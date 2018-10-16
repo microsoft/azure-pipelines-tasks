@@ -135,7 +135,7 @@
                 "windowsAuthentication": "Windows Authentication",
                 "sqlServerAuthentication": "SQL Server Authentication"
             },
-            "helpMarkDown": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the administrator's account, as specified in the Machines section, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below."
+            "helpMarkDown": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the account with which deployment agent has been configured, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below."
         },
         {
             "name": "SqlUsername",
