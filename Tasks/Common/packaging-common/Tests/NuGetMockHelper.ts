@@ -39,7 +39,7 @@ export function registerNugetToolGetterMockUnix(tmr: tmrm.TaskMockRunner) {
 export function registerNugetUtilityMock(tmr: tmrm.TaskMockRunner, projectFile: string[]) {
     tmr.registerMock('packaging-common/nuget/Utility', {
         getPatternsArrayFromInput: function(input) {
-            return [`fromMockedUtility-${input}`];
+            return [input];
         },
         resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
             return projectFile;
