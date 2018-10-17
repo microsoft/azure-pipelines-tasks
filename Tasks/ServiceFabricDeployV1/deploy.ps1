@@ -195,6 +195,7 @@ try
 }
 catch
 {
+    Warn-IfCertificateNotPresentInLocalCertStore -certificate $certificate
     Publish-Telemetry -TaskName 'ServiceFabricDeploy' -OperationId $global:operationId  -ErrorData $_
     throw
 }
