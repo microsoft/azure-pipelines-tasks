@@ -195,14 +195,7 @@ try
 }
 catch
 {
-    if ($null -ne $Certificate)
-    {
-        $thumbprint = $Certificate.Thumbprint
-        if (!(Test-Path "Cert:\CurrentUser\My\$thumbprint"))
-        {
-            Write-Warning (Get-VstsLocString -Key CertNotPresentInLocalStoreWarningMsg -ArgumentList $thumbprint)
-        }
-    }
+    Warn-IfCertificateNotPresentInLocalCertStore -certificate $certificate
     Publish-Telemetry -TaskName 'ServiceFabricDeploy' -OperationId $global:operationId  -ErrorData $_
     throw
 }
