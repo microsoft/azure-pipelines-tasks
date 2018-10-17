@@ -145,7 +145,8 @@ export async function run(nuGetPath: string): Promise<void> {
                 packagingLocation.DefaultPackagingUri,
                 internalFeedId,
                 nuGetVersion,
-                accessToken);
+                accessToken,
+                true /* useSession */);
             if (useCredConfig) {
                 nuGetConfigHelper.addSourcesToTempNuGetConfig([
                     // tslint:disable-next-line:no-object-literal-type-assertion

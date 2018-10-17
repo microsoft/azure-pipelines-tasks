@@ -14,12 +14,7 @@
     "rm": [
         {
             "items": [
-                "node_modules/utility-common/node_modules/vsts-task-lib"
-            ],
-            "options": "-Rf"
-        },
-        {
-            "items": [
+                "node_modules/utility-common/node_modules/vsts-task-lib",
                 "node_modules/packaging-common/node_modules/vsts-task-lib"
             ],
             "options": "-Rf"

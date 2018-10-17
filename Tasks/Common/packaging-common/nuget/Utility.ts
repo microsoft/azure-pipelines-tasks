@@ -184,7 +184,8 @@ export async function getNuGetFeedRegistryUrl(
     packagingCollectionUrl: string,
     feedId: string,
     nuGetVersion: VersionInfo,
-    accessToken?: string): Promise<string>
+    accessToken?: string,
+    useSession?: boolean): Promise<string>
 {
     // If no version is received, V3 is assumed
     const registryType: locationUtilities.RegistryType = nuGetVersion && nuGetVersion.productVersion.a < 3
@@ -200,6 +201,6 @@ export async function getNuGetFeedRegistryUrl(
         packagingCollectionUrl = collectionUrl;
     }
 
-    return await locationUtilities.getFeedRegistryUrl(packagingCollectionUrl, registryType, feedId, accessToken);
+    return await locationUtilities.getFeedRegistryUrl(packagingCollectionUrl, registryType, feedId, accessToken, useSession);
 }
 

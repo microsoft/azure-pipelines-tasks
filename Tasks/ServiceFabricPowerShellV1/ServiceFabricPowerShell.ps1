@@ -97,6 +97,18 @@ try
         }
     }
 }
+catch
+{
+    if ($null -ne $certificate)
+    {
+        $thumbprint = $certificate.Thumbprint
+        if (!(Test-Path "Cert:\CurrentUser\My\$thumbprint"))
+        {
+            Write-Warning (Get-VstsLocString -Key CertNotPresentInLocalStoreWarningMsg -ArgumentList $thumbprint)
+        }
+    }
+    throw
+}
 Finally
 {
     If ($scriptType -eq "InlineScript" -and (Test-Path -LiteralPath $scriptPath) -eq $true )
@@ -109,9 +121,9 @@ Finally
     # Can't use Remove-ClientCertificate as we removed all funcitons above
     try
     {
-        if ($null -ne $Certificate)
+        if ($null -ne $certificate)
         {
-            $thumbprint = $Certificate.Thumbprint
+            $thumbprint = $certificate.Thumbprint
             if (Test-Path "Cert:\CurrentUser\My\$thumbprint")
             {
                 Remove-Item "Cert:\CurrentUser\My\$thumbprint" -Force

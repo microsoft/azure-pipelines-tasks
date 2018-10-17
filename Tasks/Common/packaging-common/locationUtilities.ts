@@ -3,10 +3,13 @@ import * as interfaces from 'vso-node-api/interfaces/common/VSSInterfaces';
 import * as tl from 'vsts-task-lib/task';
 import { IRequestOptions } from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
 
+import * as provenance from "./provenance";
+
 export enum ProtocolType {
     NuGet,
     Maven,
-    Npm
+    Npm,
+    PyPi
 }
 
 export enum RegistryType {
@@ -33,9 +36,12 @@ export async function getServiceUriFromAreaId(serviceUri: string, accessToken: s
     const locationApi = await webApi.getLocationsApi();
 
     tl.debug(`Getting URI for area ID ${areaId} from ${serviceUri}`);
-    const serviceUriFromArea = await locationApi.getResourceArea(areaId);
-
-    return serviceUriFromArea.locationUrl;
+    try {
+        const serviceUriFromArea = await locationApi.getResourceArea(areaId);
+        return serviceUriFromArea.locationUrl;
+    } catch (error) {
+        throw new Error(error);
+    }
 }
 
 export async function getNuGetUriFromBaseServiceUri(serviceUri: string, accesstoken: string): Promise<string> {
@@ -155,7 +161,8 @@ export async function getFeedRegistryUrl(
     packagingUrl: string, 
     registryType: RegistryType, 
     feedId: string,
-    accessToken?: string): Promise<string> {
+    accessToken?: string,
+    useSession?: boolean): Promise<string> {
     let loc : RegistryLocation;
     switch (registryType) {
         case RegistryType.npm:
@@ -196,15 +203,25 @@ export async function getFeedRegistryUrl(
             break;
     }
 
-    tl.debug("Getting feed registry url from " + packagingUrl);
+    tl.debug("Getting registry url from " + packagingUrl);
 
     const vssConnection = getWebApiWithProxy(packagingUrl, accessToken);
 
+    let sessionId = feedId;
+    if (useSession) {
+        sessionId = await provenance.ProvenanceHelper.GetSessionId(
+            feedId,
+            loc.area /* protocol */,
+            vssConnection.serverUrl,
+            [vssConnection.authHandler],
+            vssConnection.options);
+    }
+
     const data = await Retry(async () => {
-        return await vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: feedId });
+        return await vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: sessionId });
     }, 4, 100);
 
-    tl.debug("feed registry url: " + data.requestUrl);
+    tl.debug("Feed registry url: " + data.requestUrl);
     return data.requestUrl;
 }
 
@@ -221,7 +238,7 @@ async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: n
             tl.debug("Retrying...");
             return await Retry<T>(cb, max_retry-1, retry_delay*2);
         } else {
-            throw exception;
+            throw new Error(exception);
         }
     }
 }

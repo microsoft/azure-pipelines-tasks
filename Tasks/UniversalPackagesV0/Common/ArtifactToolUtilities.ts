@@ -36,6 +36,11 @@ export async function extractZip(file: string): Promise<string> {
 
 export async function getArtifactToolFromService(serviceUri: string, accessToken: string, toolName: string){
 
+    const overrideArtifactToolPath = tl.getVariable("UPack.OverrideArtifactToolPath");
+    if (overrideArtifactToolPath != null) {
+        return getArtifactToolLocation(overrideArtifactToolPath);
+    }
+
     let osName = tl.osType();
     let arch = os.arch();
     if(osName === "Windows_NT"){
