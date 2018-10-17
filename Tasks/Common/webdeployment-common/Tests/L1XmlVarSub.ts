@@ -16,7 +16,8 @@ async function xmlVarSub() {
         'connectionString': 'replaced_value',
         'invariantName': 'System.Data.SqlServer',
         'blatvar': 'ApplicationSettingReplacedValue',
-        'log_level': 'error,warning'
+        'log_level': 'error,warning',
+        'Email:ToOverride': ''
     }
 
     var parameterFilePath = path.join(__dirname, 'L1XmlVarSub/parameters_test.xml');
