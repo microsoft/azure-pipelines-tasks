@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 18
   },
   "demands": [
     "Cmd"
@@ -89,6 +89,7 @@
     }
   },
   "messages": {
+    "CertNotPresentInLocalStoreWarningMsg": "ms-resource:loc.messages.CertNotPresentInLocalStoreWarningMsg",
     "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
     "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0"
   }

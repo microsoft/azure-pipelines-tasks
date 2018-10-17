@@ -13,6 +13,7 @@
   "loc.input.help.Inline": "Enter the script to execute.",
   "loc.input.label.ScriptArguments": "Script Arguments",
   "loc.input.help.ScriptArguments": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters.",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
   "loc.messages.InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
   "loc.messages.InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
 }
