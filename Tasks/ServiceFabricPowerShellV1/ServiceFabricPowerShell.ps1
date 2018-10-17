@@ -97,6 +97,18 @@ try
         }
     }
 }
+catch
+{
+    if ($null -ne $Certificate)
+    {
+        $thumbprint = $Certificate.Thumbprint
+        if (!(Test-Path "Cert:\CurrentUser\My\$thumbprint"))
+        {
+            Write-Warning (Get-VstsLocString -Key CertNotPresentInLocalStoreWarningMsg -ArgumentList $thumbprint)
+        }
+    }
+    throw
+}
 Finally
 {
     If ($scriptType -eq "InlineScript" -and (Test-Path -LiteralPath $scriptPath) -eq $true )
