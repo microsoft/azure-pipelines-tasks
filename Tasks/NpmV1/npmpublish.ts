@@ -33,7 +33,11 @@ export async function getPublishRegistry(packagingLocation: PackagingLocation): 
         case RegistryLocation.Feed:
             tl.debug(tl.loc('PublishFeed'));
             const feedId = tl.getInput(NpmTaskInput.PublishFeed, true);
-            npmRegistry = await NpmRegistry.FromFeedId(packagingLocation.DefaultPackagingUri, feedId);
+            npmRegistry = await NpmRegistry.FromFeedId(
+                packagingLocation.DefaultPackagingUri,
+                feedId,
+                false /* authOnly */,
+                true /* useSession */);
             break;
         case RegistryLocation.External:
             tl.debug(tl.loc('PublishExternal'));
