@@ -99,7 +99,14 @@ try
 }
 catch
 {
-    Warn-IfCertificateNotPresentInLocalCertStore -certificate $certificate
+    if ($null -ne $certificate)
+    {
+        $thumbprint = $certificate.Thumbprint
+        if (!(Test-Path "Cert:\CurrentUser\My\$thumbprint"))
+        {
+            Write-Warning (Get-VstsLocString -Key CertNotPresentInLocalStoreWarningMsg -ArgumentList $thumbprint)
+        }
+    }
     throw
 }
 Finally
