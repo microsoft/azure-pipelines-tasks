@@ -87,8 +87,10 @@ export class TaskParametersUtility {
             taskParameters.TakeAppOfflineFlag = false;
         }
 
-        taskParameters.VirtualApplication = taskParameters.VirtualApplication && taskParameters.VirtualApplication.startsWith('/') 
-            ? taskParameters.VirtualApplication.substr(1) : taskParameters.VirtualApplication;
+        if (!taskParameters.isFunctionApp && !taskParameters.isLinuxApp) {
+            taskParameters.VirtualApplication = taskParameters.VirtualApplication && taskParameters.VirtualApplication.startsWith('/') 
+                ? taskParameters.VirtualApplication.substr(1) : taskParameters.VirtualApplication;
+        }
 
         if(taskParameters.UseWebDeploy) {
             taskParameters.DeploymentType = this.getDeploymentType(tl.getInput('DeploymentType', false));
