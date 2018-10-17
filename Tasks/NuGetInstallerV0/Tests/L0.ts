@@ -15,7 +15,7 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
@@ -31,7 +31,7 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.stdout.indexOf('credProviderPath = ') >= 0, "should have found credential provider path");
@@ -49,7 +49,7 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\packages.config'), 'it should have run NuGet');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\packages.config'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
@@ -65,7 +65,7 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -NoCache'), 'it should have run NuGet');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -NoCache'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
@@ -81,7 +81,7 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -Foo'), 'it should have run NuGet');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -Foo'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
@@ -97,7 +97,7 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet with ConfigFile specified');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet with ConfigFile specified');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained("adding package source uri: mockFeedUri"), "should have added content to temp config");
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
@@ -130,8 +130,8 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet on single.sln');
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\double\\double.sln'), 'it should have run NuGet on double.sln');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet on single.sln');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\double\\double.sln'), 'it should have run NuGet on double.sln');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');

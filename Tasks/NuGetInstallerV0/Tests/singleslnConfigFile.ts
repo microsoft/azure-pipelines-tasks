@@ -3,6 +3,8 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import util = require('./NugetMockHelper');
 
+import nMockHelper = require('packaging-common/Tests/NuGetMockHelper');
+
 let taskPath = path.join(__dirname, '..', 'nugetinstaller.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr);
@@ -19,7 +21,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "which": {},
     "exec": {
-        "c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config": {
+        "c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""
@@ -39,7 +41,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 nmh.setAnswers(a);
 
-nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\single.sln"]);
+nMockHelper.registerNugetUtilityMock(tmr, ["c:\\agent\\home\\directory\\single.sln"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerNugetConfigMock();
 nmh.registerToolRunnerMock();
