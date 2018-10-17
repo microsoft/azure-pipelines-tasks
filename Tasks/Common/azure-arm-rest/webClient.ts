@@ -1,5 +1,6 @@
 import tl = require('vsts-task-lib/task');
 import util = require("util");
+import fs = require('fs');
 import httpClient = require("typed-rest-client/HttpClient");
 import httpInterfaces = require("typed-rest-client/Interfaces");
 
@@ -50,6 +51,9 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
     let timeToWait: number = retryIntervalInSeconds;
     while (true) {
         try {
+            if (request.body && typeof(request.body) !== 'string' && !request.body["readable"]) {
+                request.body = fs.createReadStream(request.body["path"]);
+            }
             let response: WebResponse = await sendRequestInternal(request);
             if (retriableStatusCodes.indexOf(response.statusCode) != -1 && ++i < retryCount) {
                 tl.debug(util.format("Encountered a retriable status code: %s. Message: '%s'.", response.statusCode, response.statusMessage));

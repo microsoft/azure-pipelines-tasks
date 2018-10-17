@@ -63,7 +63,7 @@ export class DeploymentFactory {
             return await this._getUserSelectedDeploymentProviderForWindow();
         } else {             
             var _isMSBuildPackage = await this._taskParams.Package.isMSBuildPackage();           
-            if(_isMSBuildPackage || this._taskParams.VirtualApplication) {
+            if(_isMSBuildPackage || (!this._taskParams.isFunctionApp && this._taskParams.VirtualApplication)) {
                 return new WindowsWebAppWebDeployProvider(this._taskParams);
             } else if(this._taskParams.ScriptType) {
                 return new WindowsWebAppZipDeployProvider(this._taskParams);
