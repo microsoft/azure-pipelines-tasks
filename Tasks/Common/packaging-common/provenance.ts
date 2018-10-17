@@ -112,7 +112,7 @@ export class ProvenanceHelper {
     }
 }
 
-export class ProvenanceApi extends vstsClientBases.ClientApiBase {
+class ProvenanceApi extends vstsClientBases.ClientApiBase {
     constructor(baseUrl: string, handlers: VsoBaseInterfaces.IRequestHandler[], options?: VsoBaseInterfaces.IRequestOptions) {
         super(baseUrl, handlers, "node-packageprovenance-api", options);
     }
