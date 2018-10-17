@@ -133,6 +133,21 @@ function Remove-ClientCertificate
         Write-Warning (Get-VstsLocString -Key WarningOnRemoveCertificate -ArgumentList $_)
     }
 }
+function Warn-IfCertificateNotPresentInLocalCertStore{
+    [CmdletBinding()]
+    Param (
+        $certificate
+    )
+
+    if ($null -ne $certificate)
+    {
+        $thumbprint = $certificate.Thumbprint
+        if (!(Test-Path "Cert:\CurrentUser\My\$thumbprint"))
+        {
+            Write-Warning (Get-VstsLocString -Key CertNotPresentInLocalStoreWarningMsg -ArgumentList $thumbprint)
+        }
+    }
+}
 function Connect-ServiceFabricClusterFromServiceEndpoint
 {
     [CmdletBinding()]
