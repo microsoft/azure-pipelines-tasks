@@ -54,6 +54,7 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
             if (request.body && typeof(request.body) !== 'string' && !request.body["readable"]) {
                 request.body = fs.createReadStream(request.body["path"]);
             }
+            
             let response: WebResponse = await sendRequestInternal(request);
             if (retriableStatusCodes.indexOf(response.statusCode) != -1 && ++i < retryCount) {
                 tl.debug(util.format("Encountered a retriable status code: %s. Message: '%s'.", response.statusCode, response.statusMessage));
