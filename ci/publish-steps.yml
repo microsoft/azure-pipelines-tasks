@@ -16,9 +16,6 @@ steps:
   inputs:
     versionSpec: 4.0.0
 
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
-
 # npm install
 - script: npm install
   displayName: npm install
@@ -33,60 +30,14 @@ steps:
   env:
     SYSTEM_ACCESSTOKEN: $(system.accessToken)
 
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
-
 # Stage milestone
+# TODO: Rename this.. we are staging task packages not the milestone.
 - script: node .\ci\stage-milestone.js
   displayName: Stage milestone
-
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
-
-# Create packages.config for restoring previous milestones
-- script: node .\ci\create-restore-config.js
-  displayName: Create packages.config for restoring previous milestones
-
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
-
-# Restore previous milestones
-- task: NuGetCommand@2
-  displayName: Restore previous milestones
-  inputs:
-    command: restore
-    solution: _package\packages.config
-    selectOrConfig: select
-    feedRestore: $(task_milestone_feed_name)
-    includeNuGetOrg: false
-    packagesDirectory: $(system.defaultWorkingDirectory)\_package\restore
-
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
-
-# Stage aggregate
-- script: node .\ci\stage-aggregate.js
-  displayName: Stage aggregate
-
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
-
-# Publish aggregate artifact
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathToPublish: _package/publish-layout
-    artifactName: TaskPackage
-    publishLocation: container
-
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
 
 # Stage per task NuGet package
 - script: npm run package
   displayName: npm run package
-
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
 
 # Publish per task NuGet package artifact
 - task: PublishBuildArtifacts@1
@@ -95,19 +46,6 @@ steps:
     pathToPublish: _package/nuget-packages
     artifactName: IndividualNuGetPackages
     publishLocation: container
-
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
-
-# Publish milestone package
-- task: NuGetCommand@2
-  displayName: Publish milestone package
-  condition: and(succeeded(), variables.publish_milestone)
-  inputs:
-    command: push
-    searchPatternPush: _package\vsts-tasks-milestone.$(milestone_version).nupkg
-    nuGetFeedType: internal
-    feedPublish: $(task_milestone_feed_name)
 
 # Update build number
 - script: "echo ##vso[build.updatebuildnumber]$(aggregate_version)"
