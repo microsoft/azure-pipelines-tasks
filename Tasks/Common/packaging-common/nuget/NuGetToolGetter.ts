@@ -98,9 +98,9 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
     return fullNuGetPath;
 }
 
-export async function cacheBundledNuGet() {
-    let cachedVersionToUse = DEFAULT_NUGET_VERSION;
-    let nugetPathSuffix = DEFAULT_NUGET_PATH_SUFFIX;
+export async function cacheBundledNuGet(
+    cachedVersionToUse: string = DEFAULT_NUGET_VERSION,
+    nugetPathSuffix = DEFAULT_NUGET_PATH_SUFFIX): Promise<string> {
     if (taskLib.getVariable(FORCE_NUGET_4_0_0) &&
         taskLib.getVariable(FORCE_NUGET_4_0_0).toLowerCase() === "true"){
         cachedVersionToUse = NUGET_VERSION_4_0_0;
@@ -110,11 +110,12 @@ export async function cacheBundledNuGet() {
     if (!toolLib.findLocalTool(NUGET_TOOL_NAME, cachedVersionToUse)) {
         taskLib.debug(`Placing bundled NuGet.exe ${cachedVersionToUse} in tool lib cache`);
 
-        let bundledNuGet4Location: string = getBundledNuGet_Location([nugetPathSuffix]);
-        toolLib.cacheFile(bundledNuGet4Location, NUGET_EXE_FILENAME, NUGET_TOOL_NAME, cachedVersionToUse);
+        let bundledNuGetLocation: string = getBundledNuGet_Location([nugetPathSuffix]);
+        await toolLib.cacheFile(bundledNuGetLocation, NUGET_EXE_FILENAME, NUGET_TOOL_NAME, cachedVersionToUse);
     }
-}
 
+    return cachedVersionToUse;
+}
 
 function GetRestClientOptions(): restm.IRequestOptions
 {
@@ -147,9 +148,8 @@ async function getLatestMatchVersionInfo(versionSpec: string): Promise<INuGetVer
     return releasedVersions.find(x => x.version === version);
 }
 
-
 function getBundledNuGet_Location(nugetPaths: string[]): string {
-    let taskNodeModulesPath: string = path.dirname(__dirname);
+    let taskNodeModulesPath: string = path.dirname(path.dirname(__dirname));
     let taskRootPath: string = path.dirname(taskNodeModulesPath);
     const toolPath = commandHelper.locateTool("NuGet",
     <commandHelper.LocateOptions>{

@@ -64,9 +64,6 @@ export class NugetMockHelper {
             resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
                 return projectFile;
             },
-            getBundledNuGetLocation: function(version) {
-                return 'c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe';
-            },
             stripLeadingAndTrailingQuotes: function(path) {
                 return path;
             },

@@ -160,34 +160,6 @@ export function stripLeadingAndTrailingQuotes(path: string): string {
     return path.substring(left, right + 1);
 }
 
-export function getBundledNuGetLocation(uxOption: string): string {
-    let nuGetDir;
-    if (uxOption === "4.0.0.2283") {
-        nuGetDir = "NuGet/4.0.0";
-    }
-    else if (uxOption === "3.5.0.1829") {
-        nuGetDir = "NuGet/3.5.0";
-    }
-    else if (uxOption === "3.3.0") {
-        nuGetDir = "NuGet/3.3.0";
-    }
-    else {
-        throw new Error(tl.loc("NGCommon_UnabletoDetectNuGetVersion"));
-    }
-
-    const toolPath = ngToolRunner.locateTool("NuGet", {
-        root: __dirname,
-        searchPath: [nuGetDir],
-        toolFilenames: ["NuGet.exe", "nuget.exe"],
-    });
-
-    if (!toolPath) {
-        throw new Error(tl.loc("NGCommon_UnableToFindTool", "NuGet"));
-    }
-
-    return toolPath;
-}
-
 export function resolveToolPath(path: string ): string {
     return tl.resolve(path);
 }

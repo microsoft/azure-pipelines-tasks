@@ -52,9 +52,6 @@ tmr.registerMock('packaging-common/nuget/Utility', {
     resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
         return ["~/myagent/_work/1/s/single.sln"];
     },
-    getBundledNuGetLocation: function(version) {
-        return '~/myagent/_work/_tasks/NuGet/nuget.exe';
-    },
     locateCredentialProvider: function(path) {
         return '~/myagent/_work/_tasks/NuGet/CredentialProvider';
     },
