@@ -1,6 +1,5 @@
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
-import * as ngToolRunner from "./NuGetToolRunner";
 import * as locationUtilities from "../locationUtilities";
 import { VersionInfo } from "../pe-parser/VersionResource";
 
@@ -165,11 +164,14 @@ export function resolveToolPath(path: string ): string {
 }
 
 export function locateCredentialProvider(useV2CredProvider?: boolean): string {
+    let taskNodeModulesPath: string = path.dirname(path.dirname(__dirname));
+    let taskRootPath: string = path.dirname(taskNodeModulesPath);
+
     if (useV2CredProvider === true) {
         // tslint:disable-next-line:max-line-length
-        return path.join(__dirname, "NuGet/CredentialProviderV2/plugins/netfx/CredentialProvider.Microsoft/CredentialProvider.Microsoft.exe");
+        return path.join(taskRootPath, "NuGet/CredentialProviderV2/plugins/netfx/CredentialProvider.Microsoft/CredentialProvider.Microsoft.exe");
     } else {
-        return path.join(__dirname, "NuGet/CredentialProvider");
+        return path.join(taskRootPath, "NuGet/CredentialProvider");
     }
 }
 
