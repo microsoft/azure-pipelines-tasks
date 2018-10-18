@@ -169,9 +169,9 @@ export function locateCredentialProvider(useV2CredProvider?: boolean): string {
 
     if (useV2CredProvider === true) {
         // tslint:disable-next-line:max-line-length
-        return path.join(taskRootPath, "NuGet/CredentialProviderV2/plugins/netfx/CredentialProvider.Microsoft/CredentialProvider.Microsoft.exe");
+        return path.join(taskRootPath, "CredentialProviderV2/plugins/netfx/CredentialProvider.Microsoft/CredentialProvider.Microsoft.exe");
     } else {
-        return path.join(taskRootPath, "NuGet/CredentialProvider");
+        return path.join(taskRootPath, "CredentialProvider");
     }
 }
 
