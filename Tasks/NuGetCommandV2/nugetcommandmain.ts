@@ -1,9 +1,9 @@
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 
-import * as nuGetGetter from "nuget-task-common/NuGetToolGetter";
-import * as peParser from "nuget-task-common/pe-parser";
-import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
+import * as nuGetGetter from "packaging-common/nuget/NuGetToolGetter";
+import * as peParser from "packaging-common/pe-parser";
+import {VersionInfo} from "packaging-common/pe-parser/VersionResource";
 import * as telemetry from "utility-common/telemetry";
 import * as nugetCustom from "./nugetcustom";
 import * as nugetPack from "./nugetpack";

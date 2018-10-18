@@ -1,6 +1,8 @@
-import * as tl from "vsts-task-lib";
-import {IExecSyncResult, IExecOptions} from "vsts-task-lib/toolrunner";
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
+import {ProvenanceHelper} from "packaging-common/provenance";
 import * as telemetry from "utility-common/telemetry";
+import * as tl from "vsts-task-lib";
+import {IExecOptions, IExecSyncResult} from "vsts-task-lib/toolrunner";
 import * as artifactToolRunner from "./Common/ArtifactToolRunner";
 import * as artifactToolUtilities from "./Common/ArtifactToolUtilities";
 import * as auth from "./Common/Authentication";
@@ -39,6 +41,8 @@ export async function run(artifactToolPath: string): Promise<void> {
 
         let toolRunnerOptions = artifactToolRunner.getOptions();
 
+        let sessionId: string;
+
         if (feedType === "internal")
         {
             // getting inputs
@@ -46,11 +50,35 @@ export async function run(artifactToolPath: string): Promise<void> {
 
             packageName = tl.getInput("packageListPublish");
             feedId = tl.getInput("feedListPublish");
+
             // Setting up auth info
-            accessToken = auth.getSystemAccessToken();
+            accessToken = pkgLocationUtils.getSystemAccessToken();
             internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
 
             toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = internalAuthInfo.accessToken;
+
+            // creating session
+            const useSessionEnabled = tl.getVariable("Packaging.SavePublishMetadata");
+            if (useSessionEnabled) {
+                let packagingLocation: string;
+                try {
+                    // This call is to get the packaging URI(abc.pkgs.vs.com) which is same for all protocols.
+                    packagingLocation = await pkgLocationUtils.getNuGetUriFromBaseServiceUri(
+                        serviceUri,
+                        accessToken);
+                } catch (error) {
+                    tl.debug(JSON.stringify(error));
+                    packagingLocation = serviceUri;
+                }
+
+                const pkgConn = pkgLocationUtils.getWebApiWithProxy(packagingLocation, accessToken);
+                sessionId = await ProvenanceHelper.GetSessionId(
+                    feedId,
+                    "universal",
+                    pkgConn.serverUrl,
+                    [pkgConn.authHandler],
+                    pkgConn.options);
+            }
         }
         else {
             const externalAuthInfo = auth.GetExternalAuthInfo("externalEndpoints");
@@ -74,13 +102,17 @@ export async function run(artifactToolPath: string): Promise<void> {
             version = tl.getInput("versionPublish");
         }
         else{
-            feedUri = await artifactToolUtilities.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
+            feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
 
             let highestVersion = await artifactToolUtilities.getHighestPackageVersionFromFeed(feedUri, accessToken, feedId, packageName);
 
             version = artifactToolUtilities.getVersionUtility(tl.getInput("versionPublishSelector"), highestVersion);
         }
         tl.debug(tl.loc("Info_UsingArtifactToolPublish"));
+
+        if (sessionId != null) {
+            feedId = sessionId;
+        }
 
         // tslint:disable-next-line:no-object-literal-type-assertion
         const publishOptions = {

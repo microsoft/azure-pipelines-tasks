@@ -3,7 +3,7 @@ import AdmZip = require('adm-zip');
 import os = require("os");
 import * as path from "path";
 import * as semver from "semver";
-import * as vsts from "vso-node-api";
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as tl from "vsts-task-lib";
 import * as toollib from "vsts-task-tool-lib/tool";
 
@@ -34,19 +34,12 @@ export async function extractZip(file: string): Promise<string> {
     return dest;
 }
 
-// Getting service urls from resource areas api
-export async function getServiceUriFromAreaId(serviceUri: string, accessToken: string, areaId: string){
-    const credentialHandler = vsts.getBasicHandler("vsts", accessToken);
-    const connectionData = new vsts.WebApi(serviceUri, credentialHandler);
-
-    let locationApi = await connectionData.getLocationsApi();
-
-    const serviceUriFromArea = await locationApi.getResourceArea(areaId);
-
-    return serviceUriFromArea.locationUrl;
-}
-
 export async function getArtifactToolFromService(serviceUri: string, accessToken: string, toolName: string){
+
+    const overrideArtifactToolPath = tl.getVariable("UPack.OverrideArtifactToolPath");
+    if (overrideArtifactToolPath != null) {
+        return getArtifactToolLocation(overrideArtifactToolPath);
+    }
 
     let osName = tl.osType();
     let arch = os.arch();
@@ -61,8 +54,7 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
     const blobstoreAreaId = "187ec90d-dd1e-4ec6-8c57-937d979261e5";
     const ApiVersion = "5.0-preview";
 
-    const credentialHandler = vsts.getBasicHandler("vsts", accessToken);
-    const blobstoreConnection = new vsts.WebApi(serviceUri, credentialHandler);
+    const blobstoreConnection = pkgLocationUtils.getWebApiWithProxy(serviceUri, accessToken);
 
     try{
         const artifactToolGetUrl = await blobstoreConnection.vsoClient.getVersioningData(ApiVersion,
@@ -80,7 +72,7 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
             tl.debug(tl.loc("Info_DownloadingArtifactTool", artifactToolUri.result.uri));
 
             const zippedToolsDir: string = await toollib.downloadTool(artifactToolUri.result.uri);
-            
+
             tl.debug("Downloaded zipped artifact tool to " + zippedToolsDir);
             const unzippedToolsDir = await extractZip(zippedToolsDir);
 
@@ -110,26 +102,12 @@ export function getVersionUtility(versionRadio: string, highestVersion: string):
     }
 }
 
-// Feeds url from location service
-export async function getFeedUriFromBaseServiceUri(serviceUri: string, accesstoken: string): Promise<string>{
-    const feedAreaId = "7ab4e64e-c4d8-4f50-ae73-5ef2e21642a5";
-
-    return getServiceUriFromAreaId(serviceUri, accesstoken, feedAreaId);
-}
-
-export async function getBlobstoreUriFromBaseServiceUri(serviceUri: string, accesstoken: string): Promise<string>{
-    const blobAreaId = "5294ef93-12a1-4d13-8671-9d9d014072c8";
-
-    return getServiceUriFromAreaId(serviceUri, accesstoken, blobAreaId);
-}
-
 export async function getPackageNameFromId(serviceUri: string, accessToken: string, feedId: string, packageId: string): Promise<string> {
     const ApiVersion = "3.0-preview.1";
     const PackagingAreaName = "Packaging";
     const PackageAreaId = "7a20d846-c929-4acc-9ea2-0d5a7df1b197";
 
-    const credentialHandler = vsts.getBasicHandler("vsts", accessToken);
-    const feedConnection = new vsts.WebApi(serviceUri, credentialHandler);
+    const feedConnection = pkgLocationUtils.getWebApiWithProxy(serviceUri, accessToken);
 
     // Getting url for feeds version API
     const packageUrl = await new Promise<string>((resolve, reject) => {
@@ -160,8 +138,7 @@ export async function getHighestPackageVersionFromFeed(serviceUri: string, acces
     const PackagingAreaName = "Packaging";
     const PackageAreaId = "7a20d846-c929-4acc-9ea2-0d5a7df1b197";
 
-    const credentialHandler = vsts.getBasicHandler("vsts", accessToken);
-    const feedConnection = new vsts.WebApi(serviceUri, credentialHandler);
+    const feedConnection = pkgLocationUtils.getWebApiWithProxy(serviceUri, accessToken);
 
     // Getting url for feeds version API
     const packageUrl = await new Promise<string>((resolve, reject) => {

@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 8
     },
     "runsOn": [
         "Agent",
@@ -245,7 +245,7 @@
             "type": "pickList",
             "label": "Package name",
             "defaultValue": "",
-            "helpMarkDown": "Select a package ID to publish or type a new package ID if you've never published a version of this package before.",
+            "helpMarkDown": "Select a package ID to publish or type a new package ID if you've never published a version of this package before. Package names must be lower case and can only use letters, numbers, and dashes(-).",
             "required": "true",
             "groupName": "packagePublishDetails",
             "visibleRule": "internalOrExternalPublish = internal",

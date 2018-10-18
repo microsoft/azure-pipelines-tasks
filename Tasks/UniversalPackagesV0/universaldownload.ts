@@ -1,6 +1,6 @@
 import * as tl from "vsts-task-lib";
+import * as pkgLocationUtils from "packaging-common/locationUtilities"; 
 import {IExecSyncResult, IExecOptions} from "vsts-task-lib/toolrunner";
-
 import * as telemetry from "utility-common/telemetry";
 import * as artifactToolRunner from "./Common/ArtifactToolRunner";
 import * as artifactToolUtilities from "./Common/ArtifactToolUtilities";
@@ -46,11 +46,11 @@ export async function run(artifactToolPath: string): Promise<void> {
 
             // Getting package name from package Id
             const packageId = tl.getInput("packageListDownload");
-            const accessToken = auth.getSystemAccessToken();
+            const accessToken = pkgLocationUtils.getSystemAccessToken();
 
             internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
 
-            const feedUri = await artifactToolUtilities.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
+            const feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
             packageName = await artifactToolUtilities.getPackageNameFromId(feedUri, accessToken, feedId, packageId);
 
             version = tl.getInput("versionListDownload");

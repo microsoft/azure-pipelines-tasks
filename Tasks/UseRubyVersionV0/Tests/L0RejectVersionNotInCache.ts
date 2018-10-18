@@ -9,6 +9,9 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('versionSpec', '3.x');
 tr.setInput('addToPath', 'false');
 
+// `getVariable` is not supported by `TaskLibAnswers`
+process.env['AGENT_TOOLSDIRECTORY'] = '$(Agent.ToolsDirectory)';
+
 tr.registerMock('vsts-task-tool-lib/tool', {
     findLocalTool: () => null,
     findLocalToolVersions: () => ['2.7.13']

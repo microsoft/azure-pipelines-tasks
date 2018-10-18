@@ -34,7 +34,6 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
-        assert(tr.stdout.indexOf('Got auth token') >= 0, "should have got Auth token");
         assert(tr.stdout.indexOf('credProviderPath = ') >= 0, "should have found credential provider path");
         assert(tr.succeeded, 'should have succeeded');
         assert(tr.invokedToolCount == 1, 'should have run NuGet');

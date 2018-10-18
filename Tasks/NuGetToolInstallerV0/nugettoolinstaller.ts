@@ -1,11 +1,7 @@
 import * as taskLib from 'vsts-task-lib/task';
-// Remove once task lib 2.0.4 releases
-global['_vsts_task_lib_loaded'] = true;
-import * as toolLib from 'vsts-task-tool-lib/tool';
-import * as restm from 'typed-rest-client/RestClient';
 import * as path from "path";
 
-import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
+import nuGetGetter = require("packaging-common/nuget/NuGetToolGetter");
 
 async function run() {
     try {

@@ -4,8 +4,7 @@ var DecompressZip = require('decompress-zip');
 var path = require('path')
 
 import * as corem from 'vso-node-api/CoreApi';
-import * as restm from 'vso-node-api/RestClient';
-import * as locationUtility from "utility-common/packaging/locationUtilities";
+import * as locationUtility from "packaging-common/locationUtilities";
 import * as tl from 'vsts-task-lib/task';
 import * as vsom from 'vso-node-api/VsoClient';
 import * as vsts from "vso-node-api/WebApi"

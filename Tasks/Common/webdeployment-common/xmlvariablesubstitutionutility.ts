@@ -195,7 +195,7 @@ function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues):
         var attributeNameValue = (attributeName === "key" || attributeName == "name") ? xmlDomNodeAttributes[attributeName] : attributeName;
         var attributeName = (attributeName === "key" || attributeName == "name") ? "value" : attributeName;
 
-        if(variableMap[attributeNameValue]) {
+        if(variableMap[attributeNameValue] != undefined) {
             var ConfigFileAppSettingsTokenName = ConfigFileAppSettingsToken + '(' + attributeNameValue + ')';
             let isValueReplaced: boolean = false;
             if(xmlDomNode.getAttr(attributeName) != undefined) {
@@ -248,7 +248,7 @@ function updateXmlConnectionStringsNodeAttribute(xmlDomNode, variableMap, replac
             replacableTokenValues[ConfigFileConnStringTokenName] = variableMap[xmlDomNodeAttributes.name].replace(/"/g, "'");
             isSubstitutionApplied = true;
         }
-        else if(variableMap["connectionString"]) {
+        else if(variableMap["connectionString"] != undefined) {
             var ConfigFileConnStringTokenName = ConfigFileConnStringToken + '(connectionString)';
             tl.debug('Substituting connectionString value for connectionString=' + xmlDomNodeAttributes.name + ' with token_value: ' + ConfigFileConnStringTokenName);
             xmlDomNode.attr("connectionString", ConfigFileConnStringTokenName);

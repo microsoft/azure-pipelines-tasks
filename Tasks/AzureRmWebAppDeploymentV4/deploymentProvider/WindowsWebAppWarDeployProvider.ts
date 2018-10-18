@@ -10,6 +10,9 @@ export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvi
     public async DeployWebAppStep() {
 
         tl.debug("Initiated deployment via kudu service for webapp war package : "+ this.taskParams.Package.getPath());
+
+        await this.kuduServiceUtility.warmpUp();
+        
         var warName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".war");
 
         this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), 

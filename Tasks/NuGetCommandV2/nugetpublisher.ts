@@ -1,17 +1,16 @@
 import * as tl from "vsts-task-lib/task";
 import {IExecSyncResult} from "vsts-task-lib/toolrunner";
 
-import * as auth from "nuget-task-common/Authentication";
-import { IPackageSource } from "nuget-task-common/Authentication";
-import * as commandHelper from "nuget-task-common/CommandHelper";
-import {NuGetConfigHelper2} from "nuget-task-common/NuGetConfigHelper2";
-import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
-import peParser = require("nuget-task-common/pe-parser/index");
-import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
-import * as nutil from "nuget-task-common/Utility";
-import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
+import * as auth from "packaging-common/nuget/Authentication";
+import * as commandHelper from "packaging-common/nuget/CommandHelper";
+import {NuGetConfigHelper2} from "packaging-common/nuget/NuGetConfigHelper2";
+import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner2";
+import peParser = require("packaging-common/pe-parser/index");
+import {VersionInfo} from "packaging-common/pe-parser/VersionResource";
+import * as nutil from "packaging-common/nuget/Utility";
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as telemetry from "utility-common/telemetry";
-import INuGetCommandOptions from "./Common/INuGetCommandOptions";
+import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions2";
 import * as vstsNuGetPushToolRunner from "./Common/VstsNuGetPushToolRunner";
 import * as vstsNuGetPushToolUtilities from "./Common/VstsNuGetPushToolUtilities";
 
@@ -102,7 +101,7 @@ export async function run(nuGetPath: string): Promise<void> {
         }
 
         // Setting up auth info
-        const accessToken = auth.getSystemAccessToken();
+        const accessToken = pkgLocationUtils.getSystemAccessToken();
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
@@ -144,9 +143,10 @@ export async function run(nuGetPath: string): Promise<void> {
             const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
             feedUri = await nutil.getNuGetFeedRegistryUrl(
                 packagingLocation.DefaultPackagingUri,
-                accessToken,
                 internalFeedId,
-                nuGetVersion);
+                nuGetVersion,
+                accessToken,
+                true /* useSession */);
             if (useCredConfig) {
                 nuGetConfigHelper.addSourcesToTempNuGetConfig([
                     // tslint:disable-next-line:no-object-literal-type-assertion
@@ -154,7 +154,7 @@ export async function run(nuGetPath: string): Promise<void> {
                         feedName: internalFeedId,
                         feedUri,
                         isInternal: true,
-                    } as IPackageSource]);
+                    } as auth.IPackageSource]);
                 configFile = nuGetConfigHelper.tempNugetConfigPath;
                 credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
             }

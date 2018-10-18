@@ -16,7 +16,6 @@ export class TaskParametersUtility {
             ConnectionType: tl.getInput('ConnectionType', true),
             WebAppKind: tl.getInput('WebAppKind', false),
             DeployToSlotOrASEFlag: tl.getBoolInput('DeployToSlotOrASEFlag', false),
-            VirtualApplication: tl.getInput('VirtualApplication', false),
             GenerateWebConfig: tl.getBoolInput('GenerateWebConfig', false),
             WebConfigParameters: tl.getInput('WebConfigParameters', false),
             XmlTransformation: tl.getBoolInput('XmlTransformation', false),
@@ -79,16 +78,19 @@ export class TaskParametersUtility {
 
         if(taskParameters.isLinuxApp && taskParameters.isBuiltinLinuxWebApp) {
             if(taskParameters.isFunctionApp) {
-                taskParameters.RuntimeStack = tl.getInput('RuntimeStackFunction', true);
+                taskParameters.RuntimeStack = tl.getInput('RuntimeStackFunction', false);
             }
             else {
-                taskParameters.RuntimeStack = tl.getInput('RuntimeStack', true);
+                taskParameters.RuntimeStack = tl.getInput('RuntimeStack', false);
             }
             taskParameters.TakeAppOfflineFlag = false;
         }
 
-        taskParameters.VirtualApplication = taskParameters.VirtualApplication && taskParameters.VirtualApplication.startsWith('/') 
-            ? taskParameters.VirtualApplication.substr(1) : taskParameters.VirtualApplication;
+        if (!taskParameters.isFunctionApp && !taskParameters.isLinuxApp) {
+            taskParameters.VirtualApplication = tl.getInput('VirtualApplication', false);
+            taskParameters.VirtualApplication = taskParameters.VirtualApplication && taskParameters.VirtualApplication.startsWith('/') 
+                ? taskParameters.VirtualApplication.substr(1) : taskParameters.VirtualApplication;
+        }
 
         if(taskParameters.UseWebDeploy) {
             taskParameters.DeploymentType = this.getDeploymentType(tl.getInput('DeploymentType', false));

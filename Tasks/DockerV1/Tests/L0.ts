@@ -196,6 +196,22 @@ describe('Docker Suite', function() {
         done();
     });
 
+    it('Runs successfully for docker tag command with arguments', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.tagImages;
+        process.env[shared.TestEnvVars.imageName] = 'test/test:latest';
+        process.env[shared.TestEnvVars.arguments] = 'test/test:v1';
+        tr.run();
+
+        assert(tr.invokedToolCount == 2, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker tag test/test:latest test/test:v1`) != -1, "docker tag should run");
+        console.log(tr.stderr);
+        done();
+    });
+
     it('Runs successfully for docker push image', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);

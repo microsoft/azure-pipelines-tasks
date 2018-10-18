@@ -1,0 +1,98 @@
+{
+  "id": "e4d58330-c771-11e8-8f8f-81fbb42e2824",
+  "name": "TwineAuthenticate",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 2
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.115.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "feedAuthentication",
+      "displayName": "ms-resource:loc.group.displayName.feedAuthentication",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "feedList",
+      "aliases": [
+        "vstsFeed"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.feedList",
+      "helpMarkDown": "ms-resource:loc.input.help.feedList",
+      "defaultValue": "",
+      "required": "false",
+      "groupName": "feedAuthentication",
+      "properties": {
+        "EditableOptions": "True",
+        "MultiSelectFlatList": "True"
+      }
+    },
+    {
+      "name": "externalSources",
+      "aliases": [
+        "externalFeedCredentials"
+      ],
+      "type": "connectedService:externalPythonUploadFeed",
+      "label": "ms-resource:loc.input.label.externalSources",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.externalSources",
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "True"
+      },
+      "groupName": "feedAuthentication"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "feedList",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "twineauthenticatemain.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Info_AddingInternalFeeds": "ms-resource:loc.messages.Info_AddingInternalFeeds",
+    "Info_AddingExternalFeeds": "ms-resource:loc.messages.Info_AddingExternalFeeds",
+    "Info_SuccessAddingAuth": "ms-resource:loc.messages.Info_SuccessAddingAuth",
+    "Info_AddingPasswordAuthEntry": "ms-resource:loc.messages.Info_AddingPasswordAuthEntry",
+    "Info_AddingTokenAuthEntry": "ms-resource:loc.messages.Info_AddingTokenAuthEntry",
+    "Info_StartParsingExistingPypircFile": "ms-resource:loc.messages.Info_StartParsingExistingPypircFile",
+    "Error_FailedToParseFeedUrlAndAuth": "ms-resource:loc.messages.Error_FailedToParseFeedUrlAndAuth",
+    "Warning_DuplicateEntryForInternalFeed": "ms-resource:loc.messages.Warning_DuplicateEntryForInternalFeed",
+    "Error_DuplicateEntryForExternalFeed": "ms-resource:loc.messages.Error_DuplicateEntryForExternalFeed",
+    "FailedToGetPackagingUri": "ms-resource:loc.messages.FailedToGetPackagingUri",
+    "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
+    "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable",
+    "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
+    "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
+    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile"
+  },
+  "postjobexecution": {
+    "Node": {
+      "target": "authcleanup.js",
+      "argumentFormat": ""
+    }
+  }
+}

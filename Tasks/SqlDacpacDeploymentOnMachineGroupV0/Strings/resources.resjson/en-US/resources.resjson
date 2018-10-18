@@ -24,7 +24,7 @@
   "loc.input.label.DatabaseName": "Database Name",
   "loc.input.help.DatabaseName": "Provide the name of the SQL Server database.",
   "loc.input.label.AuthScheme": "Authentication",
-  "loc.input.help.AuthScheme": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the administrator's account, as specified in the Machines section, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below.",
+  "loc.input.help.AuthScheme": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the account used to configure deployment agent, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below.",
   "loc.input.label.SqlUsername": "SQL User name",
   "loc.input.help.SqlUsername": "Provide the SQL login to connect to the SQL Server. The option is only available if SQL Server Authentication mode has been selected.",
   "loc.input.label.SqlPassword": "SQL Password",

@@ -36,7 +36,6 @@ describe('NuGetCommand Suite', function () {
         assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
-        assert(tr.stdout.indexOf('Got auth token') >= 0, "should have got Auth token");
         assert(tr.stdout.indexOf('credProviderPath = ') >= 0, "should have found credential provider path");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.warningIssues.length, 0, "should have no warnings");
@@ -234,7 +233,7 @@ describe('NuGetCommand Suite', function () {
         done();
     });
 
-    it('succeeds when conflict occurs using VstsNuGetPush.exe', (done: MochaDone) => {
+    it('succeeds when conflict occurs using VstsNuGetPush.exe (allow conflict)', (done: MochaDone) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, './PublishTests/internalFeedVstsNuGetPushAllowConflict.js')
@@ -250,7 +249,7 @@ describe('NuGetCommand Suite', function () {
         done();
     });
 
-    it('succeeds when conflict occurs using VstsNuGetPush.exe', (done: MochaDone) => {
+    it('fails when conflict occurs using VstsNuGetPush.exe (disallow conflict)', (done: MochaDone) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, './PublishTests/internalFeedVstsNuGetPushDisallowConflict.js')

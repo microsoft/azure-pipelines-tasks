@@ -3,6 +3,9 @@ import * as path from 'path';
 import { TaskLibAnswers, TaskLibAnswerExecResult } from 'vsts-task-lib/mock-answer';
 import { TaskMockRunner } from 'vsts-task-lib/mock-run';
 import * as mtr from 'vsts-task-lib/mock-toolrunner';
+import { debug } from 'vsts-task-lib';
+
+import * as pkgMock from 'packaging-common/Tests/MockHelper';
 
 export class NpmMockHelper extends TaskMockRunner {
     private static NpmCmdPath: string = 'c:\\mock\\location\\npm';
@@ -74,7 +77,7 @@ export class NpmMockHelper extends TaskMockRunner {
             }
         });
 
-        this.registerLocationHelpersMock();
+        pkgMock.registerLocationHelpersMock(this);
     }
 
     public run(noMockTask?: boolean): void {
@@ -99,43 +102,9 @@ export class NpmMockHelper extends TaskMockRunner {
         this.answers.exec[`${NpmMockHelper.NpmCmdPath} ${command}`] = result;
     }
 
-    public RegisterLocationServiceMocks() {
-        this.registerMock('vso-node-api/WebApi', {
-            getBearerHandler: function(token){
-                return {};
-            },
-            WebApi: function(url, handler){
-                return {
-                    getCoreApi: function() {
-                        return {
-                            vsoClient: {
-                                getVersioningData: async function (ApiVersion: string, PackagingAreaName: string, PackageAreaId: string, Obj) {
-                                    return { requestUrl: 'foobar' };
-                                }
-                            }
-                        };
-                    }
-                };
-            }
-        });
-    }
-
     public mockServiceEndpoint(endpointId: string, url: string, auth: any): void {
         process.env['ENDPOINT_URL_' + endpointId] = url;
         process.env['ENDPOINT_AUTH_' + endpointId] = JSON.stringify(auth);
-    }
-
-    public registerLocationHelpersMock() {
-        this.registerMock('utility-common/packaging/locationUtilities', {
-            getPackagingUris: function(input) {
-                const collectionUrl: string = "https://vsts/packagesource";
-                return {
-                    PackagingUris: [collectionUrl],
-                    DefaultPackagingUri: collectionUrl
-                };
-            },
-            ProtocolType: {NuGet: 1, Npm: 2, Maven: 3}
-        });
     }
 
     private isDebugging() {
@@ -161,10 +130,6 @@ export class NpmMockHelper extends TaskMockRunner {
     private _registerMockToolRunner() {
         let tmr = require('vsts-task-lib/mock-toolrunner');
         this.registerMock('vsts-task-lib/toolrunner', tmr);
-    }
-
-    private _mockGetFeedRegistryUrl(feedId: string): string {
-        return NpmMockHelper.CollectionUrl + '/_packaging/' + feedId + '/npm/registry/';
     }
 }
 

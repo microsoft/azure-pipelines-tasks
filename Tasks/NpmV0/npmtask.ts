@@ -1,11 +1,10 @@
 import Q = require('q');
-import fs = require('fs');
 import path = require('path');
 import url = require('url');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 var extend = require('util')._extend;
-import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
 
 interface EnvironmentDictionary { [key: string]: string; }
 
@@ -192,7 +191,7 @@ async function addBuildCredProviderEnv(env: EnvironmentDictionary) : Promise<Env
     var credProviderPath : string = path.join(__dirname, 'Npm/CredentialProvider');
 
     // get build access token
-    var accessToken : string = getSystemAccessToken();
+    var accessToken : string = pkgLocationUtils.getSystemAccessToken();
 
     // get uri prefixes
     var serviceUri : string = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
@@ -227,34 +226,4 @@ async function addBuildCredProviderEnv(env: EnvironmentDictionary) : Promise<Env
     env['NPM_CREDENTIALPROVIDERS_PATH'] =  credProviderPath;
     env['VSS_DISABLE_DEFAULTCREDENTIALPROVIDER'] = '1';
     return env;
-}
-
-// Below logic exists in nuget common module as well, but due to tooling issue
-// where two tasks which use different tasks lib versions can't use the same common
-// module, it's being duplicated here. 
-function getSystemAccessToken(): string {
-    tl.debug('Getting credentials for local feeds');
-    var auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
-    if (auth.scheme === 'OAuth') {
-        tl.debug('Got auth token');
-        return auth.parameters['AccessToken'];
-    } else {
-        tl.warning(tl.loc('BuildCredentialsWarn'));
-    }
-}
-
-function assumeNpmUriPrefixes(collectionUri: string): string[] {
-    var prefixes = [collectionUri];
-
-    var collectionUrlObject = url.parse(collectionUri);
-    if(collectionUrlObject.hostname.toUpperCase().endsWith('.VISUALSTUDIO.COM')) {
-        var hostparts = collectionUrlObject.hostname.split('.');
-        var packagingHostName = hostparts[0] + '.pkgs.visualstudio.com';
-        collectionUrlObject.hostname = packagingHostName;
-        // remove the host property so it doesn't override the hostname property for url.format
-        delete collectionUrlObject.host;
-        prefixes.push(url.format(collectionUrlObject));
-    }
-
-    return prefixes;
 }

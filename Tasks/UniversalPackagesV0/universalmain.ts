@@ -1,8 +1,8 @@
 import * as path from "path";
+import * as pkgLocationUtils from "packaging-common/locationUtilities"; 
 import * as telemetry from "utility-common/telemetry";
 import * as tl from "vsts-task-lib";
 import * as artifactToolUtilities from "./Common/ArtifactToolUtilities";
-import * as auth from "./Common/Authentication";
 import * as universalDownload from "./universaldownload";
 import * as universalPublish from "./universalpublish";
 
@@ -14,9 +14,9 @@ async function main(): Promise<void> {
     let artifactToolPath: string;
 
     try {
-        const localAccessToken = auth.getSystemAccessToken();
+        const localAccessToken = pkgLocationUtils.getSystemAccessToken();
         const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-        const blobUri = await artifactToolUtilities.getBlobstoreUriFromBaseServiceUri(
+        const blobUri = await pkgLocationUtils.getBlobstoreUriFromBaseServiceUri(
             serviceUri,
             localAccessToken);
 
