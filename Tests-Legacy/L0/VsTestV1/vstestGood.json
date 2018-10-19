@@ -1,0 +1,99 @@
+{
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "/source/dir",
+        "build.sourcesdirectory": "/source/dir",
+        "VS150COMNTools": "/vs/path",
+        "VS140COMNTools": "/vs/path",
+        "VS120COMNTools": "/vs/path"
+    },
+    "find": {
+        "/source/dir": [
+            "someDir/someFile2",
+            "/someDir/someFile1"
+        ]
+    },
+    "match": {
+        "\\source\\dir\\some\\*pattern": [
+            "some/path/one",
+            "some/path/two"
+        ],
+        "\\source\\dir\\exclude\\*pattern": [
+            "some/path/two",
+            "some/path/three"
+        ],
+        "\\source\\dir\\TestResults\\*.trx": [
+            "a.trx"
+        ],
+        "**\\packages\\**\\*TestAdapter.dll": []
+    },
+    "exec": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe some/path/one some/path/two /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe some/path/one /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /TestCaseFilter:testFilter /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /EnableCodeCoverage /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file consoleOptions /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /Settings:settings.runsettings /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx /TestAdapterPath:path/to/customadapters": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "some\\path\\to\\vstest.console.exe path/to/file /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\path\\to\\vstest\\directory\\vstest.console.exe path/to/file /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        }
+    },
+    "rmRF": {
+        "\\source\\dir\\TestResults": {
+            "success": true,
+            "message": "success"
+        }
+    },
+    "exist": {
+        "settings.runsettings": true,
+        "path/to/customadapters": true,
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": false,
+        "some\\path\\to\\vstest.console.exe": true,
+        "some\\illegal\\path\\to\\vstest.console.exe": false,
+        "\\path\\to\\vstest\\directory": true
+    },
+    "stats": {
+        "settings.runsettings": {
+            "isFile": true
+        },
+        "some\\path\\to\\vstest.console.exe": {
+            "isFile": true
+        },
+        "path/to/customadapters": {
+            "isDirectory": true
+        },
+        "\\path\\to\\vstest\\directory": {
+            "isDirectory": true
+        }
+    }
+}
