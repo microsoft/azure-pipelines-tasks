@@ -1,0 +1,34 @@
+{
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "/source/dir",
+        "build.sourcesdirectory": "/source/dir",
+        "VS140COMNTools": "/vs/path",
+        "VSTest_14.0": "/vs/IDE/CommonExtensions/Microsoft/TestWindow"
+    },
+    "find": {
+        "/source/dir": [
+            "someDir/someFile2",
+            "/someDir/someFile1"
+        ]
+    },
+    "match": {
+        "\\source\\dir\\some\\*pattern": [
+            "some/path/one",
+            "some/path/two"
+        ],
+        "**\\packages\\**\\*TestAdapter.dll": []
+    },
+    "exec": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe some/path/one some/path/two /logger:trx": {
+            "code": 1,
+            "stdout": "running vstest",
+            "stderr": "error occured while running vstest"
+        }
+    },
+    "rmRF": {
+        "\\source\\dir\\TestResults": {
+            "success": true,
+            "message": "success"
+        }
+    }
+}
