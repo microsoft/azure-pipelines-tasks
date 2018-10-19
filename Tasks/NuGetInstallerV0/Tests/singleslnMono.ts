@@ -3,9 +3,11 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import util = require('./NugetMockHelper');
 
+import nMockHelper = require('packaging-common/Tests/NuGetMockHelper');
+
 let taskPath = path.join(__dirname, '..', 'nugetinstaller.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
-let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr);
+let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr, true);
 
 nmh.setNugetVersionInputDefault();
 tmr.setInput('solution', 'single.sln');
@@ -47,27 +49,7 @@ process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.
 process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "~/myagent/_work/1/s";
 process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
 
-tmr.registerMock('packaging-common/nuget/Utility', {
-    resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
-        return ["~/myagent/_work/1/s/single.sln"];
-    },
-    getBundledNuGetLocation: function(version) {
-        return '~/myagent/_work/_tasks/NuGet/nuget.exe';
-    },
-    locateCredentialProvider: function(path) {
-        return '~/myagent/_work/_tasks/NuGet/CredentialProvider';
-    },
-    setConsoleCodePage: function() {
-        var tlm = require('vsts-task-lib/mock-task');
-        tlm.debug(`setting console code page`);
-    }
-} );
-
-tmr.registerMock('./Utility', {
-    resolveToolPath: function(path) {
-        return path;
-    }
-});
+nMockHelper.registerNugetUtilityMockUnix(tmr, ["~/myagent/_work/1/s/single.sln"]);
 
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();

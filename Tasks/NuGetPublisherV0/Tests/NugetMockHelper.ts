@@ -3,6 +3,7 @@ import VersionInfoVersion from 'packaging-common/pe-parser/VersionInfoVersion'
 import {VersionInfo} from 'packaging-common/pe-parser/VersionResource'
 
 import * as pkgMock from 'packaging-common/Tests/MockHelper';
+import nMockHelper = require('packaging-common/Tests/NuGetMockHelper');
 
 export class NugetMockHelper {
     private defaultNugetVersion = '3.3.0';
@@ -18,6 +19,7 @@ export class NugetMockHelper {
         process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
 
         pkgMock.registerLocationHelpersMock(tmr);
+        nMockHelper.registerNugetToolGetterMock(tmr);
     }
     
     public setNugetVersionInputDefault() {
@@ -40,30 +42,7 @@ export class NugetMockHelper {
     }
     
     public registerNugetUtilityMock(projectFile: string[]) {
-        this.tmr.registerMock('packaging-common/nuget/Utility', {
-            resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
-                return projectFile;
-            },
-            getBundledNuGetLocation: function(version) {
-                return 'c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe';
-            },
-            stripLeadingAndTrailingQuotes: function(path) {
-                return path;
-            },
-            locateCredentialProvider: function(path) {
-                return 'c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider';
-            },
-            setConsoleCodePage: function() {
-                var tlm = require('vsts-task-lib/mock-task');
-                tlm.debug(`setting console code page`);
-            }
-        } );
-        
-        this.tmr.registerMock('./Utility', {
-            resolveToolPath: function(path) {
-                return path;
-            }
-        });
+        nMockHelper.registerNugetUtilityMock(this.tmr, projectFile);
     }
     
     public registerNugetConfigMock() {
