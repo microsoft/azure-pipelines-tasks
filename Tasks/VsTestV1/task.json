@@ -196,9 +196,6 @@
             "platforms": [
                 "windows"
             ]
-        },
-        "Node": {
-            "target": "vstest.js"
         }
     },
     "messages": {
