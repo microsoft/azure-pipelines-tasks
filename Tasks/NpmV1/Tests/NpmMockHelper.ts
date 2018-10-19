@@ -5,6 +5,8 @@ import { TaskMockRunner } from 'vsts-task-lib/mock-run';
 import * as mtr from 'vsts-task-lib/mock-toolrunner';
 import { debug } from 'vsts-task-lib';
 
+import * as pkgMock from 'packaging-common/Tests/MockHelper';
+
 export class NpmMockHelper extends TaskMockRunner {
     private static NpmCmdPath: string = 'c:\\mock\\location\\npm';
     private static NpmCachePath: string = 'c:\\mock\\location\\npm_cache';
@@ -75,7 +77,7 @@ export class NpmMockHelper extends TaskMockRunner {
             }
         });
 
-        this.registerLocationHelpersMock();
+        pkgMock.registerLocationHelpersMock(this);
     }
 
     public run(noMockTask?: boolean): void {
@@ -103,38 +105,6 @@ export class NpmMockHelper extends TaskMockRunner {
     public mockServiceEndpoint(endpointId: string, url: string, auth: any): void {
         process.env['ENDPOINT_URL_' + endpointId] = url;
         process.env['ENDPOINT_AUTH_' + endpointId] = JSON.stringify(auth);
-    }
-
-    public registerLocationHelpersMock() {
-        const mockLocationUtils = {
-            getPackagingUris: function(input) {
-                const collectionUrl: string = "https://vsts/packagesource";
-                return {
-                    PackagingUris: [collectionUrl],
-                    DefaultPackagingUri: collectionUrl
-                };
-            },
-            getWebApiWithProxy: function(serviceUri: string, accessToken?: string) {
-                return {
-                    vsoClient: {
-                        getVersioningData: async function (ApiVersion: string, PackagingAreaName: string, PackageAreaId: string, Obj) {
-                            return { requestUrl: 'foobar' };
-                        }
-                    }
-                }
-            },
-            getSystemAccessToken: function() {
-                return "token";
-            },
-            getFeedRegistryUrl: function(packagingUrl: string, registryType, feedId: string) {
-                return packagingUrl + "/" + feedId;
-            },
-            ProtocolType: {NuGet: 1, Npm: 2, Maven: 3},
-            RegistryType: {npm: 1, NuGetV2: 2, NuGetV3: 3}
-        };
-
-        this.registerMock('packaging-common/locationUtilities', mockLocationUtils);
-        this.registerMock('../locationUtilities', mockLocationUtils);
     }
 
     private isDebugging() {

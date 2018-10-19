@@ -2,6 +2,8 @@ import tmrm = require('vsts-task-lib/mock-run');
 import VersionInfoVersion from 'packaging-common/pe-parser/VersionInfoVersion'
 import {VersionInfo} from 'packaging-common/pe-parser/VersionResource'
 
+import * as pkgMock from 'packaging-common/Tests/MockHelper';
+
 export class NugetMockHelper {
     private defaultNugetVersion = '3.3.0';
     private defaultNugetVersionInfo = [3,3,0,212];
@@ -15,7 +17,7 @@ export class NugetMockHelper {
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
 
-        this.registerLocationHelpersMock();
+        pkgMock.registerLocationHelpersMock(tmr);
     }
     
     public setNugetVersionInputDefault() {
@@ -79,37 +81,5 @@ export class NugetMockHelper {
         a.exist["c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe"] = true;
         a.exist["c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider\\CredentialProvider.TeamBuild.exe"] = true;
         this.tmr.setAnswers(a);
-    }
-
-    public registerLocationHelpersMock() {
-        const mockLocationUtils = {
-            getPackagingUris: function(input) {
-                const collectionUrl: string = "https://vsts/packagesource";
-                return {
-                    PackagingUris: [collectionUrl],
-                    DefaultPackagingUri: collectionUrl
-                };
-            },
-            getWebApiWithProxy: function(serviceUri: string, accessToken?: string) {
-                return {
-                    vsoClient: {
-                        getVersioningData: async function (ApiVersion: string, PackagingAreaName: string, PackageAreaId: string, Obj) {
-                            return { requestUrl: 'foobar' };
-                        }
-                    }
-                }
-            },
-            getSystemAccessToken: function() {
-                return "token";
-            },
-            getFeedRegistryUrl: function(packagingUrl: string, registryType, feedId: string, accessToken?: string) {
-                return packagingUrl + "/" + feedId;
-            },
-            ProtocolType: {NuGet: 1, Npm: 2, Maven: 3},
-            RegistryType: {npm: 1, NuGetV2: 2, NuGetV3: 3}
-        };
-
-        this.tmr.registerMock('packaging-common/locationUtilities', mockLocationUtils);
-        this.tmr.registerMock('../locationUtilities', mockLocationUtils);
     }
 }

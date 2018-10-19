@@ -5,7 +5,7 @@ import { INpmRegistry, NpmRegistry } from 'packaging-common/npm/npmregistry';
 import { NpmToolRunner } from './npmtoolrunner';
 import * as util from 'packaging-common/util';
 import * as npmutil from 'packaging-common/npm/npmutil';
-import { PackagingLocation } from 'utility-common/packaging/locationUtilities';
+import { PackagingLocation } from 'packaging-common/locationUtilities';
 
 export async function run(packagingLocation: PackagingLocation): Promise<void> {
     const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
@@ -33,7 +33,11 @@ export async function getPublishRegistry(packagingLocation: PackagingLocation): 
         case RegistryLocation.Feed:
             tl.debug(tl.loc('PublishFeed'));
             const feedId = tl.getInput(NpmTaskInput.PublishFeed, true);
-            npmRegistry = await NpmRegistry.FromFeedId(packagingLocation.DefaultPackagingUri, feedId);
+            npmRegistry = await NpmRegistry.FromFeedId(
+                packagingLocation.DefaultPackagingUri,
+                feedId,
+                false /* authOnly */,
+                true /* useSession */);
             break;
         case RegistryLocation.External:
             tl.debug(tl.loc('PublishExternal'));

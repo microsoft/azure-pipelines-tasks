@@ -43,6 +43,5 @@ nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\foo.nupkg"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 nmh.registerNugetConfigMock();
-nmh.RegisterLocationServiceMocks();
 
 tmr.run();

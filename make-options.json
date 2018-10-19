@@ -114,6 +114,7 @@
         "UsePythonVersionV0",
         "UseRubyVersionV0",
         "VSBuildV1",
+        "VsTestV1",
         "VsTestV2",
         "VsTestPlatformToolInstallerV1",
         "WindowsMachineFileCopyV2",

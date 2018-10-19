@@ -38,7 +38,7 @@ export class KuduServiceManagementClient {
                 }
 
                 if(retryCount > 0 && exceptionString.indexOf('Request timeout') != -1 && (!reqOptions || reqOptions.retryRequestTimedout)) {
-                    tl.debug('encountered request timedou issue in Kudu. Retrying again');
+                    tl.debug('encountered request timedout issue in Kudu. Retrying again');
                     retryCount -= 1;
                     continue;
                 }

@@ -5,7 +5,7 @@ import { INpmRegistry, NpmRegistry } from 'packaging-common/npm/npmregistry';
 import { NpmToolRunner } from './npmtoolrunner';
 import * as util from 'packaging-common/util';
 import * as npmutil from 'packaging-common/npm/npmutil';
-import { PackagingLocation } from 'utility-common/packaging/locationUtilities';
+import { PackagingLocation } from 'packaging-common/locationUtilities';
 
 export async function run(packagingLocation: PackagingLocation, command?: string): Promise<void> {
     const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();

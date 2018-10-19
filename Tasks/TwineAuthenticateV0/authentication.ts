@@ -1,6 +1,5 @@
-import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as tl from "vsts-task-lib/task";
-import * as utils from "./utilities";
 
 export interface IPackageSource {
     feedUri: string;
@@ -52,9 +51,14 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<AuthIn
         tl.debug(JSON.stringify(error));
         packagingLocation = serviceUri;
     }
-    const globalWebApi = utils.getWebApi(packagingLocation, localAccessToken);
+
     internalAuthArray = await Promise.all(feedList.map(async (feedName: string) => {
-        const feedUri = await utils.getPyPiUploadApiFromFeedName(globalWebApi, feedName);
+        const feedUri = await pkgLocationUtils.getFeedRegistryUrl(
+            packagingLocation,
+            pkgLocationUtils.RegistryType.PyPiUpload,
+            feedName,
+            localAccessToken,
+            true /* useSession */);
         return new AuthInfo({
             feedName,
             feedUri,
