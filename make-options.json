@@ -92,6 +92,7 @@
         "PublishCodeCoverageResultsV1",
         "PublishPipelineArtifactV0",
         "PublishSymbolsV2",
+        "PublishTestResultsV1",
         "PublishTestResultsV2",
         "PublishToAzureServiceBusV1",
         "PyPIPublisherV0",
