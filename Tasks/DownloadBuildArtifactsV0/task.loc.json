@@ -85,6 +85,15 @@
       }
     },
     {
+      "name": "partiallySucceededBuilds",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.partiallySucceededBuilds",
+      "defaultValue": "false",
+      "visibleRule": "buildType == specific && buildVersionToDownload != specific",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.partiallySucceededBuilds"
+    },
+    {
       "name": "branchName",
       "type": "string",
       "label": "ms-resource:loc.input.label.branchName",
