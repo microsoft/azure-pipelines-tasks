@@ -92,11 +92,11 @@ export function prependCondaToPath(condaRoot: string, platform: Platform): void 
  */
 export async function updateConda(condaRoot: string, platform: Platform): Promise<void> {
     try {
-        const conda = task.tool('conda');
+        const conda = sudo('conda', platform);
         conda.line('update --name base conda --yes');
         await conda.exec();
     } catch (e) {
-        // Best effort
+        task.debug('Failed to update conda. This is best effort. Continuing ...');
     }
 }
 
