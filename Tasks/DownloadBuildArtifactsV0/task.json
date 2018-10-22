@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 142,
-        "Patch": 1
+        "Patch": 2
     },
     "groups": [
         {
@@ -107,7 +107,7 @@
             "helpMarkDown": "The build from which to download the artifacts"
         },
         {
-            "name": "Tags",
+            "name": "tags",
             "type": "string",
             "label": "Build Tags",
             "defaultValue": "",
