@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 142,
-    "Patch": 0
+    "Patch": 2
   },
   "groups": [
     {
@@ -107,13 +107,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.buildId"
     },
     {
-      "name": "Tags",
+      "name": "tags",
       "type": "string",
-      "label": "ms-resource:loc.input.label.Tags",
+      "label": "ms-resource:loc.input.label.tags",
       "defaultValue": "",
       "visibleRule": "buildType == specific && buildVersionToDownload != specific",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.Tags"
+      "helpMarkDown": "ms-resource:loc.input.help.tags"
     },
     {
       "name": "downloadType",
