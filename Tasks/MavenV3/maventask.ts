@@ -89,6 +89,7 @@ if (isWindows &&
     }
 }
 
+tl.checkPath(mvnExec, 'maven path');
 tl.debug('Maven executable: ' + mvnExec);
 
 // Set JAVA_HOME to the JDK version (default, 1.7, 1.8, etc.) or the path specified by the user
