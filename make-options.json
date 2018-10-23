@@ -74,7 +74,6 @@
         "MavenV2",
         "MavenV3",
         "MSBuildV1",
-        "MysqlDeploymentOnMachineGroupV1",
         "NodeToolV0",
         "NpmV1",
         "NpmAuthenticateV0",
