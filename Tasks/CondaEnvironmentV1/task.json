@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 140,
-        "Patch": 3
+        "Minor": 143,
+        "Patch": 0
     },
     "demands": [],
     "instanceNameFormat": "Conda environment $(environmentName)",
