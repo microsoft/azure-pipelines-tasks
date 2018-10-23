@@ -11,6 +11,7 @@ async function run() {
 
     if(!enableTls) {
         tl.debug(tl.loc("SkipDownloadSecureFiles"));
+        return;
     }
 
     var caCert = tl.getInput('caCert', true);
@@ -30,4 +31,8 @@ async function run() {
     }
 }
 
-run();
+run().then(()=>{
+    // do nothing
+}, (reason)=> {
+        tl.setResult(tl.TaskResult.Failed, reason);
+});
