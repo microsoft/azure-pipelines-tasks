@@ -5,13 +5,16 @@ import * as os from 'os';
 import * as path from 'path';
 
 let osPlat: string = os.platform();
-let osArch: string;
+let osArch: string = os.arch();
 
 async function run() {
     try {
         let versionSpec = taskLib.getInput('versionSpec', true);
         let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
-        osArch = taskLib.getInput('architecture', false);
+        let architecture = taskLib.getInput('architecture', false);
+        if (architecture != "") {
+            osArch = architecture;
+        }
         await getNode(versionSpec, checkLatest);
     }
     catch (error) {

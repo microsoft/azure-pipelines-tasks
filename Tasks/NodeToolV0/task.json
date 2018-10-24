@@ -41,7 +41,7 @@
             "name": "architecture",
             "type": "pickList",
             "label": "Architecture",
-            "defaultValue": "x64",
+            "defaultValue": "",
             "required": true,
             "helpMarkDown": "The target architecture (x86, x64, ARM) of the Node install.",
             "groupName": "advanced",
