@@ -43,11 +43,14 @@
             "label": "Architecture",
             "defaultValue": "x64",
             "required": true,
-            "helpMarkDown": "The target architecture (x86, x64) of the Node install.",
+            "helpMarkDown": "The target architecture (x86, x64, ARM) of the Node install.",
             "groupName": "advanced",
             "options": {
                 "x86": "x86",
-                "x64": "x64"
+                "x64": "x64",
+                "ARM64": "arm64",
+                "ARMv6": "armv61",
+                "ARMv7": "armv71"
             }
         }
     ],
