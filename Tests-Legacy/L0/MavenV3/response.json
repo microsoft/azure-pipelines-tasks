@@ -93,6 +93,7 @@
         "/home/bin/maven/bin/mvn": true,
         "/home/bin/maven": true,
         "/home/bin/maven2": true,
+        "/home/bin/maven2/bin/mvn": true,
         "/tmp/.mavenInfo": true,
         "/tmp/.mavenInfo/MavenInfo.md": true,
         "pom.xml": true
