@@ -38,7 +38,7 @@
             "helpMarkDown": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool."
         },
         {
-            "name": "architecture",
+            "name": "arch",
             "type": "pickList",
             "label": "Architecture",
             "defaultValue": "",

@@ -11,7 +11,7 @@ async function run() {
     try {
         let versionSpec = taskLib.getInput('versionSpec', true);
         let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
-        let architecture = taskLib.getInput('architecture', false);
+        let architecture = taskLib.getInput('arch', false);
         if (architecture != "") {
             osArch = architecture;
         }
