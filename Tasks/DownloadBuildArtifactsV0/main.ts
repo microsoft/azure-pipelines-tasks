@@ -71,7 +71,7 @@ async function main(): Promise<void> {
         var branchName: string =  tl.getInput("branchName", false);;
         var downloadPath: string = tl.getInput("downloadPath", true);
         var downloadType: string = tl.getInput("downloadType", true);
-        var tagFiltersInput = tl.getInput("tagFilters", false);
+        var tagFiltersInput: string = tl.getInput("tags", false);
         var tagFilters = [];
         if (!!tagFiltersInput) {
             tagFilters = tagFiltersInput.split(",");

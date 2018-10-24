@@ -4,6 +4,7 @@ import {VersionInfo} from 'packaging-common/pe-parser/VersionResource'
 import * as nugetPackUtils from "packaging-common/PackUtilities"
 
 import * as pkgMock from 'packaging-common/Tests/MockHelper';
+import nMockHelper = require('packaging-common/Tests/NuGetMockHelper');
 
 export class NugetMockHelper {
     private defaultNugetVersion = '4.0.0';
@@ -25,22 +26,7 @@ export class NugetMockHelper {
 
     public registerDefaultNugetVersionMock() {
         this.registerNugetVersionMock(this.defaultNugetVersion, this.defaultNugetVersionInfo);
-        this.registerNugetToolGetterMock();
-    }
-
-    public registerNugetToolGetterMock() {
-        this.tmr.registerMock('packaging-common/nuget/NuGetToolGetter', {
-            getNuGet: function(versionSpec) {
-                return "c:\\from\\tool\\installer\\nuget.exe";
-            },
-            cacheBundledNuGet: function(){},
-            FORCE_NUGET_4_0_0: 'FORCE_NUGET_4_0_0',
-            NUGET_VERSION_4_0_0: '4.0.0',
-            NUGET_VERSION_4_0_0_PATH_SUFFIX: 'NuGet/4.0.0/',
-            DEFAULT_NUGET_VERSION: '4.1.0',
-            DEFAULT_NUGET_PATH_SUFFIX: 'NuGet/4.1.0/',
-            NUGET_EXE_TOOL_PATH_ENV_VAR: "NuGetExeToolPath"
-        } )
+        nMockHelper.registerNugetToolGetterMock(this.tmr);
     }
 
     public registerNugetVersionMock(productVersion: string, versionInfoVersion: number[]) {
@@ -68,68 +54,11 @@ export class NugetMockHelper {
     }
 
     public registerNugetUtilityMock(projectFile: string[]) {
-        this.tmr.registerMock('packaging-common/nuget/Utility', {
-            getPatternsArrayFromInput: function(input) {
-                return [input];
-            },
-            resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
-                return projectFile;
-            },
-            getBundledNuGetLocation: function(version) {
-                return 'c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe';
-            },
-            stripLeadingAndTrailingQuotes: function(path) {
-                return path;
-            },
-            locateCredentialProvider: function(path) {
-                return 'c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider';
-            },
-            setConsoleCodePage: function() {
-                var tlm = require('vsts-task-lib/mock-task');
-                tlm.debug(`setting console code page`);
-            },
-            getNuGetFeedRegistryUrl(
-                packagingCollectionUrl: string,
-                feedId: string,
-                nuGetVersion: VersionInfo,
-                accessToken?: string) {
-                return 'https://vsts/packagesource';
-            }
-        });
-        this.tmr.registerMock('./Utility', {
-            resolveToolPath: function(path) {
-                return path;
-            }
-        });
+        nMockHelper.registerNugetUtilityMock(this.tmr, projectFile);
     }
 
-    public registerNugetUtilityMockUnix() {
-        this.tmr.registerMock('packaging-common/nuget/Utility', {
-            getPatternsArrayFromInput: function(input) {
-                return [input];
-            },
-            resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
-                return ["~/myagent/_work/1/s/single.sln"];
-            },
-            getBundledNuGetLocation: function(version) {
-                return '~/myagent/_work/_tasks/NuGet/nuget.exe';
-            },
-            resolveToolPath: function(path) {
-                return path;
-            },
-            locateCredentialProvider: function(path) {
-                return '~/myagent/_work/_tasks/NuGet/CredentialProvider';
-            },
-            setConsoleCodePage: function() {
-                var tlm = require('vsts-task-lib/mock-task');
-                tlm.debug(`setting console code page`);
-            }
-        });
-        this.tmr.registerMock('./Utility', {
-            resolveToolPath: function(path) {
-                return path;
-            }
-        });
+    public registerNugetUtilityMockUnix(projectFile: string[]) {
+        nMockHelper.registerNugetUtilityMockUnix(this.tmr, projectFile);
     }
 
     public registerVstsNuGetPushRunnerMock() {

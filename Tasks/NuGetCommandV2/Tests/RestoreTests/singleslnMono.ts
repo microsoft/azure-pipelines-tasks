@@ -55,6 +55,6 @@ process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudi
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 nmh.registerNugetConfigMock();
-nmh.registerNugetUtilityMockUnix();
+nmh.registerNugetUtilityMockUnix(["~/myagent/_work/1/s/single.sln"]);
 
 tmr.run();
