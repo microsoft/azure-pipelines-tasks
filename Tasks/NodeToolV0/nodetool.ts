@@ -5,12 +5,13 @@ import * as os from 'os';
 import * as path from 'path';
 
 let osPlat: string = os.platform();
-let osArch: string = os.arch();
+let architecture: string;
 
 async function run() {
     try {
         let versionSpec = taskLib.getInput('versionSpec', true);
         let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
+        architecture = taskLib.getInput('architecture', false);
         await getNode(versionSpec, checkLatest);
     }
     catch (error) {
@@ -63,7 +64,7 @@ async function getNode(versionSpec: string, checkLatest: boolean) {
             // query nodejs.org for a matching version
             version = await queryLatestMatch(versionSpec);
             if (!version) {
-                throw new Error(`Unable to find Node version '${versionSpec}' for platform ${osPlat} and architecture ${osArch}.`);
+                throw new Error(`Unable to find Node version '${versionSpec}' for platform ${osPlat} and architecture ${architecture}.`);
             }
 
             // check cache
@@ -95,9 +96,9 @@ async function queryLatestMatch(versionSpec: string): Promise<string> {
     // node offers a json list of versions
     let dataFileName: string;
     switch (osPlat) {
-        case "linux": dataFileName = "linux-" + osArch; break;
-        case "darwin": dataFileName = "osx-" + osArch + '-tar'; break;
-        case "win32": dataFileName = "win-" + osArch + '-exe'; break;
+        case "linux": dataFileName = "linux-" + architecture; break;
+        case "darwin": dataFileName = "osx-" + architecture + '-tar'; break;
+        case "win32": dataFileName = "win-" + architecture + '-exe'; break;
         default: throw new Error(`Unexpected OS '${osPlat}'`);
     }
 

@@ -36,6 +36,19 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool."
+        },
+        {
+            "name": "architecture",
+            "type": "pickList",
+            "label": "Architecture",
+            "defaultValue": "x64",
+            "required": true,
+            "helpMarkDown": "The target architecture (x86, x64) of the Node install.",
+            "groupName": "advanced",
+            "options": {
+                "x86": "x86",
+                "x64": "x64"
+            }
         }
     ],
     "execution": {
