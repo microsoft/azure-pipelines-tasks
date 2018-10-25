@@ -85,8 +85,16 @@ var getTasksToBuildFromDiff = function() {
     var prId = process.env['SYSTEM_PULLREQUEST_PULLREQUESTID'];
     var commonChanges = [];
     var toBeBuilt = [];
+    // Check if its from a fork
+    if (sourceBranch.contains(':')) {
+        sourceBranch = sourceBranch.split(':')[1];
+        run('git fetch origin pull/' + prId + '/head:' + sourceBranch);
+    }
+    else {
+        run('git fetch origin ' + sourceBranch);
+    }
+    run ('git checkout ' + sourceBranch);
     run('git checkout master');
-    run('git fetch origin pull/' + prId + '/head:' + sourceBranch);
     run('git diff --name-only master..' + sourceBranch).split('\n').forEach(filePath => {
         if (filePath.slice(0, 5) == 'Tasks') {
             var taskPath = filePath.slice(6);
@@ -105,7 +113,6 @@ var getTasksToBuildFromDiff = function() {
             buildCommon = true;
         }
     });
-    run('cd ..');
     var changedTasks = getFilesUsingChangedCommon(commonChanges);
     var shouldBeBumped = [];
     changedTasks.forEach(task => {
