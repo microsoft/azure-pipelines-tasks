@@ -86,14 +86,14 @@ function getkubectlDownloadURL(version: string) : string {
 export function getKubeconfigForCluster(kubernetesServiceEndpoint: string)
 {
     var kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'kubeconfig', false);
-    var cluster = tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'cluster', true);
-    if (!cluster || cluster === "")
+    var clusterContext = tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'clusterContext', true);
+    if (!clusterContext || clusterContext === "")
     {
         return kubeconfig;
     }
 
     var kubeconfigTemplate = yaml.safeLoad(kubeconfig);
-    kubeconfigTemplate["current-context"] = cluster;
+    kubeconfigTemplate["current-context"] = clusterContext;
     var modifiedKubeConfig = yaml.safeDump(kubeconfigTemplate);
     return modifiedKubeConfig.toString();
 }
