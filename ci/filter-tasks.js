@@ -115,9 +115,6 @@ var getTasksToBuildFromDiff = function() {
                 }
             }
         }
-        else if (filePath.slice(0, 5) == 'Tests') {
-            buildCommon = true;
-        }
     });
     var changedTasks = getTasksUsingChangedCommon(commonChanges);
     var shouldBeBumped = [];
