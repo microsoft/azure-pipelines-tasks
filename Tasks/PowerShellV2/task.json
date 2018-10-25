@@ -55,7 +55,6 @@
             "name": "arguments",
             "type": "string",
             "label": "Arguments",
-            "visibleRule": "targetType = filePath",
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Arguments passed to the PowerShell script. Either ordinal parameters or named parameters."
