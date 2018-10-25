@@ -57,7 +57,7 @@ var getTasksToBuildFromVersioning = async function() {
     });
 }
 
-var getFilesUsingChangedCommon = function(commonFilePaths) {
+var getTasksUsingChangedCommon = function(commonFilePaths) {
     // Takes in an array of filepaths that have been changed in the Tasks/Common folder, returns any tasks that could be affected.
     if (commonFilePaths.length == 0) {
         return [];
@@ -113,7 +113,7 @@ var getTasksToBuildFromDiff = function() {
             buildCommon = true;
         }
     });
-    var changedTasks = getFilesUsingChangedCommon(commonChanges);
+    var changedTasks = getTasksUsingChangedCommon(commonChanges);
     var shouldBeBumped = [];
     changedTasks.forEach(task => {
         if (!toBeBuilt.includes(task)) {
