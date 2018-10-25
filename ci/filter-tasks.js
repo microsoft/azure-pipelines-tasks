@@ -86,14 +86,20 @@ var getTasksToBuildFromDiff = function() {
     var commonChanges = [];
     var toBeBuilt = [];
     // Check if its from a fork
-    if (sourceBranch.contains(':')) {
-        sourceBranch = sourceBranch.split(':')[1];
-        run('git fetch origin pull/' + prId + '/head:' + sourceBranch);
+    try {
+        if (sourceBranch.contains(':')) {
+            sourceBranch = sourceBranch.split(':')[1];
+            run('git fetch origin pull/' + prId + '/head:' + sourceBranch);
+        }
+        else {
+            run('git fetch origin ' + sourceBranch);
+        }
+        run ('git checkout ' + sourceBranch);
     }
-    else {
-        run('git fetch origin ' + sourceBranch);
+    catch (err) {
+        // If unable to reach rest github, build everything.
+        return makeOptions.tasks;
     }
-    run ('git checkout ' + sourceBranch);
     run('git checkout master');
     run('git diff --name-only master..' + sourceBranch).split('\n').forEach(filePath => {
         if (filePath.slice(0, 5) == 'Tasks') {
