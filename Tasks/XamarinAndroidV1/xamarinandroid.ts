@@ -29,17 +29,10 @@ async function run() {
             tl.debug('Using JDK version to find JDK path');
             let jdkVersion: string = tl.getInput('jdkVersion');
             let jdkArchitecture: string = tl.getInput('jdkArchitecture'); 
-            javaTelemetryData = { "jdkVersion": jdkVersion };                       
-
+            javaTelemetryData = { "jdkVersion": jdkVersion };     
+            
             if (jdkVersion !== 'default') {
-                // jdkVersion should be in the form of 1.7, 1.8, or 1.10
-                // jdkArchitecture is either x64 or x86
-                // envName for version 1.7 and x64 would be "JAVA_HOME_7_X64"
-                let envName: string = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArchitecture.toUpperCase();
-                specifiedJavaHome = tl.getVariable(envName);
-                if (!specifiedJavaHome) {
-                    throw tl.loc('JDKNotFound', envName);
-                }
+                specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
             }
         }
         else {

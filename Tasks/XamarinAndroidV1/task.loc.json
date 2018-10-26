@@ -242,7 +242,9 @@
     }
   },
   "messages": {
-    "JDKNotFound": "ms-resource:loc.messages.JDKNotFound",
+    "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
+    "UnsupportedJdkWarning": "ms-resource:loc.messages.UnsupportedJdkWarning",
+    "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
     "NoMatchingProjects": "ms-resource:loc.messages.NoMatchingProjects",
     "XamarinAndroidBuildFailed": "ms-resource:loc.messages.XamarinAndroidBuildFailed",
     "XamarinAndroidSucceeded": "ms-resource:loc.messages.XamarinAndroidSucceeded",
