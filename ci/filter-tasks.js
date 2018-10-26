@@ -1,6 +1,10 @@
-// File to filter out tasks that don't need to be built
+// Filter out tasks that don't need to be built. Determines which tasks need to be built based on the type of build.
+// If its a CI build, all tasks whose package numbers have been bumped will be built.
+// If its a PR build, all tasks that have been changed will be built.
+// Any other type of build will build all tasks.
 var fs = require('fs');
 var path = require('path');
+var semver = require('semver');
 var restClient = require('typed-rest-client/RestClient');
 var httpHandler = require('typed-rest-client/Handlers');
 var run = require('./ci-util').run;
@@ -8,15 +12,16 @@ var run = require('./ci-util').run;
 var makeOptionsPath = path.join(__dirname, '..', 'make-options.json');
 var makeOptions = JSON.parse(fs.readFileSync(makeOptionsPath).toString());
 
-var getTasksToBuildFromVersioning = async function() {
+var getTasksToBuildForCI = async function() {
     // Returns a list of tasks that have different version numbers than their current published version.
     var token = process.env['SYSTEM_ACCESSTOKEN'];
     var packageInfo;
     try {
         var handler = new httpHandler.PersonalAccessTokenCredentialHandler(token);
         var client = new restClient.RestClient('Tasks CI', '', [handler]);
-        packageInfo = await client.get('https://mseng.feeds.visualstudio.com/_apis/packaging/Feeds/Codex-deps/Packages?packageNameQuery=Mseng.MS.TF.DistributedTask.Tasks');
+        packageInfo = await client.get(process.env['PACKAGE_ENDPOINT']);
         if (packageInfo.statusCode != 200) {
+            console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=24;]Failed to get info from package endpoint, returned with status code ${packageInfo.statusCode}`);
             return makeOptions.tasks;
         }
     }
@@ -25,6 +30,10 @@ var getTasksToBuildFromVersioning = async function() {
         return makeOptions.tasks;
     }
     var packageMap = {};
+    if(!packageInfo.result || !packageInfo.result.value) {
+        console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=34;]Failed to get info from package endpoint, returned no packages');
+        return makeOptions.tasks;
+    }
     packageInfo.result.value.forEach(package => {
         if (package.name && package.versions) {
             var packageName = package.name.slice('Mseng.MS.TF.DistributedTask.Tasks.'.length);
@@ -40,24 +49,29 @@ var getTasksToBuildFromVersioning = async function() {
 
     return makeOptions.tasks.filter(function (taskName) {
         if (taskName in packageMap) {
-            var packageVersion = packageMap[taskName].split('.');
-            var packageMajorVersion = packageVersion[0];
-            var packageMinorVersion = packageVersion[1];
-            var packagePatchVersion = packageVersion[2];
+            var packageVersion = packageMap[taskName]
 
             var taskJsonPath = path.join(__dirname, '..', 'Tasks' , taskName, 'task.json')
             var taskJson = JSON.parse(fs.readFileSync(taskJsonPath).toString());
-            var version = taskJson.version;
-            if (packageMajorVersion != version.Major || packageMinorVersion != version.Minor || packagePatchVersion != version.Patch) {
-                // If versions are not the same, want to build this package
+            var localVersion = `${taskJson.version.Major}.${taskJson.version.Minor}.${taskJson.version.Patch}`;
+            
+            if (semver.gt(localVersion, packageVersion)) {
+                // If local version is greater than package version, want to build this package
                 return true;
             }
+            else if (semver.lt(localVersion, packageVersion)) {
+                console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=63;]Package version ${localVersion} for ${taskName} is less than published version ${packageVersion}`);
+            }
+            return false;
         }
-        return false;
+        else {
+            console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=68;]${taskName} has not been published before`);
+            return true;
+        }
     });
 }
 
-var getTasksUsingChangedCommon = function(commonFilePaths) {
+var getTasksDependentOnChangedCommonFiles = function(commonFilePaths) {
     // Takes in an array of filepaths that have been changed in the Tasks/Common folder, returns any tasks that could be affected.
     if (commonFilePaths.length == 0) {
         return [];
@@ -79,25 +93,23 @@ var getTasksUsingChangedCommon = function(commonFilePaths) {
     return changedTasks;
 }
 
-var getTasksToBuildFromDiff = function() {
+var getTasksToBuildForPR = function() {
     // Takes in a git source branch, diffs it with master, and returns a list of tasks that could have been affected by the changes.
     var sourceBranch = process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'];
     var prId = process.env['SYSTEM_PULLREQUEST_PULLREQUESTID'];
     var commonChanges = [];
     var toBeBuilt = [];
-    // Check if its from a fork
     try {
         if (sourceBranch.contains(':')) {
+            // We only care about the branch name, not the source repo
             sourceBranch = sourceBranch.split(':')[1];
-            run('git fetch origin pull/' + prId + '/head:' + sourceBranch);
         }
-        else {
-            run('git fetch origin ' + sourceBranch);
-        }
+        run('git fetch origin pull/' + prId + '/head:' + sourceBranch);
         run ('git checkout ' + sourceBranch);
     }
     catch (err) {
-        // If unable to reach rest github, build everything.
+        // If unable to reach github, build everything.
+        console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=112;]Unable to reach github, building all tasks');
         return makeOptions.tasks;
     }
     run('git checkout master');
@@ -116,7 +128,7 @@ var getTasksToBuildFromDiff = function() {
             }
         }
     });
-    var changedTasks = getTasksUsingChangedCommon(commonChanges);
+    var changedTasks = getTasksDependentOnChangedCommonFiles(commonChanges);
     var shouldBeBumped = [];
     changedTasks.forEach(task => {
         if (!toBeBuilt.includes(task)) {
@@ -139,14 +151,14 @@ var buildReason = process.env['BUILD_REASON'].toLowerCase();
 var tasks;
 if (buildReason == 'individualci' || buildReason == 'batchedci') {
     // If CI, we will compare any tasks that have updated versions.
-    getTasksToBuildFromVersioning().then(tasks => {
+    getTasksToBuildForCI().then(tasks => {
         setTaskVariables(tasks)
     });
 }
 else {
     if (buildReason == 'pullrequest') {
         // If PR, we will compare any tasks that could have been affected based on the diff.
-        tasks = getTasksToBuildFromDiff();
+        tasks = getTasksToBuildForPR();
         setTaskVariables(tasks);
     }
     else {
