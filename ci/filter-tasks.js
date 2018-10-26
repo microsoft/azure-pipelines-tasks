@@ -37,7 +37,7 @@ var getTasksToBuildForCI = async function() {
     }
     packageInfo.result.value.forEach(package => {
         if (package.name && package.versions) {
-            var packageName = package.name.toLowerCase().slice('mseng.ms.tf.distributedtask.tasks.'.length);
+            var packageName = package.name.slice('Mseng.MS.TF.DistributedTask.Tasks.'.length).toLowerCase();
             var packageVersion = package.versions[0].version;
             package.versions.forEach(versionInfo => {
                 if (versionInfo.isLatest) {
