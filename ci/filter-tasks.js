@@ -27,6 +27,7 @@ var getTasksToBuildForCI = async function() {
     }
     catch (err) {
         // If unable to reach rest client, build everything.
+        console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=30;]Failed to get info from package endpoint, client failed with error ${err.message}`);
         return makeOptions.tasks;
     }
     var packageMap = {};
