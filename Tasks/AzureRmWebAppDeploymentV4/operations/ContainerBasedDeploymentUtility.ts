@@ -65,17 +65,8 @@ export class ContainerBasedDeploymentUtility {
 
     private _getDockerHubImageName(): string {
         var namespace = tl.getInput('DockerNamespace', true);
-        var image = tl.getInput('DockerRepository', false);
+        var image = tl.getInput('DockerRepository', true);
         var tag = tl.getInput('DockerImageTag', false);
-        
-        if(!image && (!tag || tag.trim() == "$(Build.BuildId)")) {
-            if(namespace.split("/").length == 2) {
-                return namespace;
-            }
-            else {
-                throw Error(tl.loc('InvalidDockerImageName'));
-            }
-        }
     
         return this._constructImageName(namespace, image, tag);
     }
