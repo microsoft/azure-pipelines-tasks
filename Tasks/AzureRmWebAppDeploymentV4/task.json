@@ -18,9 +18,9 @@
     "version": {
         "Major": 4,
         "Minor": 3,
-        "Patch": 13
+        "Patch": 14
     },
-    "releaseNotes": "What's new in version 4.* (preview)<br />Supports Zip Deploy, Run From Package, War Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
+    "releaseNotes": "What's new in version 4.* (preview)<br />Supports Zip Deploy, Run From Package, War Deploy [Details here](https://aka.ms/appServiceDeploymentMethods)<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
@@ -635,6 +635,7 @@
         "ASE_WebDeploySSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to pass -allowUntrusted in additional arguments of web deploy option.",
         "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
         "JarPathNotPresent": "Java jar path is not present",
-        "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s"
+        "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
+        "RunFromZipPreventsFileInUseError": "Move from Web Deploy to RunFrom Package, which helps in avoiding FILE_IN_USE error. Note that Run From Package does not support msBuild package type. Please change your package format to use this deployment method."
     }
 }

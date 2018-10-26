@@ -86,6 +86,7 @@ export class WebDeployUtility {
                 }
                 else {
                     tl.warning(tl.loc("Trytodeploywebappagainwithrenamefileoptionselected"));
+                    tl.warning(tl.loc("RunFromZipPreventsFileInUseError"));
                 }
                 break;
             }
