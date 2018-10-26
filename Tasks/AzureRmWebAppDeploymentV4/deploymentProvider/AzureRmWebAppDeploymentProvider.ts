@@ -50,6 +50,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }
+        
         let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
             ? this.taskParams.VirtualApplication : null);
         console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
