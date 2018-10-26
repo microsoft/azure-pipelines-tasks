@@ -14,7 +14,7 @@ var makeOptions = JSON.parse(fs.readFileSync(makeOptionsPath).toString());
 
 var getTasksToBuildForCI = async function() {
     // Returns a list of tasks that have different version numbers than their current published version.
-    var token = process.env['SYSTEM_ACCESSTOKEN'];
+    var token = process.env['WRAPPED_ACCESSTOKEN'];
     var packageInfo;
     try {
         var handler = new httpHandler.PersonalAccessTokenCredentialHandler(token);
