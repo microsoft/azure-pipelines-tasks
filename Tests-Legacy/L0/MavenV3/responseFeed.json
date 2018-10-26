@@ -7,11 +7,15 @@
             "code": 0,
             "stdout": "Maven version 1.0.0"
         },
-        "/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package": {
+        "/home/bin/maven/bin/mvn -f pom.xml package": {
             "code": 0,
             "stdout": "Maven package done"
         },
-        "/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml /o /p /t package": {
+        "/home/bin/maven/bin/mvn -f pom.xml /o /p /t package": {
+            "code": 0,
+            "stdout": "Maven package done"
+        },
+        "/home/bin/maven/bin/mvn -f pom.xml /o -s settings.xml /p /t package": {
             "code": 0,
             "stdout": "Maven package done"
         },
