@@ -110,12 +110,7 @@
         "build.buildNumber": "1",
         "System.TeamFoundationCollectionUri": "https://xplatalm.visualstudio.com/"
     },
-    "find": {
-        "/user/build": [
-            "/user/build/fun/test-123.xml"
-        ]
-    },
-    "match": {
+    "findMatch": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ]
