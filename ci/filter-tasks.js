@@ -37,7 +37,7 @@ var getTasksToBuildForCI = async function() {
     }
     packageInfo.result.value.forEach(package => {
         if (package.name && package.versions) {
-            var packageName = package.name.slice('Mseng.MS.TF.DistributedTask.Tasks.'.length);
+            var packageName = package.name.toLowerCase().slice('mseng.ms.tf.distributedtask.tasks.'.length);
             var packageVersion = package.versions[0].version;
             package.versions.forEach(versionInfo => {
                 if (versionInfo.isLatest) {
@@ -49,8 +49,9 @@ var getTasksToBuildForCI = async function() {
     });
 
     return makeOptions.tasks.filter(function (taskName) {
-        if (taskName in packageMap) {
-            var packageVersion = packageMap[taskName]
+        var lowerCaseName = taskName.toLowerCase();
+        if (lowerCaseName in packageMap) {
+            var packageVersion = packageMap[lowerCaseName]
 
             var taskJsonPath = path.join(__dirname, '..', 'Tasks' , taskName, 'task.json')
             var taskJson = JSON.parse(fs.readFileSync(taskJsonPath).toString());
