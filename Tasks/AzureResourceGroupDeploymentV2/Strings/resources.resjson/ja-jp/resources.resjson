@@ -27,6 +27,8 @@
   "loc.input.help.csmParametersFile": "Azure Resource Manager テンプレートのパラメーター ファイルを指すパスまたはパターンを指定します。",
   "loc.input.label.overrideParameters": "テンプレート パラメーターのオーバーライド",
   "loc.input.help.overrideParameters": "グリッドでテンプレートのパラメーターを表示するには、[パラメーターのオーバーライド] のテキストボックスの横にある [...] をクリックします。この機能は、ソースで CORS ルールが有効になっている必要があります。テンプレートが Azure Storage BLOB にある場合は、[こちら](https://docs.microsoft.com/ja-jp/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) を参照して CORS を有効にします。または、テキストボックスにテンプレート パラメーターを入力してオーバーライドします。たとえば、<br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre) です。<br>使用しているパラメーターの値に複数の単語が含まれる場合、変数を使用してそれらの単語を渡すとしても、引用符で囲みます。たとえば、-name \"parameter value\" -name2 \"$(var)\" です<br>オブジェクトの種類のパラメーターを上書きするには、文字列化した JSON オブジェクトを使用します。たとえば、-options [\"option1\"] -map {\"key1\": \"value1\" } です。",
+  "loc.input.label.deploymentName": "配備名",
+  "loc.input.help.deploymentName": "作成するリソースグループ配備の名前を指定します。",
   "loc.input.label.deploymentMode": "展開モード",
   "loc.input.help.deploymentMode": "増分モードでは、配置をリソース グループへの増分更新として処理します。リソース グループ内にあり、テンプレートで指定されていないリソースは変更されずに残されます。\n\n 完全モードではテンプレート内にないリソースが削除されます。\n\n 検証モードでは、実際のリソースを作成する前に、テンプレートの問題を検出することができます。\n\n 既定では増分モードが使用されます。",
   "loc.input.label.enableDeploymentPrerequisites": "前提条件を有効にする",

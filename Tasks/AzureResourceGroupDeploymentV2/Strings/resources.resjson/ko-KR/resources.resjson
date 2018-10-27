@@ -27,6 +27,8 @@
   "loc.input.help.csmParametersFile": "Azure Resource Manager 템플릿에 해당하는 매개 변수 파일을 가리키는 경로 또는 패턴을 지정합니다.",
   "loc.input.label.overrideParameters": "템플릿 매개 변수 재정의",
   "loc.input.help.overrideParameters": "템플릿 매개 변수를 표 형태로 보려면 [매개 변수 재정의] 텍스트 상자 옆에 있는 \"...\"을 클릭합니다. 이 기능을 사용하려면 소스에서 CORS 규칙을 사용하도록 설정해야 합니다. 템플릿이 Azure Storage Blob에 있는 경우 [이 문서](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests)를 참조하여 CORS를 사용하도록 설정하세요. 또는 텍스트 상자에 재정의할 템플릿 매개 변수를 입력합니다. 예: <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).<br>사용 중인 매개 변수 값이 여러 단어로 이루어진 경우에는 변수를 사용해서 전달하더라도 따옴표로 묶으세요. 예: -name \"parameter value\" -name2 \"$(var)\"<br>개체 형식 매개 변수를 재정의하려면 묶은 JSON 개체를 사용합니다. 예: -options [\"option1\"] -map {\"key1\": \"value1\" }. ",
+  "loc.input.label.deploymentName": "배포 이름",
+  "loc.input.help.deploymentName": "작성할 자원 그룹 배치의 이름을 지정합니다.",
   "loc.input.label.deploymentMode": "배포 모드",
   "loc.input.help.deploymentMode": "증분 모드에서는 배포를 리소스 그룹에 대한 증분 업데이트로 처리합니다. 리소스 그룹에 있지만 템플릿에 지정되지 않은 리소스는 변경하지 않고 그대로 유지합니다. \n\n 전체 모드에서는 템플릿에 없는 리소스를 삭제합니다. \n\n 유효성 검사 모드에서는 실제 리소스를 만들기 전에 템플릿 관련 문제를 찾을 수 있습니다. \n\n 기본적으로 증분 모드가 사용됩니다.",
   "loc.input.label.enableDeploymentPrerequisites": "필수 구성 요소 사용",

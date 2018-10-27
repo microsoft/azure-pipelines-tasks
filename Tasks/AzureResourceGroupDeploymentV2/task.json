@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 141,
-        "Patch": 2
+        "Minor": 142,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -163,13 +163,22 @@
             }
         },
         {
+            "name": "deploymentName",
+            "type": "string",
+            "label": "Deployment name",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "Template",
+            "helpMarkDown": "Specifies the name of the resource group deployment to create."
+        },
+        {
             "name": "deploymentMode",
             "type": "pickList",
             "label": "Deployment mode",
             "defaultValue": "Incremental",
             "required": true,
             "groupName": "Template",
-            "helpMarkDown": "Incremental mode handles deployments as incremental updates to the resource group . It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
+            "helpMarkDown": "Incremental mode handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
             "options": {
                 "Incremental": "Incremental",
                 "Complete": "Complete",
