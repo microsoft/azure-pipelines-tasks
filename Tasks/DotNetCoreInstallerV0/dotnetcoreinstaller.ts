@@ -62,41 +62,47 @@ class DotnetCoreInstaller {
 
     private detectMachineOS(): string[] {
         let osSuffix = [];
+        let scriptRunner: trm.ToolRunner;
 
         if (tl.osType().match(/^Win/)) {
-            let primary = "win-" + os.arch();
-            osSuffix.push(primary);
-            console.log(tl.loc("PrimaryPlatform", primary));
+            let escapedScript = path.join(utilities.getCurrentDir(), 'externals', 'get-os-platform.ps1').replace(/'/g, "''");
+            let command = `& '${escapedScript}'`
+
+            let powershellPath = tl.which('powershell', true);
+            scriptRunner = tl.tool(powershellPath)
+                .line('-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command')
+                .arg(command);
         }
         else {
             let scriptPath = path.join(utilities.getCurrentDir(), 'externals', 'get-os-distro.sh');
             utilities.setFileAttribute(scriptPath, "777");
 
-            let scriptRunner: trm.ToolRunner = tl.tool(tl.which(scriptPath, true));
-            let result: trm.IExecSyncResult = scriptRunner.execSync();
+            scriptRunner = tl.tool(tl.which(scriptPath, true));
+        }
 
-            if (result.code != 0) {
-                throw tl.loc("getMachinePlatformFailed", result.error ? result.error.message : result.stderr);
-            }
+        let result: trm.IExecSyncResult = scriptRunner.execSync();
 
-            let output: string = result.stdout;
+        if (result.code != 0) {
+            throw tl.loc("getMachinePlatformFailed", result.error ? result.error.message : result.stderr);
+        }
 
-            let index;
-            if ((index = output.indexOf("Primary:")) >= 0) {
-                let primary = output.substr(index + "Primary:".length).split(os.EOL)[0];
-                osSuffix.push(primary);
-                console.log(tl.loc("PrimaryPlatform", primary));
-            }
+        let output: string = result.stdout;
 
-            if ((index = output.indexOf("Legacy:")) >= 0) {
-                let legacy = output.substr(index + "Legacy:".length).split(os.EOL)[0];
-                osSuffix.push(legacy);
-                console.log(tl.loc("LegacyPlatform", legacy));
-            }
+        let index;
+        if ((index = output.indexOf("Primary:")) >= 0) {
+            let primary = output.substr(index + "Primary:".length).split(os.EOL)[0];
+            osSuffix.push(primary);
+            console.log(tl.loc("PrimaryPlatform", primary));
+        }
 
-            if (osSuffix.length == 0) {
-                throw tl.loc("CouldNotDetectPlatform");
-            }
+        if ((index = output.indexOf("Legacy:")) >= 0) {
+            let legacy = output.substr(index + "Legacy:".length).split(os.EOL)[0];
+            osSuffix.push(legacy);
+            console.log(tl.loc("LegacyPlatform", legacy));
+        }
+
+        if (osSuffix.length == 0) {
+            throw tl.loc("CouldNotDetectPlatform");
         }
 
         return osSuffix;
