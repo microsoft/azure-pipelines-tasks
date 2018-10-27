@@ -1,0 +1,38 @@
+{
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "/source/dir",
+        "build.sourcesdirectory": "/source/dir",
+        "VS140COMNTools": "/vs/path"
+    },
+    "find": {
+        "/source/dir": [
+            "someDir/someFile2",
+            "/someDir/someFile1"
+        ]
+    },
+    "match": {
+        "\\source\\dir\\TestResults\\*.trx": [
+            "a.trx"
+        ]
+    },
+    "exec": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        }
+    },
+    "rmRF": {
+        "\\source\\dir\\TestResults": {
+            "success": true,
+            "message": "success"
+        }
+    },
+    "exist": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": true
+    },
+    "stats": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": {
+            "isFile": true
+        }
+    }
+}

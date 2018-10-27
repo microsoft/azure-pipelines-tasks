@@ -56,6 +56,10 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
         }
         else {
             await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
+            let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
+                ? this.taskParams.VirtualApplication : null);
+            console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+            tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
         }
     }
 }

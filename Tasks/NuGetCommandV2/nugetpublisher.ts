@@ -193,7 +193,9 @@ export async function run(nuGetPath: string): Promise<void> {
             }
         }
 
-        await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
+        if (isInternalFeed === false || useCredConfig) {
+            await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
+        }
 
         const verbosity = tl.getInput("verbosityPush");
 

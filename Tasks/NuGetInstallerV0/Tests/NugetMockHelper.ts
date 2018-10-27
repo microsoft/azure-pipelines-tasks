@@ -3,13 +3,13 @@ import VersionInfoVersion from 'packaging-common/pe-parser/VersionInfoVersion'
 import {VersionInfo} from 'packaging-common/pe-parser/VersionResource'
 
 import * as pkgMock from 'packaging-common/Tests/MockHelper';
+import * as nPkgMock from 'packaging-common/Tests/NuGetMockHelper';
 
 export class NugetMockHelper {
     private defaultNugetVersion = '3.3.0';
     private defaultNugetVersionInfo = [3,3,0,212];
     
-    constructor(
-        private tmr: tmrm.TaskMockRunner) { 
+    constructor(private tmr: tmrm.TaskMockRunner, unix: boolean = false) { 
         process.env['AGENT_HOMEDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['BUILD_SOURCESDIRECTORY'] = "c:\\agent\\home\\directory\\sources",
         process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
@@ -18,6 +18,12 @@ export class NugetMockHelper {
         process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
 
         pkgMock.registerLocationHelpersMock(tmr);
+
+        if (unix) {
+            nPkgMock.registerNugetToolGetterMockUnix(tmr);
+        } else {
+            nPkgMock.registerNugetToolGetterMock(tmr);
+        }
     }
     
     public setNugetVersionInputDefault() {
@@ -37,33 +43,6 @@ export class NugetMockHelper {
                 return result;
             }
         })
-    }
-    
-    public registerNugetUtilityMock(projectFile: string[]) {
-        this.tmr.registerMock('packaging-common/nuget/Utility', {
-            resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
-                return projectFile;
-            },
-            getBundledNuGetLocation: function(version) {
-                return 'c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe';
-            },
-            stripLeadingAndTrailingQuotes: function(path) {
-                return path;
-            },
-            locateCredentialProvider: function(path) {
-                return 'c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider';
-            },
-            setConsoleCodePage: function() {
-                var tlm = require('vsts-task-lib/mock-task');
-                tlm.debug(`setting console code page`);
-            }
-        } );
-        
-        this.tmr.registerMock('./Utility', {
-            resolveToolPath: function(path) {
-                return path;
-            }
-        });
     }
     
     public registerNugetConfigMock() {

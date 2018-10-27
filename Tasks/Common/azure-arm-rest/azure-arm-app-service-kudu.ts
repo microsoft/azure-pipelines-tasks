@@ -17,10 +17,10 @@ export class KuduServiceManagementClient {
         this._scmUri = scmUri;
     }
 
-    public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions): Promise<webClient.WebResponse> {
+    public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions, contentType?: string): Promise<webClient.WebResponse> {
         request.headers = request.headers || {};
         request.headers["Authorization"] = "Basic " + this._accesssToken;
-        request.headers['Content-Type'] = 'application/json; charset=utf-8';
+        request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
         
         let retryCount = reqOptions && util.isNumber(reqOptions.retryCount) ? reqOptions.retryCount : 5;
 
@@ -447,7 +447,7 @@ export class Kudu {
         httpRequest.body = fs.createReadStream(webPackage);
 
         try {
-            let response = await this._client.beginRequest(httpRequest);
+            let response = await this._client.beginRequest(httpRequest, null, 'application/octet-stream');
             tl.debug(`ZIP Deploy response: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 tl.debug('Deployment passed');

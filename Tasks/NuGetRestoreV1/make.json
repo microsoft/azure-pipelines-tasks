@@ -14,15 +14,18 @@
     "rm": [
         {
             "items": [
-                "node_modules/packaging-common/node_modules/vsts-task-lib"
-            ],
-            "options": "-Rf"
-        },
-        {
-            "items": [
+                "node_modules/packaging-common/node_modules/vsts-task-lib",
                 "node_modules/utility-common/node_modules/vsts-task-lib"
             ],
             "options": "-Rf"
         }
-    ]
+    ],
+    "externals": {
+        "archivePackages": [
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/CredentialProvider.TeamBuild/15.105.25712.0/CredentialProvider.TeamBuild.zip",
+                "dest": "./CredentialProvider/"
+            }
+        ]
+    }
 }
