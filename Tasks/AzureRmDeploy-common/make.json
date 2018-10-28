@@ -1,0 +1,16 @@
+{
+    "externals": {
+        "archivePackages": [
+            {
+                "archiveName": "MSDeploy.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/M142/MSDeploy.zip",
+                "dest": "./webdeployment-common/"
+            },
+            {
+                "archiveName": "openssl.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/openssl/1.0.2/M138/openssl.zip",
+                "dest": "./azure-arm-rest/openssl"
+            }
+        ]
+    }
+}
