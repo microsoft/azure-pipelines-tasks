@@ -13,11 +13,10 @@ var makeOptionsPath = path.join(__dirname, '..', 'make-options.json');
 var makeOptions = JSON.parse(fs.readFileSync(makeOptionsPath).toString());
 
 var getTasksToBuildForCI = async function() {
-    // Returns a list of tasks that have different version numbers than their current published version.
-    var token = process.env['WRAPPED_ACCESSTOKEN'];
+    // Returns a list of tasks that have different version numbers than their current published version. 
     var packageInfo;
     try {
-        var handler = new httpHandler.PersonalAccessTokenCredentialHandler(token);
+        var handler = new httpHandler.PersonalAccessTokenCredentialHandler(process.env['PACKAGE_TOKEN']);
         var client = new restClient.RestClient('Tasks CI', '', [handler]);
         packageInfo = await client.get(process.env['PACKAGE_ENDPOINT']);
         if (packageInfo.statusCode != 200) {

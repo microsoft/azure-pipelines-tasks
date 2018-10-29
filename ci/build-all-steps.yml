@@ -28,8 +28,6 @@ steps:
 # Filter out unchanged tasks
 - script: node ./ci/filter-tasks.js
   displayName: Filter out unchanged tasks
-  env: 
-    WRAPPED_ACCESSTOKEN: System.AccessToken
 
 # Build
 - script: node make.js build --task "$(task_pattern)"
