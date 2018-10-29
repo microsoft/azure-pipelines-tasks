@@ -1253,7 +1253,7 @@ function Is-WinRMCustomScriptExtensionExists
             $index = 1 
             $maxCount = 45   # Setting timeout for deleting extension as 15 mins.
 
-            while($true) {
+            while($index -le $maxCount) {
                 Write-Verbose "Checking WinRM custom script extension status $index times"
 
                 $customScriptExtension = Get-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $serviceEndpoint
