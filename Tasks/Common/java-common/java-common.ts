@@ -51,7 +51,7 @@ export function findJavaHome(jdkVersion: string, jdkArch: string): string {
         }
 
         if (!discoveredJavaHome) {
-            if(jdkVersion === '1.9' || jdkVersion === '1.10') {
+            if (jdkVersion === '1.9' || jdkVersion === '1.10') {
                 // jdk 1.9 and 1.10 are out out support, warn and switch to 1.11 to avoid breaking builds
                 tl.warning(tl.loc('UnsupportedJdkWarning'));
                 return findJavaHome('1.11', jdkArch);

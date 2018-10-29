@@ -30,8 +30,7 @@ function Get-JavaDevelopmentKitPath{
         }
         
         Write-Verbose "jdkPath from registry = $jdkPath"
-        if ([string]::IsNullOrEmpty($jdkPath))
-        {
+        if ([string]::IsNullOrEmpty($jdkPath)) {
             $jdkVersionShort = $jdkVersion.Substring(2)
             $javaHomeEnvVariable = "JAVA_HOME_" + $jdkVersionShort + "_" + $jdkArchitecture
             Write-Verbose "javaHomeEnvVariable = $javaHomeEnvVariable"
@@ -43,8 +42,7 @@ function Get-JavaDevelopmentKitPath{
         }
         
         Write-Verbose "jdkPath from environment variable $javaHomeEnvVariable = $jdkPath"
-        if ([string]::IsNullOrEmpty($jdkPath))
-        {
+        if ([string]::IsNullOrEmpty($jdkPath)) {
             throw "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent or use the [Java Tool Installer](https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK."
         }
         return $jdkPath

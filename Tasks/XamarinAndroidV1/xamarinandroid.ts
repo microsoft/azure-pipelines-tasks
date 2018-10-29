@@ -28,9 +28,9 @@ async function run() {
         if (jdkSelection === 'JDKVersion') {
             tl.debug('Using JDK version to find JDK path');
             let jdkVersion: string = tl.getInput('jdkVersion');
-            let jdkArchitecture: string = tl.getInput('jdkArchitecture'); 
-            javaTelemetryData = { "jdkVersion": jdkVersion };     
-            
+            let jdkArchitecture: string = tl.getInput('jdkArchitecture');
+            javaTelemetryData = { "jdkVersion": jdkVersion };
+
             if (jdkVersion !== 'default') {
                 specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
             }
@@ -39,7 +39,7 @@ async function run() {
             tl.debug('Using path from user input to find JDK');
             let jdkUserInputPath: string = tl.getPathInput('jdkUserInputPath', true, true);
             specifiedJavaHome = jdkUserInputPath;
-            javaTelemetryData = { "jdkVersion": "custom" };      
+            javaTelemetryData = { "jdkVersion": "custom" };
         }
         javacommons.publishJavaTelemetry('XamarinAndroid', javaTelemetryData);
 
