@@ -1250,8 +1250,8 @@ function Is-WinRMCustomScriptExtensionExists
 
         try
         {
-            $index = 1; 
-            $maxCount = 45;   # Setting timeout for deleting extension as 15 mins.
+            $index = 1 
+            $maxCount = 45   # Setting timeout for deleting extension as 15 mins.
 
             while($true) {
                 Write-Verbose "Checking WinRM custom script extension status $index times"
@@ -1260,7 +1260,7 @@ function Is-WinRMCustomScriptExtensionExists
 
                 if(-not $customScriptExtension -or $customScriptExtension.ProvisioningState -ne "deleting") 
                 {
-                    break;
+                    break
                 }
                
                 start-sleep -s 20
