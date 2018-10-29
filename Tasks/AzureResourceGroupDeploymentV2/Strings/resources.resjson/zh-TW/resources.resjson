@@ -27,8 +27,6 @@
   "loc.input.help.csmParametersFile": "請指定指向 Azure Resource Manager 範本之參數檔案的路徑或模式。",
   "loc.input.label.overrideParameters": "覆寫範本參數",
   "loc.input.help.overrideParameters": "若要以網格模式檢視範本參數，請按一下 [Override Parameters] 文字方塊旁的 [...]。必須在來源啟用 CORS 規則才能使用此功能。若範本在 Azure 儲存體 Blob 中，請參閱[本篇](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests)來啟用 CORS，或是在文字方塊中鍵入要覆寫的範本參數。例如，<br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre)。<br>若您使用的參數有多個文字，請以引號括住文字，即使您使用變數來傳遞文字亦同。例如，-name \"參數值\" -name2 \"$(var)\"<br>若要覆寫物件類型參數，請使用已轉換為字串的 JSON 物件。例如，-options [\"option1\"] -map {\"key1\": \"value1\" }。 ",
-  "loc.input.label.deploymentName": "部署名稱",
-  "loc.input.help.deploymentName": "指定要創建的資源組部署的名稱。",
   "loc.input.label.deploymentMode": "部署模式",
   "loc.input.help.deploymentMode": "累加模式會以資源群組的累加式更新方式處理部署，不變更存在於資源群組但未在範本中指定的資源。\n\n 完整模式會刪除不在範本中的資源。\n\n 驗證模式能讓您在建立實際資源前，找出範本的問題。\n\n 根據預設會使用累加模式。",
   "loc.input.label.enableDeploymentPrerequisites": "啟用必要條件",
