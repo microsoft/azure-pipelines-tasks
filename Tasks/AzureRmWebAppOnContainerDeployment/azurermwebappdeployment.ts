@@ -1,8 +1,8 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
-import { TaskParameters, TaskParametersUtility } from 'azurermcontainerdeploy-common/operations/TaskParameters';
-import { AzureRmWebAppDeploymentProvider } from 'azurermcontainerdeploy-common/AzureRmWebAppDeploymentProvider';
-import * as Endpoint from 'azurermcontainerdeploy-common/azure-arm-rest/azure-arm-endpoint';
+import { TaskParameters, TaskParametersUtility } from './TaskParameters';
+import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
+import * as Endpoint from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 
 async function main() {
     let isDeploymentSuccess: boolean = true;

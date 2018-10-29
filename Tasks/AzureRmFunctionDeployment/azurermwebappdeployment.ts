@@ -1,7 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
-import { TaskParameters, TaskParametersUtility } from 'azurermdeploycommon/operations/TaskParameters';
-import { DeploymentFactory } from 'azurermdeploycommon/DeploymentFactory';
+import { TaskParameters, TaskParametersUtility } from './TaskParameters';
+import { DeploymentFactory } from './DeploymentFactory';
 import * as Endpoint from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 
 async function main() {

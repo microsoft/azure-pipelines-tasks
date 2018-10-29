@@ -1,7 +1,7 @@
 {
     "common": [
         {
-            "module": "../AzureRmContainerDeploy-common",
+            "module": "../Common/AzureRmDeploy-common",
             "type": "node",
             "dest": "./",
             "compile" : true
@@ -19,7 +19,7 @@
     "rm": [
         {
             "items": [
-                "node_modules/azurermcontainerdeploy-common/node_modules/vsts-task-lib"
+                "node_modules/azurermdeploycommon/node_modules/vsts-task-lib"
             ],
             "options": "-Rf"
         }
