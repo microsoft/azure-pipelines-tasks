@@ -1,10 +1,6 @@
-import msRestAzure = require('./azure-arm-common');
 import tl = require('vsts-task-lib/task');
-import util = require('util');
 import webClient = require('./webClient');
 import  {ToError, ServiceClient } from './AzureServiceClient';
-import Model = require('./azureModels');
-import Q = require('q');
 import { AzureEndpoint, IAzureMetricAlertRequestBody } from './azureModels';
 import { APIVersions } from './constants';
 
