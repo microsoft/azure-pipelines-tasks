@@ -153,6 +153,8 @@ function publishPackageUsingArtifactTool(publishDir: string, options: artifactTo
     const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(options.artifactToolPath, command, execOptions);
 
     if (execResult.code === 0) {
+        console.log(`##vso[task.setvariable variable=UniversalPackage_Name;]${options.packageName}`);
+        console.log(`##vso[task.setvariable variable=UniversalPackage_Ver;]${options.packageVersion}`);
         return;
     }
 
