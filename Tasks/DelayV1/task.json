@@ -28,7 +28,7 @@
             "properties": {
                 "isVariableOrNonNegativeNumber": "true"
             },
-            "helpMarkDown": "Delay the execution of the workflow by specified time in minutes. 0 value here means that workflow execution will start without delay."
+            "helpMarkDown": "Delay the execution of the workflow by specified time in minutes. 0 value means that workflow execution will start without delay."
         }
     ],
     "instanceNameFormat": "Delay by $(delayForMinutes) minutes",
