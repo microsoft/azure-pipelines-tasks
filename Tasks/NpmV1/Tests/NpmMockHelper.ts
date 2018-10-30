@@ -3,6 +3,9 @@ import * as path from 'path';
 import { TaskLibAnswers, TaskLibAnswerExecResult } from 'vsts-task-lib/mock-answer';
 import { TaskMockRunner } from 'vsts-task-lib/mock-run';
 import * as mtr from 'vsts-task-lib/mock-toolrunner';
+import { debug } from 'vsts-task-lib';
+
+import * as pkgMock from 'packaging-common/Tests/MockHelper';
 
 export class NpmMockHelper extends TaskMockRunner {
     private static NpmCmdPath: string = 'c:\\mock\\location\\npm';
@@ -73,6 +76,8 @@ export class NpmMockHelper extends TaskMockRunner {
                 };
             }
         });
+
+        pkgMock.registerLocationHelpersMock(this);
     }
 
     public run(noMockTask?: boolean): void {
@@ -95,27 +100,6 @@ export class NpmMockHelper extends TaskMockRunner {
     public mockNpmCommand(command: string, result: TaskLibAnswerExecResult) {
         this.answers.exec[`npm ${command}`] = result;
         this.answers.exec[`${NpmMockHelper.NpmCmdPath} ${command}`] = result;
-    }
-
-    public RegisterLocationServiceMocks() {
-        this.registerMock('vso-node-api/WebApi', {
-            getBearerHandler: function(token){
-                return {};
-            },
-            WebApi: function(url, handler){
-                return {
-                    getCoreApi: function() {
-                        return {
-                            vsoClient: {
-                                getVersioningData: async function (ApiVersion: string, PackagingAreaName: string, PackageAreaId: string, Obj) {
-                                    return { requestUrl: 'foobar' };
-                                }
-                            }
-                        };
-                    }
-                };
-            }
-        });
     }
 
     public mockServiceEndpoint(endpointId: string, url: string, auth: any): void {
@@ -146,10 +130,6 @@ export class NpmMockHelper extends TaskMockRunner {
     private _registerMockToolRunner() {
         let tmr = require('vsts-task-lib/mock-toolrunner');
         this.registerMock('vsts-task-lib/toolrunner', tmr);
-    }
-
-    private _mockGetFeedRegistryUrl(feedId: string): string {
-        return NpmMockHelper.CollectionUrl + '/_packaging/' + feedId + '/npm/registry/';
     }
 }
 

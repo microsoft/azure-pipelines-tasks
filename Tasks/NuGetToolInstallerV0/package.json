@@ -11,7 +11,8 @@
         "url": "git+https://github.com/microsoft/vsts-tasks.git"
     },
     "keywords": [
-        "VSTS",
+        "Azure",
+        "Pipelines",
         "Tasks",
         "NuGet"
     ],
@@ -22,6 +23,6 @@
     },
     "homepage": "https://github.com/microsoft/vsts-tasks#readme",
     "dependencies": {
-        "nuget-task-common": "file:../../_build/Tasks/Common/nuget-task-common-1.0.1.tgz"
+        "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz"
     }
 }

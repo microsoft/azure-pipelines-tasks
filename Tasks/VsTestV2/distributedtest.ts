@@ -1,20 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as ps from 'child_process';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
-import * as models from './models';
-import * as constants from './constants';
 import * as inputdatacontract from './inputdatacontract';
-import * as settingsHelper from './settingshelper';
 import * as utils from './helpers';
-import * as ta from './testagent';
-import * as versionFinder from './versionfinder';
 import * as os from 'os';
 import * as ci from './cieventlogger';
 import { TestSelectorInvoker } from './testselectorinvoker';
 import { writeFileSync } from 'fs';
-import { TaskResult } from 'vso-node-api/interfaces/TaskAgentInterfaces';
 import * as uuid from 'uuid';
 
 const testSelector = new TestSelectorInvoker();
@@ -66,6 +59,11 @@ export class DistributedTest {
         // Pass the acess token as an environment variable for security purposes
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
 
+        if(this.inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled)
+        {
+            utils.Helper.addToProcessEnvVars(envVars, 'PROCDUMP_PATH', path.join(__dirname, 'ProcDump'));
+        }
+
         // Invoke DtaExecutionHost with the input json file
         const inputFilePath = utils.Helper.GenerateTempFile('input_' + uuid.v1() + '.json');
         utils.Helper.removeEmptyNodes(this.inputDataContract);
@@ -82,7 +80,7 @@ export class DistributedTest {
 
         const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
         dtaExecutionHostTool.arg(['--inputFile', inputFilePath]);
-        const code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ env: envVars });
+        const code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ ignoreReturnCode:this.inputDataContract.ExecutionSettings.IgnoreTestFailures, env: envVars });
 
         //hydra: add consolidated ci for inputs in C# layer for now
         const consolidatedCiData = {

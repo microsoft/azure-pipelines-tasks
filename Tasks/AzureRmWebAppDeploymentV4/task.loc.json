@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 2,
-    "Patch": 7
+    "Minor": 3,
+    "Patch": 14
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -27,19 +27,19 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp"
+      "visibleRule": "WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != webAppLinux && webAppKind != functionAppLinux && Package NotEndsWith .war"
     },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && webAppKind != functionAppLinux && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
     },
     {
       "name": "PostDeploymentAction",
       "displayName": "ms-resource:loc.group.displayName.PostDeploymentAction",
       "isExpanded": false,
-      "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && WebAppKind != webAppContainer"
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && WebAppKind != webAppContainer && WebAppkind != functionAppContainer"
     },
     {
       "name": "ApplicationAndConfigurationSettings",
@@ -102,8 +102,10 @@
       "options": {
         "webApp": "Web App on Windows",
         "webAppLinux": "Web App on Linux",
-        "webAppContainer": "Web App for Containers",
-        "functionApp": "Function App",
+        "webAppContainer": "Web App for Containers (Linux)",
+        "functionApp": "Function App on Windows",
+        "functionAppLinux": "Function App on Linux",
+        "functionAppContainer": "Function App for Containers (Linux)",
         "apiApp": "API App",
         "mobileApp": "Mobile App"
       },
@@ -164,7 +166,7 @@
       "label": "ms-resource:loc.input.label.DockerNamespace",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = webAppContainer",
+      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.DockerNamespace"
     },
     {
@@ -173,7 +175,7 @@
       "label": "ms-resource:loc.input.label.DockerRepository",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = webAppContainer",
+      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
     },
     {
@@ -182,7 +184,7 @@
       "label": "ms-resource:loc.input.label.DockerImageTag",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = webAppContainer",
+      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
     },
     {
@@ -191,7 +193,7 @@
       "label": "ms-resource:loc.input.label.VirtualApplication",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != functionApp && WebAppKind != \"\"",
+      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != functionApp && webAppKind != functionAppLinux && WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
     },
     {
@@ -203,7 +205,7 @@
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp || WebAppKind = webAppLinux",
+      "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp || WebAppKind = webAppLinux || webAppKind = functionAppLinux",
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
@@ -211,7 +213,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.RuntimeStack",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "properties": {
         "EditableOptions": "True"
       },
@@ -219,12 +221,28 @@
       "visibleRule": "WebAppKind = webAppLinux"
     },
     {
+      "name": "RuntimeStackFunction",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.RuntimeStackFunction",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "options": {
+        "DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0": ".NET",
+        "DOCKER|microsoft/azure-functions-node8:2.0": "JavaScript"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.RuntimeStackFunction",
+      "visibleRule": "WebAppKind = functionAppLinux"
+    },
+    {
       "name": "StartupCommand",
       "type": "string",
       "label": "ms-resource:loc.input.label.StartupCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer",
+      "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
     },
     {
@@ -320,7 +338,7 @@
       "options": {
         "webDeploy": "Web Deploy",
         "zipDeploy": "Zip Deploy",
-        "runFromZip": "RunFromZip"
+        "runFromZip": "Run From Package"
       },
       "helpMarkDown": "ms-resource:loc.input.help.DeploymentType",
       "visibleRule": "UseWebDeploy == true"
@@ -597,6 +615,7 @@
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
     "PackageDeploymentInitiated": "ms-resource:loc.messages.PackageDeploymentInitiated",
+    "WarPackageDeploymentInitiated": "ms-resource:loc.messages.WarPackageDeploymentInitiated",
     "FailedToGetDeploymentLogs": "ms-resource:loc.messages.FailedToGetDeploymentLogs",
     "GoExeNameNotPresent": "ms-resource:loc.messages.GoExeNameNotPresent",
     "WarDeploymentRetry": "ms-resource:loc.messages.WarDeploymentRetry",
@@ -611,8 +630,12 @@
     "InvalidPublishProfile": "ms-resource:loc.messages.InvalidPublishProfile",
     "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
     "ZipDeployLogsURL": "ms-resource:loc.messages.ZipDeployLogsURL",
+    "DeployLogsURL": "ms-resource:loc.messages.DeployLogsURL",
     "AppServiceApplicationURL": "ms-resource:loc.messages.AppServiceApplicationURL",
     "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation",
-    "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID"
+    "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
+    "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
+    "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
+    "RunFromZipPreventsFileInUseError": "ms-resource:loc.messages.RunFromZipPreventsFileInUseError"
   }
 }

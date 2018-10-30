@@ -8,8 +8,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 138,
-    "Patch": 0
+    "Minor": 142,
+    "Patch": 2
   },
   "groups": [
     {
@@ -57,7 +57,8 @@
       "visibleRule": "buildType == specific",
       "properties": {
         "EditableOptions": "True",
-        "DisableManageLink": "True"
+        "DisableManageLink": "True",
+        "IsSearchable": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.definition"
     },
@@ -79,7 +80,7 @@
       "required": true,
       "options": {
         "latest": "Latest",
-        "latestFromBranch": "Latest from specific branch",
+        "latestFromBranch": "Latest from specific branch and specified Build Tags",
         "specific": "Specific version"
       }
     },
@@ -104,6 +105,15 @@
         "DisableManageLink": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.buildId"
+    },
+    {
+      "name": "tags",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.tags",
+      "defaultValue": "",
+      "visibleRule": "buildType == specific && buildVersionToDownload != specific",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.tags"
     },
     {
       "name": "downloadType",
@@ -174,10 +184,11 @@
     {
       "endpointId": "tfs:teamfoundation",
       "target": "definition",
-      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?api-version=3.0-preview&$top=1000&continuationToken={{{continuationToken}}}&queryOrder=2",
+      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?api-version=3.0-preview&$top=500&continuationToken={{{continuationToken}}}&name=*{{name}}*&queryOrder=2",
       "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
       "parameters": {
-        "project": "$(project)"
+        "project": "$(project)",
+        "name": "$(name)"
       },
       "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
       "callbackContextTemplate": "{\"continuationToken\" : \"{{{headers.x-ms-continuationtoken}}}\"}",
@@ -231,6 +242,15 @@
     "LatestBuildFound": "ms-resource:loc.messages.LatestBuildFound",
     "LatestBuildNotFound": "ms-resource:loc.messages.LatestBuildNotFound",
     "LatestBuildFromBranchNotFound": "ms-resource:loc.messages.LatestBuildFromBranchNotFound",
-    "DownloadingContainerResource": "ms-resource:loc.messages.DownloadingContainerResource"
-  }
+    "DownloadingContainerResource": "ms-resource:loc.messages.DownloadingContainerResource",
+    "DefinitionNameMatchFound": "ms-resource:loc.messages.DefinitionNameMatchFound",
+    "InvalidBuildDefinitionName": "ms-resource:loc.messages.InvalidBuildDefinitionName",
+    "UnresolvedDefinitionId": "ms-resource:loc.messages.UnresolvedDefinitionId"
+  },
+  "outputVariables": [
+    {
+      "name": "BuildNumber",
+      "description": "Stores the build number of the build artifact source"
+    }
+  ]
 }

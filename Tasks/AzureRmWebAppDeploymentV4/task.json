@@ -2,8 +2,8 @@
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRmWebAppDeployment",
     "friendlyName": "Azure App Service Deploy",
-    "description": "Update Azure WebApp Services On Windows, Web App On Linux with built-in images or docker containers, ASP.NET, .NET Core, PHP, Python or Node based Web applications, Function Apps, Mobile Apps, Api applications, Web Jobs using Web Deploy / Kudu REST APIs",
-    "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
+    "description": "Update Azure App Services on Windows, Web App on Linux with built-in images or Docker containers, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Function Apps on Windows or Linux with Docker Containers, Mobile Apps, API applications, Web Jobs using Web Deploy / Kudu REST APIs",
+    "helpMarkDown": "[More information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -17,29 +17,29 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 2,
-        "Patch": 7
+        "Minor": 3,
+        "Patch": 14
     },
-    "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
+    "releaseNotes": "What's new in version 4.* (preview)<br />Supports Zip Deploy, Run From Package, War Deploy [Details here](https://aka.ms/appServiceDeploymentMethods)<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
-            "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp"
+            "visibleRule": "WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != webAppLinux && webAppKind != functionAppLinux && Package NotEndsWith .war"
         },
         {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
+            "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && webAppKind != functionAppLinux && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
         },
         {
             "name": "PostDeploymentAction",
             "displayName": "Post Deployment Action",
             "isExpanded": false,
-            "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && WebAppKind != webAppContainer"
+            "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && WebAppKind != webAppContainer && WebAppkind != functionAppContainer"
         },
         {
             "name": "ApplicationAndConfigurationSettings",
@@ -63,7 +63,9 @@
         },
         {
             "name": "ConnectedServiceName",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "defaultValue": "",
@@ -90,7 +92,9 @@
         },
         {
             "name": "WebAppKind",
-            "aliases": ["appType"],
+            "aliases": [
+                "appType"
+            ],
             "type": "pickList",
             "label": "App Service type",
             "defaultValue": "webApp",
@@ -98,12 +102,14 @@
             "options": {
                 "webApp": "Web App on Windows",
                 "webAppLinux": "Web App on Linux",
-                "webAppContainer": "Web App for Containers",
-                "functionApp": "Function App",
+                "webAppContainer": "Web App for Containers (Linux)",
+                "functionApp": "Function App on Windows",
+                "functionAppLinux": "Function App on Linux",
+                "functionAppContainer": "Function App for Containers (Linux)",
                 "apiApp": "API App",
                 "mobileApp": "Mobile App"
             },
-            "helpMarkDown": "Choose from Web App On Windows, Web App On Linux, Web App for Containers, Function App and Mobile App.",
+            "helpMarkDown": "Choose from Web App On Windows, Web App On Linux, Web App for Containers, Function App, Function App on Linux, Function App for Containers and Mobile App.",
             "visibleRule": "ConnectionType = AzureRM"
         },
         {
@@ -120,7 +126,9 @@
         },
         {
             "name": "DeployToSlotOrASEFlag",
-            "aliases": ["deployToSlotOrASE"],
+            "aliases": [
+                "deployToSlotOrASE"
+            ],
             "type": "boolean",
             "label": "Deploy to Slot or App Service Environment",
             "defaultValue": "false",
@@ -158,7 +166,7 @@
             "label": "Registry or Namespace",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = webAppContainer",
+            "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
             "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
         },
         {
@@ -167,7 +175,7 @@
             "label": "Image",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = webAppContainer",
+            "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
             "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
         },
         {
@@ -176,7 +184,7 @@
             "label": "Tag",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = webAppContainer",
+            "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
             "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
         },
         {
@@ -185,17 +193,19 @@
             "label": "Virtual application",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != functionApp && WebAppKind != \"\"",
+            "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != functionApp && webAppKind != functionAppLinux && WebAppKind != \"\"",
             "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the App Service root."
         },
         {
             "name": "Package",
-            "aliases": ["packageForLinux"],
+            "aliases": [
+                "packageForLinux"
+            ],
             "type": "filePath",
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp || WebAppKind = webAppLinux",
+            "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp || WebAppKind = webAppLinux || webAppKind = functionAppLinux",
             "helpMarkDown": "File path to the package or a folder containing app service contents generated by MSBuild or a compressed zip or war file.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip or $(System.DefaultWorkingDirectory)/\\*\\*/\\*.war."
         },
         {
@@ -203,7 +213,7 @@
             "type": "pickList",
             "label": "Runtime Stack",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "properties": {
                 "EditableOptions": "True"
             },
@@ -211,12 +221,28 @@
             "visibleRule": "WebAppKind = webAppLinux"
         },
         {
+            "name": "RuntimeStackFunction",
+            "type": "pickList",
+            "label": "Runtime Stack",
+            "defaultValue": "",
+            "required": false,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "options": {
+                "DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0": ".NET",
+                "DOCKER|microsoft/azure-functions-node8:2.0": "JavaScript"
+            },
+            "helpMarkDown": "Select the framework and version.",
+            "visibleRule": "WebAppKind = functionAppLinux"
+        },
+        {
             "name": "StartupCommand",
             "type": "string",
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer",
+            "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
             "helpMarkDown": "Enter the start up command."
         },
         {
@@ -257,7 +283,7 @@
         {
             "name": "WebConfigParameters",
             "type": "multiLine",
-            "label": "Generate web.config parameters for Python, Node.js and Go apps",
+            "label": "Generate web.config parameters for Python, Node.js, Go and Java apps",
             "required": false,
             "defaultValue": "",
             "groupName": "FileTransformsAndVariableSubstitution",
@@ -292,7 +318,9 @@
         },
         {
             "name": "UseWebDeploy",
-            "aliases": [ "enableCustomDeployment" ],
+            "aliases": [
+                "enableCustomDeployment"
+            ],
             "type": "boolean",
             "label": "Select deployment method",
             "required": false,
@@ -310,7 +338,7 @@
             "options": {
                 "webDeploy": "Web Deploy",
                 "zipDeploy": "Zip Deploy",
-                "runFromZip": "RunFromZip"
+                "runFromZip": "Run From Package"
             },
             "helpMarkDown": "Choose the deployment method for the app.",
             "visibleRule": "UseWebDeploy == true"
@@ -353,7 +381,7 @@
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
-            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the Azure App Service."
+            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to/ deleted from the Azure App Service."
         },
         {
             "name": "AdditionalArguments",
@@ -377,7 +405,9 @@
         },
         {
             "name": "XmlTransformation",
-            "aliases": ["enableXmlTransform"],
+            "aliases": [
+                "enableXmlTransform"
+            ],
             "type": "boolean",
             "label": "XML transformation",
             "required": false,
@@ -387,7 +417,9 @@
         },
         {
             "name": "XmlVariableSubstitution",
-            "aliases": ["enableXmlVariableSubstitution"],
+            "aliases": [
+                "enableXmlVariableSubstitution"
+            ],
             "type": "boolean",
             "label": "XML variable substitution",
             "required": false,
@@ -402,7 +434,7 @@
             "required": false,
             "defaultValue": "",
             "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build or release pipeline (or release pipeline's environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: the build or release's system definition variables are excluded in substitution."
+            "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build or release pipeline (or release pipeline's environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: pipeline variables are excluded in substitution."
         }
     ],
     "outputVariables": [
@@ -446,7 +478,6 @@
                 "osTypeSelected": "Linux"
             },
             "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}}\"}"
-
         }
     ],
     "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
@@ -584,22 +615,27 @@
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
         "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
+        "WarPackageDeploymentInitiated": "Package deployment using WAR Deploy initiated.",
         "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
         "GoExeNameNotPresent": "Go exe name is not present",
         "WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier.",
-        "Updatemachinetoenablesecuretlsprotocol" : "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
+        "Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
         "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-        "XmlParsingFailed":"Unable to parse publishProfileXML file, Error: %s",
+        "XmlParsingFailed": "Unable to parse publishProfileXML file, Error: %s",
         "PropertyDoesntExistPublishProfile": "[%s] Property does not exist in publish profile",
         "InvalidConnectionType": "Invalid service connection type",
         "InvalidImageSourceType": "Invalid Image source Type",
         "InvalidPublishProfile": "Publish profile file is invalid.",
         "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline",
         "ZipDeployLogsURL": "Zip Deploy logs can be viewed at %s",
+        "DeployLogsURL": "Deploy logs can be viewed at %s",
         "AppServiceApplicationURL": "App Service Application URL: %s",
         "ASE_WebDeploySSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to pass -allowUntrusted in additional arguments of web deploy option.",
-        "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s"
+        "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
+        "JarPathNotPresent": "Java jar path is not present",
+        "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
+        "RunFromZipPreventsFileInUseError": "Move from Web Deploy to RunFrom Package, which helps in avoiding FILE_IN_USE error. Note that Run From Package does not support msBuild package type. Please change your package format to use this deployment method."
     }
 }

@@ -2,6 +2,21 @@
   "requires": true,
   "lockfileVersion": 1,
   "dependencies": {
+    "@types/mocha": {
+      "version": "2.2.48",
+      "resolved": "https://registry.npmjs.org/@types/mocha/-/mocha-2.2.48.tgz",
+      "integrity": "sha512-nlK/iyETgafGli8Zh9zJVCTicvU3iajSkRwOh3Hhiva598CMqNJ4NcVCGMTGKpGpTYj/9R8RLzS9NAykSSCqGw=="
+    },
+    "@types/node": {
+      "version": "6.0.117",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-6.0.117.tgz",
+      "integrity": "sha512-sihk0SnN8PpiS5ihu5xJQ5ddnURNq4P+XPmW+nORlKkHy21CoZO/IVHK/Wq/l3G8fFW06Fkltgnqx229uPlnRg=="
+    },
+    "@types/q": {
+      "version": "1.5.1",
+      "resolved": "https://registry.npmjs.org/@types/q/-/q-1.5.1.tgz",
+      "integrity": "sha512-eqz8c/0kwNi/OEHQfvIuJVLTst3in0e7uTKeuY+WL/zfKn0xVujOTp42bS/vUUokhK5P2BppLd9JXMOMHcgbjA=="
+    },
     "argparse": {
       "version": "1.0.9",
       "resolved": "https://registry.npmjs.org/argparse/-/argparse-1.0.9.tgz",
@@ -237,9 +252,9 @@
       }
     },
     "semver": {
-      "version": "5.5.0",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-5.5.0.tgz",
-      "integrity": "sha512-4SJ3dm0WAwWy/NVeioZh5AntkdJoWKxHxcmyP622fOkgHa4z3R0TdBJICINyaSDE6uNwVc8gZr+ZinwZAH4xIA=="
+      "version": "5.4.1",
+      "resolved": "https://registry.npmjs.org/semver/-/semver-5.4.1.tgz",
+      "integrity": "sha512-WfG/X9+oATh81XtllIo/I8gOiY9EXRdv1cQdyykeXK17YcUW3EXUAi2To4pcH6nZtJPr7ZOpM5OMyWJZm+8Rsg=="
     },
     "shelljs": {
       "version": "0.3.0",
@@ -257,9 +272,9 @@
       "integrity": "sha1-LTeFoVjBdMmhbcLARuxfxfF0IhM="
     },
     "underscore": {
-      "version": "1.9.0",
-      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.9.0.tgz",
-      "integrity": "sha512-4IV1DSSxC1QK48j9ONFK1MoIAKKkbE8i7u55w2R6IqBqbT7A/iG7aZBCR2Bi8piF0Uz+i/MG1aeqLwl/5vqF+A=="
+      "version": "1.9.1",
+      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.9.1.tgz",
+      "integrity": "sha512-5/4etnCkd9c8gwgowi5/om/mYO5ajCaOgdzj/oW+0eQV9WxKBDZw5+ycmKmeaTXjInS/W0BzpGLo2xR2aBwZdg=="
     },
     "vso-node-api": {
       "version": "6.0.1-preview",
@@ -268,7 +283,7 @@
       "requires": {
         "q": "1.4.1",
         "tunnel": "0.0.4",
-        "underscore": "1.9.0"
+        "underscore": "1.9.1"
       }
     },
     "vsts-task-lib": {
@@ -280,7 +295,7 @@
         "mockery": "1.7.0",
         "node-uuid": "1.4.8",
         "q": "1.4.1",
-        "semver": "5.5.0",
+        "semver": "5.4.1",
         "shelljs": "0.3.0"
       }
     },

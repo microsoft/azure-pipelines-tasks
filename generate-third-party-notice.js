@@ -1,14 +1,32 @@
 /**
  * Run from the root of the vsts-tasks repo.
  * Usage: `node generate-third-party-notice.js <task name>`
+ *
+ * NOTE: delete node_modules and build the task before running this script!
+ * Otherwise, you may pick up old dependencies that are no longer needed.
+ *
+ * TODO: Make this part of the script
  */
+
+'use strict';
+
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
+let verboseLogging = false;
+
+// TODO rebranding: change this URL when the repo URL changes
+function isThisRepo(url) {
+    return url === 'git+https://github.com/Microsoft/vsts-tasks.git'
+        || url ==='git+ssh://git@github.com/Microsoft/vsts-tasks.git';
+}
+
 const log = {
     info(message) {
-        console.log(`[INFO] ${message}`);
+        if (verboseLogging) {
+            console.log(`[INFO] ${message}`);
+        }
     },
     warning(message) {
         console.log(`[WARNING] ${message}`);
@@ -50,8 +68,7 @@ function findLicense(packagePath) {
     ].map(x => x.toLowerCase());
 
     const candidates = children.filter(x => licenseNames.includes(x.toLowerCase()));
-    if (!candidates) {
-        log.warning(`Could not find a license for ${packagePath}`);
+    if (candidates.length === 0) {
         return null;
     } else {
         if (candidates.length > 1) {
@@ -68,12 +85,23 @@ function findLicense(packagePath) {
  */
 function* collectLicenseInfo(modulesRoot) {
     const packagePaths = fs.readdirSync(modulesRoot).map(x => path.join(modulesRoot, x));
-    for (let absolutePath of packagePaths) {
+    for (const absolutePath of packagePaths) {
         log.info(`Collecting license information from ${absolutePath} ...`);
+
+        const basename = path.basename(absolutePath);
+        if (basename.startsWith('@')) {
+            // This is a scoped package: recurse into children
+            yield* collectLicenseInfo(absolutePath);
+            continue;
+        }
+
+        const parentDir = path.basename(path.dirname(absolutePath));
+        const isScopedPackage = parentDir.startsWith('@');
+
         const name = (() => {
-            const basename = path.basename(absolutePath);
-            if (path.dirname(absolutePath).endsWith('@types')) {
-                return `@types/${basename}`;
+            if (isScopedPackage) {
+                // "scoped package" -- parent directory is part of name (e.g. @types/node, @sinonjs/formatio)
+                return `${parentDir}/${basename}`;
             } else {
                 return basename;
             }
@@ -83,20 +111,34 @@ function* collectLicenseInfo(modulesRoot) {
             continue;
         }
 
-        if (name === '@types') {
-            yield* collectLicenseInfo(absolutePath);
+        const manifest = readPackageJson(absolutePath);
+        const url = manifest.repository ? manifest.repository.url : null;
+        if (!url) {
+            log.warning(`Could not find a repository URL for ${absolutePath}`);
+        }
+
+        // Don't add license info for packages in this repo (such as those in Common)
+        if (isThisRepo(url)) {
             continue;
         }
 
-        const manifest = readPackageJson(absolutePath);
         const license = findLicense(absolutePath);
-        const licenseText = fs.readFileSync(license, { encoding: 'utf-8' });
+        const licenseText = license ? fs.readFileSync(license, { encoding: 'utf-8' }) : null;
+        if (!licenseText) {
+            log.warning(`Could not find a license for ${absolutePath}`);
+        }
 
         yield {
             name: name,
-            url: manifest.repository.url,
-            licenseText: licenseText
+            url: url || 'NO URL FOUND',
+            licenseText: licenseText || 'NO LICENSE FOUND'
         };
+
+        // See if this package has its own `node_modules` directory
+        const child_packages = path.join(absolutePath, 'node_modules');
+        if (fs.existsSync(child_packages)) {
+            yield* collectLicenseInfo(child_packages);
+        }
     }
 }
 
@@ -107,12 +149,12 @@ function* thirdPartyNotice(taskName, licenseInfo) {
     yield 'THIRD-PARTY SOFTWARE NOTICES AND INFORMATION';
     yield 'Do Not Translate or Localize';
     yield '';
-    yield `This Visual Studio Team Services extension (${taskName}) is based on or incorporates material from the projects listed below (Third Party IP). The original copyright notice and the license under which Microsoft received such Third Party IP, are set forth below. Such licenses and notices are provided for informational purposes only. Microsoft licenses the Third Party IP to you under the licensing terms for the Visual Studio Team Services extension. Microsoft reserves all other rights not expressly granted under this agreement, whether by implication, estoppel or otherwise.`;
+    yield `This Azure DevOps extension (${taskName}) is based on or incorporates material from the projects listed below (Third Party IP). The original copyright notice and the license under which Microsoft received such Third Party IP, are set forth below. Such licenses and notices are provided for informational purposes only. Microsoft licenses the Third Party IP to you under the licensing terms for the Azure DevOps extension. Microsoft reserves all other rights not expressly granted under this agreement, whether by implication, estoppel or otherwise.`;
     yield '';
 
     // Enumerated modules
     let num = 1;
-    for (let item of licenseInfo) {
+    for (const item of licenseInfo) {
         if (item.url) {
             yield `${num}.\t${item.name} (${item.url})`;
         } else {
@@ -125,7 +167,7 @@ function* thirdPartyNotice(taskName, licenseInfo) {
     yield '';
 
     // Module licenses
-    for (let item of licenseInfo) {
+    for (const item of licenseInfo) {
         yield `%% ${item.name} NOTICES, INFORMATION, AND LICENSE BEGIN HERE`;
         yield '=========================================';
         yield item.licenseText.trim();
@@ -141,15 +183,26 @@ function writeLines(writeStream, lines) {
         writeStream.write(os.EOL);
     };
 
-    for (let line of lines) {
+    for (const line of lines) {
         writeLine(line);
+    }
+}
+
+/** Join zero or more iterables into a single iterable. */
+function* chain(...iterables) {
+    for (const it of iterables) {
+        yield* it;
     }
 }
 
 function main(args) {
     try {
-        if (!(args && args.length > 2)) {
-            throw new Error(`Usage: node generate-third-party-notice.js <task name>`);
+        if (!args || args.length < 2) {
+            throw new Error(`Usage: node generate-third-party-notice.js <task name> [--verbose]`);
+        }
+
+        if (args.includes('--verbose')) {
+            verboseLogging = true;
         }
 
         const taskName = args[2];
@@ -157,10 +210,25 @@ function main(args) {
         trace('task path', taskPath);
 
         const nodeModuleDir = path.join(taskPath, 'node_modules');
-        const licenseInfo = Array.from(collectLicenseInfo(nodeModuleDir));
+        const testsNodeModuleDir = path.join(taskPath, 'Tests', 'node_modules');
+        const licenseInfo = chain(
+            collectLicenseInfo(nodeModuleDir),
+            fs.existsSync(testsNodeModuleDir) ? collectLicenseInfo(testsNodeModuleDir) : []);
+
+        function compareStrings(a, b) {
+            if (a < b) {
+                return -1;
+            } else if (a > b) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
+        const sortedLicenseInfo = Array.from(licenseInfo).sort((x, y) => compareStrings(x.name, y.name));
 
         const writeStream = fs.createWriteStream(path.join(taskPath, 'ThirdPartyNotice.txt'));
-        writeLines(writeStream, thirdPartyNotice(taskName, licenseInfo));
+        writeLines(writeStream, thirdPartyNotice(taskName, sortedLicenseInfo));
         writeStream.end();
     } catch (e) {
         log.error(e.message);

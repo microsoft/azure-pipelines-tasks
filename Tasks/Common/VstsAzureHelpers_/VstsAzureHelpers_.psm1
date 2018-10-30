@@ -48,9 +48,16 @@ function Initialize-Azure {
         }
 
         # Import/initialize the Azure module.
+        $currentWarningPreference = $WarningPreference
+        $WarningPreference = "SilentlyContinue"
         Import-AzureModule -PreferredModule $preferredModules -azurePsVersion $azurePsVersion -strict:$strict
         Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $storageAccount
     } finally {
+        if (![string]::IsNullOrEmpty($currentWarningPreference)) {
+            $WarningPreference = $currentWarningPreference
+        } else {
+            $WarningPreference = "Continue"
+        }
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
@@ -58,3 +65,4 @@ function Initialize-Azure {
 # Export only the public function.
 Export-ModuleMember -Function Initialize-Azure
 Export-ModuleMember -Function CmdletHasMember
+Export-ModuleMember -Function Remove-EndpointSecrets

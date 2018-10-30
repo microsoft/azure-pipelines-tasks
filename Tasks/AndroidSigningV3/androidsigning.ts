@@ -1,5 +1,4 @@
 import * as path from 'path';
-import * as Q from 'q';
 import * as tl from 'vsts-task-lib/task';
 
 const findAndroidTool = (tool: string): string => {

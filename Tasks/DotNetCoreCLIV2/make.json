@@ -1,7 +1,12 @@
 {
     "common": [
         {
-            "module": "../Common/nuget-task-common",
+            "module": "../Common/utility-common",
+            "type": "node",
+            "compile": true
+        },
+        {
+            "module": "../Common/packaging-common",
             "type": "node",
             "compile": true
         }
@@ -9,7 +14,7 @@
     "rm": [
         {
             "items": [
-                "node_modules/nuget-task-common/node_modules/vsts-task-lib"
+                "node_modules/packaging-common/node_modules/vsts-task-lib"
             ],
             "options": "-Rf"
         }

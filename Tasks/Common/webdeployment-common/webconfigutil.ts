@@ -44,6 +44,11 @@ function addMissingParametersValue(appType: string, webConfigParameters) {
         },
         'Go': {
             'GoExeFilePath': ''
+        },
+        'java_springboot': {
+            'JAVA_PATH' : '%JAVA_HOME%\\bin\\java.exe',
+            'JAR_PATH' : '',
+            'ADDITIONAL_DEPLOYMENT_OPTIONS' : ''
         }
     };
 
@@ -66,7 +71,7 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
     var webConfigPath = path.join(folderPath, "web.config");
     if (!tl.exist(webConfigPath)) {
         try {
-            var supportedAppTypes = ['node', 'python_Bottle', 'python_Django', 'python_Flask', 'Go']
+            var supportedAppTypes = ['node', 'python_Bottle', 'python_Django', 'python_Flask', 'Go', 'java_springboot']
             // Create web.config
             tl.debug('web.config file does not exist. Generating.');
             if(!webConfigParameters['appType']) {
@@ -95,7 +100,15 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
                     throw Error(tl.loc('GoExeNameNotPresent'));
                 }
                 selectedAppTypeParams['GoExeFilePath'] = rootDirectoryPath + "\\" + webConfigParameters['GoExeFileName'].value;
+            } else if(appType == 'java_springboot') {
+                if (util.isNullOrUndefined(webConfigParameters['JAR_PATH'])
+                || util.isNullOrUndefined(webConfigParameters['JAR_PATH'].value) 
+                || webConfigParameters['JAR_PATH'].value.length <= 0) {
+                    throw Error(tl.loc('JarPathNotPresent'));
+                }
+                selectedAppTypeParams['JAR_PATH'] = rootDirectoryPath + "\\" + webConfigParameters['JAR_PATH'].value;
             }
+
             generateWebConfigFile(webConfigPath, appType, selectedAppTypeParams);
             console.log(tl.loc("SuccessfullyGeneratedWebConfig"));
         }

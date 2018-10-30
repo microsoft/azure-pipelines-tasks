@@ -91,12 +91,12 @@ export class ContainerBasedDeploymentUtility {
         }
     
         if(tag) {
-            imageName = namespace + "/" + repository + ":" + tag;
+            imageName = namespace.toLowerCase() + "/" + repository.toLowerCase() + ":" + tag;
         } else {
-            imageName = namespace + "/" + repository;
+            imageName = namespace.toLowerCase() + "/" + repository.toLowerCase();
         }
     
-        return imageName;
+        return imageName.replace(/ /g,"");
     }
 
     private _getPrivateRegistryImageName(): string {

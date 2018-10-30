@@ -32,20 +32,20 @@ export async function useRubyVersion(parameters: TaskParameters, platform: Platf
         // Fail and list available versions
         throw new Error([
             task.loc('VersionNotFound', parameters.versionSpec),
-            task.loc('ListAvailableVersions'),
-            tool.findLocalToolVersions('Ruby')
+            task.loc('ListAvailableVersions', task.getVariable('Agent.ToolsDirectory')),
+            tool.findLocalToolVersions('Ruby'),
+            task.loc('ToolNotFoundMicrosoftHosted', 'Ruby', 'https://aka.ms/hosted-agent-software'),
+            task.loc('ToolNotFoundSelfHosted', 'Ruby', 'https://go.microsoft.com/fwlink/?linkid=2005989')
         ].join(os.EOL));
     }
 
     const toolPath: string = path.join(installDir, 'bin');
     if (platform !== Platform.Windows) {
+        // Ruby / Gem heavily use the '#!/usr/bin/ruby' to find ruby, so this task needs to
+        // replace that version of ruby so all the correct version of ruby gets selected
         // replace the default
         const dest: string = '/usr/bin/ruby';
-        if (fs.existsSync(dest)) {
-            task.debug('removing ' + dest);
-            fs.unlinkSync(dest);
-        }
-        fs.symlinkSync(path.join(toolPath, 'ruby'), dest);
+        task.execSync('sudo', `ln -sf ${path.join(toolPath, 'ruby')} ${dest}`); // replace any existing
     }
 
     task.setVariable('rubyLocation', toolPath);

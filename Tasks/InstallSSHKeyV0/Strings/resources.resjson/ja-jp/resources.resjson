@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SSH キーのインストール",
-  "loc.helpMarkDown": "",
+  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=875267)",
   "loc.description": "ビルドまたはリリースの前に、SSH キーをインストールします",
   "loc.instanceNameFormat": "SSH キーのインストール",
   "loc.input.label.hostName": "既知のホスト エントリ",

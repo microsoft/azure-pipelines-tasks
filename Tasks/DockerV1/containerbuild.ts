@@ -63,6 +63,8 @@ function addReleaseLabels(command: ToolRunner, hostName: string): void {
 }
 
 function getReverseDNSName(): string {
+    // Hostname part of URL used as prefix for labels.
+    // it is safe to use url.parse on SYSTEM_TEAMFOUNDATIONCOLLECTIONURI here.
     var teamFoundationCollectionURI = tl.getVariable("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI");
     if (teamFoundationCollectionURI) {
         var parsedUrl = URL.parse(teamFoundationCollectionURI);
@@ -93,12 +95,12 @@ export function run(connection: ContainerConnection): any {
     if (addDefaultLabels) {        
         var hostName = getReverseDNSName();
         if (hostName) {
-            var hostType = tl.getVariable("SYSTEM_HOSTTYPE");
             addCommonLabels(command, hostName);
-            if (hostType === "build") {            
+            var hostType = tl.getVariable("SYSTEM_HOSTTYPE");
+            if (hostType.toLowerCase() === "build") {
                 addBuildLabels(command, hostName);
             }
-            else if (hostType === "release") {
+            else {
                 addReleaseLabels(command, hostName);
             }
         }

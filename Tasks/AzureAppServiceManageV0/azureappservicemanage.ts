@@ -1,7 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
-import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
+import { AzureRMEndpoint, dispose } from 'azure-arm-rest/azure-arm-endpoint';
 import { AzureEndpoint } from 'azure-arm-rest/azureModels';
 import {AzureAppService  } from 'azure-arm-rest/azure-arm-app-service';
 import { AzureApplicationInsights } from 'azure-arm-rest/azure-arm-appinsights';
@@ -154,6 +154,9 @@ async function run() {
     }
     catch(error) {
         tl.debug(error);
+    }
+    finally {
+        dispose();
     }
 
     if (!taskResult) {

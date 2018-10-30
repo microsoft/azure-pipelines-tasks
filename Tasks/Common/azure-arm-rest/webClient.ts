@@ -1,5 +1,6 @@
 import tl = require('vsts-task-lib/task');
 import util = require("util");
+import fs = require('fs');
 import httpClient = require("typed-rest-client/HttpClient");
 import httpInterfaces = require("typed-rest-client/Interfaces");
 
@@ -38,6 +39,7 @@ export class WebRequestOptions {
     public retryCount: number;
     public retryIntervalInSeconds: number;
     public retriableStatusCodes: number[];
+    public retryRequestTimedout: boolean;
 }
 
 export async function sendRequest(request: WebRequest, options?: WebRequestOptions): Promise<WebResponse> {
@@ -45,12 +47,16 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
     let retryCount = options && options.retryCount ? options.retryCount : 5;
     let retryIntervalInSeconds = options && options.retryIntervalInSeconds ? options.retryIntervalInSeconds : 2;
     let retriableErrorCodes = options && options.retriableErrorCodes ? options.retriableErrorCodes : ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN"];
-    let retriableStatusCodes = options && options.retriableStatusCodes ? options.retriableStatusCodes: [408, 409, 500, 502, 503, 504];
-    let timeToWait : number = retryIntervalInSeconds;
+    let retriableStatusCodes = options && options.retriableStatusCodes ? options.retriableStatusCodes : [408, 409, 500, 502, 503, 504];
+    let timeToWait: number = retryIntervalInSeconds;
     while (true) {
         try {
+            if (request.body && typeof(request.body) !== 'string' && !request.body["readable"]) {
+                request.body = fs.createReadStream(request.body["path"]);
+            }
+            
             let response: WebResponse = await sendRequestInternal(request);
-            if(retriableStatusCodes.indexOf(response.statusCode) != -1 && ++i < retryCount) {
+            if (retriableStatusCodes.indexOf(response.statusCode) != -1 && ++i < retryCount) {
                 tl.debug(util.format("Encountered a retriable status code: %s. Message: '%s'.", response.statusCode, response.statusMessage));
                 await sleepFor(timeToWait);
                 timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
@@ -67,7 +73,7 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
             }
             else {
                 if (error.code) {
-                    console.log("##vso[task.logissue type=error;code="+error.code+";]");
+                    console.log("##vso[task.logissue type=error;code=" + error.code + ";]");
                 }
 
                 throw error;
@@ -100,6 +106,8 @@ async function toWebResponse(response: httpClient.HttpClientResponse): Promise<W
                 res.body = JSON.parse(body);
             }
             catch (error) {
+                tl.debug("Could not parse response: " + JSON.stringify(error));
+                tl.debug("Response: " + JSON.stringify(res.body));
                 res.body = body;
             }
         }

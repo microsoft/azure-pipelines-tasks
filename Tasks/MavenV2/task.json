@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 139,
-        "Patch": 0
+        "Minor": 143,
+        "Patch": 1
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
@@ -50,7 +50,9 @@
     "inputs": [
         {
             "name": "mavenPOMFile",
-            "aliases": [ "mavenPomFile" ],
+            "aliases": [
+                "mavenPomFile"
+            ],
             "type": "filePath",
             "label": "Maven POM file",
             "defaultValue": "pom.xml",
@@ -74,11 +76,11 @@
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish to TFS/Team Services",
+            "label": "Publish to Azure Pipelines/TFS",
             "required": true,
             "defaultValue": "true",
             "groupName": "junitTestResults",
-            "helpMarkDown": "Select this option to publish JUnit test results produced by the Maven build to TFS/Team Services. Each test results file matching `Test Results Files` will be published as a test run in TFS/Team Services."
+            "helpMarkDown": "Select this option to publish JUnit test results produced by the Maven build to Azure Pipelines/TFS. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines/TFS."
         },
         {
             "name": "testResultsFiles",
@@ -102,7 +104,9 @@
         },
         {
             "name": "codeCoverageTool",
-            "aliases": [ "codeCoverageToolOption" ],
+            "aliases": [
+                "codeCoverageToolOption"
+            ],
             "type": "pickList",
             "label": "Code coverage tool",
             "required": false,
@@ -117,7 +121,9 @@
         },
         {
             "name": "classFilter",
-            "aliases": [ "codeCoverageClassFilter" ],
+            "aliases": [
+                "codeCoverageClassFilter"
+            ],
             "type": "string",
             "label": "Class inclusion/exclusion filters",
             "defaultValue": "",
@@ -128,7 +134,9 @@
         },
         {
             "name": "classFilesDirectories",
-            "aliases": [ "codeCoverageClassFilesDirectories" ],
+            "aliases": [
+                "codeCoverageClassFilesDirectories"
+            ],
             "type": "string",
             "label": "Class files directories",
             "required": false,
@@ -138,7 +146,9 @@
         },
         {
             "name": "srcDirectories",
-            "aliases": [ "codeCoverageSourceDirectories" ],
+            "aliases": [
+                "codeCoverageSourceDirectories"
+            ],
             "type": "string",
             "label": "Source files directories",
             "defaultValue": "",
@@ -149,7 +159,9 @@
         },
         {
             "name": "failIfCoverageEmpty",
-            "aliases": [ "codeCoverageFailIfEmpty" ],
+            "aliases": [
+                "codeCoverageFailIfEmpty"
+            ],
             "type": "boolean",
             "label": "Fail when code coverage results are missing",
             "defaultValue": "false",
@@ -160,7 +172,9 @@
         },
         {
             "name": "javaHomeSelection",
-            "aliases": [ "javaHomeOption" ],
+            "aliases": [
+                "javaHomeOption"
+            ],
             "type": "radio",
             "label": "Set JAVA_HOME by",
             "required": true,
@@ -174,7 +188,9 @@
         },
         {
             "name": "jdkVersion",
-            "aliases": [ "jdkVersionOption" ],
+            "aliases": [
+                "jdkVersionOption"
+            ],
             "type": "pickList",
             "label": "JDK version",
             "required": false,
@@ -184,16 +200,19 @@
             "visibleRule": "javaHomeSelection = JDKVersion",
             "options": {
                 "default": "default",
-                "1.10": "JDK 10",
-                "1.9": "JDK 9",
+                "1.11": "JDK 11",
+                "1.10": "JDK 10 (out of support)",
+                "1.9": "JDK 9 (out of support)",
                 "1.8": "JDK 8",
                 "1.7": "JDK 7",
-                "1.6": "JDK 6"
+                "1.6": "JDK 6 (out of support)"
             }
         },
         {
             "name": "jdkUserInputPath",
-            "aliases": [ "jdkDirectory" ],
+            "aliases": [
+                "jdkDirectory"
+            ],
             "type": "string",
             "label": "JDK path",
             "required": true,
@@ -204,7 +223,9 @@
         },
         {
             "name": "jdkArchitecture",
-            "aliases": [ "jdkArchitectureOption" ],
+            "aliases": [
+                "jdkArchitectureOption"
+            ],
             "type": "pickList",
             "label": "JDK architecture",
             "defaultValue": "x64",
@@ -219,7 +240,9 @@
         },
         {
             "name": "mavenVersionSelection",
-            "aliases": [ "mavenVersionOption" ],
+            "aliases": [
+                "mavenVersionOption"
+            ],
             "type": "radio",
             "label": "Maven version",
             "defaultValue": "Default",
@@ -233,7 +256,9 @@
         },
         {
             "name": "mavenPath",
-            "aliases": [ "mavenDirectory" ],
+            "aliases": [
+                "mavenDirectory"
+            ],
             "type": "string",
             "label": "Maven path",
             "required": true,
@@ -254,7 +279,9 @@
         },
         {
             "name": "mavenOpts",
-            "aliases": [ "mavenOptions" ],
+            "aliases": [
+                "mavenOptions"
+            ],
             "type": "string",
             "label": "Set MAVEN_OPTS to",
             "required": false,
@@ -264,17 +291,21 @@
         },
         {
             "name": "mavenFeedAuthenticate",
-            "aliases": [ "mavenAuthenticateFeed" ],
+            "aliases": [
+                "mavenAuthenticateFeed"
+            ],
             "type": "boolean",
             "label": "Authenticate built-in Maven feeds",
             "required": true,
             "defaultValue": "true",
             "groupName": "advanced",
-            "helpMarkDown": "Automatically authenticate built-in Maven feeds from the VSTS/TFS [Package Management](https://marketplace.visualstudio.com/items?itemName=ms.feed) extension. If built-in Maven feeds are not in use, deselect this option for faster builds."
+            "helpMarkDown": "Automatically authenticate built-in Maven feeds from the Azure Artifacts/TFS [Package Management](https://marketplace.visualstudio.com/items?itemName=ms.feed) extension. If built-in Maven feeds are not in use, deselect this option for faster builds."
         },
         {
             "name": "sqAnalysisEnabled",
-            "aliases": [ "sonarQubeRunAnalysis" ],
+            "aliases": [
+                "sonarQubeRunAnalysis"
+            ],
             "type": "boolean",
             "label": "Run SonarQube or SonarCloud analysis",
             "required": true,
@@ -298,7 +329,9 @@
         },
         {
             "name": "checkstyleAnalysisEnabled",
-            "aliases": [ "checkStyleRunAnalysis" ],
+            "aliases": [
+                "checkStyleRunAnalysis"
+            ],
             "type": "boolean",
             "label": "Run Checkstyle",
             "required": false,
@@ -308,7 +341,9 @@
         },
         {
             "name": "pmdAnalysisEnabled",
-            "aliases": [ "pmdRunAnalysis" ],
+            "aliases": [
+                "pmdRunAnalysis"
+            ],
             "type": "boolean",
             "label": "Run PMD",
             "required": false,
@@ -318,7 +353,9 @@
         },
         {
             "name": "findbugsAnalysisEnabled",
-            "aliases": [ "findBugsRunAnalysis" ],
+            "aliases": [
+                "findBugsRunAnalysis"
+            ],
             "type": "boolean",
             "label": "Run FindBugs",
             "required": false,
@@ -363,6 +400,7 @@
         "codeAnalysisArtifactSummaryTitle": "Code Analysis Results",
         "codeAnalysisDisabled": "Code analysis is disabled outside of the build environment. Could not find a value for: %s",
         "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
+        "UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
         "FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK.",
         "NoCodeCoverage": "No code coverage results were found to publish.",
         "EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",

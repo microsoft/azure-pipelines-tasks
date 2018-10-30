@@ -1,9 +1,0 @@
-{
-  "loc.messages.SettingUpSSHConnection": "设置到远程主机 %s 的 SSH 连接。",
-  "loc.messages.ConnectionNotSetup": "未设置 SSH 连接。",
-  "loc.messages.ConnectionFailed": "无法连接到远程计算机。请验证 SSH 终结点详细信息。%s。",
-  "loc.messages.RemoteCmdExecutionErr": "命令 %s 因远程计算机上的错误失败。%s。",
-  "loc.messages.CheckLogForStdErr": "从命令检查 STDERR 生成日志。",
-  "loc.messages.RemoteCmdNonZeroExitCode": "命令 %s 已退出，代码为 %s。",
-  "loc.messages.UploadFileFailed": "未能将 %s 上传到远程计算机上的 %s。%s。"
-}

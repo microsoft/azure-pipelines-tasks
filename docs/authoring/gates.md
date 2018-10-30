@@ -1,5 +1,5 @@
 
-You can take a look at this document to learn about how you can add a new [server task](https://github.com/Microsoft/vsts-tasks/blob/master/docs/authoring/servertaskauthoring.md). Assuming that you are aware of the process for an adding a server task, then to make it a gate, you should do the following. 
+You can take a look at this document to learn about how you can add a new [server task](https://github.com/Microsoft/vsts-tasks/blob/master/docs/authoring/servertaskauthoring.md). Assuming that you are aware of the process for adding a server task, then to make it a gate, you should do the following. 
 
 #### Change the RunsOn property :
 RunsOn property in task.json specifies where the task should run. The possible values for this property are as follows: -
@@ -9,7 +9,7 @@ RunsOn property in task.json specifies where the task should run. The possible v
 - Server
 - ServerGate
 
-The default value of this property is Agent, but you can change it to ServerGate to specify that the task should run on VSTS/TFS server and should show up in the list of gates in the definition editor. In case you want the task to appear in both server tasks as well as gate tasks, specify the value of RunsOn as Server | ServerGate.
+The default value of this property is Agent, but you can change it to ServerGate to specify that the task should run on Azure Pipelines/TFS server and should show up in the list of gates in the definition editor. In case you want the task to appear in both server tasks as well as gate tasks, specify the value of RunsOn as Server | ServerGate.
 
 #### Provide the result evaulation expression :
 
@@ -19,10 +19,10 @@ In case you are using http request executions in your task, then you should prov
 
 Server task can be used to do 2 kinds of activities: 
 
-- Create a new resource on external system. 
+- Create a new resource on an external system. 
 - Query an external system. 
 
-For example: - You can have 2 Chef server tasks, one which creates a new deployment on chef and another which queries the status of an existing deployment.
+For example: - You can have 2 Chef server tasks, one which creates a new deployment on Chef and another which queries the status of an existing deployment.
 
 Gate tasks, in a typical usage will primarily do one kind of activity and that activity will be "query an external system". You will typically not create a new resource in a gate because gates run N times in a deployment and creating N resources in a single deployment does not look natural.
 

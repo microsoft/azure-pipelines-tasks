@@ -4,7 +4,7 @@
 
 This task is used to manage an IIS website, web application, virtual directory or an application pool. 
 
-The task runs on the deployment target machine(s) registered with the Deployment Group configured for the task/phase. [Deployment Groups](https://opsstaging.www.visualstudio.com/en-gb/docs/release/getting-started/machine-group-agents?branch=users%2Fahomer%2Frelease-master) are logical groups of deployment target machines with agents installed on each of them. They also specify the security context and runtime targets for the agents. When authoring a Team Services Release definition, you can specify the deployments targets for a [phase](https://opsstaging.www.visualstudio.com/en-gb/docs/build/concepts/process/phases) using the deployment group.
+The task runs on the deployment target machine(s) registered with the Deployment Group configured for the task/phase. [Deployment Groups](https://opsstaging.www.visualstudio.com/en-gb/docs/release/getting-started/machine-group-agents?branch=users%2Fahomer%2Frelease-master) are logical groups of deployment target machines with agents installed on each of them. They also specify the security context and runtime targets for the agents. When authoring an Azure Pipelines Release definition, you can specify the deployments targets for a [phase](https://opsstaging.www.visualstudio.com/en-gb/docs/build/concepts/process/phases) using the deployment group.
 
 
 ## Contact Information
@@ -17,14 +17,14 @@ The following pre-requisites need to be setup for the task to work properly.
 
 ### IIS Web Server
 
-There should be a IIS web server already installed and configured on the pre-existing machines or virtual machines. The task updates websites, webapps and application pools but does not install or configure IIS web server on the machines. Also to deploy a webapp, use a different task [IIS WebApp Deployment On Deployment Group](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/IISWebAppDeploymentOnMachineGroup)
+There should be a IIS web server already installed and configured on the pre-existing machines or virtual machines. Alternatively, you can use the "Enable IIS" option provided in the task to enable the IIS web server along with all of its sub-features on the machines (applicable only for Windows Server machines). The task updates websites, webapps and application pools. Also to deploy a webapp, use a different task [IIS WebApp Deployment On Deployment Group](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/IISWebAppDeploymentOnMachineGroup)
 
 ### Pre-existing Deployment Group
 
 This task requires a Deployment group to execute. If the web application is to be created/updated on pre-existing machines (physical or virtual machines) then download the agent installer on each of the machines and register them with an existing Deployment group. If there is no pre-existing Deployment group, you can create one in the Deployment groups hub.
 
 Carry out the following steps to create a Deployment group:
-* Open your Visual Studio Team Services account in your web browser. 
+* Open your Azure Pipelines account in your web browser. 
 * Open the Deployment groups tab of the Build & Release hub and choose +Deployment group to create a new group
 * Enter a name for the group in the Details tab and then save the group.
 * In the Register machines using command line section, choose Regenerate script with PAT.

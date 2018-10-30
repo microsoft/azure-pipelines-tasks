@@ -1,3 +1,4 @@
+import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import path = require("path");
 import tl = require("vsts-task-lib/task");
 import fs = require("fs");
@@ -55,7 +56,7 @@ export class azureclitask {
             else {
                 tool = tl.tool(tl.which(scriptPath, true));
             }
-
+            this.throwIfError(tl.execSync("az", "--version"));
             this.loginAzure();
 
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
@@ -75,7 +76,7 @@ export class azureclitask {
                 this.deleteFile(scriptPath);
             }
 
-            if(this.cliPasswordPath) {
+            if (this.cliPasswordPath) {
                 tl.debug('Removing spn certificate file');
                 tl.rmRF(this.cliPasswordPath);
             }
@@ -83,6 +84,10 @@ export class azureclitask {
             //Logout of Azure if logged in
             if (this.isLoggedIn) {
                 this.logoutAzure();
+            }
+
+            if (this.azCliConfigPath) {
+                tl.rmRF(this.azCliConfigPath);
             }
 
             //set the task result to either succeeded or failed based on error was thrown or not
@@ -97,6 +102,7 @@ export class azureclitask {
 
     private static isLoggedIn: boolean = false;
     private static cliPasswordPath: string = null;
+    private static azCliConfigPath: string;
 
     private static loginAzure() {
         var connectedService: string = tl.getInput("connectedServiceNameARM", true);
@@ -107,7 +113,7 @@ export class azureclitask {
         var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
         let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
         let cliPassword: string = null;
-        if(authType == "spnCertificate") {
+        if (authType == "spnCertificate") {
             tl.debug('certificate based endpoint');
             let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
             cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
@@ -122,11 +128,27 @@ export class azureclitask {
 
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
+
+        // set az cli config dir
+        this.setConfigDirectory();
+
         //login using svn
-        this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""));
+        this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
         this.isLoggedIn = true;
         //set the subscription imported to the current subscription
-        this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""));
+        this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
+    }
+
+    private static setConfigDirectory(): void {
+        var configDirName: string = "c" + new Date().getTime(); // 'c' denotes config
+        if (tl.osType().match(/^Win/)) {
+            this.azCliConfigPath = path.join(process.env.USERPROFILE, ".azclitask", configDirName);
+        }
+        else {
+            this.azCliConfigPath = path.join(process.env.HOME, ".azclitask", configDirName);
+        }
+
+        process.env['AZURE_CONFIG_DIR'] = this.azCliConfigPath;
     }
 
     private static logoutAzure() {
@@ -139,8 +161,12 @@ export class azureclitask {
         }
     }
 
-    private static throwIfError(resultOfToolExecution): void {
-        if (resultOfToolExecution.stderr) {
+    private static throwIfError(resultOfToolExecution: IExecSyncResult, errormsg?: string): void {
+        if (resultOfToolExecution.code != 0) {
+            tl.error("Error Code: [" + resultOfToolExecution.code + "]");
+            if (errormsg) {
+                tl.error("Error: " + errormsg);
+            }
             throw resultOfToolExecution;
         }
     }

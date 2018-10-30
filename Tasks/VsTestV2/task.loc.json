@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 138,
-    "Patch": 8
+    "Minor": 143,
+    "Patch": 2
   },
   "demands": [
     "vstest"
@@ -406,6 +406,30 @@
       "groupName": "reportingOptions"
     },
     {
+      "name": "diagnosticsEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.diagnosticsEnabled",
+      "defaultValue": "True",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.diagnosticsEnabled",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "collectDumpOn",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.collectDumpOn",
+      "defaultValue": "onAbortOnly",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.collectDumpOn",
+      "groupName": "executionOptions",
+      "options": {
+        "onAbortOnly": "On abort only",
+        "always": "Always",
+        "never": "Never"
+      },
+      "visibleRule": "diagnosticsEnabled = true"
+    },
+    {
       "name": "rerunFailedTests",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.rerunFailedTests",
@@ -590,6 +614,8 @@
     "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
     "VsTestVersionEmpty": "ms-resource:loc.messages.VsTestVersionEmpty",
     "UserProvidedSourceFilter": "ms-resource:loc.messages.UserProvidedSourceFilter",
-    "UnableToGetFeatureFlag": "ms-resource:loc.messages.UnableToGetFeatureFlag"
+    "UnableToGetFeatureFlag": "ms-resource:loc.messages.UnableToGetFeatureFlag",
+    "diagnosticsInput": "ms-resource:loc.messages.diagnosticsInput",
+    "UncPathNotSupported": "ms-resource:loc.messages.UncPathNotSupported"
   }
 }

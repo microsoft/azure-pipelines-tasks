@@ -2,30 +2,31 @@
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRmWebAppDeployment",
     "friendlyName": "Azure App Service Deploy",
-    "description": "Update Azure WebApp Services On Windows, Web App On Linux with built-in images or docker containers, ASP.NET, .NET Core, PHP, Python or Node based Web applications, Function Apps, Mobile Apps, Api applications, Web Jobs using Web Deploy / Kudu REST APIs",
-    "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
+    "description": "Update Azure App Services on Windows, Web App on Linux with built-in images or Docker containers, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Function Apps, Mobile Apps, API applications, Web Jobs using Web Deploy / Kudu REST APIs",
+    "helpMarkDown": "[More information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
         "Release"
     ],
     "runsOn": [
-        "Agent"
+        "Agent",
+        "DeploymentGroup"
     ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
         "Minor": 4,
-        "Patch": 0
+        "Patch": 15
     },
-    "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
+    "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\""
+            "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\" && Package NotEndsWith .war"
         },
         {
             "name": "AdditionalDeploymentOptions",
@@ -54,7 +55,9 @@
     "inputs": [
         {
             "name": "ConnectedServiceName",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "defaultValue": "",
@@ -63,7 +66,9 @@
         },
         {
             "name": "WebAppKind",
-            "aliases": ["appType"],
+            "aliases": [
+                "appType"
+            ],
             "type": "pickList",
             "label": "App type",
             "defaultValue": "app",
@@ -196,8 +201,8 @@
             "label": "Repository Access",
             "required": true,
             "options": {
-               "private": "Private",
-               "public": "Public"
+                "private": "Private",
+                "public": "Public"
             },
             "defaultValue": "public",
             "helpMarkDown": "Select the Docker repository access.",
@@ -205,7 +210,9 @@
         },
         {
             "name": "RegistryConnectedServiceName",
-            "aliases": ["dockerRegistryConnection"],
+            "aliases": [
+                "dockerRegistryConnection"
+            ],
             "type": "connectedService:dockerregistry",
             "label": "Registry Connection",
             "required": true,
@@ -284,7 +291,9 @@
         },
         {
             "name": "BuiltinLinuxPackage",
-            "aliases": ["packageForLinux"],
+            "aliases": [
+                "packageForLinux"
+            ],
             "type": "filePath",
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
@@ -298,22 +307,8 @@
             "label": "Runtime Stack",
             "defaultValue": "",
             "required": true,
-            "options": {
-                "node|4.4": "Node.js 4.4",
-                "node|4.5": "Node.js 4.5",
-                "node|6.2": "Node.js 6.2",
-                "node|6.6": "Node.js 6.6",
-                "node|6.9": "Node.js 6.9",
-                "node|6.10": "Node.js 6.10",
-                "node|6.11": "Node.js 6.11",
-                "node|8.0": "Node.js 8.0",
-                "node|8.1": "Node.js 8.1",
-                "php|5.6": "PHP 5.6",
-                "php|7.0": "PHP 7.0",
-                "dotnetcore|1.0": ".NET Core 1.0",
-                "dotnetcore|1.1": ".NET Core 1.1",
-                "dotnetcore|2.0": ".NET Core 2.0",
-                "ruby|2.3": "Ruby 2.3"
+            "properties": {
+                "EditableOptions": "True"
             },
             "helpMarkDown": "Select the framework and version.",
             "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource = Builtin"
@@ -463,7 +458,7 @@
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the Azure App Service."
+            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to/ deleted from the Azure App Service."
         },
         {
             "name": "AdditionalArguments",
@@ -487,7 +482,9 @@
         },
         {
             "name": "XmlTransformation",
-            "aliases": ["enableXmlTransform"],
+            "aliases": [
+                "enableXmlTransform"
+            ],
             "type": "boolean",
             "label": "XML transformation",
             "required": false,
@@ -497,13 +494,15 @@
         },
         {
             "name": "XmlVariableSubstitution",
-            "aliases": ["enableXmlVariableSubstitution"],
+            "aliases": [
+                "enableXmlVariableSubstitution"
+            ],
             "type": "boolean",
             "label": "XML variable substitution",
             "required": false,
             "defaultValue": false,
             "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "Variables defined in the Build or Release Definition will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. Variable Substitution is run after config transforms. <br/><br/> Note: If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables.<br/>"
+            "helpMarkDown": "Variables defined in the build or release pipeline will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. Variable Substitution is run after config transforms. <br/><br/> Note: If same variables are defined in the release pipeline and in the Environment, then the Environment variables will supersede the release pipeline variables.<br/>"
         },
         {
             "name": "JSONFiles",
@@ -512,7 +511,7 @@
             "required": false,
             "defaultValue": "",
             "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build/release definition (or release definition’s environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: Build/Release’s system definition variables are excluded in substitution"
+            "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build/release pipeline (or release pipeline’s environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: pipeline variables are excluded in substitution."
         }
     ],
     "dataSourceBindings": [
@@ -609,6 +608,15 @@
             "endpointUrl": "{{endpoint.url}}v2/$(PrivateRegistryImage)/tags/list",
             "resultSelector": "jsonpath:$.tags[*]",
             "authorizationHeader": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"
+        },
+        {
+            "target": "RuntimeStack",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMWebAppRuntimeStacksByOsType",
+            "parameters": {
+                "osTypeSelected": "Linux"
+            },
+            "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}}\"}"
         }
     ],
     "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
@@ -745,10 +753,12 @@
         "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
         "GoExeNameNotPresent": "Go exe name is not present",
         "WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier.",
-        "Updatemachinetoenablesecuretlsprotocol" : "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
+        "Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
         "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
         "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline",
-        "ASE_WebDeploySSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to pass -allowUntrusted in additional arguments of web deploy option."
+        "ASE_WebDeploySSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to pass -allowUntrusted in additional arguments of web deploy option.",
+        "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
+        "JarNotSupported": "Jar deployment is not supported in this version. Change the task version to '4.*' which is in preview mode"
     }
 }

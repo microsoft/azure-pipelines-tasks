@@ -1,4 +1,3 @@
-
 {
   "loc.friendlyName": "Развертывание облачной службы Azure",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613748)",
@@ -12,7 +11,7 @@
   "loc.input.label.ServiceName": "Имя службы",
   "loc.input.help.ServiceName": "Выберите или введите имя существующей облачной службы.",
   "loc.input.label.ServiceLocation": "Расположение службы",
-  "loc.input.help.ServiceLocation": "Выберите регион для развертывания новой службы. Возможные варианты: **Восток США**, **Восток США 2**, **Центральная часть США**, **Южно-Центральная часть США**, **Запад США**, **Северная Европа**, **Западная Европа** и другие.",
+  "loc.input.help.ServiceLocation": "Выберите регион для развертывания новой службы. Возможные варианты: **Восток США**, **Восток США 2**, **Центральная часть США**, **Центрально-южная часть США**, **Запад США**, **Северная Европа**, **Западная Европа** и другие.",
   "loc.input.label.CsPkg": "CsPkg",
   "loc.input.help.CsPkg": "Путь к CsPkg в каталоге артефактов по умолчанию.",
   "loc.input.label.CsCfg": "CsCfg",
@@ -29,14 +28,16 @@
   "loc.input.help.SimultaneousUpgrade": "Updates all instances at once. Your cloud service will be unavailable during update.",
   "loc.input.label.ForceUpgrade": "Принудительное обновление",
   "loc.input.help.ForceUpgrade": "При выборе этого варианта выполняется принудительное обновление, которое может привести к потере локальных данных.",
+  "loc.input.label.VerifyRoleInstanceStatus": "Verify role instance status",
+  "loc.input.help.VerifyRoleInstanceStatus": "When selected then the task will wait until role instances are in ready state.",
   "loc.input.label.DiagnosticStorageAccountKeys": "Ключи учетной записи хранения диагностики",
   "loc.input.help.DiagnosticStorageAccountKeys": "Укажите ключи к хранилищу данных для учетной записи хранения диагностики в формате \"Роль:Ключ\". Имя учетной записи хранения диагностики для каждой роли берется из файла конфигурации диагностики (WADCFGX). Если WADCFGX-файл роли не найден, расширения диагностики не будут настроены для этой роли. Если имя учетной записи хранения диагностики отсутствует в WADCFGX-файле, для хранения результатов диагностики будет использоваться учетная запись хранения по умолчанию, а параметры ключей к хранилищу данных из задачи развертывания будут проигнорированы. Рекомендуется сохранить <ключ_учетной_записи_хранения> в качестве секретной переменной, если в результатах диагностики вашей среды есть конфиденциальная информация. <br/><br/>Например,<br/> WebRole: &lt;ключ_учетной_записи_хранения_веб-роли&gt;<br/>WorkerRole: &lt;ключ_учетной_записи_хранения_рабочей_роли&gt;",
+  "loc.input.label.NewServiceCustomCertificates": "Custom certificates to import",
+  "loc.input.help.NewServiceCustomCertificates": "Provide custom certificates in CertificatePfxBase64:CertificatePassword format. It’s recommended to save <certificate_password> as a secret variable. <br/><br/>For example,<br/> Certificate1: &lt;Certificate1_password&gt;<br/>Certificate2: &lt;Certificate2_password&gt;",
   "loc.input.label.NewServiceAdditionalArguments": "Дополнительные аргументы",
   "loc.input.help.NewServiceAdditionalArguments": "Передайте дополнительные аргументы во время создания службы. Они будут переданы в командлет New-AzureService. Пример: -Label 'MyTestService'",
   "loc.input.label.NewServiceAffinityGroup": "Территориальная группа",
   "loc.input.help.NewServiceAffinityGroup": "При создании новой службы будет учитываться эта территориальная группа, а не расположение службы.",
-  "loc.input.label.NewServiceCustomCertificates": "Custom certificates to import",
-  "loc.input.help.NewServiceCustomCertificates": "Provide custom certificates in CertificatePfxBase64:CertificatePassword format. It’s recommended to save <certificate_password> as a secret variable. <br/><br/>For example,<br/> Certificate1: &lt;Certificate1_password&gt;<br/>Certificate2: &lt;Certificate2_password&gt;",
   "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Не удалось получить первичный ключ к хранилищу данных для учетной записи хранения \"{0}\". Не удается применить расширения диагностики.",
   "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Не удалось получить первичный ключ к хранилищу данных для учетной записи общедоступного хранилища конфигураций \"{0}\". Не удается применить расширения диагностики.",
   "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Применение настроенных расширений диагностики.",
@@ -45,7 +46,13 @@
   "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Найдено несколько файлов для развертывания с шаблоном поиска \"{0}\". Файл может быть только один.",
   "loc.messages.Storagekeysaredefinedininvalidformat": "Формат ключей к хранилищу данных недопустим.",
   "loc.messages.Unabletofind0usingprovidedsubscription": "Не удается найти {0} с использованием указанной подписки.",
-  "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Текущая версия Azure PowerShell не поддерживает настройку диагностики с использованием внешней учетной записи хранения.",
+  "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Current version of azure powershell does not support external storage account for configuring diagnostics.",
+  "loc.messages.Customcertificatesaredefinedininvalidformat": "Custom certificates are defined in invalid format.",
   "loc.messages.Addinganyconfiguredcustomcertificates": "Adding any configured custom certificates.",
-  "loc.messages.Customcertificatesaredefinedininvalidformat": "Custom certificates are defined in invalid format."
+  "loc.messages.ValidateAzureCloudServiceStatus": "Validating status of Azure Cloud Service: '{0}'",
+  "loc.messages.RetryAzureCloudServiceStatusCheck": "Azure Cloud Service: '{0}' validation failed. Retrying in '{1}' seconds.",
+  "loc.messages.AzureCloudServiceIsReady": "Azure Cloud Service: '{0}' is ready.",
+  "loc.messages.AzureCloudServiceIsNotReady": "Azure Cloud Service: '{0}' is not ready. This can be due to one or more RoleInstances not being in 'ReadyRole' state. Check logs for more details.",
+  "loc.messages.AllRoleInstancesAreReady": "All role instances (count: '{1}') for Azure Cloud Service: '{0}' are in 'ReadyRole' state.",
+  "loc.messages.AzureCloudServiceNotFound": "Azure Cloud Service: '{0}' not found."
 }

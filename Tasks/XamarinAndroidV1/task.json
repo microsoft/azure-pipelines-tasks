@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 137,
+        "Minor": 143,
         "Patch": 0
     },
     "demands": [
@@ -34,7 +34,9 @@
     "inputs": [
         {
             "name": "project",
-            "aliases": [ "projectFile" ],
+            "aliases": [
+                "projectFile"
+            ],
             "type": "filePath",
             "label": "Project",
             "defaultValue": "**/*.csproj",
@@ -51,7 +53,9 @@
         },
         {
             "name": "outputDir",
-            "aliases": [ "outputDirectory" ],
+            "aliases": [
+                "outputDirectory"
+            ],
             "type": "string",
             "label": "Output directory",
             "defaultValue": "",
@@ -83,7 +87,9 @@
         },
         {
             "name": "msbuildLocationMethod",
-            "aliases": [ "msbuildLocationOption" ],
+            "aliases": [
+                "msbuildLocationOption"
+            ],
             "type": "radio",
             "label": "MSBuild",
             "required": false,
@@ -96,7 +102,9 @@
         },
         {
             "name": "msbuildVersion",
-            "aliases": [ "msbuildVersionOption" ],
+            "aliases": [
+                "msbuildVersionOption"
+            ],
             "type": "pickList",
             "label": "MSBuild version",
             "required": false,
@@ -114,7 +122,9 @@
         },
         {
             "name": "msbuildLocation",
-            "aliases": [ "msbuildFile" ],
+            "aliases": [
+                "msbuildFile"
+            ],
             "type": "string",
             "label": "MSBuild location",
             "defaultValue": "",
@@ -125,7 +135,9 @@
         },
         {
             "name": "msbuildArchitecture",
-            "aliases": [ "msbuildArchitectureOption" ],
+            "aliases": [
+                "msbuildArchitectureOption"
+            ],
             "type": "pickList",
             "label": "MSBuild architecture",
             "defaultValue": "x86",
@@ -149,7 +161,9 @@
         },
         {
             "name": "jdkSelection",
-            "aliases": [ "jdkOption" ],
+            "aliases": [
+                "jdkOption"
+            ],
             "type": "radio",
             "label": "Select JDK to use for the build",
             "required": true,
@@ -163,7 +177,9 @@
         },
         {
             "name": "jdkVersion",
-            "aliases": [ "jdkVersionOption" ],
+            "aliases": [
+                "jdkVersionOption"
+            ],
             "type": "pickList",
             "label": "JDK version",
             "required": false,
@@ -173,16 +189,19 @@
             "visibleRule": "jdkSelection = JDKVersion",
             "options": {
                 "default": "default",
-                "1.10": "JDK 10",
-                "1.9": "JDK 9",
+                "1.11": "JDK 11",
+                "1.10": "JDK 10 (out of support)",
+                "1.9": "JDK 9 (out of support)",
                 "1.8": "JDK 8",
                 "1.7": "JDK 7",
-                "1.6": "JDK 6"
+                "1.6": "JDK 6 (out of support)"
             }
         },
         {
             "name": "jdkUserInputPath",
-            "aliases": [ "jdkDirectory" ],
+            "aliases": [
+                "jdkDirectory"
+            ],
             "type": "string",
             "label": "JDK path",
             "required": true,
@@ -193,7 +212,9 @@
         },
         {
             "name": "jdkArchitecture",
-            "aliases": [ "jdkArchitectureOption" ],
+            "aliases": [
+                "jdkArchitectureOption"
+            ],
             "type": "pickList",
             "label": "JDK architecture",
             "defaultValue": "x64",
@@ -221,7 +242,9 @@
         }
     },
     "messages": {
-        "JDKNotFound": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK.",
+        "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
+        "UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
+        "FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK.",
         "NoMatchingProjects": "No files were found matching: %s.",
         "XamarinAndroidBuildFailed": "%s\nSee https://go.microsoft.com/fwlink/?LinkId=760847.",
         "XamarinAndroidSucceeded": "Xamarin.Android task execution completed with no errors.",

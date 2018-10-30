@@ -150,6 +150,9 @@ a.exec[`kubectl --kubeconfig ${KubconfigFile} get secrets my-secret -o yaml`] = 
     "code": 0,
     "stdout": "successfully got secret my-secret and printed it in the specified format"
 };
+a.exec[`kubectl --kubeconfig ${KubconfigFile} logs nginx`] = {
+    "code": 0
+};
 
 tr.setAnswers(<any>a);
 
@@ -182,13 +185,13 @@ fsClone.writeFileSync = function(fileName, data) {
     }
 };
 
-fsClone.chmod = function(path, mode) {
+fsClone.chmodSync = function(path, mode) {
       switch(path){
           case KubectlPath:
             console.log(`Set kubectlPath to ${KubectlPath} and added permissions`);
             break;
           default:
-            fs.chmod(path, mode);        
+            fs.chmodSync(path, mode);        
       }
 };
 

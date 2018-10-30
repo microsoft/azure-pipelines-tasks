@@ -17,7 +17,7 @@
     "version": {
         "Major": 3,
         "Minor": 1,
-        "Patch": 1
+        "Patch": 8
     },
     "releaseNotes": "Added support for Fail on standard error and ErrorActionPreference",
     "demands": [
@@ -34,7 +34,9 @@
     "inputs": [
         {
             "name": "ConnectedServiceNameSelector",
-            "aliases": ["azureConnectionType"],
+            "aliases": [
+                "azureConnectionType"
+            ],
             "type": "pickList",
             "label": "Azure Connection Type",
             "required": false,
@@ -47,7 +49,9 @@
         },
         {
             "name": "ConnectedServiceName",
-            "aliases": ["azureClassicSubscription"],
+            "aliases": [
+                "azureClassicSubscription"
+            ],
             "type": "connectedService:Azure",
             "label": "Azure Classic Subscription",
             "defaultValue": "",
@@ -57,13 +61,18 @@
         },
         {
             "name": "ConnectedServiceNameARM",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell",
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
+            }
         },
         {
             "name": "ScriptType",
@@ -97,7 +106,7 @@
             "properties": {
                 "resizable": "true",
                 "rows": "10",
-                "maxLength": "500"
+                "maxLength": "5000"
             }
         },
         {
@@ -135,7 +144,9 @@
         },
         {
             "name": "TargetAzurePs",
-            "aliases": ["azurePowerShellVersion"],
+            "aliases": [
+                "azurePowerShellVersion"
+            ],
             "type": "radio",
             "label": "Azure PowerShell Version",
             "defaultValue": "OtherVersion",
@@ -145,18 +156,20 @@
                 "OtherVersion": "Specify other version"
             },
             "groupName": "AzurePowerShellVersionOptions",
-            "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Versions are: 2.1.0, 3.8.0, 4.2.1 and 5.1.1(Hosted VS2017 Queue), 3.6.0(Hosted Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
+            "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Versions are: 2.1.0, 3.8.0, 4.2.1, 5.1.1 and 6.7.0(Hosted VS2017 Queue), 3.6.0(Hosted Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
         },
         {
             "name": "CustomTargetAzurePs",
-            "aliases": ["preferredAzurePowerShellVersion"],
+            "aliases": [
+                "preferredAzurePowerShellVersion"
+            ],
             "type": "string",
             "label": "Preferred Azure PowerShell Version",
             "defaultValue": "",
             "required": true,
             "visibleRule": "TargetAzurePs = OtherVersion",
             "groupName": "AzurePowerShellVersionOptions",
-            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports versions: 2.1.0, 3.8.0, 4.2.1, 5.1.1"
+            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Azure module versions: 2.1.0, 3.8.0, 4.2.1, 5.1.1 and AzureRM module versions: 2.1.0, 3.8.0, 4.2.1, 5.1.1, 6.7.0"
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",

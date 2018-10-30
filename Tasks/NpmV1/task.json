@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 19
+        "Patch": 29
     },
     "runsOn": [
         "Agent",
@@ -33,7 +33,8 @@
             "isExpanded": true,
             "visibleRule": "command = publish"
         },
-        {   "displayName": "Advanced",
+        {
+            "displayName": "Advanced",
             "name": "advanced",
             "isExpanded": false,
             "visibleRule": "command = install || command = publish"
@@ -78,7 +79,7 @@
             "groupName": "customRegistries",
             "name": "customRegistry",
             "label": "Registries to use",
-            "helpMarkDown": "You can either commit a .npmrc file to your source code repository and set its path here or select a registry from VSTS here.",
+            "helpMarkDown": "You can either commit a .npmrc file to your source code repository and set its path here or select a registry from Azure Artifacts here.",
             "type": "radio",
             "options": {
                 "useNpmrc": "Registries in my .npmrc",
@@ -89,7 +90,7 @@
         {
             "groupName": "customRegistries",
             "name": "customFeed",
-            "label": "Use packages from this VSTS/TFS registry",
+            "label": "Use packages from this Azure Artifacts/TFS registry",
             "helpMarkDown": "Include the selected feed in the generated .npmrc.",
             "type": "pickList",
             "visibleRule": "customRegistry = useFeed",
@@ -182,6 +183,7 @@
         "TestDebugLog": "Trying debug log location: %s",
         "OverridingProjectNpmrc": "Overriding project .npmrc: %s",
         "RestoringProjectNpmrc": "Restoring project .npmrc",
-        "WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory"
+        "WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory",
+        "NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region."
     }
 }

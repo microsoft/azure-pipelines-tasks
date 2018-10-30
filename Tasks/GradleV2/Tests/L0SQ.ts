@@ -18,9 +18,9 @@ let ccReportDirReplaced: string = path.join(__dirname, 'CCReport43F6D5EF', 'cove
 
 //Env vars in the mock framework must replace '.' with '_'
 //replace with mock of setVariable when task-lib has the support
-process.env['MOCK_IGNORE_TEMP_PATH'] = true;
+process.env['MOCK_IGNORE_TEMP_PATH'] = 'true';
 process.env['MOCK_TEMP_PATH'] = path.join(__dirname, '..', '..');
-process.env['MOCK_NORMALIZE_SLASHES'] = true;
+process.env['MOCK_NORMALIZE_SLASHES'] = 'true';
 
 process.env['JAVA_HOME_8_X86'] = '/user/local/bin/Java8';
 
@@ -63,12 +63,7 @@ let myAnswers: string = `{
       "${taskReportValidBuildSonarDirReplaced}":true,
       "${taskReportValidBuildSonarReportTaskTextDirReplaced}":true
    },
-   "find":{
-      "/user/build":[
-         "/user/build/fun/test-123.xml"
-      ]
-   },
-   "match":{
+   "findMatch":{
       "**/build/test-results/TEST-*.xml":[
          "/user/build/fun/test-123.xml"
       ]

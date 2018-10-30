@@ -1,5 +1,4 @@
 import * as tl from 'vsts-task-lib/task';
-import * as models from './models';
 import * as nondistributedtest from './nondistributedtest';
 import * as path from 'path';
 import * as distributedTest from './distributedtest';
@@ -15,7 +14,7 @@ const osPlat: string = os.platform();
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function execute() {
-    const taskProps = { state: 'started', result: '' };
+    const taskProps: { [key: string]: string; } = { state: 'started'};
     ci.publishEvent(taskProps);
 
     const enableApiExecution = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
@@ -29,6 +28,10 @@ async function execute() {
         }
         const serverBasedRun = isServerBasedRun();
         inputParser.setIsServerBasedRun(serverBasedRun);
+
+        const enableDiagnostics = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
+        'TestExecution.EnableDiagnostics', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
+        inputParser.setEnableDiagnosticsSettings(enableDiagnostics);
 
         if (serverBasedRun) {
             ci.publishEvent({
@@ -46,7 +49,7 @@ async function execute() {
             console.log(tl.loc('nonDistributedTestWorkflow'));
             console.log('======================================================');
             const inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
-            if (enableApiExecution || (inputDataContract.ExecutionSettings
+            if (enableApiExecution || inputDataContract.EnableSingleAgentAPIFlow || (inputDataContract.ExecutionSettings
                 && inputDataContract.ExecutionSettings.RerunSettings
                 && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests)) {
                 if (enableApiExecution) {
@@ -62,7 +65,7 @@ async function execute() {
         }
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
-        taskProps.result = error;
+        taskProps.result = error.message;
     }
     finally {
         taskProps.state = 'completed';
@@ -88,7 +91,7 @@ function isFeatureFlagEnabled(collectionUri: string, featureFlag: string, token:
                 tl.debug('Unable to get feature flag ' + featureFlag + ' Error:' + err.message);
                 resolve(state);
             }
-            if (faModel.effectiveState) {
+            if (faModel  && faModel.effectiveState) {
                 state = ('on' === faModel.effectiveState.toLowerCase());
                 tl.debug(' Final feature flag state: ' + state);
             }

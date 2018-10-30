@@ -36,6 +36,21 @@ class DotnetCoreInstaller {
         // Prepend the tools path. instructs the agent to prepend for future tasks
         toolLib.prependPath(toolPath);
 
+        try {
+            let globalToolPath: string = "";
+            if (tl.osType().match(/^Win/)) {
+                globalToolPath = path.join(process.env.USERPROFILE, ".dotnet\\tools");
+            } else {
+                globalToolPath = path.join(process.env.HOME, ".dotnet/tools");
+            }
+
+            console.log(tl.loc("PrependGlobalToolPath"));
+            tl.mkdirP(globalToolPath);
+            toolLib.prependPath(globalToolPath);
+        } catch (error) {
+            //nop
+        }
+
         // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
         tl.setVariable('DOTNET_ROOT', toolPath);
     }

@@ -43,7 +43,7 @@ describe('Docker Compose Suite', function() {
             assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf("[command]docker push dir2_web:latest") != -1, "docker compose push should run");
+            assert(tr.stdout.indexOf("[command]docker push dir2_web") != -1, "docker compose push should run");
             console.log(tr.stderr);
             done();
         });
@@ -73,7 +73,7 @@ describe('Docker Compose Suite', function() {
             assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf("[command]docker push ajgtestacr1.azurecr.io/dir2_web:latest") != -1, "docker compose push should run");
+            assert(tr.stdout.indexOf("[command]docker push ajgtestacr1.azurecr.io/dir2_web") != -1, "docker compose push should run");
             console.log(tr.stderr);
             done();
         });
@@ -158,7 +158,7 @@ describe('Docker Compose Suite', function() {
             assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf("[command]docker push 100_web:latest") != -1, "docker compose push should run");
+            assert(tr.stdout.indexOf("[command]docker push 100_web") != -1, "docker compose push should run");
             console.log(tr.stderr);
             done();
         });
@@ -188,7 +188,7 @@ describe('Docker Compose Suite', function() {
             assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf("[command]docker push ajgtestacr1.azurecr.io/100_web:latest") != -1, "docker compose push should run");
+            assert(tr.stdout.indexOf("[command]docker push ajgtestacr1.azurecr.io/100_web") != -1, "docker compose push should run");
             console.log(tr.stderr);
             done();
         });

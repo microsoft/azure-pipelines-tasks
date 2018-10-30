@@ -73,7 +73,8 @@ export class AzureAppServiceUtility {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'GET';
             webRequest.uri = applicationUrl;
-            var response = await webClient.sendRequest(webRequest);
+            let webRequestOptions:webClient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true};
+            var response = await webClient.sendRequest(webRequest, webRequestOptions);
             tl.debug(`App Service status Code: '${response.statusCode}'. Status Message: '${response.statusMessage}'`);
         }
         catch(error) {
@@ -131,7 +132,7 @@ export class AzureAppServiceUtility {
         console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(properties)));
         await this._appService.patchApplicationSettings(properties);
         var kuduService = await this.getKuduService();
-        var noOftimesToIterate: number = 6;
+        var noOftimesToIterate: number = 12;
         tl.debug('retrieving values from Kudu service to check if new values are updated');
         while(noOftimesToIterate > 0) {
             var kuduServiceAppSettings = await kuduService.getAppSettings();

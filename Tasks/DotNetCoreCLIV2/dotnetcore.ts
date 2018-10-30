@@ -7,7 +7,7 @@ var archiver = require('archiver');
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
-import * as utility from "./Common/utility";
+import * as utility from './Common/utility';
 
 export class dotNetExe {
     private command: string;
@@ -18,6 +18,7 @@ export class dotNetExe {
     private outputArgument: string = "";
     private outputArgumentIndex: number = 0;
     private workingDirectory: string;
+    private testRunSystem: string = "VSTS - dotnet";
 
     constructor() {
         this.command = tl.getInput("command");
@@ -112,7 +113,6 @@ export class dotNetExe {
         const dotnetPath = tl.which('dotnet', true);
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
-
         if (enablePublishTestResults && enablePublishTestResults === true) {
             this.arguments = this.arguments.concat(` --logger trx --results-directory "${resultsDirectory}"`);
         }
@@ -159,7 +159,7 @@ export class dotNetExe {
             tl.warning('No test result files were found.');
         } else {
             const tp: tl.TestPublisher = new tl.TestPublisher('VSTest');
-            tp.publish(matchingTestResultsFiles, 'false', buildPlaform, buildConfig, '', 'true');
+            tp.publish(matchingTestResultsFiles, 'false', buildPlaform, buildConfig, '', 'true', this.testRunSystem);
             //refer https://github.com/Microsoft/vsts-task-lib/blob/master/node/task.ts#L1620
         }
     }

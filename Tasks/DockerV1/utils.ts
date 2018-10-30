@@ -26,7 +26,7 @@ export function getImageName(): string {
     return imageName;
 }
 
-export function getImageMappings(connection: ContainerConnection, imageNames: string[]): ImageMapping[] {
+export function getImageMappings(connection: ContainerConnection, imageNames: string[], additionalImageTags: string[]): ImageMapping[] {
     let qualifyImageName = tl.getBoolInput("qualifyImageName");
     let imageInfos: ImageInfo[] = imageNames.map(imageName => {
         let qualifiedImageName = qualifyImageName ? connection.qualifyImageName(imageName) : imageName;
@@ -37,9 +37,8 @@ export function getImageMappings(connection: ContainerConnection, imageNames: st
             taggedImages: []
         };
     });
-
+    
     let includeSourceTags = tl.getBoolInput("includeSourceTags");
-    let includeLatestTag = tl.getBoolInput("includeLatestTag");
 
     let sourceTags: string[] = [];
     if (includeSourceTags) {
@@ -50,18 +49,12 @@ export function getImageMappings(connection: ContainerConnection, imageNames: st
     // may be listed more than once if there are multiple tags.  The target image names will be tagged based on the task configuration.
     for (let i = 0; i < imageInfos.length; i++) {
         let imageInfo = imageInfos[i];
-        let imageSpecificTags: string[] = [];
-        if (imageInfo.baseImageName === imageInfo.qualifiedImageName) {
-            imageSpecificTags.push("latest");
-        } else {
-            imageInfo.taggedImages.push(imageInfo.qualifiedImageName);
-            if (includeLatestTag) {
-                imageSpecificTags.push("latest");
-            }
-        }
-
-        sourceTags.concat(imageSpecificTags).forEach(tag => {
+        imageInfo.taggedImages.push(imageInfo.qualifiedImageName);
+        sourceTags.forEach(tag => {
             imageInfo.taggedImages.push(imageInfo.baseImageName + ":" + tag);
+        });
+        additionalImageTags.forEach(tag => {
+            imageInfo.taggedImages.push(tag);
         });
     }
 

@@ -5,7 +5,6 @@
     "description": "Finds or downloads a specific version of Go in the tools cache and adds it to the PATH. Use this to set the version of Go used in subsequent tasks.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867581)",
     "category": "Tool",
-    "preview": "true",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
@@ -14,12 +13,14 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 0
+        "Patch": 3
     },
-    "satisfies": ["GO"],
+    "satisfies": [
+        "GO"
+    ],
     "demands": [],
     "instanceNameFormat": "Use Go $(version)",
-    "groups":[
+    "groups": [
         {
             "name": "advanced",
             "displayName": "Advanced",

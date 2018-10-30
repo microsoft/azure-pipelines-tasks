@@ -9,6 +9,8 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "dependencies": {
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.0.7",
     "vsts-task-lib": "2.1.0"
   }
 }

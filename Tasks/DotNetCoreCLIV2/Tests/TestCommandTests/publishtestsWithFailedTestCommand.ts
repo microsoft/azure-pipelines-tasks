@@ -48,6 +48,22 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     }
 };
+
+// Create mock for getVariable
+const tl = require('vsts-task-lib/mock-task');
+const tlClone = Object.assign({}, tl);
+tlClone.getVariable = function(variable: string) {
+    if (variable.toUpperCase() === "Agent.TempDirectory".toUpperCase())
+    {
+        return process.env[variable.toUpperCase()];
+    }
+    else
+    {
+        return tl.getVariable(variable);
+    }    
+};
+tmr.registerMock('vsts-task-lib/mock-task', tlClone);
+
 nmh.setAnswers(a);
 nmh.registerNugetUtilityMock(['c:\\agent\\home\\directory\\temp.csproj']);
 nmh.registerDefaultNugetVersionMock();

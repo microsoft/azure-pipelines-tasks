@@ -1,29 +1,29 @@
-import * as path from 'path';
-
 import * as tl from 'vsts-task-lib/task';
 
-import { NpmCommand, NpmTaskInput, RegistryLocation } from './constants';
-import { INpmRegistry, NpmRegistry } from 'npm-common/npmregistry';
+import { NpmTaskInput, RegistryLocation } from './constants';
+import { INpmRegistry, NpmRegistry } from 'packaging-common/npm/npmregistry';
 import { NpmToolRunner } from './npmtoolrunner';
-import * as util from 'npm-common/util';
+import * as util from 'packaging-common/util';
+import * as npmutil from 'packaging-common/npm/npmutil';
+import { PackagingLocation } from 'packaging-common/locationUtilities';
 
-export async function run(command?: string): Promise<void> {
-    let workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
-    let npmrc = util.getTempNpmrcPath();
-    let npmRegistries: INpmRegistry[] = await getCustomRegistries();
-    let overrideNpmrc = (tl.getInput(NpmTaskInput.CustomRegistry) == RegistryLocation.Feed) ? true : false;
+export async function run(packagingLocation: PackagingLocation, command?: string): Promise<void> {
+    const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
+    const npmrc = npmutil.getTempNpmrcPath();
+    const npmRegistries: INpmRegistry[] = await getCustomRegistries(packagingLocation);
+    const overrideNpmrc = (tl.getInput(NpmTaskInput.CustomRegistry) === RegistryLocation.Feed) ? true : false;
 
-    for (let registry of npmRegistries) {
+    for (const registry of npmRegistries) {
         if (registry.authOnly === false) {
             tl.debug(tl.loc('UsingRegistry', registry.url));
-            util.appendToNpmrc(npmrc, `registry=${registry.url}\n`);
+            npmutil.appendToNpmrc(npmrc, `registry=${registry.url}\n`);
         }
 
         tl.debug(tl.loc('AddingAuthRegistry', registry.url));
-        util.appendToNpmrc(npmrc, `${registry.auth}\n`);
+        npmutil.appendToNpmrc(npmrc, `${registry.auth}\n`);
     }
 
-    let npm = new NpmToolRunner(workingDir, npmrc, overrideNpmrc);
+    const npm = new NpmToolRunner(workingDir, npmrc, overrideNpmrc);
     npm.line(command || tl.getInput(NpmTaskInput.CustomCommand, true));
 
     npm.execSync();
@@ -32,15 +32,15 @@ export async function run(command?: string): Promise<void> {
     tl.rmRF(util.getTempPath());
 }
 
-export async function getCustomRegistries(): Promise<NpmRegistry[]> {
-    let workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
-    let npmRegistries: INpmRegistry[] = await util.getLocalNpmRegistries(workingDir);
-    let registryLocation = tl.getInput(NpmTaskInput.CustomRegistry);
+export async function getCustomRegistries(packagingLocation: PackagingLocation): Promise<NpmRegistry[]> {
+    const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
+    const npmRegistries: INpmRegistry[] = await npmutil.getLocalNpmRegistries(workingDir, packagingLocation.PackagingUris);
+    const registryLocation = tl.getInput(NpmTaskInput.CustomRegistry);
     switch (registryLocation) {
         case RegistryLocation.Feed:
             tl.debug(tl.loc('UseFeed'));
-            let feedId = tl.getInput(NpmTaskInput.CustomFeed, true);
-            npmRegistries.push(await NpmRegistry.FromFeedId(feedId));
+            const feedId = tl.getInput(NpmTaskInput.CustomFeed, true);
+            npmRegistries.push(await NpmRegistry.FromFeedId(packagingLocation.DefaultPackagingUri, feedId));
             break;
         case RegistryLocation.Npmrc:
             tl.debug(tl.loc('UseNpmrc'));

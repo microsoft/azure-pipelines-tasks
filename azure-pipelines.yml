@@ -1,0 +1,62 @@
+trigger:
+- master
+- releases/*
+
+jobs:
+
+# All tasks on Windows
+- job: build_all_windows
+  displayName: Build all tasks (Windows)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
+  pool:
+    vmImage: vs2017-win2016
+  strategy:
+    parallel: $[ variables.build_windows_parallel ]
+  steps:
+  - template: ci/build-all-steps.yml
+    parameters:
+      os: Windows_NT
+
+# Publish on Windows
+- job: publish_windows
+  displayName: Publish
+  dependsOn: 
+  - build_all_windows
+  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - template: ci/publish-steps.yml
+
+# All tasks on Linux
+- job: build_all_linux
+  displayName: Build all tasks (Linux)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
+  pool:
+    vmImage: ubuntu-16.04
+  strategy:
+    parallel: $[ variables.build_linux_parallel ]
+  steps:
+  - template: ci/build-all-steps.yml
+    parameters:
+      os: Linux
+
+# All tasks on macOS
+- job: build_all_darwin
+  displayName: Build all tasks (macOS)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
+  pool:
+    vmImage: macos-10.13
+  strategy:
+    parallel: $[ variables.build_darwin_parallel ]
+  steps:
+  - template: ci/build-all-steps.yml
+    parameters:
+      os: Darwin
+
+# Single task
+- job: buildSingle
+  displayName: Build single task
+  condition: and(succeeded(), variables.task)
+  steps:
+  - template: ci/build-single-steps.yml

@@ -24,7 +24,27 @@ function Get-JavaDevelopmentKitPath{
             $view = "Registry32"
         }
 
-        $jdkPath = Get-RegistryValue -Hive 'LocalMachine' -View $view -KeyName $jdkKeyName -ValueName 'JavaHome'
+        $jdkPath;
+        if (-not [string]::IsNullOrEmpty($jdkKeyName)) {
+            $jdkPath = Get-RegistryValue -Hive 'LocalMachine' -View $view -KeyName $jdkKeyName -ValueName 'JavaHome'
+        }
+        
+        Write-Verbose "jdkPath from registry = $jdkPath"
+        if ([string]::IsNullOrEmpty($jdkPath)) {
+            $jdkVersionShort = $jdkVersion.Substring(2)
+            $javaHomeEnvVariable = "JAVA_HOME_" + $jdkVersionShort + "_" + $jdkArchitecture
+            Write-Verbose "javaHomeEnvVariable = $javaHomeEnvVariable"
+            try {
+                $jdkPath = (Get-Item env:$javaHomeEnvVariable).Value
+            } catch {
+                throw "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable $javaHomeEnvVariable exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK."
+            }
+        }
+        
+        Write-Verbose "jdkPath from environment variable $javaHomeEnvVariable = $jdkPath"
+        if ([string]::IsNullOrEmpty($jdkPath)) {
+            throw "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent or use the [Java Tool Installer](https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK."
+        }
         return $jdkPath
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation

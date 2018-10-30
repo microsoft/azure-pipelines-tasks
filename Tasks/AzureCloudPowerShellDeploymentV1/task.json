@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 3,
-        "Patch": 7
+        "Patch": 10
     },
     "demands": [
         "azureps"
@@ -32,7 +32,9 @@
     "inputs": [
         {
             "name": "ConnectedServiceName",
-            "aliases": ["azureClassicSubscription"],
+            "aliases": [
+                "azureClassicSubscription"
+            ],
             "type": "connectedService:Azure:Certificate,UsernamePassword",
             "label": "Azure subscription (Classic)",
             "defaultValue": "",
@@ -90,7 +92,9 @@
         },
         {
             "name": "Slot",
-            "aliases": ["slotName"],
+            "aliases": [
+                "slotName"
+            ],
             "type": "string",
             "label": "Environment (Slot)",
             "defaultValue": "Production",
@@ -137,6 +141,14 @@
             "defaultValue": "false",
             "visibleRule": "AllowUpgrade == true",
             "helpMarkDown": "When selected sets the upgrade to a forced upgrade, which could potentially cause loss of local data.",
+            "required": false
+        },
+        {
+            "name": "VerifyRoleInstanceStatus",
+            "type": "boolean",
+            "label": "Verify role instance status",
+            "defaultValue": "false",
+            "helpMarkDown": "When selected then the task will wait until role instances are in ready state.",
             "required": false
         },
         {

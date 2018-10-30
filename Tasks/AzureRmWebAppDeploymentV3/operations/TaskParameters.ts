@@ -40,6 +40,11 @@ export class TaskParametersUtility {
             taskParameters.RuntimeStack = tl.getInput('RuntimeStack', true);
             tl.debug('Change package path to Linux package path');
             taskParameters.Package = tl.getInput('BuiltinLinuxPackage', true);
+            taskParameters.TakeAppOfflineFlag = false;
+        }
+
+        if(taskParameters.Package && taskParameters.Package.endsWith(".jar")) {
+            throw new Error(tl.loc('JarNotSupported'));
         }
 
         taskParameters.VirtualApplication = taskParameters.VirtualApplication && taskParameters.VirtualApplication.startsWith('/') ?
@@ -52,7 +57,24 @@ export class TaskParametersUtility {
             taskParameters.AdditionalArguments = tl.getInput('AdditionalArguments', false);
         }
 
+        if(taskParameters.isLinuxApp && taskParameters.ScriptType) {
+            this.UpdateLinuxAppTypeScriptParameters(taskParameters);
+        }
+
         return taskParameters;
+    }
+
+    private static UpdateLinuxAppTypeScriptParameters(taskParameters: TaskParameters) {
+        let retryTimeoutValue = tl.getVariable('appservicedeploy.retrytimeout');
+        let timeoutAppSettings = retryTimeoutValue ? Number(retryTimeoutValue) * 60 : 1800;
+
+        tl.debug(`setting app setting SCM_COMMAND_IDLE_TIMEOUT to ${timeoutAppSettings}`);
+        if(taskParameters.AppSettings) {
+            taskParameters.AppSettings = `-SCM_COMMAND_IDLE_TIMEOUT ${timeoutAppSettings} ` + taskParameters.AppSettings;
+        }
+        else {
+            taskParameters.AppSettings = `-SCM_COMMAND_IDLE_TIMEOUT ${timeoutAppSettings}`;
+        }
     }
 }
 

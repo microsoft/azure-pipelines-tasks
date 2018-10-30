@@ -25,7 +25,7 @@ process.env['ENDPOINT_DATA_ID1_acceptUntrustedCerts'] = 'true';
 helper.RegisterArtifactEngineMock(tr);
 helper.RegisterHttpClientMock(tr, (url: string) => {
     if (url === "http://url/job/myfreestyleproject//api/json") {
-        return helper.GetSuccessExpectedResult('{}');
+        return helper.GetSuccessExpectedResult('{ "_class": "hudson.model.FreeStyleBuild" }');
     }
 
     if (url === "http://url//job/myfreestyleproject//20/api/json?tree=artifacts[*]") {

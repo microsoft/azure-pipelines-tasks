@@ -208,7 +208,10 @@ export interface AzureEndpoint {
     subscriptionID: string;
     subscriptionName: string;
     servicePrincipalClientID?: string;
+    authenticationType?: string;
     servicePrincipalKey?: string;
+    servicePrincipalCertificate?: string;
+    servicePrincipalCertificatePath?: string
     tenantID: string;
     environmentAuthorityUrl: string;
     url: string;
@@ -218,11 +221,12 @@ export interface AzureEndpoint {
     graphEndpoint?: string;
     galleryUrl?: string;
     portalEndpoint?: string;
-    AzureKeyVaultDnsSuffix?: string;
-    AzureKeyVaultServiceEndpointResourceId?: string;
+    azureKeyVaultDnsSuffix?: string;
+    azureKeyVaultServiceEndpointResourceId?: string;
     msiClientId?: string;
     scheme?: string;
     applicationTokenCredentials: ApplicationTokenCredentials;
+    isADFSEnabled?: boolean;
 }
 
 export interface AzureAppServiceConfigurationDetails {

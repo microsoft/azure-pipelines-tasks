@@ -1,7 +1,5 @@
 import * as path from 'path';
 
-import * as mockery from 'mockery';
-
 import { TaskMockRunner } from 'vsts-task-lib/mock-run';
 
 const taskPath = path.join(__dirname, '..', 'main.js');
@@ -16,9 +14,19 @@ taskRunner.setAnswers({
         'conda': '/miniconda/bin/conda'
     },
     exec: {
+        'sudo /miniconda/bin/conda install python=3 --quiet --yes --json': {
+            code: 0
+        },
         'conda install python=3 --quiet --yes --json': {
-            'code': 0
-        }
+            code: 0
+        },
+        '/miniconda/bin/conda info --base': {
+            code: 0,
+            stdout: '/base/environment'
+        },
+    },
+    checkPath: {
+        '/miniconda/bin/conda': true
     }
 });
 

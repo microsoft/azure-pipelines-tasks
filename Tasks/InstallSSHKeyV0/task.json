@@ -12,15 +12,14 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 137,
+        "Minor": 141,
         "Patch": 1
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
-    "demands": [
-    ],
+    "demands": [],
     "minimumAgentVersion": "2.117.0",
     "instanceNameFormat": "Install an SSH key",
     "inputs": [
@@ -76,4 +75,3 @@
         "CannotResetKnownHosts": "Cannot reset the known_hosts file to its original values."
     }
 }
-    

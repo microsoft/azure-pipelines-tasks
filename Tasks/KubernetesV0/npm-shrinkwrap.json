@@ -2,6 +2,49 @@
   "requires": true,
   "lockfileVersion": 1,
   "dependencies": {
+    "@types/del": {
+      "version": "2.2.33",
+      "resolved": "https://registry.npmjs.org/@types/del/-/del-2.2.33.tgz",
+      "integrity": "sha512-bXwiHz4Ljz7FXGybdEtCHrsgJE+zIvxmGWgBLMwReMJi6yMenQs1ls3Q/s9rieuja9S/clDKVoXDS7BhEU2lYQ==",
+      "requires": {
+        "@types/glob": "5.0.36"
+      }
+    },
+    "@types/events": {
+      "version": "1.2.0",
+      "resolved": "https://registry.npmjs.org/@types/events/-/events-1.2.0.tgz",
+      "integrity": "sha512-KEIlhXnIutzKwRbQkGWb/I4HFqBuUykAdHgDED6xqwXJfONCjF5VoE0cXEiurh3XauygxzeDzgtXUqvLkxFzzA=="
+    },
+    "@types/glob": {
+      "version": "5.0.36",
+      "resolved": "https://registry.npmjs.org/@types/glob/-/glob-5.0.36.tgz",
+      "integrity": "sha512-KEzSKuP2+3oOjYYjujue6Z3Yqis5HKA1BsIC+jZ1v3lrRNdsqyNNtX0rQf6LSuI4DJJ2z5UV//zBZCcvM0xikg==",
+      "requires": {
+        "@types/events": "1.2.0",
+        "@types/minimatch": "3.0.3",
+        "@types/node": "6.0.117"
+      }
+    },
+    "@types/minimatch": {
+      "version": "3.0.3",
+      "resolved": "https://registry.npmjs.org/@types/minimatch/-/minimatch-3.0.3.tgz",
+      "integrity": "sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA=="
+    },
+    "@types/mocha": {
+      "version": "2.2.48",
+      "resolved": "https://registry.npmjs.org/@types/mocha/-/mocha-2.2.48.tgz",
+      "integrity": "sha512-nlK/iyETgafGli8Zh9zJVCTicvU3iajSkRwOh3Hhiva598CMqNJ4NcVCGMTGKpGpTYj/9R8RLzS9NAykSSCqGw=="
+    },
+    "@types/node": {
+      "version": "6.0.117",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-6.0.117.tgz",
+      "integrity": "sha512-sihk0SnN8PpiS5ihu5xJQ5ddnURNq4P+XPmW+nORlKkHy21CoZO/IVHK/Wq/l3G8fFW06Fkltgnqx229uPlnRg=="
+    },
+    "@types/q": {
+      "version": "1.5.1",
+      "resolved": "https://registry.npmjs.org/@types/q/-/q-1.5.1.tgz",
+      "integrity": "sha512-eqz8c/0kwNi/OEHQfvIuJVLTst3in0e7uTKeuY+WL/zfKn0xVujOTp42bS/vUUokhK5P2BppLd9JXMOMHcgbjA=="
+    },
     "array-union": {
       "version": "1.0.2",
       "resolved": "https://registry.npmjs.org/array-union/-/array-union-1.0.2.tgz",
@@ -127,11 +170,6 @@
         "path-is-inside": "1.0.2"
       }
     },
-    "js-base64": {
-      "version": "2.4.3",
-      "resolved": "https://registry.npmjs.org/js-base64/-/js-base64-2.4.3.tgz",
-      "integrity": "sha512-H7ErYLM34CvDMto3GbD6xD0JLUGYXR3QTcH6B/tr4Hi/QpSThnCsIp+Sy5FRTw3B0d6py4HcNkW7nO/wdtGWEw=="
-    },
     "minimatch": {
       "version": "3.0.4",
       "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.4.tgz",
@@ -220,9 +258,9 @@
       }
     },
     "semver": {
-      "version": "5.5.0",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-5.5.0.tgz",
-      "integrity": "sha512-4SJ3dm0WAwWy/NVeioZh5AntkdJoWKxHxcmyP622fOkgHa4z3R0TdBJICINyaSDE6uNwVc8gZr+ZinwZAH4xIA=="
+      "version": "5.4.1",
+      "resolved": "https://registry.npmjs.org/semver/-/semver-5.4.1.tgz",
+      "integrity": "sha512-WfG/X9+oATh81XtllIo/I8gOiY9EXRdv1cQdyykeXK17YcUW3EXUAi2To4pcH6nZtJPr7ZOpM5OMyWJZm+8Rsg=="
     },
     "semver-compare": {
       "version": "1.0.0",
@@ -256,32 +294,50 @@
     "utility-common": {
       "version": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
       "requires": {
-        "js-base64": "2.4.3",
-        "semver": "5.5.0",
-        "vso-node-api": "6.0.1-preview",
-        "vsts-task-lib": "2.0.6",
+        "semver": "5.4.1",
+        "vso-node-api": "6.5.0",
+        "vsts-task-lib": "2.6.0",
         "vsts-task-tool-lib": "0.4.0"
       },
       "dependencies": {
+        "typed-rest-client": {
+          "version": "0.12.0",
+          "resolved": "https://registry.npmjs.org/typed-rest-client/-/typed-rest-client-0.12.0.tgz",
+          "integrity": "sha1-Y3b1Un9CfaEh3K/f1+QeEyHgcgw=",
+          "requires": {
+            "tunnel": "0.0.4",
+            "underscore": "1.8.3"
+          }
+        },
+        "vso-node-api": {
+          "version": "6.5.0",
+          "resolved": "http://registry.npmjs.org/vso-node-api/-/vso-node-api-6.5.0.tgz",
+          "integrity": "sha512-hFjPLMJkq02zF8U+LhZ4airH0ivaiKzGdlNAQlYFB3lWuGH/UANUrl63DVPUQOyGw+7ZNQ+ufM44T6mWN92xyg==",
+          "requires": {
+            "tunnel": "0.0.4",
+            "typed-rest-client": "0.12.0",
+            "underscore": "1.8.3"
+          }
+        },
         "vsts-task-lib": {
-          "version": "2.0.6",
-          "resolved": "https://registry.npmjs.org/vsts-task-lib/-/vsts-task-lib-2.0.6.tgz",
-          "integrity": "sha1-9sqGS3sDsS23N8nV/2kThGNpEFY=",
+          "version": "2.6.0",
+          "resolved": "https://registry.npmjs.org/vsts-task-lib/-/vsts-task-lib-2.6.0.tgz",
+          "integrity": "sha512-ja2qX4BIUvswcNbGtIoGo1SM5mRVc3Yaf7oM4oY64bNHs04chKfvH6f3cDDG0pd44OrZIGQE9LgECzeau6z2wA==",
           "requires": {
             "minimatch": "3.0.4",
             "mockery": "1.7.0",
             "q": "1.4.1",
-            "semver": "5.5.0",
+            "semver": "5.4.1",
             "shelljs": "0.3.0",
-            "uuid": "3.2.1"
+            "uuid": "3.3.2"
           }
         }
       }
     },
     "uuid": {
-      "version": "3.2.1",
-      "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.2.1.tgz",
-      "integrity": "sha512-jZnMwlb9Iku/O3smGWvZhauCf6cvvpKi4BKRiliS3cxnI+Gz9j5MEpTz2UFuXiKPJocb7gnsLHwiS05ige5BEA=="
+      "version": "3.3.2",
+      "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.3.2.tgz",
+      "integrity": "sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA=="
     },
     "vso-node-api": {
       "version": "6.0.1-preview",
@@ -302,7 +358,7 @@
         "mockery": "1.7.0",
         "node-uuid": "1.4.8",
         "q": "1.4.1",
-        "semver": "5.5.0",
+        "semver": "5.4.1",
         "shelljs": "0.3.0"
       }
     },
@@ -311,7 +367,7 @@
       "resolved": "https://registry.npmjs.org/vsts-task-tool-lib/-/vsts-task-tool-lib-0.4.0.tgz",
       "integrity": "sha1-zOtRxyh3yWTI5E3p7eovZfyKyPk=",
       "requires": {
-        "semver": "5.5.0",
+        "semver": "5.4.1",
         "semver-compare": "1.0.0",
         "typed-rest-client": "0.9.0",
         "uuid": "3.2.1",
@@ -331,7 +387,7 @@
             "minimatch": "3.0.4",
             "mockery": "1.7.0",
             "q": "1.4.1",
-            "semver": "5.5.0",
+            "semver": "5.4.1",
             "shelljs": "0.3.0",
             "uuid": "3.2.1"
           }

@@ -9,6 +9,9 @@ taskRunner.setInput('versionSpec', '3.x');
 taskRunner.setInput('addToPath', 'false');
 taskRunner.setInput('architecture', 'x64');
 
+// `getVariable` is not supported by `TaskLibAnswers`
+process.env['AGENT_TOOLSDIRECTORY'] = '$(Agent.ToolsDirectory)';
+
 // Mock vsts-task-tool-lib
 taskRunner.registerMock('vsts-task-tool-lib/tool', {
     findLocalTool: () => null,

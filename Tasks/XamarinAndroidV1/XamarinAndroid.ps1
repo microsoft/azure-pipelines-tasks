@@ -55,11 +55,6 @@ try {
     if ($jdkVersion -and $jdkVersion -ne "default")
     {
         $jdkPath = Get-JavaDevelopmentKitPath -Version $jdkVersion -Arch $jdkArchitecture
-        if (!$jdkPath)
-        {
-            throw "Could not find JDK $jdkVersion $jdkArchitecture, please make sure the selected JDK is installed properly"
-        }
-
         Write-Verbose "adding JavaSdkDirectory: $jdkPath"
         $msBuildArguments = "$msBuildArguments /p:JavaSdkDirectory=`"$jdkPath`""
 

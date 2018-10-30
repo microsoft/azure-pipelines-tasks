@@ -1,10 +1,13 @@
 {
   "name": "vsts-tasks-jenkinsqueuejob",
   "dependencies": {
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.0.7",
+    "@types/shelljs": "^0.3.0",
     "request": "^2.65.0",
     "vsts-task-lib": "0.9.20"
   },
-  "description": "VSTS Jenkins Queue Job Task",
+  "description": "Azure Pipelines Jenkins Queue Job Task",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/microsoft/vsts-tasks.git"

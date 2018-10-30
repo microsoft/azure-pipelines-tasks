@@ -1,14 +1,12 @@
-import * as ngToolRunner from "nuget-task-common/NuGetToolRunner";
-import * as nutil from "nuget-task-common/Utility";
+import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner";
+import * as nutil from "packaging-common/nuget/Utility";
 import * as tl from "vsts-task-lib/task";
-// Remove once task lib 2.0.4 releases
-global['_vsts_task_lib_loaded'] = true;
 import * as path from "path";
-import * as auth from "nuget-task-common/Authentication";
+import * as auth from "packaging-common/nuget/Authentication";
 
-import locationHelpers = require("nuget-task-common/LocationHelpers");
-import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
-import peParser = require('nuget-task-common/pe-parser/index');
+import nuGetGetter = require("packaging-common/nuget/NuGetToolGetter");
+import peParser = require('packaging-common/pe-parser/index');
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
 
 class NuGetExecutionOptions {
     constructor(
@@ -20,6 +18,18 @@ class NuGetExecutionOptions {
 }
 
 async function main(): Promise<void> {
+    let packagingLocation: pkgLocationUtils.PackagingLocation;
+    try {
+        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
+    } catch (error) {
+        tl.debug("Unable to get packaging URIs, using default collection URI");
+        tl.debug(JSON.stringify(error));
+        const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
+        packagingLocation = {
+            PackagingUris: [collectionUrl],
+            DefaultPackagingUri: collectionUrl};
+    }
+
     tl.setResourcePath(path.join(__dirname, "task.json"));
 
     let buildIdentityDisplayName: string = null;
@@ -60,9 +70,9 @@ async function main(): Promise<void> {
         const useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
         // useCredConfig not placed here: This task will only support NuGet versions >= 3.5.0 which support credProvider both hosted and OnPrem
 
-        let accessToken = auth.getSystemAccessToken();
+        let accessToken = pkgLocationUtils.getSystemAccessToken();
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-        let urlPrefixes = await locationHelpers.assumeNuGetUriPrefixes(serviceUri);
+        let urlPrefixes = packagingLocation.PackagingUris;
         tl.debug(`Discovered URL prefixes: ${urlPrefixes}`);
 
         // Note to readers: This variable will be going away once we have a fix for the location service for

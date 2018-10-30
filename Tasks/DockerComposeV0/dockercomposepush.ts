@@ -22,8 +22,12 @@ function pushTag(promise: any, connection: DockerComposeConnection, imageName: s
 
 function pushTags(connection: DockerComposeConnection, imageName: string): any {
     var baseImageName = imageUtils.imageNameWithoutTag(imageName);
-    var builtImageName = imageName + (baseImageName === imageName ? ":latest" : "");
-    return dockerPush(connection, builtImageName)
+    if (baseImageName == imageName)
+    {
+        tl.debug(tl.loc('ImageNameWithoutTag'));
+    }
+
+    return dockerPush(connection, imageName)
     .then(function pushAdditionalTags() {
         var promise: any;
         tl.getDelimitedInput("additionalImageTags", "\n").forEach(tag => {

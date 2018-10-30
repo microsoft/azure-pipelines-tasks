@@ -10,7 +10,7 @@ Please report a problem at [Developer Community Forum](https://developercommunit
 
 ## Pre-requisites for the task
 
-The only prerequisite for the task is that .NET Core must be installed on VSTS agent machine. In case you want an exact version of .NET Core on the agent then you can use the [.NET Core Tool installer task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DotNetCoreInstaller)
+The only prerequisite for the task is that .NET Core must be installed on Azure Pipelines agent machine. In case you want an exact version of .NET Core on the agent then you can use the [.NET Core Tool installer task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DotNetCoreInstaller)
 
 ### Parameters of the task
 
@@ -27,7 +27,7 @@ Options specific to **dotnet publish** command
 
 Options specific to **dotnet nuget push** command
 * **Path to NuGet package(s) to publish\*:** The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: **\*.nupkg;-:**\*.Tests.nupkg
-* **Target feed location\*:** You can choose from a feed in your VSTS account or an external NuGet server.
+* **Target feed location\*:** You can choose from a feed in your Azure Pipelines account or an external NuGet server.
 * **Target feed\*:** Select a feed hosted in this account. You must have Package Management installed and licensed to select a feed here.
 
 Options specific to **dotnet pack** command
@@ -42,8 +42,8 @@ If you choose 'Use the build number', this will use the build number to version 
 * **Verbosity\*:** Specifies the amount of detail displayed in the output.
 
 Options specific to **dotnet restore** command
-* **Feeds to use\*:** You can either select a feed from VSTS and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.
-* **Use packages from this VSTS/TFS feed\*:** Include the selected feed in the generated NuGet.config. You must have Package Management installed and licensed to select a feed here.
+* **Feeds to use\*:** You can either select a feed from Azure Artifacts and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.
+* **Use packages from this Azure Artifacts/TFS feed\*:** Include the selected feed in the generated NuGet.config. You must have Package Management installed and licensed to select a feed here.
 * **Use packages from NuGet.org\*:** Include NuGet.org in the generated NuGet.config.
 * **Disable local cache\*:** Prevents NuGet from using packages from local machine caches.
 * **Destination directory\*:** Specifies the folder in which packages are installed. If no folder is specified, packages are restored into the default NuGet package cache.

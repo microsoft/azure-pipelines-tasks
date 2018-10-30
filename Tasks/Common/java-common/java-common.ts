@@ -39,7 +39,8 @@ function readJavaHomeFromRegistry(jdkVersion: string, arch: string): string {
 export function findJavaHome(jdkVersion: string, jdkArch: string): string {
     tl.debug(tl.loc('LocateJVMBasedOnVersionAndArch', jdkVersion, jdkArch));
 
-    // jdkVersion should be in the form of 1.7, 1.8, or 1.10
+    // jdkVersion should be in the form of 1.6, 1.7, 1.8, 1.9, 1.10 or 1.11
+    // 1.6, 1.9 and 1.10 are out of support
     // jdkArchitecture is either x64 or x86
     // envName for version 1.7 and x64 would be "JAVA_HOME_7_X64"
     var envName = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArch.toUpperCase();
@@ -50,10 +51,16 @@ export function findJavaHome(jdkVersion: string, jdkArch: string): string {
         }
 
         if (!discoveredJavaHome) {
-            throw new Error(tl.loc('FailedToLocateSpecifiedJVM', envName));
+            if (jdkVersion === '1.9' || jdkVersion === '1.10') {
+                // jdk 1.9 and 1.10 are out out support, warn and switch to 1.11 to avoid breaking builds
+                tl.warning(tl.loc('UnsupportedJdkWarning'));
+                return findJavaHome('1.11', jdkArch);
+            } else {
+                throw new Error(tl.loc('FailedToLocateSpecifiedJVM', envName));
+            }
         }
-    } 
-    
+    }
+
     return discoveredJavaHome;
 }
 
@@ -62,7 +69,7 @@ export function publishJavaTelemetry(taskName: string, javaTelemetryData) {
         //tl.assertAgent('2.120.0'); -> we can use this when all the tasks using this common module use vsts-task-lib 2.1.0 or higher
         let agentVersion: string = tl.getVariable('Agent.Version');
         if (agentVersion && !semver.lt(agentVersion, '2.120.0') && taskName && javaTelemetryData) {
-            console.log('##vso[telemetry.publish area=Tasks.CrossPlatform;feature=' + taskName + ']' + JSON.stringify(javaTelemetryData));
+            console.log('##vso[telemetry.publish area=TaskHub;feature=' + taskName + ']' + JSON.stringify(javaTelemetryData));
         } else {
             tl.debug('Failed to publish java telemetry. Agent version 2.120.0 or higher is required.');
         }

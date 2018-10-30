@@ -2,14 +2,14 @@
     "id": "AD8974D8-DE11-11E4-B2FE-7FB898A745F3",
     "name": "cURLUploader",
     "friendlyName": "cURL Upload Files",
-    "description": "Use cURL to upload files with FTP, FTPS, SFTP, HTTP, and more.",
+    "description": "Use cURL to upload files.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627418)",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 137,
-        "Patch": 0
+        "Minor": 142,
+        "Patch": 2
     },
     "runsOn": [
         "Agent",

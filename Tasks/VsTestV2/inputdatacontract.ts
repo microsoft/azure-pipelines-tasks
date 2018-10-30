@@ -8,6 +8,7 @@ export interface InputDataContract {
     TestSelectionSettings : TestSelectionSettings;
     VsTestConsolePath : string;
     UsingXCopyTestPlatformPackage : boolean;
+    EnableSingleAgentAPIFlow : boolean;
     TestReportingSettings : TestReportingSettings;
     TfsSpecificSettings : TfsSpecificSettings;
     TargetBinariesSettings : TargetBinariesSettings;
@@ -16,11 +17,13 @@ export interface InputDataContract {
     DistributionSettings : DistributionSettings;
     ExecutionSettings : ExecutionSettings;
     Logging : Logging;
+    SourcesDirectory : string;
 }
 
 export interface TestReportingSettings {
     TestRunTitle : string;
     TestResultsDirectory : string;
+    TestRunSystem : string;
 }
 
 export interface TestSelectionSettings {
@@ -96,6 +99,12 @@ export interface ExecutionSettings {
     TiaSettings : TiaSettings;
     TempFolder : string;
     VideoDataCollectorEnabled : boolean;
+    DiagnosticsSettings : DiagnosticsSettings;
+}
+
+export interface DiagnosticsSettings {
+    Enabled : boolean;
+    DumpCollectionType : string;
 }
 
 export interface TiaSettings {

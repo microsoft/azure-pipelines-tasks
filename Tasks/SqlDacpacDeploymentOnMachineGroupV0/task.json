@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 11
+        "Patch": 14
     },
     "demands": [],
     "minimumAgentVersion": "1.102.0",
@@ -135,7 +135,7 @@
                 "windowsAuthentication": "Windows Authentication",
                 "sqlServerAuthentication": "SQL Server Authentication"
             },
-            "helpMarkDown": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the administrator's account, as specified in the Machines section, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below."
+            "helpMarkDown": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the account used to configure deployment agent, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below."
         },
         {
             "name": "SqlUsername",

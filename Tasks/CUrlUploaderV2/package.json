@@ -1,7 +1,7 @@
 {
   "name": "vsts-curluploader-task",
   "version": "1.0.0",
-  "description": "VSTS Curl Uploader Task",
+  "description": "Azure Pipelines Curl Uploader Task",
   "main": "curluploader.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/microsoft/vsts-tasks#readme",
   "dependencies": {
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.0.7",
     "vsts-task-lib": "^2.0.5"
   }
 }

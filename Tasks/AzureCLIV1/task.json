@@ -18,8 +18,8 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 137,
-        "Patch": 2
+        "Minor": 143,
+        "Patch": 1
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -33,7 +33,9 @@
     "inputs": [
         {
             "name": "connectedServiceNameARM",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "required": true,
@@ -71,12 +73,14 @@
             "properties": {
                 "resizable": "true",
                 "rows": "10",
-                "maxLength": "4000"
+                "maxLength": "5000"
             }
         },
         {
             "name": "args",
-            "aliases": ["arguments"],
+            "aliases": [
+                "arguments"
+            ],
             "type": "string",
             "label": "Arguments",
             "defaultValue": "",
@@ -88,7 +92,9 @@
         },
         {
             "name": "cwd",
-            "aliases": ["workingDirectory"],
+            "aliases": [
+                "workingDirectory"
+            ],
             "type": "filePath",
             "label": "Working Directory",
             "defaultValue": "",
@@ -117,6 +123,8 @@
         "ScriptFailed": "Script failed with error: %s",
         "UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM",
         "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
-        "FailedToLogout": "The following error occurred while logging out: %s"
+        "FailedToLogout": "The following error occurred while logging out: %s",
+        "LoginFailed": "Azure login failed",
+        "ErrorInSettingUpSubscription": "Error in setting up subscription"
     }
 }

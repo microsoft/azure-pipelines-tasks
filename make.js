@@ -107,7 +107,6 @@ target.clean = function () {
 // ex: node make.js gendocs --task ShellScript
 //
 target.gendocs = function() {
-
     var docsDir = path.join(__dirname, '_gendocs');
     rm('-Rf', docsDir);
     mkdir('-p', docsDir);
@@ -231,7 +230,7 @@ target.build = function() {
                         getExternals(modMake.externals, modOutDir);
                     }
 
-                    if (mod.type === 'node' && mod.compile == true) {
+                    if (mod.type === 'node' && mod.compile == true || test('-f', path.join(modPath, 'package.json'))) {
                         var commonPack = util.getCommonPackInfo(modOutDir);
 
                         // assert the pack file does not already exist (name should be unique)
@@ -488,14 +487,9 @@ target.package = function() {
     // END LOCAL CONFIG
     // Note: The local section above is needed when running layout locally due to discrepancies between local build and
     //       slicing in CI. This will get cleaned up after we fully roll out and go to build only changed.
+    
     var layoutPath = path.join(packagePath, 'milestone-layout');
     util.createNugetPackagePerTask(packagePath, layoutPath);
-
-    // These methods are to help with the migration to NuGet package per task.
-    // Get rid of them after transition is done.
-    //var path = '';
-    //util.renameFoldersFromAggregate(path);
-    //util.generatePerTaskForLegacyPackages(path);
 }
 
 // used by CI that does official publish
@@ -548,11 +542,19 @@ target.publish = function() {
     run(`nuget3.exe push ${nupkgFile} -Source ${server} -apikey Skyrise`);
 }
 
+
+var agentPluginTasks = ['DownloadPipelineArtifact', 'PublishPipelineArtifact'];
 // used to bump the patch version in task.json files
 target.bump = function() {
     taskList.forEach(function (taskName) {
         var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
         var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
+
+        // skip agent plugin tasks
+        if(agentPluginTasks.indexOf(taskJson.name) > -1) {
+            return;
+        }
+
         if (typeof taskJson.version.Patch != 'number') {
             fail(`Error processing '${taskName}'. version.Patch should be a number.`);
         }
