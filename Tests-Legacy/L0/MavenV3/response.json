@@ -93,6 +93,7 @@
         "/home/bin/maven/bin/mvn": true,
         "/home/bin/maven": true,
         "/home/bin/maven2": true,
+        "/home/bin/maven2/bin/mvn": true,
         "/tmp/.mavenInfo": true,
         "/tmp/.mavenInfo/MavenInfo.md": true,
         "pom.xml": true
@@ -109,12 +110,7 @@
         "build.buildNumber": "1",
         "System.TeamFoundationCollectionUri": "https://xplatalm.visualstudio.com/"
     },
-    "find": {
-        "/user/build": [
-            "/user/build/fun/test-123.xml"
-        ]
-    },
-    "match": {
+    "findMatch": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ]
