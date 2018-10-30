@@ -56,20 +56,6 @@ export class AzureRmWebAppDeploymentProvider{
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }
-    }
-
-    protected async PostDeploymentStep() {
-        if(this.taskParams.AppSettings) {
-            var customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
-            await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
-        }
-
-        if(this.taskParams.ConfigurationSettings) {
-            var customApplicationSettings = ParameterParser.parse(this.taskParams.ConfigurationSettings);
-            await this.appServiceUtility.updateConfigurationSettings(customApplicationSettings);
-        }
-
-        await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
         
         let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
         console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));

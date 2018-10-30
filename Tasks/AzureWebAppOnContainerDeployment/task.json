@@ -158,8 +158,26 @@
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppNamesByAppType",
             "parameters": {
-                "WebAppKind": "$(WebAppKind)"
+                "WebAppKind": "webAppContainer"
             }
+        },
+        {
+            "target": "ResourceGroupName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMWebAppResourceGroup",
+            "parameters": {
+                "WebAppName": "$(WebAppName)"
+            }
+        },
+        {
+            "target": "SlotName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMWebAppSlotsId",
+            "parameters": {
+                "WebAppName": "$(WebAppName)",
+                "ResourceGroupName": "$(ResourceGroupName)"
+            },
+            "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         }
     ],
     "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
