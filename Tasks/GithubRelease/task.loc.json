@@ -1,0 +1,172 @@
+{
+  "id": "7B5A6198-ADF8-4B16-9939-7ADDF85708B2",
+  "name": "GithubRelease",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "preview": true,
+  "version": {
+    "Major": 5,
+    "Minor": 0,
+    "Patch": 3
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.0.0",
+  "inputs": [
+    {
+      "name": "githubEndpoint",
+      "type": "connectedService:github",
+      "label": "ms-resource:loc.input.label.githubEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.githubEndpoint"
+    },
+    {
+      "name": "repositoryName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.repositoryName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.repositoryName",
+      "properties": {
+        "DisableManageLink": "True"
+      }
+    },
+    {
+      "name": "action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.action",
+      "defaultValue": "CreateRelease",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.action",
+      "options": {
+        "Create": "Create",
+        "Edit": "Edit",
+        "Discard": "Discard"
+      }
+    },
+    {
+      "name": "tagCreate",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.tagCreate",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "action = Create",
+      "helpMarkDown": "ms-resource:loc.input.help.tagCreate"
+    },
+    {
+      "name": "tagEdit",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.tagEdit",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "action = Edit || action = Discard",
+      "helpMarkDown": "ms-resource:loc.input.help.tagEdit"
+    },
+    {
+      "name": "target",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.target",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "action = Create",
+      "helpMarkDown": "ms-resource:loc.input.help.target"
+    },
+    {
+      "name": "releaseTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.releaseTitle",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "action = Create || action = Edit",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseTitle"
+    },
+    {
+      "name": "releasenote",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.releasenote",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "action = Create || action = Edit",
+      "helpMarkDown": "ms-resource:loc.input.help.releasenote",
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      }
+    },
+    {
+      "name": "githubReleaseAsset",
+      "type": "input",
+      "label": "ms-resource:loc.input.label.githubReleaseAsset",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "action = Create || action = Edit",
+      "helpMarkDown": "ms-resource:loc.input.help.githubReleaseAsset"
+    },
+    {
+      "name": "deleteExistingAssets",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.deleteExistingAssets",
+      "defaultValue": "false",
+      "required": true,
+      "visibleRule": "action = Create || action = Edit",
+      "helpMarkDown": "ms-resource:loc.input.help.deleteExistingAssets"
+    },
+    {
+      "name": "isdraft",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isdraft",
+      "defaultValue": "false",
+      "required": true,
+      "visibleRule": "action = Create || action = Edit",
+      "helpMarkDown": "ms-resource:loc.input.help.isdraft"
+    },
+    {
+      "name": "isprerelease",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isprerelease",
+      "defaultValue": "false",
+      "required": true,
+      "visibleRule": "action = Create || action = Edit",
+      "helpMarkDown": "ms-resource:loc.input.help.isprerelease"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "repositoryName",
+      "endpoint": "/$(system.teamProject)/_apis/sourceProviders/GitHub/repositories?serviceEndpointId=$(githubEndpoint)",
+      "selector": "jsonpath:$.repositories[*].id",
+      "keySelector": "jsonpath:$.repositories[*].id",
+      "authKey": "tfs:teamfoundation"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "main.js"
+    }
+  },
+  "messages": {
+    "ResourceGroupDoesntMatchPattern": "ms-resource:loc.messages.ResourceGroupDoesntMatchPattern",
+    "MissingAssetError": "ms-resource:loc.messages.MissingAssetError",
+    "UploadingAsset": "ms-resource:loc.messages.UploadingAsset",
+    "ErrorUploadingAsset": "ms-resource:loc.messages.ErrorUploadingAsset",
+    "ErrorCreateRelease": "ms-resource:loc.messages.ErrorCreateRelease",
+    "ErrorEditRelease": "ms-resource:loc.messages.ErrorEditRelease",
+    "ErrorGettingReleaseByTag": "ms-resource:loc.messages.ErrorGettingReleaseByTag",
+    "ErrorDiscardingRelease": "ms-resource:loc.messages.ErrorDiscardingRelease",
+    "DiscardReleaseSuccessful": "ms-resource:loc.messages.DiscardReleaseSuccessful",
+    "UploadAssetSuccessful": "ms-resource:loc.messages.UploadAssetSuccessful",
+    "DuplicateAssetFound": "ms-resource:loc.messages.DuplicateAssetFound",
+    "DuplicateAssetDeletedSuccessfully": "ms-resource:loc.messages.DuplicateAssetDeletedSuccessfully",
+    "ErrorDeletingDuplicateAsset": "ms-resource:loc.messages.ErrorDeletingDuplicateAsset",
+    "DeletingDuplicateAsset": "ms-resource:loc.messages.DeletingDuplicateAsset"
+  }
+}

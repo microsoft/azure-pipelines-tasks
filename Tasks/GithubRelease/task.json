@@ -1,0 +1,172 @@
+{
+    "id": "7B5A6198-ADF8-4B16-9939-7ADDF85708B2",
+    "name": "GithubRelease",
+    "friendlyName": "Github Release",
+    "description": "Create, edit or discard the github release",
+    "helpMarkDown": "[More Information](Todo: Link to github release documentation)",
+    "category": "Utility",
+    "releaseNotes": "Works with cross-platform agents (Linux, macOS, or Windows)",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "preview": true,
+    "version": {
+        "Major": 5,
+        "Minor": 0,
+        "Patch": 3
+    },
+    "demands": [],
+    "minimumAgentVersion": "2.0.0",
+    "inputs": [
+        {
+            "name": "githubEndpoint",
+            "type": "connectedService:github",
+            "label": "GitHub Connection",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the service endpoint for your GitHub connection. To create one, click the Manage link and create a new service endpoint."
+        },
+        {
+            "name": "repositoryName",
+            "type": "pickList",
+            "label": "Repository",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Name of the GitHub repository",
+            "properties": {
+                "DisableManageLink": "True"
+            }
+        },
+        {
+            "name": "action",
+            "type": "pickList",
+            "label": "Action",
+            "defaultValue": "CreateRelease",
+            "required": true,
+            "helpMarkDown": "Select the action to trigger",
+            "options": {
+                "Create": "Create",
+                "Edit": "Edit",
+                "Discard": "Discard"
+            }
+        },
+        {
+            "name": "tagCreate",
+            "type": "string",
+            "label": "Tag",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "action = Create",
+            "helpMarkDown": "Tag to release, default value $(Build.BuildNumber) for release current build"
+        },
+        {
+            "name": "tagEdit",
+            "type": "string",
+            "label": "Tag",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "action = Edit || action = Discard",
+            "helpMarkDown": "Tag to release, default value $(Build.BuildNumber) for release current build"
+        },
+        {
+            "name": "target",
+            "type": "string",
+            "label": "Target",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "action = Create",
+            "helpMarkDown": "The branch or commit to release"
+        },
+        {
+            "name": "releaseTitle",
+            "type": "string",
+            "label": "Release title",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "action = Create || action = Edit",
+            "helpMarkDown": "Release title"
+        },
+        {
+            "name": "releasenote",
+            "type": "multiLine",
+            "label": "Release note",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "action = Create || action = Edit",
+            "helpMarkDown": "Release note",
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            }
+        },
+        {
+            "name": "githubReleaseAsset",
+            "type": "input",
+            "label": "File to upload as asset",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "action = Create || action = Edit",
+            "helpMarkDown": "The file to upload as artifacts to the release. Eg- $(System.DefaultWorkingDirectory)/**/*.xml"
+        },
+        {
+            "name": "deleteExistingAssets",
+            "type": "boolean",
+            "label": "Delete existing assets",
+            "defaultValue": "false",
+            "required": true,
+            "visibleRule": "action = Create || action = Edit",
+            "helpMarkDown": "Delete existing assets"
+        },
+        {
+            "name": "isdraft",
+            "type": "boolean",
+            "label": "Is draft release ?",
+            "defaultValue": "false",
+            "required": true,
+            "visibleRule": "action = Create || action = Edit",
+            "helpMarkDown": "Is draft"
+        },
+        {
+            "name": "isprerelease",
+            "type": "boolean",
+            "label": "Is Pre Release ?",
+            "defaultValue": "false",
+            "required": true,
+            "visibleRule": "action = Create || action = Edit",
+            "helpMarkDown": "Is pre release"
+        }
+    ],
+    "sourceDefinitions": [
+        {
+            "target": "repositoryName",
+            "endpoint": "/$(system.teamProject)/_apis/sourceProviders/GitHub/repositories?serviceEndpointId=$(githubEndpoint)",
+            "selector": "jsonpath:$.repositories[*].id",
+            "keySelector": "jsonpath:$.repositories[*].id",
+            "authKey": "tfs:teamfoundation"
+        }
+    ],
+    "instanceNameFormat": "$(action) GitHub Release",
+    "execution": {
+        "Node": {
+            "target": "main.js"
+        }
+    },
+    "messages": {
+        "ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/",
+        "MissingAssetError": "Missing asset: %s",
+        "UploadingAsset": "Uploading asset: %s",
+        "ErrorUploadingAsset": "Error while uploading asset: %s",
+        "ErrorCreateRelease": "Github create release request failed.",
+        "ErrorEditRelease": "Github edit release request failed.",
+        "ErrorGettingReleaseByTag": "Github get release by tag name request failed.",
+        "ErrorDiscardingRelease": "Github discard release request failed.",
+        "DiscardReleaseSuccessful": "Discard release successful.",
+        "UploadAssetSuccessful": "Uploaded asset: %s",
+        "DuplicateAssetFound": "Duplicate asset found: %s",
+        "DuplicateAssetDeletedSuccessfully": "Duplicate asset deleted successfully: %s\n Uploading the current asset again",
+        "ErrorDeletingDuplicateAsset": "Error deleting duplicate asset: %s",
+        "DeletingDuplicateAsset": "Deleting duplicate asset: %s"
+    }
+}
