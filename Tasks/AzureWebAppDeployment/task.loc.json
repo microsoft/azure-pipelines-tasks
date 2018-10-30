@@ -16,7 +16,7 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
+    "Major": 1,
     "Minor": 0,
     "Patch": 0
   },
@@ -66,6 +66,9 @@
     },
     {
       "name": "WebAppName",
+      "aliases": [
+        "appName"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebAppName",
       "defaultValue": "",
@@ -101,6 +104,9 @@
     },
     {
       "name": "SlotName",
+      "aliases": [
+        "slotName"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.SlotName",
       "defaultValue": "production",
@@ -114,7 +120,8 @@
     {
       "name": "Package",
       "aliases": [
-        "packageForLinux"
+        "packageForLinux",
+        "package"
       ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.Package",
@@ -124,6 +131,9 @@
     },
     {
       "name": "RuntimeStack",
+      "aliases": [
+        "runtimeStack"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.RuntimeStack",
       "defaultValue": "",
@@ -136,6 +146,9 @@
     },
     {
       "name": "StartupCommand",
+      "aliases": [
+        "startUpCommand"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.StartupCommand",
       "defaultValue": "",
@@ -157,6 +170,9 @@
     },
     {
       "name": "AppSettings",
+      "aliases": [
+        "appSettings"
+      ],
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.AppSettings",
       "defaultValue": "",
@@ -169,6 +185,9 @@
     },
     {
       "name": "ConfigurationSettings",
+      "aliases": [
+        "configurationStrings"
+      ],
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.ConfigurationSettings",
       "defaultValue": "",
@@ -180,9 +199,12 @@
       }
     },
     {
-      "name": "DeploymentType",
+      "name": "DeploymentMethod",
+      "aliases": [
+        "deploymentMethod"
+      ],
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.DeploymentType",
+      "label": "ms-resource:loc.input.label.DeploymentMethod",
       "defaultValue": "auto",
       "required": true,
       "groupName": "AdditionalDeploymentOptions",
@@ -191,10 +213,13 @@
         "zipDeploy": "Zip Deploy",
         "runFromZip": "Run From Package"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.DeploymentType"
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentMethod"
     },
     {
       "name": "TakeAppOfflineFlag",
+      "aliases": [
+        "appOffline"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
       "defaultValue": "false",

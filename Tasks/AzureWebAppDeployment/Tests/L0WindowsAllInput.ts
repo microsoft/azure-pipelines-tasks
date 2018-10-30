@@ -8,12 +8,9 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('WebAppName', 'mytestapp');
 tr.setInput('Package', 'webAppPkg.zip');
-tr.setInput('UseWebDeploy', 'true');
 tr.setInput('RemoveAdditionalFilesFlag', 'true');
 tr.setInput('ExcludeFilesFromAppDataFlag', 'true');
 tr.setInput('TakeAppOfflineFlag', 'false');
-tr.setInput('VirtualApplication', 'virtualApp');
-tr.setInput('AdditionalArguments', 'additionalArguments');
 tr.setInput('WebAppUri', 'someuri');
 
 process.env['TASK_TEST_TRACE'] = 1;

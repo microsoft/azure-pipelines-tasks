@@ -1,6 +1,6 @@
 import tl = require('vsts-task-lib');
 import { WindowsWebAppZipDeployProvider } from '../deploymentProvider/WindowsWebAppZipDeployProvider'
-import { TaskParametersUtility, TaskParameters, DeploymentType } from '../TaskParameters';
+import { TaskParametersUtility, TaskParameters, DeploymentType } from '../taskparameters';
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import { getMockEndpoint } from '../node_modules/azurermdeploycommon/Tests/mock_utils';
 import { mockAzureARMPreDeploymentSteps, mockZipDeploySettings }  from "./mock_utils";
@@ -12,11 +12,11 @@ mockZipDeploySettings();
 export class WindowsWebAppZipDeployProviderL0Tests  {
 
     public static async startWindowsWebAppZipDeployProviderL0Tests() {
-        // await WindowsWebAppZipDeployProviderL0Tests.testForPreDeploymentSteps_ZipDeployProvider();
-        // await WindowsWebAppZipDeployProviderL0Tests.testForPreDeploymentStepsWithSlotEnabled_ZipDeployProvider();
-        // await WindowsWebAppZipDeployProviderL0Tests.testForUpdateDeploymentStatus_ZipDeployProvider();
-        // await WindowsWebAppZipDeployProviderL0Tests.testForDeployWebAppStep_ZipDeployProvider();
-        // await WindowsWebAppZipDeployProviderL0Tests.testForDeployWebAppStepForFolder_ZipDeployProvider();
+        await WindowsWebAppZipDeployProviderL0Tests.testForPreDeploymentSteps_ZipDeployProvider();
+        await WindowsWebAppZipDeployProviderL0Tests.testForPreDeploymentStepsWithSlotEnabled_ZipDeployProvider();
+        await WindowsWebAppZipDeployProviderL0Tests.testForUpdateDeploymentStatus_ZipDeployProvider();
+        await WindowsWebAppZipDeployProviderL0Tests.testForDeployWebAppStep_ZipDeployProvider();
+        await WindowsWebAppZipDeployProviderL0Tests.testForDeployWebAppStepForFolder_ZipDeployProvider();
     }
 
     public static async testForPreDeploymentSteps_ZipDeployProvider() {

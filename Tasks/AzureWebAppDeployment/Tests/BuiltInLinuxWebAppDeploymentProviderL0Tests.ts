@@ -1,6 +1,6 @@
 import tl = require('vsts-task-lib');
 import { BuiltInLinuxWebAppDeploymentProvider } from '../deploymentProvider/BuiltInLinuxWebAppDeploymentProvider'
-import { TaskParametersUtility, TaskParameters, DeploymentType } from '../TaskParameters';
+import { TaskParametersUtility, TaskParameters, DeploymentType } from '../taskparameters';
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import { getMockEndpoint } from '../node_modules/azurermdeploycommon/Tests/mock_utils';
 import { mockAzureARMPreDeploymentSteps, mockLinuxAppSettings }  from "./mock_utils";

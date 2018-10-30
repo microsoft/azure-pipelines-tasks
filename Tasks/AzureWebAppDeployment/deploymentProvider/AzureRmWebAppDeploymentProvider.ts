@@ -1,5 +1,5 @@
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
-import { TaskParameters } from '../TaskParameters';
+import { TaskParameters } from '../taskparameters';
 import { KuduServiceUtility } from 'azurermdeploycommon/operations/KuduServiceUtility';
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
 import { Kudu } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service-kudu';

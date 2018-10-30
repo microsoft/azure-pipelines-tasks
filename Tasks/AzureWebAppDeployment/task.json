@@ -16,11 +16,11 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
+        "Major": 1,
         "Minor": 0,
         "Patch": 0
     },
-    "releaseNotes": "What's new in version 0.* (preview)<br />Supports Zip Deploy, Run From Package, War Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurewebappdeployreadme) for more information.",
+    "releaseNotes": "What's new in version 1.* (preview)<br />Supports Zip Deploy, Run From Package, War Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurewebappdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
@@ -66,6 +66,9 @@
         },
         {
             "name": "WebAppName",
+            "aliases": [
+                "appName"
+            ],
             "type": "pickList",
             "label": "App Service name",
             "defaultValue": "",
@@ -101,6 +104,9 @@
         },
         {
             "name": "SlotName",
+            "aliases":[
+                "slotName"
+            ],
             "type": "pickList",
             "label": "Slot",
             "defaultValue": "production",
@@ -114,7 +120,8 @@
         {
             "name": "Package",
             "aliases": [
-                "packageForLinux"
+                "packageForLinux",
+                "package"
             ],
             "type": "filePath",
             "label": "Package or folder",
@@ -124,6 +131,9 @@
         },
         {
             "name": "RuntimeStack",
+            "aliases":[
+                "runtimeStack"
+            ],
             "type": "pickList",
             "label": "Runtime Stack",
             "defaultValue": "",
@@ -136,6 +146,9 @@
         },
         {
             "name": "StartupCommand",
+            "aliases":[
+                "startUpCommand"
+            ],
             "type": "string",
             "label": "Startup command ",
             "defaultValue": "",
@@ -157,6 +170,9 @@
         },
         {
             "name": "AppSettings",
+            "aliases":[
+                "appSettings"
+            ],
             "type": "multiLine",
             "label": "App settings",
             "defaultValue": "",
@@ -169,6 +185,9 @@
         },
         {
             "name": "ConfigurationSettings",
+            "aliases":[
+                "configurationStrings"
+            ],
             "type": "multiLine",
             "label": "Configuration settings",
             "defaultValue": "",
@@ -180,7 +199,10 @@
             }
         },
         {
-            "name": "DeploymentType",
+            "name": "DeploymentMethod",
+            "aliases":[
+                "deploymentMethod"
+            ],
             "type": "pickList",
             "label": "Deployment method",
             "defaultValue": "auto",
@@ -195,6 +217,9 @@
         },
         {
             "name": "TakeAppOfflineFlag",
+            "aliases":[
+                "appOffline"
+            ],
             "type": "boolean",
             "label": "Take App Offline",
             "defaultValue": "false",

@@ -27,13 +27,12 @@ export function setEndpointData() {
 }
 
 export function setAgentsData() {
-    process.env['TASK_TEST_TRACE'] = 1;
+    process.env["TASK_TEST_TRACE"] = 1;
     process.env["AZURE_HTTP_USER_AGENT"] = "TFS_useragent";
     process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
     process.env["AGENT_NAME"] = "author";
-    process.env["AGENT_TEMPDIRECTORY"] = 'Agent.TempDirectory';
-    process.env["BUILD_BUILDID"] = 'Build.BuildId';
-    process.env["VSTS_ARM_REST_IGNORE_SSL_ERRORS"] ="VSTS_ARM_REST_IGNORE_SSL_ERRORS";
+    process.env["AGENT_TEMPDIRECTORY"] = "Agent.TempDirectory";
+    process.env["BUILD_BUILDID"] = "Build.BuildId";
 }
 
 export function mockTaskArgument():  ma.TaskLibAnswers{

@@ -8,7 +8,7 @@ var KuduServiceTests = require("../node_modules/azurermdeploycommon/Tests/L0-azu
 var ApplicationInsightsTests = require("../node_modules/azurermdeploycommon/Tests/L0-azure-arm-appinsights-tests.js");
 var ResourcesTests = require("../node_modules/azurermdeploycommon/Tests/L0-azure-arm-resource-tests.js");
 
-describe('AzureRmWebAppDeployment Suite', function() {
+describe('AzureWebAppDeployment Suite', function() {
     
     this.timeout(60000);
 
@@ -20,10 +20,10 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
-    // ApplicationInsightsTests.ApplicationInsightsTests();
-    // AppServiceTests.AzureAppServiceMockTests();
-    // KuduServiceTests.KuduServiceTests();
-    // ResourcesTests.ResourcesTests(); 
+    ApplicationInsightsTests.ApplicationInsightsTests();
+    AppServiceTests.AzureAppServiceMockTests();
+    KuduServiceTests.KuduServiceTests();
+    ResourcesTests.ResourcesTests(); 
 
     it('Validate operations.ParameterParserUtility.parse()', (done:MochaDone) => {
         let tp = path.join(__dirname, 'L0ParameterParserUtility.js');

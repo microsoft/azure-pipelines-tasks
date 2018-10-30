@@ -1,5 +1,5 @@
 {
-    "name": "vsts-tasks-azurermappservicedeployment",
+    "name": "vsts-tasks-azurewebappedeployment",
     "version": "1.0.0",
     "description": "Azure Pipelines Azure Web App Deployment",
     "main": "azurermappservicedeployment.js",

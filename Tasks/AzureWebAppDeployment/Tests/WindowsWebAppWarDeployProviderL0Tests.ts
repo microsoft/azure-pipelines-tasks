@@ -1,6 +1,6 @@
 import tl = require('vsts-task-lib');
 import { WindowsWebAppWarDeployProvider } from '../deploymentProvider/WindowsWebAppWarDeployProvider'
-import { TaskParametersUtility, TaskParameters, DeploymentType } from '../TaskParameters';
+import { TaskParametersUtility, TaskParameters, DeploymentType } from '../taskparameters';
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import { getMockEndpoint } from '../node_modules/azurermdeploycommon/Tests/mock_utils';
 import { mockAzureARMPreDeploymentSteps, mockRunFromZipSettings }  from "./mock_utils";
@@ -12,10 +12,10 @@ mockRunFromZipSettings();
 export class WindowsWebAppWarDeployProviderL0Tests  {
 
     public static async startWindowsWebAppWarDeployProviderL0Tests() {
-        // await WindowsWebAppWarDeployProviderL0Tests.testForPreDeploymentSteps_WarDeployProvider();
-        // await WindowsWebAppWarDeployProviderL0Tests.testForPreDeploymentStepsWithSlotEnabled_WarDeployProvider();
-        // await WindowsWebAppWarDeployProviderL0Tests.testForUpdateDeploymentStatus_WarDeployProvider();
-        // await WindowsWebAppWarDeployProviderL0Tests.testForDeployWebAppStep_WarDeployProvider();
+        await WindowsWebAppWarDeployProviderL0Tests.testForPreDeploymentSteps_WarDeployProvider();
+        await WindowsWebAppWarDeployProviderL0Tests.testForPreDeploymentStepsWithSlotEnabled_WarDeployProvider();
+        await WindowsWebAppWarDeployProviderL0Tests.testForUpdateDeploymentStatus_WarDeployProvider();
+        await WindowsWebAppWarDeployProviderL0Tests.testForDeployWebAppStep_WarDeployProvider();
     }
 
     public static async testForPreDeploymentSteps_WarDeployProvider() {

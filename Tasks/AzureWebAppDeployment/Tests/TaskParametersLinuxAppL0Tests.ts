@@ -1,5 +1,5 @@
 import tl = require('vsts-task-lib');
-import { TaskParametersUtility, TaskParameters } from '../TaskParameters';
+import { TaskParametersUtility, TaskParameters } from '../taskparameters';
 import { getMockEndpoint } from '../node_modules/azurermdeploycommon/Tests/mock_utils';
 
 getMockEndpoint();

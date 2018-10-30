@@ -78,7 +78,7 @@ export class TaskParametersUtility {
             taskParameters.TakeAppOfflineFlag = false;
         }
 
-        taskParameters.DeploymentType = DeploymentType[(tl.getInput('DeploymentType', false))];
+        taskParameters.DeploymentType = DeploymentType[(tl.getInput('DeploymentMethod', false))];
 
         return taskParameters;
     }
