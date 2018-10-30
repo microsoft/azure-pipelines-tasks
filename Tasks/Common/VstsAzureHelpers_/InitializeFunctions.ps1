@@ -272,7 +272,7 @@ function Get-MsiAccessToken {
     }
 
     $trialCount = 1
-    $retryableStatusCodes = @(429, 500, 502, 503, 504)
+    $retryableStatusCodes = @(409, 429, 500, 502, 503, 504)
 
     do {
         try {        
@@ -291,11 +291,11 @@ function Get-MsiAccessToken {
             
             $webExceptionStatus = $_.Exception.Status
             $webExceptionMessage = $_.Exception.Message
+			$response = $_.Exception.Response
 
-            if ($webExceptionStatus -eq [System.Net.WebExceptionStatus]::ProtocolError) {
+            if ($webExceptionStatus -eq [System.Net.WebExceptionStatus]::ProtocolError -and $response -ne $null) { 
                 
-                $response = $_.Exception.Response
-                $responseStatusCode = [int]$_.Exception.Response.StatusCode
+				$responseStatusCode = [int]$_.Exception.Response.StatusCode
                 $responseStream = $_.Exception.Response.GetResponseStream()
 
                 if ($responseStream -ne $null) {
