@@ -56,14 +56,8 @@ var getTasksToBuildForCI = async function() {
             var taskJson = JSON.parse(fs.readFileSync(taskJsonPath).toString());
             var localVersion = `${taskJson.version.Major}.${taskJson.version.Minor}.${taskJson.version.Patch}`;
             
-            if (semver.gt(localVersion, packageVersion)) {
-                // If local version is greater than package version, want to build this package
-                return true;
-            }
-            else if (semver.lt(localVersion, packageVersion)) {
-                console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=63;]Package version ${localVersion} for ${taskName} is less than published version ${packageVersion}`);
-            }
-            return false;
+            // Build if local version and package version are different.
+            return semver.neq(localVersion, packageVersion);
         }
         else {
             console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=68;]${taskName} has not been published before`);
