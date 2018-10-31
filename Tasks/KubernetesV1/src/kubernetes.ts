@@ -7,7 +7,7 @@ import ClusterConnection from "./clusterconnection";
 import * as kubectlConfigMap from "./kubernetesconfigmap";
 import * as kubectlSecret from "./kubernetessecret";
 
-tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
+tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));
 
@@ -20,52 +20,49 @@ if (command === "logout") {
 }
 // open kubectl connection and run the command
 var connection = new ClusterConnection(kubeconfigfilePath);
-try
-{
-    connection.open().then(  
+try {
+    connection.open().then(
         () => { return run(connection, command) }
     ).then(
-       () =>  {
-           tl.setResult(tl.TaskResult.Succeeded, "");
-           if (command !== "login") {
+        () => {
+            tl.setResult(tl.TaskResult.Succeeded, "");
+            if (command !== "login") {
                 connection.close();
-           }
-       }
+            }
+        }
     ).catch((error) => {
-       tl.setResult(tl.TaskResult.Failed, error.message)
-       connection.close();
+        tl.setResult(tl.TaskResult.Failed, error.message)
+        connection.close();
     });
 }
-catch (error)
-{
+catch (error) {
     tl.setResult(tl.TaskResult.Failed, error.message);
 }
 
-async function run(clusterConnection: ClusterConnection, command: string) 
-{
+async function run(clusterConnection: ClusterConnection, command: string) {
     var secretName = tl.getInput("secretName", false);
     var configMapName = tl.getInput("configMapName", false);
 
-    if(secretName) {
+    if (secretName) {
         await kubectlSecret.run(clusterConnection, secretName);
     }
 
-    if(configMapName) {
+    if (configMapName) {
         await kubectlConfigMap.run(clusterConnection, configMapName);
     }
-    
-    await executeKubectlCommand(clusterConnection, command);  
+
+    await executeKubectlCommand(clusterConnection, command);
 }
 
 // execute kubectl command
-function executeKubectlCommand(clusterConnection: ClusterConnection, command: string) : any {
+function executeKubectlCommand(clusterConnection: ClusterConnection, command: string): any {
     var commandMap = {
         "login": "./kuberneteslogin",
         "logout": "./kuberneteslogout"
     }
-    
+
     var commandImplementation = require("./kubernetescommand");
-    if(command in commandMap) {
+    if (command in commandMap) {
         commandImplementation = require(commandMap[command]);
     }
 
@@ -80,7 +77,7 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
         JSON.stringify(telemetry));
     var result = "";
     return commandImplementation.run(clusterConnection, command, (data) => result += data)
-    .fin(function cleanup() {
-        tl.setVariable('KubectlOutput', result);
-    });
+        .fin(function cleanup() {
+            tl.setVariable('KubectlOutput', result);
+        });
 }

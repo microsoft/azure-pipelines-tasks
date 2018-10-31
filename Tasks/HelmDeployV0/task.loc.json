@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 138,
-    "Patch": 10
+    "Patch": 11
   },
   "demands": [],
   "groups": [
@@ -46,11 +46,12 @@
       "name": "connectionType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.connectionType",
-      "defaultValue": "Azure Resource Manager",
+      "defaultValue": "inCluster Config",
       "required": true,
       "options": {
         "Azure Resource Manager": "Azure Resource Manager",
-        "Kubernetes Service Connection": "Kubernetes Service Connection"
+        "Kubernetes Service Connection": "Kubernetes Service Connection",
+        "inCluster Config": "inCluster Config"
       },
       "helpMarkDown": "ms-resource:loc.input.help.connectionType",
       "groupName": "cluster"
