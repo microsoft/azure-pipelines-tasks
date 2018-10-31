@@ -1,8 +1,23 @@
 
-THIRD-PARTY SOFTWARE NOTICES AND INFORMATION
+THIRD PARTY SOFTWARE NOTICES AND INFORMATION
 Do Not Translate or Localize
 
-The Helm tool installer task for Azure Pipelines or Team Foundation Server incorporates components from the projects listed below. Microsoft licenses these components to you under the Microsoft software license terms. The original copyright notices and the licenses under which Microsoft received such components are set forth below for informational purposes. Microsoft reserves all rights not expressly granted herein, whether by implication, estoppel or otherwise.
+Helm tool installer task for Azure Pipelines or Azure DevOps Server
+
+This software incorporates material from third parties. Microsoft makes certain
+open source code available at http://3rdpartysource.microsoft.com, or you may
+send a check or money order for US $5.00, including the product name, the open
+source component name, and version number, to:
+
+Source Code Compliance Team
+Microsoft Corporation
+One Microsoft Way
+Redmond, WA 98052
+USA
+
+Notwithstanding any other terms, you may reverse engineer this software to the
+extent required to debug changes to any libraries licensed under the GNU Lesser
+General Public License.
 
 
 1.	@types/node (https://www.github.com/DefinitelyTyped/DefinitelyTyped.git)
@@ -642,7 +657,7 @@ END OF path-is-absolute  NOTICES, INFORMATION, AND LICENSE
 
 %% path-is-inside NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
-Copyright � 2013�2014 Domenic Denicola <domenic@domenicdenicola.com>
+Copyright 2013-2014 Domenic Denicola <domenic@domenicdenicola.com>
 Licensed under the WTFPL Version 2 (http://www.wtfpl.net/about/)
 =========================================
 END OF path-is-inside NOTICES, INFORMATION, AND LICENSE
@@ -725,9 +740,10 @@ THE SOFTWARE.
 =========================================
 END OF pinkie-promise NOTICES, INFORMATION, AND LICENSE
 
-%% q NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% q NOTICES AND INFORMATION BEGIN HERE
 =========================================
-Copyright 2009�2014 Kristopher Michael Kowal. All rights reserved.
+Copyright 2009–2017 Kristopher Michael Kowal. All rights reserved.
+Copyright 2009–2014 Kristopher Michael Kowal. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
@@ -774,7 +790,7 @@ IN THE SOFTWARE.
  *
  */
 =========================================
-END OF q NOTICES, INFORMATION, AND LICENSE
+END OF q NOTICES AND INFORMATION
 
 %% Rimraf NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
