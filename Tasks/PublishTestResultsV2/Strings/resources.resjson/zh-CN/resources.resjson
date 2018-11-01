@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "发布测试结果",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Publish Test Results to Azure Pipelines/TFS",
+  "loc.description": "将测试结果发布到 Azure Pipelines/TFS",
   "loc.instanceNameFormat": "发布测试结果 $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>NUnit3 支持</li><li>Minimatch 文件模式支持</li></ul>",
   "loc.group.displayName.advanced": "高级",
@@ -15,12 +15,12 @@
   "loc.input.help.mergeTestResults": "为每个结果文件创建测试运行。选中此选项可将结果合并到单个测试运行中。为了进行优化以提高性能，如果存在超过 100 个结果文件，结果将合并到单个运行中，而不无论此选项如何。",
   "loc.input.label.testRunTitle": "测试运行标题",
   "loc.input.help.testRunTitle": "提供测试运行的名称。",
-  "loc.input.label.platform": "Build Platform",
+  "loc.input.label.platform": "生成平台",
   "loc.input.help.platform": "对其运行了测试的平台。",
-  "loc.input.label.configuration": "Build Configuration",
+  "loc.input.label.configuration": "生成配置",
   "loc.input.help.configuration": "对其运行了测试的配置。",
   "loc.input.label.publishRunAttachments": "上传测试结果文件",
-  "loc.input.help.publishRunAttachments": "Upload logs and other files containing diagnostic information collected when the tests were run.",
+  "loc.input.help.publishRunAttachments": "运行测试时，上传日志和包含收集的诊断信息的其他文件。",
   "loc.messages.NoMatchingFilesFound": "未找到与“%s”匹配的测试结果文件。",
   "loc.messages.ErrorTestResultsPublisher": "执行 TestResultsPublisher 时出错: %s。"
 }

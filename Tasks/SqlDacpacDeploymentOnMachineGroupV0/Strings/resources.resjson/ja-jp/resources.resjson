@@ -24,7 +24,7 @@
   "loc.input.label.DatabaseName": "データベース名　",
   "loc.input.help.DatabaseName": "SQL Server データベースの名前を指定します。",
   "loc.input.label.AuthScheme": "認証",
-  "loc.input.help.AuthScheme": "SQL Server に接続する際の認証モードを選択します。Windows 認証モードでは、コンピューター セクションで管理者のアカウントが指定されている場合、管理者のアカウントを使用して SQL Server に接続します。SQL Server 認証モードでは、下のパラメーターで SQL ログインとパスワードを指定する必要があります。",
+  "loc.input.help.AuthScheme": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the account used to configure deployment agent, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below.",
   "loc.input.label.SqlUsername": "SQL ユーザー名",
   "loc.input.help.SqlUsername": "SQL Server に接続するための SQL ログインを指定します。このオプションは、SQL Server 認証モードが選択されている場合のみ利用できます。",
   "loc.input.label.SqlPassword": "SQL パスワード ",

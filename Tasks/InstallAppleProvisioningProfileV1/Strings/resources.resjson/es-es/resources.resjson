@@ -12,5 +12,5 @@
   "loc.input.label.removeProfile": "Quitar perfil después de la compilación",
   "loc.input.help.removeProfile": "Seleccione esta opción para especificar que el perfil de aprovisionamiento debe quitarse del agente una vez finalizada la compilación o la versión.",
   "loc.messages.InputProvisioningProfileNotFound": "El perfil de aprovisionamiento que se va a instalar no se encontró en %s. Especifique la ruta de acceso de archivo completa para un perfil de aprovisionamiento.",
-  "loc.messages.InstallRequiresMac": "Install Apple Provisioning Profile requires a macOS agent. Installing on Windows or Linux is not supported by Apple."
+  "loc.messages.InstallRequiresMac": "La opción Instalar perfil de aprovisionamiento de Apple requiere un agente de macOS. Apple no admite la instalación en Windows o Linux."
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Monitor-Warnungen abfragen",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "Hiermit überwachen Sie die konfigurierten Azure Monitor-Regeln auf aktive Warnungen.",
   "loc.instanceNameFormat": "Azure Monitor-Warnungen abfragen",
   "loc.input.label.connectedServiceNameARM": "Azure-Abonnement",
