@@ -22,5 +22,6 @@
   "loc.messages.FeedTokenUnavailable": "Failed to get the access token for this organization.",
   "loc.messages.NoPypircFile": "No .pypirc file to clean up.",
   "loc.messages.VariableSetForPypirc": "Environment variable for .pypirc at %s is set.",
-  "loc.messages.Info_RemovingPypircFile": "Removing .pypirc file from %s"
+  "loc.messages.Info_RemovingPypircFile": "Removing .pypirc file from %s",
+  "loc.messages.Error_PythonInternalFeedsNotSupportedOnprem": "Authentication for internal feeds is not supported in this version of Azure DevOps Server."
 }

@@ -18,31 +18,39 @@ async function main(): Promise<void> {
 
         const feedIds  = tl.getDelimitedInput("feedList", ",");
 
+        const serverType = tl.getVariable("System.ServerType");
         // Local feeds
         if (feedIds)
         {
-            tl.debug(tl.loc("Info_AddingInternalFeeds", feedIds.length));
-            const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-            const localAccessToken = pkgLocationUtils.getSystemAccessToken();
-            try {
-                // This call is to get the packaging URI(abc.pkgs.vs.com) which is same for all protocols.
-                packagingLocation = await pkgLocationUtils.getNuGetUriFromBaseServiceUri(
-                    serviceUri,
-                    localAccessToken);
-            } catch (error) {
-                tl.debug(tl.loc("FailedToGetPackagingUri"));
-                tl.debug(JSON.stringify(error));
-                packagingLocation = serviceUri;
+            // not supported on prem
+            if (!serverType || serverType.toLowerCase() !== "hosted") {
+                throw new Error(tl.loc("Error_PythonInternalFeedsNotSupportedOnprem"));
             }
+            else{
+                tl.debug(tl.loc("Info_AddingInternalFeeds", feedIds.length));
+                const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
+                const localAccessToken = pkgLocationUtils.getSystemAccessToken();
+                try {
+                    // This call is to get the packaging URI(abc.pkgs.vs.com) which is same for all protocols.
+                    packagingLocation = await pkgLocationUtils.getNuGetUriFromBaseServiceUri(
+                        serviceUri,
+                        localAccessToken);
+                } catch (error) {
+                    tl.debug(tl.loc("FailedToGetPackagingUri"));
+                    tl.debug(JSON.stringify(error));
+                    packagingLocation = serviceUri;
+                }
 
-            for (const feedId of feedIds) {
-                const feedUri = await pkgLocationUtils.getFeedRegistryUrl(
-                    packagingLocation, 
-                    pkgLocationUtils.RegistryType.PyPiSimple, 
-                    feedId, 
-                    localAccessToken);
-                const pipUri = utils.formPipCompatibleUri("build", localAccessToken, feedUri);
-                pipEnvVar = pipEnvVar + " " + pipUri;
+                for (const feedId of feedIds) {
+                    const feedUri = await pkgLocationUtils.getFeedRegistryUrl(
+                        packagingLocation,
+                        pkgLocationUtils.RegistryType.PyPiSimple,
+                        feedId,
+                        localAccessToken);
+                    const pipUri = utils.formPipCompatibleUri("build", localAccessToken, feedUri);
+                    pipEnvVar = pipEnvVar + " " + pipUri;
+                }
+
             }
         }
 

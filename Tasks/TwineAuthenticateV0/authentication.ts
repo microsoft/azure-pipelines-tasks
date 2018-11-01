@@ -36,6 +36,13 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<AuthIn
     {
         return internalAuthArray;
     }
+
+    // Not supported on prem currently
+    const serverType = tl.getVariable("System.ServerType");
+    if (!serverType || serverType.toLowerCase() !== "hosted") {
+        throw new Error(tl.loc("Error_PythonInternalFeedsNotSupportedOnprem"));
+    }
+
     tl.debug(tl.loc("Info_AddingInternalFeeds", feedList.length));
 
     let packagingLocation: string;
