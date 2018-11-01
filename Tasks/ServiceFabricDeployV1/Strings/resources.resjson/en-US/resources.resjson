@@ -38,7 +38,6 @@
   "loc.input.label.upgradeMode": "Upgrade Mode",
   "loc.input.label.FailureAction": "FailureAction",
   "loc.input.label.UpgradeReplicaSetCheckTimeoutSec": "UpgradeReplicaSetCheckTimeoutSec",
-  "loc.input.label.ReplicaQuorumTimeoutSec": "ReplicaQuorumTimeoutSec",
   "loc.input.label.TimeoutSec": "TimeoutSec",
   "loc.input.label.ForceRestart": "ForceRestart",
   "loc.input.label.HealthCheckRetryTimeoutSec": "HealthCheckRetryTimeoutSec",

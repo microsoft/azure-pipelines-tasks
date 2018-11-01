@@ -1,5 +1,6 @@
 {
   "loc.messages.AadAuthority": "AAD 権限: {0}",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
   "loc.messages.ClientAppId": "クライアント アプリケーション ID: {0}",
   "loc.messages.ClusterAppId": "クラスター アプリケーション ID: {0}",
   "loc.messages.ConnectedToCluster": "正常にクラスターに接続しました。",
@@ -10,8 +11,8 @@
   "loc.messages.ServiceFabricSDKNotInstalled": "Service Fabric SDK がビルド エージェントにインストールされていません。https://aka.ms/servicefabric にアクセスしてダウンロードし、インストールしてください。",
   "loc.messages.UseWindowsSecurity": "Windows セキュリティが指定されました。接続中に -WindowsCredential スイッチが使用されます。",
   "loc.messages.ServerCertificateNotFoundForTextEncrypt": "テキストを暗号化するには拇印 '{0}' の付いたクラスターのサーバー証明書が必要ですが、'CurrentUser\\My' 証明書の保存場所のエージェント マシン上で証明書が見つかりませんでした。",
-  "loc.messages.RetryingClusterConnection": "Retrying to connect to cluster..",
-  "loc.messages.WarningOnRemoveCertificate": "An error occurred attempting to remove the client certificate. Error message: {0}",
-  "loc.messages.TelemetryWarning": "Unable to push telemetry data. Error: {0}.",
-  "loc.messages.SfSdkVersion": "Service fabric SDK version: {0}."
+  "loc.messages.RetryingClusterConnection": "クラスターへの接続を再試行しています..",
+  "loc.messages.WarningOnRemoveCertificate": "クライアント証明書を削除しようとしてエラーが発生しました。エラー メッセージ: {0}",
+  "loc.messages.TelemetryWarning": "テレメトリ データをプッシュできません。エラー: {0}",
+  "loc.messages.SfSdkVersion": "Service Fabric SDK バージョン: {0}。"
 }
