@@ -6,7 +6,7 @@
   "loc.input.label.ConnectedServiceName": "Подписка Azure",
   "loc.input.help.ConnectedServiceName": "Выберите подписку на Azure Resource Manager для развертывания.",
   "loc.input.label.ResourceGroupName": "Группа ресурсов",
-  "loc.input.help.ResourceGroupName": "Выберите название группы ресурсов.",
+  "loc.input.help.ResourceGroupName": "Выберите имя группы ресурсов.",
   "loc.input.label.LoadBalancer": "Название балансировщика нагрузки",
   "loc.input.help.LoadBalancer": "Выберите или укажите балансировщик нагрузки.",
   "loc.input.label.Action": "Действие",

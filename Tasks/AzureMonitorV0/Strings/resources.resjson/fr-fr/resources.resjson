@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Interroger les alertes Azure Monitor",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "Examinez les règles Azure Monitor configurées pour les alertes actives.",
   "loc.instanceNameFormat": "Interroger les alertes Azure Monitor",
   "loc.input.label.connectedServiceNameARM": "Abonnement Azure",

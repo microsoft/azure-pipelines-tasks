@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 139,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "instanceNameFormat": "Conda Environment $(environmentName)",
