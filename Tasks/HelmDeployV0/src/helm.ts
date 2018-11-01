@@ -4,7 +4,7 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import { AzureAksService } from 'azure-arm-rest/azure-arm-aks-service';
 import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
-import { AzureEndpoint, AKSCluster, AKSClusterAccessProfile } from 'azure-arm-rest/azureModels';
+import { AzureEndpoint, AKSCluster, AKSClusterAccessProfile} from 'azure-arm-rest/azureModels';
 
 import helmcli from "./helmcli";
 import kubernetescli from "./kubernetescli"
@@ -12,7 +12,7 @@ import * as helmutil from "./utils"
 import fs = require('fs');
 import * as commonCommandOptions from "./commoncommandoption"
 
-tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
 
 function getKubeConfigFilePath(): string {
     var userdir = helmutil.getTaskTempDir();
@@ -21,10 +21,10 @@ function getKubeConfigFilePath(): string {
 
 function getClusterType(): any {
     var connectionType = tl.getInput("connectionType", true);
-    if (connectionType === "Azure Resource Manager") {
-        return require("./clusters/armkubernetescluster")
+    if(connectionType === "Azure Resource Manager") {
+        return require("./clusters/armkubernetescluster")  
     }
-
+    
     return require("./clusters/generickubernetescluster")
 }
 
@@ -58,7 +58,7 @@ async function run() {
         kubectlCli.login();
     }
 
-    var helmCli: helmcli = new helmcli();
+    var helmCli : helmcli = new helmcli();
     helmCli.login();
     var connectionType = tl.getInput("connectionType", true);
     var telemetry = {
@@ -72,7 +72,7 @@ async function run() {
         JSON.stringify(telemetry));
 
     try {
-        switch (command) {
+        switch (command){
             case "login":
                 kubectlCli.setKubeConfigEnvVariable();
                 break;
@@ -82,10 +82,10 @@ async function run() {
             default:
                 runHelm(helmCli, command);
         }
-    } catch (err) {
+    } catch(err) {
         // not throw error so that we can logout from helm and kubernetes
         tl.setResult(tl.TaskResult.Failed, err.message);
-    }
+    } 
     finally {
         if (isKubConfigLogoutRequired(command)) {
             kubectlCli.logout();
@@ -96,15 +96,15 @@ async function run() {
 }
 
 function runHelm(helmCli: helmcli, command: string) {
-    var helmCommandMap = {
+    var helmCommandMap ={
         "init": "./helmcommands/helminit",
         "install": "./helmcommands/helminstall",
         "package": "./helmcommands/helmpackage",
         "upgrade": "./helmcommands/helmupgrade"
-    }
+    }    
 
     var commandImplementation = require("./helmcommands/uinotimplementedcommands");
-    if (command in helmCommandMap) {
+    if(command in helmCommandMap) {
         commandImplementation = require(helmCommandMap[command]);
     }
 
@@ -119,8 +119,8 @@ function runHelm(helmCli: helmcli, command: string) {
     helmCli.execHelmCommand();
 }
 
-run().then(() => {
-    // do nothing
-}, (reason) => {
-    tl.setResult(tl.TaskResult.Failed, reason);
+run().then(()=>{
+ // do nothing
+}, (reason)=> {
+     tl.setResult(tl.TaskResult.Failed, reason);
 });

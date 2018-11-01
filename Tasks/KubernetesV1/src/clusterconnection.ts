@@ -23,14 +23,14 @@ export default class ClusterConnection {
     }
 
     private loadClusterType(connectionType: string): any {
-        if (connectionType === "Azure Resource Manager") {
+        if(connectionType === "Azure Resource Manager") {
             return require("./clusters/armkubernetescluster");
         }
         else {
             return require("./clusters/generickubernetescluster");
         }
     }
-
+    
     // get kubeconfig file path
     private async getKubeConfig(connectionType): Promise<string> {
         return this.loadClusterType(connectionType).getKubeConfig().then((config) => {
@@ -39,12 +39,12 @@ export default class ClusterConnection {
     }
 
     private async initialize(): Promise<void> {
-        return this.getKubectl().then((kubectlpath) => {
-            this.kubectlPath = kubectlpath;
+        return this.getKubectl().then((kubectlpath)=> {
+            this.kubectlPath = kubectlpath; 
             // prepend the tools path. instructs the agent to prepend for future tasks
-            if (!process.env['PATH'].toLowerCase().startsWith(path.dirname(this.kubectlPath.toLowerCase()))) {
+            if(!process.env['PATH'].toLowerCase().startsWith(path.dirname(this.kubectlPath.toLowerCase()))) {
                 toolLib.prependPath(path.dirname(this.kubectlPath));
-            }
+            }     
         });
     }
 
@@ -65,13 +65,14 @@ export default class ClusterConnection {
         }
 
         return this.initialize().then(() => {
-            if (kubeconfig) {
+            if (kubeconfig)
+            {
                 this.kubeconfigFile = path.join(this.userDir, "config");
                 fs.writeFileSync(this.kubeconfigFile, kubeconfig);
             }
 
             process.env["KUBECONFIG"] = this.kubeconfigFile;
-        });
+         });
     }
 
     // close kubernetes connection
@@ -80,10 +81,11 @@ export default class ClusterConnection {
         if (connectionType === "inCluster Config") {
             return;
         }
-        if (this.kubeconfigFile != null && fs.existsSync(this.kubeconfigFile)) {
-            delete process.env["KUBECONFIG"];
-            fs.unlinkSync(this.kubeconfigFile);
-        }
+        if (this.kubeconfigFile != null && fs.existsSync(this.kubeconfigFile))
+        {
+           delete process.env["KUBECONFIG"];
+           fs.unlinkSync(this.kubeconfigFile);
+        }    
     }
 
     public setKubeConfigEnvVariable() {
@@ -95,7 +97,7 @@ export default class ClusterConnection {
             throw new Error(tl.loc('KubernetesServiceConnectionNotFound'));
         }
     }
-
+    
     public unsetKubeConfigEnvVariable() {
         var kubeConfigPath = tl.getVariable("KUBECONFIG");
         if (kubeConfigPath) {
@@ -115,34 +117,36 @@ export default class ClusterConnection {
         });
     }
 
-    private async getKubectl(): Promise<string> {
+    private async getKubectl() : Promise<string> {
         let versionOrLocation = tl.getInput("versionOrLocation");
-        if (versionOrLocation === "location") {
+        if( versionOrLocation === "location") {
             let pathToKubectl = tl.getPathInput("specifyLocation", true, true);
             fs.chmodSync(pathToKubectl, "777");
             return pathToKubectl;
         }
-        else if (versionOrLocation === "version") {
+        else if(versionOrLocation === "version") {
             var defaultVersionSpec = "1.7.0";
             let versionSpec = tl.getInput("versionSpec");
             let checkLatest: boolean = tl.getBoolInput('checkLatest', false);
             var version = await utils.getKubectlVersion(versionSpec, checkLatest);
-            if (versionSpec != defaultVersionSpec || checkLatest) {
-                tl.debug(tl.loc("DownloadingClient"));
-                var version = await utils.getKubectlVersion(versionSpec, checkLatest);
-                return await utils.downloadKubectl(version);
+            if (versionSpec != defaultVersionSpec || checkLatest)
+            {
+               tl.debug(tl.loc("DownloadingClient"));
+               var version = await utils.getKubectlVersion(versionSpec, checkLatest);
+               return await utils.downloadKubectl(version); 
             }
 
             // Reached here => default version
             // Now to handle back-compat, return the version installed on the machine
-            if (this.kubectlPath && fs.existsSync(this.kubectlPath)) {
+            if(this.kubectlPath && fs.existsSync(this.kubectlPath))
+            {
                 return this.kubectlPath;
             }
-
-            // Download the default version
-            tl.debug(tl.loc("DownloadingClient"));
-            var version = await utils.getKubectlVersion(versionSpec, checkLatest);
-            return await utils.downloadKubectl(version);
+            
+           // Download the default version
+           tl.debug(tl.loc("DownloadingClient"));
+           var version = await utils.getKubectlVersion(versionSpec, checkLatest);
+           return await utils.downloadKubectl(version); 
         }
     }
 }
