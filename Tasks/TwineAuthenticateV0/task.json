@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   }, 
   "runsOn": [
     "Agent",
@@ -80,7 +80,8 @@
     "FeedTokenUnavailable": "Failed to get the access token for this organization.",
     "NoPypircFile": "No .pypirc file to clean up.",
     "VariableSetForPypirc": "Environment variable for .pypirc at %s is set.",
-    "Info_RemovingPypircFile": "Removing .pypirc file from %s"
+    "Info_RemovingPypircFile": "Removing .pypirc file from %s",
+    "Error_PythonInternalFeedsNotSupportedOnprem": "Authentication for internal feeds is not supported in this version of Azure DevOps Server."
   },
   "postjobexecution": {
     "Node": {
@@ -88,4 +89,4 @@
         "argumentFormat": ""
     }
 }
-} 
+}
