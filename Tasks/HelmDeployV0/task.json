@@ -46,12 +46,12 @@
             "name": "connectionType",
             "type": "pickList",
             "label": "Connection Type",
-            "defaultValue": "inCluster Config",
+            "defaultValue": "Azure Resource Manager",
             "required": true,
             "options": {
                 "Azure Resource Manager": "Azure Resource Manager",
                 "Kubernetes Service Connection": "Kubernetes Service Connection",
-                "inCluster Config": "inCluster Config"
+                "None": "None"
             },
             "helpMarkDown": "Select 'Azure Resource Manager' to connect to an Azure Kubernetes Service by using Azure Service Connection. Select 'Kubernetes Service Connection' to connect to any Kubernetes cluster by using kubeconfig or Service Account",
             "groupName": "cluster"

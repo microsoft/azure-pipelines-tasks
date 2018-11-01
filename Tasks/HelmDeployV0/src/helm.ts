@@ -30,12 +30,12 @@ function getClusterType(): any {
 
 function isKubConfigSetupRequired(command: string): boolean {
     var connectionType = tl.getInput("connectionType", true);
-    return command !== "package" && connectionType !== "inCluster Config";
+    return command !== "package" && connectionType !== "None";
 }
 
 function isKubConfigLogoutRequired(command: string): boolean {
     var connectionType = tl.getInput("connectionType", true);
-    return command !== "package" && command !== "login" && connectionType !== "inCluster Config";
+    return command !== "package" && command !== "login" && connectionType !== "None";
 }
 
 // get kubeconfig file path

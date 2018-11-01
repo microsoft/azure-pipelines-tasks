@@ -56,7 +56,7 @@ export default class ClusterConnection {
     // open kubernetes connection
     public async open() {
         var connectionType = tl.getInput("connectionType", true);
-        if (connectionType === "inCluster Config") {
+        if (connectionType === "None") {
             return;
         }
         var kubeconfig;
@@ -78,7 +78,7 @@ export default class ClusterConnection {
     // close kubernetes connection
     public close(): void {
         var connectionType = tl.getInput("connectionType", true);
-        if (connectionType === "inCluster Config") {
+        if (connectionType === "None") {
             return;
         }
         if (this.kubeconfigFile != null && fs.existsSync(this.kubeconfigFile))

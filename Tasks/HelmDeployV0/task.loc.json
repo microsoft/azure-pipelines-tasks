@@ -46,12 +46,12 @@
       "name": "connectionType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.connectionType",
-      "defaultValue": "inCluster Config",
+      "defaultValue": "Azure Resource Manager",
       "required": true,
       "options": {
         "Azure Resource Manager": "Azure Resource Manager",
         "Kubernetes Service Connection": "Kubernetes Service Connection",
-        "inCluster Config": "inCluster Config"
+        "None": "None"
       },
       "helpMarkDown": "ms-resource:loc.input.help.connectionType",
       "groupName": "cluster"
