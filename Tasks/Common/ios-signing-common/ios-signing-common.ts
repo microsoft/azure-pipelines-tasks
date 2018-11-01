@@ -1,3 +1,4 @@
+import path = require('path');
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
@@ -472,16 +473,18 @@ export async function unlockKeychain(keychainPath: string, keychainPwd: string):
  * @param uuid
  */
 export async function deleteProvisioningProfile(uuid: string): Promise<void> {
-    let provProfiles: string[] = tl.findMatch(getUserProvisioningProfilesPath(), uuid + '*');
-    if (provProfiles) {
-        provProfiles.forEach(async (provProfilePath) => {
-            tl.warning('Deleting provisioning profile: ' + provProfilePath);
-            if (tl.exist(provProfilePath)) {
-                let deleteProfileCommand: ToolRunner = tl.tool(tl.which('rm', true));
-                deleteProfileCommand.arg(['-f', provProfilePath]);
-                await deleteProfileCommand.exec();
-            }
-        });
+    if (uuid) {
+        let provProfiles: string[] = tl.findMatch(getUserProvisioningProfilesPath(), uuid.trim() + '*');
+        if (provProfiles) {
+            provProfiles.forEach(async (provProfilePath) => {
+                tl.warning('Deleting provisioning profile: ' + provProfilePath);
+                if (tl.exist(provProfilePath)) {
+                    let deleteProfileCommand: ToolRunner = tl.tool(tl.which('rm', true));
+                    deleteProfileCommand.arg(['-f', provProfilePath]);
+                    await deleteProfileCommand.exec();
+                }
+            });
+        }
     }
 }
 
@@ -676,9 +679,9 @@ async function printFromPlist(itemToPrint: string, plistPath: string) {
 }
 
 function getProvisioningProfilePath(uuid: string, provProfilePath?: string): string {
-    let profileExtension: string = '.mobileprovision';
+    let profileExtension: string;
     if (provProfilePath) {
-        profileExtension = provProfilePath.substring(provProfilePath.lastIndexOf('.'));
+        profileExtension = path.extname(provProfilePath);
     }
     return tl.resolve(getUserProvisioningProfilesPath(), uuid.trim().concat(profileExtension));
 }
