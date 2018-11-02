@@ -679,7 +679,7 @@ async function printFromPlist(itemToPrint: string, plistPath: string) {
 }
 
 function getProvisioningProfilePath(uuid: string, provProfilePath?: string): string {
-    let profileExtension: string;
+    let profileExtension: string = '';
     if (provProfilePath) {
         profileExtension = path.extname(provProfilePath);
     }
