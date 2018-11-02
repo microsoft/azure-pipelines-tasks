@@ -180,7 +180,7 @@
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         }
     ],
-    "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
+    "instanceNameFormat": "Azure Web App on Container Deploy: $(WebAppName)",
     "execution": {
         "Node": {
             "target": "azurermwebappdeployment.js"
