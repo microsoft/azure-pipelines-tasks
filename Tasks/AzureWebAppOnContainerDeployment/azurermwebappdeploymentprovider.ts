@@ -7,7 +7,6 @@ import { AzureAppServiceUtility } from 'azurermdeploycommon/operations/AzureAppS
 import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
 import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/AzureResourceFilterUtility';
 import tl = require('vsts-task-lib/task');
-import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
 import { ContainerBasedDeploymentUtility } from 'azurermdeploycommon/operations/ContainerBasedDeploymentUtility';
 

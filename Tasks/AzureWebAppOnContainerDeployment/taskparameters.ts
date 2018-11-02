@@ -1,17 +1,5 @@
 import tl = require('vsts-task-lib/task');
 
-export enum DeploymentType {
-    webDeploy,
-    zipDeploy,
-    runFromZip,
-    warDeploy
-}
-
-const webAppKindMap = new Map([
-    [ 'app,linux,container', 'webAppContainer' ],
-    [ 'functionapp,linux,container', 'functionAppContainer' ]
-]);
-
 export class TaskParametersUtility {
 
     public static async getParameters(): Promise<TaskParameters> {
