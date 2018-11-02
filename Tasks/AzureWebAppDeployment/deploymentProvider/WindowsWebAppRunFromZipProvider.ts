@@ -15,7 +15,7 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
     public async DeployWebAppStep() {
         var webPackage = this.taskParams.Package.getPath();
         
-        if(this.taskParams.DeploymentType === DeploymentType.runFromZip) {
+        if(this.taskParams.DeploymentType === DeploymentType.runFromPackage) {
             var _isMSBuildPackage = await this.taskParams.Package.isMSBuildPackage();
             if(_isMSBuildPackage) {
                 throw Error(tl.loc("Publishusingzipdeploynotsupportedformsbuildpackage"));

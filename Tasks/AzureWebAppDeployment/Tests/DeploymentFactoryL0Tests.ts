@@ -106,7 +106,7 @@ export class DeploymentFactoryL0Tests  {
         try {
             var taskParameters: TaskParameters = await TaskParametersUtility.getParameters();
             taskParameters.isLinuxApp = false;
-            taskParameters.DeploymentType =  DeploymentType.runFromZip;
+            taskParameters.DeploymentType =  DeploymentType.runFromPackage;
             var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParameters);
             var windowsWebAppRunFromZipProvider: IWebAppDeploymentProvider = await deploymentFactory.GetDeploymentProvider();
             if(windowsWebAppRunFromZipProvider.constructor.name === "WindowsWebAppRunFromZipProvider"){

@@ -89,7 +89,7 @@ export class TaskParametersUtility {
 export enum DeploymentType {
     auto,
     zipDeploy,
-    runFromZip,
+    runFromPackage,
     warDeploy
 }
 

@@ -211,7 +211,7 @@
             "options": {
                 "auto": "Auo-detect",
                 "zipDeploy": "Zip Deploy",
-                "runFromZip": "Run From Package"
+                "runFromPackage": "Run From Package"
             },
             "helpMarkDown": "Choose the deployment method for the app."
         },
@@ -272,7 +272,7 @@
             "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}}\"}"
         }
     ],
-    "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
+    "instanceNameFormat": "Azure Web App Deploy: $(WebAppName)",
     "execution": {
         "Node": {
             "target": "azurermwebappdeployment.js"

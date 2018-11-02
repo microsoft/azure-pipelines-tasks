@@ -201,7 +201,8 @@ export class KuduServiceUtility {
             var kuduDeploymentDetails = await this._appServiceKuduService.getDeploymentDetails(deploymentDetails.id);
             tl.debug(`logs from kudu deploy: ${kuduDeploymentDetails.log_url}`);
 
-            if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED || tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() == 'true') {
+            let sysDebug = tl.getVariable('system.debug');
+            if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED || sysDebug && sysDebug.toLowerCase() == 'true') {
                 await this._printZipDeployLogs(kuduDeploymentDetails.log_url);
             }
             else {

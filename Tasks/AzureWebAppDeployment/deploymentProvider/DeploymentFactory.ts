@@ -54,7 +54,7 @@ export class DeploymentFactory {
         switch(this._taskParams.DeploymentType){
             case DeploymentType.zipDeploy:
                 return new WindowsWebAppZipDeployProvider(this._taskParams);
-            case DeploymentType.runFromZip:
+            case DeploymentType.runFromPackage:
                 return new WindowsWebAppRunFromZipProvider(this._taskParams);
         }
     }

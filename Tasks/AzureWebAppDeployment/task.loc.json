@@ -211,7 +211,7 @@
       "options": {
         "auto": "Auo-detect",
         "zipDeploy": "Zip Deploy",
-        "runFromZip": "Run From Package"
+        "runFromPackage": "Run From Package"
       },
       "helpMarkDown": "ms-resource:loc.input.help.DeploymentMethod"
     },
