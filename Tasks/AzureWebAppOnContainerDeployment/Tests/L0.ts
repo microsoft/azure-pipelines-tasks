@@ -46,7 +46,7 @@ describe('AzureWebAppDeployment Suite', function() {
             assert(tr.stdOutContained('PreDeployment steps for container web app should succeeded'), 'Should have printed: PreDeployment steps for container web app should succeeded');
             assert(tr.stdOutContained('PreDeployment steps for container web app with slot enabled should succeeded'), 'Should have printed: PreDeployment steps for container web app withSlotEnabled should succeeded');
             assert(tr.stdOutContained('Resource Group: MOCK_RESOURCE_GROUP_NAME'), 'Should have printed: Resource Group: MOCK_RESOURCE_GROUP_NAME');
-            //assert(tr.stdOutContained('Active DeploymentId :MOCK_DEPLOYMENT_ID'), 'Should have printed: Active DeploymentId :MOCK_DEPLOYMENT_ID.'+tr.stdout);
+            assert(tr.stdOutContained('Active DeploymentId :MOCK_DEPLOYMENT_ID'), 'Should have printed: Active DeploymentId :MOCK_DEPLOYMENT_ID.'+tr.stdout);
             assert(tr.stdOutContained('loc_mock_UpdatingAppServiceConfigurationSettings {"appCommandLine":null,"linuxFxVersion":"DOCKER|dockernamespace/dockerrepository:DockerImageTag"}'), 'Should have printed: loc_mock_UpdatingAppServiceConfigurationSettings {"appCommandLine":null,"linuxFxVersion":"DOCKER|dockernamespace/dockerrepository:DockerImageTag"}');
             assert(tr.stdOutContained('loc_mock_UpdatedAppServiceConfigurationSettings'), 'Should have printed: loc_mock_UpdatedAppServiceConfigurationSettings');
             assert(tr.stdOutContained('loc_mock_UpdatedAppServiceApplicationSettings'), 'Should have printed: loc_mock_UpdatedAppServiceApplicationSettings');

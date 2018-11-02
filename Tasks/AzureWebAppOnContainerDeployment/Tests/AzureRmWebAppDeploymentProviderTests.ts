@@ -11,10 +11,10 @@ export class AzureRmWebAppDeploymentProviderTests {
         setEndpointData();
         setAgentsData();
 
-        tr.registerMock('azurermdeploycommon/azure-arm-rest/azure-arm-app-service-kudu', {
-            Kudu: function(A, B, C) {
-                return {
-                    updateDeployment : function(D) {
+        tr.registerMock('azurermdeploycommon/operations/KuduServiceUtility', {
+            KuduServiceUtility: function(A) {
+                return {                    
+                    updateDeploymentStatus : function(B,C,D) {
                         return "MOCK_DEPLOYMENT_ID";
                     }
                 }
