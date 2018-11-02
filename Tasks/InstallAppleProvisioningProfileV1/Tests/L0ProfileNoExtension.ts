@@ -4,11 +4,11 @@ import path = require('path');
 import fs = require('fs');
 import os = require('os');
 
-let taskPath = path.join(__dirname, '..', 'preinstallprovprofile.js');
+let taskPath = path.join(__dirname, '..', 'installprovprofile.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput('provisioningProfileLocation', 'secureFiles');
-tr.setInput('provProfileSecureFile', 'mySecureFileId');
+tr.setInput('provisioningProfileLocation', 'sourceRepository');
+tr.setInput('provProfileSourceRepository', '/build/source/myprovisioningprofile');
 
 process.env['AGENT_VERSION'] = '2.116.0';
 process.env['HOME'] = '/users/test';
@@ -36,10 +36,15 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/bin/cp": true
     },
     "exist": {
-        "/build/temp/mySecureFileId.filename": true
+        "/build/source/myprovisioningprofile": true
+    },
+    "stats": {
+        "/build/source/myprovisioningprofile": {
+            "isFile": true
+        }
     },
     "exec": {
-        "/usr/bin/security cms -D -i /build/temp/mySecureFileId.filename": {
+        "/usr/bin/security cms -D -i /build/source/myprovisioningprofile": {
             "code": 0,
             "stdout": "prov profile details here"
         },
@@ -51,7 +56,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "testprovname"
         },
-        "/bin/cp -f /build/temp/mySecureFileId.filename /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.filename": {
+        "/bin/cp -f /build/source/myprovisioningprofile /users/test/Library/MobileDevice/Provisioning Profiles/testuuid": {   
             "code": 0,
             "stdout": "provisioning profile copied"
         },
