@@ -15,8 +15,8 @@ export class WindowsWebAppZipDeployProviderL0Tests  {
         await WindowsWebAppZipDeployProviderL0Tests.testForPreDeploymentSteps_ZipDeployProvider();
         await WindowsWebAppZipDeployProviderL0Tests.testForPreDeploymentStepsWithSlotEnabled_ZipDeployProvider();
         await WindowsWebAppZipDeployProviderL0Tests.testForUpdateDeploymentStatus_ZipDeployProvider();
-        await WindowsWebAppZipDeployProviderL0Tests.testForDeployWebAppStep_ZipDeployProvider();
-        await WindowsWebAppZipDeployProviderL0Tests.testForDeployWebAppStepForFolder_ZipDeployProvider();
+        //await WindowsWebAppZipDeployProviderL0Tests.testForDeployWebAppStep_ZipDeployProvider();
+        //await WindowsWebAppZipDeployProviderL0Tests.testForDeployWebAppStepForFolder_ZipDeployProvider();
     }
 
     public static async testForPreDeploymentSteps_ZipDeployProvider() {

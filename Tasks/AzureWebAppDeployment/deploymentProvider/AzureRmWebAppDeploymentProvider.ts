@@ -25,7 +25,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         this.appService = new AzureAppService(this.taskParams.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, 
             this.taskParams.SlotName, this.taskParams.WebAppKind);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
-
+        
         this.kuduService = await this.appServiceUtility.getKuduService();
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
     }
@@ -38,6 +38,10 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }
+        
+        let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
+        console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+        tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
     }
 
     protected async PostDeploymentStep() {
@@ -52,8 +56,5 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         }
 
         await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
-        let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
-        console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
-        tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
     }
 }

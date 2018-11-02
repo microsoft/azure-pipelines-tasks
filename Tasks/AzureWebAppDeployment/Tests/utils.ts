@@ -80,4 +80,5 @@ export function mockTaskInputParameters(tr) {
     tr.setInput('WebAppKind', "webAppLinux");
     tr.setInput('RuntimeStack', "dummy|version");
     tr.setInput('BuiltinLinuxPackage', 'webAppPkg.zip');
+    tr.setInput('DeploymentMethod', 'auto')
 }

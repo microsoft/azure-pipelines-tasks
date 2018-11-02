@@ -4,10 +4,11 @@ import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParser
 import { DeploymentType } from '../taskparameters';
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
-const oldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
-const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 1';
 var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
+
+const oldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
+const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 1';
 
 export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProvider{
  
@@ -48,5 +49,9 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
     
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
+
+        let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
+        console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+        tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
     }
 }

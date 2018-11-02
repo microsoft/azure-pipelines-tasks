@@ -13,12 +13,22 @@ export class WindowsWebAppZipDeployProviderTests {
         setEndpointData();
         setAgentsData();
 
-        tr.registerMock('azure-arm-rest/azure-arm-app-service-kudu', {
-            Kudu: function(A, B, C) {
-                return {
-                    updateDeployment : function(D) {
+        tr.registerMock('azurermdeploycommon/operations/KuduServiceUtility', {
+            KuduServiceUtility: function(A) {
+                return {                    
+                    updateDeploymentStatus : function(B,C,D) {
                         return "MOCK_DEPLOYMENT_ID";
                     },
+                    warmUp: function() {
+                        console.log('warmed up Kudu Service');
+                    }
+                }
+            }
+        });
+
+        tr.registerMock('azurermdeploycommon/azure-arm-rest/azure-arm-app-service-kudu', {
+            Kudu: function(A, B, C) {
+                return {
                     getAppSettings : function() {
                         var map: Map<string, string> = new Map<string, string>();
                         map.set('MSDEPLOY_RENAME_LOCKED_FILES', '1');
@@ -39,7 +49,20 @@ export class WindowsWebAppZipDeployProviderTests {
             }
         });
 
-        tr.registerMock('webdeployment-common/utility.js', {
+        tr.registerMock('azurermdeploycommon/operations/AzureAppServiceUtility.js', {
+            AzureAppServiceUtility: function(X) {
+                return {
+                    getApplicationURL: function (A) {
+                        return "http://mytestapp.azurewebsites.net";
+                    },
+                    deployUsingZipDeploy: function(D,E,F) {
+                        return "ZIP_DEPLOY_FAILED_ID";
+                    }
+                }
+            }
+        });
+
+        tr.registerMock('azurermdeploycommon/webdeployment-common/utility.js', {
             generateTemporaryFolderForDeployment: function () {
                 return "webAppPkg";
             },
@@ -57,7 +80,7 @@ export class WindowsWebAppZipDeployProviderTests {
             }
         });
         
-        tr.registerMock('webdeployment-common/ziputility.js', {
+        tr.registerMock('azurermdeploycommon/webdeployment-common/ziputility.js', {
             archiveFolder: function(A, B){
                 return "webAppPkg.zip";
             }

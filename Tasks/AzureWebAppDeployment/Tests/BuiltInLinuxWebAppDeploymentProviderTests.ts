@@ -2,6 +2,9 @@ import tl = require('vsts-task-lib');
 import tmrm = require('vsts-task-lib/mock-run');
 import ma = require('vsts-task-lib/mock-answer');
 import * as path from 'path';
+import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
+import { AzureAppServiceUtility } from 'azurermdeploycommon/operations/AzureAppServiceUtility';
+import { KuduServiceUtility } from 'azurermdeploycommon/operations/KuduServiceUtility';
 import { setEndpointData, setAgentsData, mockTaskArgument, mockTaskInputParameters } from './utils';
 
 export class BuiltInLinuxWebAppDeploymentProviderTests {
@@ -13,32 +16,37 @@ export class BuiltInLinuxWebAppDeploymentProviderTests {
         setEndpointData();
         setAgentsData();
 
-        tr.registerMock('azure-arm-rest/azure-arm-app-service-kudu', {
-            Kudu: function(A, B, C) {
-                return {
-                    updateDeployment : function(D) {
+        tr.registerMock('azurermdeploycommon/operations/KuduServiceUtility', {
+            KuduServiceUtility: function(A) {
+                return {                    
+                    updateDeploymentStatus : function(B,C,D) {
                         return "MOCK_DEPLOYMENT_ID";
                     },
-                    getAppSettings : function() {
-                        var map: Map<string, string> = new Map<string, string>();
-                        map.set('MSDEPLOY_RENAME_LOCKED_FILES', '1');
-                        map.set('ScmType', 'ScmType');
-                        return map;
+                    warmUp: function() {
+                        console.log('warmed up Kudu Service');
                     },
-                    zipDeploy: function(E, F) {
-                        return '{id: "ZIP_DEPLOY_FAILED_ID", status: 3, deployer: "VSTS_ZIP_DEPLOY", author: "VSTS USER"}';
+                    deployUsingZipDeploy: function(E,F,G) {
+                        return "ZIP_DEPLOY_SUCCESS_ID";
                     },
-                    warDeploy: function(G, H) {
-                        return '{id: "ZIP_DEPLOY_FAILED_ID", status: 3, deployer: "VSTS_ZIP_DEPLOY", author: "VSTS USER"}';
-                    },
-                    getDeploymentDetails: function(I) {
-                        return "{ type: 'Deployment',url: 'http://MOCK_SCM_WEBSITE/api/deployments/MOCK_DEPLOYMENT_ID'}";
-                    }  
+                    deployUsingWarDeploy: function(H,I,J) {
+                        return "ZIP_DEPLOY_SUCCESS_ID";
+                    }
                 }
             }
         });
 
-        tr.registerMock('webdeployment-common/utility.js', {
+        tr.registerMock('azurermdeploycommon/operations/AzureAppServiceUtility.js', {
+            Kudu: function(A,B,C) {},
+            getKuduService : function() {
+                return new this.Kudu;
+            },
+            getApplicationURL: function (D) {
+                return "http://mytestapp.azurewebsites.net";
+            },
+            updateStartupCommandAndRuntimeStack: function(D,E) {}
+        });
+
+        tr.registerMock('azurermdeploycommon/webdeployment-common/utility.js', {
             generateTemporaryFolderForDeployment: function () {
                 return "webAppPkg";
             },
@@ -56,7 +64,7 @@ export class BuiltInLinuxWebAppDeploymentProviderTests {
             }
         });
         
-        tr.registerMock('webdeployment-common/ziputility.js', {
+        tr.registerMock('azurermdeploycommon/webdeployment-common/ziputility.js', {
             archiveFolder: function(A, B){
                 return "webAppPkg.zip";
             }

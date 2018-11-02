@@ -185,7 +185,7 @@ export class KuduServiceUtility {
         }
     }
 
-    public async warmpUp() {
+    public async warmpUp(): Promise<void> {
         try {
             tl.debug('warming up Kudu Service');
             await this._appServiceKuduService.getAppSettings();

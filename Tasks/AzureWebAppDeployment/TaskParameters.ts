@@ -25,7 +25,8 @@ export class TaskParametersUtility {
             AppSettings: tl.getInput('AppSettings', false),
             StartupCommand: tl.getInput('StartupCommand', false),
             ConfigurationSettings: tl.getInput('ConfigurationSettings', false),
-            ResourceGroupName: tl.getInput('ResourceGroupName', false)
+            ResourceGroupName: tl.getInput('ResourceGroupName', false),
+            SlotName: tl.getInput('SlotName', false)
         }  
         
         taskParameters.WebAppName = tl.getInput('WebAppName', true);
@@ -36,17 +37,18 @@ export class TaskParametersUtility {
         if (!taskParameters.ResourceGroupName) {
             var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);
             taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
-            taskParameters.WebAppKind = taskParameters.WebAppKind ? taskParameters.WebAppKind : webAppKindMap.get(appDetails["kind"]);
+            if(!taskParameters.WebAppKind) {
+                taskParameters.WebAppKind = webAppKindMap.get(appDetails["kind"]) ? webAppKindMap.get(appDetails["kind"]) : appDetails["kind"];
+            }
             tl.debug(`Resource Group: ${taskParameters.ResourceGroupName}`);
         }
         else if(!taskParameters.WebAppKind){
             var appService = new AzureAppService(taskParameters.azureEndpoint, taskParameters.ResourceGroupName, taskParameters.WebAppName);
             var configSettings = await appService.get(true);
-            taskParameters.WebAppKind = webAppKindMap.get(configSettings.kind);
+            taskParameters.WebAppKind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
         }
 
         taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("Linux") !=-1;
-        taskParameters.SlotName = tl.getInput('SlotName', false);
 
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
@@ -107,7 +109,6 @@ export interface TaskParameters {
     StartupCommand?: string;
     RuntimeStack?: string;
     ConfigurationSettings?: string;
-    DockerNamespace?: string;
     /** Additional parameters */
     azureEndpoint?: AzureEndpoint;
     isLinuxApp?: boolean;

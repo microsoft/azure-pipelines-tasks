@@ -30,7 +30,7 @@ export class DeploymentFactoryL0Tests  {
                 tl.setResult(tl.TaskResult.Failed, 'LinuxWebAppDeploymentProvider should be excepted but failed.');
             }
         } catch(error) {
-            tl.setResult(tl.TaskResult.Failed, 'LinuxWebAppDeploymentProvider should be excepted but failed with error.'+error);
+            tl.setResult(tl.TaskResult.Failed, 'LinuxWebAppDeploymentProvider should be excepted but failed with error. ' + error);
         }
     }
 
@@ -47,7 +47,7 @@ export class DeploymentFactoryL0Tests  {
                 tl.setResult(tl.TaskResult.Failed, 'WindowsWebAppRunFromZipProvider should be excepted but failed.');
             }
         } catch(error) {
-            tl.setResult(tl.TaskResult.Failed, 'WindowsWebAppRunFromZipProvider should be excepted but failed with error.');
+            tl.setResult(tl.TaskResult.Failed, 'WindowsWebAppRunFromZipProvider should be excepted but failed with error. ' + error);
         }
     }
 
@@ -64,7 +64,7 @@ export class DeploymentFactoryL0Tests  {
                 tl.setResult(tl.TaskResult.Failed, 'WindowsWebAppWarDeployProvider should be excepted but failed.');
             }
         } catch(error) {
-            tl.setResult(tl.TaskResult.Failed, 'WindowsWebAppWarDeployProvider should be excepted but failed with error.');
+            tl.setResult(tl.TaskResult.Failed, 'WindowsWebAppWarDeployProvider should be excepted but failed with error. ' + error);
         }
     }
 
@@ -81,7 +81,7 @@ export class DeploymentFactoryL0Tests  {
                 tl.setResult(tl.TaskResult.Failed, 'WindowsWebAppZipDeployProvider should be excepted but failed.');
             }
         } catch(error) {
-            tl.setResult(tl.TaskResult.Failed, 'WindowsWebAppZipDeployProvider should be excepted but failed with error.');
+            tl.setResult(tl.TaskResult.Failed, 'WindowsWebAppZipDeployProvider should be excepted but failed with error. ' + error);
         }
     }
 
@@ -98,7 +98,7 @@ export class DeploymentFactoryL0Tests  {
                 tl.setResult(tl.TaskResult.Failed, 'WindowsWebAppZipDeployProvider for user selected should be excepted but failed.');
             }
         } catch(error) {
-            tl.setResult(tl.TaskResult.Failed, 'WindowsWebAppZipDeployProvider for user selected should be excepted but failed with error.');
+            tl.setResult(tl.TaskResult.Failed, 'WindowsWebAppZipDeployProvider for user selected should be excepted but failed with error. ' + error);
         }
     }
 
@@ -115,7 +115,7 @@ export class DeploymentFactoryL0Tests  {
                 tl.setResult(tl.TaskResult.Failed, 'WindowsWebAppRunFromZipProvider for user selected should be excepted but failed.');
             }
         } catch(error) {
-            tl.setResult(tl.TaskResult.Failed, 'WindowsWebAppRunFromZipProvider for user selected should be excepted but failed with error.');
+            tl.setResult(tl.TaskResult.Failed, 'WindowsWebAppRunFromZipProvider for user selected should be excepted but failed with error. ' + error);
         }
     }
 

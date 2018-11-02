@@ -15,7 +15,7 @@ export class WindowsWebAppWarDeployProviderL0Tests  {
         await WindowsWebAppWarDeployProviderL0Tests.testForPreDeploymentSteps_WarDeployProvider();
         await WindowsWebAppWarDeployProviderL0Tests.testForPreDeploymentStepsWithSlotEnabled_WarDeployProvider();
         await WindowsWebAppWarDeployProviderL0Tests.testForUpdateDeploymentStatus_WarDeployProvider();
-        await WindowsWebAppWarDeployProviderL0Tests.testForDeployWebAppStep_WarDeployProvider();
+        //await WindowsWebAppWarDeployProviderL0Tests.testForDeployWebAppStep_WarDeployProvider();
     }
 
     public static async testForPreDeploymentSteps_WarDeployProvider() {

@@ -14,12 +14,10 @@ export class TaskParametersTests {
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
         tr.setInput('WebAppName', 'mytestapp');
         tr.setInput('Package', 'webAppPkg.zip');
-        tr.setInput('ImageSource', "Builtin Image");
+        tr.setInput('DeploymentMethod', "auto");
         tr.setInput('WebAppKind', "webAppLinux");
         tr.setInput('RuntimeStack', "dummy|version");
         tr.setInput('BuiltinLinuxPackage', 'webAppPkg.zip');
-        tr.setInput('ScriptType', 'Inline Script');
-        tr.setInput('InlineScript','npm install --production');
 
         tr.setAnswers(mockTaskArgument());
         tr.run();
