@@ -474,12 +474,12 @@ export async function unlockKeychain(keychainPath: string, keychainPwd: string):
  */
 export async function deleteProvisioningProfile(uuid: string): Promise<void> {
     if (uuid) {
-        let provProfiles: string[] = tl.findMatch(getUserProvisioningProfilesPath(), uuid.trim() + '*');
+        const provProfiles: string[] = tl.findMatch(getUserProvisioningProfilesPath(), uuid.trim() + '*');
         if (provProfiles) {
             provProfiles.forEach(async (provProfilePath) => {
                 tl.warning('Deleting provisioning profile: ' + provProfilePath);
                 if (tl.exist(provProfilePath)) {
-                    let deleteProfileCommand: ToolRunner = tl.tool(tl.which('rm', true));
+                    const deleteProfileCommand: ToolRunner = tl.tool(tl.which('rm', true));
                     deleteProfileCommand.arg(['-f', provProfilePath]);
                     await deleteProfileCommand.exec();
                 }
