@@ -15,16 +15,12 @@ Function CmdletHasMember($memberName) {
 
 Write-Verbose "Entering script PublishTestResults.ps1"
 
-try 
-{
-    # Force powershell to use TLS 1.2 for all communications
-    [System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls12
-    [System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls11
-    [System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls10
+try {
+	# Force powershell to use TLS 1.2 for all communications.
+	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12 -bor [System.Net.SecurityProtocolType]::Tls11 -bor [System.Net.SecurityProtocolType]::Tls10;
 }
-catch
-{
-    Write-Verbose "Failed to set SecurityProtocol to use TLS 1.2 by default"
+catch {
+	Write-Warning $error
 }
 
 # Import the Task.Common, Task.Internal and Task.TestResults dll that has all the cmdlets we need
