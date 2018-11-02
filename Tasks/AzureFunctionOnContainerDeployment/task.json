@@ -159,7 +159,7 @@
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppNamesByAppType",
             "parameters": {
-                "WebAppKind": "webAppContainer"
+                "WebAppKind": "functionAppContainer"
             }
         },        
         {

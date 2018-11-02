@@ -5,7 +5,7 @@ export class TaskParametersUtility {
     public static async getParameters(): Promise<TaskParameters> {
         var taskParameters: TaskParameters = {
             connectedServiceName: tl.getInput('ConnectedServiceName', false),
-            ImageName: tl.getInput('DockerNamespace', false),
+            ImageName: tl.getInput('ImageName', false),
             AppSettings: tl.getInput('AppSettings', false),
             StartupCommand: tl.getInput('StartupCommand', false),
             ConfigurationSettings: tl.getInput('ConfigurationSettings', false),
