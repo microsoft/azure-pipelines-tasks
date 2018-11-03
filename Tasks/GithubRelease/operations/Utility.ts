@@ -54,3 +54,23 @@ export  function validateUploadAssets(): void {
         }
     }
 }
+
+export function getReleaseNote(): string {
+    let releaseNotesSelection = tl.getInput('releaseNotesSelection');
+    let releaseNote: string = undefined;
+
+    if (releaseNotesSelection === 'file') {
+        let releaseNotesFile = tl.getPathInput('releaseNotesFile', false, true);
+        releaseNote = fs.readFileSync(releaseNotesFile).toString();
+    } 
+    else {
+        releaseNote = tl.getInput('releaseNotesInput');
+    }
+    tl.debug("ReleaseNote: " + releaseNote);
+    return releaseNote;
+}
+
+export function getGitHubApiUrl(): string {
+    let githubApiUrlInput: string = undefined; // Todo: mdakbar: get GHE url
+    return githubApiUrlInput ? githubApiUrlInput : "https://api.github.com"; // url without slash at end
+}

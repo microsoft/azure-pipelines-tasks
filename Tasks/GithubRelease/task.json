@@ -3,7 +3,7 @@
     "name": "GithubRelease",
     "friendlyName": "Github Release",
     "description": "Create, edit or discard the github release",
-    "helpMarkDown": "[More Information](Todo: Link to github release documentation)",
+    "helpMarkDown": "[More Information](Todo: mdakbar: Link to github release documentation)",
     "category": "Utility",
     "releaseNotes": "Works with cross-platform agents (Linux, macOS, or Windows)",
     "visibility": [
@@ -13,9 +13,9 @@
     "author": "Microsoft Corporation",
     "preview": true,
     "version": {
-        "Major": 5,
+        "Major": 0,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -89,17 +89,37 @@
             "helpMarkDown": "Release title"
         },
         {
-            "name": "releasenote",
-            "type": "multiLine",
+            "name": "releaseNotesSelection",
+            "type": "radio",
             "label": "Release note",
-            "defaultValue": "",
             "required": false,
+            "defaultValue": "input",
             "visibleRule": "action = Create || action = Edit",
-            "helpMarkDown": "Release note",
+            "options": {
+                "input": "Enter Release Note",
+                "file": "Select Release Note File"
+            }
+        },
+        {
+            "name": "releaseNotesInput",
+            "type": "multiLine",
+            "label": "Release notes",
+            "required": false,
+            "helpMarkDown": "Release notes for this version.",
+            "visibleRule": "releaseNotesSelection = input",
             "properties": {
                 "resizable": "true",
-                "rows": "4"
+                "rows": "4",
+                "maxLength": "5000"
             }
+        },
+        {
+            "name": "releaseNotesFile",
+            "type": "filePath",
+            "label": "Release notes file",
+            "required": false,
+            "helpMarkDown": "Select a file which contains the Release Notes for this version.",
+            "visibleRule": "releaseNotesSelection = file"
         },
         {
             "name": "githubReleaseAsset",

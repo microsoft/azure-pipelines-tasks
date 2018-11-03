@@ -4,8 +4,8 @@ import { WebResponse } from "./webClient";
 import { createRelease } from "./CreateRelease";
 import { uploadReleaseAsset } from "./UploadReleaseAsset";
 import { validateUploadAssets, getUploadAssets } from "./Utility";
-import { EditRelease } from "./EditRelease";
-import { DiscardRelease } from "./DiscardRelease";
+import { editRelease } from "./EditRelease";
+import { discardRelease } from "./DiscardRelease";
 import { deleteReleaseAsset } from "./DeleteReleaseAsset";
 
 export async function createReleaseAction(): Promise<void> {
@@ -32,7 +32,7 @@ export async function editReleaseAction(): Promise<void> {
     
     try {
         validateUploadAssets();        
-        let response: WebResponse = await EditRelease();
+        let response: WebResponse = await editRelease();
 
         if (response.statusCode === 200) {
             const uploadUrl: string = response.body["upload_url"];
@@ -51,7 +51,7 @@ export async function editReleaseAction(): Promise<void> {
 export async function discardReleaseAction(): Promise<void> {
 
     try {
-        let response: WebResponse = await DiscardRelease();
+        let response: WebResponse = await discardRelease();
 
         if (response.statusCode === 204) {
             console.log(tl.loc("DiscardReleaseSuccessful"));

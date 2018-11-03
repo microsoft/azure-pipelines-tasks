@@ -7,7 +7,7 @@ async function run(): Promise<void> {
     try {
         var taskManifestPath = path.join(__dirname, "task.json");
         tl.debug("Setting resource path to " + taskManifestPath);
-        tl.setResourcePath(taskManifestPath);
+        tl.setResourcePath(taskManifestPath);        
 
         let action = tl.getInput("action");
         tl.debug("Github action = " + action);

@@ -2,8 +2,9 @@ import tl = require("vsts-task-lib/task");
 import { WebRequest, sendRequest, WebResponse } from "./webClient";
 import * as Utility from "./Utility";
 import { GetReleaseByTag } from "./GetReleaseByTag";
+import util = require("util");
 
-export async function DiscardRelease(): Promise<WebResponse> {
+export async function discardRelease(): Promise<WebResponse> {
 
     let releaseResponse = await GetReleaseByTag();
 
@@ -14,11 +15,10 @@ export async function DiscardRelease(): Promise<WebResponse> {
         // Form request
         let request = new WebRequest();
         
-        request.uri = "https://api.github.com/repos/" + repositoryName + "/releases/" + releaseResponse.body["id"];
+        request.uri = util.format("%s/repos/%s/releases/%s", Utility.getGitHubApiUrl(), repositoryName, releaseResponse.body["id"]);
         request.method = "DELETE";
         request.headers = {
-            'Authorization': 'token ' + Utility.getGithubEndPointToken(),
-            'User-Agent': 'akbar-github-release delete'
+            'Authorization': 'token ' + Utility.getGithubEndPointToken()
         };
         tl.debug("Discard release request:\n" + JSON.stringify(request, null, 2));
 
