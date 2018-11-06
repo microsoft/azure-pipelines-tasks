@@ -1,111 +1,126 @@
 import tl = require("vsts-task-lib/task");
 import path = require("path");
 import { WebResponse } from "./webClient";
-import { createRelease } from "./CreateRelease";
-import { uploadReleaseAsset } from "./UploadReleaseAsset";
-import { validateUploadAssets, getUploadAssets } from "./Utility";
-import { editRelease } from "./EditRelease";
-import { discardRelease } from "./DiscardRelease";
-import { deleteReleaseAsset } from "./DeleteReleaseAsset";
+import { Release } from "./Release";
+import { Utility, Inputs } from "./Utility";
 
-export async function createReleaseAction(): Promise<void> {
+export class Action {
 
-    try {
-        validateUploadAssets(); 
-        let response: WebResponse = await createRelease();
+    public static async createReleaseAction(repositoryName: string, releaseTitle: string, isDraft: boolean, isPrerelease: boolean): Promise<void> {
 
-        if (response.statusCode === 201) {
-            const uploadUrl: string = response.body["upload_url"];
-            await uploadAssets(uploadUrl, []);
-        }
-        else {            
-            throw new Error(tl.loc("ErrorCreateRelease") + "\n" + JSON.stringify(response));
-        }
+        try {
+            Utility.validateUploadAssets(); 
+            let response: WebResponse = await Release.createRelease(repositoryName, releaseTitle, isDraft, isPrerelease);
 
-        tl.setResult(tl.TaskResult.Succeeded, "");
-    } catch (error) {
-        tl.setResult(tl.TaskResult.Failed, error);
-    }    
-}
+            if (response.statusCode === 201) {
+                console.log(tl.loc("CreateReleaseSuccess"));
 
-export async function editReleaseAction(): Promise<void> {
-    
-    try {
-        validateUploadAssets();        
-        let response: WebResponse = await editRelease();
+                const uploadUrl: string = response.body[this._uploadUrlkey];
+                await this._uploadAssets(repositoryName, uploadUrl, []);
+            }
+            else {           
+                tl.debug("Create release response:\n" + JSON.stringify(response));
+                throw new Error(tl.loc("CreateReleaseError"));;
+            }
 
-        if (response.statusCode === 200) {
-            const uploadUrl: string = response.body["upload_url"];
-            await uploadAssets(uploadUrl, response.body["assets"]);
-        }
-        else {
-            throw new Error(tl.loc("ErrorEditRelease") + "\n" + JSON.stringify(response));
-        }
+            tl.setResult(tl.TaskResult.Succeeded, "");
+        } catch (error) {
+            tl.setResult(tl.TaskResult.Failed, error);
+        }    
+    }
 
-        tl.setResult(tl.TaskResult.Succeeded, "");
-    } catch (error) {
-        tl.setResult(tl.TaskResult.Failed, error);
-    }    
-}
-
-export async function discardReleaseAction(): Promise<void> {
-
-    try {
-        let response: WebResponse = await discardRelease();
-
-        if (response.statusCode === 204) {
-            console.log(tl.loc("DiscardReleaseSuccessful"));
-        }
-        else {
-            throw new Error(tl.loc("ErrorDiscardingRelease") + "\n" + JSON.stringify(response));
-        }
-
-        tl.setResult(tl.TaskResult.Succeeded, "");
-    } catch (error) {
-        tl.setResult(tl.TaskResult.Failed, error);
-    }    
-}
-
-async function uploadAssets(uploadUrl: string, existingAssets) {
-    const deleteExistingAssets: boolean = tl.getBoolInput('deleteExistingAssets');
-    let assets: string[] = getUploadAssets();
-
-    for (let index = 0; index < assets.length; index++) {
-
-        const asset = assets[index];
-        let uploadResponse = await uploadReleaseAsset(uploadUrl, asset);
+    public static async editReleaseAction(repositoryName: string, releaseTitle: string, isDraft: boolean, isPrerelease: boolean): Promise<void> {
         
-        if (uploadResponse.statusCode === 201) {
-            console.log(tl.loc("UploadAssetSuccessful", asset));
-        }
-        else if (uploadResponse.statusCode === 422 && uploadResponse.body.errors && uploadResponse.body.errors[0].code === 'already_exists') {
+        try {
+            Utility.validateUploadAssets();        
+            let response: WebResponse = await Release.editRelease(repositoryName, releaseTitle, isDraft, isPrerelease);
+
+            if (response.statusCode === 200) {
+                console.log(tl.loc("EditReleaseSuccess"));
+
+                const uploadUrl: string = response.body[this._uploadUrlkey];
+                await this._uploadAssets(repositoryName, uploadUrl, response.body[this._assetsKey]);
+            }
+            else {
+                tl.debug("Edit release response:\n" + JSON.stringify(response));
+                throw new Error(tl.loc("EditReleaseError"));
+            }
+
+            tl.setResult(tl.TaskResult.Succeeded, "");
+        } catch (error) {
+            tl.setResult(tl.TaskResult.Failed, error);
+        }    
+    }
+
+    public static async discardReleaseAction(repositoryName: string): Promise<void> {
+
+        try {
+            let response: WebResponse = await Release.discardRelease(repositoryName);
+
+            if (response.statusCode === 204) {
+                console.log(tl.loc("DiscardReleaseSuccess"));
+            }
+            else {
+                tl.debug("Discard release response:\n" + JSON.stringify(response));
+                throw new Error(tl.loc("DiscardReleaseError"));
+            }
+
+            tl.setResult(tl.TaskResult.Succeeded, "");
+        } catch (error) {
+            tl.setResult(tl.TaskResult.Failed, error);
+        }    
+    }
+
+    private static async _uploadAssets(repositoryName: string, uploadUrl: string, existingAssets): Promise<void> {
+        const deleteExistingAssets: boolean = tl.getBoolInput(Inputs.deleteExistingAssets);
+        let assets: string[] = Utility.getUploadAssets();
+
+        for (let index = 0; index < assets.length; index++) {
+            const asset = assets[index];
+
+            console.log(tl.loc("UploadingAsset", asset));
+
+            let uploadResponse = await Release.uploadReleaseAsset(uploadUrl, asset);
             
-            if (deleteExistingAssets) {
-                console.log(tl.loc("DuplicateAssetFound", asset));
-                console.log(tl.loc("DeletingDuplicateAsset", asset));
-                const fileName = path.basename(asset);
+            if (uploadResponse.statusCode === 201) {
+                console.log(tl.loc("UploadAssetSuccess", asset));
+            }
+            else if (uploadResponse.statusCode === 422 && uploadResponse.body.errors && uploadResponse.body.errors.length > 0 && uploadResponse.body.errors[0].code === 'already_exists') {
+                
+                if (deleteExistingAssets) {
+                    console.log(tl.loc("DuplicateAssetFound", asset));
+                    console.log(tl.loc("DeletingDuplicateAsset", asset));
 
-                for (let existingAsset of existingAssets) {
-                    if (fileName === existingAsset.name) {
-                        let deleteAssetResponse = await deleteReleaseAsset(existingAsset.id);
+                    const fileName = path.basename(asset);
 
-                        if (deleteAssetResponse.statusCode === 204) {
-                            console.log(tl.loc("DuplicateAssetDeletedSuccessfully", asset));
+                    for (let existingAsset of existingAssets) {
+                        if (fileName === existingAsset.name) {
+                            let deleteAssetResponse = await Release.deleteReleaseAsset(existingAsset.id, repositoryName);
+
+                            if (deleteAssetResponse.statusCode === 204) {
+                                console.log(tl.loc("DuplicateAssetDeletedSuccessfully", asset));
+                            }
+                            else {
+                                tl.debug("Delete asset response:\n" + JSON.stringify(deleteAssetResponse));
+                                throw new Error(tl.loc("ErrorDeletingDuplicateAsset", asset));
+                            }
+                            index--;
+                            break;
                         }
-                        else {
-                            throw new Error(tl.loc("ErrorDeletingDuplicateAsset", asset) + "\n" + JSON.stringify(deleteAssetResponse));
-                        }
-                        index--;
-                        break;
                     }
+                }
+                else {
+                    tl.debug("Upload asset response:\n" + JSON.stringify(uploadResponse));
+                    throw new Error(tl.loc("DuplicateAssetFound", asset));
                 }
             }
             else {
-                throw new Error(tl.loc("DuplicateAssetFound", asset) + "\n" + JSON.stringify(uploadResponse));
+                tl.debug("Upload asset response:\n" + JSON.stringify(uploadResponse));
+                throw new Error(tl.loc("UploadAssetError"));
             }
         }
-        else {
-            throw new Error(tl.loc("ErrorUploadingAsset") + "\n" + JSON.stringify(uploadResponse));
-        }
     }
+
+    private static readonly _uploadUrlkey: string = "upload_url";
+    private static readonly _assetsKey: string = "assets";
 }

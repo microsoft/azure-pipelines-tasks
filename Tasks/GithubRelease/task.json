@@ -174,19 +174,20 @@
         }
     },
     "messages": {
-        "ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/",
+        "CreateReleaseError": "Github create release request failed.",
+        "CreateReleaseSuccess": "Github create release request failed.",
+        "DiscardReleaseError": "Github discard release request failed.",
+        "DiscardReleaseSuccess": "Discard release successful.",
+        "EditReleaseError": "Github edit release request failed.",
+        "EditReleaseSuccess": "Github edit release request failed.",
+        "GetReleaseByTagError": "Github get release by tag name request failed.",
         "MissingAssetError": "Missing asset: %s",
-        "UploadingAsset": "Uploading asset: %s",
-        "ErrorUploadingAsset": "Error while uploading asset: %s",
-        "ErrorCreateRelease": "Github create release request failed.",
-        "ErrorEditRelease": "Github edit release request failed.",
-        "ErrorGettingReleaseByTag": "Github get release by tag name request failed.",
-        "ErrorDiscardingRelease": "Github discard release request failed.",
-        "DiscardReleaseSuccessful": "Discard release successful.",
-        "UploadAssetSuccessful": "Uploaded asset: %s",
         "DuplicateAssetFound": "Duplicate asset found: %s",
+        "DeletingDuplicateAsset": "Deleting duplicate asset: %s",
         "DuplicateAssetDeletedSuccessfully": "Duplicate asset deleted successfully: %s\n Uploading the current asset again",
         "ErrorDeletingDuplicateAsset": "Error deleting duplicate asset: %s",
-        "DeletingDuplicateAsset": "Deleting duplicate asset: %s"
+        "UploadingAsset": "Uploading asset: %s",
+        "UploadAssetError": "Error while uploading asset: %s",
+        "UploadAssetSuccess": "Uploaded asset: %s"
     }
 }

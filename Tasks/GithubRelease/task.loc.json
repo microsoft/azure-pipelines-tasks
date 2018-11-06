@@ -174,19 +174,20 @@
     }
   },
   "messages": {
-    "ResourceGroupDoesntMatchPattern": "ms-resource:loc.messages.ResourceGroupDoesntMatchPattern",
+    "CreateReleaseError": "ms-resource:loc.messages.CreateReleaseError",
+    "CreateReleaseSuccess": "ms-resource:loc.messages.CreateReleaseSuccess",
+    "DiscardReleaseError": "ms-resource:loc.messages.DiscardReleaseError",
+    "DiscardReleaseSuccess": "ms-resource:loc.messages.DiscardReleaseSuccess",
+    "EditReleaseError": "ms-resource:loc.messages.EditReleaseError",
+    "EditReleaseSuccess": "ms-resource:loc.messages.EditReleaseSuccess",
+    "GetReleaseByTagError": "ms-resource:loc.messages.GetReleaseByTagError",
     "MissingAssetError": "ms-resource:loc.messages.MissingAssetError",
-    "UploadingAsset": "ms-resource:loc.messages.UploadingAsset",
-    "ErrorUploadingAsset": "ms-resource:loc.messages.ErrorUploadingAsset",
-    "ErrorCreateRelease": "ms-resource:loc.messages.ErrorCreateRelease",
-    "ErrorEditRelease": "ms-resource:loc.messages.ErrorEditRelease",
-    "ErrorGettingReleaseByTag": "ms-resource:loc.messages.ErrorGettingReleaseByTag",
-    "ErrorDiscardingRelease": "ms-resource:loc.messages.ErrorDiscardingRelease",
-    "DiscardReleaseSuccessful": "ms-resource:loc.messages.DiscardReleaseSuccessful",
-    "UploadAssetSuccessful": "ms-resource:loc.messages.UploadAssetSuccessful",
     "DuplicateAssetFound": "ms-resource:loc.messages.DuplicateAssetFound",
+    "DeletingDuplicateAsset": "ms-resource:loc.messages.DeletingDuplicateAsset",
     "DuplicateAssetDeletedSuccessfully": "ms-resource:loc.messages.DuplicateAssetDeletedSuccessfully",
     "ErrorDeletingDuplicateAsset": "ms-resource:loc.messages.ErrorDeletingDuplicateAsset",
-    "DeletingDuplicateAsset": "ms-resource:loc.messages.DeletingDuplicateAsset"
+    "UploadingAsset": "ms-resource:loc.messages.UploadingAsset",
+    "UploadAssetError": "ms-resource:loc.messages.UploadAssetError",
+    "UploadAssetSuccess": "ms-resource:loc.messages.UploadAssetSuccess"
   }
 }

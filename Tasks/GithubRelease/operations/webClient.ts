@@ -13,7 +13,10 @@ var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
     }
 } : {};
 
-var httpCallbackClient = new httpClient.HttpClient("GitHub_Release_Azure_Pipeline_tasks", null, requestOptions); // Todo: mdakbar: Get user-agent checked from PM
+let ignoreSslErrors: string = tl.getVariable("VSTS_ARM_REST_IGNORE_SSL_ERRORS");
+requestOptions.ignoreSslError = ignoreSslErrors && ignoreSslErrors.toLowerCase() == "true";
+
+var httpCallbackClient = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
 
 export class WebRequest {
     public method: string;
