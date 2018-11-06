@@ -64,7 +64,7 @@ it('creates and activates environment', async function () {
     await uut.condaEnvironment(parameters, Platform.Linux);
     assert(findConda.calledOnceWithExactly(Platform.Linux));
     assert(prependCondaToPath.calledOnceWithExactly('path-to-conda', Platform.Linux));
-    assert(createEnvironment.calledOnceWithExactly(path.join('/home', '.conda', 'envs', 'env'), Platform.Linux, undefined, undefined));
+    assert(createEnvironment.calledOnceWithExactly(path.join('/home', '.conda', 'envs', 'env'), undefined, undefined));
     assert(activateEnvironment.calledOnceWithExactly(path.join('/home', '.conda', 'envs'), 'env', Platform.Linux));
 });
 

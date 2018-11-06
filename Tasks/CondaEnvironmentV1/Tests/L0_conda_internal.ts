@@ -142,14 +142,14 @@ it('creates Conda environment', async function () {
             } else {
                 mockToolRunner.setAnswers({
                     exec: {
-                        [`sudo /miniconda/bin/conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
+                        [`conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
                             code: 0
                         }
                     }
                 });
             }
 
-            await uut.createEnvironment(path.join('envsDir', 'env'), platform);
+            await uut.createEnvironment(path.join('envsDir', 'env'));
         }
         { // failure
             if (platform === Platform.Windows) {
@@ -163,7 +163,7 @@ it('creates Conda environment', async function () {
             } else {
                 mockToolRunner.setAnswers({
                     exec: {
-                        [`sudo /miniconda/bin/conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
+                        [`conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
                             code: 1
                         }
                     }
@@ -174,13 +174,13 @@ it('creates Conda environment', async function () {
             // Node 10: use `assert.rejects`
             let error: any | undefined;
             try {
-                await uut.createEnvironment(path.join('envsDir', 'env'), platform);
+                await uut.createEnvironment(path.join('envsDir', 'env'));
             } catch (e) {
                 error = e;
             }
 
             assert(error instanceof Error);
-            assert.strictEqual(error.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: ${platform === Platform.Windows ? 'conda' : 'sudo'} failed with return code: 1`);
+            assert.strictEqual(error.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: conda failed with return code: 1`);
         }
     }
 });

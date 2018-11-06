@@ -55,7 +55,7 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
                 console.log(task.loc('CleanEnvironment', environmentPath));
                 task.rmRF(environmentPath);
             }
-            await internal.createEnvironment(environmentPath, platform, parameters.packageSpecs, parameters.createOptions);
+            await internal.createEnvironment(environmentPath, parameters.packageSpecs, parameters.createOptions);
         }
 
         internal.activateEnvironment(environmentsDir, environmentName, platform);
