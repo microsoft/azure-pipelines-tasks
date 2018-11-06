@@ -58,6 +58,10 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
             await internal.createEnvironment(environmentPath, parameters.packageSpecs, parameters.createOptions);
         }
 
+        // Set this environment variable to prevent foot-shooting if the user tries to run a command like
+        // `conda envs update -n {environmentName}` later in the job
+        task.setVariable('CONDA_ENVS_PATH', environmentsDir);
+
         internal.activateEnvironment(environmentsDir, environmentName, platform);
     } else if (parameters.packageSpecs) {
         await internal.installPackagesGlobally(parameters.packageSpecs, platform, parameters.installOptions);
