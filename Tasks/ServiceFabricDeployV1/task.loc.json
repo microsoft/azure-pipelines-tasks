@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 7,
-    "Patch": 26
+    "Patch": 27
   },
   "demands": [
     "Cmd"
@@ -471,6 +471,9 @@
     "SFSDK_ApplicationHealth": "ms-resource:loc.messages.SFSDK_ApplicationHealth",
     "SFSDK_RetryingUpgradeApplication": "ms-resource:loc.messages.SFSDK_RetryingUpgradeApplication",
     "SFSDK_RetryingGetApplicationUpgrade": "ms-resource:loc.messages.SFSDK_RetryingGetApplicationUpgrade",
+    "SFSDK_RetryingGetApplication": "ms-resource:loc.messages.SFSDK_RetryingGetApplication",
+    "SFSDK_RetryingGetServiceType": "ms-resource:loc.messages.SFSDK_RetryingGetServiceType",
+    "SFSDK_RetryingGetServiceManifest": "ms-resource:loc.messages.SFSDK_RetryingGetServiceManifest",
     "SFSDK_RetryingTestClusterConnection": "ms-resource:loc.messages.SFSDK_RetryingTestClusterConnection",
     "SFSDK_RetryingTestAppPackage": "ms-resource:loc.messages.SFSDK_RetryingTestAppPackage",
     "SFSDK_RetryingGetClusterManifest": "ms-resource:loc.messages.SFSDK_RetryingGetClusterManifest",
