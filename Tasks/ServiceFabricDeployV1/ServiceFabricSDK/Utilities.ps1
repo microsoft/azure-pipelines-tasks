@@ -251,7 +251,7 @@ function Get-ServiceFabricServiceTypeAction
 
     $global:operationId = $SF_Operations.GetServiceType
 
-    return Invoke-ActionWithDefaultRetries -Action { Get-ServiceFabricServiceType -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $clusterAppTypeVersion } `
+    return Invoke-ActionWithDefaultRetries -Action { Get-ServiceFabricServiceType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion } `
         -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetServiceType)
 }
 
@@ -270,7 +270,7 @@ function Get-ServiceFabricServiceManifestAction
 
     $global:operationId = $SF_Operations.GetServiceManifest
 
-    return Invoke-ActionWithDefaultRetries -Action { Get-ServiceFabricServiceManifest -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $clusterAppTypeVersion -ServiceManifestName $ServiceManifestName } `
+    return Invoke-ActionWithDefaultRetries -Action { Get-ServiceFabricServiceManifest -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -ServiceManifestName $ServiceManifestName } `
         -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetServiceManifest)
 }
 
