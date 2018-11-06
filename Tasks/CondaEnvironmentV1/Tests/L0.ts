@@ -19,11 +19,12 @@ describe('CondaEnvironment L0 Suite', function () {
         const testRunner = new MockTestRunner(testFile);
 
         testRunner.run();
+        console.log(JSON.stringify(testRunner));
 
         if (getPlatform() === Platform.Windows) {
-            assert(testRunner.ran('conda create --quiet --prefix \\miniconda\\envs\\test --mkdir --yes'));
+            assert(testRunner.ran('conda create --quiet --prefix \\userprofile\\.conda\\envs\\test --mkdir --yes'));
         } else {
-            assert(testRunner.ran('sudo /miniconda/bin/conda create --quiet --prefix /miniconda/envs/test --mkdir --yes'));
+            assert(testRunner.ran('sudo /miniconda/bin/conda create --quiet --prefix /home/.conda/envs/test --mkdir --yes'));
         }
 
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');

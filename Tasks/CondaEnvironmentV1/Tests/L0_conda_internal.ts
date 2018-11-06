@@ -47,7 +47,6 @@ it('finds the Conda installation with the CONDA variable', function () {
 
     const getVariable = sinon.stub();
     getVariable.withArgs('CONDA').returns('path-to-conda');
-    getVariable.withArgs('Agent.ToolsDirectory').returns('path-to-tools');
 
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
         getVariable
@@ -106,7 +105,6 @@ it('finds the Conda installation with PATH', function () {
 
     const getVariable = sinon.stub();
     getVariable.withArgs('CONDA').returns(undefined);
-    getVariable.withArgs('Agent.ToolsDirectory').returns('path-to-tools');
 
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
         getVariable

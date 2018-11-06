@@ -36,7 +36,12 @@ it('creates and activates environment', async function () {
         existsSync: () => false
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    const getVariable = sinon.stub();
+    getVariable.withArgs('HOME').returns('/home');
+
+    mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+        getVariable
+    }));
 
     const findConda = sinon.stub().returns('path-to-conda');
     const prependCondaToPath = sinon.spy();
@@ -59,8 +64,8 @@ it('creates and activates environment', async function () {
     await uut.condaEnvironment(parameters, Platform.Linux);
     assert(findConda.calledOnceWithExactly(Platform.Linux));
     assert(prependCondaToPath.calledOnceWithExactly('path-to-conda', Platform.Linux));
-    assert(createEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs', 'env'), Platform.Linux, undefined, undefined));
-    assert(activateEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs'), 'env', Platform.Linux));
+    assert(createEnvironment.calledOnceWithExactly(path.join('/home', '.conda', 'envs', 'env'), Platform.Linux, undefined, undefined));
+    assert(activateEnvironment.calledOnceWithExactly(path.join('/home', '.conda', 'envs'), 'env', Platform.Linux));
 });
 
 it('requires `createCustomEnvironment` to be set to create a custom environment', async function () {
