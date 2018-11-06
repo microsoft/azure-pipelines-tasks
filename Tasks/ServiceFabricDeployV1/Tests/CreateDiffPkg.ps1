@@ -87,7 +87,7 @@ $app = @{
     "ApplicationTypeName"    = $applicationTypeName;
     "ApplicationTypeVersion" = $applicationTypeVersion
 }
-Register-Mock Get-ServiceFabricApplication { $app } -- -ApplicationName $appName
+
 Register-Mock Get-ServiceFabricApplicationAction { $app } -- -ApplicationName $appName
 $publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml", "-OverwriteBehavior:", $overwriteBehavior, "-ApplicationPackagePath:", $diffPackagePath, "-ErrorAction:", "Stop", "-Action:", "RegisterAndCreate")
 Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
