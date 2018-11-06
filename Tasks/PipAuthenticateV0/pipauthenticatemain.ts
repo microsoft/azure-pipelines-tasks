@@ -17,10 +17,14 @@ async function main(): Promise<void> {
         }
 
         const feedIds  = tl.getDelimitedInput("feedList", ",");
+        const serverType = tl.getVariable("System.ServerType");
 
         // Local feeds
         if (feedIds)
         {
+            if (!serverType || serverType.toLowerCase() !== "hosted"){
+                throw new Error(tl.loc("Error_PythonInternalFeedsNotSupportedOnprem"));
+            }
             tl.debug(tl.loc("Info_AddingInternalFeeds", feedIds.length));
             const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
             const localAccessToken = pkgLocationUtils.getSystemAccessToken();
