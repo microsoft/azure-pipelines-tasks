@@ -251,7 +251,7 @@ function Get-ServiceFabricServiceTypeAction
 
     $global:operationId = $SF_Operations.GetServiceType
 
-    return Invoke-ActionWithDefaultRetries -Action { Get-ServiceFabricServiceType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion } `
+    return Invoke-ActionWithDefaultRetries -Action { Get-ServiceFabricServiceType -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $clusterAppTypeVersion } `
         -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetServiceType)
 }
 
@@ -270,7 +270,11 @@ function Get-ServiceFabricServiceManifestAction
 
     $global:operationId = $SF_Operations.GetServiceManifest
 
+<<<<<<< HEAD
     return Invoke-ActionWithDefaultRetries -Action { Get-ServiceFabricServiceManifest -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -ServiceManifestName $ServiceManifestName } `
+=======
+    return Invoke-ActionWithDefaultRetries -Action { Get-ServiceFabricServiceManifest -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $clusterAppTypeVersion -ServiceManifestName $ServiceManifestName } `
+>>>>>>> 5ec4534a4... Adding retrying for all cluster operations while creating a diff package.
         -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetServiceManifest)
 }
 
@@ -1025,7 +1029,8 @@ function Get-ServiceFabricApplicationActionOldSdk
         $getApplicationParams['ApplicationName'] = $ApplicationName
     }
 
-    $apps = Get-ServiceFabricApplication @getApplicationParams
+    $apps = Invoke-ActionWithDefaultRetries -Action { Get-ServiceFabricApplication @getApplicationParams } `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplication)
     if($ApplicationTypeName)
     {
         $apps = $apps | Where-Object { $_.ApplicationTypeName -eq $ApplicationTypeName }
