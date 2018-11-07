@@ -15,8 +15,8 @@
   "loc.input.label.customCommand": "Commandes et arguments",
   "loc.input.help.customCommand": "Commande personnalisée à exécuter, par exemple \"dist-tag ls mypackage\".",
   "loc.input.label.customRegistry": "Registres à utiliser",
-  "loc.input.help.customRegistry": "You can either commit a .npmrc file to your source code repository and set its path here or select a registry from Azure Artifacts here.",
-  "loc.input.label.customFeed": "Use packages from this Azure Artifacts/TFS registry",
+  "loc.input.help.customRegistry": "Vous pouvez soit valider un fichier .npmrc dans votre dépôt de code source et définir son chemin ici, soit sélectionner un registre à partir d'Azure Artifacts ici.",
+  "loc.input.label.customFeed": "Utiliser les packages de ce registre Azure Artifacts/TFS",
   "loc.input.help.customFeed": "Incluez le flux sélectionné dans le fichier .npmrc généré.",
   "loc.input.label.customEndpoint": "Informations d'identification des registres situés en dehors de ce compte/cette collection",
   "loc.input.help.customEndpoint": "Informations d'identification à utiliser pour les registres externes situés dans le fichier .npmrc du projet. Pour les registres présents dans ce compte/cette collection, n'indiquez aucune valeur. Les informations d'identification de la build sont utilisées automatiquement.",
@@ -30,8 +30,8 @@
   "loc.messages.NoBuildCredentials": "Informations d'identification de build introuvables",
   "loc.messages.UnknownCommand": "Commande inconnue : %s",
   "loc.messages.MultipleProjectConfigs": "Plusieurs projets .npmrc trouvés dans $s",
-  "loc.messages.ServiceEndpointNotDefined": "Couldn't find the service connection. Make sure the selected service connection still exists.",
-  "loc.messages.ServiceEndpointUrlNotDefined": "Couldn't find the URL for the service connection. Make sure the service connection is correctly configured.",
+  "loc.messages.ServiceEndpointNotDefined": "La connexion de service est introuvable. Vérifiez que la connexion de service sélectionnée existe toujours.",
+  "loc.messages.ServiceEndpointUrlNotDefined": "L'URL de la connexion de service est introuvable. Vérifiez que la connexion de service est correctement configurée.",
   "loc.messages.SavingFile": "Enregistrement du fichier %s",
   "loc.messages.RestoringFile": "Restauration du fichier %s",
   "loc.messages.PublishFeed": "Publication sur un flux interne",
@@ -42,7 +42,7 @@
   "loc.messages.UsingRegistry": "Utilisation du registre : %s",
   "loc.messages.AddingAuthRegistry": "Ajout de l'authentification pour le registre : %s",
   "loc.messages.FoundLocalRegistries": "%d registres trouvés dans ce compte/cette collection",
-  "loc.messages.ForcePackagingUrl": "Packaging collection URL forced to: %s",
+  "loc.messages.ForcePackagingUrl": "URL de collection de création de package forcée vers : %s",
   "loc.messages.DebugLogNotFound": "Journal de débogage introuvable dans le répertoire de cache ou le répertoire de travail",
   "loc.messages.NpmFailed": "Échec de npm. Code de retour : %s",
   "loc.messages.FoundNpmDebugLog": "Journal de débogage npm trouvé. Vérifiez que le chemin correspond au chemin situé dans la sortie de npm : %s",
@@ -50,5 +50,5 @@
   "loc.messages.OverridingProjectNpmrc": "Remplacement du fichier .npmrc du projet : %s",
   "loc.messages.RestoringProjectNpmrc": "Restauration du fichier .npmrc du projet",
   "loc.messages.WorkingDirectoryNotDirectory": "Remplacez votre répertoire de travail par un répertoire valide",
-  "loc.messages.NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region."
+  "loc.messages.NGCommon_AreaNotFoundInSps": "Impossible de localiser la zone '%s' [%s]. Le service qui contient la zone n'est peut-être pas disponible dans votre région."
 }

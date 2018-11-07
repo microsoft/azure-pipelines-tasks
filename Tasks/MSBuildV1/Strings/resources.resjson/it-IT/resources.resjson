@@ -22,7 +22,7 @@
   "loc.input.label.maximumCpuCount": "Compilazione in parallelo",
   "loc.input.help.maximumCpuCount": "Se la configurazione di destinazione di MSBuild è compatibile con la compilazione in parallelo, è possibile selezionare facoltativamente questa opzione di input per passare l'opzione /m a MSBuild (solo Windows). Se la configurazione di destinazione non è compatibile con la compilazione in parallelo, selezionando questa opzione durante la compilazione potrebbero verificarsi errori di file in uso oppure errori di compilazioni intermittenti o incoerenti.",
   "loc.input.label.restoreNugetPackages": "Ripristina pacchetti NuGet",
-  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a [NuGet Tool Installer](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) task before the build.",
+  "loc.input.help.restoreNugetPackages": "Questa opzione è deprecata. Per ripristinare pacchetti NuGet, aggiungere un'attività [Programma di installazione strumento NuGet](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) prima della compilazione.",
   "loc.input.label.logProjectEvents": "Registra dettagli progetto",
   "loc.input.help.logProjectEvents": "Registra facoltativamente i dettagli della sequenza temporale per ogni progetto (solo Windows).",
   "loc.input.label.createLogFile": "Crea file di log",

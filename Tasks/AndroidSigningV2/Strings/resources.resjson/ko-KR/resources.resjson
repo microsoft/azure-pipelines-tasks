@@ -6,7 +6,7 @@
   "loc.group.displayName.jarsignerOptions": "서명 옵션",
   "loc.group.displayName.zipalignOptions": "Zipalign 옵션",
   "loc.input.label.files": "APK 파일",
-  "loc.input.help.files": "Relative path from the repo root to the APK(s) you want to sign. You can use wildcards to specify multiple files ([more information](https://go.microsoft.com/fwlink/?linkid=856077)). For example, `**/bin/*.apk` for all .APK files in the 'bin' subfolder",
+  "loc.input.help.files": "서명할 APK에 대한 리포 루트의 상대 경로입니다. 와일드카드를 사용하여 여러 파일을 지정할 수 있습니다([자세한 정보](https://go.microsoft.com/fwlink/?linkid=856077)). 예를 들어, 'bin' 하위 폴더에 있는 모든 APK 파일을 표시하기 위해 '**/bin/*.apk'를 사용할 수 있습니다.",
   "loc.input.label.jarsign": "APK 서명",
   "loc.input.help.jarsign": "제공된 키 저장소 파일을 사용하여 APK에 서명하려면 이 옵션을 선택합니다. 서명되지 않은 APK는 에뮬레이터에서만 실행할 수 있습니다. 장치에서 실행하려면 APK가 서명되어야 합니다.",
   "loc.input.label.keystoreFile": "키 저장소 파일",

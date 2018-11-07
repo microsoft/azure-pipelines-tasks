@@ -21,9 +21,9 @@
   "loc.input.help.failOnStandardError": "Se è impostato su true, questa attività non riuscirà nel caso in cui vengano scritti errori nel flusso StandardError. Deselezionare la casella di controllo per ignorare gli errori standard e determinare lo stato in base ai codici di uscita",
   "loc.messages.ScriptReturnCode": "Lo script è stato terminato. Codice restituito: %d",
   "loc.messages.ScriptFailed": "Lo script non è riuscito. Errore: %s",
-  "loc.messages.UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM",
+  "loc.messages.UnsupportedEndpointScheme": "Schema di autorizzazione della connessione al servizio non supportato: entità servizio per AzureRM",
   "loc.messages.AzureSDKNotFound": "In questo computer non è installata la versione 2.x dell'interfaccia della riga di comando di Azure.",
   "loc.messages.FailedToLogout": "Durante la disconnessione si è verificato l'errore seguente: %s",
-  "loc.messages.LoginFailed": "Azure login failed",
-  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription"
+  "loc.messages.LoginFailed": "L'accesso ad Azure non è riuscito",
+  "loc.messages.ErrorInSettingUpSubscription": "Si è verificato un errore durante la configurazione della sottoscrizione"
 }

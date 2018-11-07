@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Testergebnisse veröffentlichen",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Publish Test Results to Azure Pipelines/TFS",
+  "loc.description": "Hiermit werden Testergebnissen in Azure Pipelines/TFS veröffentlicht.",
   "loc.instanceNameFormat": "Testergebnisse $(testResultsFiles) veröffentlichen",
   "loc.releaseNotes": "<ul><li>NUnit3-Unterstützung</li><li>Unterstützung für Minimatch-Dateimuster</li></ul>",
   "loc.group.displayName.advanced": "Erweitert",
@@ -15,12 +15,12 @@
   "loc.input.help.mergeTestResults": "Für jede Ergebnisdatei wird ein Testlauf erstellt. Aktivieren Sie diese Option, um die Ergebnisse in einem einzigen Testlauf zusammenzuführen. Zur Leistungsoptimierung werden die Ergebnisse unabhängig von dieser Option in einem einzigen Lauf zusammengeführt, wenn mehr als 100 Ergebnisdateien vorliegen.",
   "loc.input.label.testRunTitle": "Testlauftitel",
   "loc.input.help.testRunTitle": "Geben Sie einen Namen für den Testlauf an.",
-  "loc.input.label.platform": "Build Platform",
+  "loc.input.label.platform": "Buildplattform",
   "loc.input.help.platform": "Plattform, für die die Tests ausgeführt wurden",
-  "loc.input.label.configuration": "Build Configuration",
+  "loc.input.label.configuration": "Buildkonfiguration",
   "loc.input.help.configuration": "Konfiguration, für die die Tests ausgeführt wurden",
   "loc.input.label.publishRunAttachments": "Testergebnisdateien hochladen",
-  "loc.input.help.publishRunAttachments": "Upload logs and other files containing diagnostic information collected when the tests were run.",
+  "loc.input.help.publishRunAttachments": "Laden Sie Protokolle und weitere Dateien mit Diagnoseinformationen hoch, die beim Ausführen der Tests gesammelt wurden.",
   "loc.messages.NoMatchingFilesFound": "Keine übereinstimmenden Testergebnisdateien für \"%s\" gefunden.",
   "loc.messages.ErrorTestResultsPublisher": "Fehler beim Ausführen von TestResultsPublisher: %s."
 }

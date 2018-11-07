@@ -1,5 +1,6 @@
 {
   "loc.messages.AadAuthority": "Autorité AAD : {0}",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
   "loc.messages.ClientAppId": "ID d'application cliente : {0}",
   "loc.messages.ClusterAppId": "ID d'application de cluster : {0}",
   "loc.messages.ConnectedToCluster": "Connexion réussie au cluster.",
@@ -10,8 +11,8 @@
   "loc.messages.ServiceFabricSDKNotInstalled": "Le SDK Service Fabric n'est pas installé sur l'agent de build. Accédez à https://aka.ms/servicefabric pour le télécharger et l'installer.",
   "loc.messages.UseWindowsSecurity": "La sécurité Windows est spécifiée. Le commutateur -WindowsCredential va être utilisé durant la connexion.",
   "loc.messages.ServerCertificateNotFoundForTextEncrypt": "Le certificat de serveur du cluster avec l'empreinte numérique '{0}' est obligatoire pour chiffrer du texte. Toutefois, le certificat est introuvable sur la machine d'agent dans l'emplacement du magasin de certificats 'CurrentUser\\My'.",
-  "loc.messages.RetryingClusterConnection": "Retrying to connect to cluster..",
-  "loc.messages.WarningOnRemoveCertificate": "An error occurred attempting to remove the client certificate. Error message: {0}",
-  "loc.messages.TelemetryWarning": "Unable to push telemetry data. Error: {0}.",
-  "loc.messages.SfSdkVersion": "Service fabric SDK version: {0}."
+  "loc.messages.RetryingClusterConnection": "Nouvelle tentative de connexion au cluster.",
+  "loc.messages.WarningOnRemoveCertificate": "Une erreur s'est produite durant la suppression du certificat client. Message d'erreur : {0}",
+  "loc.messages.TelemetryWarning": "Impossible d'envoyer (push) les données de télémétrie. Erreur : {0}.",
+  "loc.messages.SfSdkVersion": "Version du kit SDK Service Fabric : {0}."
 }
