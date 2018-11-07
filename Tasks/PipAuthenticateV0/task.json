@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 4
+        "Patch": 5
     },
     "runsOn": [
         "Agent",
@@ -28,7 +28,7 @@
         {
             "name": "feedList",
             "aliases": [
-                "vstsFeed"
+                "artifactFeeds"
             ],
             "type": "pickList",
             "label": "My feeds (select below)",
@@ -44,7 +44,7 @@
         {
             "name": "externalSources",
             "aliases": [
-                "externalFeedCredentials"
+                "externalFeeds"
             ],
             "type": "connectedService:externalPythonDownloadFeed",
             "label": "Feeds from external organizations",
@@ -63,7 +63,7 @@
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {
