@@ -224,7 +224,7 @@ export async function installProvisioningProfile(provProfilePath: string) : Prom
     plistTool.arg(['-c', 'Print UUID', tmpPlist]);
     plistTool.on('stdout', function (data) {
         if (data) {
-            provProfileUUID = data.toString();
+            provProfileUUID = data.toString().trim();
         }
     })
     await plistTool.exec();
@@ -235,7 +235,7 @@ export async function installProvisioningProfile(provProfilePath: string) : Prom
     plistTool.arg(['-c', 'Print Name', tmpPlist]);
     plistTool.on('stdout', function (data) {
         if (data) {
-            provProfileName = data.toString();
+            provProfileName = data.toString().trim();
         }
     })
     await plistTool.exec();
