@@ -32,8 +32,7 @@ export default class ClusterConnection {
     }
     
     // get kubeconfig file path
-    private async getKubeConfig(): Promise<string> {
-        var connectionType = tl.getInput("connectionType", true);
+    private async getKubeConfig(connectionType): Promise<string> {
         return this.loadClusterType(connectionType).getKubeConfig().then((config) => {
             return config;
         });
@@ -55,10 +54,14 @@ export default class ClusterConnection {
     }
 
     // open kubernetes connection
-    public async open(){
+    public async open() {
+        var connectionType = tl.getInput("connectionType", true);
+        if (connectionType === "None") {
+            return;
+        }
         var kubeconfig;
         if (!this.kubeconfigFile) {
-            kubeconfig =  await this.getKubeConfig();
+            kubeconfig = await this.getKubeConfig(connectionType);
         }
 
         return this.initialize().then(() => {
@@ -74,6 +77,10 @@ export default class ClusterConnection {
 
     // close kubernetes connection
     public close(): void {
+        var connectionType = tl.getInput("connectionType", true);
+        if (connectionType === "None") {
+            return;
+        }
         if (this.kubeconfigFile != null && fs.existsSync(this.kubeconfigFile))
         {
            delete process.env["KUBECONFIG"];

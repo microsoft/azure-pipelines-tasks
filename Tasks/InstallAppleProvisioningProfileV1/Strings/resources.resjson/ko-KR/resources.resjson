@@ -12,5 +12,5 @@
   "loc.input.label.removeProfile": "빌드 후 프로필 제거",
   "loc.input.help.removeProfile": "빌드 또는 릴리스가 완료된 후에 에이전트에서 프로비저닝 프로필을 제거하도록 지정하려면 선택합니다.",
   "loc.messages.InputProvisioningProfileNotFound": "설치할 프로비전 프로필이 %s에 없습니다. 프로비전 프로필의 전체 파일 경로를 지정하세요.",
-  "loc.messages.InstallRequiresMac": "Install Apple Provisioning Profile requires a macOS agent. Installing on Windows or Linux is not supported by Apple."
+  "loc.messages.InstallRequiresMac": "Apple 권한 설정 프로파일을 설치하려면 macOS 에이전트가 필요합니다. Windows 또는 Linux에는 설치할 수 없습니다."
 }

@@ -17,7 +17,7 @@
     "version": {
         "Major": 3,
         "Minor": 142,
-        "Patch": 1
+        "Patch": 2
     },
     "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
     "minimumAgentVersion": "2.115.0",

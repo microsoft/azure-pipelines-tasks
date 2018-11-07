@@ -20,13 +20,13 @@
   "loc.input.help.NotifyEmails": "如果想要将电子邮件通知发送给其他人，请添加其他电子邮件地址并用分号(;)隔开(无论是否选中“订阅所有者...”复选框)。",
   "loc.messages.ProcessingRule": "正在处理规则:“%s”",
   "loc.messages.AlertRuleCheck": "检查预警规则“%s”是否存在于资源组“%s”。",
-  "loc.messages.AlertRuleTargetResourceIdMismatchError": "Alert rule with name '%s' is already configured to monitor a different resource with ID '%s'. Please select a different alert rule name.",
+  "loc.messages.AlertRuleTargetResourceIdMismatchError": "名称为“%s”的预警规则已配置为监视另一个 ID 为“%s”的资源。请选择其他预警规则名称。",
   "loc.messages.AlertRuleExists": "预警规则“%s”已存在于资源组“%s”。正在更新预警规则。",
   "loc.messages.AlertRuleDoesNotExist": "预警规则“%s”不存在于资源组“%s”。正在创建新的预警规则。",
   "loc.messages.CreatedRule": "已创建规则:“%s”",
   "loc.messages.UpdatedRule": "已更新规则:“%s”",
   "loc.messages.Couldnotfetchaccesstoken": "无法提取 Azure 的访问令牌。状态代码: %s (%s) %s。",
   "loc.messages.SPNExpiredCheck": "检查 SPN 是否有效且未过期。",
-  "loc.messages.FailedToGetAzureMetricAlerts": "Failed to get Application Insights Alert rule: %s. Error: %s",
-  "loc.messages.FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s"
+  "loc.messages.FailedToGetAzureMetricAlerts": "无法获取 Application Insights 预警规则: %s。错误: %s",
+  "loc.messages.FailedToUpdateAzureMetricAlerts": "未能更新 Azure 指标预警规则“%s”资源。错误: %s"
 }

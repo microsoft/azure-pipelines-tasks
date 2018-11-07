@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "Java 工具安装程序",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=875287)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=875287)",
   "loc.description": "从用户提供的 Azure blob 或工具缓存中获取特定版本的 Java，并设置 JAVA_HOME。使用此任务可以更改在 Java 任务中使用的 Java 版本。",
   "loc.instanceNameFormat": "使用 Java $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "从 Azure blob 下载 Java",
   "loc.input.label.versionSpec": "JDK 版本",
-  "loc.input.help.versionSpec": "A number that specifies the JDK version to make available on the path. Use a whole number version, such as 10",
+  "loc.input.help.versionSpec": "指定要在路径上提供的 JDK 版本的数字。使用整数版本，例如 10",
   "loc.input.label.jdkArchitectureOption": "JDK 体系结构",
   "loc.input.help.jdkArchitectureOption": "JDK 的体系结构(x86、x64)。",
   "loc.input.label.jdkSourceOption": "JDK 源",
@@ -46,7 +46,7 @@
   "loc.messages.SetJavaHome": "正在将 JAVA_HOME 设置为: %s",
   "loc.messages.SetExtendedJavaHome": "正在将 %s 设置为: %s",
   "loc.messages.UnsupportedFileExtension": "指定的 JDK 源文件没有受支持的文件扩展名。",
-  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "无法提取 Azure 的访问令牌。状态代码: %s，状态消息: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "无法提取托管服务主体的访问令牌。请为虚拟机配置托管服务标识(MSI)(https://aka.ms/azure-msi-docs)。状态代码: %s，状态消息: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "无法提取托管服务主体的访问令牌。状态代码: %s，状态消息: %s"
 }

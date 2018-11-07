@@ -245,7 +245,6 @@ describe('XamarinAndroid Suite', function () {
 
 		tr.run()
 			.then(() => {
-				assert(tr.invokedToolCount == 0, 'should not have run XamarinAndroid');
 				assert(tr.resultWasSet, 'task should have set a result');
 				assert(tr.stderr.length > 0, 'should have written to stderr');
 				assert(tr.failed, 'task should have failed');

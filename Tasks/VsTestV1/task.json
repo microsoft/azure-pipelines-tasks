@@ -9,7 +9,7 @@
         "Build",
         "Release"
     ],
-	"runsOn": [
+    "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 87
+        "Patch": 90
     },
     "demands": [
         "vstest"

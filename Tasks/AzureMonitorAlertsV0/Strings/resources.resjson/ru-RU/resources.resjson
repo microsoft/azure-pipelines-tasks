@@ -20,13 +20,13 @@
   "loc.input.help.NotifyEmails": "Если вы хотите отправлять уведомления по электронной почте дополнительным пользователям (вне зависимости от того, установлен ли флажок \"владельцы подписки...\"), добавьте дополнительные адреса электронной почты через точку с запятой (;).",
   "loc.messages.ProcessingRule": "Обрабатывается правило: \"%s\"",
   "loc.messages.AlertRuleCheck": "Выполняется проверка того, существует ли правило генерации оповещений \"%s\" в группе ресурсов \"%s\".",
-  "loc.messages.AlertRuleTargetResourceIdMismatchError": "Alert rule with name '%s' is already configured to monitor a different resource with ID '%s'. Please select a different alert rule name.",
+  "loc.messages.AlertRuleTargetResourceIdMismatchError": "Правило генерации оповещений с именем \"%s\" уже настроено для отслеживания другого ресурса с идентификатором \"%s\". Выберите другое имя правила генерации оповещений.",
   "loc.messages.AlertRuleExists": "Правило генерации оповещений \"%s\" уже имеется в группе ресурсов \"%s\". Выполняется его обновление.",
   "loc.messages.AlertRuleDoesNotExist": "Правило генерации оповещений \"%s\" не существует в группе ресурсов \"%s\". Создается новое правило генерации оповещений.",
   "loc.messages.CreatedRule": "Создано правило: \"%s\"",
   "loc.messages.UpdatedRule": "Обновлено правило: \"%s\"",
   "loc.messages.Couldnotfetchaccesstoken": "Не удалось извлечь токен доступа для Azure. Код состояния: %s (%s) %s.",
   "loc.messages.SPNExpiredCheck": "Проверьте, является ли имя субъекта-службы допустимым и не истек ли его срок действия.",
-  "loc.messages.FailedToGetAzureMetricAlerts": "Failed to get Application Insights Alert rule: %s. Error: %s",
-  "loc.messages.FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s"
+  "loc.messages.FailedToGetAzureMetricAlerts": "Не удалось получить правило генерации оповещений Application Insights: %s. Ошибка: %s",
+  "loc.messages.FailedToUpdateAzureMetricAlerts": "Не удалось обновить правило генерации оповещений метрики Azure для ресурса \"%s\". Ошибка: %s."
 }

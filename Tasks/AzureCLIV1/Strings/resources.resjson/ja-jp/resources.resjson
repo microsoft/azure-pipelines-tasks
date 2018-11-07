@@ -21,9 +21,9 @@
   "loc.input.help.failOnStandardError": "これが true の場合、StandardError ストリームにエラーが書き込まれると、このタスクは失敗します。チェック ボックスを選択解除して標準エラーを無視し、終了コードから状態を確認します",
   "loc.messages.ScriptReturnCode": "スクリプトが次のリターン コードで終了しました: %d",
   "loc.messages.ScriptFailed": "スクリプトがエラーで失敗しました: %s",
-  "loc.messages.UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM",
+  "loc.messages.UnsupportedEndpointScheme": "サポートされていないサービス接続の認証スキーム: AzureRM に対するサービス プリンシパル",
   "loc.messages.AzureSDKNotFound": "Azure CLI 2.x はこのマシンにインストールされていません。",
   "loc.messages.FailedToLogout": "ログアウト中に次のエラーが発生しました: %s",
-  "loc.messages.LoginFailed": "Azure login failed",
-  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription"
+  "loc.messages.LoginFailed": "Azure のログインに失敗しました",
+  "loc.messages.ErrorInSettingUpSubscription": "サブスクリプションの設定のエラー"
 }
