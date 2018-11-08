@@ -54,7 +54,13 @@ export class Utility {
 
         if (releaseNotesSelection === 'file') {
             let releaseNotesFile = tl.getPathInput(Inputs.releaseNotesFile, false, true);
-            releaseNote = fs.readFileSync(releaseNotesFile).toString();
+
+            if (fs.lstatSync(path.resolve(releaseNotesFile)).isDirectory()) {
+                console.log(tl.loc("ReleaseNotesFileIsDirectoryError", releaseNotesFile));
+            }
+            else {
+                releaseNote = fs.readFileSync(releaseNotesFile).toString();
+            }
         } 
         else if (releaseNotesSelection === 'input') {
             releaseNote = tl.getInput(Inputs.releaseNotesInput);
@@ -76,8 +82,8 @@ export class Inputs {
     public static readonly tagEdit = "tagEdit";
     public static readonly target = "target";
     public static readonly releaseTitle = "releaseTitle";
-    public static readonly isdraft = "isdraft";
-    public static readonly isprerelease = "isprerelease";
+    public static readonly isDraft = "isDraft";
+    public static readonly isPrerelease = "isPrerelease";
     public static readonly githubEndpoint = "githubEndpoint";
     public static readonly githubReleaseAsset = "githubReleaseAsset";
     public static readonly releaseNotesSelection = "releaseNotesSelection";

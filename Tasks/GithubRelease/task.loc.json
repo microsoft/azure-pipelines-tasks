@@ -140,22 +140,22 @@
       "helpMarkDown": "ms-resource:loc.input.help.deleteExistingAssets"
     },
     {
-      "name": "isdraft",
+      "name": "isDraft",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.isdraft",
+      "label": "ms-resource:loc.input.label.isDraft",
       "defaultValue": "false",
       "required": true,
       "visibleRule": "action = Create || action = Edit",
-      "helpMarkDown": "ms-resource:loc.input.help.isdraft"
+      "helpMarkDown": "ms-resource:loc.input.help.isDraft"
     },
     {
-      "name": "isprerelease",
+      "name": "isPrerelease",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.isprerelease",
+      "label": "ms-resource:loc.input.label.isPrerelease",
       "defaultValue": "false",
       "required": true,
       "visibleRule": "action = Create || action = Edit",
-      "helpMarkDown": "ms-resource:loc.input.help.isprerelease"
+      "helpMarkDown": "ms-resource:loc.input.help.isPrerelease"
     }
   ],
   "sourceDefinitions": [
@@ -174,10 +174,14 @@
     }
   },
   "messages": {
+    "CreatingRelease": "ms-resource:loc.messages.CreatingRelease",
     "CreateReleaseError": "ms-resource:loc.messages.CreateReleaseError",
     "CreateReleaseSuccess": "ms-resource:loc.messages.CreateReleaseSuccess",
+    "DraftReleaseCreatedSuccess": "ms-resource:loc.messages.DraftReleaseCreatedSuccess",
+    "DiscardingRelease": "ms-resource:loc.messages.DiscardingRelease",
     "DiscardReleaseError": "ms-resource:loc.messages.DiscardReleaseError",
     "DiscardReleaseSuccess": "ms-resource:loc.messages.DiscardReleaseSuccess",
+    "EditingRelease": "ms-resource:loc.messages.EditingRelease",
     "EditReleaseError": "ms-resource:loc.messages.EditReleaseError",
     "EditReleaseSuccess": "ms-resource:loc.messages.EditReleaseSuccess",
     "GetReleaseByTagError": "ms-resource:loc.messages.GetReleaseByTagError",
@@ -188,6 +192,8 @@
     "ErrorDeletingDuplicateAsset": "ms-resource:loc.messages.ErrorDeletingDuplicateAsset",
     "UploadingAsset": "ms-resource:loc.messages.UploadingAsset",
     "UploadAssetError": "ms-resource:loc.messages.UploadAssetError",
-    "UploadAssetSuccess": "ms-resource:loc.messages.UploadAssetSuccess"
+    "UploadAssetSuccess": "ms-resource:loc.messages.UploadAssetSuccess",
+    "ReleaseNotesFileIsDirectoryError": "ms-resource:loc.messages.ReleaseNotesFileIsDirectoryError",
+    "AssetIsDirectoryError": "ms-resource:loc.messages.AssetIsDirectoryError"
   }
 }

@@ -1,5 +1,6 @@
 import tl = require("vsts-task-lib/task");
 import path = require("path");
+import fs = require('fs');
 import { WebResponse } from "./webClient";
 import { Release } from "./Release";
 import { Utility, Inputs } from "./Utility";
@@ -10,17 +11,24 @@ export class Action {
 
         try {
             Utility.validateUploadAssets(); 
+            console.log(tl.loc("CreatingRelease"));
+
             let response: WebResponse = await Release.createRelease(repositoryName, releaseTitle, isDraft, isPrerelease);
+            tl.debug("Create release response:\n" + JSON.stringify(response));
 
             if (response.statusCode === 201) {
-                console.log(tl.loc("CreateReleaseSuccess"));
+                if (!tl.getBoolInput(Inputs.isDraft)) {
+                    console.log(tl.loc("CreateReleaseSuccess", response.body[this._htmlUrlkey]));
+                }
+                else {
+                    console.log(tl.loc("DraftReleaseCreatedSuccess"), response.body[this._htmlUrlkey]);
+                }
 
                 const uploadUrl: string = response.body[this._uploadUrlkey];
                 await this._uploadAssets(repositoryName, uploadUrl, []);
             }
             else {           
-                tl.debug("Create release response:\n" + JSON.stringify(response));
-                throw new Error(tl.loc("CreateReleaseError"));;
+                throw new Error(tl.loc("CreateReleaseError"));
             }
 
             tl.setResult(tl.TaskResult.Succeeded, "");
@@ -32,8 +40,11 @@ export class Action {
     public static async editReleaseAction(repositoryName: string, releaseTitle: string, isDraft: boolean, isPrerelease: boolean): Promise<void> {
         
         try {
-            Utility.validateUploadAssets();        
+            Utility.validateUploadAssets();     
+            console.log(tl.loc("EditingRelease"));
+
             let response: WebResponse = await Release.editRelease(repositoryName, releaseTitle, isDraft, isPrerelease);
+            tl.debug("Edit release response:\n" + JSON.stringify(response));
 
             if (response.statusCode === 200) {
                 console.log(tl.loc("EditReleaseSuccess"));
@@ -42,7 +53,6 @@ export class Action {
                 await this._uploadAssets(repositoryName, uploadUrl, response.body[this._assetsKey]);
             }
             else {
-                tl.debug("Edit release response:\n" + JSON.stringify(response));
                 throw new Error(tl.loc("EditReleaseError"));
             }
 
@@ -55,13 +65,14 @@ export class Action {
     public static async discardReleaseAction(repositoryName: string): Promise<void> {
 
         try {
+            console.log(tl.loc("DiscardingRelease"));
             let response: WebResponse = await Release.discardRelease(repositoryName);
+            tl.debug("Discard release response:\n" + JSON.stringify(response));
 
             if (response.statusCode === 204) {
                 console.log(tl.loc("DiscardReleaseSuccess"));
             }
             else {
-                tl.debug("Discard release response:\n" + JSON.stringify(response));
                 throw new Error(tl.loc("DiscardReleaseError"));
             }
 
@@ -77,8 +88,13 @@ export class Action {
 
         for (let index = 0; index < assets.length; index++) {
             const asset = assets[index];
-
             console.log(tl.loc("UploadingAsset", asset));
+
+            if (fs.lstatSync(path.resolve(asset)).isDirectory()) {
+                console.log(tl.loc("AssetIsDirectoryError", asset));
+                continue;
+            }
+
 
             let uploadResponse = await Release.uploadReleaseAsset(uploadUrl, asset);
             
@@ -122,5 +138,12 @@ export class Action {
     }
 
     private static readonly _uploadUrlkey: string = "upload_url";
+    private static readonly _htmlUrlkey: string = "html_url";
     private static readonly _assetsKey: string = "assets";
+}
+
+export class ActionType {
+    public static readonly create = "Create";
+    public static readonly edit = "Edit";
+    public static readonly discard = "Discard";
 }

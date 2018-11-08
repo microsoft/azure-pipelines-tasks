@@ -140,7 +140,7 @@
             "helpMarkDown": "Delete existing assets"
         },
         {
-            "name": "isdraft",
+            "name": "isDraft",
             "type": "boolean",
             "label": "Is draft release ?",
             "defaultValue": "false",
@@ -149,7 +149,7 @@
             "helpMarkDown": "Is draft"
         },
         {
-            "name": "isprerelease",
+            "name": "isPrerelease",
             "type": "boolean",
             "label": "Is Pre Release ?",
             "defaultValue": "false",
@@ -174,20 +174,26 @@
         }
     },
     "messages": {
-        "CreateReleaseError": "Github create release request failed.",
-        "CreateReleaseSuccess": "Github create release request failed.",
-        "DiscardReleaseError": "Github discard release request failed.",
+        "CreatingRelease": "Creating release",
+        "CreateReleaseError": "An error occurred while creating release.",
+        "CreateReleaseSuccess": "Release created successfully at %s",
+        "DraftReleaseCreatedSuccess": "Draft release created successfully at %s",
+        "DiscardingRelease": "Discarding release",
+        "DiscardReleaseError": "An error occurred while discarding release.",
         "DiscardReleaseSuccess": "Discard release successful.",
-        "EditReleaseError": "Github edit release request failed.",
-        "EditReleaseSuccess": "Github edit release request failed.",
-        "GetReleaseByTagError": "Github get release by tag name request failed.",
+        "EditingRelease": "Editing release",
+        "EditReleaseError": "An error occurred while editing release.",
+        "EditReleaseSuccess": "Release edited successfully",
+        "GetReleaseByTagError": "An error occurred while fetching release by tag",
         "MissingAssetError": "Missing asset: %s",
         "DuplicateAssetFound": "Duplicate asset found: %s",
         "DeletingDuplicateAsset": "Deleting duplicate asset: %s",
-        "DuplicateAssetDeletedSuccessfully": "Duplicate asset deleted successfully: %s\n Uploading the current asset again",
-        "ErrorDeletingDuplicateAsset": "Error deleting duplicate asset: %s",
+        "DuplicateAssetDeletedSuccessfully": "Duplicate asset deleted successfully: %s\n Uploading the asset again",
+        "ErrorDeletingDuplicateAsset": "An error occurred while deleting duplicate asset: %s",
         "UploadingAsset": "Uploading asset: %s",
-        "UploadAssetError": "Error while uploading asset: %s",
-        "UploadAssetSuccess": "Uploaded asset: %s"
+        "UploadAssetError": "An error occurred while uploading asset: %s",
+        "UploadAssetSuccess": "Uploaded asset: %s",
+        "ReleaseNotesFileIsDirectoryError": "Release notes file: %s is a directory and not a file. Release notes will be set as empty.",
+        "AssetIsDirectoryError": "Asset is a directory and not a file. Skipping uploading asset: %s"
     }
 }
