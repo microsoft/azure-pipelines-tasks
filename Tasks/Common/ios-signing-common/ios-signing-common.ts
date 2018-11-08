@@ -133,7 +133,26 @@ export async function findSigningIdentity(keychainPath: string) {
         tl.debug('findSigningIdentity = ' + signIdentity);
         return signIdentity;
     } else {
-        throw tl.loc('SignIdNotFound');
+        let expired: boolean = false;
+        let findIdentityExpiredCmd: ToolRunner = tl.tool(tl.which('security', true));
+        findIdentityExpiredCmd.arg(['find-identity', '-p', 'codesigning', keychainPath]);
+        findIdentityExpiredCmd.on('stdout', function (data) {
+            if (data) {
+                let matches = /"(.+) (.+)"/g.exec(data.toString().trim());
+                tl.debug('signing identity data = ' + matches);
+                if (matches && matches[2] && matches[2].includes('CSSMERR_TP_CERT_EXPIRED')) {
+                    expired = true;
+                }
+            }
+        })
+
+        await findIdentityCmd.exec();
+        
+        if (expired) {
+            throw tl.loc('SignIdExpired');
+        } else {
+            throw tl.loc('SignIdNotFound');
+        }
     }
 }
 
