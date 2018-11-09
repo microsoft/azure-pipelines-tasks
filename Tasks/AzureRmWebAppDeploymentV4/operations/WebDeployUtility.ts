@@ -17,7 +17,7 @@ export class WebDeployUtility {
         while(retryCount > 0) {
                 webDeployResult= await executeWebDeploy(webDeployArguments, await azureAppServiceUtility.getWebDeployPublishingProfile());
                 if(!webDeployResult.isSuccess) {
-                    WebDeployUtility.webDeployRecommendationForIssue(taskParameters, webDeployResult.errorCode, azureAppServiceUtility, false);
+                    await WebDeployUtility.webDeployRecommendationForIssue(taskParameters, webDeployResult.errorCode, azureAppServiceUtility, false);
                 }
                 else {
                     break;
@@ -37,7 +37,7 @@ export class WebDeployUtility {
         }
 
         if(!webDeployResult.isSuccess) {
-            WebDeployUtility.webDeployRecommendationForIssue(taskParameters, webDeployResult.errorCode, azureAppServiceUtility, true);
+            await WebDeployUtility.webDeployRecommendationForIssue(taskParameters, webDeployResult.errorCode, azureAppServiceUtility, true);
             throw new Error(webDeployResult.error);
         }
     }
