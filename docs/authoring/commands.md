@@ -111,7 +111,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
             <td>
                 <p align="left">
                     Create and update detail timeline records. <br>
-                    The first time a <code>##vso[task.detail]</code> message is seen for a given task, a detailed timeline is created for that task. <br>
+                    The first time a <code>##vso[task.logdetail]</code> message is seen for a given task, a detailed timeline is created for that task. <br>
                     Nested timeline records are created and updated based on id and parentid. <br>
                     The task author needs to remember which Guid they used for each timeline record. The logging system tracks the Guid for each timeline record that has been created, so any new Guid results in a new timeline record. <br>
                     <b>Examples:</b> <br>
