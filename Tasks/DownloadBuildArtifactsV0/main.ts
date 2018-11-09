@@ -68,7 +68,7 @@ async function main(): Promise<void> {
         var definitionIdTriggered: string = null;
         var buildId: number = null;
         var buildVersionToDownload: string = tl.getInput("buildVersionToDownload", false);
-        var isPartiallySucceededBuilds: boolean = tl.getBoolInput("partiallySucceededBuilds", false);
+        var allowPartiallySucceededBuilds: boolean = tl.getBoolInput("allowPartiallySucceededBuilds", false);
         var branchName: string =  tl.getInput("branchName", false);;
         var downloadPath: string = tl.getInput("downloadPath", true);
         var downloadType: string = tl.getInput("downloadType", true);
@@ -169,7 +169,7 @@ async function main(): Promise<void> {
             var build: Build;
             if (buildVersionToDownload != "specific") {
                 var resultFilter = BuildResult.Succeeded;
-                if (isPartiallySucceededBuilds) {
+                if (allowPartiallySucceededBuilds) {
                     resultFilter |= BuildResult.PartiallySucceeded;
                 }
                 var branchNameFilter = (buildVersionToDownload == "latest") ? null : branchName;

@@ -85,7 +85,7 @@
             }
         },
         {
-            "name": "partiallySucceededBuilds",
+            "name": "allowPartiallySucceededBuilds",
             "type": "boolean",
             "label": "Download artifacts even from partially succeeded builds.",
             "defaultValue": "false",
