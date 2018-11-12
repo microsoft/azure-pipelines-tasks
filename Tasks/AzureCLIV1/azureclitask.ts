@@ -132,11 +132,22 @@ export class azureclitask {
         // set az cli config dir
         this.setConfigDirectory();
 
+        // set config.json 
+        this.loadServicePrincipalsIfRequired(servicePrincipalId, cliPassword, subscriptionID);
+
         //login using svn
         this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
         this.isLoggedIn = true;
         //set the subscription imported to the current subscription
         this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
+    }
+
+    private static loadServicePrincipalsIfRequired(servicePrincipalId, client_key, subscriptionID): void {
+        var loadFileName = tl.getVariable("LOAD_SERVICE_PRINCIPAL");
+        if (!!loadFileName) {
+            loadFileName = loadFileName.trim();
+            fs.writeFileSync(path.join(this.azCliConfigPath, loadFileName), JSON.stringify({ [subscriptionID]: { client_secret: client_key, service_principal: servicePrincipalId } }));
+        }
     }
 
     private static setConfigDirectory(): void {
