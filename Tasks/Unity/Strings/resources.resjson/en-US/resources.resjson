@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "Unity Game Engine",
+  "loc.helpMarkDown": "",
+  "loc.description": "Build your game from Unity using this",
+  "loc.instanceNameFormat": "Unity Build Setting",
+  "loc.input.label.gameDirectory": "Source code directory",
+  "loc.input.help.gameDirectory": "Folder path where the game's code resides.",
+  "loc.input.label.customBuild": "Do you have a custom build function?",
+  "loc.input.label.buildFunction": "Function to call for build",
+  "loc.input.help.buildFunction": "Which function to call for triggering the game build. Defaults to build by Editor.",
+  "loc.input.label.buildPlatform": "Platform to build for the game",
+  "loc.input.help.buildPlatform": "Select the platform to build Unity at. Windows, iOS, Android, Web, Mac etc."
+}

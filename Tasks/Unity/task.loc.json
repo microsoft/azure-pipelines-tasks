@@ -1,0 +1,73 @@
+{
+  "id": "be067389-c4d0-4acc-938f-d38255b43bdd",
+  "name": "Unity",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "author": "nijoy",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 4
+  },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "gameDirectory",
+      "aliases": [
+        "gameDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.gameDirectory",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
+      "helpMarkDown": "ms-resource:loc.input.help.gameDirectory",
+      "required": "true",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "customBuild",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.customBuild",
+      "defaultValue": "No",
+      "required": true,
+      "options": {
+        "Yes": "Yes",
+        "No": "No"
+      }
+    },
+    {
+      "name": "buildFunction",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.buildFunction",
+      "defaultValue": "MyEditorScript.PerformBuild",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.buildFunction",
+      "visibleRule": "customBuild = Yes"
+    },
+    {
+      "name": "buildPlatform",
+      "aliases": [
+        "buildPlatform"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.buildPlatform",
+      "required": true,
+      "defaultValue": "None",
+      "helpMarkDown": "ms-resource:loc.input.help.buildPlatform",
+      "options": {
+        "WinMetro": "Windows Metro",
+        "IOS": "iOS",
+        "Linux": "Linux"
+      },
+      "visibleRule": "customBuild = No"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "index.js"
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+    "id":"be067389-c4d0-4acc-938f-d38255b43bdd",
+    "name": "Unity",
+    "friendlyName": "Unity Game Engine",
+    "description": "Build your game from Unity using this",
+    "helpMarkDown": "",
+    "category": "Utility",
+    "author": "nijoy",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 4
+    },
+    "instanceNameFormat": "Unity Build Setting",
+    "inputs": [
+        {
+            "name": "gameDirectory",
+            "aliases": [
+                "gameDirectory"
+            ],
+            "type": "filePath",
+            "label": "Source code directory",
+            "defaultValue": "$(System.DefaultWorkingDirectory)",
+            "helpMarkDown": "Folder path where the game's code resides.",
+            "required": "true",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "customBuild",
+            "type": "radio",
+            "label": "Do you have a custom build function?",
+            "defaultValue" : "No",
+            "required": true,
+            "options": {
+                "Yes": "Yes",
+                "No": "No"
+            }
+        },
+        {
+            "name": "buildFunction",
+            "type": "string",
+            "label": "Function to call for build",
+            "defaultValue": "MyEditorScript.PerformBuild",
+            "required": true,
+            "helpMarkDown": "Which function to call for triggering the game build. Defaults to build by Editor.",
+            "visibleRule": "customBuild = Yes"
+        },
+        {
+            "name": "buildPlatform",
+            "aliases": [
+                "buildPlatform"
+            ],
+            "type": "pickList",
+            "label": "Platform to build for the game",
+            "required": true,
+            "defaultValue": "None",
+            "helpMarkDown": "Select the platform to build Unity at. Windows, iOS, Android, Web, Mac etc.",
+            "options": {
+                "WinMetro": "Windows Metro",
+                "IOS": "iOS",
+                "Linux": "Linux"
+            },
+            "visibleRule": "customBuild = No"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "index.js"
+        }
+    }
+}
