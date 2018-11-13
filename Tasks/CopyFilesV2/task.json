@@ -91,7 +91,7 @@
     "messages": {
         "FoundNFiles": "found %d files",
         "CleaningTargetFolder": "Cleaning target folder: %s",
-        "FileAlreadyExistAt": "File %s already exist at %s",
+        "FileAlreadyExistAt": "File %s already exists at %s",
         "CopyingTo": "Copying %s to %s",
         "TargetIsDir": "Unable to copy file %s to %s. The target path already exists as a directory."
     }
