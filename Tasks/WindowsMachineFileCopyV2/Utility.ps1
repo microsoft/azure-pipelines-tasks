@@ -61,7 +61,7 @@ function Try-CleanupPSDrive (
 	)
 {
 	try {
-		Write-Verbose "Executing cmd.exe /c net use /delete `"$path`" `"2>NUL`""
+		Write-Verbose "[command] cmd.exe /c net use /delete `"$path`" `"2>NUL`""
 		cmd.exe /c net use /delete "$path" "2>NUL"
 	}
 	catch {
