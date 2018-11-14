@@ -64,6 +64,9 @@ function Publish-Telemetry {
             $telemetryDataJson = ConvertTo-Json $telemetryData
             $telemetryDataJson = $telemetryDataJson.Replace([environment]::NewLine, '').Trim()
             Write-Verbose "Telemetry Data is: $telemetryDataJson"
+            # featurename 'PowerShellOnTargetMachines' is not correct as AzureFileCopy also uses this. Ideally
+            # this should be 'VstsRemoteDeployer'. But the exact name of the feature really doesn't matter, so
+            # we are keeping this name in order to not maintain compat with earlier behavior.
             $telemetry = "##vso[telemetry.publish area=TaskHub;feature=PowerShellOnTargetMachines]$telemetryDataJson"
             Write-Host $telemetry
         }
