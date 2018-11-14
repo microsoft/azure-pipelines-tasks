@@ -10,6 +10,8 @@ async function run(): Promise<void> {
         tl.debug("Setting resource path to " + taskManifestPath);
         tl.setResourcePath(taskManifestPath);        
 
+        let tag = tl.getInput(Inputs.tag);
+        const target = tl.getInput(Inputs.target) || undefined;
         const repositoryName = tl.getInput(Inputs.repositoryName) || undefined;        
         const releaseTitle = tl.getInput(Inputs.releaseTitle) || undefined; 
         const isDraft = tl.getBoolInput(Inputs.isDraft) || false;
@@ -17,13 +19,13 @@ async function run(): Promise<void> {
         const action = tl.getInput(Inputs.action);
 
         if (action === ActionType.create) {
-            await Action.createReleaseAction(repositoryName, releaseTitle, isDraft, isPrerelease);
+            await Action.createReleaseAction(repositoryName, tag, target, releaseTitle, isDraft, isPrerelease);
         }
         else if (action === ActionType.edit) {
-            await Action.editReleaseAction(repositoryName, releaseTitle, isDraft, isPrerelease);
+            await Action.editReleaseAction(repositoryName, tag, releaseTitle, isDraft, isPrerelease);
         }
         else if (action === ActionType.discard) {
-            await Action.discardReleaseAction(repositoryName);
+            await Action.discardReleaseAction(repositoryName, tag);
         }
     }
     catch(error) {

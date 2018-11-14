@@ -41,7 +41,7 @@ export class Utility {
             try {
                 assets.forEach(function (asset) {
                     fs.accessSync(path.resolve(asset));
-            })
+                })
             } catch (err) {
                 throw new Error(tl.loc("MissingAssetError", err.path));
             }
@@ -78,14 +78,15 @@ export class Utility {
 export class Inputs {
     public static readonly action = "action";
     public static readonly repositoryName = "repositoryName";
-    public static readonly tagCreate = "tagCreate";
-    public static readonly tagEdit = "tagEdit";
+    public static readonly tag = "tag";
+    public static readonly tagSelection = "tagSelection";
     public static readonly target = "target";
     public static readonly releaseTitle = "releaseTitle";
     public static readonly isDraft = "isDraft";
     public static readonly isPrerelease = "isPrerelease";
     public static readonly githubEndpoint = "githubEndpoint";
     public static readonly githubReleaseAsset = "githubReleaseAsset";
+    public static readonly assetUploadMode = "assetUploadMode";
     public static readonly releaseNotesSelection = "releaseNotesSelection";
     public static readonly releaseNotesFile = "releaseNotesFile";
     public static readonly releaseNotesInput = "releaseNotesInput";

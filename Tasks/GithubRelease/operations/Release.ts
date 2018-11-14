@@ -8,9 +8,7 @@ import { WebRequest, sendRequest, WebResponse } from "./webClient";
 
 export class Release {
 
-    public static async createRelease(repositoryName: string, releaseTitle: string, isDraft: boolean, isPrerelease: boolean): Promise<WebResponse> {
-        const tag = tl.getInput(Inputs.tagCreate) || undefined;
-        const target = tl.getInput(Inputs.target) || undefined;
+    public static async createRelease(repositoryName: string, tag: string, target: string, releaseTitle: string, isDraft: boolean, isPrerelease: boolean): Promise<WebResponse> {
 
         let request = new WebRequest();
         
@@ -33,8 +31,7 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async editRelease(repositoryName: string, releaseTitle: string, isDraft: boolean, isPrerelease: boolean): Promise<WebResponse> {
-        const tag = tl.getInput(Inputs.tagEdit, true);
+    public static async editRelease(repositoryName: string, tag: string, releaseTitle: string, isDraft: boolean, isPrerelease: boolean): Promise<WebResponse> {
         let releaseResponse = await this._getReleaseByTag(repositoryName, tag);
 
         if (releaseResponse.statusCode === 200) {
@@ -64,8 +61,7 @@ export class Release {
 
     }
 
-    public static async discardRelease(repositoryName: string): Promise<WebResponse> {
-        const tag = tl.getInput(Inputs.tagEdit, true);
+    public static async discardRelease(repositoryName: string, tag: string): Promise<WebResponse> {
         let releaseResponse = await this._getReleaseByTag(repositoryName, tag);
 
         if (releaseResponse.statusCode === 200) {

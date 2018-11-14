@@ -43,32 +43,14 @@
             "name": "action",
             "type": "pickList",
             "label": "Action",
-            "defaultValue": "CreateRelease",
+            "defaultValue": "create",
             "required": true,
             "helpMarkDown": "Select the action to trigger",
             "options": {
-                "Create": "Create",
-                "Edit": "Edit",
-                "Discard": "Discard"
+                "create": "Create",
+                "edit": "Edit",
+                "discard": "Discard"
             }
-        },
-        {
-            "name": "tagCreate",
-            "type": "string",
-            "label": "Tag",
-            "defaultValue": "",
-            "required": false,
-            "visibleRule": "action = Create",
-            "helpMarkDown": "Tag to release, default value $(Build.BuildNumber) for release current build"
-        },
-        {
-            "name": "tagEdit",
-            "type": "string",
-            "label": "Tag",
-            "defaultValue": "",
-            "required": true,
-            "visibleRule": "action = Edit || action = Discard",
-            "helpMarkDown": "Tag to release, default value $(Build.BuildNumber) for release current build"
         },
         {
             "name": "target",
@@ -76,8 +58,29 @@
             "label": "Target",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "action = Create",
+            "visibleRule": "action = create",
             "helpMarkDown": "The branch or commit to release"
+        },
+        {
+            "name": "tagSelection",
+            "type": "radio",
+            "label": "Tag selection",
+            "required": false,
+            "defaultValue": "auto",
+            "visibleRule": "action = create",
+            "options": {
+                "auto": "Use tag associated with commit",
+                "manual": "Specify tags manually"
+            }
+        },
+        {
+            "name": "tag",
+            "type": "string",
+            "label": "Tag",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "action = edit || action = discard || tagSelection = manual",
+            "helpMarkDown": "Tag to release, default value $(Build.BuildNumber) for release current build"
         },
         {
             "name": "releaseTitle",
@@ -85,7 +88,7 @@
             "label": "Release title",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "action = Create || action = Edit",
+            "visibleRule": "action = create || action = edit",
             "helpMarkDown": "Release title"
         },
         {
@@ -94,7 +97,7 @@
             "label": "Release note",
             "required": false,
             "defaultValue": "input",
-            "visibleRule": "action = Create || action = Edit",
+            "visibleRule": "action = create || action = edit",
             "options": {
                 "input": "Enter Release Note",
                 "file": "Select Release Note File"
@@ -127,17 +130,20 @@
             "label": "File to upload as asset",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "action = Create || action = Edit",
+            "visibleRule": "action = create || action = edit",
             "helpMarkDown": "The file to upload as artifacts to the release. Eg- $(System.DefaultWorkingDirectory)/**/*.xml"
         },
         {
-            "name": "deleteExistingAssets",
-            "type": "boolean",
-            "label": "Delete existing assets",
-            "defaultValue": "false",
-            "required": true,
-            "visibleRule": "action = Create || action = Edit",
-            "helpMarkDown": "Delete existing assets"
+            "name": "assetUploadMode",
+            "type": "radio",
+            "label": "Asset upload mode",
+            "required": false,
+            "defaultValue": "delete",
+            "visibleRule": "action = edit",
+            "options": {
+                "delete": "Delete exisiting assets",
+                "replace": "Replace existing assets"
+            }
         },
         {
             "name": "isDraft",
@@ -145,7 +151,7 @@
             "label": "Is draft release ?",
             "defaultValue": "false",
             "required": true,
-            "visibleRule": "action = Create || action = Edit",
+            "visibleRule": "action = create || action = edit",
             "helpMarkDown": "Is draft"
         },
         {
@@ -154,7 +160,7 @@
             "label": "Is Pre Release ?",
             "defaultValue": "false",
             "required": true,
-            "visibleRule": "action = Create || action = Edit",
+            "visibleRule": "action = create || action = edit",
             "helpMarkDown": "Is pre release"
         }
     ],
@@ -189,7 +195,9 @@
         "DuplicateAssetFound": "Duplicate asset found: %s",
         "DeletingDuplicateAsset": "Deleting duplicate asset: %s",
         "DuplicateAssetDeletedSuccessfully": "Duplicate asset deleted successfully: %s\n Uploading the asset again",
+        "AssetDeletedSuccessfully": "Asset %s deleted successfully",
         "ErrorDeletingDuplicateAsset": "An error occurred while deleting duplicate asset: %s",
+        "ErrorDeletingAsset": "An error occurred while deleting asset: %s",
         "UploadingAsset": "Uploading asset: %s",
         "UploadAssetError": "An error occurred while uploading asset: %s",
         "UploadAssetSuccess": "Uploaded asset: %s",
