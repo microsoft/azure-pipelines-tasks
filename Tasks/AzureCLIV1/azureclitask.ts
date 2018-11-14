@@ -182,7 +182,7 @@ export class azureclitask {
                 try {
                     fs.unlinkSync(path.join(this.azCliConfigPath, "aksServicePrincipal.json"))
                 }
-                catch {
+                catch (err) {
                     // no-op
                 }
             }
