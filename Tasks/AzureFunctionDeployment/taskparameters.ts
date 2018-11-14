@@ -18,9 +18,7 @@ export class TaskParametersUtility {
             connectedServiceName: tl.getInput('ConnectedServiceName', true),
             WebAppKind: tl.getInput('WebAppKind', false),
             DeployToSlotOrASEFlag: tl.getBoolInput('DeployToSlotOrASEFlag', false),
-            GenerateWebConfig: tl.getBoolInput('GenerateWebConfig', false),
             WebConfigParameters: tl.getInput('WebConfigParameters', false),
-            TakeAppOfflineFlag: tl.getBoolInput('TakeAppOfflineFlag', false),
             AppSettings: tl.getInput('AppSettings', false),
             StartupCommand: tl.getInput('StartupCommand', false),
             ConfigurationSettings: tl.getInput('ConfigurationSettings', false),
@@ -76,7 +74,6 @@ export class TaskParametersUtility {
 
         if(taskParameters.isLinuxApp) {
             taskParameters.RuntimeStack = tl.getInput('RuntimeStack', false);
-            taskParameters.TakeAppOfflineFlag = false;
         }
 
         taskParameters.DeploymentType = DeploymentType[(tl.getInput('DeploymentMethod', false))];
@@ -100,10 +97,8 @@ export interface TaskParameters {
     ResourceGroupName?: string;
     SlotName?: string;
     Package?: Package;
-    GenerateWebConfig?: boolean;
     WebConfigParameters?: string;
     DeploymentType?: DeploymentType;
-    TakeAppOfflineFlag?: boolean;
     AppSettings?: string;
     StartupCommand?: string;
     RuntimeStack?: string;

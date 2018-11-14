@@ -81,8 +81,6 @@ The task is used to deploy a Web  project to an existing Azure Web App or Functi
 
 By default the task tries to select the appropriate deployment technology given the input package, app service type and agent OS.
 
-* **Take Application Offline:** Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully.
-
 * **Generate Web.config:** A standard Web.config will be generated and deployed to Azure App Service if the application does not have one. For example, for [Nodejs application, web.config](https://github.com/projectkudu/kudu/wiki/Using-a-custom-web.config-for-Node-apps) will have startup file and iis_node module values. Similarly for Python (Bottle, Django, Flask) the web.config will have details of WSGI handler, Python path etc. The task will generate a new web.config only when the artifact package/folder does not contain an existing web.config. The default values populated by the task can be overriden in the task by using the Web.config parameters field. 
 
 * **Web.config parameters:** Edit values like startup file in the task generated web.config file. The default values populated by the task can be overridden in the task by passing the web.config parameters. This edit feature is **only for the generated web.config**. Feature is useful when [Azure App Service Manage task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzureAppServiceManage) is used to install specific Python version by using extensions or when you want to provide a different startup file for Node.js. 

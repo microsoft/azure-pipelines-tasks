@@ -24,6 +24,12 @@
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
+            "name": "FileTransformsAndVariableSubstitution",
+            "displayName": "File Transforms & Variable Substitution Options",
+            "isExpanded": false,
+            "visibleRule": "webAppKind != functionAppLinux && Package NotEndsWith .war"
+        },
+        {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
@@ -159,6 +165,18 @@
             "helpMarkDown": "Enter the start up command."
         },
         {
+            "name": "WebConfigParameters",
+            "type": "multiLine",
+            "label": "Generate web.config parameters for Python, Node.js, Go and Java apps",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": "A standard Web.config will be generated and deployed to Azure App Service if the application does not have one. The values in web.config can be edited and vary based on the application framework. For example for node.js application, web.config will have startup file and iis_node module values. This edit feature is only for the generated web.config. [Learn more](https://go.microsoft.com/fwlink/?linkid=843469).",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
+            }
+        },
+        {
             "name": "AppSettings",
             "aliases":[
                 "appSettings"
@@ -204,19 +222,6 @@
                 "runFromZip": "Run From Package"
             },
             "helpMarkDown": "Choose the deployment method for the app."
-        },
-        {
-            "name": "TakeAppOfflineFlag",
-            "aliases":[
-                "appOffline"
-            ],
-            "type": "boolean",
-            "label": "Take App Offline",
-            "defaultValue": "false",
-            "required": false,
-            "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "DeploymentType != runFromZip && DeploymentType != auto",
-            "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully."
         }
     ],
     "outputVariables": [

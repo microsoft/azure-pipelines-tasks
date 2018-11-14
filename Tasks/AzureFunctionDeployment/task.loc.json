@@ -24,6 +24,12 @@
   "minimumAgentVersion": "2.104.1",
   "groups": [
     {
+      "name": "FileTransformsAndVariableSubstitution",
+      "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
+      "isExpanded": false,
+      "visibleRule": "webAppKind != functionAppLinux && Package NotEndsWith .war"
+    },
+    {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
@@ -159,6 +165,18 @@
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
     },
     {
+      "name": "WebConfigParameters",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.WebConfigParameters",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.WebConfigParameters",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
+      }
+    },
+    {
       "name": "AppSettings",
       "aliases": [
         "appSettings"
@@ -204,19 +222,6 @@
         "runFromZip": "Run From Package"
       },
       "helpMarkDown": "ms-resource:loc.input.help.DeploymentMethod"
-    },
-    {
-      "name": "TakeAppOfflineFlag",
-      "aliases": [
-        "appOffline"
-      ],
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "DeploymentType != runFromZip && DeploymentType != auto",
-      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
     }
   ],
   "outputVariables": [

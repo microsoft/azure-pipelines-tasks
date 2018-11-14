@@ -7,13 +7,14 @@ const deleteOldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
 const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 0';
 var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
+var FileTransformsUtility = require('azurermdeploycommon/webdeployment-common/FileTransformsUtility.js');
 
 export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvider{
     
     private zipDeploymentID: string;
  
     public async DeployWebAppStep() {
-        var webPackage = this.taskParams.Package.getPath();
+        var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams.WebConfigParameters, this.taskParams.Package.getPackageType());
 
         if(this.taskParams.DeploymentType === DeploymentType.zipDeploy) {
             var _isMSBuildPackage = await this.taskParams.Package.isMSBuildPackage();
@@ -41,8 +42,7 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
             await this.kuduServiceUtility.warmpUp();
         }
 
-        this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage, this.taskParams.TakeAppOfflineFlag, 
-            { slotName: this.appService.getSlot() });
+        this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage);
 
         await this.PostDeploymentStep();
     }
