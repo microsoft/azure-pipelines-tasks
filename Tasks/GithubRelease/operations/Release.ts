@@ -3,7 +3,7 @@ import util = require("util");
 import path = require("path");
 import fs = require('fs');
 import mime = require('mime');
-import { Utility, Inputs } from "./Utility";
+import { Utility } from "./Utility";
 import { WebRequest, sendRequest, WebResponse } from "./webClient";
 
 export class Release {
@@ -118,6 +118,32 @@ export class Release {
         return await sendRequest(request);
     }
 
+    public static async getBranch(repositoryName: string, target: string): Promise<WebResponse> {
+        let request = new WebRequest();
+        
+        request.uri = util.format(this._getBranchApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, target);
+        request.method = "GET";
+        request.headers = {
+            'Authorization': 'token ' + Utility.getGithubEndPointToken()
+        };
+        tl.debug("Get branch request:\n" + JSON.stringify(request, null, 2));
+
+        return await sendRequest(request);
+    }
+
+    public static async getTags(repositoryName: string): Promise<WebResponse> {
+        let request = new WebRequest();
+        
+        request.uri = util.format(this._getTagsApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
+        request.method = "GET";
+        request.headers = {
+            'Authorization': 'token ' + Utility.getGithubEndPointToken()
+        };
+        tl.debug("Get tags request:\n" + JSON.stringify(request, null, 2));
+
+        return await sendRequest(request);
+    }
+
     private static async _getReleaseByTag(repositoryName: string, tag: string): Promise<WebResponse> {
         let request = new WebRequest();
         
@@ -137,4 +163,6 @@ export class Release {
     private static readonly _deleteReleaseAssetApiUrlFormat: string = "%s/repos/%s/releases/assets/%s";
     private static readonly _uploadReleaseAssetApiUrlFormat: string = "%s?name=%s";
     private static readonly _getReleaseByTagApiUrlFormat: string = "%s/repos/%s/releases/tags/%s";
+    private static readonly _getBranchApiUrlFormat: string = "%s/repos/%s/branches/%s";
+    private static readonly _getTagsApiUrlFormat: string = "%s/repos/%s/tags";
 }

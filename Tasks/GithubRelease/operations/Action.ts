@@ -3,7 +3,7 @@ import path = require("path");
 import fs = require('fs');
 import { WebResponse } from "./webClient";
 import { Release } from "./Release";
-import { Utility, Inputs } from "./Utility";
+import { Utility, Inputs, AssetUploadMode } from "./Utility";
 
 export class Action {
 
@@ -84,7 +84,7 @@ export class Action {
 
     private static async _uploadAssets(repositoryName: string, uploadUrl: string, existingAssets): Promise<void> {
         const assetUploadMode = tl.getInput(Inputs.assetUploadMode);
-        let assets: string[] = Utility.getUploadAssets();
+        let assets: string[] = Utility.getUploadAssets() || [];
 
         if (!!assetUploadMode && assetUploadMode === AssetUploadMode.delete) {
             await this._deleteAssets(repositoryName, existingAssets);
@@ -155,9 +155,4 @@ export class ActionType {
     public static readonly create = "create";
     public static readonly edit = "edit";
     public static readonly discard = "discard";
-}
-
-class AssetUploadMode {
-    public static readonly delete = "delete";
-    public static readonly replace = "replace";
 }

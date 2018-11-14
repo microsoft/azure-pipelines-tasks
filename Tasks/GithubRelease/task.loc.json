@@ -43,41 +43,44 @@
       "name": "action",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.action",
-      "defaultValue": "CreateRelease",
+      "defaultValue": "create",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.action",
       "options": {
-        "Create": "Create",
-        "Edit": "Edit",
-        "Discard": "Discard"
+        "create": "Create",
+        "edit": "Edit",
+        "discard": "Discard"
       }
-    },
-    {
-      "name": "tagCreate",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.tagCreate",
-      "defaultValue": "",
-      "required": false,
-      "visibleRule": "action = Create",
-      "helpMarkDown": "ms-resource:loc.input.help.tagCreate"
-    },
-    {
-      "name": "tagEdit",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.tagEdit",
-      "defaultValue": "",
-      "required": true,
-      "visibleRule": "action = Edit || action = Discard",
-      "helpMarkDown": "ms-resource:loc.input.help.tagEdit"
     },
     {
       "name": "target",
       "type": "string",
       "label": "ms-resource:loc.input.label.target",
-      "defaultValue": "",
-      "required": false,
-      "visibleRule": "action = Create",
+      "defaultValue": "$(Build.SourceVersion)",
+      "required": true,
+      "visibleRule": "action = create",
       "helpMarkDown": "ms-resource:loc.input.help.target"
+    },
+    {
+      "name": "tagSelection",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.tagSelection",
+      "required": true,
+      "defaultValue": "auto",
+      "visibleRule": "action = create",
+      "options": {
+        "auto": "Use tag associated with commit",
+        "manual": "Specify tags manually"
+      }
+    },
+    {
+      "name": "tag",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.tag",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "action = edit || action = discard || tagSelection = manual",
+      "helpMarkDown": "ms-resource:loc.input.help.tag"
     },
     {
       "name": "releaseTitle",
@@ -85,7 +88,7 @@
       "label": "ms-resource:loc.input.label.releaseTitle",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "action = Create || action = Edit",
+      "visibleRule": "action = create || action = edit",
       "helpMarkDown": "ms-resource:loc.input.help.releaseTitle"
     },
     {
@@ -94,7 +97,7 @@
       "label": "ms-resource:loc.input.label.releaseNotesSelection",
       "required": false,
       "defaultValue": "input",
-      "visibleRule": "action = Create || action = Edit",
+      "visibleRule": "action = create || action = edit",
       "options": {
         "input": "Enter Release Note",
         "file": "Select Release Note File"
@@ -127,17 +130,20 @@
       "label": "ms-resource:loc.input.label.githubReleaseAsset",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "action = Create || action = Edit",
+      "visibleRule": "action = create || action = edit",
       "helpMarkDown": "ms-resource:loc.input.help.githubReleaseAsset"
     },
     {
-      "name": "deleteExistingAssets",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.deleteExistingAssets",
-      "defaultValue": "false",
-      "required": true,
-      "visibleRule": "action = Create || action = Edit",
-      "helpMarkDown": "ms-resource:loc.input.help.deleteExistingAssets"
+      "name": "assetUploadMode",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.assetUploadMode",
+      "required": false,
+      "defaultValue": "delete",
+      "visibleRule": "action = edit",
+      "options": {
+        "delete": "Delete exisiting assets",
+        "replace": "Replace existing assets"
+      }
     },
     {
       "name": "isDraft",
@@ -145,7 +151,7 @@
       "label": "ms-resource:loc.input.label.isDraft",
       "defaultValue": "false",
       "required": true,
-      "visibleRule": "action = Create || action = Edit",
+      "visibleRule": "action = create || action = edit",
       "helpMarkDown": "ms-resource:loc.input.help.isDraft"
     },
     {
@@ -154,7 +160,7 @@
       "label": "ms-resource:loc.input.label.isPrerelease",
       "defaultValue": "false",
       "required": true,
-      "visibleRule": "action = Create || action = Edit",
+      "visibleRule": "action = create || action = edit",
       "helpMarkDown": "ms-resource:loc.input.help.isPrerelease"
     }
   ],
@@ -185,11 +191,16 @@
     "EditReleaseError": "ms-resource:loc.messages.EditReleaseError",
     "EditReleaseSuccess": "ms-resource:loc.messages.EditReleaseSuccess",
     "GetReleaseByTagError": "ms-resource:loc.messages.GetReleaseByTagError",
+    "GetTagsError": "ms-resource:loc.messages.GetTagsError",
+    "GetBranchError": "ms-resource:loc.messages.GetBranchError",
     "MissingAssetError": "ms-resource:loc.messages.MissingAssetError",
     "DuplicateAssetFound": "ms-resource:loc.messages.DuplicateAssetFound",
     "DeletingDuplicateAsset": "ms-resource:loc.messages.DeletingDuplicateAsset",
     "DuplicateAssetDeletedSuccessfully": "ms-resource:loc.messages.DuplicateAssetDeletedSuccessfully",
+    "AssetDeletedSuccessfully": "ms-resource:loc.messages.AssetDeletedSuccessfully",
+    "NoTagFound": "ms-resource:loc.messages.NoTagFound",
     "ErrorDeletingDuplicateAsset": "ms-resource:loc.messages.ErrorDeletingDuplicateAsset",
+    "ErrorDeletingAsset": "ms-resource:loc.messages.ErrorDeletingAsset",
     "UploadingAsset": "ms-resource:loc.messages.UploadingAsset",
     "UploadAssetError": "ms-resource:loc.messages.UploadAssetError",
     "UploadAssetSuccess": "ms-resource:loc.messages.UploadAssetSuccess",
