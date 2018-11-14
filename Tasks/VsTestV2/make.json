@@ -6,7 +6,7 @@
                 "dest": "./"
             },
             {
-                "url": "https://testexecution.blob.core.windows.net/testexecution/7623378/TestAgent.zip",
+                "url": "https://testexecution.blob.core.windows.net/testexecution/7734137/TestAgent.zip",
                 "dest": "./Modules"
             },
             {
