@@ -9,5 +9,5 @@
   "loc.input.label.buildFunction": "Function to call for build",
   "loc.input.help.buildFunction": "Which function to call for triggering the game build. Defaults to build by Editor.",
   "loc.input.label.buildPlatform": "Platform to build for the game",
-  "loc.input.help.buildPlatform": "Select the platform to build Unity at. Windows, iOS, Android, Web, Mac etc."
+  "loc.input.help.buildPlatform": "Select the platform to build Unity at. Windows, iOS, Android, Web, Mac etc. Platform should match with agent's OS."
 }

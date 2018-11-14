@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "instanceNameFormat": "Unity Build Setting",
     "inputs": [
@@ -56,11 +56,15 @@
             "label": "Platform to build for the game",
             "required": true,
             "defaultValue": "None",
-            "helpMarkDown": "Select the platform to build Unity at. Windows, iOS, Android, Web, Mac etc.",
+            "helpMarkDown": "Select the platform to build Unity at. Windows, iOS, Android, Web, Mac etc. Platform should match with agent's OS.",
             "options": {
-                "WinMetro": "Windows Metro",
-                "IOS": "iOS",
-                "Linux": "Linux"
+                "Win32": "Native Windows 32-bit Player",
+                "Win64": "Native Windows 64-bit Player",
+                "OSX32": "Native MacOSX 32-bit Player",
+                "OSX64": "Native MaxOSX 64-bit Player",
+                "Linux32": "Native Linux 32-bit Player",
+                "Linux64": "Native Linux 64-bit Player",
+                "LinuxU": "Native Linux Universal Player"
             },
             "visibleRule": "customBuild = No"
         }
