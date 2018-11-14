@@ -24,6 +24,12 @@
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
+            "name": "FileTransformsAndVariableSubstitution",
+            "displayName": "File Transforms & Variable Substitution Options",
+            "isExpanded": false,
+            "visibleRule": "WebAppKind != webAppLinux && Package NotEndsWith .war"
+        },
+        {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
@@ -58,9 +64,7 @@
             "required": true,
             "options": {
                 "webApp": "Web App on Windows",
-                "webAppLinux": "Web App on Linux",
-                "apiApp": "API App",
-                "mobileApp": "Mobile App"
+                "webAppLinux": "Web App on Linux"
             },
             "helpMarkDown": "Choose from Web App On Windows, Web App On Linux, and Mobile App."
         },
@@ -214,19 +218,6 @@
                 "runFromPackage": "Run From Package"
             },
             "helpMarkDown": "Choose the deployment method for the app."
-        },
-        {
-            "name": "TakeAppOfflineFlag",
-            "aliases":[
-                "appOffline"
-            ],
-            "type": "boolean",
-            "label": "Take App Offline",
-            "defaultValue": "false",
-            "required": false,
-            "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "DeploymentType != runFromZip && DeploymentType != auto",
-            "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully."
         }
     ],
     "outputVariables": [

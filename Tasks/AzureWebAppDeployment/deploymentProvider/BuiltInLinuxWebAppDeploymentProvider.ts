@@ -20,12 +20,10 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
                 let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
                 let archivedWebPackage = await zipUtility.archiveFolder(this.taskParams.Package.getPath(), "", tempPackagePath);
                 tl.debug("Compressed folder into zip " +  archivedWebPackage);
-                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(archivedWebPackage, this.taskParams.TakeAppOfflineFlag, 
-                    { slotName: this.appService.getSlot() });
+                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(archivedWebPackage);
             break;
             case PackageType.zip:
-                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(this.taskParams.Package.getPath(), this.taskParams.TakeAppOfflineFlag, 
-                { slotName: this.appService.getSlot() });
+                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(this.taskParams.Package.getPath());
             break;
 
             case PackageType.jar:
@@ -48,8 +46,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
                 var output = await webCommonUtility.archiveFolderForDeployment(false, folderPath);
                 var webPackage = output.webDeployPkg;
                 tl.debug("Initiated deployment via kudu service for webapp jar package : "+ webPackage);
-                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage, this.taskParams.TakeAppOfflineFlag, 
-                { slotName: this.appService.getSlot() });
+                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage);
             break;
 
             case PackageType.war:

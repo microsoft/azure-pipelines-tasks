@@ -24,6 +24,12 @@
   "minimumAgentVersion": "2.104.1",
   "groups": [
     {
+      "name": "FileTransformsAndVariableSubstitution",
+      "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
+      "isExpanded": false,
+      "visibleRule": "WebAppKind != webAppLinux && Package NotEndsWith .war"
+    },
+    {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
@@ -58,9 +64,7 @@
       "required": true,
       "options": {
         "webApp": "Web App on Windows",
-        "webAppLinux": "Web App on Linux",
-        "apiApp": "API App",
-        "mobileApp": "Mobile App"
+        "webAppLinux": "Web App on Linux"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
     },
@@ -214,19 +218,6 @@
         "runFromPackage": "Run From Package"
       },
       "helpMarkDown": "ms-resource:loc.input.help.DeploymentMethod"
-    },
-    {
-      "name": "TakeAppOfflineFlag",
-      "aliases": [
-        "appOffline"
-      ],
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "DeploymentType != runFromZip && DeploymentType != auto",
-      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
     }
   ],
   "outputVariables": [
