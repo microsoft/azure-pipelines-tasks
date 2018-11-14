@@ -7,7 +7,7 @@ async function run() {
 
     var executeMethod = t1.getInput('buildFunction');
     var gamePath = t1.getPathInput('gameDirectory');
-    var unityPath = "C:/Program Files/Unity/Editor/Unity.exe";
+    var unityPath = "C:/Program Files/Unity/Editor/Unity.exe"; 
 
     var customBuild = t1.getInput('customBuild');
     if(customBuild == "Yes") {

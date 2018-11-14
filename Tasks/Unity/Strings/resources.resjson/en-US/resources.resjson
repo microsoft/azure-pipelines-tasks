@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Unity Game Engine",
   "loc.helpMarkDown": "",
-  "loc.description": "Build your game from Unity using this",
+  "loc.description": "Build your multi-platform game using Unity",
   "loc.instanceNameFormat": "Unity Build Setting",
   "loc.input.label.gameDirectory": "Source code directory",
   "loc.input.help.gameDirectory": "Folder path where the game's code resides.",

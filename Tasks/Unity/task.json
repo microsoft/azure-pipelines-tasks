@@ -2,14 +2,14 @@
     "id":"be067389-c4d0-4acc-938f-d38255b43bdd",
     "name": "Unity",
     "friendlyName": "Unity Game Engine",
-    "description": "Build your game from Unity using this",
+    "description": "Build your multi-platform game using Unity",
     "helpMarkDown": "",
     "category": "Utility",
     "author": "nijoy",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 0
     },
     "instanceNameFormat": "Unity Build Setting",
     "inputs": [

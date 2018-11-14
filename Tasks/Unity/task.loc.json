@@ -9,7 +9,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -58,13 +58,13 @@
       "defaultValue": "None",
       "helpMarkDown": "ms-resource:loc.input.help.buildPlatform",
       "options": {
-        "Win32": "Windows 32-bit Player",
-        "Win64": "Windows 64-bit Player",
-        "OSX32": "MacOSX 32-bit Player",
-        "OSX64": "MaxOSX 64-bit Player",
-        "Linux32": "Linux 32-bit Player",
-        "Linux64": "Linux 64-bit Player",
-        "LinuxU": "Linux Universal Player"
+        "Win32": "Native Windows 32-bit Player",
+        "Win64": "Native Windows 64-bit Player",
+        "OSX32": "Native MacOSX 32-bit Player",
+        "OSX64": "Native MaxOSX 64-bit Player",
+        "Linux32": "Native Linux 32-bit Player",
+        "Linux64": "Native Linux 64-bit Player",
+        "LinuxU": "Native Linux Universal Player"
       },
       "visibleRule": "customBuild = No"
     }
