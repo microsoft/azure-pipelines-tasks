@@ -137,13 +137,13 @@ export class azureclitask {
         this.isLoggedIn = true;
         
         // create config.json 
-        this.loadServicePrincipalsIfRequired(servicePrincipalId, cliPassword, subscriptionID);
+        this.createServicePrincipalsIfRequired(servicePrincipalId, cliPassword, subscriptionID);
 
         //set the subscription imported to the current subscription
         this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
     }
 
-    private static loadServicePrincipalsIfRequired(servicePrincipalId, client_key, subscriptionID): void {
+    private static createServicePrincipalsIfRequired(servicePrincipalId, client_key, subscriptionID): void {
         var shouldCreateServicePrincipalJSONfile = tl.getVariable("CREATE_SERVICE_PRINCIPAL_FILE");
         if (!!shouldCreateServicePrincipalJSONfile) {
             var fileName = "aksServicePrincipal.json";
@@ -175,6 +175,17 @@ export class azureclitask {
         catch (err) {
             // task should not fail if logout doesn`t occur
             tl.warning(tl.loc("FailedToLogout"));
+        }
+        finally {
+            var createServicePrincipalJSONfile = tl.getVariable("CREATE_SERVICE_PRINCIPAL_FILE");
+            if (!!createServicePrincipalJSONfile) {
+                try {
+                    fs.unlinkSync(path.join(this.azCliConfigPath, "aksServicePrincipal.json"))
+                }
+                catch {
+                    // no-op
+                }
+            }
         }
     }
 
