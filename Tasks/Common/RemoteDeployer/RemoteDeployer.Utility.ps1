@@ -58,6 +58,7 @@ function Publish-Telemetry {
                 "VmUuidHash" = $jobResult.MachineGuidHash;
                 # field name 'TelemetryError' is misleading here. TelemetryError is only the type of the Telemetry exception.
                 "TelemetryError" = $jobResult.TelemetryError;
+                "AzureSubscriptionId" = $jobResult.AzureSubscriptionId;
                 "JobId" = $buildOrReleaseJobId;
             }
             $telemetryDataJson = ConvertTo-Json $telemetryData
