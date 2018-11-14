@@ -20,7 +20,7 @@ import javacommons = require('java-common/java-common');
 import systemToken = require('utility-common/accesstoken');
 
 // Setting the access token env var to both VSTS and AZURE_ARTIFACTS for 
-// backwareds compatibility with repos that already use the older env var.
+// backwards compatibility with repos that already use the older env var.
 const accessTokenEnvSettingLegacy: string = 'VSTS_ENV_ACCESS_TOKEN';
 const accessTokenEnvSetting: string = 'AZURE_ARTIFACTS_ENV_ACCESS_TOKEN';
 const TESTRUN_SYSTEM = "VSTS - gradle"; 
