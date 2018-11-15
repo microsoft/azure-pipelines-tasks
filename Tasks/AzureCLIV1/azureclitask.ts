@@ -176,17 +176,6 @@ export class azureclitask {
             // task should not fail if logout doesn`t occur
             tl.warning(tl.loc("FailedToLogout"));
         }
-        finally {
-            var createServicePrincipalJSONfile = tl.getVariable("CREATE_SERVICE_PRINCIPAL_FILE");
-            if (!!createServicePrincipalJSONfile) {
-                try {
-                    fs.unlinkSync(path.join(this.azCliConfigPath, "aksServicePrincipal.json"))
-                }
-                catch (err) {
-                    // no-op
-                }
-            }
-        }
     }
 
     private static throwIfError(resultOfToolExecution: IExecSyncResult, errormsg?: string): void {
