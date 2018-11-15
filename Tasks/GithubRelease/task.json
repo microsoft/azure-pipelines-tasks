@@ -43,13 +43,13 @@
             "name": "action",
             "type": "pickList",
             "label": "Action",
-            "defaultValue": "create",
+            "defaultValue": "Create",
             "required": true,
             "helpMarkDown": "Select the action to trigger",
             "options": {
-                "create": "Create",
-                "edit": "Edit",
-                "discard": "Discard"
+                "Create": "Create",
+                "Edit": "Edit",
+                "Discard": "Discard"
             }
         },
         {
@@ -58,7 +58,7 @@
             "label": "Target",
             "defaultValue": "$(Build.SourceVersion)",
             "required": true,
-            "visibleRule": "action = create",
+            "visibleRule": "action = Create",
             "helpMarkDown": "The branch or commit to release"
         },
         {
@@ -67,7 +67,7 @@
             "label": "Tag selection",
             "required": true,
             "defaultValue": "auto",
-            "visibleRule": "action = create",
+            "visibleRule": "action = Create",
             "options": {
                 "auto": "Use tag associated with commit",
                 "manual": "Specify tags manually"
@@ -79,7 +79,7 @@
             "label": "Tag",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "action = edit || action = discard || tagSelection = manual",
+            "visibleRule": "action = Edit || action = Discard || tagSelection = manual",
             "helpMarkDown": "Tag to release, default value $(Build.BuildNumber) for release current build"
         },
         {
@@ -88,7 +88,7 @@
             "label": "Release title",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "action = create || action = edit",
+            "visibleRule": "action = Create || action = Edit",
             "helpMarkDown": "Release title"
         },
         {
@@ -97,7 +97,7 @@
             "label": "Release note",
             "required": false,
             "defaultValue": "input",
-            "visibleRule": "action = create || action = edit",
+            "visibleRule": "action = Create || action = Edit",
             "options": {
                 "input": "Enter Release Note",
                 "file": "Select Release Note File"
@@ -128,9 +128,9 @@
             "name": "githubReleaseAsset",
             "type": "input",
             "label": "File to upload as asset",
-            "defaultValue": "",
+            "defaultValue": "$(Build.ArtifactStagingDirectory)/*.*",
             "required": false,
-            "visibleRule": "action = create || action = edit",
+            "visibleRule": "action = Create || action = Edit",
             "helpMarkDown": "The file to upload as artifacts to the release. Eg- $(System.DefaultWorkingDirectory)/**/*.xml"
         },
         {
@@ -139,7 +139,7 @@
             "label": "Asset upload mode",
             "required": false,
             "defaultValue": "delete",
-            "visibleRule": "action = edit",
+            "visibleRule": "action = Edit",
             "options": {
                 "delete": "Delete exisiting assets",
                 "replace": "Replace existing assets"
@@ -151,7 +151,7 @@
             "label": "Is draft release ?",
             "defaultValue": "false",
             "required": true,
-            "visibleRule": "action = create || action = edit",
+            "visibleRule": "action = Create || action = Edit",
             "helpMarkDown": "Is draft"
         },
         {
@@ -160,7 +160,7 @@
             "label": "Is Pre Release ?",
             "defaultValue": "false",
             "required": true,
-            "visibleRule": "action = create || action = edit",
+            "visibleRule": "action = Create || action = Edit",
             "helpMarkDown": "Is pre release"
         }
     ],

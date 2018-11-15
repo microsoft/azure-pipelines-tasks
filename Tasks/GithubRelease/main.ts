@@ -12,23 +12,29 @@ class Main {
             tl.debug("Setting resource path to " + taskManifestPath);
             tl.setResourcePath(taskManifestPath);        
 
+            const githubEndpoint = tl.getInput(Inputs.githubEndpoint, true);
+            const repositoryName = tl.getInput(Inputs.repositoryName, true);        
+            const action = tl.getInput(Inputs.action, true);
+            const target = tl.getInput(Inputs.target, true);
             let tag = tl.getInput(Inputs.tag);
-            const target = tl.getInput(Inputs.target) || undefined;
-            const repositoryName = tl.getInput(Inputs.repositoryName, true) || undefined;        
             const releaseTitle = tl.getInput(Inputs.releaseTitle) || undefined; 
-            const isDraft = tl.getBoolInput(Inputs.isDraft) || false;
+            const releaseNotesSelection = tl.getInput(Inputs.releaseNotesSelection);
+            const releaseNotesFile = tl.getPathInput(Inputs.releaseNotesFile, false, true);
+            const releaseNoteInput = tl.getInput(Inputs.releaseNotesInput);
+            const releaseNote: string = Utility.getReleaseNote(releaseNotesSelection, releaseNotesFile, releaseNoteInput) || undefined;
             const isPrerelease = tl.getBoolInput(Inputs.isPrerelease) || false;
-            const action = tl.getInput(Inputs.action);
+            const isDraft = tl.getBoolInput(Inputs.isDraft) || false;
+            const githubReleaseAssetInput = tl.getInput(Inputs.githubReleaseAsset);
 
             if (action === ActionType.create) {
-                tag = await this._getTagForCreateAction(tag, repositoryName, target);
-                await Action.createReleaseAction(repositoryName, tag, target, releaseTitle, isDraft, isPrerelease);
+                tag = await this._getTagForCreateAction(githubEndpoint, repositoryName, target, tag);
+                await Action.createReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInput);
             }
             else if (action === ActionType.edit) {
-                await Action.editReleaseAction(repositoryName, tag, releaseTitle, isDraft, isPrerelease);
+                await Action.editReleaseAction(githubEndpoint, repositoryName, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInput);
             }
             else if (action === ActionType.discard) {
-                await Action.discardReleaseAction(repositoryName, tag);
+                await Action.discardReleaseAction(githubEndpoint, repositoryName, tag);
             }
         }
         catch(error) {
@@ -36,11 +42,11 @@ class Main {
         }
     }
 
-    private static async _getTagForCreateAction(tag: string, repositoryName: string, target: string): Promise<string> {
+    private static async _getTagForCreateAction(githubEndpoint: string, repositoryName: string, target: string, tag: string): Promise<string> {
         let tagSelection = tl.getInput(Inputs.tagSelection);
 
         if (!!tagSelection && tagSelection === TagSelectionMode.auto) {
-            let response = await Release.getBranch(repositoryName, target);
+            let response = await Release.getBranch(githubEndpoint, repositoryName, target);
             let commit_sha: string = undefined;
 
             if (response.statusCode === 200) {
@@ -57,7 +63,7 @@ class Main {
             let buildSourceVersion = tl.getVariable(this._buildSourceVersion);
 
             if (commit_sha !== buildSourceVersion) {
-                tag = await this._getTagForCommit(repositoryName, commit_sha, tag);
+                tag = await this._getTagForCommit(githubEndpoint, repositoryName, commit_sha, tag);
             }
             else {
                 let buildSourceBranch = tl.getVariable(this._buildSourceBranch);
@@ -68,7 +74,7 @@ class Main {
                     tag = normalizedBranch;
                 }
                 else {
-                    tag = await this._getTagForCommit(repositoryName, commit_sha, tag);
+                    tag = await this._getTagForCommit(githubEndpoint, repositoryName, commit_sha, tag);
                 }
             }
         }
@@ -76,8 +82,8 @@ class Main {
         return tag;
     }
 
-    private static async _getTagForCommit(repositoryName: string, commit_sha: string, tag: string) {
-        let tagsResponse = await Release.getTags(repositoryName);
+    private static async _getTagForCommit(githubEndpoint: string, repositoryName: string, commit_sha: string, tag: string) {
+        let tagsResponse = await Release.getTags(githubEndpoint, repositoryName);
 
         if (tagsResponse.statusCode === 200) {
             let tags: string[] = this._filterTagsForCommit(tagsResponse.body, commit_sha);

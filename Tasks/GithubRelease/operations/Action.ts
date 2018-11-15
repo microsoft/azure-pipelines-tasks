@@ -7,13 +7,12 @@ import { Utility, Inputs, AssetUploadMode } from "./Utility";
 
 export class Action {
 
-    public static async createReleaseAction(repositoryName: string, tag: string, target: string, releaseTitle: string, isDraft: boolean, isPrerelease: boolean): Promise<void> {
-
+    public static async createReleaseAction(githubEndpoint: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInput: string): Promise<void> {
         try {
-            Utility.validateUploadAssets(); 
+            Utility.validateUploadAssets(githubReleaseAssetInput); 
             console.log(tl.loc("CreatingRelease"));
 
-            let response: WebResponse = await Release.createRelease(repositoryName, tag, target, releaseTitle, isDraft, isPrerelease);
+            let response: WebResponse = await Release.createRelease(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease);
             tl.debug("Create release response:\n" + JSON.stringify(response));
 
             if (response.statusCode === 201) {
@@ -25,7 +24,7 @@ export class Action {
                 }
 
                 const uploadUrl: string = response.body[this._uploadUrlkey];
-                await this._uploadAssets(repositoryName, uploadUrl, []);
+                await this._uploadAssets(githubEndpoint, repositoryName, githubReleaseAssetInput, uploadUrl, []);
             }
             else {           
                 throw new Error(tl.loc("CreateReleaseError"));
@@ -37,20 +36,19 @@ export class Action {
         }    
     }
 
-    public static async editReleaseAction(repositoryName: string, tag: string, releaseTitle: string, isDraft: boolean, isPrerelease: boolean): Promise<void> {
-        
+    public static async editReleaseAction(githubEndpoint: string, repositoryName: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInput: string): Promise<void> {
         try {
-            Utility.validateUploadAssets();     
+            Utility.validateUploadAssets(githubReleaseAssetInput);     
             console.log(tl.loc("EditingRelease"));
 
-            let response: WebResponse = await Release.editRelease(repositoryName, tag, releaseTitle, isDraft, isPrerelease);
+            let response: WebResponse = await Release.editRelease(githubEndpoint, repositoryName, tag, releaseTitle, releaseNote, isDraft, isPrerelease);
             tl.debug("Edit release response:\n" + JSON.stringify(response));
 
             if (response.statusCode === 200) {
                 console.log(tl.loc("EditReleaseSuccess"));
 
                 const uploadUrl: string = response.body[this._uploadUrlkey];
-                await this._uploadAssets(repositoryName, uploadUrl, response.body[this._assetsKey]);
+                await this._uploadAssets(githubEndpoint, repositoryName, githubReleaseAssetInput, uploadUrl, response.body[this._assetsKey]);
             }
             else {
                 throw new Error(tl.loc("EditReleaseError"));
@@ -62,11 +60,10 @@ export class Action {
         }    
     }
 
-    public static async discardReleaseAction(repositoryName: string, tag: string): Promise<void> {
-
+    public static async discardReleaseAction(githubEndpoint: string, repositoryName: string, tag: string): Promise<void> {
         try {
             console.log(tl.loc("DiscardingRelease"));
-            let response: WebResponse = await Release.discardRelease(repositoryName, tag);
+            let response: WebResponse = await Release.discardRelease(githubEndpoint, repositoryName, tag);
             tl.debug("Discard release response:\n" + JSON.stringify(response));
 
             if (response.statusCode === 204) {
@@ -82,12 +79,12 @@ export class Action {
         }    
     }
 
-    private static async _uploadAssets(repositoryName: string, uploadUrl: string, existingAssets): Promise<void> {
+    private static async _uploadAssets(githubEndpoint: string, repositoryName: string, githubReleaseAssetInput: string, uploadUrl: string, existingAssets: any[]): Promise<void> {
         const assetUploadMode = tl.getInput(Inputs.assetUploadMode);
-        let assets: string[] = Utility.getUploadAssets() || [];
+        let assets: string[] = Utility.getUploadAssets(githubReleaseAssetInput) || [];
 
         if (!!assetUploadMode && assetUploadMode === AssetUploadMode.delete) {
-            await this._deleteAssets(repositoryName, existingAssets);
+            await this._deleteAssets(githubEndpoint, repositoryName, existingAssets);
         }
 
         for (let index = 0; index < assets.length; index++) {
@@ -99,7 +96,7 @@ export class Action {
                 continue;
             }
 
-            let uploadResponse = await Release.uploadReleaseAsset(uploadUrl, asset);
+            let uploadResponse = await Release.uploadReleaseAsset(githubEndpoint, asset, uploadUrl);
             
             if (uploadResponse.statusCode === 201) {
                 console.log(tl.loc("UploadAssetSuccess", asset));
@@ -114,7 +111,7 @@ export class Action {
 
                     for (let existingAsset of existingAssets) {
                         if (fileName === existingAsset.name) {
-                            await this._deleteAssets(repositoryName, [existingAsset]);
+                            await this._deleteAssets(githubEndpoint, repositoryName, [existingAsset]);
                             index--;
                             break;
                         }
@@ -132,9 +129,9 @@ export class Action {
         }
     }
 
-    private static async _deleteAssets(repositoryName: string, assets) {
+    private static async _deleteAssets(githubEndpoint: string, repositoryName: string, assets: any[]) {
         for (let asset of assets) {
-            let deleteAssetResponse = await Release.deleteReleaseAsset(asset.id, repositoryName);
+            let deleteAssetResponse = await Release.deleteReleaseAsset(githubEndpoint, repositoryName, asset.id);
 
             if (deleteAssetResponse.statusCode === 204) {
                 console.log(tl.loc("AssetDeletedSuccessfully", asset));
@@ -152,7 +149,7 @@ export class Action {
 }
 
 export class ActionType {
-    public static readonly create = "create";
-    public static readonly edit = "edit";
-    public static readonly discard = "discard";
+    public static readonly create = "Create";
+    public static readonly edit = "Edit";
+    public static readonly discard = "Discard";
 }

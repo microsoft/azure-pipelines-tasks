@@ -5,8 +5,7 @@ import fs = require('fs');
 
 export class Utility {
 
-    public static getGithubEndPointToken(): string {
-        const githubEndpoint = tl.getInput(Inputs.githubEndpoint, true);
+    public static getGithubEndPointToken(githubEndpoint: string): string {
         const githubEndpointObject = tl.getEndpointAuthorization(githubEndpoint, false);
         let githubEndpointToken: string = null;
 
@@ -20,8 +19,7 @@ export class Utility {
         return githubEndpointToken;
     }
 
-    public static getUploadAssets(): string[] {
-        let githubReleaseAssetInput = tl.getInput(Inputs.githubReleaseAsset);
+    public static getUploadAssets(githubReleaseAssetInput: string): string[] {
         let githubReleaseAssets = [];
 
         /** Check for one or multiples files into array
@@ -34,8 +32,8 @@ export class Utility {
         return githubReleaseAssets;
     }
 
-    public static validateUploadAssets(): void {
-        const assets: string[] = this.getUploadAssets();
+    public static validateUploadAssets(githubReleaseAssetInput: string): void {
+        const assets: string[] = this.getUploadAssets(githubReleaseAssetInput);
 
         if (assets && assets.length > 0) {
             try {
@@ -48,12 +46,10 @@ export class Utility {
         }
     }
 
-    public static getReleaseNote(): string {
-        let releaseNotesSelection = tl.getInput(Inputs.releaseNotesSelection);
+    public static getReleaseNote(releaseNotesSelection: string, releaseNotesFile: any, releaseNoteInput: string): string {
         let releaseNote: string = undefined;
 
-        if (releaseNotesSelection === 'file') {
-            let releaseNotesFile = tl.getPathInput(Inputs.releaseNotesFile, false, true);
+        if (releaseNotesSelection === ReleaseNotesSelectionMode.file) {
 
             if (fs.lstatSync(path.resolve(releaseNotesFile)).isDirectory()) {
                 console.log(tl.loc("ReleaseNotesFileIsDirectoryError", releaseNotesFile));
@@ -61,11 +57,12 @@ export class Utility {
             else {
                 releaseNote = fs.readFileSync(releaseNotesFile).toString();
             }
-        } 
-        else if (releaseNotesSelection === 'input') {
-            releaseNote = tl.getInput(Inputs.releaseNotesInput);
+        }
+        else {
+            releaseNote = releaseNoteInput;
         }
         tl.debug("ReleaseNote:\n" + releaseNote);
+
         return releaseNote;
     }
 
@@ -110,4 +107,9 @@ export class TagSelectionMode {
 export class AssetUploadMode {
     public static readonly delete = "delete";
     public static readonly replace = "replace";
+}
+
+class ReleaseNotesSelectionMode {
+    public static readonly input = "input";
+    public static readonly file = "file";
 }

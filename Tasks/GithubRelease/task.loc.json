@@ -43,13 +43,13 @@
       "name": "action",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.action",
-      "defaultValue": "create",
+      "defaultValue": "Create",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.action",
       "options": {
-        "create": "Create",
-        "edit": "Edit",
-        "discard": "Discard"
+        "Create": "Create",
+        "Edit": "Edit",
+        "Discard": "Discard"
       }
     },
     {
@@ -58,7 +58,7 @@
       "label": "ms-resource:loc.input.label.target",
       "defaultValue": "$(Build.SourceVersion)",
       "required": true,
-      "visibleRule": "action = create",
+      "visibleRule": "action = Create",
       "helpMarkDown": "ms-resource:loc.input.help.target"
     },
     {
@@ -67,7 +67,7 @@
       "label": "ms-resource:loc.input.label.tagSelection",
       "required": true,
       "defaultValue": "auto",
-      "visibleRule": "action = create",
+      "visibleRule": "action = Create",
       "options": {
         "auto": "Use tag associated with commit",
         "manual": "Specify tags manually"
@@ -79,7 +79,7 @@
       "label": "ms-resource:loc.input.label.tag",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "action = edit || action = discard || tagSelection = manual",
+      "visibleRule": "action = Edit || action = Discard || tagSelection = manual",
       "helpMarkDown": "ms-resource:loc.input.help.tag"
     },
     {
@@ -88,7 +88,7 @@
       "label": "ms-resource:loc.input.label.releaseTitle",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "action = create || action = edit",
+      "visibleRule": "action = Create || action = Edit",
       "helpMarkDown": "ms-resource:loc.input.help.releaseTitle"
     },
     {
@@ -97,7 +97,7 @@
       "label": "ms-resource:loc.input.label.releaseNotesSelection",
       "required": false,
       "defaultValue": "input",
-      "visibleRule": "action = create || action = edit",
+      "visibleRule": "action = Create || action = Edit",
       "options": {
         "input": "Enter Release Note",
         "file": "Select Release Note File"
@@ -128,9 +128,9 @@
       "name": "githubReleaseAsset",
       "type": "input",
       "label": "ms-resource:loc.input.label.githubReleaseAsset",
-      "defaultValue": "",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)/*.*",
       "required": false,
-      "visibleRule": "action = create || action = edit",
+      "visibleRule": "action = Create || action = Edit",
       "helpMarkDown": "ms-resource:loc.input.help.githubReleaseAsset"
     },
     {
@@ -139,7 +139,7 @@
       "label": "ms-resource:loc.input.label.assetUploadMode",
       "required": false,
       "defaultValue": "delete",
-      "visibleRule": "action = edit",
+      "visibleRule": "action = Edit",
       "options": {
         "delete": "Delete exisiting assets",
         "replace": "Replace existing assets"
@@ -151,7 +151,7 @@
       "label": "ms-resource:loc.input.label.isDraft",
       "defaultValue": "false",
       "required": true,
-      "visibleRule": "action = create || action = edit",
+      "visibleRule": "action = Create || action = Edit",
       "helpMarkDown": "ms-resource:loc.input.help.isDraft"
     },
     {
@@ -160,7 +160,7 @@
       "label": "ms-resource:loc.input.label.isPrerelease",
       "defaultValue": "false",
       "required": true,
-      "visibleRule": "action = create || action = edit",
+      "visibleRule": "action = Create || action = Edit",
       "helpMarkDown": "ms-resource:loc.input.help.isPrerelease"
     }
   ],
