@@ -56,5 +56,6 @@
   "loc.messages.UploadAssetError": "An error occurred while uploading asset: %s",
   "loc.messages.UploadAssetSuccess": "Uploaded asset: %s",
   "loc.messages.ReleaseNotesFileIsDirectoryError": "Release notes file: %s is a directory and not a file. Release notes will be set as empty.",
-  "loc.messages.AssetIsDirectoryError": "Asset is a directory and not a file. Skipping uploading asset: %s"
+  "loc.messages.AssetIsDirectoryError": "Asset is a directory and not a file. Skipping uploading asset: %s",
+  "loc.messages.ReleaseAlreadyExists": "Failed to create release. Release already exist for tag: %s"
 }

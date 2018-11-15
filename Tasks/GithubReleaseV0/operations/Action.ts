@@ -3,7 +3,7 @@ import path = require("path");
 import fs = require('fs');
 import { WebResponse } from "./webClient";
 import { Release } from "./Release";
-import { Utility, Inputs, AssetUploadMode } from "./Utility";
+import { Utility, Inputs, AssetUploadMode, GitHubAttributes } from "./Utility";
 
 export class Action {
 
@@ -17,16 +17,19 @@ export class Action {
 
             if (response.statusCode === 201) {
                 if (!tl.getBoolInput(Inputs.isDraft)) {
-                    console.log(tl.loc("CreateReleaseSuccess", response.body[this._htmlUrlkey]));
+                    console.log(tl.loc("CreateReleaseSuccess", response.body[GitHubAttributes.htmlUrl]));
                 }
                 else {
-                    console.log(tl.loc("DraftReleaseCreatedSuccess"), response.body[this._htmlUrlkey]);
+                    console.log(tl.loc("DraftReleaseCreatedSuccess"), response.body[GitHubAttributes.htmlUrl]);
                 }
 
-                const uploadUrl: string = response.body[this._uploadUrlkey];
+                const uploadUrl: string = response.body[GitHubAttributes.uploadUrl];
                 await this._uploadAssets(githubEndpoint, repositoryName, githubReleaseAssetInput, uploadUrl, []);
             }
-            else {           
+            else if (response.statusCode === 422 && response.body.errors && response.body.errors.length > 0 && response.body.errors[0].code === this._alreadyExistErrorCode) {           
+                throw new Error(tl.loc("ReleaseAlreadyExists"));
+            }
+            else {
                 throw new Error(tl.loc("CreateReleaseError"));
             }
 
@@ -47,8 +50,8 @@ export class Action {
             if (response.statusCode === 200) {
                 console.log(tl.loc("EditReleaseSuccess"));
 
-                const uploadUrl: string = response.body[this._uploadUrlkey];
-                await this._uploadAssets(githubEndpoint, repositoryName, githubReleaseAssetInput, uploadUrl, response.body[this._assetsKey]);
+                const uploadUrl: string = response.body[GitHubAttributes.uploadUrl];
+                await this._uploadAssets(githubEndpoint, repositoryName, githubReleaseAssetInput, uploadUrl, response.body[GitHubAttributes.assets]);
             }
             else {
                 throw new Error(tl.loc("EditReleaseError"));
@@ -101,7 +104,7 @@ export class Action {
             if (uploadResponse.statusCode === 201) {
                 console.log(tl.loc("UploadAssetSuccess", asset));
             }
-            else if (uploadResponse.statusCode === 422 && uploadResponse.body.errors && uploadResponse.body.errors.length > 0 && uploadResponse.body.errors[0].code === 'already_exists') {
+            else if (uploadResponse.statusCode === 422 && uploadResponse.body.errors && uploadResponse.body.errors.length > 0 && uploadResponse.body.errors[0].code === this._alreadyExistErrorCode) {
                 
                 if (!!assetUploadMode && assetUploadMode === AssetUploadMode.replace) {
                     console.log(tl.loc("DuplicateAssetFound", asset));
@@ -143,13 +146,5 @@ export class Action {
         }
     }
 
-    private static readonly _uploadUrlkey: string = "upload_url";
-    private static readonly _htmlUrlkey: string = "html_url";
-    private static readonly _assetsKey: string = "assets";
-}
-
-export class ActionType {
-    public static readonly create = "Create";
-    public static readonly edit = "Edit";
-    public static readonly discard = "Discard";
+    private static readonly _alreadyExistErrorCode: string = "already_exists";
 }

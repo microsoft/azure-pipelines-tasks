@@ -207,6 +207,7 @@
         "UploadAssetError": "An error occurred while uploading asset: %s",
         "UploadAssetSuccess": "Uploaded asset: %s",
         "ReleaseNotesFileIsDirectoryError": "Release notes file: %s is a directory and not a file. Release notes will be set as empty.",
-        "AssetIsDirectoryError": "Asset is a directory and not a file. Skipping uploading asset: %s"
+        "AssetIsDirectoryError": "Asset is a directory and not a file. Skipping uploading asset: %s",
+        "ReleaseAlreadyExists": "Failed to create release. Release already exist for tag: %s"
     }
 }

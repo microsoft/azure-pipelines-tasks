@@ -207,6 +207,7 @@
     "UploadAssetError": "ms-resource:loc.messages.UploadAssetError",
     "UploadAssetSuccess": "ms-resource:loc.messages.UploadAssetSuccess",
     "ReleaseNotesFileIsDirectoryError": "ms-resource:loc.messages.ReleaseNotesFileIsDirectoryError",
-    "AssetIsDirectoryError": "ms-resource:loc.messages.AssetIsDirectoryError"
+    "AssetIsDirectoryError": "ms-resource:loc.messages.AssetIsDirectoryError",
+    "ReleaseAlreadyExists": "ms-resource:loc.messages.ReleaseAlreadyExists"
   }
 }

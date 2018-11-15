@@ -1,7 +1,7 @@
 import tl = require("vsts-task-lib/task");
 import path = require("path");
-import { Action, ActionType } from "./operations/Action";
-import { Inputs, TagSelectionMode, Utility } from "./operations/Utility";
+import { Action } from "./operations/Action";
+import { Inputs, TagSelectionMode, Utility, GitHubAttributes, AzureDevOpsVariables, ActionType} from "./operations/Utility";
 import { Release } from "./operations/Release";
 
 class Main {
@@ -65,7 +65,7 @@ class Main {
             let commit_sha: string = undefined;
 
             if (response.statusCode === 200) {
-                commit_sha = response.body.commit.sha;
+                commit_sha = response.body[GitHubAttributes.commit][GitHubAttributes.sha];
             }
             else if (response.statusCode === 404) {
                 commit_sha = target;
@@ -75,13 +75,13 @@ class Main {
                 throw new Error(tl.loc("GetBranchError"));
             }
 
-            let buildSourceVersion = tl.getVariable(this._buildSourceVersion);
+            let buildSourceVersion = tl.getVariable(AzureDevOpsVariables.buildSourceVersion);
 
             if (commit_sha !== buildSourceVersion) {
                 tag = await this._getTagForCommit(githubEndpoint, repositoryName, commit_sha, tag);
             }
             else {
-                let buildSourceBranch = tl.getVariable(this._buildSourceBranch);
+                let buildSourceBranch = tl.getVariable(AzureDevOpsVariables.buildSourceBranch);
 
                 let normalizedBranch = Utility.normalizeBranchName(buildSourceBranch);
 
@@ -122,7 +122,7 @@ class Main {
         let tags: string[] = [];
 
         (tagsList || []).forEach((element: any) => {
-            if (element.commit.sha === commit_sha) {
+            if (element[GitHubAttributes.commit][GitHubAttributes.sha] === commit_sha) {
                 tags.push(element.name);
             }
         });
@@ -134,13 +134,13 @@ class Main {
         let releasesResponse = await Release.getReleases(githubEndpoint, repositoryName);
 
         if (releasesResponse.statusCode === 200) {
-            let releasesWithGivenTag: any[] = (releasesResponse.body || []).filter(release => release[this._tagNameKey] === tag);
+            let releasesWithGivenTag: any[] = (releasesResponse.body || []).filter(release => release[GitHubAttributes.tagName] === tag);
 
             if (releasesWithGivenTag.length === 0) {
                 return null;
             }
             else if (releasesWithGivenTag.length === 1) {
-                return releasesWithGivenTag[0][this._idKey];
+                return releasesWithGivenTag[0][GitHubAttributes.id];
             }
             else {
                 throw new Error(tl.loc("MultipleReleasesFoundError", tag));
@@ -150,12 +150,7 @@ class Main {
             tl.debug("Get release by tag response:\n" + JSON.stringify(releasesResponse));
             throw new Error(tl.loc("GetReleasesError"));
         }
-    }
-
-    private static _buildSourceVersion: string = "Build.SourceVersion";
-    private static _buildSourceBranch: string = "Build.SourceBranch";    
-    private static readonly _idKey: string = "id";
-    private static readonly _tagNameKey: string = "tag_name";
+    }   
 }
 
 Main.run();

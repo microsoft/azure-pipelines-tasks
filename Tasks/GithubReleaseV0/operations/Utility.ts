@@ -113,3 +113,24 @@ class ReleaseNotesSelectionMode {
     public static readonly input = "input";
     public static readonly file = "file";
 }
+
+export class GitHubAttributes {
+    public static readonly id: string = "id";
+    public static readonly tagName: string = "tag_name";
+    public static readonly uploadUrl: string = "upload_url";
+    public static readonly htmlUrl: string = "html_url";
+    public static readonly assets: string = "assets";
+    public static readonly commit: string = "commit";
+    public static readonly sha: string = "sha";
+}
+
+export class ActionType {
+    public static readonly create = "Create";
+    public static readonly edit = "Edit";
+    public static readonly discard = "Discard";
+}
+
+export class AzureDevOpsVariables {
+    public static buildSourceVersion: string = "Build.SourceVersion";
+    public static buildSourceBranch: string = "Build.SourceBranch"; 
+}
