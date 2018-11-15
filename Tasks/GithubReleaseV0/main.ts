@@ -12,6 +12,7 @@ class Main {
             tl.debug("Setting resource path to " + taskManifestPath);
             tl.setResourcePath(taskManifestPath);        
 
+            // Get task inputs
             const githubEndpoint = tl.getInput(Inputs.githubEndpoint, true);
             const repositoryName = tl.getInput(Inputs.repositoryName, true);        
             const action = tl.getInput(Inputs.action, true);
@@ -31,10 +32,24 @@ class Main {
                 await Action.createReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInput);
             }
             else if (action === ActionType.edit) {
-                await Action.editReleaseAction(githubEndpoint, repositoryName, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInput);
+                let releaseId: any = await this._getReleaseIdForTag(githubEndpoint, repositoryName, tag);
+
+                if (releaseId !== null) {
+                    await Action.editReleaseAction(githubEndpoint, repositoryName, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInput, releaseId);
+                }
+                else {
+                    await Action.createReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInput);
+                }
             }
             else if (action === ActionType.discard) {
-                await Action.discardReleaseAction(githubEndpoint, repositoryName, tag);
+                let releaseId: string = await this._getReleaseIdForTag(githubEndpoint, repositoryName, tag);
+
+                if (releaseId !== null) {
+                    await Action.discardReleaseAction(githubEndpoint, repositoryName, releaseId);
+                }
+                else {
+                    throw new Error(tl.loc("NoReleaseFoundToDiscard", tag));
+                }
             }
         }
         catch(error) {
@@ -103,7 +118,7 @@ class Main {
         return tag;
     }
 
-    private static _filterTagsForCommit(tagsList: any, commit_sha: string) {
+    private static _filterTagsForCommit(tagsList: any[], commit_sha: string) {
         let tags: string[] = [];
 
         (tagsList || []).forEach((element: any) => {
@@ -114,9 +129,33 @@ class Main {
 
         return tags;
     }
+    
+    private static async _getReleaseIdForTag(githubEndpoint: string, repositoryName: string, tag: string): Promise<any> {
+        let releasesResponse = await Release.getReleases(githubEndpoint, repositoryName);
+
+        if (releasesResponse.statusCode === 200) {
+            let releasesWithGivenTag: any[] = (releasesResponse.body || []).filter(release => release[this._tagNameKey] === tag);
+
+            if (releasesWithGivenTag.length === 0) {
+                return null;
+            }
+            else if (releasesWithGivenTag.length === 1) {
+                return releasesWithGivenTag[0][this._idKey];
+            }
+            else {
+                throw new Error(tl.loc("MultipleReleasesFoundError", tag));
+            }
+        }
+        else {
+            tl.debug("Get release by tag response:\n" + JSON.stringify(releasesResponse));
+            throw new Error(tl.loc("GetReleasesError"));
+        }
+    }
 
     private static _buildSourceVersion: string = "Build.SourceVersion";
-    private static _buildSourceBranch: string = "Build.SourceBranch";
+    private static _buildSourceBranch: string = "Build.SourceBranch";    
+    private static readonly _idKey: string = "id";
+    private static readonly _tagNameKey: string = "tag_name";
 }
 
 Main.run();

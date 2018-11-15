@@ -58,7 +58,7 @@
       "label": "ms-resource:loc.input.label.target",
       "defaultValue": "$(Build.SourceVersion)",
       "required": true,
-      "visibleRule": "action = Create",
+      "visibleRule": "action = Create || action = Edit",
       "helpMarkDown": "ms-resource:loc.input.help.target"
     },
     {
@@ -190,11 +190,13 @@
     "EditingRelease": "ms-resource:loc.messages.EditingRelease",
     "EditReleaseError": "ms-resource:loc.messages.EditReleaseError",
     "EditReleaseSuccess": "ms-resource:loc.messages.EditReleaseSuccess",
-    "GetReleaseByTagError": "ms-resource:loc.messages.GetReleaseByTagError",
+    "GetReleasesError": "ms-resource:loc.messages.GetReleasesError",
     "GetTagsError": "ms-resource:loc.messages.GetTagsError",
     "GetBranchError": "ms-resource:loc.messages.GetBranchError",
     "MissingAssetError": "ms-resource:loc.messages.MissingAssetError",
     "DuplicateAssetFound": "ms-resource:loc.messages.DuplicateAssetFound",
+    "NoReleaseFoundToDiscard": "ms-resource:loc.messages.NoReleaseFoundToDiscard",
+    "MultipleReleasesFoundError": "ms-resource:loc.messages.MultipleReleasesFoundError",
     "DeletingDuplicateAsset": "ms-resource:loc.messages.DeletingDuplicateAsset",
     "DuplicateAssetDeletedSuccessfully": "ms-resource:loc.messages.DuplicateAssetDeletedSuccessfully",
     "AssetDeletedSuccessfully": "ms-resource:loc.messages.AssetDeletedSuccessfully",

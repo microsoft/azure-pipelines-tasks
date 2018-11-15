@@ -36,12 +36,12 @@ export class Action {
         }    
     }
 
-    public static async editReleaseAction(githubEndpoint: string, repositoryName: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInput: string): Promise<void> {
+    public static async editReleaseAction(githubEndpoint: string, repositoryName: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInput: string, releaseId: string): Promise<void> {
         try {
             Utility.validateUploadAssets(githubReleaseAssetInput);     
             console.log(tl.loc("EditingRelease"));
 
-            let response: WebResponse = await Release.editRelease(githubEndpoint, repositoryName, tag, releaseTitle, releaseNote, isDraft, isPrerelease);
+            let response: WebResponse = await Release.editRelease(githubEndpoint, repositoryName, tag, releaseTitle, releaseNote, isDraft, isPrerelease, releaseId);
             tl.debug("Edit release response:\n" + JSON.stringify(response));
 
             if (response.statusCode === 200) {
@@ -60,10 +60,10 @@ export class Action {
         }    
     }
 
-    public static async discardReleaseAction(githubEndpoint: string, repositoryName: string, tag: string): Promise<void> {
+    public static async discardReleaseAction(githubEndpoint: string, repositoryName: string, releaseId: string): Promise<void> {
         try {
             console.log(tl.loc("DiscardingRelease"));
-            let response: WebResponse = await Release.discardRelease(githubEndpoint, repositoryName, tag);
+            let response: WebResponse = await Release.discardRelease(githubEndpoint, repositoryName, releaseId);
             tl.debug("Discard release response:\n" + JSON.stringify(response));
 
             if (response.statusCode === 204) {

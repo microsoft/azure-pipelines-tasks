@@ -9,7 +9,6 @@ import { WebRequest, sendRequest, WebResponse } from "./webClient";
 export class Release {
 
     public static async createRelease(githubEndpoint: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean): Promise<WebResponse> {
-
         let request = new WebRequest();
         
         request.uri = util.format(this._createReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
@@ -31,56 +30,38 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async editRelease(githubEndpoint: string, repositoryName: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean): Promise<WebResponse> {
-        let releaseResponse = await this._getReleaseByTag(githubEndpoint, repositoryName, tag);
-
-        if (releaseResponse.statusCode === 200) {
-            let request = new WebRequest();
+    public static async editRelease(githubEndpoint: string, repositoryName: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, releaseId: string): Promise<WebResponse> {
+        let request = new WebRequest();
             
-            request.uri = util.format(this._editOrDiscardReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseResponse.body[this._idKey]);
-            request.method = "PATCH";
-            request.body = JSON.stringify({
-                "tag_name": tag,
-                "name": releaseTitle,
-                "body": releaseNote,
-                "draft": isDraft,
-                "prerelease": isPrerelease
-            });
-            request.headers = {
-                "Content-Type": "application/json",
-                'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
-            };
-            tl.debug("Edit release request:\n" + JSON.stringify(request, null, 2));
+        request.uri = util.format(this._editOrDiscardReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseId);
+        request.method = "PATCH";
+        request.body = JSON.stringify({
+            "tag_name": tag,
+            "name": releaseTitle,
+            "body": releaseNote,
+            "draft": isDraft,
+            "prerelease": isPrerelease
+        });
+        request.headers = {
+            "Content-Type": "application/json",
+            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+        };
+        tl.debug("Edit release request:\n" + JSON.stringify(request, null, 2));
 
-            return await sendRequest(request);
-        }
-        else {
-            tl.debug("Get release by tag response:\n" + JSON.stringify(releaseResponse));
-            throw new Error(tl.loc("GetReleaseByTagError"));
-        }
-
+        return await sendRequest(request);
     }
 
-    public static async discardRelease(githubEndpoint: string, repositoryName: string, tag: string): Promise<WebResponse> {
-        let releaseResponse = await this._getReleaseByTag(githubEndpoint, repositoryName, tag);
-
-        if (releaseResponse.statusCode === 200) {
-            let request = new WebRequest();
+    public static async discardRelease(githubEndpoint: string, repositoryName: string, releaseId: string): Promise<WebResponse> {
+        let request = new WebRequest();
             
-            request.uri = util.format(this._editOrDiscardReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseResponse.body[this._idKey]);
-            request.method = "DELETE";
-            request.headers = {
-                'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
-            };
-            tl.debug("Discard release request:\n" + JSON.stringify(request, null, 2));
+        request.uri = util.format(this._editOrDiscardReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseId);
+        request.method = "DELETE";
+        request.headers = {
+            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+        };
+        tl.debug("Discard release request:\n" + JSON.stringify(request, null, 2));
 
-            return await sendRequest(request);
-        }
-        else {
-            tl.debug("Get release by tag response:\n" + JSON.stringify(releaseResponse));
-            throw new Error(tl.loc("GetReleaseByTagError"));
-        }
-
+        return await sendRequest(request);
     }
 
     public static async deleteReleaseAsset(githubEndpoint: string, repositoryName: string, asset_id: string): Promise<WebResponse> {
@@ -144,25 +125,24 @@ export class Release {
         return await sendRequest(request);
     }
 
-    private static async _getReleaseByTag(githubEndpoint: string, repositoryName: string, tag: string): Promise<WebResponse> {
+    public static async getReleases(githubEndpoint: string, repositoryName: string): Promise<WebResponse> {
         let request = new WebRequest();
         
-        request.uri = util.format(this._getReleaseByTagApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, tag);
+        request.uri = util.format(this._getReleasesApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
         request.method = "GET";
         request.headers = {
             'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
         };
-        tl.debug("Get release by tag request:\n" + JSON.stringify(request, null, 2));
+        tl.debug("Get releases request:\n" + JSON.stringify(request, null, 2));
 
         return await sendRequest(request);
     }
 
-    private static readonly _idKey: string = "id";
     private static readonly _createReleaseApiUrlFormat: string = "%s/repos/%s/releases";
     private static readonly _editOrDiscardReleaseApiUrlFormat: string = "%s/repos/%s/releases/%s";
     private static readonly _deleteReleaseAssetApiUrlFormat: string = "%s/repos/%s/releases/assets/%s";
     private static readonly _uploadReleaseAssetApiUrlFormat: string = "%s?name=%s";
-    private static readonly _getReleaseByTagApiUrlFormat: string = "%s/repos/%s/releases/tags/%s";
+    private static readonly _getReleasesApiUrlFormat: string = "%s/repos/%s/releases";
     private static readonly _getBranchApiUrlFormat: string = "%s/repos/%s/branches/%s";
     private static readonly _getTagsApiUrlFormat: string = "%s/repos/%s/tags";
 }

@@ -58,7 +58,7 @@
             "label": "Target",
             "defaultValue": "$(Build.SourceVersion)",
             "required": true,
-            "visibleRule": "action = Create",
+            "visibleRule": "action = Create || action = Edit",
             "helpMarkDown": "The branch or commit to release"
         },
         {
@@ -190,11 +190,13 @@
         "EditingRelease": "Editing release",
         "EditReleaseError": "An error occurred while editing release.",
         "EditReleaseSuccess": "Release edited successfully",
-        "GetReleaseByTagError": "An error occurred while fetching release by tag",
+        "GetReleasesError": "An error occurred while fetching releases",
         "GetTagsError": "An error occurred while fetching tags",
         "GetBranchError": "An error occurred while fetching branch",
         "MissingAssetError": "Missing asset: %s",
         "DuplicateAssetFound": "Duplicate asset found: %s",
+        "NoReleaseFoundToDiscard": "No release found to discard for tag: %s",
+        "MultipleReleasesFoundError": "More than 1 releases found for tag: %s",
         "DeletingDuplicateAsset": "Deleting duplicate asset: %s",
         "DuplicateAssetDeletedSuccessfully": "Duplicate asset deleted successfully: %s\n Uploading the asset again",
         "AssetDeletedSuccessfully": "Asset %s deleted successfully",
