@@ -16,10 +16,20 @@ var getTasksToBuildForCI = async function() {
     // Returns a list of tasks that have different version numbers than their current published version. 
     var packageInfo;
     try {
-        var handler = new httpHandler.PersonalAccessTokenCredentialHandler(process.env['PACKAGE_TOKEN']);
-        var client = new restClient.RestClient('Tasks CI', '', [handler]);
-        packageInfo = await client.get(process.env['PACKAGE_ENDPOINT']);
-        if (packageInfo.statusCode != 200) {
+        var packageToken = process.env['PACKAGE_TOKEN'];
+        if (!token) {
+            console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=24;]Failed to get info from package endpoint because no token was provided. Try setting the PACKAGE_TOKEN environment variable.`);
+            return makeOptions.tasks;
+        }
+        var handler = new httpHandler.PersonalAccessTokenCredentialHandler(packageToken);
+        var client = new restClient.RestClient('azure-pipelines-tasks-ci', '', [handler]);
+        var packageEndpoint = process.env['PACKAGE_ENDPOINT'];
+        if (!packageEndpoint) {
+            console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=24;]Failed to get info from package endpoint because no endpoint was specified. Try setting the PACKAGE_ENDPOINT environment variable.`);
+            return makeOptions.tasks;
+        }
+        packageInfo = await client.get(packageEndpoint);
+        if (packageInfo.statusCode !== 200) {
             console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=24;]Failed to get info from package endpoint, returned with status code ${packageInfo.statusCode}`);
             return makeOptions.tasks;
         }
@@ -37,13 +47,12 @@ var getTasksToBuildForCI = async function() {
     packageInfo.result.value.forEach(package => {
         if (package.name && package.versions) {
             var packageName = package.name.slice('Mseng.MS.TF.DistributedTask.Tasks.'.length).toLowerCase();
-            var packageVersion = package.versions[0].version;
-            package.versions.forEach(versionInfo => {
+            packageMap[packageName] = package.versions[0].version;
+            package.versions.some(versionInfo => {
                 if (versionInfo.isLatest) {
-                    packageVersion = versionInfo.version;
+                    packageMap[packageName] = versionInfo.version;
                 }
             });
-            packageMap[packageName] = packageVersion;
         }
     });
 
@@ -95,7 +104,7 @@ var getTasksToBuildForPR = function() {
     var commonChanges = [];
     var toBeBuilt = [];
     try {
-        if (sourceBranch.contains(':')) {
+        if (sourceBranch.includes(':')) {
             // We only care about the branch name, not the source repo
             sourceBranch = sourceBranch.split(':')[1];
         }
@@ -104,7 +113,7 @@ var getTasksToBuildForPR = function() {
     }
     catch (err) {
         // If unable to reach github, build everything.
-        console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=112;]Unable to reach github, building all tasks');
+        console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=112;]Unable to reach github, building all tasks', err);
         return makeOptions.tasks;
     }
     run('git checkout master');
@@ -142,7 +151,7 @@ var setTaskVariables = function(tasks) {
     console.log('##vso[task.setVariable variable=numTasks]' + tasks.length);
 }
 
-var buildReason = process.env['BUILD_REASON'].toLowerCase();
+var buildReason = 'pullrequest';//process.env['BUILD_REASON'].toLowerCase();
 var tasks;
 if (buildReason == 'individualci' || buildReason == 'batchedci') {
     // If CI, we will compare any tasks that have updated versions.
