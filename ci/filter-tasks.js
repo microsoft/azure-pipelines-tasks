@@ -51,7 +51,9 @@ var getTasksToBuildForCI = async function() {
             package.versions.some(versionInfo => {
                 if (versionInfo.isLatest) {
                     packageMap[packageName] = versionInfo.version;
+                    return true;
                 }
+                return false;
             });
         }
     });
