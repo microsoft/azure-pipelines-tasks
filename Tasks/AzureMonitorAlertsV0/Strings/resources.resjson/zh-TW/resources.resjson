@@ -20,13 +20,13 @@
   "loc.input.help.NotifyEmails": "若要傳送電子郵件通知給其他人員 (無論您是否選取 [訂用帳戶擁有者...] 方塊)，可新增以分號 (;) 分隔的其他電子郵件地址。",
   "loc.messages.ProcessingRule": "正在處理規則: '%s'",
   "loc.messages.AlertRuleCheck": "正在檢查警示規則 '%s' 是否存在於資源群組 '%s' 中。",
-  "loc.messages.AlertRuleTargetResourceIdMismatchError": "Alert rule with name '%s' is already configured to monitor a different resource with ID '%s'. Please select a different alert rule name.",
+  "loc.messages.AlertRuleTargetResourceIdMismatchError": "名稱為 '%s' 的警示規則已設定為監視識別碼為 '%s' 的不同資源。請選取其他警示規則名稱。",
   "loc.messages.AlertRuleExists": "警示規則 '%s' 已存在於資源群組 '%s'。正在更新警示規則。",
   "loc.messages.AlertRuleDoesNotExist": "警示規則 '%s' 不存在於資源群組 '%s'。正在建立新的警示規則。",
   "loc.messages.CreatedRule": "已建立規則: '%s'",
   "loc.messages.UpdatedRule": "已更新規則: '%s'",
   "loc.messages.Couldnotfetchaccesstoken": "無法擷取 Azure 的存取權杖。狀態碼: %s (%s) %s。",
   "loc.messages.SPNExpiredCheck": "請檢查 SPN 是否有效且未過期。",
-  "loc.messages.FailedToGetAzureMetricAlerts": "Failed to get Application Insights Alert rule: %s. Error: %s",
-  "loc.messages.FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s"
+  "loc.messages.FailedToGetAzureMetricAlerts": "無法取得 Application Insights 警示規則: %s。錯誤: %s",
+  "loc.messages.FailedToUpdateAzureMetricAlerts": "無法更新 Azure 度量警示規則 '%s' 資源。錯誤: %s"
 }

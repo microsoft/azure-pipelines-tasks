@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Публикация результатов теста",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Publish Test Results to Azure Pipelines/TFS",
+  "loc.description": "Публикация результатов тестов в Azure Pipelines или TFS",
   "loc.instanceNameFormat": "Опубликовать результаты тестов $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>Поддержка NUnit3</li><li>Поддержка шаблонов файлов Minimatch</li></ul>",
   "loc.group.displayName.advanced": "Дополнительно",
@@ -15,12 +15,12 @@
   "loc.input.help.mergeTestResults": "Тестовый запуск создается для каждого файла результатов. Установите этот флажок, чтобы объединить результаты в один тестовый запуск. Для повышения производительности при наличии более 100 файлов результатов они будут объединены в один тестовый запуск независимо от значения этого параметра.",
   "loc.input.label.testRunTitle": "Название тестового запуска",
   "loc.input.help.testRunTitle": "Укажите имя для тестового запуска.",
-  "loc.input.label.platform": "Build Platform",
+  "loc.input.label.platform": "Платформа сборки",
   "loc.input.help.platform": "Платформа, для которой выполнялись тесты.",
-  "loc.input.label.configuration": "Build Configuration",
+  "loc.input.label.configuration": "Конфигурация сборки",
   "loc.input.help.configuration": "Конфигурация, для которой выполнялись тесты.",
   "loc.input.label.publishRunAttachments": "Отправить файлы результатов теста",
-  "loc.input.help.publishRunAttachments": "Upload logs and other files containing diagnostic information collected when the tests were run.",
+  "loc.input.help.publishRunAttachments": "Отправьте журналы и другие файлы с диагностическими сведениями, собранными во время выполнения тестов.",
   "loc.messages.NoMatchingFilesFound": "Найдены файлы результатов теста, соответствующие \"%s\".",
   "loc.messages.ErrorTestResultsPublisher": "Ошибка при выполнении TestResultsPublisher: %s."
 }

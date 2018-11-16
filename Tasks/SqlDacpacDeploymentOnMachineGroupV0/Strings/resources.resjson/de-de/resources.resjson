@@ -24,7 +24,7 @@
   "loc.input.label.DatabaseName": "Datenbankname",
   "loc.input.help.DatabaseName": "Geben Sie den Namen der SQL Server-Datenbank an.",
   "loc.input.label.AuthScheme": "Authentifizierung",
-  "loc.input.help.AuthScheme": "Wählen Sie den Authentifizierungsmodus für die Verbindung mit der SQL Server-Instanz aus. Im Windows-Authentifizierungsmodus wird das im Abschnitt \"Computer\" angegebene Administratorkonto zum Herstellen der Verbindung mit der SQL Server-Instanz verwendet. Im SQL Server-Authentifizierungsmodus müssen der SQL-Anmeldename und das zugehörige Kennwort in den unten stehenden Parametern angegeben werden.",
+  "loc.input.help.AuthScheme": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the account used to configure deployment agent, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below.",
   "loc.input.label.SqlUsername": "SQL-Benutzername",
   "loc.input.help.SqlUsername": "Geben Sie die SQL-Anmeldung für die Verbindung mit der SQL Server-Instanz an. Diese Option ist nur verfügbar, wenn der SQL Server-Authentifizierungsmodus ausgewählt wurde.",
   "loc.input.label.SqlPassword": "SQL-Kennwort",

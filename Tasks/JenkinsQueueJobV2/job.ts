@@ -56,7 +56,7 @@ export class Job {
     private working: boolean = true; // initially mark it as working
     private workDelay: number = 0;
 
-    public ParsedExecutionResult: any; // set during state Finishing
+    public ParsedExecutionResult: {result: string, timestamp: number}; // set during state Finishing
 
     constructor(jobQueue: JobQueue, parent: Job, taskUrl: string, executableUrl: string, executableNumber: number, name: string) {
         this.Parent = parent;
@@ -225,7 +225,7 @@ export class Job {
         }
     }
 
-    private setParsedExecutionResult(parsedExecutionResult) {
+    private setParsedExecutionResult(parsedExecutionResult: {result: string, timestamp: number}) {
         this.ParsedExecutionResult = parsedExecutionResult;
         //log the job's closing block
         this.consoleLog(this.getBlockMessage('Jenkins job finished: ' + this.Name + '\n' + this.ExecutableUrl));
@@ -303,7 +303,7 @@ export class Job {
         if (!thisJob.queue.TaskOptions.captureConsole) { // transition to Queued
             thisJob.stopWork(0, JobState.Queued);
         } else { // stay in Finishing, or eventually go to Done
-            const resultUrl: string = Util.addUrlSegment(thisJob.ExecutableUrl, 'api/json');
+            const resultUrl: string = Util.addUrlSegment(thisJob.ExecutableUrl, 'api/json?tree=result,timestamp');
             thisJob.debug('Tracking completion status of job: ' + resultUrl);
             request.get({ url: resultUrl, strictSSL: thisJob.queue.TaskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
                 tl.debug('finish().requestCallback()');
@@ -314,7 +314,7 @@ export class Job {
                 } else if (httpResponse.statusCode != 200) {
                     Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job result');
                 } else {
-                    const parsedBody: any = JSON.parse(body);
+                    const parsedBody: {result: string, timestamp: number} = JSON.parse(body);
                     thisJob.debug(`parsedBody for: ${resultUrl} : ${JSON.stringify(parsedBody)}`);
                     if (parsedBody.result) {
                         thisJob.setParsedExecutionResult(parsedBody);

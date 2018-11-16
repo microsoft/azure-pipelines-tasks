@@ -32,6 +32,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/build/temp/mySecureFileId.filename": true,
         "/users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": true
     },
+    "findMatch": {
+        "testuuid*": [
+            "/users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision"
+        ]
+    },
     "exec": {
         "/bin/rm -f /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {
             "code": 0,

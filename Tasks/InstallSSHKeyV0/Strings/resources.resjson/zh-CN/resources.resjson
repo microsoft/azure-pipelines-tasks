@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "安装 SSH 密钥",
-  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=875267)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=875267)",
   "loc.description": "在生成或发布之前安装 SSH 密钥",
   "loc.instanceNameFormat": "安装 SSH 密钥",
   "loc.input.label.hostName": "已知主机输入",
