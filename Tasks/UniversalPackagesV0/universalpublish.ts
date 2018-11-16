@@ -74,7 +74,7 @@ export async function run(artifactToolPath: string): Promise<void> {
                 const pkgConn = pkgLocationUtils.getWebApiWithProxy(packagingLocation, accessToken);
                 sessionId = await ProvenanceHelper.GetSessionId(
                     feedId,
-                    "universal",
+                    "upack", /* must match protocol name on the server */
                     pkgConn.serverUrl,
                     [pkgConn.authHandler],
                     pkgConn.options);
