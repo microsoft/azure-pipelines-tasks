@@ -57,6 +57,7 @@
         "GradleV2",
         "GruntV0",
         "GulpV0",
+        "GulpV1",
         "HelmDeployV0",
         "HelmInstallerV0",
         "IISWebAppDeployment",
