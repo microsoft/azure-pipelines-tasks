@@ -11,7 +11,7 @@ param (
     Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" 
     Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
 
-    . $scriptRoot/Utility.ps1
+    . "$scriptRoot/Utility.ps1"
 
     Write-Verbose "Entering script RobocopyJob.ps1"
     Write-Verbose "fqdn = $fqdn"
