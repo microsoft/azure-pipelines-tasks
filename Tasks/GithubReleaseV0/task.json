@@ -70,7 +70,7 @@
             "visibleRule": "action = Create",
             "options": {
                 "auto": "Use tag associated with commit",
-                "manual": "Specify tags manually"
+                "manual": "Specify tag manually"
             }
         },
         {
@@ -126,12 +126,16 @@
         },
         {
             "name": "githubReleaseAsset",
-            "type": "input",
+            "type": "multiLine",
             "label": "File to upload as asset",
-            "defaultValue": "$(Build.ArtifactStagingDirectory)/*.*",
+            "defaultValue": "$(Build.ArtifactStagingDirectory)/*",
             "required": false,
             "visibleRule": "action = Create || action = Edit",
-            "helpMarkDown": "The file to upload as artifacts to the release. Eg- $(System.DefaultWorkingDirectory)/**/*.xml"
+            "helpMarkDown": "The file to upload as artifacts to the release. Eg- $(System.DefaultWorkingDirectory)/**/*.xml",
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            }
         },
         {
             "name": "assetUploadMode",
@@ -148,7 +152,7 @@
         {
             "name": "isDraft",
             "type": "boolean",
-            "label": "Is draft release ?",
+            "label": "Draft release",
             "defaultValue": "false",
             "required": true,
             "visibleRule": "action = Create || action = Edit",
@@ -157,7 +161,7 @@
         {
             "name": "isPrerelease",
             "type": "boolean",
-            "label": "Is Pre Release ?",
+            "label": "Pre release",
             "defaultValue": "false",
             "required": true,
             "visibleRule": "action = Create || action = Edit",

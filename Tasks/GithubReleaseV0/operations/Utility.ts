@@ -19,22 +19,31 @@ export class Utility {
         return githubEndpointToken;
     }
 
-    public static getUploadAssets(githubReleaseAssetInput: string): string[] {
-        let githubReleaseAssets = [];
+    public static getUploadAssets(githubReleaseAssetInputPatterns: string[]): string[] {
+        let githubReleaseAssets: Set<string> = new Set();
 
-        /** Check for one or multiples files into array
-         *  Accept wildcards to look for files
-         */
-        if (githubReleaseAssetInput) {
-            githubReleaseAssets = glob.sync(githubReleaseAssetInput);
-        }
+        (githubReleaseAssetInputPatterns || []).forEach(pattern => {
+            /** Check for one or multiples files into array
+             *  Accept wildcards to look for files
+             */
+            let filePaths: string[] = glob.sync(pattern);
 
-        return githubReleaseAssets;
+            filePaths.forEach((filePath) => {
+                if (!githubReleaseAssets.has(filePath)) {
+                    tl.debug("Adding filePath: " + filePath);
+                    githubReleaseAssets.add(filePath)
+                }
+                else {
+                    // File already added by previous pattern
+                    tl.debug("FilePath already added: " + filePath);
+                }
+            })
+        });
+
+        return Array.from(githubReleaseAssets);
     }
 
-    public static validateUploadAssets(githubReleaseAssetInput: string): void {
-        const assets: string[] = this.getUploadAssets(githubReleaseAssetInput);
-
+    public static validateUploadAssets(assets: string[]): void {
         if (assets && assets.length > 0) {
             try {
                 assets.forEach(function (asset) {

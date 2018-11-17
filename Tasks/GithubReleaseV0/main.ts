@@ -25,20 +25,20 @@ class Main {
             const releaseNote: string = Utility.getReleaseNote(releaseNotesSelection, releaseNotesFile, releaseNoteInput) || undefined;
             const isPrerelease = tl.getBoolInput(Inputs.isPrerelease) || false;
             const isDraft = tl.getBoolInput(Inputs.isDraft) || false;
-            const githubReleaseAssetInput = tl.getInput(Inputs.githubReleaseAsset);
+            const githubReleaseAssetInputPatterns = tl.getDelimitedInput(Inputs.githubReleaseAsset, '\n');
 
             if (action === ActionType.create) {
                 tag = await this._getTagForCreateAction(githubEndpoint, repositoryName, target, tag);
-                await Action.createReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInput);
+                await Action.createReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
             }
             else if (action === ActionType.edit) {
                 let releaseId: any = await this._getReleaseIdForTag(githubEndpoint, repositoryName, tag);
 
                 if (releaseId !== null) {
-                    await Action.editReleaseAction(githubEndpoint, repositoryName, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInput, releaseId);
+                    await Action.editReleaseAction(githubEndpoint, repositoryName, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, releaseId);
                 }
                 else {
-                    await Action.createReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInput);
+                    await Action.createReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
                 }
             }
             else if (action === ActionType.discard) {

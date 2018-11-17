@@ -7,9 +7,8 @@ import { Utility, Inputs, AssetUploadMode, GitHubAttributes } from "./Utility";
 
 export class Action {
 
-    public static async createReleaseAction(githubEndpoint: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInput: string): Promise<void> {
+    public static async createReleaseAction(githubEndpoint: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInputPatterns: string[]): Promise<void> {
         try {
-            Utility.validateUploadAssets(githubReleaseAssetInput); 
             console.log(tl.loc("CreatingRelease"));
 
             let response: WebResponse = await Release.createRelease(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease);
@@ -24,10 +23,10 @@ export class Action {
                 }
 
                 const uploadUrl: string = response.body[GitHubAttributes.uploadUrl];
-                await this._uploadAssets(githubEndpoint, repositoryName, githubReleaseAssetInput, uploadUrl, []);
+                await this._uploadAssets(githubEndpoint, repositoryName, githubReleaseAssetInputPatterns, uploadUrl, []);
             }
             else if (response.statusCode === 422 && response.body.errors && response.body.errors.length > 0 && response.body.errors[0].code === this._alreadyExistErrorCode) {           
-                throw new Error(tl.loc("ReleaseAlreadyExists"));
+                throw new Error(tl.loc("ReleaseAlreadyExists", tag));
             }
             else {
                 throw new Error(tl.loc("CreateReleaseError"));
@@ -39,9 +38,8 @@ export class Action {
         }    
     }
 
-    public static async editReleaseAction(githubEndpoint: string, repositoryName: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInput: string, releaseId: string): Promise<void> {
+    public static async editReleaseAction(githubEndpoint: string, repositoryName: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInputPatterns: string[], releaseId: string): Promise<void> {
         try {
-            Utility.validateUploadAssets(githubReleaseAssetInput);     
             console.log(tl.loc("EditingRelease"));
 
             let response: WebResponse = await Release.editRelease(githubEndpoint, repositoryName, tag, releaseTitle, releaseNote, isDraft, isPrerelease, releaseId);
@@ -51,7 +49,7 @@ export class Action {
                 console.log(tl.loc("EditReleaseSuccess"));
 
                 const uploadUrl: string = response.body[GitHubAttributes.uploadUrl];
-                await this._uploadAssets(githubEndpoint, repositoryName, githubReleaseAssetInput, uploadUrl, response.body[GitHubAttributes.assets]);
+                await this._uploadAssets(githubEndpoint, repositoryName, githubReleaseAssetInputPatterns, uploadUrl, response.body[GitHubAttributes.assets]);
             }
             else {
                 throw new Error(tl.loc("EditReleaseError"));
@@ -82,9 +80,11 @@ export class Action {
         }    
     }
 
-    private static async _uploadAssets(githubEndpoint: string, repositoryName: string, githubReleaseAssetInput: string, uploadUrl: string, existingAssets: any[]): Promise<void> {
+    private static async _uploadAssets(githubEndpoint: string, repositoryName: string, githubReleaseAssetInputPatterns: string[], uploadUrl: string, existingAssets: any[]): Promise<void> {
         const assetUploadMode = tl.getInput(Inputs.assetUploadMode);
-        let assets: string[] = Utility.getUploadAssets(githubReleaseAssetInput) || [];
+        let assets: string[] = Utility.getUploadAssets(githubReleaseAssetInputPatterns) || [];
+
+        Utility.validateUploadAssets(assets);
 
         if (!!assetUploadMode && assetUploadMode === AssetUploadMode.delete) {
             await this._deleteAssets(githubEndpoint, repositoryName, existingAssets);

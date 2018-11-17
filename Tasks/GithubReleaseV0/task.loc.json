@@ -70,7 +70,7 @@
       "visibleRule": "action = Create",
       "options": {
         "auto": "Use tag associated with commit",
-        "manual": "Specify tags manually"
+        "manual": "Specify tag manually"
       }
     },
     {
@@ -126,12 +126,16 @@
     },
     {
       "name": "githubReleaseAsset",
-      "type": "input",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.githubReleaseAsset",
-      "defaultValue": "$(Build.ArtifactStagingDirectory)/*.*",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)/*",
       "required": false,
       "visibleRule": "action = Create || action = Edit",
-      "helpMarkDown": "ms-resource:loc.input.help.githubReleaseAsset"
+      "helpMarkDown": "ms-resource:loc.input.help.githubReleaseAsset",
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      }
     },
     {
       "name": "assetUploadMode",
