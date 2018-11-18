@@ -603,13 +603,15 @@ export class Kudu {
         }
     }
 
-    private async _getDeploymentDetailsFromPollURL(pollURL: string, affinityCookie: string[]): Promise<any> {
+    private async _getDeploymentDetailsFromPollURL(pollURL: string, affinityCookie?: string[]): Promise<any> {
         let httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = pollURL;
-        httpRequest.headers = {
-            'set-cookie': affinityCookie
-        };
+        httpRequest.headers = {};
+
+        if(!!affinityCookie) {
+           httpRequest['set-cookie'] = affinityCookie; 
+        }
 
         while(true) {
             let response = await this._client.beginRequest(httpRequest);
