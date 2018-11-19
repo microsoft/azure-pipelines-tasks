@@ -65,7 +65,7 @@ export class azureclitask {
             if (!!addSpnToEnvironment) {
                 await tool.exec({
                     failOnStdErr: failOnStdErr,
-                    env: { ...process.env, ...{ servicePrincipalID: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey } }
+                    env: { ...process.env, ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey } }
                 });
             }
             else {
