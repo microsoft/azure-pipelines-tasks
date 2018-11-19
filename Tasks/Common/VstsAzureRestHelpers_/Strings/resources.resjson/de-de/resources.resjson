@@ -6,8 +6,8 @@
   "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "Load Balancer-Details können nicht abgerufen werden.",
   "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "Details zu öffentlichen IP-Adressen können nicht abgerufen werden.",
   "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "Details zu Netzwerkschnittstellen können nicht abgerufen werden.",
-  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: {0}, status message: {1}",
-  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Service Principal. Status code: {0}, status message: {1}",
-  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailure": "Failed to obtain access token using client certificate for service principal id: {0}. {1}",
-  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailureTokenNull": "Failed to obtain access token using client certificate for service principal id: {0}, tokenResult is null."
+  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Konfigurieren Sie die verwaltete Dienstidentität (MSI) für den virtuellen Computer (https://aka.ms/azure-msi-docs). Statuscode: {0}, Statusmeldung: {1}",
+  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Statuscode: {0}, Statusmeldung: {1}",
+  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailure": "Fehler beim Abrufen des Zugriffstokens unter Verwendung des Clientzertifikats für die Dienstprinzipal-ID: {0}. {1}",
+  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailureTokenNull": "Fehler beim Abrufen des Zugriffstokens unter Verwendung des Clientzertifikats für die Dienstprinzipal-ID: {0}, tokenResult ist NULL."
 }

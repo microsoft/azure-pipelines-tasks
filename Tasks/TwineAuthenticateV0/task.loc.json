@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 6
   },
   "runsOn": [
     "Agent",
@@ -28,7 +28,7 @@
     {
       "name": "feedList",
       "aliases": [
-        "vstsFeed"
+        "artifactFeeds"
       ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.feedList",
@@ -44,7 +44,7 @@
     {
       "name": "externalSources",
       "aliases": [
-        "externalFeedCredentials"
+        "externalFeeds"
       ],
       "type": "connectedService:externalPythonUploadFeed",
       "label": "ms-resource:loc.input.label.externalSources",
@@ -87,7 +87,8 @@
     "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable",
     "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
     "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
-    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile"
+    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile",
+    "Error_PythonInternalFeedsNotSupportedOnprem": "ms-resource:loc.messages.Error_PythonInternalFeedsNotSupportedOnprem"
   },
   "postjobexecution": {
     "Node": {

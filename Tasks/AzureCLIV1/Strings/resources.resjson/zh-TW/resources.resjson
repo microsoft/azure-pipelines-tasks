@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
   "loc.releaseNotes": "1.0 版的新功能:\n- 支援以 Python 為基礎的新版 Azure CLI 2.0\n- 適用於跨平台代理程式 (Linux、macOS 或 Windows)\n- 為搭配 Azure CLI 1.0 (以 node.js 為基礎) 運作，會切換為工作版本 0.0\n- 限制:\n - 不支援 Azure 傳統訂用帳戶。Azure CLI 2.0 只支援 Azure Resource Manager (ARM) 訂用帳戶。",
   "loc.group.displayName.advanced": "進階",
-  "loc.input.label.connectedServiceNameARM": "Azure 訂閱",
+  "loc.input.label.connectedServiceNameARM": "Azure 訂用帳戶",
   "loc.input.help.connectedServiceNameARM": "為部署選取 Azure Resource Manager 訂閱",
   "loc.input.label.scriptLocation": "指令碼位置",
   "loc.input.help.scriptLocation": "指令碼類型: 檔案路徑或內嵌指令碼",
@@ -21,9 +21,9 @@
   "loc.input.help.failOnStandardError": "若此項目為 true，則當任何錯誤寫入 StandardError 串流時此工作將失敗。取消選取核取方塊可略過標準錯誤並根據結束代碼判斷狀態",
   "loc.messages.ScriptReturnCode": "指令碼已結束。傳回碼: %d",
   "loc.messages.ScriptFailed": "指令碼失敗。錯誤: %s",
-  "loc.messages.UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM",
+  "loc.messages.UnsupportedEndpointScheme": "不支援的服務連線授權配置: AzureRM 的服務主體",
   "loc.messages.AzureSDKNotFound": "此電腦上未安裝 Azure CLI 2.x。",
   "loc.messages.FailedToLogout": "登出時發生下列錯誤: %s",
-  "loc.messages.LoginFailed": "Azure login failed",
-  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription"
+  "loc.messages.LoginFailed": "Azure 登入失敗",
+  "loc.messages.ErrorInSettingUpSubscription": "設定訂用帳戶時發生錯誤"
 }

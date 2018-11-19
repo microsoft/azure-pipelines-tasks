@@ -15,8 +15,8 @@
   "loc.input.label.customCommand": "命令和参数",
   "loc.input.help.customCommand": "要运行的自定义命令，如 \"dist-tag ls mypackage\"。",
   "loc.input.label.customRegistry": "要使用的注册表",
-  "loc.input.help.customRegistry": "You can either commit a .npmrc file to your source code repository and set its path here or select a registry from Azure Artifacts here.",
-  "loc.input.label.customFeed": "Use packages from this Azure Artifacts/TFS registry",
+  "loc.input.help.customRegistry": "可以将 .npmrc 文件提交到源代码存储库并在此处设置其路径，也可在此处从 Azure Artifacts 中选择注册表。",
+  "loc.input.label.customFeed": "使用来自此 Azure Artifacts/TFS 注册表的包",
   "loc.input.help.customFeed": "在生成的 .npmrc 中包含所选的源。",
   "loc.input.label.customEndpoint": "用于此帐户/集合外部的注册表的凭据",
   "loc.input.help.customEndpoint": "用于项目的 .npmrc 中的外部注册表的凭据。对于此帐户/集合中的源，请将此留空；将自动使用生成的凭据。",
@@ -30,8 +30,8 @@
   "loc.messages.NoBuildCredentials": "无法找到生成凭据",
   "loc.messages.UnknownCommand": "未知命令: %s",
   "loc.messages.MultipleProjectConfigs": "在 $s 中找到多个项目 .npmrc",
-  "loc.messages.ServiceEndpointNotDefined": "Couldn't find the service connection. Make sure the selected service connection still exists.",
-  "loc.messages.ServiceEndpointUrlNotDefined": "Couldn't find the URL for the service connection. Make sure the service connection is correctly configured.",
+  "loc.messages.ServiceEndpointNotDefined": "找不到服务连接。请确保所选的服务连接仍存在。",
+  "loc.messages.ServiceEndpointUrlNotDefined": "找不到服务连接的 URL。请确保正确配置服务连接。",
   "loc.messages.SavingFile": "正在保存文件 %s",
   "loc.messages.RestoringFile": "正在还原文件 %s",
   "loc.messages.PublishFeed": "正在发布到内部源",
@@ -42,7 +42,7 @@
   "loc.messages.UsingRegistry": "正在使用注册表: %s",
   "loc.messages.AddingAuthRegistry": "为注册表 %s 添加身份验证",
   "loc.messages.FoundLocalRegistries": "在此帐户/集合中找到了 %d 注册表",
-  "loc.messages.ForcePackagingUrl": "Packaging collection URL forced to: %s",
+  "loc.messages.ForcePackagingUrl": "正在打包强制执行到后列对象的集合 URL: %s",
   "loc.messages.DebugLogNotFound": "未在缓存或工作目录中找到调试日志",
   "loc.messages.NpmFailed": "Npm 失败，返回代码为: %s",
   "loc.messages.FoundNpmDebugLog": "找到 npm 调试日志，请确保路径与 npm 的输出中的路径相匹配: %s",
@@ -50,5 +50,5 @@
   "loc.messages.OverridingProjectNpmrc": "正在重写项目 .npmrc: %s",
   "loc.messages.RestoringProjectNpmrc": "正在还原项目 .npmrc",
   "loc.messages.WorkingDirectoryNotDirectory": "请将工作目录更改为有效目录",
-  "loc.messages.NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region."
+  "loc.messages.NGCommon_AreaNotFoundInSps": "无法定位“%s”[%s] 区域。你所在的地区可能无法使用包含该区域的服务。"
 }

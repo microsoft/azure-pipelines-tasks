@@ -108,5 +108,8 @@ describe('Common-VstsAzureHelpers_ Suite', function () {
         it('Overriddes global debug preference', (done) => {
             psr.run(path.join(__dirname, 'OverriddesGlobalDebugPreference.ps1'), done);
         })
+        it('(Get-MsiAccessToken) tests', (done) => {
+            psr.run(path.join(__dirname, 'Get-MsiAccessTokenTests.ps1'), done);
+        });
     }
 });

@@ -234,7 +234,7 @@ function Initialize-AzureSubscription {
         }
         $date = Get-Date -Format o
         $accountId = -join($accountId, "-", $date)
-        $access_token = Get-MsiAccessToken $Endpoint 0 0
+        $access_token = Get-MsiAccessToken $Endpoint
         try {
             Write-Host "##[command]Add-AzureRmAccount  -AccessToken ****** -AccountId $accountId "
             $null = Add-AzureRmAccount -AccessToken $access_token -AccountId $accountId
@@ -251,83 +251,88 @@ function Initialize-AzureSubscription {
 }
 
 
-# Get the Bearer Access Token from the Endpoint
+# Get the Bearer Access Token for Managed Identity Authentication scheme
 function Get-MsiAccessToken {
     [CmdletBinding()]
-    param([Parameter(Mandatory=$true)] $endpoint,
-        [Parameter(Mandatory=$true)] $retryCount,
-        [Parameter(Mandatory=$true)] $timeToWait)
+    param(
+        [Parameter(Mandatory=$true)] $endpoint,
+        [int] $retryLimit = 5,
+        [int] $timeToWait = 2000
+    )
 
-    $msiClientId = "";
-    if($endpoint.Data.msiClientId){
-        $msiClientId  =  "&client_id=" + $endpoint.Data.msiClientId;
+    Write-Verbose "Fetching access token for Managed Identity authentication from Azure Instance Metadata Service."
+
+    if ($endpoint.Data.msiClientId) {
+        $msiClientIdQueryParameter = "&client_id=$($endpoint.Data.msiClientId)"
     }
-    $tenantId = $endpoint.Auth.Parameters.TenantId
 
-    # Prepare contents for GET
-    $method = "GET"
-    $apiVersion = "2018-02-01";
-    $authUri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + $apiVersion + "&resource=" + $endpoint.Url + $msiClientId;
-    
-    # Call Rest API to fetch AccessToken
-    Write-Verbose "Fetching Access Token For MSI"
-    
-    try
-    {
-        $retryLimit = 5;
-        $proxyUri = Get-ProxyUri $authUri
-        if ($proxyUri -eq $null)
-        {
-            Write-Verbose "No proxy settings"
-            $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseBasicParsing
-        }
-        else
-        {
-            Write-Verbose "Using Proxy settings"
-            $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials -UseBasicParsing
-        }
+    $requestUri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=$($endpoint.Url)$msiClientIdQueryParameter"
+    $requestHeaders = @{
+        Metadata = "true"
+    }
 
-        # Action on the based of response 
-        if(($response.StatusCode -eq 429) -or ($response.StatusCode -eq 500))
-        {
-            if($retryCount -lt $retryLimit)
-            {
-                $retryCount += 1
-                $waitedTime = 2000 + $timeToWait * 2
-                Start-Sleep -m $waitedTime
-                Get-MsiAccessToken $endpoint $retryCount  $waitedTime
+    $trialCount = 1
+    $retryableStatusCodes = @(409, 429, 500, 502, 503, 504)
+
+    do {
+        try {        
+            Write-Verbose "Trial count: $trialCount"
+            $response = Invoke-WebRequest -Uri $requestUri -Method "GET" -Headers $requestHeaders -UseBasicParsing
+            
+            if ($response.StatusCode -eq 200) {
+                $responseJson = $response.Content | ConvertFrom-Json
+                return $responseJson.access_token
             }
-            else
-            {
+            else {
                 throw (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
             }
         }
-        elseif ($response.StatusCode -eq 200)
-        {
-            $accessToken = $response.Content | ConvertFrom-Json
-            return $accessToken.access_token
+        catch [System.Net.WebException] {
+            
+            $webExceptionStatus = $_.Exception.Status
+            $webExceptionMessage = $_.Exception.Message
+			$response = $_.Exception.Response
+
+            if ($webExceptionStatus -eq [System.Net.WebExceptionStatus]::ProtocolError -and $response -ne $null) { 
+                
+				$responseStatusCode = [int]$_.Exception.Response.StatusCode
+                $responseStream = $_.Exception.Response.GetResponseStream()
+
+                if ($responseStream -ne $null) {
+                    $reader = New-Object System.IO.StreamReader $responseStream
+                    if ($reader.EndOfStream) {
+                        $responseStream.Position = 0
+                        $reader.DiscardBufferedData()
+                    }
+           
+                    $webExceptionMessage += "`n$($reader.ReadToEnd())"
+                }
+
+                if ($responseStatusCode -eq 400) {
+                    throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $responseStatusCode, $webExceptionMessage)
+                }
+
+                if ($retryableStatusCodes -contains $responseStatusCode -and $trialCount -lt $retryLimit) {
+                    Write-Verbose (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $responseStatusCode, $webExceptionMessage)
+                    Start-Sleep -m $timeToWait    
+                    $trialCount++
+                }
+                else {
+                    # throw error for non-retryable status codes or the trial count exceeded retry limit
+                    throw (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $responseStatusCode, $webExceptionMessage)
+                }
+            }
+            else {
+                # we do not have a status code here, so we return the WebExceptionStatus
+                throw (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $webExceptionStatus, $webExceptionMessage)
+            }
         }
-        else
-        {
-            throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
-        }
-        
-    }
-    catch
-    {
-        $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-MsiAccessToken)"
-        if($exceptionMessage -match "400")
-        {
-            throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
-        }
-        else
-        {
+        catch {
             throw $_.Exception
         }
     }
+    while ($trialCount -le $retryLimit)
 }
-
 
 function Set-CurrentAzureSubscription {
     [CmdletBinding()]
