@@ -43,6 +43,8 @@
   "loc.input.help.versionPublish": "Select the custom package version.",
   "loc.input.label.packagePublishDescription": "Description",
   "loc.input.help.packagePublishDescription": "Description of the contents of this package and/or the changes made in this version of the package.",
+  "loc.input.label.publishedPackageVar": "Package Ouput Variable",
+  "loc.input.help.publishedPackageVar": "Specify a name for the output variable that is generated from the published package name and version. The variable can be consumed in subsequent tasks.",
   "loc.input.label.verbosity": "Verbosity",
   "loc.input.help.verbosity": "Specifies the amount of detail displayed in the output.",
   "loc.messages.PackagesDownloadedSuccessfully": "Package were downloaded successfully",

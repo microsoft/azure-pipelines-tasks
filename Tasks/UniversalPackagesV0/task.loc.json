@@ -8,8 +8,8 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 0,
-    "Patch": 9
+    "Minor": 1,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -315,6 +315,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.packagePublishDescription",
       "required": "false",
       "groupName": "packagePublishDetails"
+    },
+    {
+      "name": "publishedPackageVar",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.publishedPackageVar",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "packagePublishDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.publishedPackageVar"
     },
     {
       "name": "verbosity",
