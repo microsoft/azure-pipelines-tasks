@@ -60,7 +60,18 @@ export class azureclitask {
             this.loginAzure();
 
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
-            await tool.exec({ failOnStdErr: failOnStdErr });
+
+            var addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
+            if (!!addSpnToEnvironment) {
+                await tool.exec({
+                    failOnStdErr: failOnStdErr,
+                    env: { ...process.env, ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey } }
+                });
+            }
+            else {
+                await tool.exec({ failOnStdErr: failOnStdErr });
+            }
+
         }
         catch (err) {
             if (err.stderr) {
@@ -104,6 +115,9 @@ export class azureclitask {
     private static cliPasswordPath: string = null;
     private static azCliConfigPath: string;
 
+    private static servicePrincipalId: string = null;
+    private static servicePrincipalKey: string = null;
+
     private static loginAzure() {
         var connectedService: string = tl.getInput("connectedServiceNameARM", true);
         this.loginAzureRM(connectedService);
@@ -124,6 +138,8 @@ export class azureclitask {
         else {
             tl.debug('key based endpoint');
             cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
+            this.servicePrincipalId = servicePrincipalId;
+            this.servicePrincipalKey = cliPassword;
         }
 
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
@@ -135,6 +151,7 @@ export class azureclitask {
         //login using svn
         this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
         this.isLoggedIn = true;
+
         //set the subscription imported to the current subscription
         this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
     }
