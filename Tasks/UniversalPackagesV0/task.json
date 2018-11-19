@@ -6,7 +6,7 @@
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](https://aka.ms/universalpackagesannounce)",
     "category": "Package",
-	"version": {
+    "version": {
         "Major": 0,
         "Minor": 1,
         "Patch": 0
@@ -316,7 +316,7 @@
             "required": "false",
             "groupName": "packagePublishDetails"
         },
-		{
+        {
             "name": "publishedPackageVar",
             "type": "string",
             "label": "Package Ouput Variable",
