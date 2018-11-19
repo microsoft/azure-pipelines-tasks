@@ -1,13 +1,10 @@
 import tl = require('vsts-task-lib/task');
-import path = require('path');
 
-var zipUtility = require('webdeployment-common/ziputility.js');
-var utility = require('webdeployment-common/utility.js');
 var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitutionutility.js');
 var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
 
-export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string, isMSBuildPackage: boolean) {
+export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string, isMSBuildPackage: boolean, envName?: string) {
 
     if(xmlTransformation) {
         if(isMSBuildPackage) {
@@ -19,7 +16,7 @@ export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles:
                 console.log(tl.loc('AutoParameterizationMessage'));
             }
         }
-        var environmentName = tl.getVariable('Release.EnvironmentName');
+        var environmentName = envName || tl.getVariable('Release.EnvironmentName');
         if(tl.osType().match(/^Win/)) {
             var transformConfigs = ["Release.config"];
             if(environmentName && environmentName.toLowerCase() != 'release') {

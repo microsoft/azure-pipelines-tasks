@@ -39,6 +39,14 @@
             "helpMarkDown": "The config transforms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform."
         },
         {
+            "name": "environmentName",
+            "type": "string",
+            "label": "Environment Name",
+            "visibleRule": "enableXmlTransform = true",
+            "required": false,
+            "helpMarkDown": "Name to be used in file from which transformation will be applied."
+        },
+        {
             "name": "enableXmlVariableSubstitution",
             "type": "boolean",
             "label": "XML variable substitution",

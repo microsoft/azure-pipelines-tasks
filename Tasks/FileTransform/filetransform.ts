@@ -7,6 +7,7 @@ async function main() {
     var webPackage = new Package(tl.getPathInput('folderPath', true));
     var packagePath = webPackage.getPath();
     var JSONFiles = tl.getDelimitedInput('JSONFiles', '\n', false);
+    var envName = tl.getInput('environmentName', false);
     var XmlTransformation = tl.getBoolInput("enableXmlTransform", false);
     var XmlVariableSubstitution = tl.getBoolInput("enableXmlVariableSubstitution", false);
     var applyFileTransformFlag = JSONFiles.length != 0 || XmlTransformation || XmlVariableSubstitution;
@@ -15,7 +16,7 @@ async function main() {
         var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, packagePath, webPackage.getPackageType());
 
         var isMSBuildPackage = !isFolderBasedDeployment && (await deployUtility.isMSDeployPackage(packagePath));
-        fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, XmlTransformation, XmlVariableSubstitution, folderPath, isMSBuildPackage);
+        fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, XmlTransformation, XmlVariableSubstitution, folderPath, isMSBuildPackage, envName);
     }
     else {
         tl.debug('File Tranformation not enabled');

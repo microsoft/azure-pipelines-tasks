@@ -39,6 +39,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.enableXmlTransform"
     },
     {
+      "name": "environmentName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.environmentName",
+      "visibleRule": "enableXmlTransform = true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.environmentName"
+    },
+    {
       "name": "enableXmlVariableSubstitution",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.enableXmlVariableSubstitution",
