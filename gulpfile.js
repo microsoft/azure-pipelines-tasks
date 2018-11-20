@@ -1,5 +1,5 @@
 var gulp = require('gulp');
-var gutil = require('gulp-util');
+var plugin_error = require('plugin-error');
 var child_process = require('child_process');
 var process = require('process');
 
@@ -14,7 +14,7 @@ function make (target, cb) {
     catch (err) {
         var msg = err.output ? err.output.toString() : err.message;
         console.error(msg);
-        cb(new gutil.PluginError(msg));
+        cb(new plugin_error(msg));
         return false;
     }
 
@@ -23,13 +23,15 @@ function make (target, cb) {
 
 gulp.task('build', function (cb) {
     make('build', cb);
+    cb();
 });
 
-gulp.task('default', ['build']);
+gulp.task('default', (done) => (gulp.series('build')(done)));
 
 gulp.task('test', function (cb) {
     make('test', cb);
     make('testLegacy', cb);
+    cb();
 });
 
 gulp.task('package', function (cb) {
@@ -40,4 +42,5 @@ gulp.task('package', function (cb) {
     make('testLegacy', cb) &&
     publish &&
     make('publish', cb);
+    cb();
 });
