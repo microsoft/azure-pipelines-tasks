@@ -217,11 +217,26 @@ class Main {
         return commitIdToMessageDictionary;
     }
 
-    private static _getInitialCommit(): string {
+    private static async _getInitialCommit(githubEndpoint: string, repositoryName: string, sha: string): Promise<string> {
         let initialCommit: string = "";
 
         // No api available to get initial commit 
-        // Todo: Need to investigate
+        // Also if we get it somehow, then commit difference can be very high in that case and api to fetch commits difference
+        // can take long time to resolve
+        // Also showing that much data in changeLog to users does not seems good.
+        
+        let commitsForGivenShaResponse = await Release.getCommitsBeforeGivenSha(githubEndpoint, repositoryName, sha);
+
+        if (commitsForGivenShaResponse.statusCode === 200) {
+            let commits: any[] = commitsForGivenShaResponse.body; // Returned commits are in latest first order and first commit is the commit queried itself.
+
+            // Last commit will be oldest
+            initialCommit = commits[commits.length - 1];
+
+        }
+        else {
+            throw new Error(tl.loc("GetCommitsByShaError"));
+        }
 
         return initialCommit;
     }
@@ -233,6 +248,8 @@ class Main {
         let startCommitSha: string;
         
         if (latestReleaseResponse.statusCode === 200) {
+            let endCommitSha: string = await this._getCommitShaFromTarget(githubEndpoint, repositoryName, target);
+
             if (latestReleaseResponse.body && latestReleaseResponse.body.length === 1) {
                 let latestReleaseTag: string = latestReleaseResponse.body[GitHubAttributes.tagName];
                 tl.debug("latest release tag: " + latestReleaseTag);
@@ -240,10 +257,9 @@ class Main {
                 startCommitSha = await this._getCommitForTag(githubEndpoint, repositoryName, latestReleaseTag);
             }
             else {
-                startCommitSha = this._getInitialCommit();
+                startCommitSha = await this._getInitialCommit(githubEndpoint, repositoryName, endCommitSha);
             }
             
-            let endCommitSha: string = await this._getCommitShaFromTarget(githubEndpoint, repositoryName, target);
             let commitsListResponse = await Release.getCommitsList(githubEndpoint, repositoryName, startCommitSha, endCommitSha);
             tl.debug("Get commits list response:\n" + JSON.stringify(commitsListResponse, null, 2));
 
@@ -256,6 +272,7 @@ class Main {
                     let commits: any[] = commitsListResponse.body[GitHubAttributes.commits] || [];
                     commits = commits.reverse(); // Reversing commits as commits retrieved are in oldest first order
 
+                    // Only show changeLog for top X commits, where X = top
                     let commitIdToMessageDictionary: { [key: string]: string } = this._getCommitIdToMessageDictionary(commits.length > top ? commits.slice(0, top) : commits);
                     tl.debug("commitIdToMessageDictionary: " + JSON.stringify(commitIdToMessageDictionary));
     

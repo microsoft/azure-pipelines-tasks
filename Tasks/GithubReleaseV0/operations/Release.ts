@@ -191,6 +191,19 @@ export class Release {
         return await sendRequest(request);
     }
 
+    public static async getCommitsBeforeGivenSha(githubEndpoint: string,repositoryName: string, sha: string): Promise<WebResponse> {
+        let request = new WebRequest();
+        
+        request.uri = util.format(this._getCommitsBeforeGivenShaApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, sha);
+        request.method = "GET";
+        request.headers = {
+            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+        };
+        tl.debug("Get commits list request:\n" + JSON.stringify(request, null, 2));
+
+        return await sendRequest(request);
+    }
+
     private static readonly _createReleaseApiUrlFormat: string = "%s/repos/%s/releases";
     private static readonly _editOrDiscardReleaseApiUrlFormat: string = "%s/repos/%s/releases/%s";
     private static readonly _deleteReleaseAssetApiUrlFormat: string = "%s/repos/%s/releases/assets/%s";
@@ -201,4 +214,5 @@ export class Release {
     private static readonly _getBranchApiUrlFormat: string = "%s/repos/%s/branches/%s";
     private static readonly _getTagsApiUrlFormat: string = "%s/repos/%s/tags";
     private static readonly _getCommitsListApiUrlFormat: string = "%s/repos/%s/compare/%s...%s";
+    private static readonly _getCommitsBeforeGivenShaApiUrlFormat: string = "%s/repos/%s/commits/?sha=%s&per_page=100";
 }

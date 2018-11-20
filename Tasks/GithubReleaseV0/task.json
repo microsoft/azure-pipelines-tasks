@@ -215,6 +215,7 @@
         "GetLatestReleaseError": "Error fetching latest release",
         "GetCommitsListError": "Error fetching list of commits",
         "GetReposError": "Error fetching repos",
+        "GetCommitsByShaError": "Error fetching commits by sha",
         "ReleaseAlreadyExists": "Failed to create release. Release already exist for tag: %s"
     }
 }
