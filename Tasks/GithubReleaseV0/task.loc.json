@@ -11,11 +11,11 @@
     "Release"
   ],
   "author": "Microsoft Corporation",
-  "preview": true,
+  "preview": false,
   "version": {
-    "Major": 0,
-    "Minor": 0,
-    "Patch": 0
+    "Major": 10,
+    "Minor": 6,
+    "Patch": 24
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -96,7 +96,7 @@
       "type": "radio",
       "label": "ms-resource:loc.input.label.releaseNotesSelection",
       "required": false,
-      "defaultValue": "input",
+      "defaultValue": "file",
       "visibleRule": "action = Create || action = Edit",
       "options": {
         "input": "Enter Release Note",
@@ -212,6 +212,9 @@
     "UploadAssetSuccess": "ms-resource:loc.messages.UploadAssetSuccess",
     "ReleaseNotesFileIsDirectoryError": "ms-resource:loc.messages.ReleaseNotesFileIsDirectoryError",
     "AssetIsDirectoryError": "ms-resource:loc.messages.AssetIsDirectoryError",
+    "GetLatestReleaseError": "ms-resource:loc.messages.GetLatestReleaseError",
+    "GetCommitsListError": "ms-resource:loc.messages.GetCommitsListError",
+    "GetReposError": "ms-resource:loc.messages.GetReposError",
     "ReleaseAlreadyExists": "ms-resource:loc.messages.ReleaseAlreadyExists"
   }
 }

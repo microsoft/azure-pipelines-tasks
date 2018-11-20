@@ -55,7 +55,7 @@ export class Utility {
         }
     }
 
-    public static getReleaseNote(releaseNotesSelection: string, releaseNotesFile: any, releaseNoteInput: string): string {
+    public static getReleaseNote(releaseNotesSelection: string, releaseNotesFile: any, releaseNoteInput: string, changeLog: string): string {
         let releaseNote: string = undefined;
 
         if (releaseNotesSelection === ReleaseNotesSelectionMode.file) {
@@ -72,6 +72,9 @@ export class Utility {
         }
         tl.debug("ReleaseNote:\n" + releaseNote);
 
+        // Append commits and issues to release note.
+        releaseNote = releaseNote + "\n\nChange log:\n\n" + changeLog;
+
         return releaseNote;
     }
 
@@ -85,6 +88,44 @@ export class Utility {
             return branchName.substring(this._tagRef.length);
         }
         return undefined;
+    }
+
+    public static parseHTTPHeaderLink(headerLink: string) {
+        if (!!headerLink && headerLink.length == 0) {
+            // No paginated results found
+            return null; 
+        }
+        
+        // Split pages by comma
+        let pages = headerLink.split(',');
+        let links: { [key: string]: string } = {};
+
+        // Parse each page into a named link
+        (pages || []).forEach((page) => {
+            let section = page.split(';');
+
+            if (section.length != 2) {
+                throw new Error("section could not be split on ';'");
+            }
+            // Todo: check for rel as there can be other attributes as well
+
+            // Reference - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/n
+            var url = section[0].replace(/<(.*)>/, '$1').trim();
+            var name = section[1].replace(/rel="(.*)"/, '$1').trim();
+
+            links[name] = url;
+        })
+    
+        return links;
+    }
+
+    public static extractRepositoryOwnerAndName(repositoryName: string): IGitHubRepositoryInfo {
+        let repositoryInfo = repositoryName.split('/');
+        
+        return {
+            owner: repositoryInfo[0],
+            name: repositoryInfo[1]
+        }
     }
 
     private static _tagRef: string = "refs/tags/";
@@ -125,11 +166,16 @@ class ReleaseNotesSelectionMode {
 
 export class GitHubAttributes {
     public static readonly id: string = "id";
+    public static readonly nameAttribute: string = "name";
     public static readonly tagName: string = "tag_name";
     public static readonly uploadUrl: string = "upload_url";
     public static readonly htmlUrl: string = "html_url";
     public static readonly assets: string = "assets";
     public static readonly commit: string = "commit";
+    public static readonly message: string = "message";
+    public static readonly state: string = "state";
+    public static readonly title: string = "title";
+    public static readonly commits: string = "commits";
     public static readonly sha: string = "sha";
 }
 
@@ -142,4 +188,14 @@ export class ActionType {
 export class AzureDevOpsVariables {
     public static buildSourceVersion: string = "Build.SourceVersion";
     public static buildSourceBranch: string = "Build.SourceBranch"; 
+}
+
+export interface IGitHubRepositoryInfo {
+    owner: string;
+    name: string;
+}
+
+export interface IRepositoryIssueId {
+    repository: string;
+    issueId: string;
 }

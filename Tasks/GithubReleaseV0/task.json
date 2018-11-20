@@ -11,11 +11,11 @@
         "Release"
     ],
     "author": "Microsoft Corporation",
-    "preview": true,
+    "preview": false,
     "version": {
-        "Major": 0,
-        "Minor": 0,
-        "Patch": 0
+        "Major": 10,
+        "Minor": 6,
+        "Patch": 24
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -96,7 +96,7 @@
             "type": "radio",
             "label": "Release note",
             "required": false,
-            "defaultValue": "input",
+            "defaultValue": "file",
             "visibleRule": "action = Create || action = Edit",
             "options": {
                 "input": "Enter Release Note",
@@ -212,6 +212,9 @@
         "UploadAssetSuccess": "Uploaded asset: %s",
         "ReleaseNotesFileIsDirectoryError": "Release notes file: %s is a directory and not a file. Release notes will be set as empty.",
         "AssetIsDirectoryError": "Asset is a directory and not a file. Skipping uploading asset: %s",
+        "GetLatestReleaseError": "Error fetching latest release",
+        "GetCommitsListError": "Error fetching list of commits",
+        "GetReposError": "Error fetching repos",
         "ReleaseAlreadyExists": "Failed to create release. Release already exist for tag: %s"
     }
 }
