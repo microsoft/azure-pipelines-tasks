@@ -18,7 +18,6 @@ export class TaskParametersUtility {
             connectedServiceName: tl.getInput('ConnectedServiceName', true),
             WebAppKind: tl.getInput('WebAppKind', false),
             DeployToSlotOrASEFlag: tl.getBoolInput('DeployToSlotOrASEFlag', false),
-            GenerateWebConfig: tl.getBoolInput('GenerateWebConfig', false),
             WebConfigParameters: tl.getInput('WebConfigParameters', false),
             AppSettings: tl.getInput('AppSettings', false),
             StartupCommand: tl.getInput('StartupCommand', false),
@@ -98,7 +97,6 @@ export interface TaskParameters {
     ResourceGroupName?: string;
     SlotName?: string;
     Package?: Package;
-    GenerateWebConfig?: boolean;
     WebConfigParameters?: string;
     DeploymentType?: DeploymentType;
     AppSettings?: string;
