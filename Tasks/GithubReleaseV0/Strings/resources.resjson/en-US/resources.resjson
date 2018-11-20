@@ -57,5 +57,8 @@
   "loc.messages.UploadAssetSuccess": "Uploaded asset: %s",
   "loc.messages.ReleaseNotesFileIsDirectoryError": "Release notes file: %s is a directory and not a file. Release notes will be set as empty.",
   "loc.messages.AssetIsDirectoryError": "Asset is a directory and not a file. Skipping uploading asset: %s",
+  "loc.messages.GetLatestReleaseError": "Error fetching latest release",
+  "loc.messages.GetCommitsListError": "Error fetching list of commits",
+  "loc.messages.GetReposError": "Error fetching repos",
   "loc.messages.ReleaseAlreadyExists": "Failed to create release. Release already exist for tag: %s"
 }

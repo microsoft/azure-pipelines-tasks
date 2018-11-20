@@ -30,13 +30,14 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async editRelease(githubEndpoint: string, repositoryName: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, releaseId: string): Promise<WebResponse> {
+    public static async editRelease(githubEndpoint: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, releaseId: string): Promise<WebResponse> {
         let request = new WebRequest();
             
         request.uri = util.format(this._editOrDiscardReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseId);
         request.method = "PATCH";
         request.body = JSON.stringify({
             "tag_name": tag,
+            "target_commitish": target,
             "name": releaseTitle,
             "body": releaseNote,
             "draft": isDraft,
@@ -138,11 +139,66 @@ export class Release {
         return await sendRequest(request);
     }
 
+    public static async getLatestRelease(githubEndpoint: string, repositoryName: string): Promise<WebResponse> {
+        let request = new WebRequest();
+        
+        request.uri = util.format(this._getLatestReleasesApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
+        request.method = "GET";
+        request.headers = {
+            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+        };
+        tl.debug("Get latest release request:\n" + JSON.stringify(request, null, 2));
+
+        return await sendRequest(request);
+    }
+
+    public static async getReleaseByTag(githubEndpoint: string, repositoryName: string, tag: string): Promise<WebResponse> {
+        let request = new WebRequest();
+        
+        request.uri = util.format(this._getReleaseByTagApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, tag);
+        request.method = "GET";
+        request.headers = {
+            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+        };
+        tl.debug("Get release by tag request:\n" + JSON.stringify(request, null, 2));
+
+        return await sendRequest(request);
+    }
+
+    public static async getPaginatedResult(githubEndpoint: string, nextPageLink: string): Promise<WebResponse> {
+        let request = new WebRequest();
+        
+        request.uri = nextPageLink;
+        request.method = "GET";
+        request.headers = {
+            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+        };
+        tl.debug("Get paginated request:\n" + JSON.stringify(request, null, 2));
+
+        return await sendRequest(request);
+    }
+
+    public static async getCommitsList(githubEndpoint: string,repositoryName: string, startCommitSha: string, endCommitSha: string): Promise<WebResponse> {
+        let request = new WebRequest();
+        
+        request.uri = util.format(this._getCommitsListApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, startCommitSha, endCommitSha);
+        request.method = "GET";
+        request.headers = {
+            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+        };
+        tl.debug("Get commits list request:\n" + JSON.stringify(request, null, 2));
+
+        return await sendRequest(request);
+    }
+
     private static readonly _createReleaseApiUrlFormat: string = "%s/repos/%s/releases";
     private static readonly _editOrDiscardReleaseApiUrlFormat: string = "%s/repos/%s/releases/%s";
     private static readonly _deleteReleaseAssetApiUrlFormat: string = "%s/repos/%s/releases/assets/%s";
     private static readonly _uploadReleaseAssetApiUrlFormat: string = "%s?name=%s";
     private static readonly _getReleasesApiUrlFormat: string = "%s/repos/%s/releases";
+    private static readonly _getLatestReleasesApiUrlFormat: string = "%s/repos/%s/releases/latest";
+    private static readonly _getReleaseByTagApiUrlFormat: string = "%s/repos/%s/releases/tags/%s";
     private static readonly _getBranchApiUrlFormat: string = "%s/repos/%s/branches/%s";
     private static readonly _getTagsApiUrlFormat: string = "%s/repos/%s/tags";
+    private static readonly _getCommitsListApiUrlFormat: string = "%s/repos/%s/compare/%s...%s";
 }

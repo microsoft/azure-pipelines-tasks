@@ -33,6 +33,11 @@ export class WebResponse {
     public body: any;
 }
 
+export class HTTPAttributes {
+    public static readonly link: string = "link";
+    public static readonly next: string = "next";
+}
+
 export class WebRequestOptions {
     public retriableErrorCodes: string[];
     public retryCount: number;
@@ -101,8 +106,8 @@ async function toWebResponse(response: httpClient.HttpClientResponse): Promise<W
                 res.body = JSON.parse(body);
             }
             catch (error) {
-                tl.debug("Could not parse response: " + JSON.stringify(error));
-                tl.debug("Response: " + JSON.stringify(res.body));
+                tl.debug("Could not parse response: " + JSON.stringify(error, null, 2));
+                tl.debug("Response: " + JSON.stringify(res.body, null, 2));
                 res.body = body;
             }
         }
