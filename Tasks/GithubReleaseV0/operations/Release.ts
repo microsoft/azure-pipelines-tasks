@@ -214,5 +214,5 @@ export class Release {
     private static readonly _getBranchApiUrlFormat: string = "%s/repos/%s/branches/%s";
     private static readonly _getTagsApiUrlFormat: string = "%s/repos/%s/tags";
     private static readonly _getCommitsListApiUrlFormat: string = "%s/repos/%s/compare/%s...%s";
-    private static readonly _getCommitsBeforeGivenShaApiUrlFormat: string = "%s/repos/%s/commits/?sha=%s&per_page=100";
+    private static readonly _getCommitsBeforeGivenShaApiUrlFormat: string = "%s/repos/%s/commits?sha=%s&per_page=100";
 }
