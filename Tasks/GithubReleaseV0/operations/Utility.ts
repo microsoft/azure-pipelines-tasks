@@ -97,30 +97,41 @@ export class Utility {
         }
         
         // Split pages by comma
-        let pages = headerLink.split(',');
+        let pages = headerLink.split(Delimiters.comma);
         let links: { [key: string]: string } = {};
 
-        // Parse each page into a named link
+        // Parse each page into link and rel
         (pages || []).forEach((page) => {
-            let section = page.split(';');
+            let section: string[] = page.split(Delimiters.semiColon);
 
-            if (section.length != 2) {
+            if (section.length < 2) {
                 throw new Error("section could not be split on ';'");
             }
-            // Todo: check for rel as there can be other attributes as well
 
             // Reference - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/n
-            var url = section[0].replace(/<(.*)>/, '$1').trim();
-            var name = section[1].replace(/rel="(.*)"/, '$1').trim();
+            let urlMatch = section[0].trim().match(this._githubPaginatedLinkRegex); // If it didn't match, it will return null, else it will return match at first position
+            let relMatch = null;
 
-            links[name] = url;
+            // Handling rel
+            for (let i = 1; i < section.length; i++) {
+                relMatch = section[i].trim().match(this._githubPaginatedRelRegex); // If it didn't match, it will return null, else it will return match at first position
+
+                if (!!relMatch) {
+                    break;
+                }
+            }
+
+            if (urlMatch && relMatch) {
+                links[relMatch[1]] = urlMatch[1];
+            }
+
         })
     
         return links;
     }
 
     public static extractRepositoryOwnerAndName(repositoryName: string): IGitHubRepositoryInfo {
-        let repositoryInfo = repositoryName.split('/');
+        let repositoryInfo = repositoryName.split(Delimiters.slash);
         
         return {
             owner: repositoryInfo[0],
@@ -128,6 +139,26 @@ export class Utility {
         }
     }
 
+    public static extractRepoAndIssueId(repoIssueId: string): IRepositoryIssueId {
+        let repoIssueIdInfo: string[] = repoIssueId.split(Delimiters.hash);
+        let repo: string = repoIssueIdInfo[0];
+        let issueId: string = repoIssueIdInfo[1];
+
+        return {
+            repository: repo,
+            issueId: issueId
+        }
+    }
+
+    public static getFirstLine(comment: string): string {
+        comment = (comment || "").trim();
+        const match = comment.match(this._onlyFirstLine);
+        return match[0];
+    }
+    
+    private static readonly _onlyFirstLine = new RegExp("^.*$", "m");
+    private static readonly _githubPaginatedLinkRegex = new RegExp("^<(.*)>$");
+    private static readonly _githubPaginatedRelRegex = new RegExp('^rel="(.*)"$');
     private static _tagRef: string = "refs/tags/";
 }
 
@@ -177,6 +208,8 @@ export class GitHubAttributes {
     public static readonly title: string = "title";
     public static readonly commits: string = "commits";
     public static readonly sha: string = "sha";
+    public static readonly behind: string = "behind";
+    public static readonly status: string = "status";
 }
 
 export class ActionType {
@@ -186,8 +219,8 @@ export class ActionType {
 }
 
 export class AzureDevOpsVariables {
-    public static buildSourceVersion: string = "Build.SourceVersion";
-    public static buildSourceBranch: string = "Build.SourceBranch"; 
+    public static readonly buildSourceVersion: string = "Build.SourceVersion";
+    public static readonly buildSourceBranch: string = "Build.SourceBranch"; 
 }
 
 export interface IGitHubRepositoryInfo {
@@ -198,4 +231,13 @@ export interface IGitHubRepositoryInfo {
 export interface IRepositoryIssueId {
     repository: string;
     issueId: string;
+}
+
+export class Delimiters {
+    public static readonly newLine: string = "\n";
+    public static readonly hash: string = "#";
+    public static readonly slash: string = "/";
+    public static readonly semiColon: string = ";";
+    public static readonly comma: string = ",";
+    public static readonly space: string = " ";
 }

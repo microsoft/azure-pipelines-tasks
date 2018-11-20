@@ -2,7 +2,7 @@ import tl = require("vsts-task-lib/task");
 import util = require("util");
 import path = require("path");
 import { Action } from "./operations/Action";
-import { Inputs, TagSelectionMode, Utility, GitHubAttributes, AzureDevOpsVariables, ActionType, IGitHubRepositoryInfo, IRepositoryIssueId} from "./operations/Utility";
+import { Inputs, TagSelectionMode, Utility, GitHubAttributes, AzureDevOpsVariables, ActionType, IGitHubRepositoryInfo, IRepositoryIssueId, Delimiters} from "./operations/Utility";
 import { Release } from "./operations/Release";
 import { HTTPAttributes } from "./operations/webClient";
 
@@ -28,7 +28,7 @@ class Main {
             const releaseNotesSelection = tl.getInput(Inputs.releaseNotesSelection);
             const releaseNotesFile = tl.getPathInput(Inputs.releaseNotesFile, false, true);
             const releaseNoteInput = tl.getInput(Inputs.releaseNotesInput);
-            const changeLog: string = await this._getChangeLog(githubEndpoint, repositoryName, target);
+            const changeLog: string = await this._getChangeLog(githubEndpoint, repositoryName, target, 250);
             const releaseNote: string = Utility.getReleaseNote(releaseNotesSelection, releaseNotesFile, releaseNoteInput, changeLog) || undefined;
             const isPrerelease = tl.getBoolInput(Inputs.isPrerelease) || false;
             const isDraft = tl.getBoolInput(Inputs.isDraft) || false;
@@ -217,80 +217,62 @@ class Main {
         return commitIdToMessageDictionary;
     }
 
-    private static _extractRepoAndIssueId(repoIssueId: string): IRepositoryIssueId {
-        let repoIssueIdInfo: string[] = repoIssueId.split("#");
-        let repo: string = repoIssueIdInfo[0];
-        let issueId: string = repoIssueIdInfo[1];
+    private static _getInitialCommit(): string {
+        let initialCommit: string = "";
 
-        return {
-            repository: repo,
-            issueId: issueId
-        }
+        // No api available to get initial commit 
+        // Todo: Need to investigate
+
+        return initialCommit;
     }
 
-    private static async _getChangeLog(githubEndpoint: string, repositoryName: string, target: string): Promise<string> {
+    private static async _getChangeLog(githubEndpoint: string, repositoryName: string, target: string, top: number): Promise<string> {
         let latestReleaseResponse = await Release.getLatestRelease(githubEndpoint, repositoryName);
         tl.debug("Get latest release response:\n" + JSON.stringify(latestReleaseResponse, null, 2));
 
+        let startCommitSha: string;
+        
         if (latestReleaseResponse.statusCode === 200) {
-            let latestReleaseTag: string = latestReleaseResponse.body[GitHubAttributes.tagName];
-            tl.debug("latest release tag: " + latestReleaseTag);
-
-            let latestReleaseCommitSha: string = await this._getCommitForTag(githubEndpoint, repositoryName, latestReleaseTag);
-
-            let startCommitSha: string = latestReleaseCommitSha;
+            if (latestReleaseResponse.body && latestReleaseResponse.body.length === 1) {
+                let latestReleaseTag: string = latestReleaseResponse.body[GitHubAttributes.tagName];
+                tl.debug("latest release tag: " + latestReleaseTag);
+                
+                startCommitSha = await this._getCommitForTag(githubEndpoint, repositoryName, latestReleaseTag);
+            }
+            else {
+                startCommitSha = this._getInitialCommit();
+            }
+            
             let endCommitSha: string = await this._getCommitShaFromTarget(githubEndpoint, repositoryName, target);
-
             let commitsListResponse = await Release.getCommitsList(githubEndpoint, repositoryName, startCommitSha, endCommitSha);
             tl.debug("Get commits list response:\n" + JSON.stringify(commitsListResponse, null, 2));
 
             if (commitsListResponse.statusCode === 200) {
-                let commitIdToMessageDictionary: { [key: string]: string } = this._getCommitIdToMessageDictionary(commitsListResponse.body[GitHubAttributes.commits]);
-                tl.debug("commitIdToMessageDictionary: " + JSON.stringify(commitIdToMessageDictionary));
-
-                let commitIdToRepoIssueIdsDictionary: { [key: string]: Set<string> } = this._getCommitIdToRepoIssueIdsDictionary(commitIdToMessageDictionary, repositoryName);
-                tl.debug("commitIdToRepoIssueIdsDictionary: " + JSON.stringify(commitIdToRepoIssueIdsDictionary));
-                
-                let uniqueRepoIssueIds: string[] = this._getUniqueRepoIssueIdArray(commitIdToRepoIssueIdsDictionary);
-                let issueFragment = "fragment issueInfo on Issue { state }";
-                let repositoryTemplate: string = "_%s: repository(owner: %s, name: %s) { _%s: issue(number: %s) { ...issueInfo } }";
-                
-                // Todo: Refactor to make all issues specific to a repo comes under one repo // Currently it has a separate foreach issue
-                // This way repo owner will become unique identifier for repo and this solve problem of unique identfier
-                let repoIssueIdsQuery: string = (uniqueRepoIssueIds || []).map((repoIssueId: string) => {
-                    let repoIssueIdInfo: IRepositoryIssueId = this._extractRepoAndIssueId(repoIssueId);
-                    let repositoryInfo: IGitHubRepositoryInfo = Utility.extractRepositoryOwnerAndName(repoIssueIdInfo.repository);
-
-                    // Assuming owner is unique
-                    let uniqueIdentifierForRepoIssueId: string = repositoryInfo.owner + repoIssueIdInfo.issueId;
-
-                    return util.format(repositoryTemplate, uniqueIdentifierForRepoIssueId, repositoryInfo.owner, repositoryInfo.name, repoIssueIdInfo.issueId, repoIssueIdInfo.issueId);                 
-                }).join(" ");
-
-                tl.debug("repoIssueIdsQuery: " + repoIssueIdsQuery);
-                let query: string = util.format("query { %s }", repoIssueIdsQuery);
-                let queryWithFragment: string = util.format("%s %s", query, issueFragment);
-                tl.debug("queryWithFragment: " + queryWithFragment);
-
-                let repoIssueIdsResponse = await Release.queryGraphql(githubEndpoint, queryWithFragment);
-                tl.debug("Get repoIssueIds response:\n" + JSON.stringify(repoIssueIdsResponse, null, 2));
-
-                if (repoIssueIdsResponse.statusCode === 200) {
-                    let reposData = repoIssueIdsResponse.body.data;
-                    let changeLog: string = "";
-
-                    Object.keys(commitIdToRepoIssueIdsDictionary).forEach((commitId: string) => {
-                        let changeLogPerCommit: string = this._getChangeLogPerCommit(commitId, commitIdToMessageDictionary[commitId], commitIdToRepoIssueIdsDictionary[commitId], reposData, repositoryName);
-
-                        if (changeLogPerCommit) {
-                            changeLog += changeLogPerCommit + "\n";
-                        }
-                    });
-
-                    return changeLog;
+                // If end commit is older than start commit // Rollback scenario
+                if (commitsListResponse.body[GitHubAttributes.status] === GitHubAttributes.behind) {
+                    return ""; // Todo: Return some string. // Todo: Also handle for start and end commits same scenario
                 }
                 else {
-                    throw new Error(tl.loc("GetReposError"));
+                    let commits: any[] = commitsListResponse.body[GitHubAttributes.commits] || [];
+                    commits = commits.reverse(); // Reversing commits as commits retrieved are in oldest first order
+
+                    let commitIdToMessageDictionary: { [key: string]: string } = this._getCommitIdToMessageDictionary(commits.length > top ? commits.slice(0, top) : commits);
+                    tl.debug("commitIdToMessageDictionary: " + JSON.stringify(commitIdToMessageDictionary));
+    
+                    let commitIdToRepoIssueIdsDictionary: { [key: string]: Set<string> } = this._getCommitIdToRepoIssueIdsDictionary(commitIdToMessageDictionary, repositoryName);
+                    tl.debug("commitIdToRepoIssueIdsDictionary: " + JSON.stringify(commitIdToRepoIssueIdsDictionary));
+                    
+                    let changeLog: string;
+    
+                    Object.keys(commitIdToRepoIssueIdsDictionary).forEach((commitId: string) => {
+                        let changeLogPerCommit: string = this._getChangeLogPerCommit(commitId, commitIdToMessageDictionary[commitId], commitIdToRepoIssueIdsDictionary[commitId], repositoryName);
+    
+                        if (changeLogPerCommit) {
+                            changeLog += changeLogPerCommit + Delimiters.newLine;
+                        }
+                    });
+    
+                    return changeLog;
                 }
             }
             else{
@@ -302,51 +284,24 @@ class Main {
         }
     }
 
-    private static _getChangeLogPerCommit(commitId: string, commitMessage: string, repoIssueIdSet: Set<string>, reposData: any, repositoryName: string): string {
-        let changeLog: string = commitMessage + " " + commitId; // todo: commit message first line only
-        
+    private static _getChangeLogPerCommit(commitId: string, commitMessage: string, repoIssueIdSet: Set<string>, repositoryName: string): string {
+        let changeLog: string = Utility.getFirstLine(commitMessage) + Delimiters.space + commitId;
+
         if (!!repoIssueIdSet && repoIssueIdSet.size > 0) {
-            changeLog += ","; // todo check if returned data is valid or not
+            changeLog += Delimiters.comma;
 
             (repoIssueIdSet).forEach((repoIssueId: string) => {
-                let repoIssueIdInfo: IRepositoryIssueId = this._extractRepoAndIssueId(repoIssueId);
-                let repoInfo: IGitHubRepositoryInfo = Utility.extractRepositoryOwnerAndName(repoIssueIdInfo.repository);
-                let uniqueIdentifierForRepoIssueId: string = repoInfo.owner + repoIssueIdInfo.issueId; //Todo: Need to find unique attribute
-                let issueId: string = repoIssueIdInfo.issueId;
+                let repoIssueIdInfo: IRepositoryIssueId = Utility.extractRepoAndIssueId(repoIssueId);
 
-                tl.debug("uniqueIdentifierForRepoIssueId: " + uniqueIdentifierForRepoIssueId);
-                tl.debug("issueId: " + issueId);
-
-                if (!!reposData["_" + uniqueIdentifierForRepoIssueId] && !!reposData["_" + uniqueIdentifierForRepoIssueId]["_" + issueId]) {
-                    changeLog += " ";
-                    if (repoIssueIdInfo.repository !== repositoryName) {
-                        changeLog += repoIssueIdInfo.repository;
-                    }
-                    changeLog = changeLog + "#" + issueId ;
+                changeLog += Delimiters.space;
+                if (repoIssueIdInfo.repository !== repositoryName) {
+                    changeLog += repoIssueIdInfo.repository;
                 }
+                changeLog = changeLog + Delimiters.hash + repoIssueIdInfo.issueId;
             });
-    
         }
 
         return changeLog;
-    }
-
-    private static _getUniqueRepoIssueIdArray(commitIdToRepoIssueIdsDictionary: { [key: string]: Set<string> }): string[] {
-        let uniqueRepoIssueIdSet: Set<string> = new Set();
-
-        Object.keys(commitIdToRepoIssueIdsDictionary).forEach((commitId: string) => {
-            let repoIssueIdSet: Set<string> = commitIdToRepoIssueIdsDictionary[commitId];
-
-            if (repoIssueIdSet && repoIssueIdSet.size > 0) {
-                (repoIssueIdSet).forEach((repoIssueId: string) => {
-                    if (!uniqueRepoIssueIdSet.has(repoIssueId)) {
-                        uniqueRepoIssueIdSet.add(repoIssueId);
-                    }
-                });
-            }
-        });
-
-        return Array.from(uniqueRepoIssueIdSet);
     }
 
     private static _getCommitIdToRepoIssueIdsDictionary(commitIdToMessageDictionary: { [key: string]: string }, repositoryName: string): { [key: string]: Set<string> } {
@@ -376,7 +331,7 @@ class Main {
             let issueId: string = match[2];
 
             if (parseInt(issueId)) {
-                let uniqueRepoIssueId: string = repo + "#" + issueId;
+                let uniqueRepoIssueId: string = repo + Delimiters.hash + issueId; // Using # as separator as neither repoName nor issueId will have #.
                 tl.debug("uniqueRepoIssueId: " + uniqueRepoIssueId);
                 if (!repoIssueIdSet.has(uniqueRepoIssueId)) {
                     tl.debug("uniqueRepoIssueId true: " + uniqueRepoIssueId);
@@ -395,7 +350,6 @@ class Main {
         tl.debug("leaving: " + repoIssueIdSet);
         return repoIssueIdSet;
     }
-
 
     // Returns latest commit on the target if target is branch else returns target.
     private static async _getCommitShaFromTarget(githubEndpoint: string, repositoryName: string, target: string): Promise<string> {

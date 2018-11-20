@@ -191,23 +191,6 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async queryGraphql(githubEndpoint: string, graphqlQuery: string): Promise<WebResponse> {
-        let request = new WebRequest();
-
-        request.uri = this._graphqlApiUrlFormat;
-        request.method = "POST";
-        request.body = JSON.stringify({
-            "query": graphqlQuery
-        });
-        request.headers = {
-            "Content-Type": "application/json",
-            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
-        };
-        tl.debug("Graphql request:\n" + JSON.stringify(request, null, 2));
-
-        return await sendRequest(request);
-    }
-
     private static readonly _createReleaseApiUrlFormat: string = "%s/repos/%s/releases";
     private static readonly _editOrDiscardReleaseApiUrlFormat: string = "%s/repos/%s/releases/%s";
     private static readonly _deleteReleaseAssetApiUrlFormat: string = "%s/repos/%s/releases/assets/%s";
@@ -218,5 +201,4 @@ export class Release {
     private static readonly _getBranchApiUrlFormat: string = "%s/repos/%s/branches/%s";
     private static readonly _getTagsApiUrlFormat: string = "%s/repos/%s/tags";
     private static readonly _getCommitsListApiUrlFormat: string = "%s/repos/%s/compare/%s...%s";
-    private static readonly _graphqlApiUrlFormat: string = "https://api.github.com/graphql";
 }

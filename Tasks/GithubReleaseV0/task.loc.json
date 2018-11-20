@@ -11,11 +11,11 @@
     "Release"
   ],
   "author": "Microsoft Corporation",
-  "preview": false,
+  "preview": true,
   "version": {
-    "Major": 10,
-    "Minor": 6,
-    "Patch": 24
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",

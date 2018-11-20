@@ -38,12 +38,11 @@ export class Action {
                             tl.debug("Edit release response:\n" + JSON.stringify(response, null, 2));
 
                             if (publishReleaseResponse.statusCode === 200) {
-                                console.log(tl.loc("CreateReleaseSuccess", response.body[GitHubAttributes.htmlUrl]));
+                                console.log(tl.loc("CreateReleaseSuccess", publishReleaseResponse.body[GitHubAttributes.htmlUrl]));
                             }
                             else {
                                 console.log(tl.loc("CreateReleaseError"));
                                 await this._discardRelease(githubEndpoint, repositoryName, releaseId);
-                                // Todo: handle response error
                             }
                         }
                         else {
@@ -52,7 +51,6 @@ export class Action {
                     }
                     catch (error) {
                         await this._discardRelease(githubEndpoint, repositoryName, releaseId);
-                        // Todo: handle response error
                         throw error;
                     }
                 }
