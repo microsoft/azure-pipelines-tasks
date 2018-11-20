@@ -60,5 +60,6 @@
   "loc.messages.GetLatestReleaseError": "Error fetching latest release",
   "loc.messages.GetCommitsListError": "Error fetching list of commits",
   "loc.messages.GetReposError": "Error fetching repos",
+  "loc.messages.GetCommitsByShaError": "Error fetching commits by sha",
   "loc.messages.ReleaseAlreadyExists": "Failed to create release. Release already exist for tag: %s"
 }

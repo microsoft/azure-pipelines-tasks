@@ -215,6 +215,7 @@
     "GetLatestReleaseError": "ms-resource:loc.messages.GetLatestReleaseError",
     "GetCommitsListError": "ms-resource:loc.messages.GetCommitsListError",
     "GetReposError": "ms-resource:loc.messages.GetReposError",
+    "GetCommitsByShaError": "ms-resource:loc.messages.GetCommitsByShaError",
     "ReleaseAlreadyExists": "ms-resource:loc.messages.ReleaseAlreadyExists"
   }
 }
