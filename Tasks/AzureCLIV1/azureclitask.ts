@@ -32,11 +32,12 @@ export class azureclitask {
             }
             else {
                 var script: string = tl.getInput("inlineScript", true);
+                scriptPath = path.join(tl.getVariable('Agent.TempDirectory'), "azureclitaskscript" + new Date().getTime());
                 if (os.type() != "Windows_NT") {
-                    scriptPath = path.join(os.tmpdir(), "azureclitaskscript" + new Date().getTime() + ".sh");
+                    scriptPath = scriptPath + ".sh";
                 }
                 else {
-                    scriptPath = path.join(os.tmpdir(), "azureclitaskscript" + new Date().getTime() + ".bat");
+                    scriptPath = scriptPath + ".bat";
                 }
                 this.createFile(scriptPath, script);
             }
@@ -140,14 +141,8 @@ export class azureclitask {
     }
 
     private static setConfigDirectory(): void {
-        var configDirName: string = "c" + new Date().getTime(); // 'c' denotes config
-        if (tl.osType().match(/^Win/)) {
-            this.azCliConfigPath = path.join(process.env.USERPROFILE, ".azclitask", configDirName);
-        }
-        else {
-            this.azCliConfigPath = path.join(process.env.HOME, ".azclitask", configDirName);
-        }
-
+        var configDirName: string = "config" + new Date().getTime();
+        this.azCliConfigPath = path.join(tl.getVariable('Agent.TempDirectory'), ".azclitask", configDirName);
         process.env['AZURE_CONFIG_DIR'] = this.azCliConfigPath;
     }
 
