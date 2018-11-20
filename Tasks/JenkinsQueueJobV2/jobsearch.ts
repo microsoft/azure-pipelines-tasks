@@ -33,7 +33,7 @@ export class JobSearch {
     private foundCauses : any[] = []; // all found causes indexed by executableNumber
 
     public Initialized: boolean = false;
-    public ParsedTaskBody: {downstreamProjects?: {name: string, url: string}[], lastBuild?: {number: number}}; // the parsed task body of the job definition
+    public ParsedTaskBody: {downstreamProjects?: {name: string, url: string, color: string}[], lastBuild?: {number: number}}; // the parsed task body of the job definition
     private initialSearchBuildNumber: number = -1; // the intial, most likely build number for child jobs
     private nextSearchBuildNumber: number = -1; // the next build number to check
     private searchDirection: number = -1; // the direction to search, start by searching backwards
@@ -45,7 +45,7 @@ export class JobSearch {
         const defer: Q.Deferred<void> = Q.defer<void>();
         const thisSearch: JobSearch = this;
         if (!thisSearch.Initialized) { //only initialize once
-            const apiTaskUrl: string = util.addUrlSegment(thisSearch.taskUrl, '/api/json?tree=downstreamProjects[name,url],lastBuild[number]');
+            const apiTaskUrl: string = util.addUrlSegment(thisSearch.taskUrl, '/api/json?tree=downstreamProjects[name,url,color],lastBuild[number]');
             tl.debug('getting job task URL:' + apiTaskUrl);
             request.get({ url: apiTaskUrl, strictSSL: thisSearch.queue.TaskOptions.strictSSL }, function requestCallBack(err, httpResponse, body) {
                 if (!thisSearch.Initialized) { // only initialize once
@@ -242,7 +242,7 @@ export class JobSearch {
             thisSearch.stopWork(0); // found everything we were looking for
             return;
         } else {
-            const url: string  = util.addUrlSegment(thisSearch.taskUrl, thisSearch.nextSearchBuildNumber + '/api/json?tree=actions,timestamp');
+            const url: string  = util.addUrlSegment(thisSearch.taskUrl, thisSearch.nextSearchBuildNumber + '/api/json?tree=actions[causes[shortDescription,upstreamBuild,upstreamProject,upstreamUrl]],timestamp');
             tl.debug('pipeline, locating child execution URL:' + url);
             request.get({ url: url, strictSSL: thisSearch.queue.TaskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
                 tl.debug('locateExecution().requestCallback()');
