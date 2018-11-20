@@ -2,7 +2,7 @@ import tl = require("vsts-task-lib/task");
 import util = require("util");
 import path = require("path");
 import fs = require('fs');
-import mime = require('mime');
+import mime = require('browserify-mime');
 import { Utility } from "./Utility";
 import { WebRequest, sendRequest, WebResponse } from "./webClient";
 

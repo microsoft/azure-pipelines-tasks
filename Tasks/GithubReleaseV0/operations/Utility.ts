@@ -80,7 +80,7 @@ export class Utility {
 
     public static getGitHubApiUrl(): string {
         let githubApiUrlInput: string = undefined; // Todo: mdakbar: get GHE url
-        return githubApiUrlInput ? githubApiUrlInput : "https://api.github.com"; // url without slash at end
+        return githubApiUrlInput ? githubApiUrlInput : this._githubApiUrl; // url without slash at end
     }
 
     public static normalizeBranchName(branchName: string): string {
@@ -159,7 +159,8 @@ export class Utility {
     private static readonly _onlyFirstLine = new RegExp("^.*$", "m");
     private static readonly _githubPaginatedLinkRegex = new RegExp("^<(.*)>$");
     private static readonly _githubPaginatedRelRegex = new RegExp('^rel="(.*)"$');
-    private static _tagRef: string = "refs/tags/";
+    private static readonly _tagRef: string = "refs/tags/";
+    private static readonly _githubApiUrl: string = "https://api.github.com"; // url without slash at end
 }
 
 export class Inputs {
