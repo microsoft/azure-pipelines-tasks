@@ -4,6 +4,7 @@ import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as tl from "vsts-task-lib/task";
 import * as downloadutility from "./downloadutility";
 import * as util from "util";
+import * as yaml from "js-yaml";
 const uuidV4 = require('uuid/v4');
 const kubectlToolName = "kubectl"
 export const stableKubectlVersion = "v1.8.9"
@@ -80,6 +81,21 @@ function getkubectlDownloadURL(version: string) : string {
             return util.format("https://storage.googleapis.com/kubernetes-release/release/%s/bin/windows/amd64/kubectl.exe", version);   
 
     }
+}
+
+export function getKubeconfigForCluster(kubernetesServiceEndpoint: string)
+{
+    var kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'kubeconfig', false);
+    var clusterContext = tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'clusterContext', true);
+    if (!clusterContext)
+    {
+        return kubeconfig;
+    }
+
+    var kubeconfigTemplate = yaml.safeLoad(kubeconfig);
+    kubeconfigTemplate["current-context"] = clusterContext;
+    var modifiedKubeConfig = yaml.safeDump(kubeconfigTemplate);
+    return modifiedKubeConfig.toString();
 }
 
 function getExecutableExtention(): string {
