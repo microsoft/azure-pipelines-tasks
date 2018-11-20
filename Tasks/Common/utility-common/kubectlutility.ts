@@ -87,7 +87,7 @@ export function getKubeconfigForCluster(kubernetesServiceEndpoint: string)
 {
     var kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'kubeconfig', false);
     var clusterContext = tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'clusterContext', true);
-    if (!clusterContext || clusterContext === "")
+    if (!clusterContext)
     {
         return kubeconfig;
     }
