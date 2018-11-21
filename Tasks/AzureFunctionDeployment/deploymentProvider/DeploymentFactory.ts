@@ -50,7 +50,7 @@ export class DeploymentFactory {
         }
     }
 
-    private async _getUserSelectedDeploymentProviderForWindow(): Promise<IWebAppDeploymentProvider> {
+    private _getUserSelectedDeploymentProviderForWindow(): IWebAppDeploymentProvider {
         switch(this._taskParams.DeploymentType){
             case DeploymentType.zipDeploy:
                 return new WindowsWebAppZipDeployProvider(this._taskParams);
