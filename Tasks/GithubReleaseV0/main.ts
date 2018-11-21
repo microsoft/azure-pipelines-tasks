@@ -41,6 +41,14 @@ class Main {
                 const releaseNotesSelection = tl.getInput(Inputs.releaseNotesSelection);
                 const releaseNotesFile = tl.getPathInput(Inputs.releaseNotesFile, false, true);
                 const releaseNoteInput = tl.getInput(Inputs.releaseNotesInput);
+                // Todo: Currently, I am taking the target input as the endCommit and latest release on repo to get the startCommit
+                // And later on evaluating commits diff.
+                // But there can be scenario when tag is already created from some previous commit and users is ahead of that commit 
+                // and user is trying to create a release for that tag but CI has run for latest master i.e. latest commit
+                // In that case, target and tag's commit will be different 
+                // Will discuss with Raiyan on what to do here, how likely will this scenario occur
+                // Issue with tag's commit is that we will need to make a api call to fetch tag's commit
+                // And for that we need to fetch all tags and compare the tag as Get tag by tagName api is not available today.
                 const changeLog: string = await this._getChangeLog(githubEndpoint, repositoryName, target, 250);
                 const releaseNote: string = Utility.getReleaseNote(releaseNotesSelection, releaseNotesFile, releaseNoteInput, changeLog) || undefined;
                 const isPrerelease = tl.getBoolInput(Inputs.isPrerelease) || false;
