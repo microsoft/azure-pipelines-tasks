@@ -3,7 +3,7 @@
     "name": "GithubRelease",
     "friendlyName": "Github Release",
     "description": "Create, edit or discard the github release",
-    "helpMarkDown": "[More Information](Todo: mdakbar: Link to github release documentation)",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/GithubReleaseV0/README.md)",
     "category": "Utility",
     "releaseNotes": "Works with cross-platform agents (Linux, macOS, or Windows)",
     "visibility": [
