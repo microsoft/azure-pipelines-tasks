@@ -35,7 +35,7 @@ class Main {
                 }
             }
             else {
-                // Get task inputs specific to create and release
+                // Get task inputs specific to create and edit release
                 const target = tl.getInput(Inputs.target, true);
                 const releaseTitle = tl.getInput(Inputs.releaseTitle) || undefined; 
                 const releaseNotesSelection = tl.getInput(Inputs.releaseNotesSelection);
@@ -282,7 +282,7 @@ class Main {
                     let commitIdToRepoIssueIdsDictionary: { [key: string]: Set<string> } = this._getCommitIdToRepoIssueIdsDictionary(commitIdToMessageDictionary, repositoryName);
                     tl.debug("commitIdToRepoIssueIdsDictionary: " + JSON.stringify(commitIdToRepoIssueIdsDictionary));
                     
-                    let changeLog: string;
+                    let changeLog: string = "";
     
                     Object.keys(commitIdToRepoIssueIdsDictionary).forEach((commitId: string) => {
                         let changeLogPerCommit: string = this._getChangeLogPerCommit(commitId, commitIdToMessageDictionary[commitId], commitIdToRepoIssueIdsDictionary[commitId], repositoryName);
@@ -292,7 +292,11 @@ class Main {
                         }
                     });
     
-                    return changeLog;
+                    if (changeLog) {
+                        return this._ChangeLogTitle + changeLog;
+                    }
+
+                    return "";
                 }
             }
             else{
@@ -390,6 +394,7 @@ class Main {
         return commit_sha;
     }
 
+    private static readonly _ChangeLogTitle: string = "\n\nChange log-\n\n";
 }
 
 Main.run();

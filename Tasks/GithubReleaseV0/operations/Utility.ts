@@ -56,7 +56,7 @@ export class Utility {
     }
 
     public static getReleaseNote(releaseNotesSelection: string, releaseNotesFile: any, releaseNoteInput: string, changeLog: string): string {
-        let releaseNote: string = undefined;
+        let releaseNote: string = "";
 
         if (releaseNotesSelection === ReleaseNotesSelectionMode.file) {
 
@@ -72,8 +72,14 @@ export class Utility {
         }
         tl.debug("ReleaseNote:\n" + releaseNote);
 
+        if (!releaseNote) {
+            releaseNote = "";
+        }
+
         // Append commits and issues to release note.
-        releaseNote = releaseNote + "\n\nChange log:\n\n" + changeLog;
+        if (changeLog){
+            releaseNote = releaseNote + changeLog;
+        }
 
         return releaseNote;
     }
@@ -150,9 +156,13 @@ export class Utility {
         }
     }
 
-    public static getFirstLine(comment: string): string {
-        comment = (comment || "").trim();
-        const match = comment.match(this._onlyFirstLine);
+    public static getFirstLine(commitMessage: string): string {
+        commitMessage = (commitMessage || "").trim();
+        const match = commitMessage.match(this._onlyFirstLine);
+
+        tl.debug("Commit message: " + commitMessage);
+        tl.debug("match: " + match);
+
         return match[0];
     }
     

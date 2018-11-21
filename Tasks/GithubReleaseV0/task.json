@@ -99,9 +99,17 @@
             "defaultValue": "file",
             "visibleRule": "action = Create || action = Edit",
             "options": {
-                "input": "Enter Release Note",
-                "file": "Select Release Note File"
+                "file": "Select Release Note File",
+                "input": "Enter Release Note"
             }
+        },
+        {
+            "name": "releaseNotesFile",
+            "type": "filePath",
+            "label": "Release notes file",
+            "required": false,
+            "helpMarkDown": "Select a file which contains the Release Notes for this version.",
+            "visibleRule": "releaseNotesSelection = file"
         },
         {
             "name": "releaseNotesInput",
@@ -115,14 +123,6 @@
                 "rows": "4",
                 "maxLength": "5000"
             }
-        },
-        {
-            "name": "releaseNotesFile",
-            "type": "filePath",
-            "label": "Release notes file",
-            "required": false,
-            "helpMarkDown": "Select a file which contains the Release Notes for this version.",
-            "visibleRule": "releaseNotesSelection = file"
         },
         {
             "name": "githubReleaseAsset",
