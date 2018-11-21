@@ -1,6 +1,6 @@
 {
   "id": "15858991-8BAC-4542-99E7-577FEF9B5BE6",
-  "name": "AzureContainerDeployment",
+  "name": "AzureWebAppOnContainerDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
