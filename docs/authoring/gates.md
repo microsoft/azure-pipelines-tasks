@@ -11,9 +11,9 @@ RunsOn property in task.json specifies where the task should run. The possible v
 
 The default value of this property is Agent, but you can change it to ServerGate to specify that the task should run on Azure Pipelines/TFS server and should show up in the list of gates in the definition editor. In case you want the task to appear in both server tasks as well as gate tasks, specify the value of RunsOn as Server | ServerGate.
 
-#### Provide the result evaulation expression :
+#### Provide the result evaluation expression :
 
-In case you are using http request executions in your task, then you should provide the result evaluation expression so that the system can evaluate whether a particular run of a gate has passed or failed. You can learn more about the possible constructs in the expression in this [document](https://github.com/Microsoft/vsts-tasks/blob/master/docs/authoring/servertaskauthoring.md) and can also look at our built-in tasks for the real world usages ([Azure monitor task](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureMonitor/task.json), [Query work items](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/QueryWorkItems/task.json)).
+In case you are using http request executions in your task, then you should provide the result evaluation expression so that the system can evaluate whether a particular run of a gate has passed or failed. You can learn more about the possible constructs in the expression in this [document](https://github.com/Microsoft/vsts-tasks/blob/master/docs/authoring/servertaskauthoring.md) and can also look at our built-in tasks for the real world usages ([Azure monitor task](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureMonitorV0/task.json), [Query work items](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/QueryWorkItemsV0/task.json)).
 
 #### Understand the model difference between gate and server task:
 
