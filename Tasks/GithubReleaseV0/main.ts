@@ -45,7 +45,7 @@ class Main {
                 const releaseNote: string = Utility.getReleaseNote(releaseNotesSelection, releaseNotesFile, releaseNoteInput, changeLog) || undefined;
                 const isPrerelease = tl.getBoolInput(Inputs.isPrerelease) || false;
                 const isDraft = tl.getBoolInput(Inputs.isDraft) || false;
-                const githubReleaseAssetInputPatterns = tl.getDelimitedInput(Inputs.githubReleaseAsset, '\n');
+                const githubReleaseAssetInputPatterns = tl.getDelimitedInput(Inputs.githubReleaseAsset, Delimiters.newLine);
 
                 if (action === ActionType.create) {
                     tag = await this._getTagForCreateAction(githubEndpoint, repositoryName, target, tag);
