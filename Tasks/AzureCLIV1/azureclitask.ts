@@ -32,7 +32,7 @@ export class azureclitask {
             }
             else {
                 var script: string = tl.getInput("inlineScript", true);
-                scriptPath = path.join(tl.getVariable('Agent.TempDirectory'), "azureclitaskscript" + new Date().getTime());
+                scriptPath = path.join(tl.getVariable('Agent.TempDirectory'), "azscript");
                 if (os.type() != "Windows_NT") {
                     scriptPath = scriptPath + ".sh";
                 }
@@ -141,8 +141,7 @@ export class azureclitask {
     }
 
     private static setConfigDirectory(): void {
-        var configDirName: string = "config" + new Date().getTime();
-        this.azCliConfigPath = path.join(tl.getVariable('Agent.TempDirectory'), ".azclitask", configDirName);
+        this.azCliConfigPath = path.join(tl.getVariable('Agent.TempDirectory'), "azconfig");
         process.env['AZURE_CONFIG_DIR'] = this.azCliConfigPath;
     }
 
