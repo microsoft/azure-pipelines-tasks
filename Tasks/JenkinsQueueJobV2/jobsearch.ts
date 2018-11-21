@@ -2,10 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import tl = require('vsts-task-lib/task');
-import fs = require('fs');
-import path = require('path');
-import shell = require('shelljs');
-import url = require('url');
 import Q = require('q');
 import request = require('request');
 
@@ -33,7 +29,7 @@ export class JobSearch {
     private foundCauses : any[] = []; // all found causes indexed by executableNumber
 
     public Initialized: boolean = false;
-    public ParsedTaskBody: {downstreamProjects?: {name: string, url: string, color: string}[], lastBuild?: {number: number}}; // the parsed task body of the job definition
+    public ParsedTaskBody: ParsedTaskBody; // the parsed task body of the job definition
     private initialSearchBuildNumber: number = -1; // the intial, most likely build number for child jobs
     private nextSearchBuildNumber: number = -1; // the next build number to check
     private searchDirection: number = -1; // the direction to search, start by searching backwards
@@ -301,5 +297,17 @@ export class JobSearch {
                 }
             }).auth(thisSearch.queue.TaskOptions.username, thisSearch.queue.TaskOptions.password, true);
         }
+    }
+}
+
+interface Project {
+    name: string,
+    url: string,
+    color: string
+}
+interface ParsedTaskBody {
+    downstreamProjects?: Project[],
+    lastBuild?: {
+        number: number
     }
 }

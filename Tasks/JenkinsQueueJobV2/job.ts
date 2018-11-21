@@ -5,7 +5,6 @@ import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 import url = require('url');
-import shell = require('shelljs');
 import request = require('request');
 
 import { JobSearch } from './jobsearch';
