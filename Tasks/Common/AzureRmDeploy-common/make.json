@@ -1,4 +1,10 @@
 {
+    "cp": [
+        {
+            "source": "webdeployment-common/WebConfigTemplates",
+            "options": "-R"
+        }
+    ],
     "externals": {
         "archivePackages": [
             {

@@ -60,7 +60,7 @@
             ],
             "type": "pickList",
             "label": "App Service type",
-            "defaultValue": "functionApp",
+            "defaultValue": "",
             "required": true,
             "options": {
                 "functionApp": "Function App on Windows",

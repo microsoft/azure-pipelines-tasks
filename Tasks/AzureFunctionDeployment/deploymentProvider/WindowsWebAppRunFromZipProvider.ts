@@ -4,11 +4,11 @@ import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParser
 import { DeploymentType } from '../taskparameters';
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
+import { FileTransformsUtility } from 'azurermdeploycommon/operations/FileTransformsUtility.js';
 const oldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
 const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 1';
 var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
-var FileTransformsUtility = require('azurermdeploycommon/webdeployment-common/FileTransformsUtility.js');
 
 export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProvider{
  

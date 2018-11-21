@@ -3,11 +3,11 @@ import tl = require('vsts-task-lib/task');
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
 import { DeploymentType } from '../taskparameters';
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
+import { FileTransformsUtility } from 'azurermdeploycommon/operations/FileTransformsUtility.js';
 const deleteOldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
 const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 0';
 var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
-var FileTransformsUtility = require('azurermdeploycommon/webdeployment-common/FileTransformsUtility.js');
 
 export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvider{
     

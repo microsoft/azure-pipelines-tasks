@@ -1,8 +1,8 @@
 import tl = require('vsts-task-lib/task');
 import { parse } from './ParameterParserUtility';
 import { PackageType } from '../webdeployment-common/packageUtility';
-var deployUtility = require('webdeployment-common/utility.js');
-var generateWebConfigUtil = require('webdeployment-common/webconfigutil.js');
+var deployUtility = require('../webdeployment-common/utility.js');
+var generateWebConfigUtil = require('../webdeployment-common/webconfigutil.js');
 
 export class FileTransformsUtility {
 
