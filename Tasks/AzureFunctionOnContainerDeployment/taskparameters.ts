@@ -5,14 +5,14 @@ export class TaskParametersUtility {
     public static async getParameters(): Promise<TaskParameters> {
         var taskParameters: TaskParameters = {
             connectedServiceName: tl.getInput('ConnectedServiceName', false),
-            ImageName: tl.getInput('ImageName', false),
-            AppSettings: tl.getInput('AppSettings', false),
-            StartupCommand: tl.getInput('StartupCommand', false),
-            ConfigurationSettings: tl.getInput('ConfigurationSettings', false),
-            WebAppName: tl.getInput('WebAppName', true),
-            ResourceGroupName: tl.getInput('ResourceGroupName', false),
-            SlotName:tl.getInput('SlotName', false),
-            DeployToSlotOrASEFlag: tl.getBoolInput('DeployToSlotOrASEFlag', false),
+            ImageName: tl.getInput('imageName', false),
+            AppSettings: tl.getInput('appSettings', false),
+            StartupCommand: tl.getInput('containerCommand', false),
+            ConfigurationSettings: tl.getInput('configurationStrings', false),
+            WebAppName: tl.getInput('appName', true),
+            ResourceGroupName: tl.getInput('resourceGroupName', false),
+            SlotName:tl.getInput('slotName', false),
+            DeployToSlotOrASEFlag: tl.getBoolInput('deployToSlotOrASE', false),
         }
 
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
