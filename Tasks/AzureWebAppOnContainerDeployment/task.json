@@ -42,12 +42,9 @@
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
         },
         {
-            "name": "WebAppName",
-            "aliases": [
-                "appName"
-            ],
+            "name": "appName",
             "type": "pickList",
-            "label": "App Service name",
+            "label": "App Name",
             "defaultValue": "",
             "required": true,
             "properties": {
@@ -56,10 +53,7 @@
             "helpMarkDown": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed."
         },
         {
-            "name": "DeployToSlotOrASEFlag",
-            "aliases": [
-                "deployToSlotOrASE"
-            ],
+            "name": "deployToSlotOrASE",
             "type": "boolean",
             "label": "Deploy to Slot or App Service Environment",
             "defaultValue": "false",
@@ -67,7 +61,7 @@
             "helpMarkDown": "Select the option to deploy to an existing deployment slot or Azure App Service Environment.<br />For both the targets, the task needs Resource group name.<br />In case the deployment target is a slot, by default the deployment is done to the production slot. Any other existing slot name can also be provided.<br />In case the deployment target is an Azure App Service environment, leave the slot name as ‘production’ and just specify the Resource group name."
         },
         {
-            "name": "ResourceGroupName",
+            "name": "resourceGroupName",
             "type": "pickList",
             "label": "Resource group",
             "defaultValue": "",
@@ -79,10 +73,7 @@
             "visibleRule": "DeployToSlotOrASEFlag = true"
         },
         {
-            "name": "SlotName",
-            "aliases":[
-                "slotName"
-            ],
+            "name": "slotName",
             "type": "pickList",
             "label": "Slot",
             "defaultValue": "production",
@@ -94,10 +85,7 @@
             "visibleRule": "DeployToSlotOrASEFlag = true"
         },
         {
-            "name": "ImageName",
-            "aliases":[
-                "imageName"
-            ],
+            "name": "imageName",
             "type": "string",
             "label": "Image Name",
             "defaultValue": "",
@@ -105,10 +93,14 @@
             "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
         },
         {
-            "name": "AppSettings",
-            "aliases":[
-                "appSettings"
-            ],
+            "name": "containerCommand",
+            "type": "string",
+            "label": "Startup command ",
+            "defaultValue": "",
+            "required": false
+        },
+        {
+            "name": "appSettings",
             "type": "multiLine",
             "label": "App settings",
             "defaultValue": "",
@@ -120,21 +112,7 @@
             }
         },
         {
-            "name": "StartupCommand",
-            "aliases":[
-                "containerCommand"
-            ],
-            "type": "string",
-            "label": "Startup command ",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Enter the start up command."
-        },
-        {
-            "name": "ConfigurationSettings",
-            "aliases":[
-                "configurationStrings"
-            ],
+            "name": "configurationStrings",
             "type": "multiLine",
             "label": "Configuration settings",
             "defaultValue": "",
@@ -154,7 +132,7 @@
     ],
     "dataSourceBindings": [
         {
-            "target": "WebAppName",
+            "target": "appName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppNamesByAppType",
             "parameters": {
@@ -162,25 +140,25 @@
             }
         },
         {
-            "target": "ResourceGroupName",
+            "target": "resourceGroupName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppResourceGroup",
             "parameters": {
-                "WebAppName": "$(WebAppName)"
+                "WebAppName": "$(appName)"
             }
         },
         {
-            "target": "SlotName",
+            "target": "slotName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppSlotsId",
             "parameters": {
-                "WebAppName": "$(WebAppName)",
-                "ResourceGroupName": "$(ResourceGroupName)"
+                "WebAppName": "$(appName)",
+                "ResourceGroupName": "$(resourceGroupName)"
             },
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         }
     ],
-    "instanceNameFormat": "Azure Web App on Container Deploy: $(WebAppName)",
+    "instanceNameFormat": "Azure Web App on Container Deploy: $(appName)",
     "execution": {
         "Node": {
             "target": "azurermwebappdeployment.js"

@@ -42,105 +42,83 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
-      "name": "WebAppName",
-      "aliases": [
-        "appName"
-      ],
+      "name": "appName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.WebAppName",
+      "label": "ms-resource:loc.input.label.appName",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
+      "helpMarkDown": "ms-resource:loc.input.help.appName"
     },
     {
-      "name": "DeployToSlotOrASEFlag",
-      "aliases": [
-        "deployToSlotOrASE"
-      ],
+      "name": "deployToSlotOrASE",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.DeployToSlotOrASEFlag",
+      "label": "ms-resource:loc.input.label.deployToSlotOrASE",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotOrASEFlag"
+      "helpMarkDown": "ms-resource:loc.input.help.deployToSlotOrASE"
     },
     {
-      "name": "ResourceGroupName",
+      "name": "resourceGroupName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "label": "ms-resource:loc.input.label.resourceGroupName",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
+      "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName",
       "visibleRule": "DeployToSlotOrASEFlag = true"
     },
     {
-      "name": "SlotName",
-      "aliases": [
-        "slotName"
-      ],
+      "name": "slotName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.SlotName",
+      "label": "ms-resource:loc.input.label.slotName",
       "defaultValue": "production",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.SlotName",
+      "helpMarkDown": "ms-resource:loc.input.help.slotName",
       "visibleRule": "DeployToSlotOrASEFlag = true"
     },
     {
-      "name": "ImageName",
-      "aliases": [
-        "imageName"
-      ],
+      "name": "imageName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.ImageName",
+      "label": "ms-resource:loc.input.label.imageName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ImageName"
+      "helpMarkDown": "ms-resource:loc.input.help.imageName"
     },
     {
-      "name": "AppSettings",
-      "aliases": [
-        "appSettings"
-      ],
+      "name": "containerCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.containerCommand",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "appSettings",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.AppSettings",
+      "label": "ms-resource:loc.input.label.appSettings",
       "defaultValue": "",
       "required": false,
       "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "ms-resource:loc.input.help.AppSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.appSettings",
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
     },
     {
-      "name": "StartupCommand",
-      "aliases": [
-        "containerCommand"
-      ],
-      "type": "string",
-      "label": "ms-resource:loc.input.label.StartupCommand",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
-    },
-    {
-      "name": "ConfigurationSettings",
-      "aliases": [
-        "configurationStrings"
-      ],
+      "name": "configurationStrings",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.ConfigurationSettings",
+      "label": "ms-resource:loc.input.label.configurationStrings",
       "defaultValue": "",
       "required": false,
       "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "ms-resource:loc.input.help.ConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.configurationStrings",
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
@@ -154,7 +132,7 @@
   ],
   "dataSourceBindings": [
     {
-      "target": "WebAppName",
+      "target": "appName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureRMWebAppNamesByAppType",
       "parameters": {
@@ -162,20 +140,20 @@
       }
     },
     {
-      "target": "ResourceGroupName",
+      "target": "resourceGroupName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureRMWebAppResourceGroup",
       "parameters": {
-        "WebAppName": "$(WebAppName)"
+        "WebAppName": "$(appName)"
       }
     },
     {
-      "target": "SlotName",
+      "target": "slotName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureRMWebAppSlotsId",
       "parameters": {
-        "WebAppName": "$(WebAppName)",
-        "ResourceGroupName": "$(ResourceGroupName)"
+        "WebAppName": "$(appName)",
+        "ResourceGroupName": "$(resourceGroupName)"
       },
       "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
     }

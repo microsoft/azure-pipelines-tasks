@@ -75,6 +75,6 @@ export function mockTaskArgument():  ma.TaskLibAnswers{
 
 export function mockTaskInputParameters(tr) {
     tr.setInput('ConnectedServiceName', 'AzureRMSpn');
-    tr.setInput('WebAppName', 'mytestapp');
-    tr.setInput('ImageName', 'dockernamespace/dockerrepository:DockerImageTag');
+    tr.setInput('appName', 'mytestapp');
+    tr.setInput('imageName', 'dockernamespace/dockerrepository:DockerImageTag');
 }
