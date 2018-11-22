@@ -27,13 +27,13 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "webAppKind != functionAppLinux && Package NotEndsWith .war"
+      "visibleRule": "appType != functionAppLinux && package NotEndsWith .war"
     },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != functionAppLinux && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
+      "visibleRule": "appType != functionAppLinux && appType != \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
     },
     {
       "name": "ApplicationAndConfigurationSettings",
@@ -54,92 +54,75 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
-      "name": "WebAppKind",
-      "aliases": [
-        "appType"
-      ],
+      "name": "appType",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.WebAppKind",
+      "label": "ms-resource:loc.input.label.appType",
       "defaultValue": "",
       "required": true,
       "options": {
         "functionApp": "Function App on Windows",
         "functionAppLinux": "Function App on Linux"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
+      }
     },
     {
-      "name": "WebAppName",
-      "aliases": [
-        "appName"
-      ],
+      "name": "appName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.WebAppName",
+      "label": "ms-resource:loc.input.label.appName",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
+      "helpMarkDown": "ms-resource:loc.input.help.appName"
     },
     {
-      "name": "DeployToSlotOrASEFlag",
-      "aliases": [
-        "deployToSlotOrASE"
-      ],
+      "name": "deployToSlotOrASE",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.DeployToSlotOrASEFlag",
+      "label": "ms-resource:loc.input.label.deployToSlotOrASE",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotOrASEFlag",
-      "visibleRule": "WebAppKind != \"\""
+      "helpMarkDown": "ms-resource:loc.input.help.deployToSlotOrASE",
+      "visibleRule": "appType != \"\""
     },
     {
-      "name": "ResourceGroupName",
+      "name": "resourceGroupName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "label": "ms-resource:loc.input.label.resourceGroupName",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
-      "visibleRule": "DeployToSlotOrASEFlag = true"
+      "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName",
+      "visibleRule": "deployToSlotOrASE = true"
     },
     {
-      "name": "SlotName",
-      "aliases": [
-        "slotName"
-      ],
+      "name": "slotName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.SlotName",
+      "label": "ms-resource:loc.input.label.slotName",
       "defaultValue": "production",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.SlotName",
-      "visibleRule": "DeployToSlotOrASEFlag = true"
+      "helpMarkDown": "ms-resource:loc.input.help.slotName",
+      "visibleRule": "deployToSlotOrASE = true"
     },
     {
-      "name": "Package",
+      "name": "package",
       "aliases": [
-        "packageForLinux",
-        "package"
+        "packageForLinux"
       ],
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.Package",
+      "label": "ms-resource:loc.input.label.package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.Package"
+      "helpMarkDown": "ms-resource:loc.input.help.package"
     },
     {
-      "name": "RuntimeStack",
-      "aliases": [
-        "runtimeStack"
-      ],
+      "name": "runtimeStack",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.RuntimeStack",
+      "label": "ms-resource:loc.input.label.runtimeStack",
       "defaultValue": "",
       "required": false,
       "properties": {
@@ -149,70 +132,56 @@
         "DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0": ".NET",
         "DOCKER|microsoft/azure-functions-node8:2.0": "JavaScript"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.RuntimeStack",
-      "visibleRule": "WebAppKind = functionAppLinux"
+      "visibleRule": "appType = functionAppLinux"
     },
     {
-      "name": "StartupCommand",
-      "aliases": [
-        "startUpCommand"
-      ],
+      "name": "startUpCommand",
       "type": "string",
-      "label": "ms-resource:loc.input.label.StartupCommand",
+      "label": "ms-resource:loc.input.label.startUpCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = functionAppLinux",
-      "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
+      "visibleRule": "appType = functionAppLinux"
     },
     {
-      "name": "WebConfigParameters",
+      "name": "webConfigParameters",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.WebConfigParameters",
+      "label": "ms-resource:loc.input.label.webConfigParameters",
       "required": false,
       "defaultValue": "",
       "groupName": "FileTransformsAndVariableSubstitution",
-      "helpMarkDown": "ms-resource:loc.input.help.WebConfigParameters",
+      "helpMarkDown": "ms-resource:loc.input.help.webConfigParameters",
       "properties": {
         "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
       }
     },
     {
-      "name": "AppSettings",
-      "aliases": [
-        "appSettings"
-      ],
+      "name": "appSettings",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.AppSettings",
+      "label": "ms-resource:loc.input.label.appSettings",
       "defaultValue": "",
       "required": false,
       "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "ms-resource:loc.input.help.AppSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.appSettings",
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
     },
     {
-      "name": "ConfigurationSettings",
-      "aliases": [
-        "configurationStrings"
-      ],
+      "name": "configurationStrings",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.ConfigurationSettings",
+      "label": "ms-resource:loc.input.label.configurationStrings",
       "defaultValue": "",
       "required": false,
       "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "ms-resource:loc.input.help.ConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.configurationStrings",
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
     },
     {
-      "name": "DeploymentMethod",
-      "aliases": [
-        "deploymentMethod"
-      ],
+      "name": "deploymentMethod",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.DeploymentMethod",
+      "label": "ms-resource:loc.input.label.deploymentMethod",
       "defaultValue": "auto",
       "required": true,
       "groupName": "AdditionalDeploymentOptions",
@@ -221,7 +190,7 @@
         "zipDeploy": "Zip Deploy",
         "runFromPackage": "Run From Package"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.DeploymentMethod"
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentMethod"
     }
   ],
   "outputVariables": [
@@ -232,28 +201,28 @@
   ],
   "dataSourceBindings": [
     {
-      "target": "WebAppName",
+      "target": "appName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureRMWebAppNamesByAppType",
       "parameters": {
-        "WebAppKind": "$(WebAppKind)"
+        "WebAppKind": "$(appType)"
       }
     },
     {
-      "target": "ResourceGroupName",
+      "target": "resourceGroupName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureRMWebAppResourceGroup",
       "parameters": {
-        "WebAppName": "$(WebAppName)"
+        "WebAppName": "$(appName)"
       }
     },
     {
-      "target": "SlotName",
+      "target": "slotName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureRMWebAppSlotsId",
       "parameters": {
-        "WebAppName": "$(WebAppName)",
-        "ResourceGroupName": "$(ResourceGroupName)"
+        "WebAppName": "$(appName)",
+        "ResourceGroupName": "$(resourceGroupName)"
       },
       "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
     }
