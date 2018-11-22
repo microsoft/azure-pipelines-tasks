@@ -16,17 +16,17 @@ export class TaskParametersUtility {
     public static async getParameters(): Promise<TaskParameters> {
         var taskParameters: TaskParameters = {
             connectedServiceName: tl.getInput('ConnectedServiceName', true),
-            WebAppKind: tl.getInput('WebAppKind', false),
-            DeployToSlotOrASEFlag: tl.getBoolInput('DeployToSlotOrASEFlag', false),
-            WebConfigParameters: tl.getInput('WebConfigParameters', false),
-            AppSettings: tl.getInput('AppSettings', false),
-            StartupCommand: tl.getInput('StartupCommand', false),
-            ConfigurationSettings: tl.getInput('ConfigurationSettings', false),
-            ResourceGroupName: tl.getInput('ResourceGroupName', false),
-            SlotName: tl.getInput('SlotName', false)
+            WebAppKind: tl.getInput('appType', false),
+            DeployToSlotOrASEFlag: tl.getBoolInput('deployToSlotOrASE', false),
+            WebConfigParameters: tl.getInput('webConfigParameters', false),
+            AppSettings: tl.getInput('appSettings', false),
+            StartupCommand: tl.getInput('startUpCommand', false),
+            ConfigurationSettings: tl.getInput('configurationStrings', false),
+            ResourceGroupName: tl.getInput('resourceGroupName', false),
+            SlotName: tl.getInput('slotName', false)
         }  
         
-        taskParameters.WebAppName = tl.getInput('WebAppName', true);
+        taskParameters.WebAppName = tl.getInput('appName', true);
         
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParameters.WebAppName));   
@@ -50,7 +50,7 @@ export class TaskParametersUtility {
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
        
-        taskParameters.Package = new Package(tl.getPathInput('Package', true));
+        taskParameters.Package = new Package(tl.getPathInput('package', true));
         tl.debug("intially web config parameters :" + taskParameters.WebConfigParameters);
         if(taskParameters.Package.getPackageType() === PackageType.jar && (!taskParameters.isLinuxApp)) {
             if(!taskParameters.WebConfigParameters) {
@@ -73,10 +73,10 @@ export class TaskParametersUtility {
         }
 
         if(taskParameters.isLinuxApp) {
-            taskParameters.RuntimeStack = tl.getInput('RuntimeStack', false);
+            taskParameters.RuntimeStack = tl.getInput('runtimeStack', false);
         }
 
-        taskParameters.DeploymentType = DeploymentType[(tl.getInput('DeploymentMethod', false))];
+        taskParameters.DeploymentType = DeploymentType[(tl.getInput('deploymentMethod', false))];
 
         return taskParameters;
     }
