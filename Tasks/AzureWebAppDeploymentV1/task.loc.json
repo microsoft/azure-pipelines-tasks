@@ -24,12 +24,6 @@
   "minimumAgentVersion": "2.104.1",
   "groups": [
     {
-      "name": "FileTransformsAndVariableSubstitution",
-      "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
-      "isExpanded": false,
-      "visibleRule": "appType != webAppLinux && package NotEndsWith .war"
-    },
-    {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
@@ -141,11 +135,12 @@
       "label": "ms-resource:loc.input.label.webConfigParameters",
       "required": false,
       "defaultValue": "",
-      "groupName": "FileTransformsAndVariableSubstitution",
+      "groupName": "ApplicationAndConfigurationSettings",
       "helpMarkDown": "ms-resource:loc.input.help.webConfigParameters",
       "properties": {
         "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
-      }
+      },
+      "visibleRule": "appType != webAppLinux && package NotEndsWith .war"
     },
     {
       "name": "appSettings",

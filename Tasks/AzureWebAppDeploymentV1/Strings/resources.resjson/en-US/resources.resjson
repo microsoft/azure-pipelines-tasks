@@ -4,7 +4,6 @@
   "loc.description": "Update Azure App Services on Windows, Web App on Linux with built-in images, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Mobile Apps, API applications",
   "loc.instanceNameFormat": "Azure Web App Deploy: $(appName)",
   "loc.releaseNotes": "What's new in version 1.* (preview)<br />Supports Zip Deploy, Run From Package, War Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurewebappdeployreadme) for more information.",
-  "loc.group.displayName.FileTransformsAndVariableSubstitution": "File Transforms & Variable Substitution Options",
   "loc.group.displayName.AdditionalDeploymentOptions": "Additional Deployment Options",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
