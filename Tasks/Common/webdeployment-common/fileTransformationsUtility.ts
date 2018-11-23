@@ -4,7 +4,7 @@ var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitu
 var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
 
-export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string, isMSBuildPackage: boolean, envName?: string) {
+export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string, isMSBuildPackage: boolean) {
 
     if(xmlTransformation) {
         if(isMSBuildPackage) {
@@ -16,7 +16,7 @@ export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles:
                 console.log(tl.loc('AutoParameterizationMessage'));
             }
         }
-        var environmentName = envName || tl.getVariable('Release.EnvironmentName');
+        var environmentName = tl.getVariable('Release.EnvironmentName');
         if(tl.osType().match(/^Win/)) {
             var transformConfigs = ["Release.config"];
             if(environmentName && environmentName.toLowerCase() != 'release') {
