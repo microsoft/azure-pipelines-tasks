@@ -110,9 +110,6 @@
     },
     {
       "name": "package",
-      "aliases": [
-        "packageForLinux"
-      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
@@ -182,7 +179,7 @@
       "required": true,
       "groupName": "AdditionalDeploymentOptions",
       "options": {
-        "auto": "Auo-detect",
+        "auto": "Auto-detect",
         "zipDeploy": "Zip Deploy",
         "runFromPackage": "Run From Package"
       },

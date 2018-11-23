@@ -1,4 +1,4 @@
-#  Azure App Service Deployment: ARM 
+#  Azure Web App Deployment: ARM 
 
 ## Overview
 

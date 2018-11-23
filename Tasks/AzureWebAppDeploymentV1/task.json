@@ -1,7 +1,7 @@
 {
     "id": "18BDE28A-8172-45CB-B204-5CEF1393DBB1",
     "name": "AzureWebAppDeployment",
-    "friendlyName": "Azure Web App Deploy",
+    "friendlyName": "Azure Web App",
     "description": "Update Azure App Services on Windows, Web App on Linux with built-in images, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Mobile Apps, API applications",
     "helpMarkDown": "[More information](https://aka.ms/azurewebappdeployreadme)",
     "category": "Deploy",
@@ -110,9 +110,6 @@
         },
         {
             "name": "package",
-            "aliases": [
-                "packageForLinux"
-            ],
             "type": "filePath",
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
@@ -182,7 +179,7 @@
             "required": true,
             "groupName": "AdditionalDeploymentOptions",
             "options": {
-                "auto": "Auo-detect",
+                "auto": "Auto-detect",
                 "zipDeploy": "Zip Deploy",
                 "runFromPackage": "Run From Package"
             },
