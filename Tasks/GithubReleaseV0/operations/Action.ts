@@ -114,7 +114,7 @@ export class Action {
             console.log(tl.loc("UploadingAsset", asset));
 
             if (fs.lstatSync(path.resolve(asset)).isDirectory()) {
-                console.log(tl.loc("AssetIsDirectoryError", asset));
+                console.warn(tl.loc("AssetIsDirectoryError", asset));
                 continue;
             }
 

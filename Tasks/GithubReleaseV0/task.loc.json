@@ -69,8 +69,8 @@
       "visibleRule": "action = Create",
       "helpMarkDown": "ms-resource:loc.input.help.tagSelection",
       "options": {
-        "auto": "Tag associated with commit",
-        "manual": "Specified tag"
+        "auto": "Git tag",
+        "manual": "User specified tag"
       }
     },
     {
@@ -100,8 +100,8 @@
       "visibleRule": "action = Create || action = Edit",
       "helpMarkDown": "ms-resource:loc.input.help.releaseNotesSelection",
       "options": {
-        "file": "Select release notes file",
-        "input": "Enter release notes inline"
+        "file": "Release notes file",
+        "input": "Inline release notes"
       }
     },
     {

@@ -248,6 +248,10 @@ export class ActionType {
 export class AzureDevOpsVariables {
     public static readonly buildSourceVersion: string = "Build.SourceVersion";
     public static readonly buildSourceBranch: string = "Build.SourceBranch"; 
+    public static readonly releaseWebUrl: string = "Release.ReleaseWebURL"; 
+    public static readonly collectionUri: string = "System.TeamFoundationCollectionUri"; 
+    public static readonly teamProject: string = "System.TeamProject"; 
+    public static readonly buildId: string = "Build.BuildId"; 
 }
 
 export interface IGitHubRepositoryInfo {

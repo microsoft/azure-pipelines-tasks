@@ -63,14 +63,14 @@
         {
             "name": "tagSelection",
             "type": "radio",
-            "label": "Tag selection",
+            "label": "Tag type",
             "required": true,
             "defaultValue": "auto",
             "visibleRule": "action = Create",
-            "helpMarkDown": "Configure the tag to be used for release creation. Use 'Tag associated with commit' option automatically takes the tag which points to this commit. Use 'Specified tag' option in case you want to manually provide a tag.",
+            "helpMarkDown": "Configure the tag to be used for release creation. 'Git tag' option automatically takes the tag which is associated with this commit. Use 'User specified tag' option in case you want to manually provide a tag.",
             "options": {
-                "auto": "Tag associated with commit",
-                "manual": "Specified tag"
+                "auto": "Git tag",
+                "manual": "User specified tag"
             }
         },
         {
@@ -94,20 +94,20 @@
         {
             "name": "releaseNotesSelection",
             "type": "radio",
-            "label": "Release notes type",
+            "label": "Release notes source",
             "required": false,
             "defaultValue": "file",
             "visibleRule": "action = Create || action = Edit",
-            "helpMarkDown": "Specify the description of github release. Use 'Select release notes file' option if you wish the contents of the selected file to be copied as github release notes. Use 'Enter release notes' option if you want to manually enter the release notes.",
+            "helpMarkDown": "Specify the description of github release. Use 'Release notes file' option if you wish that the contents of a file to be copied as github release notes. Use 'Inline release notes' option if you want to manually enter the release notes.",
             "options": {
-                "file": "Select release notes file",
-                "input": "Enter release notes inline"
+                "file": "Release notes file",
+                "input": "Inline release notes"
             }
         },
         {
             "name": "releaseNotesFile",
             "type": "filePath",
-            "label": "Release notes file",
+            "label": "Release notes file path",
             "required": false,
             "helpMarkDown": "Select the file which contains the release notes.",
             "visibleRule": "releaseNotesSelection = file"
@@ -172,7 +172,7 @@
         {
             "name": "changeLog",
             "type": "boolean",
-            "label": "Add change log",
+            "label": "Add changelog",
             "defaultValue": "true",
             "required": false,
             "visibleRule": "action = Create || action = Edit",
