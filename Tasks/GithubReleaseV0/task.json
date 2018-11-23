@@ -5,7 +5,6 @@
     "description": "Create, edit or discard the github release",
     "helpMarkDown": "[More Information](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/GithubReleaseV0/README.md)",
     "category": "Utility",
-    "releaseNotes": "Works with cross-platform agents (Linux, macOS, or Windows)",
     "visibility": [
         "Build",
         "Release"
@@ -26,7 +25,7 @@
             "label": "GitHub Connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the service endpoint for your GitHub connection. To create one, click the Manage link and create a new service endpoint."
+            "helpMarkDown": "Select the service endpoint for your GitHub connection. Click the 'Manage' link to create a new service endpoint. To know more about service connections [click here.](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=vsts#sep-github)"
         },
         {
             "name": "repositoryName",
@@ -34,7 +33,7 @@
             "label": "Repository",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Name of the GitHub repository",
+            "helpMarkDown": "Select the name of github repository where github releases will be created.",
             "properties": {
                 "DisableManageLink": "True"
             }
@@ -45,7 +44,7 @@
             "label": "Action",
             "defaultValue": "Create",
             "required": true,
-            "helpMarkDown": "Select the action to trigger",
+            "helpMarkDown": "Select the type of release operation you want perform. This task can create, edit or discard a github release.",
             "options": {
                 "Create": "Create",
                 "Edit": "Edit",
@@ -59,7 +58,7 @@
             "defaultValue": "$(Build.SourceVersion)",
             "required": true,
             "visibleRule": "action = Create || action = Edit",
-            "helpMarkDown": "The branch or commit to release"
+            "helpMarkDown": "This is the commit SHA for which the github release will be created. E.g. 48b11d8d6e92a22e3e9563a3f643699c16fd6e27. You can also use variables here."
         },
         {
             "name": "tagSelection",
@@ -68,9 +67,10 @@
             "required": true,
             "defaultValue": "auto",
             "visibleRule": "action = Create",
+            "helpMarkDown": "Configure the tag to be used for release creation. Use 'Tag associated with commit' option automatically takes the tag which points to this commit. Use 'Specified tag' option in case you want to manually provide a tag.",
             "options": {
-                "auto": "Use tag associated with commit",
-                "manual": "Specify tag manually"
+                "auto": "Tag associated with commit",
+                "manual": "Specified tag"
             }
         },
         {
@@ -80,7 +80,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "action = Edit || action = Discard || tagSelection = manual",
-            "helpMarkDown": "Tag to release, default value $(Build.BuildNumber) for release current build"
+            "helpMarkDown": "Specify the tag for which you want to create, edit or discard a release. You can also use variables here. E.g. $(tagName)."
         },
         {
             "name": "releaseTitle",
@@ -89,18 +89,19 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "action = Create || action = Edit",
-            "helpMarkDown": "Release title"
+            "helpMarkDown": "Specify the title of the github release. If left empty, the tag will be used as release title."
         },
         {
             "name": "releaseNotesSelection",
             "type": "radio",
-            "label": "Release note",
+            "label": "Release notes type",
             "required": false,
             "defaultValue": "file",
             "visibleRule": "action = Create || action = Edit",
+            "helpMarkDown": "Specify the description of github release. Use 'Select release notes file' option if you wish the contents of the selected file to be copied as github release notes. Use 'Enter release notes' option if you want to manually enter the release notes.",
             "options": {
-                "file": "Select Release Note File",
-                "input": "Enter Release Note"
+                "file": "Select release notes file",
+                "input": "Enter release notes inline"
             }
         },
         {
@@ -108,7 +109,7 @@
             "type": "filePath",
             "label": "Release notes file",
             "required": false,
-            "helpMarkDown": "Select a file which contains the Release Notes for this version.",
+            "helpMarkDown": "Select the file which contains the release notes.",
             "visibleRule": "releaseNotesSelection = file"
         },
         {
@@ -116,7 +117,7 @@
             "type": "multiLine",
             "label": "Release notes",
             "required": false,
-            "helpMarkDown": "Release notes for this version.",
+            "helpMarkDown": "Type your release notes here. Accepts markdown.",
             "visibleRule": "releaseNotesSelection = input",
             "properties": {
                 "resizable": "true",
@@ -127,11 +128,11 @@
         {
             "name": "githubReleaseAsset",
             "type": "multiLine",
-            "label": "File to upload as asset",
+            "label": "Assets",
             "defaultValue": "$(Build.ArtifactStagingDirectory)/*",
             "required": false,
             "visibleRule": "action = Create || action = Edit",
-            "helpMarkDown": "The file to upload as artifacts to the release. Eg- $(System.DefaultWorkingDirectory)/**/*.xml",
+            "helpMarkDown": "Specify the files to be uploaded as assets for the release. You can use wildcard characters to specify set of files. E.g. $(Build.ArtifactStagingDirectory)/*.zip. You can also specify multiple patterns- one per line. By default, all files in $(Build.ArtifactStagingDirectory) directory will be uploaded.",
             "properties": {
                 "resizable": "true",
                 "rows": "4"
@@ -144,6 +145,7 @@
             "required": false,
             "defaultValue": "delete",
             "visibleRule": "action = Edit",
+            "helpMarkDown": "Use 'Delete existing assets' option, if you want to first delete any existing assets in the release and then upload all the assets. Use 'Replace existing assets' option, if you want to replace any assets that have the same name.",
             "options": {
                 "delete": "Delete exisiting assets",
                 "replace": "Replace existing assets"
@@ -154,18 +156,27 @@
             "type": "boolean",
             "label": "Draft release",
             "defaultValue": "false",
-            "required": true,
-            "visibleRule": "action = Create || action = Edit",
-            "helpMarkDown": "Is draft"
+            "required": false,
+            "helpMarkDown": "This option specifies if the release has to be saved as a draft release. If unchecked, the release will be published.",
+            "visibleRule": "action = Create || action = Edit"
         },
         {
             "name": "isPrerelease",
             "type": "boolean",
             "label": "Pre release",
             "defaultValue": "false",
-            "required": true,
+            "required": false,
             "visibleRule": "action = Create || action = Edit",
-            "helpMarkDown": "Is pre release"
+            "helpMarkDown": "This option specifies if the release has to be marked as a pre-release."
+        },
+        {
+            "name": "changeLog",
+            "type": "boolean",
+            "label": "Add change log",
+            "defaultValue": "true",
+            "required": false,
+            "visibleRule": "action = Create || action = Edit",
+            "helpMarkDown": "Using this option you can generate and append list of changes to release notes. The list of changes(commits and issues) between this and last published release will be generated and appended to release notes."
         }
     ],
     "sourceDefinitions": [
@@ -184,38 +195,48 @@
         }
     },
     "messages": {
-        "CreatingRelease": "Creating release",
+        "CreatingRelease": "Creating release for tag: %s",
         "CreateReleaseError": "An error occurred while creating release.",
         "CreateReleaseSuccess": "Release created successfully at %s",
-        "DraftReleaseCreatedSuccess": "Draft release created successfully at %s",
-        "DiscardingRelease": "Discarding release",
+        "DiscardingRelease": "Discarding release for tag: %s",
         "DiscardReleaseError": "An error occurred while discarding release.",
-        "DiscardReleaseSuccess": "Discard release successful.",
-        "EditingRelease": "Editing release",
+        "NoReleaseFoundCreateRelease": "No existing release found to edit. Creating one with the tag: %s",
+        "DiscardReleaseSuccess": "Release discarded successfully",
+        "EditingRelease": "Editing release with tag: %s",
         "EditReleaseError": "An error occurred while editing release.",
         "EditReleaseSuccess": "Release edited successfully",
         "GetReleasesError": "An error occurred while fetching releases",
         "GetTagsError": "An error occurred while fetching tags",
         "GetBranchError": "An error occurred while fetching branch",
-        "MissingAssetError": "Missing asset: %s",
+        "MissingAssetError": "File not found: %s",
+        "NoReleaseFoundToDiscard": "No release found for tag: %s. Discarding release failed.",
+        "MultipleReleasesFoundError": "More than 1 release found for tag: %s.",
         "DuplicateAssetFound": "Duplicate asset found: %s",
-        "NoReleaseFoundToDiscard": "No release found to discard for tag: %s",
-        "MultipleReleasesFoundError": "More than 1 releases found for tag: %s",
+        "SkipDuplicateAssetFound": "Duplicate asset found: %s. Skipping...",
         "DeletingDuplicateAsset": "Deleting duplicate asset: %s",
+        "MultipleTagFound": "More than 1 tag found for given commit: %s",
         "DuplicateAssetDeletedSuccessfully": "Duplicate asset deleted successfully: %s\n Uploading the asset again",
         "AssetDeletedSuccessfully": "Asset %s deleted successfully",
-        "NoTagFound": "No tag found",
+        "NoTagFound": "No tag found for provided target: %s. Skipping further steps",
+        "CommitDiffBehind": "Cannot compute the commit difference as the provided target commit is older than the commit of last published release.",
+        "CommitDiffEqual": "No changes found. The provided target commit is same as the commit of last published release.",
         "ErrorDeletingDuplicateAsset": "An error occurred while deleting duplicate asset: %s",
         "ErrorDeletingAsset": "An error occurred while deleting asset: %s",
         "UploadingAsset": "Uploading asset: %s",
+        "UploadingAssets": "Uploading assets...",
         "UploadAssetError": "An error occurred while uploading asset: %s",
         "UploadAssetSuccess": "Uploaded asset: %s",
+        "DeleteAllAsset": "Deleting assets...",
+        "DeletingAsset": "Deleting asset: %s",
+        "NoAssetFoundToDelete": "No assets found to delete.",
+        "NoAssetFoundToUpload": "No assets found to upload.",
         "ReleaseNotesFileIsDirectoryError": "Release notes file: %s is a directory and not a file. Release notes will be set as empty.",
-        "AssetIsDirectoryError": "Asset is a directory and not a file. Skipping uploading asset: %s",
+        "AssetIsDirectoryError": "Asset is a directory and not a file. Skipping uploading directory: %s",
         "GetLatestReleaseError": "Error fetching latest release",
         "GetCommitsListError": "Error fetching list of commits",
         "GetReposError": "Error fetching repos",
-        "GetCommitsByShaError": "Error fetching commits by sha",
-        "ReleaseAlreadyExists": "Failed to create release. Release already exist for tag: %s"
+        "GetCommitsByShaError": "Error fetching the initial commit",
+        "ReleaseAlreadyExists": "Failed to create release. Release already exists for tag: %s",
+        "ComputingChangeLog": "Computing changes made in this release..."
     }
 }

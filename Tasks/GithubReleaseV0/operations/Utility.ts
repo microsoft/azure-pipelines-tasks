@@ -50,7 +50,7 @@ export class Utility {
                     fs.accessSync(path.resolve(asset));
                 })
             } catch (err) {
-                throw new Error(tl.loc("MissingAssetError", err.path));
+                console.log(tl.loc("MissingAssetError", err.path));
             }
         }
     }
@@ -96,37 +96,50 @@ export class Utility {
         return undefined;
     }
 
-    public static parseHTTPHeaderLink(headerLink: string) {
+    /**
+     * Returns the parsed HTTP header link if it exists.
+     * E.g. Link: '<https://api.github.com/search/code?q=addClass+user%3Amozilla&page=2>; rel="next", <https://api.github.com/search/code?q=addClass+user%3Amozilla&page=34>; rel="last"'
+     * Returned object would be like {
+     *  "next": "https://api.github.com/search/code?q=addClass+user%3Amozilla&page=2",
+     *  "last": "https://api.github.com/search/code?q=addClass+user%3Amozilla&page=34"
+     * }
+     * @param headerLink 
+     */
+    public static parseHTTPHeaderLink(headerLink: string): { [key: string]: string } {
         if (!!headerLink && headerLink.length == 0) {
             // No paginated results found
             return null; 
         }
         
-        // Split pages by comma
+        // Split pages by comma as pages are separated by comma
         let pages = headerLink.split(Delimiters.comma);
         let links: { [key: string]: string } = {};
 
-        // Parse each page into link and rel
+        // Parse each page to get link and rel
         (pages || []).forEach((page) => {
             let section: string[] = page.split(Delimiters.semiColon);
 
+            // Atleast link and rel should be present else header link format has changed
             if (section.length < 2) {
                 throw new Error("section could not be split on ';'");
             }
 
             // Reference - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/n
+            // Get link
             let urlMatch = section[0].trim().match(this._githubPaginatedLinkRegex); // If it didn't match, it will return null, else it will return match at first position
             let relMatch = null;
 
-            // Handling rel
+            // Get rel, there can be other attributes like rel. So for loop is needed to filter rel attribute.
             for (let i = 1; i < section.length; i++) {
                 relMatch = section[i].trim().match(this._githubPaginatedRelRegex); // If it didn't match, it will return null, else it will return match at first position
 
+                // Break as soon as rel attribute is found
                 if (!!relMatch) {
                     break;
                 }
             }
 
+            // If both link and rel are found, append it to dictionary
             if (urlMatch && relMatch) {
                 links[relMatch[1]] = urlMatch[1];
             }
@@ -188,6 +201,7 @@ export class Inputs {
     public static readonly releaseNotesSelection = "releaseNotesSelection";
     public static readonly releaseNotesFile = "releaseNotesFile";
     public static readonly releaseNotesInput = "releaseNotesInput";
+    public static readonly changeLog = "changeLog";
     public static readonly deleteExistingAssets = "deleteExistingAssets";
 }
 
@@ -221,6 +235,8 @@ export class GitHubAttributes {
     public static readonly sha: string = "sha";
     public static readonly behind: string = "behind";
     public static readonly status: string = "status";
+    public static readonly link: string = "link";
+    public static readonly next: string = "next";
 }
 
 export class ActionType {
@@ -251,4 +267,7 @@ export class Delimiters {
     public static readonly semiColon: string = ";";
     public static readonly comma: string = ",";
     public static readonly space: string = " ";
+    public static readonly openingBracketWithSpace: string = " [";
+    public static readonly closingBracketWithSpace: string = " ]";
+    public static readonly star: string = "*";
 }

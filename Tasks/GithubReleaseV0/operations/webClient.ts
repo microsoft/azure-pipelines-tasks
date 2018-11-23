@@ -33,11 +33,6 @@ export class WebResponse {
     public body: any;
 }
 
-export class HTTPAttributes {
-    public static readonly link: string = "link";
-    public static readonly next: string = "next";
-}
-
 export class WebRequestOptions {
     public retriableErrorCodes: string[];
     public retryCount: number;

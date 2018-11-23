@@ -9,57 +9,36 @@ export class Action {
 
     public static async createReleaseAction(githubEndpoint: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInputPatterns: string[]): Promise<void> {
         try {
-            console.log(tl.loc("CreatingRelease"));
-            let releaseResponse: any = undefined;
+            console.log(tl.loc("CreatingRelease", tag));
 
-            if (!isDraft) {
-                releaseResponse = await Release.getReleaseByTag(githubEndpoint, repositoryName, tag);
-                tl.debug("Get release by tag response:\n" + JSON.stringify(releaseResponse, null, 2));
-            }
+            // Create release
+           let response: WebResponse = await Release.createRelease(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease);
+           tl.debug("Create release response:\n" + JSON.stringify(response, null, 2));
 
-            if (!!releaseResponse && releaseResponse.statusCode === 200) {
-                throw new Error(tl.loc("ReleaseAlreadyExists", tag));
-            }
-            else {
-                tl.debug("Creating draft release");
-                let response: WebResponse = await Release.createRelease(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, true, isPrerelease);
-                tl.debug("Create release response:\n" + JSON.stringify(response, null, 2));
+           if (response.statusCode === 201) {
+               let releaseId: string = response.body[GitHubAttributes.id];
+               try {
+                   // Upload the assets
+                   const uploadUrl: string = response.body[GitHubAttributes.uploadUrl];
+                   await this._uploadAssets(githubEndpoint, repositoryName, githubReleaseAssetInputPatterns, uploadUrl, []);
+                   console.log(tl.loc("CreateReleaseSuccess", response.body[GitHubAttributes.htmlUrl]));  
+               }
+               catch (error) {
+                   // If upload asets fail, then delete the release
+                   await this._discardRelease(githubEndpoint, repositoryName, releaseId, tag);
+                   throw error;
+               }
+           } 
+           else if (response.statusCode === 422 && response.body.errors && response.body.errors.length > 0 && response.body.errors[0].code === this._alreadyExistErrorCode) {
+                console.log(tl.loc("ReleaseAlreadyExists", tag));  
+                throw new Error(response.body[GitHubAttributes.message]);
+           }
+           else {
+                console.log(tl.loc("CreateReleaseError"));
+                throw new Error(response.body[GitHubAttributes.message]);
+           }
 
-                if (response.statusCode === 201) {
-                    let releaseId: string = response.body[GitHubAttributes.id];
-                    try {
-                        tl.debug("Uploading assets");
-                        const uploadUrl: string = response.body[GitHubAttributes.uploadUrl];
-                        await this._uploadAssets(githubEndpoint, repositoryName, githubReleaseAssetInputPatterns, uploadUrl, []);
-
-                        if (!isDraft) {
-                            tl.debug("Publishing release as upload assets is succesful");
-                            let publishReleaseResponse = await Release.editRelease(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, releaseId);
-                            tl.debug("Edit release response:\n" + JSON.stringify(response, null, 2));
-
-                            if (publishReleaseResponse.statusCode === 200) {
-                                console.log(tl.loc("CreateReleaseSuccess", publishReleaseResponse.body[GitHubAttributes.htmlUrl]));
-                            }
-                            else {
-                                console.log(tl.loc("CreateReleaseError"));
-                                await this._discardRelease(githubEndpoint, repositoryName, releaseId);
-                            }
-                        }
-                        else {
-                            console.log(tl.loc("DraftReleaseCreatedSuccess"), response.body[GitHubAttributes.htmlUrl]);
-                        }
-                    }
-                    catch (error) {
-                        await this._discardRelease(githubEndpoint, repositoryName, releaseId);
-                        throw error;
-                    }
-                }
-                else {
-                    throw new Error(tl.loc("CreateReleaseError"));
-                }
-
-                tl.setResult(tl.TaskResult.Succeeded, "");
-            }
+           tl.setResult(tl.TaskResult.Succeeded, "");
         } catch (error) {
             tl.setResult(tl.TaskResult.Failed, error);
         }    
@@ -67,13 +46,13 @@ export class Action {
 
     public static async editReleaseAction(githubEndpoint: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInputPatterns: string[], releaseId: string): Promise<void> {
         try {
-            console.log(tl.loc("EditingRelease"));
+            console.log(tl.loc("EditingRelease", tag));
 
             let response: WebResponse = await Release.editRelease(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, releaseId);
             tl.debug("Edit release response:\n" + JSON.stringify(response, null, 2));
 
             if (response.statusCode === 200) {
-                console.log(tl.loc("EditReleaseSuccess"));
+                console.log(tl.loc("EditReleaseSuccess", response.body[GitHubAttributes.htmlUrl]));
 
                 const uploadUrl: string = response.body[GitHubAttributes.uploadUrl];
                 await this._uploadAssets(githubEndpoint, repositoryName, githubReleaseAssetInputPatterns, uploadUrl, response.body[GitHubAttributes.assets]);
@@ -88,17 +67,17 @@ export class Action {
         }    
     }
 
-    public static async discardReleaseAction(githubEndpoint: string, repositoryName: string, releaseId: string): Promise<void> {
+    public static async discardReleaseAction(githubEndpoint: string, repositoryName: string, releaseId: string, tag: string): Promise<void> {
         try {
-            await this._discardRelease(githubEndpoint, repositoryName, releaseId);
+            await this._discardRelease(githubEndpoint, repositoryName, releaseId, tag);
             tl.setResult(tl.TaskResult.Succeeded, "");
         } catch (error) {
             tl.setResult(tl.TaskResult.Failed, error);
         }    
     }
 
-    private static async _discardRelease(githubEndpoint: string, repositoryName: string, releaseId: string): Promise<void> {
-        console.log(tl.loc("DiscardingRelease"));
+    private static async _discardRelease(githubEndpoint: string, repositoryName: string, releaseId: string, tag: string): Promise<void> {
+        console.log(tl.loc("DiscardingRelease", tag));
         let response: WebResponse = await Release.discardRelease(githubEndpoint, repositoryName, releaseId);
         tl.debug("Discard release response:\n" + JSON.stringify(response, null, 2));
 
@@ -106,7 +85,8 @@ export class Action {
             console.log(tl.loc("DiscardReleaseSuccess"));
         }
         else {
-            throw new Error(tl.loc("DiscardReleaseError"));
+            console.log(tl.loc("DiscardReleaseError"))
+            throw new Error(response.body[GitHubAttributes.message]);
         }
     }
 
@@ -116,8 +96,17 @@ export class Action {
 
         Utility.validateUploadAssets(assets);
 
+        // Delete all assets
         if (!!assetUploadMode && assetUploadMode === AssetUploadMode.delete) {
             await this._deleteAssets(githubEndpoint, repositoryName, existingAssets);
+        }
+
+        if (assets && assets.length > 0) {
+            console.log(tl.loc("UploadingAssets"));
+        }
+        else {
+            console.log(tl.loc("NoAssetFoundToUpload"));
+            return;
         }
 
         for (let index = 0; index < assets.length; index++) {
@@ -152,17 +141,23 @@ export class Action {
                     }
                 }
                 else {
-                    throw new Error(tl.loc("DuplicateAssetFound", asset));
+                    console.warn(tl.loc("SkipDuplicateAssetFound", asset));
                 }
             }
             else {
-                throw new Error(tl.loc("UploadAssetError"));
+                console.log(tl.loc("UploadAssetError"))
+                throw new Error(uploadResponse.body[GitHubAttributes.message]);
             }
         }
     }
 
     private static async _deleteAssets(githubEndpoint: string, repositoryName: string, assets: any[]) {
+        if (assets && assets.length ===  0) {
+            console.log(tl.loc("NoAssetFoundToDelete"));
+        }
+
         for (let asset of assets) {
+            console.log(tl.loc("DeletingAsset", asset));
             let deleteAssetResponse = await Release.deleteReleaseAsset(githubEndpoint, repositoryName, asset.id);
             tl.debug("Delete asset response:\n" + JSON.stringify(deleteAssetResponse, null, 2));
 
@@ -170,7 +165,8 @@ export class Action {
                 console.log(tl.loc("AssetDeletedSuccessfully", asset));
             }
             else {
-                throw new Error(tl.loc("ErrorDeletingAsset", asset));
+                console.log(tl.loc("ErrorDeletingAsset", asset));
+                throw new Error(deleteAssetResponse.body[GitHubAttributes.message]);
             }
         }
     }
