@@ -1,8 +1,9 @@
 import tl = require("vsts-task-lib/task");
 import path = require("path");
 import { Action } from "./operations/Action";
-import { Inputs, TagSelectionMode, Utility, GitHubAttributes, AzureDevOpsVariables, ActionType} from "./operations/Utility";
-import { Release } from "./operations/Release";
+import { Inputs, Utility, ActionType, Delimiters} from "./operations/Utility";
+import { ChangeLog } from "./operations/ChangeLog";
+import { Helper } from "./operations/Helper";
 
 class Main {
 
@@ -12,145 +13,81 @@ class Main {
             tl.debug("Setting resource path to " + taskManifestPath);
             tl.setResourcePath(taskManifestPath);        
 
-            // Get task inputs
+            // Get basic task inputs
             const githubEndpoint = tl.getInput(Inputs.githubEndpoint, true);
+            const githubEndpointToken = Utility.getGithubEndPointToken(githubEndpoint);
             const repositoryName = tl.getInput(Inputs.repositoryName, true);        
             const action = tl.getInput(Inputs.action, true);
-            const target = tl.getInput(Inputs.target, true);
             let tag = tl.getInput(Inputs.tag);
-            const releaseTitle = tl.getInput(Inputs.releaseTitle) || undefined; 
-            const releaseNotesSelection = tl.getInput(Inputs.releaseNotesSelection);
-            const releaseNotesFile = tl.getPathInput(Inputs.releaseNotesFile, false, true);
-            const releaseNoteInput = tl.getInput(Inputs.releaseNotesInput);
-            const releaseNote: string = Utility.getReleaseNote(releaseNotesSelection, releaseNotesFile, releaseNoteInput) || undefined;
-            const isPrerelease = tl.getBoolInput(Inputs.isPrerelease) || false;
-            const isDraft = tl.getBoolInput(Inputs.isDraft) || false;
-            const githubReleaseAssetInputPatterns = tl.getDelimitedInput(Inputs.githubReleaseAsset, '\n');
 
-            if (action === ActionType.create) {
-                tag = await this._getTagForCreateAction(githubEndpoint, repositoryName, target, tag);
-                await Action.createReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
+            if (action === ActionType.discard) {
+                await Action.discardReleaseAction(githubEndpointToken, repositoryName, tag);
             }
-            else if (action === ActionType.edit) {
-                let releaseId: any = await this._getReleaseIdForTag(githubEndpoint, repositoryName, tag);
+            else {
+                // Get task inputs specific to create and edit release
+                const target = tl.getInput(Inputs.target, true);
+                const releaseTitle = tl.getInput(Inputs.releaseTitle) || undefined; 
 
-                if (releaseId !== null) {
-                    await Action.editReleaseAction(githubEndpoint, repositoryName, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, releaseId);
-                }
-                else {
-                    await Action.createReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
-                }
-            }
-            else if (action === ActionType.discard) {
-                let releaseId: string = await this._getReleaseIdForTag(githubEndpoint, repositoryName, tag);
+                const isPrerelease = tl.getBoolInput(Inputs.isPrerelease) || false;
+                const isDraft = tl.getBoolInput(Inputs.isDraft) || false;
+                const githubReleaseAssetInputPatterns = tl.getDelimitedInput(Inputs.githubReleaseAsset, Delimiters.newLine);
 
-                if (releaseId !== null) {
-                    await Action.discardReleaseAction(githubEndpoint, repositoryName, releaseId);
+                if (action === ActionType.create) {
+                    // Get tag to create release
+                    tag = await Helper.getTagForCreateAction(githubEndpointToken, repositoryName, target, tag);
+
+                    if (!!tag) {
+                        const releaseNote: string = await this._getReleaseNote(githubEndpointToken, repositoryName, target);
+                        await Action.createReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
+                    }
+                    else {
+                        // If no tag found, then give warning.
+                        // Doing this because commits without associated tag will fail continuosly if we throw error.
+                        // Other option is to have some task condition, which user can specify in task.
+                        console.warn(tl.loc("NoTagFound", target));
+                    }
                 }
-                else {
-                    throw new Error(tl.loc("NoReleaseFoundToDiscard", tag));
+                else if (action === ActionType.edit) {
+                    const releaseNote: string = await this._getReleaseNote(githubEndpointToken, repositoryName, target);
+                    // Get the release id of the release to edit.
+                    console.log(tl.loc("FetchReleaseForTag", tag));
+                    let releaseId: any = await Helper.getReleaseIdForTag(githubEndpointToken, repositoryName, tag);
+
+                    // If a release is found, then edit it.
+                    // Else create a new release.
+                    if (!!releaseId) {
+                        console.log(tl.loc("FetchReleaseForTagSuccess", tag));
+                        await Action.editReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, releaseId);
+                    }
+                    else {
+                        console.warn(tl.loc("NoReleaseFoundToEditCreateRelease", tag));
+                        await Action.createReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
+                    }
                 }
             }
+
+            tl.setResult(tl.TaskResult.Succeeded, "");
         }
         catch(error) {
             tl.setResult(tl.TaskResult.Failed, error);
         }
     }
 
-    private static async _getTagForCreateAction(githubEndpoint: string, repositoryName: string, target: string, tag: string): Promise<string> {
-        let tagSelection = tl.getInput(Inputs.tagSelection);
+    private static async _getReleaseNote(githubEndpointToken: string, repositoryName: string, target: string): Promise<string> {
+        const releaseNotesSelection = tl.getInput(Inputs.releaseNotesSelection);
+        const releaseNotesFile = tl.getPathInput(Inputs.releaseNotesFile, false, true);
+        const releaseNoteInput = tl.getInput(Inputs.releaseNotesInput);
+        const showChangeLog: boolean = tl.getBoolInput(Inputs.changeLog);
 
-        if (!!tagSelection && tagSelection === TagSelectionMode.auto) {
-            let response = await Release.getBranch(githubEndpoint, repositoryName, target);
-            let commit_sha: string = undefined;
+        // Generate the change log 
+        // Get change log for top 250 commits only
+        const changeLog: string = showChangeLog ? await ChangeLog.getChangeLog(githubEndpointToken, repositoryName, target, 250) : "";
 
-            if (response.statusCode === 200) {
-                commit_sha = response.body[GitHubAttributes.commit][GitHubAttributes.sha];
-            }
-            else if (response.statusCode === 404) {
-                commit_sha = target;
-            }
-            else {
-                tl.debug("Get branch response:\n" + JSON.stringify(response));
-                throw new Error(tl.loc("GetBranchError"));
-            }
+        // Append change log to release note
+        const releaseNote: string = Utility.getReleaseNote(releaseNotesSelection, releaseNotesFile, releaseNoteInput, changeLog) || undefined;
 
-            let buildSourceVersion = tl.getVariable(AzureDevOpsVariables.buildSourceVersion);
-
-            if (commit_sha !== buildSourceVersion) {
-                tag = await this._getTagForCommit(githubEndpoint, repositoryName, commit_sha, tag);
-            }
-            else {
-                let buildSourceBranch = tl.getVariable(AzureDevOpsVariables.buildSourceBranch);
-
-                let normalizedBranch = Utility.normalizeBranchName(buildSourceBranch);
-
-                if (!!normalizedBranch) {
-                    tag = normalizedBranch;
-                }
-                else {
-                    tag = await this._getTagForCommit(githubEndpoint, repositoryName, commit_sha, tag);
-                }
-            }
-        }
-
-        return tag;
+        return releaseNote;
     }
-
-    private static async _getTagForCommit(githubEndpoint: string, repositoryName: string, commit_sha: string, tag: string) {
-        let tagsResponse = await Release.getTags(githubEndpoint, repositoryName);
-
-        if (tagsResponse.statusCode === 200) {
-            let tags: string[] = this._filterTagsForCommit(tagsResponse.body, commit_sha);
-            
-            if (!!tags && tags.length > 0) {
-                tag = tags[0];
-            }
-            else {
-                throw new Error(tl.loc("NoTagFound"));
-            }
-        }
-        else{
-            tl.debug("Get tags response:\n" + JSON.stringify(tagsResponse));
-            throw new Error(tl.loc("GetTagsError"));
-        }
-
-        return tag;
-    }
-
-    private static _filterTagsForCommit(tagsList: any[], commit_sha: string) {
-        let tags: string[] = [];
-
-        (tagsList || []).forEach((element: any) => {
-            if (element[GitHubAttributes.commit][GitHubAttributes.sha] === commit_sha) {
-                tags.push(element.name);
-            }
-        });
-
-        return tags;
-    }
-    
-    private static async _getReleaseIdForTag(githubEndpoint: string, repositoryName: string, tag: string): Promise<any> {
-        let releasesResponse = await Release.getReleases(githubEndpoint, repositoryName);
-
-        if (releasesResponse.statusCode === 200) {
-            let releasesWithGivenTag: any[] = (releasesResponse.body || []).filter(release => release[GitHubAttributes.tagName] === tag);
-
-            if (releasesWithGivenTag.length === 0) {
-                return null;
-            }
-            else if (releasesWithGivenTag.length === 1) {
-                return releasesWithGivenTag[0][GitHubAttributes.id];
-            }
-            else {
-                throw new Error(tl.loc("MultipleReleasesFoundError", tag));
-            }
-        }
-        else {
-            tl.debug("Get release by tag response:\n" + JSON.stringify(releasesResponse));
-            throw new Error(tl.loc("GetReleasesError"));
-        }
-    }   
 }
 
 Main.run();

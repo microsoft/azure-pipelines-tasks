@@ -5,7 +5,6 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
-  "releaseNotes": "ms-resource:loc.releaseNotes",
   "visibility": [
     "Build",
     "Release"
@@ -68,9 +67,10 @@
       "required": true,
       "defaultValue": "auto",
       "visibleRule": "action = Create",
+      "helpMarkDown": "ms-resource:loc.input.help.tagSelection",
       "options": {
-        "auto": "Use tag associated with commit",
-        "manual": "Specify tag manually"
+        "auto": "Git tag",
+        "manual": "User specified tag"
       }
     },
     {
@@ -96,12 +96,21 @@
       "type": "radio",
       "label": "ms-resource:loc.input.label.releaseNotesSelection",
       "required": false,
-      "defaultValue": "input",
+      "defaultValue": "file",
       "visibleRule": "action = Create || action = Edit",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesSelection",
       "options": {
-        "input": "Enter Release Note",
-        "file": "Select Release Note File"
+        "file": "Release notes file",
+        "input": "Inline release notes"
       }
+    },
+    {
+      "name": "releaseNotesFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.releaseNotesFile",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesFile",
+      "visibleRule": "releaseNotesSelection = file"
     },
     {
       "name": "releaseNotesInput",
@@ -115,14 +124,6 @@
         "rows": "4",
         "maxLength": "5000"
       }
-    },
-    {
-      "name": "releaseNotesFile",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.releaseNotesFile",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesFile",
-      "visibleRule": "releaseNotesSelection = file"
     },
     {
       "name": "githubReleaseAsset",
@@ -144,6 +145,7 @@
       "required": false,
       "defaultValue": "delete",
       "visibleRule": "action = Edit",
+      "helpMarkDown": "ms-resource:loc.input.help.assetUploadMode",
       "options": {
         "delete": "Delete exisiting assets",
         "replace": "Replace existing assets"
@@ -154,18 +156,27 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.isDraft",
       "defaultValue": "false",
-      "required": true,
-      "visibleRule": "action = Create || action = Edit",
-      "helpMarkDown": "ms-resource:loc.input.help.isDraft"
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.isDraft",
+      "visibleRule": "action = Create || action = Edit"
     },
     {
       "name": "isPrerelease",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.isPrerelease",
       "defaultValue": "false",
-      "required": true,
+      "required": false,
       "visibleRule": "action = Create || action = Edit",
       "helpMarkDown": "ms-resource:loc.input.help.isPrerelease"
+    },
+    {
+      "name": "changeLog",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.changeLog",
+      "defaultValue": "true",
+      "required": false,
+      "visibleRule": "action = Create || action = Edit",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLog"
     }
   ],
   "sourceDefinitions": [
@@ -184,34 +195,60 @@
     }
   },
   "messages": {
-    "CreatingRelease": "ms-resource:loc.messages.CreatingRelease",
-    "CreateReleaseError": "ms-resource:loc.messages.CreateReleaseError",
-    "CreateReleaseSuccess": "ms-resource:loc.messages.CreateReleaseSuccess",
-    "DraftReleaseCreatedSuccess": "ms-resource:loc.messages.DraftReleaseCreatedSuccess",
-    "DiscardingRelease": "ms-resource:loc.messages.DiscardingRelease",
-    "DiscardReleaseError": "ms-resource:loc.messages.DiscardReleaseError",
-    "DiscardReleaseSuccess": "ms-resource:loc.messages.DiscardReleaseSuccess",
-    "EditingRelease": "ms-resource:loc.messages.EditingRelease",
-    "EditReleaseError": "ms-resource:loc.messages.EditReleaseError",
-    "EditReleaseSuccess": "ms-resource:loc.messages.EditReleaseSuccess",
-    "GetReleasesError": "ms-resource:loc.messages.GetReleasesError",
+    "GithubApiFailError": "ms-resource:loc.messages.GithubApiFailError",
     "GetTagsError": "ms-resource:loc.messages.GetTagsError",
-    "GetBranchError": "ms-resource:loc.messages.GetBranchError",
-    "MissingAssetError": "ms-resource:loc.messages.MissingAssetError",
-    "DuplicateAssetFound": "ms-resource:loc.messages.DuplicateAssetFound",
+    "GetReleasesError": "ms-resource:loc.messages.GetReleasesError",
+    "CreateReleaseError": "ms-resource:loc.messages.CreateReleaseError",
+    "EditReleaseError": "ms-resource:loc.messages.EditReleaseError",
+    "DiscardReleaseError": "ms-resource:loc.messages.DiscardReleaseError",
+    "CreatingRelease": "ms-resource:loc.messages.CreatingRelease",
+    "CreateReleaseSuccess": "ms-resource:loc.messages.CreateReleaseSuccess",
+    "ReleaseAlreadyExists": "ms-resource:loc.messages.ReleaseAlreadyExists",
+    "EditingRelease": "ms-resource:loc.messages.EditingRelease",
+    "EditReleaseSuccess": "ms-resource:loc.messages.EditReleaseSuccess",
+    "NoReleaseFoundToEditCreateRelease": "ms-resource:loc.messages.NoReleaseFoundToEditCreateRelease",
+    "DiscardingRelease": "ms-resource:loc.messages.DiscardingRelease",
+    "DiscardReleaseSuccess": "ms-resource:loc.messages.DiscardReleaseSuccess",
     "NoReleaseFoundToDiscard": "ms-resource:loc.messages.NoReleaseFoundToDiscard",
+    "FetchReleaseForTag": "ms-resource:loc.messages.FetchReleaseForTag",
+    "FetchReleaseForTagSuccess": "ms-resource:loc.messages.FetchReleaseForTagSuccess",
+    "FetchTagForTarget": "ms-resource:loc.messages.FetchTagForTarget",
+    "FetchTagForTargetSuccess": "ms-resource:loc.messages.FetchTagForTargetSuccess",
+    "MissingAssetError": "ms-resource:loc.messages.MissingAssetError",
     "MultipleReleasesFoundError": "ms-resource:loc.messages.MultipleReleasesFoundError",
-    "DeletingDuplicateAsset": "ms-resource:loc.messages.DeletingDuplicateAsset",
-    "DuplicateAssetDeletedSuccessfully": "ms-resource:loc.messages.DuplicateAssetDeletedSuccessfully",
-    "AssetDeletedSuccessfully": "ms-resource:loc.messages.AssetDeletedSuccessfully",
+    "MultipleTagFound": "ms-resource:loc.messages.MultipleTagFound",
     "NoTagFound": "ms-resource:loc.messages.NoTagFound",
+    "DeleteAllExistingAssets": "ms-resource:loc.messages.DeleteAllExistingAssets",
+    "DuplicateAssetFound": "ms-resource:loc.messages.DuplicateAssetFound",
+    "AssetsDeletedSuccessfully": "ms-resource:loc.messages.AssetsDeletedSuccessfully",
+    "DeletingDuplicateAsset": "ms-resource:loc.messages.DeletingDuplicateAsset",
+    "SkipDuplicateAssetFound": "ms-resource:loc.messages.SkipDuplicateAssetFound",
+    "AssetDeletedSuccessfully": "ms-resource:loc.messages.AssetDeletedSuccessfully",
+    "AllAssetsUploadedSuccessfully": "ms-resource:loc.messages.AllAssetsUploadedSuccessfully",
     "ErrorDeletingDuplicateAsset": "ms-resource:loc.messages.ErrorDeletingDuplicateAsset",
     "ErrorDeletingAsset": "ms-resource:loc.messages.ErrorDeletingAsset",
+    "DeletingAsset": "ms-resource:loc.messages.DeletingAsset",
+    "NoAssetFoundToDelete": "ms-resource:loc.messages.NoAssetFoundToDelete",
+    "UploadingAssets": "ms-resource:loc.messages.UploadingAssets",
     "UploadingAsset": "ms-resource:loc.messages.UploadingAsset",
     "UploadAssetError": "ms-resource:loc.messages.UploadAssetError",
     "UploadAssetSuccess": "ms-resource:loc.messages.UploadAssetSuccess",
+    "NoAssetFoundToUpload": "ms-resource:loc.messages.NoAssetFoundToUpload",
     "ReleaseNotesFileIsDirectoryError": "ms-resource:loc.messages.ReleaseNotesFileIsDirectoryError",
     "AssetIsDirectoryError": "ms-resource:loc.messages.AssetIsDirectoryError",
-    "ReleaseAlreadyExists": "ms-resource:loc.messages.ReleaseAlreadyExists"
+    "ComputingChangeLog": "ms-resource:loc.messages.ComputingChangeLog",
+    "ComputingChangeLogSuccess": "ms-resource:loc.messages.ComputingChangeLogSuccess",
+    "CommitDiffBehind": "ms-resource:loc.messages.CommitDiffBehind",
+    "CommitDiffEqual": "ms-resource:loc.messages.CommitDiffEqual",
+    "FetchLatestPublishRelease": "ms-resource:loc.messages.FetchLatestPublishRelease",
+    "FetchLatestPublishReleaseSuccess": "ms-resource:loc.messages.FetchLatestPublishReleaseSuccess",
+    "GetLatestReleaseError": "ms-resource:loc.messages.GetLatestReleaseError",
+    "NoLatestPublishRelease": "ms-resource:loc.messages.NoLatestPublishRelease",
+    "FetchCommitDiff": "ms-resource:loc.messages.FetchCommitDiff",
+    "FetchCommitDiffSuccess": "ms-resource:loc.messages.FetchCommitDiffSuccess",
+    "FetchCommitDiffError": "ms-resource:loc.messages.FetchCommitDiffError",
+    "FetchInitialCommit": "ms-resource:loc.messages.FetchInitialCommit",
+    "FetchInitialCommitSuccess": "ms-resource:loc.messages.FetchInitialCommitSuccess",
+    "FetchInitialCommitError": "ms-resource:loc.messages.FetchInitialCommitError"
   }
 }

@@ -9,6 +9,8 @@ export class Utility {
         const githubEndpointObject = tl.getEndpointAuthorization(githubEndpoint, false);
         let githubEndpointToken: string = null;
 
+        tl.debug("Endpoint scheme: " + githubEndpointObject.scheme);
+        
         if (githubEndpointObject.scheme === 'PersonalAccessToken') {
             githubEndpointToken = githubEndpointObject.parameters.accessToken
         } else {
@@ -30,12 +32,7 @@ export class Utility {
 
             filePaths.forEach((filePath) => {
                 if (!githubReleaseAssets.has(filePath)) {
-                    tl.debug("Adding filePath: " + filePath);
                     githubReleaseAssets.add(filePath)
-                }
-                else {
-                    // File already added by previous pattern
-                    tl.debug("FilePath already added: " + filePath);
                 }
             })
         });
@@ -50,13 +47,13 @@ export class Utility {
                     fs.accessSync(path.resolve(asset));
                 })
             } catch (err) {
-                throw new Error(tl.loc("MissingAssetError", err.path));
+                console.warn(tl.loc("MissingAssetError", err.path));
             }
         }
     }
 
-    public static getReleaseNote(releaseNotesSelection: string, releaseNotesFile: any, releaseNoteInput: string): string {
-        let releaseNote: string = undefined;
+    public static getReleaseNote(releaseNotesSelection: string, releaseNotesFile: any, releaseNoteInput: string, changeLog: string): string {
+        let releaseNote: string = "";
 
         if (releaseNotesSelection === ReleaseNotesSelectionMode.file) {
 
@@ -72,12 +69,21 @@ export class Utility {
         }
         tl.debug("ReleaseNote:\n" + releaseNote);
 
+        if (!releaseNote) {
+            releaseNote = "";
+        }
+
+        // Append commits and issues to release note.
+        if (changeLog){
+            releaseNote = releaseNote + changeLog;
+        }
+
         return releaseNote;
     }
 
     public static getGitHubApiUrl(): string {
         let githubApiUrlInput: string = undefined; // Todo: mdakbar: get GHE url
-        return githubApiUrlInput ? githubApiUrlInput : "https://api.github.com"; // url without slash at end
+        return githubApiUrlInput ? githubApiUrlInput : this._githubApiUrl; // url without slash at end
     }
 
     public static normalizeBranchName(branchName: string): string {
@@ -87,7 +93,95 @@ export class Utility {
         return undefined;
     }
 
-    private static _tagRef: string = "refs/tags/";
+    /**
+     * Returns the parsed HTTP header link if it exists.
+     * E.g. Link: '<https://api.github.com/search/code?q=addClass+user%3Amozilla&page=2>; rel="next", <https://api.github.com/search/code?q=addClass+user%3Amozilla&page=34>; rel="last"'
+     * Returned object would be like {
+     *  "next": "https://api.github.com/search/code?q=addClass+user%3Amozilla&page=2",
+     *  "last": "https://api.github.com/search/code?q=addClass+user%3Amozilla&page=34"
+     * }
+     * @param headerLink 
+     */
+    public static parseHTTPHeaderLink(headerLink: string): { [key: string]: string } {
+        if (!!headerLink && headerLink.length == 0) {
+            // No paginated results found
+            return null; 
+        }
+        
+        // Split pages by comma as pages are separated by comma
+        let pages = headerLink.split(Delimiters.comma);
+        let links: { [key: string]: string } = {};
+
+        // Parse each page to get link and rel
+        (pages || []).forEach((page) => {
+            let section: string[] = page.split(Delimiters.semiColon);
+
+            // Atleast link and rel should be present else header link format has changed
+            if (section.length < 2) {
+                throw new Error("section could not be split on ';'");
+            }
+
+            // Reference - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/n
+            // Get link
+            let urlMatch = section[0].trim().match(this._githubPaginatedLinkRegex); // If it didn't match, it will return null, else it will return match at first position
+            let relMatch = null;
+
+            // Get rel, there can be other attributes like rel. So for loop is needed to filter rel attribute.
+            for (let i = 1; i < section.length; i++) {
+                relMatch = section[i].trim().match(this._githubPaginatedRelRegex); // If it didn't match, it will return null, else it will return match at first position
+
+                // Break as soon as rel attribute is found
+                if (!!relMatch) {
+                    break;
+                }
+            }
+
+            // If both link and rel are found, append it to dictionary
+            if (urlMatch && relMatch) {
+                links[relMatch[1]] = urlMatch[1];
+            }
+
+        })
+
+        tl.debug("Parsed link: " + JSON.stringify(links));
+        return links;
+    }
+
+    public static extractRepositoryOwnerAndName(repositoryName: string): IGitHubRepositoryInfo {
+        let repositoryInfo = repositoryName.split(Delimiters.slash);
+        
+        return {
+            owner: repositoryInfo[0],
+            name: repositoryInfo[1]
+        }
+    }
+
+    public static extractRepoAndIssueId(repoIssueId: string): IRepositoryIssueId {
+        let repoIssueIdInfo: string[] = repoIssueId.split(Delimiters.hash);
+        let repo: string = repoIssueIdInfo[0];
+        let issueId: string = repoIssueIdInfo[1];
+
+        return {
+            repository: repo,
+            issueId: issueId
+        }
+    }
+
+    public static getFirstLine(commitMessage: string): string {
+        commitMessage = (commitMessage || "").trim();
+        const match = commitMessage.match(this._onlyFirstLine);
+
+        tl.debug("Commit message: " + commitMessage);
+        tl.debug("match: " + match);
+
+        return match[0];
+    }
+    
+    private static readonly _onlyFirstLine = new RegExp("^.*$", "m");
+    private static readonly _githubPaginatedLinkRegex = new RegExp("^<(.*)>$");
+    private static readonly _githubPaginatedRelRegex = new RegExp('^rel="(.*)"$');
+    private static readonly _tagRef: string = "refs/tags/";
+    private static readonly _githubApiUrl: string = "https://api.github.com"; // url without slash at end
 }
 
 export class Inputs {
@@ -105,6 +199,7 @@ export class Inputs {
     public static readonly releaseNotesSelection = "releaseNotesSelection";
     public static readonly releaseNotesFile = "releaseNotesFile";
     public static readonly releaseNotesInput = "releaseNotesInput";
+    public static readonly changeLog = "changeLog";
     public static readonly deleteExistingAssets = "deleteExistingAssets";
 }
 
@@ -125,12 +220,21 @@ class ReleaseNotesSelectionMode {
 
 export class GitHubAttributes {
     public static readonly id: string = "id";
+    public static readonly nameAttribute: string = "name";
     public static readonly tagName: string = "tag_name";
     public static readonly uploadUrl: string = "upload_url";
     public static readonly htmlUrl: string = "html_url";
     public static readonly assets: string = "assets";
     public static readonly commit: string = "commit";
+    public static readonly message: string = "message";
+    public static readonly state: string = "state";
+    public static readonly title: string = "title";
+    public static readonly commits: string = "commits";
     public static readonly sha: string = "sha";
+    public static readonly behind: string = "behind";
+    public static readonly status: string = "status";
+    public static readonly link: string = "link";
+    public static readonly next: string = "next";
 }
 
 export class ActionType {
@@ -140,6 +244,32 @@ export class ActionType {
 }
 
 export class AzureDevOpsVariables {
-    public static buildSourceVersion: string = "Build.SourceVersion";
-    public static buildSourceBranch: string = "Build.SourceBranch"; 
+    public static readonly buildSourceVersion: string = "Build.SourceVersion";
+    public static readonly buildSourceBranch: string = "Build.SourceBranch"; 
+    public static readonly releaseWebUrl: string = "Release.ReleaseWebURL"; 
+    public static readonly collectionUri: string = "System.TeamFoundationCollectionUri"; 
+    public static readonly teamProject: string = "System.TeamProject"; 
+    public static readonly buildId: string = "Build.BuildId"; 
+}
+
+export interface IGitHubRepositoryInfo {
+    owner: string;
+    name: string;
+}
+
+export interface IRepositoryIssueId {
+    repository: string;
+    issueId: string;
+}
+
+export class Delimiters {
+    public static readonly newLine: string = "\n";
+    public static readonly hash: string = "#";
+    public static readonly slash: string = "/";
+    public static readonly semiColon: string = ";";
+    public static readonly comma: string = ",";
+    public static readonly space: string = " ";
+    public static readonly openingBracketWithSpace: string = " [";
+    public static readonly closingBracketWithSpace: string = " ]";
+    public static readonly star: string = "*";
 }
