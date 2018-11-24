@@ -8,7 +8,7 @@ import { WebRequest, sendRequest, WebResponse } from "./webClient";
 
 export class Release {
 
-    public static async createRelease(githubEndpoint: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean): Promise<WebResponse> {
+    public static async createRelease(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._createReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
@@ -23,14 +23,14 @@ export class Release {
         });
         request.headers = {
             "Content-Type": "application/json",
-            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+            'Authorization': 'token ' + githubEndpointToken
         };
         tl.debug("Create release request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
 
-    public static async editRelease(githubEndpoint: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, releaseId: string): Promise<WebResponse> {
+    public static async editRelease(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, releaseId: string): Promise<WebResponse> {
         let request = new WebRequest();
             
         request.uri = util.format(this._editOrDiscardReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseId);
@@ -45,33 +45,33 @@ export class Release {
         });
         request.headers = {
             "Content-Type": "application/json",
-            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+            'Authorization': 'token ' + githubEndpointToken
         };
         tl.debug("Edit release request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
 
-    public static async discardRelease(githubEndpoint: string, repositoryName: string, releaseId: string): Promise<WebResponse> {
+    public static async discardRelease(githubEndpointToken: string, repositoryName: string, releaseId: string): Promise<WebResponse> {
         let request = new WebRequest();
             
         request.uri = util.format(this._editOrDiscardReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseId);
         request.method = "DELETE";
         request.headers = {
-            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+            'Authorization': 'token ' + githubEndpointToken
         };
         tl.debug("Discard release request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
 
-    public static async deleteReleaseAsset(githubEndpoint: string, repositoryName: string, asset_id: string): Promise<WebResponse> {
+    public static async deleteReleaseAsset(githubEndpointToken: string, repositoryName: string, asset_id: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._deleteReleaseAssetApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, asset_id);
         request.method = "DELETE";
         request.headers = {
-            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+            'Authorization': 'token ' + githubEndpointToken
         };
         tl.debug("Delete release asset request: " + JSON.stringify(request));
 
@@ -79,7 +79,7 @@ export class Release {
     }
 
 
-    public static async uploadReleaseAsset(githubEndpoint: string, filePath: string, uploadUrl: string): Promise<WebResponse> {
+    public static async uploadReleaseAsset(githubEndpointToken: string, filePath: string, uploadUrl: string): Promise<WebResponse> {
         let fileName = path.basename(filePath);
         tl.debug("Filename: " + fileName);
         
@@ -92,7 +92,7 @@ export class Release {
         request.headers = {
             "Content-Type": mime.lookup(fileName),
             'Content-Length': stats.size,
-            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+            'Authorization': 'token ' + githubEndpointToken
         };
         request.body = rd;
         tl.debug("Upload release request: " + JSON.stringify(request));
@@ -100,91 +100,91 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async getBranch(githubEndpoint: string, repositoryName: string, target: string): Promise<WebResponse> {
+    public static async getBranch(githubEndpointToken: string, repositoryName: string, target: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._getBranchApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, target);
         request.method = "GET";
         request.headers = {
-            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+            'Authorization': 'token ' + githubEndpointToken
         };
         tl.debug("Get branch request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
 
-    public static async getTags(githubEndpoint: string, repositoryName: string): Promise<WebResponse> {
+    public static async getTags(githubEndpointToken: string, repositoryName: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._getTagsApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
         request.method = "GET";
         request.headers = {
-            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+            'Authorization': 'token ' + githubEndpointToken
         };
         tl.debug("Get tags request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
 
-    public static async getReleases(githubEndpoint: string, repositoryName: string): Promise<WebResponse> {
+    public static async getReleases(githubEndpointToken: string, repositoryName: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._getReleasesApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
         request.method = "GET";
         request.headers = {
-            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+            'Authorization': 'token ' + githubEndpointToken
         };
         tl.debug("Get releases request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
 
-    public static async getLatestRelease(githubEndpoint: string, repositoryName: string): Promise<WebResponse> {
+    public static async getLatestRelease(githubEndpointToken: string, repositoryName: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._getLatestReleasesApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
         request.method = "GET";
         request.headers = {
-            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+            'Authorization': 'token ' + githubEndpointToken
         };
         tl.debug("Get latest release request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
 
-    public static async getPaginatedResult(githubEndpoint: string, nextPageLink: string): Promise<WebResponse> {
+    public static async getPaginatedResult(githubEndpointToken: string, nextPageLink: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = nextPageLink;
         request.method = "GET";
         request.headers = {
-            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+            'Authorization': 'token ' + githubEndpointToken
         };
         tl.debug("Get paginated request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
 
-    public static async getCommitsList(githubEndpoint: string,repositoryName: string, startCommitSha: string, endCommitSha: string): Promise<WebResponse> {
+    public static async getCommitsList(githubEndpointToken: string,repositoryName: string, startCommitSha: string, endCommitSha: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._getCommitsListApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, startCommitSha, endCommitSha);
         request.method = "GET";
         request.headers = {
-            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+            'Authorization': 'token ' + githubEndpointToken
         };
         tl.debug("Get commits list request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
 
-    public static async getCommitsBeforeGivenSha(githubEndpoint: string,repositoryName: string, sha: string): Promise<WebResponse> {
+    public static async getCommitsBeforeGivenSha(githubEndpointToken: string,repositoryName: string, sha: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._getCommitsBeforeGivenShaApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, sha);
         request.method = "GET";
         request.headers = {
-            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
+            'Authorization': 'token ' + githubEndpointToken
         };
         tl.debug("Get commits before given sha request: " + JSON.stringify(request));
 

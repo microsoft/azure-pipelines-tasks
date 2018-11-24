@@ -8,18 +8,18 @@ export class ChangeLog {
 
     /**
      * Returns the change log.
-     * @param githubEndpoint 
+     * @param githubEndpointToken 
      * @param repositoryName 
      * @param target 
      * @param top 
      * @param changeLogInput 
      */
-    public static async getChangeLog(githubEndpoint: string, repositoryName: string, target: string, top: number): Promise<string> {
+    public static async getChangeLog(githubEndpointToken: string, repositoryName: string, target: string, top: number): Promise<string> {
         console.log(tl.loc("ComputingChangeLog"));
 
         // Get the latest published release to compare the changes with.
         console.log(tl.loc("FetchLatestPublishRelease"));
-        let latestReleaseResponse = await Release.getLatestRelease(githubEndpoint, repositoryName);
+        let latestReleaseResponse = await Release.getLatestRelease(githubEndpointToken, repositoryName);
         tl.debug("Get latest release response: " + JSON.stringify(latestReleaseResponse));
 
         // We will be fetching changes between startCommitSha...endCommitSha.
@@ -31,7 +31,7 @@ export class ChangeLog {
         // If repository has 0 releases, then latest release api returns 404.
         if (latestReleaseResponse.statusCode === 200 || latestReleaseResponse.statusCode === 404) {
             // Get the curent commit.
-            let endCommitSha: string = await Helper.getCommitShaFromTarget(githubEndpoint, repositoryName, target);
+            let endCommitSha: string = await Helper.getCommitShaFromTarget(githubEndpointToken, repositoryName, target);
 
             // Get the start commit.
             // Release has target_commitsh property but it can be branch name also.
@@ -42,18 +42,18 @@ export class ChangeLog {
                 tl.debug("latest release tag: " + latestReleaseTag);
                 
                 console.log(tl.loc("FetchLatestPublishReleaseSuccess"));
-                startCommitSha = await this._getCommitForTag(githubEndpoint, repositoryName, latestReleaseTag);
+                startCommitSha = await this._getCommitForTag(githubEndpointToken, repositoryName, latestReleaseTag);
             }
             else {
                 console.log(tl.loc("NoLatestPublishRelease"));
                 console.log(tl.loc("FetchInitialCommit"));
-                startCommitSha = await this._getInitialCommit(githubEndpoint, repositoryName, endCommitSha, top);
+                startCommitSha = await this._getInitialCommit(githubEndpointToken, repositoryName, endCommitSha, top);
                 console.log(tl.loc("FetchInitialCommitSuccess", startCommitSha));
             }
             
             // Compare the diff between 2 commits.
             console.log(tl.loc("FetchCommitDiff"));
-            let commitsListResponse = await Release.getCommitsList(githubEndpoint, repositoryName, startCommitSha, endCommitSha);
+            let commitsListResponse = await Release.getCommitsList(githubEndpointToken, repositoryName, startCommitSha, endCommitSha);
             tl.debug("Get commits list response: " + JSON.stringify(commitsListResponse));
 
             if (commitsListResponse.statusCode === 200) {
@@ -131,27 +131,27 @@ export class ChangeLog {
 
     /**
      * Returns the commit for provided tag
-     * @param githubEndpoint 
+     * @param githubEndpointToken 
      * @param repositoryName 
      * @param tag 
      */
-    private static async _getCommitForTag(githubEndpoint: string, repositoryName: string, tag: string): Promise<string> {
-        let filteredTag: any = await Helper.filterTag(githubEndpoint, repositoryName, tag, this._filterTagsByTagName);
+    private static async _getCommitForTag(githubEndpointToken: string, repositoryName: string, tag: string): Promise<string> {
+        let filteredTag: any = await Helper.filterTag(githubEndpointToken, repositoryName, tag, this._filterTagsByTagName);
 
         return filteredTag && filteredTag[GitHubAttributes.commit][GitHubAttributes.sha];
     }
 
     /**
      * Returns a commit which is 'X' (top) commits older than the provided commit sha.
-     * @param githubEndpoint 
+     * @param githubEndpointToken 
      * @param repositoryName 
      * @param sha 
      */
-    private static async _getInitialCommit(githubEndpoint: string, repositoryName: string, sha: string, top: number): Promise<string> {
+    private static async _getInitialCommit(githubEndpointToken: string, repositoryName: string, sha: string, top: number): Promise<string> {
         // No api available to get first commit directly.
         // So, fetching all commits before the current commit sha.
         // Returning last commit or 250th commit which ever is smaller.
-        let commitsForGivenShaResponse = await Release.getCommitsBeforeGivenSha(githubEndpoint, repositoryName, sha);
+        let commitsForGivenShaResponse = await Release.getCommitsBeforeGivenSha(githubEndpointToken, repositoryName, sha);
         let links: { [key: string]: string } = {};
         let commits: any[] = [];
 
@@ -173,7 +173,7 @@ export class ChangeLog {
 
                 // Calling the next page if it exists
                 if (links && links[GitHubAttributes.next]) {
-                    let paginatedResponse = await Release.getPaginatedResult(githubEndpoint, links[GitHubAttributes.next]);
+                    let paginatedResponse = await Release.getPaginatedResult(githubEndpointToken, links[GitHubAttributes.next]);
                     commitsForGivenShaResponse = paginatedResponse;
                     continue;
                 }

@@ -15,12 +15,13 @@ class Main {
 
             // Get basic task inputs
             const githubEndpoint = tl.getInput(Inputs.githubEndpoint, true);
+            const githubEndpointToken = Utility.getGithubEndPointToken(githubEndpoint);
             const repositoryName = tl.getInput(Inputs.repositoryName, true);        
             const action = tl.getInput(Inputs.action, true);
             let tag = tl.getInput(Inputs.tag);
 
             if (action === ActionType.discard) {
-                await Action.discardReleaseAction(githubEndpoint, repositoryName, tag);
+                await Action.discardReleaseAction(githubEndpointToken, repositoryName, tag);
             }
             else {
                 // Get task inputs specific to create and edit release
@@ -33,11 +34,11 @@ class Main {
 
                 if (action === ActionType.create) {
                     // Get tag to create release
-                    tag = await Helper.getTagForCreateAction(githubEndpoint, repositoryName, target, tag);
+                    tag = await Helper.getTagForCreateAction(githubEndpointToken, repositoryName, target, tag);
 
                     if (!!tag) {
-                        const releaseNote: string = await this._getReleaseNote(githubEndpoint, repositoryName, target);
-                        await Action.createReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
+                        const releaseNote: string = await this._getReleaseNote(githubEndpointToken, repositoryName, target);
+                        await Action.createReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
                     }
                     else {
                         // If no tag found, then give warning.
@@ -47,20 +48,20 @@ class Main {
                     }
                 }
                 else if (action === ActionType.edit) {
-                    const releaseNote: string = await this._getReleaseNote(githubEndpoint, repositoryName, target);
+                    const releaseNote: string = await this._getReleaseNote(githubEndpointToken, repositoryName, target);
                     // Get the release id of the release to edit.
                     console.log(tl.loc("FetchReleaseForTag", tag));
-                    let releaseId: any = await Helper.getReleaseIdForTag(githubEndpoint, repositoryName, tag);
+                    let releaseId: any = await Helper.getReleaseIdForTag(githubEndpointToken, repositoryName, tag);
 
                     // If a release is found, then edit it.
                     // Else create a new release.
                     if (!!releaseId) {
                         console.log(tl.loc("FetchReleaseForTagSuccess", tag));
-                        await Action.editReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, releaseId);
+                        await Action.editReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, releaseId);
                     }
                     else {
                         console.warn(tl.loc("NoReleaseFoundToEditCreateRelease", tag));
-                        await Action.createReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
+                        await Action.createReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
                     }
                 }
             }
@@ -72,7 +73,7 @@ class Main {
         }
     }
 
-    private static async _getReleaseNote(githubEndpoint: string, repositoryName: string, target: string): Promise<string> {
+    private static async _getReleaseNote(githubEndpointToken: string, repositoryName: string, target: string): Promise<string> {
         const releaseNotesSelection = tl.getInput(Inputs.releaseNotesSelection);
         const releaseNotesFile = tl.getPathInput(Inputs.releaseNotesFile, false, true);
         const releaseNoteInput = tl.getInput(Inputs.releaseNotesInput);
@@ -80,7 +81,7 @@ class Main {
 
         // Generate the change log 
         // Get change log for top 250 commits only
-        const changeLog: string = showChangeLog ? await ChangeLog.getChangeLog(githubEndpoint, repositoryName, target, 250) : "";
+        const changeLog: string = showChangeLog ? await ChangeLog.getChangeLog(githubEndpointToken, repositoryName, target, 250) : "";
 
         // Append change log to release note
         const releaseNote: string = Utility.getReleaseNote(releaseNotesSelection, releaseNotesFile, releaseNoteInput, changeLog) || undefined;
