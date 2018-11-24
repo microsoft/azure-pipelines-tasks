@@ -1,7 +1,7 @@
 {
     "id": "7B5A6198-ADF8-4B16-9939-7ADDF85708B2",
     "name": "GithubRelease",
-    "friendlyName": "Github Release",
+    "friendlyName": "GitHub Release",
     "description": "Create, edit or discard the github release",
     "helpMarkDown": "[More Information](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/GithubReleaseV0/README.md)",
     "category": "Utility",

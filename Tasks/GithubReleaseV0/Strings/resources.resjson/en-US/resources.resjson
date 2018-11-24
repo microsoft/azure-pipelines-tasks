@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Github Release",
+  "loc.friendlyName": "GitHub Release",
   "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/GithubReleaseV0/README.md)",
   "loc.description": "Create, edit or discard the github release",
   "loc.instanceNameFormat": "$(action) GitHub Release",

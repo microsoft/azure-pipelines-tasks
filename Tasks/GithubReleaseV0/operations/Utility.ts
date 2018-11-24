@@ -103,7 +103,7 @@ export class Utility {
      * @param headerLink 
      */
     public static parseHTTPHeaderLink(headerLink: string): { [key: string]: string } {
-        if (!!headerLink && headerLink.length == 0) {
+        if (!headerLink) {
             // No paginated results found
             return null; 
         }
