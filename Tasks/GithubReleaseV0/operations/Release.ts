@@ -25,7 +25,7 @@ export class Release {
             "Content-Type": "application/json",
             'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
         };
-        tl.debug("Create release request:\n" + JSON.stringify(request, null, 2));
+        tl.debug("Create release request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
@@ -47,7 +47,7 @@ export class Release {
             "Content-Type": "application/json",
             'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
         };
-        tl.debug("Edit release request:\n" + JSON.stringify(request, null, 2));
+        tl.debug("Edit release request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
@@ -60,7 +60,7 @@ export class Release {
         request.headers = {
             'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
         };
-        tl.debug("Discard release request:\n" + JSON.stringify(request, null, 2));
+        tl.debug("Discard release request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
@@ -73,7 +73,7 @@ export class Release {
         request.headers = {
             'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
         };
-        tl.debug("Delete release asset request:\n" + JSON.stringify(request, null, 2));
+        tl.debug("Delete release asset request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
@@ -95,7 +95,7 @@ export class Release {
             'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
         };
         request.body = rd;
-        tl.debug("Upload release request:\n" + JSON.stringify(request, null, 2));
+        tl.debug("Upload release request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
@@ -108,7 +108,7 @@ export class Release {
         request.headers = {
             'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
         };
-        tl.debug("Get branch request:\n" + JSON.stringify(request, null, 2));
+        tl.debug("Get branch request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
@@ -121,7 +121,7 @@ export class Release {
         request.headers = {
             'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
         };
-        tl.debug("Get tags request:\n" + JSON.stringify(request, null, 2));
+        tl.debug("Get tags request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
@@ -134,7 +134,7 @@ export class Release {
         request.headers = {
             'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
         };
-        tl.debug("Get releases request:\n" + JSON.stringify(request, null, 2));
+        tl.debug("Get releases request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
@@ -147,20 +147,7 @@ export class Release {
         request.headers = {
             'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
         };
-        tl.debug("Get latest release request:\n" + JSON.stringify(request, null, 2));
-
-        return await sendRequest(request);
-    }
-
-    public static async getReleaseByTag(githubEndpoint: string, repositoryName: string, tag: string): Promise<WebResponse> {
-        let request = new WebRequest();
-        
-        request.uri = util.format(this._getReleaseByTagApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, tag);
-        request.method = "GET";
-        request.headers = {
-            'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
-        };
-        tl.debug("Get release by tag request:\n" + JSON.stringify(request, null, 2));
+        tl.debug("Get latest release request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
@@ -173,7 +160,7 @@ export class Release {
         request.headers = {
             'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
         };
-        tl.debug("Get paginated request:\n" + JSON.stringify(request, null, 2));
+        tl.debug("Get paginated request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
@@ -186,7 +173,7 @@ export class Release {
         request.headers = {
             'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
         };
-        tl.debug("Get commits list request:\n" + JSON.stringify(request, null, 2));
+        tl.debug("Get commits list request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
@@ -199,7 +186,7 @@ export class Release {
         request.headers = {
             'Authorization': 'token ' + Utility.getGithubEndPointToken(githubEndpoint)
         };
-        tl.debug("Get commits list request:\n" + JSON.stringify(request, null, 2));
+        tl.debug("Get commits before given sha request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
@@ -210,7 +197,6 @@ export class Release {
     private static readonly _uploadReleaseAssetApiUrlFormat: string = "%s?name=%s";
     private static readonly _getReleasesApiUrlFormat: string = "%s/repos/%s/releases";
     private static readonly _getLatestReleasesApiUrlFormat: string = "%s/repos/%s/releases/latest";
-    private static readonly _getReleaseByTagApiUrlFormat: string = "%s/repos/%s/releases/tags/%s";
     private static readonly _getBranchApiUrlFormat: string = "%s/repos/%s/branches/%s";
     private static readonly _getTagsApiUrlFormat: string = "%s/repos/%s/tags";
     private static readonly _getCommitsListApiUrlFormat: string = "%s/repos/%s/compare/%s...%s";

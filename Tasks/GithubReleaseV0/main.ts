@@ -13,35 +13,20 @@ class Main {
             tl.debug("Setting resource path to " + taskManifestPath);
             tl.setResourcePath(taskManifestPath);        
 
-            // Get task inputs
+            // Get basic task inputs
             const githubEndpoint = tl.getInput(Inputs.githubEndpoint, true);
             const repositoryName = tl.getInput(Inputs.repositoryName, true);        
             const action = tl.getInput(Inputs.action, true);
             let tag = tl.getInput(Inputs.tag);
 
             if (action === ActionType.discard) {
-                // Get the release id of the release to discard.
-                let releaseId: string = await Helper.getReleaseIdForTag(githubEndpoint, repositoryName, tag);
-
-                if (!!releaseId) {
-                    await Action.discardReleaseAction(githubEndpoint, repositoryName, releaseId, tag);
-                }
-                else {
-                    throw new Error(tl.loc("NoReleaseFoundToDiscard", tag));
-                }
+                await Action.discardReleaseAction(githubEndpoint, repositoryName, tag);
             }
             else {
                 // Get task inputs specific to create and edit release
                 const target = tl.getInput(Inputs.target, true);
                 const releaseTitle = tl.getInput(Inputs.releaseTitle) || undefined; 
-                const releaseNotesSelection = tl.getInput(Inputs.releaseNotesSelection);
-                const releaseNotesFile = tl.getPathInput(Inputs.releaseNotesFile, false, true);
-                const releaseNoteInput = tl.getInput(Inputs.releaseNotesInput);
-                const changeLogInput: boolean = tl.getBoolInput(Inputs.changeLog);
-                // Generate the change log 
-                const changeLog: string = await ChangeLog.getChangeLog(githubEndpoint, repositoryName, target, 250, changeLogInput);
-                // Append change log to release note
-                const releaseNote: string = Utility.getReleaseNote(releaseNotesSelection, releaseNotesFile, releaseNoteInput, changeLog) || undefined;
+
                 const isPrerelease = tl.getBoolInput(Inputs.isPrerelease) || false;
                 const isDraft = tl.getBoolInput(Inputs.isDraft) || false;
                 const githubReleaseAssetInputPatterns = tl.getDelimitedInput(Inputs.githubReleaseAsset, Delimiters.newLine);
@@ -50,35 +35,57 @@ class Main {
                     // Get tag to create release
                     tag = await Helper.getTagForCreateAction(githubEndpoint, repositoryName, target, tag);
 
-                    if (!tag) {
-                        // If no tag found, then give warning and succeeding the task.
-                        // Doing this because commits without associated tag will fail continuosly
+                    if (!!tag) {
+                        const releaseNote: string = await this._getReleaseNote(githubEndpoint, repositoryName, target);
+                        await Action.createReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
+                    }
+                    else {
+                        // If no tag found, then give warning.
+                        // Doing this because commits without associated tag will fail continuosly if we throw error.
                         // Other option is to have some task condition, which user can specify in task.
                         console.warn(tl.loc("NoTagFound", target));
-                        tl.setResult(tl.TaskResult.Succeeded, "");
-                        return;
                     }
-                    await Action.createReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
                 }
                 else if (action === ActionType.edit) {
+                    const releaseNote: string = await this._getReleaseNote(githubEndpoint, repositoryName, target);
                     // Get the release id of the release to edit.
+                    console.log(tl.loc("FetchReleaseForTag", tag));
                     let releaseId: any = await Helper.getReleaseIdForTag(githubEndpoint, repositoryName, tag);
 
                     // If a release is found, then edit it.
                     // Else create a new release.
                     if (!!releaseId) {
+                        console.log(tl.loc("FetchReleaseForTagSuccess", tag));
                         await Action.editReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, releaseId);
                     }
                     else {
-                        console.warn(tl.loc("NoReleaseFoundCreateRelease", tag));
+                        console.warn(tl.loc("NoReleaseFoundToEditCreateRelease", tag));
                         await Action.createReleaseAction(githubEndpoint, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
                     }
                 }
             }
+
+            tl.setResult(tl.TaskResult.Succeeded, "");
         }
         catch(error) {
             tl.setResult(tl.TaskResult.Failed, error);
         }
+    }
+
+    private static async _getReleaseNote(githubEndpoint: string, repositoryName: string, target: string): Promise<string> {
+        const releaseNotesSelection = tl.getInput(Inputs.releaseNotesSelection);
+        const releaseNotesFile = tl.getPathInput(Inputs.releaseNotesFile, false, true);
+        const releaseNoteInput = tl.getInput(Inputs.releaseNotesInput);
+        const showChangeLog: boolean = tl.getBoolInput(Inputs.changeLog);
+
+        // Generate the change log 
+        // Get change log for top 250 commits only
+        const changeLog: string = showChangeLog ? await ChangeLog.getChangeLog(githubEndpoint, repositoryName, target, 250) : "";
+
+        // Append change log to release note
+        const releaseNote: string = Utility.getReleaseNote(releaseNotesSelection, releaseNotesFile, releaseNoteInput, changeLog) || undefined;
+
+        return releaseNote;
     }
 }
 

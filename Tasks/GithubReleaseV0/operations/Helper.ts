@@ -26,9 +26,11 @@ export class Helper {
         let tagSelection = tl.getInput(Inputs.tagSelection);
 
         if (!!tagSelection && tagSelection === TagSelectionMode.auto) {
+            console.log(tl.loc("FetchTagForTarget", target));
             // Tag should be set to undefined as it can have some value even if tag selection mode is auto if user has changed it.
             tag = undefined; 
             let commit_sha: string = await this.getCommitShaFromTarget(githubEndpoint, repositoryName, target);
+            tl.debug("commit sha for target: " + commit_sha);
             let buildSourceVersion = tl.getVariable(AzureDevOpsVariables.buildSourceVersion);
 
             // If the buildSourceVersion and user specified target does not match, then prefer user specified target
@@ -48,6 +50,11 @@ export class Helper {
                     tag = await this._getTagForCommit(githubEndpoint, repositoryName, commit_sha);
                 }
             }
+
+            if (!!tag) {
+                console.log(tl.loc("FetchTagForTargetSuccess", target));
+            }
+            
             return tag;
         }
         else {
@@ -65,7 +72,7 @@ export class Helper {
     public static async getCommitShaFromTarget(githubEndpoint: string, repositoryName: string, target: string): Promise<string> {
         let commit_sha: string = undefined;
         let response = await Release.getBranch(githubEndpoint, repositoryName, target);
-        tl.debug("Get branch response:\n" + JSON.stringify(response, null, 2));
+        tl.debug("Get branch response: " + JSON.stringify(response));
 
         if (response.statusCode === 200) {
             commit_sha = response.body[GitHubAttributes.commit][GitHubAttributes.sha];
@@ -74,7 +81,7 @@ export class Helper {
             commit_sha = target;
         }
         else {
-            console.log(tl.loc("GetBranchError"));
+            console.log(tl.loc("GithubApiFailError"));
             throw new Error(response.body[GitHubAttributes.message]);
         }
 
@@ -100,11 +107,12 @@ export class Helper {
         // Fetching releases api call may end up in paginated results.
         // Traversing all the pages and filtering all the releases with given tag.
         while (true) {
-            tl.debug("Get releases response:\n" + JSON.stringify(releasesResponse, null, 2));
+            tl.debug("Get releases response: " + JSON.stringify(releasesResponse));
 
             if (releasesResponse.statusCode === 200) {
                 // Filter the releases fetched
                 (releasesResponse.body || []).forEach(release => {
+                    tl.debug("release[GitHubAttributes.tagName]: " + release[GitHubAttributes.tagName] + " " + "tag: " + tag);
                     // Push release if tag matches
                     if (release[GitHubAttributes.tagName] === tag) {
                         releasesWithGivenTag.push({
@@ -119,9 +127,7 @@ export class Helper {
                     throw new Error(tl.loc("MultipleReleasesFoundError", tag));
                 }
 
-                tl.debug("Header link: " + releasesResponse.headers[GitHubAttributes.link])
                 links = Utility.parseHTTPHeaderLink(releasesResponse.headers[GitHubAttributes.link]);
-                tl.debug("Parsed links: " + JSON.stringify(links));
 
                 // Calling the next page if it exists
                 if (links && links[GitHubAttributes.next]) {
@@ -160,18 +166,14 @@ export class Helper {
         // Fetching tags api call may end up in paginated results.
         // So, traversing pages one by one and throwing error if more than 1 tag found.
         while (true) {
-            tl.debug("Get tags response:\n" + JSON.stringify(tagsResponse, null, 2));
+            tl.debug("Get tags response: " + JSON.stringify(tagsResponse));
 
             if (tagsResponse.statusCode === 200) {
-                tl.debug("Header link: " + tagsResponse.headers[GitHubAttributes.link])
-
                 // Parse header link and get links to different pages
                 links = Utility.parseHTTPHeaderLink(tagsResponse.headers[GitHubAttributes.link]);
-                tl.debug("Parsed links: " + JSON.stringify(links));
                 
                 // Filter the tags returned in current page
                 let tags: any[] = filterTagsCallback(tagsResponse.body, filterValue);
-                tl.debug("filteredTags length: " + tags.length);
 
                 if (!!tags && tags.length > 0) {
                     // Push returned tags in filtered tags.
@@ -213,7 +215,6 @@ export class Helper {
      */
     private static async _getTagForCommit(githubEndpoint: string, repositoryName: string, commit_sha: string): Promise<string> {
         let filteredTag: any = await this.filterTag(githubEndpoint, repositoryName, commit_sha, this._filterTagsByCommitSha);
-        tl.debug("filtered tag _getTagForCommit: " + JSON.stringify(filteredTag));
 
         return filteredTag && filteredTag[GitHubAttributes.nameAttribute];
     }

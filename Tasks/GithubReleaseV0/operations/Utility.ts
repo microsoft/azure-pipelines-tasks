@@ -9,6 +9,8 @@ export class Utility {
         const githubEndpointObject = tl.getEndpointAuthorization(githubEndpoint, false);
         let githubEndpointToken: string = null;
 
+        tl.debug("Endpoint scheme: " + githubEndpointObject.scheme);
+        
         if (githubEndpointObject.scheme === 'PersonalAccessToken') {
             githubEndpointToken = githubEndpointObject.parameters.accessToken
         } else {
@@ -30,12 +32,7 @@ export class Utility {
 
             filePaths.forEach((filePath) => {
                 if (!githubReleaseAssets.has(filePath)) {
-                    tl.debug("Adding filePath: " + filePath);
                     githubReleaseAssets.add(filePath)
-                }
-                else {
-                    // File already added by previous pattern
-                    tl.debug("FilePath already added: " + filePath);
                 }
             })
         });
@@ -50,7 +47,7 @@ export class Utility {
                     fs.accessSync(path.resolve(asset));
                 })
             } catch (err) {
-                console.log(tl.loc("MissingAssetError", err.path));
+                console.warn(tl.loc("MissingAssetError", err.path));
             }
         }
     }
@@ -145,7 +142,8 @@ export class Utility {
             }
 
         })
-    
+
+        tl.debug("Parsed link: " + JSON.stringify(links));
         return links;
     }
 

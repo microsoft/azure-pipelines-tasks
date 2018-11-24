@@ -14,17 +14,13 @@ export class ChangeLog {
      * @param top 
      * @param changeLogInput 
      */
-    public static async getChangeLog(githubEndpoint: string, repositoryName: string, target: string, top: number, changeLogInput: boolean): Promise<string> {
-        // if user has unchecked the 'Add change log' input, then return empty string.
-        if (!changeLogInput) {
-            return "";
-        }
-
+    public static async getChangeLog(githubEndpoint: string, repositoryName: string, target: string, top: number): Promise<string> {
         console.log(tl.loc("ComputingChangeLog"));
 
         // Get the latest published release to compare the changes with.
+        console.log(tl.loc("FetchLatestPublishRelease"));
         let latestReleaseResponse = await Release.getLatestRelease(githubEndpoint, repositoryName);
-        tl.debug("Get latest release response:\n" + JSON.stringify(latestReleaseResponse, null, 2));
+        tl.debug("Get latest release response: " + JSON.stringify(latestReleaseResponse));
 
         // We will be fetching changes between startCommitSha...endCommitSha.
         // endCommitSha: It is the current commit
@@ -45,15 +41,20 @@ export class ChangeLog {
                 let latestReleaseTag: string = latestReleaseResponse.body[GitHubAttributes.tagName];
                 tl.debug("latest release tag: " + latestReleaseTag);
                 
+                console.log(tl.loc("FetchLatestPublishReleaseSuccess"));
                 startCommitSha = await this._getCommitForTag(githubEndpoint, repositoryName, latestReleaseTag);
             }
             else {
+                console.log(tl.loc("NoLatestPublishRelease"));
+                console.log(tl.loc("FetchInitialCommit"));
                 startCommitSha = await this._getInitialCommit(githubEndpoint, repositoryName, endCommitSha, top);
+                console.log(tl.loc("FetchInitialCommitSuccess", startCommitSha));
             }
             
             // Compare the diff between 2 commits.
+            console.log(tl.loc("FetchCommitDiff"));
             let commitsListResponse = await Release.getCommitsList(githubEndpoint, repositoryName, startCommitSha, endCommitSha);
-            tl.debug("Get commits list response:\n" + JSON.stringify(commitsListResponse, null, 2));
+            tl.debug("Get commits list response: " + JSON.stringify(commitsListResponse));
 
             if (commitsListResponse.statusCode === 200) {
                 // If end commit is older than start commit i.e. Rollback scenario, we will not show any change log.
@@ -70,6 +71,7 @@ export class ChangeLog {
                         return "";
                     }
 
+                    console.log(tl.loc("FetchCommitDiffSuccess"));
                     // Reversing commits as commits retrieved are in oldest first order
                     commits = commits.reverse(); 
 
@@ -111,11 +113,12 @@ export class ChangeLog {
                         }
                     }
 
+                    console.log(tl.loc("ComputingChangeLogSuccess"));
                     return changeLog;
                 }
             }
             else{
-                console.log(tl.loc("GetCommitsListError"));
+                console.log(tl.loc("FetchCommitDiffError"));
                 throw new Error(commitsListResponse.body[GitHubAttributes.message]);
             }
         }
@@ -134,7 +137,6 @@ export class ChangeLog {
      */
     private static async _getCommitForTag(githubEndpoint: string, repositoryName: string, tag: string): Promise<string> {
         let filteredTag: any = await Helper.filterTag(githubEndpoint, repositoryName, tag, this._filterTagsByTagName);
-        tl.debug("filtered tag: _getCommitForTag" + JSON.stringify(filteredTag));
 
         return filteredTag && filteredTag[GitHubAttributes.commit][GitHubAttributes.sha];
     }
@@ -146,32 +148,45 @@ export class ChangeLog {
      * @param sha 
      */
     private static async _getInitialCommit(githubEndpoint: string, repositoryName: string, sha: string, top: number): Promise<string> {
-        let initialCommit: string = "";
-
         // No api available to get first commit directly.
-        // Also if we get it somehow, then commit difference can be very high 
-        // and api to fetch commits difference can take long time to resolve.
-        // Curently, I am showing top 100 commits as page size is 100.
-
-        // Todo: Ask is to get first 250 (top)
-        // Today, page size is 100, and for showing 250 commits pagination is required.
-        // Should we call the last page directly to get the first commit instead
-        
+        // So, fetching all commits before the current commit sha.
+        // Returning last commit or 250th commit which ever is smaller.
         let commitsForGivenShaResponse = await Release.getCommitsBeforeGivenSha(githubEndpoint, repositoryName, sha);
+        let links: { [key: string]: string } = {};
+        let commits: any[] = [];
 
-        if (commitsForGivenShaResponse.statusCode === 200) {
-            let commits: any[] = commitsForGivenShaResponse.body; // Returned commits are in latest first order and first commit is the commit queried itself.
+        while(true) {
+            tl.debug("Get initial commit response: " + JSON.stringify(commitsForGivenShaResponse));
 
-            // Last commit will be the oldest commit.
-            initialCommit = commits[commits.length - 1];
+            if (commitsForGivenShaResponse.statusCode === 200) {
+                // Returned commits are in latest first order and first commit is the commit queried itself.
+                (commitsForGivenShaResponse.body || []).forEach(commit => {
+                    commits.push(commit);
+                });
+    
+                if (commits.length >= top) {
+                    // Return 250th commit
+                    return commits[top - 1][GitHubAttributes.sha];
+                }
 
+                links = Utility.parseHTTPHeaderLink(commitsForGivenShaResponse.headers[GitHubAttributes.link]);
+
+                // Calling the next page if it exists
+                if (links && links[GitHubAttributes.next]) {
+                    let paginatedResponse = await Release.getPaginatedResult(githubEndpoint, links[GitHubAttributes.next]);
+                    commitsForGivenShaResponse = paginatedResponse;
+                    continue;
+                }
+                else {
+                    // Return last commit.
+                    return commits[commits.length - 1][GitHubAttributes.sha];
+                }
+            }
+            else {
+                console.log(tl.loc("FetchInitialCommitError"));
+                throw new Error(commitsForGivenShaResponse.body[GitHubAttributes.message]);
+            }
         }
-        else {
-            console.log(tl.loc("GetCommitsByShaError"));
-            throw new Error(commitsForGivenShaResponse.body[GitHubAttributes.message]);
-        }
-
-        return initialCommit;
     }
 
     /**
@@ -339,11 +354,7 @@ export class ChangeLog {
             let teamProject: string = tl.getVariable(AzureDevOpsVariables.teamProject);
             let buildId: string = tl.getVariable(AzureDevOpsVariables.buildId);
 
-            tl.debug("collection uri: " + collectionUri);
-            tl.debug("teamProject: " + teamProject);
-            tl.debug("buildId: " + buildId);
             tl.debug("Build url: " + util.format(this._buildUrlFormat, collectionUri, teamProject, buildId));
-
             return util.format(this._buildUrlFormat, collectionUri, teamProject, buildId);
         }
     }

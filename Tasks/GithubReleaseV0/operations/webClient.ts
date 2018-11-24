@@ -102,7 +102,7 @@ async function toWebResponse(response: httpClient.HttpClientResponse): Promise<W
             }
             catch (error) {
                 tl.debug("Could not parse response: " + JSON.stringify(error, null, 2));
-                tl.debug("Response: " + JSON.stringify(res.body, null, 2));
+                tl.debug("Response: " + JSON.stringify(res.body));
                 res.body = body;
             }
         }
