@@ -13,6 +13,8 @@
   "loc.input.label.specificBuildWithTriggering": "在适当情况下，从触发生成下载项目。",
   "loc.input.help.specificBuildWithTriggering": "如果选中，则此生成任务将尝试从触发生成中下载项目。如果没有来自指定管道的触发生成，它将从以下选项中指定的生成中下载项目。",
   "loc.input.label.buildVersionToDownload": "要下载的生成版本",
+  "loc.input.label.allowPartiallySucceededBuilds": "Download artifacts even from partially succeeded builds.",
+  "loc.input.help.allowPartiallySucceededBuilds": "If checked, this build task will try to download artifacts whether the build is succeeded or partially succeeded.",
   "loc.input.label.branchName": "分支名称",
   "loc.input.help.branchName": "指定为筛选分支/引用名称，例如: ```refs/heads/develop```。",
   "loc.input.label.buildId": "生成",
