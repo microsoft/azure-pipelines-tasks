@@ -122,10 +122,13 @@ export async function run(artifactToolPath: string): Promise<void> {
             accountUrl: serviceUri,
             packageName,
             packageVersion: version,
-            publishedPackageVar,
         } as artifactToolRunner.IArtifactToolOptions;
 
         publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
+        
+        if(publishedPackageVar) {
+            tl.setVariable(publishedPackageVar, `${packageName} ${version}`);
+        }
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesPublishedSuccessfully"));
     } catch (err) {
@@ -155,9 +158,6 @@ function publishPackageUsingArtifactTool(publishDir: string, options: artifactTo
     const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(options.artifactToolPath, command, execOptions);
 
     if (execResult.code === 0) {
-        if(options.publishedPackageVar) {
-            tl.setVariable(options.publishedPackageVar, `${options.packageName}.${options.packageVersion}`);
-        }
         return;
     }
 
