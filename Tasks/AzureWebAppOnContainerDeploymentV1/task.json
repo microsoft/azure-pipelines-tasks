@@ -1,7 +1,7 @@
 {
     "id": "15858991-8BAC-4542-99E7-577FEF9B5BE6",
     "name": "AzureWebAppOnContainerDeployment",
-    "friendlyName": "Azure Web App on Container Deploy",
+    "friendlyName": "Azure Web App for Container",
     "description": "Update Azure App Services on Docker containers",
     "helpMarkDown": "[More information](https://aka.ms/azurewebapponcontainerdeployreadme)",
     "category": "Deploy",
