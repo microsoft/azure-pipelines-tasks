@@ -81,7 +81,8 @@ export class DotnetMockHelper {
                 packagingCollectionUrl: string,
                 feedId: string,
                 nuGetVersion: VersionInfo,
-                accessToken?: string) {
+                accessToken?: string,
+                useSession?: true) {
                 return 'https://vsts/packagesource';
             }
         });

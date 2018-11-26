@@ -99,8 +99,16 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
 }
 
 export async function cacheBundledNuGet(
-    cachedVersionToUse: string = DEFAULT_NUGET_VERSION,
-    nugetPathSuffix = DEFAULT_NUGET_PATH_SUFFIX): Promise<string> {
+    cachedVersionToUse?: string,
+    nugetPathSuffix?: string): Promise<string> {
+    if (cachedVersionToUse == null) {
+        cachedVersionToUse = DEFAULT_NUGET_VERSION;
+    }
+
+    if (nugetPathSuffix == null) {
+        nugetPathSuffix = DEFAULT_NUGET_PATH_SUFFIX;
+    }
+
     if (taskLib.getVariable(FORCE_NUGET_4_0_0) &&
         taskLib.getVariable(FORCE_NUGET_4_0_0).toLowerCase() === "true"){
         cachedVersionToUse = NUGET_VERSION_4_0_0;
