@@ -21,6 +21,9 @@
   "inputs": [
     {
       "name": "githubEndpoint",
+      "aliases": [
+        "githubConnection"
+      ],
       "type": "connectedService:github",
       "label": "ms-resource:loc.input.label.githubEndpoint",
       "defaultValue": "",
@@ -62,6 +65,9 @@
     },
     {
       "name": "tagSelection",
+      "aliases": [
+        "tagSource"
+      ],
       "type": "radio",
       "label": "ms-resource:loc.input.label.tagSelection",
       "required": true,
@@ -84,6 +90,9 @@
     },
     {
       "name": "releaseTitle",
+      "aliases": [
+        "title"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.releaseTitle",
       "defaultValue": "",
@@ -93,6 +102,9 @@
     },
     {
       "name": "releaseNotesSelection",
+      "aliases": [
+        "releaseNotesSource"
+      ],
       "type": "radio",
       "label": "ms-resource:loc.input.label.releaseNotesSelection",
       "required": false,
@@ -114,6 +126,9 @@
     },
     {
       "name": "releaseNotesInput",
+      "aliases": [
+        "releaseNotes"
+      ],
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.releaseNotesInput",
       "required": false,
@@ -127,6 +142,9 @@
     },
     {
       "name": "githubReleaseAsset",
+      "aliases": [
+        "assets"
+      ],
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.githubReleaseAsset",
       "defaultValue": "$(Build.ArtifactStagingDirectory)/*",
@@ -162,6 +180,9 @@
     },
     {
       "name": "isPrerelease",
+      "aliases": [
+        "isPreRelease"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.isPrerelease",
       "defaultValue": "false",
@@ -171,6 +192,9 @@
     },
     {
       "name": "changeLog",
+      "aliases": [
+        "addChangeLog"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.changeLog",
       "defaultValue": "true",

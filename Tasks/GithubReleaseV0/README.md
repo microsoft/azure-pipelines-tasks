@@ -14,13 +14,13 @@ The following pre-requisites are required for the task to work properly:
 
 #### GitHub Service Connection
 
-In order to perform operations on the GitHub repository, the task needs a GitHub service connection with adequate permission. If it does not exist already, you can [create a github service connection](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=vsts#sep-github) in your azure pipelines project. Once the service connection is created, all you need is the name of the service connection in this task.
+In order to perform operations on the GitHub repository, the task needs a GitHub service connection with adequate permission. If it does not exist already, you can [create a github service connection](https://aka.ms/AA3am5s) in your azure pipelines project. Once the service connection is created, all you need is the name of the service connection in this task.
 
 ## Parameters of the task
 
 The GitHub Releases task can run in 3 action types, viz. create, edit or discard. Based on the action chosen by the user certain parameters will be ignored. The following is the list of parameters required for this task.
 
-* **Service Connection:** This is the name of GitHub service connection which will be used to connect to target GitHub account. You can use an existing GitHub service connection or create a new one. For more details, see: [create a github service connection](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=vsts#sep-github)
+* **Service Connection:** This is the name of GitHub service connection which will be used to connect to target GitHub account. You can use an existing GitHub service connection or create a new one.
 
 * **GitHub Repository:** This is the name of the github repository where the github releases will be created. E.g. *microsoft/vscode*
 
@@ -34,7 +34,7 @@ The GitHub Releases task can run in 3 action types, viz. create, edit or discard
 
 * **Target:** This is the commit SHA for which the github release will be created. By default, the value is $(Build.SourceVersion) which corresponds to the commit for which the build was run. If you specify a branch name here(E.g. *master* ), the latest commit from this branch will be used as target. This field is ignored when using edit and discard actions.
 
-* **Tag Type:** This field allows you to configure the tag to be used for a release action. It can be done in 2 ways:
+* **Tag Source:** This field allows you to configure the tag to be used for a release action. It can be done in 2 ways:
 
                 * Git tag: This option is available only for *create* action. If selected, the release will be created using the git tag that is associated with this commit. If no tag is found for the given commit, the release will not be created. If multiple tags are found, the task will throw an error.
 

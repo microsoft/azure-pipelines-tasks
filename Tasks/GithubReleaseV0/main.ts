@@ -44,7 +44,7 @@ class Main {
                         // If no tag found, then give warning.
                         // Doing this because commits without associated tag will fail continuosly if we throw error.
                         // Other option is to have some task condition, which user can specify in task.
-                        console.warn(tl.loc("NoTagFound", target));
+                        tl.warning(tl.loc("NoTagFound", target));
                     }
                 }
                 else if (action === ActionType.edit) {
@@ -60,7 +60,7 @@ class Main {
                         await Action.editReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns, releaseId);
                     }
                     else {
-                        console.warn(tl.loc("NoReleaseFoundToEditCreateRelease", tag));
+                        tl.warning(tl.loc("NoReleaseFoundToEditCreateRelease", tag));
                         await Action.createReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
                     }
                 }

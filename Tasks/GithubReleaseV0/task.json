@@ -3,7 +3,7 @@
     "name": "GithubRelease",
     "friendlyName": "GitHub Release",
     "description": "Create, edit or discard the github release",
-    "helpMarkDown": "[More Information](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/GithubReleaseV0/README.md)",
+    "helpMarkDown": "[More Information](https://aka.ms/AA3aeiw)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -21,11 +21,14 @@
     "inputs": [
         {
             "name": "githubEndpoint",
+            "aliases": [
+                "githubConnection"
+            ],
             "type": "connectedService:github",
             "label": "GitHub Connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the service endpoint for your GitHub connection. Click the 'Manage' link to create a new service endpoint. To know more about service connections [click here.](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=vsts#sep-github)"
+            "helpMarkDown": "Select the service endpoint for your GitHub connection. Click the 'Manage' link to create a new service endpoint. To know more about service connections [click here.](https://aka.ms/AA3am5s)"
         },
         {
             "name": "repositoryName",
@@ -62,8 +65,11 @@
         },
         {
             "name": "tagSelection",
+            "aliases": [
+                "tagSource"
+            ],
             "type": "radio",
-            "label": "Tag type",
+            "label": "Tag source",
             "required": true,
             "defaultValue": "auto",
             "visibleRule": "action = Create",
@@ -84,6 +90,9 @@
         },
         {
             "name": "releaseTitle",
+            "aliases": [
+                "title"
+            ],
             "type": "string",
             "label": "Release title",
             "defaultValue": "",
@@ -93,6 +102,9 @@
         },
         {
             "name": "releaseNotesSelection",
+            "aliases": [
+                "releaseNotesSource"
+            ],
             "type": "radio",
             "label": "Release notes source",
             "required": false,
@@ -114,6 +126,9 @@
         },
         {
             "name": "releaseNotesInput",
+            "aliases": [
+                "releaseNotes"
+            ],
             "type": "multiLine",
             "label": "Release notes",
             "required": false,
@@ -127,6 +142,9 @@
         },
         {
             "name": "githubReleaseAsset",
+            "aliases": [
+                "assets"
+            ],
             "type": "multiLine",
             "label": "Assets",
             "defaultValue": "$(Build.ArtifactStagingDirectory)/*",
@@ -162,6 +180,9 @@
         },
         {
             "name": "isPrerelease",
+            "aliases": [
+                "isPreRelease"
+            ],
             "type": "boolean",
             "label": "Pre release",
             "defaultValue": "false",
@@ -171,12 +192,15 @@
         },
         {
             "name": "changeLog",
+            "aliases": [
+                "addChangeLog"
+            ],
             "type": "boolean",
             "label": "Add changelog",
             "defaultValue": "true",
             "required": false,
             "visibleRule": "action = Create || action = Edit",
-            "helpMarkDown": "Using this option you can generate and append list of changes to release notes. The list of changes(commits and issues) between this and last published release will be generated and appended to release notes."
+            "helpMarkDown": "Using this option, a list of changes (commits and issues) between this and the last published release will be generated and appended to release notes."
         }
     ],
     "sourceDefinitions": [

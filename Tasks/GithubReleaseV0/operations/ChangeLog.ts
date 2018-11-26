@@ -59,7 +59,7 @@ export class ChangeLog {
             if (commitsListResponse.statusCode === 200) {
                 // If end commit is older than start commit i.e. Rollback scenario, we will not show any change log.
                 if (commitsListResponse.body[GitHubAttributes.status] === GitHubAttributes.behind) {
-                    console.warn(tl.loc("CommitDiffBehind"));
+                    tl.warning(tl.loc("CommitDiffBehind"));
                     return "";
                 }
                 else {
@@ -118,12 +118,12 @@ export class ChangeLog {
                 }
             }
             else{
-                console.log(tl.loc("FetchCommitDiffError"));
+                tl.error(tl.loc("FetchCommitDiffError"));
                 throw new Error(commitsListResponse.body[GitHubAttributes.message]);
             }
         }
         else {
-            console.log(tl.loc("GetLatestReleaseError"));
+            tl.error(tl.loc("GetLatestReleaseError"));
             throw new Error(latestReleaseResponse.body[GitHubAttributes.message]);
         }
     }
@@ -183,7 +183,7 @@ export class ChangeLog {
                 }
             }
             else {
-                console.log(tl.loc("FetchInitialCommitError"));
+                tl.error(tl.loc("FetchInitialCommitError"));
                 throw new Error(commitsForGivenShaResponse.body[GitHubAttributes.message]);
             }
         }

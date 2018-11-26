@@ -53,11 +53,11 @@ export class Action {
             }
         } 
         else if (response.statusCode === 422 && response.body.errors && response.body.errors.length > 0 && response.body.errors[0].code === this._alreadyExistErrorCode) {
-            console.log(tl.loc("ReleaseAlreadyExists", tag));  
+            tl.error(tl.loc("ReleaseAlreadyExists", tag));  
             throw new Error(response.body[GitHubAttributes.message]);
         }
         else {
-            console.log(tl.loc("CreateReleaseError"));
+            tl.error(tl.loc("CreateReleaseError"));
             throw new Error(response.body[GitHubAttributes.message]);
         }
     }
@@ -87,7 +87,7 @@ export class Action {
             console.log(tl.loc("EditReleaseSuccess", response.body[GitHubAttributes.htmlUrl]));
         }
         else {
-            console.log(tl.loc("EditReleaseError"));
+            tl.error(tl.loc("EditReleaseError"));
             throw new Error(response.body[GitHubAttributes.message]);
         }  
     }
@@ -128,7 +128,7 @@ export class Action {
             console.log(tl.loc("DiscardReleaseSuccess"));
         }
         else {
-            console.log(tl.loc("DiscardReleaseError"));
+            tl.error(tl.loc("DiscardReleaseError"));
             throw new Error(response.body[GitHubAttributes.message]);
         }
     }
@@ -166,7 +166,7 @@ export class Action {
             console.log(tl.loc("UploadingAsset", asset));
 
             if (fs.lstatSync(path.resolve(asset)).isDirectory()) {
-                console.warn(tl.loc("AssetIsDirectoryError", asset));
+                tl.warning(tl.loc("AssetIsDirectoryError", asset));
                 continue;
             }
 
@@ -193,11 +193,11 @@ export class Action {
                     }
                 }
                 else {
-                    console.warn(tl.loc("SkipDuplicateAssetFound", asset));
+                    tl.warning(tl.loc("SkipDuplicateAssetFound", asset));
                 }
             }
             else {
-                console.log(tl.loc("UploadAssetError"))
+                tl.error(tl.loc("UploadAssetError"))
                 throw new Error(uploadResponse.body[GitHubAttributes.message]);
             }
         }
@@ -225,7 +225,7 @@ export class Action {
                 console.log(tl.loc("AssetDeletedSuccessfully", asset));
             }
             else {
-                console.log(tl.loc("ErrorDeletingAsset", asset));
+                tl.error(tl.loc("ErrorDeletingAsset", asset));
                 throw new Error(deleteAssetResponse.body[GitHubAttributes.message]);
             }
         }

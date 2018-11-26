@@ -81,7 +81,7 @@ export class Helper {
             commit_sha = target;
         }
         else {
-            console.log(tl.loc("GithubApiFailError"));
+            tl.error(tl.loc("GithubApiFailError"));
             throw new Error(response.body[GitHubAttributes.message]);
         }
 
@@ -140,7 +140,7 @@ export class Helper {
                 }
             }
             else {
-                console.log(tl.loc("GetReleasesError"));
+                tl.error(tl.loc("GetReleasesError"));
                 throw new Error(releasesResponse.body[GitHubAttributes.message]);
             }
         }
@@ -198,7 +198,7 @@ export class Helper {
                 }
             }
             else{
-                console.log(tl.loc("GetTagsError"));
+                tl.error(tl.loc("GetTagsError"));
                 throw new Error(tagsResponse.body[GitHubAttributes.message]);
             }
         }

@@ -47,7 +47,7 @@ export class Utility {
                     fs.accessSync(path.resolve(asset));
                 })
             } catch (err) {
-                console.warn(tl.loc("MissingAssetError", err.path));
+                tl.warning(tl.loc("MissingAssetError", err.path));
             }
         }
     }
