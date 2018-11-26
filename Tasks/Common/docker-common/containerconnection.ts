@@ -149,6 +149,8 @@ export default class ContainerConnection {
     {
         if (!fs.existsSync(dirPath)) {
             fs.mkdirSync(dirPath);
+            var privateKeyDir= path.join(dirPath, "trust", "private");
+            tl.mkdirP(privateKeyDir);
         }
     }
 

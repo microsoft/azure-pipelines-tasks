@@ -13,6 +13,8 @@
   "loc.input.label.specificBuildWithTriggering": "해당하는 경우 트리거하는 빌드에서 아티팩트를 다운로드합니다.",
   "loc.input.help.specificBuildWithTriggering": "선택한 경우, 이 빌드 작업은 트리거 빌드에서 아티팩트를 다운로드하려고 합니다. 지정한 파이프라인에서 생성된 트리거 빌드가 없는 경우 아래 옵션에 지정된 빌드에서 아티팩트를 다운로드합니다.",
   "loc.input.label.buildVersionToDownload": "다운로드할 빌드 버전",
+  "loc.input.label.allowPartiallySucceededBuilds": "Download artifacts even from partially succeeded builds.",
+  "loc.input.help.allowPartiallySucceededBuilds": "If checked, this build task will try to download artifacts whether the build is succeeded or partially succeeded.",
   "loc.input.label.branchName": "분기 이름",
   "loc.input.help.branchName": "분기/참조 이름을 기준으로 필터링하도록 지정합니다(예: ```refs/heads/develop```).",
   "loc.input.label.buildId": "빌드",

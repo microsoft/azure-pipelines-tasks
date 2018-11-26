@@ -17,10 +17,12 @@ export class KuduServiceManagementClient {
         this._scmUri = scmUri;
     }
 
-    public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions, contentType?: string): Promise<webClient.WebResponse> {
+    public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions): Promise<webClient.WebResponse> {
         request.headers = request.headers || {};
         request.headers["Authorization"] = "Basic " + this._accesssToken;
-        request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
+        if(!request.headers['Content-Type']) {
+            request.headers['Content-Type'] = 'application/json; charset=utf-8';
+        }
         
         let retryCount = reqOptions && util.isNumber(reqOptions.retryCount) ? reqOptions.retryCount : 5;
 
@@ -445,9 +447,12 @@ export class Kudu {
         httpRequest.method = 'POST';
         httpRequest.uri = this._client.getRequestUri(`/api/zipdeploy`, queryParameters);
         httpRequest.body = fs.createReadStream(webPackage);
+        httpRequest.headers = {
+            'Content-Type': 'application/octet-stream'
+        };
 
         try {
-            let response = await this._client.beginRequest(httpRequest, null, 'application/octet-stream');
+            let response = await this._client.beginRequest(httpRequest);
             tl.debug(`ZIP Deploy response: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 tl.debug('Deployment passed');
@@ -455,9 +460,10 @@ export class Kudu {
             }
             else if(response.statusCode == 202) {
                 let pollableURL: string = response.headers.location;
+                let affinityCookie: string [] = response.headers['set-cookie'];
                 if(!!pollableURL) {
                     tl.debug(`Polling for ZIP Deploy URL: ${pollableURL}`);
-                    return await this._getDeploymentDetailsFromPollURL(pollableURL);
+                    return await this._getDeploymentDetailsFromPollURL(pollableURL, affinityCookie);
                 }
                 else {
                     tl.debug('zip deploy returned 202 without pollable URL.');
@@ -478,6 +484,9 @@ export class Kudu {
         httpRequest.method = 'POST';
         httpRequest.uri = this._client.getRequestUri(`/api/wardeploy`, queryParameters);
         httpRequest.body = fs.createReadStream(webPackage);
+        httpRequest.headers = {
+            'Content-Type': 'application/octet-stream'
+        };
 
         try {
             let response = await this._client.beginRequest(httpRequest);
@@ -488,9 +497,10 @@ export class Kudu {
             }
             else if(response.statusCode == 202) {
                 let pollableURL: string = response.headers.location;
+                let affinityCookie: string [] = response.headers['set-cookie'];
                 if(!!pollableURL) {
                     tl.debug(`Polling for War Deploy URL: ${pollableURL}`);
-                    return await this._getDeploymentDetailsFromPollURL(pollableURL);
+                    return await this._getDeploymentDetailsFromPollURL(pollableURL, affinityCookie);
                 }
                 else {
                     tl.debug('war deploy returned 202 without pollable URL.');
@@ -593,10 +603,15 @@ export class Kudu {
         }
     }
 
-    private async _getDeploymentDetailsFromPollURL(pollURL: string):Promise<any> {
+    private async _getDeploymentDetailsFromPollURL(pollURL: string, affinityCookie?: string[]): Promise<any> {
         let httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = pollURL;
+        httpRequest.headers = {};
+
+        if(!!affinityCookie) {
+           httpRequest['set-cookie'] = affinityCookie; 
+        }
 
         while(true) {
             let response = await this._client.beginRequest(httpRequest);

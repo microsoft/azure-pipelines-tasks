@@ -15,6 +15,8 @@
   "loc.input.help.inlineScript": "You can write your scripts inline here. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: az --version || az account show \n\n example for batch: call  az --version || call az account show",
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Arguments passed to the script",
+  "loc.input.label.addSpnToEnvironment": "Access service principal details in script",
+  "loc.input.help.addSpnToEnvironment": "Adds service principal id and key of the Azure subscription endpoint you chose, to the script's execution environment. You can use these variables: `$servicePrincipalId` and `$servicePrincipalKey` in your script",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Current working directory where the script is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
   "loc.input.label.failOnStandardError": "Fail on Standard Error",

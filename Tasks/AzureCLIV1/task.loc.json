@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 143,
-    "Patch": 1
+    "Patch": 2
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -89,6 +89,15 @@
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
+    },
+    {
+      "name": "addSpnToEnvironment",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addSpnToEnvironment",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.addSpnToEnvironment",
+      "groupName": "advanced"
     },
     {
       "name": "cwd",

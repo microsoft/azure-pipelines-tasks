@@ -7,7 +7,7 @@ This task supports running [Azure CLI](https://docs.microsoft.com/en-us/cli/azur
 - Supports the new [AZ CLI 2.0](https://docs.microsoft.com/en-us/cli/azure/overview) which is Python based
 - Works with Xplat agents  (Windows, Linux or OSX)
 - For working with [Azure CLI 1.0](https://docs.microsoft.com/en-us/azure/cli-install-nodejs) which is node based, switch to task version 0.0
-- Both versions of Azure-CLI can coexist in the same system but task V1.0 logs-in using user’s subsscription into the Python based AZ CLI, where as task V0.0 logs-in to the node based Azure CLI. Hence script should ensure to include only corresponding commands.
+- Both versions of Azure-CLI can coexist in the same system but task V1.0 logs-in using user’s subscription into the Python based AZ CLI, where as task V0.0 logs-in to the node based Azure CLI. Hence script should ensure to include only corresponding commands.
 - Limitations:
 	- No support for Classic subscriptions. AZ CLI 2.0 supports only Azure Resource Manager (ARM) subscriptions
 
