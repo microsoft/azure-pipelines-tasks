@@ -224,7 +224,7 @@ export async function installProvisioningProfile(provProfilePath: string) : Prom
     plistTool.arg(['-c', 'Print UUID', tmpPlist]);
     plistTool.on('stdout', function (data) {
         if (data) {
-            provProfileUUID = data.toString();
+            provProfileUUID = data.toString().trim();
         }
     })
     await plistTool.exec();
@@ -235,7 +235,7 @@ export async function installProvisioningProfile(provProfilePath: string) : Prom
     plistTool.arg(['-c', 'Print Name', tmpPlist]);
     plistTool.on('stdout', function (data) {
         if (data) {
-            provProfileName = data.toString();
+            provProfileName = data.toString().trim();
         }
     })
     await plistTool.exec();
@@ -473,17 +473,17 @@ export async function unlockKeychain(keychainPath: string, keychainPwd: string):
  * @param uuid
  */
 export async function deleteProvisioningProfile(uuid: string): Promise<void> {
-    if (uuid) {
+    if (uuid && uuid.trim()) {
         const provProfiles: string[] = tl.findMatch(getUserProvisioningProfilesPath(), uuid.trim() + '*');
         if (provProfiles) {
-            provProfiles.forEach(async (provProfilePath) => {
+            for (const provProfilePath of provProfiles) {
                 tl.warning('Deleting provisioning profile: ' + provProfilePath);
                 if (tl.exist(provProfilePath)) {
                     const deleteProfileCommand: ToolRunner = tl.tool(tl.which('rm', true));
                     deleteProfileCommand.arg(['-f', provProfilePath]);
                     await deleteProfileCommand.exec();
                 }
-            });
+            }
         }
     }
 }

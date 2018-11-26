@@ -58,6 +58,20 @@ $ExecutePsScript = {
         return $machineGuidHash
     }
 
+    function Get-AzureSubscriptionIdFromMetadataService {
+        [CmdletBinding()]
+        Param()
+
+        try {
+            # More info on Azure Instance metadata service: https://docs.microsoft.com/en-us/azure/virtual-machines/windows/instance-metadata-service
+            $instancemetadata = Invoke-RestMethod -Headers @{"Metadata"="true"} -URI 'http://169.254.169.254/metadata/instance?api-version=2017-08-01' -Method 'get' -ErrorAction 'Stop'
+            return $instancemetadata.compute.subscriptionid
+        }
+        catch {
+            return ""
+        }
+    }
+
     try {
 
         $result = @{
@@ -134,6 +148,7 @@ $ExecutePsScript = {
         $result.IsAzureVM = ((Get-Service -Name "WindowsAzureGuestAgent" -ErrorAction "SilentlyContinue") -ne $null)
         try {
             $result.MachineGuidHash = Get-MachineGuidHash
+            $result.AzureSubscriptionId = Get-AzureSubscriptionIdFromMetadataService
         } catch {
             Write-Verbose "Unable to get Telemetry data. Error: $($_.Exception.Message)"
             $result.TelemetryError = $_.Exception.GetType().ToString()

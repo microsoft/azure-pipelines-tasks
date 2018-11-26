@@ -66,7 +66,7 @@ Register-Mock Get-ApplicationManifestPath { $applicationManifestPath } -- -Appli
 Register-Mock Get-OverridenApplicationParameters { $applicationParameter } -- -ApplicationManifestPath $applicationManifestPath
 
 # Indicate that the application does not exist on cluster
-Register-Mock Get-ServiceFabricApplication { $null } -- -ApplicationName $appName
+Register-Mock Get-ServiceFabricApplicationAction { $null } -- -ApplicationName $appName
 $publishArgs = @("-Action:", "RegisterAndCreate", "-ApplicationPackagePath:", $applicationPackagePath, "-OverwriteBehavior:", $overwriteBehavior, "-ApplicationParameter:", $applicationParameter, "-ErrorAction:", "Stop", "-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml")
 Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 

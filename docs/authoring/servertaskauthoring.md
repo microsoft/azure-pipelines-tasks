@@ -77,22 +77,39 @@ This enables you to post a message to azure service bus queue. It has 3 sections
     **Cancel**:  This section specifies what should happen when the task is canceled. Here also you can define the endpoint on which message should be sent on cancelation, the message body/properties that should be sent etc. All the properties that we support in execute section are supported. This is an optional section and if you dont specify this section, then Azure Pipelines/TFS will not send you cancelation request but will cancel the task in its layer.
 
     **Events:** It  supports the same set of events as specified above in the http task section. 
-  
+
+- **HttpRequestChain**:
+This enables you to invoke multiple Http end-points. You can specify a list of invocations in the Execute section. Each invocation in the chain contains following sections.
+
+    **RequestInputs:** This section specifies the inputs to the task execution. You can define the endpoint that should be invoked, the http message body that should be sent etc. Here are the complete list of  properties that are supported.
+
+    - EndpointId: - EndpointId that should be used to generate the authentication header. This input is optional.
+    - Endpoint URL: - Http Url that should be invoked.
+    - Method: - Http verbs like PUT, GET, POST, PATCH, DELETE, OPTIONS, HEAD, TRACE.
+    - Body: - Body of http request.
+    - Headers: - Headers of http request. Header should be in JSON format.
+    - Expression: - Expression criteria which defines when to mark the invocation as succeeded. No expression means response content does not influence the result. We support all task condition constructs in these expressions and you can read more about them [here](https://go.microsoft.com/fwlink/?linkid=842996).   
+
+    **ExecutionOptions:** You can define output variables that needs to be made available for next execution and expressions to optonally skip the invocation on subsequent execution.
+    - OutputVariables: - Define variable name and value as list of key value pairs in JSON format.
+      Example:- ```{"locationUrl" : "response['headers']['location']"} here 'locationUrl' is the variable name and 'response['headers']['location']' is the expression for variable value that will be resolved at runtime and made available to subsequent invocation.```
+    - SkipSectionExpression: - Expression criteria which defines when to skip the invocation and move to next in the chain. We support all task condition constructs in these expressions and you can read more about them [here](https://go.microsoft.com/fwlink/?linkid=842996).  
+
 Let us understand few concepts/tips & tricks.
 
-- You can use task inputs, system variables, user defined variables and endpoint variables in 'execute'/'cancel' sections.
-   Example: - ``` {...   
-            "Body": "$(method)", 
-            "Expression": "le(count(root['workItems']), $(maxThreshold))",
-            "Headers": "{ \"ProjectId\": \"$(system.TeamProjectId)\" }"
-            ...
-             },  here 'method' is task input, maxThreshold is user defined variable,  system.TeamProjectId is system variable.```
+  - You can use task inputs, system variables, user defined variables and endpoint variables in 'execute'/'cancel' sections.
+    Example: - ``` {...   
+              "Body": "$(method)", 
+              "Expression": "le(count(root['workItems']), $(maxThreshold))",
+              "Headers": "{ \"ProjectId\": \"$(system.TeamProjectId)\" }"
+              ...
+              },  here 'method' is task input, maxThreshold is user defined variable,  system.TeamProjectId is system variable.```
 
-- A task which runs on agent less phase can't run on agent phase or deployment group.
+  - A task which runs on agent less phase can't run on agent phase or deployment group.
 
-- Async/Sync mode. 
-  - You can invoke Http requests in sync mode or  async mode. If http request takes more than 20 secs to complete, then you should use  async mode which means that 'WaitForCompletion' property is set to true.
-  
+  - Async/Sync mode. 
+    - You can invoke Http requests in sync mode or  async mode. If http request takes more than 20 secs to complete, then you should use  async mode which means that 'WaitForCompletion' property is set to true.
+
 
 #### Built-in server tasks making http requests : -
   [InvokeRestApi](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/InvokeRestApiV1/task.json)  
@@ -103,3 +120,6 @@ Let us understand few concepts/tips & tricks.
 #### Built-in server tasks publishing serviceBus messages : -
 
   [PublishToAzureServiceBus](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/PublishToAzureServiceBusV1/task.json)
+
+#### Built-in gates using multiple http invocations : - 
+   [AzurePolicy](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/AzurePolicyV0/task.json)

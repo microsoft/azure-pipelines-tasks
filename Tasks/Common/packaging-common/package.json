@@ -12,12 +12,13 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@types/node": "^10.12.9",
+    "azure-devops-node-api": "^6.6.0",
     "ini": "^1.3.4",
     "ip-address": "^5.8.9",
     "ltx": "^2.6.2",
     "q": "^1.5.0",
     "typed-rest-client": "0.12.0",
-    "vso-node-api": "6.5.0",
     "vsts-task-lib": "2.6.0",
     "vsts-task-tool-lib": "0.4.1",
     "xmlreader": "^0.2.3"
