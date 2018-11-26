@@ -10,7 +10,7 @@ var KuduServiceTests = require("../node_modules/azurermdeploycommon/Tests/L0-azu
 var ApplicationInsightsTests = require("../node_modules/azurermdeploycommon/Tests/L0-azure-arm-appinsights-tests.js");
 var ResourcesTests = require("../node_modules/azurermdeploycommon/Tests/L0-azure-arm-resource-tests.js");
 
-describe('AzureWebAppDeployment Suite', function() {
+describe('AzureFunctionOnContainerDeployment Suite', function() {
     
     this.timeout(60000);
 
