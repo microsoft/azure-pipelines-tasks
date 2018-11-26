@@ -150,16 +150,24 @@ function Get-VstsUpgradeParameters
 
     $parameters = @{}
 
+    $upgradeMode = Get-VstsInput -Name upgradeMode -Require
+    $parameters[$upgradeMode] = $true
+
+    $upgradeReplicaSetCheckTimeoutSecValue = Get-VstsInput -Name "UpgradeReplicaSetCheckTimeoutSec"
+    if (!$upgradeReplicaSetCheckTimeoutSecValue)
+    {
+        $upgradeReplicaSetCheckTimeoutSecValue = Get-VstsInput -Name "ReplicaQuorumTimeoutSec"
+    }
+
+    if ($upgradeReplicaSetCheckTimeoutSecValue)
+    {
+        $parameters["UpgradeReplicaSetCheckTimeoutSec"] = $upgradeReplicaSetCheckTimeoutSecValue
+    }
+
     $parameterNames = @(
-        "UpgradeReplicaSetCheckTimeoutSec",
-        "ReplicaQuorumTimeoutSec",
         "TimeoutSec",
         "ForceRestart"
     )
-
-    $upgradeMode = Get-VstsInput -Name upgradeMode -Require
-
-    $parameters[$upgradeMode] = $true
 
     if ($upgradeMode -eq "Monitored")
     {

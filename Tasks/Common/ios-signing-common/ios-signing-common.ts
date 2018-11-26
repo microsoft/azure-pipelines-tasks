@@ -1,3 +1,4 @@
+import path = require('path');
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
@@ -223,7 +224,7 @@ export async function installProvisioningProfile(provProfilePath: string) : Prom
     plistTool.arg(['-c', 'Print UUID', tmpPlist]);
     plistTool.on('stdout', function (data) {
         if (data) {
-            provProfileUUID = data.toString();
+            provProfileUUID = data.toString().trim();
         }
     })
     await plistTool.exec();
@@ -234,7 +235,7 @@ export async function installProvisioningProfile(provProfilePath: string) : Prom
     plistTool.arg(['-c', 'Print Name', tmpPlist]);
     plistTool.on('stdout', function (data) {
         if (data) {
-            provProfileName = data.toString();
+            provProfileName = data.toString().trim();
         }
     })
     await plistTool.exec();
@@ -247,7 +248,7 @@ export async function installProvisioningProfile(provProfilePath: string) : Prom
     if (provProfileUUID) {
         //copy the provisioning profile file to ~/Library/MobileDevice/Provisioning Profiles
         tl.mkdirP(getUserProvisioningProfilesPath()); // Path may not exist if Xcode has not been run yet.
-        let pathToProvProfile: string = getProvisioningProfilePath(provProfileUUID);
+        let pathToProvProfile: string = getProvisioningProfilePath(provProfileUUID, provProfilePath);
         let copyProvProfileCmd: ToolRunner = tl.tool(tl.which('cp', true));
         copyProvProfileCmd.arg(['-f', provProfilePath, pathToProvProfile]);
         await copyProvProfileCmd.exec();
@@ -472,12 +473,18 @@ export async function unlockKeychain(keychainPath: string, keychainPwd: string):
  * @param uuid
  */
 export async function deleteProvisioningProfile(uuid: string): Promise<void> {
-    let provProfilePath: string = getProvisioningProfilePath(uuid);
-    tl.warning('Deleting provisioning profile: ' + provProfilePath);
-    if (tl.exist(provProfilePath)) {
-        let deleteProfileCommand: ToolRunner = tl.tool(tl.which('rm', true));
-        deleteProfileCommand.arg(['-f', provProfilePath]);
-        await deleteProfileCommand.exec();
+    if (uuid && uuid.trim()) {
+        const provProfiles: string[] = tl.findMatch(getUserProvisioningProfilesPath(), uuid.trim() + '*');
+        if (provProfiles) {
+            for (const provProfilePath of provProfiles) {
+                tl.warning('Deleting provisioning profile: ' + provProfilePath);
+                if (tl.exist(provProfilePath)) {
+                    const deleteProfileCommand: ToolRunner = tl.tool(tl.which('rm', true));
+                    deleteProfileCommand.arg(['-f', provProfilePath]);
+                    await deleteProfileCommand.exec();
+                }
+            }
+        }
     }
 }
 
@@ -671,8 +678,12 @@ async function printFromPlist(itemToPrint: string, plistPath: string) {
     return printedValue;
 }
 
-function getProvisioningProfilePath(uuid: string): string {
-    return tl.resolve(getUserProvisioningProfilesPath(), uuid.trim().concat('.mobileprovision'));
+function getProvisioningProfilePath(uuid: string, provProfilePath?: string): string {
+    let profileExtension: string = '';
+    if (provProfilePath) {
+        profileExtension = path.extname(provProfilePath);
+    }
+    return tl.resolve(getUserProvisioningProfilesPath(), uuid.trim().concat(profileExtension));
 }
 
 /**

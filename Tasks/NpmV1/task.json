@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 29
+        "Patch": 31
     },
     "runsOn": [
         "Agent",
@@ -56,7 +56,7 @@
         },
         {
             "name": "workingDir",
-            "label": "Working folder with package.json",
+            "label": "Working folder that contains package.json",
             "helpMarkDown": "Path to the folder containing the target package.json and .npmrc files. Select the folder, not the file e.g. \"/packages/mypackage\".",
             "type": "filePath"
         },

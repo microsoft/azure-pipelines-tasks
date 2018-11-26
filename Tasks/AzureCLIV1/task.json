@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 143,
-        "Patch": 1
+        "Patch": 2
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -89,6 +89,15 @@
             "properties": {
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
             }
+        },
+        {
+            "name": "addSpnToEnvironment",
+            "type": "boolean",
+            "label": "Access service principal details in script",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId` and `$servicePrincipalKey` in your script",
+            "groupName": "advanced"
         },
         {
             "name": "cwd",

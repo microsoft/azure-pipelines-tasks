@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 141,
+    "Minor": 143,
     "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -197,11 +197,12 @@
       "visibleRule": "javaHomeSelection = JDKVersion",
       "options": {
         "default": "default",
-        "1.10": "JDK 10",
-        "1.9": "JDK 9",
+        "1.11": "JDK 11",
+        "1.10": "JDK 10 (out of support)",
+        "1.9": "JDK 9 (out of support)",
         "1.8": "JDK 8",
         "1.7": "JDK 7",
-        "1.6": "JDK 6"
+        "1.6": "JDK 6 (out of support)"
       }
     },
     {
@@ -359,6 +360,7 @@
     "codeAnalysisArtifactSummaryTitle": "ms-resource:loc.messages.codeAnalysisArtifactSummaryTitle",
     "codeAnalysisDisabled": "ms-resource:loc.messages.codeAnalysisDisabled",
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
+    "UnsupportedJdkWarning": "ms-resource:loc.messages.UnsupportedJdkWarning",
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
     "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
   }

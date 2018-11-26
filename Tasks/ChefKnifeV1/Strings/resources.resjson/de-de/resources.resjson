@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef Knife",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/chef-knife-readme)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/chef-knife-readme)",
   "loc.description": "Skripte mit Knife-Befehlen auf Ihrer Chef-Arbeitsstation ausführen",
   "loc.instanceNameFormat": "Chef Knife-Skript: $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Chef-Abonnements",

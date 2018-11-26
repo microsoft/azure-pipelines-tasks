@@ -21,9 +21,9 @@
   "loc.input.help.failOnStandardError": "true이면 StandardError 스트림에 오류가 기록될 때 이 작업이 실패합니다. 표준 오류를 무시하고 종료 코드를 사용하여 상태를 확인하려면 이 확인란의 선택을 취소하세요.",
   "loc.messages.ScriptReturnCode": "다음 반환 코드로 스크립트가 종료됨: %d",
   "loc.messages.ScriptFailed": "다음 오류가 발생하여 스크립트 실패: %s",
-  "loc.messages.UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM",
+  "loc.messages.UnsupportedEndpointScheme": "지원되지 않는 서비스 연결 인증 체계: AzureRM의 경우 서비스 주체",
   "loc.messages.AzureSDKNotFound": "이 컴퓨터에 Azure CLI 2.x가 설치되어 있지 않습니다.",
   "loc.messages.FailedToLogout": "로그아웃하는 동안 다음 오류가 발생했습니다. %s",
-  "loc.messages.LoginFailed": "Azure login failed",
-  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription"
+  "loc.messages.LoginFailed": "Azure에 로그인하지 못했습니다.",
+  "loc.messages.ErrorInSettingUpSubscription": "구독을 설정하는 중 오류가 발생했습니다."
 }

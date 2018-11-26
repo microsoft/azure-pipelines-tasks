@@ -120,7 +120,7 @@ export class NpmToolRunner extends tr.ToolRunner {
         }
 
         // check working dir
-        const cwd = options && options.cwd ? options.cwd : process.cwd;
+        const cwd = options && options.cwd ? options.cwd : process.cwd();
         const debugLog = path.join(cwd, 'npm-debug.log');
         tl.debug(tl.loc('TestDebugLog', debugLog));
         if (tl.exist(debugLog)) {

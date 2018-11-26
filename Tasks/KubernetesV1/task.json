@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 12
+        "Patch": 15
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
@@ -63,7 +63,8 @@
             "required": true,
             "options": {
                 "Azure Resource Manager": "Azure Resource Manager",
-                "Kubernetes Service Connection": "Kubernetes Service Connection"
+                "Kubernetes Service Connection": "Kubernetes Service Connection",
+                "None": "None"
             },
             "groupName": "kubernetesCluster",
             "helpMarkDown": "Select a service connection type."

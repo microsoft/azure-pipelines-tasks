@@ -1,5 +1,6 @@
 {
   "loc.messages.AadAuthority": "Центр AAD: {0}",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
   "loc.messages.ClientAppId": "Код клиентского приложения: {0}",
   "loc.messages.ClusterAppId": "Код приложения кластера: {0}",
   "loc.messages.ConnectedToCluster": "Успешное подключение к кластеру.",
@@ -10,8 +11,8 @@
   "loc.messages.ServiceFabricSDKNotInstalled": "Пакет SDK Service Fabric не установлен на агенте сборки. Перейдите на страницу https://aka.ms/servicefabric, чтобы скачать и установить его.",
   "loc.messages.UseWindowsSecurity": "Указана безопасность Windows. При подключении будет использоваться параметр -WindowsCredential.",
   "loc.messages.ServerCertificateNotFoundForTextEncrypt": "Для шифрования текста необходим сертификат сервера кластера с отпечатком \"{0}\". Не удалось найти сертификат на компьютере агента в расположении \"CurrentUser\\My\" хранилища сертификатов.",
-  "loc.messages.RetryingClusterConnection": "Retrying to connect to cluster..",
-  "loc.messages.WarningOnRemoveCertificate": "An error occurred attempting to remove the client certificate. Error message: {0}",
-  "loc.messages.TelemetryWarning": "Unable to push telemetry data. Error: {0}.",
-  "loc.messages.SfSdkVersion": "Service fabric SDK version: {0}."
+  "loc.messages.RetryingClusterConnection": "Повторная попытка подключения к кластеру.",
+  "loc.messages.WarningOnRemoveCertificate": "Произошла ошибка при попытке удалить сертификат клиента. Сообщение об ошибке: {0}",
+  "loc.messages.TelemetryWarning": "Не удается отправить данные телеметрии. Ошибка: {0}.",
+  "loc.messages.SfSdkVersion": "Версия пакета SDK структуры службы: {0}."
 }

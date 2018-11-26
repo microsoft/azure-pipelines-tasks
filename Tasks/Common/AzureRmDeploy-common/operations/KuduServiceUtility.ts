@@ -94,15 +94,9 @@ export class KuduServiceUtility {
         }
     }
 
-    public async deployUsingZipDeploy(packagePath: string, appOffline?: boolean, customMessage?: any): Promise<string> {
+    public async deployUsingZipDeploy(packagePath: string): Promise<string> {
         try {
             console.log(tl.loc('PackageDeploymentInitiated'));
-
-            if(appOffline) {
-                await this._appOfflineKuduService(physicalRootPath, true);
-                tl.debug('Wait for 5 seconds for app_offline to take effect');
-                await webClient.sleepFor(5);
-            }
 
             let queryParameters: Array<string> = [
                 'isAsync=true',
@@ -111,9 +105,6 @@ export class KuduServiceUtility {
 
             let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
             await this._processDeploymentResponse(deploymentDetails);
-            if(appOffline) {
-                await this._appOfflineKuduService(physicalRootPath, false);
-            }
 
             console.log(tl.loc('PackageDeploymentSuccess'));
             return deploymentDetails.id;
@@ -185,7 +176,7 @@ export class KuduServiceUtility {
         }
     }
 
-    public async warmpUp() {
+    public async warmpUp(): Promise<void> {
         try {
             tl.debug('warming up Kudu Service');
             await this._appServiceKuduService.getAppSettings();
@@ -201,7 +192,8 @@ export class KuduServiceUtility {
             var kuduDeploymentDetails = await this._appServiceKuduService.getDeploymentDetails(deploymentDetails.id);
             tl.debug(`logs from kudu deploy: ${kuduDeploymentDetails.log_url}`);
 
-            if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED || tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() == 'true') {
+            let sysDebug = tl.getVariable('system.debug');
+            if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED || sysDebug && sysDebug.toLowerCase() == 'true') {
                 await this._printZipDeployLogs(kuduDeploymentDetails.log_url);
             }
             else {

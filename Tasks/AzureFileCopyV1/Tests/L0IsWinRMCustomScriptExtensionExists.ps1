@@ -58,4 +58,4 @@ Register-Mock Get-AzureMachineCustomScriptExtension { return @{properties=@{Prov
 $isExtensionExists = Is-WinRMCustomScriptExtensionExists -resourceGroupName $validRG -vmName $vm0Name -extensionName $extensionName -connectedServiceName $connectedServiceName
 
 Assert-AreEqual $false $isExtensionExists
-Assert-WasCalled Get-AzureMachineCustomScriptExtension -Times 1
+Assert-WasCalled Get-AzureMachineCustomScriptExtension -Times 2
