@@ -178,7 +178,7 @@
             "required": true,
             "groupName": "AdditionalDeploymentOptions",
             "options": {
-                "auto": "Auo-detect",
+                "auto": "Auto-detect",
                 "zipDeploy": "Zip Deploy",
                 "runFromPackage": "Run From Package"
             },
