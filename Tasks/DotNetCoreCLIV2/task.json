@@ -264,7 +264,7 @@
             "type": "filePath",
             "label": "Path to NuGet package(s) to publish",
             "defaultValue": "$(Build.ArtifactStagingDirectory)/*.nupkg",
-            "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**/*.nupkg;-:**/*.Tests.nupkg`",
+            "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon.",
             "required": true,
             "visibleRule": "command = push"
         },
