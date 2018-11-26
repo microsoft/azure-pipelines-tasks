@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure IoT Edge",
-  "loc.helpMarkDown": "",
+  "loc.helpMarkDown": "A tool for continuous integration(build and push docker image) and continuous deployment(create Edge deployment on Azure)",
   "loc.description": "Azure IoT Edge",
   "loc.instanceNameFormat": "Azure IoT Edge - $(action)",
   "loc.group.displayName.advanced_push": "Advanced",
@@ -58,5 +58,6 @@
   "loc.messages.ContainerRegistryInvalid": "Failed to fetch container registry authentication token, please check you container registry setting in build task. The token is %s",
   "loc.messages.DeploymentFileNotFound": "Deployment file can't be found. Please ensure Path of deployment file is correctly set in the task.",
   "loc.messages.ValidDeploymentFileNotFound": "Cannot find a valid deployment file. Please ensure Path of deployment file is correctly set in the task.",
-  "loc.messages.AzureSdkNotFound": "Azure SDK not found"
+  "loc.messages.AzureSdkNotFound": "Azure SDK not found",
+  "loc.messages.RootPathNotExist": "The Root path %s does not exist"
 }

@@ -15,6 +15,7 @@
     "Minor": 0,
     "Patch": 0
   },
+  "preview": true,
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -234,7 +235,8 @@
     "ContainerRegistryInvalid": "ms-resource:loc.messages.ContainerRegistryInvalid",
     "DeploymentFileNotFound": "ms-resource:loc.messages.DeploymentFileNotFound",
     "ValidDeploymentFileNotFound": "ms-resource:loc.messages.ValidDeploymentFileNotFound",
-    "AzureSdkNotFound": "ms-resource:loc.messages.AzureSdkNotFound"
+    "AzureSdkNotFound": "ms-resource:loc.messages.AzureSdkNotFound",
+    "RootPathNotExist": "ms-resource:loc.messages.RootPathNotExist"
   },
   "OutputVariables": [
     {

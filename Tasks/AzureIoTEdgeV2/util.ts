@@ -24,29 +24,6 @@ export default class Util {
     });
   }
 
-  public static validateModuleJson(moduleJsonObject: any): void {
-    // Will throw error if parent property does not exist
-    if (moduleJsonObject.image.tag.platforms == undefined) {
-      throw new Error(`${Constants.fileNameModuleJson} image.tag.platforms not set`);
-    }
-    if (moduleJsonObject.image.repository == undefined) {
-      throw new Error(`${Constants.fileNameModuleJson} image.repository not set`);
-    }
-    if (moduleJsonObject.image.tag.version == undefined) {
-      throw new Error(`${Constants.fileNameModuleJson} image.tag.version not set`);
-    }
-  }
-
-  public static validateDeployTemplateJson(templateJsonObject: any): void {
-    // Will throw error if parent property does not exist
-    if (Util.getModulesContent(templateJsonObject)['$edgeAgent']['properties.desired']['modules'] == undefined) {
-      throw new Error(`Solution template file modulesContent['$edgeAgent']['properties.desired']['modules'] not set`);
-    }
-    if (Util.getModulesContent(templateJsonObject)['$edgeAgent']['properties.desired']['systemModules'] == undefined) {
-      throw new Error(`Solution template file modulesContent['$edgeAgent']['properties.desired']['systemModules'] not set`);
-    }
-  }
-
   public static generateSasToken(resourceUri: string, signingKey: string, policyName: string, expiresInMins: number = 3600) {
     resourceUri = encodeURIComponent(resourceUri);
 
@@ -212,7 +189,7 @@ export default class Util {
       tl.pushd(root);
       tl.debug(`Task root path set to ${root}`);
     } catch (e) {
-      console.log(`The Root path ${root} does not exist.`);
+      console.log(tl.loc('RootPathNotExist', root));
       tl.setResult(tl.TaskResult.Failed, `The Root path ${root} does not exist.`);
     }
   }
