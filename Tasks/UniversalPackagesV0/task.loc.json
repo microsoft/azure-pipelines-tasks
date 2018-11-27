@@ -8,8 +8,8 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 0,
-    "Patch": 10
+    "Minor": 1,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -236,6 +236,15 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "publishPackageMetadata",
+      "groupName": "advanced",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishPackageMetadata",
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.publishPackageMetadata",
+      "visibleRule": "command = publish && internalOrExternalPublish = internal"
     },
     {
       "name": "packageListPublish",
