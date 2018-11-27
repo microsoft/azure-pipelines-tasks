@@ -7,7 +7,7 @@ var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility
 var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
 
-export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider{
+export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {
     private zipDeploymentID: string;
 
     public async DeployWebAppStep() {

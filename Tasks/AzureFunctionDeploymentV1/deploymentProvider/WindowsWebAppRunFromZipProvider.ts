@@ -10,7 +10,7 @@ const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 1';
 var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
 
-export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProvider{
+export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProvider {
  
     public async DeployWebAppStep() {
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams.WebConfigParameters, this.taskParams.Package.getPackageType());

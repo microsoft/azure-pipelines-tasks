@@ -15,7 +15,7 @@ const linuxFunctionRuntimeSettingValue = new Map([
     [ 'DOCKER|microsoft/azure-functions-node8:2.0', 'node ' ]
 ]);
 
-export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider{
+export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {
     private zipDeploymentID: string;
 
     public async DeployWebAppStep() {

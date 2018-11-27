@@ -23,14 +23,33 @@ export class TaskParametersUtility {
             StartupCommand: tl.getInput('startUpCommand', false),
             ConfigurationSettings: tl.getInput('configurationStrings', false),
             ResourceGroupName: tl.getInput('resourceGroupName', false),
-            SlotName: tl.getInput('slotName', false)
+            SlotName: tl.getInput('slotName', false),
+            WebAppName: tl.getInput('appName', true)
         }  
-        
-        taskParameters.WebAppName = tl.getInput('appName', true);
 
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParameters.WebAppName));   
 
+        this.getWebAppKind(taskParameters);
+
+        taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("Linux") !=-1;
+
+        var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
+        console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
+       
+        taskParameters.Package = new Package(tl.getPathInput('package', true));
+        this.updateWebConfigParameters(taskParameters);
+
+        if(taskParameters.isLinuxApp) {
+            taskParameters.RuntimeStack = tl.getInput('runtimeStack', false);
+        }
+
+        taskParameters.DeploymentType = DeploymentType[(tl.getInput('deploymentMethod', false))];
+
+        return taskParameters;
+    }
+
+    private static async getWebAppKind(taskParameters: TaskParameters): Promise<void> {
         if (!taskParameters.ResourceGroupName) {
             var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);
             taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
@@ -44,13 +63,9 @@ export class TaskParametersUtility {
             var configSettings = await appService.get(true);
             taskParameters.WebAppKind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
         }
+    }
 
-        taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("Linux") !=-1;
-
-        var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
-        console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
-       
-        taskParameters.Package = new Package(tl.getPathInput('package', true));
+    private static updateWebConfigParameters(taskParameters: TaskParameters): void {
         tl.debug("intially web config parameters :" + taskParameters.WebConfigParameters);
         if(taskParameters.Package.getPackageType() === PackageType.jar && (!taskParameters.isLinuxApp)) {
             if(!taskParameters.WebConfigParameters) {
@@ -71,14 +86,6 @@ export class TaskParametersUtility {
             }
             tl.debug("web config parameters :" + taskParameters.WebConfigParameters);
         }
-
-        if(taskParameters.isLinuxApp) {
-            taskParameters.RuntimeStack = tl.getInput('runtimeStack', false);
-        }
-
-        taskParameters.DeploymentType = DeploymentType[(tl.getInput('deploymentMethod', false))];
-
-        return taskParameters;
     }
 }
 
@@ -91,7 +98,7 @@ export enum DeploymentType {
 
 export interface TaskParameters {
     connectedServiceName: string;
-    WebAppName?: string;
+    WebAppName: string;
     WebAppKind?: string;
     DeployToSlotOrASEFlag?: boolean;
     ResourceGroupName?: string;

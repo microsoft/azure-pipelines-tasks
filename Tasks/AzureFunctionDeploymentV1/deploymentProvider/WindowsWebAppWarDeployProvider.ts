@@ -3,7 +3,7 @@ import tl = require('vsts-task-lib/task');
 var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 
 
-export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvider{
+export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvider {
     
     private zipDeploymentID: string;
 

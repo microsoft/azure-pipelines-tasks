@@ -8,7 +8,7 @@ import tl = require('vsts-task-lib/task');
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
 
-export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider{
+export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider {
     protected taskParams:TaskParameters;
     protected appService: AzureAppService;
     protected kuduService: Kudu;

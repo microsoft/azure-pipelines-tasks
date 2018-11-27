@@ -9,7 +9,7 @@ const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 0';
 var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
 
-export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvider{
+export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvider {
     
     private zipDeploymentID: string;
  
