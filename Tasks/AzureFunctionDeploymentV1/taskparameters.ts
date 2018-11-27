@@ -7,8 +7,8 @@ import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/Azure
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
 
 const webAppKindMap = new Map([
-    [ 'app', 'webApp' ],
-    [ 'app,linux', 'webAppLinux' ]
+    [ 'functionapp', 'functionApp' ],
+    [ 'functionapp,linux,container', 'functionAppLinux' ],
 ]);
 
 export class TaskParametersUtility {
@@ -26,7 +26,7 @@ export class TaskParametersUtility {
             SlotName: tl.getInput('slotName', false),
             WebAppName: tl.getInput('appName', true)
         }  
-        
+
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParameters.WebAppName));   
 

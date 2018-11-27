@@ -2,22 +2,41 @@ import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvid
 import tl = require('vsts-task-lib/task');
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import path = require('path');
+import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
 
 var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
-var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
+
+const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE true';
+const linuxFunctionRuntimeSettingName: string = '-FUNCTIONS_WORKER_RUNTIME ';
+
+const linuxFunctionRuntimeSettingValue = new Map([
+    [ 'DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0', 'dotnet ' ],
+    [ 'DOCKER|microsoft/azure-functions-node8:2.0', 'node ' ]
+]);
 
 export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {
     private zipDeploymentID: string;
 
     public async DeployWebAppStep() {
         tl.debug('Performing Linux built-in package deployment');
+        var isNewValueUpdated: boolean = false;
         
-        await this.kuduServiceUtility.warmpUp();
+        var linuxFunctionRuntimeSetting = "";
+        if(this.taskParams.RuntimeStack){
+            linuxFunctionRuntimeSetting = linuxFunctionRuntimeSettingName + linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack);
+        }
+        var linuxFunctionAppSetting = linuxFunctionRuntimeSetting + linuxFunctionStorageSetting;
+        var customApplicationSetting = ParameterParser.parse(linuxFunctionAppSetting);
+        isNewValueUpdated = await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
+        
+        if(!isNewValueUpdated) {
+            await this.kuduServiceUtility.warmpUp();
+        }
         
         switch(this.taskParams.Package.getPackageType()){
             case PackageType.folder:
-                let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
+                let tempPackagePath = webCommonUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
                 let archivedWebPackage = await zipUtility.archiveFolder(this.taskParams.Package.getPath(), "", tempPackagePath);
                 tl.debug("Compressed folder into zip " +  archivedWebPackage);
                 this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(archivedWebPackage);
@@ -67,11 +86,10 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         if(this.kuduServiceUtility) {
+            await super.UpdateDeploymentStatus(isDeploymentSuccess);
             if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
             }
-            
-            await super.UpdateDeploymentStatus(isDeploymentSuccess);
         }
     }
 }

@@ -5,17 +5,16 @@ import { DeploymentType } from '../taskparameters';
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
 import { FileTransformsUtility } from 'azurermdeploycommon/operations/FileTransformsUtility.js';
-var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
-var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
-
 const oldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
 const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 1';
+var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
+var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
 
 export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProvider {
  
     public async DeployWebAppStep() {
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams.WebConfigParameters, this.taskParams.Package.getPackageType());
-        
+
         if(this.taskParams.DeploymentType === DeploymentType.runFromPackage) {
             var _isMSBuildPackage = await this.taskParams.Package.isMSBuildPackage();
             if(_isMSBuildPackage) {
@@ -50,7 +49,7 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
     
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
-
+        
         let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
         console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
         tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
