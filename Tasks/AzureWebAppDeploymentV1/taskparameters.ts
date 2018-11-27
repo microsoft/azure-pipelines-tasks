@@ -30,7 +30,9 @@ export class TaskParametersUtility {
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParameters.WebAppName));   
 
-        this.getWebAppKind(taskParameters);
+        var appDetails = await this.getWebAppKind(taskParameters);
+        taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
+        taskParameters.WebAppKind = appDetails["webAppKind"];
 
         taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("Linux") !=-1;
 
@@ -38,7 +40,7 @@ export class TaskParametersUtility {
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
        
         taskParameters.Package = new Package(tl.getPathInput('package', true));
-        this.updateWebConfigParameters(taskParameters);
+        taskParameters.WebConfigParameters = this.updateWebConfigParameters(taskParameters);
 
         if(taskParameters.isLinuxApp) {
             taskParameters.RuntimeStack = tl.getInput('runtimeStack', false);
@@ -49,43 +51,51 @@ export class TaskParametersUtility {
         return taskParameters;
     }
 
-    private static async getWebAppKind(taskParameters: TaskParameters): Promise<void> {
-        if (!taskParameters.ResourceGroupName) {
+    private static async getWebAppKind(taskParameters: TaskParameters): Promise<any> {
+        var resourceGroupName = taskParameters.ResourceGroupName;
+        var kind = taskParameters.WebAppKind;
+        if (!resourceGroupName) {
             var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);
-            taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
-            if(!taskParameters.WebAppKind) {
-                taskParameters.WebAppKind = webAppKindMap.get(appDetails["kind"]) ? webAppKindMap.get(appDetails["kind"]) : appDetails["kind"];
+            resourceGroupName = appDetails["resourceGroupName"];
+            if(!kind) {
+                kind = webAppKindMap.get(appDetails["kind"]) ? webAppKindMap.get(appDetails["kind"]) : appDetails["kind"];
             }
-            tl.debug(`Resource Group: ${taskParameters.ResourceGroupName}`);
+            tl.debug(`Resource Group: ${resourceGroupName}`);
         }
-        else if(!taskParameters.WebAppKind){
+        else if(!kind){
             var appService = new AzureAppService(taskParameters.azureEndpoint, taskParameters.ResourceGroupName, taskParameters.WebAppName);
             var configSettings = await appService.get(true);
-            taskParameters.WebAppKind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
+            kind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
         }
+        return {
+            resourceGroupName: resourceGroupName,
+            webAppKind: kind
+        };
     }
 
-    private static updateWebConfigParameters(taskParameters: TaskParameters): void {
+    private static updateWebConfigParameters(taskParameters: TaskParameters): string {
         tl.debug("intially web config parameters :" + taskParameters.WebConfigParameters);
+        var webConfigParameters = taskParameters.WebConfigParameters;
         if(taskParameters.Package.getPackageType() === PackageType.jar && (!taskParameters.isLinuxApp)) {
-            if(!taskParameters.WebConfigParameters) {
-                taskParameters.WebConfigParameters = "-appType java_springboot";
+            if(!webConfigParameters) {
+                webConfigParameters = "-appType java_springboot";
             }
-            if(taskParameters.WebConfigParameters.indexOf("-appType java_springboot") < 0) {
-                taskParameters.WebConfigParameters += " -appType java_springboot";
+            if(webConfigParameters.indexOf("-appType java_springboot") < 0) {
+                webConfigParameters += " -appType java_springboot";
             }
-            if(taskParameters.WebConfigParameters.indexOf("-JAR_PATH D:\\home\\site\\wwwroot\\*.jar") >= 0) {
+            if(webConfigParameters.indexOf("-JAR_PATH D:\\home\\site\\wwwroot\\*.jar") >= 0) {
                 var jarPath = webCommonUtility.getFileNameFromPath(taskParameters.Package.getPath());
-                taskParameters.WebConfigParameters = taskParameters.WebConfigParameters.replace("D:\\home\\site\\wwwroot\\*.jar", jarPath);
-            } else if(taskParameters.WebConfigParameters.indexOf("-JAR_PATH ") < 0) {
+                webConfigParameters = webConfigParameters.replace("D:\\home\\site\\wwwroot\\*.jar", jarPath);
+            } else if(webConfigParameters.indexOf("-JAR_PATH ") < 0) {
                 var jarPath = webCommonUtility.getFileNameFromPath(taskParameters.Package.getPath());
-                taskParameters.WebConfigParameters += " -JAR_PATH " + jarPath;
+                webConfigParameters += " -JAR_PATH " + jarPath;
             }
-            if(taskParameters.WebConfigParameters.indexOf("-Dserver.port=%HTTP_PLATFORM_PORT%") > 0) {
-                taskParameters.WebConfigParameters = taskParameters.WebConfigParameters.replace("-Dserver.port=%HTTP_PLATFORM_PORT%", "");  
+            if(webConfigParameters.indexOf("-Dserver.port=%HTTP_PLATFORM_PORT%") > 0) {
+                webConfigParameters = webConfigParameters.replace("-Dserver.port=%HTTP_PLATFORM_PORT%", "");  
             }
-            tl.debug("web config parameters :" + taskParameters.WebConfigParameters);
+            tl.debug("web config parameters :" + webConfigParameters);
         }
+        return webConfigParameters;
     }
 }
 
