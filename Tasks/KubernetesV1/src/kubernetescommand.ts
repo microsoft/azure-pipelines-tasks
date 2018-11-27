@@ -45,16 +45,31 @@ function getCommandOutputFormat(kubecommand: string) : string[] {
 function getCommandConfigurationFile() : string[] {
     var args: string[] =[];
     var useConfigurationFile : boolean  =  tl.getBoolInput("useConfigurationFile", false);
-    if(useConfigurationFile) {
-        var configurationPath = tl.getInput("configuration", true);
-        if(configurationPath && tl.exist(configurationPath))
-        {
-            args[0] = "-f";
-            args[1] = configurationPath;
-        }
-        else
-        {
-           throw new Error(tl.loc('ConfigurationFileNotFound', configurationPath));       
+    if (useConfigurationFile) {
+        var configurationOption:string = tl.getInput("configurationLocation", false);
+        switch(configurationOption){
+            case "configuration" : {
+                var configurationPath = tl.getInput("configuration", true);
+                if (configurationPath && tl.exist(configurationPath)) {
+                    args[0] = "-f";
+                    args[1] = configurationPath;
+                }
+                else {
+                    throw new Error(tl.loc('ConfigurationFileNotFound', configurationPath));
+                }
+                break;
+            }
+            case "inlineConfiguration" : {
+                var inlineConfiguration: string = tl.getInput("inlineConfiguration", false);
+                var stagedFile = utils.getStagedInlineConfigPath(inlineConfiguration)
+                if (tl.exist(stagedFile)) {
+                    args[0] = "-f";
+                    args[1] = stagedFile;
+                } else {
+                    throw new Error(tl.loc('ConfigurationFileNotFound', stagedFile));
+                }
+                break;
+            }
         }
     }
 

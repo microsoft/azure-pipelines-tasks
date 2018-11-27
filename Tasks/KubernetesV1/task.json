@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 15
+        "Patch": 16
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
@@ -159,14 +159,40 @@
             "visibleRule": "command != login && command != logout"
         },
         {
-            "name": "configuration",
-            "type": "filePath",
-            "label": "Configuration file",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Filename, directory, or URL to kubernetes configuration files that will be used with the commands.",
-            "visibleRule": "useConfigurationFile = true",
-            "groupName": "commands"
+          "name": "configurationLocation",
+          "type": "pickList",
+          "label": "Configuration Location",
+          "defaultValue": "configuration",
+          "groupName": "commands",
+          "helpMarkDown": "Type of Kubernetes configuration file for kubectl command. It can be a file path or an inline script.",
+          "options": {
+              "inlineConfiguration": "Inline configuration",
+              "configuration": "Configuration file path"
+          },
+          "visibleRule": "useConfigurationFile = true"
+        },
+        {
+          "name": "configuration",
+          "type": "filePath",
+          "label": "Configuration file path",
+          "defaultValue": "",
+          "required": true,
+          "helpMarkDown": "Filename, directory, or URL to kubernetes configuration files that will be used with the commands.",
+          "visibleRule": "configurationLocation = configuration",
+          "groupName": "commands"
+        },
+        {
+          "name": "inlineConfiguration",
+          "type": "multiLine",
+          "properties": {
+            "resizable": "true",
+            "rows": "10",
+            "maxLength": "5000"
+          },
+          "label": "Inline configuration",
+          "helpMarkDown": "Inline deployment configuration for kubectl command",
+          "groupName": "commands",
+          "visibleRule": "configurationLocation = inlineConfiguration"
         },
         {
             "name": "arguments",

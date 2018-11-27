@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 15
+    "Patch": 16
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -159,14 +159,40 @@
       "visibleRule": "command != login && command != logout"
     },
     {
+      "name": "configurationLocation",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.configurationLocation",
+      "defaultValue": "configuration",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.configurationLocation",
+      "options": {
+        "inlineConfiguration": "Inline configuration",
+        "configuration": "Configuration file path"
+      },
+      "visibleRule": "useConfigurationFile = true"
+    },
+    {
       "name": "configuration",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.configuration",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.configuration",
-      "visibleRule": "useConfigurationFile = true",
+      "visibleRule": "configurationLocation = configuration",
       "groupName": "commands"
+    },
+    {
+      "name": "inlineConfiguration",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"
+      },
+      "label": "ms-resource:loc.input.label.inlineConfiguration",
+      "helpMarkDown": "ms-resource:loc.input.help.inlineConfiguration",
+      "groupName": "commands",
+      "visibleRule": "configurationLocation = inlineConfiguration"
     },
     {
       "name": "arguments",
