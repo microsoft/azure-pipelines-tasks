@@ -188,18 +188,18 @@ export class Inputs {
     public static readonly action = "action";
     public static readonly repositoryName = "repositoryName";
     public static readonly tag = "tag";
-    public static readonly tagSelection = "tagSelection";
+    public static readonly tagSource = "tagSource";
     public static readonly target = "target";
-    public static readonly releaseTitle = "releaseTitle";
+    public static readonly title = "title";
     public static readonly isDraft = "isDraft";
-    public static readonly isPrerelease = "isPrerelease";
-    public static readonly githubEndpoint = "githubEndpoint";
-    public static readonly githubReleaseAsset = "githubReleaseAsset";
+    public static readonly isPreRelease = "isPreRelease";
+    public static readonly gitHubConnection = "gitHubConnection";
+    public static readonly assets = "assets";
     public static readonly assetUploadMode = "assetUploadMode";
-    public static readonly releaseNotesSelection = "releaseNotesSelection";
+    public static readonly releaseNotesSource = "releaseNotesSource";
     public static readonly releaseNotesFile = "releaseNotesFile";
-    public static readonly releaseNotesInput = "releaseNotesInput";
-    public static readonly changeLog = "changeLog";
+    public static readonly releaseNotes = "releaseNotes";
+    public static readonly addChangeLog = "addChangeLog";
     public static readonly deleteExistingAssets = "deleteExistingAssets";
 }
 

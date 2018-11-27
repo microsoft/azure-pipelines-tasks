@@ -14,7 +14,7 @@ class Main {
             tl.setResourcePath(taskManifestPath);        
 
             // Get basic task inputs
-            const githubEndpoint = tl.getInput(Inputs.githubEndpoint, true);
+            const githubEndpoint = tl.getInput(Inputs.gitHubConnection, true);
             const githubEndpointToken = Utility.getGithubEndPointToken(githubEndpoint);
             const repositoryName = tl.getInput(Inputs.repositoryName, true);        
             const action = tl.getInput(Inputs.action, true);
@@ -26,11 +26,11 @@ class Main {
             else {
                 // Get task inputs specific to create and edit release
                 const target = tl.getInput(Inputs.target, true);
-                const releaseTitle = tl.getInput(Inputs.releaseTitle) || undefined; 
+                const releaseTitle = tl.getInput(Inputs.title) || undefined; 
 
-                const isPrerelease = tl.getBoolInput(Inputs.isPrerelease) || false;
+                const isPrerelease = tl.getBoolInput(Inputs.isPreRelease) || false;
                 const isDraft = tl.getBoolInput(Inputs.isDraft) || false;
-                const githubReleaseAssetInputPatterns = tl.getDelimitedInput(Inputs.githubReleaseAsset, Delimiters.newLine);
+                const githubReleaseAssetInputPatterns = tl.getDelimitedInput(Inputs.assets, Delimiters.newLine);
 
                 if (action === ActionType.create) {
                     // Get tag to create release
@@ -74,10 +74,10 @@ class Main {
     }
 
     private static async _getReleaseNote(githubEndpointToken: string, repositoryName: string, target: string): Promise<string> {
-        const releaseNotesSelection = tl.getInput(Inputs.releaseNotesSelection);
+        const releaseNotesSelection = tl.getInput(Inputs.releaseNotesSource);
         const releaseNotesFile = tl.getPathInput(Inputs.releaseNotesFile, false, true);
-        const releaseNoteInput = tl.getInput(Inputs.releaseNotesInput);
-        const showChangeLog: boolean = tl.getBoolInput(Inputs.changeLog);
+        const releaseNoteInput = tl.getInput(Inputs.releaseNotes);
+        const showChangeLog: boolean = tl.getBoolInput(Inputs.addChangeLog);
 
         // Generate the change log 
         // Get change log for top 250 commits only

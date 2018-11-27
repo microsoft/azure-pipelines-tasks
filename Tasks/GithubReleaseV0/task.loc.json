@@ -1,6 +1,6 @@
 {
   "id": "7B5A6198-ADF8-4B16-9939-7ADDF85708B2",
-  "name": "GithubRelease",
+  "name": "GitHubRelease",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -14,21 +14,18 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
   "inputs": [
     {
-      "name": "githubEndpoint",
-      "aliases": [
-        "githubConnection"
-      ],
-      "type": "connectedService:github",
-      "label": "ms-resource:loc.input.label.githubEndpoint",
+      "name": "gitHubConnection",
+      "type": "connectedService:github:OAuth,PersonalAccessToken",
+      "label": "ms-resource:loc.input.label.gitHubConnection",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.githubEndpoint"
+      "helpMarkDown": "ms-resource:loc.input.help.gitHubConnection"
     },
     {
       "name": "repositoryName",
@@ -49,9 +46,9 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.action",
       "options": {
-        "Create": "Create",
-        "Edit": "Edit",
-        "Discard": "Discard"
+        "create": "Create",
+        "edit": "Edit",
+        "discard": "Discard"
       }
     },
     {
@@ -64,16 +61,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.target"
     },
     {
-      "name": "tagSelection",
-      "aliases": [
-        "tagSource"
-      ],
+      "name": "tagSource",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.tagSelection",
+      "label": "ms-resource:loc.input.label.tagSource",
       "required": true,
       "defaultValue": "auto",
       "visibleRule": "action = Create",
-      "helpMarkDown": "ms-resource:loc.input.help.tagSelection",
+      "helpMarkDown": "ms-resource:loc.input.help.tagSource",
       "options": {
         "auto": "Git tag",
         "manual": "User specified tag"
@@ -85,32 +79,26 @@
       "label": "ms-resource:loc.input.label.tag",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "action = Edit || action = Discard || tagSelection = manual",
+      "visibleRule": "action = Edit || action = Discard || tagSource = manual",
       "helpMarkDown": "ms-resource:loc.input.help.tag"
     },
     {
-      "name": "releaseTitle",
-      "aliases": [
-        "title"
-      ],
+      "name": "title",
       "type": "string",
-      "label": "ms-resource:loc.input.label.releaseTitle",
+      "label": "ms-resource:loc.input.label.title",
       "defaultValue": "",
       "required": false,
       "visibleRule": "action = Create || action = Edit",
-      "helpMarkDown": "ms-resource:loc.input.help.releaseTitle"
+      "helpMarkDown": "ms-resource:loc.input.help.title"
     },
     {
-      "name": "releaseNotesSelection",
-      "aliases": [
-        "releaseNotesSource"
-      ],
+      "name": "releaseNotesSource",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.releaseNotesSelection",
+      "label": "ms-resource:loc.input.label.releaseNotesSource",
       "required": false,
       "defaultValue": "file",
       "visibleRule": "action = Create || action = Edit",
-      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesSelection",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesSource",
       "options": {
         "file": "Release notes file",
         "input": "Inline release notes"
@@ -122,18 +110,15 @@
       "label": "ms-resource:loc.input.label.releaseNotesFile",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.releaseNotesFile",
-      "visibleRule": "releaseNotesSelection = file"
+      "visibleRule": "releaseNotesSource = file"
     },
     {
-      "name": "releaseNotesInput",
-      "aliases": [
-        "releaseNotes"
-      ],
+      "name": "releaseNotes",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.releaseNotesInput",
+      "label": "ms-resource:loc.input.label.releaseNotes",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesInput",
-      "visibleRule": "releaseNotesSelection = input",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseNotes",
+      "visibleRule": "releaseNotesSource = input",
       "properties": {
         "resizable": "true",
         "rows": "4",
@@ -141,16 +126,13 @@
       }
     },
     {
-      "name": "githubReleaseAsset",
-      "aliases": [
-        "assets"
-      ],
+      "name": "assets",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.githubReleaseAsset",
+      "label": "ms-resource:loc.input.label.assets",
       "defaultValue": "$(Build.ArtifactStagingDirectory)/*",
       "required": false,
       "visibleRule": "action = Create || action = Edit",
-      "helpMarkDown": "ms-resource:loc.input.help.githubReleaseAsset",
+      "helpMarkDown": "ms-resource:loc.input.help.assets",
       "properties": {
         "resizable": "true",
         "rows": "4"
@@ -179,28 +161,22 @@
       "visibleRule": "action = Create || action = Edit"
     },
     {
-      "name": "isPrerelease",
-      "aliases": [
-        "isPreRelease"
-      ],
+      "name": "isPreRelease",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.isPrerelease",
+      "label": "ms-resource:loc.input.label.isPreRelease",
       "defaultValue": "false",
       "required": false,
       "visibleRule": "action = Create || action = Edit",
-      "helpMarkDown": "ms-resource:loc.input.help.isPrerelease"
+      "helpMarkDown": "ms-resource:loc.input.help.isPreRelease"
     },
     {
-      "name": "changeLog",
-      "aliases": [
-        "addChangeLog"
-      ],
+      "name": "addChangeLog",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.changeLog",
+      "label": "ms-resource:loc.input.label.addChangeLog",
       "defaultValue": "true",
       "required": false,
       "visibleRule": "action = Create || action = Edit",
-      "helpMarkDown": "ms-resource:loc.input.help.changeLog"
+      "helpMarkDown": "ms-resource:loc.input.help.addChangeLog"
     }
   ],
   "sourceDefinitions": [

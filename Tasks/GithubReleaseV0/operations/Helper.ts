@@ -23,7 +23,7 @@ export class Helper {
      * @param tag 
      */
     public static async getTagForCreateAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string): Promise<string> {
-        let tagSelection = tl.getInput(Inputs.tagSelection);
+        let tagSelection = tl.getInput(Inputs.tagSource);
 
         if (!!tagSelection && tagSelection === TagSelectionMode.auto) {
             console.log(tl.loc("FetchTagForTarget", target));
