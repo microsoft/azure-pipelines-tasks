@@ -212,4 +212,13 @@ export default class Util {
     id = id.replace(specialCharRegex, '');
     return id;
   }
+
+  // Check if self(task) is in hosted server
+  public static checkSelfInHostedServer(): boolean {
+    let serverType = tl.getVariable('System.ServerType').toLowerCase();
+    if (!serverType || serverType.toLowerCase() !== 'hosted') {
+      return false;
+    }
+    return true;
+  }
 }

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure IoT Edge",
-  "loc.helpMarkDown": "A tool for continuous integration(build and push docker image) and continuous deployment(create Edge deployment on Azure)",
-  "loc.description": "Azure IoT Edge",
+  "loc.helpMarkDown": "Visit the [documentation](https://aka.ms/azure-iot-edge-ci-cd-docs) for help",
+  "loc.description": "Azure IoT Edge pipelines tasks for continuous integration(build and push docker image) and continuous deployment(create Edge deployment on Azure)",
   "loc.instanceNameFormat": "Azure IoT Edge - $(action)",
   "loc.group.displayName.advanced_push": "Advanced",
   "loc.group.displayName.advanced_deploy": "Advanced",

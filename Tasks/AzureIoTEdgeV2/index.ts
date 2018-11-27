@@ -6,6 +6,7 @@ import * as DeployImage from './deployimage';
 import trackEvent, { TelemetryEvent } from './telemetry';
 import Constants from "./constant";
 import util from "./util";
+import * as commonTelemetry from 'utility-common/telemetry';
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -22,9 +23,11 @@ let telemetryEvent = {
   buildId: tl.getVariable('build.buildId'),
   isSuccess: null,
   taskTime: null,
+  serverType: tl.getVariable('System.ServerType'),
 } as TelemetryEvent;
 
 let telemetryEnabled = (tl.getVariable(Constants.variableKeyDisableTelemetry) !== 'true');
+if (!util.checkSelfInHostedServer()) telemetryEnabled = false;
 
 async function run() {
   try {
@@ -50,7 +53,10 @@ async function run() {
     tl.setResult(tl.TaskResult.Failed, e)
   } finally {
     telemetryEvent.taskTime = (+new Date() - (+startTime)) / 1000;
-    if (telemetryEnabled) trackEvent(action, telemetryEvent);
+    if (telemetryEnabled) {
+      trackEvent(action, telemetryEvent);
+    }
+    commonTelemetry.emitTelemetry('TaskEndpointId', "AzureIoTEdgeV2", telemetryEvent);
   }
 }
 
