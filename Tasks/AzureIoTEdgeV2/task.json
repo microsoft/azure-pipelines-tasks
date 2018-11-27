@@ -2,8 +2,8 @@
   "id": "80F3F6A0-82A6-4A22-BA7A-E5B8C541B9B8",
   "name": "AzureIoTEdge",
   "friendlyName": "Azure IoT Edge",
-  "description": "Azure IoT Edge",
-  "helpMarkDown": "A tool for continuous integration(build and push docker image) and continuous deployment(create Edge deployment on Azure)",
+  "description": "Azure IoT Edge pipelines tasks for continuous integration(build and push docker image) and continuous deployment(create Edge deployment on Azure)",
+  "helpMarkDown": "Visit the [documentation](https://aka.ms/azure-iot-edge-ci-cd-docs) for help",
   "category": "Build",
   "visibility": [
     "Build",
