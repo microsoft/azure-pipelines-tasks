@@ -12,6 +12,7 @@
         "AzureFileCopyV1",
         "AzureFileCopyV2",
         "AzureFunctionV1",
+        "AzureIoTEdgeV2",
         "AzureKeyVaultV1",
         "AzureMonitorAlertsV0",
         "AzureMonitorV0",
