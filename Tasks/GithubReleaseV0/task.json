@@ -2,7 +2,7 @@
     "id": "7B5A6198-ADF8-4B16-9939-7ADDF85708B2",
     "name": "GitHubRelease",
     "friendlyName": "GitHub Release",
-    "description": "Create, edit or discard the github release",
+    "description": "Create, edit, or discard a GitHub release.",
     "helpMarkDown": "[More Information](https://aka.ms/AA3aeiw)",
     "category": "Utility",
     "visibility": [
@@ -42,7 +42,7 @@
             "name": "action",
             "type": "pickList",
             "label": "Action",
-            "defaultValue": "Create",
+            "defaultValue": "create",
             "required": true,
             "helpMarkDown": "Specify the type of release operation to perform. This task can create, edit, or discard a GitHub release.",
             "options": {
@@ -57,7 +57,7 @@
             "label": "Target",
             "defaultValue": "$(Build.SourceVersion)",
             "required": true,
-            "visibleRule": "action = Create || action = Edit",
+            "visibleRule": "action = create || action = edit",
             "helpMarkDown": "Specify the commit SHA for which the GitHub release will be created. E.g. `48b11d8d6e92a22e3e9563a3f643699c16fd6e27`. You can also use a variable here. E.g. `$(commitSHA)`."
         },
         {
@@ -66,7 +66,7 @@
             "label": "Tag source",
             "required": true,
             "defaultValue": "auto",
-            "visibleRule": "action = Create",
+            "visibleRule": "action = create",
             "helpMarkDown": "Specify the tag to be used for release creation. The 'Git tag' option automatically takes the tag which is associated with this commit. Use the 'User specified tag' option to manually provide a tag.",
             "options": {
                 "auto": "Git tag",
@@ -79,7 +79,7 @@
             "label": "Tag",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "action = Edit || action = Discard || tagSource = manual",
+            "visibleRule": "action = edit || action = discard || tagSource = manual",
             "helpMarkDown": "Specify the tag for which to create, edit, or discard a release. You can also use a variable here. E.g. `$(tagName)`."
         },
         {
@@ -88,7 +88,7 @@
             "label": "Release title",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "action = Create || action = Edit",
+            "visibleRule": "action = create || action = edit",
             "helpMarkDown": "Specify the title of the GitHub release. If left empty, the tag will be used as the release title."
         },
         {
@@ -97,7 +97,7 @@
             "label": "Release notes source",
             "required": false,
             "defaultValue": "file",
-            "visibleRule": "action = Create || action = Edit",
+            "visibleRule": "action = create || action = edit",
             "helpMarkDown": "Specify the description of the GitHub release. Use the 'Release notes file' option to use the contents of a file as release notes. Use the 'Inline release notes' option to manually enter release notes.",
             "options": {
                 "file": "Release notes file",
@@ -131,7 +131,7 @@
             "label": "Assets",
             "defaultValue": "$(Build.ArtifactStagingDirectory)/*",
             "required": false,
-            "visibleRule": "action = Create || action = Edit",
+            "visibleRule": "action = create || action = edit",
             "helpMarkDown": "Specify the files to be uploaded as assets of the release. You can use wildcard characters to specify multiple files. E.g. `$(Build.ArtifactStagingDirectory)/*.zip`. You can also specify multiple patterns - one per line. By default, all files in the `$(Build.ArtifactStagingDirectory)` directory will be uploaded.",
             "properties": {
                 "resizable": "true",
@@ -144,7 +144,7 @@
             "label": "Asset upload mode",
             "required": false,
             "defaultValue": "delete",
-            "visibleRule": "action = Edit",
+            "visibleRule": "action = edit",
             "helpMarkDown": "Use the 'Delete existing assets' option to first delete any existing assets in the release and then upload all assets. Use the 'Replace existing assets' option to replace any assets that have the same name.",
             "options": {
                 "delete": "Delete exisiting assets",
@@ -158,7 +158,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Indicate whether the release should be saved as a draft (unpublished). If `false`, the release will be published.",
-            "visibleRule": "action = Create || action = Edit"
+            "visibleRule": "action = create || action = edit"
         },
         {
             "name": "isPreRelease",
@@ -166,7 +166,7 @@
             "label": "Pre-release",
             "defaultValue": "false",
             "required": false,
-            "visibleRule": "action = Create || action = Edit",
+            "visibleRule": "action = create || action = edit",
             "helpMarkDown": "Indicate whether the release should be marked as a pre-release."
         },
         {
@@ -175,7 +175,7 @@
             "label": "Add changelog",
             "defaultValue": "true",
             "required": false,
-            "visibleRule": "action = Create || action = Edit",
+            "visibleRule": "action = create || action = edit",
             "helpMarkDown": "If set to `true`, a list of changes (commits and issues) between this and the last published release will be generated and appended to the release notes."
         }
     ],
@@ -188,7 +188,7 @@
             "authKey": "tfs:teamfoundation"
         }
     ],
-    "instanceNameFormat": "$(action) GitHub Release",
+    "instanceNameFormat": "GitHub release ($(action))",
     "execution": {
         "Node": {
             "target": "main.js"

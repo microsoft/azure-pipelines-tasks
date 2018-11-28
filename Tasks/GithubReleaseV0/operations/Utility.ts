@@ -238,9 +238,9 @@ export class GitHubAttributes {
 }
 
 export class ActionType {
-    public static readonly create = "Create";
-    public static readonly edit = "Edit";
-    public static readonly discard = "Discard";
+    public static readonly create = "create";
+    public static readonly edit = "edit";
+    public static readonly discard = "discard";
 }
 
 export class AzureDevOpsVariables {

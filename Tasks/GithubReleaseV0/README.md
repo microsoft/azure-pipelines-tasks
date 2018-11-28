@@ -22,7 +22,7 @@ The GitHub Releases task can run in 3 action types, viz. create, edit or discard
 
 * **Service Connection:** This is the name of GitHub service connection which will be used to connect to target GitHub account. You can use an existing GitHub service connection or create a new one.
 
-* **GitHub Repository:** This is the name of the github repository where the GitHub releases will be created. E.g. *microsoft/vscode*
+* **GitHub Repository:** This is the name of the GitHub repository where GitHub releases will be managed. E.g. `microsoft/vscode`.
 
 * **Action:** Action is the type of release operation you want perform using this task. This task can perform 3 different actions - create, edit or discard.
 
