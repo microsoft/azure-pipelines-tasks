@@ -67,7 +67,9 @@ function createDockerRegistrySecret(connection: ClusterConnection, authenticatio
         command.arg("--docker-password="+ authenticationToken.getPassword());
         command.arg("--docker-email="+ authenticationToken.getEmail());
        
-        return connection.execCommand(command);
+        return connection.execCommand(command).fin(function cleanup() {
+            tl.setVariable('KubectlOutput', secret);
+        });
     }
     else
     {
@@ -92,7 +94,9 @@ function createGenericSecret(connection: ClusterConnection, secret: string): any
         command.line(secretArguments);
     }
 
-    return connection.execCommand(command);
+    return connection.execCommand(command).fin(function cleanup() {
+        tl.setVariable('KubectlOutput', secret);
+    });
 }
 
 function getRegistryAuthenticationToken(): AuthenticationToken {

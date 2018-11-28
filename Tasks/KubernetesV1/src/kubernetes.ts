@@ -12,7 +12,7 @@ tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
 tl.cd(tl.getInput("cwd"));
 
 var registryType = tl.getInput("containerRegistryType", true);
-var command = tl.getInput("command", true);
+var command = tl.getInput("command", false);
 
 var kubeconfigfilePath;
 if (command === "logout") {
@@ -53,8 +53,10 @@ async function run(clusterConnection: ClusterConnection, command: string)
     if(configMapName) {
         await kubectlConfigMap.run(clusterConnection, configMapName);
     }
-    
-    await executeKubectlCommand(clusterConnection, command);  
+
+    if(command) {
+        await executeKubectlCommand(clusterConnection, command);
+    }  
 }
 
 // execute kubectl command

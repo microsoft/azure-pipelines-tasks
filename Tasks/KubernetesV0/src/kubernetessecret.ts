@@ -5,6 +5,7 @@ import path = require('path');
 import * as tr from "vsts-task-lib/toolrunner";
 import * as kubernetesCommand from "./kubernetescommand";
 import ClusterConnection from "./clusterconnection";
+import * as utils from "./utilities";
 
 import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
 
@@ -63,7 +64,9 @@ function createDockerRegistrySecret(connection: ClusterConnection, authenticatio
         command.arg("--docker-password="+ authenticationToken.getPassword());
         command.arg("--docker-email="+ authenticationToken.getEmail());
        
-        return connection.execCommand(command);
+        return connection.execCommand(command).fin(function cleanup() {
+            utils.setOutputVariable(secret);
+         });
     }
     else
     {
@@ -88,5 +91,7 @@ function createGenericSecret(connection: ClusterConnection, secret: string): any
         command.line(secretArguments);
     }
 
-    return connection.execCommand(command);
+    return connection.execCommand(command).fin(function cleanup() {
+        utils.setOutputVariable(secret);
+     });
 }
