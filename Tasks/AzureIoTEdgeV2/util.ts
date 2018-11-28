@@ -3,7 +3,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as crypto from "crypto";
 import { IExecSyncOptions } from 'azure-pipelines-task-lib/toolrunner';
 import { Writable } from "stream";
-import { RegistryCredential } from './registryCredentialFactory';
+import { RegistryCredential } from './registrycredentialfactory';
 
 interface Cmd {
   path: string;
