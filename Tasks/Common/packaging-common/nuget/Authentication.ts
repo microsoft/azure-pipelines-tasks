@@ -1,5 +1,3 @@
-import * as tl from "vsts-task-lib/task";
-
 export interface IPackageSource {
     feedName: string;
     feedUri: string;
