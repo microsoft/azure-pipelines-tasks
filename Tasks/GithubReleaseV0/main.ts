@@ -20,8 +20,8 @@ class Main {
             const action = tl.getInput(Inputs.action, true);
             let tag = tl.getInput(Inputs.tag);
 
-            if (action === ActionType.discard) {
-                await Action.discardReleaseAction(githubEndpointToken, repositoryName, tag);
+            if (action === ActionType.delete) {
+                await Action.deleteReleaseAction(githubEndpointToken, repositoryName, tag);
             }
             else {
                 // Get task inputs specific to create and edit release

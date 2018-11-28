@@ -122,7 +122,7 @@ export class Helper {
                     }
                 });
 
-                // Throw error in case of ambiguity as we do not know which release to pick for editing or discarding release.
+                // Throw error in case of ambiguity as we do not know which release to pick for editing or deleting release.
                 if (releasesWithGivenTag.length >= 2) {
                     throw new Error(tl.loc("MultipleReleasesFoundError", tag));
                 }

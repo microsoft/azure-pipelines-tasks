@@ -240,7 +240,7 @@ export class GitHubAttributes {
 export class ActionType {
     public static readonly create = "create";
     public static readonly edit = "edit";
-    public static readonly discard = "discard";
+    public static readonly delete = "delete";
 }
 
 export class AzureDevOpsVariables {

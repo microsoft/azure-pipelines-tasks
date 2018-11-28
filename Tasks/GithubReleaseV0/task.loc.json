@@ -42,13 +42,13 @@
       "name": "action",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.action",
-      "defaultValue": "Create",
+      "defaultValue": "create",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.action",
       "options": {
         "create": "Create",
         "edit": "Edit",
-        "discard": "Discard"
+        "delete": "Delete"
       }
     },
     {
@@ -57,7 +57,7 @@
       "label": "ms-resource:loc.input.label.target",
       "defaultValue": "$(Build.SourceVersion)",
       "required": true,
-      "visibleRule": "action = Create || action = Edit",
+      "visibleRule": "action = create || action = edit",
       "helpMarkDown": "ms-resource:loc.input.help.target"
     },
     {
@@ -66,7 +66,7 @@
       "label": "ms-resource:loc.input.label.tagSource",
       "required": true,
       "defaultValue": "auto",
-      "visibleRule": "action = Create",
+      "visibleRule": "action = create",
       "helpMarkDown": "ms-resource:loc.input.help.tagSource",
       "options": {
         "auto": "Git tag",
@@ -79,7 +79,7 @@
       "label": "ms-resource:loc.input.label.tag",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "action = Edit || action = Discard || tagSource = manual",
+      "visibleRule": "action = edit || action = delete || tagSource = manual",
       "helpMarkDown": "ms-resource:loc.input.help.tag"
     },
     {
@@ -88,7 +88,7 @@
       "label": "ms-resource:loc.input.label.title",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "action = Create || action = Edit",
+      "visibleRule": "action = create || action = edit",
       "helpMarkDown": "ms-resource:loc.input.help.title"
     },
     {
@@ -97,7 +97,7 @@
       "label": "ms-resource:loc.input.label.releaseNotesSource",
       "required": false,
       "defaultValue": "file",
-      "visibleRule": "action = Create || action = Edit",
+      "visibleRule": "action = create || action = edit",
       "helpMarkDown": "ms-resource:loc.input.help.releaseNotesSource",
       "options": {
         "file": "Release notes file",
@@ -131,7 +131,7 @@
       "label": "ms-resource:loc.input.label.assets",
       "defaultValue": "$(Build.ArtifactStagingDirectory)/*",
       "required": false,
-      "visibleRule": "action = Create || action = Edit",
+      "visibleRule": "action = create || action = edit",
       "helpMarkDown": "ms-resource:loc.input.help.assets",
       "properties": {
         "resizable": "true",
@@ -144,7 +144,7 @@
       "label": "ms-resource:loc.input.label.assetUploadMode",
       "required": false,
       "defaultValue": "delete",
-      "visibleRule": "action = Edit",
+      "visibleRule": "action = edit",
       "helpMarkDown": "ms-resource:loc.input.help.assetUploadMode",
       "options": {
         "delete": "Delete exisiting assets",
@@ -158,7 +158,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.isDraft",
-      "visibleRule": "action = Create || action = Edit"
+      "visibleRule": "action = create || action = edit"
     },
     {
       "name": "isPreRelease",
@@ -166,7 +166,7 @@
       "label": "ms-resource:loc.input.label.isPreRelease",
       "defaultValue": "false",
       "required": false,
-      "visibleRule": "action = Create || action = Edit",
+      "visibleRule": "action = create || action = edit",
       "helpMarkDown": "ms-resource:loc.input.help.isPreRelease"
     },
     {
@@ -175,7 +175,7 @@
       "label": "ms-resource:loc.input.label.addChangeLog",
       "defaultValue": "true",
       "required": false,
-      "visibleRule": "action = Create || action = Edit",
+      "visibleRule": "action = create || action = edit",
       "helpMarkDown": "ms-resource:loc.input.help.addChangeLog"
     }
   ],
@@ -200,16 +200,16 @@
     "GetReleasesError": "ms-resource:loc.messages.GetReleasesError",
     "CreateReleaseError": "ms-resource:loc.messages.CreateReleaseError",
     "EditReleaseError": "ms-resource:loc.messages.EditReleaseError",
-    "DiscardReleaseError": "ms-resource:loc.messages.DiscardReleaseError",
+    "DeleteReleaseError": "ms-resource:loc.messages.DeleteReleaseError",
     "CreatingRelease": "ms-resource:loc.messages.CreatingRelease",
     "CreateReleaseSuccess": "ms-resource:loc.messages.CreateReleaseSuccess",
     "ReleaseAlreadyExists": "ms-resource:loc.messages.ReleaseAlreadyExists",
     "EditingRelease": "ms-resource:loc.messages.EditingRelease",
     "EditReleaseSuccess": "ms-resource:loc.messages.EditReleaseSuccess",
     "NoReleaseFoundToEditCreateRelease": "ms-resource:loc.messages.NoReleaseFoundToEditCreateRelease",
-    "DiscardingRelease": "ms-resource:loc.messages.DiscardingRelease",
-    "DiscardReleaseSuccess": "ms-resource:loc.messages.DiscardReleaseSuccess",
-    "NoReleaseFoundToDiscard": "ms-resource:loc.messages.NoReleaseFoundToDiscard",
+    "DeletingRelease": "ms-resource:loc.messages.DeletingRelease",
+    "DeleteReleaseSuccess": "ms-resource:loc.messages.DeleteReleaseSuccess",
+    "NoReleaseFoundToDelete": "ms-resource:loc.messages.NoReleaseFoundToDelete",
     "FetchReleaseForTag": "ms-resource:loc.messages.FetchReleaseForTag",
     "FetchReleaseForTagSuccess": "ms-resource:loc.messages.FetchReleaseForTagSuccess",
     "FetchTagForTarget": "ms-resource:loc.messages.FetchTagForTarget",
