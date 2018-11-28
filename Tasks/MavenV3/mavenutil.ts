@@ -187,7 +187,7 @@ interface RepositoryInfo {
     id:string;
 }
 
-async function collectFeedRepositories(pomContents:string): Promise<any> {
+export async function collectFeedRepositories(pomContents:string): Promise<any> {
     return convertXmlStringToJson(pomContents).then(async function (pomJson) {
         let repos:RepositoryInfo[] = [];
         if (!pomJson) {
