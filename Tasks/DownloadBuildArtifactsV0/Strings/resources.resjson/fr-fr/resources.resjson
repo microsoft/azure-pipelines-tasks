@@ -13,6 +13,8 @@
   "loc.input.label.specificBuildWithTriggering": "Le cas échéant, téléchargez les artefacts à partir de la build de déclenchement.",
   "loc.input.help.specificBuildWithTriggering": "Si l'option est cochée, cette tâche de build essaie de télécharger les artefacts à partir de la build de déclenchement. S'il n'existe aucune build de déclenchement dans le pipeline spécifié, elle télécharge les artefacts à partir de la build spécifiée dans les options ci-dessous.",
   "loc.input.label.buildVersionToDownload": "Version de build à télécharger",
+  "loc.input.label.allowPartiallySucceededBuilds": "Download artifacts even from partially succeeded builds.",
+  "loc.input.help.allowPartiallySucceededBuilds": "If checked, this build task will try to download artifacts whether the build is succeeded or partially succeeded.",
   "loc.input.label.branchName": "Nom de la branche",
   "loc.input.help.branchName": "Spécifiez un filtrage par nom de branche/référence. Exemple : '''refs/heads/develop'''.",
   "loc.input.label.buildId": "Build",

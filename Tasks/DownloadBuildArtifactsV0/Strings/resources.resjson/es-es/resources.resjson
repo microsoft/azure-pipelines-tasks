@@ -13,6 +13,8 @@
   "loc.input.label.specificBuildWithTriggering": "Si procede, descargue los artefactos de la compilación desencadenadora.",
   "loc.input.help.specificBuildWithTriggering": "Si se selecciona, esta tarea de compilación intenta descargar los artefactos de la compilación desencadenadora. Si no hay ninguna compilación desencadenadora de la canalización especificada, descargará los artefactos de la compilación indicada en las opciones siguientes.",
   "loc.input.label.buildVersionToDownload": "Versión de compilación para descargar",
+  "loc.input.label.allowPartiallySucceededBuilds": "Download artifacts even from partially succeeded builds.",
+  "loc.input.help.allowPartiallySucceededBuilds": "If checked, this build task will try to download artifacts whether the build is succeeded or partially succeeded.",
   "loc.input.label.branchName": "Nombre de rama",
   "loc.input.help.branchName": "Especificar para filtrar por el nombre de rama o referencia; por ejemplo: \"refs/heads/develop\".",
   "loc.input.label.buildId": "Compilar",

@@ -13,6 +13,8 @@
   "loc.input.label.specificBuildWithTriggering": "Laden Sie gegebenenfalls Artefakte aus dem auslösenden Build herunter.",
   "loc.input.help.specificBuildWithTriggering": "Bei Aktivierung versucht dieser Buildtask, Artefakte aus dem auslösenden Build herunterzuladen. Ist in der angegebenen Pipeline kein auslösender Build vorhanden, werden Artefakte aus dem Build heruntergeladen, der in den nachfolgenden Optionen angegeben wird.",
   "loc.input.label.buildVersionToDownload": "Buildversion, die heruntergeladen werden soll",
+  "loc.input.label.allowPartiallySucceededBuilds": "Download artifacts even from partially succeeded builds.",
+  "loc.input.help.allowPartiallySucceededBuilds": "If checked, this build task will try to download artifacts whether the build is succeeded or partially succeeded.",
   "loc.input.label.branchName": "Branchname",
   "loc.input.help.branchName": "Hiermit geben Sie an, nach Branch- oder Verweisname zu filtern. Beispiel: \"refs/heads/develop\".",
   "loc.input.label.buildId": "Build",

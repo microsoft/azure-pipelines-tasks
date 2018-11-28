@@ -16,8 +16,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 141,
-    "Patch": 4
+    "Minor": 145,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -290,6 +290,15 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.feedPublish",
+      "visibleRule": "command = push && nuGetFeedType = internal"
+    },
+    {
+      "name": "publishPackageMetadata",
+      "groupName": "pushAdvanced",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishPackageMetadata",
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.publishPackageMetadata",
       "visibleRule": "command = push && nuGetFeedType = internal"
     },
     {

@@ -8,7 +8,7 @@ export async function getKubeConfig(): Promise<string> {
     var authorizationType = tl.getEndpointDataParameter(kubernetesServiceEndpoint, 'authorizationType', true);
     if (!authorizationType || authorizationType === "Kubeconfig")
     {
-        return tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'kubeconfig', false);
+        return kubectlutility.getKubeconfigForCluster(kubernetesServiceEndpoint);
     }
     else if (authorizationType === "ServiceAccount")
     {
