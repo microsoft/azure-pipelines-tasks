@@ -46,6 +46,8 @@ tr.setInput('azureSubscriptionEndpointForSecrets', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', 'ajgtestacr1.azurecr.io');
 tr.setInput('azureResourceGroup', 'myResourceGroup');
 tr.setInput('kubernetesCluster', 'myCluster1');
+tr.setInput('configurationLocation',process.env[shared.TestEnvVars.configurationLocation] || "configuration");
+tr.setInput('inlineConfiguration', process.env[shared.TestEnvVars.inlineConfiguration] || '');
 console.log("Inputs have been set");
 
 process.env['AGENT_VERSION'] = '2.115.0';

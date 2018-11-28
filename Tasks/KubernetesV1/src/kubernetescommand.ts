@@ -46,7 +46,7 @@ function getCommandConfigurationFile() : string[] {
     var args: string[] =[];
     var useConfigurationFile : boolean  =  tl.getBoolInput("useConfigurationFile", false);
     if (useConfigurationFile) {
-        var configurationOption:string = tl.getInput("configurationLocation", false);
+        var configurationOption:string = tl.getInput("configurationLocation", true);
         switch(configurationOption){
             case "configuration" : {
                 var configurationPath = tl.getInput("configuration", true);
