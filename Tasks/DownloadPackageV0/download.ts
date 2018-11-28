@@ -1,5 +1,4 @@
 var fs = require('fs');
-var http = require('http');
 var DecompressZip = require('decompress-zip');
 var path = require('path')
 
