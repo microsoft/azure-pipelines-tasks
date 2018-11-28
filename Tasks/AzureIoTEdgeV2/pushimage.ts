@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as fs from "fs";
 import * as tl from 'azure-pipelines-task-lib/task';
-import { RegistryCredential, ACRRegistry, RegistryCredentialFactory } from './registryCredentialFactory';
+import { RegistryCredential, ACRRegistry, RegistryCredentialFactory } from './registrycredentialfactory';
 import Constants from "./constant";
 import util from "./util";
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
