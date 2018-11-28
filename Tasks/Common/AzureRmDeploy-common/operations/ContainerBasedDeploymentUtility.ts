@@ -21,11 +21,11 @@ export class ContainerBasedDeploymentUtility {
     }
 
     public async deployWebAppImage(properties: any): Promise<void> {
-        let imageName: string = this._getDockerHubImageName();
+        let imageName: string = properties["ImageName"];
         tl.debug("Deploying an image " + imageName + " to the webapp " + this._appService.getName());
 
         tl.debug("Updating the webapp configuration.");
-        await this._updateConfigurationDetails(properties["StartupCommand"], properties["ConfigurationSettings"], imageName);
+        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], imageName);
 
         tl.debug('Updating web app settings');
         await this._updateApplicationSettings(properties["AppSettings"], imageName);   
