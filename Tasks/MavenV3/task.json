@@ -303,6 +303,18 @@
             "helpMarkDown": "Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds."
         },
         {
+            "name": "skipEffectivePom",
+            "aliases": [
+                "effectivePomSkip"
+            ],
+            "type": "boolean",
+            "label": "Skip generating effective POM while authenticating built-in feeds",
+            "required": true,
+            "defaultValue": "false",
+            "groupName": "advanced",
+            "helpMarkDown": "Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/TFS [Package Management] feeds."
+        },
+        {
             "name": "sqAnalysisEnabled",
             "aliases": [
                 "sonarQubeRunAnalysis"
