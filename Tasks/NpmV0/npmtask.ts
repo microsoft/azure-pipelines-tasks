@@ -1,6 +1,5 @@
 import Q = require('q');
 import path = require('path');
-import url = require('url');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 var extend = require('util')._extend;
