@@ -17,7 +17,7 @@
     "version": {
         "Major": 3,
         "Minor": 143,
-        "Patch": 3
+        "Patch": 5
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
@@ -300,6 +300,18 @@
             "defaultValue": "false",
             "groupName": "advanced",
             "helpMarkDown": "Automatically authenticate built-in Maven feeds from the Azure Artifacts/TFS [Package Management](https://marketplace.visualstudio.com/items?itemName=ms.feed) extension. If built-in Maven feeds are not in use, deselect this option for faster builds."
+        },
+        {
+            "name": "skipEffectivePom",
+            "aliases": [
+                "effectivePomSkip"
+            ],
+            "type": "boolean",
+            "label": "Skip generating effective POM while authenticating built-in feeds",
+            "required": true,
+            "defaultValue": "false",
+            "groupName": "advanced",
+            "helpMarkDown": "Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/TFS [Package Management] feeds."
         },
         {
             "name": "sqAnalysisEnabled",
