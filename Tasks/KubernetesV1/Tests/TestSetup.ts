@@ -14,6 +14,7 @@ const KubconfigFile = shared.formatPath("newUserDir/config");
 const KubectlPath = shared.formatPath("newUserDir/kubectl.exe");
 const ConfigMapFilePath = shared.formatPath("configMapDir/configmap.properties");
 const ConfigMapDirectoryPath = shared.formatPath("kubernetes/configMapDir");
+const InlineConfigStagePath = shared.formatPath("newUserDir/deployment.yaml");
 
 let taskPath = path.join(__dirname, '../src', 'kubernetes.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -133,6 +134,7 @@ a.exist[ConfigMapFilePath] = true;
 a.exist[KubectlPath] = true;
 a.exist[ConfigMapDirectoryPath] = true;
 a.exist[newUserDirPath] = true;
+a.exist[InlineConfigStagePath] = true;
 
 if (JSON.parse(process.env[shared.isKubectlPresentOnMachine]))
 {
@@ -202,6 +204,10 @@ a.exec[`kubectl get secrets my-secret -o yaml`] = {
 };
 a.exec[`kubectl logs nginx`] = {
     "code": 0
+};
+a.exec[`kubectl apply -f ${InlineConfigStagePath} -o json`] = {
+    "code": 0,
+    "stdout": "successfully applied the configuration deployment.yaml "
 };
 
 tr.setAnswers(<any>a);
@@ -320,7 +326,10 @@ tr.registerMock('./utilities', {
     },
     assertFileExists: function(path) {
         return true;
-    } 
+    },
+    getStagedInlineConfigPath: function(data) {
+        return InlineConfigStagePath;
+    }
 });
 
 tr.run();

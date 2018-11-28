@@ -70,6 +70,9 @@ function getCommandConfigurationFile() : string[] {
                 }
                 break;
             }
+            default : {
+                throw new Error (tl.loc('UnknownConfigurationOption', configurationOption));
+            }
         }
     }
 

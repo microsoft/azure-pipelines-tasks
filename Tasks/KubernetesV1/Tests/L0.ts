@@ -23,6 +23,7 @@ describe('Kubernetes Suite', function() {
         delete process.env[shared.TestEnvVars.namespace];
         delete process.env[shared.TestEnvVars.arguments];
         delete process.env[shared.TestEnvVars.useConfigurationFile];
+        delete process.env[shared.TestEnvVars.configurationLocation];
         delete process.env[shared.TestEnvVars.secretType];
         delete process.env[shared.TestEnvVars.secretArguments];
         delete process.env[shared.TestEnvVars.secretName];
@@ -174,7 +175,8 @@ describe('Kubernetes Suite', function() {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.apply;
-        process.env[shared.TestEnvVars.useConfigurationFile] = "true";    
+        process.env[shared.TestEnvVars.useConfigurationFile] = "true";
+        process.env[shared.TestEnvVars.configurationLocation] = shared.ConfigurationLocations.configuration; 
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -190,6 +192,7 @@ describe('Kubernetes Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.expose;
         process.env[shared.TestEnvVars.useConfigurationFile] = "true";
+        process.env[shared.TestEnvVars.configurationLocation] = shared.ConfigurationLocations.configuration;
         process.env[shared.TestEnvVars.arguments] = "--port=80 --target-port=8000";
         tr.run();
 
@@ -548,6 +551,38 @@ describe('Kubernetes Suite', function() {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.stdout.indexOf(`[command]kubectl logs nginx`) != -1, "kubectl logs should run");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Run fails when an invalid configuration choice is made', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.apply;
+        process.env[shared.TestEnvVars.useConfigurationFile] = "true";
+        process.env[shared.TestEnvVars.configurationLocation] = "invalidChoice";
+        tr.run();
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.invokedToolCount == 0, 'should not have invoked the tool. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length > 0 || tr.errorIssues.length, 'should have written an error message');
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Runs successfully when a configuration is provided inline', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.apply;
+        process.env[shared.TestEnvVars.useConfigurationFile] = "true";
+        process.env[shared.TestEnvVars.configurationLocation] = shared.ConfigurationLocations.inlineConfiguration;
+        process.env[shared.TestEnvVars.inlineConfiguration] = "";
+        tr.run();
+
+        assert(tr.succeeded, 'task should have run');
+        assert(tr.invokedToolCount == 1, 'should have been invoked once. actual : ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.stdout.indexOf(`[command]kubectl apply -f ${shared.formatPath("newUserDir/deployment.yaml")} -o json`) != -1, "kubectl apply should run");
         console.log(tr.stderr);
         done();
     });
