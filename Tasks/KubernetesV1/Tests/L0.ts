@@ -576,7 +576,7 @@ describe('Kubernetes Suite', function() {
         process.env[shared.TestEnvVars.command] = shared.Commands.apply;
         process.env[shared.TestEnvVars.useConfigurationFile] = "true";
         process.env[shared.TestEnvVars.configurationLocation] = shared.ConfigurationLocations.inlineConfiguration;
-        process.env[shared.TestEnvVars.inlineConfiguration] = "";
+        process.env[shared.TestEnvVars.inlineConfiguration] = "somestring";
         tr.run();
 
         assert(tr.succeeded, 'task should have run');

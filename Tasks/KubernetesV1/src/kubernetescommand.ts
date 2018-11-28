@@ -60,7 +60,7 @@ function getCommandConfigurationFile() : string[] {
                 break;
             }
             case "inlineConfiguration" : {
-                var inlineConfiguration: string = tl.getInput("inlineConfiguration", false);
+                var inlineConfiguration: string = tl.getInput("inlineConfiguration", true);
                 var stagedFile = utils.getStagedInlineConfigPath(inlineConfiguration)
                 if (tl.exist(stagedFile)) {
                     args[0] = "-f";

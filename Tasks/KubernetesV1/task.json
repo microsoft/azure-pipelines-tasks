@@ -189,6 +189,7 @@
             "rows": "10",
             "maxLength": "5000"
           },
+          "required": true,
           "label": "Inline configuration",
           "helpMarkDown": "Inline deployment configuration for kubectl command",
           "groupName": "commands",

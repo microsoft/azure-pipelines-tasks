@@ -189,6 +189,7 @@
         "rows": "10",
         "maxLength": "5000"
       },
+      "required": true,
       "label": "ms-resource:loc.input.label.inlineConfiguration",
       "helpMarkDown": "ms-resource:loc.input.help.inlineConfiguration",
       "groupName": "commands",
