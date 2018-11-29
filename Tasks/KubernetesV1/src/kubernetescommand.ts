@@ -46,10 +46,10 @@ function getCommandConfigurationFile() : string[] {
     var args: string[] =[];
     var useConfigurationFile : boolean  =  tl.getBoolInput("useConfigurationFile", false);
     if (useConfigurationFile) {
-        var configurationOption:string = tl.getInput("configurationLocation", true);
+        var configurationOption:string = tl.getInput("configType", true);
         switch(configurationOption){
-            case "configuration" : {
-                var configurationPath = tl.getInput("configuration", true);
+            case "file" : {
+                var configurationPath = tl.getInput("file", true);
                 if (configurationPath && tl.exist(configurationPath)) {
                     args[0] = "-f";
                     args[1] = configurationPath;
@@ -59,14 +59,14 @@ function getCommandConfigurationFile() : string[] {
                 }
                 break;
             }
-            case "inlineConfiguration" : {
-                var inlineConfiguration: string = tl.getInput("inlineConfiguration", true);
-                var stagedFile = utils.getStagedInlineConfigPath(inlineConfiguration)
-                if (tl.exist(stagedFile)) {
+            case "inline" : {
+                var inlineConfiguration: string = tl.getInput("inline", true);
+                var tempInlineFile = utils.getTempInlineConfigPath(inlineConfiguration);
+                if (tl.exist(tempInlineFile)) {
                     args[0] = "-f";
-                    args[1] = stagedFile;
+                    args[1] = tempInlineFile;
                 } else {
-                    throw new Error(tl.loc('ConfigurationFileNotFound', stagedFile));
+                    throw new Error(tl.loc('ConfigurationFileNotFound', tempInlineFile));
                 }
                 break;
             }

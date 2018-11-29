@@ -75,13 +75,9 @@ export function assertFileExists(path: string) {
     }
 }
 
-export function getStagedInlineConfigPath(inlineConfig: string): string {
-    var stagePath = getNewUserDirPath();
-    stagePath = path.join(stagePath, "deployment.yaml");
-    if (fs.existsSync(stagePath)) {
-        fs.unlinkSync(stagePath);
-    }
-
-    fs.writeFileSync(stagePath, inlineConfig);
-    return stagePath;
+export function getTempInlineConfigPath(inlineConfig: string): string {
+    var tempInlinePath = getNewUserDirPath();
+    tempInlinePath = path.join(tempInlinePath, "inlineconfig.yaml");
+    fs.writeFileSync(tempInlinePath, inlineConfig);
+    return tempInlinePath;
 }

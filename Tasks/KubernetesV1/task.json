@@ -152,37 +152,37 @@
         {
             "name": "useConfigurationFile",
             "type": "boolean",
-            "label": "Use configuration files",
+            "label": "Use configuration",
             "defaultValue": "false",
-            "helpMarkDown": "Use Kubernetes configuration file with the kubectl command. Filename, directory, or URL to Kubernetes configuration files can also be provided.",
+            "helpMarkDown": "Use Kubernetes configuration with the kubectl command. An inline script, filename, directory, or URL to Kubernetes configuration files can be provided.",
             "groupName": "commands",
             "visibleRule": "command != login && command != logout"
         },
         {
-          "name": "configurationLocation",
-          "type": "pickList",
-          "label": "Configuration Location",
-          "defaultValue": "configuration",
+          "name": "configType",
+          "type": "radio",
+          "label": "Configuration Type",
+          "defaultValue": "file",
           "groupName": "commands",
-          "helpMarkDown": "Type of Kubernetes configuration file for kubectl command. It can be a file path or an inline script.",
+          "helpMarkDown": "Type of Kubernetes configuration for kubectl command. It can be a file path or an inline script.",
           "options": {
-              "inlineConfiguration": "Inline configuration",
-              "configuration": "Configuration file path"
+              "file": "File path",
+              "inline": "Inline configuration"
           },
           "visibleRule": "useConfigurationFile = true"
         },
         {
-          "name": "configuration",
+          "name": "file",
           "type": "filePath",
-          "label": "Configuration file path",
+          "label": "File path",
           "defaultValue": "",
           "required": true,
           "helpMarkDown": "Filename, directory, or URL to kubernetes configuration files that will be used with the commands.",
-          "visibleRule": "configurationLocation = configuration",
+          "visibleRule": "configType = file",
           "groupName": "commands"
         },
         {
-          "name": "inlineConfiguration",
+          "name": "inline",
           "type": "multiLine",
           "properties": {
             "resizable": "true",
@@ -190,10 +190,11 @@
             "maxLength": "5000"
           },
           "required": true,
+          "defaultValue": "# Write your configuration here. \n",
           "label": "Inline configuration",
           "helpMarkDown": "Inline deployment configuration for kubectl command",
           "groupName": "commands",
-          "visibleRule": "configurationLocation = inlineConfiguration"
+          "visibleRule": "configType = inline"
         },
         {
             "name": "arguments",

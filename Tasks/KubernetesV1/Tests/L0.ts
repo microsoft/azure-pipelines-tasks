@@ -23,7 +23,7 @@ describe('Kubernetes Suite', function() {
         delete process.env[shared.TestEnvVars.namespace];
         delete process.env[shared.TestEnvVars.arguments];
         delete process.env[shared.TestEnvVars.useConfigurationFile];
-        delete process.env[shared.TestEnvVars.configurationLocation];
+        delete process.env[shared.TestEnvVars.configType];
         delete process.env[shared.TestEnvVars.secretType];
         delete process.env[shared.TestEnvVars.secretArguments];
         delete process.env[shared.TestEnvVars.secretName];
@@ -176,7 +176,7 @@ describe('Kubernetes Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.apply;
         process.env[shared.TestEnvVars.useConfigurationFile] = "true";
-        process.env[shared.TestEnvVars.configurationLocation] = shared.ConfigurationLocations.configuration; 
+        process.env[shared.TestEnvVars.configType] = shared.ConfigurationTypes.file; 
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -192,7 +192,7 @@ describe('Kubernetes Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.expose;
         process.env[shared.TestEnvVars.useConfigurationFile] = "true";
-        process.env[shared.TestEnvVars.configurationLocation] = shared.ConfigurationLocations.configuration;
+        process.env[shared.TestEnvVars.configType] = shared.ConfigurationTypes.file;
         process.env[shared.TestEnvVars.arguments] = "--port=80 --target-port=8000";
         tr.run();
 
@@ -560,7 +560,7 @@ describe('Kubernetes Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.apply;
         process.env[shared.TestEnvVars.useConfigurationFile] = "true";
-        process.env[shared.TestEnvVars.configurationLocation] = "invalidChoice";
+        process.env[shared.TestEnvVars.configType] = "invalidChoice";
         tr.run();
 
         assert(tr.failed, 'task should have failed');
@@ -575,14 +575,14 @@ describe('Kubernetes Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.apply;
         process.env[shared.TestEnvVars.useConfigurationFile] = "true";
-        process.env[shared.TestEnvVars.configurationLocation] = shared.ConfigurationLocations.inlineConfiguration;
-        process.env[shared.TestEnvVars.inlineConfiguration] = "somestring";
+        process.env[shared.TestEnvVars.configType] = shared.ConfigurationTypes.inline;
+        process.env[shared.TestEnvVars.inline] = "somestring";
         tr.run();
 
         assert(tr.succeeded, 'task should have run');
         assert(tr.invokedToolCount == 1, 'should have been invoked once. actual : ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.stdout.indexOf(`[command]kubectl apply -f ${shared.formatPath("newUserDir/deployment.yaml")} -o json`) != -1, "kubectl apply should run");
+        assert(tr.stdout.indexOf(`[command]kubectl apply -f ${shared.formatPath("newUserDir/inlineconfig.yaml")} -o json`) != -1, "kubectl apply should run");
         console.log(tr.stderr);
         done();
     });

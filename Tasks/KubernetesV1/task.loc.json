@@ -159,30 +159,30 @@
       "visibleRule": "command != login && command != logout"
     },
     {
-      "name": "configurationLocation",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.configurationLocation",
-      "defaultValue": "configuration",
+      "name": "configType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.configType",
+      "defaultValue": "file",
       "groupName": "commands",
-      "helpMarkDown": "ms-resource:loc.input.help.configurationLocation",
+      "helpMarkDown": "ms-resource:loc.input.help.configType",
       "options": {
-        "inlineConfiguration": "Inline configuration",
-        "configuration": "Configuration file path"
+        "file": "File path",
+        "inline": "Inline configuration"
       },
       "visibleRule": "useConfigurationFile = true"
     },
     {
-      "name": "configuration",
+      "name": "file",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.configuration",
+      "label": "ms-resource:loc.input.label.file",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.configuration",
-      "visibleRule": "configurationLocation = configuration",
+      "helpMarkDown": "ms-resource:loc.input.help.file",
+      "visibleRule": "configType = file",
       "groupName": "commands"
     },
     {
-      "name": "inlineConfiguration",
+      "name": "inline",
       "type": "multiLine",
       "properties": {
         "resizable": "true",
@@ -190,10 +190,11 @@
         "maxLength": "5000"
       },
       "required": true,
-      "label": "ms-resource:loc.input.label.inlineConfiguration",
-      "helpMarkDown": "ms-resource:loc.input.help.inlineConfiguration",
+      "defaultValue": "# Write your configuration here. \n",
+      "label": "ms-resource:loc.input.label.inline",
+      "helpMarkDown": "ms-resource:loc.input.help.inline",
       "groupName": "commands",
-      "visibleRule": "configurationLocation = inlineConfiguration"
+      "visibleRule": "configType = inline"
     },
     {
       "name": "arguments",

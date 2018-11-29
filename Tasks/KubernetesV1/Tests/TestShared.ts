@@ -6,9 +6,9 @@ export let TestEnvVars = {
     connectionType: "__connectionType__",
     command: "__command__",
     useConfigurationFile: "__useConfigurationFile__",
-    configurationLocation: "__configurationLocation__",
-    configuration: "__configuration__",
-    inlineConfiguration: "__inlineConfiguration",
+    configType: "__configType__",
+    file: "__file__",
+    inline: "__inline__",
     arguments: "__arguments__",
     namespace: "__namespace__",
     secretType: "__secretType__",
@@ -46,9 +46,9 @@ export let Commands = {
     top: "top"
 };
 
-export let ConfigurationLocations = {
-    configuration: "configuration",
-    inlineConfiguration: "inlineConfiguration"
+export let ConfigurationTypes = {
+    file: "file",
+    inline: "inline"
 }
 
 export let isKubectlPresentOnMachine = "true"; 
