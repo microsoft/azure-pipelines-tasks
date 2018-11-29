@@ -390,7 +390,6 @@ export class Kudu {
         httpRequest.method = 'POST';
         httpRequest.uri = this._client.getRequestUri(`/api/command`);
         httpRequest.headers = {
-            'Content-Type': 'multipart/form-data',
             'If-Match': '*'
         };
         httpRequest.body = JSON.stringify({
