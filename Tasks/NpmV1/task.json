@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 30
+        "Patch": 33
     },
     "runsOn": [
         "Agent",
@@ -18,7 +18,7 @@
     "demands": [
         "npm"
     ],
-    "minimumAgentVersion": "1.91.0",
+    "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "npm $(command)",
     "groups": [
         {
