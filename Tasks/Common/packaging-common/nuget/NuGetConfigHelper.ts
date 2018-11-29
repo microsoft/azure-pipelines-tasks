@@ -16,8 +16,7 @@ export interface IPackageSource {
 export class NuGetConfigHelper {
     private tempNugetConfigBaseDir
         = tl.getVariable("Agent.BuildDirectory")
-        || tl.getVariable("Agent.ReleaseDirectory")
-        || process.cwd();
+        || tl.getVariable("Agent.TempDirectory");
     private tempNugetConfigDir = path.join(this.tempNugetConfigBaseDir, "Nuget");
     private tempNugetConfigFileName = "tempNuGet_" + tl.getVariable("build.buildId") + ".config";
     public tempNugetConfigPath = path.join(this.tempNugetConfigDir, this.tempNugetConfigFileName);

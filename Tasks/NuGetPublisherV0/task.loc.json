@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 46
+    "Patch": 47
   },
   "runsOn": [
     "Agent",
@@ -18,7 +18,7 @@
   "demands": [
     "Cmd"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "2.115.0",
   "deprecated": true,
   "groups": [
     {

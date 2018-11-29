@@ -44,5 +44,6 @@ nmh.setAnswers(a);
 nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\single.sln", "c:\\agent\\home\\directory\\double\\double.sln"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
+nmh.registerNugetConfigMock();
 
 tmr.run();
