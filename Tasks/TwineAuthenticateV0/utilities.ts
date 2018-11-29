@@ -8,8 +8,7 @@ export function getPypircPath(): string {
         pypircPath = tl.getVariable("PYPIRC_PATH");
     }
     else {
-       // tslint:disable-next-line:max-line-length
-       let tempPath = tl.getVariable("Agent.BuildDirectory") || tl.getVariable("Agent.ReleaseDirectory") || process.cwd();
+       let tempPath = tl.getVariable("Agent.TempDirectory");
        tempPath = path.join(tempPath, "twineAuthenticate");
        tl.mkdirP(tempPath);
        let savePypircPath = fs.mkdtempSync(tempPath + path.sep);
