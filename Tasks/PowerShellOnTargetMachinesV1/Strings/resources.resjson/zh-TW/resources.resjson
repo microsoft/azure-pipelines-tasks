@@ -24,7 +24,7 @@
   "loc.input.label.SessionVariables": "工作階段變數",
   "loc.input.help.SessionVariables": "為兩種指令碼設定通用工作階段變數。例如 $variable = value、$var1 = \"value, 123\"",
   "loc.input.label.RunPowershellInParallel": "平行執行 PowerShell",
-  "loc.input.help.RunPowershellInParallel": "若將其設為 Ture，將會在目標電腦中平行執行 PowerShell 指令碼。",
+  "loc.input.help.RunPowershellInParallel": "若將其設為 True，將會在目標電腦中平行執行 PowerShell 指令碼。",
   "loc.input.label.ResourceFilteringMethod": "選取電腦依據 ",
   "loc.input.help.ResourceFilteringMethod": "選擇性地提供電腦名稱或標記來選取電腦的子集。",
   "loc.input.label.MachineNames": "篩選準則",
