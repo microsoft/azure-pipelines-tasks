@@ -15,7 +15,6 @@
     "Agent",
     "DeploymentGroup"
   ],
-  "demands": [],
   "version": {
     "Major": 1,
     "Minor": 0,
@@ -46,12 +45,6 @@
       "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.JSONFiles"
-    }
-  ],
-  "outputVariables": [
-    {
-      "name": "PackageFolderPath",
-      "description": "Transformed package folder path."
     }
   ],
   "execution": {
