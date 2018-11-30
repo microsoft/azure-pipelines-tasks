@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 143,
-    "Patch": 1
+    "Patch": 3
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -125,6 +125,7 @@
     "AzureSDKNotFound": "ms-resource:loc.messages.AzureSDKNotFound",
     "FailedToLogout": "ms-resource:loc.messages.FailedToLogout",
     "LoginFailed": "ms-resource:loc.messages.LoginFailed",
-    "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription"
+    "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
+    "SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir"
   }
 }
