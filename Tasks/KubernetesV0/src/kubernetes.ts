@@ -20,6 +20,7 @@ tl.cd(tl.getInput("cwd"));
 // get the registry server authentication provider 
 var registryType = tl.getInput("containerRegistryType", true);
 var authenticationProvider : AuthenticationTokenProvider;
+const environmentVariableMaximumSize = 32766;
 
 if(registryType ==  "Azure Container Registry"){
     authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry"));
@@ -73,7 +74,7 @@ async function run(clusterConnection: ClusterConnection, registryAuthenticationT
 // execute kubectl command
 function executeKubectlCommand(clusterConnection: ClusterConnection, command: string) : any {
     var result = "";
-    var ouputVariableName =  tl.getInput("kubectlOutput", false);  
+    var outputVariableName =  tl.getInput("kubectlOutput", false);  
     var telemetry = {
         registryType: registryType,
         command: command
@@ -85,8 +86,13 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
         JSON.stringify(telemetry));
     return kubectl.run(clusterConnection, command, (data) => result += data)
     .fin(function cleanup() {
-        if(ouputVariableName) {
-            tl.setVariable(ouputVariableName, result);
+        if(outputVariableName) {
+            var commandOutputLength = result.length;
+            if (commandOutputLength > environmentVariableMaximumSize) {
+                tl.warning(tl.loc('OutputVariableDataSizeExceeded', commandOutputLength, environmentVariableMaximumSize));
+            } else {
+                tl.setVariable(outputVariableName, result);
+            }
         }
     });
 }

@@ -85,6 +85,15 @@
             }
         },
         {
+            "name": "allowPartiallySucceededBuilds",
+            "type": "boolean",
+            "label": "Download artifacts even from partially succeeded builds.",
+            "defaultValue": "false",
+            "visibleRule": "buildType == specific && buildVersionToDownload != specific",
+            "required": false,
+            "helpMarkDown": "If checked, this build task will try to download artifacts whether the build is succeeded or partially succeeded."
+        },
+        {
             "name": "branchName",
             "type": "string",
             "label": "Branch name",

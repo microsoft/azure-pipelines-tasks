@@ -13,6 +13,8 @@
   "loc.input.label.specificBuildWithTriggering": "適切な場合は、トリガー ビルドから成果物をダウンロードします。",
   "loc.input.help.specificBuildWithTriggering": "チェック ボックスがオンの場合、このビルド タスクはトリガーする側のビルドから成果物をダウンロードしようとします。指定されたパイプラインからトリガーする側のビルドがない場合は、以下のオプションで指定されたビルドから成果物をダウンロードします。",
   "loc.input.label.buildVersionToDownload": "ダウンロードするビルド バージョン",
+  "loc.input.label.allowPartiallySucceededBuilds": "Download artifacts even from partially succeeded builds.",
+  "loc.input.help.allowPartiallySucceededBuilds": "If checked, this build task will try to download artifacts whether the build is succeeded or partially succeeded.",
   "loc.input.label.branchName": "ブランチ名",
   "loc.input.help.branchName": "フィルター処理する branch/ref 名を指定します。例: ```refs/heads/develop```。",
   "loc.input.label.buildId": "ビルド",

@@ -8,8 +8,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 0,
-        "Patch": 50
+        "Minor": 1,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -225,6 +225,15 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select a feed hosted in this account. You must have Package Management installed and licensed to select a feed here.",
+            "visibleRule": "command = push && nuGetFeedType = internal"
+        },
+        {
+            "name": "publishPackageMetadata",
+            "groupName": "pushAdvanced",
+            "type": "boolean",
+            "label": "Publish pipeline metadata",
+            "defaultValue": true,
+            "helpMarkDown": "Associate this build/release pipeline’s metadata (run #, source code information) with the package",
             "visibleRule": "command = push && nuGetFeedType = internal"
         },
         {

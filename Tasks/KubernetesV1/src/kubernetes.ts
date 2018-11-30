@@ -13,6 +13,7 @@ tl.cd(tl.getInput("cwd"));
 
 var registryType = tl.getInput("containerRegistryType", true);
 var command = tl.getInput("command", false);
+const environmentVariableMaximumSize = 32766;
 
 var kubeconfigfilePath;
 if (command === "logout") {
@@ -83,6 +84,11 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
     var result = "";
     return commandImplementation.run(clusterConnection, command, (data) => result += data)
     .fin(function cleanup() {
-        tl.setVariable('KubectlOutput', result);
+        var commandOutputLength = result.length;
+        if (commandOutputLength > environmentVariableMaximumSize) {
+            tl.warning(tl.loc("OutputVariableDataSizeExceeded", commandOutputLength, environmentVariableMaximumSize));
+        } else {
+            tl.setVariable('KubectlOutput', result);
+        }
     });
 }
