@@ -55,6 +55,7 @@
         "DownloadPipelineArtifactV0",
         "DownloadSecureFileV1",
         "ExtractFilesV1",
+        "FileTransformV1",
         "FtpUploadV1",
         "GithubReleaseV0",
         "GoV0",
