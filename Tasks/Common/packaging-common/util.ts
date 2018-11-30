@@ -7,8 +7,7 @@ import * as tl from 'vsts-task-lib/task';
 export function getTempPath(): string {
     const tempNpmrcDir
         = tl.getVariable('Agent.BuildDirectory')
-        || tl.getVariable('Agent.ReleaseDirectory')
-        || process.cwd();
+        || tl.getVariable('Agent.TempDirectory');
         const tempPath = path.join(tempNpmrcDir, 'npm');
     if (tl.exist(tempPath) === false) {
         tl.mkdirP(tempPath);
