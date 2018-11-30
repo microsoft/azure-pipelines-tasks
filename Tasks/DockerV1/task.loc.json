@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 19
+    "Patch": 21
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -372,6 +372,7 @@
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
-    "DockerRegistryNotFound": "ms-resource:loc.messages.DockerRegistryNotFound"
+    "DockerRegistryNotFound": "ms-resource:loc.messages.DockerRegistryNotFound",
+    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded"
   }
 }
