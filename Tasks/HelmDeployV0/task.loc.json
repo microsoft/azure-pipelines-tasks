@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 138,
-    "Patch": 11
+    "Patch": 14
   },
   "demands": [],
   "groups": [
@@ -394,6 +394,7 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "showEnvironmentVariables": true,
   "prejobexecution": {
     "Node": {
       "target": "src//downloadsecurefiles.js"

@@ -68,6 +68,7 @@ async function main(): Promise<void> {
         var definitionIdTriggered: string = null;
         var buildId: number = null;
         var buildVersionToDownload: string = tl.getInput("buildVersionToDownload", false);
+        var allowPartiallySucceededBuilds: boolean = tl.getBoolInput("allowPartiallySucceededBuilds", false);
         var branchName: string =  tl.getInput("branchName", false);;
         var downloadPath: string = tl.getInput("downloadPath", true);
         var downloadType: string = tl.getInput("downloadType", true);
@@ -167,10 +168,14 @@ async function main(): Promise<void> {
         if (definitionId) {
             var build: Build;
             if (buildVersionToDownload != "specific") {
+                var resultFilter = BuildResult.Succeeded;
+                if (allowPartiallySucceededBuilds) {
+                    resultFilter |= BuildResult.PartiallySucceeded;
+                }
                 var branchNameFilter = (buildVersionToDownload == "latest") ? null : branchName;
 
                 // get latest successful build filtered by branch
-                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds(projectId, [parseInt(definitionId)], null, null, null, null, null, null, BuildStatus.Completed, BuildResult.Succeeded, tagFilters, null, null, null, null, null, BuildQueryOrder.FinishTimeDescending, branchNameFilter), retryLimit).catch((reason) => {
+                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds(projectId, [parseInt(definitionId)], null, null, null, null, null, null, BuildStatus.Completed, resultFilter, tagFilters, null, null, null, null, null, BuildQueryOrder.FinishTimeDescending, branchNameFilter), retryLimit).catch((reason) => {
                     reject(reason);
                     return;
                 });

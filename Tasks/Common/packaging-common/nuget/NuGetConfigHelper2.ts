@@ -37,8 +37,7 @@ export class NuGetConfigHelper2 {
 
     public static getTempNuGetConfigBasePath() {
         return tl.getVariable("Agent.BuildDirectory")
-        || tl.getVariable("Agent.ReleaseDirectory")
-        || process.cwd();
+        || tl.getVariable("Agent.TempDirectory");
      }
 
     public ensureTempConfigCreated() {

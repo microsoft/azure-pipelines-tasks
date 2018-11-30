@@ -32,6 +32,8 @@
   "loc.input.label.externalEndpoints": "Account/collection connection",
   "loc.input.help.externalEndpoints": "Credentials to use for external feeds.",
   "loc.input.label.feedListPublish": "Destination Feed",
+  "loc.input.label.publishPackageMetadata": "Publish pipeline metadata",
+  "loc.input.help.publishPackageMetadata": "Associate this build/release pipeline’s metadata (run #, source code information) with the package",
   "loc.input.label.packageListPublish": "Package name",
   "loc.input.help.packageListPublish": "Select a package ID to publish or type a new package ID if you've never published a version of this package before. Package names must be lower case and can only use letters, numbers, and dashes(-).",
   "loc.input.label.feedPublishExternal": "Feed",

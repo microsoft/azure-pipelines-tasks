@@ -51,11 +51,15 @@ export class ProvenanceHelper {
         baseUrl: string,
         handlers: VsoBaseInterfaces.IRequestHandler[],
         options: VsoBaseInterfaces.IRequestOptions): Promise<string> {
-        
-        // while this feature is in preview, it is enabled by the following variable
-        const useSessionEnabled = tl.getVariable("Packaging.SavePublishMetadata");
-        if (useSessionEnabled) {
-            tl.debug("Creating provenance session");
+               
+        const publishPackageMetadata = tl.getInput("publishPackageMetadata");
+        let shouldCreateSession = publishPackageMetadata && publishPackageMetadata.toLowerCase() == 'true';
+        if (shouldCreateSession) {
+            const useSessionEnabled = tl.getVariable("Packaging.SavePublishMetadata");
+            shouldCreateSession = shouldCreateSession && !(useSessionEnabled && useSessionEnabled.toLowerCase() == 'false')
+        }
+        if (shouldCreateSession) {
+            tl.debug("Creating provenance session to save pipeline metadata. This can be disabled in the task settings, or by setting build variable Packaging.SavePublishMetadata to false");
             const prov = new ProvenanceApi(baseUrl, handlers, options);
             const sessionRequest = ProvenanceHelper.CreateSessionRequest(feedId);
             try {
