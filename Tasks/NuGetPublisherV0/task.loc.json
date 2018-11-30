@@ -8,8 +8,8 @@
   "author": "Lawrence Gripper",
   "version": {
     "Major": 0,
-    "Minor": 2,
-    "Patch": 46
+    "Minor": 145,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
