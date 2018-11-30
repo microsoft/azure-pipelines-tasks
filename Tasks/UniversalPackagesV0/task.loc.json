@@ -33,6 +33,12 @@
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
+    },
+    {
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": true,
+      "visibleRule": "command = publish"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -317,15 +323,6 @@
       "groupName": "packagePublishDetails"
     },
     {
-      "name": "publishedPackageVar",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.publishedPackageVar",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "packagePublishDetails",
-      "helpMarkDown": "ms-resource:loc.input.help.publishedPackageVar"
-    },
-    {
       "name": "verbosity",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosity",
@@ -342,6 +339,15 @@
         "Error": "Error",
         "Critical": "Citical"
       }
+    },
+    {
+      "name": "publishedPackageVar",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.publishedPackageVar",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.publishedPackageVar"
     }
   ],
   "dataSourceBindings": [

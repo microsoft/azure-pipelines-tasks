@@ -125,7 +125,6 @@ export async function run(artifactToolPath: string): Promise<void> {
         } as artifactToolRunner.IArtifactToolOptions;
 
         publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
-        
         if(publishedPackageVar) {
             tl.setVariable(publishedPackageVar, `${packageName} ${version}`);
         }
