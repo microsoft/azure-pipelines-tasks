@@ -119,9 +119,10 @@ async function main(): Promise<void> {
     }
 }
 
-
 main().catch(error => {
-    tl.rmRF(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY"));
+    if(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY")) {
+        tl.rmRF(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY"));
+    } 
     tl.setResult(tl.TaskResult.Failed, error);
 });
 function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url) {
