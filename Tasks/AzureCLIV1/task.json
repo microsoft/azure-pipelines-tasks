@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 143,
-        "Patch": 2
+        "Patch": 3
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -125,6 +125,7 @@
         "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
         "FailedToLogout": "The following error occurred while logging out: %s",
         "LoginFailed": "Azure login failed",
-        "ErrorInSettingUpSubscription": "Error in setting up subscription"
+        "ErrorInSettingUpSubscription": "Error in setting up subscription",
+        "SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s"
     }
 }
