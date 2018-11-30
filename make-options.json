@@ -12,7 +12,7 @@
         "AzureFileCopyV1",
         "AzureFileCopyV2",
         "AzureFunctionDeploymentV1",
-        "AzureFunctionOnContainerDEploymentV1",
+        "AzureFunctionOnContainerDeploymentV1",
         "AzureFunctionV1",
         "AzureKeyVaultV1",
         "AzureMonitorAlertsV0",
