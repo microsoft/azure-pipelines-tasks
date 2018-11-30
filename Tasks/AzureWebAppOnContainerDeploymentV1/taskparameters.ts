@@ -28,7 +28,7 @@ export interface TaskParameters {
     AppSettings?: string;
     StartupCommand?: string;
     ConfigurationSettings?: string;
-    ImageName?: string;
+    ImageName: string;
     ResourceGroupName?: string;
     DeployToSlotOrASEFlag?: boolean;
     SlotName?: string;

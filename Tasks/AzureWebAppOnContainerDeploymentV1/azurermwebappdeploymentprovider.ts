@@ -17,7 +17,7 @@ export class AzureRmWebAppDeploymentProvider{
     protected appServiceUtility: AzureAppServiceUtility;
     protected kuduServiceUtility: KuduServiceUtility;
     protected azureEndpoint: AzureEndpoint;
-    protected activeDeploymentID;
+    protected activeDeploymentID: string;
 
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;

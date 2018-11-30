@@ -1,5 +1,5 @@
 import tl = require('vsts-task-lib');
-import { AzureRmWebAppDeploymentProvider } from '../azurermwebappdeploymentprovider'
+import { AzureRmWebAppDeploymentProvider } from '../azurermwebappdeploymentprovider';
 import { TaskParametersUtility, TaskParameters } from '../TaskParameters';
 import { getMockEndpoint } from '../node_modules/azurermdeploycommon/Tests/mock_utils';
 import { mockAzureARMPreDeploymentSteps, mockContainerDeploySettings }  from "./mock_utils";
