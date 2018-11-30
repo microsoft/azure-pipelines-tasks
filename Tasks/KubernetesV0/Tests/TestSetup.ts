@@ -229,7 +229,6 @@ tr.registerMock('./utilities', {
     StringWritable: ut.StringWritable,
     PackerVersion: ut.PackerVersion,
     isGreaterVersion: ut.isGreaterVersion,
-    setOutputVariable: ut.setOutputVariable,
     getTempDirectory: function() {
         return newUserDirPath;
     },
@@ -271,7 +270,7 @@ tr.registerMock('./utilities', {
     },
     assertFileExists: function(path) {
         return true;
-    }
+    } 
 });
 
 tr.run();

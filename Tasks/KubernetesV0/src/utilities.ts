@@ -114,10 +114,3 @@ export function assertFileExists(path: string) {
         throw new Error(tl.loc('FileNotFoundException', path));
     }
 }
-
-export function setOutputVariable(value: string) {
-    var ouputVariableName =  tl.getInput("kubectlOutput", false);  
-    if(ouputVariableName) {
-        tl.setVariable(ouputVariableName, value);
-    }
-}

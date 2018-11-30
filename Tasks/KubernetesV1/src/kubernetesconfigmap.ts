@@ -70,9 +70,7 @@ function createConfigMap(connection: ClusterConnection, configMapName: string): 
     command.arg("configmap");
     command.arg(configMapName);
     command.line(getConfigMapArguments());
-    return connection.execCommand(command).fin(function cleanup() {
-        tl.setVariable('KubectlOutput', configMapName);
-    });
+    return connection.execCommand(command);
 }
 
 function executeKubetclGetConfigmapCommand(connection: ClusterConnection, configMapName: string): any {

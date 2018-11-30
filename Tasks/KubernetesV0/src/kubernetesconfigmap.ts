@@ -6,7 +6,6 @@ import path = require('path');
 import * as fs from "fs";
 import * as kubernetesCommand from "./kubernetescommand";
 import ClusterConnection from "./clusterconnection";
-import * as utils from "./utilities";
 
 export function run(connection: ClusterConnection, configMapName: string): Promise<any> {
     if(tl.getBoolInput("forceUpdateConfigMap") == false)
@@ -71,9 +70,7 @@ function createConfigMap(connection: ClusterConnection, configMapName: string): 
     command.arg("configmap");
     command.arg(configMapName);
     command.line(getConfigMapArguments());
-    return connection.execCommand(command).fin(function cleanup() {
-        utils.setOutputVariable(configMapName);
-     });
+    return connection.execCommand(command);
 }
 
 function executeKubetclGetConfigmapCommand(connection: ClusterConnection, configMapName: string): any {

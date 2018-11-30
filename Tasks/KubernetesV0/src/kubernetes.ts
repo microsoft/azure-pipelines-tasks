@@ -7,7 +7,6 @@ import ClusterConnection from "./clusterconnection";
 import * as kubectl from "./kubernetescommand";
 import * as kubectlConfigMap from "./kubernetesconfigmap";
 import * as kubectlSecret from "./kubernetessecret";
-import * as utils from "./utilities";
 
 import AuthenticationTokenProvider  from "docker-common/registryauthenticationprovider/authenticationtokenprovider"
 import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
@@ -74,6 +73,7 @@ async function run(clusterConnection: ClusterConnection, registryAuthenticationT
 // execute kubectl command
 function executeKubectlCommand(clusterConnection: ClusterConnection, command: string) : any {
     var result = "";
+    var ouputVariableName =  tl.getInput("kubectlOutput", false);  
     var telemetry = {
         registryType: registryType,
         command: command
@@ -85,6 +85,8 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
         JSON.stringify(telemetry));
     return kubectl.run(clusterConnection, command, (data) => result += data)
     .fin(function cleanup() {
-       utils.setOutputVariable(result);
+        if(ouputVariableName) {
+            tl.setVariable(ouputVariableName, result);
+        }
     });
 }
