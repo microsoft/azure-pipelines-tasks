@@ -168,7 +168,7 @@ export class azureclitask {
 
         if (!!basePath) {
             this.azCliConfigPath = path.join(basePath, ".azclitask", configDirName);
-            tl.debug(tl.loc('SettingAzureConfigDir', this.azCliConfigPath));
+            console.log(tl.loc('SettingAzureConfigDir', this.azCliConfigPath));
             process.env['AZURE_CONFIG_DIR'] = this.azCliConfigPath;
         }
     }
