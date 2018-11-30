@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 145,
-        "Patch": 0
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -33,6 +33,12 @@
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false
+        },
+        {
+            "name": "output",
+            "displayName": "Output",
+            "isExpanded": true,
+            "visibleRule": "command = publish"
         }
     ],
     "instanceNameFormat": "Universal $(command)",
@@ -342,7 +348,16 @@
                 "Error": "Error",
                 "Critical": "Citical"
             }
-        }
+        },
+        {
+            "name": "publishedPackageVar",
+            "type": "string",
+            "label": "Package Ouput Variable",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "output",
+            "helpMarkDown": "Provide a name for the variable that will contain the published package name and version."
+          }
     ],
     "dataSourceBindings": [
         {
