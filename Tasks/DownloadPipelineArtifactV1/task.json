@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 0
     },
     "groups": [],
     "demands": [],
@@ -76,7 +76,7 @@
             "required": true,
             "options": {
                 "latest": "Latest",
-                "latestFromBranch": "Latest from specific branch",
+                "latestFromBranch": "Latest from specific branch and specified Build Tags",
                 "specific": "Specific version"
             }
         },
@@ -195,7 +195,7 @@
     "instanceNameFormat": "Download Pipeline Artifact",
     "execution": {
         "AgentPlugin": {
-            "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTask, Agent.Plugins"
+            "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV1, Agent.Plugins"
         }
     },
     "messages": {}
