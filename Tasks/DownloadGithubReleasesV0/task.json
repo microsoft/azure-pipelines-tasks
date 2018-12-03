@@ -1,0 +1,108 @@
+{
+  "id": "263abc27-4582-4174-8789-af599697778e",
+  "name": "DownloadGithubReleases",
+  "friendlyName": "Download Github Releases",
+  "description": "Download Github Releases",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": 0,
+    "Minor": 145,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "1.99.0",
+  "instanceNameFormat": "Download Github Releases",
+  "inputs": [
+    {
+      "name": "connection",
+      "type": "connectedService:github",
+      "label": "Github Connection",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Github service connection"
+    },
+    {
+      "name": "definition",
+      "type": "pickList",
+      "label": "Repository",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Github repository"
+    },
+    {
+      "name": "releaseByTagName",
+      "type": "boolean",
+      "label": "Show release by tag name",
+      "defaultValue": "false",
+      "required": false,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Enabling this will show releases by tag name below"
+    },
+    {
+      "name": "versions",
+      "type": "pickList",
+      "label": "Release",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Release to download"
+    },
+    {
+      "name": "itemPattern",
+      "type": "string",
+      "label": "Item Pattern",
+      "defaultValue": "**",
+      "required": false,
+      "helpMarkDown": "Minimatch pattern to filter files to be downloaded. To download all files within artifact drop use drop/**"
+    },
+    {
+      "name": "downloadPath",
+      "type": "string",
+      "label": "Destination directory",
+      "defaultValue": "$(System.ArtifactsDirectory)",
+      "required": true,
+      "helpMarkDown": "Path on the agent machine where the artifacts will be downloaded"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "definition",
+      "endpointId": "$(connection)",
+      "dataSourceName": "UserRepositories",
+      "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }"
+    },
+    {
+      "target": "versions",
+      "endpointId": "$(connection)",
+      "dataSourceName": "Releases",
+      "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \" {{#equals releaseByTagName 'true'}}{{#if tag_name}}{{tag_name}}{{else}}{{id}}{{/if}}{{else}}{{#if name}}{{name}}{{else}}{{id}}{{/if}}{{/equals}}\" }",
+      "parameters": {
+        "repositoryName": "$(definition)",
+        "releaseByTagName": "$(releaseByTagName)"
+      }
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "downloadGithubReleases.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "DownloadArtifacts": "Downloading assets of release %s from: %s",
+    "ArtifactsSuccessfullyDownloaded": "Successfully downloaded release assets to %s"
+  }
+}
