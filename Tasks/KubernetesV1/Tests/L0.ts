@@ -34,6 +34,7 @@ describe('Kubernetes Suite', function() {
         delete process.env[shared.TestEnvVars.configMapFile];
         delete process.env[shared.TestEnvVars.configMapArguments];
         delete process.env[shared.TestEnvVars.outputFormat];
+        delete process.env[shared.TestEnvVars.configuration]
     });
     after(function () {
     });
@@ -176,7 +177,8 @@ describe('Kubernetes Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.apply;
         process.env[shared.TestEnvVars.useConfigurationFile] = "true";
-        process.env[shared.TestEnvVars.configType] = shared.ConfigurationTypes.file; 
+        process.env[shared.TestEnvVars.configType] = shared.ConfigurationTypes.configuration; 
+        process.env[shared.TestEnvVars.configuration] = shared.formatPath("dir/deployment.yaml");
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -192,7 +194,8 @@ describe('Kubernetes Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.expose;
         process.env[shared.TestEnvVars.useConfigurationFile] = "true";
-        process.env[shared.TestEnvVars.configType] = shared.ConfigurationTypes.file;
+        process.env[shared.TestEnvVars.configType] = shared.ConfigurationTypes.configuration;
+        process.env[shared.TestEnvVars.configuration] = shared.formatPath("dir/deployment.yaml");
         process.env[shared.TestEnvVars.arguments] = "--port=80 --target-port=8000";
         tr.run();
 
@@ -555,12 +558,12 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Run fails when an invalid configuration choice is made', (done:MochaDone) => {
+    it('Run fails when an no configuration is provided through yaml but useConfigurationFile is set to true', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.apply;
         process.env[shared.TestEnvVars.useConfigurationFile] = "true";
-        process.env[shared.TestEnvVars.configType] = "invalidChoice";
+        process.env[shared.TestEnvVars.configType] = ''; //does not matter during a yaml definition
         tr.run();
 
         assert(tr.failed, 'task should have failed');
@@ -586,4 +589,22 @@ describe('Kubernetes Suite', function() {
         console.log(tr.stderr);
         done();
     });
+
+    it('Run fails when both configurations are provided through yaml', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.apply;
+        process.env[shared.TestEnvVars.useConfigurationFile] = "true";
+        process.env[shared.TestEnvVars.configType] = ''; //does not matter during a yaml definition
+        process.env[shared.TestEnvVars.configuration] = 'someFile.yaml'; //dummy value to trigger not default configuration condition
+        process.env[shared.TestEnvVars.inline] = 'sometextforinline';
+        tr.run();
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.invokedToolCount == 0, 'should not have invoked the tool. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length > 0 || tr.errorIssues.length, 'should have written an error message');
+        console.log(tr.stderr);
+        done();
+    });
+
 });

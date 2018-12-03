@@ -7,7 +7,7 @@ export let TestEnvVars = {
     command: "__command__",
     useConfigurationFile: "__useConfigurationFile__",
     configType: "__configType__",
-    file: "__file__",
+    configuration: "__configuration__",
     inline: "__inline__",
     arguments: "__arguments__",
     namespace: "__namespace__",
@@ -47,7 +47,7 @@ export let Commands = {
 };
 
 export let ConfigurationTypes = {
-    file: "file",
+    configuration: "configuration",
     inline: "inline"
 }
 

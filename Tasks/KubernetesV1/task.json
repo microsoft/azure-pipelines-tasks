@@ -162,23 +162,23 @@
           "name": "configType",
           "type": "radio",
           "label": "Configuration Type",
-          "defaultValue": "file",
+          "defaultValue": "configuration",
           "groupName": "commands",
           "helpMarkDown": "Type of Kubernetes configuration for kubectl command. It can be a file path or an inline script.",
           "options": {
-              "file": "File path",
+              "configuration": "File path",
               "inline": "Inline configuration"
           },
           "visibleRule": "useConfigurationFile = true"
         },
         {
-          "name": "file",
+          "name": "configuration",
           "type": "filePath",
           "label": "File path",
           "defaultValue": "",
           "required": true,
           "helpMarkDown": "Filename, directory, or URL to kubernetes configuration files that will be used with the commands.",
-          "visibleRule": "configType = file",
+          "visibleRule": "configType = configuration",
           "groupName": "commands"
         },
         {

@@ -23,7 +23,7 @@ tr.setInput('containerregistrytype', process.env[shared.TestEnvVars.containerTyp
 tr.setInput('connectionType', process.env[shared.TestEnvVars.connectionType] || shared.ConnectionType.AzureResourceManager);
 tr.setInput('command', process.env[shared.TestEnvVars.command] || shared.Commands.apply);
 tr.setInput('useConfigurationFile', process.env[shared.TestEnvVars.useConfigurationFile] || "false");
-tr.setInput('file', ConfigurationFilePath);
+tr.setInput('configuration', process.env[shared.TestEnvVars.configuration] || '');
 tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || '');
 tr.setInput('namespace', process.env[shared.TestEnvVars.namespace] || '');
 tr.setInput('secretType', process.env[shared.TestEnvVars.secretType] || 'dockerRegistry');
@@ -47,7 +47,7 @@ tr.setInput('azureSubscriptionEndpointForSecrets', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', 'ajgtestacr1.azurecr.io');
 tr.setInput('azureResourceGroup', 'myResourceGroup');
 tr.setInput('kubernetesCluster', 'myCluster1');
-tr.setInput('configType',process.env[shared.TestEnvVars.configType] || shared.ConfigurationTypes.file);
+tr.setInput('configType',process.env[shared.TestEnvVars.configType] || shared.ConfigurationTypes.configuration);
 tr.setInput('inline', process.env[shared.TestEnvVars.inline] || '');
 console.log("Inputs have been set");
 

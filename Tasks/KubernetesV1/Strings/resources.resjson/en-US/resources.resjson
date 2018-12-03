@@ -28,8 +28,8 @@
   "loc.input.help.useConfigurationFile": "Use Kubernetes configuration with the kubectl command. An inline script, filename, directory, or URL to Kubernetes configuration files can be provided.",
   "loc.input.label.configType": "Configuration Type",
   "loc.input.help.configType": "Type of Kubernetes configuration for kubectl command. It can be a file path or an inline script.",
-  "loc.input.label.file": "File path",
-  "loc.input.help.file": "Filename, directory, or URL to kubernetes configuration files that will be used with the commands.",
+  "loc.input.label.configuration": "File path",
+  "loc.input.help.configuration": "Filename, directory, or URL to kubernetes configuration files that will be used with the commands.",
   "loc.input.label.inline": "Inline configuration",
   "loc.input.help.inline": "Inline deployment configuration for kubectl command",
   "loc.input.label.arguments": "Arguments",
@@ -90,6 +90,5 @@
   "loc.messages.UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
   "loc.messages.ConfigurationFileNotFound": "No configuration file matching %s was found.",
-  "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
-  "loc.messages.UnknownConfigurationOption": "Invalid configuration location choice: %s."
+  "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found."
 }

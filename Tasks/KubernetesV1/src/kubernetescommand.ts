@@ -7,6 +7,7 @@ import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as utils from "./utilities";
 import ClusterConnection from "./clusterconnection";
+import { SSL_OP_NO_TLSv1_1 } from "constants";
 
 export function run(connection: ClusterConnection, kubecommand: string, outputUpdate: (data: string) => any): any {
     var command = connection.createCommand();
@@ -46,33 +47,34 @@ function getCommandConfigurationFile() : string[] {
     var args: string[] =[];
     var useConfigurationFile : boolean  =  tl.getBoolInput("useConfigurationFile", false);
     if (useConfigurationFile) {
-        var configurationOption:string = tl.getInput("configType", true);
-        switch(configurationOption){
-            case "file" : {
-                var configurationPath = tl.getInput("file", true);
-                if (configurationPath && tl.exist(configurationPath)) {
+        let configurationPath = tl.getPathInput("configuration", false);
+        if(!tl.filePathSupplied("configurationPath")){
+            configurationPath = null;
+        }
+        var inlineConfiguration = tl.getInput("inline", false);
+        if( configurationPath == null && inlineConfiguration == null) {
+            throw new Error(tl.loc('InvalidConfiguration', configurationPath, inlineConfiguration));
+        }
+        else if (configurationPath != null && inlineConfiguration != null ) {
+            throw new Error(tl.loc('InvalidConfiguration', configurationPath, inlineConfiguration));
+        }
+        else if (configurationPath != null) {
+            if (tl.exist(configurationPath)) {
                     args[0] = "-f";
                     args[1] = configurationPath;
-                }
-                else {
-                    throw new Error(tl.loc('ConfigurationFileNotFound', configurationPath));
-                }
-                break;
             }
-            case "inline" : {
-                var inlineConfiguration: string = tl.getInput("inline", true);
-                var tempInlineFile = utils.getTempInlineConfigPath(inlineConfiguration);
-                if (tl.exist(tempInlineFile)) {
-                    args[0] = "-f";
-                    args[1] = tempInlineFile;
-                } else {
-                    throw new Error(tl.loc('ConfigurationFileNotFound', tempInlineFile));
-                }
-                break;
+            else {
+                throw new Error(tl.loc('ConfigurationFileNotFound', configurationPath));
             }
-            default : {
-                throw new Error (tl.loc('UnknownConfigurationOption', configurationOption));
-            }
+        }
+        else {
+            var tempInlineFile = utils.getTempInlineConfigPath(inlineConfiguration);
+            if (tl.exist(tempInlineFile)) {
+                args[0] = "-f";
+                args[1] = tempInlineFile;
+            } else {
+                throw new Error(tl.loc('ConfigurationFileNotFound', tempInlineFile));
+            } 
         }
     }
 
