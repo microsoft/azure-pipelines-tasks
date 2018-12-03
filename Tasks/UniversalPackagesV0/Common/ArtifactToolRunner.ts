@@ -11,6 +11,7 @@ export interface IArtifactToolOptions {
     accountUrl: string;
     packageName: string;
     packageVersion: string;
+    publishedPackageVar: string;
 }
 
 export function getOptions(): IExecOptions{

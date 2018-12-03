@@ -13,6 +13,7 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
 // get the registry server authentication provider 
 var registryType = tl.getInput("containerregistrytype", true);
 var authenticationProvider : AuthenticationTokenProvider;
+const environmentVariableMaximumSize = 32766;
 
 if(registryType ==  "Azure Container Registry"){
     authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry"));
@@ -68,7 +69,13 @@ commandImplementation.run(connection, (data) => result += data)
     }
 })
 .then(function success() {
-    tl.setVariable("DockerOutput", result);
+    var commandOutputLength = result.length;
+    if (commandOutputLength > environmentVariableMaximumSize) {
+        tl.warning(tl.loc('OutputVariableDataSizeExceeded', commandOutputLength, environmentVariableMaximumSize));
+    } else {
+        tl.setVariable("DockerOutput", result);
+    }
+
     tl.setResult(tl.TaskResult.Succeeded, "");
 }, function failure(err) {
     tl.setResult(tl.TaskResult.Failed, err.message);

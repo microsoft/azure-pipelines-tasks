@@ -23,7 +23,7 @@ export class Helper {
      * @param tag 
      */
     public static async getTagForCreateAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string): Promise<string> {
-        let tagSelection = tl.getInput(Inputs.tagSelection);
+        let tagSelection = tl.getInput(Inputs.tagSource);
 
         if (!!tagSelection && tagSelection === TagSelectionMode.auto) {
             console.log(tl.loc("FetchTagForTarget", target));
@@ -122,7 +122,7 @@ export class Helper {
                     }
                 });
 
-                // Throw error in case of ambiguity as we do not know which release to pick for editing or discarding release.
+                // Throw error in case of ambiguity as we do not know which release to pick for editing or deleting release.
                 if (releasesWithGivenTag.length >= 2) {
                     throw new Error(tl.loc("MultipleReleasesFoundError", tag));
                 }
