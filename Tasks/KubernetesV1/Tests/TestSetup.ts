@@ -23,6 +23,7 @@ tr.setInput('connectionType', process.env[shared.TestEnvVars.connectionType] || 
 tr.setInput('command', process.env[shared.TestEnvVars.command] || shared.Commands.apply);
 tr.setInput('useConfigurationFile', process.env[shared.TestEnvVars.useConfigurationFile] || "false");
 tr.setInput('configuration', ConfigurationFilePath);
+tr.setInput('useWatch', process.env[shared.TestEnvVars.useWatch] || "false");
 tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || '');
 tr.setInput('namespace', process.env[shared.TestEnvVars.namespace] || '');
 tr.setInput('secretType', process.env[shared.TestEnvVars.secretType] || 'dockerRegistry');
@@ -200,6 +201,10 @@ a.exec[`kubectl get secrets my-secret -o yaml`] = {
 };
 a.exec[`kubectl logs nginx`] = {
     "code": 0
+};
+a.exec[`kubectl rollout status service myService --watch`] = {
+    "code": 0,
+    "stdout": "myService succesfully rolled out"
 };
 
 tr.setAnswers(<any>a);

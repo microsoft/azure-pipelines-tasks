@@ -141,7 +141,8 @@
         "logs": "logs",
         "run": "run",
         "set": "set",
-        "top": "top"
+        "top": "top",
+        "rollout": "rollout"
       },
       "helpMarkDown": "ms-resource:loc.input.help.command",
       "groupName": "commands",
@@ -157,6 +158,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.useConfigurationFile",
       "groupName": "commands",
       "visibleRule": "command != login && command != logout"
+    },
+    {
+      "name": "useWatch",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useWatch",
+      "defaultValue": "true",
+      "helpMarkdown": "Add a watch to the rollout indicating that the pipeline should wait with upcoming tasks until the rollout is complete",
+      "groupName": "commands",
+      "visibleRule": "command == rollout"
     },
     {
       "name": "configuration",

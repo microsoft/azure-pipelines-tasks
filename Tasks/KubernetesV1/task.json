@@ -141,7 +141,8 @@
                 "logs": "logs",
                 "run": "run",
                 "set": "set",
-                "top": "top"
+                "top": "top",
+                "rollout": "rollout"
             },
             "helpMarkDown": "Select or specify a kubectl command to run.",
             "groupName": "commands",
@@ -157,6 +158,15 @@
             "helpMarkDown": "Use Kubernetes configuration file with the kubectl command. Filename, directory, or URL to Kubernetes configuration files can also be provided.",
             "groupName": "commands",
             "visibleRule": "command != login && command != logout"
+        },
+        {
+            "name": "useWatch",
+            "type": "boolean",
+            "label": "Watch rollout until done",
+            "defaultValue": "true",
+            "helpMarkdown": "Add a watch to the rollout indicating that the pipeline should wait with upcoming tasks until the rollout is complete",
+            "groupName": "commands",
+            "visibleRule": "command == rollout"
         },
         {
             "name": "configuration",

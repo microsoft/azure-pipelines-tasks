@@ -14,12 +14,21 @@ export function run(connection: ClusterConnection, kubecommand: string, outputUp
         outputUpdate(output);
     });
 
-    command.arg(kubecommand)
+    command.arg(getExecCommand(kubecommand));
     command.arg(getNameSpace());
     command.arg(getCommandConfigurationFile());
     command.line(getCommandArguments());
+    command.arg(getWatch(kubecommand));
     command.arg(getCommandOutputFormat(kubecommand));
     return connection.execCommand(command);
+}
+
+function getExecCommand(kubecommand: string): string {
+    if (kubecommand === "rollout") {
+        return "rollout status";
+    }
+
+    return kubecommand;
 }
 
 function getCommandOutputFormat(kubecommand: string) : string[] {
@@ -74,9 +83,20 @@ function isJsonOrYamlOutputFormatSupported(kubecommand) : boolean
           return false;
        case "logs":
           return false;
+       case "rollout":
+          return false;
        default: 
           return true;
    }
+}
+
+function getWatch(kubecommand: string): string[] {
+    var shouldAddWatch: boolean = tl.getBoolInput("useWatch", false);
+    if (kubecommand === "rollout" && shouldAddWatch) {
+        return ['--watch'];
+    }
+
+    return [];
 }
 
 export function getNameSpace(): string[] {

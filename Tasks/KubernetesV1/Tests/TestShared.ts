@@ -7,6 +7,7 @@ export let TestEnvVars = {
     command: "__command__",
     useConfigurationFile: "__useConfigurationFile__",
     configuration: "__configuration__",
+    useWatch: "__useWatch__",
     arguments: "__arguments__",
     namespace: "__namespace__",
     secretType: "__secretType__",
@@ -41,7 +42,8 @@ export let Commands = {
     logs: "logs",
     run: "run",
     set: "set",
-    top: "top"
+    top: "top",
+    rollout: "rollout"
 };
 
 export let isKubectlPresentOnMachine = "true"; 

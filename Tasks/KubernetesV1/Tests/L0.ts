@@ -23,6 +23,7 @@ describe('Kubernetes Suite', function() {
         delete process.env[shared.TestEnvVars.namespace];
         delete process.env[shared.TestEnvVars.arguments];
         delete process.env[shared.TestEnvVars.useConfigurationFile];
+        delete process.env[shared.TestEnvVars.useWatch];
         delete process.env[shared.TestEnvVars.secretType];
         delete process.env[shared.TestEnvVars.secretArguments];
         delete process.env[shared.TestEnvVars.secretName];
@@ -197,6 +198,22 @@ describe('Kubernetes Suite', function() {
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]kubectl expose -f ${shared.formatPath("dir/deployment.yaml")} --port=80 --target-port=8000 -o json`) != -1, "kubectl expose should run");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Runs successfully for kubectl rollout status', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.rollout;
+        process.env[shared.TestEnvVars.useWatch] = "true";
+        process.env[shared.TestEnvVars.arguments] = "service myService";
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]kubectl rollout status service myService --watch`) != -1, "kubectl rollout status should run");
         console.log(tr.stderr);
         done();
     });
