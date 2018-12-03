@@ -56,6 +56,7 @@ async function run(clusterConnection: ClusterConnection, registryAuthenticationT
 {
     var secretName = tl.getInput("secretName", false);
     var configMapName = tl.getInput("configMapName", false);
+    var command = tl.getInput("command", false);
 
     if(secretName) {
         await kubectlSecret.run(clusterConnection, registryAuthenticationToken, secretName);
@@ -64,13 +65,14 @@ async function run(clusterConnection: ClusterConnection, registryAuthenticationT
     if(configMapName) {
         await kubectlConfigMap.run(clusterConnection, configMapName);
     }
-    
-    await executeKubectlCommand(clusterConnection);  
+
+    if (command) {
+        await executeKubectlCommand(clusterConnection, command);
+    }
 }
 
 // execute kubectl command
-function executeKubectlCommand(clusterConnection: ClusterConnection) : any {
-    var command = tl.getInput("command", true);
+function executeKubectlCommand(clusterConnection: ClusterConnection, command: string) : any {
     var result = "";
     var outputVariableName =  tl.getInput("kubectlOutput", false);  
     var telemetry = {
