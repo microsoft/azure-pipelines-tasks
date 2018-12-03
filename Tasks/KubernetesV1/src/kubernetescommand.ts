@@ -7,7 +7,6 @@ import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as utils from "./utilities";
 import ClusterConnection from "./clusterconnection";
-import { SSL_OP_NO_TLSv1_1 } from "constants";
 
 export function run(connection: ClusterConnection, kubecommand: string, outputUpdate: (data: string) => any): any {
     var command = connection.createCommand();
@@ -43,38 +42,40 @@ function getCommandOutputFormat(kubecommand: string) : string[] {
     return args;
 }
 
-function getCommandConfigurationFile() : string[] {
-    var args: string[] =[];
-    var useConfigurationFile : boolean  =  tl.getBoolInput("useConfigurationFile", false);
-    if (useConfigurationFile) {
-        let configurationPath = tl.getPathInput("configuration", false);
-        if(!tl.filePathSupplied("configurationPath")){
-            configurationPath = null;
-        }
-        var inlineConfiguration = tl.getInput("inline", false);
-        if( configurationPath == null && inlineConfiguration == null) {
-            throw new Error(tl.loc('InvalidConfiguration', configurationPath, inlineConfiguration));
-        }
-        else if (configurationPath != null && inlineConfiguration != null ) {
-            throw new Error(tl.loc('InvalidConfiguration', configurationPath, inlineConfiguration));
-        }
-        else if (configurationPath != null) {
-            if (tl.exist(configurationPath)) {
-                    args[0] = "-f";
-                    args[1] = configurationPath;
-            }
-            else {
-                throw new Error(tl.loc('ConfigurationFileNotFound', configurationPath));
-            }
+function getCommandConfigurationFile(): string[] {
+    var args: string[] = [];
+    var useConfigurationFile: boolean = tl.getBoolInput("useConfigurationFile", false);
+    let configurationPath = tl.getPathInput("configuration", false);
+    var inlineConfiguration = tl.getInput("inline", false);
+
+    if (!tl.filePathSupplied("configurationPath")) {
+        configurationPath = null;
+    }
+
+    if (useConfigurationFile && configurationPath == null && inlineConfiguration == null) {
+        throw new Error(tl.loc('InvalidConfiguration', configurationPath, inlineConfiguration));
+    }
+    else if (useConfigurationFile && configurationPath != null && inlineConfiguration != null) {
+        throw new Error(tl.loc('InvalidConfiguration', configurationPath, inlineConfiguration));
+    }
+
+    //apply incoming configuration irrespective of useConfigurationFile flag. Simplifies yaml definition for pipelines
+    if (configurationPath != null) {
+        if (tl.exist(configurationPath)) {
+            args[0] = "-f";
+            args[1] = configurationPath;
         }
         else {
-            var tempInlineFile = utils.getTempInlineConfigPath(inlineConfiguration);
-            if (tl.exist(tempInlineFile)) {
-                args[0] = "-f";
-                args[1] = tempInlineFile;
-            } else {
-                throw new Error(tl.loc('ConfigurationFileNotFound', tempInlineFile));
-            } 
+            throw new Error(tl.loc('ConfigurationFileNotFound', configurationPath));
+        }
+    }
+    else if(inlineConfiguration != null) {
+        var tempInlineFile = utils.getTempInlineConfigPath(inlineConfiguration);
+        if (tl.exist(tempInlineFile)) {
+            args[0] = "-f";
+            args[1] = tempInlineFile;
+        } else {
+            throw new Error(tl.loc('ConfigurationFileNotFound', tempInlineFile));
         }
     }
 

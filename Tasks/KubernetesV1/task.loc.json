@@ -190,7 +190,7 @@
         "maxLength": "5000"
       },
       "required": true,
-      "defaultValue": "# Write your configuration here. \n",
+      "defaultValue": "",
       "label": "ms-resource:loc.input.label.inline",
       "helpMarkDown": "ms-resource:loc.input.help.inline",
       "groupName": "commands",
