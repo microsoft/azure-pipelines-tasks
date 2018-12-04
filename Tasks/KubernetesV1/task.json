@@ -142,7 +142,8 @@
                 "run": "run",
                 "set": "set",
                 "top": "top",
-                "rollout": "rollout"
+                "rolloutstatus": "rollout status",
+                "rolloutundo": "rollout undo"
             },
             "helpMarkDown": "Select or specify a kubectl command to run.",
             "groupName": "commands",
@@ -166,7 +167,7 @@
             "defaultValue": "true",
             "helpMarkdown": "Add a watch to the rollout indicating that the pipeline should wait with upcoming tasks until the rollout is complete",
             "groupName": "commands",
-            "visibleRule": "command == rollout"
+            "visibleRule": "command == rolloutstatus"
         },
         {
             "name": "configuration",

@@ -24,9 +24,10 @@ export function run(connection: ClusterConnection, kubecommand: string, outputUp
 }
 
 function getExecCommand(kubecommand: string): string {
-    if (kubecommand === "rollout") {
+    if (kubecommand === "rolloutstatus") {
         return "rollout status";
     }
+    if (kubecommand === "rolloutundo")
 
     return kubecommand;
 }
@@ -78,12 +79,10 @@ function isJsonOrYamlOutputFormatSupported(kubecommand) : boolean
 {
    switch (kubecommand) {
        case "delete":
-          return false;
        case "exec":
-          return false;
        case "logs":
-          return false;
-       case "rollout":
+       case "rolloutstatus":
+       case "rolloutundo":
           return false;
        default: 
           return true;
@@ -92,7 +91,7 @@ function isJsonOrYamlOutputFormatSupported(kubecommand) : boolean
 
 function getWatch(kubecommand: string): string[] {
     var shouldAddWatch: boolean = tl.getBoolInput("useWatch", false);
-    if (kubecommand === "rollout" && shouldAddWatch) {
+    if (kubecommand === "rolloutstatus" && shouldAddWatch) {
         return ['--watch'];
     }
 
