@@ -1,6 +1,6 @@
 import tl = require('vsts-task-lib');
 import { AzureFunctionOnContainerDeploymentProvider } from '../azurefunctiononcontainerprovider'
-import { TaskParametersUtility, TaskParameters } from '../TaskParameters';
+import { TaskParametersUtility, TaskParameters } from '../taskparameters';
 import { getMockEndpoint } from '../node_modules/azurermdeploycommon/Tests/mock_utils';
 import { mockAzureARMPreDeploymentSteps, mockContainerDeploySettings }  from "./mock_utils";
 

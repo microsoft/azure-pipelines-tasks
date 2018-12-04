@@ -14,6 +14,9 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
     private zipDeploymentID: string;
  
     public async DeployWebAppStep() {
+        let deploymentMethodtelemetry = '{"deploymentMethod":"Zip Deploy"}';
+        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureWebAppDeployment]" + deploymentMethodtelemetry);
+        
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams.WebConfigParameters, this.taskParams.Package.getPackageType());
 
         if(this.taskParams.DeploymentType === DeploymentType.zipDeploy) {
