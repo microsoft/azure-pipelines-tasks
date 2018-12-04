@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 144,
-    "Patch": 1
+    "Patch": 2
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -109,6 +109,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "useGlobalConfig",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useGlobalConfig",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useGlobalConfig",
       "groupName": "advanced"
     },
     {
