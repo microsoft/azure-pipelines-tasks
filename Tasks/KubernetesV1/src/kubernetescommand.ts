@@ -55,7 +55,7 @@ function getCommandConfigurationFile(): string[] {
     if (useConfigurationFile && configurationPath == null && inlineConfiguration == null) {
         throw new Error(tl.loc('InvalidConfiguration', configurationPath, inlineConfiguration));
     }
-    else if (useConfigurationFile && configurationPath != null && inlineConfiguration != null) {
+    else if (configurationPath != null && inlineConfiguration != null) {
         throw new Error(tl.loc('InvalidConfiguration', configurationPath, inlineConfiguration));
     }
 
