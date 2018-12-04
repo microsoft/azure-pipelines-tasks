@@ -138,7 +138,7 @@ async function acquireNode(version: string): Promise<string> {
     catch (err)
     {
         if (err['httpStatusCode'] && 
-            err['httpStatusCode'] == '404')
+            err['httpStatusCode'] === '404')
         {
             return await acquireNodeFromFallbackLocation(version);
         }
@@ -188,22 +188,27 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
     let tempDownloadFolder: string = 'temp_' + Math.floor(Math.random() * 2000000000);
     let tempDir: string = path.join(taskLib.getVariable('agent.tempDirectory'), tempDownloadFolder);
     taskLib.mkdirP(tempDir);
+    let exeUrl: string;
+    let libUrl: string;
     try {
-        let exeUrl: string = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.exe`;
-        let libUrl: string = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.lib`;
+        exeUrl = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.exe`;
+        libUrl = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.lib`;
 
         await toolLib.downloadTool(exeUrl, path.join(tempDir, "node.exe"));
         await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));
     }
     catch (err) {
         if (err['httpStatusCode'] && 
-            err['httpStatusCode'] == '404')
+            err['httpStatusCode'] === '404')
         {
-            let exeUrl: string = `https://nodejs.org/dist/v${version}/node.exe`;
-            let libUrl: string = `https://nodejs.org/dist/v${version}/node.lib`;
+            exeUrl = `https://nodejs.org/dist/v${version}/node.exe`;
+            libUrl = `https://nodejs.org/dist/v${version}/node.lib`;
 
             await toolLib.downloadTool(exeUrl, path.join(tempDir, "node.exe"));
             await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));
+        }
+        else {
+            throw err;
         }
     }
     return await toolLib.cacheDir(tempDir, 'node', version);
