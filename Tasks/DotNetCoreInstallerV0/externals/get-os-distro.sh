@@ -157,7 +157,6 @@ get_legacy_os_name() {
 }
 
 get_machine_architecture() {
-    eval $invocation
 
     if command -v uname > /dev/null; then
         CPUName=$(uname -m)
@@ -183,11 +182,11 @@ legacyOsName=$(get_legacy_os_name || echo "")
 arch=$(get_machine_architecture || echo "")
 
 primaryName="$osName-$arch"
-legacyName="$legacyOsName-$arch"
+legacyName="$legacyOsName"
 
 echo "Primary:$primaryName"
 echo "Legacy:$legacyName"
 
-if [ "$primaryName" = "-" ] && [ "$legacyName" = "-" ];then
+if [ -z "$osName" ] && [ -z "$legacyOsName" ];then
     exit 1
 fi

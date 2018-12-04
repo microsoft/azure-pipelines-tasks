@@ -20,12 +20,14 @@ class DotnetCoreInstaller {
     public async install() {
         // Check cache
         let toolPath: string;
+        let osSuffixes = this.detectMachineOS();
+        let parts = osSuffixes[0].split("-");
+        this.arch = parts.length > 1 ? parts[1] : "x64";
         toolPath = this.getLocalTool();
 
         if (!toolPath) {
             // download, extract, cache
             console.log(tl.loc("InstallingAfresh"));
-            let osSuffixes = this.detectMachineOS();
             console.log(tl.loc("GettingDownloadUrl", this.packageType, this.version));
             let downloadUrls = await DotNetCoreReleaseFetcher.getDownloadUrls(osSuffixes, this.version, this.packageType);
             toolPath = await this.downloadAndInstall(downloadUrls);
@@ -57,7 +59,7 @@ class DotnetCoreInstaller {
 
     private getLocalTool(): string {
         console.log(tl.loc("CheckingToolCache"));
-        return toolLib.findLocalTool(this.cachedToolName, this.version);
+        return toolLib.findLocalTool(this.cachedToolName, this.version, this.arch);
     }
 
     private detectMachineOS(): string[] {
@@ -131,7 +133,7 @@ class DotnetCoreInstaller {
 
         // cache tool
         console.log(tl.loc("CachingTool"));
-        let cachedDir = await toolLib.cacheDir(extPath, this.cachedToolName, this.version);
+        let cachedDir = await toolLib.cacheDir(extPath, this.cachedToolName, this.version, this.arch);
         console.log(tl.loc("SuccessfullyInstalled", this.packageType, this.version));
         return cachedDir;
     }
@@ -139,6 +141,7 @@ class DotnetCoreInstaller {
     private packageType: string;
     private version: string;
     private cachedToolName: string;
+    private arch: string;
 }
 
 async function run() {
