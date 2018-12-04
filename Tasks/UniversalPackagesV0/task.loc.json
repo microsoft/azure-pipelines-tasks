@@ -8,8 +8,8 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 0,
-    "Patch": 10
+    "Minor": 145,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -33,6 +33,12 @@
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
+    },
+    {
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": true,
+      "visibleRule": "command = publish"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -238,6 +244,15 @@
       }
     },
     {
+      "name": "publishPackageMetadata",
+      "groupName": "advanced",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishPackageMetadata",
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.publishPackageMetadata",
+      "visibleRule": "command = publish && internalOrExternalPublish = internal"
+    },
+    {
       "name": "packageListPublish",
       "aliases": [
         "vstsFeedPackagePublish"
@@ -333,6 +348,15 @@
         "Error": "Error",
         "Critical": "Citical"
       }
+    },
+    {
+      "name": "publishedPackageVar",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.publishedPackageVar",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.publishedPackageVar"
     }
   ],
   "dataSourceBindings": [

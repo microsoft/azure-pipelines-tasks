@@ -8,8 +8,8 @@
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 0,
-        "Patch": 10
+        "Minor": 145,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -33,6 +33,12 @@
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false
+        },
+        {
+            "name": "output",
+            "displayName": "Output",
+            "isExpanded": true,
+            "visibleRule": "command = publish"
         }
     ],
     "instanceNameFormat": "Universal $(command)",
@@ -237,6 +243,15 @@
                 "EditableOptions": "True"
             }
         },
+		{
+            "name": "publishPackageMetadata",
+            "groupName": "advanced",
+            "type": "boolean",
+            "label": "Publish pipeline metadata",
+            "defaultValue": true,
+            "helpMarkDown": "Associate this build/release pipeline’s metadata (run #, source code information) with the package",
+            "visibleRule": "command = publish && internalOrExternalPublish = internal"
+        },
         {
             "name": "packageListPublish",
             "aliases": [
@@ -333,7 +348,16 @@
                 "Error": "Error",
                 "Critical": "Citical"
             }
-        }
+        },
+        {
+            "name": "publishedPackageVar",
+            "type": "string",
+            "label": "Package Ouput Variable",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "output",
+            "helpMarkDown": "Provide a name for the variable that will contain the published package name and version."
+          }
     ],
     "dataSourceBindings": [
         {
