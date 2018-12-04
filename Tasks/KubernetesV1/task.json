@@ -159,9 +159,9 @@
             "visibleRule": "command != login && command != logout"
         },
         {
-          "name": "configType",
+          "name": "configurationType",
           "type": "radio",
-          "label": "Configuration Type",
+          "label": "Configuration type",
           "defaultValue": "configuration",
           "groupName": "commands",
           "helpMarkDown": "Type of Kubernetes configuration for kubectl command. It can be a file path or an inline script.",
@@ -178,7 +178,7 @@
           "defaultValue": "",
           "required": true,
           "helpMarkDown": "Filename, directory, or URL to kubernetes configuration files that will be used with the commands.",
-          "visibleRule": "configType = configuration",
+          "visibleRule": "configurationType = configuration",
           "groupName": "commands"
         },
         {
@@ -190,11 +190,11 @@
             "maxLength": "5000"
           },
           "required": true,
-          "defaultValue": "# Write your configuration here. \n",
+          "defaultValue": "",
           "label": "Inline configuration",
           "helpMarkDown": "Inline deployment configuration for kubectl command",
           "groupName": "commands",
-          "visibleRule": "configType = inline"
+          "visibleRule": "configurationType = inline"
         },
         {
             "name": "arguments",
@@ -464,6 +464,7 @@
         "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
         "ConfigurationFileNotFound": "No configuration file matching %s was found.",
         "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
-        "OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s"
+        "OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
+        "InvalidConfiguration": "Invalid configuration for configuration path: %s and inline configuration: %s."
     }
 }

@@ -48,19 +48,14 @@ function getCommandConfigurationFile(): string[] {
     let configurationPath = tl.getPathInput("configuration", false);
     var inlineConfiguration = tl.getInput("inline", false);
 
-    if (!tl.filePathSupplied("configurationPath")) {
+    if (!tl.filePathSupplied("configuration")) {
         configurationPath = null;
     }
-
-    if (useConfigurationFile && configurationPath == null && inlineConfiguration == null) {
+    if (configurationPath != null && inlineConfiguration != null) {
         throw new Error(tl.loc('InvalidConfiguration', configurationPath, inlineConfiguration));
     }
-    else if (configurationPath != null && inlineConfiguration != null) {
-        throw new Error(tl.loc('InvalidConfiguration', configurationPath, inlineConfiguration));
-    }
-
+    else if (configurationPath) {
     //apply incoming configuration irrespective of useConfigurationFile flag. Simplifies yaml definition for pipelines
-    if (configurationPath != null) {
         if (tl.exist(configurationPath)) {
             args[0] = "-f";
             args[1] = configurationPath;
@@ -69,7 +64,7 @@ function getCommandConfigurationFile(): string[] {
             throw new Error(tl.loc('ConfigurationFileNotFound', configurationPath));
         }
     }
-    else if(inlineConfiguration != null) {
+    else if(inlineConfiguration) {
         var tempInlineFile = utils.getTempInlineConfigPath(inlineConfiguration);
         if (tl.exist(tempInlineFile)) {
             args[0] = "-f";

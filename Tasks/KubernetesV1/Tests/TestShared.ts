@@ -6,7 +6,7 @@ export let TestEnvVars = {
     connectionType: "__connectionType__",
     command: "__command__",
     useConfigurationFile: "__useConfigurationFile__",
-    configType: "__configType__",
+    configurationType: "__configurationType__",
     configuration: "__configuration__",
     inline: "__inline__",
     arguments: "__arguments__",

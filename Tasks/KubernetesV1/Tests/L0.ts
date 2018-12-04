@@ -23,7 +23,7 @@ describe('Kubernetes Suite', function() {
         delete process.env[shared.TestEnvVars.namespace];
         delete process.env[shared.TestEnvVars.arguments];
         delete process.env[shared.TestEnvVars.useConfigurationFile];
-        delete process.env[shared.TestEnvVars.configType];
+        delete process.env[shared.TestEnvVars.configurationType];
         delete process.env[shared.TestEnvVars.secretType];
         delete process.env[shared.TestEnvVars.secretArguments];
         delete process.env[shared.TestEnvVars.secretName];
@@ -177,7 +177,7 @@ describe('Kubernetes Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.apply;
         process.env[shared.TestEnvVars.useConfigurationFile] = "true";
-        process.env[shared.TestEnvVars.configType] = shared.ConfigurationTypes.configuration; 
+        process.env[shared.TestEnvVars.configurationType] = shared.ConfigurationTypes.configuration; 
         process.env[shared.TestEnvVars.configuration] = shared.formatPath("dir/deployment.yaml");
         tr.run();
 
@@ -194,7 +194,7 @@ describe('Kubernetes Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.expose;
         process.env[shared.TestEnvVars.useConfigurationFile] = "true";
-        process.env[shared.TestEnvVars.configType] = shared.ConfigurationTypes.configuration;
+        process.env[shared.TestEnvVars.configurationType] = shared.ConfigurationTypes.configuration;
         process.env[shared.TestEnvVars.configuration] = shared.formatPath("dir/deployment.yaml");
         process.env[shared.TestEnvVars.arguments] = "--port=80 --target-port=8000";
         tr.run();
@@ -558,27 +558,12 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Run fails when an no configuration is provided through yaml but useConfigurationFile is set to true', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.command] = shared.Commands.apply;
-        process.env[shared.TestEnvVars.useConfigurationFile] = "true";
-        process.env[shared.TestEnvVars.configType] = ''; //does not matter during a yaml definition
-        tr.run();
-
-        assert(tr.failed, 'task should have failed');
-        assert(tr.invokedToolCount == 0, 'should not have invoked the tool. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length > 0 || tr.errorIssues.length, 'should have written an error message');
-        console.log(tr.stderr);
-        done();
-    });
-
     it('Runs successfully when a configuration is provided inline', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.apply;
         process.env[shared.TestEnvVars.useConfigurationFile] = "true";
-        process.env[shared.TestEnvVars.configType] = shared.ConfigurationTypes.inline;
+        process.env[shared.TestEnvVars.configurationType] = shared.ConfigurationTypes.inline;
         process.env[shared.TestEnvVars.inline] = "somestring";
         tr.run();
 
@@ -595,7 +580,7 @@ describe('Kubernetes Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.apply;
         process.env[shared.TestEnvVars.useConfigurationFile] = "true";
-        process.env[shared.TestEnvVars.configType] = ''; //does not matter during a yaml definition
+        process.env[shared.TestEnvVars.configurationType] = ''; //does not matter during a yaml definition
         process.env[shared.TestEnvVars.configuration] = 'someFile.yaml'; //dummy value to trigger not default configuration condition
         process.env[shared.TestEnvVars.inline] = 'sometextforinline';
         tr.run();

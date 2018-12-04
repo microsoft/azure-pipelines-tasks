@@ -159,12 +159,12 @@
       "visibleRule": "command != login && command != logout"
     },
     {
-      "name": "configType",
+      "name": "configurationType",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.configType",
+      "label": "ms-resource:loc.input.label.configurationType",
       "defaultValue": "configuration",
       "groupName": "commands",
-      "helpMarkDown": "ms-resource:loc.input.help.configType",
+      "helpMarkDown": "ms-resource:loc.input.help.configurationType",
       "options": {
         "configuration": "File path",
         "inline": "Inline configuration"
@@ -178,7 +178,7 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.configuration",
-      "visibleRule": "configType = configuration",
+      "visibleRule": "configurationType = configuration",
       "groupName": "commands"
     },
     {
@@ -194,7 +194,7 @@
       "label": "ms-resource:loc.input.label.inline",
       "helpMarkDown": "ms-resource:loc.input.help.inline",
       "groupName": "commands",
-      "visibleRule": "configType = inline"
+      "visibleRule": "configurationType = inline"
     },
     {
       "name": "arguments",
@@ -464,6 +464,7 @@
     "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
     "ConfigurationFileNotFound": "ms-resource:loc.messages.ConfigurationFileNotFound",
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
-    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded"
+    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
+    "InvalidConfiguration": "ms-resource:loc.messages.InvalidConfiguration"
   }
 }

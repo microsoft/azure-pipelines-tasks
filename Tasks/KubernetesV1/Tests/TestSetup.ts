@@ -47,7 +47,7 @@ tr.setInput('azureSubscriptionEndpointForSecrets', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', 'ajgtestacr1.azurecr.io');
 tr.setInput('azureResourceGroup', 'myResourceGroup');
 tr.setInput('kubernetesCluster', 'myCluster1');
-tr.setInput('configType',process.env[shared.TestEnvVars.configType] || shared.ConfigurationTypes.configuration);
+tr.setInput('configurationType',process.env[shared.TestEnvVars.configurationType] || shared.ConfigurationTypes.configuration);
 tr.setInput('inline', process.env[shared.TestEnvVars.inline] || '');
 console.log("Inputs have been set");
 

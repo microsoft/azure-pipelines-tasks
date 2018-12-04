@@ -26,8 +26,8 @@
   "loc.input.help.command": "Select or specify a kubectl command to run.",
   "loc.input.label.useConfigurationFile": "Use configuration",
   "loc.input.help.useConfigurationFile": "Use Kubernetes configuration with the kubectl command. An inline script, filename, directory, or URL to Kubernetes configuration files can be provided.",
-  "loc.input.label.configType": "Configuration Type",
-  "loc.input.help.configType": "Type of Kubernetes configuration for kubectl command. It can be a file path or an inline script.",
+  "loc.input.label.configurationType": "Configuration type",
+  "loc.input.help.configurationType": "Type of Kubernetes configuration for kubectl command. It can be a file path or an inline script.",
   "loc.input.label.configuration": "File path",
   "loc.input.help.configuration": "Filename, directory, or URL to kubernetes configuration files that will be used with the commands.",
   "loc.input.label.inline": "Inline configuration",
@@ -91,5 +91,6 @@
   "loc.messages.NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
   "loc.messages.ConfigurationFileNotFound": "No configuration file matching %s was found.",
   "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
-  "loc.messages.OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s"
+  "loc.messages.OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
+  "loc.messages.InvalidConfiguration": "Invalid configuration for configuration path: %s and inline configuration: %s."
 }
