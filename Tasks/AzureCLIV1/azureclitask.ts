@@ -57,7 +57,7 @@ export class azureclitask {
                 tool = tl.tool(tl.which(scriptPath, true));
             }
             this.throwIfError(tl.execSync("az", "--version"));
-            this.useGlobalConfig = tl.getBoolInput("useGlobalConfig") || true;
+            this.useGlobalConfig = tl.getBoolInput("useGlobalConfig");
             this.loginAzure();
 
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
