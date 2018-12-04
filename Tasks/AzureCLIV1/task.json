@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 144,
-        "Patch": 1
+        "Patch": 2
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -97,6 +97,15 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId` and `$servicePrincipalKey` in your script",
+            "groupName": "advanced"
+        },
+        {
+            "name": "useGlobalConfig",
+            "type": "boolean",
+            "label": "Use global Azure CLI configuration",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "If this is false, this task will use its own separate [Azure CLI configuration directory](https://docs.microsoft.com/en-us/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file). This can be used to run Azure CLI tasks in *parallel* releases",
             "groupName": "advanced"
         },
         {
