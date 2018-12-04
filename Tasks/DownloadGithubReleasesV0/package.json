@@ -5,7 +5,7 @@
     "type": "git",
     "url": "git+https://github.com/microsoft/azure-pipelines-tasks.git"
   },
-  "main": "downloadGithubReleases.js",
+  "main": "main.js",
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {

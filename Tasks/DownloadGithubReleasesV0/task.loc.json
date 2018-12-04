@@ -97,7 +97,7 @@
   ],
   "execution": {
     "Node": {
-      "target": "downloadGithubReleases.js",
+      "target": "main.js",
       "argumentFormat": ""
     }
   },
