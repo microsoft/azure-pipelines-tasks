@@ -57,6 +57,7 @@ export class azureclitask {
                 tool = tl.tool(tl.which(scriptPath, true));
             }
             this.throwIfError(tl.execSync("az", "--version"));
+            this.useGlobalConfig = tl.getBoolInput("useGlobalConfig");
             this.loginAzure();
 
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
@@ -103,6 +104,7 @@ export class azureclitask {
     private static isLoggedIn: boolean = false;
     private static cliPasswordPath: string = null;
     private static azCliConfigPath: string;
+    private static useGlobalConfig: boolean = true;
 
     private static loginAzure() {
         var connectedService: string = tl.getInput("connectedServiceNameARM", true);
@@ -140,6 +142,10 @@ export class azureclitask {
     }
 
     private static setConfigDirectory(): void {
+        if (this.useGlobalConfig) {
+            return;
+        }
+
         var configDirName: string = "c" + new Date().getTime(); // 'c' denotes config
         var basePath: string;
         if (tl.osType().match(/^Win/)) {
