@@ -96,8 +96,6 @@
         "PackerBuildV1",
         "PipAuthenticateV0",
         "PowerShellV2",
-        "PowerShellOnTargetMachinesV1",
-        "PowerShellOnTargetMachinesV2",
         "PowerShellOnTargetMachinesV3",
         "PublishBuildArtifactsV1",
         "PublishCodeCoverageResultsV1",
