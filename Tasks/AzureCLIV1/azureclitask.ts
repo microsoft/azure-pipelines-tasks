@@ -57,7 +57,9 @@ export class azureclitask {
                 tool = tl.tool(tl.which(scriptPath, true));
             }
             this.throwIfError(tl.execSync("az", "--version"));
-            this.useGlobalConfig = tl.getBoolInput("useGlobalConfig");
+            // set az cli config dir
+            this.setConfigDirectory();
+            this.setAzureCloudBasedOnServiceEndpoint();
             this.loginAzure();
 
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
@@ -104,7 +106,6 @@ export class azureclitask {
     private static isLoggedIn: boolean = false;
     private static cliPasswordPath: string = null;
     private static azCliConfigPath: string;
-    private static useGlobalConfig: boolean = true;
 
     private static loginAzure() {
         var connectedService: string = tl.getInput("connectedServiceNameARM", true);
@@ -131,9 +132,6 @@ export class azureclitask {
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
-        // set az cli config dir
-        this.setConfigDirectory();
-
         //login using svn
         this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
         this.isLoggedIn = true;
@@ -142,7 +140,7 @@ export class azureclitask {
     }
 
     private static setConfigDirectory(): void {
-        if (this.useGlobalConfig) {
+        if (tl.getBoolInput("useGlobalConfig")) {
             return;
         }
 
@@ -159,6 +157,15 @@ export class azureclitask {
             this.azCliConfigPath = path.join(basePath, ".azclitask", configDirName);
             console.log(tl.loc('SettingAzureConfigDir', this.azCliConfigPath));
             process.env['AZURE_CONFIG_DIR'] = this.azCliConfigPath;
+        }
+    }
+
+    private static setAzureCloudBasedOnServiceEndpoint(): void {
+        var connectedService: string = tl.getInput("connectedServiceNameARM", true);
+        var environment = tl.getEndpointDataParameter(connectedService, 'environment', true);
+        if(!!environment) {
+            console.log(tl.loc('SettingAzureCloud', environment));
+            this.throwIfError(tl.execSync("az", "cloud set -n " + environment));
         }
     }
 
