@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 13
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -221,6 +221,7 @@
     "LinuxMysqlClientMissingError": "ms-resource:loc.messages.LinuxMysqlClientMissingError",
     "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
-    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "NotAbleToCreateFirewallRule": "ms-resource:loc.messages.NotAbleToCreateFirewallRule"
   }
 }
