@@ -4,6 +4,9 @@ import tl = require("vsts-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 import os = require("os");
+import { AzureEndpoint } from 'azure-arm-rest/azureModels';
+import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
+import { async } from 'q';
 
 export class azureclitask {
     public static checkIfAzurePythonSdkIsInstalled() {
@@ -57,7 +60,9 @@ export class azureclitask {
                 tool = tl.tool(tl.which(scriptPath, true));
             }
             this.throwIfError(tl.execSync("az", "--version"));
-            this.useGlobalConfig = tl.getBoolInput("useGlobalConfig");
+            // set az cli config dir
+            this.setConfigDirectory();
+            await this.setAzureCloudBasedOnServiceEndpoint();
             this.loginAzure();
 
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
@@ -115,7 +120,6 @@ export class azureclitask {
     private static isLoggedIn: boolean = false;
     private static cliPasswordPath: string = null;
     private static azCliConfigPath: string;
-    private static useGlobalConfig: boolean = true;
     private static servicePrincipalId: string = null;
     private static servicePrincipalKey: string = null;
 
@@ -146,9 +150,6 @@ export class azureclitask {
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
-        // set az cli config dir
-        this.setConfigDirectory();
-
         //login using svn
         this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
         this.isLoggedIn = true;
@@ -158,7 +159,7 @@ export class azureclitask {
     }
 
     private static setConfigDirectory(): void {
-        if (this.useGlobalConfig) {
+        if (tl.getBoolInput("useGlobalConfig")) {
             return;
         }
 
@@ -175,6 +176,15 @@ export class azureclitask {
             this.azCliConfigPath = path.join(basePath, ".azclitask", configDirName);
             console.log(tl.loc('SettingAzureConfigDir', this.azCliConfigPath));
             process.env['AZURE_CONFIG_DIR'] = this.azCliConfigPath;
+        }
+    }
+
+    private static async setAzureCloudBasedOnServiceEndpoint(): Promise<void> {
+        var connectedService: string = tl.getInput("connectedServiceNameARM", true);
+        const endpoint: AzureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint();
+        if(!!endpoint.environment) {
+            console.log(tl.loc('SettingAzureCloud', endpoint.environment));
+            this.throwIfError(tl.execSync("az", "cloud set -n " + endpoint.environment));
         }
     }
 
