@@ -69,5 +69,6 @@ tmr.registerMock('./Utility', {
 
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
+nmh.registerNugetConfigMock();
 
 tmr.run();

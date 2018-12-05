@@ -300,7 +300,7 @@ export function getExecOptions(): tr.IExecOptions {
 }
 
 export function publishMavenInfo(mavenInfo: string) {
-    const stagingDir: string = path.join(os.tmpdir(), '.mavenInfo');
+    const stagingDir: string = path.join(tl.getVariable('Agent.TempDirectory'), '.mavenInfo');
     const randomString: string = uuidV4();
     const infoFilePath: string = path.join(stagingDir, 'MavenInfo-' + randomString + '.md');
     if (!tl.exist(stagingDir)) {

@@ -1279,6 +1279,36 @@ function Is-WinRMCustomScriptExtensionExists
     if($removeExtension)
     {
         $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $serviceEndpoint
+        
+        try
+        {
+            $index = 1
+            $maxCount = 45   # Setting timeout for deleting extension as 15 mins.
+
+            while($index -le $maxCount) {
+                Write-Verbose "Checking WinRM custom script extension status $index times"
+
+                $customScriptExtension = Get-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $serviceEndpoint
+
+                if(-not $customScriptExtension -or $customScriptExtension.ProvisioningState -ne "deleting") 
+                {
+                    break
+                }
+               
+                start-sleep -s 20
+                $index = $index + 1
+            }
+        }
+        catch
+        {
+            Write-Verbose ("Failed to get extension with error : " + $_.exception.message)
+        }
+
+        if ($index -gt $maxCount)
+        {
+            Write-Warning (Get-VstsLocString -Key AFC_UninstallWinRMCustomScriptExtension)
+        }
+
         $isExtensionExists = $false
     }
 

@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 143,
-    "Patch": 1
+    "Minor": 144,
+    "Patch": 2
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -91,6 +91,15 @@
       }
     },
     {
+      "name": "addSpnToEnvironment",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addSpnToEnvironment",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.addSpnToEnvironment",
+      "groupName": "advanced"
+    },
+    {
       "name": "cwd",
       "aliases": [
         "workingDirectory"
@@ -100,6 +109,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "useGlobalConfig",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useGlobalConfig",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useGlobalConfig",
       "groupName": "advanced"
     },
     {
@@ -125,6 +143,7 @@
     "AzureSDKNotFound": "ms-resource:loc.messages.AzureSDKNotFound",
     "FailedToLogout": "ms-resource:loc.messages.FailedToLogout",
     "LoginFailed": "ms-resource:loc.messages.LoginFailed",
-    "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription"
+    "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
+    "SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir"
   }
 }

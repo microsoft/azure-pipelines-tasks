@@ -8,8 +8,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 29
+        "Minor": 145,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -18,7 +18,7 @@
     "demands": [
         "npm"
     ],
-    "minimumAgentVersion": "1.91.0",
+    "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "npm $(command)",
     "groups": [
         {
@@ -56,7 +56,7 @@
         },
         {
             "name": "workingDir",
-            "label": "Working folder with package.json",
+            "label": "Working folder that contains package.json",
             "helpMarkDown": "Path to the folder containing the target package.json and .npmrc files. Select the folder, not the file e.g. \"/packages/mypackage\".",
             "type": "filePath"
         },
@@ -127,6 +127,15 @@
             "type": "pickList",
             "visibleRule": "publishRegistry = useFeed",
             "required": true
+        },
+        {
+            "name": "publishPackageMetadata",
+            "groupName": "advanced",
+            "type": "boolean",
+            "label": "Publish pipeline metadata",
+            "defaultValue": true,
+            "helpMarkDown": "Associate this build/release pipeline’s metadata (run #, source code information) with the package",
+            "visibleRule": "command = publish && publishRegistry = useFeed"
         },
         {
             "groupName": "publishRegistries",

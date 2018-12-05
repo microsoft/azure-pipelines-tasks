@@ -15,8 +15,8 @@
   "loc.input.label.customCommand": "命令與引數",
   "loc.input.help.customCommand": "要執行的自訂命令，例如 \"dist-tag ls mypackage\"。",
   "loc.input.label.customRegistry": "要使用的登錄",
-  "loc.input.help.customRegistry": "You can either commit a .npmrc file to your source code repository and set its path here or select a registry from Azure Artifacts here.",
-  "loc.input.label.customFeed": "Use packages from this Azure Artifacts/TFS registry",
+  "loc.input.help.customRegistry": "您可以將 .npmrc 檔案認可至您的來源程式碼存放庫，並將其路徑設為此處，或從此處選取 Azure 成品登錄。",
+  "loc.input.label.customFeed": "使用此 Azure 成品/TFS 登錄中的套件",
   "loc.input.help.customFeed": "在產生的 .npmrc 中包含選取的摘要。",
   "loc.input.label.customEndpoint": "登錄的認證在此帳戶/集合外部",
   "loc.input.help.customEndpoint": "用於外部登錄的認證，位於專案的 .npmrc 中。如需此帳戶/集合中的登錄，請將此保留空白; 系統會自動使用組建的認證。",
@@ -30,8 +30,8 @@
   "loc.messages.NoBuildCredentials": "找不到組建認證",
   "loc.messages.UnknownCommand": "未知的命令: %s",
   "loc.messages.MultipleProjectConfigs": "在 $s 中找到多個專案 .npmrc",
-  "loc.messages.ServiceEndpointNotDefined": "Couldn't find the service connection. Make sure the selected service connection still exists.",
-  "loc.messages.ServiceEndpointUrlNotDefined": "Couldn't find the URL for the service connection. Make sure the service connection is correctly configured.",
+  "loc.messages.ServiceEndpointNotDefined": "找不到服務連線。請確定選取的服務連線仍然存在。",
+  "loc.messages.ServiceEndpointUrlNotDefined": "找不到服務連線的 URL。請確定服務連線的設定正確。",
   "loc.messages.SavingFile": "正在儲存檔案 %s",
   "loc.messages.RestoringFile": "正在還原檔案 %s",
   "loc.messages.PublishFeed": "正在發行至內部摘要",
@@ -42,7 +42,7 @@
   "loc.messages.UsingRegistry": "使用登錄: %s",
   "loc.messages.AddingAuthRegistry": "正在新增登錄 %s 的驗證",
   "loc.messages.FoundLocalRegistries": "在此帳戶/集合中找到 %d 個登錄",
-  "loc.messages.ForcePackagingUrl": "Packaging collection URL forced to: %s",
+  "loc.messages.ForcePackagingUrl": "封裝集合 URL 會強制前往: %s",
   "loc.messages.DebugLogNotFound": "在快取或工作目錄中找不到偵錯記錄檔",
   "loc.messages.NpmFailed": "npm 失敗，傳回碼為: %s",
   "loc.messages.FoundNpmDebugLog": "找到 npm 偵錯記錄檔，請確定路徑符合 npm 輸出中的路徑: %s",
@@ -50,5 +50,5 @@
   "loc.messages.OverridingProjectNpmrc": "正在覆寫專案 .npmrc: %s",
   "loc.messages.RestoringProjectNpmrc": "正在還原專案 .npmrc",
   "loc.messages.WorkingDirectoryNotDirectory": "請將您的工作目錄變更為有效的目錄",
-  "loc.messages.NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region."
+  "loc.messages.NGCommon_AreaNotFoundInSps": "找不到 '%s' [%s] 區域。包含該區域的服務可能無法在您的地區使用。"
 }

@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "установка pod",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.cwd": "Рабочий каталог",
-  "loc.input.help.cwd": "Specify the working directory in which to execute this task. If left empty, the repository directory will be used.",
+  "loc.input.help.cwd": "Укажите рабочий каталог для выполнения этой задачи. Если значение пусто, используется каталог репозитория.",
   "loc.input.label.forceRepoUpdate": "Принудительное обновление репозитория",
   "loc.input.help.forceRepoUpdate": "Выбор этого параметра приведет к принудительному запуску команды \"pod repo update\" перед установкой.",
   "loc.input.label.projectDirectory": "Каталог проекта",

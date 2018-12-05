@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 138,
-    "Patch": 10
+    "Patch": 14
   },
   "demands": [],
   "groups": [
@@ -50,7 +50,8 @@
       "required": true,
       "options": {
         "Azure Resource Manager": "Azure Resource Manager",
-        "Kubernetes Service Connection": "Kubernetes Service Connection"
+        "Kubernetes Service Connection": "Kubernetes Service Connection",
+        "None": "None"
       },
       "helpMarkDown": "ms-resource:loc.input.help.connectionType",
       "groupName": "cluster"
@@ -393,6 +394,7 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "showEnvironmentVariables": true,
   "prejobexecution": {
     "Node": {
       "target": "src//downloadsecurefiles.js"

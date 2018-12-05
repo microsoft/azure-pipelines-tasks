@@ -81,7 +81,14 @@ export class DotnetMockHelper {
                 packagingCollectionUrl: string,
                 feedId: string,
                 nuGetVersion: VersionInfo,
-                accessToken?: string) {
+                accessToken?: string,
+                useSession?: boolean) {
+                if (useSession) {
+                    console.log("Using session registry url");
+                }
+                else {
+                    console.log("Using feed registry url");
+                }
                 return 'https://vsts/packagesource';
             }
         });
