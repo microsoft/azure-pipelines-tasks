@@ -4,9 +4,6 @@ import tl = require("vsts-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 import os = require("os");
-import { AzureEndpoint } from 'azure-arm-rest/azureModels';
-import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
-import { async } from 'q';
 
 export class azureclitask {
     public static checkIfAzurePythonSdkIsInstalled() {
@@ -62,7 +59,7 @@ export class azureclitask {
             this.throwIfError(tl.execSync("az", "--version"));
             // set az cli config dir
             this.setConfigDirectory();
-            await this.setAzureCloudBasedOnServiceEndpoint();
+            this.setAzureCloudBasedOnServiceEndpoint();
             this.loginAzure();
 
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
@@ -179,12 +176,12 @@ export class azureclitask {
         }
     }
 
-    private static async setAzureCloudBasedOnServiceEndpoint(): Promise<void> {
+    private static setAzureCloudBasedOnServiceEndpoint(): void {
         var connectedService: string = tl.getInput("connectedServiceNameARM", true);
-        const endpoint: AzureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint();
-        if(!!endpoint.environment) {
-            console.log(tl.loc('SettingAzureCloud', endpoint.environment));
-            this.throwIfError(tl.execSync("az", "cloud set -n " + endpoint.environment));
+        var environment = tl.getEndpointDataParameter(connectedService, 'environment', true);
+        if(!!environment) {
+            console.log(tl.loc('SettingAzureCloud', environment));
+            this.throwIfError(tl.execSync("az", "cloud set -n " + environment));
         }
     }
 
