@@ -1,0 +1,220 @@
+{
+  "id": "DEE316A2-586F-4DEF-BE79-488A1F503DEE",
+  "name": "KubernetesManifest",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "preview": true,
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 9
+  },
+  "demands": [],
+  "groups": [
+    {
+      "name": "config",
+      "displayName": "ms-resource:loc.group.displayName.config",
+      "isExpanded": true
+    },
+    {
+      "name": "kubernetesCluster",
+      "displayName": "ms-resource:loc.group.displayName.kubernetesCluster",
+      "isExpanded": true,
+      "visibleRule": "action != bake"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "connectionType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.connectionType",
+      "defaultValue": "Azure Resource Manager",
+      "required": true,
+      "options": {
+        "Azure Resource Manager": "Azure Resource Manager",
+        "Kubernetes Service Connection": "Kubernetes Service Connection",
+        "None": "None"
+      },
+      "groupName": "kubernetesCluster",
+      "helpMarkDown": "ms-resource:loc.input.help.connectionType"
+    },
+    {
+      "name": "kubernetesServiceEndpoint",
+      "type": "connectedService:kubernetes",
+      "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
+      "visibleRule": "connectionType = Kubernetes Service Connection",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint",
+      "groupName": "kubernetesCluster",
+      "required": true
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "groupName": "kubernetesCluster",
+      "required": true
+    },
+    {
+      "name": "azureResourceGroup",
+      "label": "ms-resource:loc.input.label.azureResourceGroup",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "kubernetesCluster",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "kubernetesCluster",
+      "label": "ms-resource:loc.input.label.kubernetesCluster",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesCluster",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "kubernetesCluster",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "namespace",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.namespace",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "kubernetesCluster",
+      "helpMarkDown": "ms-resource:loc.input.help.namespace"
+    },
+    {
+      "name": "action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.action",
+      "required": false,
+      "defaultValue": "deploy",
+      "groupName": "config",
+      "options": {
+        "deploy": "deploy",
+        "bake": "bake"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.action"
+    },
+    {
+      "name": "manifests",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.manifests",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.manifests",
+      "visibleRule": "action = deploy"
+    },
+    {
+      "name": "checkManifestStability",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkManifestStability",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.checkManifestStability",
+      "visibleRule": "action = deploy"
+    },
+    {
+      "name": "containers",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.containers",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.containers",
+      "visibleRule": "action = deploy"
+    },
+    {
+      "name": "chart",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.chart",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.chart",
+      "visibleRule": "action = bake"
+    },
+    {
+      "name": "overrides",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.overrides",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.overrides",
+      "visibleRule": "action = bake"
+    },
+    {
+      "name": "manifestsBundle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.manifestsBundle",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.manifestsBundle",
+      "visibleRule": "action = bake"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "kubernetesCluster",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{name}}}"
+    },
+    {
+      "target": "azureResourceGroup",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "outputVariables": [],
+  "execution": {
+    "Node": {
+      "target": "src//kubernetes.js"
+    }
+  },
+  "messages": {
+    "CantDownloadAccessProfile": "ms-resource:loc.messages.CantDownloadAccessProfile",
+    "DownloadingClient": "ms-resource:loc.messages.DownloadingClient",
+    "KubernetesClusterResourceGroup": "ms-resource:loc.messages.KubernetesClusterResourceGroup",
+    "CreatingSecret": "ms-resource:loc.messages.CreatingSecret",
+    "DeleteSecret": "ms-resource:loc.messages.DeleteSecret",
+    "CreatingConfigMap": "ms-resource:loc.messages.CreatingConfigMap",
+    "DeleteConfigMap": "ms-resource:loc.messages.DeleteConfigMap",
+    "ConfigMapExists": "ms-resource:loc.messages.ConfigMapExists",
+    "GetConfigMap": "ms-resource:loc.messages.GetConfigMap",
+    "DockerRegistryConnectionNotSpecified": "ms-resource:loc.messages.DockerRegistryConnectionNotSpecified",
+    "FileNotFoundException": "ms-resource:loc.messages.FileNotFoundException",
+    "DownloadingKubeCtlFromUrl": "ms-resource:loc.messages.DownloadingKubeCtlFromUrl",
+    "DownloadPathForStableTxt": "ms-resource:loc.messages.DownloadPathForStableTxt",
+    "DownloadKubeCtlFailed": "ms-resource:loc.messages.DownloadKubeCtlFailed",
+    "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
+    "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion",
+    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
+    "ConfigurationFileNotFound": "ms-resource:loc.messages.ConfigurationFileNotFound",
+    "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound"
+  }
+}
