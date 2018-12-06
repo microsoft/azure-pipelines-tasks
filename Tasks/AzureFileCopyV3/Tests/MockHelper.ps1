@@ -205,51 +205,6 @@ namespace Hyak.Common {
 "@ 
 Add-Type -TypeDefinition $Source -Language CSharp
 
-function Get-AzureStorageKeyFromRDFE
-{
-    param([string]$storageAccountName)
-
-    if(-not [string]::IsNullOrEmpty($storageAccountName))
-    {
-        if(-not $storageAccounts.ContainsKey($storageAccountName))
-        {
-            throw New-Object Hyak.Common.CloudException
-        }
-
-        return  $storageAccounts[$storageAccountName]
-    }
-}
-
-function Get-AzureStorageAccountTypeFromRDFE
-{
-    param([string]$storageAccountName)
-
-    if(-not [string]::IsNullOrEmpty($storageAccountName))
-    {
-        if(-not $storageAccounts.ContainsKey($storageAccountName))
-        {
-            throw New-Object Hyak.Common.CloudException
-        }
-
-        return  $storageAccounts[$storageAccountName]
-    }
-}
-
-function Get-AzureBlobStorageEndpointFromRDFE
-{
-    param([string]$storageAccountName)
-
-    if(-not [string]::IsNullOrEmpty($storageAccountName))
-    {
-        if(-not $storageAccounts.ContainsKey($storageAccountName))
-        {
-            throw New-Object Hyak.Common.CloudException
-        }
-
-        return  $storageAccounts[$storageAccountName]
-    }
-}
-
 function Get-AzureBlobStorageEndpointFromARM
 {
     param([string]$storageAccountName)
@@ -327,21 +282,6 @@ function Create-AzureStorageContext
     }
 }
 
-function Get-AzureCloudService
-{
-    param([string]$cloudServiceName)
-
-    if(-not [string]::IsNullOrEmpty($cloudServiceName))
-    {
-        if(-not $cloudServices.ContainsKey($cloudServiceName))
-        {
-            throw New-Object Hyak.Common.CloudException
-        }
-
-        return
-    }
-}
-
 function Get-AzureClassicVMsInResourceGroup
 {
     param([string]$resourceGroupName)
@@ -349,17 +289,6 @@ function Get-AzureClassicVMsInResourceGroup
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $cloudServices.ContainsKey($resourceGroupName))
     {
         return $($cloudServices[$resourceGroupName])["vms"]
-    }
-}
-
-function Get-AzureClassicVMsConnectionDetailsInResourceGroup
-{
-    param([string]$resourceGroupName,
-          [object]$azureClassicVMResources)
-
-    if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $cloudServices.ContainsKey($resourceGroupName))
-    {
-        return $($cloudServices[$resourceGroupName])["vmConnectionDetails"]
     }
 }
 

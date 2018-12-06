@@ -200,3 +200,43 @@ function Initialize-AzureSubscription {
         throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
     } 
 }
+
+function Set-CurrentAzureSubscription {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$SubscriptionId,
+        [string]$StorageAccount)
+
+    $additional = @{ }
+    if ($script:azureModule.Version -lt ([version]'0.8.15')) {
+        $additional['Default'] = $true # The Default switch is required prior to 0.8.15.
+    }
+
+    Write-Host "##[command]Select-AzureSubscription -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+    $null = Select-AzureSubscription -SubscriptionId $SubscriptionId @additional
+    if ($StorageAccount) {
+        Write-Host "##[command]Set-AzureSubscription -SubscriptionId $SubscriptionId -CurrentStorageAccountName $StorageAccount"
+        Set-AzureSubscription -SubscriptionId $SubscriptionId -CurrentStorageAccountName $StorageAccount
+    }
+}
+
+function Set-CurrentAzureRMSubscription {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$SubscriptionId,
+        [string]$TenantId)
+
+    $additional = @{ }
+    if ($TenantId) { $additional['TenantId'] = $TenantId }
+
+    if (Get-Command -Name "Select-AzureRmSubscription" -ErrorAction "SilentlyContinue") {
+        Write-Host "##[command] Select-AzureRMSubscription -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        $null = Select-AzureRMSubscription -SubscriptionId $SubscriptionId @additional
+    }
+    else {
+        Write-Host "##[command] Set-AzureRmContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        $null = Set-AzureRmContext -SubscriptionId $SubscriptionId @additional
+    }
+}
