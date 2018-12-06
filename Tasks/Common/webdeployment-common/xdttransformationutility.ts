@@ -20,13 +20,13 @@ export function expandWildcardPattern(folderPath: string, wildcardPattern : stri
 * @param    tansformFile Transform Xml File
 *
 */
-export function applyXdtTransformation(sourceFile, transformFile) {
+export function applyXdtTransformation(sourceFile, transformFile, destinationFile = "") {
 
     var cttPath = path.join(__dirname, "..", "..", "ctt", "ctt.exe"); 
     var cttArgsArray= [
         "s:" + sourceFile,
         "t:" + transformFile,
-        "d:" + sourceFile,
+        "d:" + (destinationFile ? destinationFile : sourceFile),
         "pw",
         "i"
     ];
@@ -70,6 +70,47 @@ export function basicXdtTransformation(rootFolder, transformConfigs): boolean {
         tl.warning(tl.loc('FailedToApplyTransformation'));
         tl.warning(tl.loc('FailedToApplyTransformationReason1'));
         tl.warning(tl.loc('FailedToApplyTransformationReason2'));
+    }
+
+    return isTransformationApplied;
+}
+
+
+/**
+* Performs XDT transformations ousing ctt.exe
+* 
+*/
+export function specialXdtTransformation(rootFolder, transformConfig, sourceConfig, destinationConfig = ""): boolean {
+    var sourceXmlFiles = expandWildcardPattern(rootFolder, sourceConfig ? sourceConfig : '**/*.config');
+    var isTransformationApplied = false;
+    if(Object.keys(sourceXmlFiles).length > 1) {        
+        Object.keys(sourceXmlFiles).forEach( function(sourceXmlFile) {
+            sourceXmlFile = sourceXmlFiles[sourceXmlFile];
+            var sourceConfigSuffix = sourceConfig ? sourceConfig.substr(sourceConfig.lastIndexOf("*")+1) : ".config";
+            var sourceBasename = path.win32.basename(sourceXmlFile.replace(/\.config/ig,'\.config'), sourceConfigSuffix);  
+            var transformConfigSuffix = transformConfig.substr(transformConfig.lastIndexOf("*") + 1);
+            var destinationConfigSuffix = destinationConfig ? destinationConfig.substr(sourceConfig.lastIndexOf("*") + 1) : destinationConfig;
+            var transformXmlFile = path.join(path.dirname(sourceXmlFile), sourceBasename + transformConfigSuffix);
+            var destinationFile = destinationConfig ? path.join(path.dirname(sourceXmlFile), sourceBasename + destinationConfigSuffix) : "";
+            if(sourceXmlFiles[transformXmlFile.toLowerCase()]) {
+                tl.debug('Applying XDT Transformation : ' + transformXmlFile + ' -> ' + sourceXmlFile);
+                applyXdtTransformation(sourceXmlFile, transformXmlFile, destinationFile);
+                isTransformationApplied = true;
+            }
+        });
+    }
+    else {
+        let sourceXmlFile = path.join(rootFolder, sourceConfig);
+        let transformXmlFile = path.join(rootFolder, transformConfig);
+        if(tl.exist(sourceXmlFile) && tl.exist(transformXmlFile)){
+            tl.debug('Applying XDT Transformation : ' + transformConfig + ' -> ' + sourceConfig);
+            let destinationXmlFile = destinationConfig ? path.join(rootFolder, destinationConfig) : "";
+            applyXdtTransformation(sourceXmlFile, transformXmlFile, destinationXmlFile);
+            isTransformationApplied = true;
+        }
+    }
+    if(!isTransformationApplied) {
+        tl.warning(tl.loc('FailedToApplyTransformation'));
     }
 
     return isTransformationApplied;

@@ -1,10 +1,11 @@
 import tl = require('vsts-task-lib/task');
+import * as ParameterParser from './ParameterParserUtility';
 
 var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitutionutility.js');
 var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
 
-export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string, isMSBuildPackage: boolean) {
+export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string, isMSBuildPackage, transformationRules?: any) {
 
     if(xmlTransformation) {
         if(isMSBuildPackage) {
@@ -18,11 +19,28 @@ export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles:
         }
         var environmentName = tl.getVariable('Release.EnvironmentName');
         if(tl.osType().match(/^Win/)) {
-            var transformConfigs = ["Release.config"];
-            if(environmentName && environmentName.toLowerCase() != 'release') {
-                transformConfigs.push(environmentName + ".config");
+            if(transformationRules){
+                var isTransformationApplied: boolean = true;
+                transformationRules.forEach(function(rule) {
+                    var args = ParameterParser.parse(rule);
+                    if(Object.keys(args).length < 2 || !args["transform"] || !args["xml"]) {
+                       tl.error(tl.loc("MissingArgumentsforXMLTransformation"));
+                    }
+                    else if(Object.keys(args).length > 2) {
+                        isTransformationApplied = isTransformationApplied && xdtTransformationUtility.specialXdtTransformation(folderPath, args["transform"].value, args["xml"].value, args["result"].value);
+                    }
+                    else {
+                        isTransformationApplied = isTransformationApplied && xdtTransformationUtility.specialXdtTransformation(folderPath, args["transform"].value, args["xml"].value);
+                    }
+                });
             }
-            var isTransformationApplied: boolean = xdtTransformationUtility.basicXdtTransformation(folderPath, transformConfigs);
+            else{                
+                let transformConfigs = ["Release.config"];
+                if(environmentName && environmentName.toLowerCase() != 'release') {
+                    transformConfigs.push(environmentName + ".config");
+                }
+                var isTransformationApplied: boolean = xdtTransformationUtility.basicXdtTransformation(folderPath, transformConfigs);
+            }
             
             if(isTransformationApplied)
             {
@@ -31,7 +49,7 @@ export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles:
             
         }
         else {
-            throw new Error(tl.loc("CannotPerformXdtTransformationOnNonWindowsPlatform"));
+           tl.error(tl.loc("CannotPerformXdtTransformationOnNonWindowsPlatform"));
         }
     }
 
