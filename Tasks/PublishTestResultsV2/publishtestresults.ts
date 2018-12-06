@@ -13,6 +13,43 @@ function isNullOrWhitespace(input: any) {
     return input.replace(/\s/g, '').length < 1;
 }
 
+function publish(testRunner, resultFiles, mergeResults, platform, config, runTitle, publishRunAttachments, failTaskOnFailedTests, testRunSystem) {
+
+    var properties = <{ [key: string]: string }>{};
+    properties['type'] = testRunner;
+
+    if (mergeResults) {
+        properties['mergeResults'] = mergeResults;
+    }
+
+    if (platform) {
+        properties['platform'] = platform;
+    }
+
+    if (config) {
+        properties['config'] = config;
+    }
+
+    if (runTitle) {
+        properties['runTitle'] = runTitle;
+    }
+
+    if (publishRunAttachments) {
+        properties['publishRunAttachments'] = publishRunAttachments;
+    }
+
+    if (resultFiles) {
+        properties['resultFiles'] = resultFiles;
+    }
+    
+    if(failTaskOnFailedTests){
+        properties['failTaskOnFailedTests'] = failTaskOnFailedTests;
+    }
+    properties['testRunSystem'] = testRunSystem;
+
+    tl.command('results.publish', properties, '');
+}
+
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -24,6 +61,7 @@ async function run() {
         const config = tl.getInput('configuration');
         const testRunTitle = tl.getInput('testRunTitle');
         const publishRunAttachments = tl.getInput('publishRunAttachments');
+        const failTaskOnFailedTests = tl.getInput('failTaskOnFailedTests');
         let searchFolder = tl.getInput('searchFolder');
 
         tl.debug('testRunner: ' + testRunner);
@@ -33,6 +71,7 @@ async function run() {
         tl.debug('config: ' + config);
         tl.debug('testRunTitle: ' + testRunTitle);
         tl.debug('publishRunAttachments: ' + publishRunAttachments);
+        tl.debug('failTaskOnFailedTests: ' + failTaskOnFailedTests);
 
         if (isNullOrWhitespace(searchFolder)) {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
@@ -68,6 +107,7 @@ async function run() {
             if (osType === 'Windows_NT' && isExeFlowOverridden != 'true') {
                 const testResultsPublisher = new publishTestResultsTool.TestResultsPublisher(matchingTestResultsFiles,
                     forceMerge ? true.toString() : mergeResults,
+                    failTaskOnFailedTests,
                     platform,
                     config,
                     testRunTitle,
@@ -79,23 +119,28 @@ async function run() {
 
                 if (exitCode === 20000) {
                     // The exe returns with exit code: 20000 if the Feature flag is off or if it fails to fetch the Feature flag value
-                    const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
-                    tp.publish(matchingTestResultsFiles,
+                    // const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
+                    publish(testRunner, matchingTestResultsFiles,
                         forceMerge ? true.toString() : mergeResults,
                         platform,
                         config,
                         testRunTitle,
                         publishRunAttachments,
+                        failTaskOnFailedTests,
                         TESTRUN_SYSTEM);
                 }
+                else if(exitCode == 40000){
+                    tl.setResult(tl.TaskResult.Failed, 'Tests error found');
+                }
             } else {
-                const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
-                tp.publish(matchingTestResultsFiles,
+                // const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
+                publish(testRunner, matchingTestResultsFiles,
                     forceMerge ? true.toString() : mergeResults,
                     platform,
                     config,
                     testRunTitle,
                     publishRunAttachments,
+                    failTaskOnFailedTests,
                     TESTRUN_SYSTEM);
             }
         }

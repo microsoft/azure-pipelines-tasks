@@ -1,7 +1,7 @@
 {
     "id": "0B0F01ED-7DDE-43FF-9CBB-E48954DAF9B1",
     "name": "PublishTestResults",
-    "friendlyName": "Publish Test Results",
+    "friendlyName": "Publish Test Results Version",
     "description": "Publish Test Results to Azure Pipelines/TFS",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613742)",
     "category": "Test",
@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 144,
-        "Patch": 1
+        "Minor": 145,
+        "Patch": 2
     },
     "demands": [],
     "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
@@ -70,6 +70,14 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "A test run is created for each results file. Check this option to merge results into a single test run. To optimize for better performance, results will be merged into a single run if there are more than 100 result files, irrespective of this option."
+        },
+        {
+            "name": "failTaskOnFailedTests",
+            "type": "boolean",
+            "label": "Fail if there are test failures",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Fail the task if there are any test failures. This will cause the build to fail."
         },
         {
             "name": "testRunTitle",
