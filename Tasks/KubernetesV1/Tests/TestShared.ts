@@ -37,6 +37,7 @@ export let Commands = {
     delete: "delete",
     exec: "exec",
     expose: "expose",
+    rolloutStatus : "rollout status",
     get: "get",
     logs: "logs",
     run: "run",
