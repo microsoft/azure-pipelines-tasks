@@ -94,6 +94,7 @@ export class ProvenanceHelper {
     private static CreateBuildSessionRequest(feedId: string, buildId: string): SessionRequest {
         let buildData = {
             "System.CollectionId": tl.getVariable("System.CollectionId"),
+            "System.DefinitionId": tl.getVariable("System.DefinitionId"),
             "System.TeamProjectId": tl.getVariable("System.TeamProjectId"),
             "Build.BuildId": buildId,
             "Build.BuildNumber": tl.getVariable("Build.BuildNumber"),
@@ -101,6 +102,7 @@ export class ProvenanceHelper {
             "Build.Repository.Name": tl.getVariable("Build.Repository.Name"),
             "Build.Repository.Provider": tl.getVariable("Build.Repository.Provider"),
             "Build.Repository.Id": tl.getVariable("Build.Repository.Id"),
+            "Build.Repository.Uri": tl.getVariable("Build.Repository.Uri"),
             "Build.SourceBranch": tl.getVariable("Build.SourceBranch"),
             "Build.SourceBranchName": tl.getVariable("Build.SourceBranchName"),
             "Build.SourceVersion": tl.getVariable("Build.SourceVersion")
