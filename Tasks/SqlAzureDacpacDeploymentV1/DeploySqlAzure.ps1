@@ -15,7 +15,9 @@ $connectedServiceName = Get-VstsInput -Name "ConnectedServiceName"
 $connectedServiceNameARM = Get-VstsInput -Name "ConnectedServiceNameARM"
 $sqlUsername = Get-VstsInput -Name "SqlUsername"
 $sqlPassword = Get-VstsInput -Name "SqlPassword"
-$deploymentAction = Get-VstsInput -Name "DeploymentAction" 
+$deploymentAction = Get-VstsInput -Name "DeploymentAction"
+$targetMethod = Get-VstsInput -Name "TargetMethod"
+$connectionString = Get-VstsInput -Name "ConnectionString"
 $publishProfile = Get-VstsInput -Name "PublishProfile"
 $sqlpackageAdditionalArguments = Get-VstsInput -Name "AdditionalArguments"
 $sqlcmdAdditionalArguments = Get-VstsInput -Name "SqlAdditionalArguments"
@@ -46,7 +48,7 @@ try {
 
     $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
 
-    # Telemetry for endpoint id 
+    # Telemetry for endpoint id
     $telemetryJsonContent = "{`"endpointId`":`"$connectedServiceName`"}"
     Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=SqlAzureDacpacDeployment]$telemetryJsonContent"
 
@@ -57,52 +59,66 @@ try {
     Import-Sqlps
 
     $firewallRuleName, $isFirewallConfigured = Add-FirewallRule -endpoint $endpoint -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -ipDetectionMethod $ipDetectionMethod -startIPAddress $startIpAddress -endIPAddress $endIpAddress
-    
+
     if (@("Extract", "Export", "DriftReport", "DeployReport", "Script") -contains $deploymentAction) {
         # Create the directory for output files
         $generatedOutputFilesRoot = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles"
         if (Test-Path $generatedOutputFilesRoot) {
-            Remove-Item -Path $generatedOutputFilesRoot -Recurse -Force 
+            Remove-Item -Path $generatedOutputFilesRoot -Recurse -Force
         }
 
         Write-Verbose "Creating output files directory: $generatedOutputFilesRoot"
         New-Item -Path $generatedOutputFilesRoot -ItemType Directory | Out-Null
     }
 
-    switch ($deploymentAction) {
-        "Publish" {
-            Write-Verbose "Executing 'Publish' action."
-            Execute-PublishAction -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -taskNameSelector $taskNameSelector -dacpacFile $dacpacFile `
-                -publishProfile $publishProfile -sqlFile $sqlFile -sqlInline $sqlInline -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -sqlcmdInlineAdditionalArguments $sqlcmdInlineAdditionalArguments
+    switch ($taskNameSelector) {
+        "SqlTask" {
+            Run-SqlFiles -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFile $sqlFile -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments
         }
-        "Extract" {
-            Write-Verbose "Executing 'Extract' action."
-            Extract-Dacpac -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments    
+        "InlineSqlTask" {
+            Run-InlineSql -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlInline $sqlInline -connectionString $connectionString -sqlcmdAdditionalArguments $sqlcmdInlineAdditionalArguments
         }
-        "Export" {
-            Write-Verbose "Executing 'Export' action."
-            Export-Bacpac -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
-        }
-        "Import" {
-            Write-Verbose "Executing 'Import' action."
-            Import-Bacpac -bacpacFile $bacpacFile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
-        }
-        "DriftReport" {
-            Write-Verbose "Executing 'DriftReport' action."
-            Drift-Report -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
-        }
-        "Script" {
-            Write-Verbose "Executing 'Script' action."
-            Script-Action -dacpacFile $dacpacFile -publishProfile $publishProfile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
-        }
-        "DeployReport" {
-            Write-Verbose "Executing 'DeployReport' action."
-            Deploy-Report -dacpacFile $dacpacFile -publishProfile $publishProfile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
+        "DacpacTask" {
+          switch ($deploymentAction) {
+              "Publish" {
+                  Write-Verbose "Executing 'Publish' action."
+                  Publish-Dacpac -serverName $serverName -targetMethod $targetMethod -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -dacpacFile $dacpacFile -publishProfile $publishProfile -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
+              }
+              "Extract" {
+                  Write-Verbose "Executing 'Extract' action."
+                  Extract-Dacpac -serverName $serverName -targetMethod $targetMethod -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
+              }
+              "Export" {
+                  Write-Verbose "Executing 'Export' action."
+                  Export-Bacpac -serverName $serverName -targetMethod $targetMethod -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
+              }
+              "Import" {
+                  Write-Verbose "Executing 'Import' action."
+                  Import-Bacpac -bacpacFile $bacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
+              }
+              "DriftReport" {
+                  Write-Verbose "Executing 'DriftReport' action."
+                  Drift-Report -serverName $serverName -targetMethod $targetMethod -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
+              }
+              "Script" {
+                  Write-Verbose "Executing 'Script' action."
+                  Script-Action -dacpacFile $dacpacFile -targetMethod $targetMethod -publishProfile $publishProfile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
+              }
+              "DeployReport" {
+                  Write-Verbose "Executing 'DeployReport' action."
+                  Deploy-Report -dacpacFile $dacpacFile -targetMethod $targetMethod -publishProfile $publishProfile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
+              }
+              default {
+                  throw (Get-VstsLocString -Key "SAD_InvalidDeploymentAction" -ArgumentList $deploymentAction)
+              }
+          }
         }
         default {
-            throw (Get-VstsLocString -Key "SAD_InvalidDeploymentAction" -ArgumentList $deploymentAction)
+            throw Get-VstsLocString -Key "SAD_InvalidPublishOption" -ArgumentList $taskNameSelector
         }
     }
+
+
 }
 catch [System.Management.Automation.CommandNotFoundException] {
     if ($_.Exception.CommandName -ieq "Invoke-Sqlcmd") {
@@ -133,7 +149,7 @@ catch [Exception] {
     if ($deploymentAction -eq "DriftReport" -and $LASTEXITCODE -eq 1) {
         $errorMessage += Get-VstsLocString -Key "SAD_DriftReportWarning"
     }
-       
+
     $errorMessage += Get-VstsLocString -Key "SAD_TroubleshootingLink"
 
     throw $errorMessage

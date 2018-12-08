@@ -73,8 +73,12 @@ $sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -targetMethod "
 Assert-AreEqual '/Action:Publish /SourceFile:"C:\Test\DB.dacpac" /TargetServerName:"yyy.database.windows.net,1433" /TargetDatabaseName:"TestDatabase" /TargetUser:"sqluser@yyy@a0nuel7r2k.database.windows.net" /TargetPassword:"TestPassword" /Profile:"C:\Test\Profile.xml" /AddArgs:args /TargetTimeout:120' `
                                     $sqlPackageCommandLineArguments "Should have constructed Argument for TargetMethod Server when sql servername is being given in FQDN format with port and username contains servername without FQDN"
 
-$sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -targetMethod "connectionString" -connectionString "connectionString:10/20/30" -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments
-Assert-AreEqual '/Action:Publish /SourceFile:"C:\Test\DB.dacpac" /TargetConnectionString:"connectionString:10/20/30" /Profile:"C:\Test\Profile.xml" /AddArgs:args /TargetTimeout:120' `
+$sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -targetMethod "ConnectionString" -targetConnectionString "connectionString:10/20/30" -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments
+Assert-AreEqual '/Action:Publish /SourceFile:"C:\Test\DB.dacpac" /TargetConnectionString:"connectionString:10/20/30" /Profile:"C:\Test\Profile.xml" /AddArgs:args' `
+                                    $sqlPackageCommandLineArguments "Should have constructed Argument for Connection String"
+
+$sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -targetMethod "ConnectionString" -sourceConnectionString "connectionString:10/20/30" -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments
+Assert-AreEqual '/Action:Publish /SourceFile:"C:\Test\DB.dacpac" /SourceConnectionString:"connectionString:10/20/30" /Profile:"C:\Test\Profile.xml" /AddArgs:args' `
                                     $sqlPackageCommandLineArguments "Should have constructed Argument for Connection String"
 
 Assert-Throws {

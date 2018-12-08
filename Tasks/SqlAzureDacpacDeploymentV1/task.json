@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 2,
-        "Patch": 9
+        "Patch": 10
     },
     "demands": [
         "sqlpackage"
@@ -80,12 +80,26 @@
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
         },
         {
+            "name": "TargetMethod",
+            "type": "pickList",
+            "label": "Specify SQL Using",
+            "required": true,
+            "groupName": "target",
+            "defaultValue": "server",
+            "options": {
+                "server": "Server",
+                "connectionString": "Connection String"
+            },
+            "helpMarkDown": "Specify the option to connect to the Azure SQL Server Database. The options are either to provide the Azure SQL Server Database details, or the SQL Server connection string, or the Publish profile XML file."
+        },
+        {
             "name": "ServerName",
             "type": "string",
             "label": "Azure SQL Server Name",
             "required": true,
             "groupName": "target",
             "defaultValue": "",
+            "visibleRule": "TargetMethod = server",
             "helpMarkDown": "Azure SQL Server name, like Fabrikam.database.windows.net,1433 or Fabrikam.database.windows.net."
         },
         {
@@ -95,6 +109,7 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
+            "visibleRule": "TargetMethod = server",
             "helpMarkDown": "Name of the Azure SQL Database, where the files will be deployed."
         },
         {
@@ -104,6 +119,7 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
+            "visibleRule": "TargetMethod = server",
             "helpMarkDown": "Specify the Azure SQL Server administrator login."
         },
         {
@@ -113,7 +129,32 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
+            "visibleRule": "TargetMethod = server",
             "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
+        },
+        {
+           "name": "ConnectionString",
+           "type": "multiLine",
+           "label": "Connection String",
+           "required": true,
+           "groupName": "target",
+           "defaultValue": "",
+           "visibleRule": "TargetMethod = connectionString",
+           "helpMarkDown": "Specify the Azure SQL Server connection string like \"Server=testServer.database.windows.net;Database=testdb;User ID=sqluser;Password=password;\"."
+        },
+        {
+            "name": "TaskNameSelector",
+            "type": "pickList",
+            "label": "Type",
+            "required": false,
+            "helpMarkDown": "",
+            "groupName": "taskDetails",
+            "defaultValue": "DacpacTask",
+            "options": {
+                "DacpacTask": "SQL DACPAC File",
+                "SqlTask": "SQL Script File",
+                "InlineSqlTask": "Inline SQL Script"
+            }
         },
         {
             "name": "DeploymentAction",
@@ -131,22 +172,8 @@
                 "DriftReport": "Drift Report",
                 "DeployReport": "Deploy Report"
             },
+            "visibleRule": "TaskNameSelector = DacpacTask",
             "helpMarkDown": "Choose one of the SQL Actions from the list. For more details refer <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">link</a>.​"
-        },
-        {
-            "name": "TaskNameSelector",
-            "type": "pickList",
-            "label": "Type",
-            "required": false,
-            "helpMarkDown": "",
-            "groupName": "taskDetails",
-            "defaultValue": "DacpacTask",
-            "options": {
-                "DacpacTask": "SQL DACPAC File",
-                "SqlTask": "SQL Script File",
-                "InlineSqlTask": "Inline SQL Script"
-            },
-            "visibleRule": "DeploymentAction = Publish"
         },
         {
             "name": "DacpacFile",
@@ -156,7 +183,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Location of the DACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
-            "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Script || DeploymentAction = DeployReport"
+            "visibleRule": "DeploymentAction = Publish || DeploymentAction = Script || DeploymentAction = DeployReport"
         },
         {
             "name": "BacpacFile",
@@ -192,7 +219,7 @@
                 "rows": "10"
             }
         },
-        {
+       {
             "name": "PublishProfile",
             "type": "filePath",
             "label": "Publish Profile",
@@ -281,7 +308,7 @@
             "description": "Generated output file path when deployment package action is either of Extract, Export, Script, Drift Report, Deploy Report."
         }
     ],
-    "instanceNameFormat": "Azure SQL $(DeploymentAction)",
+    "instanceNameFormat": "Azure SQL $(TaskNameSelector)",
     "execution": {
         "PowerShell3": {
             "target": "DeploySqlAzure.ps1"

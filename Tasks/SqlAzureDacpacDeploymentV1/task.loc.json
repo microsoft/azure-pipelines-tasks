@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 2,
-    "Patch": 9
+    "Patch": 10
   },
   "demands": [
     "sqlpackage"
@@ -80,12 +80,26 @@
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
     },
     {
+      "name": "TargetMethod",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.TargetMethod",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "server",
+      "options": {
+        "server": "Server",
+        "connectionString": "Connection String"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.TargetMethod"
+    },
+    {
       "name": "ServerName",
       "type": "string",
       "label": "ms-resource:loc.input.label.ServerName",
       "required": true,
       "groupName": "target",
       "defaultValue": "",
+      "visibleRule": "TargetMethod = server",
       "helpMarkDown": "ms-resource:loc.input.help.ServerName"
     },
     {
@@ -95,6 +109,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
+      "visibleRule": "TargetMethod = server",
       "helpMarkDown": "ms-resource:loc.input.help.DatabaseName"
     },
     {
@@ -104,6 +119,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
+      "visibleRule": "TargetMethod = server",
       "helpMarkDown": "ms-resource:loc.input.help.SqlUsername"
     },
     {
@@ -113,7 +129,32 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
+      "visibleRule": "TargetMethod = server",
       "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
+    },
+    {
+      "name": "ConnectionString",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.ConnectionString",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "TargetMethod = connectionString",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectionString"
+    },
+    {
+      "name": "TaskNameSelector",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.TaskNameSelector",
+      "required": false,
+      "helpMarkDown": "",
+      "groupName": "taskDetails",
+      "defaultValue": "DacpacTask",
+      "options": {
+        "DacpacTask": "SQL DACPAC File",
+        "SqlTask": "SQL Script File",
+        "InlineSqlTask": "Inline SQL Script"
+      }
     },
     {
       "name": "DeploymentAction",
@@ -131,22 +172,8 @@
         "DriftReport": "Drift Report",
         "DeployReport": "Deploy Report"
       },
+      "visibleRule": "TaskNameSelector = DacpacTask",
       "helpMarkDown": "ms-resource:loc.input.help.DeploymentAction"
-    },
-    {
-      "name": "TaskNameSelector",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.TaskNameSelector",
-      "required": false,
-      "helpMarkDown": "",
-      "groupName": "taskDetails",
-      "defaultValue": "DacpacTask",
-      "options": {
-        "DacpacTask": "SQL DACPAC File",
-        "SqlTask": "SQL Script File",
-        "InlineSqlTask": "Inline SQL Script"
-      },
-      "visibleRule": "DeploymentAction = Publish"
     },
     {
       "name": "DacpacFile",
@@ -156,7 +183,7 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.DacpacFile",
-      "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Script || DeploymentAction = DeployReport"
+      "visibleRule": "DeploymentAction = Publish || DeploymentAction = Script || DeploymentAction = DeployReport"
     },
     {
       "name": "BacpacFile",
