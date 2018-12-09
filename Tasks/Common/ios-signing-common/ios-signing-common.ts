@@ -514,12 +514,12 @@ export function getTempKeychainPath(): string {
 }
 
 /**
- * Get the SHA1 hash (thumbprint) for the certificate in a P12 file.
+ * Get several x509 properties from the certificate in a P12 file.
  * @param p12Path Path to the P12 file
  * @param p12Pwd Password for the P12 file
  */
-export async function getP12SHA1Hash(p12Path: string, p12Pwd: string): Promise<string> {
-    //openssl pkcs12 -in <p12Path> -nokeys -passin pass:"<p12Pwd>" | openssl x509 -noout –fingerprint
+export async function getP12Properties(p12Path: string, p12Pwd: string): Promise<{ fingerprint: string, commonName: string, notBefore: Date, notAfter: Date}> {
+    //openssl pkcs12 -in <p12Path> -nokeys -passin pass:"<p12Pwd>" | openssl x509 -noout -fingerprint –subject -dates
     let opensslPath: string = tl.which('openssl', true);
     let openssl1: ToolRunner = tl.tool(opensslPath);
     if (!p12Pwd) {
@@ -529,23 +529,47 @@ export async function getP12SHA1Hash(p12Path: string, p12Pwd: string): Promise<s
     openssl1.arg(['pkcs12', '-in', p12Path, '-nokeys', '-passin', 'pass:' + p12Pwd]);
 
     let openssl2: ToolRunner = tl.tool(opensslPath);
-    openssl2.arg(['x509', '-noout', '-fingerprint']);
+    openssl2.arg(['x509', '-noout', '-fingerprint', '-subject', '-dates']);
     openssl1.pipeExecOutputToTool(openssl2);
 
-    let sha1Hash: string;
-    openssl1.on('stdout', function (data) {
-        if (data) {
-            // find the fingerprint
-            data = data.toString().trim();
-            let fingerprint: string[] = data.match(/SHA1 Fingerprint=.+/g);
-            if (fingerprint && fingerprint[0]) {
-                sha1Hash = fingerprint[0].replace('SHA1 Fingerprint=', '').replace(/:/g, '').trim();
+    let fingerprint: string;
+    let commonName: string;
+    let notBefore: Date;
+    let notAfter: Date;
+
+    function onLine(line: string) {
+        if (line) {
+            const { key, value } = splitIntoKeyValue(line);
+
+            if (key === 'SHA1 Fingerprint') {
+                fingerprint = value.replace(/:/g, '').trim();
+            } else if (key === 'subject') {
+                const matches: string[] = value.match(/\/CN=([^/]+)/);
+                if (matches && matches[1]) {
+                    commonName = matches[1].trim();
+                }
+            } else if (key === 'notBefore') {
+                notBefore = new Date(value);
+            } else if (key === 'notAfter') {
+                notAfter = new Date(value);
             }
         }
-    })
+    }
+
+    // Concat all of stdout to avoid shearing. This can be updated to `openssl1.on('stdline', onLine)` once stdline mocking is available.
+    let output = '';
+    openssl1.on('stdout', (data) => {
+        output = output + data.toString();
+    });
 
     try {
         await openssl1.exec();
+
+        // process the collected stdout.
+        let line: string;
+        for (line of output.split('\n')) {
+            onLine(line);
+        }
     } catch (err) {
         if (!p12Pwd) {
             tl.warning(tl.loc('NoP12PwdWarning'));
@@ -553,49 +577,12 @@ export async function getP12SHA1Hash(p12Path: string, p12Pwd: string): Promise<s
         throw err;
     }
 
-    tl.debug('P12 SHA1 hash = ' + sha1Hash);
-    return sha1Hash;
-}
+    tl.debug(`P12 fingerprint: ${fingerprint}`);
+    tl.debug(`P12 common name (CN): ${commonName}`);
+    tl.debug(`NotBefore: ${notBefore}`);
+    tl.debug(`NotAfter: ${notAfter}`);
 
-/**
- * Get the common name from the certificate in a P12 file, with 'CN=' removed.
- * @param p12Path Path to the P12 file
- * @param p12Pwd Password for the P12 file
- */
-export async function getP12CommonName(p12Path: string, p12Pwd: string): Promise<string> {
-    //openssl pkcs12 -in <p12Path> -nokeys -passin pass:"<p12Pwd>" | openssl x509 -noout –subject
-    let opensslPath: string = tl.which('openssl', true);
-    let openssl1: ToolRunner = tl.tool(opensslPath);
-    if (!p12Pwd) {
-        // if password is null or not defined, set it to empty
-        p12Pwd = '';
-    }
-    openssl1.arg(['pkcs12', '-in', p12Path, '-nokeys', '-passin', 'pass:' + p12Pwd]);
-
-    let openssl2: ToolRunner = tl.tool(opensslPath);
-    openssl2.arg(['x509', '-noout', '-subject']);
-    openssl1.pipeExecOutputToTool(openssl2);
-
-    let commonName: string;
-    openssl1.on('stdout', function (data) {
-        if (data) {
-            // find the subject
-            data = data.toString().trim();
-            let subject: string[] = data.match(/subject=.+\/CN=.+\(?.+\)?.+/g);
-            if (subject && subject[0]) {
-                // find the CN from the subject
-                let cn: string[] = subject[0].trim().split('/').filter((s) => {
-                    return s.startsWith('CN=')
-                });
-                if (cn && cn[0]) {
-                    commonName = cn[0].replace('CN=', '').trim();
-                }
-            }
-        }
-    })
-    await openssl1.exec();
-    tl.debug('P12 common name (CN) = ' + commonName);
-    return commonName;
+    return { fingerprint, commonName, notBefore, notAfter };
 }
 
 /**
@@ -734,4 +721,14 @@ function generatePassword(): string {
 
 function getUserProvisioningProfilesPath(): string {
     return tl.resolve(tl.getVariable('HOME'), 'Library', 'MobileDevice', 'Provisioning Profiles');
+}
+
+function splitIntoKeyValue(line: string): {key: string, value: string} {
+    const index: number = line.indexOf('=');
+
+    if (index) {
+        return {key: line.substring(0, index), value: line.substring(index + 1)};
+    } else {
+        return undefined;
+    }
 }
