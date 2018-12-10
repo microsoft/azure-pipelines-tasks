@@ -49,7 +49,7 @@
             "name": "xmlTransformationRules",
             "type": "multiLine",
             "label": "Transformation Rules",
-            "defaultValue": "-transform **/*.Release.config -xml **/*.config​ \n-transform **/*.$(Release.EnvironmentName).config -xml **/*.config",
+            "defaultValue": "-transform **\\*.Release.config -xml **\\*.config\n-transform **\\*.$(Release.EnvironmentName).config -xml **\\*.config",
             "required": false,
             "helpMarkDown": "Provide new line separated list of transformation file rules.",
             "visibleRule": "enableXmlTransform == true"

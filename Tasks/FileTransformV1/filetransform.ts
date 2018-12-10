@@ -30,4 +30,6 @@ async function main() {
     }
 }
 
-main();
+main().catch((error) => {
+	tl.setResult(tl.TaskResult.Failed, error);
+});

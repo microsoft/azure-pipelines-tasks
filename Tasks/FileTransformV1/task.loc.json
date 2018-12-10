@@ -49,7 +49,7 @@
       "name": "xmlTransformationRules",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.xmlTransformationRules",
-      "defaultValue": "-transform **/*.Release.config -xml **/*.config​ \n-transform **/*.$(Release.EnvironmentName).config -xml **/*.config",
+      "defaultValue": "-transform **\\*.Release.config -xml **\\*.config\n-transform **\\*.$(Release.EnvironmentName).config -xml **\\*.config",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.xmlTransformationRules",
       "visibleRule": "enableXmlTransform == true"

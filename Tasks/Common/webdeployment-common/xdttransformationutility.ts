@@ -81,34 +81,50 @@ export function basicXdtTransformation(rootFolder, transformConfigs): boolean {
 * 
 */
 export function specialXdtTransformation(rootFolder, transformConfig, sourceConfig, destinationConfig = ""): boolean {
-    var sourceXmlFiles = expandWildcardPattern(rootFolder, sourceConfig ? sourceConfig : '**/*.config');
+    var sourceXmlFiles = expandWildcardPattern(rootFolder, sourceConfig);
     var isTransformationApplied = false;
-    if(Object.keys(sourceXmlFiles).length > 1) {        
-        Object.keys(sourceXmlFiles).forEach( function(sourceXmlFile) {
-            sourceXmlFile = sourceXmlFiles[sourceXmlFile];
-            var sourceConfigSuffix = sourceConfig ? sourceConfig.substr(sourceConfig.lastIndexOf("*")+1) : ".config";
-            var sourceBasename = path.win32.basename(sourceXmlFile.replace(/\.config/ig,'\.config'), sourceConfigSuffix);  
-            var transformConfigSuffix = transformConfig.substr(transformConfig.lastIndexOf("*") + 1);
-            var destinationConfigSuffix = destinationConfig ? destinationConfig.substr(sourceConfig.lastIndexOf("*") + 1) : destinationConfig;
-            var transformXmlFile = path.join(path.dirname(sourceXmlFile), sourceBasename + transformConfigSuffix);
-            var destinationFile = destinationConfig ? path.join(path.dirname(sourceXmlFile), sourceBasename + destinationConfigSuffix) : "";
-            if(sourceXmlFiles[transformXmlFile.toLowerCase()]) {
+
+    for(var sourceXmlFile in sourceXmlFiles) {
+        sourceXmlFile = sourceXmlFiles[sourceXmlFile];        
+        var sourceBasename = "", transformXmlFiles = {};
+
+        if(sourceConfig.indexOf("*") != -1){
+            var sourceConfigSuffix = sourceConfig.substr(sourceConfig.lastIndexOf("*")+1);
+            sourceBasename = path.win32.basename(sourceXmlFile.replace(/\.config/ig,'\.config'), sourceConfigSuffix);
+        }
+
+        if(transformConfig.indexOf("*") != -1){
+            if(sourceBasename) {
+                var transformConfigSuffix = transformConfig.substr(transformConfig.lastIndexOf("*") + 1);
+                var transformXmlFile = path.join(path.dirname(sourceXmlFile), sourceBasename + transformConfigSuffix);
+                transformXmlFiles[transformXmlFile.toLowerCase()] = transformXmlFile;
+            }
+            else { 
+                var transformXmlFiles = expandWildcardPattern(rootFolder, transformConfig);
+            }
+        }
+        else {
+            transformXmlFile = path.join(rootFolder, transformConfig);
+            transformXmlFiles[transformXmlFile.toLowerCase()] = transformXmlFile;
+        }
+
+        if(destinationConfig.indexOf("*") != -1){
+            var destinationConfigSuffix = destinationConfig ? destinationConfig.substr(destinationConfig.lastIndexOf("*") + 1) : "";
+            var destinationXmlFile = destinationConfig ? path.join(path.dirname(sourceXmlFile), sourceBasename + destinationConfigSuffix) : "";
+        }
+        else {
+            var destinationXmlFile = destinationConfig ? path.join(rootFolder, destinationConfig) : "";
+        }
+
+        for(var transformXmlFile in transformXmlFiles) {                
+            if(sourceXmlFiles[transformXmlFile.toLowerCase()] || tl.exist(transformXmlFile)) {
                 tl.debug('Applying XDT Transformation : ' + transformXmlFile + ' -> ' + sourceXmlFile);
-                applyXdtTransformation(sourceXmlFile, transformXmlFile, destinationFile);
+                applyXdtTransformation(sourceXmlFile, transformXmlFile, destinationXmlFile);
                 isTransformationApplied = true;
             }
-        });
-    }
-    else {
-        let sourceXmlFile = path.join(rootFolder, sourceConfig);
-        let transformXmlFile = path.join(rootFolder, transformConfig);
-        if(tl.exist(sourceXmlFile) && tl.exist(transformXmlFile)){
-            tl.debug('Applying XDT Transformation : ' + transformConfig + ' -> ' + sourceConfig);
-            let destinationXmlFile = destinationConfig ? path.join(rootFolder, destinationConfig) : "";
-            applyXdtTransformation(sourceXmlFile, transformXmlFile, destinationXmlFile);
-            isTransformationApplied = true;
         }
     }
+    
     if(!isTransformationApplied) {
         tl.warning(tl.loc('FailedToApplyTransformation'));
     }
