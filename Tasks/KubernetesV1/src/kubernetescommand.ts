@@ -64,8 +64,8 @@ function getCommandConfigurationFile(): string[] {
             throw new Error(tl.loc('ConfigurationFileNotFound', configurationPath));
         }
     }
-    else if(inlineConfiguration) {
-        var tempInlineFile = utils.getTempInlineConfigPath(inlineConfiguration);
+    else if (inlineConfiguration) {
+        var tempInlineFile = utils.writeInlineConfigInTempPath(inlineConfiguration);
         if (tl.exist(tempInlineFile)) {
             args[0] = "-f";
             args[1] = tempInlineFile;

@@ -465,6 +465,6 @@
         "ConfigurationFileNotFound": "No configuration file matching %s was found.",
         "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
         "OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
-        "InvalidConfiguration": "Invalid configuration for configuration path: %s and inline configuration: %s."
+        "InvalidConfiguration": "Can not set configuration with both file: %s and inline configuration: %s."
     }
 }

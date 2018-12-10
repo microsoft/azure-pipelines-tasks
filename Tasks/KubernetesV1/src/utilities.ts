@@ -75,7 +75,7 @@ export function assertFileExists(path: string) {
     }
 }
 
-export function getTempInlineConfigPath(inlineConfig: string): string {
+export function writeInlineConfigInTempPath(inlineConfig: string): string {
     var tempInlinePath = getNewUserDirPath();
     tempInlinePath = path.join(tempInlinePath, "inlineconfig.yaml");
     fs.writeFileSync(tempInlinePath, inlineConfig);

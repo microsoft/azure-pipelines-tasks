@@ -327,7 +327,7 @@ tr.registerMock('./utilities', {
     assertFileExists: function(path) {
         return true;
     },
-    getTempInlineConfigPath: function(data) {
+    writeInlineConfigInTempPath: function(data) {
         return InlineConfigTempPath;
     }
 });
