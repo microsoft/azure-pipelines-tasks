@@ -77,7 +77,7 @@
             "label": "Fail if there are test failures",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Fail the task if there are any test failures. This will cause the build to fail."
+            "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected in the result files."
         },
         {
             "name": "testRunTitle",
