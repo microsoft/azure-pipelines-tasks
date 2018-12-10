@@ -38,7 +38,7 @@ The GitHub Releases task can run in 3 action types, viz. create, edit or delete.
 
                 * Git tag: This option is available only for *create* action. If selected, the release will be created using the git tag that is associated with this commit. If no tag is found for the given commit, the release will not be created. If multiple tags are found, the task will throw an error.
 
-                * User specified tag: When this option is used, the release will be created using the tag mentioned. You can also mention the tag using variables, Eg. v\$(MajorVersion).\$(MinorVersion).\$(PatchVersion). For release edit and delete actions, it is mandatory to use this option.
+                * User specified tag: When this option is used, the release will be created using the tag mentioned. A tag will be created, if it does not exist. You can also mention the tag using variables, Eg. v\$(MajorVersion).\$(MinorVersion).\$(PatchVersion). For release edit and delete actions, it is mandatory to use this option.
 
 * **Release Title:** This is the title that will be used for release creation. If left empty, the tag name will be used as the release title.
 
