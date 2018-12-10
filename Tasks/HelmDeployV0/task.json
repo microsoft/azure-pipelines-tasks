@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 138,
-        "Patch": 14
+        "Patch": 15
     },
     "demands": [],
     "groups": [
@@ -21,7 +21,7 @@
             "name": "cluster",
             "displayName": "Kubernetes Cluster",
             "isExpanded": true,
-            "visibleRule": "command != logout && command != package"
+            "visibleRule": "command != logout && command != package && clientOnlyInit = false"
         },
         {
             "name": "commands",
@@ -32,13 +32,13 @@
             "name": "tls",
             "displayName": "TLS",
             "isExpanded": false,
-            "visibleRule": "command != login && command != logout && command != package"
+            "visibleRule": "command != login && command != logout && command != package && clientOnlyInit = false"
         },
         {
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false,
-            "visibleRule": "command != login && command != logout && command != package"
+            "visibleRule": "command != login && command != logout && command != package && clientOnlyInit = false"
         }
     ],
     "inputs": [
@@ -235,7 +235,7 @@
             "label": "Use canary image version.",
             "defaultValue": "false",
             "helpMarkDown": "Use the canary Tiller image, the latest pre-release version of Tiller.",
-            "visibleRule": "command == init",
+            "visibleRule": "command == init && clientOnlyInit = false",
             "groupName": "commands"
         },
         {
@@ -247,7 +247,7 @@
             "label": "Upgrade Tiller",
             "defaultValue": "true",
             "helpMarkDown": "Upgrade if Tiller is already installed.",
-            "visibleRule": "command == init",
+            "visibleRule": "command == init && clientOnlyInit = false",
             "groupName": "commands"
         },
         {
@@ -314,6 +314,15 @@
             "defaultValue": "true",
             "helpMarkDown": "Block till command execution completes.",
             "visibleRule": "command == init || command == install || command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "clientOnlyInit",
+            "type": "boolean",
+            "label": "Client only",
+            "defaultValue": "false",
+            "helpMarkDown": "Initialize only client​",
+            "visibleRule": "command == init",
             "groupName": "commands"
         },
         {

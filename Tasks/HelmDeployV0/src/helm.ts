@@ -50,26 +50,32 @@ async function getKubeConfigFile(): Promise<string> {
 
 async function run() {
     var command = tl.getInput("command", true).toLowerCase();
-    var isKubConfigRequired = isKubConfigSetupRequired(command);
+    var clientOnlyInit = tl.getInput("clientOnlyInit",false);
+
     var kubectlCli: kubernetescli;
-    if (isKubConfigRequired) {
-        var kubeconfigfilePath = command === "logout" ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
-        kubectlCli = new kubernetescli(kubeconfigfilePath);
-        kubectlCli.login();
+    if (!clientOnlyInit) {
+        var isKubConfigRequired = isKubConfigSetupRequired(command);
+        if (isKubConfigRequired) {
+            var kubeconfigfilePath = command === "logout" ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
+            kubectlCli = new kubernetescli(kubeconfigfilePath);
+            kubectlCli.login();
+        }
     }
 
     var helmCli : helmcli = new helmcli();
     helmCli.login();
-    var connectionType = tl.getInput("connectionType", true);
-    var telemetry = {
-        connectionType: connectionType,
-        command: command
-    };
+    if (!clientOnlyInit) {
+        var connectionType = tl.getInput("connectionType", true);
+        var telemetry = {
+            connectionType: connectionType,
+            command: command
+        };
 
-    console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
-        "TaskEndpointId",
-        "HelmDeployV0",
-        JSON.stringify(telemetry));
+        console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
+            "TaskEndpointId",
+            "HelmDeployV0",
+            JSON.stringify(telemetry));
+    }
 
     try {
         switch (command){
@@ -87,11 +93,13 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err.message);
     } 
     finally {
-        if (isKubConfigLogoutRequired(command)) {
-            kubectlCli.logout();
-        }
+        if (!clientOnlyInit) {
+            if (isKubConfigLogoutRequired(command)) {
+                kubectlCli.logout();
+            }
 
-        helmCli.logout();
+            helmCli.logout();
+        }
     }
 }
 

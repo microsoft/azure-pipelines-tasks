@@ -10,23 +10,27 @@ export function addArguments(helmCli: helmcli) : void {
     var upgradeTiller = tl.getBoolInput('upgradetiller', false);
     var argumentsInput = tl.getInput("arguments", false);
     var enableTls = tl.getBoolInput("enableTls", false);
+    var clientOnlyInit = tl.getBoolInput("clientOnlyInit", false);
     
-    if(canaryimage) {
-        helmCli.addArgument("--canary-image");
+    if (clientOnlyInit) {
+        helmCli.addArgument("--client-only");
+    } else {
+        if(canaryimage) {
+            helmCli.addArgument("--canary-image");
+        }
+    
+        if(upgradeTiller) {
+            helmCli.addArgument("--upgrade");
+        }
+    
+        if(waitForTiller) {
+            helmCli.addArgument("--wait");
+        }
+    
+        if(enableTls) {
+            addTillerTlsSettings(helmCli);
+        }
     }
-
-    if(upgradeTiller) {
-        helmCli.addArgument("--upgrade");
-    }
-
-    if(waitForTiller) {
-        helmCli.addArgument("--wait");
-    }
-
-    if(enableTls) {
-        addTillerTlsSettings(helmCli);
-    }
-
     if(argumentsInput) {
         helmCli.addArgument(argumentsInput);
     }

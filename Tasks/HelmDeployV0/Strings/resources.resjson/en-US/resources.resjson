@@ -55,6 +55,8 @@
   "loc.input.help.force": "Force resource update through delete/recreate if needed​",
   "loc.input.label.waitForExecution": "Wait",
   "loc.input.help.waitForExecution": "Block till command execution completes.",
+  "loc.input.label.clientOnlyInit": "Client only",
+  "loc.input.help.clientOnlyInit": "Initialize only client​",
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Helm command options.",
   "loc.input.label.enableTls": "Enable TLS",
