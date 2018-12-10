@@ -19,7 +19,7 @@
     "satisfies": [
         "Docker"
     ],
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.142.1",
     "inputs": [
         {
             "name": "dockerVersion",

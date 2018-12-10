@@ -1,10 +1,10 @@
 "use strict";
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 
-import * as toolLib from 'vsts-task-tool-lib/tool';
-import * as dockerInstaller from "./dockerinstaller";
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
+import * as utils from "./utils";
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
@@ -12,7 +12,7 @@ async function configureDocker() {
     var version = tl.getInput("dockerVersion", true);
     var releaseType = tl.getInput("releaseType", true);
 
-    var dockerPath = await dockerInstaller.downloadDocker(version, releaseType);
+    var dockerPath = await utils.downloadDocker(version, releaseType);
 
     // prepend the tools path. instructs the agent to prepend for future tasks
     if (!process.env['PATH'].startsWith(path.dirname(dockerPath))) {
@@ -30,8 +30,5 @@ async function verifyDocker() {
 
 configureDocker()
     .then(() => verifyDocker())
-    .then(() => {
-        tl.setResult(tl.TaskResult.Succeeded, "");
-    }).catch((error) => {
-        tl.setResult(tl.TaskResult.Failed, error)
-    });
+    .then(() => tl.setResult(tl.TaskResult.Succeeded, ""))
+    .catch((error) => tl.setResult(tl.TaskResult.Failed, error));
