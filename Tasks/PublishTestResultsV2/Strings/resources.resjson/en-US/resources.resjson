@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Publish Test Results Version",
+  "loc.friendlyName": "Publish Test Results",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "Publish Test Results to Azure Pipelines/TFS",
   "loc.instanceNameFormat": "Publish Test Results $(testResultsFiles)",
@@ -24,5 +24,6 @@
   "loc.input.label.publishRunAttachments": "Upload test results files",
   "loc.input.help.publishRunAttachments": "Upload logs and other files containing diagnostic information collected when the tests were run.",
   "loc.messages.NoMatchingFilesFound": "No test result files matching '%s' were found.",
-  "loc.messages.ErrorTestResultsPublisher": "Error while executing TestResultsPublisher: %s."
+  "loc.messages.ErrorTestResultsPublisher": "Error while executing TestResultsPublisher: %s.",
+  "loc.messages.ErrorFailTaskOnFailedTests": "There are one or more test failures detected in result files. Detailed summary of published test results can be viewed in the Tests tab."
 }

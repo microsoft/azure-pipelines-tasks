@@ -1,7 +1,7 @@
 {
     "id": "0B0F01ED-7DDE-43FF-9CBB-E48954DAF9B1",
     "name": "PublishTestResults",
-    "friendlyName": "Publish Test Results Version",
+    "friendlyName": "Publish Test Results",
     "description": "Publish Test Results to Azure Pipelines/TFS",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613742)",
     "category": "Test",
@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 145,
+        "Minor": 144,
         "Patch": 2
     },
     "demands": [],
@@ -130,6 +130,7 @@
     },
     "messages": {
         "NoMatchingFilesFound": "No test result files matching '%s' were found.",
-        "ErrorTestResultsPublisher": "Error while executing TestResultsPublisher: %s."
+        "ErrorTestResultsPublisher": "Error while executing TestResultsPublisher: %s.",
+        "ErrorFailTaskOnFailedTests": "There are one or more test failures detected in result files. Detailed summary of published test results can be viewed in the Tests tab."
     }
 }

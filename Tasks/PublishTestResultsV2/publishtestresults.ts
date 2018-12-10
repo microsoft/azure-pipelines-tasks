@@ -13,35 +13,28 @@ function isNullOrWhitespace(input: any) {
     return input.replace(/\s/g, '').length < 1;
 }
 
-function publish(testRunner, resultFiles, mergeResults, platform, config, runTitle, publishRunAttachments, failTaskOnFailedTests, testRunSystem) {
-
+function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, platform, config, runTitle, publishRunAttachments, testRunSystem) {
     var properties = <{ [key: string]: string }>{};
     properties['type'] = testRunner;
 
     if (mergeResults) {
         properties['mergeResults'] = mergeResults;
     }
-
     if (platform) {
         properties['platform'] = platform;
     }
-
     if (config) {
         properties['config'] = config;
     }
-
     if (runTitle) {
         properties['runTitle'] = runTitle;
     }
-
     if (publishRunAttachments) {
         properties['publishRunAttachments'] = publishRunAttachments;
     }
-
     if (resultFiles) {
         properties['resultFiles'] = resultFiles;
-    }
-    
+    }   
     if(failTaskOnFailedTests){
         properties['failTaskOnFailedTests'] = failTaskOnFailedTests;
     }
@@ -119,28 +112,27 @@ async function run() {
 
                 if (exitCode === 20000) {
                     // The exe returns with exit code: 20000 if the Feature flag is off or if it fails to fetch the Feature flag value
-                    // const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
                     publish(testRunner, matchingTestResultsFiles,
                         forceMerge ? true.toString() : mergeResults,
+                        failTaskOnFailedTests,
                         platform,
                         config,
                         testRunTitle,
                         publishRunAttachments,
-                        failTaskOnFailedTests,
                         TESTRUN_SYSTEM);
                 }
                 else if(exitCode == 40000){
-                    tl.setResult(tl.TaskResult.Failed, 'Tests error found');
+                    // The exe returns with exit code: 40000 if there are test failures found and failTaskOnFailedTests is true
+                    tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnFailedTests'));
                 }
             } else {
-                // const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
                 publish(testRunner, matchingTestResultsFiles,
                     forceMerge ? true.toString() : mergeResults,
+                    failTaskOnFailedTests,
                     platform,
                     config,
                     testRunTitle,
                     publishRunAttachments,
-                    failTaskOnFailedTests,
                     TESTRUN_SYSTEM);
             }
         }
