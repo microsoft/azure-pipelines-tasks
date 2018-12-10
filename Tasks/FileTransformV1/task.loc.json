@@ -23,8 +23,8 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
-      "name": "WebAppConfigurations",
-      "displayName": "ms-resource:loc.group.displayName.WebAppConfigurations",
+      "name": "VariableSubstitution",
+      "displayName": "ms-resource:loc.group.displayName.VariableSubstitution",
       "isExpanded": true
     }
   ],
@@ -38,40 +38,47 @@
       "helpMarkDown": "ms-resource:loc.input.help.folderPath"
     },
     {
-      "name": "enableXmlVariableSubstitution",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.enableXmlVariableSubstitution",
-      "required": false,
-      "defaultValue": false,
-      "groupName": "WebAppConfigurations",
-      "helpMarkDown": "ms-resource:loc.input.help.enableXmlVariableSubstitution"
-    },
-    {
       "name": "enableXmlTransform",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.enableXmlTransform",
       "required": false,
       "defaultValue": false,
-      "groupName": "WebAppConfigurations",
       "helpMarkDown": "ms-resource:loc.input.help.enableXmlTransform"
     },
     {
-      "name": "transformationRules",
+      "name": "xmlTransformationRules",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.transformationRules",
-      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.xmlTransformationRules",
+      "defaultValue": "-transform **/*.Release.config -xml **/*.config​ \n-transform **/*.$(Release.EnvironmentName).config -xml **/*.config",
       "required": false,
-      "groupName": "WebAppConfigurations",
-      "helpMarkDown": "ms-resource:loc.input.help.transformationRules",
+      "helpMarkDown": "ms-resource:loc.input.help.xmlTransformationRules",
       "visibleRule": "enableXmlTransform == true"
     },
     {
-      "name": "JSONFiles",
+      "name": "fileType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.fileType",
+      "defaultValue": "",
+      "required": false,
+      "options": {
+        "xml": "XML",
+        "json": "JSON"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "groupName": "VariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.fileType"
+    },
+    {
+      "name": "targetFiles",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.JSONFiles",
+      "label": "ms-resource:loc.input.label.targetFiles",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.JSONFiles"
+      "groupName": "VariableSubstitution",
+      "visibleRule": "fileType = xml || fileType = json",
+      "helpMarkDown": "ms-resource:loc.input.help.targetFiles"
     }
   ],
   "execution": {

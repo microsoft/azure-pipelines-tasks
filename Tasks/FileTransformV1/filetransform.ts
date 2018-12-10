@@ -9,20 +9,20 @@ async function main() {
     tl.setResourcePath(path.join( __dirname, 'task.json'));
     let webPackage = new Package(tl.getPathInput('folderPath', true));
     let packagePath = webPackage.getPath();
-    let JSONFiles = tl.getDelimitedInput('JSONFiles', '\n', false);
-    let XmlVariableSubstitution = tl.getBoolInput("enableXmlVariableSubstitution", false);
-    let XmlTransformation = tl.getBoolInput('enableXmlTransform', false);
-    let transformationRules = tl.getDelimitedInput('transformationRules', '\n', false);
-    let applyFileTransformFlag = JSONFiles.length != 0 || XmlVariableSubstitution || XmlTransformation;
+    let fileType = tl.getInput("fileType", false);
+    let targetFiles = tl.getDelimitedInput('targetFiles', '\n', false);
+    let xmlTransformation = tl.getBoolInput('enableXmlTransform', false);
+    let xmlTransformationRules = tl.getDelimitedInput('xmlTransformationRules', '\n', false);
+    let applyFileTransformFlag = fileType || xmlTransformation;
     if (applyFileTransformFlag) {
         let isFolderBasedDeployment: boolean = tl.stats(packagePath).isDirectory();
         if(!isFolderBasedDeployment) {
             var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, packagePath, webPackage.getPackageType());
-            fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, XmlTransformation, XmlVariableSubstitution, folderPath, false, transformationRules);
+            fileTransformationsUtility.advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, folderPath, xmlTransformationRules);
             await zipUtility.archiveFolder(folderPath, path.dirname(packagePath), path.basename(packagePath));
         }
         else {
-            fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, XmlTransformation, XmlVariableSubstitution, packagePath, false, transformationRules);
+            fileTransformationsUtility.advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, packagePath, xmlTransformationRules);
         }
     }
     else {
