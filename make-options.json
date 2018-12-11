@@ -11,6 +11,7 @@
         "AzureCloudPowerShellDeploymentV1",
         "AzureFileCopyV1",
         "AzureFileCopyV2",
+		"AzureFileCopyV3",
         "AzureFunctionV1",
         "AzureKeyVaultV1",
         "AzureMonitorAlertsV0",

@@ -4,17 +4,13 @@ param()
 Trace-VstsEnteringInvocation $MyInvocation
 
 # Get inputs for the task
-$connectedServiceNameSelector = Get-VstsInput -Name ConnectedServiceNameSelector -Require
 $sourcePath = Get-VstsInput -Name SourcePath -Require
 $destination = Get-VstsInput -Name Destination -Require
-$connectedServiceName = Get-VstsInput -Name ConnectedServiceName
-$connectedServiceNameARM = Get-VstsInput -Name ConnectedServiceNameARM
-$storageAccount = Get-VstsInput -Name StorageAccount
-$storageAccountRM = Get-VstsInput -Name StorageAccountRM
+$connectedServiceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
+$storageAccount = Get-VstsInput -Name StorageAccountRM
 $containerName = Get-VstsInput -Name ContainerName
 $blobPrefix = Get-VstsInput -Name BlobPrefix
-$environmentName = Get-VstsInput -Name EnvironmentName
-$environmentNameRM = Get-VstsInput -Name EnvironmentNameRM
+$environmentName = Get-VstsInput -Name EnvironmentNameRM
 $resourceFilteringMethod = Get-VstsInput -Name ResourceFilteringMethod
 $machineNames = Get-VstsInput -Name MachineNames
 $vmsAdminUserName = Get-VstsInput -Name VmsAdminUsername
@@ -28,13 +24,6 @@ $skipCACheck = Get-VstsInput -Name SkipCACheck -AsBool
 $enableCopyPrerequisites = Get-VstsInput -Name EnableCopyPrerequisites -AsBool
 $outputStorageContainerSasToken = Get-VstsInput -Name OutputStorageContainerSasToken
 $outputStorageURI = Get-VstsInput -Name OutputStorageUri
-
-if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM")
-{
-    $connectedServiceName = $connectedServiceNameARM
-    $storageAccount = $storageAccountRM
-    $environmentName = $environmentNameRM
-}
 
 if ($destination -ne "AzureBlob")
 {
@@ -65,7 +54,14 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-Initialize-Azure
+
+$endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
+if (Get-Module Az.Profile -ListAvailable){
+    Initialize-AzModule -Endpoint $endpoint
+}
+else{
+    Initialize-AzureRMModule -Endpoint $endpoint
+}
 
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
@@ -84,7 +80,7 @@ Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 try
 {
     # Importing required version of azure cmdlets according to azureps installed on machine
-    $azureUtility = Get-AzureUtility $connectedServiceName
+    $azureUtility = Get-AzureUtility
 
     Write-Verbose -Verbose "Loading $azureUtility"
     . "$PSScriptRoot/$azureUtility"
@@ -93,17 +89,14 @@ try
     $telemetryJsonContent = "{`"endpointId`":`"$connectedServiceName`"}"
     Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=AzureFileCopy]$telemetryJsonContent"
 
-    # Getting connection type (Certificate/UserNamePassword/SPN) used for the task
-    $connectionType = Get-TypeOfConnection -connectedServiceName $connectedServiceName
-
-    # Getting storage key for the storage account based on the connection type
-    $storageKey = Get-StorageKey -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
+    # Getting storage key for the storage account
+    $storageKey = Get-StorageKey -storageAccountName $storageAccount -endpoint $endpoint
 
     # creating storage context to be used while creating container, sas token, deleting container
     $storageContext = Create-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
 	
     # Geting Azure Storage Account type
-    $storageAccountType = Get-StorageAccountType -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
+    $storageAccountType = Get-StorageAccountType -storageAccountName $storageAccount -endpoint $endpoint
     Write-Verbose "Obtained Storage Account type: $storageAccountType"
     if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium'))
     {
@@ -118,7 +111,7 @@ try
     }
 	
     # Getting Azure Blob Storage Endpoint
-    $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
+    $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -endpoint $endpoint
 
 }
 catch
@@ -207,7 +200,7 @@ try
         $vmsAdminUserName = ".\" + $vmsAdminUserName 
     }
     # getting azure vms properties(name, fqdn, winrmhttps port)
-    $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName -connectionType $connectionType `
+    $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName `
     -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites -connectedServiceName $connectedServiceName
 
     $azureVMsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword
