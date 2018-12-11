@@ -50,9 +50,11 @@ export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles:
 export function advancedFileTransformations(isFolderBasedDeployment: boolean, targetFiles: any, xmlTransformation: boolean, variableSubstitutionFileFormat: string, folderPath: string, transformationRules: any) {
 
     if(xmlTransformation) {
-        var environmentName = tl.getVariable('Release.EnvironmentName');
-        if(tl.osType().match(/^Win/)) {
-            if(transformationRules.length > 0){
+        if(!tl.osType().match(/^Win/)) {
+            throw Error(tl.loc("CannotPerformXdtTransformationOnNonWindowsPlatform"));
+        }
+        else {
+            if(transformationRules.length > 0) {
                 var isTransformationApplied: boolean = true;
                 transformationRules.forEach(function(rule) {
                     var args = ParameterParser.parse(rule);
@@ -67,7 +69,8 @@ export function advancedFileTransformations(isFolderBasedDeployment: boolean, ta
                     }
                 });
             }
-            else{                
+            else{   
+                var environmentName = tl.getVariable('Release.EnvironmentName');             
                 let transformConfigs = ["Release.config"];
                 if(environmentName && environmentName.toLowerCase() != 'release') {
                     transformConfigs.push(environmentName + ".config");
@@ -75,14 +78,9 @@ export function advancedFileTransformations(isFolderBasedDeployment: boolean, ta
                 var isTransformationApplied: boolean = xdtTransformationUtility.basicXdtTransformation(folderPath, transformConfigs);
             }
             
-            if(isTransformationApplied)
-            {
+            if(isTransformationApplied) {
                 console.log(tl.loc("XDTTransformationsappliedsuccessfully"));
-            }
-            
-        }
-        else {
-           tl.error(tl.loc("CannotPerformXdtTransformationOnNonWindowsPlatform"));
+            }            
         }
     }
 
@@ -100,8 +98,8 @@ export function advancedFileTransformations(isFolderBasedDeployment: boolean, ta
 
     if(variableSubstitutionFileFormat === "json") {
         // For Json variable substitution if no target files are specified file files matching **\*.json
-        if(!targetFiles || targetFiles.length == 0){
-            targetFiles = ["**\\*.json"];
+        if(!targetFiles || targetFiles.length == 0) {
+            targetFiles = ["**/*.json"];
         }
         jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, targetFiles);
         console.log(tl.loc('JSONvariablesubstitutionappliedsuccessfully'));
