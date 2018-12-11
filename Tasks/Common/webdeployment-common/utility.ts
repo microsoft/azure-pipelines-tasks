@@ -78,6 +78,11 @@ export function findfiles(filepath){
 
     tl.debug("Finding files matching input: " + filepath);
 
+    // Replacing \ with / in case of Linux agent
+    if(!tl.osType().match(/^Win/)) {
+        filepath = filepath.replace(/\\/g, "/");
+    }
+
     var filesList : string [];
     if (filepath.indexOf('*') == -1 && filepath.indexOf('?') == -1) {
 
