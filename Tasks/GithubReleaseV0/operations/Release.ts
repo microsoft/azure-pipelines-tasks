@@ -33,7 +33,7 @@ export class Release {
     public static async editRelease(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, releaseId: string): Promise<WebResponse> {
         let request = new WebRequest();
             
-        request.uri = util.format(this._editOrDiscardReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseId);
+        request.uri = util.format(this._editOrDeleteReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseId);
         request.method = "PATCH";
         request.body = JSON.stringify({
             "tag_name": tag,
@@ -52,15 +52,15 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async discardRelease(githubEndpointToken: string, repositoryName: string, releaseId: string): Promise<WebResponse> {
+    public static async deleteRelease(githubEndpointToken: string, repositoryName: string, releaseId: string): Promise<WebResponse> {
         let request = new WebRequest();
             
-        request.uri = util.format(this._editOrDiscardReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseId);
+        request.uri = util.format(this._editOrDeleteReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseId);
         request.method = "DELETE";
         request.headers = {
             'Authorization': 'token ' + githubEndpointToken
         };
-        tl.debug("Discard release request: " + JSON.stringify(request));
+        tl.debug("Delete release request: " + JSON.stringify(request));
 
         return await sendRequest(request);
     }
@@ -192,7 +192,7 @@ export class Release {
     }
 
     private static readonly _createReleaseApiUrlFormat: string = "%s/repos/%s/releases";
-    private static readonly _editOrDiscardReleaseApiUrlFormat: string = "%s/repos/%s/releases/%s";
+    private static readonly _editOrDeleteReleaseApiUrlFormat: string = "%s/repos/%s/releases/%s";
     private static readonly _deleteReleaseAssetApiUrlFormat: string = "%s/repos/%s/releases/assets/%s";
     private static readonly _uploadReleaseAssetApiUrlFormat: string = "%s?name=%s";
     private static readonly _getReleasesApiUrlFormat: string = "%s/repos/%s/releases";

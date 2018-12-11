@@ -7,15 +7,19 @@ var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility
 var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
 
-export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider{
+export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {
     private zipDeploymentID: string;
 
     public async DeployWebAppStep() {
+        let packageType = this.taskParams.Package.getPackageType();
+        let deploymentMethodtelemetry = packageType === PackageType.war ? '{"deploymentMethod":"War Deploy"}' : '{"deploymentMethod":"Zip Deploy"}';
+        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureWebAppDeployment]" + deploymentMethodtelemetry);
+        
         tl.debug('Performing Linux built-in package deployment');
         
         await this.kuduServiceUtility.warmpUp();
         
-        switch(this.taskParams.Package.getPackageType()){
+        switch(packageType){
             case PackageType.folder:
                 let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
                 let archivedWebPackage = await zipUtility.archiveFolder(this.taskParams.Package.getPath(), "", tempPackagePath);

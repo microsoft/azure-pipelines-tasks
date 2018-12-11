@@ -12,7 +12,7 @@ export class Action {
      * Creating a release and uploading assets are 2 different process. First we create a release and when it is successful, we upload assets to it.
      * But in our scenario, we assume it to be a single process, means if upload assets step fail then we say release is in dirty state and we would want it to be deleted as it is without assets yet.
      * So, we delete the created release as assets are not uploaded to it. And will want user to run the task again to create release with assets.
-     * The discard release step is only reachable if user has specified any assets to upload and the upload step failed.
+     * The delete release step is only reachable if user has specified any assets to upload and the upload step failed.
      * @param githubEndpointToken 
      * @param repositoryName 
      * @param target 
@@ -43,10 +43,10 @@ export class Action {
                 try {
                     // If upload asets fail, then delete the release
                     let releaseId: string = response.body[GitHubAttributes.id];
-                    await this._discardRelease(githubEndpointToken, repositoryName, releaseId, tag);
+                    await this._deleteRelease(githubEndpointToken, repositoryName, releaseId, tag);
                 }
                 catch (error) {
-                    tl.debug("Failed to discard the release which is in dirty state currently. Assets were expected to be uploaded but it failed. Discard the release manually.")
+                    tl.debug("Failed to delete the release which is in dirty state currently. Assets were expected to be uploaded but it failed. Delete the release manually.")
                 }
 
                 throw error;
@@ -93,42 +93,42 @@ export class Action {
     }
 
     /**
-     * Discards a release if it exists.
+     * Deletes a release if it exists.
      * @param githubEndpointToken 
      * @param repositoryName 
      * @param tag 
      */
-    public static async discardReleaseAction(githubEndpointToken: string, repositoryName: string, tag: string): Promise<void> {
-        // Get the release id of the release with corresponding tag to discard.
+    public static async deleteReleaseAction(githubEndpointToken: string, repositoryName: string, tag: string): Promise<void> {
+        // Get the release id of the release with corresponding tag to delete.
         console.log(tl.loc("FetchReleaseForTag", tag));
         let releaseId: string = await Helper.getReleaseIdForTag(githubEndpointToken, repositoryName, tag);
 
         if (!!releaseId) {
             console.log(tl.loc("FetchReleaseForTagSuccess", tag));
-            await this._discardRelease(githubEndpointToken, repositoryName, releaseId, tag);
+            await this._deleteRelease(githubEndpointToken, repositoryName, releaseId, tag);
         }
         else {
-            throw new Error(tl.loc("NoReleaseFoundToDiscard", tag));
+            throw new Error(tl.loc("NoReleaseFoundToDelete", tag));
         }
     }
 
     /**
-     * Discards an existing release.
+     * Deletes an existing release.
      * @param githubEndpointToken 
      * @param repositoryName 
      * @param releaseId 
      * @param tag 
      */
-    private static async _discardRelease(githubEndpointToken: string, repositoryName: string, releaseId: string, tag: string): Promise<void> {
-        console.log(tl.loc("DiscardingRelease", tag));
-        let response: WebResponse = await Release.discardRelease(githubEndpointToken, repositoryName, releaseId);
-        tl.debug("Discard release response: " + JSON.stringify(response));
+    private static async _deleteRelease(githubEndpointToken: string, repositoryName: string, releaseId: string, tag: string): Promise<void> {
+        console.log(tl.loc("DeletingRelease", tag));
+        let response: WebResponse = await Release.deleteRelease(githubEndpointToken, repositoryName, releaseId);
+        tl.debug("Delete release response: " + JSON.stringify(response));
 
         if (response.statusCode === 204) {
-            console.log(tl.loc("DiscardReleaseSuccess"));
+            console.log(tl.loc("DeleteReleaseSuccess"));
         }
         else {
-            tl.error(tl.loc("DiscardReleaseError"));
+            tl.error(tl.loc("DeleteReleaseError"));
             throw new Error(response.body[GitHubAttributes.message]);
         }
     }
