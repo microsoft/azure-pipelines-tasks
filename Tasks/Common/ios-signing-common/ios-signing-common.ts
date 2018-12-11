@@ -1,7 +1,7 @@
 import path = require('path');
 import Q = require('q');
-import tl = require('vsts-task-lib/task');
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import tl = require('azure-pipelines-task-lib/task');
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 /**
  * Creates a temporary keychain and installs the P12 cert in the temporary keychain

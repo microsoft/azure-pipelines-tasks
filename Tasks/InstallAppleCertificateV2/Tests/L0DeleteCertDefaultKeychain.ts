@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import os = require('os');
@@ -10,17 +10,17 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('keychain', 'default');
 tr.setInput('deleteCert', 'true');
 
-process.env['AGENT_VERSION'] = '2.116.0';
-process.env['VSTS_TASKVARIABLE_APPLE_CERTIFICATE_KEYCHAIN'] = '/usr/lib/login.keychain';
-process.env['VSTS_TASKVARIABLE_APPLE_CERTIFICATE_SHA1HASH'] = 'SHA1HASHOFP12CERTIFICATE';
-process.env['HOME'] = '/users/test';
-
 tr.registerMock('fs', {
     readFileSync: fs.readFileSync,
     statSync: fs.statSync,
     writeFileSync: function (filePath, contents) {
     }
 });
+
+process.env['AGENT_VERSION'] = '2.116.0';
+process.env['VSTS_TASKVARIABLE_APPLE_CERTIFICATE_KEYCHAIN'] = '/usr/lib/login.keychain';
+process.env['VSTS_TASKVARIABLE_APPLE_CERTIFICATE_SHA1HASH'] = 'SHA1HASHOFP12CERTIFICATE';
+process.env['HOME'] = '/users/test';
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{

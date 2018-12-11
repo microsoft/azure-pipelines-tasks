@@ -14,13 +14,13 @@
     "rm": [
         {
             "items": [
-                "node_modules/ios-signing-common/node_modules/vsts-task-lib"
+                "node_modules/ios-signing-common/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         },
         {
             "items": [
-                "node_modules/securefiles-common/node_modules/vsts-task-lib"
+                "node_modules/securefiles-common/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import os = require('os');
@@ -11,10 +11,6 @@ tr.setInput('certSecureFile', 'mySecureFileId');
 tr.setInput('certPwd', '');
 tr.setInput('keychain', 'temp');
 
-process.env['AGENT_VERSION'] = '2.116.0';
-process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
-process.env['HOME'] = '/users/test';
-
 let secureFileHelperMock = require('securefiles-common/securefiles-common-mock');
 tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
 
@@ -22,6 +18,10 @@ tr.registerMock('fs', {
     writeFileSync: function (filePath, contents) {
     }
 });
+
+process.env['AGENT_VERSION'] = '2.116.0';
+process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
+process.env['HOME'] = '/users/test';
 
 // Mock Math.random() to always return the same value for our tests.
 Math.random = function (): number {
