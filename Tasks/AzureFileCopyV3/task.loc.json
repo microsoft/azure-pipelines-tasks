@@ -46,8 +46,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM"
     },
     {
       "name": "Destination",
@@ -73,8 +72,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.StorageAccountRM",
       "properties": {
         "EditableOptions": "True"
-      },
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
+      }
     },
     {
       "name": "ContainerName",
@@ -107,7 +105,7 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM && Destination = AzureVMs"
+      "visibleRule": "Destination = AzureVMs"
     },
     {
       "name": "ResourceFilteringMethod",
@@ -180,7 +178,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.enableCopyPrerequisites",
       "defaultValue": "false",
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM && Destination = AzureVMs",
+      "visibleRule": "Destination = AzureVMs",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.enableCopyPrerequisites"
     },
