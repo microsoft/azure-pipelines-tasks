@@ -98,7 +98,7 @@ export class TestResultsPublisher {
              tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false));
         envVars = this.addToProcessEnvVars(envVars, 'testrunner', this.testRunner);
         envVars = this.addToProcessEnvVars(envVars, 'mergeresults', this.mergeResults);
-        envVars = this.addToProcessEnvVars(envVars, 'failTaskOnFailedTests', this.failTaskOnFailedTests);
+        envVars = this.addToProcessEnvVars(envVars, 'failtaskonfailedtests', this.failTaskOnFailedTests);
         envVars = this.addToProcessEnvVars(envVars, 'platform', this.platform);
         envVars = this.addToProcessEnvVars(envVars, 'config', this.config);
         envVars = this.addToProcessEnvVars(envVars, 'publishrunattachments', this.publishRunAttachments);
