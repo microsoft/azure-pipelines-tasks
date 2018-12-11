@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 144,
-    "Patch": 1
+    "Patch": 3
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -100,6 +100,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "useGlobalConfig",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useGlobalConfig",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useGlobalConfig",
+      "groupName": "advanced"
+    },
+    {
       "name": "cwd",
       "aliases": [
         "workingDirectory"
@@ -135,6 +144,7 @@
     "FailedToLogout": "ms-resource:loc.messages.FailedToLogout",
     "LoginFailed": "ms-resource:loc.messages.LoginFailed",
     "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
-    "SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir"
+    "SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir",
+    "SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud"
   }
 }

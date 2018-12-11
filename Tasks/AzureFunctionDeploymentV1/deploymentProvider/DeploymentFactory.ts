@@ -1,4 +1,4 @@
-import { TaskParameters, DeploymentType } from '../TaskParameters';
+import { TaskParameters, DeploymentType } from '../taskparameters';
 import { BuiltInLinuxWebAppDeploymentProvider } from './BuiltInLinuxWebAppDeploymentProvider';
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider';

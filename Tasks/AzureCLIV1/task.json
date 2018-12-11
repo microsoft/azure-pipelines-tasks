@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 144,
-        "Patch": 1
+        "Patch": 3
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -100,6 +100,15 @@
             "groupName": "advanced"
         },
         {
+            "name": "useGlobalConfig",
+            "type": "boolean",
+            "label": "Use global Azure CLI configuration",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "If this is false, this task will use its own separate [Azure CLI configuration directory](https://docs.microsoft.com/en-us/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file). This can be used to run Azure CLI tasks in *parallel* releases",
+            "groupName": "advanced"
+        },
+        {
             "name": "cwd",
             "aliases": [
                 "workingDirectory"
@@ -135,6 +144,7 @@
         "FailedToLogout": "The following error occurred while logging out: %s",
         "LoginFailed": "Azure login failed",
         "ErrorInSettingUpSubscription": "Error in setting up subscription",
-        "SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s"
+        "SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
+        "SettingAzureCloud": "Setting active cloud to: %s"
     }
 }
