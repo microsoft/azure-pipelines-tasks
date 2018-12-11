@@ -15,7 +15,7 @@ This Azure DevOps extension (XcodeV5) is based on or incorporates material from 
 9.	semver (git+https://github.com/npm/node-semver.git)
 10.	shelljs (git://github.com/arturadib/shelljs.git)
 11.	uuid (git+https://github.com/kelektiv/node-uuid.git)
-12.	vsts-task-lib (git+https://github.com/Microsoft/vsts-task-lib.git)
+12.	azure-pipelines-task-lib (git+https://github.com/Microsoft/azure-pipelines-task-lib.git)
 
 
 %% @types/mocha NOTICES, INFORMATION, AND LICENSE BEGIN HERE
@@ -255,15 +255,15 @@ modification, are permitted provided that the following conditions are met:
       names of the contributors may be used to endorse or promote products
       derived from this software without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 ARE DISCLAIMED. IN NO EVENT SHALL ARTUR ADIB BE LIABLE FOR ANY
 DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 =========================================
 END OF shelljs NOTICES, INFORMATION, AND LICENSE
@@ -294,7 +294,7 @@ SOFTWARE.
 =========================================
 END OF uuid NOTICES, INFORMATION, AND LICENSE
 
-%% vsts-task-lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% azure-pipelines-task-lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 The MIT License (MIT)
 
@@ -318,5 +318,5 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 =========================================
-END OF vsts-task-lib NOTICES, INFORMATION, AND LICENSE
+END OF azure-pipelines-task-lib NOTICES, INFORMATION, AND LICENSE
 

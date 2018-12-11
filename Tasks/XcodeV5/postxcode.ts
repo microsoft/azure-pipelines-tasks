@@ -1,9 +1,9 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import sign = require('ios-signing-common/ios-signing-common');
 import utils = require('./xcodeutils');
 
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 async function run() {
     try {
@@ -16,7 +16,7 @@ async function run() {
         const publishResults: boolean = tl.getBoolInput('publishJUnitResults', false);
         const useXcpretty: boolean = tl.getBoolInput('useXcpretty', false);
         const workingDir: string = tl.getPathInput('cwd');
-        
+
         if (publishResults) {
             if (!useXcpretty) {
                 throw tl.loc('UseXcprettyForTestPublishing');
@@ -32,8 +32,8 @@ async function run() {
                     let matchingTestResultsFiles: string[];
                     if (testResultsFiles.indexOf('*') >= 0) {
                         tl.debug('Pattern found in testResultsFiles parameter');
-                        matchingTestResultsFiles = tl.findMatch(workingDir, testResultsFiles, 
-                            { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false }, 
+                        matchingTestResultsFiles = tl.findMatch(workingDir, testResultsFiles,
+                            { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false },
                             { matchBase: true, nocase: true });
                     }
                     else {
