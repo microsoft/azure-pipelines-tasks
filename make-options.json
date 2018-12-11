@@ -9,7 +9,6 @@
         "AzureAppServiceManageV0",
         "AzureCLIV1",
         "AzureCloudPowerShellDeploymentV1",
-        "AzureFileCopyV1",
         "AzureFileCopyV2",
         "AzureFunctionDeploymentV1",
         "AzureFunctionOnContainerDeploymentV1",
