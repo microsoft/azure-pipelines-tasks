@@ -1,7 +1,7 @@
 import fs = require('fs');
 import assert = require('assert');
 import path = require('path');
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('InstallAppleProvisioningProfile Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
@@ -68,7 +68,7 @@ describe('InstallAppleProvisioningProfile Suite', function () {
 
         assert(tr.ran('/usr/bin/security cms -D -i /build/source/myprovisioningprofile'),
             'provisioning profile should have been installed.');
-        assert(tr.ran('/bin/cp -f /build/source/myprovisioningprofile /users/test/Library/MobileDevice/Provisioning Profiles/testuuid'), 
+        assert(tr.ran('/bin/cp -f /build/source/myprovisioningprofile /users/test/Library/MobileDevice/Provisioning Profiles/testuuid'),
             'copied provisioning profile should not have an extension');
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
