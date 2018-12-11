@@ -87,7 +87,9 @@
       "groupName": "target",
       "defaultValue": "server",
       "options": {
-        "server": "Server",
+        "server": "SQL Server Authentication",
+        "aadAuthenticationPassword": "Active Directory - Password",
+        "aadAuthenticationIntegration": "Active Directory - Integration",
         "connectionString": "Connection String"
       },
       "helpMarkDown": "ms-resource:loc.input.help.TargetMethod"
@@ -99,7 +101,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "TargetMethod = server",
+      "visibleRule": "TargetMethod = server || TargetMethod = aadAuthenticationPassword || TargetMethod = aadAuthenticationIntegration",
       "helpMarkDown": "ms-resource:loc.input.help.ServerName"
     },
     {
@@ -109,7 +111,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "TargetMethod = server",
+      "visibleRule": "TargetMethod = server || TargetMethod = aadAuthenticationPassword || TargetMethod = aadAuthenticationIntegration",
       "helpMarkDown": "ms-resource:loc.input.help.DatabaseName"
     },
     {
@@ -119,7 +121,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "TargetMethod = server",
+      "visibleRule": "TargetMethod = server || TargetMethod = aadAuthenticationPassword",
       "helpMarkDown": "ms-resource:loc.input.help.SqlUsername"
     },
     {
@@ -129,7 +131,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "TargetMethod = server",
+      "visibleRule": "TargetMethod = server || TargetMethod = aadAuthenticationPassword",
       "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
     },
     {
@@ -146,7 +148,7 @@
       "name": "TaskNameSelector",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.TaskNameSelector",
-      "required": false,
+      "required": true,
       "helpMarkDown": "",
       "groupName": "taskDetails",
       "defaultValue": "DacpacTask",

@@ -82,12 +82,14 @@
         {
             "name": "TargetMethod",
             "type": "pickList",
-            "label": "Specify SQL Using",
+            "label": "Authentication",
             "required": true,
             "groupName": "target",
             "defaultValue": "server",
             "options": {
-                "server": "Server",
+                "server": "SQL Server Authentication",
+                "aadAuthenticationPassword": "Active Directory - Password",
+                "aadAuthenticationIntegration": "Active Directory - Integration",
                 "connectionString": "Connection String"
             },
             "helpMarkDown": "Specify the option to connect to the Azure SQL Server Database. The options are either to provide the Azure SQL Server Database details, or the SQL Server connection string, or the Publish profile XML file."
@@ -99,7 +101,7 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
-            "visibleRule": "TargetMethod = server",
+            "visibleRule": "TargetMethod = server || TargetMethod = aadAuthenticationPassword || TargetMethod = aadAuthenticationIntegration",
             "helpMarkDown": "Azure SQL Server name, like Fabrikam.database.windows.net,1433 or Fabrikam.database.windows.net."
         },
         {
@@ -109,7 +111,7 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
-            "visibleRule": "TargetMethod = server",
+            "visibleRule": "TargetMethod = server || TargetMethod = aadAuthenticationPassword || TargetMethod = aadAuthenticationIntegration",
             "helpMarkDown": "Name of the Azure SQL Database, where the files will be deployed."
         },
         {
@@ -119,7 +121,7 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
-            "visibleRule": "TargetMethod = server",
+            "visibleRule": "TargetMethod = server || TargetMethod = aadAuthenticationPassword",
             "helpMarkDown": "Specify the Azure SQL Server administrator login."
         },
         {
@@ -129,7 +131,7 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
-            "visibleRule": "TargetMethod = server",
+            "visibleRule": "TargetMethod = server || TargetMethod = aadAuthenticationPassword",
             "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
         },
         {
@@ -146,7 +148,7 @@
             "name": "TaskNameSelector",
             "type": "pickList",
             "label": "Type",
-            "required": false,
+            "required": true,
             "helpMarkDown": "",
             "groupName": "taskDetails",
             "defaultValue": "DacpacTask",

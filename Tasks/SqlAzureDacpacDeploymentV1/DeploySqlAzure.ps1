@@ -9,8 +9,8 @@ $dacpacFile = Get-VstsInput -Name "DacpacFile"
 $sqlFile = Get-VstsInput -Name "SqlFile"
 $sqlInline = Get-VstsInput -Name "SqlInline"
 $bacpacFile = Get-VstsInput -Name "BacpacFile"
-$serverName = Get-VstsInput -Name  "ServerName" -Require
-$databaseName = Get-VstsInput -Name "DatabaseName" -Require
+$serverName = Get-VstsInput -Name  "ServerName"
+$databaseName = Get-VstsInput -Name "DatabaseName"
 $connectedServiceName = Get-VstsInput -Name "ConnectedServiceName"
 $connectedServiceNameARM = Get-VstsInput -Name "ConnectedServiceNameARM"
 $sqlUsername = Get-VstsInput -Name "SqlUsername"
@@ -54,11 +54,32 @@ try {
 
     # Checks for the very basic consistency of the Server Name
     $serverName = $serverName.ToLower()
-    Check-ServerName $serverName
+    if (-not $targetMethod -eq "connectionString")
+    {
+        Check-ServerName $serverName
+    }
 
     Import-Sqlps
 
-    $firewallRuleName, $isFirewallConfigured = Add-FirewallRule -endpoint $endpoint -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -ipDetectionMethod $ipDetectionMethod -startIPAddress $startIpAddress -endIPAddress $endIpAddress
+    # Parse server name and database name from connection string for adding firewall rules
+    if ($targetMethod -eq "connectionString") {
+        $sb = New-Object System.Data.Common.DbConnectionStringBuilder
+        $sb.set_ConnectionString($connectionString.toLower())
+
+        if($sb['data source']) {
+          $serverName = $sb['data source']
+        } elseif ($sb['server']) {
+          $serverName = $sb['server']
+        }
+
+        if($sb['initial catalog']) {
+          $databaseName = $sb['initial catalog']
+        } elseif ($sb['database']) {
+          $databaseName = $sb['database']
+        }
+    }
+
+    $firewallRuleName, $isFirewallConfigured = Add-FirewallRule -endpoint $endpoint -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -ipDetectionMethod $ipDetectionMethod -startIPAddress $startIpAddress -endIPAddress $endIpAddress
 
     if (@("Extract", "Export", "DriftReport", "DeployReport", "Script") -contains $deploymentAction) {
         # Create the directory for output files

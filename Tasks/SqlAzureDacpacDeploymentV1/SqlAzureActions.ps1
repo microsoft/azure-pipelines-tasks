@@ -209,6 +209,7 @@ function Run-SqlFiles {
 }
 
 function Run-InlineSql {
+    [CmdletBinding()]
     param (
         [string] $serverName,
         [string] $databaseName,
@@ -237,6 +238,7 @@ function Run-InlineSql {
 }
 
 function Run-SqlCmd {
+    [CmdletBinding()]
     param (
         [string] $serverName,
         [string] $databaseName,
@@ -248,12 +250,12 @@ function Run-SqlCmd {
         [string] $sqlcmdAdditionalArguments
     )
 
-    if ($sqlUsername) {
-        $sqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
-    }
-
-
     if ($targetMethod -eq "server") {
+
+      if ($sqlUsername) {
+          $sqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
+      }
+
       $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$serverName`" -Database `"$databaseName`" -Username `"$sqlUsername`" "
       $sqlPassword = EscapeSpecialChars -str $sqlPassword
 
@@ -266,9 +268,15 @@ function Run-SqlCmd {
           # Add Timeout of 120 Seconds
           $sqlcmdAdditionalArguments = $sqlcmdAdditionalArguments + " -ConnectionTimeout 120"
       }
-    } else {
+    }
+    elseif ($targetMethod -eq "connectionString") {
       $commandToRun = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
       $commandToLog = "Invoke-Sqlcmd -connectionString `"**********`" "
+    }
+    elseif ($targetMethod -eq "aadAuthenticationPassword" -or $targetMethod -eq "aadAuthenticationIntegration") {
+      $connectionString = Get-AADAuthenticationConnectionString -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword
+      $commandToRun = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
+      $commandToLog = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
     }
 
     $commandToRun += " -Inputfile `"$sqlFilePath`" " + $sqlcmdAdditionalArguments
@@ -278,13 +286,83 @@ function Run-SqlCmd {
     Invoke-Expression $commandToRun
 }
 
+function Get-AgentIPRange
+{
+    param(
+        [String] $targetMethod,
+        [String] $serverName,
+        [String] $sqlUserName,
+        [String] $sqlPassword,
+        [String] $databaseName,
+        [String] $connectionString
+    )
+
+    [hashtable] $IPRange = @{}
+
+    if (Get-Command -Name "Invoke-Sqlcmd" -ErrorAction SilentlyContinue)
+    {
+      try {
+        Write-Verbose "Reaching SqlServer to check connection by running Invoke-SqlCmd"
+        Write-Verbose "Invoke-Sqlcmd -ServerInstance $serverName -Username $formattedSqlUsername -Password ****** -Query `"select getdate()`" -ErrorVariable errors -ConnectionTimeout 120 | Out-String"
+
+        $output = Run-InlineSql -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword -sqlInline "select getdate()" -connectionString $connectionString -ErrorVariable errors | Out-String
+    }
+      catch {
+        Write-Verbose "Failed to reach SQL server $serverName. $($_.Exception.Message)"
+      }
+    }
+    else
+    {
+      $sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmd\SQLCMD.exe"
+      $env:SQLCMDPASSWORD = $sqlPassword
+
+      $sqlCmdArgs = "-S `"$serverName`" -U `"$formattedSqlUsername`" -Q `"select getdate()`""
+
+      Write-Verbose "Reaching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
+
+      $ErrorActionPreference = 'Continue'
+
+      $output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
+
+      $ErrorActionPreference = 'Stop'
+    }
+
+    if($errors.Count -gt 0)
+    {
+        $errMsg = $errors[0].ToString()
+        Write-Verbose "Error Message : $errMsg"
+        $output = $errMsg
+    }
+
+    if($output)
+    {
+        Write-Verbose "Message To Parse: $output"
+
+        $pattern = "([0-9]+)\.([0-9]+)\.([0-9]+)\."
+        $regex = New-Object  -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
+
+        if($output.Contains("sp_set_firewall_rule") -eq $true -and $regex.IsMatch($output) -eq $true)
+        {
+            $ipRangePrefix = $regex.Match($output).Groups[0].Value;
+            Write-Verbose "IP Range Prefix $ipRangePrefix"
+
+            $IPRange.StartIPAddress = $ipRangePrefix + '0'
+            $IPRange.EndIPAddress = $ipRangePrefix + '255'
+        }
+    }
+
+    return $IPRange
+}
+
 function Add-FirewallRule {
     param (
         [object] $endpoint,
+        [string] $targetMethod,
         [string] $serverName,
         [string] $databaseName,
         [string] $sqlUsername,
         [string] $sqlPassword,
+        [string] $connectionString,
         [string] $ipDetectionMethod,
         [string] $startIPAddress,
         [string] $endIPAddress
@@ -294,7 +372,7 @@ function Add-FirewallRule {
     $ipAddressRange = @{}
     if($ipDetectionMethod -eq "AutoDetect")
     {
-        $ipAddressRange = Get-AgentIPRange -serverName $serverName -sqlUsername $sqlUsername -sqlPassword $sqlPassword
+        $ipAddressRange = Get-AgentIPRange -targetMethod $targetMethod -serverName $serverName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -databaseName $databaseName -connectionString $connectionString
     }
     else
     {
