@@ -25,8 +25,13 @@ async function run() {
 
         let certPwd: string = tl.getInput('certPwd');
 
-        // get the P12 details - SHA1 hash and common name (CN)
-        let { fingerprint, commonName, notBefore, notAfter } = await sign.getP12Properties(certPath, certPwd);
+        // get the P12 details - SHA1 hash, common name (CN) and expiration.
+        const p12Properties = await sign.getP12Properties(certPath, certPwd);
+        let commonName = p12Properties.commonName;
+        const fingerprint = p12Properties.fingerprint,
+            notBefore = p12Properties.notBefore,
+            notAfter = p12Properties.notAfter;
+
         // give user an option to override the CN as a workaround if we can't parse the certificate's subject.
         let commonNameOverride: string = tl.getInput('certSigningIdentity', false);
         if (commonNameOverride) {
