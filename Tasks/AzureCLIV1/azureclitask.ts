@@ -57,9 +57,6 @@ export class azureclitask {
                 tool = tl.tool(tl.which(scriptPath, true));
             }
             this.throwIfError(tl.execSync("az", "--version"));
-            // set az cli config dir
-            this.setConfigDirectory();
-            this.setAzureCloudBasedOnServiceEndpoint();
             this.loginAzure();
 
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
@@ -79,7 +76,7 @@ export class azureclitask {
                 this.deleteFile(scriptPath);
             }
 
-            if (this.cliPasswordPath) {
+            if(this.cliPasswordPath) {
                 tl.debug('Removing spn certificate file');
                 tl.rmRF(this.cliPasswordPath);
             }
@@ -87,10 +84,6 @@ export class azureclitask {
             //Logout of Azure if logged in
             if (this.isLoggedIn) {
                 this.logoutAzure();
-            }
-
-            if (this.azCliConfigPath) {
-                tl.rmRF(this.azCliConfigPath);
             }
 
             //set the task result to either succeeded or failed based on error was thrown or not
@@ -105,7 +98,6 @@ export class azureclitask {
 
     private static isLoggedIn: boolean = false;
     private static cliPasswordPath: string = null;
-    private static azCliConfigPath: string;
 
     private static loginAzure() {
         var connectedService: string = tl.getInput("connectedServiceNameARM", true);
@@ -116,7 +108,7 @@ export class azureclitask {
         var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
         let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
         let cliPassword: string = null;
-        if (authType == "spnCertificate") {
+        if(authType == "spnCertificate") {
             tl.debug('certificate based endpoint');
             let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
             cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
@@ -131,42 +123,11 @@ export class azureclitask {
 
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
-
         //login using svn
         this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
         this.isLoggedIn = true;
         //set the subscription imported to the current subscription
         this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
-    }
-
-    private static setConfigDirectory(): void {
-        if (tl.getBoolInput("useGlobalConfig")) {
-            return;
-        }
-
-        var configDirName: string = "c" + new Date().getTime(); // 'c' denotes config
-        var basePath: string;
-        if (tl.osType().match(/^Win/)) {
-            basePath = process.env.USERPROFILE;
-        }
-        else {
-            basePath = process.env.HOME;
-        }
-
-        if (!!basePath) {
-            this.azCliConfigPath = path.join(basePath, ".azclitask", configDirName);
-            console.log(tl.loc('SettingAzureConfigDir', this.azCliConfigPath));
-            process.env['AZURE_CONFIG_DIR'] = this.azCliConfigPath;
-        }
-    }
-
-    private static setAzureCloudBasedOnServiceEndpoint(): void {
-        var connectedService: string = tl.getInput("connectedServiceNameARM", true);
-        var environment = tl.getEndpointDataParameter(connectedService, 'environment', true);
-        if(!!environment) {
-            console.log(tl.loc('SettingAzureCloud', environment));
-            this.throwIfError(tl.execSync("az", "cloud set -n " + environment));
-        }
     }
 
     private static logoutAzure() {

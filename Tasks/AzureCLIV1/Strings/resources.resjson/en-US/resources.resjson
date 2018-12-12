@@ -15,8 +15,6 @@
   "loc.input.help.inlineScript": "You can write your scripts inline here. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: az --version || az account show \n\n example for batch: call  az --version || call az account show",
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Arguments passed to the script",
-  "loc.input.label.useGlobalConfig": "Use global Azure CLI configuration",
-  "loc.input.help.useGlobalConfig": "If this is false, this task will use its own separate [Azure CLI configuration directory](https://docs.microsoft.com/en-us/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file). This can be used to run Azure CLI tasks in *parallel* releases",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Current working directory where the script is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
   "loc.input.label.failOnStandardError": "Fail on Standard Error",
@@ -27,7 +25,5 @@
   "loc.messages.AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
   "loc.messages.FailedToLogout": "The following error occurred while logging out: %s",
   "loc.messages.LoginFailed": "Azure login failed",
-  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription",
-  "loc.messages.SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
-  "loc.messages.SettingAzureCloud": "Setting active cloud to: %s"
+  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription"
 }
