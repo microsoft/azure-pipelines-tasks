@@ -31,5 +31,6 @@
   "loc.messages.LoginFailed": "Azure login failed",
   "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription",
   "loc.messages.SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
-  "loc.messages.SettingAzureCloud": "Setting active cloud to: %s"
+  "loc.messages.SettingAzureCloud": "Setting active cloud to: %s",
+  "loc.messages.GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used"
 }

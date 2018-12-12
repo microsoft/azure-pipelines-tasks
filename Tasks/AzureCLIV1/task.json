@@ -145,6 +145,7 @@
         "LoginFailed": "Azure login failed",
         "ErrorInSettingUpSubscription": "Error in setting up subscription",
         "SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
-        "SettingAzureCloud": "Setting active cloud to: %s"
+        "SettingAzureCloud": "Setting active cloud to: %s",
+        "GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used"
     }
 }
