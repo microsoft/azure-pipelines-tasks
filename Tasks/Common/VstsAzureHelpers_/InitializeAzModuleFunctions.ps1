@@ -171,7 +171,7 @@ function Set-CurrentAzSubscription {
         [string]$SubscriptionId,
         [string]$TenantId)
 
-    $additional = { $additional['TenantId'] = $TenantId }
+    $additional = @{ TenantId = $TenantId }
 
     Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
     $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
