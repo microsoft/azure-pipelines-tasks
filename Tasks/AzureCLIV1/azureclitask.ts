@@ -155,9 +155,13 @@ export class azureclitask {
             return;
         }
 
-        var azCliConfigPath = path.join(tl.getVariable('Agent.TempDirectory'), ".azclitask");
-        console.log(tl.loc('SettingAzureConfigDir', azCliConfigPath));
-        process.env['AZURE_CONFIG_DIR'] = azCliConfigPath;
+        if (!!tl.getVariable('Agent.TempDirectory')) {
+            var azCliConfigPath = path.join(tl.getVariable('Agent.TempDirectory'), ".azclitask");
+            console.log(tl.loc('SettingAzureConfigDir', azCliConfigPath));
+            process.env['AZURE_CONFIG_DIR'] = azCliConfigPath;
+        } else {
+            console.warn(tl.loc('GlobalCliConfigAgentVersionWarning'));
+        }
     }
 
     private static setAzureCloudBasedOnServiceEndpoint(): void {
