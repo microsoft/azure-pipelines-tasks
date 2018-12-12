@@ -141,19 +141,14 @@ export class azureclitask {
 
     private static setConfigDirectory(): void {
         var configDirName: string = "c" + new Date().getTime(); // 'c' denotes config
-        var basePath: string;
         if (tl.osType().match(/^Win/)) {
-            basePath = process.env.USERPROFILE;
+            this.azCliConfigPath = path.join(process.env.USERPROFILE, ".azclitask", configDirName);
         }
         else {
-            basePath = process.env.HOME;
+            this.azCliConfigPath = path.join(process.env.HOME, ".azclitask", configDirName);
         }
 
-        if (!!basePath) {
-            this.azCliConfigPath = path.join(basePath, ".azclitask", configDirName);
-            console.log(tl.loc('SettingAzureConfigDir', this.azCliConfigPath));
-            process.env['AZURE_CONFIG_DIR'] = this.azCliConfigPath;
-        }
+        process.env['AZURE_CONFIG_DIR'] = this.azCliConfigPath;
     }
 
     private static logoutAzure() {
