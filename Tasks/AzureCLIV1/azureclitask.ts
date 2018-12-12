@@ -31,12 +31,13 @@ export class azureclitask {
                 }
             }
             else {
+                var tmpDir = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
                 var script: string = tl.getInput("inlineScript", true);
                 if (os.type() != "Windows_NT") {
-                    scriptPath = path.join(tl.getVariable('Agent.TempDirectory'), "azureclitaskscript" + new Date().getTime() + ".sh");
+                    scriptPath = path.join(tmpDir, "azureclitaskscript" + new Date().getTime() + ".sh");
                 }
                 else {
-                    scriptPath = path.join(tl.getVariable('Agent.TempDirectory'), "azureclitaskscript" + new Date().getTime() + ".bat");
+                    scriptPath = path.join(tmpDir, "azureclitaskscript" + new Date().getTime() + ".bat");
                 }
                 this.createFile(scriptPath, script);
             }
