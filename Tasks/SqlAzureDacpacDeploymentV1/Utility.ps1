@@ -99,11 +99,6 @@ function Get-SqlPackageCommandArguments
 
     $ErrorActionPreference = 'Stop'
 
-    if (-not $targetMethod)
-    {
-      $targetMethod = "server"
-    }
-
     $sqlPackageOptions =
     @{
         SourceFile = "/SourceFile:";

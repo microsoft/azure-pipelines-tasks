@@ -147,8 +147,8 @@ function Script-Action {
 
     $outputSqlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_Script.sql"
 
-    $sqlpackageArguments = Get-SqlPackageCommandArguments -targetMethod $targetMethod -sqlpackageAction "Script" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -sourceConnectionString $connectionString -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments
-    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -targetMethod $targetMethod -sqlpackageAction "Script" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -sourceConnectionString $connectionString -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+    $sqlpackageArguments = Get-SqlPackageCommandArguments -targetMethod $targetMethod -sqlpackageAction "Script" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -targetMethod $targetMethod -sqlpackageAction "Script" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -targetConnectionString $connectionString -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
