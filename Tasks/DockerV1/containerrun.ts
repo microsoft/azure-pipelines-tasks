@@ -83,5 +83,8 @@ export function run(connection: ContainerConnection): any {
         command.line(containerCommand);
     }
 
+    var commandArguments = tl.getInput("arguments", false); 
+    command.line(commandArguments);
+
     return connection.execCommand(command);
 }
