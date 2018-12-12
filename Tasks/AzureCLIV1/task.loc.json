@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 144,
-    "Patch": 3
+    "Patch": 4
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -145,6 +145,7 @@
     "LoginFailed": "ms-resource:loc.messages.LoginFailed",
     "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
     "SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir",
-    "SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud"
+    "SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud",
+    "GlobalCliConfigAgentVersionWarning": "ms-resource:loc.messages.GlobalCliConfigAgentVersionWarning"
   }
 }
