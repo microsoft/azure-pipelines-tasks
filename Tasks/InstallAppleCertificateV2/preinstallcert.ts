@@ -33,13 +33,13 @@ async function run() {
             notAfter = p12Properties.notAfter;
 
         // give user an option to override the CN as a workaround if we can't parse the certificate's subject.
-        let commonNameOverride: string = tl.getInput('certSigningIdentity', false);
+        const commonNameOverride: string = tl.getInput('certSigningIdentity', false);
         if (commonNameOverride) {
             commonName = commonNameOverride;
         }
 
         if (!fingerprint || !commonName) {
-            throw tl.loc('INVALID_P12');
+            throw new Error(tl.loc('INVALID_P12'));
         }
         tl.setTaskVariable('APPLE_CERTIFICATE_SHA1HASH', fingerprint);
 

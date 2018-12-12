@@ -544,13 +544,18 @@ export async function getP12Properties(p12Path: string, p12Pwd: string): Promise
             const value = tuple.value;
 
             if (key === 'SHA1 Fingerprint') {
+                // Example value: "BB:26:83:C6:AA:88:35:DE:36:94:F2:CF:37:0A:D4:60:BB:AE:87:0C"
+                // Remove colons separating each octet.
                 fingerprint = value.replace(/:/g, '').trim();
             } else if (key === 'subject') {
+                // Example value: "/UID=E848ASUQZY/CN=iPhone Developer: Chris Sidi (7RZ3N927YF)/OU=DJ8T2973U7/O=Chris Sidi/C=US"
+                // Extract the common name.
                 const matches: string[] = value.match(/\/CN=([^/]+)/);
                 if (matches && matches[1]) {
                     commonName = matches[1].trim();
                 }
             } else if (key === 'notBefore') {
+                // Example value: "Nov 13 03:37:42 2018 GMT"
                 notBefore = new Date(value);
             } else if (key === 'notAfter') {
                 notAfter = new Date(value);
@@ -726,6 +731,7 @@ function getUserProvisioningProfilesPath(): string {
 }
 
 function splitIntoKeyValue(line: string): {key: string, value: string} {
+    // Don't use `split`. The value may contain `=` (e.g. "/UID=E848ASUQZY/CN=iPhone Developer: ...")
     const index: number = line.indexOf('=');
 
     if (index) {
