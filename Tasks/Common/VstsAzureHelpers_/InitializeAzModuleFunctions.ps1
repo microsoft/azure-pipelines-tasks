@@ -10,11 +10,9 @@ function Initialize-AzModule {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
-        if (!(Import-AzModule))
-        {
-            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList "Any version", "Az.Profile")
-        }
+        Import-AzModule
 
+        Write-Verbose "Initializing Az Module."
         Initialize-AzSubscription -Endpoint $Endpoint
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
@@ -27,21 +25,21 @@ function Import-AzModule {
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
+        # We are only looking for Az.Profile module becasue all the command required for initialize the azure PS session is in Az.Profile module.
         $moduleName = "Az.Profile"
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
         $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
         if (!$module) {
             Write-Verbose "No module found with name: $moduleName"
-            return $false
+            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList "Any version", "Az.Profile")
         }
 
         # Import the module.
         Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
         $module = Import-Module -Name $module.Path -Global -PassThru -Force
         Write-Verbose "Imported module version: $($module.Version)"
-        return $true
-     }finally {
+     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
      }
 }
@@ -56,12 +54,10 @@ function Initialize-AzSubscription {
     Set-UserAgent
     
     # Clear context
-    if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal') {
-        Write-Host "##[command]Clear-AzContext -Scope Process"
-        $null = Clear-AzContext -Scope Process
-        Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
-        $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
-    }
+    Write-Host "##[command]Clear-AzContext -Scope Process"
+    $null = Clear-AzContext -Scope Process
+    Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+    $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
 
     $environmentName = "AzureCloud"
     if($Endpoint.Data.Environment) {
@@ -83,25 +79,27 @@ function Initialize-AzSubscription {
     }
 
     if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal') {
-        
-        if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
-            $servicePrincipalCertificate = Add-Certificate -Endpoint $Endpoint -ServicePrincipal
-        }
-        else {
-            $psCredential = New-Object System.Management.Automation.PSCredential(
-                $Endpoint.Auth.Parameters.ServicePrincipalId,
-                (ConvertTo-SecureString $Endpoint.Auth.Parameters.ServicePrincipalKey -AsPlainText -Force))
-        }
-
         try {
-            if ($Endpoint.Auth.Parameters.AuthenticationType -eq "SPNCertificate") {
+            if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
+                $servicePrincipalCertificate = Add-Certificate -Endpoint $Endpoint -ServicePrincipal
+
                 Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName"
-                $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName
+                $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId `
+                -CertificateThumbprint $servicePrincipalCertificate.Thumbprint `
+                -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId `
+                -Environment $environmentName -WarningAction SilentlyContinue
             }
             else {
+                $psCredential = New-Object System.Management.Automation.PSCredential(
+                    $Endpoint.Auth.Parameters.ServicePrincipalId,
+                    (ConvertTo-SecureString $Endpoint.Auth.Parameters.ServicePrincipalKey -AsPlainText -Force))
+
                 Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
-                $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName -WarningAction SilentlyContinue
+                $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId `
+                -Credential $psCredential `
+                -Environment $environmentName -WarningAction SilentlyContinue
             }
+
         } 
         catch {
             # Provide an additional, custom, credentials-related error message.
@@ -133,7 +131,7 @@ function Initialize-AzSubscription {
         }
         
         Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
-    }else {
+    } else {
         throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
     } 
 }
@@ -151,13 +149,7 @@ function Add-AzureStackAzEnvironment {
     $armEnv = Get-AzEnvironment -Name $name
     if($armEnv -ne $null) {
         Write-Verbose "Updating Az environment $name" -Verbose
-        
-        if (CmdletHasMember -cmdlet Remove-AzEnvironment -memberName Force) {
-            Remove-AzEnvironment -Name $name -Force | Out-Null
-        }
-        else {
-            Remove-AzEnvironment -Name $name | Out-Null
-        }        
+        Remove-AzEnvironment -Name $name | Out-Null       
     }
     else {
         Write-Verbose "Adding Az environment $name" -Verbose
@@ -179,8 +171,7 @@ function Set-CurrentAzSubscription {
         [string]$SubscriptionId,
         [string]$TenantId)
 
-    $additional = @{ }
-    if ($TenantId) { $additional['TenantId'] = $TenantId }
+    $additional = { $additional['TenantId'] = $TenantId }
 
     Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
     $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
