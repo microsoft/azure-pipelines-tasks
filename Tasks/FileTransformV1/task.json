@@ -48,7 +48,7 @@
         {
             "name": "xmlTransformationRules",
             "type": "multiLine",
-            "label": "Transformation Rules",
+            "label": "Transformation rules",
             "defaultValue": "-transform **\\*.Release.config -xml **\\*.config\n-transform **\\*.$(Release.EnvironmentName).config -xml **\\*.config",
             "required": false,
             "helpMarkDown": "Provide new line separated list of transformation file rules.",
@@ -57,7 +57,7 @@
         {
             "name": "fileType",
             "type": "pickList",
-            "label": "File Format",
+            "label": "File format",
             "defaultValue": "",
             "required": false,
             "options": {
@@ -73,7 +73,7 @@
         {
             "name": "targetFiles",
             "type": "multiLine",
-            "label": "Target Files",
+            "label": "Target files",
             "required": false,
             "defaultValue": "",
             "groupName": "VariableSubstitution",
