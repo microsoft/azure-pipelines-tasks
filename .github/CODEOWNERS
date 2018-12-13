@@ -28,7 +28,7 @@ Tasks/AzureFunctionOnContainerDeploymentV1/*    @kmkumaran      @SumiranAgg     
 
 Tasks/AzureFunctionV1/*     @bansalaseem
 
-Tasks/AzureIoTEdgeV2/*      @prativen
+Tasks/AzureIoTEdgeV2/*      @prativen   @michaeljqzq    @shyama1208
 
 Tasks/AzureKeyVaultV1/*     @bansalaseem
 
@@ -114,7 +114,7 @@ Tasks/ExtractFilesV1/*      @bryanmacfarlane
 
 Tasks/FtpUploadV1/*     @madhurig
 
-Tasks/GithubReleaseV0/*     @prativen
+Tasks/GithubReleaseV0/*     @prativen   @mdmdakbar
 
 Tasks/GoV0/*    @sachinma
 
