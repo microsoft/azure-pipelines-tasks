@@ -10,6 +10,7 @@
         "AzureCLIV1",
         "AzureCloudPowerShellDeploymentV1",
         "AzureFileCopyV2",
+        "AzureFileCopyV3",
         "AzureFunctionDeploymentV1",
         "AzureFunctionOnContainerDeploymentV1",
         "AzureFunctionV1",
