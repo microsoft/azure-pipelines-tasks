@@ -88,5 +88,5 @@
   "loc.messages.FetchInitialCommit": "Fetching the initial commit...",
   "loc.messages.FetchInitialCommitSuccess": "Found the initial commit: %s",
   "loc.messages.FetchInitialCommitError": "An unexpected error occurred while fetching the initial commit.",
-  "loc.messages.InvalidActionSet": "Invalid action: %s. Only 'create' or 'edit' or 'delete' actions are allowed. Skipping further steps..."
+  "loc.messages.InvalidActionSet": "Invalid action: %s. Only 'create' or 'edit' or 'delete' actions are allowed."
 }

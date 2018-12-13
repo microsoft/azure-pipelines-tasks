@@ -250,6 +250,6 @@
         "FetchInitialCommit": "Fetching the initial commit...",
         "FetchInitialCommitSuccess": "Found the initial commit: %s",
         "FetchInitialCommitError": "An unexpected error occurred while fetching the initial commit.",
-        "InvalidActionSet": "Invalid action: %s. Only 'create' or 'edit' or 'delete' actions are allowed. Skipping further steps..."
+        "InvalidActionSet": "Invalid action: %s. Only 'create' or 'edit' or 'delete' actions are allowed."
     }
 }
