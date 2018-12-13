@@ -100,7 +100,7 @@ export class FirewallRules {
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else if(statusCode === 202){
-                this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, 3, 0).then((response) => {
+                this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, 5, 0).then((response) => {
                     deferred.resolve(new azureServiceClient.ApiResult(null, response));
                 },(error) => {
                     deferred.reject(error);

@@ -65,6 +65,7 @@ try
     }
 
     . "$PSScriptRoot\ServiceFabricSDK\ServiceFabricSDK.ps1"
+    . "$PSScriptRoot\ServiceFabricSDK\Utilities.ps1"
 
     $applicationParameterFile = Get-SinglePathOfType (Get-VstsInput -Name applicationParameterPath) Leaf
     if ($applicationParameterFile)
@@ -102,7 +103,7 @@ try
     }
 
     $applicationName = Get-ApplicationNameFromApplicationParameterFile $applicationParameterFile
-    $app = Get-ServiceFabricApplication -ApplicationName $applicationName
+    $app = Get-ServiceFabricApplicationAction -ApplicationName $applicationName
 
     $useDiffPackage = [System.Boolean]::Parse((Get-VstsInput -Name useDiffPackage))
     if ($useDiffPackage)

@@ -1,8 +1,8 @@
 import * as tl from "vsts-task-lib";
 
-import * as VsoBaseInterfaces from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
-import { ClientVersioningData } from 'vso-node-api/VsoClient';
-import vstsClientBases = require("vso-node-api/ClientApiBases");
+import * as VsoBaseInterfaces from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
+import { ClientVersioningData } from 'azure-devops-node-api/VsoClient';
+import vstsClientBases = require("azure-devops-node-api/ClientApiBases");
 
 import * as restclient from 'typed-rest-client/RestClient';
 
@@ -51,11 +51,15 @@ export class ProvenanceHelper {
         baseUrl: string,
         handlers: VsoBaseInterfaces.IRequestHandler[],
         options: VsoBaseInterfaces.IRequestOptions): Promise<string> {
-        
-        // while this feature is in preview, it is enabled by the following variable
-        const useSessionEnabled = tl.getVariable("Packaging.SavePublishMetadata");
-        if (useSessionEnabled) {
-            tl.debug("Creating provenance session");
+               
+        const publishPackageMetadata = tl.getInput("publishPackageMetadata");
+        let shouldCreateSession = publishPackageMetadata && publishPackageMetadata.toLowerCase() == 'true';
+        if (shouldCreateSession) {
+            const useSessionEnabled = tl.getVariable("Packaging.SavePublishMetadata");
+            shouldCreateSession = shouldCreateSession && !(useSessionEnabled && useSessionEnabled.toLowerCase() == 'false')
+        }
+        if (shouldCreateSession) {
+            tl.debug("Creating provenance session to save pipeline metadata. This can be disabled in the task settings, or by setting build variable Packaging.SavePublishMetadata to false");
             const prov = new ProvenanceApi(baseUrl, handlers, options);
             const sessionRequest = ProvenanceHelper.CreateSessionRequest(feedId);
             try {
@@ -90,6 +94,7 @@ export class ProvenanceHelper {
     private static CreateBuildSessionRequest(feedId: string, buildId: string): SessionRequest {
         let buildData = {
             "System.CollectionId": tl.getVariable("System.CollectionId"),
+            "System.DefinitionId": tl.getVariable("System.DefinitionId"),
             "System.TeamProjectId": tl.getVariable("System.TeamProjectId"),
             "Build.BuildId": buildId,
             "Build.BuildNumber": tl.getVariable("Build.BuildNumber"),
@@ -97,6 +102,7 @@ export class ProvenanceHelper {
             "Build.Repository.Name": tl.getVariable("Build.Repository.Name"),
             "Build.Repository.Provider": tl.getVariable("Build.Repository.Provider"),
             "Build.Repository.Id": tl.getVariable("Build.Repository.Id"),
+            "Build.Repository.Uri": tl.getVariable("Build.Repository.Uri"),
             "Build.SourceBranch": tl.getVariable("Build.SourceBranch"),
             "Build.SourceBranchName": tl.getVariable("Build.SourceBranchName"),
             "Build.SourceVersion": tl.getVariable("Build.SourceVersion")

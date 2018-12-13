@@ -12,5 +12,5 @@
   "loc.input.label.removeProfile": "Удалить профиль после сборки",
   "loc.input.help.removeProfile": "Выберите, чтобы указать, что по завершении сборки или версии профиль подготовки следует удалить с агента.",
   "loc.messages.InputProvisioningProfileNotFound": "Устанавливаемый профиль подготовки не найден в %s. Укажите полный путь к профилю подготовки.",
-  "loc.messages.InstallRequiresMac": "Install Apple Provisioning Profile requires a macOS agent. Installing on Windows or Linux is not supported by Apple."
+  "loc.messages.InstallRequiresMac": "Для установки профиля подготовки Apple требуется агент macOS. Установка в Linux или Windows не поддерживается Apple."
 }

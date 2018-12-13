@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Installer la clé SSH",
-  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=875267)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=875267)",
   "loc.description": "Installer une clé SSH avant une build ou une mise en production",
   "loc.instanceNameFormat": "Installer une clé SSH",
   "loc.input.label.hostName": "Entrée des hôtes connus",

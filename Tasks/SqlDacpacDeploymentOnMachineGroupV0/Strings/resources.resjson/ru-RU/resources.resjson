@@ -24,7 +24,7 @@
   "loc.input.label.DatabaseName": "Имя базы данных",
   "loc.input.help.DatabaseName": "Укажите имя базы данных SQL Server.",
   "loc.input.label.AuthScheme": "Проверка подлинности",
-  "loc.input.help.AuthScheme": "Выберите режим проверки подлинности для подключения к SQL Server. В режиме Windows для подключения к SQL Server используется учетная запись администратора, указанная в разделе Machines. В режиме SQL Server необходимо указать в параметрах ниже имя для входа SQL и пароль.",
+  "loc.input.help.AuthScheme": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the account used to configure deployment agent, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below.",
   "loc.input.label.SqlUsername": "Имя пользователя SQL",
   "loc.input.help.SqlUsername": "Укажите имя для входа SQL, используемое для подключения к SQL Server. Параметр доступен только при выборе режима проверки подлинности SQL Server.",
   "loc.input.label.SqlPassword": "Пароль SQL",

@@ -1,7 +1,7 @@
-import * as vsts from 'vso-node-api';
-import * as interfaces from 'vso-node-api/interfaces/common/VSSInterfaces';
+import * as vsts from 'azure-devops-node-api';
+import * as interfaces from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 import * as tl from 'vsts-task-lib/task';
-import { IRequestOptions } from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
+import { IRequestOptions } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
 
 import * as provenance from "./provenance";
 

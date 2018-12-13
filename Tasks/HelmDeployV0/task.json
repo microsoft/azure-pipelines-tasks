@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 138,
-        "Patch": 10
+        "Patch": 14
     },
     "demands": [],
     "groups": [
@@ -50,7 +50,8 @@
             "required": true,
             "options": {
                 "Azure Resource Manager": "Azure Resource Manager",
-                "Kubernetes Service Connection": "Kubernetes Service Connection"
+                "Kubernetes Service Connection": "Kubernetes Service Connection",
+                "None": "None"
             },
             "helpMarkDown": "Select 'Azure Resource Manager' to connect to an Azure Kubernetes Service by using Azure Service Connection. Select 'Kubernetes Service Connection' to connect to any Kubernetes cluster by using kubeconfig or Service Account",
             "groupName": "cluster"
@@ -393,6 +394,7 @@
         }
     ],
     "instanceNameFormat": "helm $(command)",
+    "showEnvironmentVariables": true,
     "prejobexecution": {
         "Node": {
             "target": "src//downloadsecurefiles.js"

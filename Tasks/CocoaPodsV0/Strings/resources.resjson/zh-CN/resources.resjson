@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "pod 安装",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.cwd": "工作目录",
-  "loc.input.help.cwd": "Specify the working directory in which to execute this task. If left empty, the repository directory will be used.",
+  "loc.input.help.cwd": "指定要执行此任务的工作目录。如果留空，将使用存储库目录。",
   "loc.input.label.forceRepoUpdate": "强制存储库更新",
   "loc.input.help.forceRepoUpdate": "选择此选项会在安装前强制运行 \"pod repo update\"。",
   "loc.input.label.projectDirectory": "项目目录",
