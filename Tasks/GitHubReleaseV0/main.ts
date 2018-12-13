@@ -13,11 +13,13 @@ class Main {
             tl.debug("Setting resource path to " + taskManifestPath);
             tl.setResourcePath(taskManifestPath);        
 
+            Helper.publishTelemetry();
+
             // Get basic task inputs
             const githubEndpoint = tl.getInput(Inputs.gitHubConnection, true);
             const githubEndpointToken = Utility.getGithubEndPointToken(githubEndpoint);
             const repositoryName = tl.getInput(Inputs.repositoryName, true);        
-            const action = tl.getInput(Inputs.action, true);
+            const action = tl.getInput(Inputs.action, true).toLowerCase();
             let tag = tl.getInput(Inputs.tag);
 
             if (action === ActionType.delete) {
@@ -63,6 +65,9 @@ class Main {
                         tl.warning(tl.loc("NoReleaseFoundToEditCreateRelease", tag));
                         await Action.createReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
                     }
+                }
+                else {
+                    throw new Error(tl.loc("InvalidActionSet", action));
                 }
             }
 
