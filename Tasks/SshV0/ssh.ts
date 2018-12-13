@@ -71,7 +71,8 @@ async function run() {
             try {
                 fs.writeFileSync(scriptFile, inlineScript);
             } catch (err) {
-                this.deleteFile(scriptFile);
+                console.log(tl.loc('FailedToWriteScript', err));
+                tryDeleteFile(scriptFile);
                 throw err;
             }
         } else {
@@ -169,6 +170,16 @@ async function run() {
         if (sshClientConnection) {
             tl.debug('Closing the SSH client connection.');
             sshClientConnection.end();
+        }
+    }
+}
+
+function tryDeleteFile(filePath: string): void {
+    if (fs.existsSync(filePath)) {
+        try {
+            fs.unlinkSync(filePath);
+        } catch (err) {
+            console.error(err);
         }
     }
 }
