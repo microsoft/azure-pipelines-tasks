@@ -279,7 +279,7 @@ export class ResourceGroup {
         var timestamp = new Date(Date.now());
         var uniqueId = uuid().substr(0, 4);
         var suffix = util.format("%s%s%s-%s%s%s-%s", timestamp.getFullYear(),
-            formatNumber(timestamp.getMonth()),
+            formatNumber(timestamp.getMonth() + 1),
             formatNumber(timestamp.getDate()),
             formatNumber(timestamp.getHours()),
             formatNumber(timestamp.getMinutes()),

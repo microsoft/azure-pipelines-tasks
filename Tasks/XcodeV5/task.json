@@ -12,7 +12,7 @@
     "version": {
         "Major": 5,
         "Minor": 142,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "This version of the task is compatible with Xcode 8, Xcode 9 and Xcode 10. Features that were there solely to maintain compat with Xcode 7 have been removed. The task has better options to work with the Hosted macOS pool.",
     "demands": [

@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "pod install",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.cwd": "Directory di lavoro",
-  "loc.input.help.cwd": "Specify the working directory in which to execute this task. If left empty, the repository directory will be used.",
+  "loc.input.help.cwd": "Consente di specificare la directory di lavoro in cui eseguire questa attività. Se viene lasciato vuoto, verrà usata la directory del repository.",
   "loc.input.label.forceRepoUpdate": "Forza aggiornamento del repository",
   "loc.input.help.forceRepoUpdate": "Se si seleziona questa opzione, 'pod repo update' verrà eseguito forzatamente prima dell'installazione.",
   "loc.input.label.projectDirectory": "Directory del progetto",

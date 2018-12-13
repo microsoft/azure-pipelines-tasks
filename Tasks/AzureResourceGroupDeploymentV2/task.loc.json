@@ -37,8 +37,8 @@
       "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
     },
     {
-      "name": "Outputs",
-      "displayName": "ms-resource:loc.group.displayName.Outputs",
+      "name": "Advanced",
+      "displayName": "ms-resource:loc.group.displayName.Advanced",
       "isExpanded": true,
       "visibleRule": "action = Create Or Update Resource Group"
     }
@@ -163,15 +163,6 @@
       }
     },
     {
-      "name": "deploymentName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.deploymentName",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "Template",
-      "helpMarkDown": "ms-resource:loc.input.help.deploymentName"
-    },
-    {
       "name": "deploymentMode",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.deploymentMode",
@@ -289,12 +280,21 @@
       "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
     },
     {
+      "name": "deploymentName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.deploymentName",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentName"
+    },
+    {
       "name": "deploymentOutputs",
       "type": "string",
       "label": "ms-resource:loc.input.label.deploymentOutputs",
       "required": false,
       "defaultValue": "",
-      "groupName": "Outputs",
+      "groupName": "Advanced",
       "helpMarkDown": "ms-resource:loc.input.help.deploymentOutputs"
     }
   ],

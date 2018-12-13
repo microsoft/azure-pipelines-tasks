@@ -1,0 +1,65 @@
+{
+  "id": "8ce97e91-56cc-4743-bfab-9a9315be5f27",
+  "name": "FileTransform",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "preview": "true",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "folderPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.folderPath",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.folderPath"
+    },
+    {
+      "name": "enableXmlVariableSubstitution",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enableXmlVariableSubstitution",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.enableXmlVariableSubstitution"
+    },
+    {
+      "name": "JSONFiles",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.JSONFiles",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.JSONFiles"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "filetransform.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "JSONvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.JSONvariablesubstitutionappliedsuccessfully",
+    "XMLvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.XMLvariablesubstitutionappliedsuccessfully",
+    "XDTTransformationsappliedsuccessfully": "ms-resource:loc.messages.XDTTransformationsappliedsuccessfully",
+    "CannotPerformXdtTransformationOnNonWindowsPlatform": "ms-resource:loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform",
+    "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
+    "JSONParseError": "ms-resource:loc.messages.JSONParseError",
+    "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern"
+  }
+}

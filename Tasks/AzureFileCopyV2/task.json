@@ -12,10 +12,9 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 0,
-        "Patch": 13
+        "Minor": 1,
+        "Patch": 0
     },
-    "preview": true,
     "demands": [
         "azureps"
     ],
@@ -365,6 +364,7 @@
         "AFC_RedirectResponseInvalidStatusCode": "The HTTP response code: '{0}' is not a valid redirect status code",
         "AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null.",
         "AFC_AzCopyBlobUploadNonZeroExitCode": "AzCopy.exe exited with non-zero exit code while uploading files to blob storage.",
-        "AFC_PreexecutionJob_UnableToGetStorageKey": "Unable to fetch storage account key. Error: '{0}'"
+        "AFC_PreexecutionJob_UnableToGetStorageKey": "Unable to fetch storage account key. Error: '{0}'",
+        "AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment."
     }
 }

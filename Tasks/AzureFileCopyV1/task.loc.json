@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 142
+    "Patch": 144
   },
   "demands": [
     "azureps"
@@ -347,6 +347,7 @@
     "AFC_BlobStorageNotFound": "ms-resource:loc.messages.AFC_BlobStorageNotFound",
     "AFC_RootContainerAndDirectory": "ms-resource:loc.messages.AFC_RootContainerAndDirectory",
     "AFC_RedirectResponseInvalidStatusCode": "ms-resource:loc.messages.AFC_RedirectResponseInvalidStatusCode",
-    "AFC_RedirectResponseLocationHeaderIsNull": "ms-resource:loc.messages.AFC_RedirectResponseLocationHeaderIsNull"
+    "AFC_RedirectResponseLocationHeaderIsNull": "ms-resource:loc.messages.AFC_RedirectResponseLocationHeaderIsNull",
+    "AFC_UninstallWinRMCustomScriptExtension": "ms-resource:loc.messages.AFC_UninstallWinRMCustomScriptExtension"
   }
 }
