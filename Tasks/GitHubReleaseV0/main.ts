@@ -13,6 +13,8 @@ class Main {
             tl.debug("Setting resource path to " + taskManifestPath);
             tl.setResourcePath(taskManifestPath);        
 
+            Helper.publishTelemetry();
+
             // Get basic task inputs
             const githubEndpoint = tl.getInput(Inputs.gitHubConnection, true);
             const githubEndpointToken = Utility.getGithubEndPointToken(githubEndpoint);

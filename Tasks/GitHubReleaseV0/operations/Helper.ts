@@ -1,10 +1,20 @@
 import tl = require("vsts-task-lib/task");
-import { Inputs, TagSelectionMode, Utility, GitHubAttributes, AzureDevOpsVariables} from "./Utility";
+import * as telemetry from "utility-common/telemetry";
+import { Inputs, TagSelectionMode, Utility, GitHubAttributes, AzureDevOpsVariables, ActionType} from "./Utility";
 import { Release } from "./Release";
 
 interface IRelease {
     tagName: string;
     id: number;
+}
+
+interface ITelemetryData {
+    area: string;
+    action: string;
+    tagSource: string;
+    isDraft: boolean;
+    isPreRelease: boolean;
+    addChangeLog: boolean;
 }
 
 export class Helper {
@@ -202,6 +212,28 @@ export class Helper {
                 throw new Error(tagsResponse.body[GitHubAttributes.message]);
             }
         }
+    }
+
+    public static publishTelemetry(): void {
+        let telemetryData = {} as ITelemetryData;
+
+        const releaseId: string = tl.getVariable(AzureDevOpsVariables.releaseId);
+
+        telemetryData.area = !!releaseId ? "release" : "build";
+        telemetryData.action = tl.getInput(Inputs.action, true);
+
+        if (telemetryData.action !== ActionType.delete) {
+
+            if (telemetryData.action === ActionType.create) {
+                telemetryData.tagSource = tl.getInput(Inputs.tagSource);
+            }
+
+            telemetryData.isDraft = tl.getBoolInput(Inputs.isDraft);
+            telemetryData.isPreRelease = tl.getBoolInput(Inputs.isPreRelease);
+            telemetryData.addChangeLog = tl.getBoolInput(Inputs.addChangeLog);
+        }
+
+        telemetry.emitTelemetry("TaskHub", "GitHubRelease", telemetryData);
     }
     
     /**
