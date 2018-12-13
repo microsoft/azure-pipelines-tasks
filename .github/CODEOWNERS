@@ -8,7 +8,7 @@ Tasks/AppCenterDistributeV1/*   @madhurig
 
 Tasks/AppCenterTestV1/*   @madhurig
 
-Tasks/ArchiveFilesV2/*  @bryanmac
+Tasks/ArchiveFilesV2/*  @bryanmacfarlane
 
 Tasks/AzureAppServiceManageV0/*     @kmkumaran      @SumiranAgg     @vincentdass
 
@@ -48,9 +48,9 @@ Tasks/AzureRmWebAppDeploymentV4/*   @kmkumaran    @SumiranAgg     @vincentdass
 
 Tasks/AzureVmssDeploymentV0/*       @sachinma
 
-Tasks/BashV3/*  @bryanmac
+Tasks/BashV3/*  @bryanmacfarlane
 
-Tasks/BatchScriptV1/*   @bryanmac
+Tasks/BatchScriptV1/*   @bryanmacfarlane
 
 Tasks/ChefV1/*      @kmkumaran
 
@@ -58,7 +58,7 @@ Tasks/ChefKnifeV1/*     @kmkumaran
 
 Tasks/CMakeV1/*  @daveken
 
-Tasks/CmdLineV2/*   bryanmac
+Tasks/CmdLineV2/*   bryanmacfarlane
 
 Tasks/CocoaPodsV0/*     @madhurig
 
@@ -66,7 +66,7 @@ Tasks/CondaEnvironmentV0/*      @madhurig
 
 Tasks/CondaEnvironmentV1/*      @madhurig
 
-Tasks/CopyFilesV2/*     @bryanmac
+Tasks/CopyFilesV2/*     @bryanmacfarlane
 
 Tasks/CopyFilesOverSSHV0/*      @madhurig
 
@@ -76,7 +76,7 @@ Tasks/DecryptFileV1/*   @madhurig
 
 Tasks/DelayV1/*     @bansalaseem
 
-Tasks/DeleteFilesV1/*   @bryanmac
+Tasks/DeleteFilesV1/*   @bryanmacfarlane
 
 Tasks/DeployVisualStudioTestAgentV2/*       @smalpani
 
@@ -100,7 +100,7 @@ Tasks/DownloadPipelineArtifactV0/*      @mihaif
 
 Tasks/DownloadSecureFileV1/*    @madhurig
 
-Tasks/ExtractFilesV1/*      @bryanmac
+Tasks/ExtractFilesV1/*      @bryanmacfarlane
 
 Tasks/FtpUploadV1/*     @madhurig
 
@@ -112,11 +112,11 @@ Tasks/GoToolV0/*    @sachinma
 
 Tasks/GradleV2/*    @madhurig
 
-Tasks/GruntV0/*     @robrodbe
+Tasks/GruntV0/*     @hross
 
-Tasks/GulpV0/*      @robrodbe
+Tasks/GulpV0/*      @hross
 
-Tasks/GulpV1/*      @robrodbe
+Tasks/GulpV1/*      @hross
 
 Tasks/HelmDeployV0/*    @bansalaseem
 
@@ -156,7 +156,7 @@ Tasks/MSBuildV1/*   @daveken
 
 Tasks/MysqlDeploymentOnMachineGroupV1/*     @kmkumaran
 
-Tasks/NodeToolV0/*      @robrodbe
+Tasks/NodeToolV0/*      @hross
 
 Tasks/NpmV1/*       @zackrun
 
@@ -176,7 +176,7 @@ Tasks/PackerBuildV0/*   @sachinma
 
 Tasks/PackerBuildV1/*   @sachinma
 
-Tasks/PowerShellV2/*    @bryanmac
+Tasks/PowerShellV2/*    @bryanmacfarlane
 
 Tasks/PowerShellOnTargetMachinesV1/*    @kmkumaran
 
@@ -234,7 +234,7 @@ Tasks/UniversalPackagesV0/*     @zackrun
 
 Tasks/UsePythonVersionV0/*      @madhurig
 
-Tasks/UseRubyVersionV0/*    @robrodbe
+Tasks/UseRubyVersionV0/*    @hross
 
 Tasks/VSBuildV1/*   @daveken
 
