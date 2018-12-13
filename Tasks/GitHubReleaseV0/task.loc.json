@@ -182,7 +182,7 @@
   "sourceDefinitions": [
     {
       "target": "repositoryName",
-      "endpoint": "/$(system.teamProject)/_apis/sourceProviders/GitHub/repositories?serviceEndpointId=$(githubEndpoint)",
+      "endpoint": "/$(system.teamProject)/_apis/sourceProviders/GitHub/repositories?serviceEndpointId=$(gitHubConnection)",
       "selector": "jsonpath:$.repositories[*].id",
       "keySelector": "jsonpath:$.repositories[*].id",
       "authKey": "tfs:teamfoundation"
@@ -249,6 +249,7 @@
     "FetchCommitDiffError": "ms-resource:loc.messages.FetchCommitDiffError",
     "FetchInitialCommit": "ms-resource:loc.messages.FetchInitialCommit",
     "FetchInitialCommitSuccess": "ms-resource:loc.messages.FetchInitialCommitSuccess",
-    "FetchInitialCommitError": "ms-resource:loc.messages.FetchInitialCommitError"
+    "FetchInitialCommitError": "ms-resource:loc.messages.FetchInitialCommitError",
+    "InvalidActionSet": "ms-resource:loc.messages.InvalidActionSet"
   }
 }
