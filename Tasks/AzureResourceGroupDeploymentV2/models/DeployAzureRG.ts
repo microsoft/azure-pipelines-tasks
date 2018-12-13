@@ -63,6 +63,7 @@ export class AzureRGTaskParameters {
     public outputVariable: string;
     public subscriptionId: string;
     public endpointPortalUrl: string;
+    public deploymentName: string;
     public deploymentMode: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
     public deploymentGroupProjectName = "";
@@ -134,6 +135,7 @@ export class AzureRGTaskParameters {
             this.agentServiceUserCredentials = new AgentServiceUserCredentials(userName, password);
             
             this.outputVariable = tl.getInput("outputVariable");
+            this.deploymentName = tl.getInput("deploymentName");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = await this.getARMCredentials(connectedService);
             this.deploymentGroupProjectName = tl.getInput("project");

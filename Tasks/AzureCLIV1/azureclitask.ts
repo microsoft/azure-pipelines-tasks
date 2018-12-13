@@ -31,12 +31,13 @@ export class azureclitask {
                 }
             }
             else {
+                var tmpDir = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
                 var script: string = tl.getInput("inlineScript", true);
                 if (os.type() != "Windows_NT") {
-                    scriptPath = path.join(os.tmpdir(), "azureclitaskscript" + new Date().getTime() + ".sh");
+                    scriptPath = path.join(tmpDir, "azureclitaskscript" + new Date().getTime() + ".sh");
                 }
                 else {
-                    scriptPath = path.join(os.tmpdir(), "azureclitaskscript" + new Date().getTime() + ".bat");
+                    scriptPath = path.join(tmpDir, "azureclitaskscript" + new Date().getTime() + ".bat");
                 }
                 this.createFile(scriptPath, script);
             }
@@ -100,10 +101,6 @@ export class azureclitask {
                 this.logoutAzure();
             }
 
-            if (this.azCliConfigPath) {
-                tl.rmRF(this.azCliConfigPath);
-            }
-
             //set the task result to either succeeded or failed based on error was thrown or not
             if (toolExecutionError) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailed", toolExecutionError));
@@ -116,7 +113,6 @@ export class azureclitask {
 
     private static isLoggedIn: boolean = false;
     private static cliPasswordPath: string = null;
-    private static azCliConfigPath: string;
     private static servicePrincipalId: string = null;
     private static servicePrincipalKey: string = null;
 
@@ -160,19 +156,12 @@ export class azureclitask {
             return;
         }
 
-        var configDirName: string = "c" + new Date().getTime(); // 'c' denotes config
-        var basePath: string;
-        if (tl.osType().match(/^Win/)) {
-            basePath = process.env.USERPROFILE;
-        }
-        else {
-            basePath = process.env.HOME;
-        }
-
-        if (!!basePath) {
-            this.azCliConfigPath = path.join(basePath, ".azclitask", configDirName);
-            console.log(tl.loc('SettingAzureConfigDir', this.azCliConfigPath));
-            process.env['AZURE_CONFIG_DIR'] = this.azCliConfigPath;
+        if (!!tl.getVariable('Agent.TempDirectory')) {
+            var azCliConfigPath = path.join(tl.getVariable('Agent.TempDirectory'), ".azclitask");
+            console.log(tl.loc('SettingAzureConfigDir', azCliConfigPath));
+            process.env['AZURE_CONFIG_DIR'] = azCliConfigPath;
+        } else {
+            console.warn(tl.loc('GlobalCliConfigAgentVersionWarning'));
         }
     }
 
