@@ -250,6 +250,7 @@ export class AzureDevOpsVariables {
     public static readonly collectionUri: string = "System.TeamFoundationCollectionUri"; 
     public static readonly teamProject: string = "System.TeamProject"; 
     public static readonly buildId: string = "Build.BuildId"; 
+    public static readonly releaseId: string = "Release.ReleaseId"; 
 }
 
 export interface IGitHubRepositoryInfo {
