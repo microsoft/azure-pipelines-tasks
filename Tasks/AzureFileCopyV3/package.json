@@ -1,0 +1,8 @@
+{
+  "name": "AzureFileCopyV2",
+  "dependencies": {
+    "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
+    "moment": "2.21.0",
+    "uuid": "3.2.1"
+  }
+}

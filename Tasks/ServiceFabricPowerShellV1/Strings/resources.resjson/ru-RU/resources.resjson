@@ -3,8 +3,8 @@
   "loc.helpMarkDown": "[Подробнее](https://go.microsoft.com/fwlink/?LinkID=841538)",
   "loc.description": "Выполнение сценария PowerShell в контексте подключения к кластеру Azure Service Fabric.",
   "loc.instanceNameFormat": "Сценарий PowerShell Service Fabric: $(ScriptType)",
-  "loc.input.label.serviceConnectionName": "Cluster Service Connection",
-  "loc.input.help.serviceConnectionName": "Azure Service Fabric cluster which will have an established service connection when executing the specified PowerShell script.",
+  "loc.input.label.serviceConnectionName": "Подключение к службе кластера",
+  "loc.input.help.serviceConnectionName": "Кластер Azure Service Fabric, к которому будет установлено подключение службы при выполнении указанного скрипта PowerShell.",
   "loc.input.label.ScriptType": "Тип сценария",
   "loc.input.help.ScriptType": "Тип сценария: путь к файлу или встроенный сценарий",
   "loc.input.label.ScriptPath": "Путь к скрипту",
@@ -13,6 +13,7 @@
   "loc.input.help.Inline": "Введите сценарий для выполнения.",
   "loc.input.label.ScriptArguments": "Аргументы скрипта",
   "loc.input.help.ScriptArguments": "Дополнительные параметры для передачи в PowerShell. Могут быть как порядковыми, так и именованными.",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
   "loc.messages.InvalidScriptArguments0": "Недопустимые аргументы скрипта \"{0}\". Разрывы строк запрещены.",
   "loc.messages.InvalidScriptPath0": "Недопустимый путь к скрипту \"{0}\". Указаны символы, недопустимые в пути."
 }

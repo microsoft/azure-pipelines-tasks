@@ -3,8 +3,8 @@
   "loc.helpMarkDown": "[更多資訊](https://go.microsoft.com/fwlink/?LinkID=841538)",
   "loc.description": "在 Azure Service Fabric 叢集連線的內容中執行 PowerShell 指令碼。",
   "loc.instanceNameFormat": "Service Fabric PowerShell 指令碼: $(ScriptType)",
-  "loc.input.label.serviceConnectionName": "Cluster Service Connection",
-  "loc.input.help.serviceConnectionName": "Azure Service Fabric cluster which will have an established service connection when executing the specified PowerShell script.",
+  "loc.input.label.serviceConnectionName": "叢集服務連線",
+  "loc.input.help.serviceConnectionName": "Azure Service Fabric 叢集，會在執行指定的 PowerShell 指令碼時建立服務連線。",
   "loc.input.label.ScriptType": "指令碼類型",
   "loc.input.help.ScriptType": "指令碼類型: 檔案路徑或內嵌指令碼",
   "loc.input.label.ScriptPath": "指令碼路徑",
@@ -13,6 +13,7 @@
   "loc.input.help.Inline": "請輸入要執行的指令碼。",
   "loc.input.label.ScriptArguments": "指令碼引數",
   "loc.input.help.ScriptArguments": "傳遞至 PowerShell 的額外引數。可以是序數或具名參數。",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
   "loc.messages.InvalidScriptArguments0": "指令碼引數 '{0}' 無效。不允許分行符號。",
   "loc.messages.InvalidScriptPath0": "指令碼路徑 '{0}' 無效。指定的路徑字元無效。"
 }

@@ -1,8 +1,5 @@
 import tl = require('vsts-task-lib/task');
-import path = require('path');
 
-var zipUtility = require('webdeployment-common/ziputility.js');
-var utility = require('webdeployment-common/utility.js');
 var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitutionutility.js');
 var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');

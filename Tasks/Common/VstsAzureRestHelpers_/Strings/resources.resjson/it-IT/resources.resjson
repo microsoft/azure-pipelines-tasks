@@ -6,8 +6,8 @@
   "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "Non è possibile recuperare i dettagli del bilanciamento del carico",
   "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "Non è possibile recuperare i dettagli degli indirizzi IP pubblici",
   "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "Non è possibile recuperare i dettagli delle interfacce di rete",
-  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: {0}, status message: {1}",
-  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Service Principal. Status code: {0}, status message: {1}",
-  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailure": "Failed to obtain access token using client certificate for service principal id: {0}. {1}",
-  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailureTokenNull": "Failed to obtain access token using client certificate for service principal id: {0}, tokenResult is null."
+  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Non è stato possibile recuperare il token di accesso per l'entità servizio gestita. Configurare l'identità del servizio gestita per la macchina virtuale 'https://aka.ms/azure-msi-docs'. Codice di stato: {0}. Messaggio di stato: {1}",
+  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Non è stato possibile recuperare il token di accesso per l'entità servizio gestita. Codice di stato: {0}. Messaggio di stato: {1}",
+  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailure": "Non è stato possibile ottenere il token di accesso usando il certificato client per l'ID entità servizio: {0}. {1}",
+  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailureTokenNull": "Non è stato possibile ottenere il token di accesso usando il certificato client per l'ID entità servizio: {0}. tokenResult è Null."
 }

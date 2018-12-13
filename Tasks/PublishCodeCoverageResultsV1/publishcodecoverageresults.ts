@@ -32,19 +32,13 @@ async function run() {
 
             // Get any 'Additional Files' to publish as build artifacts
             if (additionalFiles) {
-                // Does the 'Additional Files' value contain wildcards?
-                if (containsWildcard(additionalFiles)) {
-                    // Resolve matches of the 'Additional Files' pattern
-                    var additionalFileMatches: string[] = tl.findMatch(
-                        workingDirectory,
-                        additionalFiles,
-                        { followSymbolicLinks: false, followSpecifiedSymbolicLink: false },
-                        { matchBase: true });
-                }
-                else {
-                    // Use the specific additional file (no wildcards)
-                    var additionalFileMatches: string[] = [additionalFiles];
-                }
+                // Resolve matches of the 'Additional Files' pattern
+                var additionalFileMatches: string[] = tl.findMatch(
+                    workingDirectory,
+                    additionalFiles,
+                    { followSymbolicLinks: false, followSpecifiedSymbolicLink: false },
+                    { matchBase: true });
+
                 additionalFileMatches = additionalFileMatches.filter(file => pathExistsAsFile(file));
                 tl.debug(tl.loc('FoundNMatchesForPattern', additionalFileMatches.length, additionalFiles));
             }
@@ -65,7 +59,7 @@ function resolvePathToSingleItem(workingDirectory:string, pathInput: string) : s
     var resolvedPath: string = pathInput;
 
     // Does the pathInput value contain wildcards?
-    if (pathInput && containsWildcard(pathInput)) {
+    if (pathInput) {
         // Resolve matches of the pathInput pattern
         var pathMatches: string[] = tl.findMatch(
             workingDirectory,
@@ -90,12 +84,6 @@ function resolvePathToSingleItem(workingDirectory:string, pathInput: string) : s
 
     // Return resolved path
     return resolvedPath;
-}
-
-// Gets whether the specified input value contains a wildcard character.
-function containsWildcard(inputValue: string) : boolean {
-    return inputValue.indexOf('*') >= 0 ||
-           inputValue.indexOf('?') >= 0;
 }
 
 // Gets whether the specified path exists as file.

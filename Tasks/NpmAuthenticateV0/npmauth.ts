@@ -29,7 +29,7 @@ async function main(): Promise<void> {
          saveNpmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
     }
     else {
-        let tempPath = tl.getVariable('Agent.BuildDirectory') || tl.getVariable('Agent.ReleaseDirectory') || process.cwd();
+        let tempPath = tl.getVariable('Agent.BuildDirectory') || tl.getVariable('Agent.TempDirectory');
         tempPath = path.join(tempPath, 'npmAuthenticate');
         tl.mkdirP(tempPath);
         saveNpmrcPath = fs.mkdtempSync(tempPath + path.sep); 
@@ -119,9 +119,10 @@ async function main(): Promise<void> {
     }
 }
 
-
 main().catch(error => {
-    tl.rmRF(util.getTempPath());
+    if(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY")) {
+        tl.rmRF(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY"));
+    } 
     tl.setResult(tl.TaskResult.Failed, error);
 });
 function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url) {

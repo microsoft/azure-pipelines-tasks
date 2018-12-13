@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 142,
-        "Patch": 2
+        "Patch": 3
     },
     "groups": [
         {
@@ -83,6 +83,15 @@
                 "latestFromBranch": "Latest from specific branch and specified Build Tags",
                 "specific": "Specific version"
             }
+        },
+        {
+            "name": "allowPartiallySucceededBuilds",
+            "type": "boolean",
+            "label": "Download artifacts even from partially succeeded builds.",
+            "defaultValue": "false",
+            "visibleRule": "buildType == specific && buildVersionToDownload != specific",
+            "required": false,
+            "helpMarkDown": "If checked, this build task will try to download artifacts whether the build is succeeded or partially succeeded."
         },
         {
             "name": "branchName",

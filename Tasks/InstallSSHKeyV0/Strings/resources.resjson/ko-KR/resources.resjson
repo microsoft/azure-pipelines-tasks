@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SSH 키 설치",
-  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=875267)",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=875267)",
   "loc.description": "빌드 또는 릴리스 전에 SSH 키 설치",
   "loc.instanceNameFormat": "SSH 키 설치",
   "loc.input.label.hostName": "알려진 호스트 항목",

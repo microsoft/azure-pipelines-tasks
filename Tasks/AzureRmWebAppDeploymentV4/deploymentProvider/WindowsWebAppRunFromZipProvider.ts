@@ -13,6 +13,9 @@ var zipUtility = require('webdeployment-common/ziputility.js');
 export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProvider{
  
     public async DeployWebAppStep() {
+        let deploymentMethodtelemetry = '{"deploymentMethod":"Run from Package"}';
+        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureWebAppDeployment]" + deploymentMethodtelemetry);
+
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams);
         
         if(this.taskParams.UseWebDeploy && this.taskParams.DeploymentType === DeploymentType.runFromZip) {
@@ -56,6 +59,10 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
         }
         else {
             await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
+            let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
+                ? this.taskParams.VirtualApplication : null);
+            console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+            tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
         }
     }
 }

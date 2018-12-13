@@ -19,7 +19,10 @@ import ccUtil = require('codecoverage-tools/codecoverageutilities');
 import javacommons = require('java-common/java-common');
 import systemToken = require('utility-common/accesstoken');
 
-const accessTokenEnvSetting: string = 'VSTS_ENV_ACCESS_TOKEN';
+// Setting the access token env var to both VSTS and AZURE_ARTIFACTS for 
+// backwards compatibility with repos that already use the older env var.
+const accessTokenEnvSettingLegacy: string = 'VSTS_ENV_ACCESS_TOKEN';
+const accessTokenEnvSetting: string = 'AZURE_ARTIFACTS_ENV_ACCESS_TOKEN';
 const TESTRUN_SYSTEM = "VSTS - gradle"; 
 
 // Configure the JVM associated with this run.
@@ -157,7 +160,7 @@ function setJavaHome(javaHomeSelection: string): void {
 
 function getExecOptions(): IExecOptions {
     var env = process.env;
-    env[accessTokenEnvSetting] = systemToken.getSystemAccessToken();
+    env[accessTokenEnvSetting] = env[accessTokenEnvSettingLegacy] = systemToken.getSystemAccessToken();
     return <IExecOptions> {
         env: env,
     };

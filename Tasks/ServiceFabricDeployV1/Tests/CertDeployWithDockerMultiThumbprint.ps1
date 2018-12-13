@@ -90,7 +90,7 @@ Register-Mock Get-ItemProperty { $regKeyObj } -- -Path "HKLM:\SOFTWARE\Microsoft
 Register-Mock Get-ApplicationNameFromApplicationParameterFile { $appName } -- "$PSScriptRoot\data\ApplicationParameters.xml"
 
 # Indicate that the application does not exist on cluster
-Register-Mock Get-ServiceFabricApplication { $null } -- -ApplicationName $appName
+Register-Mock Get-ServiceFabricApplicationAction { $null } -- -ApplicationName $appName
 $publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml",  "-OverwriteBehavior:", $overwriteBehavior, "-ApplicationPackagePath:", $applicationPackagePath, "-ErrorAction:", "Stop", "-Action:", "RegisterAndCreate")
 Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 

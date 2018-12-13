@@ -38,5 +38,6 @@ process.env['NUGET_FORCEENABLECREDENTIALPROVIDER'] = "true";
 nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\single.sln"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
+nmh.registerNugetConfigMock();
 
 tmr.run();

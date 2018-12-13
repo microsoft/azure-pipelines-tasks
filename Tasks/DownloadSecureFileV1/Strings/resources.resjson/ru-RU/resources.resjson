@@ -3,6 +3,6 @@
   "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkID=862069)",
   "loc.description": "Скачайте защищенный файл во временное расположение в агенте сборки или выпуска",
   "loc.instanceNameFormat": "Скачать защищенный файл",
-  "loc.input.label.secureFile": "Защищенный файл",
+  "loc.input.label.secureFile": "Защитный файл",
   "loc.input.help.secureFile": "Выберите защищенный файл для скачивания во временное расположение на компьютере агента. Файл будет удален после сборки или выпуска."
 }

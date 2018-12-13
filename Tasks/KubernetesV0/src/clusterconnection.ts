@@ -44,7 +44,7 @@ export default class ClusterConnection {
             if (!authorizationType || authorizationType === "Kubeconfig")
             {
                 if (kubernetesEndpoint) {
-                     kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesEndpoint, 'kubeconfig', false);
+                     kubeconfig = kubectlutility.getKubeconfigForCluster(kubernetesEndpoint);
                 } 
             }
             else if (authorizationType === "ServiceAccount")

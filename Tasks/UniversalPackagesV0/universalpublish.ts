@@ -25,6 +25,7 @@ export async function run(artifactToolPath: string): Promise<void> {
         let version: string;
         let accessToken: string;
         let feedUri: string;
+        let publishedPackageVar: string = tl.getInput("publishedPackageVar");
         const versionRadio = tl.getInput("versionPublishSelector");
 
         // Feed Auth
@@ -74,7 +75,7 @@ export async function run(artifactToolPath: string): Promise<void> {
                 const pkgConn = pkgLocationUtils.getWebApiWithProxy(packagingLocation, accessToken);
                 sessionId = await ProvenanceHelper.GetSessionId(
                     feedId,
-                    "universal",
+                    "upack", /* must match protocol name on the server */
                     pkgConn.serverUrl,
                     [pkgConn.authHandler],
                     pkgConn.options);
@@ -124,6 +125,9 @@ export async function run(artifactToolPath: string): Promise<void> {
         } as artifactToolRunner.IArtifactToolOptions;
 
         publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
+        if(publishedPackageVar) {
+            tl.setVariable(publishedPackageVar, `${packageName} ${version}`);
+        }
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesPublishedSuccessfully"));
     } catch (err) {
