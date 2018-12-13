@@ -20,21 +20,21 @@ Tasks/AzureFileCopyV1/*    @kmkumaran
 
 Tasks/AzureFileCopyV2/*    @kmkumaran
 
-Tasks/AzureFunctionV1/*     @aseemb
+Tasks/AzureFunctionV1/*     @bansalaseem
 
 Tasks/AzureIoTEdgeV2/*      @prativen
 
-Tasks/AzureKeyVaultV1/*     @aseemb
+Tasks/AzureKeyVaultV1/*     @bansalaseem
 
 Tasks/AzureMonitorAlertsV0/*    @kmkumaran
 
-Tasks/AzureMonitorV0/*      @aseemb
+Tasks/AzureMonitorV0/*      @bansalaseem
 
 Tasks/AzureMysqlDeploymentV1/*  @kmkumaran
 
 Tasks/AzureNLBManagementV1/*    @kmkumaran
 
-Tasks/AzurePolicyV0/*   @aseemb
+Tasks/AzurePolicyV0/*   @bansalaseem
 
 Tasks/AzurePowerShellV2/*   @kmkumaran
 
@@ -74,17 +74,17 @@ Tasks/CUrlUploaderV2/*      @madhurig
 
 Tasks/DecryptFileV1/*   @madhurig
 
-Tasks/DelayV1/*     @aseemb
+Tasks/DelayV1/*     @bansalaseem
 
 Tasks/DeleteFilesV1/*   @bryanmac
 
 Tasks/DeployVisualStudioTestAgentV2/*       @smalpani
 
-Tasks/DockerV0/*    @aseemb
+Tasks/DockerV0/*    @bansalaseem
 
-Tasks/DockerV1/*    @aseemb
+Tasks/DockerV1/*    @bansalaseem
 
-Tasks/DockerComposeV0/*     @aseemb
+Tasks/DockerComposeV0/*     @bansalaseem
 
 Tasks/DotNetCoreCLIV2/*     @sachinma
 
@@ -118,9 +118,9 @@ Tasks/GulpV0/*      @robrodbe
 
 Tasks/GulpV1/*      @robrodbe
 
-Tasks/HelmDeployV0/*    @aseemb
+Tasks/HelmDeployV0/*    @bansalaseem
 
-Tasks/HelmInstallerV0/*     @aseemb
+Tasks/HelmInstallerV0/*     @bansalaseem
 
 Tasks/IISWebAppDeployment/*     @kmkumaran
 
@@ -134,7 +134,7 @@ Tasks/InstallAppleProvisioningProfileV1/*   @madhurig
 
 Tasks/InstallSSHKeyV0/*     @madhurig
 
-Tasks/InvokeRestApiV1/*     @aseemb
+Tasks/InvokeRestApiV1/*     @bansalaseem
 
 Tasks/JavaToolInstallerV0/*     @madhurig
 
@@ -142,9 +142,9 @@ Tasks/JenkinsDownloadArtifactsV1/*      @Lovakumar
 
 Tasks/JenkinsQueueJobV2/*   @madhurig
 
-Tasks/KubernetesV0/*    @aseemb
+Tasks/KubernetesV0/*    @bansalaseem
 
-Tasks/KubernetesV1/*    @aseemb
+Tasks/KubernetesV1/*    @bansalaseem
 
 Tasks/ManualInterventionV8/*
 
@@ -196,13 +196,13 @@ Tasks/PublishTestResultsV1/*    @smalpani
 
 Tasks/PublishTestResultsV2/*    @smalpani
 
-Tasks/PublishToAzureServiceBusV1/*      @aseemb
+Tasks/PublishToAzureServiceBusV1/*      @bansalaseem
 
 Tasks/PyPIPublisherV0/*     @sachinma   @madhurig
 
 Tasks/PythonScriptV0/*      @madhurig
 
-Tasks/QueryWorkItemsV0/*    @aseemb
+Tasks/QueryWorkItemsV0/*    @bansalaseem
 
 Tasks/QuickPerfTestV1/*     @smalpani
 
