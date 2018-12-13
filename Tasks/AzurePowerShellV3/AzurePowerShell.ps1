@@ -50,11 +50,10 @@ $targetAzurePs = Get-RollForwardVersion -azurePowerShellVersion $targetAzurePs
 $authScheme = ''
 try
 {
-    $serviceNameInput = Get-VstsInput -Name ConnectedServiceNameSelector -Default 'ConnectedServiceName'
-    $serviceName = Get-VstsInput -Name $serviceNameInput -Default (Get-VstsInput -Name DeploymentEnvironmentName)
+    $serviceName = Get-VstsInput -Name ConnectedServiceNameARM
     if (!$serviceName)
     {
-            Get-VstsInput -Name $serviceNameInput -Require
+            Get-VstsInput -Name ConnectedServiceNameARM -Require
     }
 
     $endpoint = Get-VstsEndpoint -Name $serviceName -Require

@@ -17,7 +17,7 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 10
+    "Patch": 12
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -33,33 +33,6 @@
   "minimumAgentVersion": "2.0.0",
   "inputs": [
     {
-      "name": "ConnectedServiceNameSelector",
-      "aliases": [
-        "azureConnectionType"
-      ],
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
-      "required": false,
-      "helpMarkDown": "",
-      "defaultValue": "ConnectedServiceNameARM",
-      "options": {
-        "ConnectedServiceName": "Azure Classic",
-        "ConnectedServiceNameARM": "Azure Resource Manager"
-      }
-    },
-    {
-      "name": "ConnectedServiceName",
-      "aliases": [
-        "azureClassicSubscription"
-      ],
-      "type": "connectedService:Azure",
-      "label": "ms-resource:loc.input.label.ConnectedServiceName",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
-    },
-    {
       "name": "ConnectedServiceNameARM",
       "aliases": [
         "azureSubscription"
@@ -69,7 +42,6 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM",
       "properties": {
         "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
       }
