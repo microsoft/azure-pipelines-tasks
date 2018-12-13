@@ -1,10 +1,20 @@
 import tl = require("vsts-task-lib/task");
-import { Inputs, TagSelectionMode, Utility, GitHubAttributes, AzureDevOpsVariables} from "./Utility";
+import * as telemetry from "utility-common/telemetry";
+import { Inputs, TagSelectionMode, Utility, GitHubAttributes, AzureDevOpsVariables, ActionType} from "./Utility";
 import { Release } from "./Release";
 
 interface IRelease {
     tagName: string;
     id: number;
+}
+
+interface ITelemetryData {
+    area: string;
+    action: string;
+    tagSource: string;
+    isDraft: boolean;
+    isPreRelease: boolean;
+    addChangeLog: boolean;
 }
 
 export class Helper {
@@ -23,7 +33,7 @@ export class Helper {
      * @param tag 
      */
     public static async getTagForCreateAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string): Promise<string> {
-        let tagSelection = tl.getInput(Inputs.tagSelection);
+        let tagSelection = tl.getInput(Inputs.tagSource);
 
         if (!!tagSelection && tagSelection === TagSelectionMode.auto) {
             console.log(tl.loc("FetchTagForTarget", target));
@@ -122,7 +132,7 @@ export class Helper {
                     }
                 });
 
-                // Throw error in case of ambiguity as we do not know which release to pick for editing or discarding release.
+                // Throw error in case of ambiguity as we do not know which release to pick for editing or deleting release.
                 if (releasesWithGivenTag.length >= 2) {
                     throw new Error(tl.loc("MultipleReleasesFoundError", tag));
                 }
@@ -202,6 +212,28 @@ export class Helper {
                 throw new Error(tagsResponse.body[GitHubAttributes.message]);
             }
         }
+    }
+
+    public static publishTelemetry(): void {
+        let telemetryData = {} as ITelemetryData;
+
+        const releaseId: string = tl.getVariable(AzureDevOpsVariables.releaseId);
+
+        telemetryData.area = !!releaseId ? "release" : "build";
+        telemetryData.action = tl.getInput(Inputs.action, true).toLowerCase();
+
+        if (telemetryData.action !== ActionType.delete) {
+
+            if (telemetryData.action === ActionType.create) {
+                telemetryData.tagSource = tl.getInput(Inputs.tagSource);
+            }
+
+            telemetryData.isDraft = tl.getBoolInput(Inputs.isDraft);
+            telemetryData.isPreRelease = tl.getBoolInput(Inputs.isPreRelease);
+            telemetryData.addChangeLog = tl.getBoolInput(Inputs.addChangeLog);
+        }
+
+        telemetry.emitTelemetry("TaskHub", "GitHubRelease", telemetryData);
     }
     
     /**

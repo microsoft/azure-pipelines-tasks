@@ -53,7 +53,7 @@
         "DownloadSecureFileV1",
         "ExtractFilesV1",
         "FtpUploadV1",
-        "GithubReleaseV0",
+        "GitHubReleaseV0",
         "GoV0",
         "GoToolV0",
         "GradleV2",
