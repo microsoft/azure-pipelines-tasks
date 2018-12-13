@@ -71,7 +71,7 @@ async function run() {
             try {
                 fs.writeFileSync(scriptFile, inlineScript);
             } catch (err) {
-                console.log(tl.loc('FailedToWriteScript', err));
+                console.error(tl.loc('FailedToWriteScript', err));
                 tryDeleteFile(scriptFile);
                 throw err;
             }
