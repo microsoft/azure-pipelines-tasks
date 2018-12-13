@@ -43,7 +43,7 @@
     "instanceNameFormat": "Download Pipeline Artifact",
     "execution": {
         "AgentPlugin": {
-            "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTask, Agent.Plugins"
+            "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV0, Agent.Plugins"
         }
     },
     "messages": {}
