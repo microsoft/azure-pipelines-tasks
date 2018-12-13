@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 26
+        "Patch": 27
     },
     "demands": [],
     "releaseNotes": "Simplified the task by:<br/>&nbsp;- Providing an option to simply select or type a command.<br/>&nbsp;- Retaining the useful input fields and providing an option to pass the rest as an argument to the command.",
@@ -281,7 +281,7 @@
         {
             "name": "containerCommand",
             "type": "string",
-            "label": "Command",
+            "label": "Container command",
             "visibleRule": "command = Run an image || command = run",
             "groupName": "commands",
             "helpMarkDown": "The docker run command first creates a writeable container layer over the specified image, and then starts it by using the specified run command. For example, if the image contains a simple Python Flask web application you can specify 'python app.py' to launch the web application."
