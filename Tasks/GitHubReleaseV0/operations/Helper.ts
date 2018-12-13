@@ -220,7 +220,7 @@ export class Helper {
         const releaseId: string = tl.getVariable(AzureDevOpsVariables.releaseId);
 
         telemetryData.area = !!releaseId ? "release" : "build";
-        telemetryData.action = tl.getInput(Inputs.action, true);
+        telemetryData.action = tl.getInput(Inputs.action, true).toLowerCase();
 
         if (telemetryData.action !== ActionType.delete) {
 

@@ -182,7 +182,7 @@
     "sourceDefinitions": [
         {
             "target": "repositoryName",
-            "endpoint": "/$(system.teamProject)/_apis/sourceProviders/GitHub/repositories?serviceEndpointId=$(githubEndpoint)",
+            "endpoint": "/$(system.teamProject)/_apis/sourceProviders/GitHub/repositories?serviceEndpointId=$(gitHubConnection)",
             "selector": "jsonpath:$.repositories[*].id",
             "keySelector": "jsonpath:$.repositories[*].id",
             "authKey": "tfs:teamfoundation"
@@ -249,6 +249,7 @@
         "FetchCommitDiffError": "An unexpected error occurred while fetching the list of changes.",
         "FetchInitialCommit": "Fetching the initial commit...",
         "FetchInitialCommitSuccess": "Found the initial commit: %s",
-        "FetchInitialCommitError": "An unexpected error occurred while fetching the initial commit."
+        "FetchInitialCommitError": "An unexpected error occurred while fetching the initial commit.",
+        "InvalidActionSet": "Invalid action: %s. Only 'create' or 'edit' or 'delete' actions are allowed. Skipping further steps..."
     }
 }
