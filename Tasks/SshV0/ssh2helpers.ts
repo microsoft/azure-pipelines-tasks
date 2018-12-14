@@ -1,7 +1,7 @@
-import tl = require('vsts-task-lib/task');
-import Q = require('q');
-const Ssh2Client = require('ssh2').Client;
-const Scp2Client = require('scp2');
+import * as tl from 'vsts-task-lib/task';
+import * as Q from 'q';
+import * as scp2 from 'scp2';
+import * as ssh2 from 'ssh2';
 
 export class RemoteCommandOptions {
     public failOnStdErr: boolean;
@@ -16,7 +16,7 @@ export class RemoteCommandOptions {
 export function copyScriptToRemoteMachine(scriptFile: string, scpConfig: any): Q.Promise<string> {
     const defer = Q.defer<string>();
 
-    Scp2Client.scp(scriptFile, scpConfig, (err) => {
+    scp2.scp(scriptFile, scpConfig, (err) => {
         if (err) {
             defer.reject(tl.loc('RemoteCopyFailed', err));
         } else {
@@ -35,7 +35,7 @@ export function copyScriptToRemoteMachine(scriptFile: string, scpConfig: any): Q
  */
 export function setupSshClientConnection(sshConfig: any): Q.Promise<any> {
     const defer = Q.defer<any>();
-    const client = new Ssh2Client();
+    const client = new ssh2.Client();
     client.on('ready', () => {
         defer.resolve(client);
     }).on('error', (err) => {

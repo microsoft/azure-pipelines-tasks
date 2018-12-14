@@ -1,8 +1,8 @@
-import os = require('os');
-import path = require('path');
-import tl = require('vsts-task-lib/task');
-import fs = require('fs');
-import sshHelper = require('./ssh2helpers');
+import * as os from 'os';
+import * as path from 'path';
+import * as tl from 'vsts-task-lib/task';
+import * as fs from 'fs';
+import * as sshHelper from './ssh2helpers';
 import { RemoteCommandOptions } from './ssh2helpers'
 
 async function run() {
