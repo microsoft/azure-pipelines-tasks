@@ -11,7 +11,7 @@ export class RemoteCommandOptions {
  * Uses scp2 to copy a file to remote machine
  * @param scriptFile
  * @param scpConfig
- * @returns {Promise<string>|Promise<T>}
+ * @returns {Promise<string>}
  */
 export function copyScriptToRemoteMachine(scriptFile: string, scpConfig: any): Q.Promise<string> {
     const defer = Q.defer<string>();
@@ -31,7 +31,7 @@ export function copyScriptToRemoteMachine(scriptFile: string, scpConfig: any): Q
 /**
  * Sets up an SSH client connection, when promise is fulfilled, returns the connection object
  * @param sshConfig
- * @returns {Promise<any>|Promise<T>}
+ * @returns {Promise<any>}
  */
 export function setupSshClientConnection(sshConfig: any): Q.Promise<any> {
     const defer = Q.defer<any>();
@@ -49,7 +49,7 @@ export function setupSshClientConnection(sshConfig: any): Q.Promise<any> {
  * @param command
  * @param sshClient
  * @param options
- * @returns {Promise<string>|Promise<T>}
+ * @returns {Promise<string>}
  */
 export function runCommandOnRemoteMachine(command: string, sshClient: any, options: RemoteCommandOptions): Q.Promise<string> {
     const defer = Q.defer<string>();
