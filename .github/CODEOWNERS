@@ -88,7 +88,7 @@ Tasks/DelayV1/*     @bansalaseem
 
 Tasks/DeleteFilesV1/*   @bryanmacfarlane
 
-Tasks/DeployVisualStudioTestAgentV2/*       @smalpani
+Tasks/DeployVisualStudioTestAgentV2/*       @cltshivash
 
 Tasks/DockerV0/*    @bansalaseem
 
@@ -156,7 +156,7 @@ Tasks/KubernetesV0/*    @bansalaseem
 
 Tasks/KubernetesV1/*    @bansalaseem
 
-Tasks/ManualInterventionV8/*
+Tasks/ManualInterventionV8/*    @bansalaseem
 
 Tasks/MavenV2/*     @madhurig
 
@@ -204,7 +204,7 @@ Tasks/PublishSymbolsV2/*    @smalpani
 
 Tasks/PublishTestResultsV1/*    @smalpani
 
-Tasks/PublishTestResultsV2/*    @smalpani
+Tasks/PublishTestResultsV2/*    @SadagopanRajaram
 
 Tasks/PublishToAzureServiceBusV1/*      @bansalaseem
 
@@ -220,7 +220,7 @@ Tasks/RunDistributedTestsV1/*   @smalpani
 
 Tasks/RunJMeterLoadTestV1/*     @smalpani
 
-Tasks/RunLoadTestV1/*   @smalpani
+Tasks/RunLoadTestV1/*   @cltshivash
 
 Tasks/ServiceFabricComposeDeployV0/*    @sachinma
 
@@ -248,11 +248,11 @@ Tasks/UseRubyVersionV0/*    @hross
 
 Tasks/VSBuildV1/*   @daveken
 
-Tasks/VsTestV1/*    @smalpani
+Tasks/VsTestV1/*    @cltshivash
 
-Tasks/VsTestV2/*    @smalpani
+Tasks/VsTestV2/*    @cltshivash
 
-Tasks/VsTestPlatformToolInstallerV1/*   @smalpani
+Tasks/VsTestPlatformToolInstallerV1/*   @cltshivash
 
 Tasks/WindowsMachineFileCopyV1/*    @kmkumaran
 
