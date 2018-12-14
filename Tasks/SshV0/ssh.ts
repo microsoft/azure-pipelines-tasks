@@ -71,7 +71,7 @@ async function run() {
             try {
                 fs.writeFileSync(scriptFile, inlineScript);
             } catch (err) {
-                console.error(tl.loc('FailedToWriteScript', err));
+                tl.error(tl.loc('FailedToWriteScript', err.message || err));
                 tryDeleteFile(scriptFile);
                 throw err;
             }
@@ -179,7 +179,7 @@ function tryDeleteFile(filePath: string): void {
         try {
             fs.unlinkSync(filePath);
         } catch (err) {
-            console.error(err);
+            tl.error(err);
         }
     }
 }
