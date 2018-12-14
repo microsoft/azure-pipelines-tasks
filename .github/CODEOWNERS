@@ -100,9 +100,9 @@ Tasks/DotNetCoreCLIV2/*     @sachinma
 
 Tasks/DotNetCoreInstallerV0/*   @sachinma
 
-Tasks/DownloadBuildArtifactsV0/*    @Lovakumar
+Tasks/DownloadBuildArtifactsV0/*    @Lovakumar      @omeshp
 
-Tasks/DownloadFileshareArtifactsV0/*    @Lovakumar
+Tasks/DownloadFileshareArtifactsV0/*    @Lovakumar      @omeshp
 
 Tasks/DownloadPackageV0/*       @zackrun
 
@@ -148,7 +148,7 @@ Tasks/InvokeRestApiV1/*     @bansalaseem
 
 Tasks/JavaToolInstallerV0/*     @madhurig
 
-Tasks/JenkinsDownloadArtifactsV1/*      @Lovakumar
+Tasks/JenkinsDownloadArtifactsV1/*      @Lovakumar      @kasubram
 
 Tasks/JenkinsQueueJobV2/*   @madhurig
 
