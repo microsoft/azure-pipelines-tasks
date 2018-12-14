@@ -80,19 +80,19 @@
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
     },
     {
-      "name": "TargetMethod",
+      "name": "AuthenticationType",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.TargetMethod",
+      "label": "ms-resource:loc.input.label.AuthenticationType",
       "required": true,
       "groupName": "target",
       "defaultValue": "server",
       "options": {
         "server": "SQL Server Authentication",
         "aadAuthenticationPassword": "Active Directory - Password",
-        "aadAuthenticationIntegration": "Active Directory - Integration",
+        "aadAuthenticationIntegration": "Active Directory - Integrated",
         "connectionString": "Connection String"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.TargetMethod"
+      "helpMarkDown": "ms-resource:loc.input.help.AuthenticationType"
     },
     {
       "name": "ServerName",
@@ -101,7 +101,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "TargetMethod = server || TargetMethod = aadAuthenticationPassword || TargetMethod = aadAuthenticationIntegration",
+      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegration",
       "helpMarkDown": "ms-resource:loc.input.help.ServerName"
     },
     {
@@ -111,7 +111,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "TargetMethod = server || TargetMethod = aadAuthenticationPassword || TargetMethod = aadAuthenticationIntegration",
+      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegration",
       "helpMarkDown": "ms-resource:loc.input.help.DatabaseName"
     },
     {
@@ -121,7 +121,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "TargetMethod = server || TargetMethod = aadAuthenticationPassword",
+      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword",
       "helpMarkDown": "ms-resource:loc.input.help.SqlUsername"
     },
     {
@@ -131,7 +131,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "TargetMethod = server || TargetMethod = aadAuthenticationPassword",
+      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword",
       "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
     },
     {
@@ -141,7 +141,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "TargetMethod = connectionString",
+      "visibleRule": "AuthenticationType = connectionString",
       "helpMarkDown": "ms-resource:loc.input.help.ConnectionString"
     },
     {

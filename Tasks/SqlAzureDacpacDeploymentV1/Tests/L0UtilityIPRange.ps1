@@ -19,10 +19,10 @@ $errors += $firewallException
 
 $startIP = "167.220.238.0"
 $endIP = "167.220.238.255"
-$targetMethod = "server"
+$authenticationType = "server"
 
 Register-Mock Invoke-Expression { Write-Error $firewallException } -ParametersEvaluator { }
-$IPAddressRange = Get-AgentIPRange -targetMethod $targetMethod -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
+$IPAddressRange = Get-AgentIPRange -authenticationType $authenticationType -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
 
 Assert-AreEqual  $startIP $IPAddressRange.StartIPAddress
 Assert-AreEqual $endIP $IPAddressRange.EndIPAddress
@@ -31,7 +31,7 @@ Assert-AreEqual $endIP $IPAddressRange.EndIPAddress
 $errors = @()
 Register-Mock Invoke-Expression {  } -ParametersEvaluator { }
 
-$IPAddressRange = Get-AgentIPRange -targetMethod $targetMethod -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
+$IPAddressRange = Get-AgentIPRange -authenticationType $authenticationType -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
 
 Assert-AreEqual 0 $IPAddressRange.Count
 
@@ -43,7 +43,7 @@ Unregister-Mock Get-Command
 Register-Mock Get-Command { return "Command exists" }
 Register-Mock Run-InlineSql { Write-Error $firewallException }
 
-$IPAddressRange = Get-AgentIPRange -targetMethod $targetMethod -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
+$IPAddressRange = Get-AgentIPRange -authenticationType $authenticationType -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
 
 Assert-WasCalled Run-InlineSql
 Assert-AreEqual  $startIP $IPAddressRange.StartIPAddress

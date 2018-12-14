@@ -78,7 +78,7 @@ function Get-SqlPackageCommandArguments
 {
     param(
         [String] $sqlpackageAction,
-        [String] $targetMethod,
+        [String] $authenticationType,
         [String] $sourceFile,
         [String] $targetFile,
         [String] $sourceServerName,
@@ -128,7 +128,7 @@ function Get-SqlPackageCommandArguments
         $sqlPackageArguments += @("$($sqlPackageOptions.TargetFile)`"$targetFile`"")
     }
 
-    if ($targetMethod -eq "server") {
+    if ($authenticationType -eq "server") {
         if ($sourceServerName -and $sourceDatabaseName) {
             $sqlPackageArguments += @("$($sqlPackageOptions.SourceServerName)`"$sourceServerName`"",
                                       "$($sqlPackageOptions.SourceDatabaseName)`"$sourceDatabaseName`"")
@@ -175,7 +175,7 @@ function Get-SqlPackageCommandArguments
             }
         }
     }
-    elseif ($targetMethod -eq "connectionString") {
+    elseif ($authenticationType -eq "connectionString") {
         # check this for extract and export
         if ($TargetConnectionString) {
           $sqlPackageArguments += @("$($sqlPackageOptions.TargetConnectionString)`"$targetConnectionString`"")
@@ -184,7 +184,7 @@ function Get-SqlPackageCommandArguments
           $sqlPackageArguments += @("$($sqlPackageOptions.SourceConnectionString)`"$sourceConnectionString`"")
         }
     }
-    elseif ($targetMethod -eq "aadAuthenticationPassword" -or $targetMethod -eq "aadAuthenticationIntegration") {
+    elseif ($authenticationType -eq "aadAuthenticationPassword" -or $authenticationType -eq "aadAuthenticationIntegration") {
 
         $databaseName = $targetDatabaseName
         $sqlServerName = $targetServerName
@@ -197,7 +197,7 @@ function Get-SqlPackageCommandArguments
           $sqlServerName = $sourceServerName
         }
 
-        $connectionString = Get-AADAuthenticationConnectionString -targetMethod $targetMethod -serverName $sqlServerName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword
+        $connectionString = Get-AADAuthenticationConnectionString -authenticationType $authenticationType -serverName $sqlServerName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword
 
         if ($targetDatabaseName) {
           $sqlPackageArguments += @("$($sqlPackageOptions.TargetConnectionString)`"$connectionString`"")
@@ -223,7 +223,7 @@ function Get-SqlPackageCommandArguments
 
     # not supported in Extract Export
     $defaultTimeout = 120
-    if (($targetMethod -eq "server") -and -not ($sqlpackageAction -eq "Extract" -or $sqlpackageAction -eq "Export") -and -not ($additionalArguments.ToLower().Contains("/targettimeout:") -or $additionalArguments.ToLower().Contains("/tt:"))) {
+    if (($authenticationType -eq "server") -and -not ($sqlpackageAction -eq "Extract" -or $sqlpackageAction -eq "Export") -and -not ($additionalArguments.ToLower().Contains("/targettimeout:") -or $additionalArguments.ToLower().Contains("/tt:"))) {
         # Add Timeout of 120 Seconds
         $additionalArguments = $additionalArguments + " /TargetTimeout:$defaultTimeout"
     }
@@ -237,7 +237,7 @@ function Get-SqlPackageCommandArguments
 function Get-AADAuthenticationConnectionString
 {
   param(
-      [String][Parameter(Mandatory=$true)] $targetMethod,
+      [String][Parameter(Mandatory=$true)] $authenticationType,
       [String][Parameter(Mandatory=$true)] $serverName,
       [String][Parameter(Mandatory=$true)] $databaseName,
       [String] $sqlUserName,
@@ -246,7 +246,7 @@ function Get-AADAuthenticationConnectionString
 
   $connectionString = "Data Source=$serverName; Initial Catalog=$databaseName; "
 
-  if ($targetMethod -eq "aadAuthenticationPassword") {
+  if ($authenticationType -eq "aadAuthenticationPassword") {
      $connectionString += @("Authentication=Active Directory Password; UID=$sqlUserName; PWD=$sqlPassword")
   }
   else {
