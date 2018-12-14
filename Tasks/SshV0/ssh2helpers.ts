@@ -1,7 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
-var Ssh2Client = require('ssh2').Client;
-var Scp2Client = require('scp2');
+const Ssh2Client = require('ssh2').Client;
+const Scp2Client = require('scp2');
 
 export class RemoteCommandOptions {
     public failOnStdErr: boolean;
@@ -14,7 +14,7 @@ export class RemoteCommandOptions {
  * @returns {Promise<string>|Promise<T>}
  */
 export function copyScriptToRemoteMachine(scriptFile: string, scpConfig: any): Q.Promise<string> {
-    var defer = Q.defer<string>();
+    const defer = Q.defer<string>();
 
     Scp2Client.scp(scriptFile, scpConfig, (err) => {
         if (err) {
@@ -34,8 +34,8 @@ export function copyScriptToRemoteMachine(scriptFile: string, scpConfig: any): Q
  * @returns {Promise<any>|Promise<T>}
  */
 export function setupSshClientConnection(sshConfig: any): Q.Promise<any> {
-    var defer = Q.defer<any>();
-    var client = new Ssh2Client();
+    const defer = Q.defer<any>();
+    const client = new Ssh2Client();
     client.on('ready', () => {
         defer.resolve(client);
     }).on('error', (err) => {
