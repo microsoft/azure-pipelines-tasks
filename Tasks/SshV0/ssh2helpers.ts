@@ -4,7 +4,7 @@ var Ssh2Client = require('ssh2').Client;
 var Scp2Client = require('scp2');
 
 export class RemoteCommandOptions {
-    public failOnStdErr : boolean;
+    public failOnStdErr: boolean;
 }
 
 /**
@@ -13,7 +13,7 @@ export class RemoteCommandOptions {
  * @param scpConfig
  * @returns {Promise<string>|Promise<T>}
  */
-export function copyScriptToRemoteMachine(scriptFile : string, scpConfig : any) : Q.Promise<string> {
+export function copyScriptToRemoteMachine(scriptFile: string, scpConfig: any): Q.Promise<string> {
     var defer = Q.defer<string>();
 
     Scp2Client.scp(scriptFile, scpConfig, (err) => {
@@ -33,7 +33,7 @@ export function copyScriptToRemoteMachine(scriptFile : string, scpConfig : any) 
  * @param sshConfig
  * @returns {Promise<any>|Promise<T>}
  */
-export function setupSshClientConnection(sshConfig: any) : Q.Promise<any> {
+export function setupSshClientConnection(sshConfig: any): Q.Promise<any> {
     var defer = Q.defer<any>();
     var client = new Ssh2Client();
     client.on('ready', () => {
@@ -51,7 +51,7 @@ export function setupSshClientConnection(sshConfig: any) : Q.Promise<any> {
  * @param options
  * @returns {Promise<string>|Promise<T>}
  */
-export function runCommandOnRemoteMachine(command: string, sshClient: any, options: RemoteCommandOptions) : Q.Promise<string> {
+export function runCommandOnRemoteMachine(command: string, sshClient: any, options: RemoteCommandOptions): Q.Promise<string> {
     const defer = Q.defer<string>();
     let stdErrWritten: boolean = false;
 
