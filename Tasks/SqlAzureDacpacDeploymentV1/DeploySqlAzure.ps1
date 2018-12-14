@@ -78,6 +78,10 @@ try {
     $serverName = $serverName.ToLower()
     Check-ServerName $serverName
 
+    if ($taskNameSelector -ne "DacpacTask" -and $deploymentAction -ne "Publish") {
+        throw (Get-VstsLocString -Key "SAD_InvalidDeploymentActionForSQLOperations" -ArgumentList $deploymentAction)
+    }
+
     $firewallRuleName, $isFirewallConfigured = Add-FirewallRule -endpoint $endpoint -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -ipDetectionMethod $ipDetectionMethod -startIPAddress $startIpAddress -endIPAddress $endIpAddress
 
     if (@("Extract", "Export", "DriftReport", "DeployReport", "Script") -contains $deploymentAction) {

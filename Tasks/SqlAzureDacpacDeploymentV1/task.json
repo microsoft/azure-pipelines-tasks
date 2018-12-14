@@ -92,7 +92,7 @@
                 "aadAuthenticationIntegration": "Active Directory - Integrated",
                 "connectionString": "Connection String"
             },
-            "helpMarkDown": "Specify the option to connect to the Azure SQL Server Database. The options are either to provide the Azure SQL Server Database details, or the SQL Server connection string, or AAD Authentication password or integrated."
+            "helpMarkDown": "Specify the option to connect to the Azure SQL Server Database. The options are either to provide the Azure SQL Server Database details, or the SQL Server connection string, or AAD Authentication password or integrated. For SQL server authentication, use SQL server's user credentials and for AD authentication, use credentials of AD user configured to SQL server."
         },
         {
             "name": "ServerName",
@@ -142,10 +142,13 @@
            "groupName": "target",
            "defaultValue": "",
            "visibleRule": "AuthenticationType = connectionString",
-           "helpMarkDown": "Specify the Azure SQL Server connection string like \"Server=testServer.database.windows.net;Database=testdb;User ID=sqluser;Password=password;\"."
+           "helpMarkDown": "Specify the Azure SQL Server connection string like \"Server=testServer.database.windows.net;Database=testdb;User ID=sqluser;Password=$(securePassword);\"."
         },
         {
             "name": "TaskNameSelector",
+            "aliases": [
+                "deployType"
+            ],
             "type": "pickList",
             "label": "Deploy type",
             "required": true,
@@ -330,6 +333,7 @@
         "SAD_AzureSQLDacpacTaskFailed": "The Azure SQL DACPAC task failed. SqlPackage.exe exited with code {0}.",
         "SAD_TroubleshootingLink": "Check out how to troubleshoot failures at https://aka.ms/sqlazuredeployreadme#troubleshooting-",
         "SAD_InvalidDeploymentAction": "Invalid deployment action: {0}",
+        "SAD_InvalidDeploymentActionForSQLOperations": "Invalid deployment action: {0}. For SQL query operations, deployment actions should be set to value `Publish`.",
         "SAD_SetOutputVariable": "Setting output variable '{0}' to '{1}'",
         "SAD_TemporaryInlineSqlFile": "Temporary inline SQL file: {0}",
         "SAD_GeneratedFile": "Generated file {0}. Uploading file to the logs.",

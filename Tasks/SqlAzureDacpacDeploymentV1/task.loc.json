@@ -146,6 +146,9 @@
     },
     {
       "name": "TaskNameSelector",
+      "aliases": [
+        "deployType"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.TaskNameSelector",
       "required": true,
@@ -330,6 +333,7 @@
     "SAD_AzureSQLDacpacTaskFailed": "ms-resource:loc.messages.SAD_AzureSQLDacpacTaskFailed",
     "SAD_TroubleshootingLink": "ms-resource:loc.messages.SAD_TroubleshootingLink",
     "SAD_InvalidDeploymentAction": "ms-resource:loc.messages.SAD_InvalidDeploymentAction",
+    "SAD_InvalidDeploymentActionForSQLOperations": "ms-resource:loc.messages.SAD_InvalidDeploymentActionForSQLOperations",
     "SAD_SetOutputVariable": "ms-resource:loc.messages.SAD_SetOutputVariable",
     "SAD_TemporaryInlineSqlFile": "ms-resource:loc.messages.SAD_TemporaryInlineSqlFile",
     "SAD_GeneratedFile": "ms-resource:loc.messages.SAD_GeneratedFile",
