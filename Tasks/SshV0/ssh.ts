@@ -107,7 +107,7 @@ async function run() {
                 const remoteScript = './' + path.basename(scriptFile);
                 let remoteScriptPath = '"' + remoteScript + '"';
                 const windowsEncodedRemoteScriptPath = remoteScriptPath;
-                const isWin = os.type().match(/^Win/);
+                const isWin = os.platform() === 'win32';
                 if (isWin) {
                     remoteScriptPath = '"' + remoteScript + "._unix" + '"';
                 }
