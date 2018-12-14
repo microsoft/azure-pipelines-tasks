@@ -100,7 +100,7 @@ async function run() {
                     tl._writeLine(command);
                     const returnCode: string = await sshHelper.runCommandOnRemoteMachine(
                         command, sshClientConnection, remoteCmdOptions);
-                    tl.debug('Command ' + commands + ' completed with return code = ' + returnCode);
+                    tl.debug('Command ' + command + ' completed with return code = ' + returnCode);
                 }
             } else { // both other runOptions: inline and script
                 //setup script path on remote machine relative to user's $HOME directory
