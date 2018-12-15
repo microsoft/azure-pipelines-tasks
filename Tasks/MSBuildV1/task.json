@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 146,
+        "Minor": 147,
         "Patch": 0
     },
     "demands": [
@@ -149,6 +149,23 @@
             "required": false,
             "helpMarkDown": "Optionally create a log file (Windows only).",
             "groupName": "advanced"
+        },
+        {
+            "name": "logFileVerbosity",
+            "type": "pickList",
+            "label": "Log File Verbosity",
+            "defaultValue": "normal",
+            "required": false,
+            "helpMarkDown": "Optional log file verbosity.",
+            "groupName": "advanced",
+            "options": {
+                "quiet": "Quiet",
+                "minimal": "Minimal",
+                "normal": "Normal",
+                "detailed": "Detailed",
+                "diagnostic": "Diagnostic"
+            },
+            "visibleRule": "createLogFile = true"
         }
     ],
     "instanceNameFormat": "Build solution $(solution)",

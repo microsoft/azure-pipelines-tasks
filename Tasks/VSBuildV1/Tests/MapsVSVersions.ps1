@@ -3,6 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+Register-Mock Get-VstsTaskVariable { $false } -- -Name System.Debug -AsBool
 Register-Mock Get-SolutionFiles
 Register-Mock Format-MSBuildArguments
 Register-Mock Invoke-BuildTools

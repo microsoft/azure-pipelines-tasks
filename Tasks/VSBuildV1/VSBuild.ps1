@@ -5,6 +5,9 @@ Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
+    # Get task variables.
+    [bool]$debug = Get-VstsTaskVariable -Name System.Debug -AsBool
+
     # Get the inputs.
     [string]$vsVersion = Get-VstsInput -Name VSVersion
     [string]$msBuildArchitecture = Get-VstsInput -Name MSBuildArchitecture
@@ -16,7 +19,8 @@ try {
     [bool]$maximumCpuCount = Get-VstsInput -Name MaximumCpuCount -AsBool
     [bool]$restoreNugetPackages = Get-VstsInput -Name RestoreNugetPackages -AsBool
     [bool]$logProjectEvents = Get-VstsInput -Name LogProjectEvents -AsBool
-    [bool]$createLogFile = Get-VstsInput -Name CreateLogFile -AsBool
+    [bool]$createLogFile = (Get-VstsInput -Name CreateLogFile -AsBool) -or $debug
+    [string]$logFileVerbosity = if ($debug) { "diagnostic" } else { Get-VstsInput -Name LogFileVerbosity }
 
     # Warn if deprecated inputs were specified.
     if ([string]$vsLocation = Get-VstsInput -Name VSLocation) {
@@ -72,7 +76,7 @@ try {
     $global:ErrorActionPreference = 'Continue'
 
     # Build each solution.
-    Invoke-BuildTools -NuGetRestore:$RestoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $MSBuildLocation -MSBuildArguments $MSBuildArgs -Clean:$Clean -NoTimelineLogger:(!$LogProjectEvents) -CreateLogFile:$createLogFile
+    Invoke-BuildTools -NuGetRestore:$RestoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $MSBuildLocation -MSBuildArguments $MSBuildArgs -Clean:$Clean -NoTimelineLogger:(!$LogProjectEvents) -CreateLogFile:$createLogFile -LogFileVerbosity:$logFileVerbosity
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
 }

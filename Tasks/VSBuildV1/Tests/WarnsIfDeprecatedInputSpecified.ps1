@@ -16,6 +16,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Get-VstsInput { $variableSet.MSBuildVersion } -- -Name MSBuildVersion
 }
 Register-Mock Get-SolutionFiles
+Register-Mock Get-VstsTaskVariable { $false } -- -Name System.Debug -AsBool
 Register-Mock Select-VSVersion
 Register-Mock Select-MSBuildPath
 Register-Mock Format-MSBuildArguments
