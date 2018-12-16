@@ -27,10 +27,10 @@ async function run() {
 
         // get the P12 details - SHA1 hash, common name (CN) and expiration.
         const p12Properties = await sign.getP12Properties(certPath, certPwd);
-        let commonName = p12Properties.commonName;
-        const fingerprint = p12Properties.fingerprint,
-            notBefore = p12Properties.notBefore,
-            notAfter = p12Properties.notAfter;
+        let commonName: string = p12Properties.commonName;
+        const fingerprint: string = p12Properties.fingerprint,
+            notBefore: Date = p12Properties.notBefore,
+            notAfter: Date = p12Properties.notAfter;
 
         // give user an option to override the CN as a workaround if we can't parse the certificate's subject.
         const commonNameOverride: string = tl.getInput('certSigningIdentity', false);
@@ -46,13 +46,13 @@ async function run() {
         // set the signing identity output variable.
         tl.setVariable('signingIdentity', commonName);
 
-        // Warn if the certificate is not yet valid or expired. If the dates are undefined or invalid, the conditions will return false.
+        // Warn if the certificate is not yet valid or expired. If the dates are undefined or invalid, the comparisons below will return false.
         const now: Date = new Date();
         if (notBefore > now) {
-            tl.warning(tl.loc('CertNotValidUntilWarning', notBefore));
+            throw new Error(tl.loc('CertNotValidYetError', commonName, fingerprint, notBefore));
         }
         if (notAfter < now) {
-            tl.warning(tl.loc('CertExpiredWarning', notAfter));
+            throw new Error(tl.loc('CertExpiredError', commonName, fingerprint, notAfter));
         }
 
         // install the certificate in specified keychain, keychain is created if required

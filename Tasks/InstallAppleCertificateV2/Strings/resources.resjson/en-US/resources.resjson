@@ -27,6 +27,6 @@
   "loc.messages.SetKeyPartitionListCommandNotFound": "Skipping unnecessary keychain partition_id ACL assignment on this older OS. The security command 'set-key-partition-list' was introduced in macOS Sierra (10.12).",
   "loc.messages.SetKeyPartitionListCommandFailed": "Error setting the partition_id ACL for the private key. Verify that the `Keychain password` is correct, or use a `Temporary Keychain` instead.",
   "loc.messages.InstallRequiresMac": "Install Apple Certificate requires a macOS agent. Installing Apple Certificates on Linux or Windows is not supported by Apple.",
-  "loc.messages.CertNotValidUntilWarning": "Certificate isn't valid until %s",
-  "loc.messages.CertExpiredWarning": "Certificate expired on %s"
+  "loc.messages.CertNotValidYetError": "%s (%s) certificate isn't valid until %s",
+  "loc.messages.CertExpiredError": "%s (%s) Certificate expired on %s"
 }

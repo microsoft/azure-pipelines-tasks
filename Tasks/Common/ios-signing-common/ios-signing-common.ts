@@ -540,8 +540,8 @@ export async function getP12Properties(p12Path: string, p12Pwd: string): Promise
     function onLine(line: string) {
         if (line) {
             const tuple = splitIntoKeyValue(line);
-            const key = tuple.key;
-            const value = tuple.value;
+            const key: string = tuple.key;
+            const value: string = tuple.value;
 
             if (key === 'SHA1 Fingerprint') {
                 // Example value: "BB:26:83:C6:AA:88:35:DE:36:94:F2:CF:37:0A:D4:60:BB:AE:87:0C"
