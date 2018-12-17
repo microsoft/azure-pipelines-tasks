@@ -15,9 +15,9 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 3,
-        "Minor": 1,
-        "Patch": 10
+        "Major": 4,
+        "Minor": 0,
+        "Patch": 0
     },
     "releaseNotes": "Added support for Fail on standard error and ErrorActionPreference",
     "demands": [
@@ -28,6 +28,11 @@
             "name": "AzurePowerShellVersionOptions",
             "displayName": "Azure PowerShell version options",
             "isExpanded": true
+        },
+        {
+            "name": "AzurePowerShellAdvancedOptions",
+            "displayName": "Advanced Options",
+            "isExpanded": false
         }
     ],
     "minimumAgentVersion": "2.0.0",
@@ -170,7 +175,20 @@
             "visibleRule": "TargetAzurePs = OtherVersion",
             "groupName": "AzurePowerShellVersionOptions",
             "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Azure module versions: 2.1.0, 3.8.0, 4.2.1, 5.1.1 and AzureRM module versions: 2.1.0, 3.8.0, 4.2.1, 5.1.1, 6.7.0"
+        },
+        {
+            "name": "KeepSessionLoggedIn",
+            "aliases": [
+                "keepSessionLoggedIn"
+            ],
+            "type": "boolean",
+            "label": "Keep Azure Powershell logged in after task ends",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "AzurePowerShellAdvancedOptions",
+            "helpMarkDown": "Check to keep the Azure Powershell session logged in after this task ends. (Keep in mind it will also stay stored after pipeline ends if you are on a private agent.)"
         }
+
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
     "execution": {

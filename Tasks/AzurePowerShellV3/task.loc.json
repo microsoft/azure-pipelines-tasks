@@ -15,9 +15,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 3,
-    "Minor": 1,
-    "Patch": 10
+    "Major": 4,
+    "Minor": 0,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -28,6 +28,11 @@
       "name": "AzurePowerShellVersionOptions",
       "displayName": "ms-resource:loc.group.displayName.AzurePowerShellVersionOptions",
       "isExpanded": true
+    },
+    {
+      "name": "AzurePowerShellAdvancedOptions",
+      "displayName": "ms-resource:loc.group.displayName.AzurePowerShellAdvancedOptions",
+      "isExpanded": false
     }
   ],
   "minimumAgentVersion": "2.0.0",
@@ -170,6 +175,18 @@
       "visibleRule": "TargetAzurePs = OtherVersion",
       "groupName": "AzurePowerShellVersionOptions",
       "helpMarkDown": "ms-resource:loc.input.help.CustomTargetAzurePs"
+    },
+    {
+      "name": "KeepSessionLoggedIn",
+      "aliases": [
+        "keepSessionLoggedIn"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.KeepSessionLoggedIn",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "AzurePowerShellAdvancedOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.KeepSessionLoggedIn"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
