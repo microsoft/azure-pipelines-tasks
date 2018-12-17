@@ -36,9 +36,11 @@ The GitHub Release task can run in 3 action types, viz. create, edit or delete. 
 
 * **Tag Source:** This field allows you to choose the tag to be used for a release action. It can be done in 2 ways:
 
-    * Git tag: Choose this option if you want use the tag that is pushed along with the commit. The release will be created using the git tag that is associated with this commit. If no tag is found for the given commit, the release will not be created. If multiple tags are found, the task will throw an error.This option is available only for *create* action.
+    * Git tag: Choose this option if the tag to be used in release creation has been pushed to the repository. The release will be created using the git tag that is associated with this commit. If no tag is found for the given commit, the release will not be created. If multiple tags are found, the task will throw an error. This option is available only for *create* action.
 
-    * User specified tag: Choose this option if you want the task to create a new tag. The release will subsequently be created using this new tag. You can specify the tag to be created directly or using variables, Eg. v\$(MajorVersion).\$(MinorVersion).\$(PatchVersion). If the tag already exists in the repo, then the release will be created for the existing tag. This option is available for *create*, *edit* or *delete* actions. However, it is the only tag source option for *edit* and *delete* actions.
+    * User specified tag: Choose this option if you want the task to create a new tag. The release will subsequently be created using the new tag provided in the 'tag' parameter. If the tag already exists in the repository, then the release will be created for the existing tag. 
+    
+* **Tag:** This is the tag to be used for the chosen release action. You can specify the tag directly or by using variables, Eg. v\$(MajorVersion).\$(MinorVersion).\$(PatchVersion). For *edit*, *delete* actions, the release having this tag will be acted upon. For *create* action, a new release will be created with this tag. Note that this is a mandatory field for *edit* and *delete* actions. 
 
 * **Release Title:** This is the title that will be used for release creation. If left empty, the tag name will be used as the release title.
 
