@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 25
+        "Patch": 29
     },
     "demands": [
         "Cmd"
@@ -208,15 +208,6 @@
             "name": "UpgradeReplicaSetCheckTimeoutSec",
             "type": "string",
             "label": "UpgradeReplicaSetCheckTimeoutSec",
-            "defaultValue": "",
-            "required": false,
-            "groupname": "upgrade",
-            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
-        },
-        {
-            "name": "ReplicaQuorumTimeoutSec",
-            "type": "string",
-            "label": "ReplicaQuorumTimeoutSec",
             "defaultValue": "",
             "required": false,
             "groupname": "upgrade",
@@ -480,6 +471,9 @@
         "SFSDK_ApplicationHealth": "Getting application health:",
         "SFSDK_RetryingUpgradeApplication": "Retrying application upgrade..",
         "SFSDK_RetryingGetApplicationUpgrade": "Getting application upgrade status...",
+        "SFSDK_RetryingGetApplication": "Getting application from the cluster...",
+        "SFSDK_RetryingGetServiceType": "Getting service type from the cluster...",
+        "SFSDK_RetryingGetServiceManifest": "Getting service manifest from the cluster...",
         "SFSDK_RetryingTestClusterConnection": "Testing connection to cluster..",
         "SFSDK_RetryingTestAppPackage": "Testing application package..",
         "SFSDK_RetryingGetClusterManifest": "Getting cluster manifest..",

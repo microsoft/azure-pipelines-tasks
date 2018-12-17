@@ -10,16 +10,20 @@ const taskRunner = new TaskMockRunner(taskPath);
 taskRunner.setInput('createCustomEnvironment', 'true');
 taskRunner.setInput('environmentName', 'test');
 
+// `getVariable` is not supported by `TaskLibAnswers`
+process.env['HOME'] = '/home';
+process.env['USERPROFILE'] = '\\userprofile'
+
 // Mock vsts-task-lib
 taskRunner.setAnswers({
     which: {
         'conda': '/miniconda/bin/conda'
     },
     exec: {
-        'sudo /miniconda/bin/conda create --quiet --prefix /miniconda/envs/test --mkdir --yes': {
+        'conda create --quiet --prefix /home/.conda/envs/test --mkdir --yes': {
             code: 0
         },
-        'conda create --quiet --prefix \\miniconda\\envs\\test --mkdir --yes': {
+        'conda create --quiet --prefix \\userprofile\\.conda\\envs\\test --mkdir --yes': {
             code: 0
         },
     }

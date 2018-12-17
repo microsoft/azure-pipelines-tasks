@@ -27,7 +27,7 @@ export function getNewUserDirPath(): string {
     ensureDirExists(userDir);
 
     return userDir;
-} 
+}
 
 function ensureDirExists(dirPath : string) : void
 {
@@ -73,4 +73,11 @@ export function assertFileExists(path: string) {
         tl.error(tl.loc('FileNotFoundException', path));
         throw new Error(tl.loc('FileNotFoundException', path));
     }
+}
+
+export function writeInlineConfigInTempPath(inlineConfig: string): string {
+    var tempInlinePath = getNewUserDirPath();
+    tempInlinePath = path.join(tempInlinePath, "inlineconfig.yaml");
+    fs.writeFileSync(tempInlinePath, inlineConfig);
+    return tempInlinePath;
 }

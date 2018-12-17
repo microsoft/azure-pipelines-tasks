@@ -24,7 +24,7 @@
   "loc.input.label.DatabaseName": "数据库名",
   "loc.input.help.DatabaseName": "提供 SQL Server 数据库的名称。",
   "loc.input.label.AuthScheme": "身份验证",
-  "loc.input.help.AuthScheme": "选择连接到 SQL Server 时使用的身份验证模式。在 Windows 身份验证模式下，管理员帐户(“计算机”部分所指定)用于连接 SQL Server。在 SQL Server 身份验证模式下，必须在以下参数中提供 SQL 登录名和密码。",
+  "loc.input.help.AuthScheme": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the account used to configure deployment agent, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below.",
   "loc.input.label.SqlUsername": "SQL 用户名",
   "loc.input.help.SqlUsername": "提供连接到 SQL Server 的 SQL 登录名。仅当选中 SQL Server 身份验证模式时，此选项才可用。",
   "loc.input.label.SqlPassword": "SQL 密码",

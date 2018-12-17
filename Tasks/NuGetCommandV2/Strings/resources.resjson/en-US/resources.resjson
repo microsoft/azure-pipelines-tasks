@@ -35,6 +35,8 @@
   "loc.input.label.nuGetFeedType": "Target feed location",
   "loc.input.label.feedPublish": "Target feed",
   "loc.input.help.feedPublish": "Select a feed hosted in this account. You must have Package Management installed and licensed to select a feed here.",
+  "loc.input.label.publishPackageMetadata": "Publish pipeline metadata",
+  "loc.input.help.publishPackageMetadata": "Associate this build/release pipeline’s metadata (run #, source code information) with the package",
   "loc.input.label.allowPackageConflicts": "Allow duplicates to be skipped",
   "loc.input.help.allowPackageConflicts": "If you continually publish a set of packages and only change the version number of the subset of packages that changed, use this option. It allows the task to report success even if some of your packages are rejected with 409 Conflict errors.\n\nThis option is currently only available on Azure Pipelines and using Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
   "loc.input.label.externalEndpoint": "NuGet server",

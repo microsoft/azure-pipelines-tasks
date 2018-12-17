@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 142,
+        "Minor": 145,
         "Patch": 1
     },
     "demands": [],
@@ -112,13 +112,14 @@
         }
     },
     "messages": {
-        "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
-        "SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
-        "SshConnectionSuccessful": "Successfully connected.",
         "ConnectionFailed": "Failed to connect to remote machine. Verify the SSH service connection details. Error: %s.",
-        "RemoteCopyFailed": "Failed to copy script to remote machine. Error: %s.",
+        "FailedToWriteScript": "Failed to write the script to disk: %s",
         "RemoteCmdExecutionErr": "Command failed with errors on remote machine.",
         "RemoteCmdNonZeroExitCode": "Command %s exited with code %s.",
-        "RemoteScriptFileCleanUpFailed": "Failed to delete the script file copied to the remote machine. Error = %s."
+        "RemoteCopyFailed": "Failed to copy script to remote machine. Error: %s.",
+        "RemoteScriptFileCleanUpFailed": "Failed to delete the script file copied to the remote machine. Error = %s.",
+        "SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
+        "SshConnectionSuccessful": "Successfully connected.",
+        "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified."
     }
 }

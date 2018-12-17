@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 22
+    "Patch": 26
   },
   "demands": [],
   "preview": "false",
@@ -339,6 +339,7 @@
     "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
-    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced"
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded"
   }
 }

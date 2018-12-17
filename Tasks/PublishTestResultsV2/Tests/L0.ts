@@ -28,6 +28,7 @@ describe('PublishTestResults Suite', function() {
         delete process.env[constants.searchFolder];
         delete process.env[constants.listPackagesReturnCode];
         delete process.env[constants.osType];
+        delete process.env[constants.failTaskOnFailedTests];
 
         done();
     });
@@ -47,6 +48,7 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.testRunner] = 'VSTest';
         process.env[constants.testResultsFiles] = '"n-files0.xml"';
         process.env[constants.mergeTestResults] = 'false';
+        process.env[constants.failTaskOnFailedTests] = 'false';
         process.env[constants.platform] = '';
         process.env[constants.configuration] = '';
         process.env[constants.testRunTitle] = '';
@@ -78,6 +80,7 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.testRunner] = 'VSTest';
         process.env[constants.testResultsFiles] = '"n-files0.xml"';
         process.env[constants.mergeTestResults] = 'false';
+        process.env[constants.failTaskOnFailedTests] = 'false';
         process.env[constants.platform] = '';
         process.env[constants.configuration] = '';
         process.env[constants.testRunTitle] = '';
@@ -109,6 +112,7 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.testRunner] = 'VSTest';
         process.env[constants.testResultsFiles] = '"n-files0.xml"';
         process.env[constants.mergeTestResults] = 'false';
+        process.env[constants.failTaskOnFailedTests] = 'false';
         process.env[constants.platform] = '';
         process.env[constants.configuration] = '';
         process.env[constants.testRunTitle] = '';
@@ -126,7 +130,7 @@ describe('PublishTestResults Suite', function() {
         assert.equal(tr.invokedToolCount, 1, `invoked tool count should be 1`);
         assert(tr.stdOutContained(`TestResultsPublisher.exe`),
             `Should have called TestResultsPublisher.exe first`);
-        assert(tr.stdOutContained(`vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=false;resultFiles=n-files0.xml;]`),
+        assert(tr.stdOutContained(`vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=false;resultFiles=n-files0.xml;failTaskOnFailedTests=false;testRunSystem=VSTS - PTR;]`),
             `Should have published results through Command when feature flag is off`);
 
         done();
@@ -144,6 +148,7 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.testRunner] = 'VSTest';
         process.env[constants.testResultsFiles] = '"n-files0.xml"';
         process.env[constants.mergeTestResults] = 'false';
+        process.env[constants.failTaskOnFailedTests] = 'false';
         process.env[constants.platform] = '';
         process.env[constants.configuration] = '';
         process.env[constants.testRunTitle] = '';
@@ -161,7 +166,7 @@ describe('PublishTestResults Suite', function() {
         assert.equal(tr.invokedToolCount, 1, `invoked tool count should be 1`);
         assert(tr.stdOutContained(`TestResultsPublisher.exe`),
             `Should have called TestResultsPublisher.exe first`);
-        assert(tr.stdout.indexOf(`vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=false;resultFiles=n-files0.xml;]`) < 0,
+        assert(tr.stdout.indexOf(`vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=false;resultFiles=n-files0.xml;failTaskOnFailedTests=false;testRunSystem=VSTS - PTR;]`) < 0,
             `Command should not have been called when exe returns with exit code suggesting feature flag is on`);
 
         done();

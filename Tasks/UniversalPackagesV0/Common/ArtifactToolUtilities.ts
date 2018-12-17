@@ -67,16 +67,16 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
             throw new Error(tl.loc("Error_UnexpectedErrorFailedToGetToolMetadata", artifactToolGetUrl.requestUrl));
         }
 
-        let artifactToolPath = toollib.findLocalTool(toolName, artifactToolUri.result.version);
+        let artifactToolPath = toollib.findLocalTool(toolName, artifactToolUri.result['version']);
         if (!artifactToolPath) {
-            tl.debug(tl.loc("Info_DownloadingArtifactTool", artifactToolUri.result.uri));
+            tl.debug(tl.loc("Info_DownloadingArtifactTool", artifactToolUri.result['uri']));
 
-            const zippedToolsDir: string = await toollib.downloadTool(artifactToolUri.result.uri);
+            const zippedToolsDir: string = await toollib.downloadTool(artifactToolUri.result['uri']);
 
             tl.debug("Downloaded zipped artifact tool to " + zippedToolsDir);
             const unzippedToolsDir = await extractZip(zippedToolsDir);
 
-            artifactToolPath = await toollib.cacheDir(unzippedToolsDir, "ArtifactTool", artifactToolUri.result.version);
+            artifactToolPath = await toollib.cacheDir(unzippedToolsDir, "ArtifactTool", artifactToolUri.result['version']);
         }
         else{
             tl.debug(tl.loc("Info_ResolvedToolFromCache", artifactToolPath));
@@ -123,8 +123,8 @@ export async function getPackageNameFromId(serviceUri: string, accessToken: stri
     // Return the user input incase of failure
     try{
         const response = await feedConnection.rest.get(packageUrl);
-        if(response.statusCode === 200 && response.result.name){
-            return response.result.name;
+        if(response.statusCode === 200 && response.result['name']){
+            return response.result['name'];
         }
         return packageId;
     }
@@ -154,11 +154,11 @@ export async function getHighestPackageVersionFromFeed(serviceUri: string, acces
     const versionResponse = await new Promise<string>((resolve, reject) => {
         let responsePromise = feedConnection.rest.get(packageUrl);
         responsePromise.then((result) => {
-            if (result.result.count === 0){
+            if (result.result['count'] === 0){
                 return resolve("0.0.0");
             }
             else{
-                result.result.value.forEach((element) => {
+                result.result['value'].forEach((element) => {
                     if (element.name === packageName.toLowerCase()){
                         return resolve(element.versions[0].version);
                     }

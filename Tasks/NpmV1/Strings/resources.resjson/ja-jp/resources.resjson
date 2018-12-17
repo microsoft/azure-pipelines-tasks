@@ -15,8 +15,8 @@
   "loc.input.label.customCommand": "コマンドと引数",
   "loc.input.help.customCommand": "実行するカスタム コマンド。例: \"dist-tag ls mypackage\"。",
   "loc.input.label.customRegistry": "使用するレジストリ",
-  "loc.input.help.customRegistry": "You can either commit a .npmrc file to your source code repository and set its path here or select a registry from Azure Artifacts here.",
-  "loc.input.label.customFeed": "Use packages from this Azure Artifacts/TFS registry",
+  "loc.input.help.customRegistry": ".npmrc ファイルをソース コード リポジトリにコミットしてそのパスをここに設定するか、または Azure Artifacts からレジストリをここで選択するかのどちらかが可能です。",
+  "loc.input.label.customFeed": "この Azure Artifacts/TFS レジストリからのパッケージを使用する",
   "loc.input.help.customFeed": "生成される .npmrc に選択したフィードを組み込みます。",
   "loc.input.label.customEndpoint": "このアカウント/コレクション外のレジストリの資格情報",
   "loc.input.help.customEndpoint": "プロジェクトの .npmrc にある外部レジストリのために使用する資格情報。このアカウント/コレクション内のレジストリの場合は、これを空白のままにしてください。自動的にビルドの資格情報が使用されます。",
@@ -30,8 +30,8 @@
   "loc.messages.NoBuildCredentials": "ビルドの資格情報が見つかりませんでした",
   "loc.messages.UnknownCommand": "不明なコマンド: %s",
   "loc.messages.MultipleProjectConfigs": "複数のプロジェクト .npmrc が $s の中に見つかりました",
-  "loc.messages.ServiceEndpointNotDefined": "Couldn't find the service connection. Make sure the selected service connection still exists.",
-  "loc.messages.ServiceEndpointUrlNotDefined": "Couldn't find the URL for the service connection. Make sure the service connection is correctly configured.",
+  "loc.messages.ServiceEndpointNotDefined": "サービス接続が見つかりませんでした。選択したサービス接続がまだ存在していることをご確認ください。",
+  "loc.messages.ServiceEndpointUrlNotDefined": "サービス接続の URL が見つかりませんでした。サービス接続が正しく構成されていることをご確認ください。",
   "loc.messages.SavingFile": "ファイル %s を保存しています",
   "loc.messages.RestoringFile": "ファイルを復元しています %s",
   "loc.messages.PublishFeed": "内部フィードに発行しています",
@@ -42,7 +42,7 @@
   "loc.messages.UsingRegistry": "次のレジストリを使用しています: %s",
   "loc.messages.AddingAuthRegistry": "次のレジストリに権限を追加しています: %s",
   "loc.messages.FoundLocalRegistries": "このアカウント/コレクションに %d 個のレジストリが見つかりました",
-  "loc.messages.ForcePackagingUrl": "Packaging collection URL forced to: %s",
+  "loc.messages.ForcePackagingUrl": "コレクション URL を %s に強制してパッケージ化しています",
   "loc.messages.DebugLogNotFound": "キャッシュまたは作業ディレクトリにデバッグ ログが見つかりませんでした",
   "loc.messages.NpmFailed": "npm でエラーが発生しました。リターン コード: %s",
   "loc.messages.FoundNpmDebugLog": "npm デバッグ ログが見つかりました。パスが、npm の出力にあるものと一致することをご確認ください: %s",
@@ -50,5 +50,5 @@
   "loc.messages.OverridingProjectNpmrc": "プロジェクト .npmrc をオーバーライドしています: %s",
   "loc.messages.RestoringProjectNpmrc": "プロジェクト .npmrc を復元しています",
   "loc.messages.WorkingDirectoryNotDirectory": "作業ディレクトリを有効なディレクトリに変更してください",
-  "loc.messages.NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region."
+  "loc.messages.NGCommon_AreaNotFoundInSps": "'%s' [%s] 領域を特定できません。この領域を含むサービスは、ご利用の地域では提供されません。"
 }

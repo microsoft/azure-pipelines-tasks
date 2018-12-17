@@ -1,5 +1,6 @@
 {
   "loc.messages.AadAuthority": "AAD 기관: {0}",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
   "loc.messages.ClientAppId": "클라이언트 응용 프로그램 ID: {0}",
   "loc.messages.ClusterAppId": "클러스터 응용 프로그램 ID: {0}",
   "loc.messages.ConnectedToCluster": "클러스터에 연결했습니다.",
@@ -10,8 +11,8 @@
   "loc.messages.ServiceFabricSDKNotInstalled": "Service Fabric SDK가 빌드 에이전트에 설치되지 않았습니다. https://aka.ms/servicefabric으로 이동하여 해당 SDK를 다운로드 및 설치하세요.",
   "loc.messages.UseWindowsSecurity": "Windows 보안을 지정했습니다. 연결하는 동안 -WindowsCredential 스위치가 사용됩니다.",
   "loc.messages.ServerCertificateNotFoundForTextEncrypt": "텍스트를 암호화하려면 '{0}' 지문이 포함된 클러스터의 서버 인증서가 필요한데, 에이전트 컴퓨터의 'CurrentUser\\My' 인증서 저장소 위치에서 해당 인증서를 찾을 수 없습니다.",
-  "loc.messages.RetryingClusterConnection": "Retrying to connect to cluster..",
-  "loc.messages.WarningOnRemoveCertificate": "An error occurred attempting to remove the client certificate. Error message: {0}",
-  "loc.messages.TelemetryWarning": "Unable to push telemetry data. Error: {0}.",
-  "loc.messages.SfSdkVersion": "Service fabric SDK version: {0}."
+  "loc.messages.RetryingClusterConnection": "클러스터에 연결을 다시 시도하는 중..",
+  "loc.messages.WarningOnRemoveCertificate": "클라이언트 인증서를 제거하는 동안 오류가 발생했습니다. 오류 메시지: {0}",
+  "loc.messages.TelemetryWarning": "원격 분석 데이터를 푸시할 수 없습니다. 오류: {0}.",
+  "loc.messages.SfSdkVersion": "Service Fabric SDK 버전: {0}."
 }

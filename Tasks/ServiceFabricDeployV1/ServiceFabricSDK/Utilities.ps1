@@ -235,7 +235,43 @@ function Get-ServiceFabricApplicationAction
         $getApplicationParams['ApplicationName'] = $ApplicationName
     }
 
-    return Get-ServiceFabricApplication @getApplicationParams
+    return Invoke-ActionWithDefaultRetries -Action { Get-ServiceFabricApplication @getApplicationParams } `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplication)
+}
+
+function Get-ServiceFabricServiceTypeAction
+{
+    Param (
+        [string]
+        $ApplicationTypeName,
+
+        [string]
+        $ApplicationTypeVersion
+    )
+
+    $global:operationId = $SF_Operations.GetServiceType
+
+    return Invoke-ActionWithDefaultRetries -Action { Get-ServiceFabricServiceType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion } `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetServiceType)
+}
+
+function Get-ServiceFabricServiceManifestAction
+{
+    Param (
+        [string]
+        $ApplicationTypeName,
+
+        [string]
+        $ApplicationTypeVersion,
+
+        [string]
+        $ServiceManifestName
+    )
+
+    $global:operationId = $SF_Operations.GetServiceManifest
+
+    return Invoke-ActionWithDefaultRetries -Action { Get-ServiceFabricServiceManifest -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -ServiceManifestName $ServiceManifestName } `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetServiceManifest)
 }
 
 function Get-ServiceFabricApplicationUpgradeAction
@@ -989,7 +1025,8 @@ function Get-ServiceFabricApplicationActionOldSdk
         $getApplicationParams['ApplicationName'] = $ApplicationName
     }
 
-    $apps = Get-ServiceFabricApplication @getApplicationParams
+    $apps = Invoke-ActionWithDefaultRetries -Action { Get-ServiceFabricApplication @getApplicationParams } `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplication)
     if($ApplicationTypeName)
     {
         $apps = $apps | Where-Object { $_.ApplicationTypeName -eq $ApplicationTypeName }

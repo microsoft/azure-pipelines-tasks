@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 142
+        "Patch": 144
     },
     "demands": [
         "azureps"
@@ -347,6 +347,7 @@
         "AFC_BlobStorageNotFound": "Storage account: {0} not found. Please specify existing storage account",
         "AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers.",
         "AFC_RedirectResponseInvalidStatusCode": "The HTTP response code: '{0}' is not a valid redirect status code",
-        "AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null."
+        "AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null.",
+        "AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment."
     }
 }
