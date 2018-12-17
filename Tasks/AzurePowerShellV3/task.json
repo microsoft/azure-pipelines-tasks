@@ -17,7 +17,7 @@
     "version": {
         "Major": 4,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 2
     },
     "releaseNotes": "Added support for Fail on standard error and ErrorActionPreference",
     "demands": [
@@ -195,6 +195,11 @@
         "PowerShell3": {
             "target": "AzurePowerShell.ps1"
         }
+    },
+    "postjobexecution": {
+        "PowerShell3": {
+            "target": "AzurePowerShell-postjob.ps1"
+        }     
     },
     "messages": {
         "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",

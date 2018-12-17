@@ -17,7 +17,7 @@
   "version": {
     "Major": 4,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -193,6 +193,11 @@
   "execution": {
     "PowerShell3": {
       "target": "AzurePowerShell.ps1"
+    }
+  },
+  "postjobexecution": {
+    "PowerShell3": {
+      "target": "AzurePowerShell-postjob.ps1"
     }
   },
   "messages": {

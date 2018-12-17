@@ -75,94 +75,79 @@ catch
 
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs -authScheme $authScheme
 
-try {
-    # Initialize Azure.
-    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    Initialize-Azure -azurePsVersion $targetAzurePs -strict
-    # Trace the expression as it will be invoked.
-    $__vstsAzPSInlineScriptPath = $null
-    If ($scriptType -eq "InlineScript") {
-        $scriptArguments = $null
-        $__vstsAzPSInlineScriptPath = [System.IO.Path]::Combine($env:Agent_TempDirectory, ([guid]::NewGuid().ToString() + ".ps1"));
-        ($scriptInline | Out-File $__vstsAzPSInlineScriptPath)
-        $scriptPath = $__vstsAzPSInlineScriptPath
-    }
 
-    $scriptCommand = "& '$($scriptPath.Replace("'", "''"))' $scriptArguments"
-    Remove-Variable -Name scriptType
-    Remove-Variable -Name scriptPath
-    Remove-Variable -Name scriptInline
-    Remove-Variable -Name scriptArguments
+# Initialize Azure.
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+Initialize-Azure -azurePsVersion $targetAzurePs -strict
+# Trace the expression as it will be invoked.
+$__vstsAzPSInlineScriptPath = $null
+If ($scriptType -eq "InlineScript") {
+    $scriptArguments = $null
+    $__vstsAzPSInlineScriptPath = [System.IO.Path]::Combine($env:Agent_TempDirectory, ([guid]::NewGuid().ToString() + ".ps1"));
+    ($scriptInline | Out-File $__vstsAzPSInlineScriptPath)
+    $scriptPath = $__vstsAzPSInlineScriptPath
+}
 
-    # Remove all commands imported from VstsTaskSdk, other than Out-Default.
-    # Remove all commands imported from VstsAzureHelpers_.
-    Get-ChildItem -LiteralPath function: |
-        Where-Object {
-            ($_.ModuleName -eq 'VstsTaskSdk' -and $_.Name -ne 'Out-Default') -or
-            ($_.Name -eq 'Invoke-VstsTaskScript') -or
-            ($_.ModuleName -eq 'VstsAzureHelpers_' )
-        } |
-        Remove-Item
+$scriptCommand = "& '$($scriptPath.Replace("'", "''"))' $scriptArguments"
+Remove-Variable -Name scriptType
+Remove-Variable -Name scriptPath
+Remove-Variable -Name scriptInline
+Remove-Variable -Name scriptArguments
 
-    # For compatibility with the legacy handler implementation, set the error action
-    # preference to continue. An implication of changing the preference to Continue,
-    # is that Invoke-VstsTaskScript will no longer handle setting the result to failed.
-    $global:ErrorActionPreference = 'Continue'
+# Remove all commands imported from VstsTaskSdk, other than Out-Default.
+# Remove all commands imported from VstsAzureHelpers_.
+Get-ChildItem -LiteralPath function: |
+    Where-Object {
+        ($_.ModuleName -eq 'VstsTaskSdk' -and $_.Name -ne 'Out-Default') -or
+        ($_.Name -eq 'Invoke-VstsTaskScript') -or
+        ($_.ModuleName -eq 'VstsAzureHelpers_' )
+    } |
+    Remove-Item
 
-    # Undocumented VstsTaskSdk variable so Verbose/Debug isn't converted to ##vso[task.debug].
-    # Otherwise any content the ad-hoc script writes to the verbose pipeline gets dropped by
-    # the agent when System.Debug is not set.
-    $global:__vstsNoOverrideVerbose = $true
+# For compatibility with the legacy handler implementation, set the error action
+# preference to continue. An implication of changing the preference to Continue,
+# is that Invoke-VstsTaskScript will no longer handle setting the result to failed.
+$global:ErrorActionPreference = 'Continue'
 
-    # Run the user's script. Redirect the error pipeline to the output pipeline to enable
-    # a couple goals due to compatibility with the legacy handler implementation:
-    # 1) STDERR from external commands needs to be converted into error records. Piping
-    #    the redirected error output to an intermediate command before it is piped to
-    #    Out-Default will implicitly perform the conversion.
-    # 2) The task result needs to be set to failed if an error record is encountered.
-    #    As mentioned above, the requirement to handle this is an implication of changing
-    #    the error action preference.
-    ([scriptblock]::Create($scriptCommand)) | 
-        ForEach-Object {
-            Remove-Variable -Name scriptCommand
-            Write-Host "##[command]$_"
-            . $_ 2>&1
-        } | 
-        ForEach-Object {
-            if($_ -is [System.Management.Automation.ErrorRecord]) {
-                if($_.FullyQualifiedErrorId -eq "NativeCommandError" -or $_.FullyQualifiedErrorId -eq "NativeCommandErrorMessage") {
+# Undocumented VstsTaskSdk variable so Verbose/Debug isn't converted to ##vso[task.debug].
+# Otherwise any content the ad-hoc script writes to the verbose pipeline gets dropped by
+# the agent when System.Debug is not set.
+$global:__vstsNoOverrideVerbose = $true
+
+# Run the user's script. Redirect the error pipeline to the output pipeline to enable
+# a couple goals due to compatibility with the legacy handler implementation:
+# 1) STDERR from external commands needs to be converted into error records. Piping
+#    the redirected error output to an intermediate command before it is piped to
+#    Out-Default will implicitly perform the conversion.
+# 2) The task result needs to be set to failed if an error record is encountered.
+#    As mentioned above, the requirement to handle this is an implication of changing
+#    the error action preference.
+([scriptblock]::Create($scriptCommand)) | 
+    ForEach-Object {
+        Remove-Variable -Name scriptCommand
+        Write-Host "##[command]$_"
+        . $_ 2>&1
+    } | 
+    ForEach-Object {
+        if($_ -is [System.Management.Automation.ErrorRecord]) {
+            if($_.FullyQualifiedErrorId -eq "NativeCommandError" -or $_.FullyQualifiedErrorId -eq "NativeCommandErrorMessage") {
+                ,$_
+                if($__vsts_input_failOnStandardError -eq $true) {
+                    "##vso[task.complete result=Failed]"
+                }
+            }
+            else {
+                if($__vsts_input_errorActionPreference -eq "continue") {
                     ,$_
                     if($__vsts_input_failOnStandardError -eq $true) {
                         "##vso[task.complete result=Failed]"
                     }
                 }
-                else {
-                    if($__vsts_input_errorActionPreference -eq "continue") {
-                        ,$_
-                        if($__vsts_input_failOnStandardError -eq $true) {
-                            "##vso[task.complete result=Failed]"
-                        }
-                    }
-                    elseif($__vsts_input_errorActionPreference -eq "stop") {
-                        throw $_
-                    }
+                elseif($__vsts_input_errorActionPreference -eq "stop") {
+                    throw $_
                 }
-            } else {
-                ,$_
             }
+        } else {
+            ,$_
         }
-}
-finally {
-    if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
-        Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
     }
-
-    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-
-    if($keepSessionLoggedIn -eq $false)
-    {
-        Disconnect-AzureRmAccount
-    }
-    
-    Remove-EndpointSecrets
-}
