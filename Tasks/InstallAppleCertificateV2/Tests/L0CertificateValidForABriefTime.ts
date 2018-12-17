@@ -28,6 +28,15 @@ Math.random = function (): number {
     return 1337;
 }
 
+// Have our certificate be valid only for a very short window of time. This confirms our date comparisons properly
+// account for timezones. Someone in a timezone ahead of UTC shouldn't have to wait to use a newly created certificate.
+
+// 10 minutes ago.
+const notBefore: Date = new Date(new Date().getTime() - 10 * 60 * 1000);
+
+// 10 minutes from now.
+const notAfter: Date = new Date(new Date().getTime() + 10 * 60 * 1000);
+
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
@@ -47,7 +56,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exec": {
         "/usr/bin/openssl pkcs12 -in /build/temp/mySecureFileId.filename -nokeys -passin pass:mycertPwd | /usr/bin/openssl x509 -noout -fingerprint -subject -dates": {
             "code": 0,
-            "stdout": "MAC verified OK\nSHA1 Fingerprint=BB:26:83:C6:AA:88:35:DE:36:94:F2:CF:37:0A:D4:60:BB:AE:87:0C\nsubject= /UID=ZD34QB2EFN/CN=iPhone Developer: Madhuri Gummalla (HE432Y3E2Q)/OU=A9M46DL4GH/O=Madhuri Gummalla/C=US\nnotBefore=Nov 13 03:37:42 2018 GMT\nnotAfter=Nov 13 03:37:42 2099 GMT\n"
+            "stdout": `MAC verified OK\nSHA1 Fingerprint=BB:26:83:C6:AA:88:35:DE:36:94:F2:CF:37:0A:D4:60:BB:AE:87:0C\nsubject= /UID=ZD34QB2EFN/CN=iPhone Developer: Madhuri Gummalla (HE432Y3E2Q)/OU=A9M46DL4GH/O=Madhuri Gummalla/C=US\nnotBefore=${toOpensslString(notBefore)}\nnotAfter=${toOpensslString(notAfter)}\n`
         },
         "/usr/bin/openssl pkcs12 -in /build/temp/mySecureFileId.filename -nocerts -passin pass:mycertPwd -passout pass:mycertPwd | /usr/bin/grep friendlyName": {
             "code": 0,
@@ -88,3 +97,19 @@ tr.registerMock('os', os);
 
 tr.run();
 
+// Return a UTC date in this format: "Nov 13 03:37:42 2018 GMT"
+function toOpensslString(datetime: Date): string {
+    const dateSegments: string[] = datetime.toUTCString().split(' ');
+
+    if (dateSegments.length != 6) {
+        throw new Error('Expected 6 segments in the date string');
+    }
+
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toString
+    const date = dateSegments[1];
+    const monthName = dateSegments[2];
+    const year = dateSegments[3];
+    const time = dateSegments[4];
+
+    return `${monthName} ${date} ${time} ${year} GMT`;
+}
