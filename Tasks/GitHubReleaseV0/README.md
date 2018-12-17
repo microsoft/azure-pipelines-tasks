@@ -1,8 +1,8 @@
-# GitHub Releases
+# GitHub Release
 
 ## Overview
 
-The GitHub Releases task can be used to create/edit/delete a GitHub release directly from your CI/CD pipeline. This task works on cross platform Azure Pipeline agents running Windows, Linux or Mac and uses GitHub APIs to manage GitHub releases.
+The [GitHub Release task](https://aka.ms/AA3m1bq) can be used to create/edit/delete a GitHub release directly from your CI/CD pipeline. This task works on cross platform Azure Pipeline agents running Windows, Linux or Mac and uses GitHub APIs to manage GitHub releases.
 
 ## Contact Information
 
@@ -18,7 +18,7 @@ In order to perform operations on the GitHub repository, the task needs a GitHub
 
 ## Parameters of the task
 
-The GitHub Releases task can run in 3 action types, viz. create, edit or delete. Based on the action chosen by the user certain parameters will be ignored. The following is the list of parameters required for this task.
+The GitHub Release task can run in 3 action types, viz. create, edit or delete. Based on the action chosen by the user certain parameters will be ignored. The following is the list of parameters required for this task.
 
 * **Service Connection:** This is the name of GitHub service connection which will be used to connect to target GitHub account. You can use an existing GitHub service connection or create a new one. Note that the service connection should use OAuth or PAT for authentication.
 
@@ -34,11 +34,11 @@ The GitHub Releases task can run in 3 action types, viz. create, edit or delete.
 
 * **Target:** This is the commit SHA for which the GitHub release will be created. By default, the value is $(Build.SourceVersion) which corresponds to the commit for which the build was run. If you specify a branch name here(E.g. *master* ), the latest commit from this branch will be used as target. This field is ignored when using edit and delete actions.
 
-* **Tag Source:** This field allows you to configure the tag to be used for a release action. It can be done in 2 ways:
+* **Tag Source:** This field allows you to choose the tag to be used for a release action. It can be done in 2 ways:
 
-    * Git tag: This option is available only for *create* action. If selected, the release will be created using the git tag that is associated with this commit. If no tag is found for the given commit, the release will not be created. If multiple tags are found, the task will throw an error.
+    * Git tag: Choose this option if you want use the tag that is pushed along with the commit. The release will be created using the git tag that is associated with this commit. If no tag is found for the given commit, the release will not be created. If multiple tags are found, the task will throw an error.This option is available only for *create* action.
 
-    * User specified tag: When this option is used, the release will be created using the tag mentioned. You can also mention the tag using variables, Eg. v\$(MajorVersion).\$(MinorVersion).\$(PatchVersion). For release edit and delete actions, it is mandatory to use this option.
+    * User specified tag: Choose this option if you want the task to create a new tag. The release will subsequently be created using this new tag. You can specify the tag to be created directly or using variables, Eg. v\$(MajorVersion).\$(MinorVersion).\$(PatchVersion). If the tag already exists in the repo, then the release will be created for the existing tag. This option is available for *create*, *edit* or *delete* actions. However, it is the only tag source option for *edit* and *delete* actions.
 
 * **Release Title:** This is the title that will be used for release creation. If left empty, the tag name will be used as the release title.
 
