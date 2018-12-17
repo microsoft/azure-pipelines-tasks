@@ -1,12 +1,13 @@
+
 Tasks/AndroidSigningV2/*    @madhurig
 
 Tasks/AndroidSigningV3/*    @madhurig
 
 Tasks/ANTV1/*   @madhurig
 
-Tasks/AppCenterDistributeV1/*   @madhurig
+Tasks/AppCenterDistributeV1/*   @DennisPan
 
-Tasks/AppCenterTestV1/*   @madhurig
+Tasks/AppCenterTestV1/*   @owenniblock
 
 Tasks/ArchiveFilesV2/*  @bryanmacfarlane
 
@@ -200,7 +201,7 @@ Tasks/PublishCodeCoverageResultsV1/*    @madhurig
 
 Tasks/PublishPipelineArtifactV0/*       @mihaif
 
-Tasks/PublishSymbolsV2/*    @smalpani
+Tasks/PublishSymbolsV2/*    @arunkm
 
 Tasks/PublishTestResultsV1/*    @smalpani
 
