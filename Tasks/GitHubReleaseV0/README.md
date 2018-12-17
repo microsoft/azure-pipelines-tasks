@@ -34,9 +34,9 @@ The GitHub Release task can run in 3 action types, viz. create, edit or delete. 
 
 * **Target:** This is the commit SHA for which the GitHub release will be created. By default, the value is $(Build.SourceVersion) which corresponds to the commit for which the build was run. If you specify a branch name here(E.g. *master* ), the latest commit from this branch will be used as target. This field is ignored when using edit and delete actions.
 
-* **Tag Source:** This field allows you to choose the tag to be used for a release action. It can be done in 2 ways:
+* **Tag Source:** This parameter allows you to choose the source of tag to be used for a release action. This is available only for *create* action. It can be done in 2 ways:
 
-    * Git tag: Choose this option if the tag to be used in release creation has been pushed to the repository. The release will be created using the git tag that is associated with this commit. If no tag is found for the given commit, the release will not be created. If multiple tags are found, the task will throw an error. This option is available only for *create* action.
+    * Git tag: Choose this option if the tag to be used in release creation has been pushed to the repository. The release will be created using the git tag that is associated with this commit. If no tag is found for the given commit, the release will not be created. If multiple tags are found, the task will throw an error.
 
     * User specified tag: Choose this option if you want the task to create a new tag. The release will subsequently be created using the new tag provided in the 'tag' parameter. If the tag already exists in the repository, then the release will be created for the existing tag. 
     
