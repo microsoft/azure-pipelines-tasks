@@ -28,9 +28,9 @@ Math.random = function (): number {
     return 1337;
 }
 
-// 24 hours ago
-// This date string is generated to ensure the positive test, L0CertificateValid.ts, is actually testing expiration times.
-const expiredDate: Date = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+// 10 minutes ago. The notAfter date string is generated instead of hardcoded to ensure the positive test,
+// L0CertificateValid.ts, is actually testing expiration times since reading them from the certificate is best effort.
+const expiredDate: Date = new Date(new Date().getTime() - 10 * 60 * 1000);
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{

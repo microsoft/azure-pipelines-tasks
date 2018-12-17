@@ -28,8 +28,8 @@ Math.random = function (): number {
     return 1337;
 }
 
-// Create a certificate that's been valid only for 10 minutes and expires in 10 minutes.
-// toOpensslString returns UTC date strings, so our testing includes that date comparisons properly account for timezones.
+// Have our certificate be valid only for a very short window of time. We need to test that our date comparisons
+// properly account for timezones. Someone ahead of UTC shouldn't have to wait to use a newly created certificate.
 
 // 10 minutes ago.
 const notBefore: Date = new Date(new Date().getTime() - 10 * 60 * 1000);
