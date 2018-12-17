@@ -11,7 +11,8 @@ Register-Mock Get-VstsInput { 'arg1 arg2' } -- -Name ScriptArguments
 Register-Mock Get-VstsInput { "continue" } -- -Name errorActionPreference
 Register-Mock Get-VstsInput { $true } -- -Name FailOnStandardError
 Register-Mock Update-PSModulePathForHostedAgent
-Register-Mock Initialize-Azure
+Register-Mock Get-Module
+Register-Mock Initialize-AzureRMModule
 Register-Mock Get-VstsEndpoint { @{auth = @{ scheme = "ServicePrincipal" }} }
 Register-Mock Remove-EndpointSecrets
 
@@ -24,7 +25,7 @@ $global:ErrorActionPreference = 'Stop' # Reset to stop.
 
 # Assert the Azure helpers module was imported and invoked.
 Assert-WasCalled Import-Module -- ([System.IO.Path]::GetFullPath("$PSScriptRoot\..\ps_modules\VstsAzureHelpers_"))
-Assert-WasCalled Initialize-Azure
+Assert-WasCalled Initialize-AzureRMModule
 
 # Assert the target script was invoked with the specified args.
 Assert-AreEqual @('arg1', 'arg2') $actual.Args

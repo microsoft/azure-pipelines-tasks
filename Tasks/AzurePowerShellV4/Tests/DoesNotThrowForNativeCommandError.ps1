@@ -10,7 +10,8 @@ Register-Mock Get-VstsInput { $targetAzurePs } -- -Name TargetAzurePs
 Register-Mock Get-VstsInput { "stop" } -- -Name errorActionPreference
 Register-Mock Get-VstsInput { $false } -- -Name FailOnStandardError
 Register-Mock Update-PSModulePathForHostedAgent
-Register-Mock Initialize-Azure
+Register-Mock Initialize-AzModule
+Register-Mock Initialize-AzureRMModule
 Register-Mock Remove-EndpointSecrets
 
 # Act.

@@ -24,7 +24,8 @@ function Invoke-VstsTaskScript { } # Detached from the task SDK module
 $null = Get-Item function:SomeVstsTaskSdkFunction1 # Sanity check to verify the function was imported.
 
 # Arrange the mock Azure helpers module.
-Register-Mock Initialize-Azure
+Register-Mock Initialize-AzModule
+Register-Mock Initialize-AzureRMModule
 New-Module -Name VstsAzureHelpers_ -ScriptBlock {
     function SomeAzureHelpersFunction1 { }
     function SomeAzureHelpersFunction2 { }
