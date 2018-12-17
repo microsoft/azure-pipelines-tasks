@@ -116,10 +116,10 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Installs valid certificate', (done: MochaDone) => {
+    it('Installs certificate valid for a brief time', (done: MochaDone) => {
         this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0CertificateValid.js');
+        let tp: string = path.join(__dirname, 'L0CertificateValidForABriefTime.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
