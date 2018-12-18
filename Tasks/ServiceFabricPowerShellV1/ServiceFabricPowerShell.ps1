@@ -113,7 +113,7 @@ Finally
 {
     If ($scriptType -eq "InlineScript" -and (Test-Path -LiteralPath $scriptPath) -eq $true )
     {
-        Remove-Item -LiteralPath $scriptPath -ErrorAction 'SilentlyContinue'
+        Remove-Item -LiteralPath $scriptPath -Force -ErrorAction 'SilentlyContinue' | Out-Null
     }
 
     Remove-Variable -Name scriptPath
