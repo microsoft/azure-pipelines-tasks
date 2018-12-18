@@ -115,7 +115,7 @@
                 "resizable": "true",
                 "rows": "2"
             },
-            "visibleRule": "command != Run an image && command != run && command != login && command != logout",
+            "visibleRule": "command != login && command != logout",
             "label": "Arguments",
             "groupName": "commands",
             "helpMarkDown": "Docker command options. In case of 'tag' command, you can specify additional tags for Docker image here."
