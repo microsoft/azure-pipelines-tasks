@@ -28,6 +28,10 @@ export default class CustomTemplateFileProvider extends TemplateFileProviderBase
         tl.checkPath(initialTemplateFileLocation, tl.loc("CustomTemplateNotFoundErrorMessagePathName", initialTemplateFileLocation));
 
         this._templateFileLocation = initialTemplateFileLocation;
-        return this._templateFileLocation; 
+        return this._templateFileLocation;
+    }
+
+    public cleanup(): void {
+        // do not delete in case of user provided template.
     }
 }
