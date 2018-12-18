@@ -446,7 +446,7 @@ export class Job {
                     thisJob.stopWork(0, JobState.Finishing);
                 }
             }
-        }).auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, false) //The 'false' flag forces the request to send proper authentication headers when retrying
+        }).auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, true)
         .on('error', (err) => { 
             throw err; 
         });
