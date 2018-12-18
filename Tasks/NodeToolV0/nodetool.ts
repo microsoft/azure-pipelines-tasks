@@ -6,6 +6,7 @@ import * as path from 'path';
 
 let osPlat: string = os.platform();
 let osArch: string = os.arch();
+let toolName: string = 'node';
 
 async function run() {
     try {
@@ -63,7 +64,12 @@ async function getNode(versionSpec: string, checkLatest: boolean) {
             // query nodejs.org for a matching version
             version = await queryLatestMatch(versionSpec);
             if (!version) {
-                throw new Error(`Unable to find Node version '${versionSpec}' for platform ${osPlat} and architecture ${osArch}.`);
+                // If we can't find it from nodejs.org, try iojs.org (has versions 1-3)
+                toolName = 'io';
+                version = await queryLatestMatch(versionSpec);
+                if (!version) {
+                    throw new Error(`Unable to find Node version '${versionSpec}' for platform ${osPlat} and architecture ${osArch}.`);
+                }
             }
 
             // check cache
@@ -102,7 +108,7 @@ async function queryLatestMatch(versionSpec: string): Promise<string> {
     }
 
     let versions: string[] = [];
-    let dataUrl = "https://nodejs.org/dist/index.json";
+    let dataUrl = `https://${toolName}js.org/dist/index.json`;
     let rest: restm.RestClient = new restm.RestClient('vsts-node-tool');
     let nodeVersions: INodeVersion[] = (await rest.get<INodeVersion[]>(dataUrl)).result;
     nodeVersions.forEach((nodeVersion:INodeVersion) => {
@@ -127,7 +133,7 @@ async function acquireNode(version: string): Promise<string> {
     let urlFileName: string = osPlat == 'win32'? fileName + '.7z':
                                                     fileName + '.tar.gz';  
 
-    let downloadUrl = 'https://nodejs.org/dist/v' + version + '/' + urlFileName;
+    let downloadUrl = `https://${toolName}js.org/dist/v${version}/${urlFileName}`;
 
     let downloadPath: string;
 
@@ -191,8 +197,8 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
     let exeUrl: string;
     let libUrl: string;
     try {
-        exeUrl = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.exe`;
-        libUrl = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.lib`;
+        exeUrl = `https://${toolName}js.org/dist/v${version}/win-${os.arch()}/${toolName}.exe`;
+        libUrl = `https://${toolName}js.org/dist/v${version}/win-${os.arch()}/${toolName}.lib`;
 
         await toolLib.downloadTool(exeUrl, path.join(tempDir, "node.exe"));
         await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));
@@ -201,8 +207,8 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
         if (err['httpStatusCode'] && 
             err['httpStatusCode'] === '404')
         {
-            exeUrl = `https://nodejs.org/dist/v${version}/node.exe`;
-            libUrl = `https://nodejs.org/dist/v${version}/node.lib`;
+            exeUrl = `https://${toolName}js.org/dist/v${version}/${toolName}.exe`;
+            libUrl = `https://${toolName}js.org/dist/v${version}/${toolName}.lib`;
 
             await toolLib.downloadTool(exeUrl, path.join(tempDir, "node.exe"));
             await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));
