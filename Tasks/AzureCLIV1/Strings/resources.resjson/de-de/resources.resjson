@@ -21,9 +21,9 @@
   "loc.input.help.failOnStandardError": "Bei aktivierter Option kann diese Aufgabe nicht erfolgreich ausgeführt werden, wenn Fehler in den StandardError-Stream geschrieben werden. Deaktivieren Sie das Kontrollkästchen, um Standardfehler zu ignorieren, und bestimmen Sie den Status mithilfe von Exitcodes.",
   "loc.messages.ScriptReturnCode": "Skript wurde mit Rückgabecode beendet: %d",
   "loc.messages.ScriptFailed": "Skriptfehler: %s",
-  "loc.messages.UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM",
+  "loc.messages.UnsupportedEndpointScheme": "Nicht unterstütztes Authentifizierungsschema für Dienstverbindung: Dienstprinzipal für AzureRM",
   "loc.messages.AzureSDKNotFound": "Azure CLI 2.x ist nicht auf diesem Computer installiert.",
   "loc.messages.FailedToLogout": "Beim Abmelden ist der folgende Fehler aufgetreten: %s",
-  "loc.messages.LoginFailed": "Azure login failed",
-  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription"
+  "loc.messages.LoginFailed": "Fehler bei der Azure-Anmeldung.",
+  "loc.messages.ErrorInSettingUpSubscription": "Fehler beim Festlegen des Abonnements."
 }

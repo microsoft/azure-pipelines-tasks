@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 7,
-    "Patch": 25
+    "Patch": 29
   },
   "demands": [
     "Cmd"
@@ -208,15 +208,6 @@
       "name": "UpgradeReplicaSetCheckTimeoutSec",
       "type": "string",
       "label": "ms-resource:loc.input.label.UpgradeReplicaSetCheckTimeoutSec",
-      "defaultValue": "",
-      "required": false,
-      "groupname": "upgrade",
-      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
-    },
-    {
-      "name": "ReplicaQuorumTimeoutSec",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.ReplicaQuorumTimeoutSec",
       "defaultValue": "",
       "required": false,
       "groupname": "upgrade",
@@ -480,6 +471,9 @@
     "SFSDK_ApplicationHealth": "ms-resource:loc.messages.SFSDK_ApplicationHealth",
     "SFSDK_RetryingUpgradeApplication": "ms-resource:loc.messages.SFSDK_RetryingUpgradeApplication",
     "SFSDK_RetryingGetApplicationUpgrade": "ms-resource:loc.messages.SFSDK_RetryingGetApplicationUpgrade",
+    "SFSDK_RetryingGetApplication": "ms-resource:loc.messages.SFSDK_RetryingGetApplication",
+    "SFSDK_RetryingGetServiceType": "ms-resource:loc.messages.SFSDK_RetryingGetServiceType",
+    "SFSDK_RetryingGetServiceManifest": "ms-resource:loc.messages.SFSDK_RetryingGetServiceManifest",
     "SFSDK_RetryingTestClusterConnection": "ms-resource:loc.messages.SFSDK_RetryingTestClusterConnection",
     "SFSDK_RetryingTestAppPackage": "ms-resource:loc.messages.SFSDK_RetryingTestAppPackage",
     "SFSDK_RetryingGetClusterManifest": "ms-resource:loc.messages.SFSDK_RetryingGetClusterManifest",

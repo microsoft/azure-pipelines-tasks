@@ -30,7 +30,8 @@ function Update-DockerSettings
             }
             "ContainerRegistryEndpoint"
             {
-                $dockerRegistryEndpoint = Get-VstsInput -Name dockerRegistryEndpoint -Require
+                $dockerRegistryInput = Get-VstsInput -Name dockerRegistryEndpoint -Require
+                $dockerRegistryEndpoint = Get-VstsEndpoint -Name $dockerRegistryInput -Require
                 $userName = $dockerRegistryEndpoint.Auth.Parameters.UserName
                 $password = $dockerRegistryEndpoint.Auth.Parameters.Password
                 $isPasswordEncrypted = $false

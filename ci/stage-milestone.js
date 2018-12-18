@@ -12,33 +12,21 @@ fs.mkdirSync(util.milestoneLayoutPath);
 // servicing supports both this new format and the legacy layout format as well.
 fs.writeFileSync(path.join(util.milestoneLayoutPath, 'layout-version.txt'), '2');
 
-// get the slice artifact names
-var artifactNames = fs.readdirSync(process.env.SYSTEM_ARTIFACTSDIRECTORY)
-    .filter(function (val) {
-        return val.match(/^slice-[0-9]+$/);
-    });
-if (!artifactNames || !artifactNames.length) {
-    throw new Error("expected artifact folders not found");
-}
+// extract the artifact
+var artifactZipPath = path.join(process.env.SYSTEM_ARTIFACTSDIRECTORY, "package", "tasks.zip");
+var artifactPath = path.join(util.packagePath, "package");
+util.expandTasks(artifactZipPath, artifactPath);
 
-for (var i = 0; i < artifactNames.length; i++) {
-    // extract the artifact
-    var artifactName = artifactNames[i];
-    var artifactZipPath = path.join(process.env.SYSTEM_ARTIFACTSDIRECTORY, artifactName, "tasks.zip");
-    var slicePath = path.join(util.packagePath, artifactName);
-    util.expandTasks(artifactZipPath, slicePath);
+// link the artifact
+fs.readdirSync(artifactPath).forEach(function (itemName) {
+    var itemSourcePath = path.join(artifactPath, itemName);
+    if (!fs.lstatSync(itemSourcePath).isDirectory()) {
+        throw new Error(`Expected item to be a directory: ${itemSourcePath}`);
+    }
 
-    // link the artifact
-    fs.readdirSync(slicePath).forEach(function (itemName) {
-        var itemSourcePath = path.join(slicePath, itemName);
-        if (!fs.lstatSync(itemSourcePath).isDirectory()) {
-            throw new Error(`Expected item to be a directory: ${itemSourcePath}`);
-        }
-
-        var itemDestPath = path.join(util.milestoneLayoutPath, itemName);
-        fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
-    });
-}
+    var itemDestPath = path.join(util.milestoneLayoutPath, itemName);
+    fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
+});
 
 // create the nuspec file
 var nuspecContent =

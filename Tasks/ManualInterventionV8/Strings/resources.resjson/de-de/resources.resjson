@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Manueller Eingriff",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870234)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=870234)",
   "loc.description": "Bereitstellung anhalten und auf Eingriff warten",
   "loc.instanceNameFormat": "Manueller Eingriff",
   "loc.input.label.instructions": "Anweisungen",

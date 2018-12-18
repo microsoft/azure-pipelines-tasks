@@ -11,13 +11,12 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 141,
-        "Patch": 1
+        "Minor": 145,
+        "Patch": 0
     },
     "releaseNotes": "This version of the task uses apksigner instead of jarsigner to sign APKs.",
     "demands": [
-        "JDK",
-        "AndroidSDK"
+        "JDK"
     ],
     "minimumAgentVersion": "2.116.0",
     "groups": [

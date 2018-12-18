@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "查询 Azure 监视器警报",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "观察配置的 Azure 监视器是否出现活动警报。",
   "loc.instanceNameFormat": "查询 Azure 监视器警报",
   "loc.input.label.connectedServiceNameARM": "Azure 订阅",

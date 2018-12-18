@@ -38,7 +38,7 @@ steps:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
   # Stage packages
-  - script: node ./ci/stage-slice.js
+  - script: node ./ci/stage-package.js
     displayName: Stage package
     condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
 

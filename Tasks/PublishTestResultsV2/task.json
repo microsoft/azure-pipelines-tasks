@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 143,
-        "Patch": 0
+        "Minor": 144,
+        "Patch": 2
     },
     "demands": [],
     "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
@@ -72,6 +72,14 @@
             "helpMarkDown": "A test run is created for each results file. Check this option to merge results into a single test run. To optimize for better performance, results will be merged into a single run if there are more than 100 result files, irrespective of this option."
         },
         {
+            "name": "failTaskOnFailedTests",
+            "type": "boolean",
+            "label": "Fail if there are test failures",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected in the result files."
+        },
+        {
             "name": "testRunTitle",
             "type": "string",
             "label": "Test run title",
@@ -122,6 +130,7 @@
     },
     "messages": {
         "NoMatchingFilesFound": "No test result files matching '%s' were found.",
-        "ErrorTestResultsPublisher": "Error while executing TestResultsPublisher: %s."
+        "ErrorTestResultsPublisher": "Error while executing TestResultsPublisher: %s.",
+        "ErrorFailTaskOnFailedTests": "There are one or more test failures detected in result files. Detailed summary of published test results can be viewed in the Tests tab."
     }
 }

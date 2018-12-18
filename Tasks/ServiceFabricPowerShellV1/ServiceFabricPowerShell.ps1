@@ -19,6 +19,9 @@ if ($scriptType -eq "FilePath")
         throw (Get-VstsLocString -Key InvalidScriptPath0 -ArgumentList $scriptPath)
     }
 }
+else {
+    $scriptPath = "";  # This will be set below.
+}
 
 if ($scriptArguments -match '[\r\n]')
 {
@@ -111,9 +114,9 @@ catch
 }
 Finally
 {
-    If ($scriptType -eq "InlineScript" -and (Test-Path -LiteralPath $scriptPath) -eq $true )
+    If ($scriptType -eq "InlineScript" -and $scriptPath -and (Test-Path -LiteralPath $scriptPath))
     {
-        Remove-Item -LiteralPath $scriptPath -ErrorAction 'SilentlyContinue'
+        Remove-Item -LiteralPath $scriptPath -Force -ErrorAction 'SilentlyContinue' | Out-Null
     }
 
     Remove-Variable -Name scriptPath
