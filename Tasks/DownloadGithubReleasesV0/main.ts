@@ -77,14 +77,14 @@ async function main(): Promise<void> {
                 }
                 else {
                     if (!!options.headers['Authorization']) {
-                        var b = {}
+                        let updatedHeaders = {};
                         for (var key in options.headers) {
-                            if (key != "Authorization") {
-                                b[key] = options.headers[key]
+                            if (key.toLowerCase() != "authorization") {
+                                updatedHeaders[key] = options.headers[key];
                             }
                         }
 
-                        options.headers = b
+                        options.headers = updatedHeaders;
                     }
                 }
             }
