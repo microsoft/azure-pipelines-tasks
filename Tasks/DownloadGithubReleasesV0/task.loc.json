@@ -28,37 +28,43 @@
       "helpMarkDown": "ms-resource:loc.input.help.connection"
     },
     {
-      "name": "definition",
+      "name": "userRepository",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.definition",
+      "label": "ms-resource:loc.input.label.userRepository",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.definition"
+      "helpMarkDown": "ms-resource:loc.input.help.userRepository"
     },
     {
-      "name": "releaseByTagName",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.releaseByTagName",
-      "defaultValue": "false",
-      "required": false,
+      "name": "defaultVersionType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.defaultVersionType",
+      "defaultValue": "latest",
+      "required": true,
+      "options": {
+        "latest": "Latest Release",
+        "specificVersion": "Specific Version",
+        "specificTag": "Specific Tag"
+      },
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.releaseByTagName"
+      "helpMarkDown": "ms-resource:loc.input.help.defaultVersionType"
     },
     {
-      "name": "versions",
+      "name": "version",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.versions",
+      "label": "ms-resource:loc.input.label.version",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.versions"
+      "visibleRule": "defaultVersionType != latest",
+      "helpMarkDown": "ms-resource:loc.input.help.version"
     },
     {
       "name": "itemPattern",
@@ -79,19 +85,19 @@
   ],
   "dataSourceBindings": [
     {
-      "target": "definition",
+      "target": "userRepository",
       "endpointId": "$(connection)",
       "dataSourceName": "UserRepositories",
       "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }"
     },
     {
-      "target": "versions",
+      "target": "version",
       "endpointId": "$(connection)",
       "dataSourceName": "Releases",
-      "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \" {{#equals releaseByTagName 'true'}}{{#if tag_name}}{{tag_name}}{{else}}{{id}}{{/if}}{{else}}{{#if name}}{{name}}{{else}}{{id}}{{/if}}{{/equals}}\" }",
+      "resultTemplate": "{ \"Value\" : \"{{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{id}}{{/equals}}\", \"DisplayValue\" : \" {{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{#if name}}{{name}}{{else}}{{id}}{{/if}}{{/equals}}\" }",
       "parameters": {
-        "repositoryName": "$(definition)",
-        "releaseByTagName": "$(releaseByTagName)"
+        "repositoryName": "$(userRepository)",
+        "releaseByTagName": "$(defaultVersionType)"
       }
     }
   ],
