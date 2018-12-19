@@ -19,7 +19,8 @@
         "Minor": 0,
         "Patch": 1
     },
-    "releaseNotes": "Added support for Fail on standard error and ErrorActionPreference",
+    "preview": true,
+    "releaseNotes": "Removal of Classic service endpoint support",
     "demands": [
         "azureps"
     ],
