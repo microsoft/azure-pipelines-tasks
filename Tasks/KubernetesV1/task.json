@@ -124,6 +124,14 @@
             "helpMarkDown": "Set the namespace for the kubectl command by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
         },
         {
+            "name": "kubernetesAccessProfileType",
+            "type": "boolean",
+            "label": "Get cluster admin credentials",
+            "defaultValue": "false",
+            "groupName": "kubernetesCluster",
+            "helpMarkDown": "Get cluster administrator credentials instead of default cluster user credentials."
+        },
+        {
             "name": "command",
             "type": "pickList",
             "label": "Command",

@@ -124,6 +124,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.namespace"
     },
     {
+      "name": "kubernetesAccessProfileType",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.kubernetesAccessProfileType",
+      "defaultValue": "false",
+      "groupName": "kubernetesCluster",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesAccessProfileType"
+    },
+    {
       "name": "command",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.command",
