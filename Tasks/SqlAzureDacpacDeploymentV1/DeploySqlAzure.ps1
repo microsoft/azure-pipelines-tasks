@@ -15,6 +15,8 @@ $connectedServiceName = Get-VstsInput -Name "ConnectedServiceName"
 $connectedServiceNameARM = Get-VstsInput -Name "ConnectedServiceNameARM"
 $sqlUsername = Get-VstsInput -Name "SqlUsername"
 $sqlPassword = Get-VstsInput -Name "SqlPassword"
+$aadSqlUserName = Get-VstsInput -Name "AADSqlUserName"
+$aadSqlPassword = Get-VstsInput -Name "AADSqlPassword"
 $deploymentAction = Get-VstsInput -Name "DeploymentAction"
 $authenticationType = Get-VstsInput -Name "AuthenticationType"
 $connectionString = Get-VstsInput -Name "ConnectionString"
@@ -54,6 +56,12 @@ try {
 
     Import-Sqlps
 
+    # Detect authentication type for YAML flow
+    if (-not $authenticationType) {
+        $authenticationType = Detect-AuthenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -aadSqlUsername $aadSqlUserName -aadSqlPassword $aadSqlPassword -connectionString $connectionString
+        Write-Verbose "Detected authentication type : $authenticationType"
+    }
+
     # Parse server name and database name from connection string for adding firewall rules
     if ($authenticationType -eq "connectionString") {
         $sb = New-Object System.Data.Common.DbConnectionStringBuilder
@@ -72,6 +80,9 @@ try {
         }
 
         Write-Verbose "Retrieved SQL server name : $serverName  and database : $databaseName from connection string"
+    } elseif ($authenticationType -eq "aadAuthenticationPassword") {
+        $sqlUsername = $aadSqlUserName;
+        $sqlPassword = $aadSqlPassword;
     }
 
     # Checks for the very basic consistency of the Server Name

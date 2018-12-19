@@ -184,7 +184,7 @@ function Get-SqlPackageCommandArguments
           $sqlPackageArguments += @("$($sqlPackageOptions.SourceConnectionString)`"$sourceConnectionString`"")
         }
     }
-    elseif ($authenticationType -eq "aadAuthenticationPassword" -or $authenticationType -eq "aadAuthenticationIntegration") {
+    elseif ($authenticationType -eq "aadAuthenticationPassword" -or $authenticationType -eq "aadAuthenticationIntegrated") {
 
         $databaseName = $targetDatabaseName
         $sqlServerName = $targetServerName
@@ -282,6 +282,35 @@ function Execute-Command
     }
 }
 
+function Detect-AuthenticationType
+{
+   param(
+     [String]$serverName,
+     [String]$databaseName,
+     [String]$sqlUsername,
+     [String]$sqlPassword,
+     [String]$aadSqlUsername,
+     [String]$aadSqlPassword,
+     [String]$connectionString
+   )
+
+   if ($serverName -and $databaseName) {
+     if ($sqlUsername -and $sqlPassword) {
+       $authenticationType = "server";
+     } elseif ($aadSqlUserName -and $aadSqlPassword) {
+       $authenticationType = "aadAuthenticationPassword";
+     } else {
+       $authenticationType = "aadAuthenticationIntegrated";
+     }
+   } elseif ($connectionString) {
+     $authenticationType = "connectionString";
+   } else {
+     throw (Get-VstsLocString -Key "SAD_InvalidAuthenticationInputs")
+   }
+
+   return $authenticationType
+}
+
 function ConvertParamToSqlSupported
 {
     param([String]$param)
@@ -290,6 +319,7 @@ function ConvertParamToSqlSupported
 
     return $param
 }
+
 function EscapeSpecialChars
 {
     param(

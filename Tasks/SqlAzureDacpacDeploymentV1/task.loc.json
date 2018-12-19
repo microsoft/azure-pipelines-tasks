@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 2,
+    "Minor": 3,
     "Patch": 10
   },
   "demands": [
@@ -85,11 +85,11 @@
       "label": "ms-resource:loc.input.label.AuthenticationType",
       "required": true,
       "groupName": "target",
-      "defaultValue": "server",
+      "defaultValue": "SQL Server Authentication",
       "options": {
         "server": "SQL Server Authentication",
         "aadAuthenticationPassword": "Active Directory - Password",
-        "aadAuthenticationIntegration": "Active Directory - Integrated",
+        "aadAuthenticationIntegrated": "Active Directory - Integrated",
         "connectionString": "Connection String"
       },
       "helpMarkDown": "ms-resource:loc.input.help.AuthenticationType"
@@ -101,7 +101,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegration",
+      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated",
       "helpMarkDown": "ms-resource:loc.input.help.ServerName"
     },
     {
@@ -111,7 +111,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegration",
+      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated",
       "helpMarkDown": "ms-resource:loc.input.help.DatabaseName"
     },
     {
@@ -121,7 +121,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword",
+      "visibleRule": "AuthenticationType = server",
       "helpMarkDown": "ms-resource:loc.input.help.SqlUsername"
     },
     {
@@ -131,8 +131,28 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword",
+      "visibleRule": "AuthenticationType = server",
       "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
+    },
+    {
+      "name": "AADSqlUsername",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AADSqlUsername",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = aadAuthenticationPassword",
+      "helpMarkDown": "ms-resource:loc.input.help.AADSqlUsername"
+    },
+    {
+      "name": "AADSqlPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AADSqlPassword",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = aadAuthenticationPassword",
+      "helpMarkDown": "ms-resource:loc.input.help.AADSqlPassword"
     },
     {
       "name": "ConnectionString",
@@ -326,6 +346,7 @@
     "SAD_FoundMoreFiles": "ms-resource:loc.messages.SAD_FoundMoreFiles",
     "SAD_NoFilesMatch": "ms-resource:loc.messages.SAD_NoFilesMatch",
     "SAD_InvalidDacpacFile": "ms-resource:loc.messages.SAD_InvalidDacpacFile",
+    "SAD_InvalidAuthenticationInputs": "ms-resource:loc.messages.SAD_InvalidAuthenticationInputs",
     "SAD_InvalidSqlFile": "ms-resource:loc.messages.SAD_InvalidSqlFile",
     "SAD_NoPassword": "ms-resource:loc.messages.SAD_NoPassword",
     "SAD_InvalidPublishProfile": "ms-resource:loc.messages.SAD_InvalidPublishProfile",

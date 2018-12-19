@@ -15,7 +15,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 2,
+        "Minor": 3,
         "Patch": 10
     },
     "demands": [
@@ -85,11 +85,11 @@
             "label": "Authentication Type",
             "required": true,
             "groupName": "target",
-            "defaultValue": "server",
+            "defaultValue": "SQL Server Authentication",
             "options": {
                 "server": "SQL Server Authentication",
                 "aadAuthenticationPassword": "Active Directory - Password",
-                "aadAuthenticationIntegration": "Active Directory - Integrated",
+                "aadAuthenticationIntegrated": "Active Directory - Integrated",
                 "connectionString": "Connection String"
             },
             "helpMarkDown": "Specify the option to connect to the Azure SQL Server Database. The options are either to provide the Azure SQL Server Database details, or the SQL Server connection string, or AAD Authentication password or integrated. For SQL server authentication, use SQL server's user credentials and for AD authentication, use credentials of AD user configured to SQL server."
@@ -101,7 +101,7 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
-            "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegration",
+            "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated",
             "helpMarkDown": "Azure SQL Server name, like Fabrikam.database.windows.net,1433 or Fabrikam.database.windows.net."
         },
         {
@@ -111,7 +111,7 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
-            "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegration",
+            "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated",
             "helpMarkDown": "Name of the Azure SQL Database, where the files will be deployed."
         },
         {
@@ -121,7 +121,7 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
-            "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword",
+            "visibleRule": "AuthenticationType = server",
             "helpMarkDown": "Specify the Azure SQL Server administrator login."
         },
         {
@@ -131,8 +131,28 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
-            "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword",
+            "visibleRule": "AuthenticationType = server",
             "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
+        },
+        {
+            "name": "AADSqlUsername",
+            "type": "string",
+            "label": "Login",
+            "required": true,
+            "groupName": "target",
+            "defaultValue": "",
+            "visibleRule": "AuthenticationType = aadAuthenticationPassword",
+            "helpMarkDown": "Specify the Active directory username."
+        },
+        {
+            "name": "AADSqlPassword",
+            "type": "string",
+            "label": "Password",
+            "required": true,
+            "groupName": "target",
+            "defaultValue": "",
+            "visibleRule": "AuthenticationType = aadAuthenticationPassword",
+            "helpMarkDown": "Password for the Active directory user.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
         },
         {
            "name": "ConnectionString",
@@ -326,6 +346,7 @@
         "SAD_FoundMoreFiles": "Found more than one file to deploy with search pattern {0}. There can be only one.",
         "SAD_NoFilesMatch": "No files were found to deploy with search pattern {0}",
         "SAD_InvalidDacpacFile": "Invalid DACPAC file provided: '{0}'",
+        "SAD_InvalidAuthenticationInputs": "Invalid authentication inputs. Failed to detect authentication type.",
         "SAD_InvalidSqlFile": "Invalid SQL file provided: '{0}'",
         "SAD_NoPassword": "No password specified for the SQL User: '{0}'",
         "SAD_InvalidPublishProfile": "Invalid publish profile provided: '{0}'",

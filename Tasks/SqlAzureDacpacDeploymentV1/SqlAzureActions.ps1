@@ -273,7 +273,7 @@ function Run-SqlCmd {
       $commandToRun = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
       $commandToLog = "Invoke-Sqlcmd -connectionString `"**********`" "
     }
-    elseif ($authenticationType -eq "aadAuthenticationPassword" -or $authenticationType -eq "aadAuthenticationIntegration") {
+    elseif ($authenticationType -eq "aadAuthenticationPassword" -or $authenticationType -eq "aadAuthenticationIntegrated") {
       $connectionString = Get-AADAuthenticationConnectionString -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword
       $commandToRun = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
       $commandToLog = "Invoke-Sqlcmd -connectionString `"$connectionString`" "

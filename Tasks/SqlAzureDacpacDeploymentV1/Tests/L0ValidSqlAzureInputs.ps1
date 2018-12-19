@@ -14,6 +14,8 @@ Register-Mock Get-VstsInput { $serverName } -ParametersEvaluator { $Name -eq "Se
 Register-Mock Get-VstsInput { "ConnectedServiceNameARM" } -ParametersEvaluator { $Name -eq "ConnectedServiceNameARM" }
 Register-Mock Get-VstsInput { $sqlUsername } -ParametersEvaluator { $Name -eq "SqlUsername" }
 Register-Mock Get-VstsInput { $sqlPassword } -ParametersEvaluator { $Name -eq "SqlPassword" }
+Register-Mock Get-VstsInput { $aadSqlUsername } -ParametersEvaluator { $Name -eq "AADSqlUsername" }
+Register-Mock Get-VstsInput { $aadSqlPassword } -ParametersEvaluator { $Name -eq "AADSqlPassword" }
 Register-Mock Get-VstsInput { "server" } -ParametersEvaluator { $Name -eq "TargetMethod" }
 Register-Mock Get-VstsInput { "connectionString" } -ParametersEvaluator { $Name -eq "ConnectionString" }
 Register-Mock Get-VstsInput { $publishProfile } -ParametersEvaluator { $Name -eq "PublishProfile" }
@@ -23,6 +25,7 @@ Register-Mock Get-VstsInput { $ipDetectionMethodRange } -ParametersEvaluator { $
 Register-Mock Get-VstsInput { $startIPAddress } -ParametersEvaluator { $Name -eq "StartIpAddress" }
 Register-Mock Get-VstsInput { $endIPAddress } -ParametersEvaluator { $Name -eq "EndIpAddress" }
 Register-Mock Remove-EndpointSecrets
+Register-Mock Detect-AuthenticationType {return "server"}
 
 Register-Mock Get-Endpoint { return $spnEndpoint }
 Register-Mock Import-SqlPs { }
