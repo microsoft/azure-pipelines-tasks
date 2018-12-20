@@ -1,6 +1,7 @@
 import tl = require("vsts-task-lib/task");
 import * as telemetry from "utility-common/telemetry";
-import { Inputs, TagSelectionMode, Utility, GitHubAttributes, AzureDevOpsVariables, ActionType} from "./Utility";
+import { TagSelectionMode, Utility, GitHubAttributes, AzureDevOpsVariables, ActionType} from "./Utility";
+import { Inputs } from "./Constants";
 import { Release } from "./Release";
 
 interface IRelease {
@@ -32,7 +33,7 @@ export class Helper {
      * @param target 
      * @param tag 
      */
-    public static async getTagForCreateAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string): Promise<string> {
+    public async getTagForCreateAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string): Promise<string> {
         let tagSelection = tl.getInput(Inputs.tagSource);
 
         if (!!tagSelection && tagSelection === TagSelectionMode.auto) {
@@ -79,9 +80,9 @@ export class Helper {
      * @param repositoryName 
      * @param target 
      */
-    public static async getCommitShaFromTarget(githubEndpointToken: string, repositoryName: string, target: string): Promise<string> {
+    public async getCommitShaFromTarget(githubEndpointToken: string, repositoryName: string, target: string): Promise<string> {
         let commit_sha: string = undefined;
-        let response = await Release.getBranch(githubEndpointToken, repositoryName, target);
+        let response = await new Release().getBranch(githubEndpointToken, repositoryName, target);
         tl.debug("Get branch response: " + JSON.stringify(response));
 
         if (response.statusCode === 200) {
@@ -107,10 +108,11 @@ export class Helper {
      * @param repositoryName 
      * @param tag 
      */
-    public static async getReleaseIdForTag(githubEndpointToken: string, repositoryName: string, tag: string): Promise<any> {
-
+    public async getReleaseIdForTag(githubEndpointToken: string, repositoryName: string, tag: string): Promise<any> {
+        let release = new Release();
+        
         // Fetching all releases in the repository.
-        let releasesResponse = await Release.getReleases(githubEndpointToken, repositoryName);
+        let releasesResponse = await release.getReleases(githubEndpointToken, repositoryName);
         let releasesWithGivenTag: IRelease[] = [];
         let links: { [key: string]: string } = {};
 
@@ -141,7 +143,7 @@ export class Helper {
 
                 // Calling the next page if it exists
                 if (links && links[GitHubAttributes.next]) {
-                    let paginatedResponse = await Release.getPaginatedResult(githubEndpointToken, links[GitHubAttributes.next]);
+                    let paginatedResponse = await release.getPaginatedResult(githubEndpointToken, links[GitHubAttributes.next]);
                     releasesResponse = paginatedResponse;
                     continue;
                 }
@@ -166,10 +168,11 @@ export class Helper {
      * @param filterValue 
      * @param filterTagsCallback Callback to filter the tags
      */
-    public static async filterTag(githubEndpointToken: string, repositoryName: string, filterValue: string, filterTagsCallback: (tagsList: any[], filterValue: string) => any[]): Promise<any> {
-        
+    public async filterTag(githubEndpointToken: string, repositoryName: string, filterValue: string, filterTagsCallback: (tagsList: any[], filterValue: string) => any[]): Promise<any> {
+        let release = new Release();
+
         // Fetching the tags in the repository
-        let tagsResponse = await Release.getTags(githubEndpointToken, repositoryName);
+        let tagsResponse = await release.getTags(githubEndpointToken, repositoryName);
         let links: { [key: string]: string } = {};
         let filteredTags: any[] = [];
 
@@ -199,7 +202,7 @@ export class Helper {
 
                 // Calling the next page if it exists
                 if (links && links[GitHubAttributes.next]) {
-                    let paginatedResponse = await Release.getPaginatedResult(githubEndpointToken, links[GitHubAttributes.next]);
+                    let paginatedResponse = await release.getPaginatedResult(githubEndpointToken, links[GitHubAttributes.next]);
                     tagsResponse = paginatedResponse;
                     continue;
                 }
@@ -214,7 +217,7 @@ export class Helper {
         }
     }
 
-    public static publishTelemetry(): void {
+    public publishTelemetry(): void {
         let telemetryData = {} as ITelemetryData;
 
         const releaseId: string = tl.getVariable(AzureDevOpsVariables.releaseId);
@@ -245,7 +248,7 @@ export class Helper {
      * @param repositoryName 
      * @param commit_sha 
      */
-    private static async _getTagForCommit(githubEndpointToken: string, repositoryName: string, commit_sha: string): Promise<string> {
+    private async _getTagForCommit(githubEndpointToken: string, repositoryName: string, commit_sha: string): Promise<string> {
         let filteredTag: any = await this.filterTag(githubEndpointToken, repositoryName, commit_sha, this._filterTagsByCommitSha);
 
         return filteredTag && filteredTag[GitHubAttributes.nameAttribute];
@@ -254,7 +257,7 @@ export class Helper {
     /**
      * Returns an array of matched tags, filtering on basis of commit sha
      */
-    private static _filterTagsByCommitSha = (tagsList: any[], commit_sha: string): any[] => {
+    private _filterTagsByCommitSha = (tagsList: any[], commit_sha: string): any[] => {
         let filteredTags: any[] = [];
 
         for (let tag of (tagsList || [])) {
