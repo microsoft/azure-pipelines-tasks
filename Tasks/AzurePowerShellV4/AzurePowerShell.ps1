@@ -78,7 +78,6 @@ try {
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
    
     Write-Verbose "Imported module version: $($module.Version)"
-    Write-Verbose "versionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn $targetAzurePs"
     Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs
    
     # Trace the expression as it will be invoked.

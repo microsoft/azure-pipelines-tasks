@@ -4,15 +4,8 @@ $rollForwardTable = @{
 
 function Get-SavedModulePath {
     [CmdletBinding()]
-    param([string] $azurePowerShellVersion,
-          [switch] $Classic)
-    
-    if($Classic -eq $true) {
-        return $($env:SystemDrive + "\Modules\Azure_" + $azurePowerShellVersion)
-    }
-    else {
-        return $($env:SystemDrive + "\Modules\AzureRm_" + $azurePowerShellVersion)
-    }
+    param([string] $azurePowerShellVersion)
+    return $($env:SystemDrive + "\Modules\Az_" + $azurePowerShellVersion) 
 }
 
 function Update-PSModulePathForHostedAgent {
@@ -22,29 +15,14 @@ function Update-PSModulePathForHostedAgent {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         if ($targetAzurePs) {
-            $hostedAgentAzureRmModulePath = Get-SavedModulePath -azurePowerShellVersion $targetAzurePs
-            $hostedAgentAzureModulePath = Get-SavedModulePath -azurePowerShellVersion $targetAzurePs -Classic
+            $hostedAgentAzModulePath = Get-SavedModulePath -azurePowerShellVersion $targetAzurePs
         }
         else {
-            $hostedAgentAzureRmModulePath = Get-LatestModule -patternToMatch "^azurerm_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$" -Classic:$false
-            $hostedAgentAzureModulePath  =  Get-LatestModule -patternToMatch "^azure_[0-9]+\.[0-9]+\.[0-9]+$"   -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$" -Classic:$true
+            $hostedAgentAzModulePath = Get-LatestModule -patternToMatch "^az_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"
         }
 
-        if($authScheme -eq 'ServicePrincipal' -or $authScheme -eq 'ManagedServiceIdentity' -or $authScheme -eq '')
-        {
-            $env:PSModulePath = $hostedAgentAzureModulePath + ";" + $env:PSModulePath
-            $env:PSModulePath = $env:PSModulePath.TrimStart(';')
-            $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $env:PSModulePath
-            $env:PSModulePath = $env:PSModulePath.TrimStart(';')
-        }
-        else
-        {
-            $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $env:PSModulePath
-            $env:PSModulePath = $env:PSModulePath.TrimStart(';')
-            $env:PSModulePath = $hostedAgentAzureModulePath + ";" + $env:PSModulePath
-            $env:PSModulePath = $env:PSModulePath.TrimStart(';')
-        }
-       
+        $env:PSModulePath = $hostedAgentAzModulePath + ";" + $env:PSModulePath
+        $env:PSModulePath = $env:PSModulePath.TrimStart(';') 
     } finally {
         Write-Verbose "The updated value of the PSModulePath is: $($env:PSModulePath)"
         Trace-VstsLeavingInvocation $MyInvocation
@@ -54,8 +32,7 @@ function Update-PSModulePathForHostedAgent {
 function Get-LatestModule {
     [CmdletBinding()]
     param([string] $patternToMatch,
-          [string] $patternToExtract,
-          [switch] $Classic)
+          [string] $patternToExtract)
     
     $resultFolder = ""
     $regexToMatch = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $patternToMatch
@@ -67,11 +44,7 @@ function Get-LatestModule {
         foreach ($moduleFolder in $moduleFolders) {
             $moduleVersion = [version] $($regexToExtract.Match($moduleFolder.Name).Groups[0].Value)
             if($moduleVersion -gt $maxVersion) {
-                if($Classic) {
-                    $modulePath = [System.IO.Path]::Combine($moduleFolder.FullName,"Azure\$moduleVersion\Azure.psm1")
-                } else {
-                    $modulePath = [System.IO.Path]::Combine($moduleFolder.FullName,"AzureRM\$moduleVersion\AzureRM.psm1")
-                }
+                $modulePath = [System.IO.Path]::Combine($moduleFolder.FullName,"Az\$moduleVersion\Az.psm1")
 
                 if(Test-Path -LiteralPath $modulePath -PathType Leaf) {
                     $maxVersion = $moduleVersion
@@ -98,10 +71,9 @@ function  Get-RollForwardVersion {
     try {
         $rollForwardAzurePSVersion = $rollForwardTable[$azurePowerShellVersion]
         if(![string]::IsNullOrEmpty($rollForwardAzurePSVersion)) {
-            $hostedAgentAzureRmModulePath = Get-SavedModulePath -azurePowerShellVersion $rollForwardAzurePSVersion
-            $hostedAgentAzureModulePath = Get-SavedModulePath -azurePowerShellVersion $rollForwardAzurePSVersion -Classic
+            $hostedAgentAzModulePath = Get-SavedModulePath -azurePowerShellVersion $rollForwardAzurePSVersion
         
-            if((Test-Path -Path $hostedAgentAzureRmModulePath) -eq $true -or (Test-Path -Path $hostedAgentAzureModulePath) -eq $true) {
+            if((Test-Path -Path $hostedAgentAzModulePath) -eq $true) {
                 Write-Warning (Get-VstsLocString -Key "OverrideAzurePowerShellVersion" -ArgumentList $azurePowerShellVersion, $rollForwardAzurePSVersion)
                 return $rollForwardAzurePSVersion;
             }
