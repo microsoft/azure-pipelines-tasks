@@ -98,11 +98,12 @@ function apply(configurationPath: string) {
     return command.execSync();
 }
 
-function annotate(configurationPath: string): any {
+function annotate(configurationPath?: string, podName?: string): any {
     var command = tl.tool(tl.which("kubectl"));
     command.arg("annotate");
     command.arg(getNameSpace());
-    command.arg(["-f", configurationPath]);
+    if (!!configurationPath) command.arg(["-f", configurationPath]);
+    if (!!podName) command.arg(["pod", podName]);
     command.arg(`azure-pipelines/execution=${tl.getVariable("Build.BuildNumber")}`)
     command.arg(`azure-pipelines/pipeline="${tl.getVariable("Build.DefinitionName")}"`)
     command.arg(`azure-pipelines/executionuri=${tl.getVariable("System.TeamFoundationCollectionUri")}_build/results?buildId=${tl.getVariable("Build.BuildId")}`)
@@ -116,19 +117,6 @@ function annotateResourceSets(type, name) {
     if (type.indexOf("pod") > -1) {
         return;
     }
-    function annotatePod(name) {
-        var command = tl.tool(tl.which("kubectl"));
-        command.arg("annotate");
-        command.arg(getNameSpace());
-        command.arg(["pod", name]);
-        command.arg(`azure-pipelines/execution=${tl.getVariable("Build.BuildNumber")}`)
-        command.arg(`azure-pipelines/pipeline="${tl.getVariable("Build.DefinitionName")}"`)
-        command.arg(`azure-pipelines/executionuri=${tl.getVariable("System.TeamFoundationCollectionUri")}_build/results?buildId=${tl.getVariable("Build.BuildId")}`)
-        command.arg(`azure-pipelines/project=${tl.getVariable("System.TeamProject")}`)
-        command.arg(`azure-pipelines/org=${tl.getVariable("System.CollectionId")}`)
-        command.arg(`--overwrite`)
-        return command.execSync();
-    }
 
     var owner = name;
     if (type.indexOf("deployment") > -1) {
@@ -140,7 +128,7 @@ function annotateResourceSets(type, name) {
         let owners = pod["metadata"]["ownerReferences"];
         owners.forEach(ownerRef => {
             if (ownerRef["name"] == owner) {
-                annotatePod(pod["metadata"]["name"]);
+                annotate(null, pod["metadata"]["name"]);
             }
         });
     });
