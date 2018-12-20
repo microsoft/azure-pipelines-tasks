@@ -1,4 +1,5 @@
 import { Helper } from "../operations/Helper";
+import { TestString } from "./TestStrings";
 
 export class HelperL0Tests {
     public static async startTests() {
@@ -11,7 +12,7 @@ export class HelperL0Tests {
         let tag = await new Helper().getTagForCreateAction("endpoint", "repo", "target", "tagName");
 
         if (tag === "tagName") {
-            console.log(this.getTagForCreateActionKeyword);
+            console.log(TestString.getTagForCreateActionKeyword);
         }
     }
 
@@ -20,7 +21,7 @@ export class HelperL0Tests {
         let sha = await new Helper().getCommitShaFromTarget("endpoint", "repo", target);
 
         if (sha === "abc") {
-            console.log(this.getCommitShaFromTargetKeyword);
+            console.log(TestString.getCommitShaFromTargetKeyword);
         }
     }
 
@@ -28,13 +29,10 @@ export class HelperL0Tests {
         let releaseId = await new Helper().getReleaseIdForTag("endpoint", "repo", "tagName");
         
         if (releaseId === 456) {
-            console.log(this.getReleaseIdForTagKeyword);
+            console.log(TestString.getReleaseIdForTagKeyword);
         }
     }
     
-    public static readonly getTagForCreateActionKeyword = "getTagForCreateAction method should work properly";
-    public static readonly getCommitShaFromTargetKeyword = "getCommitShaFromTarget method should work properly";
-    public static readonly getReleaseIdForTagKeyword = "getReleaseIdForTag method should work properly";
 }
 
 HelperL0Tests.startTests();

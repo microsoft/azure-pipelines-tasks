@@ -45,7 +45,7 @@ export class EditAction2L0Tests {
             Action: function () {
                 return {
                     editReleaseAction: () => {
-                        console.log("L0Test: edit release action method should be called when a release is present for given tag"); // = this.editActionKeyWord
+                        console.log("L0Test: edit release action method should be called when a release is present for given tag"); // = this.editAction2KeyWord
                     }
                 }
             }
@@ -54,7 +54,6 @@ export class EditAction2L0Tests {
     }
     
     public static sandbox;
-    public static readonly editActionKeyWord: string = "L0Test: edit release action method should be called when a release is present for given tag";
 }
 
 EditAction2L0Tests.startTest();

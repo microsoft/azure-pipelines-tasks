@@ -20,10 +20,6 @@ export class ActionL0Tests {
         await new Action().deleteReleaseAction("endpoint", "repo", "tag");
     }
 
-    public static readonly createReleaseSuccessKeyword = "CreateReleaseSuccess";
-    public static readonly editReleaseSuccessKeyword = "EditReleaseSuccess";
-    public static readonly deleteReleaseSuccessKeyword = "DeleteReleaseSuccess";
-
 }
 
 ActionL0Tests.startTests();

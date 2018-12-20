@@ -1,17 +1,7 @@
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
-import { CreateActionL0Tests } from './CreateActionL0Tests';
-import { EditActionL0Tests } from './EditActionL0Tests';
-import { EditAction2L0Tests } from './EditAction2L0Tests';
-import { DeleteAction2L0Tests } from './DeleteAction2L0Tests';
-import { CreateAction2L0Tests } from './CreateAction2L0Tests';
-import { InvalidActionL0Tests } from './InvalidActionL0Tests';
-import { UtilityL0Tests } from './UtilityL0Tests';
-import { HelperL0Tests } from './HelperL0Tests';
-import { ChangeLogL0Tests } from './ChangeLogL0Tests';
-import { DeleteActionL0Tests } from './DeleteActionL0Tests';
-import { ActionL0Tests } from './ActionL0Tests';
+import { TestString } from './TestStrings';
 
 describe('GitHubReleaseTaskTests Suite', function() {
     this.timeout(60000);
@@ -21,7 +11,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.stdout.search(DeleteActionL0Tests.deleteActionKeyWord) >= 0, 'should have printed: ' + DeleteActionL0Tests.deleteActionKeyWord);
+        assert(tr.stdout.search(TestString.deleteActionKeyWord) >= 0, 'should have printed: ' + TestString.deleteActionKeyWord);
 
         done();
     });
@@ -31,7 +21,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.stdout.search(CreateActionL0Tests.createActionKeyWord) >= 0, 'should have printed: ' + CreateActionL0Tests.createActionKeyWord);
+        assert(tr.stdout.search(TestString.createActionKeyWord) >= 0, 'should have printed: ' + TestString.createActionKeyWord);
        
         done();
     });
@@ -41,7 +31,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.stdout.search(EditActionL0Tests.createActionKeyWord) >= 0, 'should have printed: ' + EditActionL0Tests.createActionKeyWord);
+        assert(tr.stdout.search(TestString.editActionKeyWord) >= 0, 'should have printed: ' + TestString.editActionKeyWord);
         
         done();
     });
@@ -51,7 +41,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.stdout.search(EditAction2L0Tests.editActionKeyWord) >= 0, 'should have printed: ' + EditAction2L0Tests.editActionKeyWord);
+        assert(tr.stdout.search(TestString.editAction2KeyWord) >= 0, 'should have printed: ' + TestString.editAction2KeyWord);
        
         done();
     });
@@ -61,7 +51,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.stdout.search(DeleteAction2L0Tests.deleteActionKeyWord) >= 0, 'should have printed: ' + DeleteAction2L0Tests.deleteActionKeyWord);
+        assert(tr.stdout.search(TestString.deleteAction2KeyWord) >= 0, 'should have printed: ' + TestString.deleteAction2KeyWord);
         
         done();
     });
@@ -71,7 +61,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.stdout.search(CreateAction2L0Tests.NoTagFoundKeyword) >= 0, 'should have printed: ' + CreateAction2L0Tests.NoTagFoundKeyword);
+        assert(tr.stdout.search(TestString.NoTagFoundKeyword) >= 0, 'should have printed: ' + TestString.NoTagFoundKeyword);
         
         done();
     });
@@ -81,7 +71,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.stdout.search(InvalidActionL0Tests.InvalidActionKeyword) >= 0, 'should have printed: ' + InvalidActionL0Tests.InvalidActionKeyword);
+        assert(tr.stdout.search(TestString.InvalidActionKeyword) >= 0, 'should have printed: ' + TestString.InvalidActionKeyword);
         
         done();
     });
@@ -91,13 +81,13 @@ describe('GitHubReleaseTaskTests Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.stdout.search(UtilityL0Tests.getReleaseNoteKeyword) >= 0, 'should have printed: ' + UtilityL0Tests.getReleaseNoteKeyword);
-        assert(tr.stdout.search(UtilityL0Tests.validBranchNameKeyword) >= 0, 'should have printed: ' + UtilityL0Tests.validBranchNameKeyword);
-        assert(tr.stdout.search(UtilityL0Tests.invalidBranchNameKeyword) >= 0, 'should have printed: ' + UtilityL0Tests.invalidBranchNameKeyword);
-        assert(tr.stdout.search(UtilityL0Tests.parseHTTPHeaderLinkKeyword) >= 0, 'should have printed: ' + UtilityL0Tests.parseHTTPHeaderLinkKeyword);
-        assert(tr.stdout.search(UtilityL0Tests.extractRepositoryOwnerAndNameKeyword) >= 0, 'should have printed: ' + UtilityL0Tests.extractRepositoryOwnerAndNameKeyword);
-        assert(tr.stdout.search(UtilityL0Tests.extractRepoAndIssueIdKeyword) >= 0, 'should have printed: ' + UtilityL0Tests.extractRepoAndIssueIdKeyword);
-        assert(tr.stdout.search(UtilityL0Tests.getFirstLineKeyword) >= 0, 'should have printed: ' + UtilityL0Tests.getFirstLineKeyword);
+        assert(tr.stdout.search(TestString.getReleaseNoteKeyword) >= 0, 'should have printed: ' + TestString.getReleaseNoteKeyword);
+        assert(tr.stdout.search(TestString.validBranchNameKeyword) >= 0, 'should have printed: ' + TestString.validBranchNameKeyword);
+        assert(tr.stdout.search(TestString.invalidBranchNameKeyword) >= 0, 'should have printed: ' + TestString.invalidBranchNameKeyword);
+        assert(tr.stdout.search(TestString.parseHTTPHeaderLinkKeyword) >= 0, 'should have printed: ' + TestString.parseHTTPHeaderLinkKeyword);
+        assert(tr.stdout.search(TestString.extractRepositoryOwnerAndNameKeyword) >= 0, 'should have printed: ' + TestString.extractRepositoryOwnerAndNameKeyword);
+        assert(tr.stdout.search(TestString.extractRepoAndIssueIdKeyword) >= 0, 'should have printed: ' + TestString.extractRepoAndIssueIdKeyword);
+        assert(tr.stdout.search(TestString.getFirstLineKeyword) >= 0, 'should have printed: ' + TestString.getFirstLineKeyword);
         
         done();
     });
@@ -107,9 +97,9 @@ describe('GitHubReleaseTaskTests Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.stdout.search(HelperL0Tests.getTagForCreateActionKeyword) >= 0, 'should have printed: ' + HelperL0Tests.getTagForCreateActionKeyword);
-        assert(tr.stdout.search(HelperL0Tests.getCommitShaFromTargetKeyword) >= 0, 'should have printed: ' + HelperL0Tests.getCommitShaFromTargetKeyword);
-        assert(tr.stdout.search(HelperL0Tests.getReleaseIdForTagKeyword) >= 0, 'should have printed: ' + HelperL0Tests.getReleaseIdForTagKeyword);
+        assert(tr.stdout.search(TestString.getTagForCreateActionKeyword) >= 0, 'should have printed: ' + TestString.getTagForCreateActionKeyword);
+        assert(tr.stdout.search(TestString.getCommitShaFromTargetKeyword) >= 0, 'should have printed: ' + TestString.getCommitShaFromTargetKeyword);
+        assert(tr.stdout.search(TestString.getReleaseIdForTagKeyword) >= 0, 'should have printed: ' + TestString.getReleaseIdForTagKeyword);
         
         done();
     });
@@ -119,7 +109,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.stdout.search(ChangeLogL0Tests.getChangeLogKeyword) >= 0, 'should have printed: ' + ChangeLogL0Tests.getChangeLogKeyword);
+        assert(tr.stdout.search(TestString.getChangeLogKeyword) >= 0, 'should have printed: ' + TestString.getChangeLogKeyword);
         
         done();
     });
@@ -129,9 +119,9 @@ describe('GitHubReleaseTaskTests Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.stdout.search(ActionL0Tests.createReleaseSuccessKeyword) >= 0, 'should have printed: ' + ActionL0Tests.createReleaseSuccessKeyword);
-        assert(tr.stdout.search(ActionL0Tests.editReleaseSuccessKeyword) >= 0, 'should have printed: ' + ActionL0Tests.editReleaseSuccessKeyword);
-        assert(tr.stdout.search(ActionL0Tests.deleteReleaseSuccessKeyword) >= 0, 'should have printed: ' + ActionL0Tests.deleteReleaseSuccessKeyword);
+        assert(tr.stdout.search(TestString.createReleaseSuccessKeyword) >= 0, 'should have printed: ' + TestString.createReleaseSuccessKeyword);
+        assert(tr.stdout.search(TestString.editReleaseSuccessKeyword) >= 0, 'should have printed: ' + TestString.editReleaseSuccessKeyword);
+        assert(tr.stdout.search(TestString.deleteReleaseSuccessKeyword) >= 0, 'should have printed: ' + TestString.deleteReleaseSuccessKeyword);
         
         done();
     });

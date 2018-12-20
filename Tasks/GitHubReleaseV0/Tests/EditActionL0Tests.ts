@@ -45,7 +45,7 @@ export class EditActionL0Tests {
             Action: function () {
                 return {
                     createReleaseAction: () => {
-                        console.log("L0Test: create release action method should be called when no release is present for given tag"); // = this.createActionKeyWord
+                        console.log("L0Test: create release action method should be called when no release is present for given tag"); // = this.editActionKeyWord
                     }
                 }
             }
@@ -54,7 +54,6 @@ export class EditActionL0Tests {
     }
     
     public static sandbox;
-    public static readonly createActionKeyWord: string = "L0Test: create release action method should be called when no release is present for given tag";
 }
 
 EditActionL0Tests.startTest();

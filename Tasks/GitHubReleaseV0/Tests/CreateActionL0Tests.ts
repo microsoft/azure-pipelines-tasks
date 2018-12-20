@@ -52,7 +52,6 @@ export class CreateActionL0Tests {
     }
     
     public static sandbox;
-    public static readonly createActionKeyWord: string = "L0Test: create release action method should be called";
 }
 
 CreateActionL0Tests.startTest();

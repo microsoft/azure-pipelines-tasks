@@ -2,6 +2,7 @@ import tmrm = require('vsts-task-lib/mock-run');
 import * as path from 'path';
 import { Inputs } from '../operations/Constants';
 import * as sinon from 'sinon';
+import { TestString } from './TestStrings';
 
 export class DeleteActionL0Tests {
 
@@ -31,11 +32,10 @@ export class DeleteActionL0Tests {
         this.sandbox.stub(Utility.Utility, "getGithubEndPointToken").callsFake(function() { return { scheme: 'OAuth', parameters: { AccessToken: "**someToken**"}} });
         
         var Action = require('../operations/Action');
-        this.sandbox.stub(Action.Action.prototype, "deleteReleaseAction").callsFake(() => { console.log(this.deleteActionKeyWord) });
+        this.sandbox.stub(Action.Action.prototype, "deleteReleaseAction").callsFake(() => { console.log(TestString.deleteActionKeyWord) });
     }
     
     public static sandbox;
-    public static readonly deleteActionKeyWord: string = "L0Test: delete action called when action = delete";
 }
 
 DeleteActionL0Tests.startTest();

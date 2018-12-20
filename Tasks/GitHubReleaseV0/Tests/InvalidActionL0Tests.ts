@@ -29,7 +29,6 @@ export class InvalidActionL0Tests {
     }
     
     public static sandbox;
-    public static readonly InvalidActionKeyword: string = "Invalid action input";
 }
 
 InvalidActionL0Tests.startTest();

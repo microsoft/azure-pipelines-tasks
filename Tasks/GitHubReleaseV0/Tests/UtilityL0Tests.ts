@@ -1,4 +1,5 @@
 import { Utility } from "../operations/Utility";
+import { TestString } from "./TestStrings";
 
 export class UtilityL0Tests {
     public static startTests() {
@@ -16,7 +17,7 @@ export class UtilityL0Tests {
 
         let releaseNote = Utility.getReleaseNote("input", null, releaseNoteInput, changeLog);
         if (releaseNote === (releaseNoteInput + changeLog)) {
-            console.log(this.getReleaseNoteKeyword);
+            console.log(TestString.getReleaseNoteKeyword);
         }
     }
 
@@ -25,12 +26,12 @@ export class UtilityL0Tests {
 
         normalizedBranchName = Utility.normalizeBranchName("refs/tags/tagName");
         if (normalizedBranchName === "tagName") {
-            console.log(this.validBranchNameKeyword);
+            console.log(TestString.validBranchNameKeyword);
         }
 
         normalizedBranchName = Utility.normalizeBranchName("refs/heads/tagName");
         if (!normalizedBranchName) {
-            console.log(this.invalidBranchNameKeyword);
+            console.log(TestString.invalidBranchNameKeyword);
         }
     }
 
@@ -45,7 +46,7 @@ export class UtilityL0Tests {
         parsedHttpHeaderLink = Utility.parseHTTPHeaderLink(headerLink);
 
         if (JSON.stringify(parsedHttpHeaderLink) === JSON.stringify(expectedParsedHeaderLink)) {
-            console.log(this.parseHTTPHeaderLinkKeyword);
+            console.log(TestString.parseHTTPHeaderLinkKeyword);
         }
     }
 
@@ -55,7 +56,7 @@ export class UtilityL0Tests {
         let repoInfo = Utility.extractRepositoryOwnerAndName(repoName);
 
         if (repoInfo.owner === "owner_name" && repoInfo.name === "repo_name") {
-            console.log(this.extractRepositoryOwnerAndNameKeyword);
+            console.log(TestString.extractRepositoryOwnerAndNameKeyword);
         }
 
     }
@@ -66,7 +67,7 @@ export class UtilityL0Tests {
         let info = Utility.extractRepoAndIssueId(repoIssueId);
 
         if (info.repository === "repo" && info.issueId === "26") {
-            console.log(this.extractRepoAndIssueIdKeyword);
+            console.log(TestString.extractRepoAndIssueIdKeyword);
         }
     }
 
@@ -76,17 +77,10 @@ export class UtilityL0Tests {
         let firstLine = Utility.getFirstLine(message);
 
         if (firstLine === "Fixing issue #25.") {
-            console.log(this.getFirstLineKeyword);
+            console.log(TestString.getFirstLineKeyword);
         }
     }
     
-    public static readonly getReleaseNoteKeyword = "getReleaseNote method should work properly";
-    public static readonly validBranchNameKeyword = "normalizeBranchName method should return tag name when branch = refs/tags/tagname";
-    public static readonly invalidBranchNameKeyword = "normalizeBranchName method should return undefined when branch = refs/heads/tagname";
-    public static readonly parseHTTPHeaderLinkKeyword = "parseHTTPHeaderLink method should work properly";
-    public static readonly extractRepositoryOwnerAndNameKeyword = "extractRepositoryOwnerAndName method should work properly";
-    public static readonly extractRepoAndIssueIdKeyword = "extractRepoAndIssueId method should work properly";
-    public static readonly getFirstLineKeyword = "getFirstLine method should work properly";
 }
 
 UtilityL0Tests.startTests();

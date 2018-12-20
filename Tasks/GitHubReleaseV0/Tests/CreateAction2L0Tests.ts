@@ -41,7 +41,6 @@ export class CreateAction2L0Tests {
     }
     
     public static sandbox;
-    public static readonly NoTagFoundKeyword: string = "No tag found";
 }
 
 CreateAction2L0Tests.startTest();
