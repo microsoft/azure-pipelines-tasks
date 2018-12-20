@@ -98,6 +98,7 @@ async function main(): Promise<void> {
         let releaseId;
 
         var token = tl.getEndpointAuthorizationParameter(connection, 'AccessToken', false);
+        var retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : 4;
 
         // Required to prevent typed-rest-client from adding additional 'Authorization' in header on redirect to AWS
         var customCredentialHandler = {
@@ -122,12 +123,12 @@ async function main(): Promise<void> {
             }
         }
 
-        switch (defaultVersionType) {
-            case 'latest': releaseId = await getLatestRelease(repositoryName, customCredentialHandler);
+        switch (defaultVersionType.toLowerCase()) {
+            case 'latest': releaseId = await executeWithRetries("getLatestRelease", () => getLatestRelease(repositoryName, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
                 break;
-            case 'specificTag': releaseId = await getTaggedRelease(repositoryName, version, customCredentialHandler);
+            case 'specifictag': releaseId = await executeWithRetries("getTaggedRelease", () => getTaggedRelease(repositoryName, version, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
                 break;
-            case 'specificVersion':
+            case 'specificversion':
             default: releaseId = version;
         }
 
@@ -165,6 +166,30 @@ async function main(): Promise<void> {
     });
 
     return promise;
+}
+
+function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount): Promise<any> {
+    var executePromise = new Promise((resolve, reject) => {
+        executeWithRetriesImplementation(operationName, operation, retryCount, resolve, reject);
+    });
+
+    return executePromise;
+}
+
+function executeWithRetriesImplementation(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject) {
+    operation().then((result) => {
+        resolve(result);
+    }).catch((error) => {
+        if (currentRetryCount <= 0) {
+            tl.error(tl.loc("OperationFailed", operationName, error));
+            reject(error);
+        }
+        else {
+            console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
+            currentRetryCount = currentRetryCount - 1;
+            setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject), 4 * 1000);
+        }
+    });
 }
 
 main()
