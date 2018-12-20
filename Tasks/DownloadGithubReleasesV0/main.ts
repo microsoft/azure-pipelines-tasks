@@ -54,7 +54,7 @@ function publishEvent(feature, properties: any): void {
 async function getLatestRelease(repositoryName: string, handler): Promise<string> {
     var promise = new Promise<string>((resolve, reject) => {
         let httpClient: httpc.HttpClient = new httpc.HttpClient(userAgent, [handler]);
-        var latestReleaseUrl = "https://api.github.com/repos/" + repositoryName + "/releases/latest";
+        let latestReleaseUrl = "https://api.github.com/repos/" + repositoryName + "/releases/latest";
         latestReleaseUrl = latestReleaseUrl.replace(/([^:]\/)\/+/g, "$1");
         httpClient.get(latestReleaseUrl).then((res) => {
             res.readBody().then((body) => {
@@ -72,9 +72,9 @@ async function getLatestRelease(repositoryName: string, handler): Promise<string
 async function getTaggedRelease(repositoryName: string, tag: string, handler): Promise<string> {
     var promise = new Promise<string>((resolve, reject) => {
         let httpClient: httpc.HttpClient = new httpc.HttpClient(userAgent, [handler]);
-        var latestReleaseUrl = "https://api.github.com/repos/" + repositoryName + "/releases/tags/" + tag;
-        latestReleaseUrl = latestReleaseUrl.replace(/([^:]\/)\/+/g, "$1");
-        httpClient.get(latestReleaseUrl).then((res) => {
+        let taggedReleaseUrl = "https://api.github.com/repos/" + repositoryName + "/releases/tags/" + tag;
+        taggedReleaseUrl = taggedReleaseUrl.replace(/([^:]\/)\/+/g, "$1");
+        httpClient.get(taggedReleaseUrl).then((res) => {
             res.readBody().then((body) => {
                 var response = JSON.parse(body);
                 resolve(response["id"]);
