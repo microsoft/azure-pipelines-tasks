@@ -63,7 +63,7 @@ function setOutputVariables(packerHost: packerHost, outputs: Map<string, string>
                     throw tl.loc("ImageURIOutputVariableNotFound");
                 }
             } else {
-                imageUri = outputs.get(constants.PackerLogTokenManagedImageName);
+                imageUri = outputs.get(constants.PackerLogTokenManagedImageLocation);
                 if (!utils.IsNullOrEmpty(imageUri)) {
                     tl.debug("Setting image URI variable which contains the managed image name to: " + imageUri);
                     tl.setVariable(taskParameters.imageUri, imageUri);
@@ -73,7 +73,7 @@ function setOutputVariables(packerHost: packerHost, outputs: Map<string, string>
             }
         } else {
             imageUri = outputs.get(constants.PackerLogTokenImageUri);
-            managedImageName = outputs.get(constants.PackerLogTokenManagedImageName);
+            managedImageName = outputs.get(constants.PackerLogTokenManagedImageLocation);
 
             if (!utils.IsNullOrEmpty(managedImageName)) {
                 tl.debug("Setting image URI variable which contains the managed image name to: " + managedImageName);
