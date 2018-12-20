@@ -12,6 +12,8 @@ export class InvalidActionL0Tests {
         tr.setInput(Inputs.gitHubConnection, "connection");
         tr.setInput(Inputs.repositoryName, "repo");
         tr.setInput(Inputs.action, "creadte");
+        tr.setInput(Inputs.target, "master");
+        tr.setInput(Inputs.tag, "tag");
         
         this.stub(tr);
         tr.run();
