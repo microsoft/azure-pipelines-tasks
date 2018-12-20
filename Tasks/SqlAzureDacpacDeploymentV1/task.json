@@ -85,7 +85,7 @@
             "label": "Authentication Type",
             "required": true,
             "groupName": "target",
-            "defaultValue": "SQL Server Authentication",
+            "defaultValue": "server",
             "options": {
                 "server": "SQL Server Authentication",
                 "aadAuthenticationPassword": "Active Directory - Password",
