@@ -14,6 +14,7 @@ const KubconfigFile = shared.formatPath("newUserDir/config");
 const KubectlPath = shared.formatPath("newUserDir/kubectl.exe");
 const ConfigMapFilePath = shared.formatPath("configMapDir/configmap.properties");
 const ConfigMapDirectoryPath = shared.formatPath("kubernetes/configMapDir");
+const InlineConfigTempPath = shared.formatPath("newUserDir/inlineconfig.yaml");
 
 let taskPath = path.join(__dirname, '../src', 'kubernetes.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -22,7 +23,7 @@ tr.setInput('containerregistrytype', process.env[shared.TestEnvVars.containerTyp
 tr.setInput('connectionType', process.env[shared.TestEnvVars.connectionType] || shared.ConnectionType.AzureResourceManager);
 tr.setInput('command', process.env[shared.TestEnvVars.command] || shared.Commands.apply);
 tr.setInput('useConfigurationFile', process.env[shared.TestEnvVars.useConfigurationFile] || "false");
-tr.setInput('configuration', ConfigurationFilePath);
+tr.setInput('configuration', process.env[shared.TestEnvVars.configuration] || '');
 tr.setInput('useWatch', process.env[shared.TestEnvVars.useWatch] || "false");
 tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || '');
 tr.setInput('namespace', process.env[shared.TestEnvVars.namespace] || '');
@@ -47,6 +48,8 @@ tr.setInput('azureSubscriptionEndpointForSecrets', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', 'ajgtestacr1.azurecr.io');
 tr.setInput('azureResourceGroup', 'myResourceGroup');
 tr.setInput('kubernetesCluster', 'myCluster1');
+tr.setInput('configurationType',process.env[shared.TestEnvVars.configurationType] || shared.ConfigurationTypes.configuration);
+tr.setInput('inline', process.env[shared.TestEnvVars.inline] || '');
 console.log("Inputs have been set");
 
 process.env['AGENT_VERSION'] = '2.115.0';
@@ -132,6 +135,7 @@ a.exist[ConfigMapFilePath] = true;
 a.exist[KubectlPath] = true;
 a.exist[ConfigMapDirectoryPath] = true;
 a.exist[newUserDirPath] = true;
+a.exist[InlineConfigTempPath] = true;
 
 if (JSON.parse(process.env[shared.isKubectlPresentOnMachine]))
 {
@@ -201,6 +205,10 @@ a.exec[`kubectl get secrets my-secret -o yaml`] = {
 };
 a.exec[`kubectl logs nginx`] = {
     "code": 0
+};
+a.exec[`kubectl apply -f ${InlineConfigTempPath} -o json`] = {
+    "code": 0,
+    "stdout": "successfully applied the configuration deployment.yaml "
 };
 a.exec[`kubectl rollout status service myService --watch`] = {
     "code": 0,
@@ -323,7 +331,10 @@ tr.registerMock('./utilities', {
     },
     assertFileExists: function(path) {
         return true;
-    } 
+    },
+    writeInlineConfigInTempPath: function(data) {
+        return InlineConfigTempPath;
+    }
 });
 
 tr.run();
