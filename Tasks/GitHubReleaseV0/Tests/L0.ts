@@ -11,6 +11,7 @@ import { UtilityL0Tests } from './UtilityL0Tests';
 import { HelperL0Tests } from './HelperL0Tests';
 import { ChangeLogL0Tests } from './ChangeLogL0Tests';
 import { DeleteActionL0Tests } from './DeleteActionL0Tests';
+import { ActionL0Tests } from './ActionL0Tests';
 
 describe('GitHubReleaseTaskTests Suite', function() {
     this.timeout(60000);
@@ -119,6 +120,18 @@ describe('GitHubReleaseTaskTests Suite', function() {
         tr.run();
 
         assert(tr.stdout.search(ChangeLogL0Tests.getChangeLogKeyword) >= 0, 'should have printed: ' + ChangeLogL0Tests.getChangeLogKeyword);
+        
+        done();
+    });
+
+    it('Validate Action class methods', (done: MochaDone) => {
+        let tp = path.join(__dirname, 'ActionTests.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.stdout.search(ActionL0Tests.createReleaseSuccessKeyword) >= 0, 'should have printed: ' + ActionL0Tests.createReleaseSuccessKeyword);
+        assert(tr.stdout.search(ActionL0Tests.editReleaseSuccessKeyword) >= 0, 'should have printed: ' + ActionL0Tests.editReleaseSuccessKeyword);
+        assert(tr.stdout.search(ActionL0Tests.deleteReleaseSuccessKeyword) >= 0, 'should have printed: ' + ActionL0Tests.deleteReleaseSuccessKeyword);
         
         done();
     });
