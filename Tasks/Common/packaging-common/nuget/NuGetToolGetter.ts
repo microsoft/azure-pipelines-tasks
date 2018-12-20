@@ -138,7 +138,10 @@ async function getLatestMatchVersionInfo(versionSpec: string): Promise<INuGetVer
     taskLib.debug('Querying versions list');
 
     let versionsUrl = 'https://dist.nuget.org/tools.json';
-    let rest: restm.RestClient = new restm.RestClient('vsts-tasks/NuGetToolInstaller');
+    let proxyRequestOptions = {
+        proxy: taskLib.getHttpProxyConfiguration(versionsUrl)
+    };
+    let rest: restm.RestClient = new restm.RestClient('vsts-tasks/NuGetToolInstaller', undefined, undefined, proxyRequestOptions);
 
     let nugetVersions: INuGetVersionInfo[] = (await rest.get<INuGetVersionInfo[]>(versionsUrl, GetRestClientOptions())).result;
     // x.stage is the string representation of the enum, NuGetReleaseStage.Value = number, NuGetReleaseStage[NuGetReleaseStage.Value] = string, NuGetReleaseStage[x.stage] = number
