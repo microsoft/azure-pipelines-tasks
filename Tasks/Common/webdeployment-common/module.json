@@ -8,8 +8,6 @@
         "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
         "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
-        "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
-        "FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
-        "MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs."
+        "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s."
     }
 }

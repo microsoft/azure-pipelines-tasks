@@ -1,7 +1,7 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
-import * as ParameterParser from 'webdeployment-common/ParameterParserUtility';
+import * as ParameterParser from '../operations/ParameterParserUtility'
 import * as Constant from '../operations/Constants';
 import { WebDeployUtility } from '../operations/WebDeployUtility';
 import { Package } from 'webdeployment-common/packageUtility';
