@@ -102,7 +102,7 @@ var getTasksDependentOnChangedCommonFiles = function(commonFilePaths) {
 var getTasksToBuildForPR = function() {
     // Takes in a git source branch, diffs it with master, and returns a list of tasks that could have been affected by the changes.
     var sourceBranch = process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'];
-    var prId = process.env['SYSTEM_PULLREQUEST_PULLREQUESTID'];
+    var prId = process.env['SYSTEM_PULLREQUEST_PULLREQUESTNUMBER'];
     var commonChanges = [];
     var toBeBuilt = [];
     try {
