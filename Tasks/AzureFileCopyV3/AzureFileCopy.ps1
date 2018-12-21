@@ -24,6 +24,11 @@ $skipCACheck = Get-VstsInput -Name SkipCACheck -AsBool
 $enableCopyPrerequisites = Get-VstsInput -Name EnableCopyPrerequisites -AsBool
 $outputStorageContainerSasToken = Get-VstsInput -Name OutputStorageContainerSasToken
 $outputStorageURI = Get-VstsInput -Name OutputStorageUri
+$sasTokenTimeOutInMinutes = Get-VstsInput -Name SasTokenTimeOutInMinutes
+if($sasTokenTimeOutInMinutes -eq ""){
+    $sasTokenTimeOutInMinutes = 240
+}
+
 
 if ($destination -ne "AzureBlob")
 {
@@ -31,7 +36,6 @@ if ($destination -ne "AzureBlob")
 }
 
 # Constants
-$defaultSasTokenTimeOutInHours = 4
 $useHttpsProtocolOption = ''
 $ErrorActionPreference = 'Stop'
 $telemetrySet = $false
@@ -181,7 +185,7 @@ if ($destination -eq "AzureBlob")
     }
     if(-not [string]::IsNullOrEmpty($outputStorageContainerSASToken))
     {
-        $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission rl -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
+        $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission rl -ExpiryTime (Get-Date).AddMinutes($sasTokenTimeOutInMinutes)
         Write-Host "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
     }
 
@@ -211,7 +215,7 @@ try
                                                                  -skipCACheck $skipCACheck
 
     # generate container sas token with full permissions
-    $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInHours $defaultSasTokenTimeOutInHours
+    $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
 
     # Copies files on azureVMs 
     Copy-FilesToAzureVMsFromStorageContainer -targetMachineNames $invokeRemoteScriptParams.targetMachineNames `

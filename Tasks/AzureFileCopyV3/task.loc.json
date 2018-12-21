@@ -13,7 +13,7 @@
   "version": {
     "Major": 3,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "preview": true,
   "demands": [
@@ -226,6 +226,13 @@
       "defaultValue": "",
       "groupName": "output",
       "helpMarkDown": "ms-resource:loc.input.help.outputStorageContainerSasToken"
+    },
+    {
+      "name": "sasTokenTimeOutInMinutes",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sasTokenTimeOutInMinutes",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sasTokenTimeOutInMinutes"
     }
   ],
   "dataSourceBindings": [
