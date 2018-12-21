@@ -1,6 +1,6 @@
 # CI Changes
 
-Effective December 10, we will be changing how we perform CI and PR builds. 
+Effective December 17, we will be changing how we perform CI and PR builds. 
 Currently, we build all tasks sliced across 5 different jobs, but now we will be doing the following:
 
 ## PR builds
