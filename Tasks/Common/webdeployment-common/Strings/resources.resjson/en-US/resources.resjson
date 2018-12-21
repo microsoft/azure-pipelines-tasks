@@ -7,7 +7,5 @@
   "loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
   "loc.messages.XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
   "loc.messages.JSONParseError": "Unable to parse JSON file: %s. Error: %s",
-  "loc.messages.NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
-  "loc.messages.FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
-  "loc.messages.MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs."
+  "loc.messages.NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s."
 }
