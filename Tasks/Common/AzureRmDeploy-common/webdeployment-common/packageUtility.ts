@@ -8,6 +8,7 @@ export enum PackageType {
     jar,
     folder
 }
+// TEST - do not merge
 
 export class PackageUtility {
     public static getPackagePath(packagePath: string): string {
