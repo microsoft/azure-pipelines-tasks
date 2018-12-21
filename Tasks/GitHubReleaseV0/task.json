@@ -35,7 +35,8 @@
             "required": true,
             "helpMarkDown": "Specify the name of the GitHub repository in which GitHub releases will be created.",
             "properties": {
-                "DisableManageLink": "True"
+                "DisableManageLink": "True",
+                "EditableOptions": "True"
             }
         },
         {
