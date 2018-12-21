@@ -119,7 +119,9 @@ var getTasksToBuildForPR = function() {
         return makeOptions.tasks;
     }
     run('git checkout master');
-    run('git diff --name-only master..' + sourceBranch).split('\n').forEach(filePath => {
+    run('git --no-pager diff --name-only ' + sourceBranch + ' $(git merge-base ' + sourceBranch + ' master)')
+        .split('\n')
+        .forEach(filePath => {
         if (filePath.slice(0, 5) == 'Tasks') {
             var taskPath = filePath.slice(6);
             if(taskPath.slice(0, 6) == 'Common') {
