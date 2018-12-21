@@ -504,6 +504,10 @@ function Disconnect-AzureAndClearContext {
             Write-Host "##[command]Logout-AzureRmAccount"
             Logout-AzureRmAccount
         }
+        else {
+            $noCommandMessage = "Unable to find a command to log out of Azure"
+            Write-Host "##vso[task.logissue type=warning;]$noCommandMessage"
+        }
 
         if (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue") {
             Write-Host "##[command]Clear-AzureRmContext -Scope Process"
@@ -512,6 +516,8 @@ function Disconnect-AzureAndClearContext {
             $null = Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
         }
     } catch {
-        Write-Verbose "Unable to disconnect and clear context: $_.Exception.Message"
+        $error = $_.Exception.Message
+        Write-Verbose "Unable to disconnect and clear context: $error"
+        Write-Host "##vso[task.logissue type=warning;]$error"
     }
 }
