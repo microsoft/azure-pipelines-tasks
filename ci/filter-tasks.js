@@ -142,7 +142,7 @@ var getTasksToBuildForPR = function() {
         }
     });
     if (shouldBeBumped.length > 0) {
-        throw new Error('The following tasks should have their versions bumped due to changes in common: ' + shouldBeBumped);
+        console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=68;]The following tasks should have their versions bumped due to changes in common: ${shouldBeBumped}`);
     }
     return toBeBuilt;
 }
