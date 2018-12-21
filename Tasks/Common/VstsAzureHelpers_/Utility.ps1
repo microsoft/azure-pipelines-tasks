@@ -484,3 +484,34 @@ function Add-AzureStackAzureRmEnvironment {
         throw
     }
 }
+
+function Disconnect-AzureAndClearContext {
+    [CmdletBinding()]
+    param()
+
+    try {
+        Write-Verbose "Trying to disconnect from Azure and clear context"
+
+        if (Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+            Write-Host "##[command]Disconnect-AzureRmAccount"
+            Disconnect-AzureRmAccount
+        }
+        elseif (Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+            Write-Host "##[command]Remove-AzureRmAccount"
+            Remove-AzureRmAccount
+        }
+        elseif (Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+            Write-Host "##[command]Logout-AzureRmAccount"
+            Logout-AzureRmAccount
+        }
+
+        if (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue") {
+            Write-Host "##[command]Clear-AzureRmContext -Scope Process"
+            $null = Clear-AzureRmContext -Scope Process
+            Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+            $null = Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+        }
+    } catch {
+        Write-Verbose "Unable to disconnect and clear context: $_.Exception.Message"
+    }
+}
