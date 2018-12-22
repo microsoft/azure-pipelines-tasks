@@ -2,7 +2,7 @@ import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvid
 import tl = require('vsts-task-lib/task');
 import { PackageType } from 'webdeployment-common/packageUtility';
 import path = require('path');
-import * as ParameterParser from '../operations/ParameterParserUtility'
+import * as ParameterParser from 'webdeployment-common/ParameterParserUtility';
 
 var webCommonUtility = require('webdeployment-common/utility.js');
 var deployUtility = require('webdeployment-common/utility.js');
