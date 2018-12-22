@@ -72,7 +72,7 @@ function substituteValueinParameterFile(parameterFilePath, parameterSubValue) {
     tl.debug("Parameter file " + parameterFilePath + " updated.");
 }
 
-export function substituteAppSettingsVariables(folderPath, isFolderBasedDeployment, fileName = "") {
+export function substituteAppSettingsVariables(folderPath, isFolderBasedDeployment, fileName?: string) {
     var configFiles = tl.findMatch(folderPath, fileName ? fileName : "**/*.config");
     // parameters.xml is considered when fileName is not provided or filename explicitly mentions parameters.xml
     var parameterFilePath = !fileName || fileName.toLocaleLowerCase().indexOf("parameters.xml") != -1 ? path.join(folderPath, 'parameters.xml') : null;

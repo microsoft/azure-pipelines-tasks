@@ -20,7 +20,7 @@ export function expandWildcardPattern(folderPath: string, wildcardPattern : stri
 * @param    tansformFile Transform Xml File
 *
 */
-export function applyXdtTransformation(sourceFile, transformFile, destinationFile = "") {
+export function applyXdtTransformation(sourceFile: string, transformFile: string, destinationFile?: string) {
 
     var cttPath = path.join(__dirname, "..", "..", "ctt", "ctt.exe"); 
     var cttArgsArray= [
@@ -80,7 +80,7 @@ export function basicXdtTransformation(rootFolder, transformConfigs): boolean {
 * Performs XDT transformations ousing ctt.exe
 * 
 */
-export function specialXdtTransformation(rootFolder, transformConfig, sourceConfig, destinationConfig = ""): boolean {
+export function specialXdtTransformation(rootFolder, transformConfig, sourceConfig, destinationConfig?: string): boolean {
     var sourceXmlFiles = expandWildcardPattern(rootFolder, sourceConfig);
     var isTransformationApplied = false;
 
