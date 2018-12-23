@@ -140,5 +140,5 @@ finally {
         Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
     }
 
-    Disconnect-AzureAndClearContext
+    Disconnect-AzureAndClearContext -authScheme $authScheme -ErrorAction SilentlyContinue
 }
