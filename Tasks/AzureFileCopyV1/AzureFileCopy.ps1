@@ -197,7 +197,7 @@ finally
 {
     Remove-AzureContainer -containerName $containerName -storageContext $storageContext
     Remove-EndpointSecrets
-    Disconnect-AzureAndClearContext
+    Disconnect-AzureAndClearContext -authScheme $connectionType -ErrorAction SilentlyContinue
     Write-Verbose "Completed Azure File Copy Task for Azure VMs Destination" -Verbose
     Trace-VstsLeavingInvocation $MyInvocation
 }
