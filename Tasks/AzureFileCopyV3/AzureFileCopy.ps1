@@ -29,7 +29,6 @@ if($sasTokenTimeOutInMinutes -eq ""){
     $sasTokenTimeOutInMinutes = 240
 }
 
-
 if ($destination -ne "AzureBlob")
 {
     $blobPrefix = ""

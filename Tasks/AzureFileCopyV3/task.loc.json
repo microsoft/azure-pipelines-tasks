@@ -232,6 +232,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.sasTokenTimeOutInMinutes",
       "required": false,
+      "groupName": "output",
       "helpMarkDown": "ms-resource:loc.input.help.sasTokenTimeOutInMinutes"
     }
   ],

@@ -232,7 +232,8 @@
             "type": "string",
             "label": "SAS Token Expiration Period In Minutes",
             "required": false,
-            "helpMarkDown": "Enter the time in minutes after which SAS token expire."
+            "groupName": "output",
+            "helpMarkDown": "Provide the time in minutes after which SAS token will expire. Valid only when the selected destination is Azure Blob."
         }
     ],
     "dataSourceBindings": [
