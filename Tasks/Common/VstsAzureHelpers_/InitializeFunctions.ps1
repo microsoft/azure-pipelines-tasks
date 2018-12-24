@@ -664,8 +664,8 @@ function Disconnect-AzureAndClearContext {
             }
         }
     } catch {
-        $error = $_.Exception.Message
-        Write-Verbose "Unable to disconnect and clear context: $error"
-        Write-Host "##vso[task.logissue type=warning;]$error"
+        $message = $_.Exception.Message
+        Write-Verbose "Unable to disconnect and clear context: $message"
+        Write-Host "##vso[task.logissue type=warning;]$message"
     }
 }
