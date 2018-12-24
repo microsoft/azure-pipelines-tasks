@@ -487,37 +487,37 @@ function Add-AzureStackAzureRmEnvironment {
 
 function Disconnect-AzureAndClearContext {
     [CmdletBinding()]
-    param()
+    param(
+        [string]$authScheme = 'ServicePrincipal'
+    )
 
     try {
-        Write-Verbose "Trying to disconnect from Azure and clear context"
+        if ($authScheme -eq 'ServicePrincipal') {
+            Write-Verbose "Trying to disconnect from Azure and clear context"
 
-        if (Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue") {
-            Write-Host "##[command]Disconnect-AzureRmAccount"
-            Disconnect-AzureRmAccount
-        }
-        elseif (Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue") {
-            Write-Host "##[command]Remove-AzureRmAccount"
-            Remove-AzureRmAccount
-        }
-        elseif (Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue") {
-            Write-Host "##[command]Logout-AzureRmAccount"
-            Logout-AzureRmAccount
-        }
-        else {
-            $noCommandMessage = "Unable to find a command to log out of Azure"
-            Write-Host "##vso[task.logissue type=warning;]$noCommandMessage"
-        }
+            if (Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+                Write-Host "##[command]Disconnect-AzureRmAccount"
+                $null = Disconnect-AzureRmAccount
+            }
+            elseif (Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+                Write-Host "##[command]Remove-AzureRmAccount"
+                $null = Remove-AzureRmAccount
+            }
+            elseif (Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+                Write-Host "##[command]Logout-AzureRmAccount"
+                $null = Logout-AzureRmAccount
+            }
 
-        if (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue") {
-            Write-Host "##[command]Clear-AzureRmContext -Scope Process"
-            $null = Clear-AzureRmContext -Scope Process
-            Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
-            $null = Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+            if (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue") {
+                Write-Host "##[command]Clear-AzureRmContext -Scope Process"
+                $null = Clear-AzureRmContext -Scope Process
+                Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+                $null = Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+            }
         }
     } catch {
-        $error = $_.Exception.Message
-        Write-Verbose "Unable to disconnect and clear context: $error"
-        Write-Host "##vso[task.logissue type=warning;]$error"
+        $message = $_.Exception.Message
+        Write-Verbose "Unable to disconnect and clear context: $message"
+        Write-Host "##vso[task.logissue type=warning;]$message"
     }
 }

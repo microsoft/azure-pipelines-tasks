@@ -176,7 +176,6 @@ try{
         Validate-AzureCloudServiceStatus -CloudServiceName $ServiceName -Slot $Slot
     }
 } finally {
-    Disconnect-AzureAndClearContext
 	Trace-VstsLeavingInvocation $MyInvocation
 }
 
