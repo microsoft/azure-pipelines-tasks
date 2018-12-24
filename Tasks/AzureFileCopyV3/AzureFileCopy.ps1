@@ -24,15 +24,14 @@ $skipCACheck = Get-VstsInput -Name SkipCACheck -AsBool
 $enableCopyPrerequisites = Get-VstsInput -Name EnableCopyPrerequisites -AsBool
 $outputStorageContainerSasToken = Get-VstsInput -Name OutputStorageContainerSasToken
 $outputStorageURI = Get-VstsInput -Name OutputStorageUri
-$sasTokenTimeOutInMinutes = Get-VstsInput -Name SasTokenTimeOutInMinutes
+
+ $sasTokenTimeOutInMinutes = 240
 
 if ($destination -eq "AzureBlob"){
-    if($sasTokenTimeOutInMinutes -eq ""){
-        $sasTokenTimeOutInMinutes = 240
+    $userGivenTimeOutInMinutes = Get-VstsInput -Name SasTokenTimeOutInMinutes
+    if($userGivenTimeOutInMinutes -ne ""){
+        $sasTokenTimeOutInMinutes = $userGivenTimeOutInMinutes
     }
-}
-else{
-    $sasTokenTimeOutInMinutes = 240
 }
 
 if ($destination -ne "AzureBlob")
