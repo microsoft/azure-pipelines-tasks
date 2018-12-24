@@ -25,13 +25,21 @@ $enableCopyPrerequisites = Get-VstsInput -Name EnableCopyPrerequisites -AsBool
 $outputStorageContainerSasToken = Get-VstsInput -Name OutputStorageContainerSasToken
 $outputStorageURI = Get-VstsInput -Name OutputStorageUri
 
+ $sasTokenTimeOutInMinutes = 240
+
+if ($destination -eq "AzureBlob"){
+    $userGivenTimeOutInMinutes = Get-VstsInput -Name SasTokenTimeOutInMinutes
+    if($userGivenTimeOutInMinutes -ne ""){
+        $sasTokenTimeOutInMinutes = $userGivenTimeOutInMinutes
+    }
+}
+
 if ($destination -ne "AzureBlob")
 {
     $blobPrefix = ""
 }
 
 # Constants
-$defaultSasTokenTimeOutInHours = 4
 $useHttpsProtocolOption = ''
 $ErrorActionPreference = 'Stop'
 $telemetrySet = $false
@@ -181,7 +189,7 @@ if ($destination -eq "AzureBlob")
     }
     if(-not [string]::IsNullOrEmpty($outputStorageContainerSASToken))
     {
-        $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission rl -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
+        $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission rl -ExpiryTime (Get-Date).AddMinutes($sasTokenTimeOutInMinutes)
         Write-Host "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
     }
 
@@ -211,7 +219,7 @@ try
                                                                  -skipCACheck $skipCACheck
 
     # generate container sas token with full permissions
-    $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInHours $defaultSasTokenTimeOutInHours
+    $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
 
     # Copies files on azureVMs 
     Copy-FilesToAzureVMsFromStorageContainer -targetMachineNames $invokeRemoteScriptParams.targetMachineNames `

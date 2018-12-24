@@ -226,6 +226,14 @@
       "defaultValue": "",
       "groupName": "output",
       "helpMarkDown": "ms-resource:loc.input.help.outputStorageContainerSasToken"
+    },
+    {
+      "name": "sasTokenTimeOutInMinutes",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sasTokenTimeOutInMinutes",
+      "required": false,
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.sasTokenTimeOutInMinutes"
     }
   ],
   "dataSourceBindings": [

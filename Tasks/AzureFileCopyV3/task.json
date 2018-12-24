@@ -226,6 +226,14 @@
             "defaultValue": "",
             "groupName": "output",
             "helpMarkDown": "Provide a name for the variable for the storage container SAS Token used to access the files copied to with this task.  Valid only when the selected destination is Azure Blob."
+        },
+        {
+            "name": "sasTokenTimeOutInMinutes",
+            "type": "string",
+            "label": "SAS Token Expiration Period In Minutes",
+            "required": false,
+            "groupName": "output",
+            "helpMarkDown": "Provide the time in minutes after which SAS token will expire. Valid only when the selected destination is Azure Blob."
         }
     ],
     "dataSourceBindings": [

@@ -368,7 +368,7 @@ function Generate-AzureStorageContainerSASToken
 {
     param([string]$containerName,
           [object]$storageContext,
-          [System.Int32]$tokenTimeOutInHours)
+          [System.Int32]$tokenTimeOutInMinutes)
 
     if(-not [string]::IsNullOrEmpty($containerName) -and $storageContext)
     {
