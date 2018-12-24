@@ -194,6 +194,7 @@ if ($destination -eq "AzureBlob")
     }
 
     Remove-EndpointSecrets
+    Disconnect-AzureAndClearContext -authScheme $endpoint.Auth.Scheme -ErrorAction SilentlyContinue
     Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination"
     
     return
