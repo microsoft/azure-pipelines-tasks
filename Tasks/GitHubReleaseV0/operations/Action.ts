@@ -3,7 +3,8 @@ import path = require("path");
 import fs = require('fs');
 import { WebResponse } from "./webClient";
 import { Release } from "./Release";
-import { Utility, Inputs, AssetUploadMode, GitHubAttributes } from "./Utility";
+import { Utility, AssetUploadMode, GitHubAttributes } from "./Utility";
+import { Inputs } from "./Constants";
 import { Helper } from "./Helper";
 
 export class Action {
@@ -23,11 +24,11 @@ export class Action {
      * @param isPrerelease 
      * @param githubReleaseAssetInputPatterns 
      */
-    public static async createReleaseAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInputPatterns: string[]): Promise<void> {
+    public async createReleaseAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInputPatterns: string[]): Promise<void> {
         console.log(tl.loc("CreatingRelease", tag));
 
         // Create release
-        let response: WebResponse = await Release.createRelease(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease);
+        let response: WebResponse = await new Release().createRelease(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease);
         tl.debug("Create release response: " + JSON.stringify(response));
 
         if (response.statusCode === 201) {
@@ -75,10 +76,10 @@ export class Action {
      * @param githubReleaseAssetInputPatterns 
      * @param releaseId 
      */
-    public static async editReleaseAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInputPatterns: string[], releaseId: string): Promise<void> {
+    public async editReleaseAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, githubReleaseAssetInputPatterns: string[], releaseId: string): Promise<void> {
         console.log(tl.loc("EditingRelease", tag));
 
-        let response: WebResponse = await Release.editRelease(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, releaseId);
+        let response: WebResponse = await new Release().editRelease(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, releaseId);
         tl.debug("Edit release response: " + JSON.stringify(response));
 
         if (response.statusCode === 200) {
@@ -98,10 +99,10 @@ export class Action {
      * @param repositoryName 
      * @param tag 
      */
-    public static async deleteReleaseAction(githubEndpointToken: string, repositoryName: string, tag: string): Promise<void> {
+    public async deleteReleaseAction(githubEndpointToken: string, repositoryName: string, tag: string): Promise<void> {
         // Get the release id of the release with corresponding tag to delete.
         console.log(tl.loc("FetchReleaseForTag", tag));
-        let releaseId: string = await Helper.getReleaseIdForTag(githubEndpointToken, repositoryName, tag);
+        let releaseId: string = await new Helper().getReleaseIdForTag(githubEndpointToken, repositoryName, tag);
 
         if (!!releaseId) {
             console.log(tl.loc("FetchReleaseForTagSuccess", tag));
@@ -119,9 +120,9 @@ export class Action {
      * @param releaseId 
      * @param tag 
      */
-    private static async _deleteRelease(githubEndpointToken: string, repositoryName: string, releaseId: string, tag: string): Promise<void> {
+    private async _deleteRelease(githubEndpointToken: string, repositoryName: string, releaseId: string, tag: string): Promise<void> {
         console.log(tl.loc("DeletingRelease", tag));
-        let response: WebResponse = await Release.deleteRelease(githubEndpointToken, repositoryName, releaseId);
+        let response: WebResponse = await new Release().deleteRelease(githubEndpointToken, repositoryName, releaseId);
         tl.debug("Delete release response: " + JSON.stringify(response));
 
         if (response.statusCode === 204) {
@@ -141,7 +142,7 @@ export class Action {
      * @param uploadUrl 
      * @param existingAssets 
      */
-    private static async _uploadAssets(githubEndpointToken: string, repositoryName: string, githubReleaseAssetInputPatterns: string[], uploadUrl: string, existingAssets: any[]): Promise<void> {
+    private async _uploadAssets(githubEndpointToken: string, repositoryName: string, githubReleaseAssetInputPatterns: string[], uploadUrl: string, existingAssets: any[]): Promise<void> {
         const assetUploadMode = tl.getInput(Inputs.assetUploadMode);
         let assets: string[] = Utility.getUploadAssets(githubReleaseAssetInputPatterns) || [];
 
@@ -170,7 +171,7 @@ export class Action {
                 continue;
             }
 
-            let uploadResponse = await Release.uploadReleaseAsset(githubEndpointToken, asset, uploadUrl);
+            let uploadResponse = await new Release().uploadReleaseAsset(githubEndpointToken, asset, uploadUrl);
             tl.debug("Upload asset response: " + JSON.stringify(uploadResponse));
             
             if (uploadResponse.statusCode === 201) {
@@ -210,7 +211,7 @@ export class Action {
      * @param repositoryName 
      * @param assets 
      */
-    private static async _deleteAssets(githubEndpointToken: string, repositoryName: string, assets: any[]): Promise<void> {
+    private async _deleteAssets(githubEndpointToken: string, repositoryName: string, assets: any[]): Promise<void> {
         if (assets && assets.length ===  0) {
             console.log(tl.loc("NoAssetFoundToDelete"));
             return;
@@ -218,7 +219,7 @@ export class Action {
 
         for (let asset of assets) {
             console.log(tl.loc("DeletingAsset", asset));
-            let deleteAssetResponse = await Release.deleteReleaseAsset(githubEndpointToken, repositoryName, asset.id);
+            let deleteAssetResponse = await new Release().deleteReleaseAsset(githubEndpointToken, repositoryName, asset.id);
             tl.debug("Delete asset response: " + JSON.stringify(deleteAssetResponse));
 
             if (deleteAssetResponse.statusCode === 204) {
@@ -232,5 +233,5 @@ export class Action {
         console.log(tl.loc("AssetsDeletedSuccessfully"));
     }
 
-    private static readonly _alreadyExistErrorCode: string = "already_exists";
+    private readonly _alreadyExistErrorCode: string = "already_exists";
 }
