@@ -140,5 +140,6 @@ finally {
         Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
     }
 
+    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Disconnect-AzureAndClearContext -authScheme $authScheme -ErrorAction SilentlyContinue
 }
