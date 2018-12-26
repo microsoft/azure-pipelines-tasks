@@ -1,7 +1,6 @@
 import tl = require('vsts-task-lib/task');
 import { TaskParameters } from './TaskParameters';
-import { parse } from './ParameterParserUtility';
-var zipUtility = require('webdeployment-common/ziputility.js');
+import { parse } from 'webdeployment-common/ParameterParserUtility';
 var deployUtility = require('webdeployment-common/utility.js');
 var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
 var generateWebConfigUtil = require('webdeployment-common/webconfigutil.js');

@@ -70,3 +70,4 @@ Export-ModuleMember -Function CmdletHasMember
 Export-ModuleMember -Function Remove-EndpointSecrets
 Export-ModuleMember -Function Initialize-AzureRMModule
 Export-ModuleMember -Function Initialize-AzModule
+Export-ModuleMember -Function Disconnect-AzureAndClearContext

@@ -9,13 +9,22 @@ export class Utility {
         const githubEndpointObject = tl.getEndpointAuthorization(githubEndpoint, false);
         let githubEndpointToken: string = null;
 
-        tl.debug("Endpoint scheme: " + githubEndpointObject.scheme);
-        
-        if (githubEndpointObject.scheme === 'PersonalAccessToken') {
-            githubEndpointToken = githubEndpointObject.parameters.accessToken
-        } else {
-            // scheme: 'OAuth'
-            githubEndpointToken = githubEndpointObject.parameters.AccessToken
+        if (!!githubEndpointObject) {
+            tl.debug("Endpoint scheme: " + githubEndpointObject.scheme);
+            
+            if (githubEndpointObject.scheme === 'PersonalAccessToken') {
+                githubEndpointToken = githubEndpointObject.parameters.accessToken
+            } else if (githubEndpointObject.scheme === 'OAuth'){
+                // scheme: 'OAuth'
+                githubEndpointToken = githubEndpointObject.parameters.AccessToken
+            }
+            else if (githubEndpointObject.scheme) {
+                throw new Error(tl.loc("InvalidEndpointAuthScheme", githubEndpointObject.scheme));
+            }
+        }
+
+        if (!githubEndpointToken) {
+            throw new Error(tl.loc("InvalidGitHubEndpoint", githubEndpoint));
         }
 
         return githubEndpointToken;
@@ -182,25 +191,6 @@ export class Utility {
     private static readonly _githubPaginatedRelRegex = new RegExp('^rel="(.*)"$');
     private static readonly _tagRef: string = "refs/tags/";
     private static readonly _githubApiUrl: string = "https://api.github.com"; // url without slash at end
-}
-
-export class Inputs {
-    public static readonly action = "action";
-    public static readonly repositoryName = "repositoryName";
-    public static readonly tag = "tag";
-    public static readonly tagSource = "tagSource";
-    public static readonly target = "target";
-    public static readonly title = "title";
-    public static readonly isDraft = "isDraft";
-    public static readonly isPreRelease = "isPreRelease";
-    public static readonly gitHubConnection = "gitHubConnection";
-    public static readonly assets = "assets";
-    public static readonly assetUploadMode = "assetUploadMode";
-    public static readonly releaseNotesSource = "releaseNotesSource";
-    public static readonly releaseNotesFile = "releaseNotesFile";
-    public static readonly releaseNotes = "releaseNotes";
-    public static readonly addChangeLog = "addChangeLog";
-    public static readonly deleteExistingAssets = "deleteExistingAssets";
 }
 
 export class TagSelectionMode {
