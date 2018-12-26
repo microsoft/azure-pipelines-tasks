@@ -1,8 +1,6 @@
 {
     "tasks": [
-        "AndroidSigningV2",
-        "GitHubReleaseV0",
-        "GoV0"
+        "GitHubReleaseV0"
     ],
     "taskResources": [
         "*.ps1",
