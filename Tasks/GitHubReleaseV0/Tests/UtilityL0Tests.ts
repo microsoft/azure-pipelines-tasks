@@ -2,6 +2,7 @@ import { Utility } from "../operations/Utility";
 import { TestString } from "./TestStrings";
 
 export class UtilityL0Tests {
+
     public static startTests() {
         this.validateGetReleaseNote();
         this.validateNormalizeBranchName();
@@ -23,7 +24,7 @@ export class UtilityL0Tests {
 
     public static validateNormalizeBranchName() {
         let normalizedBranchName = "";
-
+        
         normalizedBranchName = Utility.normalizeBranchName("refs/tags/tagName");
         if (normalizedBranchName === "tagName") {
             console.log(TestString.validBranchNameKeyword);
@@ -37,7 +38,6 @@ export class UtilityL0Tests {
 
     public static validateParseHTTPHeaderLink() {
         let parsedHttpHeaderLink = {};
-
         let headerLink = '<https://api.github.com/search/code?q=addClass+user%3Amozilla&page=2>; rel="next", <https://api.github.com/search/code?q=addClass+user%3Amozilla&page=34>; rel="last"';
         let expectedParsedHeaderLink = {
             "next": "https://api.github.com/search/code?q=addClass+user%3Amozilla&page=2",
@@ -52,7 +52,6 @@ export class UtilityL0Tests {
 
     public static validateExtractRepositoryOwnerAndName() {
         let repoName = "owner_name/repo_name";
-
         let repoInfo = Utility.extractRepositoryOwnerAndName(repoName);
 
         if (repoInfo.owner === "owner_name" && repoInfo.name === "repo_name") {
@@ -63,7 +62,6 @@ export class UtilityL0Tests {
 
     public static validateExtractRepoAndIssueId() {
         let repoIssueId = "repo#26";
-
         let info = Utility.extractRepoAndIssueId(repoIssueId);
 
         if (info.repository === "repo" && info.issueId === "26") {
@@ -73,7 +71,6 @@ export class UtilityL0Tests {
 
     public static validateGetFirstLine() {
         let message = "Fixing issue #25.\n Description #23";
-
         let firstLine = Utility.getFirstLine(message);
 
         if (firstLine === "Fixing issue #25.") {
