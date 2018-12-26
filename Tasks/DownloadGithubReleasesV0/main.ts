@@ -10,7 +10,7 @@ var packagejson = require('./package.json');
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 var taskJson = require('./task.json');
-const area: string = 'DownloadGithubReleases';
+const area: string = 'DownloadGitHubReleases';
 const userAgent: string = 'download-github-releases-task-' + packagejson.version;
 
 function getDefaultProps() {
@@ -137,13 +137,13 @@ async function main(): Promise<void> {
         console.log(tl.loc("DownloadArtifacts", releaseId, itemsUrl));
 
         var templatePath = path.join(__dirname, 'githubreleases.handlebars.txt');
-        var githubReleasesVariables = {
+        var gitHubReleasesVariables = {
             "endpoint": {
                 "url": "https://api.github.com/"
             }
         };
 
-        var webProvider = new providers.WebProvider(itemsUrl, templatePath, githubReleasesVariables, customCredentialHandler);
+        var webProvider = new providers.WebProvider(itemsUrl, templatePath, gitHubReleasesVariables, customCredentialHandler);
         var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
         var parallelLimit: number = +tl.getVariable("release.artifact.download.parallellimit");
 

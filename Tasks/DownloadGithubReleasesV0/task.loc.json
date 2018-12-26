@@ -1,6 +1,6 @@
 {
   "id": "263abc27-4582-4174-8789-af599697778e",
-  "name": "DownloadGithubReleases",
+  "name": "DownloadGitHubReleases",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -22,7 +22,7 @@
   "inputs": [
     {
       "name": "connection",
-      "type": "connectedService:github",
+      "type": "connectedService:github:OAuth,PersonalAccessToken",
       "label": "ms-resource:loc.input.label.connection",
       "defaultValue": "",
       "required": true,
