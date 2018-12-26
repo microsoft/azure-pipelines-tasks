@@ -109,8 +109,12 @@ describe('GitHubReleaseTaskTests Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
+        
+        console.log("stdbefore");
         console.log("stdErr: " + tr.stderr);
+        console.log("stdbw");
         console.log("stdOut: " + tr.stdout);
+        console.log("stdafter");
 
         assert(tr.stdout.search(TestString.getChangeLogKeyword) >= 0, 'should have printed: ' + TestString.getChangeLogKeyword);
         
