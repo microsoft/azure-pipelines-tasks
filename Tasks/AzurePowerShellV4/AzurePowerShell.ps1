@@ -73,10 +73,11 @@ catch
 
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs -authScheme $authScheme
 
-try {
+try 
+{
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    if (Get-Module Az.Profile -ListAvailable){
+    if (Get-Module Az.Accounts -ListAvailable) {
          Initialize-AzModule -Endpoint $endpoint
     }
     else{
