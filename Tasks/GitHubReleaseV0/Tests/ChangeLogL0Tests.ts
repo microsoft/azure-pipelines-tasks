@@ -11,6 +11,9 @@ export class ChangeLogL0Tests {
 
         let expectedChanges = "\n\n## Changes:\n\n* xyz Fixing issue #56. [ #9 ]\n* abc Fixing issue #2 #3. [ #4, #5 ]\n\nThis list of changes was [auto generated](MOCK_RELEASE_URL).";
 
+        console.log("changes: " + changes);
+        console.log("expectedChanges: " + expectedChanges);
+        
         if (changes === expectedChanges) {
             console.log(TestString.getChangeLogKeyword);
         }
