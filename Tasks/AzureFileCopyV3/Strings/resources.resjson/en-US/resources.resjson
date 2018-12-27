@@ -45,6 +45,8 @@
   "loc.input.help.outputStorageUri": "Provide a name for the variable for the storage container URI that the files were copied to with this task.  Valid only when the selected destination is Azure Blob.",
   "loc.input.label.outputStorageContainerSasToken": "Storage Container SAS Token",
   "loc.input.help.outputStorageContainerSasToken": "Provide a name for the variable for the storage container SAS Token used to access the files copied to with this task.  Valid only when the selected destination is Azure Blob.",
+  "loc.input.label.sasTokenTimeOutInMinutes": "SAS Token Expiration Period In Minutes",
+  "loc.input.help.sasTokenTimeOutInMinutes": "Provide the time in minutes after which SAS token will expire. Valid only when the selected destination is Azure Blob.",
   "loc.messages.AFC_StorageAccountNotFound": "Storage account: {0} not found. The selected service connection 'Service Principal' supports storage accounts of Azure Resource Manager type only.",
   "loc.messages.AFC_ResourceGroupNotFound": "Provided resource group '{0}' does not exist.",
   "loc.messages.AFC_GetVMStatus": "[Azure Call]Getting the status for vm '{0}'",

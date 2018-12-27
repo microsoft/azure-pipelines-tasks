@@ -73,13 +73,12 @@ catch
 
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs -authScheme $authScheme
 
-try {
+try 
+{
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-   
-    Write-Verbose "Imported module version: $($module.Version)"
     Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs
-   
+    
     # Trace the expression as it will be invoked.
     $__vstsAzPSInlineScriptPath = $null
     If ($scriptType -eq "InlineScript") {

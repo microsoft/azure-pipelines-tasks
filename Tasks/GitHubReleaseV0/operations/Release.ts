@@ -8,7 +8,7 @@ import { WebRequest, sendRequest, WebResponse } from "./webClient";
 
 export class Release {
 
-    public static async createRelease(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean): Promise<WebResponse> {
+    public async createRelease(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._createReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
@@ -30,7 +30,7 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async editRelease(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, releaseId: string): Promise<WebResponse> {
+    public async editRelease(githubEndpointToken: string, repositoryName: string, target: string, tag: string, releaseTitle: string, releaseNote: string, isDraft: boolean, isPrerelease: boolean, releaseId: string): Promise<WebResponse> {
         let request = new WebRequest();
             
         request.uri = util.format(this._editOrDeleteReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseId);
@@ -52,7 +52,7 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async deleteRelease(githubEndpointToken: string, repositoryName: string, releaseId: string): Promise<WebResponse> {
+    public async deleteRelease(githubEndpointToken: string, repositoryName: string, releaseId: string): Promise<WebResponse> {
         let request = new WebRequest();
             
         request.uri = util.format(this._editOrDeleteReleaseApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, releaseId);
@@ -65,7 +65,7 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async deleteReleaseAsset(githubEndpointToken: string, repositoryName: string, asset_id: string): Promise<WebResponse> {
+    public async deleteReleaseAsset(githubEndpointToken: string, repositoryName: string, asset_id: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._deleteReleaseAssetApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, asset_id);
@@ -79,7 +79,7 @@ export class Release {
     }
 
 
-    public static async uploadReleaseAsset(githubEndpointToken: string, filePath: string, uploadUrl: string): Promise<WebResponse> {
+    public async uploadReleaseAsset(githubEndpointToken: string, filePath: string, uploadUrl: string): Promise<WebResponse> {
         let fileName = path.basename(filePath);
         tl.debug("Filename: " + fileName);
         
@@ -100,7 +100,7 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async getBranch(githubEndpointToken: string, repositoryName: string, target: string): Promise<WebResponse> {
+    public async getBranch(githubEndpointToken: string, repositoryName: string, target: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._getBranchApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, target);
@@ -113,7 +113,7 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async getTags(githubEndpointToken: string, repositoryName: string): Promise<WebResponse> {
+    public async getTags(githubEndpointToken: string, repositoryName: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._getTagsApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
@@ -126,7 +126,7 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async getReleases(githubEndpointToken: string, repositoryName: string): Promise<WebResponse> {
+    public async getReleases(githubEndpointToken: string, repositoryName: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._getReleasesApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
@@ -139,7 +139,7 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async getLatestRelease(githubEndpointToken: string, repositoryName: string): Promise<WebResponse> {
+    public async getLatestRelease(githubEndpointToken: string, repositoryName: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._getLatestReleasesApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName);
@@ -152,7 +152,7 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async getPaginatedResult(githubEndpointToken: string, nextPageLink: string): Promise<WebResponse> {
+    public async getPaginatedResult(githubEndpointToken: string, nextPageLink: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = nextPageLink;
@@ -165,7 +165,7 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async getCommitsList(githubEndpointToken: string,repositoryName: string, startCommitSha: string, endCommitSha: string): Promise<WebResponse> {
+    public async getCommitsList(githubEndpointToken: string,repositoryName: string, startCommitSha: string, endCommitSha: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._getCommitsListApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, startCommitSha, endCommitSha);
@@ -178,7 +178,7 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public static async getCommitsBeforeGivenSha(githubEndpointToken: string,repositoryName: string, sha: string): Promise<WebResponse> {
+    public async getCommitsBeforeGivenSha(githubEndpointToken: string,repositoryName: string, sha: string): Promise<WebResponse> {
         let request = new WebRequest();
         
         request.uri = util.format(this._getCommitsBeforeGivenShaApiUrlFormat, Utility.getGitHubApiUrl(), repositoryName, sha);
@@ -191,14 +191,14 @@ export class Release {
         return await sendRequest(request);
     }
 
-    private static readonly _createReleaseApiUrlFormat: string = "%s/repos/%s/releases";
-    private static readonly _editOrDeleteReleaseApiUrlFormat: string = "%s/repos/%s/releases/%s";
-    private static readonly _deleteReleaseAssetApiUrlFormat: string = "%s/repos/%s/releases/assets/%s";
-    private static readonly _uploadReleaseAssetApiUrlFormat: string = "%s?name=%s";
-    private static readonly _getReleasesApiUrlFormat: string = "%s/repos/%s/releases";
-    private static readonly _getLatestReleasesApiUrlFormat: string = "%s/repos/%s/releases/latest";
-    private static readonly _getBranchApiUrlFormat: string = "%s/repos/%s/branches/%s";
-    private static readonly _getTagsApiUrlFormat: string = "%s/repos/%s/tags";
-    private static readonly _getCommitsListApiUrlFormat: string = "%s/repos/%s/compare/%s...%s";
-    private static readonly _getCommitsBeforeGivenShaApiUrlFormat: string = "%s/repos/%s/commits?sha=%s&per_page=100";
+    private readonly _createReleaseApiUrlFormat: string = "%s/repos/%s/releases";
+    private readonly _editOrDeleteReleaseApiUrlFormat: string = "%s/repos/%s/releases/%s";
+    private readonly _deleteReleaseAssetApiUrlFormat: string = "%s/repos/%s/releases/assets/%s";
+    private readonly _uploadReleaseAssetApiUrlFormat: string = "%s?name=%s";
+    private readonly _getReleasesApiUrlFormat: string = "%s/repos/%s/releases";
+    private readonly _getLatestReleasesApiUrlFormat: string = "%s/repos/%s/releases/latest";
+    private readonly _getBranchApiUrlFormat: string = "%s/repos/%s/branches/%s";
+    private readonly _getTagsApiUrlFormat: string = "%s/repos/%s/tags";
+    private readonly _getCommitsListApiUrlFormat: string = "%s/repos/%s/compare/%s...%s";
+    private readonly _getCommitsBeforeGivenShaApiUrlFormat: string = "%s/repos/%s/commits?sha=%s&per_page=100";
 }

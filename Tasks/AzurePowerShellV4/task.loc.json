@@ -19,6 +19,7 @@
     "Minor": 0,
     "Patch": 1
   },
+  "preview": true,
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
     "azureps"
