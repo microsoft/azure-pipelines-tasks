@@ -108,7 +108,8 @@ describe('GitHubReleaseTaskTests Suite', function() {
         let tp = path.join(__dirname, 'ChangeLogTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
+    console.log("stdddd: " + tr.stderr);
+        console.log("stdout: " + tr.stdout);
         assert(tr.stdout.search(TestString.getChangeLogKeyword) >= 0, 'should have printed: ' + TestString.getChangeLogKeyword);
         
         done();
