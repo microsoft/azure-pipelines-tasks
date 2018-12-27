@@ -25,6 +25,8 @@
   "loc.input.help.checkManifestStability": "Waits on deployment status",
   "loc.input.label.containers": "Containers",
   "loc.input.help.containers": "Containers",
+  "loc.input.label.renderEngine": "Render Engine",
+  "loc.input.help.renderEngine": "Tool to generate manifest",
   "loc.input.label.chart": "Chart",
   "loc.input.help.chart": "Chart to bake",
   "loc.input.label.overrides": "Overrides",

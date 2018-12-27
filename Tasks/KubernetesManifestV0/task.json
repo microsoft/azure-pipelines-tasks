@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 1
     },
     "demands": [],
     "groups": [
@@ -141,6 +141,19 @@
             "groupName": "config",
             "helpMarkDown": "Containers",
             "visibleRule": "action = deploy"
+        },
+        {
+            "name": "renderEngine",
+            "type": "pickList",
+            "label": "Render Engine",
+            "required": false,
+            "defaultValue": "helm",
+            "groupName": "config",
+            "visibleRule": "action = bake",
+            "options": {
+                "helm": "Helm"
+            },
+            "helpMarkDown": "Tool to generate manifest"
         },
         {
             "name": "chart",

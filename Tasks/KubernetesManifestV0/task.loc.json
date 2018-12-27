@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 1
   },
   "demands": [],
   "groups": [
@@ -141,6 +141,19 @@
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.containers",
       "visibleRule": "action = deploy"
+    },
+    {
+      "name": "renderEngine",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.renderEngine",
+      "required": false,
+      "defaultValue": "helm",
+      "groupName": "config",
+      "visibleRule": "action = bake",
+      "options": {
+        "helm": "Helm"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.renderEngine"
     },
     {
       "name": "chart",
