@@ -105,6 +105,8 @@ Tasks/DownloadBuildArtifactsV0/*    @Lovakumar      @omeshp
 
 Tasks/DownloadFileshareArtifactsV0/*    @Lovakumar      @omeshp
 
+Tasks/DownloadGitHubReleasesV0/*    @Lovakumar      @gykuma
+
 Tasks/DownloadPackageV0/*       @zackrun
 
 Tasks/DownloadPipelineArtifactV0/*      @mihaif
