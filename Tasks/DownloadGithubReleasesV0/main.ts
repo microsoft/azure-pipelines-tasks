@@ -12,6 +12,7 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
 var taskJson = require('./task.json');
 const area: string = 'DownloadGitHubReleases';
 const userAgent: string = 'download-github-releases-task-' + packagejson.version;
+const defaultRetryLimit: number = 4;
 
 function getDefaultProps() {
     var hostType = (tl.getVariable('SYSTEM.HOSTTYPE') || "").toLowerCase();
@@ -29,7 +30,7 @@ function getDefaultProps() {
     };
 }
 
-function publishEvent(feature, properties: any): void {
+function publishTelemetry(feature, properties: any): void {
     try {
         var splitVersion = (process.env.AGENT_VERSION || '').split('.');
         var major = parseInt(splitVersion[0] || '0');
@@ -98,7 +99,7 @@ async function main(): Promise<void> {
         let releaseId;
 
         var token = tl.getEndpointAuthorizationParameter(connection, 'AccessToken', false);
-        var retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : 4;
+        var retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : defaultRetryLimit;
 
         // Required to prevent typed-rest-client from adding additional 'Authorization' in header on redirect to AWS
         var customCredentialHandler = {
@@ -197,6 +198,6 @@ main()
         tl.setResult(tl.TaskResult.Succeeded, "");
     })
     .catch((err) => {
-        publishEvent('reliability', { issueType: 'error', errorMessage: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
+        publishTelemetry('reliability', { issueType: 'error', errorMessage: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
         tl.setResult(tl.TaskResult.Failed, err);
     });

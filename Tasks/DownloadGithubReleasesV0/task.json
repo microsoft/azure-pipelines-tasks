@@ -6,14 +6,10 @@
   "author": "Microsoft Corporation",
   "helpMarkDown": "",
   "category": "Utility",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 145,
+    "Minor": 146,
     "Patch": 0
   },
   "minimumAgentVersion": "1.99.0",
