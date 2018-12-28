@@ -226,7 +226,12 @@ export function getSourcesFromNuGetConfig(configPath: string): IPackageSourceBas
     }
 
     // parse sources xml
-    let xml = ltx.parse(xmlString);
+    let xml: ltx.Element;
+    try {
+        xml = ltx.parse(xmlString);
+    } catch (e) {
+        throw new Error(tl.loc("NGCommon_NuGetConfigIsInvalid", configPath));
+    }
 
     // give clearer errors if the user has set an invalid nuget.config
     if(!xml.nameEquals(new ltx.Element("configuration"))) {

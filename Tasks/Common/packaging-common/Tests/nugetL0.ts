@@ -100,7 +100,23 @@ export function nugetcommon() {
 
         let ngutil = require("../nuget/Utility");
 
-        configFile = '<configuration><packageSources><add key="NameOnly"/><add value="ValueOnly"/><add key="SourceName" value="http://source/"/><add key="SourceCredentials" value="http://credentials"/></packageSources><packageSourceCredentials><SourceCredentials><add key="Username" value="foo"/><add key="ClearTextPassword" value="bar"/></SourceCredentials></packageSourceCredentials></configuration>';
+        configFile = `
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <packageSources>
+        <add key="NameOnly"/>  
+        <add key="SourceName" value="http://source/"/>
+        <add value="ValueOnly"/>
+        <add key="SourceCredentials" value="http://credentials"/>
+    </packageSources>
+    <packageSourceCredentials>
+        <SourceCredentials>
+            <add key="Username" value="foo"/>
+            <add key="ClearTextPassword" value="bar"/>
+        </SourceCredentials>
+    </packageSourceCredentials>
+</configuration>
+`;
 
         let sources: IPackageSourceBase[] = ngutil.getSourcesFromNuGetConfig("nuget.config");
         assert.strictEqual(sources.length, 2);
@@ -108,7 +124,47 @@ export function nugetcommon() {
         assert.strictEqual(sources[0].feedUri, "http://source/");
         assert.strictEqual(sources[1].feedName, "SourceCredentials");
         assert.strictEqual(sources[1].feedUri, "http://credentials");
+        done();
+    });
 
+    it("getSourcesFromNuGetConfig recognises package.config files", (done: MochaDone) => {    
+        let configFile: string;
+        mockery.registerMock("fs", {
+            readFileSync: () => configFile
+        });
+
+        let ngutil = require("../nuget/Utility");
+
+        configFile = `
+<?xml version="1.0" encoding="utf-8"?>
+<packages>
+  <package id="jQuery" version="3.1.1" targetFramework="net46" />
+  <package id="NLog" version="4.3.10" targetFramework="net46" />
+</packages>
+`;
+
+        assert.throws(() => ngutil.getSourcesFromNuGetConfig("nuget.config"), /NGCommon_NuGetConfigIsPackagesConfig/);
+        done();
+    });
+
+    it("getSourcesFromNuGetConfig recognises invalid nuget.config files", (done: MochaDone) => {    
+        let configFile: string;
+        mockery.registerMock("fs", {
+            readFileSync: () => configFile
+        });
+
+        let ngutil = require("../nuget/Utility");
+
+        configFile = `
+<?xml version="1.0" encoding="utf-8"?>
+<foo />
+`;
+        assert.throws(() => ngutil.getSourcesFromNuGetConfig("nuget.config"), /NGCommon_NuGetConfigIsInvalid/);
+
+        configFile = `
+not xml
+`;
+        assert.throws(() => ngutil.getSourcesFromNuGetConfig("nuget.config"), /NGCommon_NuGetConfigIsInvalid/);
         done();
     });
 
