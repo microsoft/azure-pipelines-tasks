@@ -157,22 +157,10 @@ export class NuGetConfigHelper2 {
         let packageSources = ngutil.getSourcesFromNuGetConfig(configPath);
         return packageSources.map((source) => this.convertToIPackageSource(source));
     }
-	
-	private convertToIPackageSource(source: auth.IPackageSourceBase): IPackageSource {
-        const uppercaseUri = source.feedUri.toUpperCase();
-        const isInternal = this.authInfo.internalAuthInfo.uriPrefixes.some(prefix => uppercaseUri.indexOf(prefix.toUpperCase()) === 0);
-
-        return {
-            feedName: source.feedName,
-            feedUri: source.feedUri,
-            isInternal
-        };
-    }
 
     private removeSourceFromTempNugetConfig(packageSource: IPackageSource) {
         this.nugetXmlHelper.RemoveSourceFromNuGetConfig(packageSource.feedName);
     }
-
 
     private addSourcesToTempNugetConfigInternal(packageSources: IPackageSource[]) {
         packageSources.forEach((source) => {
@@ -188,5 +176,16 @@ export class NuGetConfigHelper2 {
     private setApiKeyForSourceInTempNuGetConfig(source: IPackageSource, apiKey: string)
     {
         this.nugetXmlHelper.SetApiKeyInNuGetConfig(source.feedName, apiKey);
+    }
+
+    private convertToIPackageSource(source: auth.IPackageSourceBase): IPackageSource {
+        const uppercaseUri = source.feedUri.toUpperCase();
+        const isInternal = this.authInfo.internalAuthInfo.uriPrefixes.some(prefix => uppercaseUri.indexOf(prefix.toUpperCase()) === 0);
+
+        return {
+            feedName: source.feedName,
+            feedUri: source.feedUri,
+            isInternal
+        };
     }
 }
