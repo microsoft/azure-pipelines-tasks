@@ -143,7 +143,7 @@ export async function run(): Promise<void> {
             }
         }
 
-        await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
+        nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
 
         const dotnetPath = tl.which('dotnet', true);
 
