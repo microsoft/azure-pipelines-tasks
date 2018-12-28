@@ -1,11 +1,15 @@
 import * as assert from "assert";
 import * as mockery from "mockery";
 import { INuGetXmlHelper } from "../nuget/INuGetXmlHelper";
+import { IPackageSourceBase } from "../nuget/Authentication";
 
 class MockedTask {
     private _proxyUrl: string;
     private _proxyUsername: string;
     private _proxyPassword: string;
+
+    public debug(message: string) {}
+    public loc(message: string): string { return message; }
 
     public setMockedValues(proxyUrl?: string, proxyUsername?: string, proxyPassword?: string) {
         this._proxyUrl = proxyUrl;
@@ -21,6 +25,8 @@ class MockedTask {
                 return this._proxyUsername;
             case "agent.proxypassword":
                 return this._proxyPassword;
+            case "Task.DisplayName":
+                return "NuGet Test"
             default:
                 return undefined;
         }
@@ -82,6 +88,26 @@ export function nugetcommon() {
 
         let httpProxy: string = ngToolRunner.getNuGetProxyFromEnvironment();
         assert.strictEqual(httpProxy, `http://${mockedUsername}:${mockedPassword}@proxy/`);
+
+        done();
+    });
+
+    it("getSourcesFromNuGetConfig gets sources", (done: MochaDone) => {    
+        let configFile: string;
+        mockery.registerMock("fs", {
+            readFileSync: () => configFile
+        });
+
+        let ngutil = require("../nuget/Utility");
+
+        configFile = '<configuration><packageSources><add key="NameOnly"/><add value="ValueOnly"/><add key="SourceName" value="http://source/"/><add key="SourceCredentials" value="http://credentials"/></packageSources><packageSourceCredentials><SourceCredentials><add key="Username" value="foo"/><add key="ClearTextPassword" value="bar"/></SourceCredentials></packageSourceCredentials></configuration>';
+
+        let sources: IPackageSourceBase[] = ngutil.getSourcesFromNuGetConfig("nuget.config");
+        assert.strictEqual(sources.length, 2);
+        assert.strictEqual(sources[0].feedName, "SourceName");
+        assert.strictEqual(sources[0].feedUri, "http://source/");
+        assert.strictEqual(sources[1].feedName, "SourceCredentials");
+        assert.strictEqual(sources[1].feedUri, "http://credentials");
 
         done();
     });

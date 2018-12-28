@@ -21,7 +21,6 @@
     "q": "^1.5.0",
     "typed-rest-client": "0.12.0",
     "vsts-task-lib": "2.6.0",
-    "vsts-task-tool-lib": "0.4.1",
-    "xmlreader": "^0.2.3"
+    "vsts-task-tool-lib": "0.4.1"
   }
 }
