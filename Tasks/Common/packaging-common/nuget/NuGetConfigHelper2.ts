@@ -145,7 +145,7 @@ export class NuGetConfigHelper2 {
         return path.join(tempNuGetConfigBaseDir, "Nuget", tempNuGetConfigFileName);
     }
 
-    private getSourcesFromTempNuGetConfig(): IPackageSource[] {
+    public getSourcesFromTempNuGetConfig(): IPackageSource[] {
         // load content of the user's nuget.config
         let configPath: string = this.tempNugetConfigPath ? this.tempNugetConfigPath : this.nugetConfigPath;
 
@@ -188,10 +188,5 @@ export class NuGetConfigHelper2 {
     private setApiKeyForSourceInTempNuGetConfig(source: IPackageSource, apiKey: string)
     {
         this.nugetXmlHelper.SetApiKeyInNuGetConfig(source.feedName, apiKey);
-    }
-
-    private shouldGetCredentialsForFeed(source: IPackageSource): boolean {
-        let uppercaseUri = source.feedUri.toUpperCase();
-        return this.authInfo.internalAuthInfo.uriPrefixes.some(prefix => uppercaseUri.indexOf(prefix.toUpperCase()) === 0);
     }
 }

@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import * as mockery from "mockery";
 import { INuGetXmlHelper } from "../nuget/INuGetXmlHelper";
-import { IPackageSourceBase } from "../nuget/Authentication";
+import { InternalAuthInfo, IPackageSourceBase, IPackageSource, NuGetExtendedAuthInfo } from "../nuget/Authentication";
 
 class MockedTask {
     private _proxyUrl: string;
@@ -89,6 +89,37 @@ export function nugetcommon() {
         let httpProxy: string = ngToolRunner.getNuGetProxyFromEnvironment();
         assert.strictEqual(httpProxy, `http://${mockedUsername}:${mockedPassword}@proxy/`);
 
+        done();
+    });
+
+    it("getSourcesFromTempNuGetConfig sets isInternal", (done: MochaDone) => {    
+        let packageSourceBase: IPackageSourceBase[];
+        mockery.registerMock("./Utility", {
+            getSourcesFromNuGetConfig: () => packageSourceBase
+        });
+
+        let ngConfig = require("../nuget/NuGetConfigHelper2");
+
+        packageSourceBase = [
+            { feedName: "SourceName", feedUri: "http://source/foo" },
+            { feedName: "SourceCredentials", feedUri: "http://credentials/foo" }
+        ];
+
+        let intAuthInfo = new InternalAuthInfo(
+            ["http://credentials", "http://other"],
+            "",
+            "",
+            true
+        );
+        let authInfo = new NuGetExtendedAuthInfo(intAuthInfo);
+        let configHelper = new ngConfig.NuGetConfigHelper2("nuget.exe", "nuget.config", authInfo, {}, "temp", false);
+
+        let sources: IPackageSource[] = configHelper.getSourcesFromTempNuGetConfig();
+        assert.strictEqual(sources.length, 2);
+        assert.strictEqual(sources[0].feedName, "SourceName");
+        assert.strictEqual(sources[0].isInternal, false);
+        assert.strictEqual(sources[1].feedName, "SourceCredentials");
+        assert.strictEqual(sources[1].isInternal, true);
         done();
     });
 
