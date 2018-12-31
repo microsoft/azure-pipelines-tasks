@@ -20,7 +20,6 @@
         "Minor": 0,
         "Patch": 1
     },
-    "releaseNotes": "What's new in version 1.* (preview)Click [here](https://aka.ms/azurewebapponcontainerdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
@@ -137,8 +136,8 @@
             }
         },
         {
-            "target": "azureSubscription",
-            "endpointId": "$(ConnectedServiceName)",
+            "target": "resourceGroupName",
+            "endpointId": "$(azureSubscription)",
             "dataSourceName": "AzureRMWebAppResourceGroup",
             "parameters": {
                 "WebAppName": "$(appName)"
