@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "What's new in version 1.* (preview)Click [here](https://aka.ms/azurewebapponcontainerdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
@@ -130,14 +130,14 @@
     "dataSourceBindings": [
         {
             "target": "appName",
-            "endpointId": "$(ConnectedServiceName)",
+            "endpointId": "$(azureSubscription)",
             "dataSourceName": "AzureRMWebAppNamesByAppType",
             "parameters": {
                 "WebAppKind": "webAppContainer"
             }
         },
         {
-            "target": "resourceGroupName",
+            "target": "azureSubscription",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppResourceGroup",
             "parameters": {
@@ -146,7 +146,7 @@
         },
         {
             "target": "slotName",
-            "endpointId": "$(ConnectedServiceName)",
+            "endpointId": "$(azureSubscription)",
             "dataSourceName": "AzureRMWebAppSlotsId",
             "parameters": {
                 "WebAppName": "$(appName)",
