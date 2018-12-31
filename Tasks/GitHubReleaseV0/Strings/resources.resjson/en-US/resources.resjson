@@ -87,6 +87,8 @@
   "loc.messages.FetchCommitDiffError": "An unexpected error occurred while fetching the list of changes.",
   "loc.messages.FetchInitialCommit": "Fetching the initial commit...",
   "loc.messages.FetchInitialCommitSuccess": "Found the initial commit: %s",
+  "loc.messages.InvalidGitHubEndpoint": "Invalid GitHub service endpoint: %s.",
+  "loc.messages.InvalidEndpointAuthScheme": "Invalid GitHub service endpoint scheme: %s. Only 'PAT' and 'OAuth' service endpoint schemes are allowed.",
   "loc.messages.FetchInitialCommitError": "An unexpected error occurred while fetching the initial commit.",
   "loc.messages.InvalidActionSet": "Invalid action: %s. Only 'create' or 'edit' or 'delete' actions are allowed."
 }

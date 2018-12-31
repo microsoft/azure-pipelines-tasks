@@ -14,12 +14,14 @@ export class ChangeLog {
      * @param top 
      * @param changeLogInput 
      */
-    public static async getChangeLog(githubEndpointToken: string, repositoryName: string, target: string, top: number): Promise<string> {
+    public async getChangeLog(githubEndpointToken: string, repositoryName: string, target: string, top: number): Promise<string> {
         console.log(tl.loc("ComputingChangeLog"));
+
+        let release = new Release();
 
         // Get the latest published release to compare the changes with.
         console.log(tl.loc("FetchLatestPublishRelease"));
-        let latestReleaseResponse = await Release.getLatestRelease(githubEndpointToken, repositoryName);
+        let latestReleaseResponse = await release.getLatestRelease(githubEndpointToken, repositoryName);
         tl.debug("Get latest release response: " + JSON.stringify(latestReleaseResponse));
 
         // We will be fetching changes between startCommitSha...endCommitSha.
@@ -31,7 +33,7 @@ export class ChangeLog {
         // If repository has 0 releases, then latest release api returns 404.
         if (latestReleaseResponse.statusCode === 200 || latestReleaseResponse.statusCode === 404) {
             // Get the curent commit.
-            let endCommitSha: string = await Helper.getCommitShaFromTarget(githubEndpointToken, repositoryName, target);
+            let endCommitSha: string = await new Helper().getCommitShaFromTarget(githubEndpointToken, repositoryName, target);
 
             // Get the start commit.
             // Release has target_commitsh property but it can be branch name also.
@@ -53,7 +55,7 @@ export class ChangeLog {
             
             // Compare the diff between 2 commits.
             console.log(tl.loc("FetchCommitDiff"));
-            let commitsListResponse = await Release.getCommitsList(githubEndpointToken, repositoryName, startCommitSha, endCommitSha);
+            let commitsListResponse = await release.getCommitsList(githubEndpointToken, repositoryName, startCommitSha, endCommitSha);
             tl.debug("Get commits list response: " + JSON.stringify(commitsListResponse));
 
             if (commitsListResponse.statusCode === 200) {
@@ -135,8 +137,8 @@ export class ChangeLog {
      * @param repositoryName 
      * @param tag 
      */
-    private static async _getCommitForTag(githubEndpointToken: string, repositoryName: string, tag: string): Promise<string> {
-        let filteredTag: any = await Helper.filterTag(githubEndpointToken, repositoryName, tag, this._filterTagsByTagName);
+    private async _getCommitForTag(githubEndpointToken: string, repositoryName: string, tag: string): Promise<string> {
+        let filteredTag: any = await new Helper().filterTag(githubEndpointToken, repositoryName, tag, this._filterTagsByTagName);
 
         return filteredTag && filteredTag[GitHubAttributes.commit][GitHubAttributes.sha];
     }
@@ -147,11 +149,13 @@ export class ChangeLog {
      * @param repositoryName 
      * @param sha 
      */
-    private static async _getInitialCommit(githubEndpointToken: string, repositoryName: string, sha: string, top: number): Promise<string> {
+    private async _getInitialCommit(githubEndpointToken: string, repositoryName: string, sha: string, top: number): Promise<string> {
+        let release = new Release();
+
         // No api available to get first commit directly.
         // So, fetching all commits before the current commit sha.
         // Returning last commit or 250th commit which ever is smaller.
-        let commitsForGivenShaResponse = await Release.getCommitsBeforeGivenSha(githubEndpointToken, repositoryName, sha);
+        let commitsForGivenShaResponse = await release.getCommitsBeforeGivenSha(githubEndpointToken, repositoryName, sha);
         let links: { [key: string]: string } = {};
         let commits: any[] = [];
 
@@ -173,7 +177,7 @@ export class ChangeLog {
 
                 // Calling the next page if it exists
                 if (links && links[GitHubAttributes.next]) {
-                    let paginatedResponse = await Release.getPaginatedResult(githubEndpointToken, links[GitHubAttributes.next]);
+                    let paginatedResponse = await release.getPaginatedResult(githubEndpointToken, links[GitHubAttributes.next]);
                     commitsForGivenShaResponse = paginatedResponse;
                     continue;
                 }
@@ -193,7 +197,7 @@ export class ChangeLog {
      * Returns a dictionary of { commitId to commit message }.
      * @param commits 
      */
-    private static _getCommitIdToMessageDictionary(commits: any[]): { [key: string]: string } {
+    private _getCommitIdToMessageDictionary(commits: any[]): { [key: string]: string } {
         let commitIdToMessageDictionary: { [key: string]: string } = {};
 
         for (let commit of (commits || [])) {
@@ -208,7 +212,7 @@ export class ChangeLog {
      * @param commitIdToMessageDictionary 
      * @param repositoryName 
      */
-    private static _getCommitIdToRepoIssueIdsDictionary(commitIdToMessageDictionary: { [key: string]: string }, repositoryName: string): { [key: string]: Set<string> } {
+    private _getCommitIdToRepoIssueIdsDictionary(commitIdToMessageDictionary: { [key: string]: string }, repositoryName: string): { [key: string]: Set<string> } {
         let commitIdToRepoIssueIdsDictionary: { [key: string]: Set<string> } = {};
 
         Object.keys(commitIdToMessageDictionary).forEach((commitId: string) => {
@@ -223,7 +227,7 @@ export class ChangeLog {
      * Filter tags by tag name.
      * Returns tag object.
      */
-    private static _filterTagsByTagName = (tagsList: any[], tagName: string): any[] => {
+    private _filterTagsByTagName = (tagsList: any[], tagName: string): any[] => {
         let filteredTags: any[] = [];
 
         (tagsList || []).forEach((tag: any) => {
@@ -241,7 +245,7 @@ export class ChangeLog {
      * @param message 
      * @param repositoryName 
      */
-    private static _getRepoIssueIdFromCommitMessage(message: string, repositoryName: string): Set<string> {
+    private _getRepoIssueIdFromCommitMessage(message: string, repositoryName: string): Set<string> {
         let match = undefined;
         let repoIssueIdSet: Set<string> = new Set();
 
@@ -283,7 +287,7 @@ export class ChangeLog {
      * @param repoIssueIdSet 
      * @param repositoryName 
      */
-    private static _getChangeLogPerCommit(commitId: string, commitMessage: string, repoIssueIdSet: Set<string>, repositoryName: string): string {
+    private _getChangeLogPerCommit(commitId: string, commitMessage: string, repoIssueIdSet: Set<string>, repositoryName: string): string {
         // GitHub commit messages have description as well alongwith title.
         // Parsing the commit title and showing to user.
         let commitMessageFirstLine: string = Utility.getFirstLine(commitMessage);
@@ -326,7 +330,7 @@ export class ChangeLog {
         return log;
     }
 
-    private static _getAutoGeneratedText(): string {
+    private _getAutoGeneratedText(): string {
         let autoGeneratedUrl: string = this._getAutoGeneratedUrl();
 
         if (!!autoGeneratedUrl) {
@@ -336,7 +340,7 @@ export class ChangeLog {
         return "";
     }
 
-    private static _getAutoGeneratedUrl(): string {
+    private _getAutoGeneratedUrl(): string {
         let releaseUrl: string = tl.getVariable(AzureDevOpsVariables.releaseWebUrl);
 
         if (!!releaseUrl) {
@@ -361,11 +365,11 @@ export class ChangeLog {
 
     // https://github.com/moby/moby/commit/df23a1e675c7e3cbad617374d85c48103541ee14?short_path=6206c94#diff-6206c94cde21ec0a5563c8369b71e609
     // Supported format for GitHub issues: #26 GH-26 repositoryName#26 repositoryNameGH-26, where GH is case in-sensitive.
-    private static readonly _issueRegex = new RegExp("(?:^|[^A-Za-z0-9_]?)([a-z0-9_]+/[a-zA-Z0-9-_.]+)?(?:#|[G|g][H|h]-)([0-9]+)(?:[^A-Za-z_]|$)", "gm");
-    private static readonly _ChangeLogTitle: string = "\n\n## Changes:\n\n";
-    private static readonly _seeMoreText: string = "See more";
-    private static readonly _changeLogVisibleLimit: number = 10;
-    private static readonly _buildUrlFormat: string = "%s/%s/_build/results?buildId=%s&view=logs";
-    private static readonly _autoGeneratedTextFormat: string = "This list of changes was [auto generated](%s).";
-    private static readonly _seeMoreChangeLogFormat: string = "<details><summary><b>%s</b></summary>\n\n%s\n%s</details>"; // For showing See more button if more than 10 commits message are to be shown to user.
+    private readonly _issueRegex = new RegExp("(?:^|[^A-Za-z0-9_]?)([a-z0-9_]+/[a-zA-Z0-9-_.]+)?(?:#|[G|g][H|h]-)([0-9]+)(?:[^A-Za-z_]|$)", "gm");
+    private readonly _ChangeLogTitle: string = "\n\n## Changes:\n\n";
+    private readonly _seeMoreText: string = "See more";
+    private readonly _changeLogVisibleLimit: number = 10;
+    private readonly _buildUrlFormat: string = "%s/%s/_build/results?buildId=%s&view=logs";
+    private readonly _autoGeneratedTextFormat: string = "This list of changes was [auto generated](%s).";
+    private readonly _seeMoreChangeLogFormat: string = "<details><summary><b>%s</b></summary>\n\n%s\n%s</details>"; // For showing See more button if more than 10 commits message are to be shown to user.
 }
