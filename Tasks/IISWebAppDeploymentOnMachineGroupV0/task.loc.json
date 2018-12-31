@@ -182,6 +182,7 @@
     "FailedToApplyTransformationReason2": "ms-resource:loc.messages.FailedToApplyTransformationReason2",
     "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage",
     "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed",
-    "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol"
+    "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol",
+    "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy"
   }
 }
