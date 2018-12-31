@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "What's new in version 1.* (preview)<br/>Click [here](https://aka.ms/azurefunctiononcontainerdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
@@ -132,7 +132,7 @@
     "dataSourceBindings": [
         {
             "target": "appName",
-            "endpointId": "$(ConnectedServiceName)",
+            "endpointId": "$(azureSubscription)",
             "dataSourceName": "AzureRMWebAppNamesByAppType",
             "parameters": {
                 "WebAppKind": "functionAppContainer"
@@ -140,7 +140,7 @@
         },        
         {
             "target": "resourceGroupName",
-            "endpointId": "$(ConnectedServiceName)",
+            "endpointId": "$(azureSubscription)",
             "dataSourceName": "AzureRMWebAppResourceGroup",
             "parameters": {
                 "WebAppName": "$(appName)"
@@ -148,7 +148,7 @@
         },
         {
             "target": "rlotName",
-            "endpointId": "$(ConnectedServiceName)",
+            "endpointId": "$(azureSubscription)",
             "dataSourceName": "AzureRMWebAppSlotsId",
             "parameters": {
                 "WebAppName": "$(appName)",

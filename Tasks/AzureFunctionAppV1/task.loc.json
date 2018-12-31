@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -191,7 +191,7 @@
   "dataSourceBindings": [
     {
       "target": "appName",
-      "endpointId": "$(ConnectedServiceName)",
+      "endpointId": "$(azureSubscription)",
       "dataSourceName": "AzureRMWebAppNamesByAppType",
       "parameters": {
         "WebAppKind": "$(appType)"
@@ -199,7 +199,7 @@
     },
     {
       "target": "resourceGroupName",
-      "endpointId": "$(ConnectedServiceName)",
+      "endpointId": "$(azureSubscription)",
       "dataSourceName": "AzureRMWebAppResourceGroup",
       "parameters": {
         "WebAppName": "$(appName)"
@@ -207,7 +207,7 @@
     },
     {
       "target": "slotName",
-      "endpointId": "$(ConnectedServiceName)",
+      "endpointId": "$(azureSubscription)",
       "dataSourceName": "AzureRMWebAppSlotsId",
       "parameters": {
         "WebAppName": "$(appName)",
