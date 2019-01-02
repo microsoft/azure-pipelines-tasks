@@ -367,6 +367,6 @@
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
         "NoAssociatedArtifacts": "No associated artifacts found",
         "OperationFailed": "Failed in %s with error: %s",
-        "RetryingOperation": "Error: in %s, retrying the operation => retries pending  : %s"
+        "RetryingOperation": "Error: in %s, retrying the operation => retries pending: %s"
     }
 }

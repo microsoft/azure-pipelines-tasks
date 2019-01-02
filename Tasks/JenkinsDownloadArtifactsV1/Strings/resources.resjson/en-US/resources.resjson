@@ -129,5 +129,5 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
   "loc.messages.NoAssociatedArtifacts": "No associated artifacts found",
   "loc.messages.OperationFailed": "Failed in %s with error: %s",
-  "loc.messages.RetryingOperation": "Error: in %s, retrying the operation => retries pending  : %s"
+  "loc.messages.RetryingOperation": "Error: in %s, retrying the operation => retries pending: %s"
 }
