@@ -262,6 +262,7 @@ export function getSourcesFromNuGetConfig(configPath: string): IPackageSourceBas
         return [];
     }
 
+    // convert to IPackageSourceBase[]
     let sources = addPackageSources.reduce((result, current) => {
         const k = current.attrs["key"];
         const v = current.attrs["value"];

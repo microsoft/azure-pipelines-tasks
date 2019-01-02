@@ -68,7 +68,7 @@ export class NuGetConfigHelper2 {
         this.addSourcesToTempNugetConfigInternal(packageSources);
     }
 
-    public setAuthForSourcesInTempNuGetConfig(): Promise<void>
+    public setAuthForSourcesInTempNuGetConfig(): void
     {
         tl.debug('Setting auth in the temp nuget.config');
         this.ensureTempConfigCreated();
