@@ -21,7 +21,10 @@ process.env['ENDPOINT_DATA_ID1_acceptUntrustedCerts'] = 'true';
 
 helper.RegisterArtifactEngineMock(tr);
 helper.RegisterHttpClientMock(tr, (url: string) => {
+    if (url === "http://url/job/myfreestyleproject//api/json") {
+        return helper.GetErrorExpectedResult(500, 'Error: connect ETIMEDOUT ');
+    }
 });
 
-process.env['VSTS_HTTP_RETRY'] = "1";
+process.env['VSTS_HTTP_RETRY'] = '1';
 tr.run();
