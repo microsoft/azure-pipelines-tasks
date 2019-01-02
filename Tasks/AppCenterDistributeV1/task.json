@@ -158,6 +158,13 @@
             "visibleRule": "releaseNotesSelection = file"
         },
         {
+            "name": "isMandatory",
+            "type": "boolean",
+            "label": "Require users to update to this release",
+            "defaultValue": "false",
+            "required": false
+        },
+        {
             "name": "destinationId",
             "aliases": [
                 "distributionGroupId"

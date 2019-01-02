@@ -145,7 +145,7 @@ function commitRelease(apiServer: string, apiVersion: string, appSlug: string, u
     return defer.promise;
 }
 
-function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: string, destinationId: string, token: string, userAgent: string) {
+function publishRelease(apiServer: string, releaseUrl: string, isMandatory: boolean, releaseNotes: string, destinationId: string, token: string, userAgent: string) {
     tl.debug("-- Mark package available.");
     let defer = Q.defer<void>();
     let publishReleaseUrl: string = `${apiServer}/${releaseUrl}`;
@@ -160,6 +160,7 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
     let publishBody = {
         "status": "available",
         "release_notes": releaseNotes,
+        "mandatory_update": isMandatory,
         "destinations": [
             {
                 "id": destinationId
@@ -434,6 +435,8 @@ async function run() {
             releaseNotes = tl.getInput('releaseNotesInput', true);
         }
 
+        let isMandatory: boolean = tl.getBoolInput('isMandatory', false);
+
         let destinationId = tl.getInput('destinationId', false) || '00000000-0000-0000-0000-000000000000';
         tl.debug(`Effective destinationId: ${destinationId}`);
 
@@ -467,7 +470,7 @@ async function run() {
         let packageUrl = await commitRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken, userAgent);
 
         // Publish
-        await publishRelease(effectiveApiServer, packageUrl, releaseNotes, destinationId, apiToken, userAgent);
+        await publishRelease(effectiveApiServer, packageUrl, isMandatory, releaseNotes, destinationId, apiToken, userAgent);
 
         if (symbolsFile) {
             // Begin preparing upload symbols
