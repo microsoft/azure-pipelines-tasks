@@ -3,7 +3,6 @@
   "loc.helpMarkDown": "[More information](https://aka.ms/azurefunctiononcontainerdeployreadme)",
   "loc.description": "Update Azure App Services on Docker containers, Function Apps with Docker Containers",
   "loc.instanceNameFormat": "Azure Function App on Container Deploy: $(appName)",
-  "loc.releaseNotes": "What's new in version 1.* (preview)<br/>Click [here](https://aka.ms/azurefunctiononcontainerdeployreadme) for more information.",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
   "loc.input.label.azureSubscription": "Azure subscription",
   "loc.input.help.azureSubscription": "Select the Azure Resource Manager subscription for the deployment.",
