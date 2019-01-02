@@ -213,7 +213,10 @@ export class JenkinsRestClient {
         const jobName = tl.getInput("jobName", true);
         const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(endpoint, 'acceptUntrustedCerts', true));
         const jobUrlInfix = JenkinsJobDetails.GetJobUrlInfix(jobName);
-        const retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : 4;
+        
+        const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
+        const retryLimit: number = (!!retryLimitValue && !isNaN(parseInt(retryLimitValue))) ? parseInt(retryLimitValue) : 4;
+        tl.debug(`RetryLimit set to ${retryLimit}`);
 
         let requestUrl: string = `${endpointUrl}${jobUrlInfix}/${urlPath}`;
         console.log(tl.loc("DownloadingContentFromJenkinsServer", requestUrl, strictSSL));
