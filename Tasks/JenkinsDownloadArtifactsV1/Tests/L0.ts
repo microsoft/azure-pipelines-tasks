@@ -130,6 +130,7 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
         try {
             tr.run();
+            console.log(tr.stdout);
 
             assert(tr.stdout.indexOf('Translated url git@github.com:user/TestRepo.git/commit/3cbfc14e3f482a25e5122323f3273b89677d9875 to https://github.com/user/TestRepo/commit/3cbfc14e3f482a25e5122323f3273b89677d9875') !== -1, tr.stdout);
 
