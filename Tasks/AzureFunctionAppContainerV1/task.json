@@ -40,7 +40,7 @@
         {
             "name": "appName",
             "type": "pickList",
-            "label": "App Name",
+            "label": "App name",
             "defaultValue": "",
             "required": true,
             "properties": {
@@ -84,7 +84,7 @@
         {
             "name": "imageName",
             "type": "string",
-            "label": "Image Name",
+            "label": "Image name",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
