@@ -45,17 +45,11 @@ if ($targetAzurePs -eq $latestVersion) {
 }
 
 . "$PSScriptRoot\Utility.ps1"
-$targetAzurePs = Get-RollForwardVersion -azurePowerShellVersion $targetAzurePs
 
 $authScheme = ''
 try
 {
-    $serviceName = Get-VstsInput -Name ConnectedServiceNameARM
-    if (!$serviceName)
-    {
-            Get-VstsInput -Name $ConnectedServiceNameARM -Require
-    }
-
+    $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
     $endpoint = Get-VstsEndpoint -Name $serviceName -Require
 
     if($endpoint)
@@ -77,12 +71,8 @@ try
 {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    if (Get-Module Az.Accounts -ListAvailable) {
-         Initialize-AzModule -Endpoint $endpoint
-    }
-    else{
-         Initialize-AzureRMModule -Endpoint $endpoint
-    }
+    Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs
+    
     # Trace the expression as it will be invoked.
     $__vstsAzPSInlineScriptPath = $null
     If ($scriptType -eq "InlineScript") {
