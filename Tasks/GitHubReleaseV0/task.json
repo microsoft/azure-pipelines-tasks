@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -35,7 +35,8 @@
             "required": true,
             "helpMarkDown": "Specify the name of the GitHub repository in which GitHub releases will be created.",
             "properties": {
-                "DisableManageLink": "True"
+                "DisableManageLink": "True",
+                "EditableOptions": "True"
             }
         },
         {
