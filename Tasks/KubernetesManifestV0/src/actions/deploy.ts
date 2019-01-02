@@ -67,7 +67,7 @@ function getCommandConfigurationFiles(filePattern: string, containers): string[]
         files.forEach((filePath: string) => {
             var contents = fs.readFileSync(filePath).toString();
             containers.forEach((container: string) => {
-                let imageName = container.split(":")[0];
+                let imageName = container.split(":")[0] + ":";
                 if (contents.indexOf(imageName) > 0) {
                     contents = replaceAllTokens(contents, imageName, container);
                 }
@@ -81,6 +81,8 @@ function getCommandConfigurationFiles(filePattern: string, containers): string[]
 
             newFilePaths.push(fileName);
         });
+
+        files = newFilePaths;
     }
 
     return files;

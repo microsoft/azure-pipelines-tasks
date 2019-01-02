@@ -174,16 +174,6 @@
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.overrides",
       "visibleRule": "action = bake"
-    },
-    {
-      "name": "manifestsBundle",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.manifestsBundle",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.manifestsBundle",
-      "visibleRule": "action = bake"
     }
   ],
   "dataSourceBindings": [
@@ -203,7 +193,12 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "outputVariables": [],
+  "outputVariables": [
+    {
+      "name": "manifestsBundle",
+      "description": "The location of the manifest bundles created by bake action"
+    }
+  ],
   "execution": {
     "Node": {
       "target": "src//kubernetes.js"

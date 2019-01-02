@@ -174,16 +174,6 @@
             "groupName": "config",
             "helpMarkDown": "Override values to set",
             "visibleRule": "action = bake"
-        },
-        {
-            "name": "manifestsBundle",
-            "type": "string",
-            "label": "Manifests Bundle name",
-            "required": false,
-            "defaultValue": "",
-            "groupName": "config",
-            "helpMarkDown": "You can use this to deploy using the variable name you specify here.",
-            "visibleRule": "action = bake"
         }
     ],
     "dataSourceBindings": [
@@ -203,7 +193,12 @@
         }
     ],
     "instanceNameFormat": "$(action)",
-    "outputVariables": [],
+    "outputVariables": [
+        {
+            "name": "manifestsBundle",
+            "description": "The location of the manifest bundles created by bake action"
+        }
+    ],
     "execution": {
         "Node": {
             "target": "src//kubernetes.js"

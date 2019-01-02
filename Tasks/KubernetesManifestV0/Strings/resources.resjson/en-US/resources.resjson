@@ -31,8 +31,6 @@
   "loc.input.help.chart": "Chart to bake",
   "loc.input.label.overrides": "Overrides",
   "loc.input.help.overrides": "Override values to set",
-  "loc.input.label.manifestsBundle": "Manifests Bundle name",
-  "loc.input.help.manifestsBundle": "You can use this to deploy using the variable name you specify here.",
   "loc.messages.CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
   "loc.messages.DownloadingClient": "Downloading kubernetes client.",
   "loc.messages.KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",

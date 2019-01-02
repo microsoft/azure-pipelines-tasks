@@ -33,7 +33,7 @@ class Helm {
             return;
         }
         let pathToBakedManifest = this.getTemplatePath(result.stdout);
-        tl.setVariable(tl.getInput("manifestsBundle"), pathToBakedManifest);
+        tl.setVariable("manifestsBundle", pathToBakedManifest);
     }
 
     private static getTemplatePath(data) {
