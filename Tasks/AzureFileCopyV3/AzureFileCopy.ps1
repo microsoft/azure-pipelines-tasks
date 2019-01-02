@@ -64,7 +64,7 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
-if (Get-Module Az.Profile -ListAvailable){
+if (Get-Module Az.Accounts -ListAvailable){
     Initialize-AzModule -Endpoint $endpoint
 }
 else{
