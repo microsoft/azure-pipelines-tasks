@@ -136,6 +136,7 @@
         "exec": "exec",
         "expose": "expose",
         "get": "get",
+        "rolloutStatus": "rollout status",
         "login": "login",
         "logout": "logout",
         "logs": "logs",

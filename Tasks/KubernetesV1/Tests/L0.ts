@@ -238,6 +238,36 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
+    it('Runs successfully for kubectl rollout status with configuration file', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.rolloutStatus;
+        process.env[shared.TestEnvVars.useConfigurationFile] = "true";    
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]kubectl rollout status -f ${shared.formatPath("dir/deployment.yaml")} -o json`) != -1, "kubectl rollout status should run");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Runs successfully for kubectl rollout status with arguments', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.rolloutStatus;
+        process.env[shared.TestEnvVars.arguments] = "deployment/nginx";
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]kubectl rollout status deployment/nginx -o json`) != -1, "kubectl rollout status should run");
+        console.log(tr.stderr);
+        done();
+    });
+
     it('Runs successfully for kubectl docker-registry secrets using Container Registry with forceUpdate', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);

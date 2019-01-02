@@ -149,6 +149,14 @@ a.exec[`kubectl apply -f ${ConfigurationFilePath} -o json`] = {
     "code": 0,
     "stdout": "successfully applied the configuration deployment.yaml"
 };
+a.exec[`kubectl rollout status -f ${ConfigurationFilePath} -o json`] = {
+    "code": 0,
+    "stdout": "successfully get rollout status with configuration deployment.yaml"
+};
+a.exec[`kubectl rollout status deployment/nginx -o json`] = {
+    "code": 0,
+    "stdout": "successfully get rollout status with arguments"
+};
 a.exec[`kubectl get pods -o json`] = {
     "code": 0,
     "stdout": "successfully ran get pods command"
