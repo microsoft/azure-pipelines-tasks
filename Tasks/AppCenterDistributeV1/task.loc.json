@@ -158,6 +158,13 @@
       "visibleRule": "releaseNotesSelection = file"
     },
     {
+      "name": "isMandatory",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isMandatory",
+      "defaultValue": "false",
+      "required": false
+    },
+    {
       "name": "destinationId",
       "aliases": [
         "distributionGroupId"
