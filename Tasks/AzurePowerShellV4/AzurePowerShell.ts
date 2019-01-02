@@ -27,6 +27,20 @@ async function run() {
         let _vsts_input_errorActionPreference: string = tl.getInput('errorActionPreference', false) || 'Stop';
         let _vsts_input_failOnStandardError = tl.getBoolInput('FailOnStandardError', false);
         let targetAzurePs: string = tl.getInput('TargetAzurePs', false);
+
+        try {
+            let serviceName = tl.getInput('ConnectedServiceNameARM',/*required*/true);
+            if(serviceName) {
+                let endpoint = tl.getInput('serviceName',/*required*/true);
+                if(endpoint) {
+                    let authScheme = endpoint.Auth.Scheme
+                }
+            }
+        }
+        catch {
+          //  let error = _.Exception.Message
+            console.log( "Unable to get the authScheme $error" );
+        }
        
         if (scriptType.toUpperCase() == 'SCRIPTTYPE') {
             if (!tl.stats(scriptPath).isFile() || !scriptPath.toUpperCase().match(/\.PS1$/)) {
