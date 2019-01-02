@@ -45,17 +45,11 @@ if ($targetAzurePs -eq $latestVersion) {
 }
 
 . "$PSScriptRoot\Utility.ps1"
-$targetAzurePs = Get-RollForwardVersion -azurePowerShellVersion $targetAzurePs
 
 $authScheme = ''
 try
 {
-    $serviceName = Get-VstsInput -Name ConnectedServiceNameARM
-    if (!$serviceName)
-    {
-            Get-VstsInput -Name $ConnectedServiceNameARM -Require
-    }
-
+    $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
     $endpoint = Get-VstsEndpoint -Name $serviceName -Require
 
     if($endpoint)

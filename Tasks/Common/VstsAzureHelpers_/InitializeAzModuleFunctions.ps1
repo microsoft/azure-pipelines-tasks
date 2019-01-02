@@ -22,8 +22,7 @@ function Initialize-AzModule {
 
 function Import-AzModule {
     [CmdletBinding()]
-    param(
-        [string] $azVersion)
+    param([string] $azVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
