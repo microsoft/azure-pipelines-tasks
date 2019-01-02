@@ -20,7 +20,7 @@ function Get-AzureUtility
 	$azureUtilityARM = "AzureUtilityARM.ps1"
     $azUtilityVersion100 = "AzureUtilityAz1.0.ps1"
 
-    if (Get-Module Az.Profile -ListAvailable){
+    if (Get-Module Az.Accounts -ListAvailable){
         Write-Verbose "Az module is installed in the agent."
         return $azUtilityVersion100
     }
@@ -39,7 +39,7 @@ function Get-Endpoint
 function Validate-AzurePowershellVersion
 {
     Write-Verbose "Validating installed azure powershell version is greater than or equal to AzureRM 1.1.0"
-    if (!(Get-Module Az.Profile -ListAvailable)){
+    if (!(Get-Module Az.Accounts -ListAvailable)){
         $currentVersion =  Get-AzureCmdletsVersion
         Write-Verbose "Installed Azure PowerShell version: $currentVersion"
 
