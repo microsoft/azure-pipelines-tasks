@@ -53,9 +53,11 @@ export var PackerLogTokenImageUri = "OSDiskUri";
 export var PackerLogTokenStorageLocation = "StorageAccountLocation";
 export var PackerLogTokenManagedResourceGroupName = "ManagedImageResourceGroupName";
 export var PackerLogTokenManagedImageName = "ManagedImageName";
+export var PackerLogTokenManagedImageId = "ManagedImageId";
 export var PackerLogTokenManagedImageLocation = "ManagedImageLocation";
 
 export var OutputVariableImageUri = "imageUri";
+export var OutputVariableImageId = "imageId";
 
 export var CurrentSupportedPackerVersionString = "1.2.4";
 export var PackerDownloadUrlFormat = "https://releases.hashicorp.com/packer/%s/packer_%s_%s.zip"

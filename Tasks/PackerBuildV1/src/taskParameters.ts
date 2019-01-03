@@ -35,13 +35,14 @@ export default class TaskParameters {
     public skipTempFileCleanupDuringVMDeprovision: boolean = true;
 
     public imageUri: string;
+    public imageId: string;
 
     public graphCredentials: msRestAzure.ApplicationTokenCredentials;
 
     constructor() {
         try {
             this.templateType = tl.getInput(constants.TemplateTypeInputName, true);
-            
+
             if(this.templateType === constants.TemplateTypeCustom) {
                 this.customTemplateLocation = tl.getPathInput(constants.CustomTemplateLocationInputType, true, true);
                 console.log(tl.loc("ParsingCustomTemplateParameters"));
@@ -86,6 +87,7 @@ export default class TaskParameters {
             this.additionalBuilderParameters = JSON.parse(tl.getInput("additionalBuilderParameters"));
             this.skipTempFileCleanupDuringVMDeprovision = tl.getBoolInput("skipTempFileCleanupDuringVMDeprovision", false);
             this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
+            this.imageId = tl.getInput(constants.OutputVariableImageId, false);
         }
         catch (error) {
             throw (tl.loc("TaskParametersConstructorFailed", error));
