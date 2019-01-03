@@ -10,8 +10,7 @@ function Get-SavedModulePath {
 
 function Update-PSModulePathForHostedAgent {
     [CmdletBinding()]
-    param([string] $targetAzurePs,
-          [string] $authScheme)
+    param([string] $targetAzurePs)
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         if ($targetAzurePs) {
@@ -83,4 +82,13 @@ function  Get-RollForwardVersion {
     finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
+}
+
+function  Get-InputForRunScript {
+    [CmdletBinding()]
+    param()
+
+    $targetAzurePs = Get-VstsInput -Name TargetAzurePs
+    $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
+    $endpoint = Get-VstsEndpoint -Name $serviceName -Require
 }

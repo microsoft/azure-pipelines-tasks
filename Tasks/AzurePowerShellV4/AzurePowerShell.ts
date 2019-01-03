@@ -27,41 +27,34 @@ async function run() {
         let _vsts_input_errorActionPreference: string = tl.getInput('errorActionPreference', false) || 'Stop';
         let _vsts_input_failOnStandardError = tl.getBoolInput('FailOnStandardError', false);
         let targetAzurePs: string = tl.getInput('TargetAzurePs', false);
-
-        try {
-            let serviceName = tl.getInput('ConnectedServiceNameARM',/*required*/true);
-            if(serviceName) {
-                let endpoint = tl.getInput('serviceName',/*required*/true);
-                if(endpoint) {
-                    let authScheme = endpoint.Auth.Scheme
-                }
-            }
-        }
-        catch {
-          //  let error = _.Exception.Message
-            console.log( "Unable to get the authScheme $error" );
-        }
+      //  let serviceName = tl.getInput('ConnectedServiceNameARM',/*required*/true);
+       // let endpoint = tl.getInput('serviceName',/*required*/true);
        
-        if (scriptType.toUpperCase() == 'SCRIPTTYPE') {
-            if (!tl.stats(scriptPath).isFile() || !scriptPath.toUpperCase().match(/\.PS1$/)) {
-                throw new Error(tl.loc('JS_InvalidFilePath', scriptPath));
-            }
-        }
-        else {
+        let runScriptFilePath = 'D:\azure-pipelines-tasks\Tasks\AzurePowerShellV4\RunScript2.ps1';
+        let runScriptArgument = '-azurePowerShellVersion ' + targetAzurePs;
+
+     //   if (scriptType.toUpperCase() == 'SCRIPTTYPE') {
+      //      if (!tl.stats(scriptPath).isFile() || !scriptPath.toUpperCase().match(/\.PS1$/)) {
+      //          throw new Error(tl.loc('JS_InvalidFilePath', scriptPath));
+    //        }
+     //   }
+     //   else {
             scriptInline = tl.getInput('Inline', false) || '';
-        }
+    //    }
 
         // Generate the script contents.
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`);
-        if (scriptType.toUpperCase() == 'SCRIPTTYPE') {
-            contents.push(`. '${scriptPath.replace("'", "''")}' ${scriptArguments}`.trim());
-            console.log(tl.loc('JS_FormattedCommand', contents[contents.length - 1]));
-        }
-        else {
-            contents.push(scriptInline);
-        }
+        contents.push(`. '${runScriptFilePath.replace("'", "''")}' ${runScriptArgument}`.trim());
+
+       // if (scriptType.toUpperCase() == 'SCRIPTTYPE') {
+      //      contents.push(`. '${runScriptFilePath.replace("'", "''")}' ${runScriptArgument}`.trim());
+        //    console.log(tl.loc('JS_FormattedCommand', contents[contents.length - 1]));
+      //  }
+      //  else {
+     //       contents.push(scriptInline);
+     //   }
 
         // Write the script to disk.
         tl.assertAgent('2.115.0');
