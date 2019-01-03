@@ -11,7 +11,7 @@ let targetFolder: string = tl.getPathInput('TargetFolder', true);
 let cleanTargetFolder: boolean = tl.getBoolInput('CleanTargetFolder', false);
 let overWrite: boolean = tl.getBoolInput('OverWrite', false);
 let flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
-let keepTimestamp: boolean = tl.getBoolInput('keepTimestamp', false);
+let preserveTimestamp: boolean = tl.getBoolInput('preserveTimestamp', false);
 
 // normalize the source folder path. this is important for later in order to accurately
 // determine the relative path of each found file (substring using sourceFolder.length).
@@ -108,7 +108,7 @@ if (matchedFiles.length > 0) {
                 else { // copy
                     console.log(tl.loc('CopyingTo', file, targetPath));
                     tl.cp(file, targetPath);
-                    if (keepTimestamp) {
+                    if (preserve) {
                         fs.utimes(targetPath, targetStats.atime, targetStats.mtime);
                     }
                 }
@@ -136,7 +136,7 @@ if (matchedFiles.length > 0) {
                 }
 
                 tl.cp(file, targetPath, "-f");
-                if (keepTimestamp) {
+                if (preserve) {
                     fs.utimes(targetPath, targetStats.atime, targetStats.mtime);
                 }
             }
