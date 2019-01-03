@@ -25,14 +25,14 @@ function Import-AzModule {
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        # We are only looking for Az.Profile module becasue all the command required for initialize the azure PS session is in Az.Profile module.
-        $moduleName = "Az.Profile"
+        # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
+        $moduleName = "Az.Accounts"
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
         $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
         if (!$module) {
             Write-Verbose "No module found with name: $moduleName"
-            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList "Any version", "Az.Profile")
+            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList "Any version", "Az.Accounts")
         }
 
         # Import the module.
