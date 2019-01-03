@@ -109,7 +109,8 @@ if (matchedFiles.length > 0) {
                     console.log(tl.loc('CopyingTo', file, targetPath));
                     tl.cp(file, targetPath);
                     if (preserveTimestamp) {
-                        fs.utimes(targetPath, targetStats.atime, targetStats.mtime, (err) => {
+                        let fileStats: tl.FsStats = tl.stats(file);
+                        fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
                             console.log(`Error: ${err}`);
                           });
                     }
@@ -139,7 +140,8 @@ if (matchedFiles.length > 0) {
 
                 tl.cp(file, targetPath, "-f");
                 if (preserveTimestamp) {
-                    fs.utimes(targetPath, targetStats.atime, targetStats.mtime, (err) => {
+                    let fileStats: tl.FsStats = tl.stats(file);
+                    fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
                         console.log(`Error: ${err}`);
                       });
                 }
