@@ -105,6 +105,7 @@ var getTasksToBuildForPR = function() {
     var prId = process.env['SYSTEM_PULLREQUEST_PULLREQUESTNUMBER'];
     var commonChanges = [];
     var toBeBuilt = [];
+    run('git fetch origin master');
     try {
         if (sourceBranch.includes(':')) {
             // We only care about the branch name, not the source repo
