@@ -20,7 +20,6 @@
     "Minor": 0,
     "Patch": 1
   },
-  "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
   "groups": [
     {
@@ -137,8 +136,8 @@
       }
     },
     {
-      "target": "azureSubscription",
-      "endpointId": "$(ConnectedServiceName)",
+      "target": "resourceGroupName",
+      "endpointId": "$(azureSubscription)",
       "dataSourceName": "AzureRMWebAppResourceGroup",
       "parameters": {
         "WebAppName": "$(appName)"

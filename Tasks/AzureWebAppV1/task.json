@@ -20,7 +20,6 @@
         "Minor": 0,
         "Patch": 1
     },
-    "releaseNotes": "What's new in version 1.* (preview)<br />Supports Zip Deploy, Run From Package, War Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurewebappdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
@@ -47,7 +46,7 @@
         {
             "name": "appType",
             "type": "pickList",
-            "label": "App Type",
+            "label": "App type",
             "defaultValue": "",
             "required": true,
             "options": {
@@ -58,7 +57,7 @@
         {
             "name": "appName",
             "type": "pickList",
-            "label": "App Name",
+            "label": "App name",
             "defaultValue": "",
             "required": true,
             "properties": {
@@ -110,7 +109,7 @@
         {
             "name": "runtimeStack",
             "type": "pickList",
-            "label": "Runtime Stack",
+            "label": "Runtime stack",
             "defaultValue": "",
             "required": false,
             "properties": {

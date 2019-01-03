@@ -4,7 +4,7 @@
   "loc.description": "File Transform",
   "loc.instanceNameFormat": "File Transform: $(Package)",
   "loc.group.displayName.VariableSubstitution": "Variable Substitution",
-  "loc.input.label.folderPath": "Package or Folder",
+  "loc.input.label.folderPath": "Package or folder",
   "loc.input.help.folderPath": "File path to the package or a folder.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip.",
   "loc.input.label.enableXmlTransform": "XML transformation",
   "loc.input.help.enableXmlTransform": "Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform.",

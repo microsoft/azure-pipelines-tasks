@@ -2,7 +2,7 @@
     "id": "13C22CE0-3B93-43F9-AEB7-71FBCE7BF5B2",
     "name": "AzureFunctionAppContainer",
     "friendlyName": "Azure Function for Container",
-    "description": "Update Azure App Services on Docker containers, Function Apps with Docker Containers",
+    "description": "Update Function Apps with Docker Containers",
     "helpMarkDown": "[More information](https://aka.ms/azurefunctiononcontainerdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -20,7 +20,6 @@
         "Minor": 0,
         "Patch": 1
     },
-    "releaseNotes": "What's new in version 1.* (preview)<br/>Click [here](https://aka.ms/azurefunctiononcontainerdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
@@ -41,7 +40,7 @@
         {
             "name": "appName",
             "type": "pickList",
-            "label": "App Name",
+            "label": "App name",
             "defaultValue": "",
             "required": true,
             "properties": {
@@ -85,7 +84,7 @@
         {
             "name": "imageName",
             "type": "string",
-            "label": "Image Name",
+            "label": "Image name",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."

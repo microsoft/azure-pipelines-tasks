@@ -23,9 +23,9 @@ Tasks/AzureFileCopyV2/*    @kmkumaran
 
 Tasks/AzureFileCopyV3/*    @kmkumaran
 
-Tasks/AzureFunctionDeploymentV1/*    @kmkumaran      @SumiranAgg     @vincentdass
+Tasks/AzureFunctionAppV1/*    @kmkumaran      @SumiranAgg     @vincentdass
 
-Tasks/AzureFunctionOnContainerDeploymentV1/*    @kmkumaran      @SumiranAgg     @vincentdass
+Tasks/AzureFunctionAppContainerV1/*    @kmkumaran      @SumiranAgg     @vincentdass
 
 Tasks/AzureFunctionV1/*     @bansalaseem
 
@@ -53,9 +53,9 @@ Tasks/AzureRmWebAppDeploymentV3/*   @kmkumaran    @SumiranAgg     @vincentdass
 
 Tasks/AzureRmWebAppDeploymentV4/*   @kmkumaran    @SumiranAgg     @vincentdass
 
-Tasks/AzureWebAppDeploymentV1/*   @kmkumaran    @SumiranAgg     @vincentdass
+Tasks/AzureWebAppV1/*   @kmkumaran    @SumiranAgg     @vincentdass
 
-Tasks/AzureWebAppOnContainerDeploymentV1/*   @kmkumaran    @SumiranAgg     @vincentdass
+Tasks/AzureWebAppContainerV1/*   @kmkumaran    @SumiranAgg     @vincentdass
 
 Tasks/AzureVmssDeploymentV0/*       @sachinma
 
