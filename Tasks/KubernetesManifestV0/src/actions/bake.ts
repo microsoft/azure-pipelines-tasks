@@ -5,6 +5,7 @@ import path = require('path');
 import fs = require('fs');
 import { getTempDirectory } from "../utilities";
 import helmutility = require("utility-common/helmutility");
+import { Helm, NameValuePair } from "utility-common/helm-object-model";
 
 const uuidV4 = require('uuid/v4');
 
@@ -12,26 +13,23 @@ export async function bake() {
     let renderEngine = tl.getInput("renderEngine", true);
     switch (renderEngine) {
         case "helm":
-            await Helm.bake();
+            await HelmRenderEngine.bake();
             break;
         default:
             throw Error("Unknown render engine");
     }
 }
 
-class Helm {
+class HelmRenderEngine {
     public static async bake() {
         let helmPath = await helmutility.getHelm();
-        let helmCommand = tl.tool(helmPath);
-        helmCommand.arg("template");
-        helmCommand.arg(tl.getPathInput("chart"))
-        let args = tl.getDelimitedInput("overrides", "\n");
-        helmCommand.arg(this.setArgs(args));
-        var result = helmCommand.execSync();
+        let helmCommand = new Helm(helmPath, tl.getInput("namespace"));
+        var result = helmCommand.template(tl.getPathInput("chart"), this.getOverrideValues());
         if (result.stderr) {
             tl.setResult(tl.TaskResult.Failed, result.stderr);
             return;
         }
+        
         let pathToBakedManifest = this.getTemplatePath(result.stdout);
         tl.setVariable("manifestsBundle", pathToBakedManifest);
     }
@@ -42,13 +40,17 @@ class Helm {
         return paths;
     }
 
-    private static setArgs(args) {
-        var newArgs = [];
-        args.forEach(arg => {
-            let a = arg.split(":");
-            newArgs.push("--set")
-            newArgs.push(a[0].trim() + "=" + a[1].trim());
+    private static getOverrideValues() {
+        let overridesInput = tl.getDelimitedInput("overrides", "\n");
+        var overrideValues = [];
+        overridesInput.forEach(arg => {
+            let overrideInput = arg.split(":");
+            overrideValues.push({
+                name: overrideInput[0].trim(),
+                value: overrideInput[1].trim()
+            } as NameValuePair);
         });
-        return newArgs;
+
+        return overrideValues;
     }
 }
