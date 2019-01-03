@@ -37,6 +37,8 @@ Tasks/AzureMonitorAlertsV0/*    @kmkumaran
 
 Tasks/AzureMonitorV0/*      @bansalaseem
 
+Tasks/AzureMonitorV1/*      @vithati
+
 Tasks/AzureMysqlDeploymentV1/*  @kmkumaran      @RoshanKumarMicrosoft
 
 Tasks/AzureNLBManagementV1/*    @kmkumaran
