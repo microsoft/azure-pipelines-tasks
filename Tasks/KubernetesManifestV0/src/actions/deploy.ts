@@ -13,11 +13,15 @@ var execResults: IExecSyncResult[] = [];
 
 export async function deploy() {
     execResults = [];
-    let containers = tl.getDelimitedInput("containers", "\n");
-    let files = getCommandConfigurationFiles(tl.getInput("manifests", true), containers);
+    
+    var files: string[] = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), tl.getInput("manifests", true));
+    
     if (files === []) {
         throw ("No file found with matching pattern");
     }
+
+    let containers = tl.getDelimitedInput("containers", "\n");
+    files = updateContainerImagesInConfigFiles(files, containers);
 
     let kubectl = new Kubectl(await getKubectl(), tl.getInput("namespace", false));
 
@@ -61,19 +65,11 @@ export async function deploy() {
     }
 }
 
-function getCommandConfigurationFiles(filePattern: string, containers): string[] {
-    if (filePattern.length == 0) {
-        return [""];
-    }
-    var files: string[] = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), filePattern);
-    if (!files || !files.length) {
-        return [];
-    }
-
+function updateContainerImagesInConfigFiles(filePaths: string[], containers): string[] {
     if (containers != []) {
         let newFilePaths = [];
         const tempDirectory = utils.getTempDirectory();
-        files.forEach((filePath: string) => {
+        filePaths.forEach((filePath: string) => {
             var contents = fs.readFileSync(filePath).toString();
             containers.forEach((container: string) => {
                 let imageName = container.split(":")[0] + ":";
@@ -91,10 +87,10 @@ function getCommandConfigurationFiles(filePattern: string, containers): string[]
             newFilePaths.push(fileName);
         });
 
-        files = newFilePaths;
+        return newFilePaths;
     }
 
-    return files;
+    return filePaths;
 }
 
 function replaceAllTokens(currentString: string, replaceToken, replaceValue) {
