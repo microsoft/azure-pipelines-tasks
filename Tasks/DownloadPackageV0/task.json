@@ -10,7 +10,7 @@
         "Major": 0,
         "Minor": 1,
         "Patch": 18
-  },
+    },
     "demands": [],
     "minimumAgentVersion": "1.99.0",
     "inputs": [
