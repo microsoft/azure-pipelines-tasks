@@ -12,11 +12,6 @@ describe('AndroidSigning Suite v3', function () {
     after(() => {
         // empty
     });
-    
-    it('Should fail if CI is working', (done: MochaDone) => {
-        assert(1==0);
-        done();
-    });
 
     it('Do not sign or zipalign if nothing is selected', (done: MochaDone) => {
         this.timeout(1000);
