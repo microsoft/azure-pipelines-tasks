@@ -1,11 +1,15 @@
 import * as assert from "assert";
 import * as mockery from "mockery";
 import { INuGetXmlHelper } from "../nuget/INuGetXmlHelper";
+import { InternalAuthInfo, IPackageSourceBase, IPackageSource, NuGetExtendedAuthInfo } from "../nuget/Authentication";
 
 class MockedTask {
     private _proxyUrl: string;
     private _proxyUsername: string;
     private _proxyPassword: string;
+
+    public debug(message: string) {}
+    public loc(message: string): string { return message; }
 
     public setMockedValues(proxyUrl?: string, proxyUsername?: string, proxyPassword?: string) {
         this._proxyUrl = proxyUrl;
@@ -21,6 +25,8 @@ class MockedTask {
                 return this._proxyUsername;
             case "agent.proxypassword":
                 return this._proxyPassword;
+            case "Task.DisplayName":
+                return "NuGet Test"
             default:
                 return undefined;
         }
@@ -83,6 +89,113 @@ export function nugetcommon() {
         let httpProxy: string = ngToolRunner.getNuGetProxyFromEnvironment();
         assert.strictEqual(httpProxy, `http://${mockedUsername}:${mockedPassword}@proxy/`);
 
+        done();
+    });
+
+    it("getSourcesFromTempNuGetConfig sets isInternal", (done: MochaDone) => {    
+        let packageSourceBase: IPackageSourceBase[];
+        mockery.registerMock("./Utility", {
+            getSourcesFromNuGetConfig: () => packageSourceBase
+        });
+
+        let ngConfig = require("../nuget/NuGetConfigHelper2");
+
+        packageSourceBase = [
+            { feedName: "SourceName", feedUri: "http://source/foo" },
+            { feedName: "SourceCredentials", feedUri: "http://credentials/foo" }
+        ];
+
+        let intAuthInfo = new InternalAuthInfo(
+            ["http://credentials", "http://other"],
+            "",
+            "",
+            true
+        );
+        let authInfo = new NuGetExtendedAuthInfo(intAuthInfo);
+        let configHelper = new ngConfig.NuGetConfigHelper2("nuget.exe", "nuget.config", authInfo, {}, "temp", false);
+
+        let sources: IPackageSource[] = configHelper.getSourcesFromTempNuGetConfig();
+        assert.strictEqual(sources.length, 2);
+        assert.strictEqual(sources[0].feedName, "SourceName");
+        assert.strictEqual(sources[0].isInternal, false);
+        assert.strictEqual(sources[1].feedName, "SourceCredentials");
+        assert.strictEqual(sources[1].isInternal, true);
+        done();
+    });
+
+    it("getSourcesFromNuGetConfig gets sources", (done: MochaDone) => {    
+        let configFile: string;
+        mockery.registerMock("fs", {
+            readFileSync: () => configFile
+        });
+
+        let ngutil = require("../nuget/Utility");
+
+        configFile = `
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <packageSources>
+        <add key="NameOnly"/>  
+        <add key="SourceName" value="http://source/"/>
+        <add value="ValueOnly"/>
+        <add key="SourceCredentials" value="http://credentials"/>
+    </packageSources>
+    <packageSourceCredentials>
+        <SourceCredentials>
+            <add key="Username" value="foo"/>
+            <add key="ClearTextPassword" value="bar"/>
+        </SourceCredentials>
+    </packageSourceCredentials>
+</configuration>
+`;
+
+        let sources: IPackageSourceBase[] = ngutil.getSourcesFromNuGetConfig("nuget.config");
+        assert.strictEqual(sources.length, 2);
+        assert.strictEqual(sources[0].feedName, "SourceName");
+        assert.strictEqual(sources[0].feedUri, "http://source/");
+        assert.strictEqual(sources[1].feedName, "SourceCredentials");
+        assert.strictEqual(sources[1].feedUri, "http://credentials");
+        done();
+    });
+
+    it("getSourcesFromNuGetConfig recognises package.config files", (done: MochaDone) => {    
+        let configFile: string;
+        mockery.registerMock("fs", {
+            readFileSync: () => configFile
+        });
+
+        let ngutil = require("../nuget/Utility");
+
+        configFile = `
+<?xml version="1.0" encoding="utf-8"?>
+<packages>
+  <package id="jQuery" version="3.1.1" targetFramework="net46" />
+  <package id="NLog" version="4.3.10" targetFramework="net46" />
+</packages>
+`;
+
+        assert.throws(() => ngutil.getSourcesFromNuGetConfig("nuget.config"), /NGCommon_NuGetConfigIsPackagesConfig/);
+        done();
+    });
+
+    it("getSourcesFromNuGetConfig recognises invalid nuget.config files", (done: MochaDone) => {    
+        let configFile: string;
+        mockery.registerMock("fs", {
+            readFileSync: () => configFile
+        });
+
+        let ngutil = require("../nuget/Utility");
+
+        configFile = `
+<?xml version="1.0" encoding="utf-8"?>
+<foo />
+`;
+        assert.throws(() => ngutil.getSourcesFromNuGetConfig("nuget.config"), /NGCommon_NuGetConfigIsInvalid/);
+
+        configFile = `
+not xml
+`;
+        assert.throws(() => ngutil.getSourcesFromNuGetConfig("nuget.config"), /NGCommon_NuGetConfigIsInvalid/);
         done();
     });
 

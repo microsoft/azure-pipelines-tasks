@@ -186,7 +186,7 @@ export async function run(nuGetPath: string): Promise<void> {
 
         if (!useV2CredProvider && !configFile) {
             // Setting creds in the temp NuGet.config if needed
-            await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
+            nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
             tl.debug('Setting nuget.config auth');
         } else {
             // In case of !!useV2CredProvider, V2 credential provider will handle external credentials
