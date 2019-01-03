@@ -517,12 +517,13 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         }
     });
 
-    /* it('Should retry if JenkinsClient encounters an error', (done) => {
+    it('Should retry if JenkinsClient encounters an error', (done) => {
         const tp: string = path.join(__dirname, 'L0ShouldRetryCorrectlyWhenErrorHappens.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
             tr.run();
+            console.log(`kalyan here ${tr.stdout}`);
 
             let expectedMessage: string = "RetryingOperation DownloadJsonContent 1";
             assert(tr.stdout.indexOf(expectedMessage) != -1, tr.stdout);
@@ -534,5 +535,5 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             console.log(err);
             done(err);
         }
-    }); */
+    });
 });
