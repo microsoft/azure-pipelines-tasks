@@ -4,49 +4,58 @@ import path = require('path');
 import fs = require("fs");
 import * as utils from "./../utilities";
 import Q = require('q');
-import { IExecOptions } from 'vsts-task-lib/toolrunner';
+import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import kubectlutility = require("utility-common/kubectlutility");
+import { Kubectl } from "utility-common/kubectl-object-model";
 
 var kubectlPath = "";
-var annotationPromises = [];
+var execResults: IExecSyncResult[] = [];
 
 export async function deploy() {
-    annotationPromises = [];
+    execResults = [];
     let containers = tl.getDelimitedInput("containers", "\n");
     let files = getCommandConfigurationFiles(tl.getInput("manifests", true), containers);
     if (files === []) {
         throw ("No file found with matching pattern");
     }
 
+    let kubectl = new Kubectl(await getKubectl(), tl.getInput("namespace", false));
+
     for (let i = 0; i < files.length; i++) {
         let filePath = files[i];
-        let results = await apply(filePath);
+        let results = kubectl.apply(filePath);
         if (results.stderr) {
             tl.setResult(tl.TaskResult.Failed, results.stderr);
             break;
         }
         var types = results.stdout.split("\n");
-        annotationPromises = [annotate(filePath)];
+        execResults = [kubectl.annotate("-f", filePath, getAnnotations(), true)];
+        types.forEach(line => {
+            let words = line.split(" ");
+            if (recognizedWorkloadTypes.filter(type => words[0].startsWith(type)).length > 0) {
+                annotateResourceSets(kubectl, words[0], words[1].trim());
+            }
+        });
+
         if (tl.getBoolInput("checkManifestStability")) {
             types.forEach(line => {
                 let words = line.split(" ");
                 if (recognizedWorkloadTypes.filter(type => words[0].startsWith(type)).length > 0) {
-                    annotationPromises.push(checkRolloutStatus(words[0], words[1].trim()));
+                    execResults.push(kubectl.checkRolloutStatus(words[0], words[1].trim()));
                 }
             });
         }
-        types.forEach(line => {
-            let words = line.split(" ");
-            if (recognizedWorkloadTypes.filter(type => words[0].startsWith(type)).length > 0) {
-                annotateResourceSets(words[0], words[1].trim());
-            }
-        });
+
 
     }
-    if (annotationPromises.length != 0) {
-        let results = await Q.all(annotationPromises);
-        let sum = results.reduce((a, b) => a + b, 0);
-        if (sum > 0) {
+    if (execResults.length != 0) {
+        var stderr = "";
+        execResults.forEach(result => {
+            if (result.stderr) {
+                stderr += result.stderr + "\n";
+            }
+        });
+        if (stderr.length > 0) {
             tl.setResult(tl.TaskResult.Failed, "Annotations failed");
         }
     }
@@ -103,96 +112,29 @@ function replaceAllTokens(currentString: string, replaceToken, replaceValue) {
     return replaceAllTokens(newString, replaceToken, replaceValue);
 }
 
-async function apply(configurationPath: string) {
-    var command = tl.tool(await getKubectl());
-    command.arg("apply");
-    command.arg(getNameSpace());
-    command.arg(["-f", configurationPath]);
-    return command.execSync();
-}
-
-async function annotate(configurationPath?: string, podName?: string) {
-    var command = tl.tool(await getKubectl());
-    command.arg("annotate");
-    command.arg(getNameSpace());
-    if (!!configurationPath) command.arg(["-f", configurationPath]);
-    if (!!podName) command.arg(["pod", podName]);
-    command.arg(`azure-pipelines/execution=${tl.getVariable("Build.BuildNumber")}`)
-    command.arg(`azure-pipelines/pipeline="${tl.getVariable("Build.DefinitionName")}"`)
-    command.arg(`azure-pipelines/executionuri=${tl.getVariable("System.TeamFoundationCollectionUri")}_build/results?buildId=${tl.getVariable("Build.BuildId")}`)
-    command.arg(`azure-pipelines/project=${tl.getVariable("System.TeamProject")}`)
-    command.arg(`azure-pipelines/org=${tl.getVariable("System.CollectionId")}`)
-    command.arg(`--overwrite`)
-    return await command.exec();
-}
-
-async function annotateResourceSets(type, name) {
+async function annotateResourceSets(kubectl: Kubectl, type, name) {
     if (type.indexOf("pod") > -1) {
         return;
     }
 
     var owner = name;
     if (type.indexOf("deployment") > -1) {
-        owner = getNewReplicaSet(name);
+        owner = kubectl.getNewReplicaSet(name);
     }
 
-    var allPods = JSON.parse((await getAllPods()).stdout);
+    var allPods = JSON.parse((kubectl.getAllPods()).stdout);
     if (!!allPods && !!allPods["items"] && allPods["items"].length > 0) {
         allPods["items"].forEach((pod) => {
             let owners = pod["metadata"]["ownerReferences"];
             if (!!owners) {
                 owners.forEach(ownerRef => {
                     if (ownerRef["name"] == owner) {
-                        annotationPromises.push(annotate(null, pod["metadata"]["name"]));
+                        execResults.push(kubectl.annotate("pod", pod["metadata"]["name"], getAnnotations(), true));
                     }
                 });
             }
         });
     }
-}
-
-async function getNewReplicaSet(deployment) {
-    var command = tl.tool(await getKubectl());
-    command.arg("describe");
-    command.arg(getNameSpace());
-    command.arg(["deployment", deployment]);
-    let stdout = command.execSync({ silent: true } as IExecOptions).stdout.split("\n");
-    let newReplicaSet = "";
-    stdout.forEach((line: string) => {
-        if (line.indexOf("newreplicaset") > -1) {
-            newReplicaSet = line.substr(14).trim().split(" ")[0];
-        }
-    });
-
-    return newReplicaSet;
-}
-
-async function getAllPods() {
-    var command = tl.tool(await getKubectl());
-    command.arg("get");
-    command.arg(getNameSpace());
-    command.arg("pods");
-    command.arg(["-o", "json"])
-    return command.execSync({ silent: true } as IExecOptions);
-}
-
-function getNameSpace(): string[] {
-    var args: string[] = [];
-    var namespace = tl.getInput("namespace", false);
-    if (namespace) {
-        args[0] = "-n";
-        args[1] = namespace;
-    }
-
-    return args;
-}
-
-async function checkRolloutStatus(resourceType, name) {
-    var command = tl.tool(await getKubectl());
-    command.arg(["rollout", "status"]);
-    command.arg(resourceType + "/" + JSON.parse(name));
-    command.arg(getNameSpace());
-    return command.execSync();
 }
 
 var recognizedWorkloadTypes = ["deployment", "replicaset", "daemonset", "pod", "statefulset"];
@@ -206,4 +148,14 @@ async function getKubectl(): Promise<string> {
         kubectlPath = await kubectlutility.downloadKubectl(await kubectlutility.getStableKubectlVersion());
         return Promise.resolve(kubectlPath);
     }
+}
+
+function getAnnotations(): string[] {
+    return [
+        `azure-pipelines/execution=${tl.getVariable("Build.BuildNumber")}`,
+        `azure-pipelines/pipeline="${tl.getVariable("Build.DefinitionName")}"`,
+        `azure-pipelines/executionuri=${tl.getVariable("System.TeamFoundationCollectionUri")}_build/results?buildId=${tl.getVariable("Build.BuildId")}`,
+        `azure-pipelines/project=${tl.getVariable("System.TeamProject")}`,
+        `azure-pipelines/org=${tl.getVariable("System.CollectionId")}`
+    ];
 }

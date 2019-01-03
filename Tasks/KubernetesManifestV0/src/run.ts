@@ -1,25 +1,22 @@
 "use strict";
 import tl = require('vsts-task-lib/task');
 import path = require('path');
-import fs = require("fs");
-import ClusterConnection from "./connections/clusterconnection";
 import { deploy } from "./actions/deploy";
 import { bake } from "./actions/bake";
+import { Connection } from "./connection";
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
-function run() {
+function run(): Promise<void> {
     let action = tl.getInput("action");
     switch (action) {
         case "bake":
             return bake()
         case "deploy":
-            var kubeconfigfilePath = tl.getVariable("KUBECONFIG");
-            // open kubectl connection and run the command
-            var connection = new ClusterConnection(kubeconfigfilePath);
-            return connection.login()
+            let connection = new Connection(!!tl.getVariable("KUBECONFIG"))
+            return connection.open()
                 .then(() => deploy())
-                .then(() => connection.close(!kubeconfigfilePath))
+                .then(() => connection.close())
         default:
             throw new Error("Not supported");
     }

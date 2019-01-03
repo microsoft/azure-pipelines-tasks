@@ -35,10 +35,9 @@
             "name": "connectionType",
             "type": "pickList",
             "label": "Service connection type",
-            "defaultValue": "Azure Resource Manager",
+            "defaultValue": "Kubernetes Service Connection",
             "required": true,
             "options": {
-                "Azure Resource Manager": "Azure Resource Manager",
                 "Kubernetes Service Connection": "Kubernetes Service Connection",
                 "None": "None"
             },
@@ -55,47 +54,11 @@
             "required": true
         },
         {
-            "name": "azureSubscriptionEndpoint",
-            "type": "connectedService:AzureRM",
-            "label": "Azure subscription",
-            "helpMarkDown": "Select the Azure Resource Manager subscription, which contains Azure Container Registry.Note: To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button.",
-            "visibleRule": "connectionType = Azure Resource Manager",
-            "defaultValue": "",
-            "groupName": "kubernetesCluster",
-            "required": true
-        },
-        {
-            "name": "azureResourceGroup",
-            "label": "Resource group",
-            "type": "pickList",
-            "helpMarkDown": "Select an Azure resource group.",
-            "visibleRule": "connectionType = Azure Resource Manager",
-            "defaultValue": "",
-            "required": true,
-            "groupName": "kubernetesCluster",
-            "properties": {
-                "EditableOptions": "True"
-            }
-        },
-        {
-            "name": "kubernetesCluster",
-            "label": "Kubernetes cluster",
-            "type": "pickList",
-            "helpMarkDown": "Select an Azure managed cluster.",
-            "visibleRule": "connectionType = Azure Resource Manager",
-            "defaultValue": "",
-            "required": true,
-            "groupName": "kubernetesCluster",
-            "properties": {
-                "EditableOptions": "True"
-            }
-        },
-        {
             "name": "namespace",
             "type": "string",
             "label": "Namespace",
-            "required": false,
-            "defaultValue": "",
+            "required": true,
+            "defaultValue": "default",
             "groupName": "kubernetesCluster",
             "helpMarkDown": "Set the namespace for the kubectl command by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
         },
@@ -201,7 +164,7 @@
     ],
     "execution": {
         "Node": {
-            "target": "src//kubernetes.js"
+            "target": "src//run.js"
         }
     },
     "messages": {
