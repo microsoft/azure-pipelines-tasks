@@ -30,7 +30,9 @@ async function main(): Promise<void> {
 	var credentialHandler = vsts.getBearerHandler(accessToken);
 	var vssConnection = new vsts.WebApi(collectionUrl, credentialHandler);
 	var coreApi = vssConnection.getCoreApi();
-	var retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : 4;
+	const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
+    const retryLimit: number = (!!retryLimitValue && !isNaN(parseInt(retryLimitValue))) ? parseInt(retryLimitValue) : 4;
+    tl.debug(`RetryLimit set to ${retryLimit}`);
 
 	await executeWithRetries("downloadPackage", () => downloadPackage(collectionUrl, accessToken, credentialHandler, feedId, packageId, version, downloadPath).catch((reason) => {
 		throw reason;

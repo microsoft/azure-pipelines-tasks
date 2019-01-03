@@ -102,7 +102,7 @@
         "ExtractingNugetPackage": "Extracting NuGet package %s to directory %s",
         "PackageTypeNotSupported": "Only NuGet packages types can be downloaded using this task.",
         "ExtractionFailed": "Failed to extract package with error %s",
-        "RetryingOperation" : "Error: in %s, so retrying => retries pending  : %s",
+        "RetryingOperation" : "Error: in %s, so retrying => retries pending: %s",
         "OperationFailed": "Failed in %s with error: %s"
     }
 }
