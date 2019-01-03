@@ -111,7 +111,8 @@ var getTasksToBuildForPR = function() {
             sourceBranch = sourceBranch.split(':')[1];
         }
         run('git fetch origin pull/' + prId + '/head:' + sourceBranch);
-        run ('git checkout ' + sourceBranch);
+        run('git checkout master');
+        run('git checkout ' + sourceBranch);
     }
     catch (err) {
         // If unable to reach github, build everything.
