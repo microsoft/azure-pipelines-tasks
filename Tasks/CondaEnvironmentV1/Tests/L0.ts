@@ -13,6 +13,10 @@ describe('CondaEnvironment L0 Suite', function () {
     describe('conda_internal.ts', function () {
         require('./L0_conda_internal');
     });
+    
+    it('This test should fail if ci is working', function () {
+        assert(1==0);
+    })
 
     it('succeeds when creating and activating an environment', function () {
         const testFile = path.join(__dirname, 'L0CreateEnvironment.js');
