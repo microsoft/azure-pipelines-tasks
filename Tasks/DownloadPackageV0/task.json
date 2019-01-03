@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 17
+        "Patch": 18
     },
     "demands": [],
     "minimumAgentVersion": "1.99.0",
@@ -101,6 +101,8 @@
         "StartingDownloadOfPackage": "Starting download of NuGet package %s to location %s",
         "ExtractingNugetPackage": "Extracting NuGet package %s to directory %s",
         "PackageTypeNotSupported": "Only NuGet packages types can be downloaded using this task.",
-        "ExtractionFailed": "Failed to extract package with error %s"
+        "ExtractionFailed": "Failed to extract package with error %s",
+        "RetryingOperation" : "Error: in %s, so retrying => retries pending: %s",
+        "OperationFailed": "Failed in %s with error: %s"
     }
 }
