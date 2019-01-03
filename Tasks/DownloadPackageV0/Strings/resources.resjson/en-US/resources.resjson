@@ -18,5 +18,7 @@
   "loc.messages.StartingDownloadOfPackage": "Starting download of NuGet package %s to location %s",
   "loc.messages.ExtractingNugetPackage": "Extracting NuGet package %s to directory %s",
   "loc.messages.PackageTypeNotSupported": "Only NuGet packages types can be downloaded using this task.",
-  "loc.messages.ExtractionFailed": "Failed to extract package with error %s"
+  "loc.messages.ExtractionFailed": "Failed to extract package with error %s",
+  "loc.messages.RetryingOperation": "Error: in %s, so retrying => retries pending  : %s",
+  "loc.messages.OperationFailed": "Failed in %s with error: %s"
 }
