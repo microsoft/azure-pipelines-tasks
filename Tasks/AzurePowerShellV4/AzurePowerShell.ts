@@ -3,6 +3,7 @@ import path = require('path');
 import os = require('os');
 import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
+import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
 var uuidV4 = require('uuid/v4');
 
 async function run() {
@@ -27,41 +28,41 @@ async function run() {
         let _vsts_input_errorActionPreference: string = tl.getInput('errorActionPreference', false) || 'Stop';
         let _vsts_input_failOnStandardError = tl.getBoolInput('FailOnStandardError', false);
         let targetAzurePs: string = tl.getInput('TargetAzurePs', false);
-      //  let serviceName = tl.getInput('ConnectedServiceNameARM',/*required*/true);
-       // let endpoint = tl.getInput('serviceName',/*required*/true);
+        let serviceName = tl.getInput('ConnectedServiceNameARM',/*required*/true);
+        console.log("Service Name isssssssssssssssssssssssssssss ",serviceName);
+        //let endpoint= await new AzureRMEndpoint(serviceName).getEndpoint();
+        //console.log("Endpoint Name isssssssssssssssssssssssssssss ",endpoint);
        
-        let runScriptFilePath = 'D:\azure-pipelines-tasks\Tasks\AzurePowerShellV4\RunScript2.ps1';
-        let runScriptArgument = '-azurePowerShellVersion ' + targetAzurePs;
+        //let runScriptFilePath = 'D:\azure-pipelines-tasks\Tasks\AzurePowerShellV4\RunScript2.ps1';
+        //let runScriptArgument = '-azurePowerShellVersion ' + targetAzurePs;
 
-     //   if (scriptType.toUpperCase() == 'SCRIPTTYPE') {
-      //      if (!tl.stats(scriptPath).isFile() || !scriptPath.toUpperCase().match(/\.PS1$/)) {
-      //          throw new Error(tl.loc('JS_InvalidFilePath', scriptPath));
-    //        }
-     //   }
-     //   else {
-            scriptInline = tl.getInput('Inline', false) || '';
-    //    }
+        if (scriptType.toUpperCase() == 'SCRIPTTYPE') {
+            if (!tl.stats(scriptPath).isFile() || !scriptPath.toUpperCase().match(/\.PS1$/)) {
+                throw new Error(tl.loc('JS_InvalidFilePath', scriptPath));
+            }
+        }
 
         // Generate the script contents.
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`);
-        contents.push(`. '${runScriptFilePath.replace("'", "''")}' ${runScriptArgument}`.trim());
+       
+        //contents.push(`. '${runScriptFilePath.replace("'", "''")}' ${runScriptArgument}`.trim());
 
-       // if (scriptType.toUpperCase() == 'SCRIPTTYPE') {
-      //      contents.push(`. '${runScriptFilePath.replace("'", "''")}' ${runScriptArgument}`.trim());
-        //    console.log(tl.loc('JS_FormattedCommand', contents[contents.length - 1]));
-      //  }
-      //  else {
-     //       contents.push(scriptInline);
-     //   }
+        if (scriptType.toUpperCase() == 'SCRIPTTYPE') {
+            contents.push(`. '${scriptPath.replace("'", "''")}' ${scriptArguments}`.trim());
+            console.log(tl.loc('JS_FormattedCommand', contents[contents.length - 1]));
+        }
+        else {
+            contents.push(scriptInline);
+        }
 
         // Write the script to disk.
         tl.assertAgent('2.115.0');
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
-        console.log("FilePath ",filePath);
+        console.log("FilePathhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh ",filePath);
         await fs.writeFile(
             filePath,
             '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
@@ -78,6 +79,8 @@ async function run() {
             .arg('-NoLogo')
             .arg('-NoProfile')
             .arg('-NonInteractive')
+            .arg('-ExecutionPolicy')
+            .arg('Unrestricted')
             .arg('-Command')
             .arg(`. '${filePath.replace("'", "''")}'`);
         let options = <tr.IExecOptions>{

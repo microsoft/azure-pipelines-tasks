@@ -17,7 +17,7 @@
   "version": {
     "Major": 4,
     "Minor": 0,
-    "Patch": 61
+    "Patch": 75
   },
   "preview": true,
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -147,12 +147,6 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell3": {
-      "target": "AzurePowerShell.ps1",
-      "platforms": [
-        "windows"
-      ]
-    },
     "Node": {
       "target": "AzurePowerShell.js"
     }
