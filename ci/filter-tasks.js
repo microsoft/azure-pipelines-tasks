@@ -118,7 +118,6 @@ var getTasksToBuildForPR = function() {
         console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=112;]Unable to reach github, building all tasks', err);
         return makeOptions.tasks;
     }
-    run('git checkout master');
     run('git diff --name-only master..' + sourceBranch).split('\n').forEach(filePath => {
         if (filePath.slice(0, 5) == 'Tasks') {
             var taskPath = filePath.slice(6);
