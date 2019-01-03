@@ -11,8 +11,8 @@
         "Minor": 1,
         "Patch": 18
   },
-  "demands": [],
-  "minimumAgentVersion": "1.99.0",
+    "demands": [],
+    "minimumAgentVersion": "1.99.0",
     "inputs": [
         {
             "name": "feed",
@@ -93,16 +93,16 @@
             "argumentFormat": ""
         }
     },
-  "messages": {
-    "FailedToGetPackageMetadata": "Failed to get package metadata with error %s",
-    "FailedToDownloadNugetPackage": "Failed to download NuGet package from %s got the following error: %s",
-    "PackageDownloadSuccessful": "Package download successful",
-    "CredentialsNotFound": "Could not determine credentials to connect to Package Management service.",
-    "StartingDownloadOfPackage": "Starting download of NuGet package %s to location %s",
-    "ExtractingNugetPackage": "Extracting NuGet package %s to directory %s",
-    "PackageTypeNotSupported": "Only NuGet packages types can be downloaded using this task.",
-    "ExtractionFailed": "Failed to extract package with error %s",
-    "RetryingOperation" : "Error: in %s, so retrying => retries pending  : %s",
-    "OperationFailed": "Failed in %s with error: %s"
-  }
+    "messages": {
+        "FailedToGetPackageMetadata": "Failed to get package metadata with error %s",
+        "FailedToDownloadNugetPackage": "Failed to download NuGet package from %s got the following error: %s",
+        "PackageDownloadSuccessful": "Package download successful",
+        "CredentialsNotFound": "Could not determine credentials to connect to Package Management service.",
+        "StartingDownloadOfPackage": "Starting download of NuGet package %s to location %s",
+        "ExtractingNugetPackage": "Extracting NuGet package %s to directory %s",
+        "PackageTypeNotSupported": "Only NuGet packages types can be downloaded using this task.",
+        "ExtractionFailed": "Failed to extract package with error %s",
+        "RetryingOperation" : "Error: in %s, so retrying => retries pending  : %s",
+        "OperationFailed": "Failed in %s with error: %s"
+    }
 }
