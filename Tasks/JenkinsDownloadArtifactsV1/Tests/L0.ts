@@ -83,7 +83,7 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         }
     });
 
-    it('Should download commits from legacy project build', (done) => {
+    /* it('Should download commits from legacy project build', (done) => {
 
         const tp: string = path.join(__dirname, 'L0ShouldDownloadCommitsFromLegacyProjectBuild.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -535,5 +535,5 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             console.log(err);
             done(err);
         }
-    });
+    }); */
 });
