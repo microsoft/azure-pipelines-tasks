@@ -8,6 +8,8 @@ var includeRootFolder: boolean = tl.getBoolInput('includeRootFolder', true);
 var archiveType: string = tl.getInput('archiveType', true);
 var archiveFile: string = path.normalize(tl.getPathInput('archiveFile', true, false).trim());
 var replaceExistingArchive: boolean = tl.getBoolInput('replaceExistingArchive', true);
+var verbose: boolean = tl.getBoolInput('verbose', false);
+var quiet: boolean = tl.getBoolInput('quiet', false);
 
 tl.debug('repoRoot: ' + repoRoot);
 
@@ -79,6 +81,10 @@ function sevenZipArchive(archive: string, compression: string, files: string[]) 
     var sevenZip = tl.createToolRunner(getSevenZipLocation());
     sevenZip.arg('a');
     sevenZip.arg('-t' + compression);
+    if (verbose) {
+        // Set highest logging level
+        sevenZip.arg('-bb3');
+    }
     sevenZip.arg(archive);
     for (var i = 0; i < files.length; i++) {
         sevenZip.arg(files[i]);
@@ -94,6 +100,13 @@ function zipArchive(archive: string, files: string[]) {
     }
     var zip = tl.createToolRunner(xpZipLocation);
     zip.arg('-r');
+    // Verbose gets priority over quiet
+    if (verbose) {
+        zip.arg('-v');
+    }
+    else if (quiet) {
+        zip.arg('-q');
+    }
     zip.arg(archive);
     for (var i = 0; i < files.length; i++) {
         zip.arg(files[i]);
@@ -113,6 +126,9 @@ function tarArchive(archive: string, compression: string, files: string[]) {
         tar.arg('-r'); // append files to existing tar
     } else {
         tar.arg('-c'); // create new tar otherwise
+    }
+    if (verbose) {
+        tar.arg('-v');
     }
     if (compression) {
         tar.arg('--' + compression);
