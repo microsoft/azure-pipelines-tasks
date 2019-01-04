@@ -4,6 +4,7 @@ import os = require('os');
 import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
 import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
+import { AzureEndpoint } from 'azure-arm-rest/azureModels';
 var uuidV4 = require('uuid/v4');
 
 async function run() {
@@ -29,14 +30,15 @@ async function run() {
         let _vsts_input_failOnStandardError = tl.getBoolInput('FailOnStandardError', false);
         let targetAzurePs: string = tl.getInput('TargetAzurePs', false);
         let serviceName = tl.getInput('ConnectedServiceNameARM',/*required*/true);
-        console.log("Service Name isssssssssssssssssssssssssssss ",serviceName);
         //let endpoint= await new AzureRMEndpoint(serviceName).getEndpoint();
+
+        //var endpoint: AzureEndpoint = await (new AzureRMEndpoint(serviceName)).getEndpoint();
         //console.log("Endpoint Name isssssssssssssssssssssssssssss ",endpoint);
        
         //let runScriptFilePath = 'D:\azure-pipelines-tasks\Tasks\AzurePowerShellV4\RunScript2.ps1';
         //let runScriptArgument = '-azurePowerShellVersion ' + targetAzurePs;
 
-        if (scriptType.toUpperCase() == 'SCRIPTTYPE') {
+        if (scriptType.toUpperCase() == 'FILEPATH') {
             if (!tl.stats(scriptPath).isFile() || !scriptPath.toUpperCase().match(/\.PS1$/)) {
                 throw new Error(tl.loc('JS_InvalidFilePath', scriptPath));
             }
@@ -49,7 +51,7 @@ async function run() {
        
         //contents.push(`. '${runScriptFilePath.replace("'", "''")}' ${runScriptArgument}`.trim());
 
-        if (scriptType.toUpperCase() == 'SCRIPTTYPE') {
+        if (scriptType.toUpperCase() == 'FILEPATH') {
             contents.push(`. '${scriptPath.replace("'", "''")}' ${scriptArguments}`.trim());
             console.log(tl.loc('JS_FormattedCommand', contents[contents.length - 1]));
         }
@@ -62,7 +64,9 @@ async function run() {
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
-        console.log("FilePathhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh ",filePath);
+        let filePath3 = path.join(path.resolve(__dirname), 'RunScript2.ps1');
+
+
         await fs.writeFile(
             filePath,
             '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
@@ -83,14 +87,26 @@ async function run() {
             .arg('Unrestricted')
             .arg('-Command')
             .arg(`. '${filePath.replace("'", "''")}'`);
+
+        let powershell2 = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
+            .arg('-NoLogo')
+            .arg('-NoProfile')
+            .arg('-NonInteractive')
+            .arg('-ExecutionPolicy')
+            .arg('Unrestricted')
+            .arg('-Command')
+            .arg(`. '${filePath3.replace("'", "''")}'`);
+
         let options = <tr.IExecOptions>{
             errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
             outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
             ignoreReturnCode: true
         };
 
+
         // Run bash.
         let exitCode: number = await powershell.exec(options);
+        let exitCode2: number = await powershell2.exec(options);
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
