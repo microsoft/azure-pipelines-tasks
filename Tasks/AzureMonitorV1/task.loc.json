@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -52,14 +52,14 @@
       "label": "ms-resource:loc.input.label.resource",
       "required": false,
       "properties": {
-        "MultiSelectFlatList": "True"
+        "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.resource"
     },
     {
-      "name": "severity ",
+      "name": "severity",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.severity ",
+      "label": "ms-resource:loc.input.label.severity",
       "required": false,
       "defaultValue": "Sev0,Sev1,Sev2,Sev3,Sev4",
       "options": {
@@ -73,7 +73,7 @@
         "MultiSelectFlatList": "True",
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.severity ",
+      "helpMarkDown": "ms-resource:loc.input.help.severity",
       "groupName": "advanced"
     },
     {
@@ -99,7 +99,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.alertState",
       "required": false,
-      "defaultValue": "Acknowledged,Closed,New",
+      "defaultValue": "New,Acknowledged,Closed",
       "options": {
         "New": "New",
         "Acknowledged": "Acknowledged",
@@ -133,7 +133,7 @@
     "HttpRequest": {
       "Execute": {
         "EndpointId": "$(connectedServiceNameARM)",
-        "EndpointUrl": "$(endpoint.url)/subscriptions/{{subscriptionId}}/providers/Microsoft.AlertsManagement/alerts?api-version=2018-05-05&monitorCondition=Fired&targetResourceGroup={{ResourceGroupName}}&timeRange={{timeRange}}&alertState={{alertState}}&severity={{severity}}{{#if resource}}&targetResource={{#splitAndIterate ',' resource}}/subscriptions/{{#..}}{{subscriptionId}}{{/..}}/resourcegroups/{{#..}}{{ResourceGroupName}}{{/..}}/providers/{{this}},{{/splitAndIterate}}{{/if}}",
+        "EndpointUrl": "$(endpoint.url)/subscriptions/{{subscriptionId}}/providers/Microsoft.AlertsManagement/alerts?api-version=2018-05-05&monitorCondition=Fired&targetResourceGroup=$(ResourceGroupName)&timeRange=$(timeRange)&alertState=$(alertState)&severity=$(severity){{#if resource}}&targetResource={{#splitAndIterate ',' resource}}/subscriptions/{{#..}}{{subscriptionId}}{{/..}}/resourcegroups/{{#..}}{{ResourceGroupName}}{{/..}}/providers/{{this}},{{/splitAndIterate}}{{/if}}",
         "Method": "GET",
         "Body": "",
         "Headers": "",
