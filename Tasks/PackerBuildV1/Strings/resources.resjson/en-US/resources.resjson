@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "JDG Build Machine Image",
+  "loc.friendlyName": "Build Machine Image",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=845329)",
-  "loc.description": "JDG Build machine image using Packer. This image can be used for Azure Virtual machine scale set deployment",
+  "loc.description": "Build machine image using Packer. This image can be used for Azure Virtual machine scale set deployment",
   "loc.instanceNameFormat": "Build immutable image",
   "loc.releaseNotes": "This task now supports managed disk images.",
   "loc.group.displayName.AzureDetails": "Azure Details",

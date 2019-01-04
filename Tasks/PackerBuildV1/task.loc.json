@@ -1,6 +1,6 @@
 {
-  "id": "14e5851b-8644-4146-ac85-5c8bef5a3efc",
-  "name": "JeremyPackerBuild",
+  "id": "845fd4f4-642d-4694-8514-047948a5a556",
+  "name": "PackerBuild",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -10,11 +10,11 @@
     "Build",
     "Release"
   ],
-  "author": "Jeremy Gray",
+  "author": "Microsoft Corporation",
   "version": {
-    "Major": 2,
+    "Major": 1,
     "Minor": 0,
-    "Patch": 58
+    "Patch": 4
   },
   "demands": [],
   "preview": "true",
