@@ -53,6 +53,7 @@ nock('https://example.test')
     .patch("/my_release_location", JSON.stringify({
         status: "available",
         release_notes: "my release notes",
+        mandatory_update: false,
         destinations: [{ id: "00000000-0000-0000-0000-000000000000" }],
         build: {
             id: '2',

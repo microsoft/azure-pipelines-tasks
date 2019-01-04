@@ -17,8 +17,8 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 127,
-        "Patch": 2
+        "Minor": 145,
+        "Patch": 0
     },
     "groups": [
         {
@@ -92,6 +92,24 @@
             "required": true,
             "defaultValue": "true",
             "helpMarkDown": "If an existing archive exists, specify whether to overwrite it.  Otherwise, files will be added to it.",
+            "groupName": "archive"
+        },
+        {
+            "name": "verbose",
+            "type": "boolean",
+            "label": "Force verbose output",
+            "required": false,
+            "defaultValue": false,
+            "helpMarkDown": "If set to true, forces tools to use verbose output. Overrides 'quiet'",
+            "groupName": "archive"
+        },
+        {
+            "name": "quiet",
+            "type": "boolean",
+            "label": "Force quiet output",
+            "required": false,
+            "defaultValue": false,
+            "helpMarkDown": "If set to true, forces tools to use quiet output. Can be overridden by 'verbose'",
             "groupName": "archive"
         }
     ],

@@ -119,7 +119,7 @@ export async function run(): Promise<void> {
         }
 
         // Setting creds in the temp NuGet.config if needed
-        await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
+        nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
 
         const configFile = nuGetConfigHelper.tempNugetConfigPath;
         const dotnetPath = tl.which('dotnet', true);

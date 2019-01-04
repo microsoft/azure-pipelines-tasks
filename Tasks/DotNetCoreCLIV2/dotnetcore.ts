@@ -114,7 +114,7 @@ export class dotNetExe {
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
         if (enablePublishTestResults && enablePublishTestResults === true) {
-            this.arguments = this.arguments.concat(` --logger trx --results-directory "${resultsDirectory}"`);
+            this.arguments = ` --logger trx --results-directory "${resultsDirectory}" `.concat(this.arguments);
         }
 
         // Remove old trx files

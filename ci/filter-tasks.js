@@ -111,15 +111,18 @@ var getTasksToBuildForPR = function() {
             sourceBranch = sourceBranch.split(':')[1];
         }
         run('git fetch origin pull/' + prId + '/head:' + sourceBranch);
-        run ('git checkout ' + sourceBranch);
+        run('git checkout master');
+        run('git checkout ' + sourceBranch);
     }
     catch (err) {
         // If unable to reach github, build everything.
         console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=112;]Unable to reach github, building all tasks', err);
         return makeOptions.tasks;
     }
-    run('git checkout master');
-    run('git diff --name-only master..' + sourceBranch).split('\n').forEach(filePath => {
+    var baseCommit = run('git merge-base ' + sourceBranch + ' master');
+    run('git --no-pager diff --name-only ' + sourceBranch + ' ' + baseCommit)
+        .split('\n')
+        .forEach(filePath => {
         if (filePath.slice(0, 5) == 'Tasks') {
             var taskPath = filePath.slice(6);
             if(taskPath.slice(0, 6) == 'Common') {
@@ -154,7 +157,7 @@ var setTaskVariables = function(tasks) {
     console.log('##vso[task.setVariable variable=numTasks]' + tasks.length);
 }
 
-var buildReason = 'pullrequest';//process.env['BUILD_REASON'].toLowerCase();
+var buildReason = process.env['BUILD_REASON'].toLowerCase();
 var tasks;
 if (buildReason == 'individualci' || buildReason == 'batchedci') {
     // If CI, we will compare any tasks that have updated versions.
