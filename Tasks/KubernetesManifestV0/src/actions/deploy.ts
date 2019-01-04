@@ -1,21 +1,17 @@
 "use strict";
+
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require("fs");
 import * as utils from "./../utilities";
-import Q = require('q');
 import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import kubectlutility = require("utility-common/kubectlutility");
-import { Kubectl } from "utility-common/kubectl-object-model";
-
-var kubectlPath = "";
-var execResults: IExecSyncResult[] = [];
+import { Kubectl, Resource } from "utility-common/kubectl-object-model";
 
 export async function deploy() {
-    execResults = [];
-    
+    let execResults = [];
     var files: string[] = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), tl.getInput("manifests", true));
-    
+
     if (files.length == 0) {
         throw ("No file found with matching pattern");
     }
@@ -25,32 +21,28 @@ export async function deploy() {
 
     let kubectl = new Kubectl(await getKubectl(), tl.getInput("namespace", false));
 
-    for (let i = 0; i < files.length; i++) {
-        let filePath = files[i];
-        let results = kubectl.apply(filePath);
-        if (results.stderr) {
-            tl.setResult(tl.TaskResult.Failed, results.stderr);
-            break;
-        }
-        var types = results.stdout.split("\n");
-        execResults = [kubectl.annotate("-f", filePath, getAnnotations(), true)];
-        types.forEach(line => {
-            let words = line.split(" ");
-            if (recognizedWorkloadTypes.filter(type => words[0].startsWith(type)).length > 0) {
-                annotateResourceSets(kubectl, words[0], words[1].trim());
-            }
-        });
-
-        if (tl.getBoolInput("checkManifestStability")) {
-            types.forEach(line => {
-                let words = line.split(" ");
-                if (recognizedWorkloadTypes.filter(type => words[0].startsWith(type)).length > 0) {
-                    execResults.push(kubectl.checkRolloutStatus(words[0], words[1].trim()));
-                }
-            });
-        }
+    let result = kubectl.apply(files);
+    if (result.stderr) {
+        tl.setResult(tl.TaskResult.Failed, result.stderr);
+        return;
     }
-    
+
+    let commandExecutions: IExecSyncResult[] = [];
+    commandExecutions.push(kubectl.annotateFiles(files, getAnnotations(), true));
+
+    let resourceTypes: Resource[] = kubectl.getResources(result.stdout, recognizedWorkloadTypes);
+    resourceTypes.forEach(resource => {
+        if (resource.type.indexOf("pods") == -1)
+            annotateChildPods(kubectl, resource.type, resource.name)
+                .forEach(execResult => commandExecutions.push(execResult));
+    });
+
+    if (tl.getBoolInput("checkManifestStability")) {
+        resourceTypes.forEach(resource => {
+            execResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
+        });
+    }
+
     if (execResults.length != 0) {
         var stderr = "";
         execResults.forEach(result => {
@@ -107,14 +99,11 @@ function replaceAllTokens(currentString: string, replaceToken, replaceValue) {
     return replaceAllTokens(newString, replaceToken, replaceValue);
 }
 
-async function annotateResourceSets(kubectl: Kubectl, type, name) {
-    if (type.indexOf("pod") > -1) {
-        return;
-    }
-
-    var owner = name;
-    if (type.indexOf("deployment") > -1) {
-        owner = kubectl.getNewReplicaSet(name);
+function annotateChildPods(kubectl: Kubectl, resourceType, resourceName): IExecSyncResult[] {
+    let commandExecutionResults = [];
+    var owner = resourceName;
+    if (resourceType.indexOf("deployment") > -1) {
+        owner = kubectl.getNewReplicaSet(resourceName);
     }
 
     var allPods = JSON.parse((kubectl.getAllPods()).stdout);
@@ -124,24 +113,23 @@ async function annotateResourceSets(kubectl: Kubectl, type, name) {
             if (!!owners) {
                 owners.forEach(ownerRef => {
                     if (ownerRef["name"] == owner) {
-                        execResults.push(kubectl.annotate("pod", pod["metadata"]["name"], getAnnotations(), true));
+                        commandExecutionResults.push(kubectl.annotate("pod", pod["metadata"]["name"], getAnnotations(), true));
                     }
                 });
             }
         });
     }
+
+    return commandExecutionResults;
 }
 
 var recognizedWorkloadTypes = ["deployment", "replicaset", "daemonset", "pod", "statefulset"];
 
 async function getKubectl(): Promise<string> {
-    if (kubectlPath) return Promise.resolve(kubectlPath);
-
     try {
         return Promise.resolve(tl.which("kubectl", true));
     } catch (ex) {
-        kubectlPath = await kubectlutility.downloadKubectl(await kubectlutility.getStableKubectlVersion());
-        return Promise.resolve(kubectlPath);
+        return kubectlutility.downloadKubectl(await kubectlutility.getStableKubectlVersion());
     }
 }
 

@@ -10,7 +10,7 @@
   "loc.input.label.kubernetesServiceEndpoint": "Kubernetes service connection",
   "loc.input.help.kubernetesServiceEndpoint": "Select a Kubernetes service connection.",
   "loc.input.label.namespace": "Namespace",
-  "loc.input.help.namespace": "Set the namespace for the kubectl command by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace.",
+  "loc.input.help.namespace": "Sets the namespace for the commands by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace.",
   "loc.input.label.action": "Action",
   "loc.input.help.action": "Manifests to deploy",
   "loc.input.label.manifests": "Manifests",
