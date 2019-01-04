@@ -126,7 +126,7 @@ var getTasksToBuildForPR = function() {
         return makeOptions.tasks;
     }
     var baseCommit = run('git merge-base ' + sourceBranch + ' master');
-    run('git --no-pager diff --name-only ' + sourceBranch + ' ' + baseCommit)
+    run('git --no-pager diff --name-only ' + baseCommit + ' ' + sourceBranch)
         .split('\n')
         .forEach(filePath => {
         if (filePath.slice(0, 5) == 'Tasks') {
