@@ -17,7 +17,7 @@ var getTasksToBuildForCI = async function() {
     var packageInfo;
     try {
         var packageToken = process.env['PACKAGE_TOKEN'];
-        if (!token) {
+        if (!packageToken) {
             console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=24;]Failed to get info from package endpoint because no token was provided. Try setting the PACKAGE_TOKEN environment variable.`);
             return makeOptions.tasks;
         }
