@@ -126,6 +126,17 @@ function prepareNuGetExeEnvironment(
 
         if (proxybypass) {
             tl.debug(`Adding environment variable for NuGet proxy bypass: ${proxybypass}`);
+
+            // check if there are any existing NO_PROXY values
+            let existingNoProxy = process.env["NO_PROXY"];
+            if (existingNoProxy) {
+                existingNoProxy = existingNoProxy.trimRight();
+                // trim trailing comma
+                existingNoProxy = existingNoProxy.endsWith(',') ? existingNoProxy.slice(0,-1) : existingNoProxy;
+                // append our bypass list
+                proxybypass = existingNoProxy + ',' + proxybypass;
+            }
+
             env["NO_PROXY"] = proxybypass;
         }
     }
