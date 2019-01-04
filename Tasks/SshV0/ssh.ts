@@ -66,13 +66,13 @@ async function run() {
                 tl.debug('No script header detected.  Adding: ' + bashHeader);
                 inlineScript = bashHeader + os.EOL + inlineScript;
             }
-            const scriptFileDir = os.tmpdir();
-            scriptFile = path.join(scriptFileDir, 'sshscript_' + new Date().getTime()); // default name
+            const tempDir = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
+            scriptFile = path.join(tempDir, 'sshscript_' + new Date().getTime()); // default name
             try {
                 // Make sure the directory exists or else we will get ENOENT
-                if (!fs.existsSync(scriptFileDir))
+                if (!fs.existsSync(tempDir))
                 {
-                    tl.mkdirP(scriptFileDir);
+                    tl.mkdirP(tempDir);
                 }
                 fs.writeFileSync(scriptFile, inlineScript);
             } catch (err) {
