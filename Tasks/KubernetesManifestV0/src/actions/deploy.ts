@@ -49,9 +49,8 @@ export async function deploy() {
                 }
             });
         }
-
-
     }
+    
     if (execResults.length != 0) {
         var stderr = "";
         execResults.forEach(result => {
@@ -60,7 +59,7 @@ export async function deploy() {
             }
         });
         if (stderr.length > 0) {
-            tl.setResult(tl.TaskResult.Failed, "Annotations failed");
+            tl.setResult(tl.TaskResult.Failed, stderr);
         }
     }
 }
