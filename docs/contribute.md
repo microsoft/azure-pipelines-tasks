@@ -127,19 +127,19 @@ node make.js testLegacy --task Xcode
 
 # Package
 
-After a local code update and testing, you should test any changes your Azure DevOps organization before submitting a pull request. 
+After a local code update and testing, you should test any changes in your Azure DevOps organization before submitting a pull request. 
 
 ## Prepare your organization
 In order to upload an extension directly to your Azure DevOps organization you must be an [administrator](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/pools-queues?view=vsts#security) of "All agent pools" or have a PAT token associated with an administrator.  
 
 ## Update metadata (optional)
-Update the GUID associated with the task in the `task.json` file, this will allow you to deloy changes side-by-side with the current production task in a specific organization under your control.  You may also choose to change other metadata to make it easier to distinguish your task from the production task provided by Microsoft ('friendlyName' or 'author').  The subsequent build will update the localization file task.loc.json during the build. 
+Update the GUID associated with the task in the `task.json` file, this will allow you to deloy changes side-by-side with the current production task in a specific organization under your control.  You may also choose to change other metadata to make it easier to distinguish your task from the production task provided by Microsoft ('friendlyName' or 'author').  Subsequent builds will migrate changes to the localization file, `task.loc.json`.
 
 ## Update the version number
 You will need to manually increment the version number in `tasks.json` in order to upload a new version.  If you forget this step, you can manually update the version numbers directly in the `_build` directory.  Note the version will need to be updated in `tasks.json` as well as `tasks.loc.json` if you do it after the build.
 
 ## Build the task
-Build the specific task using the [instructions above](#Build-a-specific-task-(recommended):).    
+Build the specific task using the [instructions above](#build-a-specific-task-recommended).    
 
 ## Deploy the task
 
