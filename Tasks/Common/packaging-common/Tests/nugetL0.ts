@@ -7,25 +7,29 @@ class MockedTask {
     private _proxyUrl: string;
     private _proxyUsername: string;
     private _proxyPassword: string;
+    private _proxyBypass: string;
 
     public debug(message: string) {}
     public loc(message: string): string { return message; }
 
-    public setMockedValues(proxyUrl?: string, proxyUsername?: string, proxyPassword?: string) {
+    public setMockedValues(proxyUrl?: string, proxyUsername?: string, proxyPassword?: string, proxyBypass?: string) {
         this._proxyUrl = proxyUrl;
         this._proxyUsername = proxyUsername;
         this._proxyPassword = proxyPassword;
+        this._proxyBypass = proxyBypass;
     }
 
     public getVariable(name: string) {
-        switch (name) {
+        switch (name.toLowerCase()) {
             case "agent.proxyurl":
                 return this._proxyUrl;
             case "agent.proxyusername":
                 return this._proxyUsername;
             case "agent.proxypassword":
                 return this._proxyPassword;
-            case "Task.DisplayName":
+            case "agent.proxybypasslist":
+                return this._proxyBypass;
+            case "task.displayname":
                 return "NuGet Test"
             default:
                 return undefined;
@@ -257,6 +261,36 @@ not xml
             '<configuration><packageSources><add key="Feed with spaces and :" value="http://credentials"/></packageSources><packageSourceCredentials><Feed_x0020_with_x0020_spaces_x0020_and_x0020__x003a_><add key="Username" value="foo"/><add key="ClearTextPassword" value="bar"/></Feed_x0020_with_x0020_spaces_x0020_and_x0020__x003a_></packageSourceCredentials></configuration>',
             'Helper should have added the "Feed with spaces" source with credentials');
         helper.RemoveSourceFromNuGetConfig("Feed with spaces");
+
+        done();
+    });
+
+    it("getProxyBypassForUri doesn't match regex", (done: MochaDone) => {
+        mockedTask.setMockedValues(mockedProxy, mockedUsername, mockedPassword, '["mydomain\.com"]');
+        let ngToolRunner = require("../nuget/NuGetToolRunner2");
+
+        let bypass: string = ngToolRunner.getProxyBypassForUri("http://pkgs.mydomain2.com/registry");
+        assert.strictEqual(bypass, undefined);
+
+        done();
+    });
+
+    it("getProxyBypassForUri matches regex", (done: MochaDone) => {
+        mockedTask.setMockedValues(mockedProxy, mockedUsername, mockedPassword, '["mydomain\.com"]');
+        let ngToolRunner = require("../nuget/NuGetToolRunner2");
+
+        let bypass: string = ngToolRunner.getProxyBypassForUri("http://pkgs.mydomain.com/registry");
+        assert.strictEqual(bypass, `pkgs.mydomain.com`);
+
+        done();
+    });
+
+    it("getProxyBypassForUri matches multiple regex", (done: MochaDone) => {
+        mockedTask.setMockedValues(mockedProxy, mockedUsername, mockedPassword, '["mydomain\.com", "pkgs\.mydomain\.com", "github\.com"]');
+        let ngToolRunner = require("../nuget/NuGetToolRunner2");
+
+        let bypass: string = ngToolRunner.getProxyBypassForUri("http://pkgs.mydomain.com/registry");
+        assert.strictEqual(bypass, `pkgs.mydomain.com`);
 
         done();
     });
