@@ -265,33 +265,86 @@ not xml
         done();
     });
 
-    it("getProxyBypassForUri doesn't match regex", (done: MochaDone) => {
+    it("getProxyBypassForUri doesn't match regex", () => {
         mockedTask.setMockedValues(mockedProxy, mockedUsername, mockedPassword, '["mydomain\.com"]');
         let ngToolRunner = require("../nuget/NuGetToolRunner2");
 
         let bypass: string = ngToolRunner.getProxyBypassForUri("http://pkgs.mydomain2.com/registry");
         assert.strictEqual(bypass, undefined);
-
-        done();
     });
 
-    it("getProxyBypassForUri matches regex", (done: MochaDone) => {
+    it("getProxyBypassForUri matches regex", () => {
         mockedTask.setMockedValues(mockedProxy, mockedUsername, mockedPassword, '["mydomain\.com"]');
         let ngToolRunner = require("../nuget/NuGetToolRunner2");
 
         let bypass: string = ngToolRunner.getProxyBypassForUri("http://pkgs.mydomain.com/registry");
         assert.strictEqual(bypass, `pkgs.mydomain.com`);
-
-        done();
     });
 
-    it("getProxyBypassForUri matches multiple regex", (done: MochaDone) => {
+    it("getProxyBypassForUri matches multiple regex", () => {
         mockedTask.setMockedValues(mockedProxy, mockedUsername, mockedPassword, '["mydomain\.com", "pkgs\.mydomain\.com", "github\.com"]');
         let ngToolRunner = require("../nuget/NuGetToolRunner2");
 
         let bypass: string = ngToolRunner.getProxyBypassForUri("http://pkgs.mydomain.com/registry");
         assert.strictEqual(bypass, `pkgs.mydomain.com`);
+    });
 
-        done();
+    it("getProxyBypassForConfig doesn't match regex", () => {
+        mockedTask.setMockedValues(mockedProxy, mockedUsername, mockedPassword, '["mydomain\.com", "pkgs\.mydomain\.com", "github\.com"]');
+
+        let packageSourceBase: IPackageSourceBase[];
+        mockery.registerMock("./Utility", {
+            getSourcesFromNuGetConfig: () => packageSourceBase
+        });
+
+        let ngToolRunner = require("../nuget/NuGetToolRunner2");
+
+        packageSourceBase = [
+            { feedName: "Foo", feedUri: "http://pkgs.foo.com/foo" },
+            { feedName: "Bar", feedUri: "http://pkgs.bar.com/_reg/" }
+        ];
+
+        let bypass: string = ngToolRunner.getProxyBypassForConfig("nuget.config");
+        assert.strictEqual(bypass, undefined);
+    });
+
+    it("getProxyBypassForConfig matches regex", () => {
+        mockedTask.setMockedValues(mockedProxy, mockedUsername, mockedPassword, '["foo\.com", "pkgs\.mydomain\.com", "github\.com"]');
+
+        let packageSourceBase: IPackageSourceBase[];
+        mockery.registerMock("./Utility", {
+            getSourcesFromNuGetConfig: () => packageSourceBase
+        });
+
+        let ngToolRunner = require("../nuget/NuGetToolRunner2");
+
+        packageSourceBase = [
+            { feedName: "Foo", feedUri: "http://pkgs.foo.com/foo" },
+            { feedName: "Bar", feedUri: "http://pkgs.bar.com/foo" },
+            { feedName: "Foo2", feedUri: "http://pkgs.foo.com/foo2/" }
+        ];
+
+        let bypass: string = ngToolRunner.getProxyBypassForConfig("nuget.config");
+        assert.strictEqual(bypass, `pkgs.foo.com`);
+    });
+
+    it("getProxyBypassForConfig matches regex for multiple hostnames", () => {
+        mockedTask.setMockedValues(mockedProxy, mockedUsername, mockedPassword, '["foo\.com", "bar\.com"]');
+
+        let packageSourceBase: IPackageSourceBase[];
+        mockery.registerMock("./Utility", {
+            getSourcesFromNuGetConfig: () => packageSourceBase
+        });
+
+        let ngToolRunner = require("../nuget/NuGetToolRunner2");
+
+        packageSourceBase = [
+            { feedName: "Foo", feedUri: "http://pkgs.foo.com/foo" },
+            { feedName: "Bar", feedUri: "http://pkgs.bar.com/foo" },
+            { feedName: "Foo2", feedUri: "http://pkgs.foo.com/foo2/" }
+        ];
+
+        let bypass: string = ngToolRunner.getProxyBypassForConfig("nuget.config");
+        assert.strictEqual(bypass, `pkgs.foo.com,pkgs.bar.com`, "NO_PROXY expects a comma separated list of host names");
     });
 }
