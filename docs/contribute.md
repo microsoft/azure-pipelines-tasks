@@ -78,17 +78,17 @@ the `_build` directory.  You can then use the tfx client to upload this to your 
 
 The build will also generate a `tasks.loc.json` and an english strings file under `Strings` in your source tree. You should check these back in. Another localization process will create the other strings files.
 
+## Build a specific task (recommended):
+
+```bash
+node make.js build --task ShellScript
+```
+
 ## Build All Tasks (this can take a while):
 
 ``` bash
 # build and test
 npm run build
-```
-
-## Build a specific task (recommended):
-
-```bash
-node make.js build --task ShellScript
 ```
 
 ## Run Tests
@@ -124,3 +124,32 @@ For a specific task
 ```bash
 node make.js testLegacy --task Xcode
 ```
+
+# Package
+
+After a local code update and testing, you should test any changes your Azure DevOps organization before submitting a pull request. 
+
+## Prepare your organization
+In order to upload an extension directly to your Azure DevOps organization you must be an [administrator](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/pools-queues?view=vsts#security) of "All agent pools" or have a PAT token associated with an administrator.  
+
+## Update metadata (optional)
+Update the GUID associated with the task in the `task.json` file, this will allow you to deloy changes side-by-side with the current production task in a specific organization under your control.  You may also choose to change other metadata to make it easier to distinguish your task from the production task provided by Microsoft ('friendlyName' or 'author').  The subsequent build will update the localization file task.loc.json during the build. 
+
+## Update the version number
+You will need to manually increment the version number in `tasks.json` in order to upload a new version.  If you forget this step, you can manually update the version numbers directly in the `_build` directory.  Note the version will need to be updated in `tasks.json` as well as `tasks.loc.json` if you do it after the build.
+
+## Build the task
+Build the specific task using the [instructions above](#Build-a-specific-task-(recommended):).    
+
+## Deploy the task
+
+[Login](https://github.com/Microsoft/tfs-cli/tree/13c2e98dd7ef8115df0f25f8870d387eaae361be#login) 
+to your organization via the tfx cli. Then, 
+[upload](https://github.com/Microsoft/tfs-cli/blob/HEAD/docs/buildtasks.md#upload) the built artifact into the Azure DevOps organization you have logged into. 
+
+```bash
+tfx build tasks upload --task-path .\_build\Tasks\ShellScript\
+```
+
+## Remove any debugging code
+If you have changed any package metadata like 'id' or 'friendlyName', please discard the changes before issuing a pull request. 
