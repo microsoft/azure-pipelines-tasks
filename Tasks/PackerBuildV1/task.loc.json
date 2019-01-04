@@ -1,6 +1,6 @@
 {
-  "id": "845fd4f4-642d-4694-8514-047948a5a556",
-  "name": "PackerBuild",
+  "id": "14e5851b-8644-4146-ac85-5c8bef5a3efc",
+  "name": "JeremyPackerBuild",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -10,11 +10,11 @@
     "Build",
     "Release"
   ],
-  "author": "Microsoft Corporation",
+  "author": "Jeremy Gray",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 58
   },
   "demands": [],
   "preview": "true",
@@ -245,6 +245,15 @@
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.imageUri",
       "groupName": "Output"
+    },
+    {
+      "name": "imageId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageId",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.imageId",
+      "groupName": "Output"
     }
   ],
   "dataSourceBindings": [
@@ -294,6 +303,7 @@
     "ExecutingPackerBuild": "ms-resource:loc.messages.ExecutingPackerBuild",
     "PackerBuildCompleted": "ms-resource:loc.messages.PackerBuildCompleted",
     "ImageURIOutputVariableNotFound": "ms-resource:loc.messages.ImageURIOutputVariableNotFound",
+    "ImageIDOutputVariableNotFound": "ms-resource:loc.messages.ImageIDOutputVariableNotFound",
     "ManagedImageNameOutputVariableNotFound": "ms-resource:loc.messages.ManagedImageNameOutputVariableNotFound",
     "CustumTemplateOutputVariableNotFound": "ms-resource:loc.messages.CustumTemplateOutputVariableNotFound",
     "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName",
