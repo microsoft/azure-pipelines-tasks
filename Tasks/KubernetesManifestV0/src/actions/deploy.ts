@@ -16,7 +16,7 @@ export async function deploy() {
     
     var files: string[] = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), tl.getInput("manifests", true));
     
-    if (files === []) {
+    if (files.length == 0) {
         throw ("No file found with matching pattern");
     }
 
