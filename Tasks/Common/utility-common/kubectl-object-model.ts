@@ -19,7 +19,7 @@ export class Kubectl {
         var command = tl.tool(this.kubectlPath);
         command.arg("apply");
         command.arg(["-f", configurationPath]);
-        command.arg(["-n", this.namespace]);
+        command.arg(["--namespace", this.namespace]);
         return command.execSync();
     }
 
@@ -27,7 +27,7 @@ export class Kubectl {
         var command = tl.tool(this.kubectlPath);
         command.arg("annotate");
         command.arg([type, value]);
-        command.arg(["-n", this.namespace]);
+        command.arg(["--namespace", this.namespace]);
         command.arg(annotations);
         if (!!overwrite) command.arg(`--overwrite`)
         return command.execSync();
@@ -37,7 +37,7 @@ export class Kubectl {
         var command = tl.tool(this.kubectlPath);
         command.arg("describe");
         command.arg(["deployment", deployment]);
-        command.arg(["-n", this.namespace]);
+        command.arg(["--namespace", this.namespace]);
         let stdout = command.execSync({ silent: true } as IExecOptions).stdout.split("\n");
         let newReplicaSet = "";
         stdout.forEach((line: string) => {
@@ -53,7 +53,7 @@ export class Kubectl {
         var command = tl.tool(this.kubectlPath);
         command.arg("get");
         command.arg("pods");
-        command.arg(["-n", this.namespace]);
+        command.arg(["--namespace", this.namespace]);
         command.arg(["-o", "json"])
         return command.execSync({ silent: true } as IExecSyncOptions);
     }
@@ -62,7 +62,7 @@ export class Kubectl {
         var command = tl.tool(this.kubectlPath);
         command.arg(["rollout", "status"]);
         command.arg(resourceType + "/" + JSON.parse(name));
-        command.arg(["-n", this.namespace]);
+        command.arg(["--namespace", this.namespace]);
         return command.execSync();
     }
 

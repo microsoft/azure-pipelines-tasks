@@ -106,9 +106,9 @@
       "visibleRule": "action = deploy"
     },
     {
-      "name": "renderEngine",
+      "name": "renderType",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.renderEngine",
+      "label": "ms-resource:loc.input.label.renderType",
       "required": false,
       "defaultValue": "helm",
       "groupName": "config",
@@ -116,17 +116,27 @@
       "options": {
         "helm": "Helm"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.renderEngine"
+      "helpMarkDown": "ms-resource:loc.input.help.renderType"
     },
     {
-      "name": "chart",
+      "name": "helmChart",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.chart",
+      "label": "ms-resource:loc.input.label.helmChart",
+      "required": true,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.helmChart",
+      "visibleRule": "action = bake && renderType = helm"
+    },
+    {
+      "name": "overrideFiles",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.overrideFiles",
       "required": false,
       "defaultValue": "",
       "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.chart",
-      "visibleRule": "action = bake"
+      "helpMarkDown": "ms-resource:loc.input.help.overrideFiles",
+      "visibleRule": "action = bake && renderType = helm"
     },
     {
       "name": "overrides",
@@ -136,25 +146,10 @@
       "defaultValue": "",
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.overrides",
-      "visibleRule": "action = bake"
+      "visibleRule": "action = bake && renderType = helm"
     }
   ],
-  "dataSourceBindings": [
-    {
-      "target": "kubernetesCluster",
-      "endpointId": "$(azureSubscriptionEndpoint)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{{{name}}}"
-    },
-    {
-      "target": "azureResourceGroup",
-      "endpointId": "$(azureSubscriptionEndpoint)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
-    }
-  ],
+  "dataSourceBindings": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "outputVariables": [
     {

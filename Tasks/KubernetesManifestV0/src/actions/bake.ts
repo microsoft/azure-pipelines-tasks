@@ -10,8 +10,8 @@ import { Helm, NameValuePair } from "utility-common/helm-object-model";
 const uuidV4 = require('uuid/v4');
 
 export async function bake() {
-    let renderEngine = tl.getInput("renderEngine", true);
-    switch (renderEngine) {
+    let renderType = tl.getInput("renderType", true);
+    switch (renderType) {
         case "helm":
             await HelmRenderEngine.bake();
             break;
@@ -24,7 +24,7 @@ class HelmRenderEngine {
     public static async bake() {
         let helmPath = await helmutility.getHelm();
         let helmCommand = new Helm(helmPath, tl.getInput("namespace"));
-        var result = helmCommand.template(tl.getPathInput("chart"), this.getOverrideValues());
+        var result = helmCommand.template(tl.getPathInput("helmChart", true), tl.getDelimitedInput("overrideFiles", "\n"), this.getOverrideValues());
         if (result.stderr) {
             tl.setResult(tl.TaskResult.Failed, result.stderr);
             return;

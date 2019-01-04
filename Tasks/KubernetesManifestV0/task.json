@@ -60,7 +60,7 @@
             "required": true,
             "defaultValue": "default",
             "groupName": "kubernetesCluster",
-            "helpMarkDown": "Set the namespace for the kubectl command by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
+            "helpMarkDown": "Sets the namespace for the commands by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
         },
         {
             "name": "action",
@@ -106,7 +106,7 @@
             "visibleRule": "action = deploy"
         },
         {
-            "name": "renderEngine",
+            "name": "renderType",
             "type": "pickList",
             "label": "Render Engine",
             "required": false,
@@ -119,14 +119,24 @@
             "helpMarkDown": "Tool to generate manifest"
         },
         {
-            "name": "chart",
+            "name": "helmChart",
             "type": "filePath",
-            "label": "Chart",
+            "label": "Helm Chart",
+            "required": true,
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "Helm chart path to bake",
+            "visibleRule": "action = bake && renderType = helm"
+        },
+        {
+            "name": "overrideFiles",
+            "type": "multiLine",
+            "label": "Override Files",
             "required": false,
             "defaultValue": "",
             "groupName": "config",
-            "helpMarkDown": "Chart to bake",
-            "visibleRule": "action = bake"
+            "helpMarkDown": "Override files to set",
+            "visibleRule": "action = bake && renderType = helm"
         },
         {
             "name": "overrides",
@@ -136,24 +146,11 @@
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Override values to set",
-            "visibleRule": "action = bake"
+            "visibleRule": "action = bake && renderType = helm"
         }
     ],
     "dataSourceBindings": [
-        {
-            "target": "kubernetesCluster",
-            "endpointId": "$(azureSubscriptionEndpoint)",
-            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
-            "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{{{name}}}"
-        },
-        {
-            "target": "azureResourceGroup",
-            "endpointId": "$(azureSubscriptionEndpoint)",
-            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
-            "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
-        }
+
     ],
     "instanceNameFormat": "$(action)",
     "outputVariables": [

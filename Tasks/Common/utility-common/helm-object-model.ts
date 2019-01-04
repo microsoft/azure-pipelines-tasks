@@ -20,10 +20,16 @@ export class Helm {
         }
     }
 
-    public template(chartPath: string, overrideValues: NameValuePair[]): IExecSyncResult {
+    public template(chartPath: string, overrideFiles: string[], overrideValues: NameValuePair[]): IExecSyncResult {
         var command = tl.tool(this.helmPath);
         command.arg("template");
         command.arg(chartPath)
+        command.arg(["--namespace", this.namespace]);
+        if (overrideFiles.length > 0) {
+            overrideFiles.forEach(file => {
+                command.arg(["-f", file]);
+            })
+        }
         command.arg(this._buildSetArguments(overrideValues));
         return command.execSync();
     }
