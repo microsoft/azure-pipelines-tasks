@@ -87,7 +87,7 @@ export default class TaskParameters {
             this.additionalBuilderParameters = JSON.parse(tl.getInput("additionalBuilderParameters"));
             this.skipTempFileCleanupDuringVMDeprovision = tl.getBoolInput("skipTempFileCleanupDuringVMDeprovision", false);
             this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
-            this.imageId = tl.getInput(constants.OutputVariableImageId,false);
+            this.imageId = tl.getInput(constants.OutputVariableImageId, false);
         }
         catch (error) {
             throw (tl.loc("TaskParametersConstructorFailed", error));
