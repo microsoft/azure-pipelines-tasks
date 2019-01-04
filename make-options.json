@@ -28,7 +28,7 @@
         "AzureRmWebAppDeploymentV3",
         "AzureRmWebAppDeploymentV4",
         "AzureWebAppV1",
-        "AzureWebAppOnContainerV1",
+        "AzureWebAppContainerV1",
         "AzureVmssDeploymentV0",
         "BashV3",
         "BatchScriptV1",
