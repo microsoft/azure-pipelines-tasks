@@ -6,6 +6,7 @@
   "author": "Microsoft Corporation",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
+  "preview": true,
   "visibility": [
     "Build",
     "Release"

@@ -6,6 +6,7 @@
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
     "category": "Utility",
+    "preview": true,
     "visibility": [
         "Build",
         "Release"
