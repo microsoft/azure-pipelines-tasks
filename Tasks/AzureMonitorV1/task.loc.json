@@ -62,6 +62,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.severity",
       "required": false,
+      "defaultValue": "Sev0,Sev1,Sev2,Sev3,Sev4",
       "options": {
         "Sev0": "Sev0",
         "Sev1": "Sev1",
@@ -99,6 +100,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.alertState",
       "required": false,
+      "defaultValue": "Acknowledged,Closed,New",
       "options": {
         "New": "New",
         "Acknowledged": "Acknowledged",
