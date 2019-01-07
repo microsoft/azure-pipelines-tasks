@@ -16,7 +16,7 @@ export async function bake() {
             await HelmRenderEngine.bake();
             break;
         default:
-            throw Error("Unknown render engine");
+            throw Error(tl.loc("UnknownRenderType"));
     }
 }
 

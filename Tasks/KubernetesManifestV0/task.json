@@ -139,9 +139,7 @@
             "visibleRule": "action = bake && renderType = helm"
         }
     ],
-    "dataSourceBindings": [
-
-    ],
+    "dataSourceBindings": [],
     "instanceNameFormat": "$(action)",
     "outputVariables": [
         {
@@ -161,6 +159,7 @@
         "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
         "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
         "ManifestFileNotFound": "No manifest file(s) matching %s was found.",
-        "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found."
+        "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
+        "UnknownRenderType": "Unknown render engine"
     }
 }
