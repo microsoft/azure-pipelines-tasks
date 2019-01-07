@@ -55,7 +55,7 @@ export class CommitsDownloader {
         let defer = Q.defer<string>();
         let url: string = endpointUrl + "/api/v1.1/project/"+definitionId+"/"+buildId;
         
-        this.webProvider.webClient.get(url, { 'Accept': 'application/json' }).then((res: HttpClientResponse) => {
+        this.executeWithRetries("getCommitsFromSingleBuild", this.webProvider.webClient.get, 4, url, { 'Accept': 'application/json' }).then((res: HttpClientResponse) => {
             if (res && res.message.statusCode === 200) {
                 res.readBody().then((body: string) => {
                     let jsonResult = JSON.parse(body);
@@ -91,7 +91,7 @@ export class CommitsDownloader {
         let url: string = endpointUrl + "/api/v1.1/project/"+definitionId+"/"+startBuildId;
         let commits = [];
 
-        this.webProvider.webClient.get(url, { 'Accept': 'application/json' }).then((res: HttpClientResponse) => {
+        this.executeWithRetries("getCommits", this.webProvider.webClient.get, 4, url, { 'Accept': 'application/json' }).then((res: HttpClientResponse) => {
             if (res && res.message.statusCode === 200) {
                 res.readBody().then((body: string) => {
                     let jsonResult = JSON.parse(body);
@@ -181,5 +181,29 @@ export class CommitsDownloader {
         });
 
         return defer.promise;
+    }
+
+    private executeWithRetries(operationName: string, operation: (string, any) => Promise<any>, retryCount, url, headers): Promise<any> {
+        var executePromise = new Promise((resolve, reject) => {
+            this.executeWithRetriesImplementation(operationName, operation, retryCount, url, headers, resolve, reject);
+        });
+    
+        return executePromise;
+    }
+    
+    private executeWithRetriesImplementation(operationName: string, operation: (string, any) => Promise<any>, currentRetryCount, url, headers, resolve, reject) {
+        operation(url, headers).then((result) => {
+            resolve(result);
+        }).catch((error) => {
+            if (currentRetryCount <= 0) {
+                tl.error(tl.loc("OperationFailed", operationName, error));
+                reject(error);
+            }
+            else {
+                console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
+                currentRetryCount = currentRetryCount - 1;
+                setTimeout(() => this.executeWithRetriesImplementation(operationName, operation, currentRetryCount, url, headers, resolve, reject), 4 * 1000);
+            }
+        });
     }
 }

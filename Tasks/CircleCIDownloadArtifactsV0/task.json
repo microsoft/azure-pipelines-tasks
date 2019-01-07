@@ -7,9 +7,9 @@
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
-      "Major": 15,
-      "Minor": 138,
-      "Patch": 5
+      "Major": 0,
+      "Minor": 147,
+      "Patch": 0
     },
     "demands": [],
     "inputs": [

@@ -14,7 +14,7 @@
   "loc.input.label.downloadPath": "Destination directory",
   "loc.input.help.downloadPath": "Path on the agent machine where the artifact will be downloaded",
   "loc.input.label.downloadCommitsAndWorkItems": "Download Commits and WorkItems",
-  "loc.input.help.downloadCommitsAndWorkItems": "Enables downloading the commits and workitem details associated with the Jenkins Job",
+  "loc.input.help.downloadCommitsAndWorkItems": "Enables downloading the commits and workitem details associated with the CircleCI build",
   "loc.messages.DownloadArtifacts": "Downloading artifacts from : %s",
   "loc.messages.GettingCommitsFromSingleBuild": "Downloading commits associated with the build %s",
   "loc.messages.ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
