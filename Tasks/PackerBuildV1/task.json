@@ -252,7 +252,7 @@
             "label": "Azure Resource Id",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Provide a name for the output variable which will store the azure resource id for the newly created image.",
+            "helpMarkDown": "Provide a name for the output variable which will store the azure resource id for the newly created image.  This is for managed images only.",
             "groupName": "Output"
         }
     ],
