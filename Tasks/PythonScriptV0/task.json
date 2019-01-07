@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 138,
-        "Patch": 3
+        "Minor": 147,
+        "Patch": 0
     },
     "demands": [],
     "instanceNameFormat": "Run a Python script",
@@ -87,6 +87,7 @@
             "label": "Working directory",
             "defaultValue": "",
             "required": false,
+            "helpMarkDown": "The working directory where the script will run. When empty, the root of the repository (for builds) or artifacts (for releases) is used, which is the value of '$(System.DefaultWorkingDirectory)'.",
             "groupName": "advanced"
         },
         {
