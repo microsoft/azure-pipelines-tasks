@@ -92,7 +92,7 @@ export class Kubectl {
             let words = line.split(" ");
             if (words.length > 2) {
                 let resourceType = words[0].trim(), resourceName = JSON.parse(words[1].trim());
-                if (filterResourceTypes.filter(type => resourceType.startsWith(type)).length > 0) {
+                if (filterResourceTypes.filter(type => !!type && resourceType.toLowerCase().startsWith(type.toLowerCase())).length > 0) {
                     results.push({
                         type: resourceType,
                         name: resourceName

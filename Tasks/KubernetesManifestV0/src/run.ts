@@ -23,4 +23,4 @@ function run(): Promise<void> {
 }
 
 run()
-    .catch((error) => tl.setResult(tl.TaskResult.Failed, error.message));
+    .catch((error) => tl.setResult(tl.TaskResult.Failed, !!error.message ? error.message : error));

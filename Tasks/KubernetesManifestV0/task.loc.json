@@ -86,16 +86,6 @@
       "visibleRule": "action = deploy"
     },
     {
-      "name": "checkManifestStability",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.checkManifestStability",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.checkManifestStability",
-      "visibleRule": "action = deploy"
-    },
-    {
       "name": "containers",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.containers",
@@ -163,24 +153,12 @@
     }
   },
   "messages": {
-    "CantDownloadAccessProfile": "ms-resource:loc.messages.CantDownloadAccessProfile",
-    "DownloadingClient": "ms-resource:loc.messages.DownloadingClient",
-    "KubernetesClusterResourceGroup": "ms-resource:loc.messages.KubernetesClusterResourceGroup",
-    "CreatingSecret": "ms-resource:loc.messages.CreatingSecret",
-    "DeleteSecret": "ms-resource:loc.messages.DeleteSecret",
-    "CreatingConfigMap": "ms-resource:loc.messages.CreatingConfigMap",
-    "DeleteConfigMap": "ms-resource:loc.messages.DeleteConfigMap",
-    "ConfigMapExists": "ms-resource:loc.messages.ConfigMapExists",
-    "GetConfigMap": "ms-resource:loc.messages.GetConfigMap",
-    "DockerRegistryConnectionNotSpecified": "ms-resource:loc.messages.DockerRegistryConnectionNotSpecified",
-    "FileNotFoundException": "ms-resource:loc.messages.FileNotFoundException",
-    "DownloadingKubeCtlFromUrl": "ms-resource:loc.messages.DownloadingKubeCtlFromUrl",
     "DownloadPathForStableTxt": "ms-resource:loc.messages.DownloadPathForStableTxt",
     "DownloadKubeCtlFailed": "ms-resource:loc.messages.DownloadKubeCtlFailed",
     "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
     "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion",
     "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
-    "ConfigurationFileNotFound": "ms-resource:loc.messages.ConfigurationFileNotFound",
+    "ManifestFileNotFound": "ms-resource:loc.messages.ManifestFileNotFound",
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound"
   }
 }

@@ -9,11 +9,11 @@ import kubectlutility = require("utility-common/kubectlutility");
 import { Kubectl, Resource } from "utility-common/kubectl-object-model";
 
 export async function deploy() {
-    let execResults = [];
+
     var files: string[] = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), tl.getInput("manifests", true));
 
     if (files.length == 0) {
-        throw ("No file found with matching pattern");
+        throw (tl.loc("ManifestFileNotFound"));
     }
 
     let containers = tl.getDelimitedInput("containers", "\n");
@@ -22,27 +22,28 @@ export async function deploy() {
     let kubectl = new Kubectl(await getKubectl(), tl.getInput("namespace", false));
 
     let result = kubectl.apply(files);
-    if (result.stderr) {
-        tl.setResult(tl.TaskResult.Failed, result.stderr);
-        return;
-    }
+    checkForErrors([result]);
 
-    let commandExecutions: IExecSyncResult[] = [];
-    commandExecutions.push(kubectl.annotateFiles(files, getAnnotations(), true));
+    let rolloutStatusResults = [];
 
     let resourceTypes: Resource[] = kubectl.getResources(result.stdout, recognizedWorkloadTypes);
     resourceTypes.forEach(resource => {
-        if (resource.type.indexOf("pods") == -1)
-            annotateChildPods(kubectl, resource.type, resource.name)
-                .forEach(execResult => commandExecutions.push(execResult));
+        rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
     });
+    checkForErrors(rolloutStatusResults);
 
-    if (tl.getBoolInput("checkManifestStability")) {
-        resourceTypes.forEach(resource => {
-            execResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
-        });
-    }
+    let annotateResults: IExecSyncResult[] = [];
+    var allPods = JSON.parse((kubectl.getAllPods()).stdout);
+    annotateResults.push(kubectl.annotateFiles(files, annotationsToAdd(), true));
+    resourceTypes.forEach(resource => {
+        if (resource.type.indexOf("pods") == -1)
+            annotateChildPods(kubectl, resource.type, resource.name, allPods)
+                .forEach(execResult => annotateResults.push(execResult));
+    });
+    checkForErrors(annotateResults, true);
+}
 
+function checkForErrors(execResults: IExecSyncResult[], warnIfError?: boolean) {
     if (execResults.length != 0) {
         var stderr = "";
         execResults.forEach(result => {
@@ -51,7 +52,10 @@ export async function deploy() {
             }
         });
         if (stderr.length > 0) {
-            tl.setResult(tl.TaskResult.Failed, stderr);
+            if (!!warnIfError)
+                tl.warning(stderr.trim());
+            else
+                throw stderr.trim();
         }
     }
 }
@@ -87,6 +91,7 @@ function updateContainerImagesInConfigFiles(filePaths: string[], containers): st
 function replaceAllTokens(currentString: string, replaceToken, replaceValue) {
     let i = currentString.indexOf(replaceToken);
     if (i < 0) {
+        tl.debug(`No occurence of replacement token: ${replaceToken} found`);
         return currentString;
     }
 
@@ -94,26 +99,26 @@ function replaceAllTokens(currentString: string, replaceToken, replaceValue) {
     let leftOverString = currentString.substring(i);
     newString += replaceValue + leftOverString.substring(Math.min(leftOverString.indexOf("\n"), leftOverString.indexOf("\"")));
     if (newString == currentString) {
+        tl.debug(`All occurences replaced`);
         return newString;
     }
     return replaceAllTokens(newString, replaceToken, replaceValue);
 }
 
-function annotateChildPods(kubectl: Kubectl, resourceType, resourceName): IExecSyncResult[] {
+function annotateChildPods(kubectl: Kubectl, resourceType, resourceName, allPods): IExecSyncResult[] {
     let commandExecutionResults = [];
     var owner = resourceName;
     if (resourceType.indexOf("deployment") > -1) {
         owner = kubectl.getNewReplicaSet(resourceName);
     }
 
-    var allPods = JSON.parse((kubectl.getAllPods()).stdout);
     if (!!allPods && !!allPods["items"] && allPods["items"].length > 0) {
         allPods["items"].forEach((pod) => {
             let owners = pod["metadata"]["ownerReferences"];
             if (!!owners) {
                 owners.forEach(ownerRef => {
                     if (ownerRef["name"] == owner) {
-                        commandExecutionResults.push(kubectl.annotate("pod", pod["metadata"]["name"], getAnnotations(), true));
+                        commandExecutionResults.push(kubectl.annotate("pod", pod["metadata"]["name"], annotationsToAdd(), true));
                     }
                 });
             }
@@ -123,8 +128,6 @@ function annotateChildPods(kubectl: Kubectl, resourceType, resourceName): IExecS
     return commandExecutionResults;
 }
 
-var recognizedWorkloadTypes = ["deployment", "replicaset", "daemonset", "pod", "statefulset"];
-
 async function getKubectl(): Promise<string> {
     try {
         return Promise.resolve(tl.which("kubectl", true));
@@ -133,7 +136,7 @@ async function getKubectl(): Promise<string> {
     }
 }
 
-function getAnnotations(): string[] {
+function annotationsToAdd(): string[] {
     return [
         `azure-pipelines/execution=${tl.getVariable("Build.BuildNumber")}`,
         `azure-pipelines/pipeline="${tl.getVariable("Build.DefinitionName")}"`,
@@ -142,3 +145,5 @@ function getAnnotations(): string[] {
         `azure-pipelines/org=${tl.getVariable("System.CollectionId")}`
     ];
 }
+
+var recognizedWorkloadTypes = ["deployment", "replicaset", "daemonset", "pod", "statefulset"];
