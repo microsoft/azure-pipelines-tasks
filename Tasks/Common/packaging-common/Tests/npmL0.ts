@@ -146,6 +146,9 @@ export function npmcommon() {
             },
             getHttpProxyConfiguration: (endpoint) => {
                 return null;
+            },
+            setSecret: () => {
+                return;
             }
         };
         mockery.registerMock('vsts-task-lib/task', mockTask);
