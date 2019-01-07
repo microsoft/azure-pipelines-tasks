@@ -53,7 +53,7 @@
         "DotNetCoreInstallerV0",
         "DownloadBuildArtifactsV0",
         "DownloadFileshareArtifactsV0",
-        "DownloadGitHubReleasesV0",
+        "DownloadGithubReleasesV0",
         "DownloadPackageV0",
         "DownloadPipelineArtifactV0",
         "DownloadSecureFileV1",
