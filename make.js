@@ -342,7 +342,7 @@ target.test = function() {
     // setup the version of node to run the tests
     util.installNode(options.node);
 
-    run('mocha ' + testsSpec.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
+    run('mocha ' + testsSpec.join(' ') + ' --reporter mocha-multi-reporters --reporter-options mochaFile=../testresults/test-results.xml', true);
 }
 
 //
@@ -469,7 +469,7 @@ target.testLegacy = function() {
     });
     contents += '});' + os.EOL;
     fs.writeFileSync(testsSpecPath, contents);
-    run('mocha ' + testsSpecPath /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-legacy-results.xml' */, /*inheritStreams:*/true);
+    run('mocha ' + testsSpecPath + ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-legacy-results.xml' , true);
 }
 
 // 
