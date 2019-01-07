@@ -114,8 +114,8 @@ function Initialize-AzureSubscription {
         if ($script:azureModule -and $script:azureModule.Version -lt ([version]'0.9.9')) {
             # Service principals arent supported from 0.9.9 and greater in the Azure module.
             try {
-                Write-Host "##[command]Add-AzureAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential"
-                $null = Add-AzureAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential
+                Write-Host "##[command]Add-AzureAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Scope Process"
+                $null = Add-AzureAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Scope Process
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
