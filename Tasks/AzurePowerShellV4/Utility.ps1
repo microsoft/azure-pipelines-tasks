@@ -83,12 +83,3 @@ function  Get-RollForwardVersion {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
-
-function  Get-InputForRunScript {
-    [CmdletBinding()]
-    param()
-
-    $targetAzurePs = Get-VstsInput -Name TargetAzurePs
-    $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
-    $endpoint = Get-VstsEndpoint -Name $serviceName -Require
-}

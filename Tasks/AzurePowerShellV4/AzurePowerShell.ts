@@ -32,7 +32,7 @@ async function run() {
         let serviceName = tl.getInput('ConnectedServiceNameARM',/*required*/true);
         //let endpoint= await new AzureRMEndpoint(serviceName).getEndpoint();
 
-        //var endpoint: AzureEndpoint = await (new AzureRMEndpoint(serviceName)).getEndpoint();
+        var endpoint: AzureEndpoint = await (new AzureRMEndpoint(serviceName)).getEndpoint();
         //console.log("Endpoint Name isssssssssssssssssssssssssssss ",endpoint);
        
         //let runScriptFilePath = 'D:\azure-pipelines-tasks\Tasks\AzurePowerShellV4\RunScript2.ps1';
@@ -47,9 +47,12 @@ async function run() {
         // Generate the script contents.
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
+        let filePath3 = path.join(path.resolve(__dirname), 'RunScript2.ps1');
+        //contents.push(`${filePath3} -targetAzurePs  ${targetAzurePs} -serviceName ${serviceName}`);
+        contents.push(`${filePath3} -targetAzurePs  ${targetAzurePs} -serviceName ${serviceName}  ${endpoint}`);
         contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`);
+        //console.log("Contentsssssssssssssssssssssssssssssssssssssssss ", contents);
        
-        //contents.push(`. '${runScriptFilePath.replace("'", "''")}' ${runScriptArgument}`.trim());
 
         if (scriptType.toUpperCase() == 'FILEPATH') {
             contents.push(`. '${scriptPath.replace("'", "''")}' ${scriptArguments}`.trim());
@@ -64,8 +67,6 @@ async function run() {
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
-        let filePath3 = path.join(path.resolve(__dirname), 'RunScript2.ps1');
-
 
         await fs.writeFile(
             filePath,
@@ -79,6 +80,15 @@ async function run() {
         //
         // Note, use "-Command" instead of "-File" to match the Windows implementation. Refer to
         // comment on Windows implementation for an explanation why "-Command" is preferred.
+        /*let powershell2 = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
+        .arg('-NoLogo')
+        .arg('-NoProfile')
+        .arg('-NonInteractive')
+        .arg('-ExecutionPolicy')
+        .arg('Unrestricted')
+        .arg('-Command')
+        .arg(`. '${filePath3.replace("'", "''")}'`);*/
+
         let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
             .arg('-NoLogo')
             .arg('-NoProfile')
@@ -87,15 +97,6 @@ async function run() {
             .arg('Unrestricted')
             .arg('-Command')
             .arg(`. '${filePath.replace("'", "''")}'`);
-
-        let powershell2 = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
-            .arg('-NoLogo')
-            .arg('-NoProfile')
-            .arg('-NonInteractive')
-            .arg('-ExecutionPolicy')
-            .arg('Unrestricted')
-            .arg('-Command')
-            .arg(`. '${filePath3.replace("'", "''")}'`);
 
         let options = <tr.IExecOptions>{
             errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
@@ -106,7 +107,7 @@ async function run() {
 
         // Run bash.
         let exitCode: number = await powershell.exec(options);
-        let exitCode2: number = await powershell2.exec(options);
+        //let exitCode2: number = await powershell2.exec(options);
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
