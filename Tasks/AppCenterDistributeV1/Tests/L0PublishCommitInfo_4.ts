@@ -20,9 +20,8 @@ tmr.setInput('symbolsType', 'AndroidJava');
 tmr.setInput('mappingTxtPath', '/test/path/to/mappings.txt');
 
 process.env['BUILD_BUILDID'] = '2';
-process.env['BUILD_SOURCEBRANCH'] = 'refs/heads/master';
+process.env['BUILD_SOURCEBRANCH'] = '$/teamproject/main';
 process.env['BUILD_SOURCEVERSION'] = 'commitsha';
-process.env['LASTCOMMITMESSAGE'] = 'commit message';
 
 //prepare upload
 nock('https://example.test')
@@ -54,12 +53,12 @@ nock('https://example.test')
     .patch("/my_release_location", JSON.stringify({
         status: "available",
         release_notes: "my release notes",
+        mandatory_update: false,
         destinations: [{ id: "00000000-0000-0000-0000-000000000000" }],
         build: {
             id: '2',
-            branch: 'master',
-            commit_hash: 'commitsha',
-            commit_message: 'commit message'
+            branch: '$/teamproject/main',
+            commit_hash: 'commitsha'
         }
     }))
     .reply(200);
