@@ -330,6 +330,26 @@ function Locate-SqlPackageInVS_15_0()
     return $null, 0
 }
 
+function Locate-SqlPackageInVS_16_0()
+{
+    $vs16 = Get-VisualStudio_16_0
+    if ($vs16 -and $vs16.installationPath) {
+        # End with "\" for consistency with old ShellFolder values.
+        $shellFolder16 = $vs16.installationPath.TrimEnd('\'[0]) + "\"
+
+        # Test for the DAC directory.
+        $dacParentDir = [System.IO.Path]::Combine($shellFolder16, 'Common7', 'IDE', 'Extensions', 'Microsoft', 'SQLDB', 'DAC')
+        $dacInstallPath, $dacInstallVersion = Get-LatestVersionSqlPackageInDacDirectory -dacParentDir $dacParentDir
+        
+        if($dacInstallPath)
+        {
+            return $dacInstallPath, $dacInstallVersion
+        }
+    }
+
+    return $null, 0
+}
+
 function Locate-SqlPackageInVS([string] $version)
 {
     $vsRegKeyForVersion = "SOFTWARE", "Microsoft", "VisualStudio", $version -join [System.IO.Path]::DirectorySeparatorChar
@@ -386,8 +406,13 @@ function Get-LatestVersionSqlPackageInDacDirectory([string] $dacParentDir)
 
 function Locate-HighestVersionSqlPackageInVS()
 {
-    # Locate SqlPackage.exe in VS 15.0
-    $dacFullPath, $dacVersion = Locate-SqlPackageInVS_15_0
+    # Locate SqlPackage.exe in VS 16.0
+    $dacFullPath, $dacVersion = Locate-SqlPackageInVS_16_0
+    if ($dacFullPath -eq $null) 
+    {
+        # If VS 16.0 isn't there , locate SqlPackage.exe in VS 16.0
+        $dacFullPath, $dacVersion = Locate-SqlPackageInVS_15_0
+    }
 
     if ($dacFullPath -ne $null)
     {
@@ -461,6 +486,58 @@ function Get-VisualStudio_15_0 {
             Write-Verbose "Getting latest BuildTools 15 setup instance."
             $output = New-Object System.Text.StringBuilder
             Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [15.0,16.0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero 2>&1 |
+                ForEach-Object {
+                    if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                        Write-Verbose "STDERR: $($_.Exception.Message)"
+                    }
+                    else {
+                        Write-Verbose $_
+                        $null = $output.AppendLine($_)
+                    }
+                }
+            $visualStudioInstallDir  = (ConvertFrom-Json -InputObject $output.ToString()) |
+                Select-Object -First 1
+        }
+    } catch {
+        Write-Verbose ($_ | Out-String)
+        $visualStudioInstallDir = $null
+    }
+    
+    return $visualStudioInstallDir
+}
+
+function Get-VisualStudio_16_0 {
+    [CmdletBinding()]
+    param()
+
+    $visualStudioInstallDir = $null
+    try {
+        # Query for the latest 16.* version.
+        #
+        # Note, the capability is registered as VisualStudio_16.0, however the actual version
+        # may be something like 16.2.
+        Write-Verbose "Getting latest Visual Studio 16 setup instance."
+        $output = New-Object System.Text.StringBuilder
+        Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [16.0,17.0) -latest -format json" -RequireExitCodeZero 2>&1 |
+            ForEach-Object {
+                if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                    Write-Verbose "STDERR: $($_.Exception.Message)"
+                }
+                else {
+                    Write-Verbose $_
+                    $null = $output.AppendLine($_)
+                }
+            }
+        $visualStudioInstallDir = (ConvertFrom-Json -InputObject $output.ToString()) |
+            Select-Object -First 1
+        if (!$visualStudioInstallDir) {
+            # Query for the latest 16.* BuildTools.
+            #
+            # Note, whereas VS 16.x version number is always 16.0.*, BuildTools does not follow the
+            # the same scheme. It appears to follow the 16.<UPDATE_NUMBER>.* versioning scheme.
+            Write-Verbose "Getting latest BuildTools 16 setup instance."
+            $output = New-Object System.Text.StringBuilder
+            Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [16.0,17.0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero 2>&1 |
                 ForEach-Object {
                     if ($_ -is [System.Management.Automation.ErrorRecord]) {
                         Write-Verbose "STDERR: $($_.Exception.Message)"

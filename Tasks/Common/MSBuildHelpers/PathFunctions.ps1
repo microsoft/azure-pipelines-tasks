@@ -17,9 +17,19 @@ function Get-MSBuildPath {
         # Only attempt to find Microsoft.Build.Utilities.Core.dll from a VS 15 Willow install
         # when "15.0" or latest is specified. In 15.0, the method GetPathToBuildToolsFile(...)
         # has regressed. When it is called for a version that is not found, the latest version
-        # found is returned instead.
+        # found is returned instead. Same for "16.0"
         [System.Reflection.Assembly]$msUtilities = $null
-        if (($Version -eq "15.0" -or !$Version) -and # !$Version indicates "latest"
+        if (($Version -eq "16.0" -or !$Version) -and # !$Version indicates "latest"
+            ($visualStudio16 = Get-VisualStudio_16_0) -and
+            $visualStudio16.installationPath) {
+
+            $msbuildUtilitiesPath = [System.IO.Path]::Combine($visualStudio16.installationPath, "MSBuild\Current\Bin\Microsoft.Build.Utilities.Core.dll")
+            if (Test-Path -LiteralPath $msbuildUtilitiesPath -PathType Leaf) {
+                Write-Verbose "Loading $msbuildUtilitiesPath"
+                $msUtilities = [System.Reflection.Assembly]::LoadFrom($msbuildUtilitiesPath)
+            }
+        }
+        elseif (($Version -eq "15.0" -or !$Version) -and # !$Version indicates "latest"
             ($visualStudio15 = Get-VisualStudio_15_0) -and
             $visualStudio15.installationPath) {
 
@@ -65,13 +75,13 @@ function Get-MSBuildPath {
             [type]$t = $msUtilities.GetType('Microsoft.Build.Utilities.ToolLocationHelper')
             if ($t -ne $null) {
                 # Attempt to load the method info for GetPathToBuildToolsFile. This method
-                # is available in the 15.0, 14.0, and 12.0 utilities DLL. It is not available
+                # is available in the 16.0, 15.0, 14.0, and 12.0 utilities DLL. It is not available
                 # in the 4.0 utilities DLL.
                 [System.Reflection.MethodInfo]$mi = $t.GetMethod(
                     "GetPathToBuildToolsFile",
                     [type[]]@( [string], [string], $msUtilities.GetType("Microsoft.Build.Utilities.DotNetFrameworkArchitecture") ))
                 if ($mi -ne $null -and $mi.GetParameters().Length -eq 3) {
-                    $versions = "15.0", "14.0", "12.0", "4.0"
+                    $versions = "16.0", "15.0", "14.0", "12.0", "4.0"
                     if ($Version) {
                         $versions = @( $Version )
                     }
@@ -227,6 +237,63 @@ function Get-VisualStudio_15_0 {
     }
 }
 
+function Get-VisualStudio_16_0 {
+    [CmdletBinding()]
+    param()
+
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        if (!$script:visualStudioCache.ContainsKey('16.0')) {
+            try {
+                # Query for the latest 16.* version.
+                #
+                # Note, the capability is registered as VisualStudio_16.0, however the actual version
+                # may be something like 16.2.
+                Write-Verbose "Getting latest Visual Studio 16 setup instance."
+                $output = New-Object System.Text.StringBuilder
+                Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-prerelease -version [16.0,17.0) -latest -format json" -RequireExitCodeZero 2>&1 |
+                    ForEach-Object {
+                        if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                            Write-Verbose "STDERR: $($_.Exception.Message)"
+                        }
+                        else {
+                            Write-Verbose $_
+                            $null = $output.AppendLine($_)
+                        }
+                    }
+                $script:visualStudioCache['16.0'] = (ConvertFrom-Json -InputObject $output.ToString()) |
+                    Select-Object -First 1
+                if (!$script:visualStudioCache['16.0']) {
+                    # Query for the latest 16.* BuildTools.
+                    #
+                    # Note, whereas VS 16.x version number is always 16.0.*, BuildTools does not follow the
+                    # the same scheme. It appears to follow the 16.<UPDATE_NUMBER>.* versioning scheme.
+                    Write-Verbose "Getting latest BuildTools 16 setup instance."
+                    $output = New-Object System.Text.StringBuilder
+                    Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-prerelease -version [16.0,17.0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero 2>&1 |
+                        ForEach-Object {
+                            if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                                Write-Verbose "STDERR: $($_.Exception.Message)"
+                            }
+                            else {
+                                Write-Verbose $_
+                                $null = $output.AppendLine($_)
+                            }
+                        }
+                    $script:visualStudioCache['16.0'] = (ConvertFrom-Json -InputObject $output.ToString()) |
+                        Select-Object -First 1
+                }
+            } catch {
+                Write-Verbose ($_ | Out-String)
+                $script:visualStudioCache['6.0'] = $null
+            }
+        }
+
+        return $script:visualStudioCache['16.0']
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
 function Select-MSBuildPath {
     [CmdletBinding()]
     param(
@@ -261,7 +328,7 @@ function Select-MSBuildPath {
         }
 
         $specificVersion = $PreferredVersion -and $PreferredVersion -ne 'latest'
-        $versions = '15.0', '14.0', '12.0', '4.0' | Where-Object { $_ -ne $PreferredVersion }
+        $versions = "16.0", '15.0', '14.0', '12.0', '4.0' | Where-Object { $_ -ne $PreferredVersion }
 
         # Look for a specific version of MSBuild.
         if ($specificVersion) {
