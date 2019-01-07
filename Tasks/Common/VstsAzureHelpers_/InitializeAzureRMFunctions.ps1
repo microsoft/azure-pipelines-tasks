@@ -81,8 +81,6 @@ function Initialize-AzureRMSubscription {
     if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue")) {
         Write-Host "##[command]Clear-AzureRmContext -Scope Process"
         $null = Clear-AzureRmContext -Scope Process
-        Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
-        $null = Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
     }
 
     $environmentName = "AzureCloud"
