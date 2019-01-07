@@ -21,7 +21,7 @@ tmr.setInput('symbolsType', 'AndroidJava');
 tmr.setInput('mappingTxtPath', '/test/path/to/mappings.txt');
 
 process.env['BUILD_BUILDID'] = '2';
-process.env['BUILD_SOURCEBRANCH'] = 'master';
+process.env['BUILD_SOURCEBRANCH'] = 'refs/heads/master';
 process.env['BUILD_SOURCEVERSION'] = 'commitsha';
 
 //prepare upload
