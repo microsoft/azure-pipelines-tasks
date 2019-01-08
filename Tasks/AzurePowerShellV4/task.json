@@ -148,13 +148,13 @@
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
     "execution": {
         "PowerShell3": {
-            "target": "AzurepowerShell.ps1",
+            "target": "azurepowershell.ps1",
             "platforms": [
                 "windows"
             ]
         },
         "Node": {
-            "target": "AzurePowerShell.js"
+            "target": "azurepowershell.js"
         }
     },
     "messages": {
