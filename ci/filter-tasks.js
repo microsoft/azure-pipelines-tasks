@@ -63,6 +63,8 @@ var getTasksToBuildForCI = async function() {
         if (fs.existsSync(taskJsonPath)){
             var taskJson = JSON.parse(fs.readFileSync(taskJsonPath).toString());
             var lowerCaseName = taskJson.name.toLowerCase();
+            console.log("Current:", lowerCaseName);
+            console.log("Previous:", taskName.toLowerCase());
             if (lowerCaseName in packageMap) {
                 var packageVersion = packageMap[lowerCaseName];
                 var localVersion = `${taskJson.version.Major}.${taskJson.version.Minor}.${taskJson.version.Patch}`;
@@ -160,7 +162,7 @@ var setTaskVariables = function(tasks) {
     console.log('##vso[task.setVariable variable=numTasks]' + tasks.length);
 }
 
-var buildReason = process.env['BUILD_REASON'].toLowerCase();
+var buildReason = 'individualci';
 var tasks;
 if (buildReason == 'individualci' || buildReason == 'batchedci') {
     // If CI, we will compare any tasks that have updated versions.
