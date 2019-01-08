@@ -12,10 +12,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 139,
-        "Patch": 2
+        "Minor": 147,
+        "Patch": 0
     },
-    "releaseNotes": "Add support for distribution to stores.",
+    "releaseNotes": "Fix bug where feature branches were being truncated.",
     "groups": [
         {
             "name": "symbols",
