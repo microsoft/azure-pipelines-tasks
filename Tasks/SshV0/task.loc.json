@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 142,
+    "Minor": 147,
     "Patch": 0
   },
   "demands": [],
@@ -112,13 +112,14 @@
     }
   },
   "messages": {
-    "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort",
-    "SettingUpSshConnection": "ms-resource:loc.messages.SettingUpSshConnection",
-    "SshConnectionSuccessful": "ms-resource:loc.messages.SshConnectionSuccessful",
     "ConnectionFailed": "ms-resource:loc.messages.ConnectionFailed",
-    "RemoteCopyFailed": "ms-resource:loc.messages.RemoteCopyFailed",
+    "FailedToWriteScript": "ms-resource:loc.messages.FailedToWriteScript",
     "RemoteCmdExecutionErr": "ms-resource:loc.messages.RemoteCmdExecutionErr",
     "RemoteCmdNonZeroExitCode": "ms-resource:loc.messages.RemoteCmdNonZeroExitCode",
-    "RemoteScriptFileCleanUpFailed": "ms-resource:loc.messages.RemoteScriptFileCleanUpFailed"
+    "RemoteCopyFailed": "ms-resource:loc.messages.RemoteCopyFailed",
+    "RemoteScriptFileCleanUpFailed": "ms-resource:loc.messages.RemoteScriptFileCleanUpFailed",
+    "SettingUpSshConnection": "ms-resource:loc.messages.SettingUpSshConnection",
+    "SshConnectionSuccessful": "ms-resource:loc.messages.SshConnectionSuccessful",
+    "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort"
   }
 }

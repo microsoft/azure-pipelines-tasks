@@ -10,8 +10,6 @@ jobs:
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
   pool:
     vmImage: vs2017-win2016
-  strategy:
-    parallel: $[ variables.build_windows_parallel ]
   steps:
   - template: ci/build-all-steps.yml
     parameters:
@@ -34,8 +32,6 @@ jobs:
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
   pool:
     vmImage: ubuntu-16.04
-  strategy:
-    parallel: $[ variables.build_linux_parallel ]
   steps:
   - template: ci/build-all-steps.yml
     parameters:
@@ -47,8 +43,6 @@ jobs:
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
   pool:
     vmImage: macos-10.13
-  strategy:
-    parallel: $[ variables.build_darwin_parallel ]
   steps:
   - template: ci/build-all-steps.yml
     parameters:

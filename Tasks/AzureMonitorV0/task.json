@@ -1,8 +1,8 @@
 {
     "id": "99A72E7F-25E4-4576-BF38-22A42B995ED8",
     "name": "AzureMonitor",
-    "friendlyName": "Query Azure Monitor Alerts",
-    "description": "Observe the configured Azure monitor rules for active alerts.",
+    "friendlyName": "Query Classic Azure Monitor Alerts",
+    "description": "Observe the configured classic Azure monitor rules for active alerts.",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
     "category": "Utility",
@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 12
     },
     "instanceNameFormat": "Query Azure Monitor alerts",
     "groups": [],

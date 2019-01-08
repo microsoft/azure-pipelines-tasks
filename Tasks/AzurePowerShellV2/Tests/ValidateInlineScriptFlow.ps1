@@ -10,6 +10,7 @@ Register-Mock Get-VstsInput { ",@( 'item 1', 'item 2')" } -- -Name Inline
 Register-Mock Get-VstsInput { $targetAzurePs } -- -Name TargetAzurePs
 Register-Mock Update-PSModulePathForHostedAgent
 Register-Mock Initialize-Azure
+Register-Mock Disconnect-AzureAndClearContext
 
 # Act.
 $actual = @( & $PSScriptRoot\..\AzurePowerShell.ps1 )

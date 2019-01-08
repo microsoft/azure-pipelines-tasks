@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 139,
+    "Minor": 146,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -156,6 +156,13 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.releaseNotesFile",
       "visibleRule": "releaseNotesSelection = file"
+    },
+    {
+      "name": "isMandatory",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isMandatory",
+      "defaultValue": "false",
+      "required": false
     },
     {
       "name": "destinationId",

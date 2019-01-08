@@ -1,0 +1,169 @@
+{
+    "id": "99A72E7F-25E4-4576-BF38-22A42B995ED8",
+    "name": "AzureMonitor",
+    "friendlyName": "Query Azure Monitor Alerts",
+    "description": "Observe the configured Azure monitor rules for active alerts.",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
+    "category": "Utility",
+    "preview": true,
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Server",
+        "ServerGate"
+    ],
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 2
+    },
+    "instanceNameFormat": "Query Azure Monitor alerts",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false     
+        }
+    ],
+    "inputs": [
+        {
+            "name": "connectedServiceNameARM",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "defaultValue": "",
+            "required": "true",
+            "helpMarkDown": "Select an Azure Resource Manager subscription to monitor."
+        },
+        {
+            "name": "ResourceGroupName",
+            "type": "pickList",
+            "label": "Resource group",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Provide the name of a resource group to monitor."
+        },
+        {
+            "name": "resource",
+            "type": "pickList",
+            "label": "Resource",
+            "required": false,
+            "properties": {      
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Select Azure resource to monitor."
+        },
+        {
+            "name": "severity",
+            "type": "pickList",
+            "label": "Severity",
+            "required": false,
+            "defaultValue": "Sev0,Sev1,Sev2,Sev3,Sev4",
+            "options": {
+                "Sev0": "Sev0",
+                "Sev1": "Sev1",
+                "Sev2": "Sev2",
+                "Sev3": "Sev3",
+                "Sev4": "Sev4"
+            },
+            "properties": {
+                "MultiSelectFlatList": "True",
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Filter by severity. Default value is select all.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "timeRange",
+            "type": "pickList",
+            "label": "Time range",
+            "required": false,
+            "defaultValue": "1h",
+            "options": {
+                "1h": "Past hour",
+                "1d": "Past 24 hours",
+                "7d": "Past 7 days",
+                "30d": "Past 30 days"
+            },
+            "properties": {
+                "EditableOptions": "false"
+            },
+            "helpMarkDown": "Filter by time range. Default value is 1 hour.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "alertState",
+            "type": "pickList",
+            "label": "Alert state",
+            "required": false,
+            "defaultValue": "Acknowledged,Closed,New",
+            "options": {
+                "New": "New",
+                "Acknowledged": "Acknowledged",
+                "Closed": "Closed"
+            },
+            "properties": {
+                "MultiSelectFlatList": "True",
+                "EditableOptions": "True"
+            },            
+            "helpMarkDown": "Filter by state of the alert instance. Default value is to select all.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "alertRule",
+            "type": "pickList",
+            "label": "Alert rule",
+            "required": false,
+            "properties": {      
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Filter by specific alert rule. Default value is to select all.",
+            "groupName": "advanced"
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "ResourceGroupName",
+            "endpointId": "$(connectedServiceNameARM)",
+            "dataSourceName": "AzureResourceGroups"
+        },
+        {
+            "target": "resource",
+            "endpointId": "$(connectedServiceNameARM)",
+            "dataSourceName": "AzureRMResourcesInRG",
+            "parameters": {
+                "ResourceGroupName": "$(ResourceGroupName)"           
+            },            
+            "resultTemplate": "{ \"Value\" : \"{{{type}}}/{{{name}}}\", \"DisplayValue\" : \"{{{name}}} [{{{type}}}]\" }"
+        },
+        {
+            "target": "alertRule",
+            "endpointId": "$(connectedServiceNameARM)",
+            "RequestVerb": "Post",
+            "endpointUrl": "{{{endpoint.url}}}/batch?api-version=2015-11-01",
+            "parameters": {
+                "ResourceGroupName": "$(ResourceGroupName)"
+            },
+            "requestContent": "{\"requests\":[{\"httpMethod\":\"GET\",\"relativeUrl\":\"/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{ResourceGroupName}}}/providers/microsoft.insights/activityLogAlerts?api-Version=2017-04-01\"}, {\"httpMethod\":\"GET\",\"relativeUrl\":\"/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{ResourceGroupName}}}/providers/microsoft.insights/metricAlerts?api-version=2018-03-01\"}, {\"httpMethod\":\"GET\",\"relativeUrl\":\"/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{ResourceGroupName}}}/providers/microsoft.insights/scheduledqueryrules?api-version=2018-04-16\"}]}",
+            "resultSelector": "jsonpath:$.responses[?(@.httpStatusCode == 200)].content.value[?(@.properties.enabled == true)]",
+            "resultTemplate": "{ \"Value\" : \"{{#removePrefixFromPath type 'Microsoft.Insights'}}{{/removePrefixFromPath}}/{{{name}}}\", \"DisplayValue\" : \"{{{name}}} [{{#removePrefixFromPath type 'Microsoft.Insights'}}{{/removePrefixFromPath}}]\" }"
+        }
+    ],
+    "execution": {
+        "HttpRequest": {
+            "Execute": {
+                "EndpointId": "$(connectedServiceNameARM)",
+                "EndpointUrl": "$(endpoint.url)/subscriptions/{{subscriptionId}}/providers/Microsoft.AlertsManagement/alerts?api-version=2018-05-05&monitorCondition=Fired&targetResourceGroup=$(ResourceGroupName)&timeRange=$(timeRange)&alertState=$(alertState)&severity=$(severity){{#if resource}}&targetResource=/subscriptions/{{subscriptionId}}/resourcegroups/{{ResourceGroupName}}/providers/{{resource}}{{/if}}{{#if alertRule}}&alertRule=/subscriptions/{{subscriptionId}}/resourceGroups/{{ResourceGroupName}}/providers/microsoft.insights/{{alertRule}}{{/if}}",
+                "Method": "GET",
+                "Body": "",
+                "Headers": "",
+                "WaitForCompletion": "false",
+                "Expression": "eq(count(jsonpath('$.value[*]')), 0)"
+            }
+        }
+    }
+}

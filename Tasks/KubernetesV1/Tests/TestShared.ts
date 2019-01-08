@@ -6,7 +6,9 @@ export let TestEnvVars = {
     connectionType: "__connectionType__",
     command: "__command__",
     useConfigurationFile: "__useConfigurationFile__",
+    configurationType: "__configurationType__",
     configuration: "__configuration__",
+    inline: "__inline__",
     arguments: "__arguments__",
     namespace: "__namespace__",
     secretType: "__secretType__",
@@ -43,6 +45,11 @@ export let Commands = {
     set: "set",
     top: "top"
 };
+
+export let ConfigurationTypes = {
+    configuration: "configuration",
+    inline: "inline"
+}
 
 export let isKubectlPresentOnMachine = "true"; 
 export let endpointAuthorizationType = "Kubeconfig";

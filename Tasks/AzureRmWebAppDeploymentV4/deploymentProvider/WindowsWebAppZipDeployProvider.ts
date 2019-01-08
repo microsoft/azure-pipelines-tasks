@@ -1,7 +1,7 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
-import * as ParameterParser from '../operations/ParameterParserUtility'
+import * as ParameterParser from 'webdeployment-common/ParameterParserUtility';
 import { DeploymentType } from '../operations/TaskParameters';
 import { PackageType } from 'webdeployment-common/packageUtility';
 const deleteOldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';

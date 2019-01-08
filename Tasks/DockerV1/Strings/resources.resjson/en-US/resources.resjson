@@ -55,7 +55,7 @@
   "loc.input.help.workingDirectory": "The working directory for the Docker container.",
   "loc.input.label.entrypointOverride": "Entry point override",
   "loc.input.help.entrypointOverride": "Override the default entry point for the Docker container.",
-  "loc.input.label.containerCommand": "Command",
+  "loc.input.label.containerCommand": "Container command",
   "loc.input.help.containerCommand": "The docker run command first creates a writeable container layer over the specified image, and then starts it by using the specified run command. For example, if the image contains a simple Python Flask web application you can specify 'python app.py' to launch the web application.",
   "loc.input.label.runInBackground": "Run in background",
   "loc.input.help.runInBackground": "Run the Docker container in the background.",
