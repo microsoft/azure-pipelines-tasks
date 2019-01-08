@@ -12,7 +12,7 @@ import * as commandHelper from "./CommandHelper";
 // we are accessing internal or external package sources.
 // It is used by the NuGetCommand >= v2.0.0 and DotNetCoreCLI >= v2.0.0
 
-interface EnvironmentDictionary { [key: string]: string; }
+export interface EnvironmentDictionary { [key: string]: string; }
 interface EndpointCredentials {
     endpoint: string;
     username?: string;
@@ -111,17 +111,25 @@ function prepareNuGetExeEnvironment(
         }
     }
 
+    env = setNuGetProxyEnvironment(env, settings.configFile, settings.registryUri);
+    return env;
+}
+
+// Adds the HTTP_PROXY and NO_PROXY values (if applicable) to the input dictionary
+export function setNuGetProxyEnvironment(input: EnvironmentDictionary,
+    configFile?: string,
+    registryUri?: string): EnvironmentDictionary {
     let httpProxy = getNuGetProxyFromEnvironment();
     if (httpProxy) {
         tl.debug(`Adding environment variable for NuGet proxy: ${httpProxy}`);
-        env["HTTP_PROXY"] = httpProxy;
+        input["HTTP_PROXY"] = httpProxy;
 
         let proxybypass: string;
-        if (settings.configFile != null) {
-            proxybypass = getProxyBypassForConfig(settings.configFile);
+        if (configFile != null) {
+            proxybypass = getProxyBypassForConfig(configFile);
 
-        } else if (settings.registryUri != null) {
-            proxybypass = getProxyBypassForUri(settings.registryUri);
+        } else if (registryUri != null) {
+            proxybypass = getProxyBypassForUri(registryUri);
         }
 
         if (proxybypass) {
@@ -137,11 +145,11 @@ function prepareNuGetExeEnvironment(
                 proxybypass = existingNoProxy + ',' + proxybypass;
             }
 
-            env["NO_PROXY"] = proxybypass;
+            input["NO_PROXY"] = proxybypass;
         }
     }
 
-    return env;
+    return input;
 }
 
 function buildCredProviderPath(credProviderPath1: string, credProviderPath2: string): string {
