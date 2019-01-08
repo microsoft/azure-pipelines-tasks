@@ -59,24 +59,25 @@ var getTasksToBuildForCI = async function() {
     });
 
     return makeOptions.tasks.filter(function (taskName) {
-        var taskJsonPath = path.join(__dirname, '..', 'Tasks' , taskName, 'task.json');
-        if (fs.existsSync(taskJsonPath)){
-            var taskJson = JSON.parse(fs.readFileSync(taskJsonPath).toString());
-            var lowerCaseName = taskJson.name.toLowerCase();
-            if (lowerCaseName in packageMap) {
-                var packageVersion = packageMap[lowerCaseName];
+        var lowerCaseName = taskName.toLowerCase();
+        if (lowerCaseName in packageMap) {
+            var packageVersion = packageMap[lowerCaseName]
+
+            var taskJsonPath = path.join(__dirname, '..', 'Tasks' , taskName, 'task.json');
+            if (fs.existsSync(taskJsonPath)){
+                var taskJson = JSON.parse(fs.readFileSync(taskJsonPath).toString());
                 var localVersion = `${taskJson.version.Major}.${taskJson.version.Minor}.${taskJson.version.Patch}`;
                 
                 // Build if local version and package version are different.
                 return semver.neq(localVersion, packageVersion);
             }
             else {
-                console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=74;]${taskName} has not been published before`);
+                console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=75;]${taskJsonPath} does not exist`);
                 return true;
             }
         }
         else {
-            console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=79;]${taskJsonPath} does not exist`);
+            console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=80;]${taskName} has not been published before`);
             return true;
         }
     });
@@ -119,7 +120,7 @@ var getTasksToBuildForPR = function() {
     }
     catch (err) {
         // If unable to reach github, build everything.
-        console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=124;]Unable to reach github, building all tasks', err);
+        console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=125;]Unable to reach github, building all tasks', err);
         return makeOptions.tasks;
     }
     var baseCommit = run('git merge-base ' + sourceBranch + ' origin/master');
