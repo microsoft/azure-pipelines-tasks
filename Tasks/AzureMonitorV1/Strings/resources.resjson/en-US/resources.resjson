@@ -16,6 +16,8 @@
   "loc.input.help.timeRange": "Filter by time range. Default value is 1 hour.",
   "loc.input.label.alertState": "Alert state",
   "loc.input.help.alertState": "Filter by state of the alert instance. Default value is to select all.",
+  "loc.input.label.monitorCondition": "Monitor condition",
+  "loc.input.help.monitorCondition": "Monitor condition represents whether the underlying conditions have crossed the defined alert rule thresholds.",
   "loc.input.label.alertRule": "Alert rule",
   "loc.input.help.alertRule": "Filter by specific alert rule. Default value is to select all."
 }

@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 4
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -114,6 +114,23 @@
       "groupName": "advanced"
     },
     {
+      "name": "monitorCondition",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.monitorCondition",
+      "required": false,
+      "defaultValue": "Fired",
+      "options": {
+        "Fired ": "Fired",
+        "Resolved": "Resolved"
+      },
+      "properties": {
+        "MultiSelectFlatList": "True",
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.monitorCondition",
+      "groupName": "advanced"
+    },
+    {
       "name": "alertRule",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.alertRule",
@@ -157,7 +174,7 @@
     "HttpRequest": {
       "Execute": {
         "EndpointId": "$(connectedServiceNameARM)",
-        "EndpointUrl": "$(endpoint.url)/subscriptions/{{subscriptionId}}/providers/Microsoft.AlertsManagement/alerts?api-version=2018-05-05&monitorCondition=Fired&targetResourceGroup=$(ResourceGroupName)&timeRange=$(timeRange)&alertState=$(alertState)&severity=$(severity){{#if resource}}&targetResource=/subscriptions/{{subscriptionId}}/resourcegroups/{{ResourceGroupName}}/providers/{{resource}}{{/if}}{{#if alertRule}}&alertRule=/subscriptions/{{subscriptionId}}/resourceGroups/{{ResourceGroupName}}/providers/microsoft.insights/{{alertRule}}{{/if}}",
+        "EndpointUrl": "$(endpoint.url)/subscriptions/{{subscriptionId}}/providers/Microsoft.AlertsManagement/alerts?api-version=2018-05-05{{#if monitorCondition}}&monitorCondition=$(monitorCondition){{/if}}{{#if ResourceGroupName}}&targetResourceGroup=$(ResourceGroupName){{/if}}{{#if timeRange}}&timeRange=$(timeRange){{/if}}{{#if alertState}}&alertState=$(alertState){{/if}}{{#if severity}}&severity=$(severity){{/if}}{{#if resource}}&targetResource=/subscriptions/{{subscriptionId}}/resourcegroups/{{ResourceGroupName}}/providers/{{resource}}{{/if}}{{#if alertRule}}&alertRule=/subscriptions/{{subscriptionId}}/resourceGroups/{{ResourceGroupName}}/providers/microsoft.insights/{{alertRule}}{{/if}}",
         "Method": "GET",
         "Body": "",
         "Headers": "",
