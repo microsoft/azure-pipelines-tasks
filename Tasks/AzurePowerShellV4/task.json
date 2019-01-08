@@ -17,7 +17,7 @@
     "version": {
         "Major": 4,
         "Minor": 0,
-        "Patch": 115
+        "Patch": 1
     },
     "preview": true,
     "releaseNotes": "Removal of Classic service endpoint support",
@@ -147,6 +147,12 @@
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
     "execution": {
+        "PowerShell3": {
+            "target": "AzurepowerShell.ps1",
+            "platforms": [
+                "windows"
+            ]
+        },
         "Node": {
             "target": "AzurePowerShell.js"
         }

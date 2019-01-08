@@ -29,14 +29,24 @@ async function run() {
         let _vsts_input_errorActionPreference: string = tl.getInput('errorActionPreference', false) || 'Stop';
         let _vsts_input_failOnStandardError = tl.getBoolInput('FailOnStandardError', false);
         let targetAzurePs: string = tl.getInput('TargetAzurePs', false);
+        let customTargetAzurePs: string = tl.getInput('CustomTargetAzurePs', false);
         let serviceName = tl.getInput('ConnectedServiceNameARM',/*required*/true);
-        //let endpoint= await new AzureRMEndpoint(serviceName).getEndpoint();
+        let endpointt= await new AzureRMEndpoint(serviceName).getEndpoint();
 
-        var endpoint: AzureEndpoint = await (new AzureRMEndpoint(serviceName)).getEndpoint();
-        //console.log("Endpoint Name isssssssssssssssssssssssssssss ",endpoint);
-       
-        //let runScriptFilePath = 'D:\azure-pipelines-tasks\Tasks\AzurePowerShellV4\RunScript2.ps1';
-        //let runScriptArgument = '-azurePowerShellVersion ' + targetAzurePs;
+        // string constants
+        let otherVersion = "OtherVersion"
+        let latestVersion = "LatestVersion"
+
+        if (targetAzurePs == otherVersion) {
+            if (customTargetAzurePs != "") {
+                targetAzurePs = customTargetAzurePs;
+            }
+            else {
+                targetAzurePs = ""
+            }
+        }
+
+        var endpoint = JSON.stringify(endpointt);
 
         if (scriptType.toUpperCase() == 'FILEPATH') {
             if (!tl.stats(scriptPath).isFile() || !scriptPath.toUpperCase().match(/\.PS1$/)) {
@@ -47,12 +57,9 @@ async function run() {
         // Generate the script contents.
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
-        let filePath3 = path.join(path.resolve(__dirname), 'RunScript2.ps1');
-        //contents.push(`${filePath3} -targetAzurePs  ${targetAzurePs} -serviceName ${serviceName}`);
-        contents.push(`${filePath3} -targetAzurePs  ${targetAzurePs} -serviceName ${serviceName}  ${endpoint}`);
-        contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`);
-        //console.log("Contentsssssssssssssssssssssssssssssssssssssssss ", contents);
-       
+        let filePath3 = path.join(path.resolve(__dirname), 'InitializeAz.ps1');
+        contents.push(`${filePath3} -targetAzurePs  ${targetAzurePs} -serviceName ${serviceName} -endpoint '${endpoint}'`);
+        contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`); 
 
         if (scriptType.toUpperCase() == 'FILEPATH') {
             contents.push(`. '${scriptPath.replace("'", "''")}' ${scriptArguments}`.trim());
@@ -80,15 +87,6 @@ async function run() {
         //
         // Note, use "-Command" instead of "-File" to match the Windows implementation. Refer to
         // comment on Windows implementation for an explanation why "-Command" is preferred.
-        /*let powershell2 = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
-        .arg('-NoLogo')
-        .arg('-NoProfile')
-        .arg('-NonInteractive')
-        .arg('-ExecutionPolicy')
-        .arg('Unrestricted')
-        .arg('-Command')
-        .arg(`. '${filePath3.replace("'", "''")}'`);*/
-
         let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
             .arg('-NoLogo')
             .arg('-NoProfile')
@@ -107,7 +105,6 @@ async function run() {
 
         // Run bash.
         let exitCode: number = await powershell.exec(options);
-        //let exitCode2: number = await powershell2.exec(options);
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
