@@ -86,7 +86,6 @@ try
         $__vstsAzPSInlineScriptPath = [System.IO.Path]::Combine($env:Agent_TempDirectory, ([guid]::NewGuid().ToString() + ".ps1"));
         ($scriptInline | Out-File $__vstsAzPSInlineScriptPath)
         $scriptPath = $__vstsAzPSInlineScriptPath
-        Write-Verbose "FilePathhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh  $scriptPath";
     }
 
     $scriptCommand = "& '$($scriptPath.Replace("'", "''"))' $scriptArguments"
