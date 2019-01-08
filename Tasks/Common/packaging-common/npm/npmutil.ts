@@ -23,7 +23,7 @@ export async function getLocalRegistries(packagingUrls: string[], npmrc: string)
         return undefined;
     });
 
-    const registries = NpmrcParser.GetRegistries(npmrc);
+    const registries = NpmrcParser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true);
 
     const localRegistries = registries.filter(registry => {
         const registryHost = url.parse(registry).host;
