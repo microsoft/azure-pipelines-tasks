@@ -16,12 +16,11 @@ tmr.setInput('appSlug', 'testuser/testapp');
 tmr.setInput('app', '/test/path/to/my.ipa');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
-tmr.setInput('isMandatory', 'True');
 tmr.setInput('symbolsType', 'AndroidJava');
 tmr.setInput('mappingTxtPath', '/test/path/to/mappings.txt');
 
 process.env['BUILD_BUILDID'] = '2';
-process.env['BUILD_SOURCEBRANCH'] = 'refs/heads/master';
+process.env['BUILD_SOURCEBRANCH'] = 'refs/heads/feature/foobar';
 process.env['BUILD_SOURCEVERSION'] = 'commitsha';
 
 //prepare upload
@@ -54,11 +53,11 @@ nock('https://example.test')
     .patch("/my_release_location", JSON.stringify({
         status: "available",
         release_notes: "my release notes",
-        mandatory_update: true,
+        mandatory_update: false,
         destinations: [{ id: "00000000-0000-0000-0000-000000000000" }],
         build: {
             id: '2',
-            branch: 'master',
+            branch: 'feature/foobar',
             commit_hash: 'commitsha'
         }
     }))
