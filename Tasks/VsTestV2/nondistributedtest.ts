@@ -70,10 +70,6 @@ export class NonDistributedTest {
             tl.setResult(tl.TaskResult.Failed, `Failed to write to the input json file ${inputFilePath} with error ${e}`);
         }
 
-        if (utils.Helper.isDebugEnabled()) {
-            utils.Helper.uploadFile(inputFilePath);
-        }
-
         dtaExecutionHostTool.arg(['--inputFile', inputFilePath]);
 
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
