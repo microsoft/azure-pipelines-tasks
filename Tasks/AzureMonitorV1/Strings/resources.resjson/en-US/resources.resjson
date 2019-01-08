@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "Observe the configured Azure monitor rules for active alerts.",
   "loc.instanceNameFormat": "Query Azure Monitor alerts",
+  "loc.releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added support for query unified Azure monitor alerts.",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.connectedServiceNameARM": "Azure subscription",
   "loc.input.help.connectedServiceNameARM": "Select an Azure Resource Manager subscription to monitor.",
@@ -19,7 +20,7 @@
   "loc.input.label.timeRange": "Time range",
   "loc.input.help.timeRange": "Filter by time range. Default value is 1 hour.",
   "loc.input.label.alertState": "Alert state",
-  "loc.input.help.alertState": "Filter by state of the alert instance. Default value is to select all."
+  "loc.input.help.alertState": "Filter by state of the alert instance. Default value is to select all.",
   "loc.input.label.monitorCondition": "Monitor condition",
-  "loc.input.help.monitorCondition": "Monitor condition represents whether the underlying conditions have crossed the defined alert rule thresholds.",
+  "loc.input.help.monitorCondition": "Monitor condition represents whether the underlying conditions have crossed the defined alert rule thresholds."
 }
