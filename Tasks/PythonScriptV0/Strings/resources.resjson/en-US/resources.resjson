@@ -15,7 +15,7 @@
   "loc.input.label.pythonInterpreter": "Python interpreter",
   "loc.input.help.pythonInterpreter": "Absolute path to the Python interpreter to use. If not specified, the task will use the interpreter in PATH.<br /> Run the [Use Python Version](https://go.microsoft.com/fwlink/?linkid=871498) task to add a version of Python to PATH.",
   "loc.input.label.workingDirectory": "Working directory",
-  "loc.input.help.workingDirectory": "The working directory where the script will run. When empty, the root of the repository (for builds) or artifacts (for releases) is used, which is the value of '$(System.DefaultWorkingDirectory)'.",
+  "loc.input.help.workingDirectory": "The working directory where the script will run. If not specified, the value of '$(System.DefaultWorkingDirectory)' will be used. For builds, this variable defaults to the root of the repository. For releases, it defaults to the root of the artifacts directory.",
   "loc.input.label.failOnStderr": "Fail on standard error",
   "loc.input.help.failOnStderr": "If this is true, this task will fail if any text is written to the stderr stream.",
   "loc.messages.NotAFile": "The given path was not to a file: '%s'.",
