@@ -167,7 +167,8 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
         ]
     };
 
-    const branchName = process.env['BUILD_SOURCEBRANCHNAME'];
+    let branchName = process.env['BUILD_SOURCEBRANCH'];
+    branchName = getBranchName(branchName);
     const sourceVersion = process.env['BUILD_SOURCEVERSION'];
     const buildId = process.env['BUILD_BUILDID'];
 
@@ -201,6 +202,13 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
     })
 
     return defer.promise;
+}
+
+function getBranchName(ref: string): string {
+    const gitRefsHeadsPrefix = 'refs/heads/';
+    if (ref) {
+        return ref.indexOf(gitRefsHeadsPrefix) === 0 ? ref.substr(gitRefsHeadsPrefix.length) : ref;
+    }
 }
 
 /**
