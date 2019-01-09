@@ -285,7 +285,7 @@ function Get-VisualStudio_16_0 {
                 }
             } catch {
                 Write-Verbose ($_ | Out-String)
-                $script:visualStudioCache['6.0'] = $null
+                $script:visualStudioCache['16.0'] = $null
             }
         }
 
