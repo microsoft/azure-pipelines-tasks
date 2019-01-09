@@ -41,7 +41,7 @@ function Export-Bacpac {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host (Get-VstsLocString -Key "SAD_GeneratedFile" -ArgumentList "$targetBacpacFilePath")
-    Write-Host "##vso[task.uploadfile] $targetBacpacFilePath"
+    Write-Host "##vso[task.uploadfile]$targetBacpacFilePath"
     Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "SqlDeploymentOutputFile", $targetBacpacFilePath)
     Write-Host "##vso[task.setVariable variable=SqlDeploymentOutputFile] $targetBacpacFilePath"
 }
