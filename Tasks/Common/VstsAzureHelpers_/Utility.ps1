@@ -496,21 +496,23 @@ function Disconnect-AzureAndClearContext {
             Write-Verbose "Trying to disconnect from Azure and clear context"
 
             if (Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue") {
-                Write-Host "##[command]Disconnect-AzureRmAccount -Scope Process"
-                $null = Disconnect-AzureRmAccount -Scope Process
+                Write-Host "##[command]Disconnect-AzureRmAccount"
+                $null = Disconnect-AzureRmAccount
             }
             elseif (Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue") {
-                Write-Host "##[command]Remove-AzureRmAccount -Scope Process"
-                $null = Remove-AzureRmAccount -Scope Process
+                Write-Host "##[command]Remove-AzureRmAccount"
+                $null = Remove-AzureRmAccount
             }
             elseif (Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue") {
-                Write-Host "##[command]Logout-AzureRmAccount -Scope Process"
-                $null = Logout-AzureRmAccount -Scope Process
+                Write-Host "##[command]Logout-AzureRmAccount"
+                $null = Logout-AzureRmAccount
             }
 
             if (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue") {
                 Write-Host "##[command]Clear-AzureRmContext -Scope Process"
                 $null = Clear-AzureRmContext -Scope Process
+                Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+                $null = Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
             }
         }
     } catch {
