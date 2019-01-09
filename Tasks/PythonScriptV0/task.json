@@ -48,7 +48,7 @@
             "visibleRule": "scriptSource = filePath",
             "required": true,
             "defaultValue": "",
-            "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+            "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to `$(System.DefaultWorkingDirectory)`."
         },
         {
             "name": "script",
@@ -87,7 +87,7 @@
             "label": "Working directory",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The working directory where the script will run. If not specified, the value of '$(System.DefaultWorkingDirectory)' will be used. For builds, this variable defaults to the root of the repository. For releases, it defaults to the root of the artifacts directory.",
+            "helpMarkDown": "The working directory where the script will run. If not specified, the value of `$(System.DefaultWorkingDirectory)` will be used. For builds, this variable defaults to the root of the repository. For releases, it defaults to the root of the artifacts directory.",
             "groupName": "advanced"
         },
         {
