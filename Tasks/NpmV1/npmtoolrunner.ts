@@ -8,7 +8,7 @@ import * as tr from 'vsts-task-lib/toolrunner';
 import {NpmTaskInput} from './constants';
 
 import * as util from 'packaging-common/util';
-import * as npmrcparser from 'packaging-common/npm/npmrcparser';
+import * as npmutil from 'packaging-common/npm/npmutil';
 import * as telemetry from 'utility-common/telemetry';
 
 export class NpmToolRunner extends tr.ToolRunner {
@@ -117,8 +117,9 @@ export class NpmToolRunner extends tr.ToolRunner {
                     existingNoProxy = existingNoProxy.endsWith(',') ? existingNoProxy.slice(0,-1) : existingNoProxy;
                     // append our bypass list
                     proxybypass = existingNoProxy + ',' + proxybypass;
-
                 }
+
+                tl.debug(`Setting NO_PROXY for npm: "${proxybypass}"`);
                 options.env['NO_PROXY'] = proxybypass;
             }
         }
@@ -135,7 +136,7 @@ export class NpmToolRunner extends tr.ToolRunner {
         }
 
         // get the potential package sources
-        let registries: string[] = npmrcparser.GetRegistries(this.npmrc, /* saveNormalizedRegistries */ false);
+        let registries: string[] = npmutil.getAllNpmRegistries(this.projectNpmrc());
 
         // convert to urls
         let registryUris = registries.reduce(function(result: Url[], currentRegistry: string): Url[] {

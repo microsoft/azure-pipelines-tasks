@@ -44,6 +44,14 @@ export function getFeedIdFromRegistry(registry: string) {
     return registryUrl.pathname.substring(startingIndex + startingToken.length, endingIndex);
 }
 
+export function getAllNpmRegistries(npmrcPath: string): string[] {
+    if (tl.exist(npmrcPath)) {
+        return NpmrcParser.GetRegistries(npmrcPath, /* saveNormalizedRegistries */ false);
+    }
+
+    return [];
+}
+
 export async function getLocalNpmRegistries(workingDir: string, packagingUrls: string[]): Promise<INpmRegistry[]> {
     const npmrcPath = path.join(workingDir, '.npmrc');
 
