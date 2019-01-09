@@ -166,7 +166,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it.skip('Positive path: publish commit info for feature branch', function () {
+    it('Positive path: publish commit info for feature branch', function () {
         this.timeout(4000);
 
         let tp = path.join(__dirname, 'L0PublishCommitInfo_3.js');
@@ -176,7 +176,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it.skip('Positive path: publish commit info for tfvc branch', function () {
+    it('Positive path: publish commit info for tfvc branch', function () {
         this.timeout(4000);
 
         let tp = path.join(__dirname, 'L0PublishCommitInfo_4.js');
@@ -186,7 +186,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it.skip('Positive path: publish mandatory update)', function () {
+    it('Positive path: publish mandatory update)', function () {
         this.timeout(4000);
 
         let tp = path.join(__dirname, 'L0PublishMandatoryUpdate.js');
