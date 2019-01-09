@@ -1,6 +1,6 @@
 {
     "id": "DEE316A2-586F-4DEF-BE79-488A1F503DEE",
-    "name": "KubernetesManifest",
+    "name": "KubernetesManifestBased",
     "friendlyName": "Manifest based Kubernetes deployments",
     "description": "Manifest based deployments to kubernetes",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
@@ -70,8 +70,10 @@
             "defaultValue": "deploy",
             "groupName": "config",
             "options": {
+                "bake": "bake",
                 "deploy": "deploy",
-                "bake": "bake"
+                "patch": "patch",
+                "scale": "scale"
             },
             "helpMarkDown": "Manifests to deploy"
         },
@@ -137,6 +139,84 @@
             "groupName": "config",
             "helpMarkDown": "Override values to set",
             "visibleRule": "action = bake && renderType = helm"
+        },
+        {
+            "name": "replicas",
+            "type": "string",
+            "label": "Replica count",
+            "required": true,
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "Number of replicas to scale to",
+            "visibleRule": "action = scale"
+        },
+        {
+            "name": "mergeStrategy",
+            "type": "pickList",
+            "label": "Merge Strategy",
+            "required": true,
+            "defaultValue": "strategic",
+            "options": {
+                "json": "json",
+                "merge": "merge",
+                "strategic": "strategic"
+            },
+            "groupName": "config",
+            "helpMarkDown": "The type of patch being provided; one of [json merge strategic]",
+            "visibleRule": "action = patch"
+        },
+        {
+            "name": "patchType",
+            "type": "radio",
+            "label": "Patch Type",
+            "required": true,
+            "defaultValue": "file",
+            "options": {
+                "file": "file",
+                "type": "type"
+            },
+            "groupName": "config",
+            "helpMarkDown": "to identify the resource",
+            "visibleRule": "action = patch"
+        },
+        {
+            "name": "patchFile",
+            "type": "filePath",
+            "label": "file path",
+            "required": true,
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "Path to the file used for patch",
+            "visibleRule": "action = patch && patchType = file"
+        },
+        {
+            "name": "kind",
+            "type": "string",
+            "label": "Kind",
+            "required": true,
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "Kind of K8s object; deployment, replicaSet etc.",
+            "visibleRule": "action = scale || patchType = type"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "label": "Name",
+            "required": true,
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "Name of the k8s object",
+            "visibleRule": "action = scale || patchType = type"
+        },
+        {
+            "name": "patch",
+            "type": "string",
+            "label": "Patch",
+            "required": true,
+            "groupName": "config",
+            "helpMarkDown": "Contents of patch",
+            "visibleRule": "action = patch"
         }
     ],
     "dataSourceBindings": [],
