@@ -59,8 +59,7 @@ export class DistributedTest {
         // Pass the acess token as an environment variable for security purposes
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
 
-        if(this.inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled)
-        {
+        if (this.inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled) {
             utils.Helper.addToProcessEnvVars(envVars, 'PROCDUMP_PATH', path.join(__dirname, 'ProcDump'));
         }
 
@@ -72,10 +71,6 @@ export class DistributedTest {
             writeFileSync(inputFilePath, JSON.stringify(this.inputDataContract));
         } catch (e) {
             tl.setResult(tl.TaskResult.Failed, `Failed to write to the input json file ${inputFilePath} with error ${e}`);
-        }
-
-        if (utils.Helper.isDebugEnabled()) {
-            utils.Helper.uploadFile(inputFilePath);
         }
 
         const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
