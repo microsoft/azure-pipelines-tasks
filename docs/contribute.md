@@ -9,7 +9,6 @@
   * [Run Tests](#run-tests)
   * [Legacy Tests](#legacy-tests)
 
-
 # Contributing
 
 This repo contains the in-the-box tasks for Azure Pipelines build. Tasks in this repo get deployed every three weeks to Azure Pipelines and appear in TFS quarterly updates.
