@@ -5,6 +5,12 @@
             "type": "ps"
         },
         {
+            "module": "../Common/azure-arm-rest",
+            "type": "node",
+            "dest": "./",
+            "compile" : true
+        },
+        {
             "module": "../Common/TlsHelper_",
             "type": "ps"
         }

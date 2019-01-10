@@ -6,8 +6,7 @@ function Get-SavedModulePath {
 
 function Update-PSModulePathForHostedAgent {
     [CmdletBinding()]
-    param([string] $targetAzurePs,
-          [string] $authScheme)
+    param([string] $targetAzurePs)
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         if ($targetAzurePs) {
