@@ -1,7 +1,3 @@
-$rollForwardTable = @{
-    "5.0.0" = "5.1.1";
-};
-
 function Get-SavedModulePath {
     [CmdletBinding()]
     param([string] $azurePowerShellVersion)
@@ -60,26 +56,4 @@ function Get-LatestModule {
     }
     Write-Verbose "Latest module folder detected: $resultFolder"
     return $resultFolder
-}
-
-function  Get-RollForwardVersion {
-    [CmdletBinding()]
-    param([string]$azurePowerShellVersion)
-    Trace-VstsEnteringInvocation $MyInvocation
-    
-    try {
-        $rollForwardAzurePSVersion = $rollForwardTable[$azurePowerShellVersion]
-        if(![string]::IsNullOrEmpty($rollForwardAzurePSVersion)) {
-            $hostedAgentAzModulePath = Get-SavedModulePath -azurePowerShellVersion $rollForwardAzurePSVersion
-        
-            if((Test-Path -Path $hostedAgentAzModulePath) -eq $true) {
-                Write-Warning (Get-VstsLocString -Key "OverrideAzurePowerShellVersion" -ArgumentList $azurePowerShellVersion, $rollForwardAzurePSVersion)
-                return $rollForwardAzurePSVersion;
-            }
-        }
-        return $azurePowerShellVersion
-    }
-    finally {
-        Trace-VstsLeavingInvocation $MyInvocation
-    }
 }

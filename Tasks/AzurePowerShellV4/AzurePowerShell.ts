@@ -63,9 +63,9 @@ async function run() {
             contents.push(`${azFilePath} -serviceName ${serviceName} -endpoint '${endpoint}'`);
         }
         else {
-            contents.push(`${azFilePath} -targetAzurePs  ${targetAzurePs} -serviceName ${serviceName} -endpoint '${endpoint}'`);
+            contents.push(`${azFilePath} -serviceName ${serviceName} -endpoint '${endpoint}' -targetAzurePs  ${targetAzurePs}`);
         }
-        
+
         if (scriptType.toUpperCase() == 'FILEPATH') {
             contents.push(`. '${scriptPath.replace("'", "''")}' ${scriptArguments}`.trim());
             console.log(tl.loc('JS_FormattedCommand', contents[contents.length - 1]));

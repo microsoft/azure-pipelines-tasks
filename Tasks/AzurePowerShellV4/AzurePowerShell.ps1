@@ -44,9 +44,6 @@ if ($targetAzurePs -eq $latestVersion) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
 
-. "$PSScriptRoot\Utility.ps1"
-$targetAzurePs = Get-RollForwardVersion -azurePowerShellVersion $targetAzurePs
-
 $authScheme = ''
 try
 {
