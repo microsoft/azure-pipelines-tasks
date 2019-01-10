@@ -47,12 +47,7 @@ if ($targetAzurePs -eq $latestVersion) {
 $authScheme = ''
 try
 {
-    $serviceName = Get-VstsInput -Name ConnectedServiceNameARM
-    if (!$serviceName)
-    {
-            Get-VstsInput -Name $ConnectedServiceNameARM -Require
-    }
-
+    $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
     $endpoint = Get-VstsEndpoint -Name $serviceName -Require
 
     if($endpoint)
