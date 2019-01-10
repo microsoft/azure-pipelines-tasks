@@ -20,6 +20,14 @@
   ],
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "generalAdvanced",
+      "displayName": "ms-resource:loc.group.displayName.generalAdvanced",
+      "isExpanded": false,
+      "visibleRule": "useGlobalJson = true"
+    }
+  ],
   "inputs": [
     {
       "name": "packageType",
@@ -34,12 +42,30 @@
       }
     },
     {
+      "name": "useGlobalJson",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useGlobalJson",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useGlobalJson",
+      "visibleRule": "packageType = sdk"
+    },
+    {
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
       "defaultValue": "1.0.4",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.version"
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.version",
+      "visibleRule": "useGlobalJson = false || packageType = runtime"
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
+      "required": "false",
+      "groupName": "generalAdvanced"
     }
   ],
   "execution": {

@@ -19,7 +19,15 @@
         "DotNetCore"
     ],
     "demands": [],
-    "instanceNameFormat": "Use .NET Core $(packageType) $(version)",
+    "instanceNameFormat": "Use .NET Core $(packageType)",
+    "groups":[
+        {
+            "name": "generalAdvanced",
+            "displayName": "Advanced",
+            "isExpanded": false,
+            "visibleRule": "useGlobalJson = true"
+        }
+    ],
     "inputs": [
         {
             "name": "packageType",
@@ -32,6 +40,15 @@
                 "runtime": "Runtime",
                 "sdk": "SDK (contains runtime)"
             }
+        },        
+        {
+            "name": "useGlobalJson",
+            "type": "boolean",
+            "label": "use global.json",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "If you set this box, the task will search for all global.json from your working directory and install the matching SDK.",
+            "visibleRule": "packageType = sdk"
         },
         {
             "name": "version",
@@ -40,16 +57,7 @@
             "defaultValue": "1.0.4",
             "required": false,
             "helpMarkDown": "Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here](https://github.com/dotnet/core/blob/master/release-notes/releases.json)",
-            "visibleRule": "useGlobalJson = false"
-        },
-        {
-            "name": "useGlobalJson",
-            "type": "boolean",
-            "label": "use global.json",
-            "defaultValue": false,
-            "required": false,
-            "helpMarkDown": "If you set this box, the task will search for all global.json from your working directory and install the matching SDK.",
-            "visibleRule": "packageType = SDK (contains runtime)"
+            "visibleRule": "useGlobalJson = false || packageType = runtime"
         },
         {
             "name": "workingDirectory",
@@ -57,7 +65,7 @@
             "label": "Working Directory",
             "helpMarkDown": "Current working directory where the script starts searching for files named 'global.json'.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
             "required": "false",
-            "visibleRule": "useGlobalJson = true"
+            "groupName": "generalAdvanced"
         }
     ],
     "execution": {
