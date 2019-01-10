@@ -3,7 +3,6 @@
 
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
-//import request = require('request');
 
 import { Job, JobState } from './job';
 import { JobQueue } from './jobqueue';
@@ -80,38 +79,6 @@ export class JobSearch {
                     defer.reject(err);
                 }
             });
-
-
-
-
-            // request.get({ url: apiTaskUrl, strictSSL: thisSearch.queue.TaskOptions.strictSSL }, function requestCallBack(err, httpResponse, body) {
-            //     if (!thisSearch.Initialized) { // only initialize once
-            //         if (err) {
-            //             if (err.code == 'ECONNRESET') {
-            //                 tl.debug(err);
-            //                 // resolve but do not initialize -- a job will trigger this again
-            //                 defer.resolve(null);
-            //             } else {
-            //                 defer.reject(err);
-            //             }
-            //         } else if (httpResponse.statusCode !== 200) {
-            //             defer.reject(util.getFullErrorMessage(httpResponse, 'Unable to retrieve job: ' + thisSearch.identifier));
-            //         } else {
-            //             const parsedBody: any = JSON.parse(body);
-            //             tl.debug(`parsedBody for: ${apiTaskUrl} : ${JSON.stringify(parsedBody)}`);
-            //             thisSearch.Initialized = true;
-            //             thisSearch.ParsedTaskBody = parsedBody;
-            //             // if this is the first time this job is triggered, there will be no lastBuild information, and we assume the
-            //             // build number is 1 in this case
-            //             thisSearch.initialSearchBuildNumber = (thisSearch.ParsedTaskBody.lastBuild) ? thisSearch.ParsedTaskBody.lastBuild.number : 1;
-            //             thisSearch.nextSearchBuildNumber = thisSearch.initialSearchBuildNumber;
-            //             thisSearch.searchDirection = -1;  // start searching backwards
-            //             defer.resolve(null);
-            //         }
-            //     } else {
-            //         defer.resolve(null);
-            //     }
-            // }).auth(thisSearch.queue.TaskOptions.username, thisSearch.queue.TaskOptions.password, true);
         } else { // already initialized
             defer.resolve(null);
         }
@@ -337,65 +304,6 @@ export class JobSearch {
                 thisSearch.stopWork(thisSearch.queue.TaskOptions.pollIntervalMillis);
                 return;
             });
-
-
-
-            // request.get({ url: url, strictSSL: thisSearch.queue.TaskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
-            //     tl.debug('locateExecution().requestCallback()');
-            //     if (err) {
-            //         util.handleConnectionResetError(err); // something went bad
-            //         thisSearch.stopWork(thisSearch.queue.TaskOptions.pollIntervalMillis);
-            //         return;
-            //     } else if (httpResponse.statusCode === 404) {
-            //         // try again in the future
-            //         thisSearch.stopWork(thisSearch.queue.TaskOptions.pollIntervalMillis);
-            //     } else if (httpResponse.statusCode !== 200) {
-            //         util.failReturnCode(httpResponse, 'Job pipeline tracking failed to read downstream project');
-            //     } else {
-            //         const parsedBody: any = JSON.parse(body);
-            //         tl.debug(`parsedBody for: ${url} : ${JSON.stringify(parsedBody)}`);
-
-            //         /**
-            //          * This is the list of all reasons for this job execution to be running.
-            //          * Jenkins may 'join' several pipelined jobs so all will be listed here.
-            //          * e.g. suppose A -> C and B -> C.  If both A & B scheduled C around the same time before C actually started,
-            //          * Jenkins will join these requests and only run C once.
-            //          * So, for all jobs being tracked (within this code), one is consisdered the main job (which will be followed), and
-            //          * all others are considered joined and will not be tracked further.
-            //          */
-            //         const findCauses = function(actions) {
-            //             for (const i in actions) {
-            //                 if (actions[i].causes) {
-            //                     return actions[i].causes;
-            //                 }
-            //             }
-
-            //             return null;
-            //         };
-
-            //         const causes: any = findCauses(parsedBody.actions);
-            //         thisSearch.foundCauses[thisSearch.nextSearchBuildNumber] = causes;
-            //         thisSearch.DetermineMainJob(thisSearch.nextSearchBuildNumber, function (mainJob: Job, secondaryJobs: Job[]) {
-            //             if (mainJob != null) {
-            //                 //found the mainJob, so make sure it's running!
-            //                 mainJob.SetStreaming(thisSearch.nextSearchBuildNumber);
-            //             }
-            //         });
-
-            //         if (thisSearch.searchDirection < 0) { // currently searching backwards
-            //             if (thisSearch.nextSearchBuildNumber <= 1 || parsedBody.timestamp < thisSearch.queue.RootJob.ParsedExecutionResult.timestamp) {
-            //                 //either found the very first job, or one that was triggered before the root job was; need to change search directions
-            //                 thisSearch.searchDirection = 1;
-            //                 thisSearch.nextSearchBuildNumber = thisSearch.initialSearchBuildNumber + 1;
-            //             } else {
-            //                 thisSearch.nextSearchBuildNumber--;
-            //             }
-            //         } else {
-            //             thisSearch.nextSearchBuildNumber++;
-            //         }
-            //         return thisSearch.stopWork(0); // immediately poll again because there might be more jobs
-            //     }
-            // }).auth(thisSearch.queue.TaskOptions.username, thisSearch.queue.TaskOptions.password, true);
         }
     }
 }
