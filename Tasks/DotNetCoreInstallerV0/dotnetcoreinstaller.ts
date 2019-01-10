@@ -54,10 +54,10 @@ class DotnetCoreInstaller {
         // download all sdk that are not in the cache
         let sdksToDownload = sdkVersionNumber
             // remove all tools that are present in cache.
-            .filter(d => d.toolPath == null)
+            .filter(function (d) {return d.toolPath == null})
             // distinct on version name
             .filter(function (x, i, a) {
-                a.map(d => d.name).indexOf(x.name) == i;
+                return a.map(function (d){return d.name}).indexOf(x.name) == i;
             });
             
         for (let index = 0; index < sdksToDownload.length; index++) {
