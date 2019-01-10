@@ -20,7 +20,7 @@ function Get-MSBuildPath {
         # found is returned instead. Same for "16.0"
         [System.Reflection.Assembly]$msUtilities = $null
         if (($Version -eq "16.0" -or !$Version) -and # !$Version indicates "latest"
-            ($visualStudio16 = Get-VisualStudio_16_0) -and
+            ($visualStudio16 = Get-VisualStudio 16) -and
             $visualStudio16.installationPath) {
 
             $msbuildUtilitiesPath = [System.IO.Path]::Combine($visualStudio16.installationPath, "MSBuild\Current\Bin\Microsoft.Build.Utilities.Core.dll")
@@ -30,7 +30,7 @@ function Get-MSBuildPath {
             }
         }
         elseif (($Version -eq "15.0" -or !$Version) -and # !$Version indicates "latest"
-            ($visualStudio15 = Get-VisualStudio_15_0) -and
+            ($visualStudio15 = Get-VisualStudio 15) -and
             $visualStudio15.installationPath) {
 
             $msbuildUtilitiesPath = [System.IO.Path]::Combine($visualStudio15.installationPath, "MSBuild\15.0\Bin\Microsoft.Build.Utilities.Core.dll")

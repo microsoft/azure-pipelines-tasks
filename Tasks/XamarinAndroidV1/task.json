@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 144,
-        "Patch": 0
+        "Minor": 143,
+        "Patch": 1
     },
     "demands": [
         "MSBuild",
