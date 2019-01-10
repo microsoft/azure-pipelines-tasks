@@ -50,6 +50,14 @@
             "required": false,
             "helpMarkDown": "If you set this box, the task will search for all global.json from your working directory and install the matching SDK.",
             "visibleRule": "packageType = SDK (contains runtime)"
+        },
+        {
+            "name": "workingDirectory",
+            "type": "filePath",
+            "label": "Working Directory",
+            "helpMarkDown": "Current working directory where the script starts searching for files named 'global.json'.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
+            "required": "false",
+            "visibleRule": "useGlobalJson = true"
         }
     ],
     "execution": {

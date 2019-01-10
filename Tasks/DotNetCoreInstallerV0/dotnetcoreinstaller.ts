@@ -9,9 +9,10 @@ import * as os from 'os';
 import * as path from 'path';
 
 class DotnetCoreInstaller {
-    constructor(packageType: string, version?: string, useGlobalJson: boolean = false) {
+    constructor(workingDirectory: string, packageType: string, version?: string, useGlobalJson: boolean = false) {
         this.useGlobalJson = useGlobalJson;
         this.packageType = packageType;
+        this.workingDirectory = workingDirectory;
         if (!toolLib.isExplicitVersion(version)) {
             throw tl.loc("ImplicitVersionNotSupported", version);
         }
@@ -23,7 +24,7 @@ class DotnetCoreInstaller {
     }
 
     private async installFromGlobalJson(osSuffixes: string[]) {
-        let filePathsToGlobalJson = this.getFiles(".", "global.json");
+        let filePathsToGlobalJson = this.getFiles(this.workingDirectory, "global.json");
         if(filePathsToGlobalJson.length == 0){
             throw tl.loc("FailedToFindGlobalJson", "From the root of your working folder we can't find any global.json file.");
         }
@@ -31,7 +32,7 @@ class DotnetCoreInstaller {
         // read all global files
         filePathsToGlobalJson.forEach(filePath => {
             let globalJson = (JSON.parse(fileSystem.readFileSync(filePath).toString())) as { sdk: { version: string } };
-            if(globalJson == null ||globalJson.sdk == null || globalJson.sdk.version == null){
+            if(globalJson == null || globalJson.sdk == null || globalJson.sdk.version == null){
                 throw tl.loc("FailedToReadGlobalJson", "The global.json file isn't valid. (" + filePath + ") Please take a look in the documentation for global.json (https://docs.microsoft.com/en-us/dotnet/core/tools/global-json)");
             }
             sdkVersionNumber.push({ name: globalJson.sdk.version, toolPath: null });
@@ -217,14 +218,16 @@ class DotnetCoreInstaller {
     private useGlobalJson: boolean = false;
     private cachedToolName: string;
     private arch: string;
+    private workingDirectory: string;
 }
 
 async function run() {
     let packageType = tl.getInput('packageType', true);
     let version = tl.getInput('version', false).trim();
     let useGlobalJson = tl.getBoolInput('useGlobalJson');
+    let workingDirectory = tl.getPathInput("workingDirectory", false)
     console.log(tl.loc("ToolToInstall", packageType, version));
-    await new DotnetCoreInstaller(packageType, version, useGlobalJson).install();
+    await new DotnetCoreInstaller(workingDirectory, packageType, version, useGlobalJson).install();
 }
 
 var taskManifestPath = path.join(__dirname, "task.json");
