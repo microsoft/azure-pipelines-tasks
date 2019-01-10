@@ -21,10 +21,16 @@ class DotnetCoreInstaller {
 
     private async installFromGlobalJson(osSuffixes: string[]) {
         let filePathsToGlobalJson = this.getFiles(".", "global.json");
+        if(filePathsToGlobalJson.length == 0){
+            throw tl.loc("FailedToFindGlobalJson", "From the root of your working folder we can't find any global.json file.");
+        }
         let sdkVersionNumber = new Array<{ name: string, toolPath?: string }>();
         // read all global files
         filePathsToGlobalJson.forEach(filePath => {
             let globalJson = (JSON.parse(fileSystem.readFileSync(filePath).toString())) as { sdk: { version: string } };
+            if(globalJson == null ||globalJson.sdk == null || globalJson.sdk.version == null){
+                throw tl.loc("FailedToReadGlobalJson", "The global.json file isn't valid. (" + filePath + ") Please take a look in the documentation for global.json (https://docs.microsoft.com/en-us/dotnet/core/tools/global-json)");
+            }
             sdkVersionNumber.push({ name: globalJson.sdk.version, toolPath: null });
         });
         // check each version if it installed in the cache
@@ -53,7 +59,6 @@ class DotnetCoreInstaller {
 
     private async installFromInputParameter(osSuffixes: string[]) {
         let toolPath = this.getLocalTool();
-
         if (!toolPath) {
             // download, extract, cache
             console.log(tl.loc("InstallingAfresh"));
@@ -66,11 +71,12 @@ class DotnetCoreInstaller {
 
         // Prepend the tools path. instructs the agent to prepend for future tasks
         toolLib.prependPath(toolPath);
+        // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
+        tl.setVariable('DOTNET_ROOT', toolPath);
     }
 
     public async install() {
         // Check cache
-        let toolPath: string; // TODO: remove me
         let osSuffixes = this.detectMachineOS();
         let parts = osSuffixes[0].split("-");
         this.arch = parts.length > 1 ? parts[1] : "x64";
@@ -94,9 +100,6 @@ class DotnetCoreInstaller {
         } catch (error) {
             //nop
         }
-
-        // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
-        tl.setVariable('DOTNET_ROOT', toolPath);
     }
 
     private getLocalTool(version?: string): string | null {
@@ -216,8 +219,9 @@ class DotnetCoreInstaller {
 async function run() {
     let packageType = tl.getInput('packageType', true);
     let version = tl.getInput('version', true).trim();
+    let useGlobalJson = tl.getBoolInput('useGlobalJson');
     console.log(tl.loc("ToolToInstall", packageType, version));
-    await new DotnetCoreInstaller(packageType, version).install();
+    await new DotnetCoreInstaller(packageType, version, useGlobalJson).install();
 }
 
 var taskManifestPath = path.join(__dirname, "task.json");
