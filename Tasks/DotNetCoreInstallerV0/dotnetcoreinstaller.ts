@@ -16,7 +16,7 @@ class DotnetCoreInstaller {
             throw tl.loc("ImplicitVersionNotSupported", version);
         }
         if(!useGlobalJson && (version == null || version.length == 0)){
-            throw tl.loc("ArgumentExecution", "If you don't use global.json then please defined a version.")
+            throw tl.loc("VersionMissingException", "If you don't use global.json then please defined a version.")
         }
         this.version = version;
         this.cachedToolName = this.packageType === 'runtime' ? 'dncr' : 'dncs';;

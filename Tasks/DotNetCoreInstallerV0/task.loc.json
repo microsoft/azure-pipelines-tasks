@@ -94,6 +94,8 @@
     "WarningVersionNotFound": "ms-resource:loc.messages.WarningVersionNotFound",
     "CouldNotDownload": "ms-resource:loc.messages.CouldNotDownload",
     "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
-    "PrependGlobalToolPath": "ms-resource:loc.messages.PrependGlobalToolPath"
+    "PrependGlobalToolPath": "ms-resource:loc.messages.PrependGlobalToolPath",
+    "VersionMissingException": "ms-resource:loc.messages.VersionMissingException",
+    "FailedToFindGlobalJson": "ms-resource:loc.messages.FailedToFindGlobalJson"
   }
 }
