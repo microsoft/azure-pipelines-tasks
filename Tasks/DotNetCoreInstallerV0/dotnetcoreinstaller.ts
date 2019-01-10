@@ -8,7 +8,7 @@ import * as os from 'os';
 import * as path from 'path';
 
 class DotnetCoreInstaller {
-    constructor(workingDirectory: string, packageType: string, version?: string, useGlobalJson: boolean = false) {
+    constructor(workingDirectory: string, packageType: string, version?: string, useGlobalJson?: boolean) {
         this.useGlobalJson = useGlobalJson;
         this.packageType = packageType;
         this.workingDirectory = workingDirectory;
