@@ -131,7 +131,7 @@ function Initialize-AzureSubscription {
             # Else, this is AzureRM.            
             try {
                 if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
-                    If (CmdletHasMember -cmdlet "Add-AzureRmAccount" -memberName "Scope")
+                    if (CmdletHasMember -cmdlet "Add-AzureRmAccount" -memberName "Scope")
                     {
                         $processScope = @{ Scope = "Process" }    
                     }
