@@ -12,10 +12,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 139,
-        "Patch": 2
+        "Minor": 147,
+        "Patch": 0
     },
-    "releaseNotes": "Add support for distribution to stores.",
+    "releaseNotes": "Fix bug where feature branches were being truncated.",
     "groups": [
         {
             "name": "symbols",
@@ -156,6 +156,13 @@
             "required": true,
             "helpMarkDown": "Select a UTF-8 encoded text file which contains the Release Notes for this version.",
             "visibleRule": "releaseNotesSelection = file"
+        },
+        {
+            "name": "isMandatory",
+            "type": "boolean",
+            "label": "Require users to update to this release",
+            "defaultValue": "false",
+            "required": false
         },
         {
             "name": "destinationId",

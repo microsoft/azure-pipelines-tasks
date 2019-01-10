@@ -20,7 +20,7 @@ describe('AppCenterDistribute L0 Suite', function () {
 
     after(() => {
         delete process.env['BUILD_BUILDID'];
-        delete process.env['BUILD_SOURCEBRANCHNAME'];
+        delete process.env['BUILD_SOURCEBRANCH'];
         delete process.env['BUILD_SOURCEVERSION'];
         delete process.env['LASTCOMMITMESSAGE'];
     });
@@ -160,6 +160,36 @@ describe('AppCenterDistribute L0 Suite', function () {
         this.timeout(4000);
 
         let tp = path.join(__dirname, 'L0PublishCommitInfo_2.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
+    it('Positive path: publish commit info for feature branch', function () {
+        this.timeout(4000);
+
+        let tp = path.join(__dirname, 'L0PublishCommitInfo_3.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
+    it('Positive path: publish commit info for tfvc branch', function () {
+        this.timeout(4000);
+
+        let tp = path.join(__dirname, 'L0PublishCommitInfo_4.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
+    it('Positive path: publish mandatory update)', function () {
+        this.timeout(4000);
+
+        let tp = path.join(__dirname, 'L0PublishMandatoryUpdate.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
