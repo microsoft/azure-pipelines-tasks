@@ -93,12 +93,6 @@ export function sleepFor(sleepDurationInSeconds): Promise<any> {
     });
 }
 
-async function sendRequestInternal(request: WebRequest): Promise<WebResponse> {
-    tl.debug(util.format("[%s]%s", request.method, request.uri));
-    var response: httpClient.HttpClientResponse = await httpCallbackClient.request(request.method, request.uri, request.body, request.headers);
-    return await toWebResponse(response);
-}
-
 async function toWebResponse(response: httpClient.HttpClientResponse): Promise<WebResponse> {
     var res = new WebResponse();
     if (response) {
