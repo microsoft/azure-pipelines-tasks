@@ -36,7 +36,7 @@ The task is used to run Azure CLI commands on Cross platform agents running Wind
 
 * **Script Path**\*: When using Windows based agent, specify the path to the .bat , .cmd script whereas when using Linux based agent, specify the path to the .sh script you want to run. The path must be a fully qualified path or a valid path relative to the default working directory.
 
-* **Inline Script**\*: Write the script here while using Azure CLI commands. When using Windows based agent use batch scripting whereas use shell scripting when using Linux based agents.
+* **Inline Script**\*: Specify the script inline here. When using Windows based agent use batch scripting whereas use shell scripting when using Linux based agents.
 
 * **Arguments**: Specify arguments to pass to the script.
 
