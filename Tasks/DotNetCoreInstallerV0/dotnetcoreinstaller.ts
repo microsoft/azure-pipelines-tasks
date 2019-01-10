@@ -15,6 +15,9 @@ class DotnetCoreInstaller {
         if (!toolLib.isExplicitVersion(version)) {
             throw tl.loc("ImplicitVersionNotSupported", version);
         }
+        if(!useGlobalJson && (version == null || version.length == 0)){
+            throw tl.loc("ArgumentExecution", "If you don't use global.json then please defined a version.")
+        }
         this.version = version;
         this.cachedToolName = this.packageType === 'runtime' ? 'dncr' : 'dncs';;
     }
@@ -218,7 +221,7 @@ class DotnetCoreInstaller {
 
 async function run() {
     let packageType = tl.getInput('packageType', true);
-    let version = tl.getInput('version', true).trim();
+    let version = tl.getInput('version', false).trim();
     let useGlobalJson = tl.getBoolInput('useGlobalJson');
     console.log(tl.loc("ToolToInstall", packageType, version));
     await new DotnetCoreInstaller(packageType, version, useGlobalJson).install();

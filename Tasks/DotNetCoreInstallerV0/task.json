@@ -38,8 +38,9 @@
             "type": "string",
             "label": "Version",
             "defaultValue": "1.0.4",
-            "required": true,
-            "helpMarkDown": "Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here](https://github.com/dotnet/core/blob/master/release-notes/releases.json)"
+            "required": false,
+            "helpMarkDown": "Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here](https://github.com/dotnet/core/blob/master/release-notes/releases.json)",
+            "visibleRule": "useGlobalJson = false"
         },
         {
             "name": "useGlobalJson",
@@ -47,7 +48,8 @@
             "label": "use global.json",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "If you set this box, the task will search for all global.json from your working directory and install the SDK's."
+            "helpMarkDown": "If you set this box, the task will search for all global.json from your working directory and install the matching SDK.",
+            "visibleRule": "packageType = SDK (contains runtime)"
         }
     ],
     "execution": {
