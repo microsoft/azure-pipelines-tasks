@@ -44,6 +44,8 @@ if ($targetAzurePs -eq $latestVersion) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
 
+. "$PSScriptRoot\Utility.ps1"
+
 $authScheme = ''
 try
 {
