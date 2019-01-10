@@ -4,7 +4,6 @@ import * as trm from 'vsts-task-lib/toolrunner';
 import { DotNetCoreReleaseFetcher } from "./releasesfetcher";
 import * as utilities from "./utilities";
 import * as fileSystem from "fs";
-
 import * as os from 'os';
 import * as path from 'path';
 
@@ -30,7 +29,8 @@ class DotnetCoreInstaller {
         }
         let sdkVersionNumber = new Array<{ name: string, toolPath?: string }>();
         // read all global files
-        filePathsToGlobalJson.forEach(filePath => {
+        for (let index = 0; index < filePathsToGlobalJson.length; index++) {
+            const filePath = filePathsToGlobalJson[index];
             let globalJson = {} as { sdk: { version: string } };  
             console.log("global.json found here: " + filePath);
             try {
@@ -43,20 +43,22 @@ class DotnetCoreInstaller {
                 throw tl.error("FailedToReadGlobalJson \r\n" +  
                 "The global.json file isn't valid. (" + filePath + ") Please take a look in the documentation for global.json (https://docs.microsoft.com/en-us/dotnet/core/tools/global-json)");
             }
-            sdkVersionNumber.push({ name: globalJson.sdk.version, toolPath: null });
-        });
+            sdkVersionNumber.push({ name: globalJson.sdk.version, toolPath: null });            
+        }
         // check each version if it installed in the cache
-        sdkVersionNumber.forEach(d => {
+        for (let index = 0; index < sdkVersionNumber.length; index++) {
+            const d = sdkVersionNumber[index];
             let path = this.getLocalTool(d.name);
             d.toolPath = path;
-        });
-
+        }      
         // download all sdk that are not in the cache
         let sdksToDownload = sdkVersionNumber
             // remove all tools that are present in cache.
             .filter(d => d.toolPath == null)
             // distinct on version name
-            .filter((x, i, a) => a.map(d => d.name).indexOf(x.name) == i);
+            .filter(function (x, i, a) {
+                a.map(d => d.name).indexOf(x.name) == i;
+            });
             
         for (let index = 0; index < sdksToDownload.length; index++) {
             const element = sdksToDownload[index];
@@ -69,7 +71,7 @@ class DotnetCoreInstaller {
             toolLib.prependPath(element.toolPath);
         }
         // set the biggest sdk as default
-        let biggestSdkVersion = sdkVersionNumber.sort((a,b) => a.name.localeCompare(b.name))[sdkVersionNumber.length - 1];
+        let biggestSdkVersion = sdkVersionNumber.sort(function (a,b) {return a.name.localeCompare(b.name);})[sdkVersionNumber.length - 1];
         tl.setVariable('DOTNET_ROOT', biggestSdkVersion.toolPath);
     }
 
