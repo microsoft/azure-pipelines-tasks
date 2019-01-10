@@ -127,6 +127,17 @@ describe('DotNetCoreInstaller', function() {
                 assert(tr.stdout.indexOf("loc_mock_DownloadingPrimaryUrl") == -1, "should not proceed with downloading");
             }, tr, done);
         });
+        it("[windows]should fail if useGlobalJson is set but no global.json is found.", (done) => {
+            process.env["__use_global_json__"] = "TRUE";
+            let tp = path.join(__dirname, "InstallWindows.js");
+            let tr = new ttm.MockTestRunner(tp);
+            tr.run();
+            delete process.env["__use_global_json__"];
+            runValidations(() => {
+                assert(tr.failed, "Should have failed");
+                assert(tr.stdout.indexOf("FailedToFindGlobalJson") > -1, "should print error message");
+            }, tr, done);
+        });
     } else {
         it("[nix]should succeed if sdk installed successfully", (done) => {
             let tp = path.join(__dirname, "InstallNix.js");
