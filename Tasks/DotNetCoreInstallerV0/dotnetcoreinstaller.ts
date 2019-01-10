@@ -3,12 +3,14 @@ import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as trm from 'vsts-task-lib/toolrunner';
 import { DotNetCoreReleaseFetcher } from "./releasesfetcher";
 import * as utilities from "./utilities";
+import * as fileSystem from "fs";
 
 import * as os from 'os';
 import * as path from 'path';
 
 class DotnetCoreInstaller {
-    constructor(packageType, version) {
+    constructor(packageType: string, version?: string, useGlobalJson: boolean = false) {
+        this.useGlobalJson = useGlobalJson;
         this.packageType = packageType;
         if (!toolLib.isExplicitVersion(version)) {
             throw tl.loc("ImplicitVersionNotSupported", version);
@@ -17,13 +19,40 @@ class DotnetCoreInstaller {
         this.cachedToolName = this.packageType === 'runtime' ? 'dncr' : 'dncs';;
     }
 
-    public async install() {
-        // Check cache
-        let toolPath: string;
-        let osSuffixes = this.detectMachineOS();
-        let parts = osSuffixes[0].split("-");
-        this.arch = parts.length > 1 ? parts[1] : "x64";
-        toolPath = this.getLocalTool();
+    private async installFromGlobalJson(osSuffixes: string[]) {
+        let filePathsToGlobalJson = this.getFiles(".", "global.json");
+        let sdkVersionNumber = new Array<{ name: string, toolPath?: string }>();
+        // read all global files
+        filePathsToGlobalJson.forEach(filePath => {
+            let globalJson = (JSON.parse(fileSystem.readFileSync(filePath).toString())) as { sdk: { version: string } };
+            sdkVersionNumber.push({ name: globalJson.sdk.version, toolPath: null });
+        });
+        // check each version if it installed in the cache
+        sdkVersionNumber.forEach(d => {
+            let path = this.getLocalTool(d.name);
+            d.toolPath = path;
+        });
+
+        // download all sdk that are not in the cache
+        await sdkVersionNumber
+            .filter(d => d.toolPath == null)
+            .forEach(async d => {
+                // download, extract, cache
+                console.log(tl.loc("InstallingAfresh"));
+                console.log(tl.loc("GettingDownloadUrl", this.packageType, d.name));
+                let downloadUrls = await DotNetCoreReleaseFetcher.getDownloadUrls(osSuffixes, d.name, this.packageType);
+                d.toolPath = await this.downloadAndInstall(downloadUrls);
+                // Prepend the tools path. instructs the agent to prepend for future tasks
+                toolLib.prependPath(d.toolPath);
+            });
+
+        // set the biggest sdk as default
+        let biggestSdkVersion = sdkVersionNumber.sort((a,b) => a.name.localeCompare(b.name))[sdkVersionNumber.length - 1];
+        tl.setVariable('DOTNET_ROOT', biggestSdkVersion.toolPath);
+    }
+
+    private async installFromInputParameter(osSuffixes: string[]) {
+        let toolPath = this.getLocalTool();
 
         if (!toolPath) {
             // download, extract, cache
@@ -37,7 +66,20 @@ class DotnetCoreInstaller {
 
         // Prepend the tools path. instructs the agent to prepend for future tasks
         toolLib.prependPath(toolPath);
+    }
 
+    public async install() {
+        // Check cache
+        let toolPath: string; // TODO: remove me
+        let osSuffixes = this.detectMachineOS();
+        let parts = osSuffixes[0].split("-");
+        this.arch = parts.length > 1 ? parts[1] : "x64";
+
+        if (this.useGlobalJson) {
+            await this.installFromGlobalJson(osSuffixes);
+        } else {
+            await this.installFromInputParameter(osSuffixes);
+        }        
         try {
             let globalToolPath: string = "";
             if (tl.osType().match(/^Win/)) {
@@ -57,9 +99,12 @@ class DotnetCoreInstaller {
         tl.setVariable('DOTNET_ROOT', toolPath);
     }
 
-    private getLocalTool(): string {
+    private getLocalTool(version?: string): string | null {
         console.log(tl.loc("CheckingToolCache"));
-        return toolLib.findLocalTool(this.cachedToolName, this.version, this.arch);
+        return toolLib.findLocalTool(
+            this.cachedToolName,
+            version != null ? version : this.version,
+            this.arch);
     }
 
     private detectMachineOS(): string[] {
@@ -138,8 +183,32 @@ class DotnetCoreInstaller {
         return cachedDir;
     }
 
+    /**
+     * Search for files from a given path.
+     * @param dir the dir we use to search for files
+     * @param searchPattern the regex search pattern the file name must match. The default matches on all names!
+     */
+    private getFiles(dir: string, searchPattern: string = ".*", recursive: boolean = true): Array<string> {
+        const subPaths = fileSystem.readdirSync(dir);
+        let matchedFiles = new Array<string>();
+        for (const subPath of subPaths) {
+            const res = path.resolve(dir, subPath);
+            if (
+                (fileSystem.statSync(res)).isDirectory() &&
+                recursive) {
+                matchedFiles = matchedFiles.concat(this.getFiles(res, searchPattern));
+            } else {
+                if (res.match(searchPattern)) {
+                    matchedFiles.push(res);
+                }
+            }
+        }
+        return matchedFiles;
+    }
+
     private packageType: string;
-    private version: string;
+    private version?: string;
+    private useGlobalJson: boolean = false;
     private cachedToolName: string;
     private arch: string;
 }
