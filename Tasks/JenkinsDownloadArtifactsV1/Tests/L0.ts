@@ -161,6 +161,25 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         }
     });
     
+    it('Validate bitbucket commit url', (done) => {
+
+        const tp: string = path.join(__dirname, 'L0ValidateBitBucketCommitUrl.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            assert(tr.stdout.indexOf('Translated url http://bitbucket.org/commits/3cbfc14e3f482a25e5122323f3273b89677d9875 after fixing the query path based on the provider') !== -1, tr.stdout);
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
     it('Validate http commit url', (done) => {
 
         const tp: string = path.join(__dirname, 'L0ValidateHttpCommitUrl.js');
