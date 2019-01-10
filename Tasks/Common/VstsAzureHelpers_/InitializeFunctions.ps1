@@ -16,6 +16,12 @@ function Initialize-AzureSubscription {
         $null = Clear-AzureRmContext -Scope Process
     }
 
+    if (Get-Command -Name "Disable-AzureRmContextAutosave" -ErrorAction "SilentlyContinue") 
+    {
+        Write-Host "##[command]Disable-AzureRmContextAutosave -ErrorAction SilentlyContinue"
+        $null = Disable-AzureRmContextAutosave -ErrorAction SilentlyContinue
+    }
+
     $environmentName = "AzureCloud"
     if($Endpoint.Data.Environment) {
         $environmentName = $Endpoint.Data.Environment

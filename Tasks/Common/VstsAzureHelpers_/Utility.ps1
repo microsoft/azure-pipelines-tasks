@@ -493,7 +493,20 @@ function Disconnect-AzureAndClearContext {
 
     try {
         if ($authScheme -eq 'ServicePrincipal') {
-            Write-Verbose "Trying to clear context from process scope"
+            Write-Verbose "Trying to disconnect from Azure and clear context at process scope"
+
+            if (Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Disconnect-AzureRmAccount -memberName Scope) {	
+                Write-Host "##[command]Disconnect-AzureRmAccount -Scope Process"	
+                $null = Disconnect-AzureRmAccount -Scope Process
+            }	
+            elseif (Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Remove-AzureRmAccount -memberName Scope) {	
+                Write-Host "##[command]Remove-AzureRmAccount -Scope Process"	
+                $null = Remove-AzureRmAccount -Scope Process
+            }	
+            elseif (Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Logout-AzureRmAccount -memberName Scope) {	
+                Write-Host "##[command]Logout-AzureRmAccount -Scope Process"	
+                $null = Logout-AzureRmAccount -Scope Process
+            }
 
             if (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue") {
                 Write-Host "##[command]Clear-AzureRmContext -Scope Process"
