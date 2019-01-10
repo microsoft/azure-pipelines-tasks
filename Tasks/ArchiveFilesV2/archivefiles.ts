@@ -110,7 +110,7 @@ function sevenZipArchive(archive: string, compression: string, files: string[]) 
     }
     sevenZip.arg(archive);
 
-    const fileList = createFileList(files);
+    const fileList: string = createFileList(files);
     sevenZip.arg('@' + fileList);
 
     return handleExecResult(sevenZip.execSync(getOptions()), archive);
