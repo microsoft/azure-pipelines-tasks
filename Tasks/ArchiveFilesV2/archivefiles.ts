@@ -67,7 +67,7 @@ function createFileList(files: string[]): string {
     try {
         fs.writeFileSync(
             file,
-            files.reduce((prev, cur) => prev + cur + "\n"),
+            files.reduce((prev, cur) => prev + cur + "\n", ""),
             { encoding: "utf8" });
     }
     catch (error) {
