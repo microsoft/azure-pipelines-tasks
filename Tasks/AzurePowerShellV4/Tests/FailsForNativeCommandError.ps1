@@ -11,8 +11,8 @@ Register-Mock Get-VstsInput { "silentlyContinue" } -- -Name errorActionPreferenc
 Register-Mock Get-VstsInput { $true } -- -Name FailOnStandardError
 Register-Mock Update-PSModulePathForHostedAgent
 Register-Mock Initialize-AzModule
-Register-Mock Initialize-AzureRMModule
 Register-Mock Remove-EndpointSecrets
+Register-Mock Disconnect-AzureAndClearContext
 
 # Act.
 $actual = @( & $PSScriptRoot\..\AzurePowerShell.ps1 )

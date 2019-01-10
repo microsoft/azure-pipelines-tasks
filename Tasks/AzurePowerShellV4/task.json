@@ -20,7 +20,7 @@
         "Patch": 1
     },
     "preview": true,
-    "releaseNotes": "Removal of Classic service endpoint support",
+    "releaseNotes": "Add support of Az Module and cross platform agents",
     "demands": [
         "azureps"
     ],

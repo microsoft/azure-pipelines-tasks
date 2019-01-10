@@ -153,4 +153,5 @@ finally {
 
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Remove-EndpointSecrets
+    Disconnect-AzureAndClearContext -authScheme $authScheme -ErrorAction SilentlyContinue
 }
