@@ -32,7 +32,7 @@ describe('JenkinsQueueJob L0 Suite', function () {
         try {
             tr.run();
 
-            assert(tr.stderr.indexOf('Input required: serverEndpoint') !== -1, 'should have written to stderr');
+            assert(tr.stdOutContained('Input required: serverEndpoint'), 'should have written to stdout');
             assert(tr.failed, 'task should have failed');
             done();
 
@@ -56,7 +56,7 @@ describe('JenkinsQueueJob L0 Suite', function () {
         try {
             tr.run();
 
-            assert(tr.stderr.indexOf('Input required: jobName') !== -1, 'should have written to stderr');
+            assert(tr.stdOutContained('Input required: jobName'), 'should have written to stdout');
             assert(tr.failed, 'task should have failed');
             done();
         } catch (err) {
@@ -74,7 +74,7 @@ describe('JenkinsQueueJob L0 Suite', function () {
         try {
             tr.run();
 
-            assert(tr.stderr.indexOf('Input required: captureConsole') != -1, 'should have written to stderr');
+            assert(tr.stdOutContained('Input required: captureConsole'), 'should have written to stdout');
             assert(tr.failed, 'task should have failed');
             done();
         } catch (err) {
@@ -92,7 +92,7 @@ describe('JenkinsQueueJob L0 Suite', function () {
         try {
             tr.run();
 
-            assert(tr.stderr.indexOf('Input required: capturePipeline') != -1, 'should have written to stderr');
+            assert(tr.stdOutContained('Input required: capturePipeline'), 'should have written to stdout');
             assert(tr.failed, 'task should have failed');
             done();
         } catch (err) {
@@ -110,7 +110,7 @@ describe('JenkinsQueueJob L0 Suite', function () {
         try {
             tr.run();
 
-            assert(tr.stderr.indexOf('Input required: parameterizedJob') != -1, 'should have written to stderr');
+            assert(tr.stdOutContained('Input required: parameterizedJob'), 'should have written to stdout');
             assert(tr.failed, 'task should have failed');
             done();
         } catch (err) {
@@ -128,7 +128,7 @@ describe('JenkinsQueueJob L0 Suite', function () {
         try {
             tr.run();
 
-            assert(tr.stderr.indexOf('Error: Invalid URI "bogusURL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)"') != -1, 'should have written to stderr');
+            assert(tr.stdOutContained('Invalid URI "bogusURL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)"'), 'should have written to stdout');
             assert(tr.failed, 'task should have failed');
             done();
         } catch (err) {
@@ -146,7 +146,7 @@ describe('JenkinsQueueJob L0 Suite', function () {
         try {
             tr.run();
 
-            assert(tr.stderr.indexOf('Error: Invalid URI "bogusURL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)"') != -1, 'should have written to stderr');
+            assert(tr.stdOutContained('Invalid URI "bogusURL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)"'), 'should have written to stdout');
             assert(tr.failed, 'task should have failed');
             done();
         } catch (err) {

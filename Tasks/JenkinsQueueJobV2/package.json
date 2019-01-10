@@ -5,7 +5,8 @@
     "@types/q": "^1.0.7",
     "@types/shelljs": "^0.3.0",
     "request": "^2.65.0",
-    "vsts-task-lib": "0.9.20"
+    "typed-rest-client": "1.0.7",
+    "vsts-task-lib": "2.4.0"
   },
   "description": "Azure Pipelines Jenkins Queue Job Task",
   "repository": {

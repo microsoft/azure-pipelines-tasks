@@ -22,7 +22,6 @@ export function failReturnCode(httpResponse, message: string): void {
     const fullMessage = getFullErrorMessage(httpResponse, message);
     tl.debug(message);
     tl.error(fullMessage);
-    tl._writeError(message);
     tl.setResult(tl.TaskResult.Failed, message);
 }
 

@@ -2,10 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import tl = require('vsts-task-lib/task');
-import fs = require('fs');
 import path = require('path');
-import shell = require('shelljs');
-import Q = require('q');
 import util = require('./util');
 
 import { Job } from './job';
@@ -116,7 +113,6 @@ async function doWork() {
         tl.setVariable('JENKINS_JOB_ID', rootJob.ExecutableNumber.toString());
     } catch (e) {
         tl.debug(e.message);
-        tl._writeError(e);
         tl.setResult(tl.TaskResult.Failed, e.message);
     }
 }

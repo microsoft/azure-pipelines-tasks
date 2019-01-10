@@ -45,7 +45,7 @@ function sevenZipExtract(file: string, destinationFolder: string): void {
     return handleExecResult(sevenZip.execSync(getOptions()), file);
 }
 
-function handleExecResult(execResult: tr.IExecResult, file: string): void {
+function handleExecResult(execResult: tr.IExecSyncResult, file: string): void {
     if (execResult.code != tl.TaskResult.Succeeded) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
         const message: string = 'Extraction failed for file: ' + file +
