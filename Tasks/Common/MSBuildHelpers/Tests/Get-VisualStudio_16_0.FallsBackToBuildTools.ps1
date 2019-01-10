@@ -20,8 +20,8 @@ Register-Mock Invoke-VstsTool {
     } -- -FileName (Resolve-Path $PSScriptRoot\..\vswhere.exe).Path -Arguments "-version [16.0,17.0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero
 
 # Act.
-$null = Get-VisualStudio_16_0
-$actual = Get-VisualStudio_16_0
+$null = Get-VisualStudio 16
+$actual = Get-VisualStudio 16
 
 # Assert.
 Assert-AreEqual -Expected "build tools path" -Actual $actual.installationPath
