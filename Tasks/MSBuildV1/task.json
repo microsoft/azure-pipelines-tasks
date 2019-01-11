@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 120,
-        "Patch": 2
+        "Minor": 146,
+        "Patch": 0
     },
     "demands": [
         "msbuild"
@@ -55,6 +55,7 @@
             "visibleRule": "msbuildLocationMethod = version",
             "options": {
                 "latest": "Latest",
+                "16.0": "MSBuild 16.0",
                 "15.0": "MSBuild 15.0",
                 "14.0": "MSBuild 14.0",
                 "12.0": "MSBuild 12.0",
