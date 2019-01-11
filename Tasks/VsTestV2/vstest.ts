@@ -87,11 +87,11 @@ export function startTest() {
                 uploadFile(path.join(os.tmpdir(), 'TestSelector.log'));
             }
             if (taskResult == tl.TaskResult.Failed) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'));
+                tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'), true);
             }
             else {
                 consolidatedCiData.result = 'Succeeded';
-                tl.setResult(tl.TaskResult.Succeeded, tl.loc('VstestPassedReturnCode'));
+                tl.setResult(tl.TaskResult.Succeeded, tl.loc('VstestPassedReturnCode'), true);
             }
             ci.publishEvent(consolidatedCiData);
 
@@ -99,12 +99,12 @@ export function startTest() {
             uploadVstestDiagFile();
             utils.Helper.publishEventToCi(AreaCodes.INVOKEVSTEST, err.message, 1002, false);
             console.log('##vso[task.logissue type=error;code=' + err + ';TaskName=VSTest]');
-            tl.setResult(tl.TaskResult.Failed, err);
+            tl.setResult(tl.TaskResult.Failed, err, true);
         });
     } catch (error) {
         uploadVstestDiagFile();
         utils.Helper.publishEventToCi(AreaCodes.RUNTESTSLOCALLY, error.message, 1003, false);
-        tl.setResult(tl.TaskResult.Failed, error);
+        tl.setResult(tl.TaskResult.Failed, error, true);
     }
 }
 
