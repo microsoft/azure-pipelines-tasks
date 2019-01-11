@@ -29,15 +29,15 @@ export class DistributedTest {
 
             if (exitCode !== 0) {
                 tl.debug('Modules/DTAExecutionHost.exe process exited with code ' + exitCode);
-                tl.setResult(tl.TaskResult.Failed, 'Modules/DTAExecutionHost.exe process exited with code ' + exitCode);
+                tl.setResult(tl.TaskResult.Failed, 'Modules/DTAExecutionHost.exe process exited with code ' + exitCode, true);
             } else {
                 tl.debug('Modules/DTAExecutionHost.exe exited');
-                tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
+                tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded', true);
             }
         } catch (error) {
             ci.publishEvent({ environmenturi: this.inputDataContract.RunIdentifier, error: error });
             tl.error(error);
-            tl.setResult(tl.TaskResult.Failed, error);
+            tl.setResult(tl.TaskResult.Failed, error, true);
         }
     }
 
