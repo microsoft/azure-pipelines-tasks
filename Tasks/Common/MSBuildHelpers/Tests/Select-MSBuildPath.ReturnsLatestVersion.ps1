@@ -6,7 +6,7 @@ param()
 Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..
 foreach ($version in @('', 'latest')) {
     Unregister-Mock Get-MSBuildPath
-    Register-Mock Get-MSBuildPath { 'Some resolved location' } -- -Version '15.0' -Architecture 'Some architecture'
+    Register-Mock Get-MSBuildPath { 'Some resolved location' } -- -Version '16.0' -Architecture 'Some architecture'
 
     # Act.
     $actual = Select-MSBuildPath -Method 'Version' -Location 'Some input location' -PreferredVersion $version -Architecture 'Some architecture'
