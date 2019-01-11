@@ -289,7 +289,7 @@
             "label": "Other console options",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ option. The options can be specified using a settings file instead.</p>",
+            "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ option or 'Test run' option or when a custom batching option is selected. The options can be specified using a settings file instead.</p>",
             "groupName": "executionOptions"
         },
         {
