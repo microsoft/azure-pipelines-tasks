@@ -111,6 +111,7 @@ var getTasksToBuildForPR = function() {
     // Takes in a git source branch, diffs it with master, and returns a list of tasks that could have been affected by the changes.
     var sourceBranch = process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'];
     var prId = process.env['SYSTEM_PULLREQUEST_PULLREQUESTNUMBER'];
+    var targetBranch = process.env['SYSTEM_PULLREQUEST_TARGETBRANCH'];
     var commonChanges = [];
     var toBeBuilt = [];
     try {
@@ -125,7 +126,7 @@ var getTasksToBuildForPR = function() {
         console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=125;]Unable to reach github, building all tasks', err);
         return makeOptions.tasks;
     }
-    var baseCommit = run('git merge-base ' + sourceBranch + ' origin/master');
+    var baseCommit = run('git merge-base ' + sourceBranch + ' origin/' + targetBranch);
     run('git --no-pager diff --name-only ' + baseCommit + ' ' + sourceBranch)
         .split('\n')
         .forEach(filePath => {
