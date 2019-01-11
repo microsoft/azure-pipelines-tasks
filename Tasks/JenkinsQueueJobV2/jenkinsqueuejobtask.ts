@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import util = require('./util');
 
@@ -113,6 +113,7 @@ async function doWork() {
         tl.setVariable('JENKINS_JOB_ID', rootJob.ExecutableNumber.toString());
     } catch (e) {
         tl.debug(e.message);
+        tl.error(e);
         tl.setResult(tl.TaskResult.Failed, e.message);
     }
 }

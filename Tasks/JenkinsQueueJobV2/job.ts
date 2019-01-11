@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 import fs = require('fs');
 import httpClient = require("typed-rest-client/HttpClient");
 import path = require('path');
@@ -312,7 +312,7 @@ export class Job {
             const resultUrl: string = Util.addUrlSegment(thisJob.ExecutableUrl, 'api/json?tree=result,timestamp');
             thisJob.debug('Tracking completion status of job: ' + resultUrl);
 
-            var request = new WebRequest();
+            const request = new WebRequest();
             request.uri = resultUrl;
             request.method = "GET";
             request.headers = {
@@ -320,7 +320,7 @@ export class Job {
                 "Authorization": 'Basic ' + new Buffer(thisJob.queue.TaskOptions.username + ':' + thisJob.queue.TaskOptions.password).toString('base64')
             };
         
-            var response = sendRequest(request).then(async (response: WebResponse) => {
+            const response = sendRequest(request).then(async (response: WebResponse) => {
                 tl.debug('finish().requestCallback()');
                 if (response.statusCode != 200) {
                     Util.failReturnCode(response, 'Job progress tracking failed to read job result');

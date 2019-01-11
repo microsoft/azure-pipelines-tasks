@@ -1,14 +1,14 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 
 import { Job, JobState } from './job';
 import { JobQueue } from './jobqueue';
 
 import util = require('./util');
-import { WebRequest, sendRequest, sendRetriableRequest, WebResponse } from "./webclient";
+import { WebRequest, sendRequest, sendRetriableRequest, WebResponse } from './webclient';
 
 export class JobSearch {
     private taskUrl: string; // URL for the job definition
@@ -44,15 +44,15 @@ export class JobSearch {
             const apiTaskUrl: string = util.addUrlSegment(thisSearch.taskUrl, '/api/json?tree=downstreamProjects[name,url,color],lastBuild[number]');
             tl.debug('getting job task URL:' + apiTaskUrl);
 
-            var request = new WebRequest();
+            const request = new WebRequest();
             request.uri = apiTaskUrl;
-            request.method = "GET";
+            request.method = 'GET';
             request.headers = {
-                "Content-Type": "application/json; charset=utf-8",
-                "Authorization": 'Basic ' + new Buffer(thisSearch.queue.TaskOptions.username + ':' + thisSearch.queue.TaskOptions.password).toString('base64')
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': 'Basic ' + new Buffer(thisSearch.queue.TaskOptions.username + ':' + thisSearch.queue.TaskOptions.password).toString('base64')
             };
         
-            var response = sendRequest(request).then(async (response: WebResponse) => {
+        const response = sendRequest(request).then(async (response: WebResponse) => {
                 if (!thisSearch.Initialized) { // only initialize once
                     if (response.statusCode !== 200) {
                         defer.reject(util.getFullErrorMessage(response, 'Unable to retrieve job: ' + thisSearch.identifier));
@@ -249,12 +249,12 @@ export class JobSearch {
             const url: string  = util.addUrlSegment(thisSearch.taskUrl, thisSearch.nextSearchBuildNumber + '/api/json?tree=actions[causes[shortDescription,upstreamBuild,upstreamProject,upstreamUrl]],timestamp');
             tl.debug('pipeline, locating child execution URL:' + url);
 
-            var request = new WebRequest();
+            const request = new WebRequest();
             request.uri = url;
-            request.method = "GET";
+            request.method = 'GET';
             request.headers = {
-                "Content-Type": "application/json; charset=utf-8",
-                "Authorization": 'Basic ' + new Buffer(thisSearch.queue.TaskOptions.username + ':' + thisSearch.queue.TaskOptions.password).toString('base64')
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': 'Basic ' + new Buffer(thisSearch.queue.TaskOptions.username + ':' + thisSearch.queue.TaskOptions.password).toString('base64')
             };
         
             var response = sendRetriableRequest(request).then(async (response: WebResponse) => {
