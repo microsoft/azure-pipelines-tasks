@@ -208,8 +208,12 @@ class DotnetCoreInstaller {
      * Search for files from a given path.
      * @param dir the dir we use to search for files
      * @param searchPattern the regex search pattern the file name must match. The default matches on all names!
+     * @param recursive search recursive for the files. The default is true!
      */
-    private getFiles(dir: string, searchPattern: string = ".*", recursive: boolean = true): Array<string> {
+    private getFiles(dir: string, searchPattern?: string, recursive?: boolean): Array<string> {
+        searchPattern = typeof searchPattern !== 'undefined' ? searchPattern : ".*";
+        recursive = typeof recursive !== 'undefined' ? recursive : true;
+
         const subPaths = fileSystem.readdirSync(dir);
         let matchedFiles = new Array<string>();
         for (const subPath of subPaths) {
