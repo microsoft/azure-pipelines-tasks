@@ -9,9 +9,11 @@ import { HttpClientResponse } from 'artifact-engine/Providers/typed-rest-client/
 
 export class CommitsDownloader {
     private webProvider: providers.WebProvider;
+    private retryLimit: number;
 
     constructor(webProvider: providers.WebProvider) {
         this.webProvider = webProvider;
+        this.retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : 4;
     }
 
     public DownloadFromSingleBuildAndSave(buildId: string): Q.Promise<string> {
@@ -53,9 +55,10 @@ export class CommitsDownloader {
         let definitionId = tl.getInput("definition", true);
         var endpointUrl = tl.getEndpointUrl(connection, false);
         let defer = Q.defer<string>();
-        let url: string = endpointUrl + "/api/v1.1/project/"+definitionId+"/"+buildId;
+        let url: string = `${endpointUrl}/api/v1.1/project/${definitionId}/${buildId}`;
+        url = url.replace(/([^:]\/)\/+/g, "$1");
         
-        this.executeWithRetries("getCommitsFromSingleBuild", this.webProvider.webClient.get, 4, url, { 'Accept': 'application/json' }).then((res: HttpClientResponse) => {
+        this.executeWithRetries("getCommitsFromSingleBuild", this.webProvider.webClient.get, url, { 'Accept': 'application/json' }).then((res: HttpClientResponse) => {
             if (res && res.message.statusCode === 200) {
                 res.readBody().then((body: string) => {
                     let jsonResult = JSON.parse(body);
@@ -76,8 +79,12 @@ export class CommitsDownloader {
                     });
 
                     defer.resolve(JSON.stringify(commits));
+                }, (error) => {
+                    defer.reject(error);
                 });
             }
+        }, (error) => {
+            defer.reject(error);
         });
 
         return defer.promise;
@@ -88,16 +95,18 @@ export class CommitsDownloader {
         let definitionId = tl.getInput("definition", true);
         var endpointUrl = tl.getEndpointUrl(connection, false);
         let defer = Q.defer<string>();
-        let url: string = endpointUrl + "/api/v1.1/project/"+definitionId+"/"+startBuildId;
+        let url: string = `${endpointUrl}/api/v1.1/project/${definitionId}/${startBuildId}`;
+        url = url.replace(/([^:]\/)\/+/g, "$1");
         let commits = [];
 
-        this.executeWithRetries("getCommits", this.webProvider.webClient.get, 4, url, { 'Accept': 'application/json' }).then((res: HttpClientResponse) => {
+        this.executeWithRetries("getCommits", this.webProvider.webClient.get, url, { 'Accept': 'application/json' }).then((res: HttpClientResponse) => {
             if (res && res.message.statusCode === 200) {
                 res.readBody().then((body: string) => {
                     let jsonResult = JSON.parse(body);
                     let branch = jsonResult.branch;
 
-                    let buildsUrl = endpointUrl + "/api/v1.1/project/"+definitionId+"/tree/"+branch;
+                    let buildsUrl = `${endpointUrl}/api/v1.1/project/${definitionId}/tree/${branch}`;
+                    buildsUrl = buildsUrl.replace(/([^:]\/)\/+/g, "$1");
                     this.webProvider.webClient.get(buildsUrl, { 'Accept': 'application/json' }).then((res: HttpClientResponse) => {
                         res.readBody().then((body: string) => {
                             let builds = JSON.parse(body);
@@ -124,8 +133,12 @@ export class CommitsDownloader {
                             });
                             
                             defer.resolve(JSON.stringify(commits));
+                        }, (error) => {
+                            defer.reject(error);
                         });
 
+                    }, (error) => {
+                        defer.reject(error);
                     });
                 });
             }
@@ -183,9 +196,9 @@ export class CommitsDownloader {
         return defer.promise;
     }
 
-    private executeWithRetries(operationName: string, operation: (string, any) => Promise<any>, retryCount, url, headers): Promise<any> {
+    private executeWithRetries(operationName: string, operation: (string, any) => Promise<any>, url, headers): Promise<any> {
         var executePromise = new Promise((resolve, reject) => {
-            this.executeWithRetriesImplementation(operationName, operation, retryCount, url, headers, resolve, reject);
+            this.executeWithRetriesImplementation(operationName, operation, this.retryLimit, url, headers, resolve, reject);
         });
     
         return executePromise;

@@ -60,10 +60,9 @@ async function main(): Promise<void> {
         let buildId = tl.getInput("version", true);
         let itemPattern = tl.getInput("itemPattern", false);
         let downloadPath = tl.getInput("downloadPath", true);
-        var retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : 4;
 
         var endpointUrl = tl.getEndpointUrl(connection, false);
-        var itemsUrl = endpointUrl + "/api/v1.1/project/"+definitionId+"/"+buildId+"/artifacts";
+        var itemsUrl = `${endpointUrl}/api/v1.1/project/${definitionId}/${buildId}/artifacts`;
         itemsUrl = itemsUrl.replace(/([^:]\/)\/+/g, "$1");
         console.log(tl.loc("DownloadArtifacts", itemsUrl));
 
