@@ -28,6 +28,15 @@ export class Kubectl {
         return command.execSync();
     }
 
+    public parse(file: string): IExecSyncResult {
+        var command = tl.tool(this.kubectlPath);
+        command.arg("apply");
+        command.arg(["-f", file]);
+        command.arg("--dry-run");
+        command.arg(["-o","json"]);
+        return command.execSync();
+    }
+
     public annotate(resourceType: string, resourceName: string, annotations: string[], overwrite?: boolean): IExecSyncResult {
         var command = tl.tool(this.kubectlPath);
         command.arg("annotate");
@@ -82,6 +91,16 @@ export class Kubectl {
         command.arg(["rollout", "status"]);
         command.arg(resourceType + "/" + name);
         command.arg(["--namespace", this.namespace]);
+        return command.execSync();
+    }
+
+    public getResource(resourceType: string, name: string): IExecSyncResult {
+        var command = tl.tool(this.kubectlPath);
+        command.arg("get");
+        command.arg(resourceType + "/" + name);
+        command.arg(["--namespace", this.namespace]);
+        command.arg(["-o", "json"])
+        command.arg("--export=true");
         return command.execSync();
     }
 

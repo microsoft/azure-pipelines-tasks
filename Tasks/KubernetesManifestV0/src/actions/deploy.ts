@@ -3,10 +3,12 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require("fs");
+import yaml = require('js-yaml');
 import * as utils from "./../utilities";
 import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import kubectlutility = require("utility-common/kubectlutility");
 import { Kubectl, Resource } from "utility-common/kubectl-object-model";
+import * as helper from '../KubernetesObjectHelper';
 
 export async function deploy() {
 
@@ -20,7 +22,7 @@ export async function deploy() {
     files = updateContainerImagesInConfigFiles(files, containers);
 
     let kubectl = new Kubectl(await getKubectl(), tl.getInput("namespace", false));
-
+    parse(files, kubectl);
     let result = kubectl.apply(files);
     checkForErrors([result]);
 
@@ -58,6 +60,91 @@ function checkForErrors(execResults: IExecSyncResult[], warnIfError?: boolean) {
                 throw stderr.trim();
         }
     }
+}
+
+function parse(filePaths: string[], kubectl: Kubectl) {
+    tl.debug("Parsing yaml files");
+    var parsedOutput = {};
+    var newObjectsList = [];
+    filePaths.forEach((filePath: string) => {
+        var fileContents = fs.readFileSync(filePath);
+        yaml.safeLoadAll(fileContents, function (inputObject) 
+        {
+            var canaryMetadata = new helper.CanaryMetdata();
+            var name = inputObject.metadata.name;
+            var kind = inputObject.kind;
+            var canaryReplicaCount = helper.calculateReplicaCountForCanary(inputObject, parseInt(tl.getInput("percentage")));
+            if (helper.isDeploymentEntity(kind))
+            {
+                tl.debug(name+ " is a deployment entity of kind: "+kind);
+                tl.debug("Querying stable object");
+                canaryMetadata.stable_object = helper.fetchResource(kubectl, kind, name);
+                if (!!!canaryMetadata.stable_object ){
+                    tl.debug("Stable object not found");
+                    tl.debug("Adding input object for creation");
+                    newObjectsList.push(inputObject);
+                } else {
+                tl.debug("Querying canary object");
+                canaryMetadata.existing_canary_object = helper.fetchCanaryResource(kubectl, kind, name);
+                if (!!!canaryMetadata.existing_canary_object)
+                {
+                    tl.debug("Canary object not found");
+                    var newCanaryObject = helper.getNewCanaryResource(inputObject, canaryReplicaCount);
+                    tl.debug("New canary object :"+JSON.stringify(newCanaryObject));
+                    var newBaselineObject = helper.getNewBaselineResource(canaryMetadata.stable_object, canaryReplicaCount);
+                    tl.debug("Adding canary object for creation");
+                    tl.debug("New baseline object :"+JSON.stringify(newBaselineObject));
+                    tl.debug("Adding baseline object for creation");
+                    newObjectsList.push(newCanaryObject);
+                    newObjectsList.push(newBaselineObject);
+                }else {
+
+                    //tl.debug("Doing diff of input object and canary object");
+                   // var diffCanaryOutput = helper.diff(canaryMetadata.existing_canary_object, inputObject);
+                   // tl.debug("Diff output of existing canary and new input is :"+JSON.stringify(diffCanaryOutput));
+
+                    tl.debug("Canary object found");
+                    // Update existing canary - Pod spec, Pod metadata, Object labels and replica count
+                    tl.debug("Updating existing canary object");
+                    helper.updatePodSpec(canaryMetadata.existing_canary_object, helper.getPodSpec(inputObject));
+                    helper.updatePodMetdata(canaryMetadata.existing_canary_object, helper.getPodMetdata(inputObject))
+                    helper.updateObjectLabelsForCanary(canaryMetadata.existing_canary_object, helper.getObjectLabels(inputObject));
+                    helper.updateReplicaCount(canaryMetadata.existing_canary_object, helper.getReplicaCount(inputObject));
+                    newObjectsList.push(canaryMetadata.existing_canary_object);
+
+                    tl.debug("Querying baseline object");
+                    canaryMetadata.existing_baseline_object = helper.fetchBaselineResource(kubectl, kind, name);
+                    if (!!!canaryMetadata.existing_baseline_object){
+                        tl.debug("baseline object not found");
+                        var newBaselineObject = helper.getNewBaselineResource(canaryMetadata.stable_object, canaryReplicaCount);
+                        tl.debug("New baseline object :"+JSON.stringify(newBaselineObject));
+                        tl.debug("Adding baseline object for creation");
+                        newObjectsList.push(newBaselineObject);
+                    }else {
+                        // Update existing baseline - Object labels and replica count
+                        tl.debug("Updating existing baseline object");
+                        helper.updateObjectLabelsForBaseline(canaryMetadata.existing_baseline_object, helper.getObjectLabels(inputObject));
+                        helper.updateReplicaCount(canaryMetadata.existing_baseline_object, helper.getReplicaCount(inputObject));
+                        newObjectsList.push(canaryMetadata.existing_baseline_object);
+                    }
+                }
+
+                // Update existing stable - Object labels and replica count
+                tl.debug("Updating existing stable object");
+                helper.updateObjectLabels(canaryMetadata.stable_object, helper.getObjectLabels(inputObject));
+                helper.updateReplicaCount(canaryMetadata.stable_object, helper.getReplicaCount(inputObject));
+                newObjectsList.push(canaryMetadata.stable_object);
+            }
+            }else {
+                tl.debug(name+ " is not deployment entity");
+            }
+        });
+        parsedOutput[filePath] = newObjectsList;
+        helper.applyResource(kubectl, newObjectsList);
+
+    });
+    tl.debug(JSON.stringify(parsedOutput));
+    return parsedOutput;
 }
 
 function updateContainerImagesInConfigFiles(filePaths: string[], containers): string[] {

@@ -1,7 +1,9 @@
 {
     "compilerOptions": {
         "target": "ES6",
-        "module": "commonjs"
+        "module": "commonjs",       
+        "skipDefaultLibCheck": true,
+        "skipLibCheck": true
     },
     "exclude": [
         "node_modules"

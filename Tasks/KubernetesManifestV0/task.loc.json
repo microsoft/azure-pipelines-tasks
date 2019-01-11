@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 30
   },
   "demands": [],
   "groups": [
@@ -74,6 +74,28 @@
         "bake": "bake"
       },
       "helpMarkDown": "ms-resource:loc.input.help.action"
+    },
+    {
+      "name": "deploymentStrategy",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.deploymentStrategy",
+      "required": false,
+      "groupName": "config",
+      "options": {
+        "canary": "Canary"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentStrategy",
+      "visibleRule": "action = deploy"
+    },
+    {
+      "name": "percentage",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.percentage",
+      "required": false,
+      "groupName": "config",
+      "helpMarkDown": "",
+      "defaultValue": 0,
+      "visibleRule": "action = deploy"
     },
     {
       "name": "manifests",
