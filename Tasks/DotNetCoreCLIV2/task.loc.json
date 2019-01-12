@@ -133,6 +133,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.publishTestResults"
     },
     {
+      "name": "cleanupOldTestResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.cleanupOldTestResults",
+      "defaultValue": "true",
+      "visibleRule": "command = test",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cleanupOldTestResults"
+    },
+    {
       "name": "zipAfterPublish",
       "type": "boolean",
       "visibleRule": "command = publish",

@@ -118,7 +118,10 @@ export class dotNetExe {
         }
 
         // Remove old trx files
-        this.removeOldTestResultFiles(resultsDirectory);
+        const cleanupOldTestResults: boolean = tl.getBoolInput('cleanupOldTestResults', false) || false;
+        if (cleanupOldTestResults) {
+            this.removeOldTestResultFiles(resultsDirectory);
+        }
 
         // Use empty string when no project file is specified to operate on the current directory
         const projectFiles = this.getProjectFiles();
