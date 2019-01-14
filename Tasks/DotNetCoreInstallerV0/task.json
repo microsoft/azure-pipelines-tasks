@@ -55,7 +55,7 @@
             "type": "string",
             "label": "Version",
             "defaultValue": "1.0.4",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here](https://github.com/dotnet/core/blob/master/release-notes/releases.json)",
             "visibleRule": "useGlobalJson = false || packageType = runtime"
         },
@@ -95,7 +95,7 @@
         "CouldNotDownload": "Could not download installation package from this URL: %s Error: %s",
         "FailedToDownloadPackage": "Failed to download package for installation",
         "PrependGlobalToolPath": "Creating global tool path and pre-prending to PATH.",
-        "VersionMissingException": "If you don't use global.json then please defined a version.",
+        "VersionMissingException": "If you don't use global.json then please define a version.",
         "FailedToFindGlobalJson": "From the root of your working folder we can't find any global.json file."
     }
 }
