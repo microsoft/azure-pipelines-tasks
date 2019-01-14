@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 30
+    "Patch": 33
   },
   "demands": [],
   "groups": [
@@ -82,7 +82,8 @@
       "required": false,
       "groupName": "config",
       "options": {
-        "canary": "Canary"
+        "canary": "Canary",
+        "None": "None"
       },
       "helpMarkDown": "ms-resource:loc.input.help.deploymentStrategy",
       "visibleRule": "action = deploy"
@@ -91,11 +92,11 @@
       "name": "percentage",
       "type": "int",
       "label": "ms-resource:loc.input.label.percentage",
-      "required": false,
+      "required": true,
       "groupName": "config",
       "helpMarkDown": "",
       "defaultValue": 0,
-      "visibleRule": "action = deploy"
+      "visibleRule": "deploymentStrategy = Canary"
     },
     {
       "name": "manifests",

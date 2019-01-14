@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 30
+        "Patch": 33
     },
     "demands": [],
     "groups": [
@@ -82,7 +82,8 @@
       "required": false,
       "groupName": "config",
       "options": {
-        "canary": "Canary"
+        "canary": "Canary",
+        "None": "None"
       },
       "helpMarkDown": "Strategy for deployment",
       "visibleRule": "action = deploy"
@@ -91,11 +92,11 @@
       "name": "percentage",
       "type": "int",
       "label": "Percentage",
-      "required": false,
+      "required": true,
       "groupName": "config",
       "helpMarkDown": "",
       "defaultValue": 0,
-      "visibleRule": "action = deploy"
+      "visibleRule": "deploymentStrategy = Canary"
     },
     {
       "name": "manifests",

@@ -4,7 +4,7 @@ var fs = require('fs');
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as os from "os";
-import { ToolRunner, IExecOptions } from 'vsts-task-lib/toolrunner';
+import { ToolRunner, IExecOptions, IExecSyncResult } from 'vsts-task-lib/toolrunner';
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
@@ -40,4 +40,21 @@ export function assertFileExists(path: string) {
 export function execCommand(command: ToolRunner, options?: IExecOptions) {
     command.on("errline", tl.error);
     return command.execSync(options);
+}
+
+function checkForErrors(execResults: IExecSyncResult[], warnIfError?: boolean) {
+    if (execResults.length != 0) {
+        var stderr = "";
+        execResults.forEach(result => {
+            if (result.stderr) {
+                stderr += result.stderr + "\n";
+            }
+        });
+        if (stderr.length > 0) {
+            if (!!warnIfError)
+                tl.warning(stderr.trim());
+            else
+                throw stderr.trim();
+        }
+    }
 }
