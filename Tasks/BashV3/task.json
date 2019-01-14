@@ -3,6 +3,7 @@
     "name": "Bash",
     "friendlyName": "Bash",
     "description": "Run a Bash script on macOS, Linux, or Windows",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613738",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613738)",
     "category": "Utility",
     "visibility": [

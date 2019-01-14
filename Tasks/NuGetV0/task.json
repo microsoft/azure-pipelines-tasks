@@ -6,6 +6,8 @@
     "category": "Package",
     "author": "Microsoft Corporation",
     "preview": "true",
+    "helpUrl": "",
+    "helpMarkDown": "",
     "version": {
         "Major": 0,
         "Minor": 145,

@@ -4,6 +4,7 @@
     "friendlyName": "Archive Files",
     "description": "Archive files using compression formats such as .7z, .rar, .tar.gz, and .zip.",
     "author": "Microsoft Corporation",
+    "helpUrl": "http://go.microsoft.com/fwlink/?LinkId=809083",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=809083)",
     "category": "Utility",
     "visibility": [

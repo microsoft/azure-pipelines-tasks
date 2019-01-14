@@ -3,6 +3,7 @@
     "name": "DockerCompose",
     "friendlyName": "Docker Compose",
     "description": "Build, push or run multi-container Docker applications. Task can be used with Docker or Azure Container registry.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=848006",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
     "category": "Build",
     "visibility": [

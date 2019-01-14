@@ -4,6 +4,7 @@
     "friendlyName": "Universal Packages",
     "description": "Download or publish Universal Packages.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://aka.ms/universalpackagesannounce",
     "helpMarkDown": "[More Information](https://aka.ms/universalpackagesannounce)",
     "category": "Package",
     "version": {

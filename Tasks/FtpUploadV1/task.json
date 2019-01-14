@@ -4,6 +4,7 @@
     "friendlyName": "FTP Upload",
     "description": "FTP Upload",
     "author": "Microsoft Corporation",
+    "helpUrl": "",
     "helpMarkDown": "Upload files to a remote machine using the File Transfer Protocol (FTP), or securely with FTPS.  [More Information](http://go.microsoft.com/fwlink/?LinkId=809084).",
     "category": "Utility",
     "visibility": [

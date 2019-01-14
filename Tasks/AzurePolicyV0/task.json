@@ -3,6 +3,8 @@
   "name": "AzurePolicyCheckGate",
   "friendlyName": "Security and compliance assessment",
   "description": "Security and compliance assessment with Azure policies on resources that belong to the resource group and Azure subscription",
+  "helpUrl": "",
+  "helpMarkDown": "",
   "category": "Deploy",
   "visibility": [
     "Release"

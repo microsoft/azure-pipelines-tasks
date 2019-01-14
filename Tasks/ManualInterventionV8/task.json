@@ -3,6 +3,7 @@
     "name": "ManualIntervention",
     "friendlyName": "Manual Intervention",
     "description": "Pause deployment and wait for intervention",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870234",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870234)",
     "category": "Deploy",
     "visibility": [

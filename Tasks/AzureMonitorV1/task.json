@@ -4,6 +4,7 @@
     "friendlyName": "Query Azure Monitor Alerts",
     "description": "Observe the configured Azure monitor rules for active alerts.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870240",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
     "category": "Utility",
     "preview": true,

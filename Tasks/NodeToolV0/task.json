@@ -3,6 +3,7 @@
     "name": "NodeTool",
     "friendlyName": "Node Tool Installer",
     "description": "Finds or Downloads and caches specified version spec of Node and adds it to the PATH.",
+    "helpUrl": "",
     "helpMarkDown": "",
     "category": "Tool",
     "runsOn": [

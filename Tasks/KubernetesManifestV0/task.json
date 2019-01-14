@@ -3,6 +3,7 @@
     "name": "KubernetesManifest",
     "friendlyName": "Manifest based Kubernetes deployments",
     "description": "Manifest based deployments to kubernetes",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
     "preview": true,

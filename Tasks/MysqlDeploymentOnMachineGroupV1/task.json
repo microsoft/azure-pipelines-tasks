@@ -3,6 +3,7 @@
     "name": "MysqlDeploymentOnMachineGroup",
     "friendlyName": "MySQL Database Deploy",
     "description": "This is an early preview. Run your scripts and make changes to your MySQL Database.",
+    "helpUrl": "https://aka.ms/mysql-deployment-on-machine-group",
     "helpMarkDown": "[More Information](https://aka.ms/mysql-deployment-on-machine-group)",
     "category": "Deploy",
     "visibility": [

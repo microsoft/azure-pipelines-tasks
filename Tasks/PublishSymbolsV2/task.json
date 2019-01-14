@@ -3,6 +3,7 @@
     "name": "PublishSymbols",
     "friendlyName": "Index Sources & Publish Symbols",
     "description": "Index your source code and publish symbols to a file share or Azure Artifacts Symbol Server",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613722",
     "helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task.",
     "category": "Build",
     "visibility": [
