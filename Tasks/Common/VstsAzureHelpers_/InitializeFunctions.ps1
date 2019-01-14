@@ -16,6 +16,12 @@ function Initialize-AzureSubscription {
         $null = Clear-AzureRmContext -Scope Process
     }
 
+    if (Get-Command -Name "Disable-AzureRmContextAutosave" -ErrorAction "SilentlyContinue") 
+    {
+        Write-Host "##[command]Disable-AzureRmContextAutosave -ErrorAction SilentlyContinue"
+        $null = Disable-AzureRmContextAutosave -ErrorAction SilentlyContinue
+    }
+
     $environmentName = "AzureCloud"
     if($Endpoint.Data.Environment) {
         $environmentName = $Endpoint.Data.Environment
@@ -130,37 +136,55 @@ function Initialize-AzureSubscription {
         } else {
             # Else, this is AzureRM.            
             try {
-                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {                    
+                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+                    if (CmdletHasMember -cmdlet "Add-AzureRmAccount" -memberName "Scope")
+                    {
+                        $processScope = @{ Scope = "Process" }    
+                    }
+                    else
+                    {
+                        $processScope = @{}
+                    }
+
                     if (CmdletHasMember -cmdlet "Add-AzureRMAccount" -memberName "EnvironmentName") {
                         
                         if ($Endpoint.Auth.Parameters.AuthenticationType -eq "SPNCertificate") {
-                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -EnvironmentName $environmentName -Scope Process"
-                            $null = Add-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -EnvironmentName $environmentName  -Scope Process
+                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -EnvironmentName $environmentName @processScope"
+                            $null = Add-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -EnvironmentName $environmentName @processScope
                         }
                         else {
-                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName -Scope Process"
-                            $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName -Scope Process
+                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName @processScope"
+                            $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName @processScope
                         }
                     }
                     else {
                         if ($Endpoint.Auth.Parameters.AuthenticationType -eq "SPNCertificate") {
-                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName -Scope Process"
-                            $null = Add-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName -Scope Process
+                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName @processScope"
+                            $null = Add-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName @processScope
                         }
                         else {
-                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName -Scope Process"
-                            $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName -Scope Process
+                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName @processScope"
+                            $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName @processScope
                         }
                     }
                 }
                 else {
+                    If (CmdletHasMember -cmdlet "Connect-AzureRMAccount" -memberName "Scope")
+                    {
+                        $processScope = @{ Scope = "Process" }    
+                    }
+                    else
+                    {
+                        $processScope = @{}
+                    }
+
                     if ($Endpoint.Auth.Parameters.AuthenticationType -eq "SPNCertificate") {
-                        Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName -Scope Process"
-                        $null = Connect-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName  -Scope Process
+                        Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName  @processScope"
+                        $null = Connect-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName @processScope
                     }
                     else {
-                        Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName -Scope Process"
-                        $null = Connect-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName  -Scope Process
+                        Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName @processScope"
+                        $null = Connect-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName @processScope
                     }
                 }
             } 

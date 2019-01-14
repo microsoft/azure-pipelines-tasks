@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 146,
-        "Patch": 1
+        "Patch": 4
     },
     "demands": [
         "vstest"
@@ -289,7 +289,7 @@
             "label": "Other console options",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ option. The options can be specified using a settings file instead.</p>",
+            "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ or 'Test run' option or when a custom batching option is selected. The options can be specified using a settings file instead.</p>",
             "groupName": "executionOptions"
         },
         {
@@ -557,7 +557,7 @@
         "testSettingPropertiesNotSupported": "Properties specified in testsettings file can be accessed via the TestContext using Visual Studio 2017 Update 4 or higher",
         "vstestVersionInvalid": "Given test platform version %s is not supported.",
         "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
-        "otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent job setting. This option will be ignored.",
+        "otherConsoleOptionsNotSupported": "Other console options is not supported for this task configuration. This option will be ignored.",
         "distributedTestWorkflow": "In distributed testing flow",
         "nonDistributedTestWorkflow": "Running tests using vstest.console.exe runner.",
         "dtaNumberOfAgents": "Distributed test execution, number of agents in job : %s",

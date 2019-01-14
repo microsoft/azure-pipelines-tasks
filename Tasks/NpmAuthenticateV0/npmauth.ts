@@ -82,7 +82,7 @@ async function main(): Promise<void> {
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
     
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
-    for (let RegistryURLString of npmrcparser.GetRegistries(npmrc)) {
+    for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
         let registryURL = URL.parse(RegistryURLString);
         let registry: npmregistry.NpmRegistry;
         if (endpointRegistries && endpointRegistries.length > 0) {

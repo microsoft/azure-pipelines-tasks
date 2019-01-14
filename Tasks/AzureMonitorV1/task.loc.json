@@ -7,6 +7,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "preview": true,
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "visibility": [
     "Build",
     "Release"
@@ -18,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 4
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -48,14 +49,45 @@
       "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName"
     },
     {
-      "name": "resource",
+      "name": "filterType",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.resource",
-      "required": false,
+      "label": "ms-resource:loc.input.label.filterType",
+      "required": true,
+      "defaultValue": "none",
+      "options": {
+        "resource": "By resource",
+        "alertrule": "By alert rule",
+        "none": "None"
+      },
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.resource"
+      "helpMarkDown": "ms-resource:loc.input.help.filterType",
+      "groupName": "advanced"
+    },
+    {
+      "name": "resource",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.resource",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "filterType = resource",
+      "helpMarkDown": "ms-resource:loc.input.help.resource",
+      "groupName": "advanced"
+    },
+    {
+      "name": "alertRule",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.alertRule",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "filterType = alertrule",
+      "helpMarkDown": "ms-resource:loc.input.help.alertRule",
+      "groupName": "advanced"
     },
     {
       "name": "severity",
@@ -100,7 +132,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.alertState",
       "required": false,
-      "defaultValue": "Acknowledged,Closed,New",
+      "defaultValue": "Acknowledged,New",
       "options": {
         "New": "New",
         "Acknowledged": "Acknowledged",
@@ -114,14 +146,20 @@
       "groupName": "advanced"
     },
     {
-      "name": "alertRule",
+      "name": "monitorCondition",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.alertRule",
+      "label": "ms-resource:loc.input.label.monitorCondition",
       "required": false,
+      "defaultValue": "Fired",
+      "options": {
+        "Fired ": "Fired",
+        "Resolved": "Resolved"
+      },
       "properties": {
+        "MultiSelectFlatList": "True",
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.alertRule",
+      "helpMarkDown": "ms-resource:loc.input.help.monitorCondition",
       "groupName": "advanced"
     }
   ],
@@ -157,7 +195,7 @@
     "HttpRequest": {
       "Execute": {
         "EndpointId": "$(connectedServiceNameARM)",
-        "EndpointUrl": "$(endpoint.url)/subscriptions/{{subscriptionId}}/providers/Microsoft.AlertsManagement/alerts?api-version=2018-05-05&monitorCondition=Fired&targetResourceGroup=$(ResourceGroupName)&timeRange=$(timeRange)&alertState=$(alertState)&severity=$(severity){{#if resource}}&targetResource=/subscriptions/{{subscriptionId}}/resourcegroups/{{ResourceGroupName}}/providers/{{resource}}{{/if}}{{#if alertRule}}&alertRule=/subscriptions/{{subscriptionId}}/resourceGroups/{{ResourceGroupName}}/providers/microsoft.insights/{{alertRule}}{{/if}}",
+        "EndpointUrl": "$(endpoint.url)/subscriptions/{{subscriptionId}}/providers/Microsoft.AlertsManagement/alerts?api-version=2018-05-05{{#if ResourceGroupName}}&targetResourceGroup=$(ResourceGroupName){{/if}}{{#if monitorCondition}}&monitorCondition=$(monitorCondition){{#if timeRange}}&timeRange=$(timeRange){{/if}}{{#if alertState}}&alertState=$(alertState){{/if}}{{#if severity}}&severity=$(severity){{/if}}{{#equals '$(filterType)' 'resource' 1}}{{#if resource}}&targetResource=/subscriptions/{{subscriptionId}}/resourcegroups/{{ResourceGroupName}}/providers/{{resource}}{{/if}}{{/equals}}{{#equals '$(filterType)' 'alertrule' 1}}{{#if alertRule}}&alertRule=/subscriptions/{{subscriptionId}}/resourceGroups/{{ResourceGroupName}}/providers/microsoft.insights/{{alertRule}}{{/if}}{{/equals}}",
         "Method": "GET",
         "Body": "",
         "Headers": "",
