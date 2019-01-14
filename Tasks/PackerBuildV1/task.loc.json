@@ -245,6 +245,15 @@
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.imageUri",
       "groupName": "Output"
+    },
+    {
+      "name": "imageId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageId",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.imageId",
+      "groupName": "Output"
     }
   ],
   "dataSourceBindings": [
@@ -294,6 +303,7 @@
     "ExecutingPackerBuild": "ms-resource:loc.messages.ExecutingPackerBuild",
     "PackerBuildCompleted": "ms-resource:loc.messages.PackerBuildCompleted",
     "ImageURIOutputVariableNotFound": "ms-resource:loc.messages.ImageURIOutputVariableNotFound",
+    "ImageIDOutputVariableNotFound": "ms-resource:loc.messages.ImageIDOutputVariableNotFound",
     "ManagedImageNameOutputVariableNotFound": "ms-resource:loc.messages.ManagedImageNameOutputVariableNotFound",
     "CustumTemplateOutputVariableNotFound": "ms-resource:loc.messages.CustumTemplateOutputVariableNotFound",
     "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName",
