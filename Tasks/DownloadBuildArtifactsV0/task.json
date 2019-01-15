@@ -3,6 +3,7 @@
     "name": "DownloadBuildArtifacts",
     "friendlyName": "Download Build Artifacts",
     "description": "Download Build Artifacts",
+    "helpUrl": "",
     "helpMarkDown": "",
     "category": "Utility",
     "author": "Microsoft Corporation",

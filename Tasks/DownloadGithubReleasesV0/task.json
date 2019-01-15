@@ -4,6 +4,7 @@
   "friendlyName": "Download GitHub Releases",
   "description": "Download GitHub Releases",
   "author": "Microsoft Corporation",
+  "helpUrl": "",
   "helpMarkDown": "",
   "category": "Utility",
   "demands": [],

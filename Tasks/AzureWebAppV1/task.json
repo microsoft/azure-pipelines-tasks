@@ -3,6 +3,7 @@
     "name": "AzureWebApp",
     "friendlyName": "Azure Web App",
     "description": "Update Azure App Services on Windows, Web App on Linux with built-in images, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Mobile Apps, API applications",
+    "helpUrl": "https://aka.ms/azurewebappdeployreadme",
     "helpMarkDown": "[More information](https://aka.ms/azurewebappdeployreadme)",
     "category": "Deploy",
     "visibility": [

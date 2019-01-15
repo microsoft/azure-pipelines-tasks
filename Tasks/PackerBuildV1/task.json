@@ -3,6 +3,7 @@
     "name": "PackerBuild",
     "friendlyName": "Build Machine Image",
     "description": "Build machine image using Packer. This image can be used for Azure Virtual machine scale set deployment",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=845329",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=845329)",
     "category": "Deploy",
     "releaseNotes": "This task now supports managed disk images.",

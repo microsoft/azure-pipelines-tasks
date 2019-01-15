@@ -4,6 +4,7 @@
     "friendlyName": "File Transform",
     "description": "File Transform",
     "author": "Microsoft Corporation",
+    "helpUrl": "",
     "helpMarkDown": "File transformation and variable substitution task: Update tokens in your XML based configuration files and then replaces those tokens with variable values. <br/>Currently only XML, JSON file formats are supported for variable substitution.",
     "category": "Utility",
     "visibility": [

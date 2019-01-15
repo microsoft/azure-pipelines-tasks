@@ -3,6 +3,7 @@
     "name": "InstallSSHKey",
     "friendlyName": "Install SSH Key",
     "description": "Install an SSH key prior to a build or release",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=875267",
     "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=875267)",
     "category": "Utility",
     "visibility": [

@@ -3,6 +3,7 @@
     "name": "PowerShell",
     "friendlyName": "PowerShell",
     "description": "Run a PowerShell script on Windows, macOS, or Linux.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613736",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
     "category": "Utility",
     "visibility": [

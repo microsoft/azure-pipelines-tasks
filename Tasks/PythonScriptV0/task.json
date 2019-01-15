@@ -3,6 +3,7 @@
     "name": "PythonScript",
     "friendlyName": "Python Script",
     "description": "Run a Python script.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=2006181",
     "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkID=2006181)",
     "category": "Utility",
     "visibility": [

@@ -4,6 +4,7 @@
     "friendlyName": "Azure Network Load Balancer",
     "description": "Connect/Disconnect an Azure virtual machine's network interface to a Load Balancer's backend address pool",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=837723",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=837723)",
     "category": "Utility",
     "visibility": [

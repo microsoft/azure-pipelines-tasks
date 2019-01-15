@@ -3,6 +3,7 @@
     "name": "JenkinsDownloadArtifacts",
     "friendlyName": "Jenkins Download Artifacts",
     "description": "Download artifacts produced by a Jenkins job",
+    "helpUrl": "",
     "helpMarkDown": "Download artifacts produced by a [Jenkins](https://jenkins.io/) job.",
     "category": "Utility",
     "visibility": [
