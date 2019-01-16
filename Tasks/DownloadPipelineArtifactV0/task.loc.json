@@ -43,7 +43,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AgentPlugin": {
-      "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV0, Agent.Plugins"
+      "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTask, Agent.Plugins"
     }
   },
   "messages": {}

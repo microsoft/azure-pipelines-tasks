@@ -14,7 +14,7 @@
   "groups": [],
   "demands": [],
   "preview": true,
-  "minimumAgentVersion": "2.140.1",
+  "minimumAgentVersion": "2.147",
   "inputs": [
     {
       "name": "buildType",
