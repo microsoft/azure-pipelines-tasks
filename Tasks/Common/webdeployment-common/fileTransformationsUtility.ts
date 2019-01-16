@@ -101,7 +101,7 @@ export function advancedFileTransformations(isFolderBasedDeployment: boolean, ta
         if(!targetFiles || targetFiles.length == 0) {
             targetFiles = ["**/*.json"];
         }
-        jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, targetFiles);
+        jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, targetFiles, true);
         console.log(tl.loc('JSONvariablesubstitutionappliedsuccessfully'));
     }
 }
