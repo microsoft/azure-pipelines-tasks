@@ -36,16 +36,6 @@ export function updateObjectLabelsForCanary(inputObject: any, newLabels: any){
     inputObject.metadata.labels = newLabels;
 }
 
-export function updateObjectLabelsForBaseline(inputObject: any, newLabels: any){
-    if (!newLabels){
-            newLabels = new Map<string, string>();
-    }
-        
-     // Add baseline label
-    newLabels[CANARY_VERSION_LABEL] = BASELINE_LABEL_VALUE;
-    inputObject.metadata.labels = newLabels;
-}
-
 export function calculateReplicaCountForCanary(inputObject: any, percentage: number){
     var inputReplicaCount = helper.getReplicaCount(inputObject);
     return Math.floor((inputReplicaCount*percentage)/100);
@@ -124,10 +114,6 @@ export function fetchResource(kubectl: Kubectl, kind: string, name: string): obj
 
 export function fetchCanaryResource(kubectl: Kubectl, kind: string, name: string): object {
     return fetchResource(kubectl, kind, getCanaryResourceName(name));
-}
-
-export function fetchBaselineResource(kubectl: Kubectl, kind: string, name: string): object {
-    return fetchResource(kubectl, kind, getBaselineResourceName(name));
 }
 
 function getCanaryResourceName(name: string){

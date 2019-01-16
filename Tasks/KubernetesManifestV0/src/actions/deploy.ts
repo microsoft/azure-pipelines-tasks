@@ -75,15 +75,14 @@ function canaryDeployment(filePaths: string[], kubectl: Kubectl) {
                 tl.debug("Querying stable object");
                 canaryMetadata.stable_object = canaryDeploymentHelper.fetchResource(kubectl, kind, name);
                 if (!canaryMetadata.stable_object ){
-                    // If stable object not found, create it.
-                    tl.debug("Stable object not found");
-                    newObjectsList.push(inputObject);
+                    // If stable object not found, create canary deployment.
+                    tl.debug("Stable object not found. Creating canary object.");
+                    var newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
+                    newObjectsList.push(newCanaryObject);
                 } else {
-                    // If stable object found, fetch its canary and baseline object
+                    // If stable object found, fetch its canary.
                     tl.debug("Querying canary object");
                     canaryMetadata.existing_canary_object = canaryDeploymentHelper.fetchCanaryResource(kubectl, kind, name);
-                    tl.debug("Querying baseline object");
-                    canaryMetadata.existing_baseline_object = canaryDeploymentHelper.fetchBaselineResource(kubectl, kind, name);
 
                     if (!canaryMetadata.existing_canary_object){
                         // If canary object not found, create canary and baseline object.
@@ -93,25 +92,8 @@ function canaryDeployment(filePaths: string[], kubectl: Kubectl) {
                         newObjectsList.push(newCanaryObject);
                         newObjectsList.push(newBaselineObject);
                     }else {
-                        // Update existing canary - pod spec, pod metadata, object labels and replica count.
-                        tl.debug("Updating existing canary object");
-                        KubernetesObjectUtility.updatePodSpec(canaryMetadata.existing_canary_object, KubernetesObjectUtility.getPodSpec(inputObject));
-                        KubernetesObjectUtility.updatePodMetdata(canaryMetadata.existing_canary_object, KubernetesObjectUtility.getPodMetdata(inputObject))
-                        canaryDeploymentHelper.updateObjectLabelsForCanary(canaryMetadata.existing_canary_object, KubernetesObjectUtility.getObjectLabels(inputObject));
-                        KubernetesObjectUtility.updateReplicaCount(canaryMetadata.existing_canary_object, KubernetesObjectUtility.getReplicaCount(inputObject));
-                        newObjectsList.push(canaryMetadata.existing_canary_object);
-
-                        // Update existing baseline - Object labels and replica count
-                        tl.debug("Updating existing baseline object");
-                        canaryDeploymentHelper.updateObjectLabelsForBaseline(canaryMetadata.existing_baseline_object, KubernetesObjectUtility.getObjectLabels(inputObject));
-                        KubernetesObjectUtility.updateReplicaCount(canaryMetadata.existing_baseline_object, KubernetesObjectUtility.getReplicaCount(inputObject));
-                        newObjectsList.push(canaryMetadata.existing_baseline_object);
+                        throw new Error("Currently canary deployment is going on. Rejecting this deployment");
                     }
-                    // Update existing stable - Object labels and replica count
-                    tl.debug("Updating existing stable object");
-                    KubernetesObjectUtility.updateObjectLabels(canaryMetadata.stable_object, KubernetesObjectUtility.getObjectLabels(inputObject), true);
-                    KubernetesObjectUtility.updateReplicaCount(canaryMetadata.stable_object, KubernetesObjectUtility.getReplicaCount(inputObject));
-                    newObjectsList.push(canaryMetadata.stable_object);
                 }
             } else {
                 // Updating non deployment entity as it is.
