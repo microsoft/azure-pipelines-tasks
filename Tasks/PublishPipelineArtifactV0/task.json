@@ -36,7 +36,7 @@
     "instanceNameFormat": "Publish Pipeline Artifact",
     "execution": {
         "AgentPlugin": {
-            "target": "Agent.Plugins.PipelineArtifact.PublishPipelineArtifactTaskV0, Agent.Plugins"
+            "target": "Agent.Plugins.PipelineArtifact.PublishPipelineArtifactTask, Agent.Plugins"
         }
     },
     "messages": {}
