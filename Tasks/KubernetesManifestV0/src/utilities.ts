@@ -64,8 +64,10 @@ export function checkForErrors(execResults: IExecSyncResult[], warnIfError?: boo
         if (stderr.length > 0) {
             if (!!warnIfError)
                 tl.warning(stderr.trim());
-            else
-                throw stderr.trim();
+            else {
+                tl.setResult(tl.TaskResult.Failed, stderr.trim());
+                throw new Error(stderr.trim());
+            }
         }
     }
 }

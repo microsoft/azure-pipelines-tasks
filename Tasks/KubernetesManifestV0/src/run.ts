@@ -27,11 +27,13 @@ function run(): Promise<void> {
             action_func = patch;
             break;
         default:
-            throw new Error("Not supported");
+            tl.setResult(tl.TaskResult.Failed, 'Not a supported action, choose from "bake", "deploy", "patch", "scale"');
+            process.exit(1);
     }
     return connection.open()
         .then(() => action_func())
         .then(() => connection.close())
+        .catch(()=> connection.close())
 }
 
 run()

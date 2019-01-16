@@ -8,10 +8,10 @@ export async function patch() {
     let kubectl = new Kubectl(await utils.getKubectl(), tl.getInput("namespace", false));
     let kind = tl.getInput("kind", false).toLowerCase();
     let name = tl.getInput("name", false);
-    let filePath = tl.getInput("patchFile", false);
-    let strategy = tl.getInput("strategy", false);
+    let filePath = tl.getInput("resourceFileToPatch", false);
+    let strategy = tl.getInput("mergeStrategy", false);
     let patch = tl.getInput("patch", true);
-    if (tl.filePathSupplied("patchFile")) {
+    if (tl.filePathSupplied("resourceFileToPatch") && tl.getInput("resourceToPatch") == "file") {
         kind = "-f";
         name = filePath;
     }

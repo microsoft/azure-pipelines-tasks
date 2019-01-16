@@ -166,28 +166,28 @@
       "visibleRule": "action = patch"
     },
     {
-      "name": "patchType",
+      "name": "resourceToPatch",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.patchType",
+      "label": "ms-resource:loc.input.label.resourceToPatch",
       "required": true,
       "defaultValue": "file",
       "options": {
         "file": "file",
-        "type": "type"
+        "name": "name"
       },
       "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.patchType",
+      "helpMarkDown": "ms-resource:loc.input.help.resourceToPatch",
       "visibleRule": "action = patch"
     },
     {
-      "name": "patchFile",
+      "name": "resourceFileToPatch",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.patchFile",
+      "label": "ms-resource:loc.input.label.resourceFileToPatch",
       "required": true,
       "defaultValue": "",
       "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.patchFile",
-      "visibleRule": "action = patch && patchType = file"
+      "helpMarkDown": "ms-resource:loc.input.help.resourceFileToPatch",
+      "visibleRule": "action = patch && resourceToPatch = file"
     },
     {
       "name": "kind",
@@ -197,7 +197,7 @@
       "defaultValue": "",
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.kind",
-      "visibleRule": "action = scale || patchType = type"
+      "visibleRule": "action = scale || resourceToPatch = name"
     },
     {
       "name": "name",
@@ -207,7 +207,7 @@
       "defaultValue": "",
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.name",
-      "visibleRule": "action = scale || patchType = type"
+      "visibleRule": "action = scale || resourceToPatch = name"
     },
     {
       "name": "patch",

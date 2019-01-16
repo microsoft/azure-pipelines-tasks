@@ -166,28 +166,28 @@
             "visibleRule": "action = patch"
         },
         {
-            "name": "patchType",
+            "name": "resourceToPatch",
             "type": "radio",
-            "label": "Patch Type",
+            "label": "Resource to patch",
             "required": true,
             "defaultValue": "file",
             "options": {
                 "file": "file",
-                "type": "type"
+                "name": "name"
             },
             "groupName": "config",
             "helpMarkDown": "to identify the resource",
             "visibleRule": "action = patch"
         },
         {
-            "name": "patchFile",
+            "name": "resourceFileToPatch",
             "type": "filePath",
-            "label": "file path",
+            "label": "File path",
             "required": true,
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Path to the file used for patch",
-            "visibleRule": "action = patch && patchType = file"
+            "visibleRule": "action = patch && resourceToPatch = file"
         },
         {
             "name": "kind",
@@ -197,7 +197,7 @@
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Kind of K8s object; deployment, replicaSet etc.",
-            "visibleRule": "action = scale || patchType = type"
+            "visibleRule": "action = scale || resourceToPatch = name"
         },
         {
             "name": "name",
@@ -207,7 +207,7 @@
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Name of the k8s object",
-            "visibleRule": "action = scale || patchType = type"
+            "visibleRule": "action = scale || resourceToPatch = name"
         },
         {
             "name": "patch",
