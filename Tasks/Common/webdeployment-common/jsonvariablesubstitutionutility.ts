@@ -76,8 +76,6 @@ export function substituteJsonVariable(jsonObject, envObject) {
                     case 'string':
                         jsonObject[jsonChild] = resultNode.value;
                 }
-
-                jsonObject[jsonChild] = resultNode.value;
             }
             else {
                 substituteJsonVariable(jsonObject[jsonChild], resultNode);
