@@ -1,6 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
+import { isNumber, isBoolean } from 'util';
 
 var varUtility = require ('./variableutility.js');
 var fileEncoding = require('./fileencoding.js');
@@ -53,8 +54,29 @@ export function substituteJsonVariable(jsonObject, envObject) {
         var jsonChildArray = jsonChild.split('.');
         var resultNode = checkEnvTreePath(jsonChildArray, 0, jsonChildArray.length, envObject);
         if(resultNode != undefined) {
-            if(resultNode.isEnd && (jsonObject[jsonChild] == null || typeof jsonObject[jsonChild] !== "object")) {
+            if(resultNode.isEnd) {
                 tl.debug('substituting value on key: ' + jsonChild);
+
+                switch(typeof(jsonObject[jsonChild])) {
+                    case 'number':
+                        jsonObject[jsonChild] = isNumber(resultNode.value) ? Number(resultNode.value): resultNode.value;
+                        break;
+                    case 'boolean':
+                        jsonObject[jsonChild] = isBoolean(resultNode.value) ? Boolean(resultNode.value): resultNode.value;
+                        break;
+                    case 'object':
+                    case null:
+                        try {
+                            jsonObject[jsonChild] = JSON.parse(resultNode.value);
+                        }
+                        catch(exception) {
+                            jsonObject[jsonChild] = resultNode.value;
+                        }
+                        break;
+                    case 'string':
+                        jsonObject[jsonChild] = resultNode.value;
+                }
+
                 jsonObject[jsonChild] = resultNode.value;
             }
             else {
