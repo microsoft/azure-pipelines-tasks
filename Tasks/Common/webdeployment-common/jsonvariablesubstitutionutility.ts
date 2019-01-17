@@ -71,12 +71,13 @@ export function substituteJsonVariableV2(jsonObject, envObject) {
         var resultNode = checkEnvTreePath(jsonChildArray, 0, jsonChildArray.length, envObject);
         if(resultNode != undefined) {
             if(resultNode.isEnd) {
-                tl.debug('substituting value on key: ' + jsonChild);
                 switch(typeof(jsonObject[jsonChild])) {
                     case 'number':
+                    tl.debug('substituting value on key: ' + jsonChild + ' with (number) value: ' + resultNode.value);
                         jsonObject[jsonChild] = isNumber(resultNode.value) ? Number(resultNode.value): resultNode.value;
                         break;
                     case 'boolean':
+                        tl.debug('substituting value on key: ' + jsonChild + ' with (boolean) value: ' + resultNode.value);
                         jsonObject[jsonChild] = (
                             resultNode.value == 'true' ? true : (resultNode.value == 'false' ? false : resultNode.value)
                         )
@@ -84,13 +85,16 @@ export function substituteJsonVariableV2(jsonObject, envObject) {
                     case 'object':
                     case null:
                         try {
+                            tl.debug('substituting value on key: ' + jsonChild + ' with (object) value: ' + resultNode.value);
                             jsonObject[jsonChild] = JSON.parse(resultNode.value);
                         }
                         catch(exception) {
+                            tl.debug('unable to substitute the value. falling back to string value');
                             jsonObject[jsonChild] = resultNode.value;
                         }
                         break;
                     case 'string':
+                        tl.debug('substituting value on key: ' + jsonChild + ' with (string) value: ' + resultNode.value);
                         jsonObject[jsonChild] = resultNode.value;
                 }
             }
