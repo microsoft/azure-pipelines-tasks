@@ -69,7 +69,6 @@ function canaryDeployment(filePaths: string[], kubectl: Kubectl) {
         var name = inputObject.metadata.name;
         var kind = inputObject.kind;
         if (canaryDeploymentHelper.isDeploymentEntity(kind)){
-            tl.debug("Querying canary object");
             var existing_canary_object = canaryDeploymentHelper.fetchCanaryResource(kubectl, kind, name);
 
             if (!!existing_canary_object){
@@ -77,18 +76,14 @@ function canaryDeployment(filePaths: string[], kubectl: Kubectl) {
             }
 
             var canaryReplicaCount = canaryDeploymentHelper.calculateReplicaCountForCanary(inputObject, percentage);
-            tl.debug("Canary replica count is: "+canaryReplicaCount);
             // Get stable object
-            tl.debug("Querying stable object");
             var stable_object = canaryDeploymentHelper.fetchResource(kubectl, kind, name);
             if (!stable_object ){
                 // If stable object not found, create canary deployment.
-                tl.debug("Stable object not found. Creating canary object.");
                 var newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
                 newObjectsList.push(newCanaryObject);
             } else {
                     // If canary object not found, create canary and baseline object.
-                    tl.debug("Canary object not found");
                     var newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
                     var newBaselineObject = canaryDeploymentHelper.getNewBaselineResource(stable_object, canaryReplicaCount);
                     newObjectsList.push(newCanaryObject);

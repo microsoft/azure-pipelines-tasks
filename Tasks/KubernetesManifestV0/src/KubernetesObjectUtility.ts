@@ -5,7 +5,7 @@ import yaml = require('js-yaml');
 import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import { Resource } from "utility-common/kubectl-object-model";
 
-class KubernetesWorkload {
+export class KubernetesWorkload {
     static Pod: string = "Pod";
     static Replicaset: string = "Replicaset";
     static Deployment: string = "Deployment";

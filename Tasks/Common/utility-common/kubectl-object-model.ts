@@ -27,16 +27,7 @@ export class Kubectl {
         command.arg(["--namespace", this.namespace]);
         return command.execSync();
     }
-
-    public parse(file: string): IExecSyncResult {
-        var command = tl.tool(this.kubectlPath);
-        command.arg("apply");
-        command.arg(["-f", file]);
-        command.arg("--dry-run");
-        command.arg(["-o","json"]);
-        return command.execSync();
-    }
-
+    
     public annotate(resourceType: string, resourceName: string, annotations: string[], overwrite?: boolean): IExecSyncResult {
         var command = tl.tool(this.kubectlPath);
         command.arg("annotate");

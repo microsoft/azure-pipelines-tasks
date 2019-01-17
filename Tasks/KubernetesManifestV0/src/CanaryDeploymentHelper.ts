@@ -11,14 +11,6 @@ const CANARY_SUFFIX = "-canary";
 const CANARY_LABEL_VALUE = "canary";
 const CANARY_VERSION_LABEL = "azure-pipelines/version";
 
-class KubernetesWorkload {
-    static Pod = "Pod";
-    static Replicaset = "Replicaset";
-    static Deployment = "Deployment";
-    static StatefulSet = "StatefulSet";
-    static DaemonSet = "DaemonSet";
-}
-
 export function calculateReplicaCountForCanary(inputObject: any, percentage: number){
     var inputReplicaCount = helper.getReplicaCount(inputObject);
     return Math.floor((inputReplicaCount*percentage)/100);
@@ -30,11 +22,11 @@ export function isDeploymentEntity(kind: string): boolean {
     }
     
     var temp = kind.toUpperCase();
-    return temp === KubernetesWorkload.Pod.toUpperCase() ||  
-           temp === KubernetesWorkload.Replicaset.toUpperCase() ||  
-           temp === KubernetesWorkload.Deployment.toUpperCase() ||  
-           temp === KubernetesWorkload.StatefulSet.toUpperCase() ||  
-           temp === KubernetesWorkload.DaemonSet.toUpperCase();
+    return temp === helper.KubernetesWorkload.Pod.toUpperCase() ||  
+           temp === helper.KubernetesWorkload.Replicaset.toUpperCase() ||  
+           temp === helper.KubernetesWorkload.Deployment.toUpperCase() ||  
+           temp === helper.KubernetesWorkload.StatefulSet.toUpperCase() ||  
+           temp === helper.KubernetesWorkload.DaemonSet.toUpperCase();
 }
 
 export function getNewBaselineResource(stableObject: any, replicas: number): object {
@@ -56,8 +48,8 @@ function getNewCanaryObject(inputObject: any, replicas: number, type: string): o
     addCanaryLabelsAndAnnotations(newObject, type);
     
     // Updating no. of replicas
-    if (newObject.kind.toUpperCase() != KubernetesWorkload.Pod.toUpperCase() && 
-        newObject.kind.toUpperCase() != KubernetesWorkload.DaemonSet.toUpperCase()){
+    if (newObject.kind.toUpperCase() != helper.KubernetesWorkload.Pod.toUpperCase() && 
+        newObject.kind.toUpperCase() != helper.KubernetesWorkload.DaemonSet.toUpperCase()){
         newObject.spec.replicas = replicas;
     }
 
@@ -91,7 +83,7 @@ export function applyResource(kubectl: Kubectl, inputObjects: any[]){
     if (newFilePaths.length > 0){
         result = kubectl.apply(newFilePaths);
     }
-
+    
     return  { "result" : result, "newFilePaths" : newFilePaths };
 }
 
