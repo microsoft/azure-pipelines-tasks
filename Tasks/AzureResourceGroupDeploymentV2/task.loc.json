@@ -3,6 +3,7 @@
   "name": "AzureResourceGroupDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/argtaskreadme",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -14,7 +15,7 @@
   "version": {
     "Major": 2,
     "Minor": 145,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -278,6 +279,15 @@
       "groupName": "AdvancedDeploymentOptions",
       "visibleRule": "enableDeploymentPrerequisites = ConfigureVMwithWinRM || enableDeploymentPrerequisites = None",
       "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
+    },
+    {
+      "name": "addSpnToEnvironment",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addSpnToEnvironment",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.addSpnToEnvironment",
+      "groupName": "AdvancedDeploymentOptions"
     },
     {
       "name": "deploymentName",
