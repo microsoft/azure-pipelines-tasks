@@ -39,11 +39,13 @@ export async function deploy() {
     }
     KubernetesObjectUtility.checkForErrors([result]);
 
-    let rolloutStatusResults = [];
-
     let resourceTypes: Resource[] = KubernetesObjectUtility.getResources(files, recognizedWorkloadTypes);
+    
+    let rolloutStatusResults = [];  
     resourceTypes.forEach(resource => {
+        if (recognizedWorkloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) == -1){
         rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
+        }
     });
     KubernetesObjectUtility.checkForErrors(rolloutStatusResults);
 
@@ -51,9 +53,10 @@ export async function deploy() {
     var allPods = JSON.parse((kubectl.getAllPods()).stdout);
     annotateResults.push(kubectl.annotateFiles(files, annotationsToAdd(), true));
     resourceTypes.forEach(resource => {
-        if (resource.type.indexOf("pods") == -1)
+        if (resource.type.toUpperCase() != KubernetesObjectUtility.KubernetesWorkload.Pod.toUpperCase()){
             annotateChildPods(kubectl, resource.type, resource.name, allPods)
                 .forEach(execResult => annotateResults.push(execResult));
+        }
     });
     KubernetesObjectUtility.checkForErrors(annotateResults, true);
 }
@@ -184,4 +187,5 @@ function annotationsToAdd(): string[] {
     ];
 }
 
-var recognizedWorkloadTypes = ["deployment", "replicaset", "daemonset", "pod", "statefulset"];
+var recognizedWorkloadTypes: string[] = ["deployment", "replicaset", "daemonset", "pod", "statefulset"];
+var recognizedWorkloadTypesWithRolloutStatus: string[] = ["deployment", "daemonset", "statefulset"];
