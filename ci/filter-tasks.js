@@ -64,7 +64,7 @@ var getTasksToBuildForCI = async function() {
             var taskJson = JSON.parse(fs.readFileSync(taskJsonPath).toString());
             var lowerCaseName = taskJson.name.toLowerCase();
             if (!isdigit(lowerCaseName[-1])) {
-                lowerCaseName += "V" + taskJson.version.Major;
+                lowerCaseName += "v" + taskJson.version.Major;
             }
             if (lowerCaseName in packageMap || taskName.toLowerCase() in packageMap) {
                 if (taskName.toLowerCase() in packageMap) {
