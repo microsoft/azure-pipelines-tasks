@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 145,
-    "Patch": 1
+    "Minor": 147,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -281,15 +281,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
     },
     {
-      "name": "addSpnToEnvironment",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.addSpnToEnvironment",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.addSpnToEnvironment",
-      "groupName": "AdvancedDeploymentOptions"
-    },
-    {
       "name": "deploymentName",
       "type": "string",
       "label": "ms-resource:loc.input.label.deploymentName",
@@ -306,6 +297,15 @@
       "defaultValue": "",
       "groupName": "Advanced",
       "helpMarkDown": "ms-resource:loc.input.help.deploymentOutputs"
+    },
+    {
+      "name": "addSpnToEnvironment",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addSpnToEnvironment",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.addSpnToEnvironment",
+      "groupName": "Advanced"
     }
   ],
   "dataSourceBindings": [

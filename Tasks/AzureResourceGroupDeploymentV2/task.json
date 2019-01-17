@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 145,
-        "Patch": 1
+        "Minor": 147,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -281,15 +281,6 @@
             "helpMarkDown": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected."
         },
         {
-            "name": "addSpnToEnvironment",
-            "type": "boolean",
-            "label": "Access service principal details in override parameters",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId` and `$servicePrincipalKey` in your override parameters like `-key $servicePrincipalKey`",
-            "groupName": "AdvancedDeploymentOptions"
-        },
-        {
             "name": "deploymentName",
             "type": "string",
             "label": "Deployment name",
@@ -306,6 +297,15 @@
             "defaultValue": "",
             "groupName": "Advanced",
             "helpMarkDown": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values."
+        },
+        {
+            "name": "addSpnToEnvironment",
+            "type": "boolean",
+            "label": "Access service principal details in override parameters",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId` and `$servicePrincipalKey` in your override parameters like `-key $servicePrincipalKey`",
+            "groupName": "Advanced"
         }
     ],
     "dataSourceBindings": [
