@@ -31,7 +31,9 @@ export async function deploy() {
     var deploymentStrategy = tl.getInput(TASK_INPUT_DEPLOYMENT_STRATEGY);
     let result;
     if (deploymentStrategy && deploymentStrategy.toUpperCase() === CANARY_DEPLOYMENT_STRATEGY){
-        result = canaryDeployment(files, kubectl);
+        var canaryDeploymentOutput = canaryDeployment(files, kubectl);
+        result = canaryDeploymentOutput.result;
+        files = canaryDeploymentOutput.newFilePaths;
     }else {
         result = kubectl.apply(files);
     }
@@ -39,7 +41,7 @@ export async function deploy() {
 
     let rolloutStatusResults = [];
 
-    let resourceTypes: Resource[] = kubectl.getResources(result.stdout, recognizedWorkloadTypes);
+    let resourceTypes: Resource[] = KubernetesObjectUtility.getResources(files, recognizedWorkloadTypes);
     resourceTypes.forEach(resource => {
         rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
     });
@@ -59,50 +61,44 @@ export async function deploy() {
 function canaryDeployment(filePaths: string[], kubectl: Kubectl) {
     var newObjectsList = [];
     var percentage = parseInt(tl.getInput(TASK_INPUT_CANARY_PERCENTAGE));
-    
-    try {
-          filePaths.forEach((filePath: string) => {  
-            var fileContents = fs.readFileSync(filePath);
-            yaml.safeLoadAll(fileContents, function (inputObject) {
-            
-            var name = inputObject.metadata.name;
-            var kind = inputObject.kind;
-            if (canaryDeploymentHelper.isDeploymentEntity(kind)){
-                var canaryReplicaCount = canaryDeploymentHelper.calculateReplicaCountForCanary(inputObject, percentage);
-                tl.debug("Canary replica count is: "+canaryReplicaCount);
-                var canaryMetadata = new canaryDeploymentHelper.CanaryMetdata();
-                // Get stable object
-                tl.debug("Querying stable object");
-                canaryMetadata.stable_object = canaryDeploymentHelper.fetchResource(kubectl, kind, name);
-                if (!canaryMetadata.stable_object ){
-                    // If stable object not found, create canary deployment.
-                    tl.debug("Stable object not found. Creating canary object.");
-                    var newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
-                    newObjectsList.push(newCanaryObject);
-                } else {
-                    // If stable object found, fetch its canary.
-                    tl.debug("Querying canary object");
-                    canaryMetadata.existing_canary_object = canaryDeploymentHelper.fetchCanaryResource(kubectl, kind, name);
 
-                    if (!canaryMetadata.existing_canary_object){
-                        // If canary object not found, create canary and baseline object.
-                        tl.debug("Canary object not found");
-                        var newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
-                        var newBaselineObject = canaryDeploymentHelper.getNewBaselineResource(canaryMetadata.stable_object, canaryReplicaCount);
-                        newObjectsList.push(newCanaryObject);
-                        newObjectsList.push(newBaselineObject);
-                    }else {
-                        throw new Error("Currently canary deployment is going on. Rejecting this deployment");
-                    }
-                }
+    filePaths.forEach((filePath: string) => {  
+    var fileContents = fs.readFileSync(filePath);
+    yaml.safeLoadAll(fileContents, function (inputObject) {
+            
+        var name = inputObject.metadata.name;
+        var kind = inputObject.kind;
+        if (canaryDeploymentHelper.isDeploymentEntity(kind)){
+            tl.debug("Querying canary object");
+            var existing_canary_object = canaryDeploymentHelper.fetchCanaryResource(kubectl, kind, name);
+
+            if (!!existing_canary_object){
+                throw new Error("Canary deployment already exists. Rejecting this deployment");
+            }
+
+            var canaryReplicaCount = canaryDeploymentHelper.calculateReplicaCountForCanary(inputObject, percentage);
+            tl.debug("Canary replica count is: "+canaryReplicaCount);
+            // Get stable object
+            tl.debug("Querying stable object");
+            var stable_object = canaryDeploymentHelper.fetchResource(kubectl, kind, name);
+            if (!stable_object ){
+                // If stable object not found, create canary deployment.
+                tl.debug("Stable object not found. Creating canary object.");
+                var newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
+                newObjectsList.push(newCanaryObject);
             } else {
-                // Updating non deployment entity as it is.
-                newObjectsList.push(inputObject);
-            }});
-        });
-    }catch (e){
-       tl.error("Exception occurred while fetching objects for canary deployment :"+e);
-    }
+                    // If canary object not found, create canary and baseline object.
+                    tl.debug("Canary object not found");
+                    var newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
+                    var newBaselineObject = canaryDeploymentHelper.getNewBaselineResource(stable_object, canaryReplicaCount);
+                    newObjectsList.push(newCanaryObject);
+                    newObjectsList.push(newBaselineObject);
+                }
+        } else {
+            // Updating non deployment entity as it is.
+            newObjectsList.push(inputObject);
+        }});
+    });
 
     return canaryDeploymentHelper.applyResource(kubectl, newObjectsList);;
 }

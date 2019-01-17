@@ -19,23 +19,6 @@ class KubernetesWorkload {
     static DaemonSet = "DaemonSet";
 }
 
-export class CanaryMetdata {
-   input_object: any;
-   stable_object: any;
-   existing_canary_object: any;
-   existing_baseline_object: any;
-}
-
-export function updateObjectLabelsForCanary(inputObject: any, newLabels: any){
-    if (!newLabels){
-            newLabels = new Map<string, string>();
-    }
- 
-    // Add canary label
-    newLabels[CANARY_VERSION_LABEL] = CANARY_LABEL_VALUE;
-    inputObject.metadata.labels = newLabels;
-}
-
 export function calculateReplicaCountForCanary(inputObject: any, percentage: number){
     var inputReplicaCount = helper.getReplicaCount(inputObject);
     return Math.floor((inputReplicaCount*percentage)/100);
@@ -86,9 +69,9 @@ function addCanaryLabelsAndAnnotations(inputObject: any, type: string){
     newLabels[CANARY_VERSION_LABEL] = type;                                                  
     
     helper.updateObjectLabels(inputObject, newLabels, false);
-    helper.updateSelectorLabels(inputObject, newLabels, false);
-    helper.updatePodLabels(inputObject, newLabels, false);
     helper.updateObjectAnnotations(inputObject, newLabels, false);
+    helper.updateSelectorLabels(inputObject, newLabels, false);
+    helper.updateSpecLabels(inputObject, newLabels, false);
 }
 
 export function applyResource(kubectl: Kubectl, inputObjects: any[]){
@@ -104,7 +87,12 @@ export function applyResource(kubectl: Kubectl, inputObjects: any[]){
         newFilePaths.push(fileName);
     });
 
-    return kubectl.apply(newFilePaths);
+    var result = null;
+    if (newFilePaths.length > 0){
+        result = kubectl.apply(newFilePaths);
+    }
+
+    return  { "result" : result, "newFilePaths" : newFilePaths };
 }
 
 export function fetchResource(kubectl: Kubectl, kind: string, name: string): object {

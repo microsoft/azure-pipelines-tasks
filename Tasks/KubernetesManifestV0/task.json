@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 33
+        "Patch": 10
     },
     "demands": [],
     "groups": [
@@ -81,6 +81,7 @@
       "label": "Strategy",
       "required": false,
       "groupName": "config",
+      "defaultValue": "None",
       "options": {
         "canary": "Canary",
         "None": "None"
@@ -90,13 +91,17 @@
     },
     {
       "name": "percentage",
-      "type": "int",
+      "type": "string",
       "label": "Percentage",
       "required": true,
       "groupName": "config",
       "helpMarkDown": "",
       "defaultValue": 0,
-      "visibleRule": "deploymentStrategy = Canary"
+      "visibleRule": "deploymentStrategy = Canary",  
+      "validation": {
+        "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')", 
+        "message": "Enter valid percentage value i.e between 0 to 100."
+      }
     },
     {
       "name": "manifests",
