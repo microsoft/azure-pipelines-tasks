@@ -30,10 +30,13 @@ function run(): Promise<void> {
             tl.setResult(tl.TaskResult.Failed, 'Not a supported action, choose from "bake", "deploy", "patch", "scale"');
             process.exit(1);
     }
-    return connection.open()
-        .then(() => action_func())
+    connection.open()
+    return action_func()
         .then(() => connection.close())
-        .catch(()=> connection.close())
+        .catch((error) => {
+            connection.close()
+            throw error;
+        });
 }
 
 run()
