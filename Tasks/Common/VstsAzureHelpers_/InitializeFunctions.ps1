@@ -63,8 +63,18 @@ function Initialize-AzureSubscription {
     if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and !$script:azureModule -and (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue")) {
         Write-Host "##[command]Clear-AzureRmContext -Scope Process"
         $null = Clear-AzureRmContext -Scope Process
-        Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
-        $null = Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+    }
+
+    if (Get-Command -Name "Disable-AzureRmContextAutosave" -ErrorAction "SilentlyContinue") 
+    {
+        try {
+            Write-Host "##[command]Disable-AzureRmContextAutosave -ErrorAction Stop"
+            $null = Disable-AzureRmContextAutosave -ErrorAction Stop
+        }
+        catch {
+            $message = $_.Exception.Message
+            Write-Verbose "Unable to disable Azure RM context save: $message"
+        }
     }
 
     $environmentName = "AzureCloud"
@@ -181,37 +191,55 @@ function Initialize-AzureSubscription {
         } else {
             # Else, this is AzureRM.            
             try {
-                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {                    
+                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+                    If (CmdletHasMember -cmdlet "Add-AzureRmAccount" -memberName "Scope")
+                    {
+                        $processScope = @{ Scope = "Process" }    
+                    }
+                    else
+                    {
+                        $processScope = @{}
+                    }
+
                     if (CmdletHasMember -cmdlet "Add-AzureRMAccount" -memberName "EnvironmentName") {
                         
                         if ($Endpoint.Auth.Parameters.AuthenticationType -eq "SPNCertificate") {
-                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -EnvironmentName $environmentName"
-                            $null = Add-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -EnvironmentName $environmentName
+                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -EnvironmentName $environmentName @processScope"
+                            $null = Add-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -EnvironmentName $environmentName @processScope
                         }
                         else {
-                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
-                            $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
+                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName @processScope"
+                            $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName @processScope
                         }
                     }
                     else {
                         if ($Endpoint.Auth.Parameters.AuthenticationType -eq "SPNCertificate") {
-                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName"
-                            $null = Add-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName
+                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName @processScope"
+                            $null = Add-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName @processScope
                         }
                         else {
-                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
-                            $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName @processScope"
+                            $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName @processScope
                         }
                     }
                 }
                 else {
+                    If (CmdletHasMember -cmdlet "Connect-AzureRMAccount" -memberName "Scope")
+                    {
+                        $processScope = @{ Scope = "Process" }    
+                    }
+                    else
+                    {
+                        $processScope = @{}
+                    }
+
                     if ($Endpoint.Auth.Parameters.AuthenticationType -eq "SPNCertificate") {
-                        Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName"
-                        $null = Connect-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName
+                        Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName  @processScope"
+                        $null = Connect-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName @processScope
                     }
                     else {
-                        Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
-                        $null = Connect-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                        Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName @processScope"
+                        $null = Connect-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName @processScope
                     }
                 }
             } 
@@ -643,24 +671,22 @@ function Disconnect-AzureAndClearContext {
         if ($authScheme -eq 'ServicePrincipal') {
             Write-Verbose "Trying to disconnect from Azure and clear context"
 
-            if (Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue") {
-                Write-Host "##[command]Disconnect-AzureRmAccount"
-                $null = Disconnect-AzureRmAccount
+            if (Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Disconnect-AzureRmAccount -memberName Scope) {
+                Write-Host "##[command]Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop"
+                $null = Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop
             }
-            elseif (Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue") {
-                Write-Host "##[command]Remove-AzureRmAccount"
-                $null = Remove-AzureRmAccount
+            elseif (Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Remove-AzureRmAccount -memberName Scope) {
+                Write-Host "##[command]Remove-AzureRmAccount -Scope Process -ErrorAction Stop"
+                $null = Remove-AzureRmAccount -Scope Process -ErrorAction Stop
             }
-            elseif (Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue") {
-                Write-Host "##[command]Logout-AzureRmAccount"
-                $null = Logout-AzureRmAccount
+            elseif (Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Logout-AzureRmAccount -memberName Scope) {
+                Write-Host "##[command]Logout-AzureRmAccount -Scope Process -ErrorAction Stop"
+                $null = Logout-AzureRmAccount -Scope Process -ErrorAction Stop
             }
 
             if (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue") {
-                Write-Host "##[command]Clear-AzureRmContext -Scope Process"
-                $null = Clear-AzureRmContext -Scope Process
-                Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
-                $null = Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+                Write-Host "##[command]Clear-AzureRmContext -Scope Process -Scope Process -ErrorAction Stop"
+                $null = Clear-AzureRmContext -Scope Process -ErrorAction Stop
             }
         }
     } catch {
