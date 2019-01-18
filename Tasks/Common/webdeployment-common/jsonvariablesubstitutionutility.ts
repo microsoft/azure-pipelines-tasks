@@ -74,7 +74,7 @@ export function substituteJsonVariableV2(jsonObject, envObject) {
                 switch(typeof(jsonObject[jsonChild])) {
                     case 'number':
                     tl.debug('substituting value on key: ' + jsonChild + ' with (number) value: ' + resultNode.value);
-                        jsonObject[jsonChild] = isNumber(resultNode.value) ? Number(resultNode.value): resultNode.value;
+                        jsonObject[jsonChild] = !isNaN(resultNode.value) ? Number(resultNode.value): resultNode.value;
                         break;
                     case 'boolean':
                         tl.debug('substituting value on key: ' + jsonChild + ' with (boolean) value: ' + resultNode.value);
