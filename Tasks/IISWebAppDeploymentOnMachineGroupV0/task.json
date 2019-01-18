@@ -3,6 +3,7 @@
     "name": "IISWebAppDeploymentOnMachineGroup",
     "friendlyName": "IIS Web App Deploy",
     "description": "Deploy a website or web application using Web Deploy",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=866789",
     "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=866789)",
     "category": "Deploy",
     "visibility": [

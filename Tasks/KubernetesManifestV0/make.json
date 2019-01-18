@@ -1,0 +1,19 @@
+{
+	"common": [
+    {
+		"module": "../Common/utility-common",
+		"type": "node",
+		"dest" : "./",
+		"compile" : true
+	}
+],
+	"rm": [
+        {
+            "items": [
+                "node_modules/utility-common/node_modules/vsts-task-lib",
+				"node_modules/vsts-task-tool-lib/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
+}

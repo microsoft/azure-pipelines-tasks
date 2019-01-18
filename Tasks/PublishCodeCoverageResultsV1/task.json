@@ -3,6 +3,7 @@
     "name": "PublishCodeCoverageResults",
     "friendlyName": "Publish Code Coverage Results",
     "description": "Publish Cobertura or JaCoCo code coverage results from a build",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=626485",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=626485)",
     "category": "Test",
     "visibility": [

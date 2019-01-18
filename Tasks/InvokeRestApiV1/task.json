@@ -4,6 +4,7 @@
     "friendlyName": "Invoke REST API",
     "description": "Invoke a REST API as a part of your pipeline.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870236",
     "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=870236)",
     "category": "Deploy",
     "visibility": [

@@ -3,6 +3,7 @@
     "name": "AzureFunctionAppContainer",
     "friendlyName": "Azure Function for Container",
     "description": "Update Function Apps with Docker Containers",
+    "helpUrl": "https://aka.ms/azurefunctiononcontainerdeployreadme",
     "helpMarkDown": "[More information](https://aka.ms/azurefunctiononcontainerdeployreadme)",
     "category": "Deploy",
     "visibility": [

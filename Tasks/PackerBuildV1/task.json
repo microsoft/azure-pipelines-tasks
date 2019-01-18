@@ -3,6 +3,7 @@
     "name": "PackerBuild",
     "friendlyName": "Build Machine Image",
     "description": "Build machine image using Packer. This image can be used for Azure Virtual machine scale set deployment",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=845329",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=845329)",
     "category": "Deploy",
     "releaseNotes": "This task now supports managed disk images.",
@@ -14,7 +15,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [],
     "preview": "true",
@@ -222,7 +223,7 @@
             "type": "multiLine",
             "label": "Additional Builder parameters",
             "required": false,
-            "defaultValue": "{}",
+            "defaultValue": "{\"vm_size\":\"Standard_D3_v2\"}",
             "groupName": "Advanced",
             "helpMarkDown": "In auto generated Packer template mode the task creates a Packer template with an Azure builder. This builder is used to generate a machine image. You can add keys to the Azure builder to customize the generated Packer template. For example setting ssh_tty=true in case you are using a CentOS base image and you need to have a tty to run sudo.<br/>To view/edit the additional parameters in a grid, click on “…” next to text box.",
             "properties": {
@@ -244,6 +245,15 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Provide a name for the output variable which will store generated machine image VHD url for un-managed VM image or image name for managed VM image.",
+            "groupName": "Output"
+        },
+        {
+            "name": "imageId",
+            "type": "string",
+            "label": "Azure Resource Id",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Provide a name for the output variable which will store the azure resource id for the newly created image.  This is for managed images only.",
             "groupName": "Output"
         }
     ],
@@ -294,6 +304,7 @@
         "ExecutingPackerBuild": "Running packer build command. Waiting for it to finish...",
         "PackerBuildCompleted": "packer build completed.",
         "ImageURIOutputVariableNotFound": "Could not get vhd image URI (unmanaged image) from packer execution. Output variable will not be set.",
+        "ImageIDOutputVariableNotFound": "Could not get managed image id from packer execution. Output variable will not be set. Note: This variable should not be used with un-managed VM images.",
         "ManagedImageNameOutputVariableNotFound": "Could not get managed image name from packer execution. Output variable will not be set.",
         "CustumTemplateOutputVariableNotFound": "Could not get managed image name or vhd image URI (unmanaged image) from packer execution. Output variable will not be set.",
         "BuiltInTemplateNotFoundErrorMessagePathName": "Built-in template for OS type: %s ",

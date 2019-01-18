@@ -1,5 +1,6 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
+import fs = require('fs');
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 
@@ -58,6 +59,28 @@ function makeAbsolute(normalizedPath: string): string {
     return result;
 }
 
+function createFileList(files: string[]): string {
+    const tempDirectory: string = tl.getVariable('Agent.TempDirectory');
+    const fileName: string = Math.random().toString(36).replace('0.', '');
+    const file: string = path.resolve(tempDirectory, fileName);
+
+    try {
+        fs.writeFileSync(
+            file,
+            files.reduce((prev, cur) => prev + cur + "\n", ""),
+            { encoding: "utf8" });
+    }
+    catch (error) {
+        if (fs.existsSync(file)) {
+            fs.unlinkSync(file);
+        }
+
+        throw error;
+    }
+
+    return file;
+}
+
 function getOptions() {
     var dirName: string;
     if (includeRootFolder) {
@@ -86,9 +109,10 @@ function sevenZipArchive(archive: string, compression: string, files: string[]) 
         sevenZip.arg('-bb3');
     }
     sevenZip.arg(archive);
-    for (var i = 0; i < files.length; i++) {
-        sevenZip.arg(files[i]);
-    }
+
+    const fileList: string = createFileList(files);
+    sevenZip.arg('@' + fileList);
+
     return handleExecResult(sevenZip.execSync(getOptions()), archive);
 }
 
@@ -159,7 +183,7 @@ export class FailTaskError extends Error {
  * Windows only
  * standard gnu-tar extension formats with recognized auto compression formats
  * https://www.gnu.org/software/tar/manual/html_section/tar_69.html
- *   
+ *
  * Computes the name of the tar to use inside a compressed tar.
  * E.g. foo.tar.gz is expected to have foo.tar inside
  */

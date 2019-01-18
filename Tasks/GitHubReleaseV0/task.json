@@ -3,6 +3,7 @@
     "name": "GitHubRelease",
     "friendlyName": "GitHub Release",
     "description": "Create, edit, or delete a GitHub release.",
+    "helpUrl": "https://aka.ms/AA3aeiw",
     "helpMarkDown": "[More Information](https://aka.ms/AA3aeiw)",
     "category": "Utility",
     "visibility": [

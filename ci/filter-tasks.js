@@ -17,31 +17,31 @@ var getTasksToBuildForCI = async function() {
     var packageInfo;
     try {
         var packageToken = process.env['PACKAGE_TOKEN'];
-        if (!token) {
-            console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=24;]Failed to get info from package endpoint because no token was provided. Try setting the PACKAGE_TOKEN environment variable.`);
+        if (!packageToken) {
+            console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=21;]Failed to get info from package endpoint because no token was provided. Try setting the PACKAGE_TOKEN environment variable.`);
             return makeOptions.tasks;
         }
         var handler = new httpHandler.PersonalAccessTokenCredentialHandler(packageToken);
         var client = new restClient.RestClient('azure-pipelines-tasks-ci', '', [handler]);
         var packageEndpoint = process.env['PACKAGE_ENDPOINT'];
         if (!packageEndpoint) {
-            console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=24;]Failed to get info from package endpoint because no endpoint was specified. Try setting the PACKAGE_ENDPOINT environment variable.`);
+            console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=28;]Failed to get info from package endpoint because no endpoint was specified. Try setting the PACKAGE_ENDPOINT environment variable.`);
             return makeOptions.tasks;
         }
         packageInfo = await client.get(packageEndpoint);
         if (packageInfo.statusCode !== 200) {
-            console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=24;]Failed to get info from package endpoint, returned with status code ${packageInfo.statusCode}`);
+            console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=33;]Failed to get info from package endpoint, returned with status code ${packageInfo.statusCode}`);
             return makeOptions.tasks;
         }
     }
     catch (err) {
         // If unable to reach rest client, build everything.
-        console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=30;]Failed to get info from package endpoint, client failed with error ${err.message}`);
+        console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=39;]Failed to get info from package endpoint, client failed with error ${err.message}`);
         return makeOptions.tasks;
     }
     var packageMap = {};
     if(!packageInfo.result || !packageInfo.result.value) {
-        console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=34;]Failed to get info from package endpoint, returned no packages');
+        console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=44;]Failed to get info from package endpoint, returned no packages');
         return makeOptions.tasks;
     }
     packageInfo.result.value.forEach(package => {
@@ -59,19 +59,27 @@ var getTasksToBuildForCI = async function() {
     });
 
     return makeOptions.tasks.filter(function (taskName) {
-        var lowerCaseName = taskName.toLowerCase();
-        if (lowerCaseName in packageMap) {
-            var packageVersion = packageMap[lowerCaseName]
-
-            var taskJsonPath = path.join(__dirname, '..', 'Tasks' , taskName, 'task.json')
+        var taskJsonPath = path.join(__dirname, '..', 'Tasks' , taskName, 'task.json');
+        if (fs.existsSync(taskJsonPath)){
             var taskJson = JSON.parse(fs.readFileSync(taskJsonPath).toString());
-            var localVersion = `${taskJson.version.Major}.${taskJson.version.Minor}.${taskJson.version.Patch}`;
-            
-            // Build if local version and package version are different.
-            return semver.neq(localVersion, packageVersion);
+            var lowerCaseName = taskJson.name.toLowerCase();
+            if (lowerCaseName in packageMap || taskName.toLowerCase() in packageMap) {
+                if (taskName.toLowerCase() in packageMap) {
+                    lowerCaseName = taskName.toLowerCase();   
+                }
+                var packageVersion = packageMap[lowerCaseName];
+                var localVersion = `${taskJson.version.Major}.${taskJson.version.Minor}.${taskJson.version.Patch}`;
+                
+                // Build if local version and package version are different.
+                return semver.neq(localVersion, packageVersion);
+            }
+            else {
+                console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=74;]${taskName} has not been published before`);
+                return true;
+            }
         }
         else {
-            console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=68;]${taskName} has not been published before`);
+            console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=79;]${taskJsonPath} does not exist`);
             return true;
         }
     });
@@ -103,6 +111,7 @@ var getTasksToBuildForPR = function() {
     // Takes in a git source branch, diffs it with master, and returns a list of tasks that could have been affected by the changes.
     var sourceBranch = process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'];
     var prId = process.env['SYSTEM_PULLREQUEST_PULLREQUESTNUMBER'];
+    var targetBranch = process.env['SYSTEM_PULLREQUEST_TARGETBRANCH'];
     var commonChanges = [];
     var toBeBuilt = [];
     try {
@@ -111,16 +120,14 @@ var getTasksToBuildForPR = function() {
             sourceBranch = sourceBranch.split(':')[1];
         }
         run('git fetch origin pull/' + prId + '/head:' + sourceBranch);
-        run('git checkout master');
-        run('git checkout ' + sourceBranch);
     }
     catch (err) {
         // If unable to reach github, build everything.
-        console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=112;]Unable to reach github, building all tasks', err);
+        console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=125;]Unable to reach github, building all tasks', err);
         return makeOptions.tasks;
     }
-    var baseCommit = run('git merge-base ' + sourceBranch + ' master');
-    run('git --no-pager diff --name-only ' + sourceBranch + ' ' + baseCommit)
+    var baseCommit = run('git merge-base ' + sourceBranch + ' origin/' + targetBranch);
+    run('git --no-pager diff --name-only ' + baseCommit + ' ' + sourceBranch)
         .split('\n')
         .forEach(filePath => {
         if (filePath.slice(0, 5) == 'Tasks') {

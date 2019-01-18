@@ -3,6 +3,7 @@
     "name": "WindowsMachineFileCopy",
     "friendlyName": "Windows Machine File Copy",
     "description": "Copy files to remote machine(s)",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=627415",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
     "category": "Deploy",
     "visibility": [

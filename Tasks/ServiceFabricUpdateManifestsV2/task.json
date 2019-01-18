@@ -4,6 +4,7 @@
     "friendlyName": "Update Service Fabric Manifests",
     "description": "Automatically updates portions of the application and service manifests within a packaged Service Fabric application.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=820529",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820529)",
     "category": "Utility",
     "visibility": [

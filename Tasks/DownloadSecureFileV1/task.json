@@ -3,6 +3,7 @@
     "name": "DownloadSecureFile",
     "friendlyName": "Download Secure File",
     "description": "Download a secure file to a temporary location on the build or release agent",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=862069",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862069)",
     "category": "Utility",
     "visibility": [

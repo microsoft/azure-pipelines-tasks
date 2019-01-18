@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [],
   "preview": "true",
@@ -222,7 +222,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.additionalBuilderParameters",
       "required": false,
-      "defaultValue": "{}",
+      "defaultValue": "{\"vm_size\":\"Standard_D3_v2\"}",
       "groupName": "Advanced",
       "helpMarkDown": "ms-resource:loc.input.help.additionalBuilderParameters",
       "properties": {
@@ -244,6 +244,15 @@
       "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.imageUri",
+      "groupName": "Output"
+    },
+    {
+      "name": "imageId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageId",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.imageId",
       "groupName": "Output"
     }
   ],
@@ -294,6 +303,7 @@
     "ExecutingPackerBuild": "ms-resource:loc.messages.ExecutingPackerBuild",
     "PackerBuildCompleted": "ms-resource:loc.messages.PackerBuildCompleted",
     "ImageURIOutputVariableNotFound": "ms-resource:loc.messages.ImageURIOutputVariableNotFound",
+    "ImageIDOutputVariableNotFound": "ms-resource:loc.messages.ImageIDOutputVariableNotFound",
     "ManagedImageNameOutputVariableNotFound": "ms-resource:loc.messages.ManagedImageNameOutputVariableNotFound",
     "CustumTemplateOutputVariableNotFound": "ms-resource:loc.messages.CustumTemplateOutputVariableNotFound",
     "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName",

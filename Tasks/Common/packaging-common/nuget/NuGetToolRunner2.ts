@@ -12,7 +12,7 @@ import * as commandHelper from "./CommandHelper";
 // we are accessing internal or external package sources.
 // It is used by the NuGetCommand >= v2.0.0 and DotNetCoreCLI >= v2.0.0
 
-interface EnvironmentDictionary { [key: string]: string; }
+export interface EnvironmentDictionary { [key: string]: string; }
 interface EndpointCredentials {
     endpoint: string;
     username?: string;
@@ -27,6 +27,14 @@ export interface NuGetEnvironmentSettings {
     /* V2 credential provider path. Only populated if V2 should be used. */
     V2CredProviderPath?: string
     extensionsDisabled: boolean;
+
+    /* NO_PROXY support
+    / Agent.ProxyBypassList supplies a list of regexes, nuget is expecting a list of comma seperated domains.
+    / so we need to determine if the uris match any of the regexes. */
+    // provide to read the uris from a config file (install)
+    configFile?: string;
+    // provide to just match against a single uri (publish)
+    registryUri?: string;
 }
 
 function prepareNuGetExeEnvironment(
@@ -103,13 +111,45 @@ function prepareNuGetExeEnvironment(
         }
     }
 
+    env = setNuGetProxyEnvironment(env, settings.configFile, settings.registryUri);
+    return env;
+}
+
+// Adds the HTTP_PROXY and NO_PROXY values (if applicable) to the input dictionary
+export function setNuGetProxyEnvironment(input: EnvironmentDictionary,
+    configFile?: string,
+    registryUri?: string): EnvironmentDictionary {
     let httpProxy = getNuGetProxyFromEnvironment();
     if (httpProxy) {
         tl.debug(`Adding environment variable for NuGet proxy: ${httpProxy}`);
-        env["HTTP_PROXY"] = httpProxy;
+        input["HTTP_PROXY"] = httpProxy;
+
+        let proxybypass: string;
+        if (configFile != null) {
+            proxybypass = getProxyBypassForConfig(configFile);
+
+        } else if (registryUri != null) {
+            proxybypass = getProxyBypassForUri(registryUri);
+        }
+
+        if (proxybypass) {
+            tl.debug(`Adding environment variable for NuGet proxy bypass: ${proxybypass}`);
+
+            // check if there are any existing NO_PROXY values
+            let existingNoProxy = process.env["NO_PROXY"];
+            if (existingNoProxy) {
+                existingNoProxy = existingNoProxy.trimRight();
+                // trim trailing comma
+                existingNoProxy = existingNoProxy.endsWith(',') ? existingNoProxy.slice(0,-1) : existingNoProxy;
+                // append our bypass list
+                proxybypass = existingNoProxy + ',' + proxybypass;
+            }
+
+            input["NO_PROXY"] = proxybypass;
+        }
     }
 
-    return env;
+    return input;
 }
 
 function buildCredProviderPath(credProviderPath1: string, credProviderPath2: string): string {
@@ -311,6 +351,75 @@ export function getNuGetProxyFromEnvironment(): string {
         return url.format(proxy);
     }
 
+    return undefined;
+}
+
+export function getProxyBypassForUri(registryUri: string): string {
+    // check if there are any proxy bypass hosts
+    const proxyBypassHosts: string[] = JSON.parse(tl.getVariable('Agent.ProxyBypassList') || '[]'); 
+    if (proxyBypassHosts == null || proxyBypassHosts.length == 0) {
+        return undefined;
+    }
+
+    const uri = url.parse(registryUri);
+    if (uri.hostname != null) {
+        const bypass = proxyBypassHosts.some(bypassHost => {
+            return (new RegExp(bypassHost, 'i').test(uri.href));
+        });
+        if (bypass) {
+            return uri.hostname;
+        }
+    }
+    return undefined;
+}
+
+export function getProxyBypassForConfig(configFile: string): string {
+    // check if there are any proxy bypass hosts
+    const proxyBypassHosts: string[] = JSON.parse(tl.getVariable('Agent.ProxyBypassList') || '[]'); 
+    if (proxyBypassHosts == null || proxyBypassHosts.length == 0) {
+        return undefined;
+    }
+
+    // get the potential package sources
+    let sources = ngutil.getSourcesFromNuGetConfig(configFile);
+
+    // convert to urls
+    let sourceUris = sources.reduce(function(result: url.Url[], current: auth.IPackageSourceBase): url.Url[] {
+        try {
+            const uri = url.parse(current.feedUri);
+            if (uri.hostname != null) {
+                result.push(uri);
+            }
+        }
+        finally {
+            return result;
+        }
+    }, []);
+
+    const bypassDomainSet = new Set<string>(); 
+    proxyBypassHosts.forEach((bypassHost => {
+        // if there are no more sources, stop processing regexes
+        if (sourceUris == null || sourceUris.length == 0) {
+            return;
+        }
+
+        let regex = new RegExp(bypassHost, 'i');
+        
+        // filter out the sources that match the current regex
+        sourceUris = sourceUris.filter(sourceUri => {
+            if (regex.test(sourceUri.href)) {
+                bypassDomainSet.add(sourceUri.hostname);
+                return false;
+            }
+            return true;
+        });
+    }));
+
+    // return a comma separated list of the bypass domains
+    if (bypassDomainSet.size > 0) {
+        const bypassDomainArray = Array.from(bypassDomainSet);
+        return bypassDomainArray.join(',');
+    }
     return undefined;
 }
 

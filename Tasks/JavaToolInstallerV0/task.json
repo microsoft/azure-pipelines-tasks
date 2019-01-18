@@ -3,6 +3,7 @@
     "name": "JavaToolInstaller",
     "friendlyName": "Java Tool Installer",
     "description": "Acquires a specific version of Java from a user supplied Azure blob or the tools cache and sets JAVA_HOME. Use this task to change the version of Java used in Java tasks.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=875287",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=875287)",
     "category": "Tool",
     "runsOn": [

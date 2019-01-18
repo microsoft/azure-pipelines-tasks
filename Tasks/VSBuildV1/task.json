@@ -3,6 +3,7 @@
     "name": "VSBuild",
     "friendlyName": "Visual Studio Build",
     "description": "Build with MSBuild and set the Visual Studio version property.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613727",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613727)",
     "category": "Build",
     "visibility": [
@@ -11,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 126,
-        "Patch": 2
+        "Minor": 147,
+        "Patch": 0
     },
     "demands": [
         "msbuild",
@@ -44,6 +45,7 @@
             "defaultValue": "latest",
             "options": {
                 "latest": "Latest",
+                "16.0": "Visual Studio 2019",
                 "15.0": "Visual Studio 2017",
                 "14.0": "Visual Studio 2015",
                 "12.0": "Visual Studio 2013",
@@ -130,6 +132,23 @@
             "required": false,
             "helpMarkDown": "Optionally create a log file (Windows only).",
             "groupName": "advanced"
+        },
+        {
+            "name": "logFileVerbosity",
+            "type": "pickList",
+            "label": "Log File Verbosity",
+            "defaultValue": "normal",
+            "required": false,
+            "helpMarkDown": "Optional log file verbosity.",
+            "groupName": "advanced",
+            "options": {
+                "quiet": "Quiet",
+                "minimal": "Minimal",
+                "normal": "Normal",
+                "detailed": "Detailed",
+                "diagnostic": "Diagnostic"
+            },
+            "visibleRule": "createLogFile = true"
         }
     ],
     "instanceNameFormat": "Build solution $(solution)",

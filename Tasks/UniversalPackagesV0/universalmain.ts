@@ -14,6 +14,11 @@ async function main(): Promise<void> {
     let artifactToolPath: string;
 
     try {
+        const serverType = tl.getVariable("System.ServerType");
+        if (!serverType || serverType.toLowerCase() !== "hosted"){
+            throw new Error(tl.loc("Error_UniversalPackagesNotSupportedOnPrem"));
+        }
+
         const localAccessToken = pkgLocationUtils.getSystemAccessToken();
         const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
         const blobUri = await pkgLocationUtils.getBlobstoreUriFromBaseServiceUri(

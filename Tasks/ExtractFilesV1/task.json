@@ -4,6 +4,7 @@
     "friendlyName": "Extract Files",
     "description": "Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=800269",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
     "category": "Utility",
     "visibility": [
