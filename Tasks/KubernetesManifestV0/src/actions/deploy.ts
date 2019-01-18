@@ -53,7 +53,7 @@ export async function deploy() {
     annotateResults.push(kubectl.annotateFiles(files, utils.annotationsToAdd(), true));
     resourceTypes.forEach(resource => {
         if (resource.type.toUpperCase() != KubernetesObjectUtility.KubernetesWorkload.Pod.toUpperCase()){
-            annotateChildPods(kubectl, resource.type, resource.name, allPods)
+            utils.annotateChildPods(kubectl, resource.type, resource.name, allPods)
                 .forEach(execResult => annotateResults.push(execResult));
         }
     });

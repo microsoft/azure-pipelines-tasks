@@ -7,7 +7,6 @@ import * as os from "os";
 import { ToolRunner, IExecOptions, IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import kubectlutility = require("utility-common/kubectlutility");
 import { Kubectl } from "utility-common/kubectl-object-model";
-import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
