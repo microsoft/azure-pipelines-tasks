@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Télécharger un package",
+  "loc.helpMarkDown": "L'extension Package Management doit être installée",
+  "loc.description": "Téléchargez un package à partir d'un flux Package Management dans Azure Artifacts ou TFS. \r\n Nécessite l'extension Package Management.",
+  "loc.instanceNameFormat": "Télécharger un package",
+  "loc.input.label.feed": "Flux",
+  "loc.input.help.feed": "Sélectionner la source du package",
+  "loc.input.label.definition": "Package",
+  "loc.input.help.definition": "Sélectionnez le package à télécharger. Seuls les packages NuGet sont pris en charge.",
+  "loc.input.label.version": "Version",
+  "loc.input.help.version": "Version du package",
+  "loc.input.label.downloadPath": "Répertoire de destination",
+  "loc.input.help.downloadPath": "Chemin de l'emplacement de téléchargement du package sur la machine agent",
+  "loc.messages.FailedToGetPackageMetadata": "Échec de l'obtention des métadonnées du package avec l'erreur %s",
+  "loc.messages.FailedToDownloadNugetPackage": "Échec du téléchargement du package NuGet à partir de %s en raison de l'erreur suivante : %s",
+  "loc.messages.PackageDownloadSuccessful": "Téléchargement réussi du package",
+  "loc.messages.CredentialsNotFound": "Impossible de déterminer les informations d'identification pour la connexion au service Package Management.",
+  "loc.messages.StartingDownloadOfPackage": "Démarrage du téléchargement du package NuGet %s vers l'emplacement %s",
+  "loc.messages.ExtractingNugetPackage": "Extraction du package NuGet %s dans le répertoire %s",
+  "loc.messages.PackageTypeNotSupported": "Seuls les types de package NuGet peuvent être téléchargés à l'aide de cette tâche.",
+  "loc.messages.ExtractionFailed": "Échec de l'extraction du package avec l'erreur %s"
+}
