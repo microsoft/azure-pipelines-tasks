@@ -88,7 +88,7 @@ export async function getPackagingUris(protocolType: ProtocolType): Promise<Pack
 
     const serviceUri = await getServiceUriFromAreaId(collectionUrl, accessToken, areaId);
 
-    const webApi = getWebApiWithProxy(serviceUri, accessToken);
+    const webApi = getWebApiWithProxy(serviceUri);
 
     const locationApi = await webApi.getLocationsApi();
 
