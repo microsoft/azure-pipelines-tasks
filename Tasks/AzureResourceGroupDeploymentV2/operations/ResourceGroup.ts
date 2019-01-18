@@ -170,7 +170,7 @@ export class ResourceGroup {
             tl.error(error.message);
             if (error.details) {
                 tl.error(tl.loc("Details"));
-                
+
 
                 for (var i = 0; i < error.details.length; i++) {
                     var errorMessage = null;
@@ -189,7 +189,7 @@ export class ResourceGroup {
                     }
                 }
 
-                
+
             }
         } else {
             tl.error(error);
@@ -316,6 +316,15 @@ export class ResourceGroup {
         var overrideParameters: NameValuePair[] = PowerShellParameters.parse(this.taskParameters.overrideParameters, true, "\\");
         for (var overrideParameter of overrideParameters) {
             tl.debug("Overriding key: " + overrideParameter.name);
+            if (this.taskParameters.addSpnToEnvironment) {
+                if (overrideParameter.value === "$servicePrincipalId") {
+                    overrideParameter.value = tl.getEndpointAuthorizationParameter(this.taskParameters.connectedService, 'serviceprincipalid', true);
+                }
+                if (overrideParameter.value === "$servicePrincipalKey") {
+                    overrideParameter.value = tl.getEndpointAuthorizationParameter(this.taskParameters.connectedService, 'serviceprincipalkey', false);
+                }
+            }
+
             try {
                 overrideParameter.value = this.castToType(overrideParameter.value, template.parameters[overrideParameter.name].type);
             } catch (error) {

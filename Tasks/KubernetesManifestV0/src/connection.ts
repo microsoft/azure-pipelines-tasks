@@ -10,7 +10,7 @@ export class Connection {
         this._skipAuth = !!skipAuth;
     }
 
-    public async open() {
+    public open() {
         let connectionType = tl.getInput("connectionType", true);
         if (connectionType === "None" || this._skipAuth) {
             return;
