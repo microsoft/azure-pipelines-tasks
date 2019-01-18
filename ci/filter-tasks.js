@@ -167,7 +167,7 @@ var setTaskVariables = function(tasks) {
     console.log('##vso[task.setVariable variable=numTasks]' + tasks.length);
 }
 
-var buildReason = process.env['BUILD_REASON'].toLowerCase();
+var buildReason = 'individualci';
 var tasks;
 if (buildReason == 'individualci' || buildReason == 'batchedci') {
     // If CI, we will compare any tasks that have updated versions.
