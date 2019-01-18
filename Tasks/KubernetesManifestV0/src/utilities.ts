@@ -103,3 +103,20 @@ export function annotateChildPods(kubectl: Kubectl, resourceType, resourceName, 
 
     return commandExecutionResults;
 }
+
+export function replaceAllTokens(currentString: string, replaceToken, replaceValue) {
+    let i = currentString.indexOf(replaceToken);
+    if (i < 0) {
+        tl.debug(`No occurence of replacement token: ${replaceToken} found`);
+        return currentString;
+    }
+
+    let newString = currentString.substring(0, i);
+    let leftOverString = currentString.substring(i);
+    newString += replaceValue + leftOverString.substring(Math.min(leftOverString.indexOf("\n"), leftOverString.indexOf("\"")));
+    if (newString == currentString) {
+        tl.debug(`All occurences replaced`);
+        return newString;
+    }
+    return replaceAllTokens(newString, replaceToken, replaceValue);
+}

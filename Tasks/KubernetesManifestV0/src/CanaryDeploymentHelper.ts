@@ -11,22 +11,22 @@ const CANARY_SUFFIX = "-canary";
 const CANARY_LABEL_VALUE = "canary";
 const CANARY_VERSION_LABEL = "azure-pipelines/version";
 
-export function calculateReplicaCountForCanary(inputObject: any, percentage: number){
+export function calculateReplicaCountForCanary(inputObject: any, percentage: number) {
     var inputReplicaCount = helper.getReplicaCount(inputObject);
-    return Math.floor((inputReplicaCount*percentage)/100);
+    return Math.round((inputReplicaCount * percentage) / 100);
 }
 
 export function isDeploymentEntity(kind: string): boolean {
-    if (!kind){
-        throw new Error ("Kind is not defined");
+    if (!kind) {
+        throw new Error("Kind is not defined");
     }
-    
+
     var temp = kind.toUpperCase();
-    return temp === helper.KubernetesWorkload.Pod.toUpperCase() ||  
-           temp === helper.KubernetesWorkload.Replicaset.toUpperCase() ||  
-           temp === helper.KubernetesWorkload.Deployment.toUpperCase() ||  
-           temp === helper.KubernetesWorkload.StatefulSet.toUpperCase() ||  
-           temp === helper.KubernetesWorkload.DaemonSet.toUpperCase();
+    return temp === helper.KubernetesWorkload.Pod.toUpperCase() ||
+        temp === helper.KubernetesWorkload.Replicaset.toUpperCase() ||
+        temp === helper.KubernetesWorkload.Deployment.toUpperCase() ||
+        temp === helper.KubernetesWorkload.StatefulSet.toUpperCase() ||
+        temp === helper.KubernetesWorkload.DaemonSet.toUpperCase();
 }
 
 export function getNewBaselineResource(stableObject: any, replicas: number): object {
@@ -41,50 +41,50 @@ function getNewCanaryObject(inputObject: any, replicas: number, type: string): o
     var newObject = JSON.parse(JSON.stringify(inputObject));
 
     // Updating name
-    newObject.metadata.name = type === CANARY_LABEL_VALUE ? getCanaryResourceName(inputObject.metadata.name) : 
-                                                            getBaselineResourceName(inputObject.metadata.name);
+    newObject.metadata.name = type === CANARY_LABEL_VALUE ? getCanaryResourceName(inputObject.metadata.name) :
+        getBaselineResourceName(inputObject.metadata.name);
 
     // Adding labels and annotations.
     addCanaryLabelsAndAnnotations(newObject, type);
-    
+
     // Updating no. of replicas
-    if (newObject.kind.toUpperCase() != helper.KubernetesWorkload.Pod.toUpperCase() && 
-        newObject.kind.toUpperCase() != helper.KubernetesWorkload.DaemonSet.toUpperCase()){
+    if (newObject.kind.toUpperCase() != helper.KubernetesWorkload.Pod.toUpperCase() &&
+        newObject.kind.toUpperCase() != helper.KubernetesWorkload.DaemonSet.toUpperCase()) {
         newObject.spec.replicas = replicas;
     }
 
     return newObject;
 }
 
-function addCanaryLabelsAndAnnotations(inputObject: any, type: string){
+function addCanaryLabelsAndAnnotations(inputObject: any, type: string) {
     var newLabels = new Map<string, string>();
-    newLabels[CANARY_VERSION_LABEL] = type;                                                  
-    
+    newLabels[CANARY_VERSION_LABEL] = type;
+
     helper.updateObjectLabels(inputObject, newLabels, false);
     helper.updateObjectAnnotations(inputObject, newLabels, false);
     helper.updateSelectorLabels(inputObject, newLabels, false);
     helper.updateSpecLabels(inputObject, newLabels, false);
 }
 
-export function applyResource(kubectl: Kubectl, inputObjects: any[]){
+export function applyResource(kubectl: Kubectl, inputObjects: any[]) {
     let newFilePaths = [];
     inputObjects.forEach((inputObject: any) => {
-        var filePath = inputObject.kind+ "_"+ inputObject.metadata.name;
+        var filePath = inputObject.kind + "_" + inputObject.metadata.name;
         var inputObjectString = JSON.stringify(inputObject);
         const tempDirectory = utils.getTempDirectory();
         let fileName = path.join(tempDirectory, path.basename(filePath));
-           fs.writeFileSync(
-           path.join(fileName),
-           inputObjectString);
+        fs.writeFileSync(
+            path.join(fileName),
+            inputObjectString);
         newFilePaths.push(fileName);
     });
 
     var result = null;
-    if (newFilePaths.length > 0){
+    if (newFilePaths.length > 0) {
         result = kubectl.apply(newFilePaths);
     }
-    
-    return  { "result" : result, "newFilePaths" : newFilePaths };
+
+    return { "result": result, "newFilePaths": newFilePaths };
 }
 
 export function fetchResource(kubectl: Kubectl, kind: string, name: string): object {
@@ -96,10 +96,10 @@ export function fetchCanaryResource(kubectl: Kubectl, kind: string, name: string
     return fetchResource(kubectl, kind, getCanaryResourceName(name));
 }
 
-function getCanaryResourceName(name: string){
-     return name+CANARY_SUFFIX;
+function getCanaryResourceName(name: string) {
+    return name + CANARY_SUFFIX;
 }
 
-function getBaselineResourceName(name: string){
-    return name+BASELINE_SUFFIX;
+function getBaselineResourceName(name: string) {
+    return name + BASELINE_SUFFIX;
 }
