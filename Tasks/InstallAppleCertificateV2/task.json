@@ -3,6 +3,7 @@
     "name": "InstallAppleCertificate",
     "friendlyName": "Install Apple Certificate",
     "description": "Install an Apple certificate required to build on a macOS agent",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=862067",
     "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkID=862067)",
     "category": "Utility",
     "visibility": [

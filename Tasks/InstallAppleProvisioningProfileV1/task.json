@@ -3,6 +3,7 @@
     "name": "InstallAppleProvisioningProfile",
     "friendlyName": "Install Apple Provisioning Profile",
     "description": "Install an Apple provisioning profile required to build on a macOS agent",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=862068",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862068)",
     "category": "Utility",
     "visibility": [

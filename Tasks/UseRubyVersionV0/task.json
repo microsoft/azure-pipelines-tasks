@@ -3,6 +3,7 @@
     "name": "UseRubyVersion",
     "friendlyName": "Use Ruby Version",
     "description": "Retrieves the specified version of Ruby from the tool cache. Optionally add it to PATH.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=2005989",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=2005989)",
     "category": "Tool",
     "runsOn": [

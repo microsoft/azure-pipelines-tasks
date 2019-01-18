@@ -3,6 +3,7 @@
     "name": "DockerInstaller",
     "friendlyName": "Docker CLI installer",
     "description": "Install Docker CLI on agent machine.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Tool",
     "visibility": [

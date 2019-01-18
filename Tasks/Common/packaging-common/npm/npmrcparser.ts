@@ -3,7 +3,7 @@ import * as ini from 'ini';
 
 import * as tl from 'vsts-task-lib/task';
 
-export function GetRegistries(npmrc: string): string[] {
+export function GetRegistries(npmrc: string, saveNormalizedRegistries: boolean): string[] {
     let registries: string[] = [];
     let config = ini.parse(fs.readFileSync(npmrc).toString());
 
@@ -15,8 +15,10 @@ export function GetRegistries(npmrc: string): string[] {
         }
     }
 
-    // save the .npmrc with normalized registries
-    tl.writeFile(npmrc, ini.stringify(config));
+    if (saveNormalizedRegistries) {
+        // save the .npmrc with normalized registries
+        tl.writeFile(npmrc, ini.stringify(config));
+    }
     return registries;
 }
 

@@ -5,11 +5,11 @@ import kubectlutility = require("utility-common/kubectlutility");
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 import yaml = require('js-yaml');
+import * as utils from "./../utilities";
 import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import { Kubectl, Resource } from "utility-common/kubectl-object-model";
 import * as canaryDeploymentHelper from '../CanaryDeploymentHelper';
 import * as KubernetesObjectUtility from '../KubernetesObjectUtility';
-import * as utils from "./../utilities";
 
 const TASK_INPUT_CANARY_PERCENTAGE = "percentage";
 const TASK_INPUT_DEPLOYMENT_STRATEGY = "deploymentStrategy";
@@ -26,7 +26,7 @@ export async function deploy() {
     let containers = tl.getDelimitedInput("containers", "\n");
     files = updateContainerImagesInConfigFiles(files, containers);
 
-    let kubectl = new Kubectl(await getKubectl(), tl.getInput("namespace", false));
+    let kubectl = new Kubectl(await utils.getKubectl(), tl.getInput("namespace", false));
 
     var deploymentStrategy = tl.getInput(TASK_INPUT_DEPLOYMENT_STRATEGY);
     let result;
@@ -37,28 +37,27 @@ export async function deploy() {
     }else {
         result = kubectl.apply(files);
     }
-    KubernetesObjectUtility.checkForErrors([result]);
+    utils.checkForErrors([result]);
 
-    let resourceTypes: Resource[] = KubernetesObjectUtility.getResources(files, recognizedWorkloadTypes);
-    
-    let rolloutStatusResults = [];  
+    let rolloutStatusResults = [];
+    let resourceTypes: Resource[] = KubernetesObjectUtility.getResources(files, recognizedWorkloadTypes);  
     resourceTypes.forEach(resource => {
         if (recognizedWorkloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) == -1){
         rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
         }
     });
-    KubernetesObjectUtility.checkForErrors(rolloutStatusResults);
+    utils.checkForErrors(rolloutStatusResults);
 
     let annotateResults: IExecSyncResult[] = [];
     var allPods = JSON.parse((kubectl.getAllPods()).stdout);
-    annotateResults.push(kubectl.annotateFiles(files, annotationsToAdd(), true));
+    annotateResults.push(kubectl.annotateFiles(files, utils.annotationsToAdd(), true));
     resourceTypes.forEach(resource => {
         if (resource.type.toUpperCase() != KubernetesObjectUtility.KubernetesWorkload.Pod.toUpperCase()){
             annotateChildPods(kubectl, resource.type, resource.name, allPods)
                 .forEach(execResult => annotateResults.push(execResult));
         }
     });
-    KubernetesObjectUtility.checkForErrors(annotateResults, true);
+    utils.checkForErrors(annotateResults, true);
 }
 
 function canaryDeployment(filePaths: string[], kubectl: Kubectl) {
@@ -144,47 +143,6 @@ function replaceAllTokens(currentString: string, replaceToken, replaceValue) {
         return newString;
     }
     return replaceAllTokens(newString, replaceToken, replaceValue);
-}
-
-function annotateChildPods(kubectl: Kubectl, resourceType, resourceName, allPods): IExecSyncResult[] {
-    let commandExecutionResults = [];
-    var owner = resourceName;
-    if (resourceType.indexOf("deployment") > -1) {
-        owner = kubectl.getNewReplicaSet(resourceName);
-    }
-
-    if (!!allPods && !!allPods["items"] && allPods["items"].length > 0) {
-        allPods["items"].forEach((pod) => {
-            let owners = pod["metadata"]["ownerReferences"];
-            if (!!owners) {
-                owners.forEach(ownerRef => {
-                    if (ownerRef["name"] == owner) {
-                        commandExecutionResults.push(kubectl.annotate("pod", pod["metadata"]["name"], annotationsToAdd(), true));
-                    }
-                });
-            }
-        });
-    }
-
-    return commandExecutionResults;
-}
-
-async function getKubectl(): Promise<string> {
-    try {
-        return Promise.resolve(tl.which("kubectl", true));
-    } catch (ex) {
-        return kubectlutility.downloadKubectl(await kubectlutility.getStableKubectlVersion());
-    }
-}
-
-function annotationsToAdd(): string[] {
-    return [
-        `azure-pipelines/execution=${tl.getVariable("Build.BuildNumber")}`,
-        `azure-pipelines/pipeline="${tl.getVariable("Build.DefinitionName")}"`,
-        `azure-pipelines/executionuri=${tl.getVariable("System.TeamFoundationCollectionUri")}_build/results?buildId=${tl.getVariable("Build.BuildId")}`,
-        `azure-pipelines/project=${tl.getVariable("System.TeamProject")}`,
-        `azure-pipelines/org=${tl.getVariable("System.CollectionId")}`
-    ];
 }
 
 var recognizedWorkloadTypes: string[] = ["deployment", "replicaset", "daemonset", "pod", "statefulset"];

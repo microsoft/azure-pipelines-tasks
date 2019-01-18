@@ -3,6 +3,7 @@
     "name": "AzureWebAppContainer",
     "friendlyName": "Azure Web App for Container",
     "description": "Update Azure App Services on Docker containers",
+    "helpUrl": "https://aka.ms/azurewebapponcontainerdeployreadme",
     "helpMarkDown": "[More information](https://aka.ms/azurewebapponcontainerdeployreadme)",
     "category": "Deploy",
     "visibility": [

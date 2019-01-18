@@ -2,7 +2,8 @@
     "id": "049918CB-1488-48EB-85E8-C318ECCAAA74",
     "name": "XamarinTestCloud",
     "friendlyName": "Xamarin Test Cloud",
-    "description": "[Depreciated] Testing mobile apps with Xamarin Test Cloud using Xamarin.UITest - recommended task is now AppCenterTest",
+    "description": "[Deprecated] Testing mobile apps with Xamarin Test Cloud using Xamarin.UITest - recommended task is now AppCenterTest",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613744",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613744)",
     "category": "Test",
     "visibility": [

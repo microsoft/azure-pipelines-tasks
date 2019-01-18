@@ -3,6 +3,7 @@
     "name": "Maven",
     "friendlyName": "Maven",
     "description": "Build with Apache Maven",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613723",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613723)",
     "category": "Build",
     "visibility": [

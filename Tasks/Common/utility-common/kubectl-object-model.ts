@@ -114,6 +114,25 @@ export class Kubectl {
         return results;
     }
 
+    public scale(resourceType, resourceName, replicas) {
+        var command = tl.tool(this.kubectlPath);
+        command.arg("scale");
+        command.arg(resourceType + "/" + resourceName);
+        command.arg(`--replicas=${replicas}`);
+        command.arg(["--namespace", this.namespace]);
+        return command.execSync();
+    }
+
+    public patch(resourceType, resourceName, patch, strategy) {
+        var command = tl.tool(this.kubectlPath);
+        command.arg("patch");
+        command.arg([resourceType, resourceName]);
+        command.arg(["--namespace", this.namespace]);
+        command.arg(`--type=${strategy}`);
+        command.arg([`-p`, patch]);
+        return command.execSync();
+    }
+
     private createInlineArray(str: string | string[]): string {
         if (typeof str === "string") return str;
         return str.join(",");

@@ -3,6 +3,7 @@
     "name": "PublishPipelineArtifact",
     "friendlyName": "Publish Pipeline Artifact",
     "description": "Publish Pipeline Artifact",
+    "helpUrl": "",
     "helpMarkDown": "Publish a local directory or file as a named artifact for the current pipeline.",
     "category": "Utility",
     "author": "Microsoft Corporation",

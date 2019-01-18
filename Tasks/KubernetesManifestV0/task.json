@@ -1,8 +1,9 @@
 {
     "id": "DEE316A2-586F-4DEF-BE79-488A1F503DEE",
-    "name": "KubernetesManifest",
+    "name": "KubernetesManifestBased",
     "friendlyName": "Manifest based Kubernetes deployments",
     "description": "Manifest based deployments to kubernetes",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
     "preview": true,
@@ -30,143 +31,223 @@
             "visibleRule": "action != bake"
         }
     ],
-  "inputs": [
-    {
-      "name": "connectionType",
-      "type": "pickList",
-      "label": "Service connection type",
-      "defaultValue": "Kubernetes Service Connection",
-      "required": true,
-      "options": {
-        "Kubernetes Service Connection": "Kubernetes Service Connection",
-        "None": "None"
-      },
-      "groupName": "kubernetesCluster",
-      "helpMarkDown": "Select a service connection type."
-    },
-    {
-      "name": "kubernetesServiceEndpoint",
-      "type": "connectedService:kubernetes",
-      "label": "Kubernetes service connection",
-      "visibleRule": "connectionType = Kubernetes Service Connection",
-      "helpMarkDown": "Select a Kubernetes service connection.",
-      "groupName": "kubernetesCluster",
-      "required": true
-    },
-    {
-      "name": "namespace",
-      "type": "string",
-      "label": "Namespace",
-      "required": true,
-      "defaultValue": "default",
-      "groupName": "kubernetesCluster",
-      "helpMarkDown": "Sets the namespace for the commands by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
-    },
-    {
-      "name": "action",
-      "type": "pickList",
-      "label": "Action",
-      "required": false,
-      "defaultValue": "deploy",
-      "groupName": "config",
-      "options": {
-        "deploy": "deploy",
-        "bake": "bake"
-      },
-      "helpMarkDown": "Manifests to deploy"
-    },
-    {
-      "name": "deploymentStrategy",
-      "type": "pickList",
-      "label": "Strategy",
-      "required": false,
-      "groupName": "config",
-      "defaultValue": "None",
-      "options": {
-        "canary": "Canary",
-        "None": "None"
-      },
-      "helpMarkDown": "Strategy for deployment",
-      "visibleRule": "action = deploy"
-    },
-    {
-      "name": "percentage",
-      "type": "string",
-      "label": "Percentage",
-      "required": true,
-      "groupName": "config",
-      "helpMarkDown": "",
-      "defaultValue": 0,
-      "visibleRule": "deploymentStrategy = Canary",  
-      "validation": {
-        "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')", 
-        "message": "Enter valid percentage value i.e between 0 to 100."
-      }
-    },
-    {
-      "name": "manifests",
-      "type": "filePath",
-      "label": "Manifests",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "config",
-      "helpMarkDown": "Manifests to deploy",
-      "visibleRule": "action = deploy"
-    },
-    {
-      "name": "containers",
-      "type": "multiLine",
-      "label": "Containers",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "config",
-      "helpMarkDown": "Containers",
-      "visibleRule": "action = deploy"
-    },
-    {
-      "name": "renderType",
-      "type": "pickList",
-      "label": "Render Engine",
-      "required": false,
-      "defaultValue": "helm",
-      "groupName": "config",
-      "visibleRule": "action = bake",
-      "options": {
-        "helm": "Helm"
-      },
-      "helpMarkDown": "Tool to generate manifest"
-    },
-    {
-      "name": "helmChart",
-      "type": "filePath",
-      "label": "Helm Chart",
-      "required": true,
-      "defaultValue": "",
-      "groupName": "config",
-      "helpMarkDown": "Helm chart path to bake",
-      "visibleRule": "action = bake && renderType = helm"
-    },
-    {
-      "name": "overrideFiles",
-      "type": "multiLine",
-      "label": "Override Files",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "config",
-      "helpMarkDown": "Override files to set",
-      "visibleRule": "action = bake && renderType = helm"
-    },
-    {
-      "name": "overrides",
-      "type": "multiLine",
-      "label": "Overrides",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "config",
-      "helpMarkDown": "Override values to set",
-      "visibleRule": "action = bake && renderType = helm"
-    }
-  ],
+    "inputs": [
+        {
+            "name": "connectionType",
+            "type": "pickList",
+            "label": "Service connection type",
+            "defaultValue": "Kubernetes Service Connection",
+            "required": true,
+            "options": {
+                "Kubernetes Service Connection": "Kubernetes Service Connection",
+                "None": "None"
+            },
+            "groupName": "kubernetesCluster",
+            "helpMarkDown": "Select a service connection type."
+        },
+        {
+            "name": "kubernetesServiceEndpoint",
+            "type": "connectedService:kubernetes",
+            "label": "Kubernetes service connection",
+            "visibleRule": "connectionType = Kubernetes Service Connection",
+            "helpMarkDown": "Select a Kubernetes service connection.",
+            "groupName": "kubernetesCluster",
+            "required": true
+        },
+        {
+            "name": "namespace",
+            "type": "string",
+            "label": "Namespace",
+            "required": true,
+            "defaultValue": "default",
+            "groupName": "kubernetesCluster",
+            "helpMarkDown": "Sets the namespace for the commands by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
+        },
+        {
+            "name": "action",
+            "type": "pickList",
+            "label": "Action",
+            "required": false,
+            "defaultValue": "deploy",
+            "groupName": "config",
+            "options": {
+                "bake": "bake",
+                "deploy": "deploy",
+                "patch": "patch",
+                "scale": "scale"
+            },
+            "helpMarkDown": "Manifests to deploy"
+        },
+        {
+            "name": "deploymentStrategy",
+            "type": "pickList",
+            "label": "Strategy",
+            "required": false,
+            "groupName": "config",
+            "defaultValue": "None",
+            "options": {
+              "canary": "Canary",
+              "None": "None"
+            },
+            "helpMarkDown": "Strategy for deployment",
+            "visibleRule": "action = deploy"
+          },
+          {
+            "name": "percentage",
+            "type": "string",
+            "label": "Percentage",
+            "required": true,
+            "groupName": "config",
+            "helpMarkDown": "",
+            "defaultValue": 0,
+            "visibleRule": "deploymentStrategy = Canary",  
+            "validation": {
+              "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')", 
+              "message": "Enter valid percentage value i.e between 0 to 100."
+            }
+          },
+        {
+            "name": "manifests",
+            "type": "filePath",
+            "label": "Manifests",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "Manifests to deploy",
+            "visibleRule": "action = deploy"
+        },
+        {
+            "name": "containers",
+            "type": "multiLine",
+            "label": "Containers",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "Containers",
+            "visibleRule": "action = deploy"
+        },
+        {
+            "name": "renderType",
+            "type": "pickList",
+            "label": "Render Engine",
+            "required": false,
+            "defaultValue": "helm",
+            "groupName": "config",
+            "visibleRule": "action = bake",
+            "options": {
+                "helm": "Helm"
+            },
+            "helpMarkDown": "Tool to generate manifest"
+        },
+        {
+            "name": "helmChart",
+            "type": "filePath",
+            "label": "Helm Chart",
+            "required": true,
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "Helm chart path to bake",
+            "visibleRule": "action = bake && renderType = helm"
+        },
+        {
+            "name": "overrideFiles",
+            "type": "multiLine",
+            "label": "Override Files",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "Override files to set",
+            "visibleRule": "action = bake && renderType = helm"
+        },
+        {
+            "name": "overrides",
+            "type": "multiLine",
+            "label": "Overrides",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "Override values to set",
+            "visibleRule": "action = bake && renderType = helm"
+        },
+        {
+            "name": "replicas",
+            "type": "string",
+            "label": "Replica count",
+            "required": true,
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "Number of replicas to scale to",
+            "visibleRule": "action = scale"
+        },
+        {
+            "name": "mergeStrategy",
+            "type": "pickList",
+            "label": "Merge Strategy",
+            "required": true,
+            "defaultValue": "strategic",
+            "options": {
+                "json": "json",
+                "merge": "merge",
+                "strategic": "strategic"
+            },
+            "groupName": "config",
+            "helpMarkDown": "The type of patch being provided; one of [json merge strategic]",
+            "visibleRule": "action = patch"
+        },
+        {
+            "name": "resourceToPatch",
+            "type": "radio",
+            "label": "Resource to patch",
+            "required": true,
+            "defaultValue": "file",
+            "options": {
+                "file": "file",
+                "name": "name"
+            },
+            "groupName": "config",
+            "helpMarkDown": "to identify the resource",
+            "visibleRule": "action = patch"
+        },
+        {
+            "name": "resourceFileToPatch",
+            "type": "filePath",
+            "label": "File path",
+            "required": true,
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "Path to the file used for patch",
+            "visibleRule": "action = patch && resourceToPatch = file"
+        },
+        {
+            "name": "kind",
+            "type": "string",
+            "label": "Kind",
+            "required": true,
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "Kind of K8s object; deployment, replicaSet etc.",
+            "visibleRule": "action = scale || resourceToPatch = name"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "label": "Name",
+            "required": true,
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "Name of the k8s object",
+            "visibleRule": "action = scale || resourceToPatch = name"
+        },
+        {
+            "name": "patch",
+            "type": "string",
+            "label": "Patch",
+            "required": true,
+            "groupName": "config",
+            "helpMarkDown": "Contents of patch",
+            "visibleRule": "action = patch"
+        }
+    ],
     "dataSourceBindings": [],
     "instanceNameFormat": "$(action)",
     "outputVariables": [

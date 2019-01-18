@@ -206,6 +206,7 @@ export async function run(nuGetPath: string): Promise<void> {
             }
         }
         tl.debug(`ConfigFile: ${configFile}`);
+        environmentSettings.configFile = configFile;
 
         try {
             const restoreOptions = new RestoreOptions(

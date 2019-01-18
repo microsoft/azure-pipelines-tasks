@@ -3,6 +3,7 @@
     "name": "CocoaPods",
     "friendlyName": "CocoaPods",
     "description": "CocoaPods is a dependency manager for Swift and Objective-C Cocoa projects. This task runs 'pod install'.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613745",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613745)",
     "category": "Package",
     "visibility": [

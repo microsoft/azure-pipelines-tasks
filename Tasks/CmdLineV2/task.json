@@ -3,6 +3,7 @@
     "name": "CmdLine",
     "friendlyName": "Command Line",
     "description": "Run a command line script using cmd.exe on Windows and bash on macOS and Linux.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613735",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613735)",
     "category": "Utility",
     "visibility": [

@@ -10,7 +10,7 @@ export async function getKubeConfig(): Promise<string> {
     {
         return kubectlutility.getKubeconfigForCluster(kubernetesServiceEndpoint);
     }
-    else if (authorizationType === "ServiceAccount")
+    else if (authorizationType === "ServiceAccount" || authorizationType === "AzureSubscription")
     {
         return kubectlutility.createKubeconfig(kubernetesServiceEndpoint);
     } 
