@@ -133,6 +133,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.publishTestResults"
     },
     {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "visibleRule": "command = test",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle"
+  },
+    {
       "name": "zipAfterPublish",
       "type": "boolean",
       "visibleRule": "command = publish",

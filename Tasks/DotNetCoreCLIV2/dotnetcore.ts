@@ -112,6 +112,7 @@ export class dotNetExe {
     private async executeTestCommand(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
+        const testRunTitle: string = tl.getInput('testRunTitle', false) || '';
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
         if (enablePublishTestResults && enablePublishTestResults === true) {
             this.arguments = ` --logger trx --results-directory "${resultsDirectory}" `.concat(this.arguments);
@@ -144,14 +145,14 @@ export class dotNetExe {
             }
         }
         if (enablePublishTestResults && enablePublishTestResults === true) {
-            this.publishTestResults(resultsDirectory);
+            this.publishTestResults(resultsDirectory, testRunTitle);
         }
         if (failedProjects.length > 0) {
             throw tl.loc('dotnetCommandFailed', failedProjects);
         }
     }
 
-    private publishTestResults(resultsDir: string): void {
+    private publishTestResults(resultsDir: string, testRunTitle: string): void {
         const buildConfig = tl.getVariable('BuildConfiguration');
         const buildPlaform = tl.getVariable('BuildPlatform');
         const matchingTestResultsFiles: string[] = tl.findMatch(resultsDir, '**/*.trx');
@@ -159,7 +160,7 @@ export class dotNetExe {
             tl.warning('No test result files were found.');
         } else {
             const tp: tl.TestPublisher = new tl.TestPublisher('VSTest');
-            tp.publish(matchingTestResultsFiles, 'false', buildPlaform, buildConfig, '', 'true', this.testRunSystem);
+            tp.publish(matchingTestResultsFiles, 'false', buildPlaform, buildConfig, testRunTitle, 'true', this.testRunSystem);
             //refer https://github.com/Microsoft/vsts-task-lib/blob/master/node/task.ts#L1620
         }
     }

@@ -51,3 +51,4 @@ Options specific to **dotnet restore** command
 
 Options specific to **dotnet test** command
 * **Publish test results\*:** Enabling this option will generate a test results TRX file in $(Agent.TempDirectory) and results will be published to the server. This option appends --logger trx --results-directory $(Agent.TempDirectory) to the command line arguments.
+* **Test run title\*:** Provide a name for the test run.
