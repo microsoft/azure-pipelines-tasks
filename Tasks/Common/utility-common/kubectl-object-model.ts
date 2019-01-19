@@ -123,6 +123,34 @@ export class Kubectl {
         return command.execSync();
     }
 
+    public delete(files: string | string[], types: string, names: string[], labels: string, cascade: boolean, gracePeriod: string) {
+        var command = tl.tool(this.kubectlPath);
+        command.arg("delete");
+        if (!!files){
+        command.arg(["-f", this.createInlineArray(files)]);
+        }else {
+            if (!!types){
+                command.arg(types);
+            }
+            if (!!names){
+                command.arg(names.join(" "));
+            }else{
+                if (!!labels){
+                    command.arg(["-l", labels]);
+                }
+            }
+        }
+        command.arg(["--namespace", this.namespace]); 
+        command.arg(`--cascade=${cascade}`);
+        if (!!gracePeriod){
+            command.arg(`--grace-period=${gracePeriod}`); //TODO handle race-period = 0 pass --force=true
+        }
+        command.arg(`--wait=true`);
+        command.arg(`--ignore-not-found=true`); // confirm this
+        return command.execSync();
+    }
+
+
     private createInlineArray(str: string | string[]): string {
         if (typeof str === "string") return str;
         return str.join(",");

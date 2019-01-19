@@ -5,6 +5,7 @@ import { deploy } from "./actions/deploy";
 import { bake } from "./actions/bake";
 import { scale } from "./actions/scale";
 import { patch } from "./actions/patch";
+import { deleteResources } from './actions/delete';
 import { Connection } from "./connection";
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
@@ -26,8 +27,11 @@ function run(): Promise<void> {
         case "patch":
             action_func = patch;
             break;
+        case "delete":
+            action_func = deleteResources;
+            break;
         default:
-            tl.setResult(tl.TaskResult.Failed, 'Not a supported action, choose from "bake", "deploy", "patch", "scale"');
+            tl.setResult(tl.TaskResult.Failed, 'Not a supported action, choose from "bake", "deploy", "patch", "scale", "delete"');
             process.exit(1);
     }
     connection.open()
