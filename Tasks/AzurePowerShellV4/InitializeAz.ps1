@@ -2,9 +2,6 @@
 param
 (
     [String] [Parameter(Mandatory = $true)]
-    $serviceName,
-
-    [String] [Parameter(Mandatory = $true)]
     $endpoint,
 
     [String] [Parameter(Mandatory = $false)]

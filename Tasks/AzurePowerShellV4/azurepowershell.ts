@@ -60,10 +60,10 @@ async function run() {
         let azFilePath = path.join(path.resolve(__dirname), 'InitializeAz.ps1');
         contents.push(`$ErrorActionPreference = '${_vsts_input_errorActionPreference}'`); 
         if(targetAzurePs == "") {
-            contents.push(`${azFilePath} -serviceName ${serviceName} -endpoint '${endpoint}'`);
+            contents.push(`${azFilePath} -endpoint '${endpoint}'`);
         }
         else {
-            contents.push(`${azFilePath} -serviceName ${serviceName} -endpoint '${endpoint}' -targetAzurePs  ${targetAzurePs}`);
+            contents.push(`${azFilePath} -endpoint '${endpoint}' -targetAzurePs  ${targetAzurePs}`);
         }
 
         if (scriptType.toUpperCase() == 'FILEPATH') {

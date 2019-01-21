@@ -21,9 +21,6 @@
   },
   "preview": true,
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "demands": [
-    "azureps"
-  ],
   "groups": [
     {
       "name": "AzurePowerShellVersionOptions",
@@ -31,7 +28,7 @@
       "isExpanded": true
     }
   ],
-  "minimumAgentVersion": "2.0.0",
+  "minimumAgentVersion": "2.115.0",
   "inputs": [
     {
       "name": "ConnectedServiceNameARM",

@@ -46,24 +46,8 @@ if ($targetAzurePs -eq $latestVersion) {
 
 . "$PSScriptRoot\Utility.ps1"
 
-$authScheme = ''
-try
-{
-    $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
-    $endpoint = Get-VstsEndpoint -Name $serviceName -Require
-
-    if($endpoint)
-    {
-        $authScheme = $endpoint.Auth.Scheme 
-    }
-
-     Write-Verbose "AuthScheme $authScheme"
-}
-catch
-{
-   $error = $_.Exception.Message
-   Write-Verbose "Unable to get the authScheme $error" 
-}
+$serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
+$endpoint = Get-VstsEndpoint -Name $serviceName -Require
 
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
 
@@ -153,5 +137,5 @@ finally {
 
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Remove-EndpointSecrets
-    Disconnect-AzureAndClearContext -authScheme $authScheme -ErrorAction SilentlyContinue
+    Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue
 }

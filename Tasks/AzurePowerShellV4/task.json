@@ -20,10 +20,7 @@
         "Patch": 1
     },
     "preview": true,
-    "releaseNotes": "Add support of Az Module and cross platform agents",
-    "demands": [
-        "azureps"
-    ],
+    "releaseNotes": "Added support for Az Module and cross platform agents.",
     "groups": [
         {
             "name": "AzurePowerShellVersionOptions",
@@ -31,7 +28,7 @@
             "isExpanded": true
         }
     ],
-    "minimumAgentVersion": "2.0.0",
+    "minimumAgentVersion": "2.115.0",
     "inputs": [
         {
             "name": "ConnectedServiceNameARM",
@@ -129,7 +126,7 @@
                 "OtherVersion": "Specify other version"
             },
             "groupName": "AzurePowerShellVersionOptions",
-            "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Versions are: 2.1.0, 3.8.0, 4.2.1, 5.1.1 and 6.7.0(Hosted VS2017 Queue), 3.6.0(Hosted Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
+            "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Version is: 1.0.0(Hosted VS2017 Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
         },
         {
             "name": "CustomTargetAzurePs",
@@ -142,7 +139,7 @@
             "required": true,
             "visibleRule": "TargetAzurePs = OtherVersion",
             "groupName": "AzurePowerShellVersionOptions",
-            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Azure module versions: 2.1.0, 3.8.0, 4.2.1, 5.1.1 and AzureRM module versions: 2.1.0, 3.8.0, 4.2.1, 5.1.1, 6.7.0"
+            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0"
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
