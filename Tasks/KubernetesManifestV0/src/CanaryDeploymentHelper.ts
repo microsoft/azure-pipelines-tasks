@@ -2,6 +2,7 @@
 import { Kubectl } from "utility-common/kubectl-object-model";
 import * as helper from './KubernetesObjectUtility';
 import * as utils from "./utilities";
+import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require("fs");
 
@@ -18,7 +19,7 @@ export function calculateReplicaCountForCanary(inputObject: any, percentage: num
 
 export function isDeploymentEntity(kind: string): boolean {
     if (!kind) {
-        throw new Error("Kind is not defined");
+        throw (tl.loc("Kind is not defined"));
     }
 
     var temp = kind.toUpperCase();
@@ -35,6 +36,36 @@ export function getNewBaselineResource(stableObject: any, replicas: number): obj
 
 export function getNewCanaryResource(inputObject: any, replicas: number): object {
     return getNewCanaryObject(inputObject, replicas, CANARY_LABEL_VALUE);
+}
+
+export function fetchResource(kubectl: Kubectl, kind: string, name: string): object {
+    var result = kubectl.getResource(kind, name);
+    return result.stderr ? null : JSON.parse(result.stdout);
+}
+
+export function fetchCanaryResource(kubectl: Kubectl, kind: string, name: string): object {
+    return fetchResource(kubectl, kind, getCanaryResourceName(name));
+}
+
+export function applyResource(kubectl: Kubectl, inputObjects: any[]) {
+    let newFilePaths = [];
+    inputObjects.forEach((inputObject: any) => {
+        var filePath = inputObject.kind + "_" + inputObject.metadata.name;
+        var inputObjectString = JSON.stringify(inputObject);
+        const tempDirectory = utils.getTempDirectory();
+        let fileName = path.join(tempDirectory, path.basename(filePath));
+        fs.writeFileSync(
+            path.join(fileName),
+            inputObjectString);
+        newFilePaths.push(fileName);
+    });
+
+    var result = null;
+    if (newFilePaths.length > 0) {
+        result = kubectl.apply(newFilePaths);
+    }
+
+    return { "result": result, "newFilePaths": newFilePaths };
 }
 
 function getNewCanaryObject(inputObject: any, replicas: number, type: string): object {
@@ -64,36 +95,6 @@ function addCanaryLabelsAndAnnotations(inputObject: any, type: string) {
     helper.updateObjectAnnotations(inputObject, newLabels, false);
     helper.updateSelectorLabels(inputObject, newLabels, false);
     helper.updateSpecLabels(inputObject, newLabels, false);
-}
-
-export function applyResource(kubectl: Kubectl, inputObjects: any[]) {
-    let newFilePaths = [];
-    inputObjects.forEach((inputObject: any) => {
-        var filePath = inputObject.kind + "_" + inputObject.metadata.name;
-        var inputObjectString = JSON.stringify(inputObject);
-        const tempDirectory = utils.getTempDirectory();
-        let fileName = path.join(tempDirectory, path.basename(filePath));
-        fs.writeFileSync(
-            path.join(fileName),
-            inputObjectString);
-        newFilePaths.push(fileName);
-    });
-
-    var result = null;
-    if (newFilePaths.length > 0) {
-        result = kubectl.apply(newFilePaths);
-    }
-
-    return { "result": result, "newFilePaths": newFilePaths };
-}
-
-export function fetchResource(kubectl: Kubectl, kind: string, name: string): object {
-    var result = kubectl.getResource(kind, name);
-    return result.stderr ? null : JSON.parse(result.stdout);
-}
-
-export function fetchCanaryResource(kubectl: Kubectl, kind: string, name: string): object {
-    return fetchResource(kubectl, kind, getCanaryResourceName(name));
 }
 
 function getCanaryResourceName(name: string) {

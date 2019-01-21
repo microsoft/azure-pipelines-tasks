@@ -110,7 +110,7 @@
             "name": "manifests",
             "type": "filePath",
             "label": "Manifests",
-            "required": false,
+            "required": true,
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Manifests to deploy",

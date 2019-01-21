@@ -110,7 +110,7 @@
       "name": "manifests",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.manifests",
-      "required": false,
+      "required": true,
       "defaultValue": "",
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.manifests",
