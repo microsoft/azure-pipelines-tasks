@@ -41,7 +41,7 @@ function Export-Bacpac {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host (Get-VstsLocString -Key "SAD_GeneratedFile" -ArgumentList "$targetBacpacFilePath")
-    Write-Host "##vso[task.uploadfile] $targetBacpacFilePath"
+    Write-Host "##vso[task.uploadfile]$targetBacpacFilePath"
     Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "SqlDeploymentOutputFile", $targetBacpacFilePath)
     Write-Host "##vso[task.setVariable variable=SqlDeploymentOutputFile] $targetBacpacFilePath"
 }
@@ -270,10 +270,12 @@ function Run-SqlCmd {
       }
     }
     elseif ($authenticationType -eq "connectionString") {
+      Check-ConnectionString
       $commandToRun = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
       $commandToLog = "Invoke-Sqlcmd -connectionString `"**********`" "
     }
     elseif ($authenticationType -eq "aadAuthenticationPassword" -or $authenticationType -eq "aadAuthenticationIntegrated") {
+      Check-connectionString
       $connectionString = Get-AADAuthenticationConnectionString -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword
       $commandToRun = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
       $commandToLog = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
@@ -284,6 +286,14 @@ function Run-SqlCmd {
 
     Write-Host $commandToLog
     Invoke-Expression $commandToRun
+}
+
+function Check-ConnectionString
+{
+   if(-not (CmdletHasMember -cmdlet Invoke-SQlCmd -memberName "connectionString"))
+   {
+     throw (Get-VstsLocString -Key "SAD_InvokeSQLCmdNotSupportingConnectionString")
+   }
 }
 
 function Get-AgentIPRange

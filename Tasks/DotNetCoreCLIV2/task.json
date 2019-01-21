@@ -4,6 +4,7 @@
     "friendlyName": ".NET Core",
     "description": "Build, test, package, or publish a dotnet application, or run a custom dotnet command. For package commands, supports NuGet.org and authenticated feeds like Package Management and MyGet.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=832194",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=832194)",
     "category": "Build",
     "visibility": [
@@ -16,8 +17,8 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 145,
-        "Patch": 3
+        "Minor": 147,
+        "Patch": 0
     },
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet $(command)",

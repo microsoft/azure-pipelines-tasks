@@ -23,9 +23,9 @@ Tasks/AzureFileCopyV2/*    @kmkumaran
 
 Tasks/AzureFileCopyV3/*    @kmkumaran
 
-Tasks/AzureFunctionDeploymentV1/*    @kmkumaran      @SumiranAgg     @vincentdass
+Tasks/AzureFunctionAppV1/*    @kmkumaran      @SumiranAgg     @vincentdass
 
-Tasks/AzureFunctionOnContainerDeploymentV1/*    @kmkumaran      @SumiranAgg     @vincentdass
+Tasks/AzureFunctionAppContainerV1/*    @kmkumaran      @SumiranAgg     @vincentdass
 
 Tasks/AzureFunctionV1/*     @bansalaseem
 
@@ -36,6 +36,8 @@ Tasks/AzureKeyVaultV1/*     @bansalaseem
 Tasks/AzureMonitorAlertsV0/*    @kmkumaran
 
 Tasks/AzureMonitorV0/*      @bansalaseem
+
+Tasks/AzureMonitorV1/*      @vithati
 
 Tasks/AzureMysqlDeploymentV1/*  @kmkumaran      @RoshanKumarMicrosoft
 
@@ -53,9 +55,9 @@ Tasks/AzureRmWebAppDeploymentV3/*   @kmkumaran    @SumiranAgg     @vincentdass
 
 Tasks/AzureRmWebAppDeploymentV4/*   @kmkumaran    @SumiranAgg     @vincentdass
 
-Tasks/AzureWebAppDeploymentV1/*   @kmkumaran    @SumiranAgg     @vincentdass
+Tasks/AzureWebAppV1/*   @kmkumaran    @SumiranAgg     @vincentdass
 
-Tasks/AzureWebAppOnContainerDeploymentV1/*   @kmkumaran    @SumiranAgg     @vincentdass
+Tasks/AzureWebAppContainerV1/*   @kmkumaran    @SumiranAgg     @vincentdass
 
 Tasks/AzureVmssDeploymentV0/*       @sachinma
 
@@ -104,6 +106,8 @@ Tasks/DotNetCoreInstallerV0/*   @sachinma
 Tasks/DownloadBuildArtifactsV0/*    @Lovakumar      @omeshp
 
 Tasks/DownloadFileshareArtifactsV0/*    @Lovakumar      @omeshp
+
+Tasks/DownloadGitHubReleasesV0/*    @Lovakumar      @gykuma
 
 Tasks/DownloadPackageV0/*       @zackrun
 

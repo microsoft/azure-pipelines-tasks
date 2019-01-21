@@ -7,6 +7,7 @@ import * as tl from 'vsts-task-lib/task';
 
 import { IExecOptions } from 'vsts-task-lib/toolrunner';
 import { NuGetConfigHelper2 } from 'packaging-common/nuget/NuGetConfigHelper2';
+import * as ngRunner from 'packaging-common/nuget/NuGetToolRunner2';
 import * as pkgLocationUtils from 'packaging-common/locationUtilities';
 
 export async function run(): Promise<void> {
@@ -143,7 +144,7 @@ export async function run(): Promise<void> {
             }
         }
 
-        await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
+        nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
 
         const dotnetPath = tl.which('dotnet', true);
 
@@ -184,8 +185,8 @@ function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: 
     dotnet.arg(apiKey);
 
     // dotnet.exe v1 and v2 do not accept the --verbosity parameter for the "nuget push"" command, although it does for other commands
-
-    return dotnet.exec({ cwd: workingDirectory } as IExecOptions);
+    const envWithProxy = ngRunner.setNuGetProxyEnvironment(process.env, /*configFile*/ null, feedUri);
+    return dotnet.exec({ cwd: workingDirectory, env: envWithProxy } as IExecOptions);
 }
 
 function useCredentialConfiguration(isInternalFeed: boolean): boolean {

@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 141,
-    "Patch": 2
+    "Minor": 147,
+    "Patch": 0
   },
   "groups": [
     {
@@ -365,6 +365,8 @@
     "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
-    "NoAssociatedArtifacts": "ms-resource:loc.messages.NoAssociatedArtifacts"
+    "NoAssociatedArtifacts": "ms-resource:loc.messages.NoAssociatedArtifacts",
+    "OperationFailed": "ms-resource:loc.messages.OperationFailed",
+    "RetryingOperation": "ms-resource:loc.messages.RetryingOperation"
   }
 }

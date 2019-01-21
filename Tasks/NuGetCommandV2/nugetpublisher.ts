@@ -194,8 +194,10 @@ export async function run(nuGetPath: string): Promise<void> {
         }
 
         if (isInternalFeed === false || useCredConfig) {
-            await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
+            nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
         }
+
+        environmentSettings.registryUri = feedUri;
 
         const verbosity = tl.getInput("verbosityPush");
 
@@ -232,7 +234,7 @@ export async function run(nuGetPath: string): Promise<void> {
                 }
             }
             else {
-                tl.debug("Using NuGet.exe to push the packages");
+                tl.debug("Using NuGet.exe to push the packages");           
                 const publishOptions = new PublishOptions(
                     nuGetPath,
                     feedUri,

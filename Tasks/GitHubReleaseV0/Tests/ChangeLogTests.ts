@@ -9,7 +9,7 @@ export class ChangeLogTests {
         let tp = path.join(__dirname, 'ChangeLogL0Tests.js');
         let tr : tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
 
-        process.env["Release_ReleaseWebURL"] = "MOCK_RELEASE_URL"; 
+        process.env["RELEASE_RELEASEWEBURL"] = "MOCK_RELEASE_URL"; 
         
         // Stub methods
         this.stub(tr);

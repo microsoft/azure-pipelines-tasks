@@ -3,6 +3,7 @@
     "name": "DownloadPipelineArtifact",
     "friendlyName": "Download Pipeline Artifact",
     "description": "Download Pipeline Artifact",
+    "helpUrl": "",
     "helpMarkDown": "Download named artifact from a pipeline to a local path.",
     "category": "Utility",
     "author": "Microsoft Corporation",

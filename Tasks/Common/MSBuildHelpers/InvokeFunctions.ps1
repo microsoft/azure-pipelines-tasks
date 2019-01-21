@@ -10,7 +10,8 @@ function Invoke-BuildTools {
         [string]$MSBuildArguments,
         [switch]$Clean,
         [switch]$NoTimelineLogger,
-        [switch]$CreateLogFile)
+        [switch]$CreateLogFile,
+        [string]$LogFileVerbosity)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -25,12 +26,20 @@ function Invoke-BuildTools {
                     $splat["LogFile"] = "$file-clean.log"
                 }
 
+                if ($LogFileVerbosity) {
+                    $splat["LogFileVerbosity"] = $LogFileVerbosity
+                }
+
                 Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
             }
 
             $splat = @{ }
             if ($CreateLogFile) {
                 $splat["LogFile"] = "$file.log"
+            }
+
+            if ($LogFileVerbosity) {
+                $splat["LogFileVerbosity"] = $LogFileVerbosity
             }
 
             Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
@@ -50,6 +59,7 @@ function Invoke-MSBuild {
         [string]$ProjectFile,
         [string]$Targets,
         [string]$LogFile,
+        [string]$LogFileVerbosity,
         [switch]$NoTimelineLogger,
         [string]$MSBuildPath, # TODO: Switch MSBuildPath to mandatory. Both callers (MSBuild and VSBuild task) throw prior to reaching here if MSBuild cannot be resolved.
         [string]$AdditionalArguments)
@@ -80,7 +90,7 @@ function Invoke-MSBuild {
 
         # If a log file was specified then hook up the default file logger.
         if ($LogFile) {
-            $arguments = "$arguments /fl /flp:`"logfile=$LogFile`""
+            $arguments = "$arguments /fl /flp:`"logfile=$LogFile;verbosity=$LogFileVerbosity`""
         }
 
         # Start the detail timeline.
@@ -123,6 +133,10 @@ function Invoke-MSBuild {
 
                 $detailFinishTime = [datetime]::UtcNow.ToString('O')
                 Write-VstsLogDetail -Id $detailId -FinishTime $detailFinishTime -Progress 100 -State Completed -Result $detailResult -AsOutput
+            }
+
+            if ($LogFile) {
+                Write-Host "##vso[task.uploadfile]$LogFile"
             }
         }
     } finally {

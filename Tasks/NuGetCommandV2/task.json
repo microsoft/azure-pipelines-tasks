@@ -3,12 +3,13 @@
     "name": "NuGetCommand",
     "friendlyName": "NuGet",
     "description": "Restore, pack, or push NuGet packages, or run a NuGet command. Supports NuGet.org and authenticated feeds like Package Management and MyGet. Uses NuGet.exe and works with .NET Framework apps. For .NET Core and .NET Standard apps, use the .NET Core task.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613747",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613747)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 145,
+        "Minor": 147,
         "Patch": 2
     },
     "runsOn": [

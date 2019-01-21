@@ -3,6 +3,7 @@
     "name": "NuGetPublisher",
     "friendlyName": "NuGet Publisher",
     "description": "Deprecated: use the “NuGet” task instead. It works with the new Tool Installer framework so you can easily use new versions of NuGet without waiting for a task update, provides better support for authenticated feeds outside this account/collection, and uses NuGet 4 by default.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=627417",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627417)",
     "category": "Package",
     "author": "Lawrence Gripper",

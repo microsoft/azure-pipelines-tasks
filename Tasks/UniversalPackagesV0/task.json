@@ -4,12 +4,13 @@
     "friendlyName": "Universal Packages",
     "description": "Download or publish Universal Packages.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://aka.ms/universalpackagesannounce",
     "helpMarkDown": "[More Information](https://aka.ms/universalpackagesannounce)",
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 145,
-        "Patch": 2
+        "Minor": 147,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -433,6 +434,7 @@
         "FailedToGetArtifactTool": "Failed to get artifact tool from service. %s",
         "Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",
         "FailedToGetLatestPackageVersion": "Failed to get package versions",
-        "Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages"
+        "Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages",
+        "Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server."
     }
 }

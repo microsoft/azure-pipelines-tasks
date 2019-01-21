@@ -3,6 +3,7 @@
     "name": "CopyFiles",
     "friendlyName": "Copy Files",
     "description": "Copy files from source folder to target folder using match patterns (The match patterns will only match file paths, not folder paths)",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=708389",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=708389)",
     "category": "Utility",
     "visibility": [

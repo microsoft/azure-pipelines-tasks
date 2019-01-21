@@ -3,6 +3,7 @@
     "name": "GitHubRelease",
     "friendlyName": "GitHub Release",
     "description": "Create, edit, or delete a GitHub release.",
+    "helpUrl": "https://aka.ms/AA3aeiw",
     "helpMarkDown": "[More Information](https://aka.ms/AA3aeiw)",
     "category": "Utility",
     "visibility": [
@@ -14,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -35,7 +36,8 @@
             "required": true,
             "helpMarkDown": "Specify the name of the GitHub repository in which GitHub releases will be created.",
             "properties": {
-                "DisableManageLink": "True"
+                "DisableManageLink": "True",
+                "EditableOptions": "True"
             }
         },
         {

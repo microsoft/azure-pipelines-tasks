@@ -32,7 +32,6 @@ export async function getStableKubectlVersion() : Promise<string> {
 
 
 export async function downloadKubectl(version: string) : Promise<string> {
-    var kubectlURL = getkubectlDownloadURL(version);
     var cachedToolpath = toolLib.findLocalTool(kubectlToolName, version);
     if(!cachedToolpath) {
         try {
@@ -83,7 +82,7 @@ function getkubectlDownloadURL(version: string) : string {
     }
 }
 
-export function getKubeconfigForCluster(kubernetesServiceEndpoint: string)
+export function getKubeconfigForCluster(kubernetesServiceEndpoint: string): string
 {
     var kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'kubeconfig', false);
     var clusterContext = tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'clusterContext', true);

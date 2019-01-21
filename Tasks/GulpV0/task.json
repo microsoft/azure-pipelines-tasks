@@ -3,6 +3,7 @@
     "name": "Gulp",
     "friendlyName": "Gulp",
     "description": "Node.js streaming task based build system",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613721",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613721)",
     "category": "Build",
     "visibility": [
