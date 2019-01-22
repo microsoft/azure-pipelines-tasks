@@ -2,7 +2,8 @@
 
 import tl = require('vsts-task-lib/task');
 import { Kubectl } from "utility-common/kubectl-object-model";
-import * as utils from "./../utilities";
+import * as utils from "../utils/utilities";
+import * as constants from "../models/constants";
 
 export async function patch() {
     let kubectl = new Kubectl(await utils.getKubectl(), tl.getInput("namespace", false));
@@ -22,7 +23,7 @@ export async function patch() {
 
     resources.forEach(resource => {
         utils.checkForErrors([kubectl.checkRolloutStatus(resource.type, resource.name)]);
-        utils.checkForErrors([kubectl.annotate(resource.type, resource.name, utils.annotationsToAdd(), true)]);
+        utils.checkForErrors([kubectl.annotate(resource.type, resource.name, constants.pipelineAnnotations, true)]);
         utils.checkForErrors(utils.annotateChildPods(kubectl, resource.type, resource.name, JSON.parse((kubectl.getAllPods()).stdout)));
     });
 }
