@@ -30,9 +30,8 @@ async function main(): Promise<void> {
 		.withMaxRetries(retryLimit)
 		.build();
 
-	var urls = await p.getDownloadUrls(collectionUrl, feedId, packageId, version);
-	console.log(urls);
-	await delay(10 * 1000);
+	await p.download(collectionUrl, feedId, packageId, version, downloadPath);
+	await delay(20 * 1000);
 
 }
 

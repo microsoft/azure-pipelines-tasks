@@ -17,7 +17,7 @@ export class MultiFilePackage extends Package {
         feedId: string,
         packageId: string,
         packageVersion: string
-    ): Promise<string[]> { 
+    ): Promise<Array<string>> { 
        
         var feedsUrl = await locationUtility.getFeedUriFromBaseServiceUri(collectionUrl, this.accessToken);
         var feedConnection = new vsts.WebApi(feedsUrl, this.credentialHandler);

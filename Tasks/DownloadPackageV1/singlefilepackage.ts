@@ -14,19 +14,44 @@ export class SingleFilePackage extends Package {
         feedId: string,
         packageId: string,
         packageVersion: string
-    ): Promise<string[]> {
-
+    ): Promise<Array<string>> {
         var feedsUrl = await locationUtility.getFeedUriFromBaseServiceUri(collectionUrl, this.accessToken);
         var feedConnection = new vsts.WebApi(feedsUrl, this.credentialHandler);
 
-        await this.getPackageMetadata(feedConnection, { feedId: feedId, packageId: packageId })
-            .then(packageMetadata => {
-                console.log("md " + JSON.stringify(packageMetadata))
+        // TODO fix this.
+        var packagesUrl = await locationUtility.getNuGetUriFromBaseServiceUri(collectionUrl, this.accessToken);
+        var packageConnection = new vsts.WebApi(packagesUrl, this.credentialHandler);
 
+        return new Promise<Array<string>>((resolve, reject) => {
+            return this.getPackageMetadata(feedConnection, {
+                feedId: feedId,
+                packageId: packageId
             })
-            .catch(error => { throw error; });
+                .then(packageMetadata => {
+                    console.log("md " + JSON.stringify(packageMetadata));
 
-        return null;
+                    var packageName = packageMetadata.name;
+
+                    this.getUrl(
+                        packageConnection.getCoreApi().vsoClient,
+                        this.packageProtocolAreaName,
+                        this.packageProtocolDownloadAreadId,
+                        {
+                            feedId: feedId,
+                            packageName: packageName,
+                            packageVersion: packageVersion
+                        }
+                    )
+                        .then(downloadUrl => {
+                            return resolve(new Array(downloadUrl));
+                        })
+                        .catch(error => {
+                            throw error;
+                        });
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
-
 }
