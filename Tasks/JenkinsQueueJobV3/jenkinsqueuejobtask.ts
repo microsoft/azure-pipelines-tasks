@@ -5,7 +5,6 @@ import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import util = require('./util');
 
-//import { Job } from './job';
 import { JobQueue } from './jobqueue';
 
 export class TaskOptions {
