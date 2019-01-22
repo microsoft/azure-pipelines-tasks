@@ -113,7 +113,6 @@ function downloadPackageUsingArtifactTool(downloadDir: string, options: artifact
         "--path", downloadDir,
         "--patvar", "UNIVERSAL_DOWNLOAD_PAT",
         "--verbosity", tl.getInput("verbosity"));
-debugger;
     console.log(tl.loc("Info_Downloading", options.packageName, options.packageVersion, options.feedId));
     const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(options.artifactToolPath, command, execOptions);
     if (execResult.code === 0) {
