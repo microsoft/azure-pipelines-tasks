@@ -10,12 +10,12 @@
   "description": "Azure Pipelines Jenkins Queue Job Task",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/microsoft/vsts-tasks/issues"
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
-  "homepage": "https://github.com/microsoft/vsts-tasks#readme"
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme"
 }

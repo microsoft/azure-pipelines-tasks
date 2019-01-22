@@ -2,7 +2,7 @@
 
 ## Overview
 
-The .NET Core task is used to Build, test and publish using dotnet core command-line. 
+The .NET Core task is used to Build, test and publish using dotnet core command-line.
 
 ## Contact Information
 
@@ -10,11 +10,11 @@ Please report a problem at [Developer Community Forum](https://developercommunit
 
 ## Pre-requisites for the task
 
-The only prerequisite for the task is that .NET Core must be installed on Azure Pipelines agent machine. In case you want an exact version of .NET Core on the agent then you can use the [.NET Core Tool installer task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DotNetCoreInstaller)
+The only prerequisite for the task is that .NET Core must be installed on Azure Pipelines agent machine. In case you want an exact version of .NET Core on the agent then you can use the [.NET Core Tool installer task](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/DotNetCoreInstallerV0)
 
 ### Parameters of the task
 
-* **Command\*:** The task can be use to run any [dotnet core command](https://docs.microsoft.com/en-us/dotnet/core/tools/?tabs=netcore2x). 
+* **Command\*:** The task can be use to run any [dotnet core command](https://docs.microsoft.com/en-us/dotnet/core/tools/?tabs=netcore2x).
 
 * **Projects\*:** Depending on the version of .NET Core, the task can work with either project.json or a csproj file. You can pass a relative path of the .csproj file(s) from repo root. Wildcards can be used too. For example, **/*.csproj for all .csproj files in all the sub folders.
 
@@ -37,7 +37,7 @@ Options specific to **dotnet pack** command
 * **Do not build\*:** Don't build the project before packing. Corresponds to the --no-build command line parameter.
 * **Automatic package versioning\*:** Cannot be used with include referenced projects. If you choose 'Use the date and time', this will generate a SemVer -compliant version formatted as X.Y.Z-ci-datetime where you choose X, Y, and Z.
 If you choose 'Use an environment variable', you must select an environment variable and ensure it contains the version number you want to use.
-If you choose 'Use the build number', this will use the build number to version your package. Note: Under Options set the build number format to be '$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r) 
+If you choose 'Use the build number', this will use the build number to version your package. Note: Under Options set the build number format to be '$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
 * **Additional build properties\*:** Specifies a list of token = value pairs, separated by semicolons, where each occurrence of $token$ in the .nuspec file will be replaced with the given value. Values can be strings in quotation marks.
 * **Verbosity\*:** Specifies the amount of detail displayed in the output.
 
