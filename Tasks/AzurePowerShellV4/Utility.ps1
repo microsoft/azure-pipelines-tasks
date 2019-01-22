@@ -1,7 +1,7 @@
 function Get-SavedModulePath {
     [CmdletBinding()]
     param([string] $azurePowerShellVersion)
-    return $($env:SystemDrive + "\Modules\Az_" + $azurePowerShellVersion) 
+    return $($env:SystemDrive + "\Modules\az_" + $azurePowerShellVersion) 
 }
 
 function Update-PSModulePathForHostedAgent {
