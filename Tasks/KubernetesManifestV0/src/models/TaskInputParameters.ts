@@ -1,6 +1,9 @@
 "use strict";
 
-export const namespace: string = "namespace";
-export const containers: string = "containers";
-export const canaryPercentage: string = "percentage";
-export const deploymentStrategy: string = "deploymentStrategy";
+import tl = require('vsts-task-lib/task');
+
+export const namespace: string = tl.getInput("namespace", false);
+export const containers: string[] = tl.getDelimitedInput("containers", "\n");
+export const manifests = tl.getInput("manifests", false);
+export const canaryPercentage: string = tl.getInput("percentage");
+export const deploymentStrategy: string = tl.getInput("deploymentStrategy", false);

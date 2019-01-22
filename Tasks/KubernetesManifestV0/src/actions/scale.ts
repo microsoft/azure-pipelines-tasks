@@ -3,6 +3,7 @@
 import tl = require('vsts-task-lib/task');
 import { Kubectl } from "utility-common/kubectl-object-model";
 import * as utils from "../utils/utilities";
+import * as constants from "../models/constants";
 
 export async function scale() {
     let kubectl = new Kubectl(await utils.getKubectl(), tl.getInput("namespace", false));
@@ -12,6 +13,6 @@ export async function scale() {
     let result = kubectl.scale(kind, name, replicas);
     utils.checkForErrors([result]);
     utils.checkForErrors([kubectl.checkRolloutStatus(kind, name)]);
-    utils.checkForErrors([kubectl.annotate(kind, name, utils.annotationsToAdd(), true)]);
+    utils.checkForErrors([kubectl.annotate(kind, name, constants.pipelineAnnotations, true)]);
     utils.checkForErrors(utils.annotateChildPods(kubectl, kind, name, JSON.parse((kubectl.getAllPods()).stdout)));
 }

@@ -6,8 +6,9 @@ import tl = require('vsts-task-lib/task');
 import yaml = require('js-yaml');
 import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
 import * as KubernetesObjectUtility from '../utils/KubernetesObjectUtility';
+import * as constants from '../models/constants';
 import * as TaskInputParameters from '../models/TaskInputParameters';
-import * as models from '../models/K8-models';
+import * as models from '../models/constants';
 import * as fileHelper from "../utils/FileHelper";
 import * as utils from "../utils/utilities";
 import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
@@ -17,7 +18,7 @@ const CANARY_DEPLOYMENT_STRATEGY = "CANARY";
 
 export async function deploy() {
     var inputManifestFiles: string[] = getManifestFiles();
-    let kubectl = new Kubectl(await utils.getKubectl(), tl.getInput(TaskInputParameters.namespace, false));
+    let kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace);
     var deployedManifestFiles = deployManifests(inputManifestFiles, kubectl);
     let resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.recognizedWorkloadTypes);
     checkManifestStability(kubectl, resourceTypes);
@@ -25,19 +26,18 @@ export async function deploy() {
 }
 
 function getManifestFiles(): string[] {
-    var files: string[] = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), tl.getInput("manifests", true));
+    var files: string[] = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), TaskInputParameters.manifests);
 
     if (files.length == 0) {
         throw (tl.loc("ManifestFileNotFound"));
     }
 
-    let containers = tl.getDelimitedInput(TaskInputParameters.containers, "\n");
-    files = updateContainerImagesInConfigFiles(files, containers);
+    files = updateContainerImagesInConfigFiles(files, TaskInputParameters.containers);
     return files;
 }
 
 function deployManifests(files: string[], kubectl: Kubectl): string[] {
-    var deploymentStrategy = tl.getInput(TaskInputParameters.deploymentStrategy);
+    var deploymentStrategy = TaskInputParameters.deploymentStrategy;
     let result;
     if (deploymentStrategy && deploymentStrategy.toUpperCase() === CANARY_DEPLOYMENT_STRATEGY) {
         var canaryDeploymentOutput = canaryDeployment(files, kubectl);
@@ -63,7 +63,7 @@ function checkManifestStability(kubectl: Kubectl, resourceTypes: Resource[]) {
 function annotateResources(files: string[], kubectl: Kubectl, resourceTypes: Resource[]) {
     let annotateResults: IExecSyncResult[] = [];
     var allPods = JSON.parse((kubectl.getAllPods()).stdout);
-    annotateResults.push(kubectl.annotateFiles(files, utils.annotationsToAdd(), true));
+    annotateResults.push(kubectl.annotateFiles(files, constants.pipelineAnnotations, true));
     resourceTypes.forEach(resource => {
         if (resource.type.toUpperCase() != models.KubernetesWorkload.Pod.toUpperCase()) {
             utils.annotateChildPods(kubectl, resource.type, resource.name, allPods)
@@ -75,7 +75,7 @@ function annotateResources(files: string[], kubectl: Kubectl, resourceTypes: Res
 
 function canaryDeployment(filePaths: string[], kubectl: Kubectl) {
     var newObjectsList = [];
-    var percentage = parseInt(tl.getInput(TaskInputParameters.canaryPercentage));
+    var percentage = parseInt(TaskInputParameters.canaryPercentage);
 
     filePaths.forEach((filePath: string) => {
         var fileContents = fs.readFileSync(filePath);

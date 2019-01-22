@@ -4,6 +4,11 @@ import * as tl from "vsts-task-lib/task";
 import { ToolRunner, IExecOptions, IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import kubectlutility = require("utility-common/kubectlutility");
 import { Kubectl } from "utility-common/kubectl-object-model";
+import { pipelineAnnotations } from "../models/constants"
+
+export enum StringComparer {
+    Ordinal, OrdinalIgnoreCase
+}
 
 export function execCommand(command: ToolRunner, options?: IExecOptions) {
     command.on("errline", tl.error);
@@ -36,17 +41,6 @@ export function checkForErrors(execResults: IExecSyncResult[], warnIfError?: boo
     }
 }
 
-export function annotationsToAdd(): string[] {
-    return [
-        `azure-pipelines/execution=${tl.getVariable("Build.BuildNumber")}`,
-        `azure-pipelines/pipeline="${tl.getVariable("Build.DefinitionName")}"`,
-        `azure-pipelines/executionuri=${tl.getVariable("System.TeamFoundationCollectionUri")}_build/results?buildId=${tl.getVariable("Build.BuildId")}`,
-        `azure-pipelines/project=${tl.getVariable("System.TeamProject")}`,
-        `azure-pipelines/org=${tl.getVariable("System.CollectionId")}`
-    ];
-}
-
-
 export function annotateChildPods(kubectl: Kubectl, resourceType, resourceName, allPods): IExecSyncResult[] {
     let commandExecutionResults = [];
     var owner = resourceName;
@@ -60,7 +54,7 @@ export function annotateChildPods(kubectl: Kubectl, resourceType, resourceName, 
             if (!!owners) {
                 owners.forEach(ownerRef => {
                     if (ownerRef["name"] == owner) {
-                        commandExecutionResults.push(kubectl.annotate("pod", pod["metadata"]["name"], annotationsToAdd(), true));
+                        commandExecutionResults.push(kubectl.annotate("pod", pod["metadata"]["name"], pipelineAnnotations, true));
                     }
                 });
             }
@@ -87,23 +81,23 @@ export function replaceAllTokens(currentString: string, replaceToken, replaceVal
     return replaceAllTokens(newString, replaceToken, replaceValue);
 }
 
-export function isEqual(str1: string, str2: string, ignoreCase: boolean): boolean {
-    
-    if (str1 == null && str2 == null){
-       return true;
+export function isEqual(str1: string, str2: string, stringComparer: StringComparer): boolean {
+
+    if (str1 == null && str2 == null) {
+        return true;
     }
 
-    if (str1 == null){
+    if (str1 == null) {
         return false;
     }
 
-    if (str2 == null){
+    if (str2 == null) {
         return false;
     }
 
-    if (ignoreCase){
+    if (stringComparer == StringComparer.OrdinalIgnoreCase) {
         return str1.toUpperCase() === str2.toUpperCase();
-    }else {
+    } else {
         return str1 === str2;
     }
 }

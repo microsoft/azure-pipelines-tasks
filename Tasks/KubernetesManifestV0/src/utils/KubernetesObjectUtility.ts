@@ -3,8 +3,9 @@ import fs = require("fs");
 import tl = require('vsts-task-lib/task');
 import yaml = require('js-yaml');
 import { Resource } from "utility-common/kubectl-object-model";
-import { KubernetesWorkload } from "../models/K8-models"
+import { KubernetesWorkload } from "../models/constants"
 import * as utils from "../utils/utilities"
+import { StringComparer } from "../utils/utilities"
 
 export function getReplicaCount(inputObject: any): any {
     if (!inputObject) {
@@ -16,7 +17,7 @@ export function getReplicaCount(inputObject: any): any {
     }
 
     var kind = inputObject.kind;
-    if (!utils.isEqual(kind, KubernetesWorkload.Pod, true) && !utils.isEqual(kind, KubernetesWorkload.DaemonSet, true)) {
+    if (!utils.isEqual(kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase) && !utils.isEqual(kind, KubernetesWorkload.DaemonSet, StringComparer.OrdinalIgnoreCase)) {
         return inputObject.spec.replicas;
     }
 
@@ -94,7 +95,8 @@ export function updateSpecLabels(inputObject: any, newLabels: Map<string, string
         return;
     }
 
-    var existingLabels = utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, true) ? inputObject.metadata.labels : getSpecLabels(inputObject);
+    var existingLabels = utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase) ?
+        inputObject.metadata.labels : getSpecLabels(inputObject);
 
     if (override) {
         existingLabels = newLabels;
@@ -124,7 +126,7 @@ export function updateSelectorLabels(inputObject: any, newLabels: Map<string, st
         return;
     }
 
-    if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, true)) {
+    if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
         return;
     }
 
@@ -157,7 +159,7 @@ export function getResources(filePaths: string[], filterResourceTypes: string[])
         var fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
 
-            if (filterResourceTypes.filter(type => utils.isEqual(inputObject.kind, type, true)).length > 0) {
+            if (filterResourceTypes.filter(type => utils.isEqual(inputObject.kind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
                 var resource = {
                     type: inputObject.kind,
                     name: inputObject.metadata.name
@@ -179,8 +181,9 @@ function getSpecLabels(inputObject: any) {
 }
 
 function setSpecLabels(inputObject: any, newLabels: any) {
-    if (!!inputObject && !!inputObject.spec && !!inputObject.spec.template && !!inputObject.spec.template.metadata) {
-        inputObject.spec.template.metadata.labels = newLabels;
+    var specLabels = getSpecLabels(inputObject);
+    if (!!specLabels) {
+        specLabels = newLabels;
     }
 }
 
@@ -195,7 +198,8 @@ function getSpecSelectorLabels(inputObject: any) {
 
 function setSpecSelectorLabels(inputObject: any, newLabels: any) {
 
-    if (!!inputObject && !!inputObject.spec && !!inputObject.spec.selector) {
-        inputObject.spec.selector.matchLabels = newLabels;
+    var selectorLabels = getSpecSelectorLabels(inputObject);
+    if (!!selectorLabels) {
+        selectorLabels = newLabels;
     }
 }

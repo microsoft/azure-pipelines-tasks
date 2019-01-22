@@ -1,7 +1,7 @@
 "use strict";
 import { Kubectl } from "utility-common/kubectl-object-model";
 import * as helper from './KubernetesObjectUtility';
-import { KubernetesWorkload } from "../models/K8-models"
+import { KubernetesWorkload, recognizedWorkloadTypes } from "../models/constants"
 import * as utils from "./utilities";
 import tl = require('vsts-task-lib/task');
 
@@ -21,11 +21,9 @@ export function isDeploymentEntity(kind: string): boolean {
         throw (tl.loc("ResourceKindNotDefined"));
     }
 
-    return utils.isEqual(kind, KubernetesWorkload.Pod, true) ||
-        utils.isEqual(kind, KubernetesWorkload.Replicaset, true) ||
-        utils.isEqual(kind, KubernetesWorkload.Deployment, true) ||
-        utils.isEqual(kind, KubernetesWorkload.StatefulSet, true) ||
-        utils.isEqual(kind, KubernetesWorkload.DaemonSet, true);
+    return recognizedWorkloadTypes.some(function (elem) {
+        return utils.isEqual(elem, kind, utils.StringComparer.OrdinalIgnoreCase);
+    });
 }
 
 export function getNewBaselineResource(stableObject: any, replicas: number): object {
@@ -49,15 +47,16 @@ function getNewCanaryObject(inputObject: any, replicas: number, type: string): o
     var newObject = JSON.parse(JSON.stringify(inputObject));
 
     // Updating name
-    newObject.metadata.name = type === CANARY_LABEL_VALUE ? getCanaryResourceName(inputObject.metadata.name) :
+    newObject.metadata.name = type === CANARY_LABEL_VALUE ?
+        getCanaryResourceName(inputObject.metadata.name) :
         getBaselineResourceName(inputObject.metadata.name);
 
     // Adding labels and annotations.
     addCanaryLabelsAndAnnotations(newObject, type);
 
     // Updating no. of replicas
-    if (!utils.isEqual(newObject.kind, KubernetesWorkload.Pod, true) &&
-        !utils.isEqual(newObject.kind, KubernetesWorkload.DaemonSet, true)) {
+    if (!utils.isEqual(newObject.kind, KubernetesWorkload.Pod, utils.StringComparer.OrdinalIgnoreCase) &&
+        !utils.isEqual(newObject.kind, KubernetesWorkload.DaemonSet, utils.StringComparer.OrdinalIgnoreCase)) {
         newObject.spec.replicas = replicas;
     }
 
