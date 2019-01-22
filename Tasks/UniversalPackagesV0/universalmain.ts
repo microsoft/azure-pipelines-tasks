@@ -37,7 +37,6 @@ async function main(): Promise<void> {
     } finally{
         _logUniversalStartupVariables(artifactToolPath);
     }
-
     // Calling the command. download/publish
     const universalPackageCommand = tl.getInput("command", true);
     switch (universalPackageCommand) {
