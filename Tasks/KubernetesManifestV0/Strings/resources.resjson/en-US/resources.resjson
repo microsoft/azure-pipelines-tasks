@@ -49,5 +49,9 @@
   "loc.messages.NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
   "loc.messages.ManifestFileNotFound": "No manifest file(s) matching %s was found.",
   "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
-  "loc.messages.UnknownRenderType": "Unknown render engine"
+  "loc.messages.UnknownRenderType": "Unknown render engine",
+  "loc.messages.ResourceKindNotDefined": "Resource kind is null",
+  "loc.messages.NullInputObject": "Input object is null.",
+  "loc.messages.NullInputObjectMetadata": "Input object metadata is null.",
+  "loc.messages.CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment"
 }

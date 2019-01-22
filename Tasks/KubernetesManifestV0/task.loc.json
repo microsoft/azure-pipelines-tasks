@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 1
   },
   "demands": [],
   "groups": [
@@ -269,6 +269,10 @@
     "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
     "ManifestFileNotFound": "ms-resource:loc.messages.ManifestFileNotFound",
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
-    "UnknownRenderType": "ms-resource:loc.messages.UnknownRenderType"
+    "UnknownRenderType": "ms-resource:loc.messages.UnknownRenderType",
+    "ResourceKindNotDefined": "ms-resource:loc.messages.ResourceKindNotDefined",
+    "NullInputObject": "ms-resource:loc.messages.NullInputObject",
+    "NullInputObjectMetadata": "ms-resource:loc.messages.NullInputObjectMetadata",
+    "CanaryDeploymentAlreadyExistErrorMessage": "ms-resource:loc.messages.CanaryDeploymentAlreadyExistErrorMessage"
   }
 }
