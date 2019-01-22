@@ -1,7 +1,7 @@
 import * as tl from "vsts-task-lib/task";
 import * as path from "path";
 import * as fs from "fs";
-import * as utils from "./utilities";
+import * as utils from "./utils/utilities";
 import kubectlutility = require("utility-common/kubectlutility");
 
 export class Connection {

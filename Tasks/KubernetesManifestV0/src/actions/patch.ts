@@ -2,7 +2,7 @@
 
 import tl = require('vsts-task-lib/task');
 import { Kubectl } from "utility-common/kubectl-object-model";
-import * as utils from "./../utilities";
+import * as utils from "../utils/utilities";
 
 export async function patch() {
     let kubectl = new Kubectl(await utils.getKubectl(), tl.getInput("namespace", false));

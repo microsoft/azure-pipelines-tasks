@@ -1,10 +1,9 @@
 "use strict";
 import { Kubectl } from "utility-common/kubectl-object-model";
 import * as helper from './KubernetesObjectUtility';
+import { KubernetesWorkload } from "../models/K8-models"
 import * as utils from "./utilities";
 import tl = require('vsts-task-lib/task');
-import path = require('path');
-import fs = require("fs");
 
 const BASELINE_SUFFIX = "-baseline";
 const BASELINE_LABEL_VALUE = "baseline";
@@ -19,15 +18,14 @@ export function calculateReplicaCountForCanary(inputObject: any, percentage: num
 
 export function isDeploymentEntity(kind: string): boolean {
     if (!kind) {
-        throw (tl.loc("Kind is not defined"));
+        throw (tl.loc("ResourceKindNotDefined"));
     }
 
-    var temp = kind.toUpperCase();
-    return temp === helper.KubernetesWorkload.Pod.toUpperCase() ||
-        temp === helper.KubernetesWorkload.Replicaset.toUpperCase() ||
-        temp === helper.KubernetesWorkload.Deployment.toUpperCase() ||
-        temp === helper.KubernetesWorkload.StatefulSet.toUpperCase() ||
-        temp === helper.KubernetesWorkload.DaemonSet.toUpperCase();
+    return utils.isEqual(kind, KubernetesWorkload.Pod, true) ||
+        utils.isEqual(kind, KubernetesWorkload.Replicaset, true) ||
+        utils.isEqual(kind, KubernetesWorkload.Deployment, true) ||
+        utils.isEqual(kind, KubernetesWorkload.StatefulSet, true) ||
+        utils.isEqual(kind, KubernetesWorkload.DaemonSet, true);
 }
 
 export function getNewBaselineResource(stableObject: any, replicas: number): object {
@@ -47,27 +45,6 @@ export function fetchCanaryResource(kubectl: Kubectl, kind: string, name: string
     return fetchResource(kubectl, kind, getCanaryResourceName(name));
 }
 
-export function applyResource(kubectl: Kubectl, inputObjects: any[]) {
-    let newFilePaths = [];
-    inputObjects.forEach((inputObject: any) => {
-        var filePath = inputObject.kind + "_" + inputObject.metadata.name;
-        var inputObjectString = JSON.stringify(inputObject);
-        const tempDirectory = utils.getTempDirectory();
-        let fileName = path.join(tempDirectory, path.basename(filePath));
-        fs.writeFileSync(
-            path.join(fileName),
-            inputObjectString);
-        newFilePaths.push(fileName);
-    });
-
-    var result = null;
-    if (newFilePaths.length > 0) {
-        result = kubectl.apply(newFilePaths);
-    }
-
-    return { "result": result, "newFilePaths": newFilePaths };
-}
-
 function getNewCanaryObject(inputObject: any, replicas: number, type: string): object {
     var newObject = JSON.parse(JSON.stringify(inputObject));
 
@@ -79,8 +56,8 @@ function getNewCanaryObject(inputObject: any, replicas: number, type: string): o
     addCanaryLabelsAndAnnotations(newObject, type);
 
     // Updating no. of replicas
-    if (newObject.kind.toUpperCase() != helper.KubernetesWorkload.Pod.toUpperCase() &&
-        newObject.kind.toUpperCase() != helper.KubernetesWorkload.DaemonSet.toUpperCase()) {
+    if (!utils.isEqual(newObject.kind, KubernetesWorkload.Pod, true) &&
+        !utils.isEqual(newObject.kind, KubernetesWorkload.DaemonSet, true)) {
         newObject.spec.replicas = replicas;
     }
 

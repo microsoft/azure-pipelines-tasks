@@ -4,26 +4,22 @@ import fs = require("fs");
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 import yaml = require('js-yaml');
-import * as canaryDeploymentHelper from '../CanaryDeploymentHelper';
-import * as KubernetesObjectUtility from '../KubernetesObjectUtility';
-import * as utils from "./../utilities";
+import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
+import * as KubernetesObjectUtility from '../utils/KubernetesObjectUtility';
+import * as TaskInputParameters from '../models/TaskInputParameters';
+import * as models from '../models/K8-models';
+import * as fileHelper from "../utils/FileHelper";
+import * as utils from "../utils/utilities";
 import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import { Kubectl, Resource } from "utility-common/kubectl-object-model";
 
-const TASK_INPUT_NAMESPACE = "namespace";
-const TASK_INPUT_CONTAINERS = "containers";
-const TASK_INPUT_CANARY_PERCENTAGE = "percentage";
-const TASK_INPUT_DEPLOYMENT_STRATEGY = "deploymentStrategy";
 const CANARY_DEPLOYMENT_STRATEGY = "CANARY";
-
-const recognizedWorkloadTypes: string[] = ["deployment", "replicaset", "daemonset", "pod", "statefulset"];
-const recognizedWorkloadTypesWithRolloutStatus: string[] = ["deployment", "daemonset", "statefulset"];
 
 export async function deploy() {
     var inputManifestFiles: string[] = getManifestFiles();
-    let kubectl = new Kubectl(await utils.getKubectl(), tl.getInput(TASK_INPUT_NAMESPACE, false));
+    let kubectl = new Kubectl(await utils.getKubectl(), tl.getInput(TaskInputParameters.namespace, false));
     var deployedManifestFiles = deployManifests(inputManifestFiles, kubectl);
-    let resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, recognizedWorkloadTypes);
+    let resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.recognizedWorkloadTypes);
     checkManifestStability(kubectl, resourceTypes);
     annotateResources(deployedManifestFiles, kubectl, resourceTypes);
 }
@@ -35,13 +31,13 @@ function getManifestFiles(): string[] {
         throw (tl.loc("ManifestFileNotFound"));
     }
 
-    let containers = tl.getDelimitedInput(TASK_INPUT_CONTAINERS, "\n");
+    let containers = tl.getDelimitedInput(TaskInputParameters.containers, "\n");
     files = updateContainerImagesInConfigFiles(files, containers);
     return files;
 }
 
 function deployManifests(files: string[], kubectl: Kubectl): string[] {
-    var deploymentStrategy = tl.getInput(TASK_INPUT_DEPLOYMENT_STRATEGY);
+    var deploymentStrategy = tl.getInput(TaskInputParameters.deploymentStrategy);
     let result;
     if (deploymentStrategy && deploymentStrategy.toUpperCase() === CANARY_DEPLOYMENT_STRATEGY) {
         var canaryDeploymentOutput = canaryDeployment(files, kubectl);
@@ -57,7 +53,7 @@ function deployManifests(files: string[], kubectl: Kubectl): string[] {
 function checkManifestStability(kubectl: Kubectl, resourceTypes: Resource[]) {
     let rolloutStatusResults = [];
     resourceTypes.forEach(resource => {
-        if (recognizedWorkloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) == -1) {
+        if (models.recognizedWorkloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) == -1) {
             rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
         }
     });
@@ -69,7 +65,7 @@ function annotateResources(files: string[], kubectl: Kubectl, resourceTypes: Res
     var allPods = JSON.parse((kubectl.getAllPods()).stdout);
     annotateResults.push(kubectl.annotateFiles(files, utils.annotationsToAdd(), true));
     resourceTypes.forEach(resource => {
-        if (resource.type.toUpperCase() != KubernetesObjectUtility.KubernetesWorkload.Pod.toUpperCase()) {
+        if (resource.type.toUpperCase() != models.KubernetesWorkload.Pod.toUpperCase()) {
             utils.annotateChildPods(kubectl, resource.type, resource.name, allPods)
                 .forEach(execResult => annotateResults.push(execResult));
         }
@@ -79,7 +75,7 @@ function annotateResources(files: string[], kubectl: Kubectl, resourceTypes: Res
 
 function canaryDeployment(filePaths: string[], kubectl: Kubectl) {
     var newObjectsList = [];
-    var percentage = parseInt(tl.getInput(TASK_INPUT_CANARY_PERCENTAGE));
+    var percentage = parseInt(tl.getInput(TaskInputParameters.canaryPercentage));
 
     filePaths.forEach((filePath: string) => {
         var fileContents = fs.readFileSync(filePath);
@@ -91,7 +87,7 @@ function canaryDeployment(filePaths: string[], kubectl: Kubectl) {
                 var existing_canary_object = canaryDeploymentHelper.fetchCanaryResource(kubectl, kind, name);
 
                 if (!!existing_canary_object) {
-                    throw (tl.loc("Canary deployment already exists. Rejecting this deployment"));
+                    throw (tl.loc("CanaryDeploymentAlreadyExistErrorMessage"));
                 }
 
                 var canaryReplicaCount = canaryDeploymentHelper.calculateReplicaCountForCanary(inputObject, percentage);
@@ -115,13 +111,15 @@ function canaryDeployment(filePaths: string[], kubectl: Kubectl) {
         });
     });
 
-    return canaryDeploymentHelper.applyResource(kubectl, newObjectsList);;
+    var manifestFiles = fileHelper.writeObjectsToFile(newObjectsList);
+    var result = kubectl.apply(manifestFiles);
+    return { "result": result, "newFilePaths": manifestFiles };
 }
 
 function updateContainerImagesInConfigFiles(filePaths: string[], containers): string[] {
     if (containers != []) {
         let newFilePaths = [];
-        const tempDirectory = utils.getTempDirectory();
+        const tempDirectory = fileHelper.getTempDirectory();
         filePaths.forEach((filePath: string) => {
             var contents = fs.readFileSync(filePath).toString();
             containers.forEach((container: string) => {

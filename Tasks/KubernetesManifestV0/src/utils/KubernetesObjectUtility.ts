@@ -2,28 +2,21 @@
 import fs = require("fs");
 import tl = require('vsts-task-lib/task');
 import yaml = require('js-yaml');
-import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import { Resource } from "utility-common/kubectl-object-model";
-
-export class KubernetesWorkload {
-    static Pod: string = "Pod";
-    static Replicaset: string = "Replicaset";
-    static Deployment: string = "Deployment";
-    static StatefulSet: string = "StatefulSet";
-    static DaemonSet: string = "DaemonSet";
-}
+import { KubernetesWorkload } from "../models/K8-models"
+import * as utils from "../utils/utilities"
 
 export function getReplicaCount(inputObject: any): any {
     if (!inputObject) {
-        throw new Error("Input object is null.");
+        throw (tl.loc("NullInputObject"));
     }
 
     if (!inputObject.kind) {
-        throw new Error("Input object kind is not defined.");
+        throw (tl.loc("ResourceKindNotDefined"));
     }
 
     var kind = inputObject.kind;
-    if (kind.toUpperCase() != KubernetesWorkload.Pod.toUpperCase() && kind.toUpperCase() != KubernetesWorkload.DaemonSet.toUpperCase()) {
+    if (!utils.isEqual(kind, KubernetesWorkload.Pod, true) && !utils.isEqual(kind, KubernetesWorkload.DaemonSet, true)) {
         return inputObject.spec.replicas;
     }
 
@@ -33,11 +26,11 @@ export function getReplicaCount(inputObject: any): any {
 export function updateObjectLabels(inputObject: any, newLabels: Map<string, string>, override: boolean) {
 
     if (!inputObject) {
-        throw new Error("Input object is null.");
+        throw (tl.loc("NullInputObject"));
     }
 
     if (!inputObject.metadata) {
-        throw new Error("Input object metadata is not defined.");
+        throw (tl.loc("NullInputObjectMetadata"));
     }
 
     if (!newLabels) {
@@ -62,11 +55,11 @@ export function updateObjectLabels(inputObject: any, newLabels: Map<string, stri
 
 export function updateObjectAnnotations(inputObject: any, newAnnotations: Map<string, string>, override: boolean) {
     if (!inputObject) {
-        throw new Error("Input object is null.");
+        throw (tl.loc("NullInputObject"));
     }
 
     if (!inputObject.metadata) {
-        throw new Error("Input object metadata is not defined.");
+        throw (tl.loc("NullInputObjectMetadata"));
     }
 
     if (!newAnnotations) {
@@ -90,18 +83,18 @@ export function updateObjectAnnotations(inputObject: any, newAnnotations: Map<st
 
 export function updateSpecLabels(inputObject: any, newLabels: Map<string, string>, override: boolean) {
     if (!inputObject) {
-        throw new Error("Input object is null.");
+        throw (tl.loc("NullInputObject"));
     }
 
     if (!inputObject.kind) {
-        throw new Error("Input object kind is not defined.");
+        throw (tl.loc("ResourceKindNotDefined"));
     }
 
     if (!newLabels) {
         return;
     }
 
-    var existingLabels = inputObject.kind.toUpperCase() == KubernetesWorkload.Pod.toUpperCase() ? inputObject.metadata.labels : getSpecLabels(inputObject);
+    var existingLabels = utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, true) ? inputObject.metadata.labels : getSpecLabels(inputObject);
 
     if (override) {
         existingLabels = newLabels;
@@ -120,18 +113,18 @@ export function updateSpecLabels(inputObject: any, newLabels: Map<string, string
 
 export function updateSelectorLabels(inputObject: any, newLabels: Map<string, string>, override: boolean) {
     if (!inputObject) {
-        throw new Error("Input object is null.");
+        throw (tl.loc("NullInputObject"));
     }
 
     if (!inputObject.kind) {
-        throw new Error("Input object kind is not defined.");
+        throw (tl.loc("ResourceKindNotDefined"));
     }
 
     if (!newLabels) {
         return;
     }
 
-    if (inputObject.kind.toUpperCase() == KubernetesWorkload.Pod.toUpperCase()) {
+    if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, true)) {
         return;
     }
 
@@ -164,7 +157,7 @@ export function getResources(filePaths: string[], filterResourceTypes: string[])
         var fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
 
-            if (filterResourceTypes.filter(type => inputObject.kind.toUpperCase() == type.toUpperCase()).length > 0) {
+            if (filterResourceTypes.filter(type => utils.isEqual(inputObject.kind, type, true)).length > 0) {
                 var resource = {
                     type: inputObject.kind,
                     name: inputObject.metadata.name
