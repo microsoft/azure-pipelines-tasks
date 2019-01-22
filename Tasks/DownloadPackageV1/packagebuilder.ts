@@ -30,7 +30,7 @@ export class PackageUrlsBuilder {
                 this.packageProtocolAreaName = "npm";
                 this.packageProtocolAreadId = "4C83CFC1-F33A-477E-A789-29D38FFCA52E";
                 this.packagingMetadataAreaId = "7A20D846-C929-4ACC-9EA2-0D5A7DF1B197"; // Package details area id
-                this.packageProtocolDownloadAreadId = "09A4EAFD-123A-495C-979C-0EDA7BDB9A14";
+                this.packageProtocolDownloadAreadId = "75CAA482-CB1E-47CD-9F2C-C048A4B7A43E"; // Unscoped NPM package
                 break;
             case "Python":
                 this.packageProtocolAreaName = "pypi";

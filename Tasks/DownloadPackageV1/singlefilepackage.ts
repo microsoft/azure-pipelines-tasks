@@ -19,7 +19,7 @@ export class SingleFilePackage extends Package {
         var feedConnection = new vsts.WebApi(feedsUrl, this.credentialHandler);
 
         // TODO fix this.
-        var packagesUrl = await locationUtility.getNuGetUriFromBaseServiceUri(collectionUrl, this.accessToken);
+        var packagesUrl = await locationUtility.getServiceUriFromAreaId(collectionUrl, this.accessToken, this.packageProtocolAreadId);
         var packageConnection = new vsts.WebApi(packagesUrl, this.credentialHandler);
 
         return new Promise<Array<string>>((resolve, reject) => {
@@ -31,7 +31,8 @@ export class SingleFilePackage extends Package {
                     console.log("md " + JSON.stringify(packageMetadata));
 
                     var packageName = packageMetadata.name;
-
+                    console.log("package Name " + packageName);
+                
                     this.getUrl(
                         packageConnection.getCoreApi().vsoClient,
                         this.packageProtocolAreaName,
