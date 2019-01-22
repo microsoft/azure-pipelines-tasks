@@ -9,24 +9,24 @@ async function run() {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         //read inputs
-        const project: string = tl.getPathInput('project', true);
-        const target: string = tl.getInput('target');
-        const outputDir: string = tl.getInput('outputDir');
-        const configuration: string = tl.getInput('configuration');
-        const createAppPackage: boolean = tl.getBoolInput('createAppPackage');
-        const clean: boolean = tl.getBoolInput('clean');
-        const msbuildArguments: string = tl.getInput('msbuildArguments');
+        const project: string | null = tl.getPathInput('project', true);
+        const target: string | null = tl.getInput('target');
+        const outputDir: string | null = tl.getInput('outputDir');
+        const configuration: string | null = tl.getInput('configuration');
+        const createAppPackage: boolean | null = tl.getBoolInput('createAppPackage');
+        const clean: boolean | null = tl.getBoolInput('clean');
+        const msbuildArguments: string| null = tl.getInput('msbuildArguments');
 
         // find jdk to be used during the build
         const jdkSelection: string = tl.getInput('jdkSelection') || 'JDKVersion'; // fall back to JDKVersion for older version of tasks
 
-        let specifiedJavaHome: string | null = null;
+        let specifiedJavaHome: string | null | undefined = null;
         let javaTelemetryData: { jdkVersion: string } | null = null;
 
         if (jdkSelection === 'JDKVersion') {
             tl.debug('Using JDK version to find JDK path');
-            const jdkVersion: string = tl.getInput('jdkVersion');
-            const jdkArchitecture: string = tl.getInput('jdkArchitecture');
+            const jdkVersion: string | null = tl.getInput('jdkVersion');
+            const jdkArchitecture: string | null = tl.getInput('jdkArchitecture');
             javaTelemetryData = { jdkVersion };
 
             if (jdkVersion !== 'default') {
@@ -44,7 +44,7 @@ async function run() {
 
         const buildLocationMethod: string = tl.getInput('msbuildLocationMethod') || 'version';
 
-        const buildToolLocation: string = tl.getPathInput('msbuildLocation');
+        const buildToolLocation: string | null = tl.getPathInput('msbuildLocation');
         if (buildToolLocation) {
             // msbuildLocation was specified, use it for back compat
             if (buildToolLocation.endsWith('xbuild') || buildToolLocation.endsWith('msbuild')) {
@@ -66,7 +66,7 @@ async function run() {
         tl.debug('Build tool path = ' + buildToolPath);
 
         // Resolve files for the specified value or pattern
-        const filesList: string[] = tl.findMatch(null, project, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+        const filesList: string[] = tl.findMatch('', project, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
 
         // Fail if no matching .csproj files were found
         if (!filesList || filesList.length === 0) {
