@@ -1,6 +1,7 @@
 import { TaskLibAnswers, TaskLibAnswerExecResult } from 'vsts-task-lib/mock-answer';
 import tmrm = require('vsts-task-lib/mock-run');
 import * as pkgMock from 'packaging-common/Tests/MockHelper';
+import * as artMock from 'packaging-common/Tests/ArtifactToolMockHelper';
 
 export class UniversalMockHelper {
     private static ArtifactToolCmd: string = 'c:\\mock\\location\\ArtifactTool.exe';
@@ -29,41 +30,9 @@ export class UniversalMockHelper {
 
         this.tmr.setAnswers(this.answers);
 
-        this.registerArtifactToolUtilitiesMock();
-        this.registerArtifactToolRunnerMock();
+        artMock.registerArtifactToolUtilitiesMock(tmr, UniversalMockHelper.ArtifactToolCmd);
+        artMock.registerArtifactToolRunnerMock(tmr);
         pkgMock.registerLocationHelpersMock(tmr);
-    }
-
-    public registerArtifactToolUtilitiesMock() {
-        this.tmr.registerMock('packaging-common/universal/ArtifactToolUtilities', {
-            getArtifactToolFromService: function(serviceUri, accessToken, toolName) {
-                return UniversalMockHelper.ArtifactToolCmd;
-            },
-            getPackageNameFromId: function(serviceUri: string, accessToken: string, feedId: string, packageId: string) {
-                return packageId;
-            }
-        });
-    }
-
-    public registerArtifactToolRunnerMock() {
-        var mtt = require('vsts-task-lib/mock-toolrunner');
-        this.tmr.registerMock('packaging-common/universal/ArtifactToolRunner', {
-            getOptions: function() {
-                return {
-                    cwd: process.cwd(),
-                    env: Object.assign({}, process.env),
-                    silent: false,
-                    failOnStdErr: false,
-                    ignoreReturnCode: false,
-                    windowsVerbatimArguments: false
-                }
-            },
-            runArtifactTool: function(artifactToolPath: string, command: string[], execOptions) {
-                var tr = new mtt.ToolRunner(artifactToolPath)
-                tr.arg(command);
-                return tr.execSync(execOptions);
-            }
-        });
     }
 
     public mockUniversalCommand(command: string, feed:string, packageName: string, packageVersion: string, path: string, result: TaskLibAnswerExecResult, service?: string) {
