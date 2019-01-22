@@ -80,6 +80,7 @@
         "JavaToolInstallerV0",
         "JenkinsDownloadArtifactsV1",
         "JenkinsQueueJobV2",
+        "JenkinsQueueJobV3",
         "KubernetesV0",
         "KubernetesV1",
         "ManualInterventionV8",

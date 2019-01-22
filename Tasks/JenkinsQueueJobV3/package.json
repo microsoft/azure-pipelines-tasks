@@ -1,0 +1,22 @@
+{
+  "name": "vsts-tasks-jenkinsqueuejob",
+  "dependencies": {
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.0.7",
+    "@types/shelljs": "^0.3.0",
+    "request": "^2.65.0",
+    "typed-rest-client": "1.0.7",
+    "azure-pipelines-task-lib": "2.7.7"
+  },
+  "description": "Azure Pipelines Jenkins Queue Job Task",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/microsoft/vsts-tasks#readme"
+}

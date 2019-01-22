@@ -1,0 +1,17 @@
+{
+  "name": "vsts-tasks-jenkinsqueuejob",
+  "devDependencies": {
+    "@types/mocha": "^5.2.0"
+  },
+  "description": "Azure Pipelines Jenkins Queue Job Task",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/microsoft/vsts-tasks#readme"
+}
