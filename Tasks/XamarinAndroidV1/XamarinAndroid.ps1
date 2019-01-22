@@ -64,7 +64,7 @@ try {
     $msbuildLocation = Select-MSBuildPath -Method $msbuildLocationMethod -Location $msbuildLocation -PreferredVersion $msbuildVersion -Architecture $msbuildArchitecture
 
     # build each project file
-    Invoke-BuildTools -SolutionFiles $projectFiles -MSBuildLocation $msbuildLocation -MSBuildArguments $msBuildArguments -Clean:$clean
+    Invoke-BuildTools -SolutionFiles $projectFiles -MSBuildLocation $msbuildLocation -MSBuildArguments $msBuildArguments
 } finally {
      Trace-VstsLeavingInvocation $MyInvocation
 }
