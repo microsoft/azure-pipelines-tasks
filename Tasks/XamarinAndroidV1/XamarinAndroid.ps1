@@ -29,9 +29,6 @@ try {
 
     # Format the MSBuild args.
     $msBuildArguments = Format-MSBuildArguments -MSBuildArguments $msbuildArguments -Configuration $configuration
-    if($clean) {
-        $msBuildArguments = "$msBuildArguments /t:clean"
-    }
     if($target) {
         $msBuildArguments = "$msBuildArguments /t:$target"
     }
@@ -64,7 +61,7 @@ try {
     $msbuildLocation = Select-MSBuildPath -Method $msbuildLocationMethod -Location $msbuildLocation -PreferredVersion $msbuildVersion -Architecture $msbuildArchitecture
 
     # build each project file
-    Invoke-BuildTools -SolutionFiles $projectFiles -MSBuildLocation $msbuildLocation -MSBuildArguments $msBuildArguments
+    Invoke-BuildTools -SolutionFiles $projectFiles -MSBuildLocation $msbuildLocation -MSBuildArguments $msBuildArguments -Clean:$clean
 } finally {
      Trace-VstsLeavingInvocation $MyInvocation
 }
