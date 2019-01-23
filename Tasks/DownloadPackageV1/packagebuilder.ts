@@ -4,11 +4,11 @@ import { SingleFilePackage } from "./singlefilepackage";
 import { MultiFilePackage } from "./multifilepackage";
 import * as locationUtility from "packaging-common/locationUtilities";
 import * as vsts from "vso-node-api/WebApi";
+import { BearerCredentialHandler } from "vso-node-api/handlers/bearertoken";
 
 export class PackageUrlsBuilder {
     private type: string;
     private pattern: string;
-    private accessToken: string;
     private maxRetries: number;
     private packageProtocolAreaName: string;
     private packageProtocolAreadId: string;
@@ -16,7 +16,6 @@ export class PackageUrlsBuilder {
     private packageProtocolDownloadAreadId: string;
     private extension: string;
     private contentHeader: string;
-    private collectionUrl: string;
     private feedConnection: vsts.WebApi;
     private pkgsConnection: vsts.WebApi;
     private getRouteParamsMethod: (feedId: string, packageMetadata: any, fileMetadata: any) => any;
@@ -69,7 +68,7 @@ export class PackageUrlsBuilder {
     get GetRouteParamsMethod() {
         return this.getRouteParamsMethod;
     }
-    
+
     get ContentHeader() {
         return this.contentHeader;
     }
@@ -103,28 +102,21 @@ export class PackageUrlsBuilder {
         return this;
     }
 
-    get AccessToken() {
-        return this.accessToken;
-    }
-
     get PkgsConnection(): vsts.WebApi {
         return this.pkgsConnection;
     }
 
-    set PkgsConnection(connection: vsts.WebApi) {
+    withPkgsConnection(connection: vsts.WebApi): PackageUrlsBuilder {
         this.pkgsConnection = connection;
+        return this;
     }
 
     get FeedsConnection(): vsts.WebApi {
         return this.feedConnection;
     }
 
-    set FeedsConnection(connection: vsts.WebApi) {
+    withFeedsConnection(connection: vsts.WebApi): PackageUrlsBuilder {
         this.feedConnection = connection;
-    }
-
-    usingAccessToken(accessToken: string): PackageUrlsBuilder {
-        this.accessToken = accessToken;
         return this;
     }
 
@@ -137,15 +129,7 @@ export class PackageUrlsBuilder {
         return this;
     }
 
-    forCollection(collectionUrl: string): PackageUrlsBuilder {
-        this.collectionUrl = collectionUrl;
-        return this;
-    }
-
     async build(): Promise<Package> {
-        this.feedConnection = await this.getConnection("7AB4E64E-C4D8-4F50-AE73-5EF2E21642A5");
-        this.pkgsConnection = await this.getConnection(this.packageProtocolAreadId);
-
         switch (this.type) {
             case "NuGet":
             case "Npm":
@@ -156,18 +140,6 @@ export class PackageUrlsBuilder {
             default:
                 throw new Error(tl.loc("PackageTypeNotSupported"));
         }
-    }
-
-    private getConnection(areaId: string): Promise<vsts.WebApi> {
-        var credentialHandler = vsts.getBearerHandler(this.accessToken);
-        return locationUtility
-            .getServiceUriFromAreaId(this.collectionUrl, this.accessToken, areaId)
-            .then(url => {
-                return new vsts.WebApi(url, credentialHandler);
-            })
-            .catch(error => {
-                throw error;
-            });
     }
 
     private getPythonRouteParams(feedId: string, packageMetadata: any, fileMetadata: any): any {

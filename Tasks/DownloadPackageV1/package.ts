@@ -1,4 +1,3 @@
-import { BearerCredentialHandler } from "vso-node-api/handlers/bearertoken";
 import { PackageUrlsBuilder } from "./packagebuilder";
 import * as vsts from "vso-node-api/WebApi";
 import * as vsom from "vso-node-api/VsoClient";
@@ -9,27 +8,21 @@ var fs = require("fs");
 var path = require("path");
 
 export abstract class Package {
-    private packagingAreaName: string = "Packaging";
-    private packagingMetadataAreaId: string;
-
-    protected ApiVersion = "3.0-preview.1";
-    protected accessToken: string;
-    protected credentialHandler: BearerCredentialHandler;
     protected maxRetries: number;
     protected packageProtocolAreaName: string;
-    protected packageProtocolAreadId: string;
     protected packageProtocolDownloadAreadId: string;
     protected extension: string;
-    private contentHeader: string;
     protected feedConnection: vsts.WebApi;
     protected pkgsConnection: vsts.WebApi;
 
+    private packagingAreaName: string = "Packaging";
+    private packagingMetadataAreaId: string;
+    private contentHeader: string;
+    private ApiVersion = "3.0-preview.1";
+
     constructor(builder: PackageUrlsBuilder) {
-        this.accessToken = builder.AccessToken;
-        this.credentialHandler = vsts.getBearerHandler(this.accessToken);
         this.maxRetries = builder.MaxRetries;
         this.packageProtocolAreaName = builder.PackageProtocolAreaName;
-        this.packageProtocolAreadId = builder.PackageProtocolAreaId;
         this.packageProtocolDownloadAreadId = builder.PackageProtocolDownloadAreadId;
         this.packagingMetadataAreaId = builder.PackagingMetadataAreaId;
         this.extension = builder.Extension;
@@ -43,7 +36,9 @@ export abstract class Package {
         packageId: string,
         packageVersion: string
     ): Promise<Map<string, string>>;
-    
+
+
+    // TODO remove this?
     protected async getUrl(
         vsoClient: vsom.VsoClient,
         areaName: string,
@@ -52,7 +47,13 @@ export abstract class Package {
         queryParams?: any
     ): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            var getVersioningDataPromise = vsoClient.getVersioningData(null, areaName, areaId, routeValues, queryParams);
+            var getVersioningDataPromise = vsoClient.getVersioningData(
+                null,
+                areaName,
+                areaId,
+                routeValues,
+                queryParams
+            );
             getVersioningDataPromise.then(result => {
                 console.log("result url " + result.requestUrl);
                 return resolve(result.requestUrl);
@@ -96,7 +97,6 @@ export abstract class Package {
         packageVersion: string,
         downloadPath: string
     ): Promise<void[]> {
-
         return new Promise<void[]>(async (resolve, reject) => {
             return this.getDownloadUrls(feedId, packageId, packageVersion)
                 .then(downloadUrls => {
@@ -111,9 +111,11 @@ export abstract class Package {
                         var zipLocation = path.resolve(downloadPath, "../", fileName);
                         //var unzipLocation = path.join(downloadPath, "");
                         console.log("hello");
-                        promises.push(this.downloadPackage(this.pkgsConnection.getCoreApi(), downloadUrls[fileName], zipLocation));
+                        promises.push(
+                            this.downloadPackage(this.pkgsConnection.getCoreApi(), downloadUrls[fileName], zipLocation)
+                        );
                     });
-                    
+
                     return resolve(Promise.all(promises));
                 })
                 .catch(error => {

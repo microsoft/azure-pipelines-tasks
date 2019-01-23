@@ -1,4 +1,7 @@
 var path = require("path");
+import * as vsts from "vso-node-api/WebApi";
+import * as locationUtility from "packaging-common/locationUtilities";
+
 
 import * as tl from "vsts-task-lib/task";
 import { PackageUrlsBuilder } from "./packagebuilder";
@@ -20,13 +23,15 @@ async function main(): Promise<void> {
     let files = tl.getVariable("files");
     let extractPackage = tl.getVariable("extract");
     const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
-    const retryLimit: number = !!retryLimitValue && !isNaN(parseInt(retryLimitValue)) ? parseInt(retryLimitValue) : 4;
+	const retryLimit: number = !!retryLimitValue && !isNaN(parseInt(retryLimitValue)) ? parseInt(retryLimitValue) : 4;
+	
+	var feedConnection = await getConnection("7AB4E64E-C4D8-4F50-AE73-5EF2E21642A5", collectionUrl);
+	var pkgsConnection = await getConnection("B3BE7473-68EA-4A81-BFC7-9530BAAA19AD", collectionUrl);
 
-
-    var p = await new PackageUrlsBuilder()
+	var p = await new PackageUrlsBuilder()
 		.ofType(packageType)
-		.usingAccessToken(getAccessToken())
-		.forCollection(collectionUrl)
+		.withPkgsConnection(pkgsConnection)
+		.withFeedsConnection(feedConnection)
 		.matchingPattern(files)
         .withMaxRetries(retryLimit)
         .build();
@@ -46,6 +51,19 @@ function getAccessToken() {
     } else {
         throw new Error(tl.loc("CredentialsNotFound"));
     }
+}
+
+function getConnection(areaId: string, collectionUrl: string): Promise<vsts.WebApi> {
+	var accessToken = getAccessToken();
+	var credentialHandler = vsts.getBearerHandler(accessToken);
+	return locationUtility
+		.getServiceUriFromAreaId(collectionUrl, accessToken, areaId)
+		.then(url => {
+			return new vsts.WebApi(url, credentialHandler);
+		})
+		.catch(error => {
+			throw error;
+		});
 }
 
 main()

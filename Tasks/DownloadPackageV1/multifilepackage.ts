@@ -1,16 +1,11 @@
 import { Package } from "./package";
 import { PackageUrlsBuilder } from "./packagebuilder";
-import { isRegExp } from "util";
-import { filter } from "vsts-task-lib";
-import { stringify } from "ltx";
 
 export class MultiFilePackage extends Package {
-    private pattern: string;
     private getRouteParamsMethod: (feedId: string, packageMetadata: any, fileMetadata: any) => any;
 
     constructor(builder: PackageUrlsBuilder) {
         super(builder);
-        this.pattern = builder.Pattern;
         this.getRouteParamsMethod = builder.GetRouteParamsMethod;
     }
 
