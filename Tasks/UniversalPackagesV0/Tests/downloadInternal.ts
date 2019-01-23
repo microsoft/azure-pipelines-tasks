@@ -19,6 +19,4 @@ umh.mockUniversalCommand("download", "TestFeed", "TestPackage", "1.0.0", "c:\\te
     "stderr": ""
 });
 
-// umh.registerArtifactToolUtilitiesMock();
-
 tmr.run();
