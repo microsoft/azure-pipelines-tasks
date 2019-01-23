@@ -4,10 +4,8 @@ import * as vsts from "vso-node-api/WebApi";
 import * as vsom from "vso-node-api/VsoClient";
 import * as locationUtility from "packaging-common/locationUtilities";
 import * as tl from "vsts-task-lib/task";
-import { ICoreApi } from "vso-node-api/CoreApi";
 var fs = require("fs");
 import * as corem from "vso-node-api/CoreApi";
-import { TestApi } from "azure-devops-node-api/TestApi";
 
 var path = require("path");
 
@@ -22,6 +20,10 @@ export abstract class Package {
     protected packageProtocolAreaName: string;
     protected packageProtocolAreadId: string;
     protected packageProtocolDownloadAreadId: string;
+    protected extension: string;
+    private contentHeader: string;
+    protected feedConnection: vsts.WebApi;
+    protected pkgsConnection: vsts.WebApi;
 
     constructor(builder: PackageUrlsBuilder) {
         this.accessToken = builder.AccessToken;
@@ -31,6 +33,10 @@ export abstract class Package {
         this.packageProtocolAreadId = builder.PackageProtocolAreaId;
         this.packageProtocolDownloadAreadId = builder.PackageProtocolDownloadAreadId;
         this.packagingMetadataAreaId = builder.PackagingMetadataAreaId;
+        this.extension = builder.Extension;
+        this.contentHeader = builder.ContentHeader;
+        this.feedConnection = builder.FeedsConnection;
+        this.pkgsConnection = builder.PkgsConnection;
     }
 
     protected abstract async getDownloadUrls(
@@ -38,8 +44,8 @@ export abstract class Package {
         feedId: string,
         packageId: string,
         packageVersion: string
-    ): Promise<Array<string>>;
-
+    ): Promise<Map<string, string>>;
+    
     protected async getUrl(
         vsoClient: vsom.VsoClient,
         areaName: string,
@@ -47,12 +53,14 @@ export abstract class Package {
         queryParams?: any
     ): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            var getVersioningDataPromise = vsoClient.getVersioningData(this.ApiVersion, areaName, areaId, queryParams);
+            var getVersioningDataPromise = vsoClient.getVersioningData(null, areaName, areaId, queryParams);
             getVersioningDataPromise.then(result => {
                 console.log("result url " + result.requestUrl);
                 return resolve(result.requestUrl);
             });
             getVersioningDataPromise.catch(error => {
+                console.log("result url " + JSON.stringify(error));
+
                 return reject(error);
             });
         });
@@ -89,8 +97,6 @@ export abstract class Package {
         packageVersion: string,
         downloadPath: string
     ): Promise<void[]> {
-        var packagesUrl = await locationUtility.getNuGetUriFromBaseServiceUri(collectionUrl, this.accessToken);
-        var packageConnection = new vsts.WebApi(packagesUrl, this.credentialHandler);
 
         return new Promise<void[]>(async (resolve, reject) => {
             return this.getDownloadUrls(collectionUrl, feedId, packageId, packageVersion)
@@ -99,17 +105,16 @@ export abstract class Package {
                         tl.mkdirP(downloadPath);
                     }
 
-                    var zipLocation = path.resolve(downloadPath, "../", packageId) + ".zip";
-                    var unzipLocation = path.join(downloadPath, "");
-                    console.log("Starting downloading packages " + zipLocation);
-
                     var promises: Promise<void>[] = [];
-                    console.log("downloadurls " + downloadUrls);
-                    for (var i = 0; i < downloadUrls.length; i++) {
-                        promises.push(
-                            this.downloadPackage(packageConnection.getCoreApi(), downloadUrls[i], zipLocation)
-                        );
-                    }
+                    console.log("downloadurls " + JSON.stringify(downloadUrls));
+
+                    Object.keys(downloadUrls).map(fileName => {
+                        var zipLocation = path.resolve(downloadPath, "../", fileName);
+                        var unzipLocation = path.join(downloadPath, "");
+                        console.log("hello");
+                        promises.push(this.downloadPackage(this.pkgsConnection.getCoreApi(), downloadUrls[fileName], zipLocation));
+                    });
+                    
                     return resolve(Promise.all(promises));
                 })
                 .catch(error => {
@@ -120,7 +125,7 @@ export abstract class Package {
 
     private async downloadPackage(coreApi: corem.ICoreApi, downloadUrl: string, downloadPath: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            var accept = coreApi.restClient.createAcceptHeader("application/zip", this.ApiVersion);
+            var accept = coreApi.restClient.createAcceptHeader(this.contentHeader, this.ApiVersion);
             console.log("download url package " + downloadUrl);
             return coreApi.restClient.httpClient.getStream(downloadUrl, accept, async function(error, status, result) {
                 var file = fs.createWriteStream(downloadPath);
@@ -128,6 +133,9 @@ export abstract class Package {
                 tl.debug("Downloading package from url: " + downloadUrl);
                 tl.debug("Download status: " + status);
                 if (!!error || status != 200) {
+                    console.log(
+                        "error bad status " + JSON.stringify(error) + " status " + status + " result " + result
+                    );
                     file.end(null, null, file.close);
                     return reject(tl.loc("FailedToDownloadNugetPackage", downloadUrl, error));
                 }
@@ -140,6 +148,8 @@ export abstract class Package {
                     return resolve();
                 });
                 result.on("error", err => {
+                    console.log("error file close " + JSON.stringify(err));
+
                     file.end(null, null, file.close);
                     return reject(tl.loc("FailedToDownloadNugetPackage", downloadUrl, err));
                 });
@@ -147,6 +157,4 @@ export abstract class Package {
             });
         });
     }
-
-
 }
