@@ -19,6 +19,7 @@ export class PackageUrlsBuilder {
     private collectionUrl: string;
     private feedConnection: vsts.WebApi;
     private pkgsConnection: vsts.WebApi;
+    private getRouteParamsMethod: (feedId: string, packageMetadata: any, fileMetadata: any) => any;
 
     get Type() {
         return this.type;
@@ -49,7 +50,7 @@ export class PackageUrlsBuilder {
                 this.packagingMetadataAreaId = "3B331909-6A86-44CC-B9EC-C1834C35498F"; // Package version details area id
                 this.packageProtocolDownloadAreadId = "97218BAE-A64D-4381-9257-B5B7951F0B98";
                 this.contentHeader = "application/zip";
-
+                this.getRouteParamsMethod = this.getPythonRouteParams;
                 break;
             case "Maven":
                 this.packageProtocolAreaName = "maven";
@@ -57,7 +58,7 @@ export class PackageUrlsBuilder {
                 this.packagingMetadataAreaId = "3B331909-6A86-44CC-B9EC-C1834C35498F"; // Package version details area id
                 this.packageProtocolDownloadAreadId = "F285A171-0DF5-4C49-AAF2-17D0D37D9F0E";
                 this.contentHeader = "application/zip";
-
+                this.getRouteParamsMethod = this.getMavenRouteParams;
                 break;
             default:
                 throw new Error(tl.loc("PackageTypeNotSupported"));
@@ -65,6 +66,10 @@ export class PackageUrlsBuilder {
         return this;
     }
 
+    get GetRouteParamsMethod() {
+        return this.getRouteParamsMethod;
+    }
+    
     get ContentHeader() {
         return this.contentHeader;
     }
@@ -163,5 +168,27 @@ export class PackageUrlsBuilder {
             .catch(error => {
                 throw error;
             });
+    }
+
+    private getPythonRouteParams(feedId: string, packageMetadata: any, fileMetadata: any): any {
+        return {
+            feedId: feedId,
+            packageName: packageMetadata.protocolMetadata.data.name,
+            packageVersion: packageMetadata.protocolMetadata.data.version,
+            fileName: fileMetadata.name
+        };
+    }
+
+    private getMavenRouteParams(feedId: string, packageMetadata: any, fileMetadata: any): any {
+        var fileName = fileMetadata.name;
+        var groupId = packageMetadata.protocolMetadata.data.groupId.replace(new RegExp("\\."), "/");
+        var artifactId = packageMetadata.protocolMetadata.data.artifactId;
+        var version = packageMetadata.protocolMetadata.data.version;
+
+        var artifactPath = `${groupId}/${artifactId}/${version}/${fileName}`;
+        return {
+            feed: feedId,
+            path: artifactPath
+        };
     }
 }
