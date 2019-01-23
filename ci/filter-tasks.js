@@ -155,10 +155,10 @@ var getTasksToBuildForPR = function() {
             toBeBuilt.push(task);
         }
     });
-    // TODO: Add this back once diffing is working 100%
-//     if (shouldBeBumped.length > 0) {
-//         throw new Error('The following tasks should have their versions bumped due to changes in common: ' + shouldBeBumped);
-//     }
+    if (shouldBeBumped.length > 0) {
+        throw new Error('The following tasks should have their versions bumped due to changes in common: ' + shouldBeBumped);
+    }
+
     return toBeBuilt;
 }
 
