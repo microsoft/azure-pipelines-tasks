@@ -96,6 +96,13 @@
         "FailedToDownloadPackage": "Failed to download package for installation",
         "PrependGlobalToolPath": "Creating global tool path and pre-prending to PATH.",
         "VersionMissingException": "If you don't use global.json then please defined a version.",
-        "FailedToFindGlobalJson": "From the root of your working folder we can't find any global.json file."
+        "FailedToFindGlobalJson": "From the root of your working folder we can't find any global.json file.",
+        "GlobalJsonFound": "global.json found here: %s",
+        "FailedToReadGlobalJson": "The global.json file isn't valid. (%s) Please take a look in the documentation for global.json (https://docs.microsoft.com/en-us/dotnet/core/tools/global-json)",
+        "UseGlobalJson": "Installer will install all sdk's from all global.json files.",
+        "UseVerion": "Installer will install the sdk %s.",
+        "AddGlobalJsonViaToCache": "Add via global.json to cache",
+        "OverrideDotnetExe": "override dotnet.exe because it already exists.",
+        "CopySdkFromTo": "copy from %s to %s"
     }
 }

@@ -6,72 +6,70 @@ import * as utilities from "./utilities";
 import * as fileSystem from "fs";
 import * as os from 'os';
 import * as path from 'path';
-
+const SystemDefaultWorkingDirectory = process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'];
 class DotnetCoreInstaller {
     constructor(workingDirectory: string, packageType: string, version?: string, useGlobalJson?: boolean) {
         this.useGlobalJson = useGlobalJson;
         this.packageType = packageType;
         this.workingDirectory = workingDirectory;
-        if (!toolLib.isExplicitVersion(version)) {
-            throw tl.loc("ImplicitVersionNotSupported", version);
-        }
-        if(!useGlobalJson && (version == null || version.length == 0)){
+        if(!useGlobalJson){
+            if (!toolLib.isExplicitVersion(version)) {
+                throw tl.loc("ImplicitVersionNotSupported", version);
+            }
+        }        
+        if (!useGlobalJson && (version == null || version.length == 0)) {
             throw tl.loc("VersionMissingException", "If you don't use global.json then please defined a version.")
         }
+        if (this.workingDirectory == null) {
+            throw tl.loc("WorkingDirectoryCantBeNull");
+        }
         this.version = version;
-        this.cachedToolName = this.packageType === 'runtime' ? 'dncr' : 'dncs';;
+        this.cachedToolName = this.packageType === 'runtime' ? 'dncr' : 'dncs';        
     }
 
     private async installFromGlobalJson(osSuffixes: string[]) {
-        let filePathsToGlobalJson = this.getFiles(this.workingDirectory ? this.workingDirectory : ".", "global.json");
-        if(filePathsToGlobalJson.length == 0){
+        let filePathsToGlobalJson = tl.findMatch(this.workingDirectory, "**/*global.json");
+        if (filePathsToGlobalJson == null || filePathsToGlobalJson.length == 0) {
             throw tl.loc("FailedToFindGlobalJson", "From the root of your working folder we can't find any global.json file.");
         }
         let sdkVersionNumber = new Array<{ name: string, toolPath?: string }>();
         // read all global files
         for (let index = 0; index < filePathsToGlobalJson.length; index++) {
             const filePath = filePathsToGlobalJson[index];
-            let globalJson = {} as { sdk: { version: string } };  
-            console.log("global.json found here: " + filePath);
+            let globalJson = {} as { sdk: { version: string } };
+            console.log(tl.loc("GlobalJsonFound", filePath));
             try {
                 globalJson = (JSON.parse(fileSystem.readFileSync(filePath).toString())) as { sdk: { version: string } };
             } catch (error) {
-                throw tl.error("FailedToReadGlobalJson \r\n" + 
-                "The global.json file isn't valid. (" + filePath + ") Please take a look in the documentation for global.json (https://docs.microsoft.com/en-us/dotnet/core/tools/global-json)");
+                throw tl.loc("FailedToReadGlobalJson", filePath);
             }
-            if(globalJson == null || globalJson.sdk == null || globalJson.sdk.version == null){
-                throw tl.error("FailedToReadGlobalJson \r\n" +  
-                "The global.json file isn't valid. (" + filePath + ") Please take a look in the documentation for global.json (https://docs.microsoft.com/en-us/dotnet/core/tools/global-json)");
+            if (globalJson == null || globalJson.sdk == null || globalJson.sdk.version == null) {
+                throw tl.loc("FailedToReadGlobalJson", filePath);
             }
-            sdkVersionNumber.push({ name: globalJson.sdk.version, toolPath: null });            
-        }
-        // check each version if it installed in the cache
-        for (let index = 0; index < sdkVersionNumber.length; index++) {
-            const d = sdkVersionNumber[index];
-            let path = this.getLocalTool(d.name);
-            d.toolPath = path;
-        }      
-        // download all sdk that are not in the cache
-        let sdksToDownload = sdkVersionNumber
-            // remove all tools that are present in cache.
-            .filter(function (d) {return d.toolPath == null})
+            sdkVersionNumber.push({ name: globalJson.sdk.version, toolPath: null });
+        }       
+
+        let sortedDownloads = sdkVersionNumber
+            //TODO: currently we don't cache if we use global json. Because we can't make sure if the installation is okay.
+            // So we override always if the current sdk already installed.
             // distinct on version name
             .filter(function (x, i, a) {
-                return a.map(function (d){return d.name}).indexOf(x.name) == i;
+                return a.map(function (d) { return d.name }).indexOf(x.name) == i;
             });
-            
-        for (let index = 0; index < sdksToDownload.length; index++) {
-            const element = sdksToDownload[index];
-            // download, extract, cache
+
+        for (let index = 0; index < sortedDownloads.length; index++) {
+            const element = sortedDownloads[index];
+            // download, extract
             console.log(tl.loc("InstallingAfresh"));
             console.log(tl.loc("GettingDownloadUrl", this.packageType, element.name));
             let downloadUrls = await DotNetCoreReleaseFetcher.getDownloadUrls(osSuffixes, element.name, this.packageType);
-            element.toolPath = await this.downloadAndInstall(downloadUrls);
+            element.toolPath = await this.downloadAndInstall(downloadUrls, true);
+            console.log(tl.loc("SuccessfullyInstalled", this.packageType, element.name));
             // Prepend the tools path. instructs the agent to prepend for future tasks
             toolLib.prependPath(element.toolPath);
         }
         // set the biggest sdk as default
-        let biggestSdkVersion = sdkVersionNumber.sort(function (a,b) {return a.name.localeCompare(b.name);})[sdkVersionNumber.length - 1];
+        let biggestSdkVersion = sdkVersionNumber.sort(function (a, b) { return a.name.localeCompare(b.name); })[sdkVersionNumber.length - 1];
         tl.setVariable('DOTNET_ROOT', biggestSdkVersion.toolPath);
     }
 
@@ -83,6 +81,7 @@ class DotnetCoreInstaller {
             console.log(tl.loc("GettingDownloadUrl", this.packageType, this.version));
             let downloadUrls = await DotNetCoreReleaseFetcher.getDownloadUrls(osSuffixes, this.version, this.packageType);
             toolPath = await this.downloadAndInstall(downloadUrls);
+            console.log(tl.loc("SuccessfullyInstalled", this.packageType, this.version));
         } else {
             console.log(tl.loc("UsingCachedTool", toolPath));
         }
@@ -103,7 +102,7 @@ class DotnetCoreInstaller {
             await this.installFromGlobalJson(osSuffixes);
         } else {
             await this.installFromInputParameter(osSuffixes);
-        }        
+        }
         try {
             let globalToolPath: string = "";
             if (tl.osType().match(/^Win/)) {
@@ -176,7 +175,7 @@ class DotnetCoreInstaller {
         return osSuffix;
     }
 
-    private async downloadAndInstall(downloadUrls: string[]) {
+    private async downloadAndInstall(downloadUrls: string[], globalJson?: boolean) {
         let downloaded = false;
         let downloadPath = "";
         for (const url of downloadUrls) {
@@ -199,32 +198,26 @@ class DotnetCoreInstaller {
 
         // cache tool
         console.log(tl.loc("CachingTool"));
-        let cachedDir = await toolLib.cacheDir(extPath, this.cachedToolName, this.version, this.arch);
-        console.log(tl.loc("SuccessfullyInstalled", this.packageType, this.version));
-        return cachedDir;
-    }
-
-    /**
-     * Search for files from a given path.
-     * @param dir the dir we use to search for files
-     * @param searchPattern the regex search pattern the file name must match. The default matches on all names!
-     */
-    private getFiles(dir: string, searchPattern: string = ".*", recursive: boolean = true): Array<string> {
-        const subPaths = fileSystem.readdirSync(dir);
-        let matchedFiles = new Array<string>();
-        for (const subPath of subPaths) {
-            const res = path.resolve(dir, subPath);
-            if (
-                (fileSystem.statSync(res)).isDirectory() &&
-                recursive) {
-                matchedFiles = matchedFiles.concat(this.getFiles(res, searchPattern));
+        let cachedDir: string;
+        if (globalJson) {            
+            let availableGlobalTool = toolLib.findLocalTool(this.cachedToolName, "0.0.0", this.arch);
+            if (availableGlobalTool == null || availableGlobalTool.length == 0) {
+                // if we never installed any dotnet core sdk.
+                cachedDir = await toolLib.cacheDir(extPath, this.cachedToolName, "0.0.0", this.arch);
             } else {
-                if (res.match(searchPattern)) {
-                    matchedFiles.push(res);
-                }
+                // here we must do now a little bit magic.
+                // this will replace all existing files. This is only the main dotnet.exe and the eula document.
+                // the other files have there own folders for the sdk version.
+                console.log(tl.loc("OverrideDotnetExe"));
+                console.log(tl.loc("CopySdkFromTo", extPath, availableGlobalTool));
+                tl.cp(extPath + "/", availableGlobalTool, "-rf", true);
+                cachedDir = availableGlobalTool;
             }
+            console.log(tl.loc("AddGlobalJsonViaToCache"));
+        } else {
+            cachedDir = await toolLib.cacheDir(extPath, this.cachedToolName, this.version, this.arch);
         }
-        return matchedFiles;
+        return cachedDir;
     }
 
     private packageType: string;
@@ -236,12 +229,20 @@ class DotnetCoreInstaller {
 }
 
 async function run() {
-    let packageType = tl.getInput('packageType', true);
-    let version = tl.getInput('version', false).trim();
     let useGlobalJson = tl.getBoolInput('useGlobalJson');
-    let workingDirectory = tl.getPathInput("workingDirectory", false)
-    console.log(tl.loc("ToolToInstall", packageType, version));
-    await new DotnetCoreInstaller(workingDirectory, packageType, version, useGlobalJson).install();
+    let workingDirectory = tl.getPathInput("workingDirectory", false);
+    workingDirectory = workingDirectory ? workingDirectory : SystemDefaultWorkingDirectory;
+    let packageType = tl.getInput('packageType', true);
+    if (useGlobalJson) {
+        console.log(tl.loc("UseGlobalJson"));
+        await new DotnetCoreInstaller(workingDirectory, packageType, null, useGlobalJson).install();        
+    } else {        
+        let version = tl.getInput('version', true);
+        console.log(tl.loc("UseVerion"), version);        
+        version = version.trim();
+        await new DotnetCoreInstaller(workingDirectory, packageType, version, useGlobalJson).install();
+        console.log(tl.loc("ToolToInstall", packageType, version));
+    }
 }
 
 var taskManifestPath = path.join(__dirname, "task.json");

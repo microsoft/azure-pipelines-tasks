@@ -4,6 +4,7 @@ import path = require('path');
 import os = require('os');
 
 let taskPath = path.join(__dirname, '..', 'dotnetcoreinstaller.js');
+process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = __dirname;
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput("packageType", process.env["__package_type__"] || 'sdk');

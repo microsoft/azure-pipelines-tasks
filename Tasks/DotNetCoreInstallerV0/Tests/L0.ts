@@ -31,7 +31,7 @@ describe('DotNetCoreInstaller', function() {
 
     if(tl.osType().match(/^Win/)) {
         it("[windows]should succeed if sdk installed successfully", (done) => {
-            let tp = path.join(__dirname, "InstallWindows.js");
+            let tp = path.join(__dirname, "InstallWindows.js");                        
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
             runValidations(() => {
