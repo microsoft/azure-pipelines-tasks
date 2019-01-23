@@ -2,11 +2,11 @@ import { Package } from "./package";
 import { PackageUrlsBuilder } from "./packagebuilder";
 
 export class MultiFilePackage extends Package {
-    private getRouteParamsMethod: (feedId: string, packageMetadata: any, fileMetadata: any) => any;
+    private getRouteParams: (feedId: string, packageMetadata: any, fileMetadata: any) => any;
 
     constructor(builder: PackageUrlsBuilder) {
         super(builder);
-        this.getRouteParamsMethod = builder.GetRouteParamsMethod;
+        this.getRouteParams = builder.GetRouteParams;
     }
 
     filterFilesMinimatch(fileMetadata): boolean {
@@ -23,7 +23,7 @@ export class MultiFilePackage extends Package {
                 this.pkgsConnection.getCoreApi().vsoClient,
                 this.packageProtocolAreaName,
                 this.packageProtocolDownloadAreadId,
-                this.getRouteParamsMethod(feedId, packageMetadata, fileMetadata)
+                this.getRouteParams(feedId, packageMetadata, fileMetadata)
             )
                 .then(downloadUrl => {
                     var url = new Map<string, string>();

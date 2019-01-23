@@ -78,7 +78,7 @@ export abstract class Package {
         var client = connection.getCoreApi().restClient;
 
         return new Promise((resolve, reject) => {
-            client.get(metadataUrl, this.ApiVersion, null, { responseIsCollection: false }, async function(
+            client.get(metadataUrl, null, null, { responseIsCollection: false }, async function(
                 error,
                 status,
                 result

@@ -1,11 +1,10 @@
 var path = require("path");
+
 import * as vsts from "vso-node-api/WebApi";
 import * as locationUtility from "packaging-common/locationUtilities";
-
-
 import * as tl from "vsts-task-lib/task";
-import { PackageUrlsBuilder } from "./packagebuilder";
 
+import { PackageUrlsBuilder } from "./packagebuilder";
 
 tl.setResourcePath(path.join(__dirname, "task.json"));
 async function main(): Promise<void> {

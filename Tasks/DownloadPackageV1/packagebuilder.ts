@@ -1,24 +1,23 @@
 import * as tl from "vsts-task-lib/task";
+import * as vsts from "vso-node-api/WebApi";
+
 import { Package } from "./package";
 import { SingleFilePackage } from "./singlefilepackage";
 import { MultiFilePackage } from "./multifilepackage";
-import * as locationUtility from "packaging-common/locationUtilities";
-import * as vsts from "vso-node-api/WebApi";
-import { BearerCredentialHandler } from "vso-node-api/handlers/bearertoken";
 
 export class PackageUrlsBuilder {
     private type: string;
     private pattern: string;
     private maxRetries: number;
-    private packageProtocolAreaName: string;
-    private packageProtocolAreadId: string;
     private packagingMetadataAreaId: string;
     private packageProtocolDownloadAreadId: string;
     private extension: string;
     private contentHeader: string;
     private feedConnection: vsts.WebApi;
     private pkgsConnection: vsts.WebApi;
-    private getRouteParamsMethod: (feedId: string, packageMetadata: any, fileMetadata: any) => any;
+    private packageProtocolAreaName: string;
+
+    private getRouteParams: (feedId: string, packageMetadata: any, fileMetadata: any) => any;
 
     get Type() {
         return this.type;
@@ -28,36 +27,32 @@ export class PackageUrlsBuilder {
         this.type = type;
         switch (this.type) {
             case "NuGet":
-                this.packageProtocolAreaName = "NuGet";
-                this.packageProtocolAreadId = "B3BE7473-68EA-4A81-BFC7-9530BAAA19AD";
-                this.packagingMetadataAreaId = "7A20D846-C929-4ACC-9EA2-0D5A7DF1B197"; // Package details area id
+                this.packagingMetadataAreaId = "7A20D846-C929-4ACC-9EA2-0D5A7DF1B197";
                 this.packageProtocolDownloadAreadId = "6EA81B8C-7386-490B-A71F-6CF23C80B388";
+                this.packageProtocolAreaName = "NuGet";
                 this.extension = ".zip";
                 this.contentHeader = "application/zip";
                 break;
             case "Npm":
+                this.packagingMetadataAreaId = "7A20D846-C929-4ACC-9EA2-0D5A7DF1B197";
+                this.packageProtocolDownloadAreadId = "75CAA482-CB1E-47CD-9F2C-C048A4B7A43E"; // TODO fix to scoped
                 this.packageProtocolAreaName = "npm";
-                this.packageProtocolAreadId = "4C83CFC1-F33A-477E-A789-29D38FFCA52E";
-                this.packagingMetadataAreaId = "7A20D846-C929-4ACC-9EA2-0D5A7DF1B197"; // Package details area id
-                this.packageProtocolDownloadAreadId = "75CAA482-CB1E-47CD-9F2C-C048A4B7A43E"; // Unscoped NPM package
                 this.extension = ".tgz";
                 this.contentHeader = "application/tgz";
                 break;
             case "Python":
-                this.packageProtocolAreaName = "pypi";
-                this.packageProtocolAreadId = "92F0314B-06C5-46E0-ABE7-15FD9D13276A";
-                this.packagingMetadataAreaId = "3B331909-6A86-44CC-B9EC-C1834C35498F"; // Package version details area id
+                this.packagingMetadataAreaId = "3B331909-6A86-44CC-B9EC-C1834C35498F";
                 this.packageProtocolDownloadAreadId = "97218BAE-A64D-4381-9257-B5B7951F0B98";
+                this.packageProtocolAreaName = "pypi";
                 this.contentHeader = "application/zip";
-                this.getRouteParamsMethod = this.getPythonRouteParams;
+                this.getRouteParams = this.getPythonRouteParams;
                 break;
             case "Maven":
-                this.packageProtocolAreaName = "maven";
-                this.packageProtocolAreadId = "6F7F8C07-FF36-473C-BCF3-BD6CC9B6C066";
-                this.packagingMetadataAreaId = "3B331909-6A86-44CC-B9EC-C1834C35498F"; // Package version details area id
+                this.packagingMetadataAreaId = "3B331909-6A86-44CC-B9EC-C1834C35498F";
                 this.packageProtocolDownloadAreadId = "F285A171-0DF5-4C49-AAF2-17D0D37D9F0E";
+                this.packageProtocolAreaName = "maven";
                 this.contentHeader = "application/zip";
-                this.getRouteParamsMethod = this.getMavenRouteParams;
+                this.getRouteParams = this.getMavenRouteParams;
                 break;
             default:
                 throw new Error(tl.loc("PackageTypeNotSupported"));
@@ -65,8 +60,12 @@ export class PackageUrlsBuilder {
         return this;
     }
 
-    get GetRouteParamsMethod() {
-        return this.getRouteParamsMethod;
+    get PackageProtocolAreaName() {
+        return this.packageProtocolAreaName;
+    }
+
+    get GetRouteParams() {
+        return this.getRouteParams;
     }
 
     get ContentHeader() {
@@ -75,14 +74,6 @@ export class PackageUrlsBuilder {
 
     get Extension() {
         return this.extension;
-    }
-
-    get PackageProtocolAreaName() {
-        return this.packageProtocolAreaName;
-    }
-
-    get PackageProtocolAreaId() {
-        return this.packageProtocolAreadId;
     }
 
     get PackagingMetadataAreaId() {
