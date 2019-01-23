@@ -2,11 +2,10 @@ import { BearerCredentialHandler } from "vso-node-api/handlers/bearertoken";
 import { PackageUrlsBuilder } from "./packagebuilder";
 import * as vsts from "vso-node-api/WebApi";
 import * as vsom from "vso-node-api/VsoClient";
-import * as locationUtility from "packaging-common/locationUtilities";
 import * as tl from "vsts-task-lib/task";
-var fs = require("fs");
 import * as corem from "vso-node-api/CoreApi";
 
+var fs = require("fs");
 var path = require("path");
 
 export abstract class Package {
@@ -110,7 +109,7 @@ export abstract class Package {
 
                     Object.keys(downloadUrls).map(fileName => {
                         var zipLocation = path.resolve(downloadPath, "../", fileName);
-                        var unzipLocation = path.join(downloadPath, "");
+                        //var unzipLocation = path.join(downloadPath, "");
                         console.log("hello");
                         promises.push(this.downloadPackage(this.pkgsConnection.getCoreApi(), downloadUrls[fileName], zipLocation));
                     });
