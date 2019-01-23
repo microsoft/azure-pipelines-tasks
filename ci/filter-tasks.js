@@ -152,6 +152,7 @@ var getTasksToBuildForPR = function() {
     changedTasks.forEach(task => {
         if (!toBeBuilt.includes(task)) {
             shouldBeBumped.push(task);
+            toBeBuilt.push(task);
         }
     });
     // TODO: Add this back once diffing is working 100%
