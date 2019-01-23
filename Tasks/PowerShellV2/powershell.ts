@@ -92,9 +92,11 @@ async function run() {
 
         // Listen for stderr.
         let stderrFailure = false;
+        let aggregatedStderr = [];
         if (input_failOnStderr) {
-            powershell.on('stderr', (data) => {
+            powershell.on('stderr', (data: Buffer) => {
                 stderrFailure = true;
+                aggregatedStderr.push(data);
             });
         }
 
@@ -109,6 +111,9 @@ async function run() {
         // Fail on stderr.
         if (stderrFailure) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('JS_Stderr'));
+            aggregatedStderr.forEach((err: Buffer) => {
+                tl.error(err.toString());
+            });
         }
     }
     catch (err) {

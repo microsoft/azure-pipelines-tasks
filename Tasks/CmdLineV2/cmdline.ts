@@ -46,9 +46,11 @@ async function run() {
 
         // Listen for stderr.
         let stderrFailure = false;
+        let aggregatedStderr = [];
         if (failOnStderr) {
-            bash.on('stderr', (data) => {
+            bash.on('stderr', (data: Buffer) => {
                 stderrFailure = true;
+                aggregatedStderr.push(data);
             });
         }
 
@@ -66,6 +68,9 @@ async function run() {
         // Fail on stderr.
         if (stderrFailure) {
             tl.error(tl.loc('JS_Stderr'));
+            aggregatedStderr.forEach((err: Buffer) => {
+                tl.error(err.toString());
+            });
             result = tl.TaskResult.Failed;
         }
 
