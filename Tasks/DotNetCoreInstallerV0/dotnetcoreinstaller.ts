@@ -12,6 +12,7 @@ class DotnetCoreInstaller {
         this.useGlobalJson = useGlobalJson;
         this.packageType = packageType;
         this.workingDirectory = workingDirectory;
+
         if(!useGlobalJson){
             if (!toolLib.isExplicitVersion(version)) {
                 throw tl.loc("ImplicitVersionNotSupported", version);
@@ -70,6 +71,7 @@ class DotnetCoreInstaller {
         }
         // set the biggest sdk as default
         let biggestSdkVersion = sdkVersionNumber.sort(function (a, b) { return a.name.localeCompare(b.name); })[sdkVersionNumber.length - 1];
+
         tl.setVariable('DOTNET_ROOT', biggestSdkVersion.toolPath);
     }
 
