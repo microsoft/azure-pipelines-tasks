@@ -31,7 +31,7 @@ async function main(): Promise<void> {
         .withMaxRetries(retryLimit)
         .build();
 
-    await p.download(collectionUrl, feedId, packageId, version, downloadPath);
+    await p.download(feedId, packageId, version, downloadPath);
     await delay(20 * 1000);
 }
 

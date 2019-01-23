@@ -1,6 +1,3 @@
-import * as vsts from "vso-node-api/WebApi";
-import * as locationUtility from "packaging-common/locationUtilities";
-
 import { Package } from "./package";
 import { PackageUrlsBuilder } from "./packagebuilder";
 
@@ -12,46 +9,90 @@ export class MultiFilePackage extends Package {
         this.pattern = builder.Pattern;
     }
 
-    async getPackageFilesMetadata(connection: vsts.WebApi, queryParams?: any): Promise<Array<any>> {
-        return new Promise<Array<any>>(async (resolve, reject) => {
-            return this.getPackageMetadata(connection, queryParams)
-                .then(async packageMetadata => {
+    filterFilesMinimatch(fileMetadata): boolean {
+        return fileMetadata.protocolMetadata.data.storageId != null;
+    }
+
+    async getDownloadUrls(feedId: string, packageId: string, packageVersion: string): Promise<Map<string, string>> {
+        return new Promise<Map<string, string>>((resolve, reject) => {
+            return this.getPackageMetadata(this.feedConnection, {
+                feedId: feedId,
+                packageId: packageId,
+                packageVersionId: packageVersion
+            })
+                .then(packageMetadata => {
                     console.log("md " + JSON.stringify(packageMetadata));
-                    return resolve(packageMetadata.files);
+
+                    var packageName = packageMetadata.protocolMetadata.data.name;
+                    
+                    return packageMetadata.files.filter(this.filterFilesMinimatch).map(async fileMetadata => {
+                        var fileName = fileMetadata.name;
+                        var artifactPath = `${packageMetadata.protocolMetadata.data.groupId.replace(new RegExp('\\.'), '/')}/${packageMetadata.protocolMetadata.data.artifactId}/${packageMetadata.protocolMetadata.data.version}/${fileName}`;
+
+                        this.getUrl(
+                            this.pkgsConnection.getCoreApi().vsoClient,
+                            this.packageProtocolAreaName,
+                            this.packageProtocolDownloadAreadId,
+                            {
+                                path: artifactPath,
+                                feed: feedId
+                            }
+
+                            // {
+                            //     feedId: feedId,
+                            //     packageName: packageName,
+                            //     packageVersion: packageVersion,
+                            //     fileName: fileName
+                            // }
+                        )
+                            .then(downloadUrl => {
+                                var url = new Map<string, string>();
+                                url[fileName] = downloadUrl;
+                                return resolve(url);
+                            })
+                            .catch(error => {
+                                console.log("error here " + error);
+                                throw error;
+                            });
+                    });
                 })
                 .catch(error => {
                     return reject(error);
                 });
         });
-    }
 
-    filterFilesMinimatch(fileMetadata): boolean {
-        return fileMetadata.protocolMetadata.data.storageId != null;
-    }
+        // this.getPackageFilesMetadata(this.feedConnection, {
+        //     feedId: feedId,
+        //     packageId: packageId,
+        //     packageVersionId: packageVersion
+        // }).then(packageFilesMetadata => {
 
-    getFileUrl(fileMetadata): Promise<string> {
-        return null;
-    }
+        //     packageName = packageFilesMetadata.protocolMetadata.data.name;
 
-    async getDownloadUrls(
-        collectionUrl: string,
-        feedId: string,
-        packageId: string,
-        packageVersion: string
-    ): Promise<Map<string, string>> {
-        
-
-        this.getPackageFilesMetadata(this.feedConnection, {
-            feedId: feedId,
-            packageId: packageId,
-            packageVersionId: packageVersion
-        }).then(packageFilesMetadata => {
-            packageFilesMetadata
-                .filter(this.filterFilesMinimatch)
-                .map(this.getFileUrl)
-        }).catch(error => { throw error; })
-
-        return null;
+        //     packageFilesMetadata
+        //         .filter(this.filterFilesMinimatch)
+        //         .map(fileMetadata => {
+        //             this.getUrl(
+        //                 this.pkgsConnection.getCoreApi().vsoClient,
+        //                 this.packageProtocolAreaName,
+        //                 this.packageProtocolDownloadAreadId,
+        //                 {
+        //                     feedId: feedId,
+        //                     packageName: packageFilesMetadata.protocolMetadata.data.name,
+        //                     packageVersion: packageVersion,
+        //                     fileName: fileMetadata.protocolMetadata.data.fileName
+        //                 }
+        //             )
+        //                 .then(downloadUrl => {
+        //                     var urls = new Map<string, string>();
+        //                     urls[packageName +  this.extension] = downloadUrl;
+        //                     return resolve(urls);
+        //                 })
+        //                 .catch(error => {
+        //                     throw error;
+        //                 });
+        //         })
+        // }).catch(error => { throw error; })
     }
 
     // var packagesUrl = await locationUtility.getServiceUriFromAreaId(

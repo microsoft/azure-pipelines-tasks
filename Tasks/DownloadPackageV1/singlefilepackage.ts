@@ -1,9 +1,5 @@
-import * as vsts from "vso-node-api/WebApi";
-import * as locationUtility from "packaging-common/locationUtilities";
-
 import { PackageUrlsBuilder } from "./packagebuilder";
 import { Package } from "./package";
-import { stringify } from "querystring";
 
 export class SingleFilePackage extends Package {
     constructor(builder: PackageUrlsBuilder) {
@@ -11,7 +7,6 @@ export class SingleFilePackage extends Package {
     }
 
     async getDownloadUrls(
-        collectionUrl: string,
         feedId: string,
         packageId: string,
         packageVersion: string

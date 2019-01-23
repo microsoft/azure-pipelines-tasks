@@ -40,7 +40,6 @@ export abstract class Package {
     }
 
     protected abstract async getDownloadUrls(
-        collectionUrl: string,
         feedId: string,
         packageId: string,
         packageVersion: string
@@ -50,10 +49,11 @@ export abstract class Package {
         vsoClient: vsom.VsoClient,
         areaName: string,
         areaId: string,
+        routeValues: any,
         queryParams?: any
     ): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            var getVersioningDataPromise = vsoClient.getVersioningData(null, areaName, areaId, queryParams);
+            var getVersioningDataPromise = vsoClient.getVersioningData(null, areaName, areaId, routeValues, queryParams);
             getVersioningDataPromise.then(result => {
                 console.log("result url " + result.requestUrl);
                 return resolve(result.requestUrl);
@@ -66,11 +66,12 @@ export abstract class Package {
         });
     }
 
-    protected async getPackageMetadata(connection: vsts.WebApi, queryParams?: any): Promise<any> {
+    protected async getPackageMetadata(connection: vsts.WebApi, routeValues: any, queryParams?: any): Promise<any> {
         var metadataUrl = await this.getUrl(
             connection.getCoreApi().vsoClient,
             this.packagingAreaName,
             this.packagingMetadataAreaId,
+            routeValues,
             queryParams
         );
 
@@ -91,7 +92,6 @@ export abstract class Package {
     }
 
     public async download(
-        collectionUrl: string,
         feedId: string,
         packageId: string,
         packageVersion: string,
@@ -99,7 +99,7 @@ export abstract class Package {
     ): Promise<void[]> {
 
         return new Promise<void[]>(async (resolve, reject) => {
-            return this.getDownloadUrls(collectionUrl, feedId, packageId, packageVersion)
+            return this.getDownloadUrls(feedId, packageId, packageVersion)
                 .then(downloadUrls => {
                     if (!tl.exist(downloadPath)) {
                         tl.mkdirP(downloadPath);

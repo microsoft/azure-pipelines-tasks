@@ -55,7 +55,7 @@ export class PackageUrlsBuilder {
                 this.packageProtocolAreaName = "maven";
                 this.packageProtocolAreadId = "6F7F8C07-FF36-473C-BCF3-BD6CC9B6C066";
                 this.packagingMetadataAreaId = "3B331909-6A86-44CC-B9EC-C1834C35498F"; // Package version details area id
-                this.packageProtocolDownloadAreadId = "FDBB9F57-14F7-4939-81FB-A150B7D27F01";
+                this.packageProtocolDownloadAreadId = "F285A171-0DF5-4C49-AAF2-17D0D37D9F0E";
                 this.contentHeader = "application/zip";
 
                 break;
