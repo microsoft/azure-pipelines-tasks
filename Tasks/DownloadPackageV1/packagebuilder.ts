@@ -12,10 +12,10 @@ export class PackageUrlsBuilder {
     private packagingMetadataAreaId: string;
     private packageProtocolDownloadAreadId: string;
     private extension: string;
-    private contentHeader: string;
     private feedConnection: vsts.WebApi;
     private pkgsConnection: vsts.WebApi;
     private packageProtocolAreaName: string;
+    private blobStoreRedirectEnabled: boolean = false;
 
     private getRouteParams: (feedId: string, packageMetadata: any, fileMetadata: any) => any;
 
@@ -31,27 +31,24 @@ export class PackageUrlsBuilder {
                 this.packageProtocolDownloadAreadId = "6EA81B8C-7386-490B-A71F-6CF23C80B388";
                 this.packageProtocolAreaName = "NuGet";
                 this.extension = ".zip";
-                this.contentHeader = "application/zip";
                 break;
             case "Npm":
                 this.packagingMetadataAreaId = "7A20D846-C929-4ACC-9EA2-0D5A7DF1B197";
                 this.packageProtocolDownloadAreadId = "75CAA482-CB1E-47CD-9F2C-C048A4B7A43E"; // TODO fix to scoped
                 this.packageProtocolAreaName = "npm";
                 this.extension = ".tgz";
-                this.contentHeader = "application/tgz";
                 break;
             case "Python":
                 this.packagingMetadataAreaId = "3B331909-6A86-44CC-B9EC-C1834C35498F";
                 this.packageProtocolDownloadAreadId = "97218BAE-A64D-4381-9257-B5B7951F0B98";
                 this.packageProtocolAreaName = "pypi";
-                this.contentHeader = "application/zip";
+                this.blobStoreRedirectEnabled = true;
                 this.getRouteParams = this.getPythonRouteParams;
                 break;
             case "Maven":
                 this.packagingMetadataAreaId = "3B331909-6A86-44CC-B9EC-C1834C35498F";
                 this.packageProtocolDownloadAreadId = "F285A171-0DF5-4C49-AAF2-17D0D37D9F0E";
                 this.packageProtocolAreaName = "maven";
-                this.contentHeader = "application/zip";
                 this.getRouteParams = this.getMavenRouteParams;
                 break;
             default:
@@ -60,16 +57,16 @@ export class PackageUrlsBuilder {
         return this;
     }
 
+    get BlobStoreRedirectEnabled() {
+        return this.blobStoreRedirectEnabled;
+    }
+
     get PackageProtocolAreaName() {
         return this.packageProtocolAreaName;
     }
 
     get GetRouteParams() {
         return this.getRouteParams;
-    }
-
-    get ContentHeader() {
-        return this.contentHeader;
     }
 
     get Extension() {

@@ -3,7 +3,8 @@ import * as vsts from "vso-node-api/WebApi";
 import * as vsom from "vso-node-api/VsoClient";
 import * as tl from "vsts-task-lib/task";
 import * as corem from "vso-node-api/CoreApi";
-
+import { IncomingMessage } from "http";
+var https = require("https");
 var fs = require("fs");
 var path = require("path");
 
@@ -17,8 +18,7 @@ export abstract class Package {
 
     private packagingAreaName: string = "Packaging";
     private packagingMetadataAreaId: string;
-    private contentHeader: string;
-    private ApiVersion = "3.0-preview.1";
+    private downloadPackage: (coreApi: corem.ICoreApi, downloadUrl: string, downloadPath: string) => Promise<void>;
 
     constructor(builder: PackageUrlsBuilder) {
         this.maxRetries = builder.MaxRetries;
@@ -26,9 +26,15 @@ export abstract class Package {
         this.packageProtocolDownloadAreadId = builder.PackageProtocolDownloadAreadId;
         this.packagingMetadataAreaId = builder.PackagingMetadataAreaId;
         this.extension = builder.Extension;
-        this.contentHeader = builder.ContentHeader;
         this.feedConnection = builder.FeedsConnection;
         this.pkgsConnection = builder.PkgsConnection;
+        if (builder.BlobStoreRedirectEnabled) {
+            console.log("Redirect enabled");
+            this.downloadPackage = this.downloadPackageThroughBlobstore;
+        } else {
+            console.log("Redirect disabled");
+            this.downloadPackage = this.downloadPackageDirect;
+        }
     }
 
     protected abstract async getDownloadUrls(
@@ -36,7 +42,6 @@ export abstract class Package {
         packageId: string,
         packageVersion: string
     ): Promise<Map<string, string>>;
-
 
     // TODO remove this?
     protected async getUrl(
@@ -78,11 +83,7 @@ export abstract class Package {
         var client = connection.getCoreApi().restClient;
 
         return new Promise((resolve, reject) => {
-            client.get(metadataUrl, null, null, { responseIsCollection: false }, async function(
-                error,
-                status,
-                result
-            ) {
+            client.get(metadataUrl, null, null, { responseIsCollection: false }, async function(error, status, result) {
                 if (!!error || status != 200) {
                     return reject(tl.loc("FailedToGetPackageMetadata", error));
                 }
@@ -124,11 +125,14 @@ export abstract class Package {
         });
     }
 
-    private async downloadPackage(coreApi: corem.ICoreApi, downloadUrl: string, downloadPath: string): Promise<void> {
+    private async downloadPackageDirect(
+        coreApi: corem.ICoreApi,
+        downloadUrl: string,
+        downloadPath: string
+    ): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            var accept = coreApi.restClient.createAcceptHeader(this.contentHeader, this.ApiVersion);
             console.log("download url package " + downloadUrl);
-            return coreApi.restClient.httpClient.getStream(downloadUrl, accept, async function(error, status, result) {
+            return coreApi.restClient.httpClient.getStream(downloadUrl, null, async function(error, status, result) {
                 var file = fs.createWriteStream(downloadPath);
 
                 tl.debug("Downloading package from url: " + downloadUrl);
@@ -155,6 +159,54 @@ export abstract class Package {
                     return reject(tl.loc("FailedToDownloadNugetPackage", downloadUrl, err));
                 });
                 return result;
+            });
+        });
+    }
+
+    private async downloadPackageThroughBlobstore(
+        coreApi: corem.ICoreApi,
+        downloadUrl: string,
+        downloadPath: string
+    ): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            console.log("Download Url Package " + downloadUrl);
+            coreApi.restClient.httpClient.get("GET", downloadUrl, {}, async function(
+                err: any,
+                res: IncomingMessage,
+                contents: string
+            ) {
+                if (res.statusCode >= 300 && res.statusCode < 400 && res.headers && res.headers.location) {
+                    console.log("Redirect URL " + res.headers.location);
+                    var redirectUrl = encodeURI(decodeURIComponent(res.headers.location));
+                    console.log("Correct redirect URL " + redirectUrl);
+                    var file = fs.createWriteStream(downloadPath);
+
+                    var req = https.request(redirectUrl, res => {
+                        tl.debug("statusCode: " + res.statusCode);
+                        res.pipe(file);
+                        res.on("error", err => reject(err));
+                        res.on("end", () => {
+                            file.end(null, null, file.close);
+                           
+                            if (res.statusCode >= 200 && res.statusCode < 300) {
+                                tl.debug("File download completed");
+                                return resolve();
+                            }
+                            else {
+                                tl.debug("File download failed");
+                                return reject(new Error('Failed to download file status code: ' + res.statusCode));
+                            }
+                        });
+                    });
+                    req.on("error", err => {
+                        tl.debug(err);
+                        reject(err);
+                    });
+                    req.end();
+                    return req;
+                } else {
+                    return reject("Unable to get redirect URL. Status: " + status)
+                }
             });
         });
     }
