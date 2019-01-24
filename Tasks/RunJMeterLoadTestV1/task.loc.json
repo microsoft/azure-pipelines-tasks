@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 28
+    "Minor": 1,
+    "Patch": 0
   },
   "demands": [
     "azureps"
@@ -78,6 +78,13 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "ThresholdLimit",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ThresholdLimit",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ThresholdLimit"
     },
     {
       "name": "geoLocation",

@@ -13,6 +13,8 @@ $connectedServiceName,
 $TestDrop,
 [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
 $LoadTest,
+[String]
+$ThresholdLimit,
 
 [String] [Parameter(Mandatory = $true)]
 $agentCount,
@@ -33,6 +35,8 @@ else {
 }
 $global:RestTimeout = 60
 $global:apiVersion = "api-version=1.0"
+$ThresholdExceeded = $false
+$MonitorThresholds = $false
 
 try {
 	# Force powershell to use TLS 1.2 for all communications.
@@ -106,6 +110,13 @@ Write-Output "Reset Load generator machine type to $machineType"
 #Validate Input
 ValidateInputs $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI $connectedServiceName $testDrop $loadTest
 
+#Setting monitoring of Threshold rule appropriately
+if ($ThresholdLimit -and $ThresholdLimit -ge 0)
+{
+	$MonitorThresholds = $true
+	Write-Output "Threshold limit = $ThresholdLimit"
+}
+
 #Initialize Connected Service Details
 if([string]::IsNullOrWhiteSpace($connectedServiceName))
 {
@@ -145,7 +156,7 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
 
 	#Monitor the test run
 	$elapsed = [System.Diagnostics.Stopwatch]::StartNew()
-	MonitorTestRun $headers $run $CltAccountUrl
+	$thresholdExceeded = MonitorTestRun $headers $run $CltAccountUrl $MonitorThresholds
 	WriteTaskMessages ( "Run execution took {0}. Collecting results." -f $($elapsed.Elapsed.ToString()))
 
 	#Print the error and messages
@@ -155,7 +166,11 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
 
 	if ($run.state -ne "completed")
 	{
-		Write-Error "Load test has failed. Please check error messages to fix the problem."
+		if ($thresholdExceeded -eq $true) {
+			Write-Error "Load test is marked as failed, the number of threshold errors has exceeded permissible limit."
+		} else {
+			Write-Error "Load test has failed. Please check error messages to fix the problem."
+		}
 	}
 	else
 	{

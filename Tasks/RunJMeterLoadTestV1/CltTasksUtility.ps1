@@ -349,14 +349,14 @@ function CheckTestErrors($headers, $run, $CltAccountUrl, $MonitorThresholds)
     $thresholdExceeded = $false
     if ($MonitorThresholds)
     {
-        $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/errors?type=ThresholdMessage&detailed=True&{2}", $CltAccountUrl, $run.id, $global:apiVersion)
+        $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/errors?type=Exception&detailed=True&{2}", $CltAccountUrl, $run.id, $global:apiVersion)
         $errors = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
 
         if ($errors -and $errors.count -gt 0 -and  $errors.types.count -gt 0)
         {
             foreach ($subType in $errors.types.subTypes)
             {
-                if ($subType.subTypeName -eq 'Critical' -and $subType.occurrences -gt $ThresholdLimit)
+                if ($subType.subTypeName -eq 'WebException' -and $subType.occurrences -gt $ThresholdLimit)
                 {
                     $thresholdExceeded = $true
                     return $true;

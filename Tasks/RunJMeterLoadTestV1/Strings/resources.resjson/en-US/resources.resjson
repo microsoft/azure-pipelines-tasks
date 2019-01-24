@@ -15,5 +15,7 @@
   "loc.input.help.runDuration": "Load test run duration in seconds.",
   "loc.input.label.geoLocation": "Load Location",
   "loc.input.help.geoLocation": "Geographical region to generate the load from.",
-  "loc.input.label.machineType": "Run load test using"
+  "loc.input.label.machineType": "Run load test using",
+  "loc.input.label.ThresholdLimit": "Number of permissible threshold violations",
+  "loc.input.help.ThresholdLimit": "Number of threshold violations above which the load test outcome is considered unsuccessful. A violation occurs when a JMeter assertion fails or a sample is marked as failed."
 }
