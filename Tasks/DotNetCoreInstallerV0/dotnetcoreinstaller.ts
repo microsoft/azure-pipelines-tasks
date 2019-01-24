@@ -19,7 +19,7 @@ class DotnetCoreInstaller {
             }
         }        
         if (!useGlobalJson && (version == null || version.length == 0)) {
-            throw tl.loc("VersionMissingException", "If you don't use global.json then please defined a version.")
+            throw tl.loc("VersionMissingException")
         }
         if (this.workingDirectory == null) {
             throw tl.loc("WorkingDirectoryCantBeNull");
@@ -31,7 +31,7 @@ class DotnetCoreInstaller {
     private async installFromGlobalJson(osSuffixes: string[]) {
         let filePathsToGlobalJson = tl.findMatch(this.workingDirectory, "**/*global.json");
         if (filePathsToGlobalJson == null || filePathsToGlobalJson.length == 0) {
-            throw tl.loc("FailedToFindGlobalJson", "From the root of your working folder we can't find any global.json file.");
+            throw tl.loc("FailedToFindGlobalJson");
         }
         let sdkVersionNumber = new Array<{ name: string, toolPath?: string }>();
         // read all global files
@@ -50,9 +50,17 @@ class DotnetCoreInstaller {
             sdkVersionNumber.push({ name: globalJson.sdk.version, toolPath: null });
         }       
 
-        let sortedDownloads = sdkVersionNumber
-            //TODO: currently we don't cache if we use global json. Because we can't make sure if the installation is okay.
-            // So we override always if the current sdk already installed.
+        let sortedDownloads = sdkVersionNumber            
+            
+            .filter(function(d) {
+                var cacheFolder = toolLib.findLocalTool(this.cachedToolName, "0.0.0", this.arch);
+                if(cacheFolder == null ||cacheFolder.length == 0){
+                    return true;
+                }
+                // We trust the installation of an sdk if the dotnet.dll exists. 
+                var dotnetDllExists = tl.exist(cacheFolder + "/sdk/" + d.name + "/dotnet.dll");
+                return !dotnetDllExists;
+            })
             // distinct on version name
             .filter(function (x, i, a) {
                 return a.map(function (d) { return d.name }).indexOf(x.name) == i;
