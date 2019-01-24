@@ -29,9 +29,6 @@ try {
 
     # Format the MSBuild args.
     $msBuildArguments = Format-MSBuildArguments -MSBuildArguments $msbuildArguments -Configuration $configuration
-    if($clean) {
-        $msBuildArguments = "$msBuildArguments /t:clean"
-    }
     if($target) {
         $msBuildArguments = "$msBuildArguments /t:$target"
     }

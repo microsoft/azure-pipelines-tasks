@@ -3,7 +3,7 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
-import { getTempDirectory } from "../utilities";
+import { getTempDirectory } from "../utils/FileHelper";
 import helmutility = require("utility-common/helmutility");
 import { Helm, NameValuePair } from "utility-common/helm-object-model";
 
@@ -29,7 +29,7 @@ class HelmRenderEngine {
             tl.setResult(tl.TaskResult.Failed, result.stderr);
             return;
         }
-        
+
         let pathToBakedManifest = this.getTemplatePath(result.stdout);
         tl.setVariable("manifestsBundle", pathToBakedManifest);
     }

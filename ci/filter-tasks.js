@@ -63,6 +63,9 @@ var getTasksToBuildForCI = async function() {
         if (fs.existsSync(taskJsonPath)){
             var taskJson = JSON.parse(fs.readFileSync(taskJsonPath).toString());
             var lowerCaseName = taskJson.name.toLowerCase();
+            if (isNaN(parseInt(lowerCaseName.slice(-1), 10))) {
+                lowerCaseName += "v" + taskJson.version.Major;
+            }
             if (lowerCaseName in packageMap || taskName.toLowerCase() in packageMap) {
                 if (taskName.toLowerCase() in packageMap) {
                     lowerCaseName = taskName.toLowerCase();   
@@ -149,6 +152,7 @@ var getTasksToBuildForPR = function() {
     changedTasks.forEach(task => {
         if (!toBeBuilt.includes(task)) {
             shouldBeBumped.push(task);
+            toBeBuilt.push(task);
         }
     });
     // TODO: Add this back once diffing is working 100%
