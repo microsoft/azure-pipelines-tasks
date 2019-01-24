@@ -18,14 +18,8 @@ function Initialize-AzureSubscription {
 
     if (Get-Command -Name "Disable-AzureRmContextAutosave" -ErrorAction "SilentlyContinue") 
     {
-        try {
-            Write-Host "##[command]Disable-AzureRmContextAutosave -ErrorAction Stop"
-            $null = Disable-AzureRmContextAutosave -ErrorAction Stop
-        }
-        catch {
-            $message = $_.Exception.Message
-            Write-Verbose "Unable to disable Azure RM context save: $message"
-        }
+        Write-Host "##[command]Disable-AzureRmContextAutosave -ErrorAction SilentlyContinue"
+        $null = Disable-AzureRmContextAutosave -ErrorAction SilentlyContinue
     }
 
     $environmentName = "AzureCloud"
