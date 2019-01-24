@@ -13,6 +13,7 @@ Register-Mock Update-PSModulePathForHostedAgent
 Register-Mock Initialize-AzModule
 Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
+Register-Mock Get-VstsEndpoint
 
 # Act.
 $actual = @( & $PSScriptRoot\..\AzurePowerShell.ps1 )

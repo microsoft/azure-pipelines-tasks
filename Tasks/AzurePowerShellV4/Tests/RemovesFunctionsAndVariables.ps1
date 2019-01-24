@@ -14,6 +14,7 @@ Register-Mock Get-VstsInput { $true } -- -Name FailOnStandardError
 Register-Mock Update-PSModulePathForHostedAgent
 Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
+Register-Mock Get-VstsEndpoint
 
 # Arrange the mock task SDK module.
 New-Module -Name VstsTaskSdk -ScriptBlock {
