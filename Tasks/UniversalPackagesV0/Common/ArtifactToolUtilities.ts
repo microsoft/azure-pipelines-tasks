@@ -3,7 +3,7 @@ import AdmZip = require('adm-zip');
 import os = require("os");
 import * as path from "path";
 import * as semver from "semver";
-import * as pkgLocationUtils from "../locationUtilities";
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as tl from "vsts-task-lib";
 import * as toollib from "vsts-task-tool-lib/tool";
 
@@ -24,8 +24,6 @@ function _createExtractFolder(dest?: string): string {
     return dest;
 }
 
-// there is a reason we do this instead of toollib.extractZip, but we don't recall what it is
-// (might be Mac compatibility)
 export async function extractZip(file: string): Promise<string> {
     if (!file) {
         throw new Error("parameter 'file' is required");

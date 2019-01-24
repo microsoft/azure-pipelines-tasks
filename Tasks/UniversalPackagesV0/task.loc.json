@@ -4,13 +4,12 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://aka.ms/universalpackagesannounce",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "version": {
     "Major": 0,
     "Minor": 147,
-    "Patch": 2
+    "Patch": 0
   },
   "runsOn": [
     "Agent",

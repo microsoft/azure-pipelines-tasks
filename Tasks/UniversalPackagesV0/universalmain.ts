@@ -2,7 +2,7 @@ import * as path from "path";
 import * as pkgLocationUtils from "packaging-common/locationUtilities"; 
 import * as telemetry from "utility-common/telemetry";
 import * as tl from "vsts-task-lib";
-import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolUtilities";
+import * as artifactToolUtilities from "./Common/ArtifactToolUtilities";
 import * as universalDownload from "./universaldownload";
 import * as universalPublish from "./universalpublish";
 
@@ -37,6 +37,7 @@ async function main(): Promise<void> {
     } finally{
         _logUniversalStartupVariables(artifactToolPath);
     }
+
     // Calling the command. download/publish
     const universalPackageCommand = tl.getInput("command", true);
     switch (universalPackageCommand) {
