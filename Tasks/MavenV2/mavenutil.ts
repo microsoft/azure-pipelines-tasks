@@ -199,12 +199,9 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Maven);
     } catch (error) {
-        tl.debug("Unable to get packaging URIs, using default collection URI");
+        tl.debug("Unable to get packaging URIs");
         tl.debug(JSON.stringify(error));
-        packagingLocation = {
-            PackagingUris: [collectionUrl],
-            DefaultPackagingUri: collectionUrl
-        };
+        throw new Error(error);
     }
 
     let packageUrl = packagingLocation.DefaultPackagingUri;
