@@ -3,6 +3,7 @@ var path = require("path");
 import * as vsts from "vso-node-api/WebApi";
 import * as locationUtility from "packaging-common/locationUtilities";
 import * as tl from "vsts-task-lib/task";
+import * as nutil from "packaging-common/nuget/Utility";
 
 import { PackageUrlsBuilder } from "./packagebuilder";
 
@@ -19,7 +20,8 @@ async function main(): Promise<void> {
 
     let downloadPath = tl.getInput("downloadPath");
     let collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-    let files = tl.getVariable("files");
+    let filesPattern = tl.getVariable("files");
+    let files: string[] = nutil.getPatternsArrayFromInput(filesPattern);
     let extractPackage = tl.getVariable("extract");
     const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
 	const retryLimit: number = !!retryLimitValue && !isNaN(parseInt(retryLimitValue)) ? parseInt(retryLimitValue) : 4;
@@ -64,6 +66,7 @@ function getConnection(areaId: string, collectionUrl: string): Promise<vsts.WebA
 			throw error;
 		});
 }
+
 
 main()
     .then(result => tl.setResult(tl.TaskResult.Succeeded, ""))

@@ -7,7 +7,7 @@ import { MultiFilePackage } from "./multifilepackage";
 
 export class PackageUrlsBuilder {
     private type: string;
-    private pattern: string;
+    private pattern: string[];
     private maxRetries: number;
     private packagingMetadataAreaId: string;
     private packageProtocolDownloadAreadId: string;
@@ -85,7 +85,7 @@ export class PackageUrlsBuilder {
         return this.pattern;
     }
 
-    matchingPattern(pattern: string): PackageUrlsBuilder {
+    matchingPattern(pattern: string[]): PackageUrlsBuilder {
         this.pattern = pattern;
         return this;
     }

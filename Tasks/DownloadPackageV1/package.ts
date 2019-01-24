@@ -4,9 +4,27 @@ import * as vsom from "vso-node-api/VsoClient";
 import * as tl from "vsts-task-lib/task";
 import * as corem from "vso-node-api/CoreApi";
 import { IncomingMessage } from "http";
+import { stringify } from "ltx";
 var https = require("https");
 var fs = require("fs");
 var path = require("path");
+
+export class Result {
+    private value: string;
+    private isUrl: boolean;
+
+    get Value() {
+        return this.value;
+    }
+    get IsUrl() {
+        return this.isUrl;
+    }
+
+    constructor(value: string, isUrl: boolean) {
+        this.value = value;
+        this.isUrl = isUrl;
+    }
+}
 
 export abstract class Package {
     protected maxRetries: number;
@@ -18,7 +36,7 @@ export abstract class Package {
 
     private packagingAreaName: string = "Packaging";
     private packagingMetadataAreaId: string;
-    private downloadPackage: (coreApi: corem.ICoreApi, downloadUrl: string, downloadPath: string) => Promise<void>;
+    private downloadFile: (coreApi: corem.ICoreApi, downloadUrl: string, downloadPath: string) => Promise<void>;
 
     constructor(builder: PackageUrlsBuilder) {
         this.maxRetries = builder.MaxRetries;
@@ -30,10 +48,10 @@ export abstract class Package {
         this.pkgsConnection = builder.PkgsConnection;
         if (builder.BlobStoreRedirectEnabled) {
             console.log("Redirect enabled");
-            this.downloadPackage = this.downloadPackageThroughBlobstore;
+            this.downloadFile = this.downloadFileThroughBlobstore;
         } else {
             console.log("Redirect disabled");
-            this.downloadPackage = this.downloadPackageDirect;
+            this.downloadFile = this.downloadFileDirect;
         }
     }
 
@@ -41,7 +59,7 @@ export abstract class Package {
         feedId: string,
         packageId: string,
         packageVersion: string
-    ): Promise<Map<string, string>>;
+    ): Promise<Map<string, Result>>;
 
     // TODO remove this?
     protected async getUrl(
@@ -113,7 +131,13 @@ export abstract class Package {
                         //var unzipLocation = path.join(downloadPath, "");
                         console.log("hello");
                         promises.push(
-                            this.downloadPackage(this.pkgsConnection.getCoreApi(), downloadUrls[fileName], zipLocation)
+                            downloadUrls[fileName].IsUrl
+                                ? this.downloadFile(
+                                      this.pkgsConnection.getCoreApi(),
+                                      downloadUrls[fileName].Value,
+                                      zipLocation
+                                  )
+                                : this.writeFile(downloadUrls[fileName].Value, zipLocation)
                         );
                     });
 
@@ -125,7 +149,19 @@ export abstract class Package {
         });
     }
 
-    private async downloadPackageDirect(
+    private async writeFile(content: string, filePath: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            fs.writeFile(filePath, content, err => {
+                if (err) {
+                    return reject(err);
+                } else {
+                    return resolve();
+                }
+            });
+        });
+    }
+
+    private async downloadFileDirect(
         coreApi: corem.ICoreApi,
         downloadUrl: string,
         downloadPath: string
@@ -163,7 +199,8 @@ export abstract class Package {
         });
     }
 
-    private async downloadPackageThroughBlobstore(
+    // TODO use download utilitiy
+    private async downloadFileThroughBlobstore(
         coreApi: corem.ICoreApi,
         downloadUrl: string,
         downloadPath: string
@@ -187,14 +224,13 @@ export abstract class Package {
                         res.on("error", err => reject(err));
                         res.on("end", () => {
                             file.end(null, null, file.close);
-                           
+
                             if (res.statusCode >= 200 && res.statusCode < 300) {
                                 tl.debug("File download completed");
                                 return resolve();
-                            }
-                            else {
+                            } else {
                                 tl.debug("File download failed");
-                                return reject(new Error('Failed to download file status code: ' + res.statusCode));
+                                return reject(new Error("Failed to download file status code: " + res.statusCode));
                             }
                         });
                     });
@@ -205,7 +241,7 @@ export abstract class Package {
                     req.end();
                     return req;
                 } else {
-                    return reject("Unable to get redirect URL. Status: " + status)
+                    return reject("Unable to get redirect URL. Status: " + status);
                 }
             });
         });

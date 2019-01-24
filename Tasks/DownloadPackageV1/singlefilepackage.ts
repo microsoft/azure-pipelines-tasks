@@ -1,5 +1,5 @@
 import { PackageUrlsBuilder } from "./packagebuilder";
-import { Package } from "./package";
+import { Package, Result } from "./package";
 
 export class SingleFilePackage extends Package {
     constructor(builder: PackageUrlsBuilder) {
@@ -10,8 +10,8 @@ export class SingleFilePackage extends Package {
         feedId: string,
         packageId: string,
         packageVersion: string
-    ): Promise<Map<string, string>> {
-        return new Promise<Map<string, string>>((resolve, reject) => {
+    ): Promise<Map<string, Result>> {
+        return new Promise<Map<string, Result>>((resolve, reject) => {
             return this.getPackageMetadata(this.feedConnection, {
                 feedId: feedId,
                 packageId: packageId
@@ -31,8 +31,8 @@ export class SingleFilePackage extends Package {
                         }
                     )
                         .then(downloadUrl => {
-                            var urls = new Map<string, string>();
-                            urls[packageName +  this.extension] = downloadUrl;
+                            var urls = new Map<string, Result>();
+                            urls[packageName +  this.extension] = new Result(downloadUrl, true);
                             return resolve(urls);
                         })
                         .catch(error => {
