@@ -52,7 +52,7 @@ class DotnetCoreInstaller {
 
         let sortedDownloads = sdkVersionNumber            
             
-            .filter(function(d) {
+            .filter(d => {
                 var cacheFolder = toolLib.findLocalTool(this.cachedToolName, "0.0.0", this.arch);
                 if(cacheFolder == null ||cacheFolder.length == 0){
                     return true;
