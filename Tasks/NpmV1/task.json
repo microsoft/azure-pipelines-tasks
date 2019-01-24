@@ -8,8 +8,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 145,
-        "Patch": 1
+        "Minor": 146,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
