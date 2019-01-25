@@ -19,14 +19,7 @@ $actual = @( & $PSScriptRoot\..\AzurePowerShell.ps1 )
 $global:ErrorActionPreference = 'Stop' # Reset to stop.
 
 Write-Verbose "Array joined start" -Verbose
-Write-Verbose -Verbose ($actual[0])
-Write-Verbose -Verbose ($actual[1])
-Write-Verbose -Verbose ($actual[2])
-Write-Verbose -Verbose ($actual[3])
-Write-Verbose -Verbose ($actual[4])
-Write-Verbose -Verbose ($actual[5])
 Write-Verbose ($actual -join ',') -Verbose
-Write-Verbose -Verbose ($a[0])
 Write-Verbose "Array joined end" -Verbose
 # Assert.
 Assert-AreEqual 4 $actual.Length
