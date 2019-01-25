@@ -13,7 +13,7 @@ try
 
     # Load utility functions
     . "$PSScriptRoot\utilities.ps1"
-    Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers -DisableNameChecking
+    Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
     Import-Module $PSScriptRoot\ps_modules\PowershellHelpers
 
     $global:operationId = $SF_Operations.Undefined
@@ -196,7 +196,7 @@ try
 }
 catch
 {
-    Warn-IfCertificateNotPresentInLocalCertStore -certificate $certificate
+    Trace-WarningIfCertificateNotPresentInLocalCertStore -certificate $certificate
     Publish-Telemetry -TaskName 'ServiceFabricDeploy' -OperationId $global:operationId  -ErrorData $_
     throw
 }

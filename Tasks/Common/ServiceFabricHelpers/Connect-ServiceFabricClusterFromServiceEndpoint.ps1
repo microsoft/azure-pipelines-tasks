@@ -133,7 +133,7 @@ function Remove-ClientCertificate
         Write-Warning (Get-VstsLocString -Key WarningOnRemoveCertificate -ArgumentList $_)
     }
 }
-function Warn-IfCertificateNotPresentInLocalCertStore{
+function Trace-WarningIfCertificateNotPresentInLocalCertStore{
     [CmdletBinding()]
     Param (
         $certificate

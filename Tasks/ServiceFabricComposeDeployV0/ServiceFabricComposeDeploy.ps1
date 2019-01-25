@@ -14,7 +14,7 @@ try
 
     # Load utility functions
     . "$PSScriptRoot\utilities.ps1"
-    Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers -DisableNameChecking
+    Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
 
     $global:operationId = $SF_Operations.Undefined
 
