@@ -20,12 +20,12 @@ $global:ErrorActionPreference = 'Stop' # Reset to stop.
 
 Write-Verbose "Array joined start" -Verbose
 Write-Verbose ($actual -join ',') -Verbose
-Write-Verbose "0 - ${actual[0]}"
-Write-Verbose "1 - ${actual[1]}"
-Write-Verbose "2 - ${actual[2]}"
-Write-Verbose "3 - ${actual[3]}"
-Write-Verbose "4 - ${actual[4]}"
-Write-Verbose "5 - ${actual[5]}"
+Write-Verbose "0 - $($actual[0])"
+Write-Verbose "1 - $($actual[1])"
+Write-Verbose "2 - $($actual[2])"
+Write-Verbose "3 - $($actual[3])"
+Write-Verbose "4 - $($actual[4])"
+Write-Verbose "5 - $($actual[5])"
 Write-Verbose "Array joined end" -Verbose
 # Assert.
 Assert-AreEqual 4 $actual.Length
