@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "http://go.microsoft.com/fwlink/?LinkID=827160",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "category": "Deploy",
@@ -18,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 144,
+    "Minor": 145,
     "Patch": 4
   },
   "minimumAgentVersion": "2.0.0",
