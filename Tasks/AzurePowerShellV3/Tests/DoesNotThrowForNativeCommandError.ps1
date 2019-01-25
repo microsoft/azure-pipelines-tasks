@@ -18,6 +18,9 @@ Register-Mock Disconnect-AzureAndClearContext
 $actual = @( & $PSScriptRoot\..\AzurePowerShell.ps1 )
 $global:ErrorActionPreference = 'Stop' # Reset to stop.
 
+Write-Verbose "Array joined" -Verbose
+Write-Verbose ($a -join ',') -Verbose
+
 Write-Host ($a -join ',')
 # Assert.
 Assert-AreEqual 4 $actual.Length
