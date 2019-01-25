@@ -32,7 +32,7 @@ $certificate = $null
 try
 {
     # Initialize Service Fabric.
-    Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
+    Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers -DisableNameChecking
 
     $global:operationId = $SF_Operations.Undefined
     $connectedServiceEndpoint = Get-VstsEndpoint -Name $serviceConnectionName -Require

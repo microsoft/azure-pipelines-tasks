@@ -16,7 +16,7 @@ function New-DiffPackage
          # Load utility functions
         . "$PSScriptRoot\utilities.ps1"
         . "$PSScriptRoot\ServiceFabricSDK\Utilities.ps1"
-        Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
+        Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers -DisableNameChecking
         Import-Module $PSScriptRoot\ps_modules\PowershellHelpers
 
         $localAppManifestPath = Get-ApplicationManifestPath -ApplicationPackagePath $ApplicationPackagePath
