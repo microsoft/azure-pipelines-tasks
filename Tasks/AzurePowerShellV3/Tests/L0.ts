@@ -55,7 +55,7 @@ describe('AzurePowerShell Suite', function () {
         it('throws when invalid script path', (done) => {
             psr.run(path.join(__dirname, 'ThrowsWhenInvalidScriptPath.ps1'), done);
         })
-        /*it('does not fail if native command writes to stderr and failonstderr is false', (done) => {
+        it('does not fail if native command writes to stderr and failonstderr is false', (done) => {
             psr.run(path.join(__dirname, 'DoesNotThrowForNativeCommandError.ps1'), done);
         })
         it('fails for native command error if fail on standard error is true', (done) => {
@@ -66,6 +66,6 @@ describe('AzurePowerShell Suite', function () {
         })
         it('Update-PSModulePathForHostedAgent updated psmodulepath correctly', (done) => {
             psr.run(path.join(__dirname, 'Utility.UpdatePSModulePathForHostedAgentWorksCorrectly.ps1'), done);
-        })*/
+        })
     }
 });
