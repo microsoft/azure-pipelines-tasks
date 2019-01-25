@@ -1,4 +1,4 @@
-import { IExecSyncResult, ToolRunner } from 'vsts-task-lib/toolrunner';
+import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import path = require("path");
 import tl = require("vsts-task-lib/task");
 import fs = require("fs");
