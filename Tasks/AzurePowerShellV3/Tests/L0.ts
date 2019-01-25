@@ -10,7 +10,7 @@ var psr = null;
 
 describe('AzurePowerShell Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-
+    process.env['TASK_TEST_TRACE'] = 1; 
     before((done) => {
         if (psm.testSupported()) {
             psr = new psm.PSRunner();
