@@ -12,6 +12,7 @@ describe('AzurePowerShell Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
+        // process.env['TASK_TEST_TRACE'] = 1;
         if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
@@ -54,9 +55,9 @@ describe('AzurePowerShell Suite', function () {
         it('throws when invalid script path', (done) => {
             psr.run(path.join(__dirname, 'ThrowsWhenInvalidScriptPath.ps1'), done);
         })
-        it('does not fail if native command writes to stderr and failonstderr is false', (done) => {
+        /*it('does not fail if native command writes to stderr and failonstderr is false', (done) => {
             psr.run(path.join(__dirname, 'DoesNotThrowForNativeCommandError.ps1'), done);
-        })
+        })*/
         it('fails for native command error if fail on standard error is true', (done) => {
             psr.run(path.join(__dirname, 'FailsForNativeCommandError.ps1'), done);
         })
