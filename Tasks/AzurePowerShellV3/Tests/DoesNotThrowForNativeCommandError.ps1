@@ -18,6 +18,7 @@ Register-Mock Disconnect-AzureAndClearContext
 $actual = @( & $PSScriptRoot\..\AzurePowerShell.ps1 )
 $global:ErrorActionPreference = 'Stop' # Reset to stop.
 
+Write-Host ($a -join ',')
 # Assert.
 Assert-AreEqual 4 $actual.Length
 Assert-AreEqual 'output 1' $actual[0]
