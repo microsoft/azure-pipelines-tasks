@@ -1,16 +1,15 @@
-import { PackageUrlsBuilder } from "./packagebuilder";
+var fs = require("fs");
+var path = require("path");
+var downloadutility = require("utility-common/downloadutility");
+
 import * as vsts from "vso-node-api/WebApi";
 import * as vsom from "vso-node-api/VsoClient";
 import * as tl from "vsts-task-lib/task";
 import * as corem from "vso-node-api/CoreApi";
+
 import { IncomingMessage } from "http";
-import { stringify } from "ltx";
 import { Extractor } from "./extractor";
-import { unzip } from "zlib";
-var https = require("https");
-var fs = require("fs");
-var path = require("path");
-import downloadutility = require("utility-common/downloadutility");
+import { PackageUrlsBuilder } from "./packagebuilder";
 
 export class Result {
     private value: string;
@@ -39,6 +38,7 @@ export abstract class Package {
 
     private packagingAreaName: string = "Packaging";
     private packagingMetadataAreaId: string;
+
     private downloadFile: (
         coreApi: corem.ICoreApi,
         downloadUrl: string,
@@ -54,6 +54,7 @@ export abstract class Package {
         this.extension = builder.Extension;
         this.feedConnection = builder.FeedsConnection;
         this.pkgsConnection = builder.PkgsConnection;
+
         if (builder.BlobStoreRedirectEnabled) {
             console.log("Redirect enabled");
             this.downloadFile = this.downloadFileThroughBlobstore;
@@ -69,7 +70,6 @@ export abstract class Package {
         packageVersion: string
     ): Promise<Map<string, Result>>;
 
-    // TODO remove this?
     protected async getUrl(
         vsoClient: vsom.VsoClient,
         areaName: string,
@@ -169,7 +169,6 @@ export abstract class Package {
         });
     }
 
-
     // TODO Remove this once redirect based download is implemented
     private async downloadFileDirect(
         coreApi: corem.ICoreApi,
@@ -178,7 +177,6 @@ export abstract class Package {
         unzipLocation: string
     ): Promise<Extractor> {
         return new Promise<Extractor>((resolve, reject) => {
-            console.log("download url package " + downloadUrl);
             return coreApi.restClient.httpClient.getStream(downloadUrl, null, function(error, status, result) {
                 var file = fs.createWriteStream(downloadPath);
 
@@ -218,12 +216,9 @@ export abstract class Package {
         unzipLocation: string
     ): Promise<Extractor> {
         return new Promise<Extractor>((resolve, reject) => {
-            console.log("Download Url Package " + downloadUrl);
             coreApi.restClient.httpClient.get("GET", downloadUrl, {}, async function(res: IncomingMessage) {
                 if (res.statusCode >= 300 && res.statusCode < 400 && res.headers && res.headers.location) {
-                    console.log("Redirect URL " + res.headers.location);
                     var redirectUrl = encodeURI(decodeURIComponent(res.headers.location));
-                    console.log("Correct redirect URL " + redirectUrl);
 
                     downloadutility
                         .download(redirectUrl, downloadPath, false, false)

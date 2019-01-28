@@ -17,8 +17,6 @@ export class SingleFilePackage extends Package {
                 packageId: packageId
             })
                 .then(packageMetadata => {
-                    console.log("md " + JSON.stringify(packageMetadata));
-
                     var packageName = packageMetadata.name;                
                     this.getUrl(
                         this.pkgsConnection.getCoreApi().vsoClient,
@@ -36,7 +34,7 @@ export class SingleFilePackage extends Package {
                             return resolve(urls);
                         })
                         .catch(error => {
-                            throw error;
+                            return reject(error);
                         });
                 })
                 .catch(error => {

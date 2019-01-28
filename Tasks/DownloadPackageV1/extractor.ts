@@ -9,8 +9,10 @@ export class Extractor {
     // 7zip
     public xpSevenZipLocation: string;
     public winSevenZipLocation: string = path.join(__dirname, "7zip/7z.exe");
+
     private zipLocation: string;
     private unzipLocation: string;
+
     constructor(zipLocation: string, unzipLocation: string) {
         this.zipLocation = zipLocation;
         this.unzipLocation = unzipLocation;
@@ -58,7 +60,6 @@ export class Extractor {
         console.log(taskLib.loc("SevenZipExtractFile", file));
         const sevenZip = taskLib.tool(this.getSevenZipLocation());
         sevenZip.arg("x");
-
         sevenZip.arg("-o" + destinationFolder);
         sevenZip.arg(file);
         const execResult = sevenZip.execSync();
@@ -69,15 +70,13 @@ export class Extractor {
 
     async extractFile(): Promise<void> {
         const stats = await taskLib.stats(this.zipLocation);
-        console.log("hello " + stats);
-
-        const fileEnding = path.parse(this.zipLocation).ext;
-
         if (!stats) {
             throw new Error(taskLib.loc("ExtractNonExistFile", this.zipLocation));
         } else if (stats.isDirectory()) {
             throw new Error(taskLib.loc("ExtractDirFailed", this.zipLocation));
         }
+
+        const fileEnding = path.parse(this.zipLocation).ext;
 
         if (this.win) {
             if (".tar" === fileEnding) {
@@ -93,8 +92,7 @@ export class Extractor {
 
                 // 0 create temp folder
                 taskLib.mkdirP(tempFolder);
-                console.log("Temp folder is " + tempFolder);
-                console.log(taskLib.stats(tempFolder));
+                
                 // 1 extract compressed tar
                 this.sevenZipExtract(this.zipLocation, tempFolder);
 

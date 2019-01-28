@@ -43,7 +43,7 @@ async function main(): Promise<void> {
     var extractors: Extractor[] = await p.download(feedId, packageId, version, downloadPath);
   
 
-    // TODO create process 
+    // TODO fix this logic to make it promisy.
     if (extractPackage) {
         extractors.forEach(async extractor => {
             await extractor.extractFile();

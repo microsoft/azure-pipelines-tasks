@@ -1,7 +1,6 @@
 import { Package, Result } from "./package";
 import { PackageUrlsBuilder } from "./packagebuilder";
 import { match } from "vsts-task-lib";
-import { stringify } from "querystring";
 
 export class MultiFilePackage extends Package {
     private getRouteParams: (feedId: string, packageMetadata: any, fileMetadata: any) => any;
@@ -47,7 +46,7 @@ export class MultiFilePackage extends Package {
     }
 
     private async getPackageFileContent(fileMetadata: any): Promise<Map<string, Result>> {
-        return new Promise<Map<string, Result>>((resolve, reject) => {
+        return new Promise<Map<string, Result>>(resolve => {
             var resultMap = new Map<string, Result>();
             resultMap[fileMetadata.name] = new Result(fileMetadata.protocolMetadata.data.content, false);
             return resolve(resultMap);
@@ -62,7 +61,6 @@ export class MultiFilePackage extends Package {
                 packageVersionId: packageVersion
             })
                 .then(packageMetadata => {
-                    console.log("md " + JSON.stringify(packageMetadata));
                     var fileMetadatas = packageMetadata.files;
                     var filteredFileList: Set<string> = this.filterFilesMinimatch(fileMetadatas);
 
