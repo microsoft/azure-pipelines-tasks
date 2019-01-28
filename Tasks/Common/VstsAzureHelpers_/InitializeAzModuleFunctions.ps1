@@ -5,12 +5,13 @@ function Initialize-AzModule {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        $Endpoint)
+        $Endpoint,
+        [string] $azVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
-        Import-AzModule
+        Import-AzModule -azVersion $azVersion
 
         Write-Verbose "Initializing Az Module."
         Initialize-AzSubscription -Endpoint $Endpoint
@@ -21,7 +22,7 @@ function Initialize-AzModule {
 
 function Import-AzModule {
     [CmdletBinding()]
-    param()
+    param([string] $azVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -29,10 +30,17 @@ function Import-AzModule {
         $moduleName = "Az.Accounts"
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
-        $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+        
+        if($azVersion -eq ""){
+            $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+        }
+        else{
+            $module = Get-Module -Name $moduleName -ListAvailable | Where-Object {$_.Version -eq $azVersion} | Select-Object -First 1
+        }
+      
         if (!$module) {
             Write-Verbose "No module found with name: $moduleName"
-            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList "Any version", "Az.Accounts")
+            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, "Az.Accounts")
         }
 
         # Import the module.
