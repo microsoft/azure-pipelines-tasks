@@ -49,7 +49,6 @@ async function main(): Promise<void> {
         retryLimit
     );
 
-    // TODO fix this logic to make it promisy.
     if (extractPackage) {
         extractors.forEach(extractor => {
             extractor.extractFile();

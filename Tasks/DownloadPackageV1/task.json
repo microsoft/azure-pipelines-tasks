@@ -156,14 +156,20 @@
     },
     "messages": {
         "FailedToGetPackageMetadata": "Failed to get package metadata with error %s",
-        "FailedToDownloadNugetPackage": "Failed to download NuGet package from %s got the following error: %s",
+        "FailedToDownloadNugetPackage": "Failed to download package file from %s got the following error: %s",
         "PackageDownloadSuccessful": "Package download successful",
         "CredentialsNotFound": "Could not determine credentials to connect to Package Management service.",
         "StartingDownloadOfPackage": "Starting download of NuGet package %s to location %s",
-        "ExtractingNugetPackage": "Extracting NuGet package %s to directory %s",
+        "ExtractingPackage": "Extracting package %s to directory %s",
         "PackageTypeNotSupported": "Only Nuget, Python, Universal, Npm, and Maven packages types can be downloaded using this task.",
         "ExtractionFailed": "Failed to extract package with error %s",
         "RetryingOperation" : "Error: in %s, so retrying => retries pending: %s",
-        "OperationFailed": "Failed in %s with error: %s"
+        "OperationFailed": "Failed in %s with error: %s",
+        "RedirectUrlError": "Unable to get redirect URL with error %.",
+        "CreateTempDir": "Creating temp folder: %s to decompress: %s",
+        "TempDir": "tempFolder = %s",
+        "DecompressedTempTar": "Decompressed temporary tar from: %s to: %s",
+        "RemoveTempDir": "Removing temp folder: %s",
+        "SevenZipExtractFile": "Extracting file: %s"
     }
 }

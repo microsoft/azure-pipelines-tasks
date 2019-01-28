@@ -17,7 +17,6 @@ export class MultiFilePackage extends Package {
             files.push(fileMetadata.name);
             return files;
         }, []);
-        console.log("files " + files);
         return new Set<string>(match(files, this.pattern));
     }
 
@@ -39,7 +38,6 @@ export class MultiFilePackage extends Package {
                     return resolve(url);
                 })
                 .catch(error => {
-                    console.log("error here " + error);
                     throw reject(error);
                 });
         });

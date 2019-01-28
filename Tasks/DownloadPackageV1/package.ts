@@ -56,10 +56,8 @@ export abstract class Package {
         this.pkgsConnection = builder.PkgsConnection;
 
         if (builder.BlobStoreRedirectEnabled) {
-            console.log("Redirect enabled");
             this.downloadFile = this.downloadFileThroughBlobstore;
         } else {
-            console.log("Redirect disabled");
             this.downloadFile = this.downloadFileDirect;
         }
     }
@@ -174,14 +172,12 @@ export abstract class Package {
             return coreApi.restClient.httpClient.getStream(downloadUrl, null, function(error, status, result) {
                 var file = fs.createWriteStream(downloadPath);
 
-                tl.debug("Downloading package from url: " + downloadUrl);
-                tl.debug("Download status: " + status);
                 if (!!error || status != 200) {
                     console.log(
                         "error bad status " + JSON.stringify(error) + " status " + status + " result " + result
                     );
                     file.close();
-                    return reject(tl.loc("FailedToDownloadNugetPackage", downloadUrl, error));
+                    return reject(tl.loc("FailedToDownloadPackage", downloadUrl, error));
                 }
 
                 result.pipe(
@@ -197,7 +193,7 @@ export abstract class Package {
                 });
                 result.on("error", err => {
                     console.log("error file close " + JSON.stringify(err));
-                    return reject(tl.loc("FailedToDownloadNugetPackage", downloadUrl, err));
+                    return reject(tl.loc("FailedToDownloadPackage", downloadUrl, err));
                 });
             });
         });
@@ -223,7 +219,7 @@ export abstract class Package {
                             return reject(error);
                         });
                 } else {
-                    return reject("Unable to get redirect URL. Status: " + status);
+                    return reject(tl.loc("RedirectUrlError", res.statusMessage));
                 }
             });
         });

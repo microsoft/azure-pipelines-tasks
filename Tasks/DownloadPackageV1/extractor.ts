@@ -69,7 +69,7 @@ export class Extractor {
     }
 
     async extractFile() {
-        const stats = await taskLib.stats(this.zipLocation);
+        const stats = taskLib.stats(this.zipLocation);
         if (!stats) {
             throw new Error(taskLib.loc("ExtractNonExistFile", this.zipLocation));
         } else if (stats.isDirectory()) {
