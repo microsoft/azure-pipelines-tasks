@@ -29,6 +29,7 @@
   "loc.messages.AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
   "loc.messages.FailedToLogout": "The following error occurred while logging out: %s",
   "loc.messages.LoginFailed": "Azure login failed",
+  "loc.messages.MSILoginFailed": "Azure login failed using Managed Service Identity",
   "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription",
   "loc.messages.SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
   "loc.messages.SettingAzureCloud": "Setting active cloud to: %s",

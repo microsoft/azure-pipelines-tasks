@@ -144,19 +144,15 @@ export class azureclitask {
 
             //login using svn
             this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
-            this.isLoggedIn = true;
-
-            //set the subscription imported to the current subscription
-            this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
         }
         else if(authScheme == "ManagedServiceIdentity") {
             //login using msi
-            this.throwIfError(tl.execSync("az", "login --identity"), tl.loc("LoginFailed"));
-            this.isLoggedIn = true;
-
-            //set the subscription imported to the current subscription
-            this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
+            this.throwIfError(tl.execSync("az", "login --identity"), tl.loc("MSILoginFailed"));
         }
+
+        this.isLoggedIn = true;
+        //set the subscription imported to the current subscription
+        this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
     }
 
     private static setConfigDirectory(): void {

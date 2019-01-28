@@ -20,7 +20,7 @@
     "version": {
         "Major": 1,
         "Minor": 147,
-        "Patch": 4
+        "Patch": 0
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -144,6 +144,7 @@
         "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
         "FailedToLogout": "The following error occurred while logging out: %s",
         "LoginFailed": "Azure login failed",
+        "MSILoginFailed": "Azure login failed using Managed Service Identity",
         "ErrorInSettingUpSubscription": "Error in setting up subscription",
         "SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
         "SettingAzureCloud": "Setting active cloud to: %s",
