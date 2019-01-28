@@ -6,6 +6,7 @@ import * as tl from "vsts-task-lib/task";
 import * as nutil from "packaging-common/nuget/Utility";
 
 import { PackageUrlsBuilder } from "./packagebuilder";
+import { Extractor } from "./extractor";
 
 tl.setResourcePath(path.join(__dirname, "task.json"));
 async function main(): Promise<void> {
@@ -37,8 +38,11 @@ async function main(): Promise<void> {
         .withMaxRetries(retryLimit)
         .build();
 
-    await p.download(feedId, packageId, version, downloadPath);
-    await delay(20 * 1000);
+    var extractors: Extractor[] = await p.download(feedId, packageId, version, downloadPath);
+    console.log("extractor " + extractors[0]);
+   // await delay(20 * 1000);
+
+    extractors.forEach(async extractor => { await extractor.extractFile(); });
 }
 
 async function delay(ms: number) {

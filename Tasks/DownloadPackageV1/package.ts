@@ -5,6 +5,8 @@ import * as tl from "vsts-task-lib/task";
 import * as corem from "vso-node-api/CoreApi";
 import { IncomingMessage } from "http";
 import { stringify } from "ltx";
+import { Extractor } from "./extractor";
+import { unzip } from "zlib";
 var https = require("https");
 var fs = require("fs");
 var path = require("path");
@@ -36,7 +38,12 @@ export abstract class Package {
 
     private packagingAreaName: string = "Packaging";
     private packagingMetadataAreaId: string;
-    private downloadFile: (coreApi: corem.ICoreApi, downloadUrl: string, downloadPath: string) => Promise<void>;
+    private downloadFile: (
+        coreApi: corem.ICoreApi,
+        downloadUrl: string,
+        downloadPath: string,
+        unzipLocation: string
+    ) => Promise<Extractor>;
 
     constructor(builder: PackageUrlsBuilder) {
         this.maxRetries = builder.MaxRetries;
@@ -115,29 +122,30 @@ export abstract class Package {
         packageId: string,
         packageVersion: string,
         downloadPath: string
-    ): Promise<void[]> {
-        return new Promise<void[]>(async (resolve, reject) => {
+    ): Promise<Extractor[]> {
+        return new Promise<Extractor[]>(async (resolve, reject) => {
             return this.getDownloadUrls(feedId, packageId, packageVersion)
                 .then(downloadUrls => {
                     if (!tl.exist(downloadPath)) {
                         tl.mkdirP(downloadPath);
                     }
 
-                    var promises: Promise<void>[] = [];
+                    var promises: Promise<Extractor>[] = [];
                     console.log("downloadurls " + JSON.stringify(downloadUrls));
 
                     Object.keys(downloadUrls).map(fileName => {
                         var zipLocation = path.resolve(downloadPath, "../", fileName);
-                        //var unzipLocation = path.join(downloadPath, "");
+                        var unzipLocation = path.join(downloadPath, "");
                         console.log("hello");
                         promises.push(
                             downloadUrls[fileName].IsUrl
                                 ? this.downloadFile(
                                       this.pkgsConnection.getCoreApi(),
                                       downloadUrls[fileName].Value,
-                                      zipLocation
+                                      zipLocation,
+                                      unzipLocation
                                   )
-                                : this.writeFile(downloadUrls[fileName].Value, zipLocation)
+                                : this.writeFile(downloadUrls[fileName].Value, zipLocation, unzipLocation)
                         );
                     });
 
@@ -149,13 +157,13 @@ export abstract class Package {
         });
     }
 
-    private async writeFile(content: string, filePath: string): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+    private async writeFile(content: string, filePath: string, unzipLocation: string): Promise<Extractor> {
+        return new Promise<Extractor>((resolve, reject) => {
             fs.writeFile(filePath, content, err => {
                 if (err) {
                     return reject(err);
                 } else {
-                    return resolve();
+                    return resolve(new Extractor(filePath, unzipLocation));
                 }
             });
         });
@@ -164,11 +172,12 @@ export abstract class Package {
     private async downloadFileDirect(
         coreApi: corem.ICoreApi,
         downloadUrl: string,
-        downloadPath: string
-    ): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        downloadPath: string,
+        unzipLocation: string
+    ): Promise<Extractor> {
+        return new Promise<Extractor>((resolve, reject) => {
             console.log("download url package " + downloadUrl);
-            return coreApi.restClient.httpClient.getStream(downloadUrl, null, async function(error, status, result) {
+            return coreApi.restClient.httpClient.getStream(downloadUrl, null, function(error, status, result) {
                 var file = fs.createWriteStream(downloadPath);
 
                 tl.debug("Downloading package from url: " + downloadUrl);
@@ -177,24 +186,22 @@ export abstract class Package {
                     console.log(
                         "error bad status " + JSON.stringify(error) + " status " + status + " result " + result
                     );
-                    file.end(null, null, file.close);
+                    file.close();
                     return reject(tl.loc("FailedToDownloadNugetPackage", downloadUrl, error));
                 }
 
-                result.pipe(file);
+                result.pipe(file, { 'end': true});
                 result.on("end", () => {
                     console.log(tl.loc("PackageDownloadSuccessful"));
-                    file.end(null, null, file.close);
-
-                    return resolve();
+                    file.on('close', () => {
+                        var extractor = new Extractor(downloadPath, unzipLocation);
+                        return resolve(extractor);
+                    });
                 });
                 result.on("error", err => {
                     console.log("error file close " + JSON.stringify(err));
-
-                    file.end(null, null, file.close);
                     return reject(tl.loc("FailedToDownloadNugetPackage", downloadUrl, err));
                 });
-                return result;
             });
         });
     }
@@ -203,9 +210,10 @@ export abstract class Package {
     private async downloadFileThroughBlobstore(
         coreApi: corem.ICoreApi,
         downloadUrl: string,
-        downloadPath: string
-    ): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        downloadPath: string,
+        unzipLocation: string
+    ): Promise<Extractor> {
+        return new Promise<Extractor>((resolve, reject) => {
             console.log("Download Url Package " + downloadUrl);
             coreApi.restClient.httpClient.get("GET", downloadUrl, {}, async function(
                 err: any,
@@ -227,7 +235,8 @@ export abstract class Package {
 
                             if (res.statusCode >= 200 && res.statusCode < 300) {
                                 tl.debug("File download completed");
-                                return resolve();
+                                var extractor = new Extractor(downloadPath, unzipLocation);
+                                return resolve(extractor);
                             } else {
                                 tl.debug("File download failed");
                                 return reject(new Error("Failed to download file status code: " + res.statusCode));
