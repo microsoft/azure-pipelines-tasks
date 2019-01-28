@@ -153,6 +153,9 @@ export class azureclitask {
             //login using msi
             this.throwIfError(tl.execSync("az", "login --identity"), tl.loc("LoginFailed"));
             this.isLoggedIn = true;
+
+            //set the subscription imported to the current subscription
+            this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
         }
     }
 
