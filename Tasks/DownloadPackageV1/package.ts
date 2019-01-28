@@ -86,12 +86,9 @@ export abstract class Package {
                 queryParams
             );
             getVersioningDataPromise.then(result => {
-                console.log("result url " + result.requestUrl);
                 return resolve(result.requestUrl);
             });
             getVersioningDataPromise.catch(error => {
-                console.log("result url " + JSON.stringify(error));
-
                 return reject(error);
             });
         });
@@ -130,10 +127,7 @@ export abstract class Package {
                     if (!tl.exist(downloadPath)) {
                         tl.mkdirP(downloadPath);
                     }
-
                     var promises: Promise<Extractor>[] = [];
-                    console.log("downloadurls " + JSON.stringify(downloadUrls));
-
                     Object.keys(downloadUrls).map(fileName => {
                         var zipLocation = path.resolve(downloadPath, "../", fileName);
                         var unzipLocation = path.join(downloadPath, "");
