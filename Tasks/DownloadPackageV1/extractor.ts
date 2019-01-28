@@ -68,7 +68,7 @@ export class Extractor {
         }
     }
 
-    async extractFile(): Promise<void> {
+    async extractFile() {
         const stats = await taskLib.stats(this.zipLocation);
         if (!stats) {
             throw new Error(taskLib.loc("ExtractNonExistFile", this.zipLocation));
@@ -92,7 +92,7 @@ export class Extractor {
 
                 // 0 create temp folder
                 taskLib.mkdirP(tempFolder);
-                
+
                 // 1 extract compressed tar
                 this.sevenZipExtract(this.zipLocation, tempFolder);
 

@@ -24,7 +24,7 @@ async function main(): Promise<void> {
     let collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
     let filesPattern = tl.getVariable("files");
     let files: string[] = nutil.getPatternsArrayFromInput(filesPattern);
-    let extractPackage = tl.getVariable("extract").toUpperCase() === "TRUE"; 
+    let extractPackage = tl.getVariable("extract") === "true"; 
 
     const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
     const retryLimit: number = !!retryLimitValue && !isNaN(parseInt(retryLimitValue)) ? parseInt(retryLimitValue) : 4;
@@ -40,13 +40,15 @@ async function main(): Promise<void> {
         .withMaxRetries(retryLimit)
         .build();
 
-    var extractors: Extractor[] = await p.download(feedId, packageId, version, downloadPath);
-  
-
+    var extractors : Extractor[] = await executeWithRetries("downloadPackage", () => p.download(feedId, packageId, version, downloadPath).catch((reason) => {
+            throw reason;
+        }), retryLimit);
+    //var extractors: Extractor[] = await p.download(feedId, packageId, version, downloadPath);
+  console.log("extract "  + extractPackage);
     // TODO fix this logic to make it promisy.
     if (extractPackage) {
-        extractors.forEach(async extractor => {
-            await extractor.extractFile();
+        extractors.forEach(extractor => {
+            extractor.extractFile();
         });
     }
 }
@@ -72,6 +74,32 @@ function getConnection(areaId: string, collectionUrl: string): Promise<vsts.WebA
             throw error;
         });
 }
+
+
+function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount): Promise<any> {
+    var executePromise = new Promise((resolve, reject) => {
+        executeWithRetriesImplementation(operationName, operation, retryCount, resolve, reject);
+    });
+
+    return executePromise;
+}
+
+function executeWithRetriesImplementation(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject) {
+    operation().then((result) => {
+        resolve(result);
+    }).catch((error) => {
+        if (currentRetryCount <= 0) {
+            tl.error(tl.loc("OperationFailed", operationName, error));
+            reject(error);
+        }
+        else {
+            console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
+            currentRetryCount = currentRetryCount - 1;
+            setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject), 4 * 1000);
+        }
+    });
+}
+
 
 main()
     .then(result => tl.setResult(tl.TaskResult.Succeeded, ""))
