@@ -3,13 +3,14 @@
   "name": "DownloadFileshareArtifacts",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 141,
-    "Patch": 2
+    "Minor": 147,
+    "Patch": 0
   },
   "groups": [
     {
