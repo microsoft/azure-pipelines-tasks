@@ -10,6 +10,7 @@ import { unzip } from "zlib";
 var https = require("https");
 var fs = require("fs");
 var path = require("path");
+import downloadutility = require("utility-common/downloadutility");
 
 export class Result {
     private value: string;
@@ -136,7 +137,6 @@ export abstract class Package {
                     Object.keys(downloadUrls).map(fileName => {
                         var zipLocation = path.resolve(downloadPath, "../", fileName);
                         var unzipLocation = path.join(downloadPath, "");
-                        console.log("hello");
                         promises.push(
                             downloadUrls[fileName].IsUrl
                                 ? this.downloadFile(
@@ -169,6 +169,8 @@ export abstract class Package {
         });
     }
 
+
+    // TODO Remove this once redirect based download is implemented
     private async downloadFileDirect(
         coreApi: corem.ICoreApi,
         downloadUrl: string,
@@ -190,10 +192,13 @@ export abstract class Package {
                     return reject(tl.loc("FailedToDownloadNugetPackage", downloadUrl, error));
                 }
 
-                result.pipe(file, { 'end': true});
+                result.pipe(
+                    file,
+                    { end: true }
+                );
                 result.on("end", () => {
                     console.log(tl.loc("PackageDownloadSuccessful"));
-                    file.on('close', () => {
+                    file.on("close", () => {
                         var extractor = new Extractor(downloadPath, unzipLocation);
                         return resolve(extractor);
                     });
@@ -206,7 +211,6 @@ export abstract class Package {
         });
     }
 
-    // TODO use download utilitiy
     private async downloadFileThroughBlobstore(
         coreApi: corem.ICoreApi,
         downloadUrl: string,
@@ -215,40 +219,20 @@ export abstract class Package {
     ): Promise<Extractor> {
         return new Promise<Extractor>((resolve, reject) => {
             console.log("Download Url Package " + downloadUrl);
-            coreApi.restClient.httpClient.get("GET", downloadUrl, {}, async function(
-                err: any,
-                res: IncomingMessage,
-                contents: string
-            ) {
+            coreApi.restClient.httpClient.get("GET", downloadUrl, {}, async function(res: IncomingMessage) {
                 if (res.statusCode >= 300 && res.statusCode < 400 && res.headers && res.headers.location) {
                     console.log("Redirect URL " + res.headers.location);
                     var redirectUrl = encodeURI(decodeURIComponent(res.headers.location));
                     console.log("Correct redirect URL " + redirectUrl);
-                    var file = fs.createWriteStream(downloadPath);
 
-                    var req = https.request(redirectUrl, res => {
-                        tl.debug("statusCode: " + res.statusCode);
-                        res.pipe(file);
-                        res.on("error", err => reject(err));
-                        res.on("end", () => {
-                            file.end(null, null, file.close);
-
-                            if (res.statusCode >= 200 && res.statusCode < 300) {
-                                tl.debug("File download completed");
-                                var extractor = new Extractor(downloadPath, unzipLocation);
-                                return resolve(extractor);
-                            } else {
-                                tl.debug("File download failed");
-                                return reject(new Error("Failed to download file status code: " + res.statusCode));
-                            }
+                    downloadutility
+                        .download(redirectUrl, downloadPath, false, false)
+                        .then(() => {
+                            return resolve(new Extractor(downloadPath, unzipLocation));
+                        })
+                        .catch(error => {
+                            return reject(error);
                         });
-                    });
-                    req.on("error", err => {
-                        tl.debug(err);
-                        reject(err);
-                    });
-                    req.end();
-                    return req;
                 } else {
                     return reject("Unable to get redirect URL. Status: " + status);
                 }
