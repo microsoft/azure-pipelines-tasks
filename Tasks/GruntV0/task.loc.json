@@ -3,6 +3,7 @@
   "name": "Grunt",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=627413",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -15,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 130,
-    "Patch": 0
+    "Minor": 141,
+    "Patch": 2
   },
   "demands": [
     "node.js"

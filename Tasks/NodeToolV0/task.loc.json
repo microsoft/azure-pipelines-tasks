@@ -3,6 +3,7 @@
   "name": "NodeTool",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [

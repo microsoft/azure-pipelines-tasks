@@ -3,6 +3,7 @@
   "name": "JenkinsQueueJob",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "http://go.microsoft.com/fwlink/?LinkId=816956",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [

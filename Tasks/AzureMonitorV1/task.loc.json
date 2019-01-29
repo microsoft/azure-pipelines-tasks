@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870240",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "preview": true,

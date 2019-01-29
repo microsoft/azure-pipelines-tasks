@@ -136,7 +136,7 @@
             "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
         },
         {
-            "name": "AADSqlUsername",
+            "name": "aadSqlUsername",
             "type": "string",
             "label": "Login",
             "required": true,
@@ -146,7 +146,7 @@
             "helpMarkDown": "Specify the Active directory username."
         },
         {
-            "name": "AADSqlPassword",
+            "name": "aadSqlPassword",
             "type": "string",
             "label": "Password",
             "required": true,

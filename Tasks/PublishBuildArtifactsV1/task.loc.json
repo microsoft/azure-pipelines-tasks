@@ -3,6 +3,7 @@
   "name": "PublishBuildArtifacts",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=708390",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -12,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 142,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",

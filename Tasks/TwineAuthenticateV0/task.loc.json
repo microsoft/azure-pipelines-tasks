@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://pypi.org/project/twine/",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "version": {

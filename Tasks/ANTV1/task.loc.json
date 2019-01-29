@@ -3,6 +3,7 @@
   "name": "Ant",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613718",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -17,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 143,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "ant"

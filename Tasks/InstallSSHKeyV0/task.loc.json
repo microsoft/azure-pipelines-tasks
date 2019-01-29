@@ -3,6 +3,7 @@
   "name": "InstallSSHKey",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=875267",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -13,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 141,
-    "Patch": 0
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
