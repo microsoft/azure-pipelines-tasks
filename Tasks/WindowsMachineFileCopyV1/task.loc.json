@@ -3,6 +3,7 @@
   "name": "WindowsMachineFileCopy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=627415",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -13,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 43
+    "Patch": 44
   },
   "minimumAgentVersion": "1.104.0",
   "groups": [

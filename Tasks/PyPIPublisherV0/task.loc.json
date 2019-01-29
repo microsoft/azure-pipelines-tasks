@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=875289",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "visibility": [
@@ -14,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 142,
-    "Patch": 0
+    "Patch": 2
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

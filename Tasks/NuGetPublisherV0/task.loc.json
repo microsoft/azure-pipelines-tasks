@@ -3,13 +3,14 @@
   "name": "NuGetPublisher",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=627417",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Lawrence Gripper",
   "version": {
     "Major": 0,
-    "Minor": 145,
-    "Patch": 1
+    "Minor": 147,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
