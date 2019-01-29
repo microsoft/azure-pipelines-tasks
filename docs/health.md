@@ -24,7 +24,7 @@ Important! Reasons are [laid out here](https://github.com/Microsoft/vsts-task-li
 
 Contributors (Microsoft and public) should be able to run tests on any platform.
 
-Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/master/docs/contribute.md).
+Per the [Contribution Guidelines](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/contribute.md).
 
 # Task Health
 
@@ -96,7 +96,7 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
 | SonarQubePreBuild              | | | | | |
 | XamarinTestCloud               |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 
-## Deploy 
+## Deploy
 
 
 |      Task        | Implemented | Platform-complete | Uses TaskLib/SDK | Has L0 Tests | Comments |

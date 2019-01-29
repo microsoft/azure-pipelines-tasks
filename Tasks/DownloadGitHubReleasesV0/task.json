@@ -1,44 +1,45 @@
 {
   "id": "263abc27-4582-4174-8789-af599697778e",
   "name": "DownloadGitHubReleases",
-  "friendlyName": "ms-resource:loc.friendlyName",
-  "description": "ms-resource:loc.description",
+  "friendlyName": "Download GitHub Releases",
+  "description": "Download GitHub Releases",
   "author": "Microsoft Corporation",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpUrl": "",
+  "helpMarkDown": "",
   "category": "Utility",
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 146,
+    "Minor": 147,
     "Patch": 0
   },
   "minimumAgentVersion": "1.99.0",
-  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "instanceNameFormat": "Download GitHub Releases",
   "preview": true,
   "inputs": [
     {
       "name": "connection",
       "type": "connectedService:github:OAuth,PersonalAccessToken",
-      "label": "ms-resource:loc.input.label.connection",
+      "label": "GitHub Connection",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.connection"
+      "helpMarkDown": "GitHub service connection"
     },
     {
       "name": "userRepository",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.userRepository",
+      "label": "Repository",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.userRepository"
+      "helpMarkDown": "GitHub repository full name"
     },
     {
       "name": "defaultVersionType",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.defaultVersionType",
+      "label": "Default release version type",
       "defaultValue": "latest",
       "required": true,
       "options": {
@@ -49,35 +50,35 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.defaultVersionType"
+      "helpMarkDown": "Download assets from latest release or specific release version/tag"
     },
     {
       "name": "version",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.version",
+      "label": "Release",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
       "visibleRule": "defaultVersionType != latest",
-      "helpMarkDown": "ms-resource:loc.input.help.version"
+      "helpMarkDown": "Release version/tag to download"
     },
     {
       "name": "itemPattern",
       "type": "string",
-      "label": "ms-resource:loc.input.label.itemPattern",
+      "label": "Item Pattern",
       "defaultValue": "**",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
+      "helpMarkDown": "Minimatch pattern to filter files to be downloaded. To download all files within release use **"
     },
     {
       "name": "downloadPath",
       "type": "string",
-      "label": "ms-resource:loc.input.label.downloadPath",
+      "label": "Destination directory",
       "defaultValue": "$(System.ArtifactsDirectory)",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.downloadPath"
+      "helpMarkDown": "Path on the agent machine where the release assets will be downloaded"
     }
   ],
   "dataSourceBindings": [
@@ -105,7 +106,7 @@
     }
   },
   "messages": {
-    "DownloadArtifacts": "ms-resource:loc.messages.DownloadArtifacts",
-    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded"
+    "DownloadArtifacts": "Downloading assets of release %s from: %s",
+    "ArtifactsSuccessfullyDownloaded": "Successfully downloaded release assets to %s"
   }
 }

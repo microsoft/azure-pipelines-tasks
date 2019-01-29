@@ -1,8 +1,9 @@
 {
   "id": "DEE316A2-586F-4DEF-BE79-488A1F503DEE",
-  "name": "KubernetesManifest",
+  "name": "KubernetesManifestBased",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "preview": true,
@@ -70,16 +71,46 @@
       "defaultValue": "deploy",
       "groupName": "config",
       "options": {
+        "bake": "bake",
         "deploy": "deploy",
-        "bake": "bake"
+        "patch": "patch",
+        "scale": "scale"
       },
       "helpMarkDown": "ms-resource:loc.input.help.action"
+    },
+    {
+      "name": "deploymentStrategy",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.deploymentStrategy",
+      "required": false,
+      "groupName": "config",
+      "defaultValue": "None",
+      "options": {
+        "canary": "Canary",
+        "None": "None"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentStrategy",
+      "visibleRule": "action = deploy"
+    },
+    {
+      "name": "percentage",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.percentage",
+      "required": true,
+      "groupName": "config",
+      "helpMarkDown": "",
+      "defaultValue": 0,
+      "visibleRule": "deploymentStrategy = Canary",
+      "validation": {
+        "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
+        "message": "Enter valid percentage value i.e between 0 to 100."
+      }
     },
     {
       "name": "manifests",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.manifests",
-      "required": false,
+      "required": true,
       "defaultValue": "",
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.manifests",
@@ -137,6 +168,84 @@
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.overrides",
       "visibleRule": "action = bake && renderType = helm"
+    },
+    {
+      "name": "replicas",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.replicas",
+      "required": true,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.replicas",
+      "visibleRule": "action = scale"
+    },
+    {
+      "name": "mergeStrategy",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.mergeStrategy",
+      "required": true,
+      "defaultValue": "strategic",
+      "options": {
+        "json": "json",
+        "merge": "merge",
+        "strategic": "strategic"
+      },
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.mergeStrategy",
+      "visibleRule": "action = patch"
+    },
+    {
+      "name": "resourceToPatch",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.resourceToPatch",
+      "required": true,
+      "defaultValue": "file",
+      "options": {
+        "file": "file",
+        "name": "name"
+      },
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.resourceToPatch",
+      "visibleRule": "action = patch"
+    },
+    {
+      "name": "resourceFileToPatch",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.resourceFileToPatch",
+      "required": true,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.resourceFileToPatch",
+      "visibleRule": "action = patch && resourceToPatch = file"
+    },
+    {
+      "name": "kind",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.kind",
+      "required": true,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.kind",
+      "visibleRule": "action = scale || resourceToPatch = name"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.name",
+      "required": true,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.name",
+      "visibleRule": "action = scale || resourceToPatch = name"
+    },
+    {
+      "name": "patch",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.patch",
+      "required": true,
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.patch",
+      "visibleRule": "action = patch"
     }
   ],
   "dataSourceBindings": [],
@@ -160,6 +269,10 @@
     "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
     "ManifestFileNotFound": "ms-resource:loc.messages.ManifestFileNotFound",
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
-    "UnknownRenderType": "ms-resource:loc.messages.UnknownRenderType"
+    "UnknownRenderType": "ms-resource:loc.messages.UnknownRenderType",
+    "ResourceKindNotDefined": "ms-resource:loc.messages.ResourceKindNotDefined",
+    "NullInputObject": "ms-resource:loc.messages.NullInputObject",
+    "NullInputObjectMetadata": "ms-resource:loc.messages.NullInputObjectMetadata",
+    "CanaryDeploymentAlreadyExistErrorMessage": "ms-resource:loc.messages.CanaryDeploymentAlreadyExistErrorMessage"
   }
 }

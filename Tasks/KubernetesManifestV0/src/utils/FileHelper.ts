@@ -4,14 +4,9 @@ var fs = require('fs');
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as os from "os";
-import { ToolRunner, IExecOptions } from 'vsts-task-lib/toolrunner';
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
-}
-
-export function getCurrentTime(): number {
-    return new Date().getTime();
 }
 
 export function getNewUserDirPath(): string {
@@ -37,7 +32,24 @@ export function assertFileExists(path: string) {
     }
 }
 
-export function execCommand(command: ToolRunner, options?: IExecOptions) {
-    command.on("errline", tl.error);
-    return command.execSync(options);
+export function writeObjectsToFile(inputObjects: any[]): string[] {
+    let newFilePaths = [];
+    inputObjects.forEach((inputObject: any) => {
+        var filePath = inputObject.kind + "_" + inputObject.metadata.name + "_" + getCurrentTime().toString();
+        var inputObjectString = JSON.stringify(inputObject);
+        const tempDirectory = getTempDirectory();
+        let fileName = path.join(tempDirectory, path.basename(filePath));
+        fs.writeFileSync(
+            path.join(fileName),
+            inputObjectString);
+        newFilePaths.push(fileName);
+    });
+
+    return newFilePaths;
 }
+
+function getCurrentTime(): number {
+    return new Date().getTime();
+}
+
+
