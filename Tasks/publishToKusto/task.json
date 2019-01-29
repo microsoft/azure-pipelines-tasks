@@ -1,6 +1,6 @@
 ﻿{
   "id": "a7cd4ea2-0b83-49cb-887a-b529e5d80db7",
-  "name": "publish-to-kusto",
+  "name": "PublishToKusto",
   "friendlyName": "Publish to Kusto",
   "description": "Run .csl Kusto scripts publishing functions, etc. to Kusto databases",
   "helpMarkDown": "[Contact Us](mailto:castalk@microsoft.com)",
