@@ -499,6 +499,7 @@ export class ResourceGroup {
             console.log(tl.loc("StartingValidation"));
             deployment.properties["mode"] = "Incremental";
             this.taskParameters.deploymentName = this.taskParameters.deploymentName || this.createDeploymentName();
+            console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
             armClient.deployments.validate(this.taskParameters.resourceGroupName, this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
                 if (error) {
                     return reject(tl.loc("CreateTemplateDeploymentValidationFailed", utils.getError(error)));
@@ -521,6 +522,7 @@ export class ResourceGroup {
             console.log(tl.loc("StartingDeployment"));
             return new Promise<void>((resolve, reject) => {
                 this.taskParameters.deploymentName = this.taskParameters.deploymentName || this.createDeploymentName();
+                console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
                 armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
                     if (error) {
                         this.writeDeploymentErrors(error);
