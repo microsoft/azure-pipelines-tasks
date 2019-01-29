@@ -145,6 +145,7 @@
         "FailedToLogout": "The following error occurred while logging out: %s",
         "LoginFailed": "Azure login failed",
         "MSILoginFailed": "Azure login failed using Managed Service Identity",
+        "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
         "ErrorInSettingUpSubscription": "Error in setting up subscription",
         "SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
         "SettingAzureCloud": "Setting active cloud to: %s",
