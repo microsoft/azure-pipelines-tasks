@@ -162,6 +162,7 @@ export class ServiceClient {
             response = await this.beginRequest(request);
             tl.debug(`Response status code : ${response.statusCode}`);
             if (response.statusCode === 202 || (response.body && (response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress"))) {
+                tl.debug(`Response status : ${response.body.status}`);
                 // If timeout; throw;
                 if (!waitIndefinitely && timeout < new Date().getTime()) {
                     throw new Error(tl.loc("TimeoutWhileWaiting"));
