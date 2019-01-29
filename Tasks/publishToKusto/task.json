@@ -1,0 +1,64 @@
+﻿{
+  "id": "a7cd4ea2-0b83-49cb-887a-b529e5d80db7",
+  "name": "publish-to-kusto",
+  "friendlyName": "Publish to Kusto",
+  "description": "Run .csl Kusto scripts publishing functions, etc. to Kusto databases",
+  "helpMarkDown": "[Contact Us](mailto:castalk@microsoft.com)",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 57
+  },
+  "instanceNameFormat": "Publish to Kusto",
+  "groups": [
+  ],
+  "inputs": [
+    {
+      "name": "files",
+      "type": "multiLine",
+      "label": "Files",
+      "defaultValue": "**/*.csl",
+      "required": true,
+      "helpMarkDown": "Kusto scripts to execute. See [file matching patterns](https://docs.microsoft.com/en-us/vsts/build-release/tasks/file-matching-patterns?view=vsts) for syntax."
+    },
+    {
+      "name": "singleCommand",
+      "type": "boolean",
+      "label": "Single Kusto command per file",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "When checked, empty lines are considered part of commands and each script file must only contain a single command. When unchecked, empty lines are treated as command separators and multiple commands can appear in script files. "
+    },
+    {
+      "name": "kustoUrls",
+      "type": "string",
+      "label": "Kusto URLs",
+      "defaultValue": "https://[YourCluster].kusto.windows.net:443?DatabaseName=[YourDatabase]",
+      "required": true,
+      "helpMarkDown": "Semicolon-separated list of URLs of the Kusto clusters and databases to deploy to, each formatted as 'https://[YourCluster].kusto.windows.net:443?DatabaseName=[YourDatabase]'."
+    },
+    {
+      "name": "aadClientId",
+      "type": "string",
+      "label": "AAD App Id",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The GUID of the AAD App authorized to run admin commands on the Kusto database."
+    },
+    {
+      "name": "aadClientSecret",
+      "type": "string",
+      "label": "AAD App Key",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The client secret used to authenticate with AAD."
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "src/index.js"
+    }
+  }
+}

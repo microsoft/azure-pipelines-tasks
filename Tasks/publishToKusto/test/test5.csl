@@ -1,0 +1,3 @@
+.create-or-alter function with (folder = @'ssr\cleanedevents', docstring = 'processing_EventTransactionSummary(runDate:string) - used populate the table event_Commerce_TransactionLine') {
+    print "ok"
+}

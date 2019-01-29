@@ -1,0 +1,22 @@
+{
+  "name": "vsts-publish-to-kusto",
+  "version": "0.0.0",
+  "description": "vsts-publish-to-kusto",
+  "main": "src/index.js",
+  "author": {
+    "name": "mmaitre"
+  },
+  "dependencies": {
+    "applicationinsights": "^1.0.2",
+    "request": "^2.83.0",
+    "vsts-task-lib": "^2.4.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.46",
+    "@types/node": "^9.3.0",
+    "@types/request": "^2.0.10"
+  },
+  "scripts": {
+    "test": "mocha test/*.js"
+  }
+}
