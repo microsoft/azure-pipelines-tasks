@@ -1,0 +1,19 @@
+
+
+
+// A comment
+
+.create-or-alter function with (folder = @'Test', docstring = @'Maps AzureCloud enum values to names') Test1(index:int)
+{
+    case(index == 1, 'Public', index == 2, 'Mooncake', index == 3, 'Fairfax', index == 4, 'Blackforest', '')
+}
+
+// A comment
+.create-or-alter function with (folder = @'Test', docstring = @'Maps Environment enum values to names') Test2(index:int)
+{
+	// A comment
+    case(index == 0, 'Prod', index == 1, 'NonProd', '') // A comment
+}
+
+
+

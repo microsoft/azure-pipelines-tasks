@@ -1,0 +1,10 @@
+
+// A comment to remove
+
+// Another comment to remove
+.create-or-alter function with (folder = @'Test', docstring = @'Maps Environment enum values to names') Test3(index:int)
+{
+
+    case(index == 0, 'Prod', index == 1, 'NonProd', '') // A comment
+
+}

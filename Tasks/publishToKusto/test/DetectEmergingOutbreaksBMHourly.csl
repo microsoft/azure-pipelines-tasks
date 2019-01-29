@@ -1,0 +1,215 @@
+.create-or-alter function with (folder = @'ThreatTelemetry',docstring = @'Determine if there is an outbreak based on anomalous BM prevalance',skipvalidation = @'true') ['DetectEmergingOutbreaksBMHourly']() {
+
+let StartTime = ago(65m);
+let EndTime = ago(5m);
+let TimeWindow = 1; //in hours
+let granularity = "Hourly"; //or "Minutely"
+//let unstableStartTime = ago(2d);
+//let hourlyStartTime = ago(65m);
+
+
+//Summarize Guid Count by signature name and time. Merge with Thresholds and Classifications (computed in Cosmos 1-2 days delayed)
+let RawBMTable = 
+CloudEngineKustoEntity
+|where todatetime(ReportTime) >= StartTime and todatetime(ReportTime) < EndTime
+|where Source == "KustoCoreReports"and ReportType == 7 and isnotempty(MachineGuid) //and tostring(Data.IsDomainJoined) == "true"
+|where PrimarySigName contains "!rsm" or PrimarySigName contains "!attk"
+|project MachineGuid, ReportTime, ReportType, PrimarySigName, PrimarySigSha, Sha256, Source, Data.IsDomainJoined, Data.Platform, Data.Product, Data.IpAddress
+|where Data_IsDomainJoined == "true";
+
+
+let RawBMTable_cache = materialize(RawBMTable);
+    
+let AllBMTable = 
+RawBMTable_cache
+//|extend ReportTimeBucket = bin(todatetime(ReportTime), 60m)
+| summarize GuidCount = dcount(MachineGuid) by  PrimarySigName, ReportType
+| project GuidCount, PrimarySigName
+| join kind = leftouter 
+    (
+        EmergingThreatModel_ThresholdsClassificationsIWB 
+        | where ThresholdType == granularity
+    ) on $left.PrimarySigName == $right.SignatureName
+      | project GuidCount, PrimarySigName, classification, HistoricHigh_7day , SignatureName, ThresholdType, WeekdayMean, WeekdaySD, WeekendMean, WeekendSD ;
+
+//Classification-based alerting logic. Commented out piece where we will not be able to "fill-in" the missing 1-2 day gap for unstables to reference the new high.
+
+                                        // let Unstable2dayMax =
+                                        // AllBMTable
+                                        // |where classification == "unstable"
+                                        // |summarize max2dayGuidCount = max(GuidCount) by PrimarySigName
+                                        // |project max2dayGuidCount, PrimarySigName ;
+ 
+let AllBMTable_cache = materialize(AllBMTable);
+
+let 3DFlagTable =
+AllBMTable_cache
+//|where ReportTimeBucket >= StartTime and ReportTimeBucket < EndTime
+                                        // | join kind = leftouter 
+                                        //     (
+                                        //         Unstable2dayMax 
+                                        //     ) on PrimarySigName
+//Stable: Guid Count > mean+n*SD for 3 minutes in a 7 minute window
+| extend Weekend = case(dayofweek(StartTime) >= 6d, 1, 0)  
+| extend Mean = case(Weekend == 1, WeekendMean, WeekdayMean), SD = case(Weekend == 1, WeekendSD, WeekdaySD)
+| extend n = case(Mean > 30, 4, 5)
+| extend stableFlag = case(GuidCount > Mean + n*SD and (classification == "stable" or classification == "stableLowPrev"), 1, 0)
+| extend ClassificationBasedThreshold = iif((classification == "stable" or classification == "stableLowPrev"), round(Mean + n*SD, 1), iif(classification == "unstable", todouble(HistoricHigh_7day),
+        iif(classification == "lowPrevalence", todouble(5.0), todouble(0.0))))
+//Unstable: Guid Count is > 7 day historic High (may be a gap for current day)
+| extend unstableFlag = case( GuidCount > HistoricHigh_7day and classification == "unstable", 1, 0)
+//Low Prevalance / Stable Low prev: Guid Count > 5 for at least3 minutes in a 7 minute window
+| extend lowPrevFlag = case(GuidCount > 5 and classification == "lowPrevalence"  , 1, 0)
+| extend totalFlag = stableFlag + unstableFlag + lowPrevFlag
+| project PrimarySigName, classification, GuidCount, ClassificationBasedThreshold, Weekend, Mean, n, SD, stableFlag, unstableFlag, lowPrevFlag, totalFlag  ;
+
+let AlertTable = 
+3DFlagTable 
+| summarize TotalFlags = sum(totalFlag), AveGuidCount = todouble(sum(GuidCount))/todouble(TimeWindow) by PrimarySigName, classification, Weekend, Mean, n, SD, ClassificationBasedThreshold
+| extend Alert = case(TotalFlags>=1, 1, 0); //1 flag triggers the hourly alert
+
+ //Alert Summary Output: Based on the Signatures that alerted, show: Signature name, classification, alert, thresholds
+ let AlertSummaryTable = 
+ AlertTable
+ |where Alert == 1
+ |extend Table = "AlertSummary", AvgMachinesImpacted = round(AveGuidCount,1), Basal_Mean_28Day = round(Mean, 1), Basal_SD_28Day = round(SD,1)
+ |project Table, AlertTime = StartTime, PrimarySigName,classification, AvgMachinesImpacted, ClassificationBasedThreshold, Basal_Mean_28Day, Basal_SD_28Day, Alert;
+    
+
+let AlertSummaryTable_cache = materialize(AlertSummaryTable);    
+ 
+//Alert Correlations table: Show top Country, Org, Sha256?, product, platform break down for Signatures that fired
+let AlertBMs =   AlertTable
+| where Alert == 1
+| project PrimarySigName;
+
+
+//Get Correlations
+let CorrelationsTable = 
+RawBMTable_cache
+|where todatetime(ReportTime) >= StartTime and  todatetime(ReportTime) < EndTime 
+ | join kind= inner
+        (
+         AlertBMs
+        )
+        on PrimarySigName
+|project MachineGuid, ReportTime, PrimarySigName, Platform = tostring(Data_Platform), Product = tostring(Data_Product), IP = parse_ipv4(tostring(Data_IpAddress)) //,Sha256
+|join kind = leftouter 
+    (
+        IpMappingData 
+        | project StartIP, IP = tolong(IP)
+    ) on IP 
+    |join kind=leftouter
+    (
+        ReverseIpFromBing
+       |project  Country, Organization, StartIP= MinIpAddress
+    )
+    on  StartIP     
+    |project-away StartIP
+        | distinct ReportTime, MachineGuid, PrimarySigName, Country, Organization, Platform, Product //,  Sha256 
+//|extend ReportTimeBucket = bin(todatetime(ReportTime), 60m)
+|summarize GuidCount = dcount(MachineGuid) by   PrimarySigName, Country, Organization, Platform, Product
+|summarize CrossSegment_AveGuidCount = round(todouble(sum(GuidCount))/todouble(TimeWindow),1) by PrimarySigName, Country, Organization, Platform, Product  
+|project  PrimarySigName,  Country, Organization, Platform, Product, CrossSegment_AveGuidCount //Sha256,
+|top-nested  of PrimarySigName by  sum(CrossSegment_AveGuidCount) desc,
+    top-nested 5 of Country  with others = "All Other Countries" by  sum(CrossSegment_AveGuidCount) desc,
+    top-nested 5 of Platform with others = "All Other Platforms" by sum(CrossSegment_AveGuidCount) desc,
+    top-nested 5 of Product  with others = "All Other Products" by  sum(CrossSegment_AveGuidCount) desc,
+    top-nested 3 of Organization  with others = "All Other Orgs" by AvgMachinesImpacted = sum(CrossSegment_AveGuidCount) desc
+ // top-nested 5 of Sha256 with others = "All Other Sha256" by sum(CrossSegment_AveGuidCount) desc//,
+|sort by PrimarySigName asc, AvgMachinesImpacted desc
+|where AvgMachinesImpacted != 0
+|project Table = "CrossCorrelations", PrimarySigName, Country, Platform, Product, Organization, AvgMachinesImpacted ;
+
+let CorrelationsTable_cache = materialize(CorrelationsTable);   
+
+
+let SigSha_ShaSummary = 
+RawBMTable_cache
+|where todatetime(ReportTime) >= StartTime and  todatetime(ReportTime) < EndTime 
+ | join kind= inner
+        (
+         AlertBMs
+        )
+        on PrimarySigName
+|project MachineGuid, ReportTime, PrimarySigName,Sha256, PrimarySigSha
+|distinct MachineGuid, ReportTime, PrimarySigName, Sha256, PrimarySigSha 
+
+|summarize GuidCount = dcount(MachineGuid) by   PrimarySigName, Sha256, PrimarySigSha 
+|summarize CrossSegment_AveGuidCount = round(todouble(sum(GuidCount))/todouble(TimeWindow),1) by PrimarySigName, Sha256, PrimarySigSha   
+|project  PrimarySigName, CrossSegment_AveGuidCount, Sha256, PrimarySigSha
+|top-nested  of PrimarySigName by  sum(CrossSegment_AveGuidCount) desc,
+    top-nested of PrimarySigSha by sum(CrossSegment_AveGuidCount) desc,
+     top-nested of Sha256  by AvgMachinesImpacted = sum(CrossSegment_AveGuidCount) desc//,
+|sort by PrimarySigName asc, AvgMachinesImpacted desc
+|where AvgMachinesImpacted > 1
+|project Table = "ShaSummary", PrimarySigName, Sha256,PrimarySigSha, AvgMachinesImpacted  // Country, Platform, Product, Organization,
+| join kind= leftouter
+        (
+            FileMetadata 
+            | where isnotnull(Sha256) 
+            | project Sha256, CreationDateTimeUTC//, toint(FileData.V1.FileType), toint(FileData.V1.FileSize)//, tostring(FileData.V1.Ctph) 
+            | summarize CreationDateTimeUTC = min(CreationDateTimeUTC) by Sha256//, FileData_V1_FileType, FileData_V1_FileSize//, FileData_V1_Ctph
+       
+       )
+        on Sha256
+         | join kind= leftouter
+        (
+            FileMetadata 
+            | where isnotnull(Sha256)  
+            | project Sha256,  toint(FileData.V1.FileType)
+            | distinct Sha256, FileData_V1_FileType//, FileData_V1_FileType, FileData_V1_FileSize//, FileData_V1_Ctph
+            | where isnotnull(FileData_V1_FileType)  
+       )
+        on Sha256
+              | join kind= leftouter
+        (
+            FileMetadata 
+            | where isnotnull(Sha256)  
+            | project Sha256,  toint(FileData.V1.FileSize)
+            | distinct Sha256, FileData_V1_FileSize//, FileData_V1_FileType, FileData_V1_FileSize//, FileData_V1_Ctph
+            | where isnotnull(FileData_V1_FileSize)  
+       )
+        on Sha256
+        |project   Table, PrimarySigName, Sha256, PrimarySigSha, AvgMachinesImpacted, CreationDateTimeUTC, FileSize = FileData_V1_FileSize, FileType = FileData_V1_FileType;
+ 
+let SigSha_ShaSummary_cache = materialize(SigSha_ShaSummary);  
+
+//Get Sample Machines impacted
+
+let MachineSummary = 
+RawBMTable_cache
+ | join kind= inner
+        (
+         AlertBMs
+        )
+        on PrimarySigName
+|project MachineGuid, ReportTime, PrimarySigName ,Sha256, PrimarySigSha
+|distinct ReportTime, MachineGuid, PrimarySigName, Sha256, PrimarySigSha 
+ | join kind= inner
+        (
+          SigSha_ShaSummary_cache
+          |top-nested  of PrimarySigName by sum(AvgMachinesImpacted),
+           top-nested 3 of Sha256 by sum(AvgMachinesImpacted),
+           top-nested of PrimarySigSha by sum(AvgMachinesImpacted)
+          |project PrimarySigName, Sha256, PrimarySigSha
+         
+        )
+        on PrimarySigName,Sha256//, PrimarySigSha
+         |top-nested  of PrimarySigName by max(1),
+           top-nested  of Sha256 by max(1),
+           top-nested of PrimarySigSha by max(1),
+           top-nested 5 of MachineGuid by max(1)
+          |project MachineGuid, PrimarySigName, Sha256, PrimarySigSha
+  | project Table = "MachineSample", MachineGuid, PrimarySigName, Sha256, PrimarySigSha ;
+
+
+let MachineSummary_cache = materialize(MachineSummary); 
+
+AlertSummaryTable_cache
+| union kind=outer SigSha_ShaSummary_cache 
+| union kind=outer CorrelationsTable_cache
+| union kind=outer MachineSummary_cache
+|sort by Table asc,  PrimarySigName asc, AvgMachinesImpacted desc
+
+  }

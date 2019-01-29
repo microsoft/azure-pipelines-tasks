@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "removeComments": true,
+    "sourceMap": true
+  },
+  "compileOnSave": true,
+  "include": [ "src/*.ts", "test/*.ts" ],
+  "exclude": [ "node_modules" ]
+}

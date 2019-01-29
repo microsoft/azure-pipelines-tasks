@@ -1,0 +1,44 @@
+﻿.create-or-alter function with (folder = "ThreatTelemetry", docstring = "OutbreakResponse Template Machine Impact: FileQueries") DEAOutbreakResponse_1_OverallImpact() {
+
+// TODO: Update startTime of the incident
+let startTime = ago(24h);
+
+// TODO: IOC: Update IOCs as per the incident
+// note: Lower case the file names
+let FileNameList = datatable(FileName:string)[
+          "{780b7e47-0f7d-7a0d-7811-7e090f0c117e}"
+          ,"a796913.dll"
+          ,"setup_x86.tmp"
+          ,"remove10.exe"
+          ,"2fd3263a-0cd1-1.d"
+          ,"555152.tmp"
+          ,"6176fc93e9d52689af18068527b72bc4.exe"
+          ,"netadapter.exe"
+          ,"systemconsole.exe"
+          ,"remove10.exe"
+];
+
+
+let resultDataSet = machineImpactWithDimensions
+| union
+(
+   machineImpactWithNoDimensions
+)
+| union
+(
+   machineImpactByGeoId
+)
+| union
+(
+   machineImpactByOSPlatformSubRelease
+)
+| project Dataset
+         ,ReportDateHour
+         ,GeoId
+         ,OrgId
+         ,OsPlatformSubRelease
+         ,NumMachines
+ ;
+ resultDataSet
+  
+ } 
