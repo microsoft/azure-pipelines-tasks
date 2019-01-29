@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 1
+        "Patch": 2
     },
     "satisfies": [
         "DotNetCore"
@@ -69,6 +69,7 @@
         "WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/dotnet/core/blob/master/release-notes/releases.json. Falling back to creating convention based URL.",
         "CouldNotDownload": "Could not download installation package from this URL: %s Error: %s",
         "FailedToDownloadPackage": "Failed to download package for installation",
-        "PrependGlobalToolPath": "Creating global tool path and pre-prending to PATH."
+        "PrependGlobalToolPath": "Creating global tool path and pre-prending to PATH.",
+        "VersionsFileMalformed": "The specified version's download links are not correctly formed in the supported versions document => %s/"
     }
 }
