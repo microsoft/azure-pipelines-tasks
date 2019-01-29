@@ -7,6 +7,7 @@
     "name": "mmaitre"
   },
   "dependencies": {
+    "@types/node": "^10.12.19",
     "request": "^2.83.0",
     "vsts-task-lib": "^2.4.0"
   },
