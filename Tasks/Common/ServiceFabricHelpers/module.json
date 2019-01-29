@@ -16,6 +16,6 @@
         "WarningOnRemoveCertificate": "An error occurred attempting to remove the client certificate. Error message: {0}",
         "TelemetryWarning": "Unable to push telemetry data. Error: {0}.",
         "SfSdkVersion": "Service fabric SDK version: {0}.",
-        "TaskNotRunningOnx64Agent": "The agent is not a x64 agent. Please make sure that you use a Windows x64 agent since Service Fabric SDK works only with that."
+        "TaskNotRunningOnx64Agent": "The agent is not a x64 agent. This task is supported only on a x64 agent."
     }
 }
