@@ -13,23 +13,23 @@ async function main(): Promise<void> {
     // TODO Get that logic to check for GUID from v0 after verifying why its needed.
 
     // Getting inputs.
-    // let packageType = tl.getInput("packageType");
-    // let feedId = tl.getInput("feed");
-    // let viewId = tl.getInput("view");
-    // let packageId = tl.getInput("definition");
-    // let version = tl.getInput("version");
-    // let downloadPath = tl.getInput("downloadPath");
-    // let filesPattern = tl.getInput("files");
-    // let extractPackage = tl.getInput("extract") === "true";
-
-    let packageType = tl.getVariable("packageType");
+    let packageType = tl.getInput("packageType");
     let feedId = tl.getInput("feed");
-    let viewId = tl.getVariable("view");
-    let packageId = tl.getVariable("definition");
-    let version = tl.getVariable("version");
+    let viewId = tl.getInput("view");
+    let packageId = tl.getInput("definition");
+    let version = tl.getInput("version");
     let downloadPath = tl.getInput("downloadPath");
-    let filesPattern = tl.getVariable("files");
-    let extractPackage = tl.getVariable("extract") === "true";
+    let filesPattern = tl.getInput("files");
+    let extractPackage = tl.getInput("extract") === "true";
+
+    // let packageType = tl.getVariable("packageType");
+    // let feedId = tl.getInput("feed");
+    // let viewId = tl.getVariable("view");
+    // let packageId = tl.getVariable("definition");
+    // let version = tl.getVariable("version");
+    // let downloadPath = tl.getInput("downloadPath");
+    // let filesPattern = tl.getVariable("files");
+    // let extractPackage = tl.getVariable("extract") === "true";
 
     // Getting variables.
     const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
@@ -37,6 +37,11 @@ async function main(): Promise<void> {
     const retryLimit: number = !!retryLimitValue && !isNaN(parseInt(retryLimitValue)) ? parseInt(retryLimitValue) : 4;
     const deleteArchive = tl.getVariable("deleteArchive") === "true";
     const skipDownload = tl.getVariable("skipDownload") === "true";
+
+    if(skipDownload) {
+        console.log("DOwnload Package skipped.");
+        return Promise.resolve();
+    }
 
     if (viewId) {
         feedId = feedId + "@" + viewId;
@@ -65,6 +70,7 @@ async function main(): Promise<void> {
             extractor.extractFile();
         });
     }
+    return Promise.resolve();
 }
 
 function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount): Promise<any> {
