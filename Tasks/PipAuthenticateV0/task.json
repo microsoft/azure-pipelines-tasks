@@ -2,8 +2,9 @@
     "id": "5e3feff0-c5ae-11e8-a7d0-4bd3b8229800",
     "name": "PipAuthenticate",
     "friendlyName": "Python Pip Authenticate",
-    "description": "Authentication task for pip client used for installing python distributions.",
+    "description": "Authentication task for the pip client used for installing Python distributions.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://pip.pypa.io/en/stable/reference/pip_install/",
     "helpMarkDown": "[More Information](https://pip.pypa.io/en/stable/reference/pip_install/)",
     "category": "Package",
     "version": {

@@ -3,6 +3,7 @@
     "name": "cURLUploader",
     "friendlyName": "cURL Upload Files",
     "description": "Use cURL to upload files.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=627418",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627418)",
     "category": "Utility",
     "author": "Microsoft Corporation",

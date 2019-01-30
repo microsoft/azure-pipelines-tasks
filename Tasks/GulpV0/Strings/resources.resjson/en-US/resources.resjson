@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Gulp",
+  "loc.friendlyName": "gulp",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613721)",
-  "loc.description": "Node.js streaming task based build system",
+  "loc.description": "Run the Node.js streaming task-based build system.",
   "loc.instanceNameFormat": "gulp $(targets)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",

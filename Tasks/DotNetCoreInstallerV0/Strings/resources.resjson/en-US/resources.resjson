@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": ".NET Core SDK Installer",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=853651)",
-  "loc.description": "Acquires a specific version of the .NET Core SDK from internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks.",
+  "loc.description": "Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks.",
   "loc.instanceNameFormat": "Use .NET Core $(packageType)",
   "loc.group.displayName.generalAdvanced": "Advanced",
   "loc.input.label.packageType": "Package to install",
@@ -35,4 +35,5 @@
   "loc.messages.PrependGlobalToolPath": "Creating global tool path and pre-prending to PATH.",
   "loc.messages.VersionMissingException": "If you don't use global.json then please defined a version.",
   "loc.messages.FailedToFindGlobalJson": "From the root of your working folder we can't find any global.json file."
+  "loc.messages.VersionsFileMalformed": "The specified version's download links are not correctly formed in the supported versions document => %s/"
 }

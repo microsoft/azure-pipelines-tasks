@@ -3,13 +3,14 @@
     "name": "NuGetCommand",
     "friendlyName": "NuGet",
     "description": "Restore, pack, or push NuGet packages, or run a NuGet command. Supports NuGet.org and authenticated feeds like Package Management and MyGet. Uses NuGet.exe and works with .NET Framework apps. For .NET Core and .NET Standard apps, use the .NET Core task.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613747",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613747)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
         "Minor": 147,
-        "Patch": 1
+        "Patch": 3
     },
     "runsOn": [
         "Agent",
@@ -137,9 +138,9 @@
                 "externalFeedCredentials"
             ],
             "type": "connectedService:ExternalNuGetFeed",
-            "label": "Credentials for feeds outside this account/collection",
+            "label": "Credentials for feeds outside this organization/collection",
             "required": false,
-            "helpMarkDown": "Credentials to use for external registries located in the selected NuGet.config. For feeds in this account/collection, leave this blank; the build’s credentials are used automatically.",
+            "helpMarkDown": "Credentials to use for external registries located in the selected NuGet.config. For feeds in this organization/collection, leave this blank; the build’s credentials are used automatically.",
             "properties": {
                 "EditableOptions": "False",
                 "MultiSelectFlatList": "True"
@@ -210,7 +211,7 @@
             "required": true,
             "defaultValue": "internal",
             "options": {
-                "internal": "This account/collection",
+                "internal": "This organization/collection",
                 "external": "External NuGet server (including other accounts/collections)"
             },
             "visibleRule": "command = push"
@@ -446,7 +447,7 @@
             "type": "string",
             "label": "Command and arguments",
             "defaultValue": "",
-            "helpMarkDown": "The command and arguments which will be passed to NuGet.exe for execution. If NuGet 3.5 or later is used, authenticated commands like list, restore, and publish against any feed in this account/collection that the Project Collection Build Service has access to will be automatically authenticated.",
+            "helpMarkDown": "The command and arguments which will be passed to NuGet.exe for execution. If NuGet 3.5 or later is used, authenticated commands like list, restore, and publish against any feed in this organization/collection that the Project Collection Build Service has access to will be automatically authenticated.",
             "required": true,
             "visibleRule": "command = custom"
         }

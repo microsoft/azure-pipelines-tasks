@@ -3,6 +3,7 @@
     "name": "Kubernetes",
     "friendlyName": "Deploy to Kubernetes",
     "description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running kubectl commands.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
     "visibility": [
@@ -13,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 21
+        "Patch": 22
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
@@ -461,7 +462,7 @@
         "DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
         "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
         "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
-        "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+        "NotAValidVersion": "Not a valid version, the available versions are: %s",
         "ConfigurationFileNotFound": "No configuration file matching %s was found.",
         "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
         "OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",

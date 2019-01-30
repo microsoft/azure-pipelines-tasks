@@ -3,6 +3,8 @@
     "name": "DecryptFile",
     "friendlyName": "Decrypt File (OpenSSL)",
     "description": "A thin utility task for file decryption using OpenSSL.",
+    "helpUrl": "",
+    "helpMarkDown": "",
     "category": "Utility",
     "visibility": [
         "Build",

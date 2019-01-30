@@ -1,8 +1,9 @@
 {
     "id": "31C75BBB-BCDF-4706-8D7C-4DA6A1959BC2",
     "name": "NodeTool",
-    "friendlyName": "Node Tool Installer",
-    "description": "Finds or Downloads and caches specified version spec of Node and adds it to the PATH.",
+    "friendlyName": "Node.js Tool Installer",
+    "description": "Finds or downloads and caches the specified version spec of Node.js and adds it to the PATH.",
+    "helpUrl": "",
     "helpMarkDown": "",
     "category": "Tool",
     "runsOn": [

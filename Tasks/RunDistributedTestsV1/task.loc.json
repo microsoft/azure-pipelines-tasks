@@ -3,6 +3,7 @@
   "name": "RunVisualStudioTestsusingTestAgent",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=624389",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
@@ -13,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 57
+    "Patch": 59
   },
   "deprecated": true,
   "runsOn": [

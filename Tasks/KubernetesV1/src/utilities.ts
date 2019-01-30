@@ -48,7 +48,8 @@ export async function getKubectlVersion(versionSpec: string, checkLatest: boolea
             return kubectlutility.getStableKubectlVersion();
         } 
         else {
-            return sanitizeVersionString(versionSpec);
+            let versions = await kubectlutility.getAvailableKubectlVersions();
+            return sanitizeVersionString(versions, versionSpec);
         } 
      }
  
@@ -59,13 +60,13 @@ export async function downloadKubectl(version: string): Promise<string> {
     return await kubectlutility.downloadKubectl(version);
 }
 
-export function sanitizeVersionString(inputVersion: string) : string{
-    var version = toolLib.cleanVersion(inputVersion);
-    if(!version) {
-        throw new Error(tl.loc("NotAValidSemverVersion"));
+export function sanitizeVersionString(versions, inputVersion: string): string {
+    var version = toolLib.evaluateVersions(versions, inputVersion);
+    if (!version) {
+        throw new Error(tl.loc("NotAValidVersion", JSON.stringify(versions)));
     }
-    
-    return "v"+version;
+
+    return version;
 }
 
 export function assertFileExists(path: string) {

@@ -36,19 +36,19 @@ export class NonDistributedTest {
 
             if (exitCode !== 0 && !this.inputDataContract.ExecutionSettings.IgnoreTestFailures) {
                 tl.debug('Modules/DTAExecutionHost.exe process exited with code ' + exitCode);
-                tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailed'));
+                tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailed'), true);
                 return;
             } else {
                 if (exitCode !== 0) {
                     console.log('Task marked as success because IgnoreTestFailures is enabled');
                 }
                 tl.debug(`Modules/DTAExecutionHost.exe exited with code ${exitCode}`);
-                tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
+                tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded', true);
             }
 
         } catch (err) {
             tl.error(err);
-            tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'));
+            tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'), true);
         }
     }
 

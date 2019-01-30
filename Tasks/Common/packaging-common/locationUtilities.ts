@@ -93,27 +93,27 @@ export async function getPackagingUris(protocolType: ProtocolType): Promise<Pack
     const locationApi = await webApi.getLocationsApi();
 
     tl.debug('Acquiring Packaging endpoints from ' + serviceUri);
-    return locationApi.getConnectionData(interfaces.ConnectOptions.IncludeServices).then((connectionData) => {
-        tl.debug('Successfully acquired the connection data');
-        const defaultAccessPoint: string = connectionData.locationServiceData.accessMappings.find((mapping) =>
-            mapping.moniker === connectionData.locationServiceData.defaultAccessMappingMoniker
-        ).accessPoint;
 
-        pkgLocation.DefaultPackagingUri = defaultAccessPoint;
-        pkgLocation.PackagingUris.push(defaultAccessPoint);
-        pkgLocation.PackagingUris = pkgLocation.PackagingUris.concat(
-            connectionData.locationServiceData.accessMappings.map((mapping) => {
-                return mapping.accessPoint;
-            }));
+    const connectionData = await Retry(async () => {
+        tl.debug('Attempting to get connection data');
+        return await locationApi.getConnectionData(interfaces.ConnectOptions.IncludeServices);
+    }, 4, 100);
 
-        tl.debug('Acquired location');
-        tl.debug(JSON.stringify(pkgLocation));
-        return pkgLocation;
-    }).catch((error) => {
-        tl.debug('An error occurred while acquiring the connection data');
-        tl.debug(JSON.stringify(error));
-        return pkgLocation;
-    });
+    tl.debug('Successfully acquired the connection data');
+    const defaultAccessPoint: string = connectionData.locationServiceData.accessMappings.find((mapping) =>
+        mapping.moniker === connectionData.locationServiceData.defaultAccessMappingMoniker
+    ).accessPoint;
+
+    pkgLocation.DefaultPackagingUri = defaultAccessPoint;
+    pkgLocation.PackagingUris.push(defaultAccessPoint);
+    pkgLocation.PackagingUris = pkgLocation.PackagingUris.concat(
+        connectionData.locationServiceData.accessMappings.map((mapping) => {
+            return mapping.accessPoint;
+        }));
+
+    tl.debug('Acquired location');
+    tl.debug(JSON.stringify(pkgLocation));
+    return pkgLocation;
 }
 
 export function getSystemAccessToken(): string {

@@ -3,13 +3,14 @@
     "name": "DownloadFileshareArtifacts",
     "friendlyName": "Download Fileshare Artifacts",
     "description": "Download artifacts from a file share e.g \\\\share\\drop",
+    "helpUrl": "",
     "helpMarkDown": "",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 141,
-        "Patch": 3
+        "Minor": 147,
+        "Patch": 0
     },
     "groups": [
         {

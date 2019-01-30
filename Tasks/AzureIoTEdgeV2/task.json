@@ -3,6 +3,7 @@
   "name": "AzureIoTEdge",
   "friendlyName": "Azure IoT Edge",
   "description": "Azure IoT Edge pipelines tasks for continuous integration(build and push docker image) and continuous deployment(create Edge deployment on Azure)",
+  "helpUrl": "https://aka.ms/azure-iot-edge-ci-cd-docs",
   "helpMarkDown": "Visit the [documentation](https://aka.ms/azure-iot-edge-ci-cd-docs) for help",
   "category": "Build",
   "visibility": [
@@ -13,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": true,
   "instanceNameFormat": "Azure IoT Edge - $(action)",

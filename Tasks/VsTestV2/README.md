@@ -34,7 +34,7 @@ Use the following options to select tests and control how the tests are run
 
 - **Path to Custom Test Adapters:** Path to the testadapter for the framework in which the specified tests are written. Provided directory and all subdirectories are checked for testadapters. If there is a packages folder in the sources directory, it is automatically searched for testadapters. As a result, any testadapter downloaded as a Nuget package will be used without any input. For example, ‘$(Build.SourcesDirectory)\Fabrikam\packages’
 
-- **Other console options:** Other options that can be provided to vstest.console.exe. For example, if you are using VSIX extensions, you can provide “/UseVsixExtensions:true”
+- **Other console options:** Other options that can be provided to vstest.console.exe. For example, if you are using VSIX extensions, you can provide “/UseVsixExtensions:true”. These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ or 'Test run' option or when a custom batching option is selected. In these cases, the options can be specified using a runsettings file instead.
 
 #### Test Impact Analysis 
 

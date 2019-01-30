@@ -13,7 +13,7 @@
   "loc.input.help.downloadDirectory": "Folder path where the package's contents will be downloaded.",
   "loc.input.label.internalOrExternalDownload": "Feed location",
   "loc.input.help.internalOrExternalDownload": "You can either select a feed from this collection or any other collection in Azure Artifacts.",
-  "loc.input.label.externalEndpoint": "Account/collection connection",
+  "loc.input.label.externalEndpoint": "organization/collection connection",
   "loc.input.help.externalEndpoint": "Credentials to use for external feeds.",
   "loc.input.label.feedListDownload": "Feed",
   "loc.input.label.packageListDownload": "Package name",
@@ -29,7 +29,7 @@
   "loc.input.help.publishDirectory": "Specifies the path to list of files to be published.",
   "loc.input.label.internalOrExternalPublish": "Feed location",
   "loc.input.help.internalOrExternalPublish": "You can either select a feed from this collection or any other collection in Azure Artifacts.",
-  "loc.input.label.externalEndpoints": "Account/collection connection",
+  "loc.input.label.externalEndpoints": "organization/collection connection",
   "loc.input.help.externalEndpoints": "Credentials to use for external feeds.",
   "loc.input.label.feedListPublish": "Destination Feed",
   "loc.input.label.publishPackageMetadata": "Publish pipeline metadata",
@@ -80,5 +80,6 @@
   "loc.messages.FailedToGetArtifactTool": "Failed to get artifact tool from service. %s",
   "loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",
   "loc.messages.FailedToGetLatestPackageVersion": "Failed to get package versions",
-  "loc.messages.Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages"
+  "loc.messages.Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages",
+  "loc.messages.Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server."
 }

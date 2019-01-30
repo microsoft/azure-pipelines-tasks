@@ -3,6 +3,7 @@
     "name": "AzureRmWebAppDeployment",
     "friendlyName": "Azure App Service Deploy",
     "description": "Update Azure App Services on Windows, Web App on Linux with built-in images or Docker containers, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Function Apps on Windows or Linux with Docker Containers, Mobile Apps, API applications, Web Jobs using Web Deploy / Kudu REST APIs",
+    "helpUrl": "https://aka.ms/azurermwebdeployreadme",
     "helpMarkDown": "[More information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -17,7 +18,7 @@
     "version": {
         "Major": 4,
         "Minor": 3,
-        "Patch": 19
+        "Patch": 20
     },
     "releaseNotes": "What's new in version 4.*<br />Supports Zip Deploy, Run From Package, War Deploy [Details here](https://aka.ms/appServiceDeploymentMethods)<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",

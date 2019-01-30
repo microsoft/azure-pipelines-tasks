@@ -4,11 +4,12 @@
     "friendlyName": "Universal Packages",
     "description": "Download or publish Universal Packages.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://aka.ms/universalpackagesannounce",
     "helpMarkDown": "[More Information](https://aka.ms/universalpackagesannounce)",
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 145,
+        "Minor": 147,
         "Patch": 2
     },
     "runsOn": [
@@ -84,8 +85,8 @@
             "helpMarkDown": "You can either select a feed from this collection or any other collection in Azure Artifacts.",
             "required": "true",
             "options": {
-                "internal": "This account/collection",
-                "external": "Another account/collection"
+                "internal": "This organization/collection",
+                "external": "Another organization/collection"
             },
             "groupName": "packageDownloadDetails"
         },
@@ -95,7 +96,7 @@
                 "externalFeedCredentials"
             ],
             "type": "connectedService:externaltfs",
-            "label": "Account/collection connection",
+            "label": "organization/collection connection",
             "required": false,
             "helpMarkDown": "Credentials to use for external feeds.",
             "properties": {
@@ -207,8 +208,8 @@
             "helpMarkDown": "You can either select a feed from this collection or any other collection in Azure Artifacts.",
             "required": "true",
             "options": {
-                "internal": "This account/collection",
-                "external": "Another account/collection"
+                "internal": "This organization/collection",
+                "external": "Another organization/collection"
             },
             "groupName": "packagePublishDetails"
         },
@@ -218,7 +219,7 @@
                 "publishFeedCredentials"
             ],
             "type": "connectedService:externaltfs",
-            "label": "Account/collection connection",
+            "label": "organization/collection connection",
             "required": true,
             "helpMarkDown": "Credentials to use for external feeds.",
             "properties": {
@@ -433,6 +434,7 @@
         "FailedToGetArtifactTool": "Failed to get artifact tool from service. %s",
         "Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",
         "FailedToGetLatestPackageVersion": "Failed to get package versions",
-        "Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages"
+        "Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages",
+        "Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server."
     }
 }

@@ -3,6 +3,7 @@
   "name": "UseRubyVersion",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=2005989",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [
@@ -13,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 142,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.115.0",

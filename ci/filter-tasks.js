@@ -63,6 +63,9 @@ var getTasksToBuildForCI = async function() {
         if (fs.existsSync(taskJsonPath)){
             var taskJson = JSON.parse(fs.readFileSync(taskJsonPath).toString());
             var lowerCaseName = taskJson.name.toLowerCase();
+            if (isNaN(parseInt(lowerCaseName.slice(-1), 10))) {
+                lowerCaseName += "v" + taskJson.version.Major;
+            }
             if (lowerCaseName in packageMap || taskName.toLowerCase() in packageMap) {
                 if (taskName.toLowerCase() in packageMap) {
                     lowerCaseName = taskName.toLowerCase();   
@@ -111,6 +114,7 @@ var getTasksToBuildForPR = function() {
     // Takes in a git source branch, diffs it with master, and returns a list of tasks that could have been affected by the changes.
     var sourceBranch = process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'];
     var prId = process.env['SYSTEM_PULLREQUEST_PULLREQUESTNUMBER'];
+    var targetBranch = process.env['SYSTEM_PULLREQUEST_TARGETBRANCH'];
     var commonChanges = [];
     var toBeBuilt = [];
     try {
@@ -125,7 +129,7 @@ var getTasksToBuildForPR = function() {
         console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=125;]Unable to reach github, building all tasks', err);
         return makeOptions.tasks;
     }
-    var baseCommit = run('git merge-base ' + sourceBranch + ' origin/master');
+    var baseCommit = run('git merge-base ' + sourceBranch + ' origin/' + targetBranch);
     run('git --no-pager diff --name-only ' + baseCommit + ' ' + sourceBranch)
         .split('\n')
         .forEach(filePath => {
@@ -148,12 +152,15 @@ var getTasksToBuildForPR = function() {
     changedTasks.forEach(task => {
         if (!toBeBuilt.includes(task)) {
             shouldBeBumped.push(task);
+            toBeBuilt.push(task);
         }
     });
-    // TODO: Add this back once diffing is working 100%
-//     if (shouldBeBumped.length > 0) {
-//         throw new Error('The following tasks should have their versions bumped due to changes in common: ' + shouldBeBumped);
-//     }
+    if (shouldBeBumped.length > 0) {
+        // TODO - change this to an error once its proven to be working.
+        console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=160;]The following tasks should have their versions bumped due to changes in common:', shouldBeBumped);
+        // throw new Error('The following tasks should have their versions bumped due to changes in common: ' + shouldBeBumped);
+    }
+
     return toBeBuilt;
 }
 

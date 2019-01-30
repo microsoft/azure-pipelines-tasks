@@ -3,6 +3,7 @@
   "name": "AzureFunctionApp",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azurefunctiondeployreadme",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [

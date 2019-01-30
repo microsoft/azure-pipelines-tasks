@@ -3,6 +3,8 @@
   "name": "DecryptFile",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
     "Build",
@@ -16,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 142,
-    "Patch": 0
+    "Patch": 2
   },
   "groups": [
     {
@@ -78,6 +80,5 @@
   "messages": {
     "OpenSSLReturnCode": "ms-resource:loc.messages.OpenSSLReturnCode",
     "OpenSSLFailed": "ms-resource:loc.messages.OpenSSLFailed"
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }

@@ -3,6 +3,7 @@
   "name": "CocoaPods",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613745",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "visibility": [
@@ -16,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 142,
-    "Patch": 0
+    "Patch": 2
   },
   "groups": [
     {

@@ -7,7 +7,7 @@
   "loc.group.displayName.AzureDetails": "Azure Details",
   "loc.group.displayName.Template": "Template",
   "loc.group.displayName.AdvancedDeploymentOptions": "Advanced deployment options for virtual machines",
-  "loc.group.displayName.Outputs": "Outputs",
+  "loc.group.displayName.Advanced": "Advanced",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",
   "loc.input.label.action": "Action",
@@ -27,8 +27,6 @@
   "loc.input.help.csmParametersFile": "Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template.",
   "loc.input.label.overrideParameters": "Override template parameters",
   "loc.input.help.overrideParameters": "To view the template parameters in a grid, click on “…” next to Override Parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS. Or type the template parameters to override in the textbox. Example, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).<br>If the parameter value you're using has multiple words, enclose them in quotes, even if you're passing them using variables. For example, -name \"parameter value\" -name2 \"$(var)\"<br>To override object type parameters use stringified JSON objects. For example, -options [\"option1\"] -map {\"key1\": \"value1\" }. ",
-  "loc.input.label.deploymentName": "Deployment name",
-  "loc.input.help.deploymentName": "Specifies the name of the resource group deployment to create.",
   "loc.input.label.deploymentMode": "Deployment mode",
   "loc.input.help.deploymentMode": "Refer to [this](https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes) for more details. \n\n Incremental mode handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. Complete mode takes relatively more time than incremental mode. If the task times out, consider increasing the timeout, or changing the mode to 'Incremental'. \n [Warning] This action will delete all the existing resources in the resource group that are not specified in the template. \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
   "loc.input.label.enableDeploymentPrerequisites": "Enable prerequisites",
@@ -49,8 +47,12 @@
   "loc.input.help.password": "The password for the user to run the agent service on the Windows VMs. <br>It is assumed that the password is the same for the specified user on all the VMs. <br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'. You may mark variable as 'secret' to secure it. <br>For linux VMs, a password is not required and will be ignored. ",
   "loc.input.label.outputVariable": "VM details for WinRM",
   "loc.input.help.outputVariable": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected.",
+  "loc.input.label.deploymentName": "Deployment name",
+  "loc.input.help.deploymentName": "Specifies the name of the resource group deployment to create.",
   "loc.input.label.deploymentOutputs": "Deployment outputs",
   "loc.input.help.deploymentOutputs": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values.",
+  "loc.input.label.addSpnToEnvironment": "Access service principal details in override parameters",
+  "loc.input.help.addSpnToEnvironment": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId` and `$servicePrincipalKey` in your override parameters like `-key $servicePrincipalKey`",
   "loc.messages.CheckResourceGroupExistence": "Checking if the following resource group exists: %s.",
   "loc.messages.ResourceGroupStatusFetchFailed": "Failed to check the resource group status. Error: %s.",
   "loc.messages.ResourceGroupStatus": "Resource group exists: %s.",
@@ -186,5 +188,6 @@
   "loc.messages.UserNameCannotBeNull": "If the 'Run agent service as a user' input is selected, then 'User name' cannot be null.",
   "loc.messages.ASE_SSLIssueRecommendation": "To use a certificate, the certificate must be signed by a trusted certificate authority. If getting certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline.",
   "loc.messages.MoreInformationOnAzurePortal": "More information on Azure Portal",
-  "loc.messages.ResponseNotValid": "Response is not in a valid format"
+  "loc.messages.ResponseNotValid": "Response is not in a valid format",
+  "loc.messages.LogDeploymentName": "Deployment name is %s"
 }

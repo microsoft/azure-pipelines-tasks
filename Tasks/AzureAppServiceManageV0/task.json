@@ -4,6 +4,7 @@
     "friendlyName": "Azure App Service Manage",
     "description": "Start, Stop, Restart, Slot swap, Install site extensions or Enable Continuous Monitoring for an Azure App Service",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=831573",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
     "category": "Deploy",
     "visibility": [

@@ -2,8 +2,9 @@
     "id": "e4d58330-c771-11e8-8f8f-81fbb42e2824",
     "name": "TwineAuthenticate",
     "friendlyName": "Python Twine Upload Authenticate",
-    "description": "Authentication for uploading python distributions using twine. Please add \"-r FeedName/EndpointName --config-file $(PYPIRC_PATH)\" to your twine upload command. For feeds present in this organization use feed name as repository(-r) otherwise use the endpoint name defined in the service connection.",
+    "description": "Authentication for uploading Python distributions using twine. Please add '-r FeedName/EndpointName --config-file $(PYPIRC_PATH)' to your twine upload command. For feeds present in this organization, use the feed name as the repository (-r). Otherwise, use the endpoint name defined in the service connection.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://pypi.org/project/twine/",
     "helpMarkDown": "[More Information](https://pypi.org/project/twine/)",
     "category": "Package",
     "version": {

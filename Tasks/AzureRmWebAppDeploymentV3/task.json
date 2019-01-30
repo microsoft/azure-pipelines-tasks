@@ -3,6 +3,7 @@
     "name": "AzureRmWebAppDeployment",
     "friendlyName": "Azure App Service Deploy",
     "description": "Update Azure App Services on Windows, Web App on Linux with built-in images or Docker containers, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Function Apps, Mobile Apps, API applications, Web Jobs using Web Deploy / Kudu REST APIs",
+    "helpUrl": "https://aka.ms/azurermwebdeployreadme",
     "helpMarkDown": "[More information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -17,7 +18,7 @@
     "version": {
         "Major": 3,
         "Minor": 4,
-        "Patch": 20
+        "Patch": 21
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",

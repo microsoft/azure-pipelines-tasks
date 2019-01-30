@@ -3,6 +3,7 @@
     "name": "GoTool",
     "friendlyName": "Go Tool Installer",
     "description": "Finds or downloads a specific version of Go in the tools cache and adds it to the PATH. Use this to set the version of Go used in subsequent tasks.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=867581",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867581)",
     "category": "Tool",
     "runsOn": [

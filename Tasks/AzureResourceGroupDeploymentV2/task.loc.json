@@ -3,6 +3,7 @@
   "name": "AzureResourceGroupDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/argtaskreadme",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -13,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 145,
-    "Patch": 0
+    "Minor": 147,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -296,6 +297,15 @@
       "defaultValue": "",
       "groupName": "Advanced",
       "helpMarkDown": "ms-resource:loc.input.help.deploymentOutputs"
+    },
+    {
+      "name": "addSpnToEnvironment",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addSpnToEnvironment",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.addSpnToEnvironment",
+      "groupName": "Advanced"
     }
   ],
   "dataSourceBindings": [
@@ -467,6 +477,7 @@
     "UserNameCannotBeNull": "ms-resource:loc.messages.UserNameCannotBeNull",
     "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
     "MoreInformationOnAzurePortal": "ms-resource:loc.messages.MoreInformationOnAzurePortal",
-    "ResponseNotValid": "ms-resource:loc.messages.ResponseNotValid"
+    "ResponseNotValid": "ms-resource:loc.messages.ResponseNotValid",
+    "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName"
   }
 }

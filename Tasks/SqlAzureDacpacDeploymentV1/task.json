@@ -3,6 +3,7 @@
     "name": "SqlAzureDacpacDeployment",
     "friendlyName": "Azure SQL Database Deployment",
     "description": "Deploy Azure SQL DB using DACPAC or run scripts using SQLCMD",
+    "helpUrl": "https://aka.ms/sqlazuredeployreadme",
     "helpMarkDown": "[More Information](https://aka.ms/sqlazuredeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -16,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 3,
-        "Patch": 11
+        "Patch": 12
     },
     "demands": [
         "sqlpackage"
@@ -135,7 +136,7 @@
             "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
         },
         {
-            "name": "AADSqlUsername",
+            "name": "aadSqlUsername",
             "type": "string",
             "label": "Login",
             "required": true,
@@ -145,7 +146,7 @@
             "helpMarkDown": "Specify the Active directory username."
         },
         {
-            "name": "AADSqlPassword",
+            "name": "aadSqlPassword",
             "type": "string",
             "label": "Password",
             "required": true,
@@ -362,6 +363,7 @@
         "SAD_DacpacFilePath": "DACPAC file path:",
         "SAD_BacpacFilePath": "BACPAC file path:",
         "SAD_PublishProfilePath": "Publish profile path:",
-        "SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application."
+        "SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application.",
+        "SAD_InvokeSQLCmdNotSupportingConnectionString": "Imported Invoke-Sqlcmd doesn't support connectionString. Install SQLServer PS module."
     }
 }

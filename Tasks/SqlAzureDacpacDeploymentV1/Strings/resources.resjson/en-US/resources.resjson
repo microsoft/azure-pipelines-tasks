@@ -21,10 +21,10 @@
   "loc.input.help.SqlUsername": "Specify the Azure SQL Server administrator login.",
   "loc.input.label.SqlPassword": "Password",
   "loc.input.help.SqlPassword": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it.",
-  "loc.input.label.AADSqlUsername": "Login",
-  "loc.input.help.AADSqlUsername": "Specify the Active directory username.",
-  "loc.input.label.AADSqlPassword": "Password",
-  "loc.input.help.AADSqlPassword": "Password for the Active directory user.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it.",
+  "loc.input.label.aadSqlUsername": "Login",
+  "loc.input.help.aadSqlUsername": "Specify the Active directory username.",
+  "loc.input.label.aadSqlPassword": "Password",
+  "loc.input.help.aadSqlPassword": "Password for the Active directory user.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it.",
   "loc.input.label.ConnectionString": "Connection String",
   "loc.input.help.ConnectionString": "Specify the Azure SQL Server connection string like \"Server=testServer.database.windows.net;Database=testdb;User ID=sqluser;Password=$(securePassword);\".",
   "loc.input.label.TaskNameSelector": "Deploy type",
@@ -76,5 +76,6 @@
   "loc.messages.SAD_DacpacFilePath": "DACPAC file path:",
   "loc.messages.SAD_BacpacFilePath": "BACPAC file path:",
   "loc.messages.SAD_PublishProfilePath": "Publish profile path:",
-  "loc.messages.SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application."
+  "loc.messages.SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application.",
+  "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "Imported Invoke-Sqlcmd doesn't support connectionString. Install SQLServer PS module."
 }

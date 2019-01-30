@@ -3,6 +3,7 @@
     "name": "Go",
     "friendlyName": "Go",
     "description": "Get, build, or test a Go application, or run a custom Go command.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=867582",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867582)",
     "author": "Microsoft Corporation",
     "category": "Build",

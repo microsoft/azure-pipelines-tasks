@@ -50,7 +50,7 @@ export function run(connection: ContainerConnection): any {
     if (qualifyImageName) {
         imageName = connection.qualifyImageName(imageName);
     }
-    command.arg(["-t", imageName]);
+    command.arg(["-t", tl.getBoolInput("enforceDockerNamingConvention") ? imageUtils.generateValidImageName(imageName) : imageName]);
 
     var baseImageName = imageUtils.imageNameWithoutTag(imageName);
 

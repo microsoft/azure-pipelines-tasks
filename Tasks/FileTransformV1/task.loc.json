@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -17,8 +18,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 1,
+    "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [

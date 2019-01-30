@@ -61,12 +61,13 @@ export class azureclitask {
             // set az cli config dir
             this.setConfigDirectory();
             this.setAzureCloudBasedOnServiceEndpoint();
-            this.loginAzure();
+            var connectedService: string = tl.getInput("connectedServiceNameARM", true);
+            this.loginAzureRM(connectedService);
 
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
 
             var addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
-            if (!!addSpnToEnvironment) {
+            if (!!addSpnToEnvironment && tl.getEndpointAuthorizationScheme(connectedService, true) == "ServicePrincipal") {
                 await tool.exec({
                     failOnStdErr: failOnStdErr,
                     env: { ...process.env, ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey } }
@@ -116,37 +117,43 @@ export class azureclitask {
     private static servicePrincipalId: string = null;
     private static servicePrincipalKey: string = null;
 
-    private static loginAzure() {
-        var connectedService: string = tl.getInput("connectedServiceNameARM", true);
-        this.loginAzureRM(connectedService);
-    }
-
     private static loginAzureRM(connectedService: string): void {
-        var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-        let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
-        let cliPassword: string = null;
-        if (authType == "spnCertificate") {
-            tl.debug('certificate based endpoint');
-            let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
-            cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
-            fs.writeFileSync(cliPassword, certificateContent);
-            this.cliPasswordPath = cliPassword;
-
-        }
-        else {
-            tl.debug('key based endpoint');
-            cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
-            this.servicePrincipalId = servicePrincipalId;
-            this.servicePrincipalKey = cliPassword;
-        }
-
-        var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+        var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
-        //login using svn
-        this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
-        this.isLoggedIn = true;
+        if(authScheme.toLowerCase() == "serviceprincipal") {
+            let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
+            let cliPassword: string = null;
+            var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+            if (authType == "spnCertificate") {
+                tl.debug('certificate based endpoint');
+                let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
+                cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
+                fs.writeFileSync(cliPassword, certificateContent);
+                this.cliPasswordPath = cliPassword;
 
+            }
+            else {
+                tl.debug('key based endpoint');
+                cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
+                this.servicePrincipalId = servicePrincipalId;
+                this.servicePrincipalKey = cliPassword;
+            }
+
+            var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+
+            //login using svn
+            this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
+        }
+        else if(authScheme.toLowerCase() == "managedserviceidentity") {
+            //login using msi
+            this.throwIfError(tl.execSync("az", "login --identity"), tl.loc("MSILoginFailed"));
+        }
+        else{
+            throw tl.loc('AuthSchemeNotSupported', authScheme);
+        }
+
+        this.isLoggedIn = true;
         //set the subscription imported to the current subscription
         this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
     }

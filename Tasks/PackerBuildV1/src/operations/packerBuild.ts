@@ -31,13 +31,13 @@ export async function run(packerHost: packerHost): Promise<any> {
     var taskParameters = packerHost.getTaskParameters();
     var outputVariablesParser: definitions.IOutputParser;
     if (taskParameters.templateType === constants.TemplateTypeCustom) {
-        outputVariablesParser = new OutputVariablesParser([constants.PackerLogTokenImageUri, constants.PackerLogTokenStorageLocation, constants.PackerLogTokenManagedImageName, constants.PackerLogTokenManagedResourceGroupName, constants.PackerLogTokenManagedImageLocation]);
+        outputVariablesParser = new OutputVariablesParser([constants.PackerLogTokenImageUri, constants.PackerLogTokenStorageLocation, constants.PackerLogTokenManagedImageName, constants.PackerLogTokenManagedResourceGroupName, constants.PackerLogTokenManagedImageLocation, constants.PackerLogTokenManagedImageId]);
     }
     else {
         if (!taskParameters.isManagedImage) {
             outputVariablesParser = new OutputVariablesParser([constants.PackerLogTokenImageUri, constants.PackerLogTokenStorageLocation]);
         } else {
-            outputVariablesParser = new OutputVariablesParser([constants.PackerLogTokenManagedImageName, constants.PackerLogTokenManagedResourceGroupName, constants.PackerLogTokenManagedImageLocation]);
+            outputVariablesParser = new OutputVariablesParser([constants.PackerLogTokenManagedImageName, constants.PackerLogTokenManagedResourceGroupName, constants.PackerLogTokenManagedImageLocation, constants.PackerLogTokenManagedImageId]);
         }
     }
 
@@ -50,12 +50,24 @@ export async function run(packerHost: packerHost): Promise<any> {
 function setOutputVariables(packerHost: packerHost, outputs: Map<string, string>): void {
     var taskParameters = packerHost.getTaskParameters();
     var imageUri;
+    var imageId;
     var managedImageName;
+      
+    if (!utils.IsNullOrEmpty(taskParameters.imageId) && !(taskParameters.templateType == constants.TemplateTypeBuiltin && !taskParameters.isManagedImage)) {
+        imageId = getValueFromOutputs(constants.PackerLogTokenManagedImageId, outputs);
+
+        if (!utils.IsNullOrEmpty(imageId)) {
+            tl.debug("Setting image Id variable which contains the managed image Id to: " + imageId);
+            tl.setVariable(taskParameters.imageId, imageId);
+        } else {
+            throw tl.loc("ImageIDOutputVariableNotFound");
+        }
+    }
 
     if (!utils.IsNullOrEmpty(taskParameters.imageUri)) {
         if (taskParameters.templateType === constants.TemplateTypeBuiltin) {
             if (!taskParameters.isManagedImage) {
-                imageUri = outputs.get(constants.PackerLogTokenImageUri);
+                imageUri = getValueFromOutputs(constants.PackerLogTokenImageUri, outputs);
                 if (!utils.IsNullOrEmpty(imageUri)) {
                     tl.debug("Setting image URI variable to: " + imageUri);
                     tl.setVariable(taskParameters.imageUri, imageUri);
@@ -63,7 +75,7 @@ function setOutputVariables(packerHost: packerHost, outputs: Map<string, string>
                     throw tl.loc("ImageURIOutputVariableNotFound");
                 }
             } else {
-                imageUri = outputs.get(constants.PackerLogTokenManagedImageName);
+                imageUri = getValueFromOutputs(constants.PackerLogTokenManagedImageName, outputs);
                 if (!utils.IsNullOrEmpty(imageUri)) {
                     tl.debug("Setting image URI variable which contains the managed image name to: " + imageUri);
                     tl.setVariable(taskParameters.imageUri, imageUri);
@@ -72,8 +84,8 @@ function setOutputVariables(packerHost: packerHost, outputs: Map<string, string>
                 }
             }
         } else {
-            imageUri = outputs.get(constants.PackerLogTokenImageUri);
-            managedImageName = outputs.get(constants.PackerLogTokenManagedImageName);
+            imageUri = getValueFromOutputs(constants.PackerLogTokenImageUri, outputs);
+            managedImageName = getValueFromOutputs(constants.PackerLogTokenManagedImageName, outputs);
 
             if (!utils.IsNullOrEmpty(managedImageName)) {
                 tl.debug("Setting image URI variable which contains the managed image name to: " + managedImageName);
@@ -88,4 +100,17 @@ function setOutputVariables(packerHost: packerHost, outputs: Map<string, string>
             }
         }
     }
+}
+
+function getValueFromOutputs (key: string, outputs: Map<string, string>): string {
+    var value;
+    try {
+        value = outputs.get(key);
+    }
+    catch (ex)
+    {
+        // do not throw as this is try get
+    }
+
+    return value;
 }

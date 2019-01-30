@@ -3,6 +3,7 @@
   "name": "SqlAzureDacpacDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/sqlazuredeployreadme",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -16,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 3,
-    "Patch": 11
+    "Patch": 12
   },
   "demands": [
     "sqlpackage"
@@ -135,24 +136,24 @@
       "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
     },
     {
-      "name": "AADSqlUsername",
+      "name": "aadSqlUsername",
       "type": "string",
-      "label": "ms-resource:loc.input.label.AADSqlUsername",
+      "label": "ms-resource:loc.input.label.aadSqlUsername",
       "required": true,
       "groupName": "target",
       "defaultValue": "",
       "visibleRule": "AuthenticationType = aadAuthenticationPassword",
-      "helpMarkDown": "ms-resource:loc.input.help.AADSqlUsername"
+      "helpMarkDown": "ms-resource:loc.input.help.aadSqlUsername"
     },
     {
-      "name": "AADSqlPassword",
+      "name": "aadSqlPassword",
       "type": "string",
-      "label": "ms-resource:loc.input.label.AADSqlPassword",
+      "label": "ms-resource:loc.input.label.aadSqlPassword",
       "required": true,
       "groupName": "target",
       "defaultValue": "",
       "visibleRule": "AuthenticationType = aadAuthenticationPassword",
-      "helpMarkDown": "ms-resource:loc.input.help.AADSqlPassword"
+      "helpMarkDown": "ms-resource:loc.input.help.aadSqlPassword"
     },
     {
       "name": "ConnectionString",
@@ -362,6 +363,7 @@
     "SAD_DacpacFilePath": "ms-resource:loc.messages.SAD_DacpacFilePath",
     "SAD_BacpacFilePath": "ms-resource:loc.messages.SAD_BacpacFilePath",
     "SAD_PublishProfilePath": "ms-resource:loc.messages.SAD_PublishProfilePath",
-    "SAD_DriftReportWarning": "ms-resource:loc.messages.SAD_DriftReportWarning"
+    "SAD_DriftReportWarning": "ms-resource:loc.messages.SAD_DriftReportWarning",
+    "SAD_InvokeSQLCmdNotSupportingConnectionString": "ms-resource:loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString"
   }
 }

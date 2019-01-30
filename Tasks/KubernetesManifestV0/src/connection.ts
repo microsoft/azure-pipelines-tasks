@@ -1,7 +1,7 @@
 import * as tl from "vsts-task-lib/task";
 import * as path from "path";
 import * as fs from "fs";
-import * as utils from "./utilities";
+import * as utils from "./utils/FileHelper";
 import kubectlutility = require("utility-common/kubectlutility");
 
 export class Connection {
@@ -10,7 +10,7 @@ export class Connection {
         this._skipAuth = !!skipAuth;
     }
 
-    public async open() {
+    public open() {
         let connectionType = tl.getInput("connectionType", true);
         if (connectionType === "None" || this._skipAuth) {
             return;

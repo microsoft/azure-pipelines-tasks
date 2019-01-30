@@ -3,6 +3,7 @@
   "name": "AppCenterDistribute",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/appcentersupport/",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [

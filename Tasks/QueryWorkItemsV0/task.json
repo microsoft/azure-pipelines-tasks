@@ -4,6 +4,7 @@
     "friendlyName": "Query Work Items",
     "description": "Executes a work item query and checks for the number of items returned.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870238",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870238)",
     "category": "Utility",
     "visibility": [

@@ -3,6 +3,7 @@
   "name": "VSBuild",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613727",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -11,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 126,
+    "Minor": 147,
     "Patch": 0
   },
   "demands": [
@@ -44,6 +45,7 @@
       "defaultValue": "latest",
       "options": {
         "latest": "Latest",
+        "16.0": "Visual Studio 2019",
         "15.0": "Visual Studio 2017",
         "14.0": "Visual Studio 2015",
         "12.0": "Visual Studio 2013",
@@ -130,6 +132,23 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.createLogFile",
       "groupName": "advanced"
+    },
+    {
+      "name": "logFileVerbosity",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.logFileVerbosity",
+      "defaultValue": "normal",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.logFileVerbosity",
+      "groupName": "advanced",
+      "options": {
+        "quiet": "Quiet",
+        "minimal": "Minimal",
+        "normal": "Normal",
+        "detailed": "Detailed",
+        "diagnostic": "Diagnostic"
+      },
+      "visibleRule": "createLogFile = true"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

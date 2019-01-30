@@ -3,6 +3,7 @@
   "name": "AzureRmWebAppDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azurermwebdeployreadme",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -17,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 4,
-    "Patch": 20
+    "Patch": 21
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",

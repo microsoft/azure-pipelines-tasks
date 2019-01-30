@@ -3,6 +3,7 @@
     "name": "AzureResourceGroupDeployment",
     "friendlyName": "Azure Resource Group Deployment",
     "description": "Deploy an Azure resource manager (ARM) template to a resource group. You can also start, stop, delete, deallocate all Virtual Machines (VM) in a resource group",
+    "helpUrl": "https://aka.ms/argtaskreadme",
     "helpMarkDown": "[More Information](https://aka.ms/argtaskreadme)",
     "category": "Deploy",
     "releaseNotes": "-Works with cross-platform agents (Linux, macOS, or Windows)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
@@ -13,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 145,
-        "Patch": 0
+        "Minor": 147,
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -296,6 +297,15 @@
             "defaultValue": "",
             "groupName": "Advanced",
             "helpMarkDown": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values."
+        },
+        {
+            "name": "addSpnToEnvironment",
+            "type": "boolean",
+            "label": "Access service principal details in override parameters",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId` and `$servicePrincipalKey` in your override parameters like `-key $servicePrincipalKey`",
+            "groupName": "Advanced"
         }
     ],
     "dataSourceBindings": [
@@ -467,6 +477,7 @@
         "UserNameCannotBeNull": "If the 'Run agent service as a user' input is selected, then 'User name' cannot be null.",
         "ASE_SSLIssueRecommendation": "To use a certificate, the certificate must be signed by a trusted certificate authority. If getting certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline.",
         "MoreInformationOnAzurePortal": "More information on Azure Portal",
-        "ResponseNotValid": "Response is not in a valid format"
+        "ResponseNotValid": "Response is not in a valid format",
+        "LogDeploymentName": "Deployment name is %s"
     }
 }

@@ -3,6 +3,8 @@
   "name": "AzurePolicyCheckGate",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Release"
@@ -102,6 +104,5 @@
         }
       ]
     }
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }

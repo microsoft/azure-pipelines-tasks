@@ -27,7 +27,7 @@ export class Kubectl {
         command.arg(["--namespace", this.namespace]);
         return command.execSync();
     }
-
+    
     public annotate(resourceType: string, resourceName: string, annotations: string[], overwrite?: boolean): IExecSyncResult {
         var command = tl.tool(this.kubectlPath);
         command.arg("annotate");
@@ -85,6 +85,16 @@ export class Kubectl {
         return command.execSync();
     }
 
+    public getResource(resourceType: string, name: string): IExecSyncResult {
+        var command = tl.tool(this.kubectlPath);
+        command.arg("get");
+        command.arg(resourceType + "/" + name);
+        command.arg(["--namespace", this.namespace]);
+        command.arg(["-o", "json"])
+        command.arg("--export=true");
+        return command.execSync();
+    }
+
     public getResources(applyOutput: string, filterResourceTypes: string[]): Resource[] {
         let outputLines = applyOutput.split("\n");
         let results = [];
@@ -102,6 +112,25 @@ export class Kubectl {
         });
 
         return results;
+    }
+
+    public scale(resourceType, resourceName, replicas) {
+        var command = tl.tool(this.kubectlPath);
+        command.arg("scale");
+        command.arg(resourceType + "/" + resourceName);
+        command.arg(`--replicas=${replicas}`);
+        command.arg(["--namespace", this.namespace]);
+        return command.execSync();
+    }
+
+    public patch(resourceType, resourceName, patch, strategy) {
+        var command = tl.tool(this.kubectlPath);
+        command.arg("patch");
+        command.arg([resourceType, resourceName]);
+        command.arg(["--namespace", this.namespace]);
+        command.arg(`--type=${strategy}`);
+        command.arg([`-p`, patch]);
+        return command.execSync();
     }
 
     private createInlineArray(str: string | string[]): string {

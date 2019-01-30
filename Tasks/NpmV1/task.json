@@ -3,13 +3,14 @@
     "name": "Npm",
     "friendlyName": "npm",
     "description": "Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Package Management.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613746",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 147,
-        "Patch": 1
+        "Patch": 3
     },
     "runsOn": [
         "Agent",
@@ -99,8 +100,8 @@
         {
             "groupName": "customRegistries",
             "name": "customEndpoint",
-            "label": "Credentials for registries outside this account/collection",
-            "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this account/collection, leave this blank; the build’s credentials are used automatically.",
+            "label": "Credentials for registries outside this organization/collection",
+            "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this organization/collection, leave this blank; the build’s credentials are used automatically.",
             "type": "connectedService:externalnpmregistry",
             "visibleRule": "customRegistry = useNpmrc",
             "properties": {
@@ -184,7 +185,7 @@
         "PublishRegistry": "Publishing to registry: %s",
         "UsingRegistry": "Using registry: %s",
         "AddingAuthRegistry": "Adding auth for registry: %s",
-        "FoundLocalRegistries": "Found %d registries in this account/collection",
+        "FoundLocalRegistries": "Found %d registries in this organization/collection",
         "ForcePackagingUrl": "Packaging collection URL forced to: %s",
         "DebugLogNotFound": "Couldn't find a debug log in the cache or working directory",
         "NpmFailed": "Npm failed with return code: %s",

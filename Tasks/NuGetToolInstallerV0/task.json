@@ -3,6 +3,7 @@
     "name": "NuGetToolInstaller",
     "friendlyName": "NuGet Tool Installer",
     "description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this task to change the version of NuGet used in the NuGet tasks.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=852538",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=852538)",
     "category": "Tool",
     "runsOn": [
