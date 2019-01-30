@@ -1,13 +1,11 @@
 var path = require("path");
 
-import * as locationUtility from "packaging-common/locationUtilities";
 import * as tl from "vsts-task-lib/task";
 import * as nutil from "packaging-common/nuget/Utility";
 
 import { PackageUrlsBuilder } from "./packagebuilder";
 import { Extractor } from "./extractor";
-import { WebApi } from "azure-devops-node-api";
-import { BearerHandlerForPresignedUrls } from "./credentialprovider";
+import { getConnection } from "./connections";
 
 tl.setResourcePath(path.join(__dirname, "task.json"));
 
@@ -59,7 +57,7 @@ async function main(): Promise<void> {
         .matchingPattern(files)
         .withMaxRetries(retryLimit)
         .build();
-    tl.debug("hello ");
+
     var extractors: Extractor[] = await p.download(feedId, packageId, version, downloadPath);
 
     if (extractPackage) {
@@ -67,19 +65,6 @@ async function main(): Promise<void> {
             extractor.extractFile();
         });
     }
-}
-
-
-function getConnection(areaId: string, collectionUrl: string): Promise<WebApi> {
-    var accessToken = locationUtility.getSystemAccessToken();
-    return locationUtility
-        .getServiceUriFromAreaId(collectionUrl, accessToken, areaId)
-        .then(url => {
-            return new WebApi(url, new BearerHandlerForPresignedUrls(accessToken));
-        })
-        .catch(error => {
-            throw error;
-        });
 }
 
 function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount): Promise<any> {
