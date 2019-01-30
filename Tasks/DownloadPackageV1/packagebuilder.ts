@@ -1,9 +1,9 @@
 import * as tl from "vsts-task-lib/task";
-import * as vsts from "vso-node-api/WebApi";
 
 import { Package } from "./package";
 import { SingleFilePackage } from "./singlefilepackage";
 import { MultiFilePackage } from "./multifilepackage";
+import { WebApi } from "azure-devops-node-api";
 
 export class PackageUrlsBuilder {
     private type: string;
@@ -12,8 +12,8 @@ export class PackageUrlsBuilder {
     private packagingMetadataAreaId: string;
     private packageProtocolDownloadAreadId: string;
     private extension: string;
-    private feedConnection: vsts.WebApi;
-    private pkgsConnection: vsts.WebApi;
+    private feedConnection: WebApi;
+    private pkgsConnection: WebApi;
     private packageProtocolAreaName: string;
     private blobStoreRedirectEnabled: boolean = false;
 
@@ -90,20 +90,20 @@ export class PackageUrlsBuilder {
         return this;
     }
 
-    get PkgsConnection(): vsts.WebApi {
+    get PkgsConnection(): WebApi {
         return this.pkgsConnection;
     }
 
-    withPkgsConnection(connection: vsts.WebApi): PackageUrlsBuilder {
+    withPkgsConnection(connection: WebApi): PackageUrlsBuilder {
         this.pkgsConnection = connection;
         return this;
     }
 
-    get FeedsConnection(): vsts.WebApi {
+    get FeedsConnection(): WebApi {
         return this.feedConnection;
     }
 
-    withFeedsConnection(connection: vsts.WebApi): PackageUrlsBuilder {
+    withFeedsConnection(connection: WebApi): PackageUrlsBuilder {
         this.feedConnection = connection;
         return this;
     }

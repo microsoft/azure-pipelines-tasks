@@ -1,29 +1,38 @@
 var path = require("path");
 
-import * as vsts from "vso-node-api/WebApi";
 import * as locationUtility from "packaging-common/locationUtilities";
 import * as tl from "vsts-task-lib/task";
 import * as nutil from "packaging-common/nuget/Utility";
 
 import { PackageUrlsBuilder } from "./packagebuilder";
 import { Extractor } from "./extractor";
+import { WebApi } from "azure-devops-node-api";
+import { BearerHandlerForPresignedUrls } from "./credentialprovider";
 
 tl.setResourcePath(path.join(__dirname, "task.json"));
 
 async function main(): Promise<void> {
     // TODO Get that logic to check for GUID from v0 after verifying why its needed.
- 
 
     // Getting inputs.
-    let packageType = tl.getInput("packageType");
+    // let packageType = tl.getInput("packageType");
+    // let feedId = tl.getInput("feed");
+    // let viewId = tl.getInput("view");
+    // let packageId = tl.getInput("definition");
+    // let version = tl.getInput("version");
+    // let downloadPath = tl.getInput("downloadPath");
+    // let filesPattern = tl.getInput("files");
+    // let extractPackage = tl.getInput("extract") === "true";
+
+    let packageType = tl.getVariable("packageType");
     let feedId = tl.getInput("feed");
-    let viewId = tl.getInput("view");
-    let packageId = tl.getInput("definition");
-    let version = tl.getInput("version");
+    let viewId = tl.getVariable("view");
+    let packageId = tl.getVariable("definition");
+    let version = tl.getVariable("version");
     let downloadPath = tl.getInput("downloadPath");
-    let filesPattern = tl.getInput("files");
-    let extractPackage = tl.getInput("extract") === "true";
-    
+    let filesPattern = tl.getVariable("files");
+    let extractPackage = tl.getVariable("extract") === "true";
+
     // Getting variables.
     const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
     const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
@@ -31,12 +40,12 @@ async function main(): Promise<void> {
     const deleteArchive = tl.getVariable("deleteArchive") === "true";
     const skipDownload = tl.getVariable("skipDownload") === "true";
 
-    if(viewId) {
+    if (viewId) {
         feedId = feedId + "@" + viewId;
     }
-        
+
     let files: string[] = [];
-    if(filesPattern) {
+    if (filesPattern) {
         files = nutil.getPatternsArrayFromInput(filesPattern);
     }
 
@@ -50,15 +59,8 @@ async function main(): Promise<void> {
         .matchingPattern(files)
         .withMaxRetries(retryLimit)
         .build();
-
-    var extractors: Extractor[] = await executeWithRetries(
-        "downloadPackageFiles",
-        () =>
-            p.download(feedId, packageId, version, downloadPath).catch(reason => {
-                throw reason;
-            }),
-        retryLimit
-    );
+    tl.debug("hello ");
+    var extractors: Extractor[] = await p.download(feedId, packageId, version, downloadPath);
 
     if (extractPackage) {
         extractors.forEach(extractor => {
@@ -67,22 +69,13 @@ async function main(): Promise<void> {
     }
 }
 
-function getAccessToken() {
-    var auth = tl.getEndpointAuthorization("SYSTEMVSSCONNECTION", false);
-    if (auth.scheme.toLowerCase() === "oauth") {
-        return auth.parameters["AccessToken"];
-    } else {
-        throw new Error(tl.loc("CredentialsNotFound"));
-    }
-}
 
-function getConnection(areaId: string, collectionUrl: string): Promise<vsts.WebApi> {
-    var accessToken = getAccessToken();
-    var credentialHandler = vsts.getBearerHandler(accessToken);
+function getConnection(areaId: string, collectionUrl: string): Promise<WebApi> {
+    var accessToken = locationUtility.getSystemAccessToken();
     return locationUtility
         .getServiceUriFromAreaId(collectionUrl, accessToken, areaId)
         .then(url => {
-            return new vsts.WebApi(url, credentialHandler);
+            return new WebApi(url, new BearerHandlerForPresignedUrls(accessToken));
         })
         .catch(error => {
             throw error;

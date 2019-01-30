@@ -17,9 +17,11 @@ export class SingleFilePackage extends Package {
                 packageId: packageId
             })
                 .then(packageMetadata => {
+
+                    console.log("mdsd " + packageMetadata.name);
                     var packageName = packageMetadata.name;                
                     this.getUrl(
-                        this.pkgsConnection.getCoreApi().vsoClient,
+                        this.pkgsConnection.vsoClient,
                         this.packageProtocolAreaName,
                         this.packageProtocolDownloadAreadId,
                         {
@@ -29,8 +31,11 @@ export class SingleFilePackage extends Package {
                         }
                     )
                         .then(downloadUrl => {
+                            
                             var urls = new Map<string, Result>();
                             urls[packageName +  this.extension] = new Result(downloadUrl, true);
+                            console.log("urls here" + packageName);
+                            console.log("sadf " + downloadUrl);
                             return resolve(urls);
                         })
                         .catch(error => {

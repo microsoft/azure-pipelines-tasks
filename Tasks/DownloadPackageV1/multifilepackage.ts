@@ -27,7 +27,7 @@ export class MultiFilePackage extends Package {
     ): Promise<Map<string, Result>> {
         return new Promise<Map<string, Result>>((resolve, reject) => {
             this.getUrl(
-                this.pkgsConnection.getCoreApi().vsoClient,
+                this.pkgsConnection.vsoClient,
                 this.packageProtocolAreaName,
                 this.packageProtocolDownloadAreadId,
                 this.getRouteParams(feedId, packageMetadata, fileMetadata)

@@ -1,15 +1,14 @@
 var fs = require("fs");
 var path = require("path");
-var downloadutility = require("utility-common/downloadutility");
 
-import * as vsts from "vso-node-api/WebApi";
-import * as vsom from "vso-node-api/VsoClient";
 import * as tl from "vsts-task-lib/task";
-import * as corem from "vso-node-api/CoreApi";
 
-import { IncomingMessage } from "http";
 import { Extractor } from "./extractor";
 import { PackageUrlsBuilder } from "./packagebuilder";
+import { WebApi } from "azure-devops-node-api";
+import { VsoClient } from "azure-devops-node-api/VsoClient";
+import { ICoreApi } from "azure-devops-node-api/CoreApi";
+import stream = require("stream");
 
 export class Result {
     private value: string;
@@ -33,18 +32,11 @@ export abstract class Package {
     protected packageProtocolAreaName: string;
     protected packageProtocolDownloadAreadId: string;
     protected extension: string;
-    protected feedConnection: vsts.WebApi;
-    protected pkgsConnection: vsts.WebApi;
+    protected feedConnection: WebApi;
+    protected pkgsConnection: WebApi;
 
     private packagingAreaName: string = "Packaging";
     private packagingMetadataAreaId: string;
-
-    private downloadFile: (
-        coreApi: corem.ICoreApi,
-        downloadUrl: string,
-        downloadPath: string,
-        unzipLocation: string
-    ) => Promise<Extractor>;
 
     constructor(builder: PackageUrlsBuilder) {
         this.maxRetries = builder.MaxRetries;
@@ -54,12 +46,6 @@ export abstract class Package {
         this.extension = builder.Extension;
         this.feedConnection = builder.FeedsConnection;
         this.pkgsConnection = builder.PkgsConnection;
-
-        if (builder.BlobStoreRedirectEnabled) {
-            this.downloadFile = this.downloadFileThroughBlobstore;
-        } else {
-            this.downloadFile = this.downloadFileDirect;
-        }
     }
 
     protected abstract async getDownloadUrls(
@@ -69,7 +55,7 @@ export abstract class Package {
     ): Promise<Map<string, Result>>;
 
     protected async getUrl(
-        vsoClient: vsom.VsoClient,
+        vsoClient: VsoClient,
         areaName: string,
         areaId: string,
         routeValues: any,
@@ -84,32 +70,38 @@ export abstract class Package {
                 queryParams
             );
             getVersioningDataPromise.then(result => {
+                tl.debug("result " + result);
                 return resolve(result.requestUrl);
             });
             getVersioningDataPromise.catch(error => {
+                tl.debug("result " + error);
+
                 return reject(error);
             });
         });
     }
 
-    protected async getPackageMetadata(connection: vsts.WebApi, routeValues: any, queryParams?: any): Promise<any> {
+    protected async getPackageMetadata(connection: WebApi, routeValues: any, queryParams?: any): Promise<any> {
         var metadataUrl = await this.getUrl(
-            connection.getCoreApi().vsoClient,
+            connection.vsoClient,
             this.packagingAreaName,
             this.packagingMetadataAreaId,
             routeValues,
             queryParams
         );
+        tl.debug("result " + metadataUrl);
 
-        var client = connection.getCoreApi().restClient;
+        var client = connection.rest;
 
         return new Promise((resolve, reject) => {
-            client.get(metadataUrl, null, null, { responseIsCollection: false }, async function(error, status, result) {
-                if (!!error || status != 200) {
+            client
+                .get(metadataUrl)
+                .then(response => {
+                    return resolve(response.result);
+                })
+                .catch(error => {
                     return reject(tl.loc("FailedToGetPackageMetadata", error));
-                }
-                return resolve(result);
-            });
+                });
         });
     }
 
@@ -121,22 +113,20 @@ export abstract class Package {
     ): Promise<Extractor[]> {
         return new Promise<Extractor[]>(async (resolve, reject) => {
             return this.getDownloadUrls(feedId, packageId, packageVersion)
-                .then(downloadUrls => {
+                .then(async downloadUrls => {
                     if (!tl.exist(downloadPath)) {
                         tl.mkdirP(downloadPath);
                     }
                     var promises: Promise<Extractor>[] = [];
+                    var coreApi = await this.pkgsConnection.getCoreApi();
                     Object.keys(downloadUrls).map(fileName => {
+
                         var zipLocation = path.resolve(downloadPath, "../", fileName);
                         var unzipLocation = path.join(downloadPath, "");
+
                         promises.push(
                             downloadUrls[fileName].IsUrl
-                                ? this.downloadFile(
-                                      this.pkgsConnection.getCoreApi(),
-                                      downloadUrls[fileName].Value,
-                                      zipLocation,
-                                      unzipLocation
-                                  )
+                                ? this.downloadFile(coreApi, downloadUrls[fileName].Value, zipLocation, unzipLocation)
                                 : this.writeFile(downloadUrls[fileName].Value, zipLocation, unzipLocation)
                         );
                     });
@@ -144,6 +134,7 @@ export abstract class Package {
                     return resolve(Promise.all(promises));
                 })
                 .catch(error => {
+                    tl.debug("error " + error);
                     return reject(error);
                 });
         });
@@ -161,67 +152,38 @@ export abstract class Package {
         });
     }
 
-    // TODO Remove this once redirect based download is implemented
-    private async downloadFileDirect(
-        coreApi: corem.ICoreApi,
+    private async downloadFile(
+        coreApi: ICoreApi,
         downloadUrl: string,
         downloadPath: string,
         unzipLocation: string
     ): Promise<Extractor> {
         return new Promise<Extractor>((resolve, reject) => {
-            return coreApi.restClient.httpClient.getStream(downloadUrl, null, function(error, status, result) {
+            return coreApi.http.get(downloadUrl).then(response => {
+
+                var responseStream = response.message as stream.Readable;
                 var file = fs.createWriteStream(downloadPath);
+                console.log("hello" + file);
+                responseStream.pipe(file);
+                console.log("hello2" + file);
 
-                if (!!error || status != 200) {
-                    console.log(
-                        "error bad status " + JSON.stringify(error) + " status " + status + " result " + result
-                    );
-                    file.close();
-                    return reject(tl.loc("FailedToDownloadPackage", downloadUrl, error));
-                }
-
-                result.pipe(
-                    file,
-                    { end: true }
-                );
-                result.on("end", () => {
+                responseStream.on("end", () => {
                     console.log(tl.loc("PackageDownloadSuccessful"));
                     file.on("close", () => {
+                        console.log("hellfdo");
                         var extractor = new Extractor(downloadPath, unzipLocation);
                         return resolve(extractor);
                     });
                 });
-                result.on("error", err => {
+                responseStream.on("error", err => {
                     console.log("error file close " + JSON.stringify(err));
                     return reject(tl.loc("FailedToDownloadPackage", downloadUrl, err));
                 });
+            }).catch(error => {
+                console.log("rejsadf " + error);
+                return reject(tl.loc("FailedToDownloadPackage", downloadUrl, error));
             });
         });
     }
 
-    private async downloadFileThroughBlobstore(
-        coreApi: corem.ICoreApi,
-        downloadUrl: string,
-        downloadPath: string,
-        unzipLocation: string
-    ): Promise<Extractor> {
-        return new Promise<Extractor>((resolve, reject) => {
-            coreApi.restClient.httpClient.get("GET", downloadUrl, {}, async function(res: IncomingMessage) {
-                if (res.statusCode >= 300 && res.statusCode < 400 && res.headers && res.headers.location) {
-                    var redirectUrl = encodeURI(decodeURIComponent(res.headers.location));
-
-                    downloadutility
-                        .download(redirectUrl, downloadPath, false, false)
-                        .then(() => {
-                            return resolve(new Extractor(downloadPath, unzipLocation));
-                        })
-                        .catch(error => {
-                            return reject(error);
-                        });
-                } else {
-                    return reject(tl.loc("RedirectUrlError", res.statusMessage));
-                }
-            });
-        });
-    }
 }
