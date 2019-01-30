@@ -3,6 +3,7 @@
   "name": "DockerCompose",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=848006",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -13,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 4,
-    "Patch": 25
+    "Patch": 26
   },
   "demands": [],
   "preview": "false",

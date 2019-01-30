@@ -80,10 +80,38 @@
             "helpMarkDown": "Choose the action to be performed."
         },
         {
+            "name": "deploymentStrategy",
+            "type": "pickList",
+            "label": "Strategy",
+            "required": false,
+            "groupName": "config",
+            "defaultValue": "None",
+            "options": {
+              "canary": "Canary",
+              "None": "None"
+            },
+            "helpMarkDown": "Strategy for deployment",
+            "visibleRule": "action = deploy"
+          },
+          {
+            "name": "percentage",
+            "type": "string",
+            "label": "Percentage",
+            "required": true,
+            "groupName": "config",
+            "helpMarkDown": "",
+            "defaultValue": 0,
+            "visibleRule": "deploymentStrategy = Canary",  
+            "validation": {
+              "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')", 
+              "message": "Enter valid percentage value i.e between 0 to 100."
+            }
+          },
+        {
             "name": "manifests",
             "type": "filePath",
             "label": "Manifests",
-            "required": false,
+            "required": true,
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Manifests to deploy",
@@ -317,6 +345,10 @@
         "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
         "ManifestFileNotFound": "No manifest file(s) matching %s was found.",
         "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
-        "UnknownRenderType": "Unknown render engine"
+        "UnknownRenderType": "Unknown render engine",
+        "ResourceKindNotDefined": "Resource kind is null",
+        "NullInputObject": "Input object is null.",
+        "NullInputObjectMetadata": "Input object metadata is null.",
+        "CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment"
     }
 }

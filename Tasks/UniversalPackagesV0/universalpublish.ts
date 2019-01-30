@@ -3,9 +3,9 @@ import {ProvenanceHelper} from "packaging-common/provenance";
 import * as telemetry from "utility-common/telemetry";
 import * as tl from "vsts-task-lib";
 import {IExecOptions, IExecSyncResult} from "vsts-task-lib/toolrunner";
-import * as artifactToolRunner from "./Common/ArtifactToolRunner";
-import * as artifactToolUtilities from "./Common/ArtifactToolUtilities";
-import * as auth from "./Common/Authentication";
+import * as artifactToolRunner from "packaging-common/universal/ArtifactToolRunner";
+import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolUtilities";
+import * as auth from "packaging-common/universal/Authentication";
 
 export async function run(artifactToolPath: string): Promise<void> {
     let buildIdentityDisplayName: string = null;

@@ -13,6 +13,9 @@
   "loc.input.help.namespace": "Sets the namespace for the commands by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace.",
   "loc.input.label.action": "Action",
   "loc.input.help.action": "Choose the action to be performed.",
+  "loc.input.label.deploymentStrategy": "Strategy",
+  "loc.input.help.deploymentStrategy": "Strategy for deployment",
+  "loc.input.label.percentage": "Percentage",
   "loc.input.label.manifests": "Manifests",
   "loc.input.help.manifests": "Manifests to deploy",
   "loc.input.label.containers": "Containers",
@@ -60,5 +63,9 @@
   "loc.messages.NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
   "loc.messages.ManifestFileNotFound": "No manifest file(s) matching %s was found.",
   "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
-  "loc.messages.UnknownRenderType": "Unknown render engine"
+  "loc.messages.UnknownRenderType": "Unknown render engine",
+  "loc.messages.ResourceKindNotDefined": "Resource kind is null",
+  "loc.messages.NullInputObject": "Input object is null.",
+  "loc.messages.NullInputObjectMetadata": "Input object metadata is null.",
+  "loc.messages.CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment"
 }

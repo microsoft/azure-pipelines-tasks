@@ -128,8 +128,16 @@ class azureclitask {
     var servicePrincipalKey = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
     var tenantId = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
     var subscriptionName = tl.getEndpointDataParameter(connectedService, "SubscriptionName", true);
+    var environment = tl.getEndpointDataParameter(connectedService, "environment", true);
     // Work around for build agent az command will exit with non-zero code since configuration files are missing.
     tl.debug(tl.execSync("az", "--version", Constants.execSyncSilentOption).stdout);
+
+    // Set environment if it is not AzureCloud (global Azure)
+    if (environment && environment !== 'AzureCloud') {
+      let result = tl.execSync("az", `cloud set --name ${environment}`, Constants.execSyncSilentOption);
+      tl.debug(JSON.stringify(result));
+    }
+
     //login using svn
     let result = tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + servicePrincipalKey + "\" --tenant \"" + tenantId + "\"", Constants.execSyncSilentOption);
     tl.debug(JSON.stringify(result));

@@ -3,13 +3,14 @@
   "name": "Npm",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613746",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 147,
-    "Patch": 1
+    "Patch": 3
   },
   "runsOn": [
     "Agent",

@@ -80,10 +80,38 @@
       "helpMarkDown": "ms-resource:loc.input.help.action"
     },
     {
+      "name": "deploymentStrategy",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.deploymentStrategy",
+      "required": false,
+      "groupName": "config",
+      "defaultValue": "None",
+      "options": {
+        "canary": "Canary",
+        "None": "None"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentStrategy",
+      "visibleRule": "action = deploy"
+    },
+    {
+      "name": "percentage",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.percentage",
+      "required": true,
+      "groupName": "config",
+      "helpMarkDown": "",
+      "defaultValue": 0,
+      "visibleRule": "deploymentStrategy = Canary",
+      "validation": {
+        "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
+        "message": "Enter valid percentage value i.e between 0 to 100."
+      }
+    },
+    {
       "name": "manifests",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.manifests",
-      "required": false,
+      "required": true,
       "defaultValue": "",
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.manifests",
@@ -317,6 +345,10 @@
     "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
     "ManifestFileNotFound": "ms-resource:loc.messages.ManifestFileNotFound",
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
-    "UnknownRenderType": "ms-resource:loc.messages.UnknownRenderType"
+    "UnknownRenderType": "ms-resource:loc.messages.UnknownRenderType",
+    "ResourceKindNotDefined": "ms-resource:loc.messages.ResourceKindNotDefined",
+    "NullInputObject": "ms-resource:loc.messages.NullInputObject",
+    "NullInputObjectMetadata": "ms-resource:loc.messages.NullInputObjectMetadata",
+    "CanaryDeploymentAlreadyExistErrorMessage": "ms-resource:loc.messages.CanaryDeploymentAlreadyExistErrorMessage"
   }
 }

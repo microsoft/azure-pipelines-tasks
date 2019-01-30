@@ -30,6 +30,11 @@ Register-Mock Set-UserAgent { }
 Register-Mock Add-Certificate { }
 
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
+& $module {
+$script:azureModule = $null
+$script:azureRMProfileModule = @{ Version = [version]'1.2.3.4' }
+}
+
 $result = & $module Initialize-AzureSubscription -Endpoint $endpoint 
 
 Assert-WasCalled Add-AzureRMAccount
