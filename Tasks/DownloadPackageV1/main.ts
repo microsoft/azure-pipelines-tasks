@@ -24,7 +24,7 @@ async function main(): Promise<void> {
     const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
     const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
     const retryLimit: number = !!retryLimitValue && !isNaN(parseInt(retryLimitValue)) ? parseInt(retryLimitValue) : 4;
-    const skipDownload = tl.getVariable("skipDownload") === "true";
+    const skipDownload = tl.getVariable("Packaging.SkipDownload") === "true";
 
     if (skipDownload) {
         tl.debug("Download Package skipped.");
@@ -61,7 +61,7 @@ async function main(): Promise<void> {
     
     if (extractPackage) {
         extractors.forEach(extractor => {
-            extractor.extractFile();
+            extractor.extract();
         });
     }
 

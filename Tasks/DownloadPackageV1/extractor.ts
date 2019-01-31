@@ -1,14 +1,12 @@
-import * as os from "os";
-import * as taskLib from "vsts-task-lib/task";
-import * as toolLib from "vsts-task-tool-lib/tool";
+import * as tl from "vsts-task-lib/task";
 import * as path from "path";
+import * as fs from "fs";
+var tar = require("tar-fs");
+var zlib = require("zlib");
+var DecompressZip = require('decompress-zip');
 
 export class Extractor {
     public readonly win: boolean;
-
-    // 7zip
-    public xpSevenZipLocation: string;
-    public winSevenZipLocation: string = path.join(__dirname, "7zip/7z.exe");
 
     private zipLocation: string;
     private unzipLocation: string;
@@ -16,110 +14,45 @@ export class Extractor {
     constructor(zipLocation: string, unzipLocation: string) {
         this.zipLocation = zipLocation;
         this.unzipLocation = unzipLocation;
-        this.win = os.platform() === "win32";
-        taskLib.debug("win: " + this.win);
     }
 
-    private getSevenZipLocation(): string {
-        if (this.win) {
-            return this.winSevenZipLocation;
-        } else {
-            if (typeof this.xpSevenZipLocation === "undefined") {
-                this.xpSevenZipLocation = taskLib.which("7z", true);
-            }
-            return this.xpSevenZipLocation;
-        }
-    }
-
-    private isTar(file): boolean {
-        const name = file.toLowerCase();
-        // standard gnu-tar extension formats with recognized auto compression formats
-        // https://www.gnu.org/software/tar/manual/html_section/tar_69.html
-        return (
-            name.endsWith(".tar") || // no compression
-            name.endsWith(".tar.gz") || // gzip
-            name.endsWith(".tgz") || // gzip
-            name.endsWith(".taz") || // gzip
-            name.endsWith(".tar.z") || // compress
-            name.endsWith(".tar.bz2") || // bzip2
-            name.endsWith(".tz2") || // bzip2
-            name.endsWith(".tbz2") || // bzip2
-            name.endsWith(".tbz") || // bzip2
-            name.endsWith(".tar.lz") || // lzip
-            name.endsWith(".tar.lzma") || // lzma
-            name.endsWith(".tlz") || // lzma
-            name.endsWith(".tar.lzo") || // lzop
-            name.endsWith(".tar.xz") || // xz
-            name.endsWith(".txz")
-        ); // xz
-    }
-
-    private sevenZipExtract(file: string, destinationFolder: string) {
-        //We have to create our own 7Zip extract function as the vsts-task-tool-lib
-        //method uses 7zDec, which only decodes .7z archives
-        console.log(taskLib.loc("SevenZipExtractFile", file));
-        const sevenZip = taskLib.tool(this.getSevenZipLocation());
-        sevenZip.arg("x");
-        sevenZip.arg("-o" + destinationFolder);
-        sevenZip.arg(file);
-        const execResult = sevenZip.execSync();
-        if (execResult.code != taskLib.TaskResult.Succeeded) {
-            taskLib.debug("execResult: " + JSON.stringify(execResult));
-        }
-    }
-
-    async extractFile() {
-        const stats = taskLib.stats(this.zipLocation);
-        if (!stats) {
-            throw new Error(taskLib.loc("ExtractNonExistFile", this.zipLocation));
-        } else if (stats.isDirectory()) {
-            throw new Error(taskLib.loc("ExtractDirFailed", this.zipLocation));
-        }
-
+    async extract(): Promise<void> {
         const fileEnding = path.parse(this.zipLocation).ext;
-
-        if (this.win) {
-            if (".tar" === fileEnding) {
-                // a simple tar
-                return this.sevenZipExtract(this.zipLocation, this.unzipLocation);
-            } else if (this.isTar(this.zipLocation)) {
-                // a compressed tar, e.g. 'fullFilePath/test.tar.gz'
-                // e.g. 'fullFilePath/test.tar.gz' --> 'test.tar.gz'
-                const shortFileName = path.basename(this.zipLocation);
-                // e.g. 'destinationFolder/_test.tar.gz_'
-                const tempFolder = path.normalize(this.unzipLocation + path.sep + "_" + shortFileName + "_");
-                console.log(taskLib.loc("CreateTempDir", tempFolder, this.zipLocation));
-
-                // 0 create temp folder
-                taskLib.mkdirP(tempFolder);
-
-                // 1 extract compressed tar
-                this.sevenZipExtract(this.zipLocation, tempFolder);
-
-                console.log(taskLib.loc("TempDir", tempFolder));
-                const tempTar = tempFolder + path.sep + taskLib.ls("-A", [tempFolder])[0]; // should be only one
-                console.log(taskLib.loc("DecompressedTempTar", this.zipLocation, tempTar));
-
-                // 2 expand extracted tar
-                this.sevenZipExtract(tempTar, this.unzipLocation);
-
-                // 3 cleanup temp folder
-                console.log(taskLib.loc("RemoveTempDir", tempFolder));
-                taskLib.rmRF(tempFolder);
-            } else {
-                // use sevenZip
-                this.sevenZipExtract(this.zipLocation, this.unzipLocation);
-            }
-        } else {
-            // not windows
-            if (".tar" === fileEnding || ".tar.gz" === fileEnding) {
-                await toolLib.extractTar(this.zipLocation);
-            } else if (".zip" === fileEnding) {
-                await toolLib.extractZip(this.zipLocation);
-            } else {
-                // fall through and use sevenZip
-                this.sevenZipExtract(this.zipLocation, this.unzipLocation);
-            }
+        switch (fileEnding) {
+            case ".zip":
+                return this.unzip(this.zipLocation, this.unzipLocation);
+            case ".tgz":
+                return this.unTarGz(this.zipLocation, this.unzipLocation);
+            default:
+                return Promise.reject(tl.loc("UnsupportedArchiveType", fileEnding));
         }
+    }
+
+    async unTarGz(zipLocation: string, unzipLocation: string): Promise<void> {
+        return Promise.resolve(
+            fs
+                .createReadStream(zipLocation)
+                .pipe(zlib.createGunzip())
+                .pipe(tar.extract(unzipLocation))
+        );
+    }
+
+    async unzip(zipLocation: string, unzipLocation: string): Promise<void> {
+        return new Promise<void>(function(resolve, reject) {
+            tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
+
+            var unzipper = new DecompressZip(zipLocation);
+            unzipper.on("error", err => {
+                return reject(tl.loc("ExtractionFailed", err));
+            });
+            unzipper.on("extract", () => {
+                tl.debug("Extracted " + zipLocation + " to " + unzipLocation + " successfully");
+                return resolve();
+            });
+
+            unzipper.extract({
+                path: unzipLocation
+            });
+        });
     }
 }

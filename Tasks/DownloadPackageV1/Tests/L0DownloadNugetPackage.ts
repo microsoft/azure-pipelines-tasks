@@ -8,13 +8,13 @@ let outputPath: string = path.join(__dirname, "out", "packageOutput");
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs
-tr.setInput("packageType", "Maven");
+tr.setInput("packageType", "NuGet");
 tr.setInput("feed", "feedId");
 tr.setInput("view", "viewId");
 tr.setInput("definition", "packageId");
 tr.setInput("version", "versionId");
 tr.setInput("downloadPath", outputPath);
-tr.setInput("files", "*.jar; *.pom");
+tr.setInput("extract", "true");
 tr.setInput("verbosity", "verbose");
 
 // Set variables.

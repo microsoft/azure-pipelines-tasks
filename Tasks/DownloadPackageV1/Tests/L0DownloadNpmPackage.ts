@@ -4,14 +4,10 @@ import { WebApiMock } from "./helpers/webapimock";
 
 let taskPath = path.join(__dirname, "..", "main.js");
 let outputPath: string = path.join(__dirname, "out", "packageOutput");
-let outputZipPath: string = path.join(__dirname, "out", "singlePackageName.zip");
-let sevenZipPath: string = path.join(__dirname, "..", "7zip/7z.exe");
-let sevenZipCommand: string = sevenZipPath + " x -o" + outputPath + " " + outputZipPath;
-
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs
-tr.setInput("packageType", "NuGet");
+tr.setInput("packageType", "Npm");
 tr.setInput("feed", "feedId");
 tr.setInput("view", "viewId");
 tr.setInput("definition", "packageId");
@@ -31,24 +27,6 @@ process.env["ENDPOINT_AUTH_SYSTEMVSSCONNECTION"] =
 tr.setAnswers({
     exist: {
         [outputPath]: true
-    },
-    exec: {
-        [sevenZipCommand]: {
-            code: 0
-        }
-    },
-    stats: {
-        [outputZipPath]: { isDirectory: false }
-    }
-});
-
-// Register toollib mock
-tr.registerMock("vsts-task-tool-lib/tool", {
-    extractTar: function() {
-        return;
-    },
-    extractZip: function() {
-        return;
     }
 });
 

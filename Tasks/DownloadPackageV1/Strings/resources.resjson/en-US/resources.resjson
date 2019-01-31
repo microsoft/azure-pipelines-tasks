@@ -31,9 +31,5 @@
   "loc.messages.RetryingOperation": "Error: in %s, so retrying => retries pending: %s",
   "loc.messages.OperationFailed": "Failed in %s with error: %s",
   "loc.messages.RedirectUrlError": "Unable to get redirect URL with error %.",
-  "loc.messages.CreateTempDir": "Creating temp folder: %s to decompress: %s",
-  "loc.messages.TempDir": "tempFolder = %s",
-  "loc.messages.DecompressedTempTar": "Decompressed temporary tar from: %s to: %s",
-  "loc.messages.RemoveTempDir": "Removing temp folder: %s",
-  "loc.messages.SevenZipExtractFile": "Extracting file: %s"
+  "loc.messages.UnsupportedArchiveType": "Unsupported archive type: %s"
 }

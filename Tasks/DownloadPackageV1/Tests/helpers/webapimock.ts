@@ -1,4 +1,6 @@
 import { Readable } from "stream";
+import * as path from "path";
+import * as fs from "fs";
 
 export class WebApiMock {
     vsoClient: VsoClientMock;
@@ -19,7 +21,8 @@ export class WebApiMock {
 class VsoClientMock {
     private packageUrlMap = {
         "7A20D846-C929-4ACC-9EA2-0D5A7DF1B197": "singlePackageMetadataUrl",
-        "6EA81B8C-7386-490B-A71F-6CF23C80B388": "singlePackageDownloadUrl",
+        "6EA81B8C-7386-490B-A71F-6CF23C80B388": "nugetPackageDownloadUrl",
+        "75CAA482-CB1E-47CD-9F2C-C048A4B7A43E": "npmPackageDownloadUrl",
         "3B331909-6A86-44CC-B9EC-C1834C35498F": "multiPackageMetadataUrl",
         "F285A171-0DF5-4C49-AAF2-17D0D37D9F0E": "multiPackageDownloadUrl"
     };
@@ -82,14 +85,20 @@ class RestMock {
 }
 
 class HttpMock {
+    private responseMap = {
+        nugetPackageDownloadUrl: fs.createReadStream(path.join(__dirname, "inputs", "nugetFile.zip")),
+        npmPackageDownloadUrl: fs.createReadStream(path.join(__dirname, "inputs", "npmFile.tgz")),
+        multiPackageDownloadUrl: new Readable({
+            read(size) {
+                this.push("test");
+                this.push(null);
+            }
+        })
+    };
+
     async get(resource: string, additionalHeaders?: any): Promise<any> {
         return {
-            message: new Readable({
-                read(size) {
-                    this.push("test");
-                    this.push(null);
-                }
-            })
+            message: this.responseMap[resource]
         };
     }
 }
