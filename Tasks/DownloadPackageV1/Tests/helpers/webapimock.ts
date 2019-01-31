@@ -30,7 +30,6 @@ class VsoClientMock {
         routeValues: any,
         queryParams?: any
     ): Promise<any> {
-        console.log("returning url " + this.packageUrlMap[locationId]);
         return Promise.resolve({ requestUrl: this.packageUrlMap[locationId] });
     }
 }
