@@ -1,11 +1,13 @@
-import ma = require("vsts-task-lib/mock-answer");
 import tmrm = require("vsts-task-lib/mock-run");
 import path = require("path");
-import * as pkgMock from './helpers/locationmock';
-import { HttpMock } from "./helpers/httpmock";
+import { WebApiMock } from "./helpers/webapimock";
 
-let taskPath = path.join(__dirname, "..", "testrun.js");
-let outputPath = path.join(__dirname, "out", "packageOutput");
+let taskPath = path.join(__dirname, "..", "main.js");
+let outputPath: string = path.join(__dirname, "out", "packageOutput");
+let outputZipPath: string = path.join(__dirname, "out", "singlePackageName.zip");
+let sevenZipPath: string = path.join(__dirname, "..", "7zip/7z.exe");
+let sevenZipCommand: string = sevenZipPath + " x -o" + outputPath + " " + outputZipPath;
+
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs
@@ -25,22 +27,36 @@ process.env["HOME"] = "/users/test";
 process.env["ENDPOINT_AUTH_SYSTEMVSSCONNECTION"] =
     '{"scheme":"OAuth","parameters":{"AccessToken":"YWFtYWxsYWQ6ZXd0emE1bmN3MzN6c3lyM2NoN2prazUzejczamN6MnluNGtiNzd0ZXc0NnlhZzV2d3ZlcQ=="}}';
 
-pkgMock.registerLocationHelpersMock(tr);
-var httpMock = new HttpMock();
-tr.registerMock('https', httpMock);
-tr.registerMock('http', httpMock);
-// // provide answers for task mock
-// let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-//     which: {
-//         cp: "/bin/cp"
-//     },
-//     checkPath: {
-//         "/bin/cp": true
-//     },
-//     exist: {
-//         downloadPath: true
-//     }
-// };
-// tr.setAnswers(a);
+// provide answers for task mock
+tr.setAnswers({
+    exist: {
+        [outputPath]: true
+    },
+    exec: {
+        [sevenZipCommand]: {
+            code: 0
+        }
+    },
+    stats: {
+        [outputZipPath]: { isDirectory: false }
+    }
+});
+
+// Register toollib mock
+tr.registerMock("vsts-task-tool-lib/tool", {
+    extractTar: function() {
+        return;
+    },
+    extractZip: function() {
+        return;
+    }
+});
+
+// Register connections mock
+tr.registerMock("./connections", {
+    getConnection: function(): Promise<any> {
+        return Promise.resolve(new WebApiMock());
+    }
+});
 
 tr.run();
