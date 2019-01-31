@@ -20,15 +20,6 @@ async function main(): Promise<void> {
     let filesPattern = tl.getInput("files");
     let extractPackage = tl.getInput("extract") === "true";
 
-    // let packageType = tl.getVariable("packageType");
-    // let feedId = tl.getInput("feed");
-    // let viewId = tl.getVariable("view");
-    // let packageId = tl.getVariable("definition");
-    // let version = tl.getVariable("version");
-    // let downloadPath = tl.getInput("downloadPath");
-    // let filesPattern = tl.getVariable("files");
-    // let extractPackage = tl.getVariable("extract") === "true";
-
     // Getting variables.
     const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
     const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
