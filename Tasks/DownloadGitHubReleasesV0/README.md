@@ -1,8 +1,8 @@
-# Download GitHub Releases
+# Download GitHub Release
 
 ## Overview
 
-The [Download GitHub Releases task](https://aka.ms/AA3x715) can be used to download assets from your GitHub releases as part of your CI/CD pipeline. This task works on cross platform Azure Pipeline agents running Windows, Linux or Mac and uses GitHub APIs to access GitHub releases.
+The [Download GitHub Release task](https://aka.ms/AA3x715) can be used to download assets from your GitHub releases as part of your CI/CD pipeline. This task works on cross platform Azure Pipeline agents running Windows, Linux or Mac and uses GitHub APIs to access GitHub releases.
 
 ## Contact Information
 
