@@ -439,7 +439,8 @@ To invoke a logging command, simply emit the command via standard output. For ex
                 <p align="left">
                     Update release name for current release.<br>
                     <b>Example:</b> <br>
-                    <code>##vso[release.updatereleasename]my-new-release-name</code>
+                    <code>##vso[release.updatereleasename]my-new-release-name</code><br>
+                    This command is not supported in Azure DevOps Server(TFS).
                 </p>
             </td>
             <td>
