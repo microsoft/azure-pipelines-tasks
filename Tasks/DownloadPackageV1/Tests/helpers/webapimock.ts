@@ -1,5 +1,3 @@
-import path = require("path");
-import fs = require("fs");
 import { Readable } from "stream";
 
 export class WebApiMock {
@@ -80,8 +78,6 @@ class RestMock {
         }
     };
     async get(resource: string, options?: any): Promise<any> {
-        console.log("URl resource " + resource);
-        console.log("url res val " + JSON.stringify(this.metadataMap[resource]));
         return Promise.resolve({ result: this.metadataMap[resource] });
     }
 }

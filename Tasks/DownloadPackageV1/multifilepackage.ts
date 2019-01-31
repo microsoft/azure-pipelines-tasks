@@ -1,6 +1,7 @@
 import { Package, Result } from "./package";
 import { PackageUrlsBuilder } from "./packagebuilder";
 import { match } from "vsts-task-lib";
+import * as tl from "vsts-task-lib/task";
 
 export class MultiFilePackage extends Package {
     private getRouteParams: (feedId: string, packageMetadata: any, fileMetadata: any) => any;
@@ -38,6 +39,7 @@ export class MultiFilePackage extends Package {
                     return resolve(url);
                 })
                 .catch(error => {
+                    tl.debug("Getting download url for file " + fileMetadata.name + " failed with error: " + error);
                     throw reject(error);
                 });
         });
@@ -59,8 +61,10 @@ export class MultiFilePackage extends Package {
                 packageVersionId: packageVersion
             })
                 .then(packageMetadata => {
-                    var fileMetadatas = packageMetadata.files;
+                    var fileMetadatas: any[] = packageMetadata.files;
+                    tl.debug("Found " + fileMetadatas.length + " files in this package.");
                     var filteredFileList: Set<string> = this.filterFilesMinimatch(fileMetadatas);
+                    tl.debug(filteredFileList.size + " files match filter criteria.");
 
                     var pkgFileUrlPromises: Promise<Map<string, Result>>[] = [];
 

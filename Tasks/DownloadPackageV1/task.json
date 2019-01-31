@@ -1,5 +1,5 @@
 {
-    "id": "8d6e8f7e-267d-442d-8c92-1f586864c62f",
+    "id": "e9e6165a-f8e3-4341-838f-cde7a2f23195",
     "name": "DownloadPackage",
     "friendlyName": "Download Package",
     "description": "Download a package from a Package Management feed in Azure Artifacts or TFS. \r\n Requires the Package Management extension.",
@@ -8,12 +8,19 @@
     "category": "Utility",
     "author": "ms-vscs-rm",
     "version": {
-        "Major": 0,
-        "Minor": 1,
-        "Patch": 18
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "1.99.0",
+    "minimumAgentVersion": "2.115.0",
+    "groups": [
+        {
+            "name": "advancedOptions",
+            "displayName": "Advanced",
+            "isExpanded": true
+        }
+    ],
     "inputs": [
         {
             "name": "packageType",
@@ -21,7 +28,7 @@
             "label": "Package Type",
             "required": true,
             "helpMarkDown": "Select the package type",
-            "defaultValue": "Microsoft.Insights/components",
+            "defaultValue": "NuGet",
             "options": {
                 "Maven": "Maven",
                 "Npm": "Npm",
@@ -45,8 +52,8 @@
             "name": "view",
             "type": "pickList",
             "label": "View",
-            "defaultValue": "",
-            "required": true,
+            "defaultValue": " ",
+            "required": false,
             "properties": {
                 "EditableOptions": "True"
             },
@@ -79,21 +86,25 @@
             "type": "string",
             "label": "Files",
             "defaultValue": "*",
-            "required": true,
+            "visibleRule": "packageType == 'Maven' || packageType == 'Python' || packageType == 'Universal'",
+            "required": false,
             "properties": {
                 "EditableOptions": "True"
             },
+            "groupName": "advancedOptions",
             "helpMarkDown": "Set the files pattern filter"
         },
         {
             "name": "extract",
             "type": "boolean",
             "label": "Extract package contents",
-            "defaultValue": "true",
-            "required": true,
+            "defaultValue": "false",
+            "required": false,
+            "visibleRule": "packageType == 'NuGet' || packageType == 'Npm'",
             "properties": {
                 "EditableOptions": "True"
             },
+            "groupName": "advancedOptions",
             "helpMarkDown": "Check to extract package contents."
         },
         {
@@ -128,9 +139,10 @@
             "endpointId": "tfs:feed",
             "parameters": {
                 "feed": "$(feed)",
-                "view": "$(view)"
+                "view": "$(view)",
+                "packageType": "$(packageType)"
             },
-            "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}@{{{view}}}/Packages?includeUrls=false",
+            "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false&protocolType={{{packageType}}}",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
@@ -140,9 +152,10 @@
             "parameters": {
                 "feed": "$(feed)",
                 "view": "$(view)",
-                "definition": "$(definition)"
+                "definition": "$(definition)",
+                "packageType": "$(packageType)"
             },
-            "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}@{{{view}}}/Packages/{{{definition}}}/Versions?includeUrls=false",
+            "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false&protocolType={{{packageType}}}",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
         }

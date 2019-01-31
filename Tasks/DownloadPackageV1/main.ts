@@ -10,8 +10,6 @@ import { getConnection } from "./connections";
 tl.setResourcePath(path.join(__dirname, "task.json"));
 
 async function main(): Promise<void> {
-    // TODO Get that logic to check for GUID from v0 after verifying why its needed.
-
     // Getting inputs.
     let packageType = tl.getInput("packageType");
     let feedId = tl.getInput("feed");
@@ -35,15 +33,14 @@ async function main(): Promise<void> {
     const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
     const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
     const retryLimit: number = !!retryLimitValue && !isNaN(parseInt(retryLimitValue)) ? parseInt(retryLimitValue) : 4;
-    const deleteArchive = tl.getVariable("deleteArchive") === "true";
     const skipDownload = tl.getVariable("skipDownload") === "true";
 
-    if(skipDownload) {
-        console.log("DOwnload Package skipped.");
+    if (skipDownload) {
+        tl.debug("Download Package skipped.");
         return Promise.resolve();
     }
 
-    if (viewId) {
+    if (viewId && viewId.replace(/\s/g, "") !== "") {
         feedId = feedId + "@" + viewId;
     }
 
@@ -60,16 +57,23 @@ async function main(): Promise<void> {
         .withPkgsConnection(pkgsConnection)
         .withFeedsConnection(feedConnection)
         .matchingPattern(files)
-        .withMaxRetries(retryLimit)
         .build();
 
-    var extractors: Extractor[] = await p.download(feedId, packageId, version, downloadPath);
-
+    var extractors: Extractor[] = await executeWithRetries(
+        "downloadPackage",
+        () =>
+            p.download(feedId, packageId, version, downloadPath).catch(reason => {
+                throw reason;
+            }),
+        retryLimit
+    );
+    
     if (extractPackage) {
         extractors.forEach(extractor => {
             extractor.extractFile();
         });
     }
+
     return Promise.resolve();
 }
 

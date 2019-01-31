@@ -31,7 +31,6 @@ tr.setAnswers({
     }
 });
 
-
 // Register toollib mock
 tr.registerMock("vsts-task-tool-lib/tool", {
     extractTar: function() {

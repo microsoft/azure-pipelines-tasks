@@ -8,14 +8,12 @@ import { WebApi } from "azure-devops-node-api";
 export class PackageUrlsBuilder {
     private type: string;
     private pattern: string[];
-    private maxRetries: number;
     private packagingMetadataAreaId: string;
     private packageProtocolDownloadAreadId: string;
     private extension: string;
     private feedConnection: WebApi;
     private pkgsConnection: WebApi;
     private packageProtocolAreaName: string;
-    private blobStoreRedirectEnabled: boolean = false;
 
     private getRouteParams: (feedId: string, packageMetadata: any, fileMetadata: any) => any;
 
@@ -42,7 +40,6 @@ export class PackageUrlsBuilder {
                 this.packagingMetadataAreaId = "3B331909-6A86-44CC-B9EC-C1834C35498F";
                 this.packageProtocolDownloadAreadId = "97218BAE-A64D-4381-9257-B5B7951F0B98";
                 this.packageProtocolAreaName = "pypi";
-                this.blobStoreRedirectEnabled = true;
                 this.getRouteParams = this.getPythonRouteParams;
                 break;
             case "Maven":
@@ -55,10 +52,6 @@ export class PackageUrlsBuilder {
                 throw new Error(tl.loc("PackageTypeNotSupported"));
         }
         return this;
-    }
-
-    get BlobStoreRedirectEnabled() {
-        return this.blobStoreRedirectEnabled;
     }
 
     get PackageProtocolAreaName() {
@@ -105,15 +98,6 @@ export class PackageUrlsBuilder {
 
     withFeedsConnection(connection: WebApi): PackageUrlsBuilder {
         this.feedConnection = connection;
-        return this;
-    }
-
-    get MaxRetries() {
-        return this.maxRetries;
-    }
-
-    withMaxRetries(maxRetries: number): PackageUrlsBuilder {
-        this.maxRetries = maxRetries;
         return this;
     }
 

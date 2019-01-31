@@ -28,7 +28,6 @@ export class Result {
 }
 
 export abstract class Package {
-    protected maxRetries: number;
     protected packageProtocolAreaName: string;
     protected packageProtocolDownloadAreadId: string;
     protected extension: string;
@@ -39,7 +38,6 @@ export abstract class Package {
     private packagingMetadataAreaId: string;
 
     constructor(builder: PackageUrlsBuilder) {
-        this.maxRetries = builder.MaxRetries;
         this.packageProtocolAreaName = builder.PackageProtocolAreaName;
         this.packageProtocolDownloadAreadId = builder.PackageProtocolDownloadAreadId;
         this.packagingMetadataAreaId = builder.PackagingMetadataAreaId;
@@ -70,12 +68,11 @@ export abstract class Package {
                 queryParams
             );
             getVersioningDataPromise.then(result => {
-                tl.debug("result " + result);
+                tl.debug("Got URL " + result + " from versioning data.");
                 return resolve(result.requestUrl);
             });
             getVersioningDataPromise.catch(error => {
-                tl.debug("result " + error);
-
+                tl.debug("Geting URL from versioning data failed with error: " + error);
                 return reject(error);
             });
         });
@@ -89,7 +86,6 @@ export abstract class Package {
             routeValues,
             queryParams
         );
-        tl.debug("result " + metadataUrl);
 
         var client = connection.rest;
 
@@ -100,6 +96,7 @@ export abstract class Package {
                     return resolve(response.result);
                 })
                 .catch(error => {
+                    tl.debug("Getting package metadata failed with error: " + error);
                     return reject(tl.loc("FailedToGetPackageMetadata", error));
                 });
         });
@@ -120,7 +117,6 @@ export abstract class Package {
                     var promises: Promise<Extractor>[] = [];
                     var coreApi = await this.pkgsConnection.getCoreApi();
                     Object.keys(downloadUrls).map(fileName => {
-
                         var zipLocation = path.resolve(downloadPath, "../", fileName);
                         var unzipLocation = path.join(downloadPath, "");
 
@@ -134,7 +130,7 @@ export abstract class Package {
                     return resolve(Promise.all(promises));
                 })
                 .catch(error => {
-                    tl.debug("error " + error);
+                    tl.debug("Getting download url for this package failed with error: " + error);
                     return reject(error);
                 });
         });
@@ -144,6 +140,7 @@ export abstract class Package {
         return new Promise<Extractor>((resolve, reject) => {
             fs.writeFile(filePath, content, err => {
                 if (err) {
+                    tl.debug("Writing file content failed with error: " + err);
                     return reject(err);
                 } else {
                     return resolve(new Extractor(filePath, unzipLocation));
@@ -159,31 +156,30 @@ export abstract class Package {
         unzipLocation: string
     ): Promise<Extractor> {
         return new Promise<Extractor>((resolve, reject) => {
-            return coreApi.http.get(downloadUrl).then(response => {
+            return coreApi.http
+                .get(downloadUrl)
+                .then(response => {
+                    var responseStream = response.message as stream.Readable;
+                    var file = fs.createWriteStream(downloadPath);
 
-                var responseStream = response.message as stream.Readable;
-                var file = fs.createWriteStream(downloadPath);
-                console.log("hello" + file);
-                responseStream.pipe(file);
-                console.log("hello2" + file);
+                    responseStream.pipe(file);
 
-                responseStream.on("end", () => {
-                    console.log(tl.loc("PackageDownloadSuccessful"));
-                    file.on("close", () => {
-                        console.log("hellfdo");
-                        var extractor = new Extractor(downloadPath, unzipLocation);
-                        return resolve(extractor);
+                    responseStream.on("end", () => {
+                        console.log(tl.loc("PackageDownloadSuccessful"));
+                        file.on("close", () => {
+                            var extractor = new Extractor(downloadPath, unzipLocation);
+                            return resolve(extractor);
+                        });
                     });
+                    responseStream.on("error", err => {
+                        console.log("Download stream failed with error: " + err);
+                        return reject(tl.loc("FailedToDownloadPackage", downloadUrl, err));
+                    });
+                })
+                .catch(error => {
+                    console.log("Downloading file failed with error: " + error);
+                    return reject(tl.loc("FailedToDownloadPackage", downloadUrl, error));
                 });
-                responseStream.on("error", err => {
-                    console.log("error file close " + JSON.stringify(err));
-                    return reject(tl.loc("FailedToDownloadPackage", downloadUrl, err));
-                });
-            }).catch(error => {
-                console.log("rejsadf " + error);
-                return reject(tl.loc("FailedToDownloadPackage", downloadUrl, error));
-            });
         });
     }
-
 }
