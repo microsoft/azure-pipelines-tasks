@@ -3,6 +3,7 @@
   "name": "AppCenterTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/appcentersupport",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
@@ -12,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 137,
-    "Patch": 0
+    "Patch": 2
   },
   "groups": [
     {

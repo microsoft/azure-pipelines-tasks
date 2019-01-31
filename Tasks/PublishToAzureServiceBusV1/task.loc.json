@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "category": "Utility",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870237",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "visibility": [
     "Build",
@@ -16,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 12
   },
   "groups": [
     {

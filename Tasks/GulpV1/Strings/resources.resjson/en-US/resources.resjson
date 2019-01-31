@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Gulp",
+  "loc.friendlyName": "gulp",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613721)",
-  "loc.description": "Node.js streaming task based build system",
+  "loc.description": "Run the Node.js streaming task-based build system.",
   "loc.instanceNameFormat": "gulp $(targets)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.group.displayName.junitTestResults": "JUnit Test Results",
@@ -15,7 +15,7 @@
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Current working directory when script is run.  Defaults to the folder where the script is located.",
   "loc.input.label.gulpjs": "gulp.js location",
-  "loc.input.help.gulpjs": "gulp.js to run when agent can't find global installed gulp.  Defaults to the gulp.js under node_modules folder of the working directory.",
+  "loc.input.help.gulpjs": "Path to an alternative gulp.js, relative to the working directory.",
   "loc.input.label.publishJUnitResults": "Publish to Azure Pipelines/TFS",
   "loc.input.help.publishJUnitResults": "Select this option to publish JUnit test results produced by the Gulp build to Azure Pipelines/TFS.",
   "loc.input.label.testResultsFiles": "Test Results Files",

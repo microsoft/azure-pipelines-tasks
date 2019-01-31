@@ -1,8 +1,9 @@
 {
   "id": "B82CFBE4-34F9-40F5-889E-C8842CA9DD9D",
-  "name": "Gulp",
+  "name": "gulp",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613721",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -13,6 +14,7 @@
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
+  "preview": true,
   "version": {
     "Major": 1,
     "Minor": 0,
@@ -81,8 +83,8 @@
       "name": "gulpjs",
       "type": "string",
       "label": "ms-resource:loc.input.label.gulpjs",
-      "defaultValue": "node_modules/gulp/bin/gulp.js",
-      "required": true,
+      "defaultValue": "",
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.gulpjs",
       "groupName": "advanced"
     },

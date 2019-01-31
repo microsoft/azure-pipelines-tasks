@@ -85,8 +85,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.internalOrExternalDownload",
       "required": "true",
       "options": {
-        "internal": "This account/collection",
-        "external": "Another account/collection"
+        "internal": "This organization/collection",
+        "external": "Another organization/collection"
       },
       "groupName": "packageDownloadDetails"
     },
@@ -208,8 +208,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.internalOrExternalPublish",
       "required": "true",
       "options": {
-        "internal": "This account/collection",
-        "external": "Another account/collection"
+        "internal": "This organization/collection",
+        "external": "Another organization/collection"
       },
       "groupName": "packagePublishDetails"
     },

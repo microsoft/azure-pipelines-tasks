@@ -3,6 +3,7 @@
   "name": "JavaToolInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=875287",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [
@@ -13,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 141,
-    "Patch": 0
+    "Patch": 2
   },
   "satisfies": [
     "Java"

@@ -85,8 +85,8 @@
             "helpMarkDown": "You can either select a feed from this collection or any other collection in Azure Artifacts.",
             "required": "true",
             "options": {
-                "internal": "This account/collection",
-                "external": "Another account/collection"
+                "internal": "This organization/collection",
+                "external": "Another organization/collection"
             },
             "groupName": "packageDownloadDetails"
         },
@@ -96,7 +96,7 @@
                 "externalFeedCredentials"
             ],
             "type": "connectedService:externaltfs",
-            "label": "Account/collection connection",
+            "label": "organization/collection connection",
             "required": false,
             "helpMarkDown": "Credentials to use for external feeds.",
             "properties": {
@@ -208,8 +208,8 @@
             "helpMarkDown": "You can either select a feed from this collection or any other collection in Azure Artifacts.",
             "required": "true",
             "options": {
-                "internal": "This account/collection",
-                "external": "Another account/collection"
+                "internal": "This organization/collection",
+                "external": "Another organization/collection"
             },
             "groupName": "packagePublishDetails"
         },
@@ -219,7 +219,7 @@
                 "publishFeedCredentials"
             ],
             "type": "connectedService:externaltfs",
-            "label": "Account/collection connection",
+            "label": "organization/collection connection",
             "required": true,
             "helpMarkDown": "Credentials to use for external feeds.",
             "properties": {

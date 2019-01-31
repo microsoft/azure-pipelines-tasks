@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Download GitHub Releases",
   "loc.helpMarkDown": "",
-  "loc.description": "Download GitHub Releases",
+  "loc.description": "Downloads a GitHub Release from a repository.",
   "loc.instanceNameFormat": "Download GitHub Releases",
   "loc.input.label.connection": "GitHub Connection",
   "loc.input.help.connection": "GitHub service connection",

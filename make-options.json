@@ -58,6 +58,7 @@
         "DownloadGitHubReleasesV0",
         "DownloadPackageV0",
         "DownloadPipelineArtifactV0",
+        "DownloadPipelineArtifactV1",        
         "DownloadSecureFileV1",
         "ExtractFilesV1",
         "FileTransformV1",

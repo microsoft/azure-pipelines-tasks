@@ -6,8 +6,10 @@ import * as downloadutility from "./downloadutility";
 import * as util from "util";
 import * as yaml from "js-yaml";
 const uuidV4 = require('uuid/v4');
-const kubectlToolName = "kubectl"
-export const stableKubectlVersion = "v1.8.9"
+const kubectlToolName = "kubectl";
+export const stableKubectlVersion = "v1.13.2";
+import { WebRequest, sendRequest } from "./restutilities";
+import { async } from "q";
 
 var fs = require('fs');
 
@@ -103,4 +105,21 @@ function getExecutableExtention(): string {
     }
 
     return "";
+}
+
+export async function getAvailableKubectlVersions() {
+    var request = new WebRequest();
+    request.uri = "https://api.github.com/repos/kubernetes/kubernetes/releases";
+    request.method = "GET";
+
+    try {
+        var response = await sendRequest(request);
+        let versions = [];
+        response.body.forEach(release => {
+            versions.push(release["tag_name"])
+        });
+        return versions;
+    } catch (error) {
+        throw error;
+    }
 }
