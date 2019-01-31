@@ -4,8 +4,8 @@
   "friendlyName": "Download GitHub Releases",
   "description": "Downloads a GitHub Release from a repository.",
   "author": "Microsoft Corporation",
-  "helpUrl": "",
-  "helpMarkDown": "",
+  "helpUrl": "https://aka.ms/AA3x715",
+  "helpMarkDown": "[More Information](https://aka.ms/AA3x715)",
   "category": "Utility",
   "demands": [],
   "version": {
