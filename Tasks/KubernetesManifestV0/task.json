@@ -1,5 +1,5 @@
 {
-    "id": "DEE316A2-586F-4DEF-BE79-488A1F503DEE",
+    "id": "DEE316A2-586F-4DEF-BE79-488A1F503DFE",
     "name": "KubernetesManifestBased",
     "friendlyName": "Manifest based Kubernetes deployments",
     "description": "Manifest based deployments to kubernetes",
@@ -13,9 +13,9 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
+        "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 4
     },
     "demands": [],
     "groups": [
@@ -258,7 +258,7 @@
             "name": "manifestsToDelete",
             "type": "filePath",
             "label": "Manifests",
-            "required": false,
+            "required": true,
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Manifests to delete",

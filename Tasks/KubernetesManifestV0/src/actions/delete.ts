@@ -2,7 +2,8 @@
 
 import tl = require('vsts-task-lib/task'); 
 import { Kubectl } from "utility-common/kubectl-object-model"; 
-import kubectlutility = require("utility-common/kubectlutility"); 
+import * as utils from "../utils/utilities";
+import * as TaskInputParameters from '../models/TaskInputParameters';
 
 const TASK_INPUT_DELETE_BY_FILENAME = "filenames";
 const TASK_INPUT_DELETE_BY_RESOURCES_AND_NAMES = "resourcesAndNames";
@@ -12,33 +13,27 @@ export async function deleteResources() {
     let files: string[] = null;
     let names: string[] = null;
     let labels: string = null;
-    let deleteResourcesBy = tl.getInput("deleteResourcesBy", true);
+    let deleteResourcesBy = TaskInputParameters.deleteResourcesBy;
+    
     if (deleteResourcesBy == TASK_INPUT_DELETE_BY_FILENAME)
     {
-        files = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), tl.getInput("manifestsToDelete", true));
+        files = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), TaskInputParameters.manifestsToDelete);
         if (files.length == 0) {
             throw (tl.loc("ManifestFileNotFound"));
         }
     }
 
-    let kubectl = new Kubectl(await getKubectl(), tl.getInput("namespace", false));
-    let types = tl.getInput("kinds", true); // kubectl delete pod,service
+    let kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace);
+    let types = TaskInputParameters.kinds // kubectl delete pod,service
     
     if (deleteResourcesBy == TASK_INPUT_DELETE_BY_RESOURCES_AND_NAMES){
-        names = tl.getDelimitedInput("names", ",", false); // kubectl delete pods, services baz foo
+        names = TaskInputParameters.names // kubectl delete pods, services baz foo
     }
     if (deleteResourcesBy == TASK_INPUT_DELETE_BY_RESOURCES_AND_LABEL_SELECTORS){
-        labels = tl.getInput("labels", false); // kubectl delete pods,services -l name=myLabel
+        labels = TaskInputParameters.labels; // kubectl delete pods,services -l name=myLabel
     }
-    let cascade = tl.getBoolInput("cascade", false); // kubectl delete deployment sample-deployment --cascade=true
-    let gracePeriod = tl.getInput("gracePeriod", false); // kubectl delete deployment --grace-period=1
-    kubectl.delete(files, types, names, labels, cascade, gracePeriod);
-}
-
-async function getKubectl(): Promise<string> {
-    try {
-        return Promise.resolve(tl.which("kubectl", true));
-    } catch (ex) {
-        return kubectlutility.downloadKubectl(await kubectlutility.getStableKubectlVersion());
-    }
+    let cascade = TaskInputParameters.cascade; // kubectl delete deployment sample-deployment --cascade=true
+    let gracePeriod = TaskInputParameters.gracePeriod; // kubectl delete deployment --grace-period=1
+    var result = kubectl.delete(files, types, names, labels, cascade, gracePeriod);
+    utils.checkForErrors([result]);
 }

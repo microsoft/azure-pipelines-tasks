@@ -1,5 +1,5 @@
 {
-  "id": "DEE316A2-586F-4DEF-BE79-488A1F503DEE",
+  "id": "DEE316A2-586F-4DEF-BE79-488A1F503DFE",
   "name": "KubernetesManifestBased",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -13,9 +13,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
+    "Major": 1,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 4
   },
   "demands": [],
   "groups": [
@@ -258,7 +258,7 @@
       "name": "manifestsToDelete",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.manifestsToDelete",
-      "required": false,
+      "required": true,
       "defaultValue": "",
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.manifestsToDelete",

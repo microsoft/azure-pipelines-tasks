@@ -153,10 +153,13 @@ export class Kubectl {
         command.arg(["--namespace", this.namespace]); 
         command.arg(`--cascade=${cascade}`);
         if (!!gracePeriod){
-            command.arg(`--grace-period=${gracePeriod}`); //TODO handle race-period = 0 pass --force=true
+            command.arg(`--grace-period=${gracePeriod}`);
+            if (gracePeriod == "0"){
+                command.arg(`--force=true`);
+            }
         }
         command.arg(`--wait=true`);
-        command.arg(`--ignore-not-found=true`); // confirm this
+        command.arg(`--ignore-not-found=true`);
         return command.execSync();
     }
 
