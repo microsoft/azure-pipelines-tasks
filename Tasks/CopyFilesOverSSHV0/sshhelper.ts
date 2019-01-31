@@ -29,10 +29,10 @@ export class SshHelper {
     }
 
     private async setupSshClientConnection() : Promise<void> {
-        let defer = Q.defer<void>();
+        const defer = Q.defer<void>();
         this.sshClient = new Ssh2Client();
         this.sshClient.once('ready', () => {
-            defer.resolve(null);
+            defer.resolve();
         }).once('error', (err) => {
             defer.reject(tl.loc('ConnectionFailed', err));
         }).connect(this.sshConfig);
@@ -40,7 +40,7 @@ export class SshHelper {
     }
 
     private async setupScpConnection() : Promise<void> {
-        let defer = Q.defer<void>();
+        const defer = Q.defer<void>();
         this.scpClient = new Scp2Client();
         this.scpClient.defaults(this.sshConfig);
         this.scpClient.sftp((err, sftp) => {
@@ -48,7 +48,7 @@ export class SshHelper {
                 defer.reject(tl.loc('ConnectionFailed', err));
             } else {
                 this.sftpClient = sftp;
-                defer.resolve(null);
+                defer.resolve();
             }
         })
         await defer.promise;
@@ -74,7 +74,7 @@ export class SshHelper {
         try {
             if (this.sftpClient) {
                 this.sftpClient.on('error', (err) => {
-                    tl.debug('sftpClient: Ignoring error diconnecting: ' + JSON.stringify(err));
+                    tl.debug('sftpClient: Ignoring error diconnecting: ' + err);
                 }); // ignore logout errors; see: https://github.com/mscdex/node-imap/issues/695
                 this.sftpClient.close();
                 this.sftpClient = null;
@@ -85,7 +85,7 @@ export class SshHelper {
         try {
             if (this.sshClient) {
                 this.sshClient.on('error', (err) => {
-                    tl.debug('sshClient: Ignoring error diconnecting: ' + JSON.stringify(err));
+                    tl.debug('sshClient: Ignoring error diconnecting: ' + err);
                 }); // ignore logout errors; see: https://github.com/mscdex/node-imap/issues/695
                 this.sshClient.end();
                 this.sshClient = null;
@@ -97,7 +97,7 @@ export class SshHelper {
         try {
             if (this.scpClient) {
                 this.scpClient.on('error', (err) => {
-                    tl.debug('scpClient: Ignoring error diconnecting: ' + JSON.stringify(err));
+                    tl.debug('scpClient: Ignoring error diconnecting: ' + err);
                 }); // ignore logout errors; see: https://github.com/mscdex/node-imap/issues/695
                 this.scpClient.close();
                 this.scpClient = null;
