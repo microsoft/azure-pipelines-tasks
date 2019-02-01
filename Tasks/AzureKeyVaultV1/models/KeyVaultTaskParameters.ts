@@ -31,16 +31,19 @@ export class KeyVaultTaskParameters {
         this.servicePrincipalId = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', true);
         this.keyVaultUrl = util.format("https://%s.%s", this.keyVaultName, azureKeyVaultDnsSuffix);
         this.scheme = tl.getEndpointAuthorizationScheme(connectedService, false);
-        this.vaultCredentials = await this.getVaultCredentials(connectedService, azureKeyVaultDnsSuffix);
+        this.vaultCredentials = await this.getVaultCredentials(connectedService);
         return this;
     }
 
-    private async getVaultCredentials(connectedService: string, azureKeyVaultDnsSuffix: string): Promise<msRestAzure.ApplicationTokenCredentials> {
+    private async getVaultCredentials(connectedService: string): Promise<msRestAzure.ApplicationTokenCredentials> {
         const endpoint: AzureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint();
          
         if(!!endpoint.environment && endpoint.environment.toLowerCase() == this._environments.AzureStack) {
             endpoint.applicationTokenCredentials.activeDirectoryResourceId = endpoint.activeDirectoryResourceID.replace("management", "vault");
         } else {
+            if (!endpoint.azureKeyVaultServiceEndpointResourceId) {
+                endpoint.azureKeyVaultServiceEndpointResourceId = "https://vault.azure.net";
+            }
             endpoint.applicationTokenCredentials.baseUrl = endpoint.azureKeyVaultServiceEndpointResourceId;
             endpoint.applicationTokenCredentials.activeDirectoryResourceId = endpoint.azureKeyVaultServiceEndpointResourceId;
         }
