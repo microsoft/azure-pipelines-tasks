@@ -33,8 +33,7 @@
                 "Maven": "Maven",
                 "Npm": "Npm",
                 "NuGet": "NuGet",
-                "Python": "Python",
-                "Universal": "Universal"
+                "Python": "Python"
             }
         },
         {

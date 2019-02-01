@@ -1,5 +1,5 @@
 import { PackageUrlsBuilder } from "./packagebuilder";
-import { Package, Result } from "./package";
+import { Package, PackageFileResult } from "./package";
 import * as tl from "vsts-task-lib/task";
 
 export class SingleFilePackage extends Package {
@@ -7,8 +7,8 @@ export class SingleFilePackage extends Package {
         super(builder);
     }
 
-    async getDownloadUrls(feedId: string, packageId: string, packageVersion: string): Promise<Map<string, Result>> {
-        return new Promise<Map<string, Result>>((resolve, reject) => {
+    async getDownloadUrls(feedId: string, packageId: string, packageVersion: string): Promise<Map<string, PackageFileResult>> {
+        return new Promise<Map<string, PackageFileResult>>((resolve, reject) => {
             return this.getPackageMetadata(this.feedConnection, {
                 feedId: feedId,
                 packageId: packageId
@@ -27,8 +27,8 @@ export class SingleFilePackage extends Package {
                         }
                     )
                         .then(downloadUrl => {
-                            var urls = new Map<string, Result>();
-                            urls[packageName + this.extension] = new Result(downloadUrl, true);
+                            var urls = new Map<string, PackageFileResult>();
+                            urls[packageName.replace(/\//g, '_') + this.extension] = new PackageFileResult(downloadUrl, true);
                             return resolve(urls);
                         })
                         .catch(error => {

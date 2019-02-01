@@ -1,4 +1,4 @@
-import { Package, Result } from "./package";
+import { Package, PackageFileResult } from "./package";
 import { PackageUrlsBuilder } from "./packagebuilder";
 import { match } from "vsts-task-lib";
 import * as tl from "vsts-task-lib/task";
@@ -25,8 +25,8 @@ export class MultiFilePackage extends Package {
         feedId: string,
         packageMetadata: any,
         fileMetadata: any
-    ): Promise<Map<string, Result>> {
-        return new Promise<Map<string, Result>>((resolve, reject) => {
+    ): Promise<Map<string, PackageFileResult>> {
+        return new Promise<Map<string, PackageFileResult>>((resolve, reject) => {
             this.getUrl(
                 this.pkgsConnection.vsoClient,
                 this.packageProtocolAreaName,
@@ -34,8 +34,8 @@ export class MultiFilePackage extends Package {
                 this.getRouteParams(feedId, packageMetadata, fileMetadata)
             )
                 .then(downloadUrl => {
-                    var url = new Map<string, Result>();
-                    url[fileMetadata.name] = new Result(downloadUrl, true);
+                    var url = new Map<string, PackageFileResult>();
+                    url[fileMetadata.name] = new PackageFileResult(downloadUrl, true);
                     return resolve(url);
                 })
                 .catch(error => {
@@ -45,16 +45,16 @@ export class MultiFilePackage extends Package {
         });
     }
 
-    private async getPackageFileContent(fileMetadata: any): Promise<Map<string, Result>> {
-        return new Promise<Map<string, Result>>(resolve => {
-            var resultMap = new Map<string, Result>();
-            resultMap[fileMetadata.name] = new Result(fileMetadata.protocolMetadata.data.content, false);
+    private async getPackageFileContent(fileMetadata: any): Promise<Map<string, PackageFileResult>> {
+        return new Promise<Map<string, PackageFileResult>>(resolve => {
+            var resultMap = new Map<string, PackageFileResult>();
+            resultMap[fileMetadata.name] = new PackageFileResult(fileMetadata.protocolMetadata.data.content, false);
             return resolve(resultMap);
         });
     }
 
-    async getDownloadUrls(feedId: string, packageId: string, packageVersion: string): Promise<Map<string, Result>> {
-        return new Promise<Map<string, Result>>((resolve, reject) => {
+    async getDownloadUrls(feedId: string, packageId: string, packageVersion: string): Promise<Map<string, PackageFileResult>> {
+        return new Promise<Map<string, PackageFileResult>>((resolve, reject) => {
             return this.getPackageMetadata(this.feedConnection, {
                 feedId: feedId,
                 packageId: packageId,
@@ -66,7 +66,7 @@ export class MultiFilePackage extends Package {
                     var filteredFileList: Set<string> = this.filterFilesMinimatch(fileMetadatas);
                     tl.debug(filteredFileList.size + " files match filter criteria.");
 
-                    var pkgFileUrlPromises: Promise<Map<string, Result>>[] = [];
+                    var pkgFileUrlPromises: Promise<Map<string, PackageFileResult>>[] = [];
 
                     for (let i = 0; i < fileMetadatas.length; i++) {
                         if (filteredFileList.has(fileMetadatas[i].name)) {
@@ -80,7 +80,7 @@ export class MultiFilePackage extends Package {
                     }
                     return Promise.all(pkgFileUrlPromises)
                         .then(urls => {
-                            var downloadUrls = new Map<string, Result>();
+                            var downloadUrls = new Map<string, PackageFileResult>();
                             urls.forEach(url => {
                                 downloadUrls = { ...downloadUrls, ...url };
                             });

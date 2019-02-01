@@ -10,7 +10,7 @@ import { VsoClient } from "azure-devops-node-api/VsoClient";
 import { ICoreApi } from "azure-devops-node-api/CoreApi";
 import stream = require("stream");
 
-export class Result {
+export class PackageFileResult {
     private value: string;
     private isUrl: boolean;
 
@@ -52,7 +52,7 @@ export abstract class Package {
         feedId: string,
         packageId: string,
         packageVersion: string
-    ): Promise<Map<string, Result>>;
+    ): Promise<Map<string, PackageFileResult>>;
 
     protected async getUrl(
         vsoClient: VsoClient,
@@ -121,7 +121,7 @@ export abstract class Package {
                     Object.keys(downloadUrls).map(fileName => {
                         var zipLocation = path.resolve(downloadPath, "../", fileName);
                         var unzipLocation = path.join(downloadPath, "");
-
+                        tl.rmRF(zipLocation);
                         promises.push(
                             downloadUrls[fileName].IsUrl
                                 ? this.downloadFile(coreApi, downloadUrls[fileName].Value, zipLocation, unzipLocation)
@@ -175,6 +175,7 @@ export abstract class Package {
                         });
                         responseStream.on("error", err => {
                             tl.debug("Download stream failed with error: " + err);
+                            file.close();
                             return reject(tl.loc("FailedToDownloadPackage", downloadUrl, err));
                         });
                     } else {

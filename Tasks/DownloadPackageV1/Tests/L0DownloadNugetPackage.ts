@@ -4,7 +4,7 @@ import { WebApiMock } from "./helpers/webapimock";
 
 let taskPath = path.join(__dirname, "..", "main.js");
 let outputPath: string = path.join(__dirname, "out", "packageOutput");
-
+let zipLocation: string = path.join(__dirname, "out", "singlePackageName.zip");
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs
@@ -28,6 +28,11 @@ process.env["ENDPOINT_AUTH_SYSTEMVSSCONNECTION"] =
 tr.setAnswers({
     exist: {
         [outputPath]: true
+    },
+    rmRF: {
+        [zipLocation]: {
+            success: true
+        }
     }
 });
 
