@@ -7,6 +7,7 @@ import { PackageUrlsBuilder } from "./packagebuilder";
 import { Extractor } from "./extractor";
 import { getConnection } from "./connections";
 import { Retry } from "./retry";
+import { downloadUniversalPackage } from "./universal";
 
 tl.setResourcePath(path.join(__dirname, "task.json"));
 
@@ -30,6 +31,10 @@ async function main(): Promise<void> {
     if (skipDownload) {
         tl.debug("Download Package skipped.");
         return Promise.resolve();
+    }
+
+    if(packageType === "Universal") {
+        return await downloadUniversalPackage(downloadPath, feedId, packageId, version);
     }
 
     if (viewId && viewId.replace(/\s/g, "") !== "") {
