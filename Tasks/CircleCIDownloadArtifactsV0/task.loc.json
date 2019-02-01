@@ -6,6 +6,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "Microsoft Corporation",
+  "preview": true,
   "version": {
     "Major": 0,
     "Minor": 147,
@@ -97,10 +98,12 @@
     "DownloadArtifacts": "ms-resource:loc.messages.DownloadArtifacts",
     "GettingCommitsFromSingleBuild": "ms-resource:loc.messages.GettingCommitsFromSingleBuild",
     "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
-    "DownloadingCircleCIChangeBetween": "ms-resource:loc.messages.DownloadingCircleCIChangeBetween",
+    "DownloadingCircleCICommitsBetween": "ms-resource:loc.messages.DownloadingCircleCICommitsBetween",
     "WritingCommitsTo": "ms-resource:loc.messages.WritingCommitsTo",
+    "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
     "CouldNotWriteToFile": "ms-resource:loc.messages.CouldNotWriteToFile",
     "UploadingAttachment": "ms-resource:loc.messages.UploadingAttachment",
-    "SuccessfullyUploadedCommitsAttachment": "ms-resource:loc.messages.SuccessfullyUploadedCommitsAttachment"
+    "SuccessfullyUploadedCommitsAttachment": "ms-resource:loc.messages.SuccessfullyUploadedCommitsAttachment",
+    "BranchNotFound": "ms-resource:loc.messages.BranchNotFound"
   }
 }

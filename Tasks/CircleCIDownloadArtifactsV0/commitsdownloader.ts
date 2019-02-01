@@ -13,7 +13,9 @@ export class CommitsDownloader {
 
     constructor(webProvider: providers.WebProvider) {
         this.webProvider = webProvider;
-        this.retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : 4;
+        let retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
+        this.retryLimit = (!!retryLimitValue && !isNaN(parseInt(retryLimitValue))) ? parseInt(retryLimitValue) : 4;
+        tl.debug("RetryLimit set to: " + this.retryLimit);
     }
 
     public DownloadFromSingleBuildAndSave(buildId: string): Q.Promise<string> {
@@ -36,7 +38,7 @@ export class CommitsDownloader {
     public DownloadFromBuildRangeAndSave(startBuildId: string, endBuildId: string): Q.Promise<string> {
         let defer: Q.Deferred<string> = Q.defer<string>();
 
-        console.log(tl.loc("DownloadingCircleCIChangeBetween", startBuildId, endBuildId));
+        console.log(tl.loc("DownloadingCircleCICommitsBetween", startBuildId, endBuildId));
         this.GetCommits(startBuildId, endBuildId).then((commits: string) => {
             this.UploadCommits(commits).then(() => {
                 defer.resolve(commits);
@@ -50,7 +52,7 @@ export class CommitsDownloader {
         return defer.promise;
     }
 
-    private GetCommitsFromSingleBuild(buildId: any): Q.Promise<string> {
+    private GetCommitsFromSingleBuild(buildId: string): Q.Promise<string> {
         let connection = tl.getInput("connection", true);
         let definitionId = tl.getInput("definition", true);
         var endpointUrl = tl.getEndpointUrl(connection, false);
@@ -58,26 +60,28 @@ export class CommitsDownloader {
         let url: string = `${endpointUrl}/api/v1.1/project/${definitionId}/${buildId}`;
         url = url.replace(/([^:]\/)\/+/g, "$1");
         
-        this.executeWithRetries("getCommitsFromSingleBuild", this.webProvider.webClient.get, url, { 'Accept': 'application/json' }).then((res: HttpClientResponse) => {
+        this.executeWithRetries("getCommitsFromSingleBuild", (url, headers) => { return this.webProvider.webClient.get(url, headers) }, url, { 'Accept': 'application/json' }).then((res: HttpClientResponse) => {
             if (res && res.message.statusCode === 200) {
                 res.readBody().then((body: string) => {
                     let jsonResult = JSON.parse(body);
                     let commits = [];
+                    if (!!jsonResult) {
+                        jsonResult.all_commit_details.forEach(c => {
+                            let commit = {
+                                "Id": c.commit,
+                                "Message": c.subject,
+                                "Author": {
+                                    "displayName": c.author_name
+                                },
+                                "DisplayUri": c.commit_url,
+                                "Timestamp": c.author_date
+                            };
+    
+                            commits.push(commit);
+                        });
+                    }
 
-                    jsonResult.all_commit_details.forEach(c => {
-                        let commit = {
-                            "Id": c.commit,
-                            "Message": c.subject,
-                            "Author": {
-                                "displayName": c.author_name
-                            },
-                            "DisplayUri": c.commit_url,
-                            "Timestamp": c.author_date
-                        };
-
-                        commits.push(commit);
-                    });
-
+                    tl.debug("Downloaded " + commits.length + " commits");
                     defer.resolve(JSON.stringify(commits));
                 }, (error) => {
                     defer.reject(error);
@@ -98,40 +102,50 @@ export class CommitsDownloader {
         let url: string = `${endpointUrl}/api/v1.1/project/${definitionId}/${startBuildId}`;
         url = url.replace(/([^:]\/)\/+/g, "$1");
         let commits = [];
-
-        this.executeWithRetries("getCommits", this.webProvider.webClient.get, url, { 'Accept': 'application/json' }).then((res: HttpClientResponse) => {
+        
+        this.executeWithRetries("getCommits", (url, headers) => { return this.webProvider.webClient.get(url, headers) }, url, { 'Accept': 'application/json' }).then((res: HttpClientResponse) => {
             if (res && res.message.statusCode === 200) {
                 res.readBody().then((body: string) => {
                     let jsonResult = JSON.parse(body);
-                    let branch = jsonResult.branch;
+                    let branch;
+                    if (!!jsonResult) {
+                        branch = jsonResult.branch;
+                    }
+                    else {
+                        defer.reject(tl.loc("BranchNotFound"));
+                        return;
+                    }
 
                     let buildsUrl = `${endpointUrl}/api/v1.1/project/${definitionId}/tree/${branch}`;
                     buildsUrl = buildsUrl.replace(/([^:]\/)\/+/g, "$1");
                     this.webProvider.webClient.get(buildsUrl, { 'Accept': 'application/json' }).then((res: HttpClientResponse) => {
                         res.readBody().then((body: string) => {
                             let builds = JSON.parse(body);
-                            let commitsDict = {};
-                            builds.forEach(build => {
-                                if (Number(build.build_num) <= Number(endBuildId) && Number(build.build_num) >= Number(startBuildId) && build.all_commit_details[0]) {
-                                    build.all_commit_details.forEach(c => {
-                                        let commit = {
-                                            "Id": c.commit,
-                                            "Message": c.subject,
-                                            "Author": {
-                                                "displayName": c.author_name
-                                            },
-                                            "DisplayUri": c.commit_url,
-                                            "Timestamp": c.author_date
-                                        };
-    
-                                        if (!commitsDict[commit.Id]) {
-                                            commits.push(commit);
-                                            commitsDict[commit.Id] = true;
-                                        }
-                                    });
-                                }
-                            });
+                            let commitsIdsMap = {};
+                            if (!!builds) {
+                                builds.forEach(build => {
+                                    if (Number(build.build_num) <= Number(endBuildId) && Number(build.build_num) >= Number(startBuildId) && build.all_commit_details[0]) {
+                                        build.all_commit_details.forEach(c => {
+                                            let commit = {
+                                                "Id": c.commit,
+                                                "Message": c.subject,
+                                                "Author": {
+                                                    "displayName": c.author_name
+                                                },
+                                                "DisplayUri": c.commit_url,
+                                                "Timestamp": c.author_date
+                                            };
+        
+                                            if (!commitsIdsMap[commit.Id]) {
+                                                commits.push(commit);
+                                                commitsIdsMap[commit.Id] = true;
+                                            }
+                                        });
+                                    }
+                                });
+                            }
                             
+                            tl.debug("Downloaded " + commits.length + " commits");
                             defer.resolve(JSON.stringify(commits));
                         }, (error) => {
                             defer.reject(error);

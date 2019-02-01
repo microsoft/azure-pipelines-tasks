@@ -76,7 +76,6 @@ async function main(): Promise<void> {
         var handler = new webHandlers.BasicCredentialHandler(username, "");
         var webProvider = new providers.WebProvider(itemsUrl, templatePath, circleciVariables, handler);
         var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
-        var parallelLimit : number = +tl.getVariable("release.artifact.download.parallellimit");
 
         var downloader = new engine.ArtifactEngine();
         var downloaderOptions = new engine.ArtifactEngineOptions();
@@ -107,13 +106,13 @@ async function main(): Promise<void> {
 }
 
 function downloadCommits(webProvider: providers.WebProvider): void {
-    let circleCIBuild = tl.getInput("version", true);
+    let currentCircleCIBuild = tl.getInput("version", true);
     let startBuildIdStr = tl.getInput("previousVersion", false) || "";
 
-    if (startBuildIdStr && parseInt(circleCIBuild) > parseInt(startBuildIdStr)) {
-        new CommitsDownloader(webProvider).DownloadFromBuildRangeAndSave(startBuildIdStr, circleCIBuild);
+    if (startBuildIdStr && parseInt(currentCircleCIBuild) > parseInt(startBuildIdStr)) {
+        new CommitsDownloader(webProvider).DownloadFromBuildRangeAndSave(startBuildIdStr, currentCircleCIBuild);
     } else {
-        new CommitsDownloader(webProvider).DownloadFromSingleBuildAndSave(circleCIBuild);
+        new CommitsDownloader(webProvider).DownloadFromSingleBuildAndSave(currentCircleCIBuild);
     }
 }
 

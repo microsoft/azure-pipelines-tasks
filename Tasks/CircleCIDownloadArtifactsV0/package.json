@@ -12,7 +12,7 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "vsts-task-lib": "2.2.1",
-    "artifact-engine": "0.1.23",
+    "artifact-engine": "0.1.26",
     "underscore": "1.9.0",
     "decompress-zip": "0.3.0",
     "fs-extra": "5.0.0",
