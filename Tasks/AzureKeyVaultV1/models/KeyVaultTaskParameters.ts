@@ -25,6 +25,9 @@ export class KeyVaultTaskParameters {
         this.keyVaultName = tl.getInput("KeyVaultName", true);
         this.secretsFilter = tl.getDelimitedInput("SecretsFilter", ",", true);
         var azureKeyVaultDnsSuffix = tl.getEndpointDataParameter(connectedService, "AzureKeyVaultDnsSuffix", true);
+        if (!azureKeyVaultDnsSuffix) {
+            azureKeyVaultDnsSuffix = "vault.azure.net"
+        }
         this.servicePrincipalId = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', true);
         this.keyVaultUrl = util.format("https://%s.%s", this.keyVaultName, azureKeyVaultDnsSuffix);
         this.scheme = tl.getEndpointAuthorizationScheme(connectedService, false);
