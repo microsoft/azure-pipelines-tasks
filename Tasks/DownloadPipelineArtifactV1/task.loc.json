@@ -8,7 +8,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
+    "Minor": 1,
     "Patch": 0
   },
   "groups": [],
@@ -116,7 +116,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.artifactName",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "properties": {
         "EditableOptions": "True",
         "DisableManageLink": "True"
@@ -195,7 +195,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AgentPlugin": {
-      "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV1, Agent.Plugins"
+      "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV1_1_0, Agent.Plugins"
     }
   },
   "messages": {}
