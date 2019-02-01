@@ -27,7 +27,7 @@ export class Kubectl {
         command.arg(["--namespace", this.namespace]);
         return command.execSync();
     }
-    
+
     public annotate(resourceType: string, resourceName: string, annotations: string[], overwrite?: boolean): IExecSyncResult {
         var command = tl.tool(this.kubectlPath);
         command.arg("annotate");
@@ -136,25 +136,25 @@ export class Kubectl {
     public delete(files: string | string[], types: string, names: string[], labels: string, cascade: boolean, gracePeriod: string) {
         var command = tl.tool(this.kubectlPath);
         command.arg("delete");
-        if (!!files){
-        command.arg(["-f", this.createInlineArray(files)]);
-        }else {
-            if (!!types){
+        if (!!files) {
+            command.arg(["-f", this.createInlineArray(files)]);
+        } else {
+            if (!!types) {
                 command.arg(types);
             }
-            if (!!names){
+            if (!!names) {
                 command.arg(names.join(" "));
-            }else{
-                if (!!labels){
+            } else {
+                if (!!labels) {
                     command.arg(["-l", labels]);
                 }
             }
         }
-        command.arg(["--namespace", this.namespace]); 
+        command.arg(`--namespace=${this.namespace}`);
         command.arg(`--cascade=${cascade}`);
-        if (!!gracePeriod){
+        if (!!gracePeriod) {
             command.arg(`--grace-period=${gracePeriod}`);
-            if (gracePeriod == "0"){
+            if (gracePeriod == "0") {
                 command.arg(`--force=true`);
             }
         }

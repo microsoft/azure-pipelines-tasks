@@ -26,10 +26,10 @@ export async function deleteResources() {
     let kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace);
     let types = TaskInputParameters.kinds // kubectl delete pod,service
     
-    if (deleteResourcesBy == TASK_INPUT_DELETE_BY_RESOURCES_AND_NAMES){
+    if (deleteResourcesBy === TASK_INPUT_DELETE_BY_RESOURCES_AND_NAMES){
         names = TaskInputParameters.names // kubectl delete pods, services baz foo
     }
-    if (deleteResourcesBy == TASK_INPUT_DELETE_BY_RESOURCES_AND_LABEL_SELECTORS){
+    if (deleteResourcesBy === TASK_INPUT_DELETE_BY_RESOURCES_AND_LABEL_SELECTORS){
         labels = TaskInputParameters.labels; // kubectl delete pods,services -l name=myLabel
     }
     let cascade = TaskInputParameters.cascade; // kubectl delete deployment sample-deployment --cascade=true
