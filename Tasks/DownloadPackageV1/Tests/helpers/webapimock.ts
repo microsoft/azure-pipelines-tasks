@@ -1,6 +1,8 @@
-import { Readable } from "stream";
 import * as path from "path";
 import * as fs from "fs";
+
+import { Readable } from "stream";
+import { IncomingMessage } from "http";
 
 export class WebApiMock {
     vsoClient: VsoClientMock;
@@ -80,7 +82,7 @@ class RestMock {
         }
     };
     async get(resource: string, options?: any): Promise<any> {
-        return Promise.resolve({ result: this.metadataMap[resource] });
+        return Promise.resolve({ statusCode: 200, result: this.metadataMap[resource] });
     }
 }
 
@@ -97,8 +99,10 @@ class HttpMock {
     };
 
     async get(resource: string, additionalHeaders?: any): Promise<any> {
+        var response = this.responseMap[resource] as IncomingMessage;
+        response.statusCode = 200;
         return {
-            message: this.responseMap[resource]
+            message: response
         };
     }
 }
