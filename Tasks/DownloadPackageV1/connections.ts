@@ -5,6 +5,7 @@ import { IRequestOptions } from "azure-devops-node-api/interfaces/common/VsoBase
 import * as tl from 'vsts-task-lib/task';
 import * as locationUtility from "packaging-common/locationUtilities";
 
+// TODO Remove this once this bug is resolved: https://github.com/Microsoft/typed-rest-client/issues/126
 export class BearerHandlerForPresignedUrls extends BearerCredentialHandler {
     prepareRequest(options) {
         // If we have a presigned blobstore url, don't add auth header
