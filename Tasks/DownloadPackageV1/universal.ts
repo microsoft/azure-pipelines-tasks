@@ -80,7 +80,7 @@ function downloadPackageUsingArtifactTool(
         return;
     }
 
-    telemetry.logResult("Packaging", "UniversalPackagesCommand", execResult.code);
+    telemetry.logResult("DownloadPackage", "UniversalPackagesCommand", execResult.code);
     throw new Error(
         tl.loc(
             "Error_UnexpectedErrorArtifactToolDownload",

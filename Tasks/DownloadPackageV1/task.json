@@ -159,7 +159,7 @@
             "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
         }
     ],
-    "instanceNameFormat": "Download Package",
+    "instanceNameFormat": "Download Package $(definition)",
     "execution": {
         "Node": {
             "target": "main.js",
