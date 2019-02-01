@@ -12,23 +12,15 @@ tl.setResourcePath(path.join(__dirname, "task.json"));
 
 async function main(): Promise<void> {
     // Getting inputs.
-    // let packageType = tl.getInput("packageType");
-    // let feedId = tl.getInput("feed");
-    // let viewId = tl.getInput("view");
-    // let packageId = tl.getInput("definition");
-    // let version = tl.getInput("version");
-    // let downloadPath = tl.getInput("downloadPath");
-    // let filesPattern = tl.getInput("files");
-    // let extractPackage = tl.getInput("extract") === "true";
-
-    let packageType = tl.getVariable("packageType");
+    let packageType = tl.getInput("packageType");
     let feedId = tl.getInput("feed");
-    let viewId = tl.getVariable("view");
-    let packageId = tl.getVariable("definition");
-    let version = tl.getVariable("version");
+    let viewId = tl.getInput("view");
+    let packageId = tl.getInput("definition");
+    let version = tl.getInput("version");
     let downloadPath = tl.getInput("downloadPath");
-    let filesPattern = tl.getVariable("files");
-    let extractPackage = tl.getVariable("extract") === "true";
+    let filesPattern = tl.getInput("files");
+    let extractPackage = tl.getInput("extract") === "true";
+
     // Getting variables.
     const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
     const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
