@@ -38,4 +38,15 @@ tr.registerMock("./connections", {
     }
 });
 
+tr.registerMock("./universal", {
+    downloadUniversalPackage: function(
+        downloadPath: string,
+        feedId: string,
+        packageId: string,
+        version: string
+    ): Promise<void> {
+        return;
+    }
+});
+
 tr.run();

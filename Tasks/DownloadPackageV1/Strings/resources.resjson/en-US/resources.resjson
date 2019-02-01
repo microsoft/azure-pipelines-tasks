@@ -30,5 +30,8 @@
   "loc.messages.ExtractionFailed": "Failed to extract package with error %s",
   "loc.messages.RetryingOperation": "Operation failed, waiting %sms before retrying, retries remaining: %s",
   "loc.messages.RedirectUrlError": "Unable to get redirect URL with error %.",
-  "loc.messages.UnsupportedArchiveType": "Unsupported archive type: %s"
+  "loc.messages.UnsupportedArchiveType": "Unsupported archive type: %s",
+  "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
+  "loc.messages.Info_Downloading": "Downloading package: %s, version: %s using feed id: %s",
+  "loc.messages.Info_UsingArtifactToolDownload": "Using artifact tool to download the package"
 }

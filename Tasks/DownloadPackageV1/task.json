@@ -176,7 +176,7 @@
         "ExtractingPackage": "Extracting package %s to directory %s",
         "PackageTypeNotSupported": "Only Nuget, Python, Universal, Npm, and Maven packages types can be downloaded using this task.",
         "ExtractionFailed": "Failed to extract package with error %s",
-        "RetryingOperation" : "Operation failed, waiting %sms before retrying, retries remaining: %s",
+        "RetryingOperation": "Operation failed, waiting %sms before retrying, retries remaining: %s",
         "RedirectUrlError": "Unable to get redirect URL with error %.",
         "UnsupportedArchiveType": "Unsupported archive type: %s",
         "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
