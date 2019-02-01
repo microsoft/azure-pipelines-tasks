@@ -6,20 +6,29 @@ import * as nutil from "packaging-common/nuget/Utility";
 import { PackageUrlsBuilder } from "./packagebuilder";
 import { Extractor } from "./extractor";
 import { getConnection } from "./connections";
+import { Retry } from "./retry";
 
 tl.setResourcePath(path.join(__dirname, "task.json"));
 
 async function main(): Promise<void> {
     // Getting inputs.
-    let packageType = tl.getInput("packageType");
-    let feedId = tl.getInput("feed");
-    let viewId = tl.getInput("view");
-    let packageId = tl.getInput("definition");
-    let version = tl.getInput("version");
-    let downloadPath = tl.getInput("downloadPath");
-    let filesPattern = tl.getInput("files");
-    let extractPackage = tl.getInput("extract") === "true";
+    // let packageType = tl.getInput("packageType");
+    // let feedId = tl.getInput("feed");
+    // let viewId = tl.getInput("view");
+    // let packageId = tl.getInput("definition");
+    // let version = tl.getInput("version");
+    // let downloadPath = tl.getInput("downloadPath");
+    // let filesPattern = tl.getInput("files");
+    // let extractPackage = tl.getInput("extract") === "true";
 
+    let packageType = tl.getVariable("packageType");
+    let feedId = tl.getInput("feed");
+    let viewId = tl.getVariable("view");
+    let packageId = tl.getVariable("definition");
+    let version = tl.getVariable("version");
+    let downloadPath = tl.getInput("downloadPath");
+    let filesPattern = tl.getVariable("files");
+    let extractPackage = tl.getVariable("extract") === "true";
     // Getting variables.
     const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
     const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
@@ -48,17 +57,11 @@ async function main(): Promise<void> {
         .withPkgsConnection(pkgsConnection)
         .withFeedsConnection(feedConnection)
         .matchingPattern(files)
+        .withRetries(Retry(retryLimit))
         .build();
 
-    var extractors: Extractor[] = await executeWithRetries(
-        "downloadPackage",
-        () =>
-            p.download(feedId, packageId, version, downloadPath).catch(reason => {
-                throw reason;
-            }),
-        retryLimit
-    );
-    
+    var extractors: Extractor[] = await p.download(feedId, packageId, version, downloadPath);
+
     if (extractPackage) {
         extractors.forEach(extractor => {
             extractor.extract();
@@ -66,41 +69,6 @@ async function main(): Promise<void> {
     }
 
     return Promise.resolve();
-}
-
-function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount): Promise<any> {
-    var executePromise = new Promise((resolve, reject) => {
-        executeWithRetriesImplementation(operationName, operation, retryCount, resolve, reject);
-    });
-
-    return executePromise;
-}
-
-function executeWithRetriesImplementation(
-    operationName: string,
-    operation: () => Promise<any>,
-    currentRetryCount,
-    resolve,
-    reject
-) {
-    operation()
-        .then(result => {
-            resolve(result);
-        })
-        .catch(error => {
-            if (currentRetryCount <= 0) {
-                tl.error(tl.loc("OperationFailed", operationName, error));
-                reject(error);
-            } else {
-                console.log(tl.loc("RetryingOperation", operationName, currentRetryCount));
-                currentRetryCount = currentRetryCount - 1;
-                setTimeout(
-                    () =>
-                        executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject),
-                    4 * 1000
-                );
-            }
-        });
 }
 
 main()

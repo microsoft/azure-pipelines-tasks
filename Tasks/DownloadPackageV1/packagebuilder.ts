@@ -14,6 +14,7 @@ export class PackageUrlsBuilder {
     private feedConnection: WebApi;
     private pkgsConnection: WebApi;
     private packageProtocolAreaName: string;
+    private executeWithRetries: <T>(operation: () => Promise<T>) => Promise<T>;
 
     private getRouteParams: (feedId: string, packageMetadata: any, fileMetadata: any) => any;
 
@@ -90,6 +91,15 @@ export class PackageUrlsBuilder {
     withPkgsConnection(connection: WebApi): PackageUrlsBuilder {
         this.pkgsConnection = connection;
         return this;
+    }
+
+    withRetries(executeWithRetries:<T>(operation: () => Promise<T>) => Promise<T>): PackageUrlsBuilder {
+        this.executeWithRetries = executeWithRetries;
+        return this;
+    }
+
+    get ExecuteWithRetries() {
+        return this.executeWithRetries;
     }
 
     get FeedsConnection(): WebApi {

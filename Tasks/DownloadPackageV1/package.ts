@@ -34,6 +34,7 @@ export abstract class Package {
     protected feedConnection: WebApi;
     protected pkgsConnection: WebApi;
 
+    private executeWithRetries: <T>(operation: () => Promise<T>) => Promise<T>;
     private packagingAreaName: string = "Packaging";
     private packagingMetadataAreaId: string;
 
@@ -44,6 +45,7 @@ export abstract class Package {
         this.extension = builder.Extension;
         this.feedConnection = builder.FeedsConnection;
         this.pkgsConnection = builder.PkgsConnection;
+        this.executeWithRetries = builder.ExecuteWithRetries;
     }
 
     protected abstract async getDownloadUrls(
@@ -60,13 +62,10 @@ export abstract class Package {
         queryParams?: any
     ): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            var getVersioningDataPromise = vsoClient.getVersioningData(
-                null,
-                areaName,
-                areaId,
-                routeValues,
-                queryParams
+            var getVersioningDataPromise = this.executeWithRetries(() =>
+                vsoClient.getVersioningData(null, areaName, areaId, routeValues, queryParams)
             );
+
             getVersioningDataPromise.then(result => {
                 tl.debug("Got URL " + result + " from versioning data.");
                 return resolve(result.requestUrl);
@@ -90,15 +89,18 @@ export abstract class Package {
         var client = connection.rest;
 
         return new Promise((resolve, reject) => {
-            client
-                .get(metadataUrl)
-                .then(response => {
-                    return resolve(response.result);
+            this.executeWithRetries(() =>
+                client.get(metadataUrl).then(response => {
+                    if (response.statusCode >= 200 && response.statusCode < 300) {
+                        return resolve(response.result);
+                    } else {
+                        throw new Error(response.statusCode + ": " + response.result);
+                    }
                 })
-                .catch(error => {
-                    tl.debug("Getting package metadata failed with error: " + error);
-                    return reject(tl.loc("FailedToGetPackageMetadata", error));
-                });
+            ).catch(error => {
+                tl.debug("Getting package metadata failed with error: " + error);
+                return reject(tl.loc("FailedToGetPackageMetadata", metadataUrl, error));
+            });
         });
     }
 
@@ -156,30 +158,33 @@ export abstract class Package {
         unzipLocation: string
     ): Promise<Extractor> {
         return new Promise<Extractor>((resolve, reject) => {
-            return coreApi.http
-                .get(downloadUrl)
-                .then(response => {
-                    var responseStream = response.message as stream.Readable;
-                    var file = fs.createWriteStream(downloadPath);
+            return this.executeWithRetries(() =>
+                coreApi.http.get(downloadUrl).then(response => {
+                    if (response.message.statusCode >= 200 && response.message.statusCode < 300) {
+                        var responseStream = response.message as stream.Readable;
+                        var file = fs.createWriteStream(downloadPath);
 
-                    responseStream.pipe(file);
+                        responseStream.pipe(file);
 
-                    responseStream.on("end", () => {
-                        console.log(tl.loc("PackageDownloadSuccessful"));
-                        file.on("close", () => {
-                            var extractor = new Extractor(downloadPath, unzipLocation);
-                            return resolve(extractor);
+                        responseStream.on("end", () => {
+                            tl.debug(tl.loc("PackageDownloadSuccessful"));
+                            file.on("close", () => {
+                                var extractor = new Extractor(downloadPath, unzipLocation);
+                                return resolve(extractor);
+                            });
                         });
-                    });
-                    responseStream.on("error", err => {
-                        console.log("Download stream failed with error: " + err);
-                        return reject(tl.loc("FailedToDownloadPackage", downloadUrl, err));
-                    });
+                        responseStream.on("error", err => {
+                            tl.debug("Download stream failed with error: " + err);
+                            return reject(tl.loc("FailedToDownloadPackage", downloadUrl, err));
+                        });
+                    } else {
+                        throw new Error(response.message.statusCode + ": " + response.message.statusMessage);
+                    }
                 })
-                .catch(error => {
-                    console.log("Downloading file failed with error: " + error);
-                    return reject(tl.loc("FailedToDownloadPackage", downloadUrl, error));
-                });
+            ).catch(error => {
+                tl.debug("Downloading file failed with error: " + error);
+                return reject(tl.loc("FailedToDownloadPackage", downloadUrl, error));
+            });
         });
     }
 }
