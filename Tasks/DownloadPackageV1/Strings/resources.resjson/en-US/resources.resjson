@@ -2,7 +2,7 @@
   "loc.friendlyName": "Download Package",
   "loc.helpMarkDown": "Needs Package Management extension to be installed",
   "loc.description": "Download a package from a Package Management feed in Azure Artifacts or TFS. \r\n Requires the Package Management extension.",
-  "loc.instanceNameFormat": "Download Package",
+  "loc.instanceNameFormat": "Download Package $(definition)",
   "loc.group.displayName.advancedOptions": "Advanced",
   "loc.input.label.packageType": "Package Type",
   "loc.input.help.packageType": "Select the package type",

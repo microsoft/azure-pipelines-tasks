@@ -11,8 +11,7 @@ describe("Download single file package suite", function() {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     beforeEach(() => {
-        fs.mkdir(outputDir);
-        fs.mkdir(outputExtractDir);
+        tl.mkdirP(outputExtractDir);
     });
 
     afterEach(() => {
@@ -73,7 +72,7 @@ describe("Download multi file package suite", function() {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before(() => {
-        fs.mkdir(outputDir);
+        tl.mkdirP(outputDir);
     });
 
     after(() => {
