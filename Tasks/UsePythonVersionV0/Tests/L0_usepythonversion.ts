@@ -56,6 +56,10 @@ it('converts Python prerelease versions to the semantic version format', functio
             expected: '14.22.100-a1000'
         },
         {
+            versionSpec: '3.7.0c', // we don't recognize 'c' as a prerelease specifier
+            expected: '3.7.0c'
+        },
+        {
             versionSpec: '3.6.6b2 || >= 3.7.0rc',
             expected: '3.6.6-b2 || >= 3.7.0-rc'
         },
@@ -65,7 +69,7 @@ it('converts Python prerelease versions to the semantic version format', functio
         },
     ];
 
-    for (let tc of testCases) { // Node 5 can't handle destructuring assignment
+    for (const tc of testCases) { // Node 5 can't handle destructuring assignment
         const actual = uut.pythonVersionToSemantic(tc.versionSpec);
         assert.strictEqual(actual, tc.expected);
     }
