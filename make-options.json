@@ -35,6 +35,7 @@
         "BatchScriptV1",
         "ChefV1",
         "ChefKnifeV1",
+        "CircleCIDownloadArtifactsV0",
         "CMakeV1",
         "CmdLineV2",
         "CocoaPodsV0",
