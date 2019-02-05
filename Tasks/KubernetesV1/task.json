@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 21
+        "Patch": 22
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
@@ -154,48 +154,48 @@
             "name": "useConfigurationFile",
             "type": "boolean",
             "label": "Use configuration",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "helpMarkDown": "Use Kubernetes configuration with the kubectl command. An inline script, filename, directory, or URL to Kubernetes configuration files can be provided.",
             "groupName": "commands",
             "visibleRule": "command != login && command != logout"
         },
         {
-          "name": "configurationType",
-          "type": "radio",
-          "label": "Configuration type",
-          "defaultValue": "configuration",
-          "groupName": "commands",
-          "helpMarkDown": "Type of Kubernetes configuration for kubectl command. It can be a file path or an inline script.",
-          "options": {
-              "configuration": "File path",
-              "inline": "Inline configuration"
-          },
-          "visibleRule": "useConfigurationFile = true"
+            "name": "configurationType",
+            "type": "radio",
+            "label": "Configuration type",
+            "defaultValue": "configuration",
+            "groupName": "commands",
+            "helpMarkDown": "Type of Kubernetes configuration for kubectl command. It can be a file path or an inline script.",
+            "options": {
+                "configuration": "File path",
+                "inline": "Inline configuration"
+            },
+            "visibleRule": "useConfigurationFile = true"
         },
         {
-          "name": "configuration",
-          "type": "filePath",
-          "label": "File path",
-          "defaultValue": "",
-          "required": true,
-          "helpMarkDown": "Filename, directory, or URL to kubernetes configuration files that will be used with the commands.",
-          "visibleRule": "configurationType = configuration",
-          "groupName": "commands"
+            "name": "configuration",
+            "type": "filePath",
+            "label": "File path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Filename, directory, or URL to kubernetes configuration files that will be used with the commands.",
+            "visibleRule": "configurationType = configuration",
+            "groupName": "commands"
         },
         {
-          "name": "inline",
-          "type": "multiLine",
-          "properties": {
-            "resizable": "true",
-            "rows": "10",
-            "maxLength": "5000"
-          },
-          "required": true,
-          "defaultValue": "",
-          "label": "Inline configuration",
-          "helpMarkDown": "Inline deployment configuration for kubectl command",
-          "groupName": "commands",
-          "visibleRule": "configurationType = inline"
+            "name": "inline",
+            "type": "multiLine",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "5000"
+            },
+            "required": true,
+            "defaultValue": "",
+            "label": "Inline configuration",
+            "helpMarkDown": "Inline deployment configuration for kubectl command",
+            "groupName": "commands",
+            "visibleRule": "configurationType = inline"
         },
         {
             "name": "arguments",
@@ -358,7 +358,7 @@
             "name": "versionSpec",
             "type": "string",
             "label": "Version spec",
-            "defaultValue": "1.7.0",
+            "defaultValue": "1.13.2",
             "helpMarkDown": "Version Spec of version to get.  Examples: 1.7.0, 1.x.0, 4.x.0, 6.10.0, >=6.10.0",
             "groupName": "advanced",
             "visibleRule": "versionOrLocation = version"
@@ -466,6 +466,6 @@
         "ConfigurationFileNotFound": "No configuration file matching %s was found.",
         "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
         "OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
-        "InvalidConfiguration": "Can not set configuration with both file: %s and inline configuration: %s."
+        "InvalidConfiguration": "No Kubernetes configuration found, supply either inline configuration or configuration file path"
     }
 }
