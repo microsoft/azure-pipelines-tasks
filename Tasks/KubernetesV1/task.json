@@ -154,7 +154,7 @@
             "name": "useConfigurationFile",
             "type": "boolean",
             "label": "Use configuration",
-            "defaultValue": "true",
+            "defaultValue": "false",
             "helpMarkDown": "Use Kubernetes configuration with the kubectl command. An inline script, filename, directory, or URL to Kubernetes configuration files can be provided.",
             "groupName": "commands",
             "visibleRule": "command != login && command != logout"

@@ -154,7 +154,7 @@
       "name": "useConfigurationFile",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.useConfigurationFile",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.useConfigurationFile",
       "groupName": "commands",
       "visibleRule": "command != login && command != logout"
@@ -358,7 +358,7 @@
       "name": "versionSpec",
       "type": "string",
       "label": "ms-resource:loc.input.label.versionSpec",
-      "defaultValue": "1.7.0",
+      "defaultValue": "1.13.2",
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec",
       "groupName": "advanced",
       "visibleRule": "versionOrLocation = version"
