@@ -1,7 +1,7 @@
 {
   "id": "263abc27-4582-4174-8789-af599697778e",
-  "name": "DownloadGitHubReleases",
-  "friendlyName": "Download GitHub Releases",
+  "name": "DownloadGitHubRelease",
+  "friendlyName": "Download GitHub Release",
   "description": "Downloads a GitHub Release from a repository.",
   "author": "Microsoft Corporation",
   "helpUrl": "https://aka.ms/AA3x715",
@@ -10,11 +10,11 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 147,
+    "Minor": 148,
     "Patch": 0
   },
   "minimumAgentVersion": "1.99.0",
-  "instanceNameFormat": "Download GitHub Releases",
+  "instanceNameFormat": "Download GitHub Release",
   "preview": true,
   "inputs": [
     {
@@ -46,9 +46,6 @@
         "latest": "Latest Release",
         "specificVersion": "Specific Version",
         "specificTag": "Specific Tag"
-      },
-      "properties": {
-        "EditableOptions": "True"
       },
       "helpMarkDown": "Download assets from latest release or specific release version/tag"
     },
