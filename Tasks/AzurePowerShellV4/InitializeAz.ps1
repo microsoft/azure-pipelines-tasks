@@ -11,13 +11,17 @@ param
 $endpointObject =  ConvertFrom-Json  $endpoint
 $moduleName = "Az.Accounts"
 $environmentName = $endpointObject.environment
+Write-Host "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 
-if($targetAzurePs -eq ""){
+. "$PSScriptRoot/Utility.ps1"
+Update-PSModulePathForHostedAgentLinux -targetAzurePs $targetAzurePs
+
+#if($targetAzurePs -eq ""){
     $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
-}
-else{
-    $module = Get-Module -Name $moduleName -ListAvailable | Where-Object {$_.Version -eq $targetAzurePs} | Select-Object -First 1
-}
+#}
+#else{
+    #$module = Get-Module -Name $moduleName -ListAvailable | Where-Object {$_.Version -eq $targetAzurePs} | Select-Object -First 1
+#}
       
 if (!$module) {
     # Will handle localization later
