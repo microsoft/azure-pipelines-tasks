@@ -1,6 +1,6 @@
 {
-  "name": "downloadgithubreleases",
-  "description": "Azure Pipelines Github Releases Download Task",
+  "name": "downloadgithubrelease",
+  "description": "Azure Pipelines GitHub Release Download Task",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/microsoft/azure-pipelines-tasks.git"
