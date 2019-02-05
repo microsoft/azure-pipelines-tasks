@@ -63,7 +63,6 @@ function getCommandConfigurationFile(): string[] {
             throw new Error(tl.loc('InvalidConfiguration'));
         }
         else if (configurationPath) {
-            //apply incoming configuration irrespective of useConfigurationFile flag. Simplifies yaml definition for pipelines
             if (tl.exist(configurationPath)) {
                 args[0] = "-f";
                 args[1] = configurationPath;
