@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 22
+    "Patch": 23
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -154,7 +154,7 @@
       "name": "useConfigurationFile",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.useConfigurationFile",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.useConfigurationFile",
       "groupName": "commands",
       "visibleRule": "command != login && command != logout"
