@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 13
   },
   "groups": [
     {
@@ -82,6 +82,14 @@
       "groupName": "signingDetails"
     },
     {
+      "name": "sessionId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sessionId",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.sessionId"
+    },
+    {
       "name": "waitForCompletion",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.waitForCompletion",
@@ -103,6 +111,7 @@
         "connectionString": "$(endpoint.serviceBusConnectionString)",
         "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
         "messageBody": "$(messageBody)",
+        "sessionId": "$(sessionId)",
         "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(certificateString){{/notEquals}}{{else}}{{/notEquals}}",
         "signaturePropertyKey": "$(signatureKey)",
         "messageProperties": {

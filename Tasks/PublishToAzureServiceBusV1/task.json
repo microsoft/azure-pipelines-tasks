@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 13
     },
     "groups": [
         {
@@ -81,6 +81,14 @@
             "visibleRule": "signPayload = true",
             "groupName": "signingDetails"
         },
+		{
+			"name": "sessionId",
+			"type": "string",
+			"label": "Session Id for Message",
+			"required": false,
+			"defaultValue": "",
+			"helpMarkDown": "This is the session id whith which you want to post the message. In case not given , default Guid will be assigned to it. Used for Session Based Queues, for Non Session Based Queues, it would not matter."
+		},
         {
             "name": "waitForCompletion",
             "type": "boolean",
@@ -103,6 +111,7 @@
                 "connectionString": "$(endpoint.serviceBusConnectionString)",
                 "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
                 "messageBody": "$(messageBody)",
+				"sessionId": "$(sessionId)",
                 "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(certificateString){{/notEquals}}{{else}}{{/notEquals}}",
                 "signaturePropertyKey": "$(signatureKey)",
                 "messageProperties": {
