@@ -1,16 +1,17 @@
 {
   "name": "publish-to-azure-data-explorer",
-  "version": "0.1.0",
+  "version": "1.0.58",
   "description": "publish to azure data explorer",
   "main": "src/index.js",
   "author": {
     "name": "shfeldma"
   },
   "dependencies": {
-    "@types/node": "^10.12.19",
     "@types/mocha": "^2.2.46",
+    "@types/node": "^10.12.19",
     "@types/request": "^2.0.10",
     "request": "^2.83.0",
+    "vss-web-extension-sdk": "^5.141.0",
     "vsts-task-lib": "^2.4.0"
   },
   "scripts": {

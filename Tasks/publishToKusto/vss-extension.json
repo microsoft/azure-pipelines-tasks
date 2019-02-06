@@ -1,0 +1,52 @@
+{
+    "name": "publish-to-azure-data-explorer",
+    "id": "PublishToADX",
+    "version" : "1.0.58",
+    "publisher" : "Azure-Kusto",
+    "categories": [
+        "Azure Pipelines"
+    ],
+    "icons": {
+        "default": "icon.png"
+    },
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "contributions": [
+        {
+            "id": "github",
+            "type": "ms.vss-web.hub",
+            "targets": [
+                "ms.vss-code-web.code-hub-group"
+            ],
+            "properties": {
+                "name": "adx tasks",
+                "uri": "my-hub.html"
+            }
+        }
+    ],
+    "files": [
+        {
+            "path": "my-hub.html",
+            "addressable": true
+        },
+        {
+            "path": "node_modules/vss-web-extension-sdk/lib",
+            "addressable": true,
+            "packagePath": "lib"
+        },
+        {
+            "path": "overview.md",
+            "addressable": true
+        }
+    ],
+    "public": true,
+    "content": {
+        "details": {
+            "path": "overview.md"
+        }
+    }
+
+}

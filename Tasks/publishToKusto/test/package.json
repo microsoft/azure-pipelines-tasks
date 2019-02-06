@@ -1,6 +1,6 @@
 {
   "name": "publish-to-azure-data-explorer",
-  "version": "0.1.0",
+  "version": "1.0.58",
   "description": "publish to azure data explorer",
   "main": "src/index.js",
   "author": {
