@@ -7,6 +7,7 @@ import {NuGetQuirkName, NuGetQuirks, defaultQuirks} from "./NuGetQuirks";
 import * as ngutil from "./Utility";
 import * as peParser from "../pe-parser";
 import * as commandHelper from "./CommandHelper";
+import * as path from "path";
 
 // NuGetToolRunner2 can handle environment setup for new authentication scenarios where
 // we are accessing internal or external package sources.
@@ -45,6 +46,12 @@ function prepareNuGetExeEnvironment(
     let env: EnvironmentDictionary = {};
     let originalCredProviderPath: string = null;
     let envVarCredProviderPathV2: string = null;
+
+    // Set NUGET_PLUGINS_CACHE_PATH to work aroud the NuGet issue with long paths: https://github.com/NuGet/Home/issues/7770
+    var tempDir = tl.getVariable('Agent.TempDirectory');
+    var nugetCacheDir = path.join(tempDir, "NuGetCache");
+    env["NUGET_PLUGINS_CACHE_PATH"] = nugetCacheDir;
+    tl.debug(`NUGET_PLUGINS_CACHE_PATH set to ${nugetCacheDir}`);
 
     for (let e in input) {
         if (!input.hasOwnProperty(e)) {
@@ -459,6 +466,11 @@ function buildCredentialJson(authInfo: auth.NuGetExtendedAuthInfo): string {
                     break;
             }
         });
+
+        if (enpointCredentialsJson.endpointCredentials.length < 1) {
+            tl.debug(`None detected.`);
+            return null;
+        }
 
         const externalCredentials: string = JSON.stringify(enpointCredentialsJson);
         return externalCredentials;
