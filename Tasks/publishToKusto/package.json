@@ -1,10 +1,10 @@
 {
-  "name": "vsts-publish-to-kusto",
+  "name": "publish-to-azure-data-explorer",
   "version": "0.1.0",
-  "description": "vsts-publish-to-kusto",
+  "description": "publish to azure data explorer",
   "main": "src/index.js",
   "author": {
-    "name": "mmaitre"
+    "name": "shfeldma"
   },
   "dependencies": {
     "@types/node": "^10.12.19",

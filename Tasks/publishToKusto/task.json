@@ -1,7 +1,7 @@
 {
     "id": "a7cd4ea2-0b83-49cb-887a-b529e5d80db7",
-    "name": "PublishToKusto",
-    "friendlyName": "Publish to Kusto",
+    "name": "PublishToADX",
+    "friendlyName": "Publish to Azure Data Explorer",
     "description": "Run .csl Kusto scripts publishing functions, etc. to Kusto databases",
     "helpMarkDown": "[Contact Us](mailto:castalk@microsoft.com)",
     "category": "Utility",
@@ -11,7 +11,7 @@
       "Minor": 0,
       "Patch": 57
     },
-    "instanceNameFormat": "Publish to Kusto",
+    "instanceNameFormat": "Publish to ADX",
     "groups": [
     ],
     "inputs": [
