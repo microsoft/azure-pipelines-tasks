@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 3,
-    "Patch": 12
+    "Patch": 13
   },
   "demands": [
     "sqlpackage"
@@ -180,7 +180,8 @@
         "DacpacTask": "SQL DACPAC File",
         "SqlTask": "SQL Script File",
         "InlineSqlTask": "Inline SQL Script"
-      }
+      },
+      "visibleRule": "AuthenticationType = server"
     },
     {
       "name": "DeploymentAction",
@@ -198,7 +199,7 @@
         "DriftReport": "Drift Report",
         "DeployReport": "Deploy Report"
       },
-      "visibleRule": "TaskNameSelector = DacpacTask",
+      "visibleRule": "TaskNameSelector = DacpacTask || AuthenticationType != server",
       "helpMarkDown": "ms-resource:loc.input.help.DeploymentAction"
     },
     {
@@ -263,7 +264,7 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments",
-      "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Extract || DeploymentAction = Export || DeploymentAction = Import || DeploymentAction = Script || DeploymentAction = DeployReport || DeploymentAction = DriftReport"
+      "visibleRule": "AuthenticationType != server || TaskNameSelector = DacpacTask || DeploymentAction = Extract || DeploymentAction = Export || DeploymentAction = Import || DeploymentAction = Script || DeploymentAction = DeployReport || DeploymentAction = DriftReport"
     },
     {
       "name": "SqlAdditionalArguments",

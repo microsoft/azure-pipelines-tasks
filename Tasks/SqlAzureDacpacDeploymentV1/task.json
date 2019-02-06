@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 3,
-        "Patch": 12
+        "Patch": 13
     },
     "demands": [
         "sqlpackage"
@@ -180,7 +180,8 @@
                 "DacpacTask": "SQL DACPAC File",
                 "SqlTask": "SQL Script File",
                 "InlineSqlTask": "Inline SQL Script"
-            }
+            },
+            "visibleRule": "AuthenticationType = server"
         },
         {
             "name": "DeploymentAction",
@@ -198,7 +199,7 @@
                 "DriftReport": "Drift Report",
                 "DeployReport": "Deploy Report"
             },
-            "visibleRule": "TaskNameSelector = DacpacTask",
+            "visibleRule": "TaskNameSelector = DacpacTask || AuthenticationType != server",
             "helpMarkDown": "Choose one of the SQL Actions from the list. For more details refer <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">link</a>.​"
         },
         {
@@ -263,7 +264,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied when deploying the Azure SQL Database, in case DACPAC option is selected like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided).",
-            "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Extract || DeploymentAction = Export || DeploymentAction = Import || DeploymentAction = Script || DeploymentAction = DeployReport || DeploymentAction = DriftReport"
+            "visibleRule": "AuthenticationType != server || TaskNameSelector = DacpacTask || DeploymentAction = Extract || DeploymentAction = Export || DeploymentAction = Import || DeploymentAction = Script || DeploymentAction = DeployReport || DeploymentAction = DriftReport"
         },
         {
             "name": "SqlAdditionalArguments",
