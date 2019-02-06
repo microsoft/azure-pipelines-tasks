@@ -11,7 +11,6 @@
     "@types/node": "^10.12.19",
     "@types/request": "^2.0.10",
     "request": "^2.83.0",
-    "vss-web-extension-sdk": "^5.141.0",
     "vsts-task-lib": "^2.4.0"
   },
   "scripts": {

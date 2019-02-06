@@ -42,7 +42,7 @@
             "addressable": true
         }
     ],
-    "public": true,
+    "public": false,
     "content": {
         "details": {
             "path": "overview.md"
