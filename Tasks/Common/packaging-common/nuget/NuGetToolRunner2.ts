@@ -77,7 +77,7 @@ function prepareNuGetExeEnvironment(
             continue;
         }
 
-        if (e.toUpperCase() === "DISABLE_NUGET_PLUGING_CACHE_WORKAROUND") {
+        if (e.toUpperCase() === "DISABLE_NUGET_PLUGINS_CACHE_WORKAROUND") {
             // Specifically disable NUGET_PLUGINS_CACHE_PATH workaround
             disableNuGetPluginCacheWorkaround = true;
             continue;
@@ -92,7 +92,7 @@ function prepareNuGetExeEnvironment(
         env[e] = input[e];
     }
 
-    // If DISABLE_NUGET_PLUGING_CACHE_WORKAROUND variable is not set 
+    // If DISABLE_NUGET_PLUGINS_CACHE_WORKAROUND variable is not set 
     // and nugetCacheDir is not populated by NUGET_PLUGINS_CACHE_PATH,
     // set NUGET_PLUGINS_CACHE_PATH to the temp directory
     // to work aroud the NuGet issue with long paths: https://github.com/NuGet/Home/issues/7770
