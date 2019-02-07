@@ -24,7 +24,7 @@
   "loc.input.label.releaseNotes": "Release notes",
   "loc.input.help.releaseNotes": "Enter the release notes here. Markdown is supported.",
   "loc.input.label.assets": "Assets",
-  "loc.input.help.assets": "Specify the files to be uploaded as assets of the release. You can use wildcard characters to specify multiple files. E.g. `$(Build.ArtifactStagingDirectory)/*.zip`. You can also specify multiple patterns - one per line. By default, all files in the `$(Build.ArtifactStagingDirectory)` directory will be uploaded.",
+  "loc.input.help.assets": "Specify the files to be uploaded as assets of the release. You can use wildcard characters to specify multiple files. E.g. For build pipelines, $(Build.ArtifactStagingDirectory)/*.zip or in case of release pipelines $(System.DefaultWorkingDirectory)/*.zip. You can also specify multiple patterns - one per line. By default, all files in the $(Build.ArtifactStagingDirectory) directory will be uploaded. To know more about the list of pre-defined variables available, see [build variables](https://aka.ms/AA4449z) and [release variables](https://aka.ms/AA43wws).",
   "loc.input.label.assetUploadMode": "Asset upload mode",
   "loc.input.help.assetUploadMode": "Use the 'Delete existing assets' option to first delete any existing assets in the release and then upload all assets. Use the 'Replace existing assets' option to replace any assets that have the same name.",
   "loc.input.label.isDraft": "Draft release",
