@@ -46,17 +46,14 @@ function prepareNuGetExeEnvironment(
     let env: EnvironmentDictionary = {};
     let originalCredProviderPath: string = null;
     let envVarCredProviderPathV2: string = null;
-
-    // Set NUGET_PLUGINS_CACHE_PATH to work aroud the NuGet issue with long paths: https://github.com/NuGet/Home/issues/7770
-    var tempDir = tl.getVariable('Agent.TempDirectory');
-    var nugetCacheDir = path.join(tempDir, "NuGetCache");
-    env["NUGET_PLUGINS_CACHE_PATH"] = nugetCacheDir;
-    tl.debug(`NUGET_PLUGINS_CACHE_PATH set to ${nugetCacheDir}`);
+    let nugetCacheDir: string = null;
+    let disableNuGetPluginCacheWorkaround: boolean = false;
 
     for (let e in input) {
         if (!input.hasOwnProperty(e)) {
             continue;
         }
+
         // NuGet.exe extensions only work with a single specific version of nuget.exe. This causes problems
         // whenever we update nuget.exe on the agent.
         if (e.toUpperCase() === "NUGET_EXTENSIONS_PATH") {
@@ -80,9 +77,34 @@ function prepareNuGetExeEnvironment(
             continue;
         }
 
+        if (e.toUpperCase() === "DISABLE_NUGET_PLUGING_CACHE_WORKAROUND") {
+            // Specifically disable NUGET_PLUGINS_CACHE_PATH workaround
+            disableNuGetPluginCacheWorkaround = true;
+            continue;
+        }
+
+        // NuGet plugins cache
+        if (e.toUpperCase() === "NUGET_PLUGINS_CACHE_PATH") {
+            nugetCacheDir = input[e];
+            continue;
+        }
+
         env[e] = input[e];
     }
 
+    // If DISABLE_NUGET_PLUGING_CACHE_WORKAROUND variable is not set 
+    // and nugetCacheDir is not populated by NUGET_PLUGINS_CACHE_PATH,
+    // set NUGET_PLUGINS_CACHE_PATH to the temp directory
+    // to work aroud the NuGet issue with long paths: https://github.com/NuGet/Home/issues/7770
+    if (nugetCacheDir == null && disableNuGetPluginCacheWorkaround === false) {
+        const tempDir = tl.getVariable('Agent.TempDirectory');
+        nugetCacheDir = path.join(tempDir, "NuGetPluginsCache");
+    }
+    if (nugetCacheDir != null) {
+        env["NUGET_PLUGINS_CACHE_PATH"] = nugetCacheDir;
+        tl.debug(`NUGET_PLUGINS_CACHE_PATH set to ${nugetCacheDir}`);
+    }
+    
     if (authInfo && authInfo.internalAuthInfo) {
         env["VSS_NUGET_ACCESSTOKEN"] = authInfo.internalAuthInfo.accessToken;
         env["VSS_NUGET_URI_PREFIXES"] = authInfo.internalAuthInfo.uriPrefixes.join(";");
