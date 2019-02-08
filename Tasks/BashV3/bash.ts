@@ -41,8 +41,10 @@ async function run() {
         let input_filePath: string;
         let input_arguments: string;
         let input_script: string;
+        let old_source_behavior: boolean;
         let input_targetType: string = tl.getInput('targetType') || '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
+            old_source_behavior = tl.getBoolInput('AZP_BASHV3_OLD_SOURCE_BEHAVIOR', /*required*/ false);
             input_filePath = tl.getPathInput('filePath', /*required*/ true);
             if (!tl.stats(input_filePath).isFile()) {
                 throw new Error(tl.loc('JS_InvalidFilePath', input_filePath));
@@ -68,7 +70,19 @@ async function run() {
                 targetFilePath = input_filePath;
             }
 
-            contents = `. '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
+            if (old_source_behavior) {
+                contents = `. '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
+            } else {
+                // Check if executable bit is set
+                let stats: fs.Stats = fs.statSync(targetFilePath);
+                if ((stats.mode & 1) > 0) {
+                    contents = `sh '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
+                }
+                else {
+                    tl.warning('Executable bit is not set on target script, sourcing instead of executing');
+                    contents = `. '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
+                }
+            }
             console.log(tl.loc('JS_FormattedCommand', contents));
         }
         else {
