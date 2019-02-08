@@ -13,11 +13,11 @@ class DotnetCoreInstaller {
         this.packageType = packageType;
         this.workingDirectory = workingDirectory;
 
-        if(!useGlobalJson){
+        if (!useGlobalJson) {
             if (!toolLib.isExplicitVersion(version)) {
                 throw tl.loc("ImplicitVersionNotSupported", version);
             }
-        }        
+        }
         if (!useGlobalJson && (version == null || version.length == 0)) {
             throw tl.loc("VersionMissingException")
         }
@@ -25,7 +25,7 @@ class DotnetCoreInstaller {
             throw tl.loc("WorkingDirectoryCantBeNull");
         }
         this.version = version;
-        this.cachedToolName = this.packageType === 'runtime' ? 'dncr' : 'dncs';        
+        this.cachedToolName = this.packageType === 'runtime' ? 'dncr' : 'dncs';
     }
 
     private async installFromGlobalJson(osSuffixes: string[]) {
@@ -48,13 +48,13 @@ class DotnetCoreInstaller {
                 throw tl.loc("FailedToReadGlobalJson", filePath);
             }
             sdkVersionNumber.push({ name: globalJson.sdk.version, toolPath: null });
-        }       
+        }
 
-        let sortedDownloads = sdkVersionNumber            
-            
+        let sortedDownloads = sdkVersionNumber
+
             .filter(d => {
                 var cacheFolder = toolLib.findLocalTool(this.cachedToolName, "0.0.0", this.arch);
-                if(cacheFolder == null ||cacheFolder.length == 0){
+                if (cacheFolder == null || cacheFolder.length == 0) {
                     return true;
                 }
                 // We trust the installation of an sdk if the dotnet.dll exists. 
@@ -209,7 +209,7 @@ class DotnetCoreInstaller {
         // cache tool
         console.log(tl.loc("CachingTool"));
         let cachedDir: string;
-        if (globalJson) {            
+        if (globalJson) {
             let availableGlobalTool = toolLib.findLocalTool(this.cachedToolName, "0.0.0", this.arch);
             if (availableGlobalTool == null || availableGlobalTool.length == 0) {
                 // if we never installed any dotnet core sdk.
@@ -245,10 +245,10 @@ async function run() {
     let packageType = tl.getInput('packageType', true);
     if (useGlobalJson) {
         console.log(tl.loc("UseGlobalJson"));
-        await new DotnetCoreInstaller(workingDirectory, packageType, null, useGlobalJson).install();        
-    } else {        
+        await new DotnetCoreInstaller(workingDirectory, packageType, null, useGlobalJson).install();
+    } else {
         let version = tl.getInput('version', true);
-        console.log(tl.loc("UseVerion"), version);        
+        console.log(tl.loc("UseVerion"), version);
         version = version.trim();
         await new DotnetCoreInstaller(workingDirectory, packageType, version, useGlobalJson).install();
         console.log(tl.loc("ToolToInstall", packageType, version));
