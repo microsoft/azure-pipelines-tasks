@@ -79,7 +79,7 @@ async function run() {
                     contents = `sh '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
                 }
                 else {
-                    tl.warning('Executable bit is not set on target script, sourcing instead of executing. More info at https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/bashwarning.md');
+                    tl.warning('Executable bit is not set on target script, sourcing instead of executing. More info at https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/bashnote.md');
                     contents = `. '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
                 }
             }
