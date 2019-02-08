@@ -61,7 +61,7 @@ function resolvePathToSingleItem(workingDirectory:string, pathInput: string, isD
     if (pathInput) {
 
         // Find match patterns won't work if the directory has a trailing slash
-        if (isDirectory && (pathInput.endsWith("/") || pathInput.endsWith("\\"))) {
+        if (isDirectory && (pathInput.endsWith('/') || pathInput.endsWith('\\'))) {
             pathInput = pathInput.slice(0, -1);
         }
         // Resolve matches of the pathInput pattern
