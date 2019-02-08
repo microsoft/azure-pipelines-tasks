@@ -19,7 +19,7 @@ async function run() {
         // Resolve the summary file path.
         // It may contain wildcards allowing the path to change between builds, such as for:
         // $(System.DefaultWorkingDirectory)\artifacts***$(Configuration)\testresults\coverage\cobertura.xml
-        var resolvedSummaryFile: string = resolvePathToSingleItem(workingDirectory, summaryFileLocation);
+        var resolvedSummaryFile: string = resolvePathToSingleItem(workingDirectory, summaryFileLocation, false);
         if (failIfCoverageIsEmpty && await ccUtil.isCodeCoverageFileEmpty(resolvedSummaryFile, codeCoverageTool)) {
             throw tl.loc('NoCodeCoverage');
         } else if (!tl.exist(resolvedSummaryFile)) {
@@ -28,7 +28,7 @@ async function run() {
             // Resolve the report directory.
             // It may contain wildcards allowing the path to change between builds, such as for:
             // $(System.DefaultWorkingDirectory)\artifacts***$(Configuration)\testresults\coverage
-            var resolvedReportDirectory: string = resolvePathToSingleItem(workingDirectory, reportDirectory);
+            var resolvedReportDirectory: string = resolvePathToSingleItem(workingDirectory, reportDirectory, true);
 
             // Get any 'Additional Files' to publish as build artifacts
             if (additionalFiles) {
@@ -54,12 +54,16 @@ async function run() {
 }
 
 // Resolves the specified path to a single item based on whether it contains wildcards
-function resolvePathToSingleItem(workingDirectory:string, pathInput: string) : string {
+function resolvePathToSingleItem(workingDirectory:string, pathInput: string, isDirectory: boolean) : string {
     // Default to using the specific pathInput value
     var resolvedPath: string = pathInput;
 
-    // Does the pathInput value contain wildcards?
     if (pathInput) {
+
+        // Find match patterns won't work if the directory has a trailing slash
+        if (isDirectory && (pathInput.endsWith('/') || pathInput.endsWith('\\'))) {
+            pathInput = pathInput.slice(0, -1);
+        }
         // Resolve matches of the pathInput pattern
         var pathMatches: string[] = tl.findMatch(
             workingDirectory,
