@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "(paje20) .NET Core SDK Installer",
+  "loc.friendlyName": ".NET Core SDK Installer",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=853651)",
   "loc.description": "Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks.",
   "loc.instanceNameFormat": "Use .NET Core $(packageType)",
@@ -32,15 +32,16 @@
   "loc.messages.WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/dotnet/core/blob/master/release-notes/releases.json. Falling back to creating convention based URL.",
   "loc.messages.CouldNotDownload": "Could not download installation package from this URL: %s Error: %s",
   "loc.messages.FailedToDownloadPackage": "Failed to download package for installation",
-  "loc.messages.PrependGlobalToolPath": "Creating global tool path and pre-prending to PATH.",
+  "loc.messages.PrependGlobalToolPath": "Creating global tool path and pre-pending to PATH.",
   "loc.messages.VersionMissingException": "If you don't use global.json then please defined a version.",
-  "loc.messages.VersionsFileMalformed": "The specified version's download links are not correctly formed in the supported versions document => %s/",
   "loc.messages.FailedToFindGlobalJson": "From the root of your working folder we can't find any global.json file.",
-  "loc.messages.GlobalJsonFound": "global.json found here: %s",
+  "loc.messages.GlobalJsonFound": "Found global.json here: %s",
   "loc.messages.FailedToReadGlobalJson": "The global.json file isn't valid. (%s) Please take a look in the documentation for global.json (https://docs.microsoft.com/en-us/dotnet/core/tools/global-json)",
-  "loc.messages.UseGlobalJson": "Installer will install all sdk's from all global.json files.",
-  "loc.messages.UseVerion": "Installer will install the sdk %s.",
+  "loc.messages.UseGlobalJson": "Installer will install sdk's from all global.json files.",
+  "loc.messages.UseVersion": "Installer will install the sdk %s.",
   "loc.messages.AddGlobalJsonViaToCache": "Add via global.json to cache",
-  "loc.messages.OverrideDotnetExe": "override dotnet.exe because it already exists.",
-  "loc.messages.CopySdkFromTo": "copy from %s to %s"
+  "loc.messages.CopySdkFromTo": "Copy SDK from %s to %s",
+  "loc.messages.DeleteSdkFolderOfAnBrokenInstallation": "Delete the folder %s of an broken installation.",
+  "loc.messages.RemoveSdkFile": "Remove the file %s.",
+  "loc.messages.InsertNewSdkFile": "Create the file %s"
 }

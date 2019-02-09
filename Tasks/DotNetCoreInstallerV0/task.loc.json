@@ -1,9 +1,9 @@
 {
-  "id": "89eacaf8-4d43-4671-9775-402fd61cd8b6",
-  "name": "pajetestdotnetcoreinstaller20",
-  "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://go.microsoft.com/fwlink/?linkid=853651",
+  "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
+  "name": "DotNetCoreInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [
@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 3,
-    "Patch": 16
+    "Minor": 2,
+    "Patch": 2
   },
   "satisfies": [
     "DotNetCore"
@@ -97,14 +97,15 @@
     "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
     "PrependGlobalToolPath": "ms-resource:loc.messages.PrependGlobalToolPath",
     "VersionMissingException": "ms-resource:loc.messages.VersionMissingException",
-    "VersionsFileMalformed": "ms-resource:loc.messages.VersionsFileMalformed",
     "FailedToFindGlobalJson": "ms-resource:loc.messages.FailedToFindGlobalJson",
     "GlobalJsonFound": "ms-resource:loc.messages.GlobalJsonFound",
     "FailedToReadGlobalJson": "ms-resource:loc.messages.FailedToReadGlobalJson",
     "UseGlobalJson": "ms-resource:loc.messages.UseGlobalJson",
-    "UseVerion": "ms-resource:loc.messages.UseVerion",
+    "UseVersion": "ms-resource:loc.messages.UseVersion",
     "AddGlobalJsonViaToCache": "ms-resource:loc.messages.AddGlobalJsonViaToCache",
-    "OverrideDotnetExe": "ms-resource:loc.messages.OverrideDotnetExe",
-    "CopySdkFromTo": "ms-resource:loc.messages.CopySdkFromTo"
+    "CopySdkFromTo": "ms-resource:loc.messages.CopySdkFromTo",
+    "DeleteSdkFolderOfAnBrokenInstallation": "ms-resource:loc.messages.DeleteSdkFolderOfAnBrokenInstallation",
+    "RemoveSdkFile": "ms-resource:loc.messages.RemoveSdkFile",
+    "InsertNewSdkFile": "ms-resource:loc.messages.InsertNewSdkFile"
   }
 }
