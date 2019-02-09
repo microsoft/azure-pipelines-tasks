@@ -55,10 +55,10 @@
 		{
 			"name": "sessionId",
 			"type": "string",
-			"label": "Session Id for Message",
+			"label": "Session Id",
 			"required": false,
 			"defaultValue": "",
-			"helpMarkDown": "This is the session id whith which you want to post the message. In case not given , default Guid will be assigned to it. Used for Session Based Queues, for Non Session Based Queues, it would not matter.",
+			"helpMarkDown": "This is the session id with which you want to post the message. If not given for Session Based Queues, Publishing of message will fail for such Queueus. For Non Session Based Queues, it will not matter.",
 			"groupName": "advancedProperties"
 		},
         {
