@@ -82,10 +82,7 @@ class DotnetCoreInstaller {
             toolLib.prependPath(element.toolPath);
         }
         // set the biggest sdk as default
-        let biggestSdkVersion = sdkVersionNumber.sort(function (a, b) { return a.name.localeCompare(b.name); })[sdkVersionNumber.length - 1];
-        if (!this.isInstalledDotnetNewer(biggestSdkVersion.name)) {
-            this.createDotnetExeVersionFile(biggestSdkVersion.name);
-        }
+        let biggestSdkVersion = sdkVersionNumber.sort(function (a, b) { return a.name.localeCompare(b.name); })[sdkVersionNumber.length - 1];        
         tl.setVariable('DOTNET_ROOT', biggestSdkVersion.toolPath);
     }
 
@@ -238,16 +235,19 @@ class DotnetCoreInstaller {
                     console.log(tl.loc("CopySdkFromTo", currentFolderToCopy, destinationFolder));
                     tl.cp(extPath + "/", availableGlobalTool, "-rf", false);
                 }
-                //Override files that are there like dotnet.exe
-                for (let index = 0; index < this.knowFilesInTheSdkThatWillOverride.length; index++) {
-                    const fileToOverride = extPath + "/" + this.knowFilesInTheSdkThatWillOverride[index];
-                    const clearPath = availableGlobalTool + "/" + this.knowFilesInTheSdkThatWillOverride[index];
-                    const destinationPath = availableGlobalTool + "/";
-                    console.log(tl.loc("RemoveSdkFile", clearPath));
-                    tl.rmRF(clearPath);
-                    console.log(tl.loc("InsertNewSdkFile", destinationPath));
-                    tl.cp(fileToOverride, destinationPath, "-rf", false);
-                }
+                //Override files that are there like dotnet.exe if they are newer as the current
+                if (!this.isInstalledDotnetNewer(version)) {
+                    for (let index = 0; index < this.knowFilesInTheSdkThatWillOverride.length; index++) {
+                        const fileToOverride = extPath + "/" + this.knowFilesInTheSdkThatWillOverride[index];
+                        const clearPath = availableGlobalTool + "/" + this.knowFilesInTheSdkThatWillOverride[index];
+                        const destinationPath = availableGlobalTool + "/";
+                        console.log(tl.loc("RemoveSdkFile", clearPath));
+                        tl.rmRF(clearPath);
+                        console.log(tl.loc("InsertNewSdkFile", destinationPath));
+                        tl.cp(fileToOverride, destinationPath, "-rf", false);
+                    }
+                   this.createDotnetExeVersionFile(version);
+                }                
                 cachedDir = availableGlobalTool;
             }
             console.log(tl.loc("AddGlobalJsonViaToCache"));
