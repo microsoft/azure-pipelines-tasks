@@ -52,16 +52,20 @@ class DotnetCoreInstaller {
 
         let sortedDownloads = sdkVersionNumber
             .filter(d => {
-                var cacheFolder = toolLib.findLocalTool(this.cachedToolName, "0.0.0", this.arch);
+                var cacheFolder = this.getToolFolder();
                 if (cacheFolder == null || cacheFolder.length == 0) {
                     return true;
                 }
                 // We trust the installation of an sdk if all known folders exists.
                 return !this
                     .knownFoldersInTheSdk
-                    .every(knownPath => tl.exist(cacheFolder + "/" + knownPath + "/" + d.name + "/"));
-            })
-            // distinct on version name
+                    .every(knownPath => {
+                        var path = cacheFolder + "/" + knownPath + "/" + d.name + "/";
+                        console.log(tl.loc("CheckPath", path));
+                        return tl.exist(path)
+                    });
+            })            
+            // distinct on version name            
             .filter(function (x, i, a) {
                 return a.map(function (d) { return d.name }).indexOf(x.name) == i;
             });
@@ -79,7 +83,9 @@ class DotnetCoreInstaller {
         }
         // set the biggest sdk as default
         let biggestSdkVersion = sdkVersionNumber.sort(function (a, b) { return a.name.localeCompare(b.name); })[sdkVersionNumber.length - 1];
-
+        if (!this.isInstalledDotnetNewer(biggestSdkVersion.name)) {
+            this.createDotnetExeVersionFile(biggestSdkVersion.name);
+        }
         tl.setVariable('DOTNET_ROOT', biggestSdkVersion.toolPath);
     }
 
@@ -239,7 +245,7 @@ class DotnetCoreInstaller {
                     const destinationPath = availableGlobalTool + "/";
                     console.log(tl.loc("RemoveSdkFile", clearPath));
                     tl.rmRF(clearPath);
-                    console.log(tl.loc("InsertNewSdkFile", destinationPath));                    
+                    console.log(tl.loc("InsertNewSdkFile", destinationPath));
                     tl.cp(fileToOverride, destinationPath, "-rf", false);
                 }
                 cachedDir = availableGlobalTool;
@@ -249,6 +255,89 @@ class DotnetCoreInstaller {
             cachedDir = await toolLib.cacheDir(extPath, this.cachedToolName, this.version, this.arch);
         }
         return cachedDir;
+    }
+
+    private getToolFolder(): string {
+        return toolLib.findLocalTool(this.cachedToolName, "0.0.0", this.arch);
+    }
+
+    private createDotnetExeVersionFile(version: string): void {
+        let toolFolder = this.getToolFolder();
+        // first delete the current version file.   
+        this.deleteAllDotnetExeVersionFields();
+        // create a new version file
+        tl.writeFile(toolFolder + "/" + "dotnet.version." + version + ".installed", "");
+    }
+
+    private isInstalledDotnetNewer(version: string): boolean {
+        let toolFolder = this.getToolFolder();
+        var foundVersionFiles = tl.findMatch(toolFolder, "/dotnet.version.*.installed");
+        if (foundVersionFiles.length == 0) {
+            // no sdk installed
+            return false;
+        } else if (foundVersionFiles.length == 1) {
+            var currentVersionFile = foundVersionFiles[0];
+            var inputVersion = version
+                // This line normalize the semver. For more information see here: https://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number/47159772#47159772
+                .split('.')
+                .map(s => this.padStart(s, 10, "0")).join('.')
+                .toLowerCase();
+
+            var currentFileNumber = currentVersionFile
+                .match(/dotnet\.version\.(\d*\.\d*\.\d*.*)\.installed/)[1]
+                // This line normalize the semver. For more information see here: https://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number/47159772#47159772
+                .split('.')
+                .map(s => this.padStart(s, 10, "0")).join('.')
+                .toLowerCase();
+
+            if (currentFileNumber.indexOf("-") || inputVersion.indexOf("-")) {
+                // here are the preview version content
+                var currentVersionNumber = currentFileNumber.split("-")[0];
+                var currentPreviewNumber = currentFileNumber.split("-")[1];
+                var inputVersionNumber = inputVersion.split("-")[0];
+                var inputPreviewNumber = inputVersion.split("-")[1];
+
+                if (currentVersionNumber == inputVersionNumber) {
+                    if (currentPreviewNumber == null) {
+                        return true;
+                    }
+                    if (inputPreviewNumber == null) {
+                        return false;
+                    }
+                    return inputPreviewNumber.localeCompare(currentPreviewNumber) == -1;
+                } else {
+                    return inputVersionNumber.localeCompare(currentVersionNumber) == -1;
+                }
+
+            } else {
+                return inputVersion.localeCompare(currentFileNumber) == -1;
+            }
+        } else {
+            // this should never happen
+            console.warn(tl.loc("MultipleVersionFilesForTheSingleDotnetExeFound"));
+            // remove all version files. because we don't which is the write.
+            this.deleteAllDotnetExeVersionFields();
+            return false;
+        }
+    }
+
+    private deleteAllDotnetExeVersionFields(): void {
+        var foundVersionFiles = tl.findMatch(this.getToolFolder(), "/dotnet.version.*.installed");
+        foundVersionFiles.forEach(f => {
+            tl.rmRF(f);
+        });
+    }
+
+    private padStart(input: string, length: number, char: string): string {
+        if (char.length > 1) {
+            throw new Error("Char expected, string given.");
+        }
+        var padStart = "";
+        for (let index = 0; index < length - input.length; index++) {
+            padStart += char;
+
+        }
+        return padStart + input;
     }
 
     private packageType: string;
