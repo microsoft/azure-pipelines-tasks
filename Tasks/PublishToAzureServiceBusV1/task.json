@@ -58,7 +58,7 @@
 			"label": "Session Id",
 			"required": false,
 			"defaultValue": "",
-			"helpMarkDown": "This is the session id with which you want to post the message. If not given for Session Based Queues, Publishing of message will fail for such Queueus. For Non Session Based Queues, it will not matter.",
+			"helpMarkDown": "Session id with which message is published. For session based queues, publishing fails if value not specified. For Non Session Based Queues, it will not matter.",
 			"groupName": "advancedProperties"
 		},
         {
@@ -112,7 +112,7 @@
                 "connectionString": "$(endpoint.serviceBusConnectionString)",
                 "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
                 "messageBody": "$(messageBody)",
-				"sessionId": "$(sessionId)",
+                "sessionId": "$(sessionId)",
                 "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(certificateString){{/notEquals}}{{else}}{{/notEquals}}",
                 "signaturePropertyKey": "$(signatureKey)",
                 "messageProperties": {

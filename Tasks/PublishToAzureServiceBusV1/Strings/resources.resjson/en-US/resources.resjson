@@ -9,7 +9,7 @@
   "loc.input.label.messageBody": "Message body",
   "loc.input.help.messageBody": "Enter the json messageBody.",
   "loc.input.label.sessionId": "Session Id",
-  "loc.input.help.sessionId": "This is the session id with which you want to post the message. If not given for Session Based Queues, Publishing of message will fail for such Queueus. For Non Session Based Queues, it will not matter.",
+  "loc.input.help.sessionId": "Session id with which message is published. For session based queues, publishing fails if value not specified. For Non Session Based Queues, it will not matter.",
   "loc.input.label.signPayload": "Sign the Message",
   "loc.input.help.signPayload": "If this is set to true, message will be signed provided a private certificate.",
   "loc.input.label.certificateString": "Certificate Variable",
