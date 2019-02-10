@@ -57,13 +57,10 @@ class DotnetCoreInstaller {
                     return true;
                 }
                 // We trust the installation of an sdk if all known folders exists.
-                return !this
-                    .knownFoldersInTheSdk
-                    .every(knownPath => {
-                        var path = cacheFolder + "/" + knownPath + "/" + d.name + "/";
-                        console.log(tl.loc("CheckPath", path));
-                        return tl.exist(path)
-                    });
+                // The other folders we can't check because they have an other versioning
+                var path = cacheFolder + "/" + this.sdkFolder + "/" + d.name + "/"; 
+                console.log(tl.loc("CheckPath", path));
+                return !tl.exist(path);
             })            
             // distinct on version name            
             .filter(function (x, i, a) {
@@ -222,10 +219,16 @@ class DotnetCoreInstaller {
                 cachedDir = await toolLib.cacheDir(extPath, this.cachedToolName, "0.0.0", this.arch);
             } else {
                 // here we must do a little bit of magic.
-                // copy all sdk files for the specific version
-                for (let index = 0; index < this.knownFoldersInTheSdk.length; index++) {
-                    const currentFolderToCopy = extPath + "/" + this.knownFoldersInTheSdk[index] + "/" + version + "/";
-                    const destinationFolder = availableGlobalTool + "/" + this.knownFoldersInTheSdk[index] + "/" + version + "/";
+                
+                // copy the sdk
+                tl.cp(extPath + "/" + this.sdkFolder + "/" + version + "/" , availableGlobalTool + "/" + this.sdkFolder + "/" + version + "/", "-rf", false);
+
+                // copy all extra sdk files for the specific version
+                for (let index = 0; index < this.knownExtraSdkFolders.length; index++) {
+                    var sourceFolderPath = extPath + "/" + this.knownExtraSdkFolders[index] + "/";
+                    var versionOfSdkLibrary = tl.ls(null, [sourceFolderPath])[0];
+                    const currentFolderToCopy = sourceFolderPath + versionOfSdkLibrary + "/";
+                    const destinationFolder = availableGlobalTool + "/" + this.knownExtraSdkFolders[index] + "/" + versionOfSdkLibrary + "/";
 
                     // If the last copy was broken we delete the old trash if it exists
                     if (tl.exist(destinationFolder)) {
@@ -271,7 +274,7 @@ class DotnetCoreInstaller {
 
     private isInstalledDotnetNewer(version: string): boolean {
         let toolFolder = this.getToolFolder();
-        var foundVersionFiles = tl.findMatch(toolFolder, "/dotnet.version.*.installed");
+        var foundVersionFiles = tl.findMatch(toolFolder, "dotnet.version.*.installed");
         if (foundVersionFiles.length == 0) {
             // no sdk installed
             return false;
@@ -322,7 +325,7 @@ class DotnetCoreInstaller {
     }
 
     private deleteAllDotnetExeVersionFields(): void {
-        var foundVersionFiles = tl.findMatch(this.getToolFolder(), "/dotnet.version.*.installed");
+        var foundVersionFiles = tl.findMatch(this.getToolFolder(), "dotnet.version.*.installed");
         foundVersionFiles.forEach(f => {
             tl.rmRF(f);
         });
@@ -347,11 +350,11 @@ class DotnetCoreInstaller {
     private arch: string;
     private workingDirectory: string;
 
-    private readonly knownFoldersInTheSdk: string[] = [
+    private readonly sdkFolder: string = "sdk";
+    private readonly knownExtraSdkFolders: string[] = [
         "shared/Microsoft.AspNetCore.All",
         "shared/Microsoft.AspNetCore.App",
-        "shared/Microsoft.NETCore.App",
-        "sdk",
+        "shared/Microsoft.NETCore.App",        
         "host/fxr"
     ];
     // we use here the index "0" because this is the primary platform
