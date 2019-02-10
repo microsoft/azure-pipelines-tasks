@@ -52,15 +52,15 @@
                 "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
             }
         },
-		{
-			"name": "sessionId",
-			"type": "string",
-			"label": "Session Id",
-			"required": false,
-			"defaultValue": "",
-			"helpMarkDown": "Session id with which message is published. For session based queues, publishing fails if value not specified. For Non Session Based Queues, it will not matter.",
-			"groupName": "advancedProperties"
-		},
+        {
+            "name": "sessionId",
+            "type": "string",
+            "label": "Session Id",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Session id with which message is published. For session based queues, publishing fails if value not specified. For Non Session Based Queues, it will not matter.",
+            "groupName": "advancedProperties"
+        },
         {
             "name": "signPayload",
             "type": "boolean",
