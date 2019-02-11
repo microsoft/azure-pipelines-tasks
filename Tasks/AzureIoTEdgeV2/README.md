@@ -1,7 +1,24 @@
-# Azure IoT Edge task
+# Azure IoT Edge
+
+### Overview
 
 Use this task in a build or release pipeline to build, test, and deploy applications quickly and efficiently to Azure IoT Edge.
 
+### Contact Information
+
+Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work.  You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.
+
+### Prerequisite for the task
+
+**Azure Subscription**
+
+To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Azure Pipelines using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab. 
+
+ - Use 'Azure Resource Manager' endpoint type to create a ARM endpoint, for more details follow the steps listed in the link [here](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
+
+### Parameters of the task:
+
+The parameters of the task are described in details, including examples, to show how to input the parameters.
 ## Container registry types
 
 ### Azure Container Registry
