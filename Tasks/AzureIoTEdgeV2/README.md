@@ -19,9 +19,10 @@ To deploy to Azure, an Azure subscription has to be linked to Team Foundation Se
 ### Parameters of the task:
 
 The parameters of the task are described in details, including examples, to show how to input the parameters.
-## Container registry types
 
-### Azure Container Registry
+### Container registry types
+
+#### Azure Container Registry
 
 <table><thead><tr><th>Parameters</th><th>Description</th></tr></thead>
 <tr><td><code>containerregistrytype</code><br/>Container registry type</td><td>(Required) Select a <b>Container Registry Type</b>. <b>Azure Container Registry</b> for ACR and <b>Generic Container Registry</b> for generic registries including docker hub</td></tr>
@@ -29,14 +30,14 @@ The parameters of the task are described in details, including examples, to show
 <tr><td><code>azureContainerRegistry</code><br/>Azure Container Registry</td><td>(Required) Select an <b>Azure Container Registry</b></td></tr>
 </table>
 
-### Other container registries
+#### Other container registries
 
 <table><thead><tr><th>Parameters</th><th>Description</th></tr></thead>
 <tr><td><code>containerregistrytype</code><br/>Container registry type</td><td>(Required) Select a <b>Container Registry Type</b>. <b>Azure Container Registry</b> for ACR and <b>Generic Container Registry</b> for generic registries including docker hub</td></tr>
 <tr><td><code>dockerRegistryEndpoint</code><br/>Docker Registry Connection</td><td>(Required) Select a generic <b>Docker registry connection</b>. Required for <b>Build and Push</b></td></tr>
 </table>
 
-## Build module images
+### Build module images
 
 <table><thead><tr><th>Parameters</th><th>Description</th></tr></thead>
 <tr><td><code>action</code><br/>Action</td><td>(Required) Select an Azure IoT Edge action<br/>Default value: Build module images</td></tr>
@@ -55,7 +56,7 @@ Following is a YAML example to build module images -
     defaultPlatform: amd64  
 ```
 
-## Push module images
+### Push module images
 
 <table><thead><tr><th>Parameters</th><th>Description</th></tr></thead>
 <tr><td><code>action</code><br/>Action</td><td>(Required) Select an Azure IoT Edge action<br/>Default value: Build module images</td></tr>
@@ -83,7 +84,7 @@ steps:
     defaultPlatform: amd64  
 ```
 
-## Deploy to IoT Edge devices
+### Deploy to IoT Edge devices
 
 <table><thead><tr><th>Parameters</th><th>Description</th></tr></thead>
 <tr><td><code>action</code><br/>Action</td><td>(Required) Select an Azure IoT Edge action<br/>Default value: Build module images</td></tr>
