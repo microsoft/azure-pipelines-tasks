@@ -32,5 +32,6 @@
   "loc.messages.PS_FormattedCommand": "Comando con formato: {0}",
   "loc.messages.PS_InvalidErrorActionPreference": "El valor \"{0}\" de ErrorActionPreference no es válido. El valor debe ser uno de los siguientes: \"Stop\", \"Continue\" o \"SilentlyContinue\"",
   "loc.messages.PS_InvalidFilePath": "La ruta de acceso de archivo \"{0}\" no es válida. Se necesita una ruta de acceso a un archivo .ps1.",
-  "loc.messages.PS_UnableToDetermineExitCode": "Excepción inesperada. No se puede determinar el código de salida de PowerShell."
+  "loc.messages.PS_UnableToDetermineExitCode": "Excepción inesperada. No se puede determinar el código de salida de PowerShell.",
+  "loc.messages.PS_InvalidTargetType": "El valor \"{0}\" de TargetType no es válido. El valor debe ser uno de los siguientes: \"filePath\" o \"inline\"",
 }
