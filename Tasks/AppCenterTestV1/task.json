@@ -180,7 +180,7 @@
             "groupName": "prepare"
         },
         {
-            "name": "uitestStoreFile",
+            "name": "uitestStorePath",
             "type": "string",
             "label": "Store file",
             "defaultValue": "",
