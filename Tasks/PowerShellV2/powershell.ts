@@ -34,7 +34,7 @@ async function run() {
 
             input_arguments = tl.getInput('arguments') || '';
         }
-        else if(input_targetType.toUpperCase() == 'INLINE') {
+        else if(input_targetType.toUpperCase() == 'INLINE' || input_targetType.length === 0) {
             input_script = tl.getInput('script', false) || '';
         }
         else {

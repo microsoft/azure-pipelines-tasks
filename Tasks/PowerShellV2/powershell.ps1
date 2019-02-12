@@ -5,6 +5,8 @@ Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
 
+    $failed = $false
+
     # Get inputs.
     $input_errorActionPreference = Get-VstsInput -Name 'errorActionPreference' -Default 'Stop'
     switch ($input_errorActionPreference.ToUpperInvariant()) {
@@ -25,7 +27,8 @@ try {
         $input_filePath = Get-VstsInput -Name 'filePath' -Require
         try {
             Assert-VstsPath -LiteralPath $input_filePath -PathType Leaf
-        } catch {
+        }
+        catch {
             Write-Error (Get-VstsLocString -Key 'PS_InvalidFilePath' -ArgumentList $input_filePath)
         }
 
@@ -34,72 +37,80 @@ try {
         }
 
         $input_arguments = Get-VstsInput -Name 'arguments'
-    } else {
+    }
+    elseif (("$input_targetType".ToUpperInvariant() -eq "INLINE") -or ("$input_targetType".Length -eq 0)) {
         $input_script = Get-VstsInput -Name 'script'
     }
-
-    # Generate the script contents.
-    Write-Host (Get-VstsLocString -Key 'GeneratingScript')
-    $contents = @()
-    $contents += "`$ErrorActionPreference = '$input_errorActionPreference'"
-    if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
-        $contents += ". '$("$input_filePath".Replace("'", "''"))' $input_arguments".Trim()
-        Write-Host (Get-VstsLocString -Key 'PS_FormattedCommand' -ArgumentList ($contents[-1]))
-    } else {
-        $contents += "$input_script".Replace("`r`n", "`n").Replace("`n", "`r`n")
+    else {
+        $failed = true
+        Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_InvalidTargetType')
     }
 
-    if (!$input_ignoreLASTEXITCODE) {
-        $contents += 'if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {'
-        $contents += '    Write-Host ''##vso[task.debug]$LASTEXITCODE is not set.'''
-        $contents += '} else {'
-        $contents += '    Write-Host (''##vso[task.debug]$LASTEXITCODE: {0}'' -f $LASTEXITCODE)'
-        $contents += '    exit $LASTEXITCODE'
-        $contents += '}'
-    }
+    if (!$failed) {
+        # Generate the script contents.
+        Write-Host (Get-VstsLocString -Key 'GeneratingScript')
+        $contents = @()
+        $contents += "`$ErrorActionPreference = '$input_errorActionPreference'"
+        if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
+            $contents += ". '$("$input_filePath".Replace("'", "''"))' $input_arguments".Trim()
+            Write-Host (Get-VstsLocString -Key 'PS_FormattedCommand' -ArgumentList ($contents[-1]))
+        }
+        else {
+            $contents += "$input_script".Replace("`r`n", "`n").Replace("`n", "`r`n")
+        }
 
-    # Write the script to disk.
-    Assert-VstsAgent -Minimum '2.115.0'
-    $tempDirectory = Get-VstsTaskVariable -Name 'agent.tempDirectory' -Require
-    Assert-VstsPath -LiteralPath $tempDirectory -PathType 'Container'
-    $filePath = [System.IO.Path]::Combine($tempDirectory, "$([System.Guid]::NewGuid()).ps1")
-    $joinedContents = [System.String]::Join(
-        ([System.Environment]::NewLine),
-        $contents)
-    $null = [System.IO.File]::WriteAllText(
-        $filePath,
-        $joinedContents,
-        ([System.Text.Encoding]::UTF8))
+        if (!$input_ignoreLASTEXITCODE) {
+            $contents += 'if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {'
+            $contents += '    Write-Host ''##vso[task.debug]$LASTEXITCODE is not set.'''
+            $contents += '} else {'
+            $contents += '    Write-Host (''##vso[task.debug]$LASTEXITCODE: {0}'' -f $LASTEXITCODE)'
+            $contents += '    exit $LASTEXITCODE'
+            $contents += '}'
+        }
 
-    # Prepare the external command values.
-    #
-    # Note, use "-Command" instead of "-File". On PowerShell v4 and V3 when using "-File", terminating
-    # errors do not cause a non-zero exit code.
-    if ($input_pwsh) {
-        $powershellPath = Get-Command -Name pwsh.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
-    } else {
-        $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
-    }
-    Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
-    $arguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `". '$($filePath.Replace("'", "''"))'`""
-    $splat = @{
-        'FileName' = $powershellPath
-        'Arguments' = $arguments
-        'WorkingDirectory' = $input_workingDirectory
-    }
+        # Write the script to disk.
+        Assert-VstsAgent -Minimum '2.115.0'
+        $tempDirectory = Get-VstsTaskVariable -Name 'agent.tempDirectory' -Require
+        Assert-VstsPath -LiteralPath $tempDirectory -PathType 'Container'
+        $filePath = [System.IO.Path]::Combine($tempDirectory, "$([System.Guid]::NewGuid()).ps1")
+        $joinedContents = [System.String]::Join(
+            ([System.Environment]::NewLine),
+            $contents)
+        $null = [System.IO.File]::WriteAllText(
+            $filePath,
+            $joinedContents,
+            ([System.Text.Encoding]::UTF8))
 
-    # Switch to "Continue".
-    $global:ErrorActionPreference = 'Continue'
-    $failed = $false
+        # Prepare the external command values.
+        #
+        # Note, use "-Command" instead of "-File". On PowerShell v4 and V3 when using "-File", terminating
+        # errors do not cause a non-zero exit code.
+        if ($input_pwsh) {
+            $powershellPath = Get-Command -Name pwsh.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
+        }
+        else {
+            $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
+        }
+        Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
+        $arguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `". '$($filePath.Replace("'", "''"))'`""
+        $splat = @{
+            'FileName'         = $powershellPath
+            'Arguments'        = $arguments
+            'WorkingDirectory' = $input_workingDirectory
+        }
 
-    # Run the script.
-    if (!$input_failOnStderr) {
-        Invoke-VstsTool @splat
-    } else {
-        $inError = $false
-        $errorLines = New-Object System.Text.StringBuilder
-        Invoke-VstsTool @splat 2>&1 |
-            ForEach-Object {
+        # Switch to "Continue".
+        $global:ErrorActionPreference = 'Continue'
+
+        # Run the script.
+        if (!$input_failOnStderr) {
+            Invoke-VstsTool @splat
+        }
+        else {
+            $inError = $false
+            $errorLines = New-Object System.Text.StringBuilder
+            Invoke-VstsTool @splat 2>&1 |
+                ForEach-Object {
                 if ($_ -is [System.Management.Automation.ErrorRecord]) {
                     # Buffer the error lines.
                     $failed = $true
@@ -108,7 +119,8 @@ try {
 
                     # Write to verbose to mitigate if the process hangs.
                     Write-Verbose "STDERR: $($_.Exception.Message)"
-                } else {
+                }
+                else {
                     # Flush the error buffer.
                     if ($inError) {
                         $inError = $false
@@ -123,26 +135,28 @@ try {
                 }
             }
 
-        # Flush the error buffer one last time.
-        if ($inError) {
-            $inError = $false
-            $message = $errorLines.ToString().Trim()
-            $null = $errorLines.Clear()
-            if ($message) {
-                Write-VstsTaskError -Message $message
+            # Flush the error buffer one last time.
+            if ($inError) {
+                $inError = $false
+                $message = $errorLines.ToString().Trim()
+                $null = $errorLines.Clear()
+                if ($message) {
+                    Write-VstsTaskError -Message $message
+                }
             }
         }
-    }
 
-    # Fail on $LASTEXITCODE
-    if (!(Test-Path -LiteralPath 'variable:\LASTEXITCODE')) {
-        $failed = $true
-        Write-Verbose "Unable to determine exit code"
-        Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_UnableToDetermineExitCode')
-    } else {
-        if ($LASTEXITCODE -ne 0) {
+        # Fail on $LASTEXITCODE
+        if (!(Test-Path -LiteralPath 'variable:\LASTEXITCODE')) {
             $failed = $true
-            Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_ExitCode' -ArgumentList $LASTEXITCODE)
+            Write-Verbose "Unable to determine exit code"
+            Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_UnableToDetermineExitCode')
+        }
+        else {
+            if ($LASTEXITCODE -ne 0) {
+                $failed = $true
+                Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_ExitCode' -ArgumentList $LASTEXITCODE)
+            }
         }
     }
 
