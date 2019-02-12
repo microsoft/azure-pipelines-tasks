@@ -28,7 +28,7 @@
   "loc.input.help.calabashSkipConfigCheck": "Cucumber プロファイルを使用しないで強制実行します。",
   "loc.input.label.uitestBuildDir": "ビルド ディレクトリ",
   "loc.input.help.uitestBuildDir": "ビルド済みテスト アセンブリがあるディレクトリへのパス。",
-  "loc.input.label.uitestStoreFile": "ファイルの保存",
+  "loc.input.label.uitestStorePath": "ファイルの保存",
   "loc.input.label.uitestStorePass": "パスワードの保存",
   "loc.input.label.uitestKeyAlias": "キーのエイリアス",
   "loc.input.label.uitestKeyPass": "キー パスワード",
