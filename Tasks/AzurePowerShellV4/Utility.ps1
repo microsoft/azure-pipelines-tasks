@@ -7,7 +7,7 @@ function Get-SavedModulePath {
 function Get-SavedModulePathLinux {
     [CmdletBinding()]
     param([string] $azurePowerShellVersion)
-    return $(".local/share/powershell/Modules/az_" + $azurePowerShellVersion) 
+    return $("/usr/share/az_" + $azurePowerShellVersion) 
 }
 
 function Update-PSModulePathForHostedAgent {
@@ -21,7 +21,6 @@ function Update-PSModulePathForHostedAgent {
         else {
             $hostedAgentAzModulePath = Get-LatestModule -patternToMatch "^az_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"
         }
-
         $env:PSModulePath = $hostedAgentAzModulePath + ";" + $env:PSModulePath
         $env:PSModulePath = $env:PSModulePath.TrimStart(';') 
     } finally {
@@ -34,20 +33,16 @@ function Update-PSModulePathForHostedAgentLinux {
     [CmdletBinding()]
     param([string] $targetAzurePs)
     try {
-        Write-Host "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
         if ($targetAzurePs) {
             $hostedAgentAzModulePath = Get-SavedModulePathLinux -azurePowerShellVersion $targetAzurePs
             if(!(Test-Path $hostedAgentAzModulePath)) {
-                Write-Host "No module found with thissssssssssssssssssssssssss name"
-                throw ("Could not find the module Az.Accounts with given version. If the module was recently installed, retry after restarting the Azure Pipelines task agent.")
+                Write-Verbose "No module path found with this name"
+                throw ("Could not find the module path with given version.")
             }
         }
         else {
             $hostedAgentAzModulePath = Get-LatestModuleLinux -patternToMatch "^az_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"
         }
-
-        Write-Host "cccccccccccccccccccccccccccccccccccccccccccc: $($hostedAgentAzModulePath)"
-
         $env:PSModulePath = $hostedAgentAzModulePath + ":" + $env:PSModulePath
         $env:PSModulePath = $env:PSModulePath.TrimStart(':') 
     } finally {
@@ -100,7 +95,7 @@ function Get-LatestModuleLinux {
     $maxVersion = [version] "0.0.0"
 
     try {
-        $moduleFolders = Get-ChildItem -Directory -Path $(".local/share/powershell/Modules") | Where-Object { $regexToMatch.IsMatch($_.Name) }
+        $moduleFolders = Get-ChildItem -Directory -Path $("/usr/share") | Where-Object { $regexToMatch.IsMatch($_.Name) }
         foreach ($moduleFolder in $moduleFolders) {
             $moduleVersion = [version] $($regexToExtract.Match($moduleFolder.Name).Groups[0].Value)
             if($moduleVersion -gt $maxVersion) {
