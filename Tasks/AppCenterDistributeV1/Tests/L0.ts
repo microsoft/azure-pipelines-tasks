@@ -9,7 +9,7 @@ import * as ttm from 'vsts-task-lib/mock-test';
 describe('AppCenterDistribute L0 Suite', function () {
     before(() => {
         //Enable this for output
-        //process.env['TASK_TEST_TRACE'] = 1; 
+        //process.env['TASK_TEST_TRACE'] = 1;
 
         //setup endpoint
         process.env["ENDPOINT_AUTH_MyTestEndpoint"] = "{\"parameters\":{\"apitoken\":\"mytoken123\"},\"scheme\":\"apitoken\"}";
@@ -155,7 +155,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
     });
-   
+
     it('Positive path: publish commit info (excluding commit message)', function () {
         this.timeout(4000);
 
@@ -186,10 +186,19 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: publish mandatory update)', function () {
+    it('Positive path: publish mandatory update', function () {
         this.timeout(4000);
 
         let tp = path.join(__dirname, 'L0PublishMandatoryUpdate.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+    it('Positive path: publish multiple destinations', function () {
+        this.timeout(4000);
+
+        let tp = path.join(__dirname, 'L0PublishMultipleDestinations.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
