@@ -157,7 +157,11 @@ function publishRelease(apiServer: string, releaseUrl: string, isMandatory: bool
         "internal-request-source": "VSTS"
     };
     const destinations = [];
-    destinationIds.map(destinationId => destinations.push({"id": destinationId}));
+    destinationIds.map(destinationId => { 
+        if (destinationId.trim()) {
+            destinations.push({"id": destinationId}) 
+        }
+    });
     let publishBody = {
         "status": "available",
         "release_notes": releaseNotes,
