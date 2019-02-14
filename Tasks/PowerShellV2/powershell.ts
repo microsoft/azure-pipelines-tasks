@@ -34,8 +34,11 @@ async function run() {
 
             input_arguments = tl.getInput('arguments') || '';
         }
-        else {
+        else if(input_targetType.toUpperCase() == 'INLINE') {
             input_script = tl.getInput('script', false) || '';
+        }
+        else {
+            throw new Error(tl.loc('PS_InvalidTargetType', input_targetType));
         }
 
         // Generate the script contents.
