@@ -3,6 +3,7 @@
   "name": "Docker",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=848006",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -13,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 27
+    "Patch": 31
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -121,23 +122,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.arguments"
     },
     {
-      "name": "useDefaultContext",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.useDefaultContext",
-      "defaultValue": "true",
-      "visibleRule": "command = Build an image || command = build",
-      "groupName": "commands",
-      "helpMarkDown": "ms-resource:loc.input.help.useDefaultContext"
-    },
-    {
-      "name": "buildContext",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.buildContext",
-      "visibleRule": "useDefaultContext = false",
-      "groupName": "commands",
-      "helpMarkDown": "ms-resource:loc.input.help.buildContext"
-    },
-    {
       "name": "pushMultipleImages",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.pushMultipleImages",
@@ -206,9 +190,26 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.addDefaultLabels",
       "defaultValue": "true",
-      "visibleRule": "command = Build an image || command = build",
+      "visibleRule": "addDefaultLabels = false",
       "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.addDefaultLabels"
+    },
+    {
+      "name": "useDefaultContext",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useDefaultContext",
+      "defaultValue": "true",
+      "visibleRule": "command = Build an image || command = build",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.useDefaultContext"
+    },
+    {
+      "name": "buildContext",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.buildContext",
+      "visibleRule": "useDefaultContext = false",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.buildContext"
     },
     {
       "name": "imageDigestFile",

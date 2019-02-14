@@ -15,7 +15,7 @@
   "version": {
     "Major": 2,
     "Minor": 147,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -477,6 +477,7 @@
     "UserNameCannotBeNull": "ms-resource:loc.messages.UserNameCannotBeNull",
     "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
     "MoreInformationOnAzurePortal": "ms-resource:loc.messages.MoreInformationOnAzurePortal",
-    "ResponseNotValid": "ms-resource:loc.messages.ResponseNotValid"
+    "ResponseNotValid": "ms-resource:loc.messages.ResponseNotValid",
+    "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName"
   }
 }

@@ -6,9 +6,11 @@
   "category": "Package",
   "author": "Microsoft Corporation",
   "preview": "true",
+  "helpUrl": "",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "version": {
     "Major": 0,
-    "Minor": 145,
+    "Minor": 147,
     "Patch": 0
   },
   "runsOn": [
@@ -72,6 +74,5 @@
     "NGCommon_UnabletoDetectNuGetVersio": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersio",
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }

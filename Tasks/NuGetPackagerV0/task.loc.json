@@ -3,13 +3,14 @@
   "name": "NuGetPackager",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=627416",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Lawrence Gripper",
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 73
+    "Patch": 75
   },
   "demands": [
     "Cmd"

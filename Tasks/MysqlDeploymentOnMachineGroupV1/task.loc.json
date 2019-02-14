@@ -3,6 +3,7 @@
   "name": "MysqlDeploymentOnMachineGroup",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/mysql-deployment-on-machine-group",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [

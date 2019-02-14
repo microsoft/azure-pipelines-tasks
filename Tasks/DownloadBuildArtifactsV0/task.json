@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 146,
+        "Minor": 148,
         "Patch": 0
     },
     "groups": [
@@ -198,7 +198,7 @@
             "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
             "parameters": {
                 "project": "$(project)",
-                "name": "$(name)"
+                "name": "$(searchText)"
             },
             "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
             "callbackContextTemplate": "{\"continuationToken\" : \"{{{headers.x-ms-continuationtoken}}}\"}",

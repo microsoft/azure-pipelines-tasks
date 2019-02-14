@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 142,
-        "Patch": 2
+        "Minor": 148,
+        "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
     "minimumAgentVersion": "2.115.0",
@@ -91,6 +91,23 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "noProfile",
+            "type": "boolean",
+            "label": "Don't load the profile startup/initialization files",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Don't load the system-wide startup file `/etc/profile' or any of the personal initialization files",
+            "groupName": "advanced"
+        },
+        {
+            "name": "noRc",
+            "type": "boolean",
+            "label": "Don't read the `~/.bashrc' initialization file",
+            "defaultValue": "true",
+            "required": false,
             "groupName": "advanced"
         }
     ],

@@ -3,6 +3,7 @@
   "name": "VSTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=835764",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
@@ -16,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 146,
-    "Patch": 4
+    "Minor": 148,
+    "Patch": 0
   },
   "demands": [
     "vstest"

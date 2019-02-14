@@ -1,5 +1,5 @@
 {
-  "id": "DEE316A2-586F-4DEF-BE79-488A1F503DEE",
+  "id": "DEE316A2-586F-4DEF-BE79-488A1F503DFE",
   "name": "KubernetesManifestBased",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -13,9 +13,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
+    "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 4
   },
   "demands": [],
   "groups": [
@@ -74,7 +74,8 @@
         "bake": "bake",
         "deploy": "deploy",
         "patch": "patch",
-        "scale": "scale"
+        "scale": "scale",
+        "delete": "delete"
       },
       "helpMarkDown": "ms-resource:loc.input.help.action"
     },
@@ -237,6 +238,81 @@
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.name",
       "visibleRule": "action = scale || resourceToPatch = name"
+    },
+    {
+      "name": "deleteResourcesBy",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.deleteResourcesBy",
+      "required": true,
+      "defaultValue": "Filenames",
+      "options": {
+        "filenames": "Filenames",
+        "resourcesAndNames": "Resources and names",
+        "resourcesAndLabelSelector": "Resources and label selector"
+      },
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.deleteResourcesBy",
+      "visibleRule": "action = delete"
+    },
+    {
+      "name": "manifestsToDelete",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.manifestsToDelete",
+      "required": true,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.manifestsToDelete",
+      "visibleRule": "action = delete && deleteResourcesBy = filenames"
+    },
+    {
+      "name": "kinds",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.kinds",
+      "required": true,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.kinds",
+      "visibleRule": "action = delete && deleteResourcesBy != filenames"
+    },
+    {
+      "name": "names",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.names",
+      "required": true,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.names",
+      "visibleRule": "action = delete && deleteResourcesBy = resourcesAndNames"
+    },
+    {
+      "name": "labels",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.labels",
+      "required": true,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.labels",
+      "visibleRule": "action = delete && deleteResourcesBy = resourcesAndLabelSelector"
+    },
+    {
+      "name": "cascade",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.cascade",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.cascade",
+      "visibleRule": "action = delete"
+    },
+    {
+      "name": "gracePeriod",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.gracePeriod",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.gracePeriod",
+      "visibleRule": "action = delete"
     },
     {
       "name": "patch",

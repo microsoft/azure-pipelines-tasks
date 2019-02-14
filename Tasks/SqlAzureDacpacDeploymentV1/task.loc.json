@@ -136,24 +136,24 @@
       "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
     },
     {
-      "name": "AADSqlUsername",
+      "name": "aadSqlUsername",
       "type": "string",
-      "label": "ms-resource:loc.input.label.AADSqlUsername",
+      "label": "ms-resource:loc.input.label.aadSqlUsername",
       "required": true,
       "groupName": "target",
       "defaultValue": "",
       "visibleRule": "AuthenticationType = aadAuthenticationPassword",
-      "helpMarkDown": "ms-resource:loc.input.help.AADSqlUsername"
+      "helpMarkDown": "ms-resource:loc.input.help.aadSqlUsername"
     },
     {
-      "name": "AADSqlPassword",
+      "name": "aadSqlPassword",
       "type": "string",
-      "label": "ms-resource:loc.input.label.AADSqlPassword",
+      "label": "ms-resource:loc.input.label.aadSqlPassword",
       "required": true,
       "groupName": "target",
       "defaultValue": "",
       "visibleRule": "AuthenticationType = aadAuthenticationPassword",
-      "helpMarkDown": "ms-resource:loc.input.help.AADSqlPassword"
+      "helpMarkDown": "ms-resource:loc.input.help.aadSqlPassword"
     },
     {
       "name": "ConnectionString",

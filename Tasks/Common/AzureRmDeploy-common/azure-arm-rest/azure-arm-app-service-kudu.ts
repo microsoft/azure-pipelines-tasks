@@ -452,9 +452,10 @@ export class Kudu {
             }
             else if(response.statusCode == 202) {
                 let pollableURL: string = response.headers.location;
+                let affinityCookie: string [] = response.headers['set-cookie'];
                 if(!!pollableURL) {
                     tl.debug(`Polling for ZIP Deploy URL: ${pollableURL}`);
-                    return await this._getDeploymentDetailsFromPollURL(pollableURL);
+                    return await this._getDeploymentDetailsFromPollURL(pollableURL, affinityCookie);
                 }
                 else {
                     tl.debug('zip deploy returned 202 without pollable URL.');
@@ -478,6 +479,7 @@ export class Kudu {
 
         try {
             let response = await this._client.beginRequest(httpRequest);
+            let affinityCookie: string [] = response.headers['set-cookie'];
             tl.debug(`War Deploy response: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 tl.debug('Deployment passed');
@@ -487,7 +489,7 @@ export class Kudu {
                 let pollableURL: string = response.headers.location;
                 if(!!pollableURL) {
                     tl.debug(`Polling for War Deploy URL: ${pollableURL}`);
-                    return await this._getDeploymentDetailsFromPollURL(pollableURL);
+                    return await this._getDeploymentDetailsFromPollURL(pollableURL, affinityCookie);
                 }
                 else {
                     tl.debug('war deploy returned 202 without pollable URL.');
@@ -590,10 +592,15 @@ export class Kudu {
         }
     }
 
-    private async _getDeploymentDetailsFromPollURL(pollURL: string):Promise<any> {
+    private async _getDeploymentDetailsFromPollURL(pollURL: string,  affinityCookie?: string[]):Promise<any> {
         let httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = pollURL;
+        httpRequest.headers = {};
+
+        if(!!affinityCookie) {
+           httpRequest.headers['set-cookie'] = affinityCookie; 
+        }
 
         while(true) {
             let response = await this._client.beginRequest(httpRequest);

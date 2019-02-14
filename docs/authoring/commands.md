@@ -302,11 +302,11 @@ To invoke a logging command, simply emit the command via standard output. For ex
                 <p align="left">
                     Create an artifact link, artifact location is required to be a file container path, VC path or UNC share path. <br>
                     <b>Examples:</b> <br>
-                    <code>##vso[artifact.associate type=container;artifactname=MyServerDrop]#/1/build</code> <br>
-                    <code>##vso[artifact.associate type=filepath;artifactname=MyFileShareDrop]\\MyShare\MyDropLocation</code> <br>
-                    <code>##vso[artifact.associate type=versioncontrol;artifactname=MyTfvcPath]$/MyTeamProj/MyFolder</code> <br>
-                    <code>##vso[artifact.associate type=gitref;artifactname=MyTag]refs/tags/MyGitTag</code> <br>
-                    <code>##vso[artifact.associate type=tfvclabel;artifactname=MyTag]MyTfvcLabel</code> <br>
+                    <code>##vso[artifact.associate artifacttype=container;artifactname=MyServerDrop]#/1/build</code> <br>
+                    <code>##vso[artifact.associate artifacttype=filepath;artifactname=MyFileShareDrop]\\MyShare\MyDropLocation</code> <br>
+                    <code>##vso[artifact.associate artifacttype=versioncontrol;artifactname=MyTfvcPath]$/MyTeamProj/MyFolder</code> <br>
+                    <code>##vso[artifact.associate artifacttype=gitref;artifactname=MyTag]refs/tags/MyGitTag</code> <br>
+                    <code>##vso[artifact.associate artifacttype=tfvclabel;artifactname=MyTag]MyTfvcLabel</code> <br>
                 </p>
             </td>
             <td>
@@ -439,7 +439,8 @@ To invoke a logging command, simply emit the command via standard output. For ex
                 <p align="left">
                     Update release name for current release.<br>
                     <b>Example:</b> <br>
-                    <code>##vso[release.updatereleasename]my-new-release-name</code>
+                    <code>##vso[release.updatereleasename]my-new-release-name</code><br>
+                    This command is not supported in Azure DevOps Server(TFS).
                 </p>
             </td>
             <td>

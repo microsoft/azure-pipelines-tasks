@@ -166,7 +166,7 @@ export async function run(nuGetPath: string): Promise<void> {
             if (includeNuGetOrg) {
                 const nuGetSource: auth.IPackageSource = nuGetVersion.productVersion.a < 3
                                         ? auth.NuGetOrgV2PackageSource
-                                        : auth.NuGetOrgV2PackageSource;
+                                        : auth.NuGetOrgV3PackageSource;
                 sources.push(nuGetSource);
             }
 

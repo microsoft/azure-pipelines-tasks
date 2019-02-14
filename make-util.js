@@ -933,8 +933,8 @@ var getTaskYaml = function(taskJson) {
         }
 
         // Does the input have a default value?
-        var isDefaultValueAvailable = input.defaultValue && input.defaultValue.length > 0;
-        var defaultValue = isDefaultValueAvailable ? input.defaultValue : null;
+        var isDefaultValueAvailable = input.defaultValue && (input.defaultValue.length > 0 || input.type == 'boolean');
+        var defaultValue = isDefaultValueAvailable ? input.defaultValue.toString() : null;
 
         // Comment out the input?
         if (!input.required ||

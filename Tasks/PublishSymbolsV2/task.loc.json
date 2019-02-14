@@ -3,6 +3,7 @@
   "name": "PublishSymbols",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613722",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -13,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 14
   },
   "minimumAgentVersion": "1.95.0",
   "groups": [

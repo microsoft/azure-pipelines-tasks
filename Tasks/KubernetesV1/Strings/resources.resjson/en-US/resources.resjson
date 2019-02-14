@@ -88,9 +88,9 @@
   "loc.messages.DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
   "loc.messages.UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
-  "loc.messages.NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+  "loc.messages.NotAValidVersion": "Not a valid version, the available versions are: %s",
   "loc.messages.ConfigurationFileNotFound": "No configuration file matching %s was found.",
   "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
   "loc.messages.OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
-  "loc.messages.InvalidConfiguration": "Can not set configuration with both file: %s and inline configuration: %s."
+  "loc.messages.InvalidConfiguration": "No Kubernetes configuration found, supply either inline configuration or configuration file path"
 }

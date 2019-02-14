@@ -3,6 +3,7 @@
   "name": "GitHubRelease",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/AA3aeiw",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -13,8 +14,8 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 148,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -35,7 +36,9 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.repositoryName",
       "properties": {
-        "DisableManageLink": "True"
+        "DisableManageLink": "True",
+        "EditableOptions": "True",
+        "SearchDataSourceName": "userRepositorySearch"
       }
     },
     {
@@ -179,13 +182,23 @@
       "helpMarkDown": "ms-resource:loc.input.help.addChangeLog"
     }
   ],
-  "sourceDefinitions": [
+  "dataSourceBindings": [
     {
       "target": "repositoryName",
-      "endpoint": "/$(system.teamProject)/_apis/sourceProviders/GitHub/repositories?serviceEndpointId=$(gitHubConnection)",
-      "selector": "jsonpath:$.repositories[*].id",
-      "keySelector": "jsonpath:$.repositories[*].id",
-      "authKey": "tfs:teamfoundation"
+      "endpointId": "$(gitHubConnection)",
+      "dataSourceName": "UserRepositories",
+      "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }"
+    },
+    {
+      "target": "userRepositorySearch",
+      "endpointId": "$(gitHubConnection)",
+      "dataSourceName": "SearchRepositoriesByName",
+      "resultSelector": "jsonpath:$['items'][*]",
+      "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }",
+      "parameters": {
+        "searchText": "$(searchText)",
+        "name": "$(searchText)"
+      }
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

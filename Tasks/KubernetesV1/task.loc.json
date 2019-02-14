@@ -3,6 +3,7 @@
   "name": "Kubernetes",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -13,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 21
+    "Patch": 23
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -357,7 +358,7 @@
       "name": "versionSpec",
       "type": "string",
       "label": "ms-resource:loc.input.label.versionSpec",
-      "defaultValue": "1.7.0",
+      "defaultValue": "1.13.2",
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec",
       "groupName": "advanced",
       "visibleRule": "versionOrLocation = version"
@@ -461,7 +462,7 @@
     "DownloadKubeCtlFailed": "ms-resource:loc.messages.DownloadKubeCtlFailed",
     "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
     "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion",
-    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
+    "NotAValidVersion": "ms-resource:loc.messages.NotAValidVersion",
     "ConfigurationFileNotFound": "ms-resource:loc.messages.ConfigurationFileNotFound",
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
     "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",

@@ -3,13 +3,14 @@
   "name": "NuGetCommand",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613747",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 147,
-    "Patch": 2
+    "Minor": 148,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -210,7 +211,7 @@
       "required": true,
       "defaultValue": "internal",
       "options": {
-        "internal": "This account/collection",
+        "internal": "This organization/collection",
         "external": "External NuGet server (including other accounts/collections)"
       },
       "visibleRule": "command = push"

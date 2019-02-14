@@ -4,11 +4,12 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://aka.ms/universalpackagesannounce",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 147,
+    "Minor": 148,
     "Patch": 0
   },
   "runsOn": [
@@ -84,8 +85,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.internalOrExternalDownload",
       "required": "true",
       "options": {
-        "internal": "This account/collection",
-        "external": "Another account/collection"
+        "internal": "This organization/collection",
+        "external": "Another organization/collection"
       },
       "groupName": "packageDownloadDetails"
     },
@@ -207,8 +208,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.internalOrExternalPublish",
       "required": "true",
       "options": {
-        "internal": "This account/collection",
-        "external": "Another account/collection"
+        "internal": "This organization/collection",
+        "external": "Another organization/collection"
       },
       "groupName": "packagePublishDetails"
     },

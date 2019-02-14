@@ -3,6 +3,7 @@
   "name": "Bash",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613738",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -16,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 142,
+    "Minor": 148,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
