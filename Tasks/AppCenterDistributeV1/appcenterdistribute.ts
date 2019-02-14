@@ -145,7 +145,7 @@ function commitRelease(apiServer: string, apiVersion: string, appSlug: string, u
     return defer.promise;
 }
 
-function publishRelease(apiServer: string, releaseUrl: string, isMandatory: boolean, releaseNotes: string, destinationId: string, token: string, userAgent: string) {
+function publishRelease(apiServer: string, releaseUrl: string, isMandatory: boolean, releaseNotes: string, destinationIds: string[], token: string, userAgent: string) {
     tl.debug("-- Mark package available.");
     let defer = Q.defer<void>();
     let publishReleaseUrl: string = `${apiServer}/${releaseUrl}`;
@@ -156,16 +156,13 @@ function publishRelease(apiServer: string, releaseUrl: string, isMandatory: bool
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-
+    const destinations = [];
+    destinationIds.map(destinationId => destinations.push({"id": destinationId}));
     let publishBody = {
         "status": "available",
         "release_notes": releaseNotes,
         "mandatory_update": isMandatory,
-        "destinations": [
-            {
-                "id": destinationId
-            }
-        ]
+        "destinations": destinations
     };
 
     let branchName = process.env['BUILD_SOURCEBRANCH'];
@@ -437,8 +434,9 @@ async function run() {
 
         let isMandatory: boolean = tl.getBoolInput('isMandatory', false);
 
-        let destinationId = tl.getInput('destinationId', false) || '00000000-0000-0000-0000-000000000000';
-        tl.debug(`Effective destinationId: ${destinationId}`);
+        let destinationIds = tl.getInput('destinationId', false) || '00000000-0000-0000-0000-000000000000';
+        tl.debug(`Effective destinationIds: ${destinationIds}`);
+        destinationIds = destinationIds.split(',').split(';');
 
         // Validate inputs
         if (!apiToken) {
@@ -470,7 +468,7 @@ async function run() {
         let packageUrl = await commitRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken, userAgent);
 
         // Publish
-        await publishRelease(effectiveApiServer, packageUrl, isMandatory, releaseNotes, destinationId, apiToken, userAgent);
+        await publishRelease(effectiveApiServer, packageUrl, isMandatory, releaseNotes, destinationIds, apiToken, userAgent);
 
         if (symbolsFile) {
             // Begin preparing upload symbols
