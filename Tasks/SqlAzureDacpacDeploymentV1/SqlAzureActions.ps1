@@ -8,6 +8,9 @@ function Extract-Dacpac {
         [string] $connectionString,
         [string] $sqlpackageAdditionalArguments
     )
+    
+    #remove any dashes in database name to prevent vso[task.uploadfile] error
+    $databaseName -replace "-", ""
 
     $targetDacpacFilePath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\$databaseName.dacpac"
 
