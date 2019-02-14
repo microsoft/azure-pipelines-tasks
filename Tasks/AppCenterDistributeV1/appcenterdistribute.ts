@@ -175,7 +175,7 @@ function publishRelease(apiServer: string, releaseUrl: string, isMandatory: bool
     // Updating the internal_request_source to distinguish the AppCenter triggered build and custom build
     if(!!commitMessage) {
         headers["internal-request-source"] = "VSTS-APPCENTER";
-    } 
+    }
 
     // Including these information for distribution notification to have additional context
     // Commit message is optional
@@ -221,7 +221,7 @@ function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> {
     if (symbolsPaths.length === 1 && fs.statSync(symbolsPaths[0]).isFile()) {
         tl.debug(`.. a single symbols file: ${symbolsPaths[0]}`)
 
-        // single file - Android source mapping txt file 
+        // single file - Android source mapping txt file
         defer.resolve(symbolsPaths[0]);
     } else if (symbolsPaths.length > 0) {
         tl.debug(`.. archiving: ${symbolsPaths}`);
@@ -324,7 +324,7 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
     let symbolsPaths: string[] = [];
 
     if (symbolsType === "Apple") {
-        // User can specifay a symbols path pattern that selects 
+        // User can specifay a symbols path pattern that selects
         // multiple dSYM folder paths for Apple application.
         let dsymPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
 
@@ -341,7 +341,7 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
             })
         }
     } else if (symbolsType === "UWP") {
-        // User can specifay a symbols path pattern that selects 
+        // User can specifay a symbols path pattern that selects
         // multiple PDB paths for UWP application.
         let pdbPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
 
@@ -358,7 +358,7 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
             })
         }
     } else {
-        // For all other application types user can specifay a symbols path pattern 
+        // For all other application types user can specifay a symbols path pattern
         // that selects only one file or one folder.
         let symbolsFile = utils.resolveSinglePath(pattern, continueOnError, packParentFolder);
 
@@ -434,9 +434,9 @@ async function run() {
 
         let isMandatory: boolean = tl.getBoolInput('isMandatory', false);
 
-        let destinationIds = tl.getInput('destinationId', false) || '00000000-0000-0000-0000-000000000000';
-        tl.debug(`Effective destinationIds: ${destinationIds}`);
-        destinationIds = destinationIds.split(',').split(';');
+        let destinations = tl.getInput('destinationIds', false) || '00000000-0000-0000-0000-000000000000';
+        tl.debug(`Effective destinationIds: ${destinations}`);
+        let destinationIds = destinations.split(/(?:,| |;)+/)
 
         // Validate inputs
         if (!apiToken) {
@@ -474,7 +474,7 @@ async function run() {
             // Begin preparing upload symbols
             let symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolsType, apiToken, userAgent);
 
-            // upload symbols 
+            // upload symbols
             await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile, userAgent);
 
             // Commit the symbols upload

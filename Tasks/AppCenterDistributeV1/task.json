@@ -166,14 +166,15 @@
             "required": false
         },
         {
-            "name": "destinationId",
+            "name": "destinationIds",
             "aliases": [
-                "distributionGroupId"
+                "distributionGroupId",
+                "destinationId"
             ],
             "type": "string",
             "defaultValue": "",
             "label": "Destination IDs",
-            "helpMarkDown": "IDs of the distribution groups or stores the app will deploy to. Leave it empty to use the default group. Use commas or semicolons to separate multiple IDs.",
+            "helpMarkDown": "IDs of the distribution groups or stores the app will deploy to. Leave it empty to use the default group and use commas or semicolons to separate multiple IDs.",
             "required": false
         }
     ],

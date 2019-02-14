@@ -166,14 +166,15 @@
       "required": false
     },
     {
-      "name": "destinationId",
+      "name": "destinationIds",
       "aliases": [
-        "distributionGroupId"
+        "distributionGroupId",
+        "destinationId"
       ],
       "type": "string",
       "defaultValue": "",
-      "label": "ms-resource:loc.input.label.destinationId",
-      "helpMarkDown": "ms-resource:loc.input.help.destinationId",
+      "label": "ms-resource:loc.input.label.destinationIds",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationIds",
       "required": false
     }
   ],
