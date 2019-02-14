@@ -198,7 +198,7 @@
             "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
             "parameters": {
                 "project": "$(project)",
-                "name": "$(name)"
+                "name": "$(searchText)"
             },
             "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
             "callbackContextTemplate": "{\"continuationToken\" : \"{{{headers.x-ms-continuationtoken}}}\"}",
