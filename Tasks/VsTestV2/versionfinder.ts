@@ -114,7 +114,7 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
     const vsVersion: number = parseFloat(testConfig.vsTestVersion);
 
     if (vsVersion === 16.0) {
-        const vstestconsolePath = getVSTestConsolePath('15.0', '17.0');
+        const vstestconsolePath = getVSTestConsolePath('16.0', '17.0');
         if (vstestconsolePath) {
             return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
         }
