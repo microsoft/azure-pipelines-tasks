@@ -132,11 +132,11 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.renderType",
       "required": false,
-      "defaultValue": "helm",
+      "defaultValue": "helm2",
       "groupName": "config",
       "visibleRule": "action = bake",
       "options": {
-        "helm": "Helm 2"
+        "helm2": "Helm 2"
       },
       "helpMarkDown": "ms-resource:loc.input.help.renderType"
     },

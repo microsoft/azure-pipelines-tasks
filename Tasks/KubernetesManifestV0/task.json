@@ -132,11 +132,11 @@
             "type": "pickList",
             "label": "Render Engine",
             "required": false,
-            "defaultValue": "helm",
+            "defaultValue": "helm2",
             "groupName": "config",
             "visibleRule": "action = bake",
             "options": {
-                "helm": "Helm 2"
+                "helm2": "Helm 2"
             },
             "helpMarkDown": "Tool to generate manifest"
         },
