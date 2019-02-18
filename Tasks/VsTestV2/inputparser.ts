@@ -488,7 +488,7 @@ function getTIALevel(fileLevel: string) {
 }
 
 function getTestPlatformPath(inputDataContract : idc.InputDataContract) {
-    let vsTestVersion = tl.getInput('vsTestVersion');
+    const vsTestVersion = tl.getInput('vsTestVersion');
 
     if (vsTestVersion.toLowerCase() === 'latest') {
         tl.debug('Searching for latest Visual Studio.');
@@ -506,7 +506,6 @@ function getTestPlatformPath(inputDataContract : idc.InputDataContract) {
         // fallback
         tl.debug('Unable to find an instance of Visual Studio 2017 or higher.');
         tl.debug('Searching for Visual Studio 2015..');
-        vsTestVersion = '14.0';
         return getVSTestLocation(14);
     }
 
