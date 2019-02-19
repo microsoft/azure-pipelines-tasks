@@ -135,7 +135,7 @@ function Invoke-MSBuild {
                 Write-VstsLogDetail -Id $detailId -FinishTime $detailFinishTime -Progress 100 -State Completed -Result $detailResult -AsOutput
             }
 
-            if (Test-File $LogFile) {
+            if (Test-Path $LogFile) {
                 Write-Host "##vso[task.uploadfile]$LogFile"
             }
         }
