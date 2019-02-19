@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 30
+        "Patch": 31
     },
     "demands": [],
     "releaseNotes": "Simplified the task by:<br/>&nbsp;- Providing an option to simply select or type a command.<br/>&nbsp;- Retaining the useful input fields and providing an option to pass the rest as an argument to the command.",
@@ -190,7 +190,7 @@
             "type": "boolean",
             "label": "Add default labels",
             "defaultValue": "true",
-            "visibleRule": "false",
+            "visibleRule": "addDefaultLabels = false",
             "groupName": "commands",
             "helpMarkDown": "Add CI/CD metadata like repository, commit, build and release information to the container image by using Docker labels."
         },

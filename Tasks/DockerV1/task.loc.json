@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 30
+    "Patch": 31
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -190,7 +190,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.addDefaultLabels",
       "defaultValue": "true",
-      "visibleRule": "false",
+      "visibleRule": "addDefaultLabels = false",
       "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.addDefaultLabels"
     },

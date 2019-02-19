@@ -190,7 +190,7 @@ try {
         }
         if(-not [string]::IsNullOrEmpty($outputStorageContainerSASToken))
         {
-            $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission rl -ExpiryTime (Get-Date).AddMinutes($sasTokenTimeOutInMinutes)
+            $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission rwdl -ExpiryTime (Get-Date).AddMinutes($sasTokenTimeOutInMinutes)
             Write-Host "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
         }
 

@@ -28,7 +28,7 @@
   "loc.input.help.calabashSkipConfigCheck": "在没有 Cucumber 配置文件的情况下强制运行。",
   "loc.input.label.uitestBuildDir": "生成目录",
   "loc.input.help.uitestBuildDir": "具有生成测试程序集的目录的路径。",
-  "loc.input.label.uitestStoreFile": "存储文件",
+  "loc.input.label.uitestStorePath": "存储文件",
   "loc.input.label.uitestStorePass": "存储密码",
   "loc.input.label.uitestKeyAlias": "密钥别名",
   "loc.input.label.uitestKeyPass": "密钥密码",

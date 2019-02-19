@@ -180,9 +180,9 @@
       "groupName": "prepare"
     },
     {
-      "name": "uitestStoreFile",
+      "name": "uitestStorePath",
       "type": "string",
-      "label": "ms-resource:loc.input.label.uitestStoreFile",
+      "label": "ms-resource:loc.input.label.uitestStorePath",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = uitest",
       "required": false,

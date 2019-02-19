@@ -1,6 +1,6 @@
 {
   "id": "DEE316A2-586F-4DEF-BE79-488A1F503DFE",
-  "name": "KubernetesManifestBased",
+  "name": "KubernetesManifest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
@@ -13,7 +13,7 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 0,
     "Minor": 0,
     "Patch": 4
   },
@@ -132,11 +132,11 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.renderType",
       "required": false,
-      "defaultValue": "helm",
+      "defaultValue": "helm2",
       "groupName": "config",
       "visibleRule": "action = bake",
       "options": {
-        "helm": "Helm"
+        "helm2": "Helm 2"
       },
       "helpMarkDown": "ms-resource:loc.input.help.renderType"
     },
@@ -169,31 +169,6 @@
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.overrides",
       "visibleRule": "action = bake && renderType = helm"
-    },
-    {
-      "name": "replicas",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.replicas",
-      "required": true,
-      "defaultValue": "",
-      "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.replicas",
-      "visibleRule": "action = scale"
-    },
-    {
-      "name": "mergeStrategy",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.mergeStrategy",
-      "required": true,
-      "defaultValue": "strategic",
-      "options": {
-        "json": "json",
-        "merge": "merge",
-        "strategic": "strategic"
-      },
-      "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.mergeStrategy",
-      "visibleRule": "action = patch"
     },
     {
       "name": "resourceToPatch",
@@ -240,78 +215,38 @@
       "visibleRule": "action = scale || resourceToPatch = name"
     },
     {
-      "name": "deleteResourcesBy",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.deleteResourcesBy",
+      "name": "replicas",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.replicas",
       "required": true,
-      "defaultValue": "Filenames",
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.replicas",
+      "visibleRule": "action = scale"
+    },
+    {
+      "name": "mergeStrategy",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.mergeStrategy",
+      "required": true,
+      "defaultValue": "strategic",
       "options": {
-        "filenames": "Filenames",
-        "resourcesAndNames": "Resources and names",
-        "resourcesAndLabelSelector": "Resources and label selector"
+        "json": "json",
+        "merge": "merge",
+        "strategic": "strategic"
       },
       "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.deleteResourcesBy",
-      "visibleRule": "action = delete"
+      "helpMarkDown": "ms-resource:loc.input.help.mergeStrategy",
+      "visibleRule": "action = patch"
     },
     {
-      "name": "manifestsToDelete",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.manifestsToDelete",
+      "name": "args",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.args",
       "required": true,
       "defaultValue": "",
       "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.manifestsToDelete",
-      "visibleRule": "action = delete && deleteResourcesBy = filenames"
-    },
-    {
-      "name": "kinds",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.kinds",
-      "required": true,
-      "defaultValue": "",
-      "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.kinds",
-      "visibleRule": "action = delete && deleteResourcesBy != filenames"
-    },
-    {
-      "name": "names",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.names",
-      "required": true,
-      "defaultValue": "",
-      "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.names",
-      "visibleRule": "action = delete && deleteResourcesBy = resourcesAndNames"
-    },
-    {
-      "name": "labels",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.labels",
-      "required": true,
-      "defaultValue": "",
-      "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.labels",
-      "visibleRule": "action = delete && deleteResourcesBy = resourcesAndLabelSelector"
-    },
-    {
-      "name": "cascade",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.cascade",
-      "required": false,
-      "defaultValue": false,
-      "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.cascade",
-      "visibleRule": "action = delete"
-    },
-    {
-      "name": "gracePeriod",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.gracePeriod",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.gracePeriod",
+      "helpMarkDown": "ms-resource:loc.input.help.args",
       "visibleRule": "action = delete"
     },
     {

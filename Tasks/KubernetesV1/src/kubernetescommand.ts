@@ -45,32 +45,40 @@ function getCommandOutputFormat(kubecommand: string) : string[] {
 function getCommandConfigurationFile(): string[] {
     var args: string[] = [];
     var useConfigurationFile: boolean = tl.getBoolInput("useConfigurationFile", false);
-    let configurationPath = tl.getPathInput("configuration", false);
-    var inlineConfiguration = tl.getInput("inline", false);
-
-    if (!tl.filePathSupplied("configuration")) {
-        configurationPath = null;
-    }
-    if (configurationPath != null && inlineConfiguration != null) {
-        throw new Error(tl.loc('InvalidConfiguration', configurationPath, inlineConfiguration));
-    }
-    else if (configurationPath) {
-    //apply incoming configuration irrespective of useConfigurationFile flag. Simplifies yaml definition for pipelines
-        if (tl.exist(configurationPath)) {
-            args[0] = "-f";
-            args[1] = configurationPath;
+    if (useConfigurationFile) {
+        let configurationPath = tl.getPathInput("configuration", false);
+        var inlineConfiguration = tl.getInput("inline", false);
+    
+        if (!tl.filePathSupplied("configuration")) {
+            configurationPath = null;
         }
-        else {
-            throw new Error(tl.loc('ConfigurationFileNotFound', configurationPath));
+    
+        if (configurationPath != null && inlineConfiguration != null) {
+            let type = tl.getInput("configurationType", false);
+            if (type == "inline") configurationPath = null;
+            else inlineConfiguration = null;
         }
-    }
-    else if (inlineConfiguration) {
-        var tempInlineFile = utils.writeInlineConfigInTempPath(inlineConfiguration);
-        if (tl.exist(tempInlineFile)) {
-            args[0] = "-f";
-            args[1] = tempInlineFile;
-        } else {
-            throw new Error(tl.loc('ConfigurationFileNotFound', tempInlineFile));
+        
+        if (configurationPath == null && inlineConfiguration == null) {
+            throw new Error(tl.loc('InvalidConfiguration'));
+        }
+        else if (configurationPath) {
+            if (tl.exist(configurationPath)) {
+                args[0] = "-f";
+                args[1] = configurationPath;
+            }
+            else {
+                throw new Error(tl.loc('ConfigurationFileNotFound', configurationPath));
+            }
+        }
+        else if (inlineConfiguration) {
+            var tempInlineFile = utils.writeInlineConfigInTempPath(inlineConfiguration);
+            if (tl.exist(tempInlineFile)) {
+                args[0] = "-f";
+                args[1] = tempInlineFile;
+            } else {
+                throw new Error(tl.loc('ConfigurationFileNotFound', tempInlineFile));
+            }
         }
     }
 

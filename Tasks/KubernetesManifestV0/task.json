@@ -1,6 +1,6 @@
 {
     "id": "DEE316A2-586F-4DEF-BE79-488A1F503DFE",
-    "name": "KubernetesManifestBased",
+    "name": "KubernetesManifest",
     "friendlyName": "Manifest based Kubernetes deployments",
     "description": "Manifest based deployments to kubernetes",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
@@ -13,7 +13,7 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 0,
         "Minor": 0,
         "Patch": 4
     },
@@ -132,11 +132,11 @@
             "type": "pickList",
             "label": "Render Engine",
             "required": false,
-            "defaultValue": "helm",
+            "defaultValue": "helm2",
             "groupName": "config",
             "visibleRule": "action = bake",
             "options": {
-                "helm": "Helm"
+                "helm2": "Helm 2"
             },
             "helpMarkDown": "Tool to generate manifest"
         },
@@ -169,31 +169,6 @@
             "groupName": "config",
             "helpMarkDown": "Override values to set",
             "visibleRule": "action = bake && renderType = helm"
-        },
-        {
-            "name": "replicas",
-            "type": "string",
-            "label": "Replica count",
-            "required": true,
-            "defaultValue": "",
-            "groupName": "config",
-            "helpMarkDown": "Number of replicas to scale to",
-            "visibleRule": "action = scale"
-        },
-        {
-            "name": "mergeStrategy",
-            "type": "pickList",
-            "label": "Merge Strategy",
-            "required": true,
-            "defaultValue": "strategic",
-            "options": {
-                "json": "json",
-                "merge": "merge",
-                "strategic": "strategic"
-            },
-            "groupName": "config",
-            "helpMarkDown": "The type of patch being provided; one of [json merge strategic]",
-            "visibleRule": "action = patch"
         },
         {
             "name": "resourceToPatch",
@@ -240,78 +215,38 @@
             "visibleRule": "action = scale || resourceToPatch = name"
         },
         {
-            "name": "deleteResourcesBy",
-            "type": "pickList",
-            "label": "Delete resources by",
+            "name": "replicas",
+            "type": "string",
+            "label": "Replica count",
             "required": true,
-            "defaultValue": "Filenames",
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "Number of replicas to scale to",
+            "visibleRule": "action = scale"
+        },
+        {
+            "name": "mergeStrategy",
+            "type": "pickList",
+            "label": "Merge Strategy",
+            "required": true,
+            "defaultValue": "strategic",
             "options": {
-                "filenames": "Filenames",
-                "resourcesAndNames": "Resources and names",
-                "resourcesAndLabelSelector" : "Resources and label selector"
+                "json": "json",
+                "merge": "merge",
+                "strategic": "strategic"
             },
             "groupName": "config",
-            "helpMarkDown": "Field indicating how the K8s object to be deleted is to be identified.",
-            "visibleRule": "action = delete"
+            "helpMarkDown": "The type of patch being provided; one of [json merge strategic]",
+            "visibleRule": "action = patch"
         },
         {
-            "name": "manifestsToDelete",
-            "type": "filePath",
-            "label": "Manifests",
+            "name": "args",
+            "type": "string",
+            "label": "Arguments",
             "required": true,
             "defaultValue": "",
             "groupName": "config",
-            "helpMarkDown": "Manifests to delete",
-            "visibleRule": "action = delete && deleteResourcesBy = filenames"
-        },
-        {
-            "name": "kinds",
-            "type": "string",
-            "label": "Kinds",
-            "required": true,
-            "defaultValue": "",
-            "groupName": "config",
-            "helpMarkDown": "Comma separated list of Kind of K8s object; deployment, replicaSet etc.",
-            "visibleRule": "action = delete && deleteResourcesBy != filenames"
-        },
-        {
-            "name": "names",
-            "type": "string",
-            "label": "Names",
-            "required": true,
-            "defaultValue": "",
-            "groupName": "config",
-            "helpMarkDown": "Comma separated list of Names of the k8s object",
-            "visibleRule": "action = delete && deleteResourcesBy = resourcesAndNames"
-        },
-        {
-            "name": "labels",
-            "type": "string",
-            "label": "Labels",
-            "required": true,
-            "defaultValue": "",
-            "groupName": "config",
-            "helpMarkDown": "Comma separated key value pairs of labels assigned to the k8s object like app=web,version=v1",
-            "visibleRule": "action = delete && deleteResourcesBy = resourcesAndLabelSelector"
-        },
-        {
-            "name": "cascade",
-            "type": "boolean",
-            "label": "Cascade",
-            "required": false,
-            "defaultValue": false,
-            "groupName": "config",
-            "helpMarkDown": "If true, cascade the deletion of the resources managed by this resource",
-            "visibleRule": "action = delete"
-        },
-        {
-            "name": "gracePeriod",
-            "type": "string",
-            "label": "Grace period",
-            "required": false,
-            "defaultValue": "",
-            "groupName": "config",
-            "helpMarkDown": "Period of time in seconds given to the resource to terminate gracefully. Ignored if negative.",
+            "helpMarkDown": "Arguments for `kubectl delete` command",
             "visibleRule": "action = delete"
         },
         {

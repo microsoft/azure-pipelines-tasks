@@ -575,19 +575,21 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Run fails when both configurations are provided through yaml', (done:MochaDone) => {
+    it('Run defaults to filepath when both configurations are provided through yaml', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.apply;
         process.env[shared.TestEnvVars.useConfigurationFile] = "true";
         process.env[shared.TestEnvVars.configurationType] = ''; //does not matter during a yaml definition
-        process.env[shared.TestEnvVars.configuration] = 'someFile.yaml'; //dummy value to trigger not default configuration condition
+        process.env[shared.TestEnvVars.configuration] = shared.formatPath("dir/deployment.yaml"); //dummy value to trigger not default configuration condition
         process.env[shared.TestEnvVars.inline] = 'sometextforinline';
         tr.run();
 
-        assert(tr.failed, 'task should have failed');
-        assert(tr.invokedToolCount == 0, 'should not have invoked the tool. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length > 0 || tr.errorIssues.length, 'should have written an error message');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]kubectl apply -f ${shared.formatPath("dir/deployment.yaml")} -o json`) != -1, "kubectl apply should run");
         console.log(tr.stderr);
         done();
     });

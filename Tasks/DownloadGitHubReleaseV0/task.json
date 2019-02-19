@@ -32,7 +32,8 @@
       "defaultValue": "",
       "required": true,
       "properties": {
-        "EditableOptions": "True"
+        "EditableOptions": "True",
+        "SearchDataSourceName": "userRepositorySearch"
       },
       "helpMarkDown": "GitHub repository full name"
     },
@@ -93,6 +94,17 @@
       "parameters": {
         "repositoryName": "$(userRepository)",
         "releaseByTagName": "$(defaultVersionType)"
+      }
+    },
+    {
+      "target": "userRepositorySearch",
+      "endpointId": "$(connection)",
+      "dataSourceName": "SearchRepositoriesByName",
+      "resultSelector": "jsonpath:$['items'][*]",
+      "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }",
+      "parameters": {
+        "searchText": "$(searchText)",
+        "name": "$(searchText)"
       }
     }
   ],
