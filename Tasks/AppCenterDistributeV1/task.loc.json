@@ -12,8 +12,8 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 148,
+    "Major": 2,
+    "Minor": 0,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
