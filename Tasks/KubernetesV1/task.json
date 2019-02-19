@@ -118,11 +118,11 @@
         {
             "name": "useClusterAdmin",
             "type": "boolean",
-            "label": "Get cluster admin credentials",
+            "label": "Use cluster admin credentials",
             "defaultValue": "false",
             "visibleRule": "connectionType = Azure Resource Manager",
             "groupName": "kubernetesCluster",
-            "helpMarkDown": "Get cluster administrator credentials instead of default cluster user credentials."
+            "helpMarkDown": "Use cluster administrator credentials instead of default cluster user credentials."
         },
         {
             "name": "namespace",
