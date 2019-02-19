@@ -159,7 +159,7 @@ function publishRelease(apiServer: string, releaseUrl: string, isMandatory: bool
     const destinations = [];
     for (let destinationId of destinationIds) {
         if (destinationId.trim()) {
-            destinations.push({"id": destinationId})
+            destinations.push({"id": destinationId});
         }
     }
     let publishBody = {
@@ -440,7 +440,7 @@ async function run() {
 
         let destinations = tl.getInput('destinationIds', false) || '00000000-0000-0000-0000-000000000000';
         tl.debug(`Effective destinationIds: ${destinations}`);
-        let destinationIds = destinations.split(/[, ;]+/); ;;;
+        let destinationIds = destinations.split(/[, ;]+/);
 
         // Validate inputs
         if (!apiToken) {
