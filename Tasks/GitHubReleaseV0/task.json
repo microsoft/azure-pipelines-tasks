@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 148,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -192,8 +192,7 @@
           {
             "target": "userRepositorySearch",
             "endpointId": "$(gitHubConnection)",
-            "dataSourceName": "SearchRepositoriesByName",
-            "resultSelector": "jsonpath:$['items'][*]",
+            "dataSourceName": "SearchRepositoriesByNameForTasks",
             "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }",
             "parameters": {
               "searchText": "$(searchText)",
