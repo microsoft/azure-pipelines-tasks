@@ -35,8 +35,8 @@ export class AzureAksService {
         });
     } 
 
-    public getAccessProfile(resourceGroup : string , clusterName : string, clusterAdmin?: boolean): Promise<Model.AKSClusterAccessProfile> {
-        var accessProfileName = !!clusterAdmin ? 'clusterAdmin' : 'clusterUser';
+    public getAccessProfile(resourceGroup : string , clusterName : string, useClusterAdmin?: boolean): Promise<Model.AKSClusterAccessProfile> {
+        var accessProfileName = !!useClusterAdmin ? 'clusterAdmin' : 'clusterUser';
         return this.beginRequest(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.ContainerService/managedClusters/{ClusterName}/accessProfiles/{AccessProfileName}`,
         {
             '{ResourceGroupName}': resourceGroup,

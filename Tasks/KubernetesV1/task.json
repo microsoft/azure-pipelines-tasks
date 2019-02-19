@@ -116,7 +116,7 @@
             }
         },
         {
-            "name": "clusterAdmin",
+            "name": "useClusterAdmin",
             "type": "boolean",
             "label": "Get cluster admin credentials",
             "defaultValue": "false",

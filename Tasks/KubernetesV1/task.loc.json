@@ -116,13 +116,13 @@
       }
     },
     {
-      "name": "clusterAdmin",
+      "name": "useClusterAdmin",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.clusterAdmin",
+      "label": "ms-resource:loc.input.label.useClusterAdmin",
       "defaultValue": "false",
       "visibleRule": "connectionType = Azure Resource Manager",
       "groupName": "kubernetesCluster",
-      "helpMarkDown": "ms-resource:loc.input.help.clusterAdmin"
+      "helpMarkDown": "ms-resource:loc.input.help.useClusterAdmin"
     },
     {
       "name": "namespace",
