@@ -599,7 +599,7 @@ export class Kudu {
         httpRequest.headers = {};
 
         if(!!affinityCookie) {
-           httpRequest.headers['set-cookie'] = affinityCookie; 
+           httpRequest.headers['Cookie'] = affinityCookie; 
         }
 
         while(true) {
