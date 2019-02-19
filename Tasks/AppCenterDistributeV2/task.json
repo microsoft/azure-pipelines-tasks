@@ -16,7 +16,7 @@
         "Minor": 0,
         "Patch": 0
     },
-    "releaseNotes": "Fix bug where feature branches were being truncated.",
+    "releaseNotes": "Added support for multiple destinations.",
     "groups": [
         {
             "name": "symbols",
@@ -190,6 +190,7 @@
         "NoResponseFromServer": "No response from server.",
         "FailedToUploadFile": "Failed to complete file upload.",
         "NoApiTokenFound": "No API token found on the Visual Studio App Center service connection.",
+        "InvalidDestinationInput": "The destination input provided was invalid",
         "Succeeded": "App Center Distribute task succeeded",
         "CannotFindAnyFile": "Cannot find any file based on %s.",
         "FoundMultipleFiles": "Found multiple files matching %s.",

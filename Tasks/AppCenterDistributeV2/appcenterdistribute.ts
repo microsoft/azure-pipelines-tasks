@@ -157,11 +157,11 @@ function publishRelease(apiServer: string, releaseUrl: string, isMandatory: bool
         "internal-request-source": "VSTS"
     };
     const destinations = [];
-    destinationIds.map(destinationId => { 
+    for (let destinationId of destinationIds) {
         if (destinationId.trim()) {
-            destinations.push({"id": destinationId}) 
+            destinations.push({"id": destinationId})
         }
-    });
+    }
     let publishBody = {
         "status": "available",
         "release_notes": releaseNotes,
@@ -440,11 +440,14 @@ async function run() {
 
         let destinations = tl.getInput('destinationIds', false) || '00000000-0000-0000-0000-000000000000';
         tl.debug(`Effective destinationIds: ${destinations}`);
-        let destinationIds = destinations.split(/(?:,| |;)+/)
+        let destinationIds = destinations.split(/[, ;]+/); ;;;
 
         // Validate inputs
         if (!apiToken) {
             throw new Error(tl.loc("NoApiTokenFound"));
+        }
+        if (!destinationIds) {
+            throw new Error(tl.loc("InvalidDestinationInput"));
         }
 
         let app = utils.resolveSinglePath(appFilePattern);

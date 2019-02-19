@@ -190,6 +190,7 @@
     "NoResponseFromServer": "ms-resource:loc.messages.NoResponseFromServer",
     "FailedToUploadFile": "ms-resource:loc.messages.FailedToUploadFile",
     "NoApiTokenFound": "ms-resource:loc.messages.NoApiTokenFound",
+    "InvalidDestinationInput": "ms-resource:loc.messages.InvalidDestinationInput",
     "Succeeded": "ms-resource:loc.messages.Succeeded",
     "CannotFindAnyFile": "ms-resource:loc.messages.CannotFindAnyFile",
     "FoundMultipleFiles": "ms-resource:loc.messages.FoundMultipleFiles",
