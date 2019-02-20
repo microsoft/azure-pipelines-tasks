@@ -158,9 +158,7 @@ function publishRelease(apiServer: string, releaseUrl: string, isMandatory: bool
     };
     const destinations = [];
     for (let destinationId of destinationIds) {
-        if (destinationId.trim()) {
             destinations.push({"id": destinationId});
-        }
     }
     let publishBody = {
         "status": "available",
@@ -440,13 +438,13 @@ async function run() {
 
         let destinations = tl.getInput('destinationIds', false) || '00000000-0000-0000-0000-000000000000';
         tl.debug(`Effective destinationIds: ${destinations}`);
-        let destinationIds = destinations.split(/[, ;]+/);
+        let destinationIds = destinations.split(/[, ;]+/).filter(id => id);
 
         // Validate inputs
         if (!apiToken) {
             throw new Error(tl.loc("NoApiTokenFound"));
         }
-        if (!destinationIds) {
+        if (!destinationIds.length) {
             throw new Error(tl.loc("InvalidDestinationInput"));
         }
 
