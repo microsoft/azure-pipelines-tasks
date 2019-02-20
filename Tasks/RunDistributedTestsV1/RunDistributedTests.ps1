@@ -148,7 +148,7 @@ Function Override-TestSettingProperties
     return $hasOverridenProperties
 }
 
-Write-Warning "This task and it’s companion task (Visual Studio Test Agent Deployment) are now deprecated. Use the 'Visual Studio Test' task instead. The VSTest task can run unit as well as functional tests. Run tests on one or more agents using the multi-agent phase setting. Use the ‘Visual Studio Test Platform’ task to run tests without needing Visual Studio on the agent. VSTest task also brings new capabilities such as automatically rerunning failed tests. Visit https://aka.ms/testingwithphases for more information."
+Write-Warning "This task and it’s companion task (Visual Studio Test Agent Deployment) are now deprecated and will stop working on 10-March-2019. Use the 'Visual Studio Test' task instead. The VSTest task can run unit as well as functional tests. Run tests on one or more agents using the multi-agent phase setting. Use the ‘Visual Studio Test Platform’ task to run tests without needing Visual Studio on the agent. VSTest task also brings new capabilities such as automatically rerunning failed tests. Visit https://aka.ms/testingwithphases for more information."
 Write-Verbose "Entering script RunDistributedTests.ps1"
 Write-Verbose "TestMachineGroup = $testMachineGroup"
 Write-Verbose "Test Drop Location = $dropLocation"
