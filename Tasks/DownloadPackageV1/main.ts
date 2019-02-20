@@ -59,9 +59,9 @@ async function main(): Promise<void> {
 
     var extractors: Extractor[] = await p.download(feedId, packageId, version, downloadPath);
 
-    if (extractPackage && (packageType === "npm" || packageType === "nuget")) {
+    if (packageType === "npm" || packageType === "nuget") {
         extractors.forEach(extractor => {
-            extractor.extract();
+            extractor.process(extractPackage);
         });
     }
 

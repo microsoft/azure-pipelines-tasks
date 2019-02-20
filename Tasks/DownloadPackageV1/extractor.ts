@@ -16,7 +16,11 @@ export class Extractor {
         this.unzipLocation = unzipLocation;
     }
 
-    async extract(): Promise<void> {
+    async process(extractPackage: boolean): Promise<void> {
+        return extractPackage ? this.extract() : this.copy();
+    }
+
+    private async extract(): Promise<void> {
         const fileEnding = path.parse(this.zipLocation).ext;
         switch (fileEnding) {
             case ".zip":
@@ -29,7 +33,12 @@ export class Extractor {
         }
     }
 
-    async unTarGz(zipLocation: string, unzipLocation: string): Promise<void> {
+
+    private async copy(): Promise<void> {
+        return Promise.resolve(tl.mv(this.zipLocation, this.unzipLocation));
+    }
+
+    private async unTarGz(zipLocation: string, unzipLocation: string): Promise<void> {
         return Promise.resolve(
             fs
                 .createReadStream(zipLocation)
@@ -38,7 +47,7 @@ export class Extractor {
         );
     }
 
-    async unzip(zipLocation: string, unzipLocation: string): Promise<void> {
+    private async unzip(zipLocation: string, unzipLocation: string): Promise<void> {
         return new Promise<void>(function(resolve, reject) {
             tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
 
