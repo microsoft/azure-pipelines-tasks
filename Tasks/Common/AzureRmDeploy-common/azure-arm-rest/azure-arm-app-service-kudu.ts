@@ -21,7 +21,7 @@ export class KuduServiceManagementClient {
         request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
         
         if(!!this._cookie) {
-            tl.debug(`setting affinity cookie ${this._cookie.join(",")}`);
+            tl.debug(`setting affinity cookie ${JSON.stringify(this._cookie)}`);
             request.headers['Cookie'] = this._cookie;
         }
 
@@ -30,9 +30,9 @@ export class KuduServiceManagementClient {
         while(retryCount >= 0) {
             try {
                 let httpResponse = await webClient.sendRequest(request, reqOptions);
-                if(!this._cookie) {
+                if(httpResponse.headers['set-cookie'] && !this._cookie) {
                     this._cookie = httpResponse.headers['set-cookie'];
-                    tl.debug(`loaded affinity cookie ${this._cookie.join(",")}`);
+                    tl.debug(`loaded affinity cookie ${JSON.stringify(this._cookie)}`);
                 }
                 
                 return httpResponse;
