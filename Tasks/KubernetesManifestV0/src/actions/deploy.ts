@@ -53,7 +53,7 @@ function deployManifests(files: string[], kubectl: Kubectl): string[] {
 function checkManifestStability(kubectl: Kubectl, resourceTypes: Resource[]) {
     let rolloutStatusResults = [];
     resourceTypes.forEach(resource => {
-        if (models.recognizedWorkloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) == -1) {
+        if (models.recognizedWorkloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
             rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
         }
     });
