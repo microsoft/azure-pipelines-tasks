@@ -59,7 +59,7 @@ async function main(): Promise<void> {
 
     var extractors: Extractor[] = await p.download(feedId, packageId, version, downloadPath);
 
-    if (extractPackage) {
+    if (extractPackage && (packageType === "npm" || packageType === "nuget")) {
         extractors.forEach(extractor => {
             extractor.extract();
         });
@@ -71,3 +71,4 @@ async function main(): Promise<void> {
 main()
     .then(result => tl.setResult(tl.TaskResult.Succeeded, ""))
     .catch(error => tl.setResult(tl.TaskResult.Failed, error));
+    

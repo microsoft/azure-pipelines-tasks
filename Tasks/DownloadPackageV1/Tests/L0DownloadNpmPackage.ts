@@ -8,7 +8,7 @@ let zipLocation: string = path.join(__dirname, "out", "singlePackageName.tgz");
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs
-tr.setInput("packageType", "Npm");
+tr.setInput("packageType", "npm");
 tr.setInput("feed", "feedId");
 tr.setInput("view", "viewId");
 tr.setInput("definition", "packageId");

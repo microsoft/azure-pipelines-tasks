@@ -20,6 +20,7 @@ export class Extractor {
         const fileEnding = path.parse(this.zipLocation).ext;
         switch (fileEnding) {
             case ".zip":
+            case ".nupkg":
                 return this.unzip(this.zipLocation, this.unzipLocation);
             case ".tgz":
                 return this.unTarGz(this.zipLocation, this.unzipLocation);
