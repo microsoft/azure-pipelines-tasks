@@ -156,10 +156,7 @@ function publishRelease(apiServer: string, releaseUrl: string, isMandatory: bool
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    const destinations = [];
-    for (let destinationId of destinationIds) {
-            destinations.push({"id": destinationId});
-    }
+    const destinations = destinationIds.map(id => { return { "id": id }; });
     let publishBody = {
         "status": "available",
         "release_notes": releaseNotes,
@@ -175,7 +172,7 @@ function publishRelease(apiServer: string, releaseUrl: string, isMandatory: bool
     // Builds started by App Center has the commit message set when distribution is enabled
     const commitMessage = process.env['LASTCOMMITMESSAGE'];
     // Updating the internal_request_source to distinguish the AppCenter triggered build and custom build
-    if(!!commitMessage) {
+    if (!!commitMessage) {
         headers["internal-request-source"] = "VSTS-APPCENTER";
     }
 
