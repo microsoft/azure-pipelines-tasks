@@ -611,7 +611,7 @@ export class Kudu {
             let response = await this._client.beginRequest(httpRequest);
             if(response.statusCode == 200 || response.statusCode == 202) {
                 var result = response.body;
-                tl.debug(`POLL URL RESULT: ${JSON.stringify(result)}`);
+                tl.debug(`POLL URL RESULT: ${JSON.stringify(response)}`);
                 if(result.status == KUDU_DEPLOYMENT_CONSTANTS.SUCCESS || result.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {
                     return result;
                 }
