@@ -8,6 +8,7 @@ import { KUDU_DEPLOYMENT_CONSTANTS } from './constants';
 export class KuduServiceManagementClient {
     private _scmUri;
     private _accesssToken: string;
+    private _cookie: string[];
 
     constructor(scmUri: string, accessToken: string) {
         this._accesssToken = accessToken;
@@ -19,11 +20,21 @@ export class KuduServiceManagementClient {
         request.headers["Authorization"] = "Basic " + this._accesssToken;
         request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
         
+        if(!!this._cookie) {
+            tl.debug(`setting affinity cookie ${this._cookie.join(",")}`);
+            request.headers['Cookie'] = this._cookie;
+        }
+
         let retryCount = reqOptions && util.isNumber(reqOptions.retryCount) ? reqOptions.retryCount : 5;
 
         while(retryCount >= 0) {
             try {
                 let httpResponse = await webClient.sendRequest(request, reqOptions);
+                if(!this._cookie) {
+                    this._cookie = httpResponse.headers['set-cookie'];
+                    tl.debug(`loaded affinity cookie ${this._cookie.join(",")}`);
+                }
+                
                 return httpResponse;
             }
             catch(exception) {
@@ -452,10 +463,9 @@ export class Kudu {
             }
             else if(response.statusCode == 202) {
                 let pollableURL: string = response.headers.location;
-                let affinityCookie: string [] = response.headers['set-cookie'];
                 if(!!pollableURL) {
                     tl.debug(`Polling for ZIP Deploy URL: ${pollableURL}`);
-                    return await this._getDeploymentDetailsFromPollURL(pollableURL, affinityCookie);
+                    return await this._getDeploymentDetailsFromPollURL(pollableURL);
                 }
                 else {
                     tl.debug('zip deploy returned 202 without pollable URL.');
@@ -479,7 +489,6 @@ export class Kudu {
 
         try {
             let response = await this._client.beginRequest(httpRequest);
-            let affinityCookie: string [] = response.headers['set-cookie'];
             tl.debug(`War Deploy response: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 tl.debug('Deployment passed');
@@ -489,7 +498,7 @@ export class Kudu {
                 let pollableURL: string = response.headers.location;
                 if(!!pollableURL) {
                     tl.debug(`Polling for War Deploy URL: ${pollableURL}`);
-                    return await this._getDeploymentDetailsFromPollURL(pollableURL, affinityCookie);
+                    return await this._getDeploymentDetailsFromPollURL(pollableURL);
                 }
                 else {
                     tl.debug('war deploy returned 202 without pollable URL.');
@@ -592,15 +601,11 @@ export class Kudu {
         }
     }
 
-    private async _getDeploymentDetailsFromPollURL(pollURL: string,  affinityCookie?: string[]):Promise<any> {
+    private async _getDeploymentDetailsFromPollURL(pollURL: string):Promise<any> {
         let httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = pollURL;
         httpRequest.headers = {};
-
-        if(!!affinityCookie) {
-           httpRequest.headers['set-cookie'] = affinityCookie; 
-        }
 
         while(true) {
             let response = await this._client.beginRequest(httpRequest);
