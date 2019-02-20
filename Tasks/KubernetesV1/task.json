@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 23
+        "Patch": 24
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
@@ -114,6 +114,15 @@
             "properties": {
                 "EditableOptions": "True"
             }
+        },
+        {
+            "name": "useClusterAdmin",
+            "type": "boolean",
+            "label": "Use cluster admin credentials",
+            "defaultValue": "false",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "groupName": "kubernetesCluster",
+            "helpMarkDown": "Use cluster administrator credentials instead of default cluster user credentials."
         },
         {
             "name": "namespace",
