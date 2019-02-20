@@ -11,7 +11,7 @@
   "version": {
     "Major": 0,
     "Minor": 148,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "1.99.0",
   "instanceNameFormat": "Download GitHub Release",
@@ -99,8 +99,7 @@
     {
       "target": "userRepositorySearch",
       "endpointId": "$(connection)",
-      "dataSourceName": "SearchRepositoriesByName",
-      "resultSelector": "jsonpath:$['items'][*]",
+      "dataSourceName": "SearchRepositoriesByNameForTasks",
       "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }",
       "parameters": {
         "searchText": "$(searchText)",
