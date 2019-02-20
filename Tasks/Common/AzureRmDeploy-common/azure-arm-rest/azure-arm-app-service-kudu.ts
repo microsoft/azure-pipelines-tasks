@@ -8,6 +8,7 @@ import { KUDU_DEPLOYMENT_CONSTANTS } from './constants';
 export class KuduServiceManagementClient {
     private _scmUri;
     private _accesssToken: string;
+    private _cookie: string[];
 
     constructor(scmUri: string, accessToken: string) {
         this._accesssToken = accessToken;
@@ -19,11 +20,21 @@ export class KuduServiceManagementClient {
         request.headers["Authorization"] = "Basic " + this._accesssToken;
         request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
         
+        if(!!this._cookie) {
+            tl.debug(`setting affinity cookie ${JSON.stringify(this._cookie)}`);
+            request.headers['Cookie'] = this._cookie;
+        }
+
         let retryCount = reqOptions && util.isNumber(reqOptions.retryCount) ? reqOptions.retryCount : 5;
 
         while(retryCount >= 0) {
             try {
                 let httpResponse = await webClient.sendRequest(request, reqOptions);
+                if(httpResponse.headers['set-cookie'] && !this._cookie) {
+                    this._cookie = httpResponse.headers['set-cookie'];
+                    tl.debug(`loaded affinity cookie ${JSON.stringify(this._cookie)}`);
+                }
+                
                 return httpResponse;
             }
             catch(exception) {
@@ -594,12 +605,13 @@ export class Kudu {
         let httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = pollURL;
+        httpRequest.headers = {};
 
         while(true) {
             let response = await this._client.beginRequest(httpRequest);
             if(response.statusCode == 200 || response.statusCode == 202) {
                 var result = response.body;
-                tl.debug(`POLL URL RESULT: ${JSON.stringify(result)}`);
+                tl.debug(`POLL URL RESULT: ${JSON.stringify(response)}`);
                 if(result.status == KUDU_DEPLOYMENT_CONSTANTS.SUCCESS || result.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {
                     return result;
                 }
