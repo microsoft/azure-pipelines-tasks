@@ -99,6 +99,7 @@
         "NuGetPackagerV0",
         "NuGetPublisherV0",
         "NuGetToolInstallerV0",
+        "NuGetToolInstallerV1",
         "PackerBuildV0",
         "PackerBuildV1",
         "PipAuthenticateV0",
