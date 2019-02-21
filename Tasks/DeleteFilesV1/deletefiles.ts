@@ -1,6 +1,6 @@
 import path = require('path');
 import os = require('os');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 (() => {
@@ -62,7 +62,7 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
     }
 
     // apply the match patterns
-    let matches: string[] = tl.match(foundPaths, patterns, matchOptions);
+    let matches: string[] = tl.match(foundPaths, patterns, null, matchOptions);
 
     // sort by length (descending) so files are deleted before folders
     matches = matches.sort((a: string, b: string) => {

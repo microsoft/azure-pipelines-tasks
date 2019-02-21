@@ -149,9 +149,6 @@
             "platforms": [
                 "windows"
             ]
-        },
-        "Node": {
-            "target": "azurepowershell.js"
         }
     },
     "messages": {
