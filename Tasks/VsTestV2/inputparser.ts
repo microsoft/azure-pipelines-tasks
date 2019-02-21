@@ -144,6 +144,8 @@ function getTfsSpecificSettings(inputDataContract : idc.InputDataContract) : idc
         inputDataContract.TfsSpecificSettings.ReleaseUri = tl.getVariable('Release.ReleaseUri');
         inputDataContract.TfsSpecificSettings.ReleaseEnvironmentUri = tl.getVariable('Release.EnvironmentUri');
         inputDataContract.TfsSpecificSettings.WorkFolder = tl.getVariable('System.DefaultWorkingDirectory');
+        inputDataContract.TfsSpecificSettings.PullRequestTargetBranchName = tl.getVariable('System.PullRequest.TargetBranch');
+
         return inputDataContract;
 }
 

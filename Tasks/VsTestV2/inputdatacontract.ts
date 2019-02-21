@@ -50,6 +50,7 @@ export interface TfsSpecificSettings {
     ReleaseUri : string;
     ReleaseEnvironmentUri : string;
     WorkFolder : string;
+    PullRequestTargetBranchName : string;
 }
 
 export interface TestSpecificSettings {
