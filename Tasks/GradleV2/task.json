@@ -366,6 +366,7 @@
         "NoCodeCoverage": "No code coverage results were found to publish.",
         "InvalidBuildFile": "Invalid or unsupported build file",
         "FileNotFound": "File or folder doesn't exist: %s",
-        "FailedToAppendCC": "Unable to append code coverage data: %s"
+        "FailedToAppendCC": "Unable to append code coverage data: %s",
+        "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
     }
 }

@@ -366,6 +366,7 @@
     "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
     "InvalidBuildFile": "ms-resource:loc.messages.InvalidBuildFile",
     "FileNotFound": "ms-resource:loc.messages.FileNotFound",
-    "FailedToAppendCC": "ms-resource:loc.messages.FailedToAppendCC"
+    "FailedToAppendCC": "ms-resource:loc.messages.FailedToAppendCC",
+    "NoTestResults": "ms-resource:loc.messages.NoTestResults"
   }
 }
