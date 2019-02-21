@@ -30,10 +30,10 @@
             "helpMarkDown": "Select the package type",
             "defaultValue": "NuGet",
             "options": {
-                "Maven": "Maven",
-                "Npm": "Npm",
-                "NuGet": "NuGet",
-                "Python": "Python"
+                "maven": "Maven",
+                "npm": "Npm",
+                "nuget": "NuGet",
+                "pypi": "Python"
             }
         },
         {
@@ -85,7 +85,7 @@
             "type": "string",
             "label": "Files",
             "defaultValue": "*",
-            "visibleRule": "packageType == 'Maven' || packageType == 'Python' || packageType == 'Universal'",
+            "visibleRule": "packageType == 'maven' || packageType == 'pypi' || packageType == 'universal'",
             "required": false,
             "properties": {
                 "EditableOptions": "True"
@@ -99,7 +99,7 @@
             "label": "Extract package contents",
             "defaultValue": "false",
             "required": false,
-            "visibleRule": "packageType == 'NuGet' || packageType == 'Npm'",
+            "visibleRule": "packageType == 'nuget' || packageType == 'npm'",
             "properties": {
                 "EditableOptions": "True"
             },
