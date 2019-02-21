@@ -342,6 +342,7 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "showEnvironmentVariables": true,
   "execution": {
     "Node": {
       "target": "src//kubernetes.js"
