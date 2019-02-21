@@ -334,7 +334,7 @@ function publishJUnitTestResults(testResultsFiles: string) {
     }
 
     if (!matchingJUnitResultFiles || matchingJUnitResultFiles.length == 0) {
-        console.log('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
+        console.log(tl.loc('NoTestResults',testResultsFiles));
         return 0;
     }
 

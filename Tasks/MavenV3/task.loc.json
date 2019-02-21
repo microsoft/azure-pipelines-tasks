@@ -407,6 +407,7 @@
     "EntryAlreadyExists": "ms-resource:loc.messages.EntryAlreadyExists",
     "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid",
     "AuthenticationNotNecessary": "ms-resource:loc.messages.AuthenticationNotNecessary",
-    "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed"
+    "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed",
+    "NoTestResults": "ms-resource:loc.messages.NoTestResults"
   }
 }
