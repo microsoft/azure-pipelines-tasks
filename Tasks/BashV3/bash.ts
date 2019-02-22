@@ -10,14 +10,10 @@ const noRc = tl.getBoolInput('noRc');
 
 async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
     let bashPwd = tl.tool(bashPath)
+        .arg('--noprofile')
+        .arg('--norc')
         .arg('-c')
         .arg('pwd');
-    if (noProfile) {
-        bashPwd.arg('--noprofile');
-    }
-    if (noRc) {
-        bashPwd.arg('--norc');
-    }
 
     let bashPwdOptions = <tr.IExecOptions>{
         cwd: directoryPath,
@@ -107,14 +103,14 @@ async function run() {
 
         // Create the tool runner.
         console.log('========================== Starting Command Output ===========================');
-        let bash = tl.tool(bashPath)
-            .arg(filePath);
+        let bash = tl.tool(bashPath);
         if (noProfile) {
             bash.arg('--noprofile');
         }
         if (noRc) {
             bash.arg('--norc');
         }
+        bash.arg(filePath);
 
         let options = <tr.IExecOptions>{
             cwd: input_workingDirectory,

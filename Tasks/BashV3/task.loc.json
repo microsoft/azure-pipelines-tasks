@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 148,
-    "Patch": 1
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
@@ -91,6 +91,23 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
+      "groupName": "advanced"
+    },
+    {
+      "name": "noProfile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.noProfile",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.noProfile",
+      "groupName": "advanced"
+    },
+    {
+      "name": "noRc",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.noRc",
+      "defaultValue": "true",
+      "required": false,
       "groupName": "advanced"
     }
   ],
