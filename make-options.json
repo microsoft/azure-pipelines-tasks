@@ -59,6 +59,7 @@
         "DownloadFileshareArtifactsV0",
         "DownloadGitHubReleaseV0",
         "DownloadPackageV0",
+        "DownloadPackageV1",
         "DownloadPipelineArtifactV0",
         "DownloadPipelineArtifactV1",
         "DownloadSecureFileV1",
