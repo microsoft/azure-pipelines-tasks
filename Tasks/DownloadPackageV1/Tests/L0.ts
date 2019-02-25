@@ -28,7 +28,7 @@ describe("Download single file package suite", function() {
         tr.run();
 
         assert(tl.ls(null, [outputDir]).length == 2, "should have only 1 file and 1 folder.");
-        const zipPath = path.join(outputDir, "singlePackageName.zip");
+        const zipPath = path.join(outputDir, "singlePackageName.nupkg");
         const zipStats = tl.stats(zipPath);
         assert(zipStats && zipStats.isFile(), "zip file should be downloaded");
 

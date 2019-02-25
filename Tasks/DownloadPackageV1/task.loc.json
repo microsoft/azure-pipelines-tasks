@@ -97,7 +97,7 @@
       "name": "extract",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.extract",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "visibleRule": "packageType == 'nuget' || packageType == 'npm'",
       "properties": {

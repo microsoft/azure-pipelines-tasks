@@ -4,7 +4,7 @@ import { WebApiMock } from "./helpers/webapimock";
 
 let taskPath = path.join(__dirname, "..", "main.js");
 let outputPath: string = path.join(__dirname, "out", "packageOutput");
-let zipLocation: string = path.join(__dirname, "out", "singlePackageName.zip");
+let zipLocation: string = path.join(__dirname, "out", "singlePackageName.nupkg");
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs

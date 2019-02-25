@@ -71,15 +71,14 @@ async function main(): Promise<void> {
 
     } finally {
         logTelemetry({
-            packageType: packageType,
-            feedId : feedId,
-            viewId : viewId,
-            packageId: packageId,
-            version: version,
-            filesPattern: filesPattern,
-            collectionUrl: collectionUrl,
-            skipDownload: skipDownload,
-            extractPackage: extractPackage
+            PackageType: packageType,
+            FeedId : feedId,
+            ViewId : viewId,
+            PackageId: packageId,
+            Version: version,
+            SkipDownload: skipDownload,
+            ExtractPackage: extractPackage,
+            IsTriggeringArtifact: tl.getInput("isTriggeringArtifact")
         })
     }
    

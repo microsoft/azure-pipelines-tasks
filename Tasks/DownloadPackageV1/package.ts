@@ -67,7 +67,7 @@ export abstract class Package {
             );
 
             getVersioningDataPromise.then(result => {
-                tl.debug("Got URL " + result + " from versioning data.");
+                tl.debug("Got URL " + result.requestUrl + " from versioning data.");
                 return resolve(result.requestUrl);
             });
             getVersioningDataPromise.catch(error => {

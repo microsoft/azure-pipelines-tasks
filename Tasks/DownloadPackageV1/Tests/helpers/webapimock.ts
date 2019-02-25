@@ -88,7 +88,7 @@ class RestMock {
 
 class HttpMock {
     private responseMap = {
-        nugetPackageDownloadUrl: fs.createReadStream(path.join(__dirname, "inputs", "nugetFile.zip")),
+        nugetPackageDownloadUrl: fs.createReadStream(path.join(__dirname, "inputs", "nugetFile.nupkg")),
         npmPackageDownloadUrl: fs.createReadStream(path.join(__dirname, "inputs", "npmFile.tgz")),
         multiPackageDownloadUrl: new Readable({
             read(size) {

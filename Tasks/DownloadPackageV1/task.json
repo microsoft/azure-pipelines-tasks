@@ -97,7 +97,7 @@
             "name": "extract",
             "type": "boolean",
             "label": "Extract package contents",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "required": false,
             "visibleRule": "packageType == 'nuget' || packageType == 'npm'",
             "properties": {

@@ -17,7 +17,7 @@ export class Extractor {
     }
 
     async process(extractPackage: boolean): Promise<void> {
-        return extractPackage ? this.extract() : this.copy();
+        return extractPackage ? this.extract() : this.move();
     }
 
     private async extract(): Promise<void> {
@@ -34,7 +34,7 @@ export class Extractor {
     }
 
 
-    private async copy(): Promise<void> {
+    private async move(): Promise<void> {
         return Promise.resolve(tl.mv(this.zipLocation, this.unzipLocation));
     }
 

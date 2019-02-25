@@ -4,7 +4,6 @@ import * as tl from "vsts-task-lib";
 import * as telemetry from "utility-common/telemetry";
 import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolUtilities";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import * as auth from "packaging-common/universal/Authentication";
 
 export async function downloadUniversalPackage(
     downloadPath: string,
@@ -43,14 +42,20 @@ export async function downloadUniversalPackage(
         } as artifactToolRunner.IArtifactToolOptions;
 
         let toolRunnerOptions = artifactToolRunner.getOptions();
-        let internalAuthInfo: auth.InternalAuthInfo = new auth.InternalAuthInfo([], accessToken);
-        toolRunnerOptions.env.UNIVERSAL_DOWNLOAD_PAT = internalAuthInfo.accessToken;
+        toolRunnerOptions.env.UNIVERSAL_DOWNLOAD_PAT = accessToken;
         downloadPackageUsingArtifactTool(downloadPath, downloadOptions, toolRunnerOptions);
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error.message);
         return;
     } finally {
-        _logUniversalStartupVariables(artifactToolPath);
+        _logUniversalStartupVariables({
+            ArtifactToolPath: artifactToolPath,
+            PackageType: "Universal",
+            FeedId : feedId,
+            PackageId: packageId,
+            Version: version,
+            IsTriggeringArtifact: tl.getInput("isTriggeringArtifact")
+        });
     }
 }
 
@@ -90,19 +95,9 @@ function downloadPackageUsingArtifactTool(
     );
 }
 
-function _logUniversalStartupVariables(artifactToolPath: string) {
+function _logUniversalStartupVariables(params: any) {
     try {
-        let universalPackagesTelemetry = {
-            command: tl.getInput("command"),
-            buildProperties: tl.getInput("buildProperties"),
-            basePath: tl.getInput("basePath"),
-            "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
-            verbosity: tl.getInput("verbosity"),
-            solution: tl.getInput("solution"),
-            artifactToolPath: artifactToolPath
-        };
-
-        telemetry.emitTelemetry("Packaging", "UniversalPackages", universalPackagesTelemetry);
+        telemetry.emitTelemetry("Packaging", "DownloadPackagev1", params);
     } catch (err) {
         tl.debug(`Unable to log Universal Packages task init telemetry. Err:( ${err} )`);
     }

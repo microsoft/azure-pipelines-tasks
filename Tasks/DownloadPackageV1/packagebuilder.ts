@@ -29,7 +29,7 @@ export class PackageUrlsBuilder {
                 this.packagingMetadataAreaId = "7A20D846-C929-4ACC-9EA2-0D5A7DF1B197";
                 this.packageProtocolDownloadAreadId = "6EA81B8C-7386-490B-A71F-6CF23C80B388";
                 this.packageProtocolAreaName = "NuGet";
-                this.extension = ".zip";
+                this.extension = ".nupkg";
                 break;
             case "npm":
                 this.packagingMetadataAreaId = "7A20D846-C929-4ACC-9EA2-0D5A7DF1B197";
