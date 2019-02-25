@@ -1,0 +1,44 @@
+{
+    "id": "D53CCAB4-555E-4494-9D06-11DB043FB4C9",
+    "name": "RestoreCacheTesting",
+    "friendlyName": "Restore Cache Testing",
+    "description": "Downloads an associated cache.",
+    "helpUrl": "",
+    "helpMarkDown": "Download named artifact from a pipeline to a local path.",
+    "category": "Utility",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "groups": [],
+    "demands": [],
+    "preview": true,
+    "minimumAgentVersion": "2.140.1",
+    "inputs": [
+        {
+            "name": "fingerprint",
+            "type": "string",
+            "label": "The name of fingerprint.",
+            "defaultValue": "fingerprint",
+            "required": true,
+            "helpMarkDown": "The name of artifact to download. The artifact must be a pipeline artifact."
+        },
+        {
+            "name": "targetPath",
+            "type": "filePath",
+            "label": "Path to download to",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The folder path to download the artifact to. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported. If the folder doesn't exist it will be created."
+        }
+    ],
+    "instanceNameFormat": "Download Pipeline Artifact",
+    "execution": {
+        "AgentPlugin": {
+            "target": "Agent.Plugins.PipelineCache.RestoreCache, Agent.Plugins"
+        }
+    },
+    "messages": {}
+}

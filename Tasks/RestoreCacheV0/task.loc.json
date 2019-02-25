@@ -1,0 +1,44 @@
+{
+  "id": "D53CCAB4-555E-4494-9D06-11DB043FB4C9",
+  "name": "RestoreCacheTesting",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "groups": [],
+  "demands": [],
+  "preview": true,
+  "minimumAgentVersion": "2.140.1",
+  "inputs": [
+    {
+      "name": "fingerprint",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.fingerprint",
+      "defaultValue": "fingerprint",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.fingerprint"
+    },
+    {
+      "name": "targetPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.targetPath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.targetPath"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "AgentPlugin": {
+      "target": "Agent.Plugins.PipelineCache.RestoreCache, Agent.Plugins"
+    }
+  },
+  "messages": {}
+}

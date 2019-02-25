@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Restore Cache Testing",
+  "loc.helpMarkDown": "Download named artifact from a pipeline to a local path.",
+  "loc.description": "Downloads an associated cache.",
+  "loc.instanceNameFormat": "Download Pipeline Artifact",
+  "loc.input.label.fingerprint": "The name of fingerprint.",
+  "loc.input.help.fingerprint": "The name of artifact to download. The artifact must be a pipeline artifact.",
+  "loc.input.label.targetPath": "Path to download to",
+  "loc.input.help.targetPath": "The folder path to download the artifact to. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported. If the folder doesn't exist it will be created."
+}
