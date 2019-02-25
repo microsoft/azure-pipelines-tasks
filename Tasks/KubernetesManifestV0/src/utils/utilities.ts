@@ -64,21 +64,32 @@ export function annotateChildPods(kubectl: Kubectl, resourceType, resourceName, 
     return commandExecutionResults;
 }
 
-export function replaceAllTokens(currentString: string, replaceToken, replaceValue) {
+export function replaceAllTokens(currentString: string, replaceToken: string, replaceValue: string) {
     let i = currentString.indexOf(replaceToken);
     if (i < 0) {
         tl.debug(`No occurence of replacement token: ${replaceToken} found`);
         return currentString;
     }
 
-    let newString = currentString.substring(0, i);
-    let leftOverString = currentString.substring(i);
-    newString += replaceValue + leftOverString.substring(Math.min(leftOverString.indexOf("\n"), leftOverString.indexOf("\"")));
-    if (newString == currentString) {
-        tl.debug(`All occurences replaced`);
-        return newString;
-    }
-    return replaceAllTokens(newString, replaceToken, replaceValue);
+    let newString = "";
+    currentString.split("\n")
+        .forEach((line) => {
+            if (line.indexOf(replaceToken) > 0 && line.toLocaleLowerCase().indexOf("image") > 0) {
+                let i = line.indexOf(replaceToken);
+                newString += line.substring(0, i);
+                let leftOverString = line.substring(i);
+                if (leftOverString.endsWith("\"")) {
+                    newString += replaceValue + "\"" + "\n";
+                } else {
+                    newString += replaceValue + "\n";
+                }
+            }
+            else {
+                newString += line + "\n";
+            }
+        });
+
+    return newString;
 }
 
 export function isEqual(str1: string, str2: string, stringComparer: StringComparer): boolean {
