@@ -48,20 +48,41 @@ export default class ContainerConnection {
         });
     }
 
-    public open(hostEndpoint?: string, authenticationToken?: AuthenticationToken): void {
+    public open(hostEndpoint?: string, authenticationToken?: AuthenticationToken, allowMultipleLogin?: boolean): void {
         this.openHostEndPoint(hostEndpoint);
-        this.openRegistryEndpoint(authenticationToken);
+        this.openRegistryEndpoint(authenticationToken, allowMultipleLogin);
     }
 
     public qualifyImageName(imageName: string) {
         if (!imageUtils.hasRegistryComponent(imageName) && this.registryAuth) {
-            var regUrl = url.parse(this.registryAuth["registry"]),
-                hostname = !regUrl.slashes ? regUrl.href : regUrl.host;
-            if (hostname.toLowerCase() !== "index.docker.io") {
-                imageName = hostname + "/" + imageName;
+            imageName = this.prefixImageName(this.registryAuth["registry"], imageName);
+        }
+
+        return imageName;
+    }
+
+    public getQualifiedImageName(repository: string) {
+        let imageName = "";
+        if (repository) {
+            imageName = this.prefixImageName(this.registryAuth["registry"], repository);
+        }
+
+        return imageName;
+    }
+
+    public getQualifiedImageNamesFromConfig(repository: string) {
+        let imageNames: string[] = [];
+        if (repository) {
+            let regUrls = this.getRegistryUrlsFromDockerConfig();
+            if (regUrls && regUrls.length > 0) {
+                regUrls.forEach(regUrl => {
+                    let imageName = this.prefixImageName(regUrl, repository);
+                    imageNames.push(imageName);
+                });
             }
         }
-        return imageName;
+
+        return imageNames;
     }
 
     public close(): void {
@@ -116,7 +137,7 @@ export default class ContainerConnection {
         }
     }
     
-    protected openRegistryEndpoint(authenticationToken?: AuthenticationToken): void {
+    protected openRegistryEndpoint(authenticationToken?: AuthenticationToken, allowMultipleLogin?: boolean): void {
         
         if (authenticationToken) {     
             this.registryAuth = {};
@@ -126,15 +147,36 @@ export default class ContainerConnection {
             this.registryAuth["registry"] = authenticationToken.getLoginServerUrl();
 
             if (this.registryAuth) {
-                this.configurationDirPath  = this.getDockerConfigDirPath();
-                process.env["DOCKER_CONFIG"] = this.configurationDirPath;
-                var json = authenticationToken.getDockerConfig();
-                var configurationFilePath = path.join(this.configurationDirPath, "config.json");
-                if(fileutils.writeFileSync(configurationFilePath, json) == 0)
-                {
-                    tl.error(tl.loc('NoDataWrittenOnFile', configurationFilePath));
-                    throw new Error(tl.loc('NoDataWrittenOnFile', configurationFilePath));
+                this.configurationDirPath = tl.getVariable("DOCKER_CONFIG");                
+                let configurationFilePath = this.configurationDirPath ? path.join(this.configurationDirPath, "config.json") : "";                
+                if (allowMultipleLogin && this.configurationDirPath && this.isPathInTempDirectory(configurationFilePath) && fs.existsSync(configurationFilePath)) {
+                    let dockerConfig = fs.readFileSync(configurationFilePath, "utf-8");
+                    let configJson = JSON.parse(dockerConfig);
+                    if (configJson && configJson.auths) {
+                        let auth = JSON.parse(authenticationToken.getDockerAuth());
+                        for (let key in auth) {                            
+                            configJson.auths[key] = auth[key];
+                        }
+
+                        let configString = JSON.stringify(configJson);
+                        if(fileutils.writeFileSync(configurationFilePath, configString) == 0)
+                        {
+                            tl.error(tl.loc('NoDataWrittenOnFile', configurationFilePath));
+                            throw new Error(tl.loc('NoDataWrittenOnFile', configurationFilePath));
+                        }
+                    }
                 }
+                else {
+                    this.configurationDirPath  = this.getDockerConfigDirPath();
+                    process.env["DOCKER_CONFIG"] = this.configurationDirPath;
+                    var json = authenticationToken.getDockerConfig();
+                    configurationFilePath = path.join(this.configurationDirPath, "config.json");
+                    if(fileutils.writeFileSync(configurationFilePath, json) == 0)
+                    {
+                        tl.error(tl.loc('NoDataWrittenOnFile', configurationFilePath));
+                        throw new Error(tl.loc('NoDataWrittenOnFile', configurationFilePath));
+                    }
+                }                
             }
         }
     }
@@ -156,5 +198,37 @@ export default class ContainerConnection {
 
     private getTempDirectory(): string {
         return tl.getVariable('agent.tempDirectory') || os.tmpdir();
+    }
+
+    private getRegistryUrlsFromDockerConfig(): string[] {
+        let regUrls: string[] = [];
+        let dockerConfigDir = tl.getVariable("DOCKER_CONFIG");
+        let dockerConfigPath = dockerConfigDir ? path.join(dockerConfigDir, "config.json") : "";
+        if (dockerConfigDir && this.isPathInTempDirectory(dockerConfigPath) && fs.existsSync(dockerConfigPath)) {
+            let dockerConfig = fs.readFileSync(dockerConfigPath, "utf-8");
+            let configJson = JSON.parse(dockerConfig);
+            if (configJson && configJson.auths) {
+                regUrls = Object.keys(configJson.auths);
+            }
+        }
+
+        return regUrls;
+    }
+
+    private isPathInTempDirectory(path): boolean {
+        let tempDir = this.getTempDirectory();
+        return path && path.startsWith(tempDir);
+    }
+
+    private prefixImageName(registry: string, repository: string): string {
+        let regUrl = url.parse(registry);
+        let hostname = !regUrl.slashes ? regUrl.href : regUrl.host;        
+        let imageName = repository;
+        // For docker hub, repository name is the qualified image name.
+        if (hostname.toLowerCase() !== "index.docker.io") {
+            imageName = hostname + "/" + repository;
+        }
+
+        return imageName;
     }
 }

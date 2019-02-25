@@ -1,0 +1,140 @@
+{
+  "id": "E28912F1-0114-4464-802A-A3A35437FD16",
+  "name": "Docker",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=848006",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [],
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "groups": [
+    {
+      "name": "containerRepository",
+      "displayName": "ms-resource:loc.group.displayName.containerRepository",
+      "isExpanded": true,
+      "visibleRule": "command != logout"
+    },
+    {
+      "name": "commands",
+      "displayName": "ms-resource:loc.group.displayName.commands",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "containerRegistry",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.containerRegistry",
+      "groupName": "containerRepository",
+      "helpMarkDown": "ms-resource:loc.input.help.containerRegistry"
+    },
+    {
+      "name": "repository",
+      "label": "ms-resource:loc.input.label.repository",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.repository",
+      "defaultValue": "",
+      "visibleRule": "command != login",
+      "groupName": "containerRepository",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "buildAndPush",
+      "required": true,
+      "options": {
+        "buildAndPush": "buildAndPush",
+        "build": "build",
+        "push": "push",
+        "login": "login",
+        "logout": "logout"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.command"
+    },
+    {
+      "name": "dockerFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.dockerFile",
+      "defaultValue": "**/Dockerfile",
+      "required": true,
+      "visibleRule": "command = build || command = buildAndPush",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerFile"
+    },
+    {
+      "name": "buildContext",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.buildContext",
+      "defaultValue": "",
+      "visibleRule": "command = build || command = buildAndPush",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.buildContext"
+    },
+    {
+      "name": "tags",
+      "type": "multiLine",
+      "defaultValue": "$(Build.BuildId)",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "visibleRule": "command = build || command = push || command = buildAndPush",
+      "label": "ms-resource:loc.input.label.tags",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.tags"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "visibleRule": "command != login && command != logout && command != buildAndPush",
+      "label": "ms-resource:loc.input.label.arguments",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    }
+  ],
+  "dataSourceBindings": [],
+  "outputVariables": [
+    {
+      "name": "DockerOutput",
+      "description": "The path of the file(s) which contains the output of the command"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "showEnvironmentVariables": true,
+  "execution": {
+    "Node": {
+      "target": "docker.js"
+    }
+  },
+  "messages": {
+    "ArgumentsNotSupportedWithBuildAndPush": "ms-resource:loc.messages.ArgumentsNotSupportedWithBuildAndPush",
+    "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
+    "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
+    "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
+    "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
+    "DockerRegistryNotFound": "ms-resource:loc.messages.DockerRegistryNotFound",
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
+    "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
+    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded"
+  }
+}
