@@ -477,7 +477,7 @@ export async function deleteProvisioningProfile(uuid: string): Promise<void> {
         const provProfiles: string[] = tl.findMatch(getUserProvisioningProfilesPath(), uuid.trim() + '*');
         if (provProfiles) {
             for (const provProfilePath of provProfiles) {
-                tl.warning('Deleting provisioning profile: ' + provProfilePath);
+                console.log('Deleting provisioning profile: ' + provProfilePath);
                 if (tl.exist(provProfilePath)) {
                     const deleteProfileCommand: ToolRunner = tl.tool(tl.which('rm', true));
                     deleteProfileCommand.arg(['-f', provProfilePath]);
