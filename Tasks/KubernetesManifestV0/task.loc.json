@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 13
   },
   "demands": [],
   "groups": [
@@ -91,7 +91,7 @@
         "None": "None"
       },
       "helpMarkDown": "ms-resource:loc.input.help.deploymentStrategy",
-      "visibleRule": "action = deploy"
+      "visibleRule": "action = deploy || action = delete"
     },
     {
       "name": "percentage",
@@ -101,11 +101,21 @@
       "groupName": "config",
       "helpMarkDown": "",
       "defaultValue": 0,
-      "visibleRule": "deploymentStrategy = Canary",
+      "visibleRule": "action = deploy && deploymentStrategy = Canary",
       "validation": {
         "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
         "message": "Enter valid percentage value i.e between 0 to 100."
       }
+    },
+    {
+      "name": "useManifests",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useManifests",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.useManifests",
+      "visibleRule": "action = delete"
     },
     {
       "name": "manifests",
@@ -116,6 +126,16 @@
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.manifests",
       "visibleRule": "action = deploy"
+    },
+    {
+      "name": "manifestsToDelete",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.manifestsToDelete",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.manifestsToDelete",
+      "visibleRule": "action = delete && useManifests = true"
     },
     {
       "name": "containers",
@@ -243,7 +263,7 @@
       "name": "args",
       "type": "string",
       "label": "ms-resource:loc.input.label.args",
-      "required": true,
+      "required": false,
       "defaultValue": "",
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.args",

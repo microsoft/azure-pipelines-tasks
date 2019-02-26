@@ -43,6 +43,14 @@ export function fetchCanaryResource(kubectl: Kubectl, kind: string, name: string
     return fetchResource(kubectl, kind, getCanaryResourceName(name));
 }
 
+export function getCanaryResourceName(name: string) {
+    return name + CANARY_SUFFIX;
+}
+
+export function getBaselineResourceName(name: string) {
+    return name + BASELINE_SUFFIX;
+}
+
 function getNewCanaryObject(inputObject: any, replicas: number, type: string): object {
     var newObject = JSON.parse(JSON.stringify(inputObject));
 
@@ -71,12 +79,4 @@ function addCanaryLabelsAndAnnotations(inputObject: any, type: string) {
     helper.updateObjectAnnotations(inputObject, newLabels, false);
     helper.updateSelectorLabels(inputObject, newLabels, false);
     helper.updateSpecLabels(inputObject, newLabels, false);
-}
-
-function getCanaryResourceName(name: string) {
-    return name + CANARY_SUFFIX;
-}
-
-function getBaselineResourceName(name: string) {
-    return name + BASELINE_SUFFIX;
 }

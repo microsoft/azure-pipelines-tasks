@@ -8,3 +8,5 @@ export const manifests = tl.getInput("manifests", false);
 export const canaryPercentage: string = tl.getInput("percentage");
 export const deploymentStrategy: string = tl.getInput("deploymentStrategy", false);
 export const args: string = tl.getInput("args", false);
+export const manifestsToDelete: string = tl.getInput("manifestsToDelete", false);
+export const useManifests: boolean = tl.getBoolInput("useManifests", false);
