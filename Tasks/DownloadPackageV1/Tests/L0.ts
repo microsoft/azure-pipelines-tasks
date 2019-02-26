@@ -67,12 +67,11 @@ describe("Download single file package suite", function() {
     });
 });
 
-
 describe("Download multi file package suite", function() {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before(() => {
-        tl.mkdirP(outputDir);
+        tl.mkdirP(outputExtractDir);
     });
 
     after(() => {
@@ -88,9 +87,9 @@ describe("Download multi file package suite", function() {
 
         tr.run();
 
-        let outputJarPath: string = path.join(outputDir, "packageName.jar");
-        let outputPomPath: string = path.join(outputDir, "packageName.pom");
-        assert(tl.ls(null, [outputDir]).length == 2, "should have only 2 files.");
+        let outputJarPath: string = path.join(outputExtractDir, "packageName.jar");
+        let outputPomPath: string = path.join(outputExtractDir, "packageName.pom");
+        assert(tl.ls(null, [outputExtractDir]).length == 2, "should have only 2 files.");
         const statsJar = tl.stats(outputJarPath);
         const statsPom = tl.stats(outputPomPath);
 

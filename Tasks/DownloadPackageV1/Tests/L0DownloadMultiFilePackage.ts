@@ -4,8 +4,8 @@ import { WebApiMock } from "./helpers/webapimock";
 
 let taskPath = path.join(__dirname, "..", "main.js");
 let outputPath: string = path.join(__dirname, "out", "packageOutput");
-let jarLocation: string = path.join(__dirname, "out", "packageName.jar");
-let pomLocation: string = path.join(__dirname, "out", "packageName.pom");
+let jarLocation: string = path.join(outputPath, "packageName.jar");
+let pomLocation: string = path.join(outputPath, "packageName.pom");
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs
