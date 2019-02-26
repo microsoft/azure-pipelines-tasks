@@ -64,24 +64,34 @@ export function annotateChildPods(kubectl: Kubectl, resourceType, resourceName, 
     return commandExecutionResults;
 }
 
-export function replaceAllTokens(currentString: string, replaceToken: string, replaceValue: string) {
-    let i = currentString.indexOf(replaceToken);
+/*
+    For example, 
+        currentString: `image: "example/example-image"`
+        imageName: `example/example-image`
+        imageNameWithNewTag: `example/example-image:identifiertag`
+    
+    This substituteImageNameInSpecFile function would return
+        return Value: `image: "example/example-image:identifiertag"`
+*/
+
+export function substituteImageNameInSpecFile(currentString: string, imageName: string, imageNameWithNewTag: string) {
+    let i = currentString.indexOf(imageName);
     if (i < 0) {
-        tl.debug(`No occurence of replacement token: ${replaceToken} found`);
+        tl.debug(`No occurence of replacement token: ${imageName} found`);
         return currentString;
     }
 
     let newString = "";
     currentString.split("\n")
         .forEach((line) => {
-            if (line.indexOf(replaceToken) > 0 && line.toLocaleLowerCase().indexOf("image") > 0) {
-                let i = line.indexOf(replaceToken);
+            if (line.indexOf(imageName) > 0 && line.toLocaleLowerCase().indexOf("image") > 0) {
+                let i = line.indexOf(imageName);
                 newString += line.substring(0, i);
                 let leftOverString = line.substring(i);
                 if (leftOverString.endsWith("\"")) {
-                    newString += replaceValue + "\"" + "\n";
+                    newString += imageNameWithNewTag + "\"" + "\n";
                 } else {
-                    newString += replaceValue + "\n";
+                    newString += imageNameWithNewTag + "\n";
                 }
             }
             else {

@@ -127,7 +127,7 @@ function updateContainerImagesInConfigFiles(filePaths: string[], containers): st
                 if (imageName.indexOf("@") > 0)
                     imageName = imageName.split("@")[0];
                 if (contents.indexOf(imageName) > 0) {
-                    contents = utils.replaceAllTokens(contents, imageName, container);
+                    contents = utils.substituteImageNameInSpecFile(contents, imageName, container);
                 }
             });
 
