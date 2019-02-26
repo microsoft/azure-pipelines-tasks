@@ -5,7 +5,7 @@ import * as nutil from "packaging-common/nuget/Utility";
 import * as telemetry from "utility-common/telemetry";
 
 import { PackageUrlsBuilder } from "./packagebuilder";
-import { Extractor } from "./extractor";
+import { PackageFile } from "./packagefile";
 import { getConnection } from "./connections";
 import { Retry } from "./retry";
 import { downloadUniversalPackage } from "./universal";
@@ -48,8 +48,8 @@ async function main(): Promise<void> {
             files = nutil.getPatternsArrayFromInput(filesPattern);
         }
 
-        var feedConnection = await getConnection("7AB4E64E-C4D8-4F50-AE73-5EF2E21642A5", collectionUrl);
-        var pkgsConnection = await getConnection("B3BE7473-68EA-4A81-BFC7-9530BAAA19AD", collectionUrl);
+        const feedConnection = await getConnection("7AB4E64E-C4D8-4F50-AE73-5EF2E21642A5", collectionUrl);
+        const pkgsConnection = await getConnection("B3BE7473-68EA-4A81-BFC7-9530BAAA19AD", collectionUrl);
 
         var p = await new PackageUrlsBuilder()
             .ofType(packageType)
@@ -59,10 +59,10 @@ async function main(): Promise<void> {
             .withRetries(Retry(retryLimit))
             .build();
 
-        var extractors: Extractor[] = await p.download(feedId, packageId, version, downloadPath, extractPackage);
+        const packageFiles: PackageFile[] = await p.download(feedId, packageId, version, downloadPath, extractPackage);
 
-        extractors.forEach(extractor => {
-            extractor.process();
+        packageFiles.forEach(packageFile => {
+            packageFile.process();
         });
 
         return Promise.resolve();
@@ -77,7 +77,7 @@ async function main(): Promise<void> {
             SkipDownload: skipDownload,
             ExtractPackage: extractPackage,
             IsTriggeringArtifact: tl.getInput("isTriggeringArtifact")
-        })
+        });
     }
 }
 

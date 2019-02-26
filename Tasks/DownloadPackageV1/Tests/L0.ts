@@ -4,21 +4,21 @@ import path = require("path");
 import * as tl from "vsts-task-lib/task";
 import * as ttm from "vsts-task-lib/mock-test";
 
-const outputDir = path.join(__dirname, "out");
-const outputExtractDir = path.join(outputDir, "packageOutput");
+const rootDir = path.join(__dirname, "out");
+const destinationDir = path.join(rootDir, "packageOutput");
 
 describe("Download single file package suite", function() {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     beforeEach(() => {
-        tl.mkdirP(outputExtractDir);
+        tl.mkdirP(destinationDir);
     });
 
     afterEach(() => {
-        tl.rmRF(outputDir);
+        tl.rmRF(rootDir);
     });
 
-    it("downloads nuget file as zip and extracts it", (done: MochaDone) => {
+    it("downloads nuget file as nupkg and extracts it", (done: MochaDone) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0DownloadNugetPackage.js");
@@ -27,14 +27,34 @@ describe("Download single file package suite", function() {
 
         tr.run();
 
-        assert(tl.ls(null, [outputDir]).length == 2, "should have only 1 file and 1 folder.");
-        const zipPath = path.join(outputDir, "singlePackageName.nupkg");
+        assert(tl.ls(null, [rootDir]).length == 2, "should have only 1 file and 1 folder.");
+        const zipPath = path.join(rootDir, "singlePackageName.nupkg");
         const zipStats = tl.stats(zipPath);
-        assert(zipStats && zipStats.isFile(), "zip file should be downloaded");
+        assert(zipStats && zipStats.isFile(), "nupkg file should be downloaded");
 
-        var extractedFilePath = path.join(outputDir, "packageOutput", "nugetFile");
+        var extractedFilePath = path.join(destinationDir, "nugetFile");
         const fileStats = tl.stats(extractedFilePath);
-        assert(fileStats && fileStats.isFile(), "zip file should be extracted");
+        assert(fileStats && fileStats.isFile(), "nupkg file should be extracted");
+
+        assert(tr.stderr.length === 0, "should not have written to stderr");
+        assert(tr.succeeded, "task should have succeeded");
+
+        done();
+    });
+
+    it("downloads nuget file as nupkg and does not extract it", (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, "L0DownloadNugetPackage_noextract.js");
+
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tl.ls(null, [destinationDir]).length == 1, "should have only 1 file.");
+        const zipPath = path.join(destinationDir, "singlePackageName.nupkg");
+        const zipStats = tl.stats(zipPath);
+        assert(zipStats && zipStats.isFile(), "nupkg file should be downloaded");
 
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.succeeded, "task should have succeeded");
@@ -51,12 +71,12 @@ describe("Download single file package suite", function() {
 
         tr.run();
 
-        assert(tl.ls(null, [outputDir]).length == 2, "should have only 1 file and 1 folder.");
-        const zipPath = path.join(outputDir, "singlePackageName.tgz");
+        assert(tl.ls(null, [rootDir]).length == 2, "should have only 1 file and 1 folder.");
+        const zipPath = path.join(rootDir, "singlePackageName.tgz");
         const zipStats = tl.stats(zipPath);
         assert(zipStats && zipStats.isFile(), "tgz file should be downloaded");
 
-        var extractedFilePath = path.join(outputExtractDir, "npmFile");
+        var extractedFilePath = path.join(destinationDir, "npmFile");
         const fileStats = tl.stats(extractedFilePath);
         assert(fileStats && fileStats.isFile(), "tgz file should be extracted");
 
@@ -71,11 +91,11 @@ describe("Download multi file package suite", function() {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before(() => {
-        tl.mkdirP(outputExtractDir);
+        tl.mkdirP(destinationDir);
     });
 
     after(() => {
-        tl.rmRF(outputDir);
+        tl.rmRF(rootDir);
     });
 
     it("only downloads jar and pom files from the maven archive and doesn't extract them", (done: MochaDone) => {
@@ -87,9 +107,9 @@ describe("Download multi file package suite", function() {
 
         tr.run();
 
-        let outputJarPath: string = path.join(outputExtractDir, "packageName.jar");
-        let outputPomPath: string = path.join(outputExtractDir, "packageName.pom");
-        assert(tl.ls(null, [outputExtractDir]).length == 2, "should have only 2 files.");
+        let outputJarPath: string = path.join(destinationDir, "packageName.jar");
+        let outputPomPath: string = path.join(destinationDir, "packageName.pom");
+        assert(tl.ls(null, [destinationDir]).length == 2, "should have only 2 files.");
         const statsJar = tl.stats(outputJarPath);
         const statsPom = tl.stats(outputPomPath);
 

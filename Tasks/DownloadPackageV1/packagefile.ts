@@ -5,7 +5,7 @@ var tar = require("tar-fs");
 var zlib = require("zlib");
 var DecompressZip = require('decompress-zip');
 
-export class Extractor {
+export class PackageFile {
     public readonly win: boolean;
 
     // file will be downloaded here

@@ -3,7 +3,7 @@ var path = require("path");
 
 import * as tl from "vsts-task-lib/task";
 
-import { Extractor } from "./extractor";
+import { PackageFile } from "./packagefile";
 import { PackageUrlsBuilder } from "./packagebuilder";
 import { WebApi } from "azure-devops-node-api";
 import { VsoClient } from "azure-devops-node-api/VsoClient";
@@ -110,22 +110,22 @@ export abstract class Package {
         packageVersion: string,
         downloadPath: string,
         extract: boolean
-    ): Promise<Extractor[]> {
-        return new Promise<Extractor[]>(async (resolve, reject) => {
+    ): Promise<PackageFile[]> {
+        return new Promise<PackageFile[]>(async (resolve, reject) => {
             return this.getDownloadUrls(feedId, packageId, packageVersion)
                 .then(async downloadUrls => {
                     if (!tl.exist(downloadPath)) {
                         tl.mkdirP(downloadPath);
                     }
-                    var promises: Promise<Extractor>[] = [];
+                    var promises: Promise<PackageFile>[] = [];
                     var coreApi = await this.pkgsConnection.getCoreApi();
                     Object.keys(downloadUrls).map(fileName => {
-                        const extractor = new Extractor(extract, downloadPath, fileName);
-                        tl.rmRF(extractor.downloadPath);
+                        const packageFile = new PackageFile(extract, downloadPath, fileName);
+                        tl.rmRF(packageFile.downloadPath);
                         promises.push(
                             downloadUrls[fileName].IsUrl
-                                ? this.downloadFile(coreApi, downloadUrls[fileName].Value, extractor)
-                                : this.writeFile(downloadUrls[fileName].Value, extractor)
+                                ? this.downloadFile(coreApi, downloadUrls[fileName].Value, packageFile)
+                                : this.writeFile(downloadUrls[fileName].Value, packageFile)
                         );
                     });
 
@@ -138,14 +138,14 @@ export abstract class Package {
         });
     }
 
-    private async writeFile(content: string, extractor: Extractor): Promise<Extractor> {
-        return new Promise<Extractor>((resolve, reject) => {
-            fs.writeFile(extractor.downloadPath, content, err => {
+    private async writeFile(content: string, packageFile: PackageFile): Promise<PackageFile> {
+        return new Promise<PackageFile>((resolve, reject) => {
+            fs.writeFile(packageFile.downloadPath, content, err => {
                 if (err) {
                     tl.debug("Writing file content failed with error: " + err);
                     return reject(err);
                 } else {
-                    return resolve(extractor);
+                    return resolve(packageFile);
                 }
             });
         });
@@ -154,21 +154,21 @@ export abstract class Package {
     private async downloadFile(
         coreApi: ICoreApi,
         downloadUrl: string,
-        extractor: Extractor
-    ): Promise<Extractor> {
-        return new Promise<Extractor>((resolve, reject) => {
+        packageFile: PackageFile
+    ): Promise<PackageFile> {
+        return new Promise<PackageFile>((resolve, reject) => {
             return this.executeWithRetries(() =>
                 coreApi.http.get(downloadUrl).then(response => {
                     if (response.message.statusCode >= 200 && response.message.statusCode < 300) {
                         var responseStream = response.message as stream.Readable;
-                        var file = fs.createWriteStream(extractor.downloadPath);
+                        var file = fs.createWriteStream(packageFile.downloadPath);
 
                         responseStream.pipe(file);
 
                         responseStream.on("end", () => {
                             tl.debug(tl.loc("PackageDownloadSuccessful"));
                             file.on("close", () => {
-                                return resolve(extractor);
+                                return resolve(packageFile);
                             });
                         });
                         responseStream.on("error", err => {
