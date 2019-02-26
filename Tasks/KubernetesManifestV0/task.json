@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "demands": [],
     "groups": [
@@ -148,7 +148,7 @@
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Helm chart path to bake",
-            "visibleRule": "action = bake && renderType = helm"
+            "visibleRule": "action = bake && renderType = helm2"
         },
         {
             "name": "overrideFiles",
@@ -158,7 +158,7 @@
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Override files to set",
-            "visibleRule": "action = bake && renderType = helm"
+            "visibleRule": "action = bake && renderType = helm2"
         },
         {
             "name": "overrides",
@@ -168,7 +168,7 @@
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Override values to set",
-            "visibleRule": "action = bake && renderType = helm"
+            "visibleRule": "action = bake && renderType = helm2"
         },
         {
             "name": "resourceToPatch",
