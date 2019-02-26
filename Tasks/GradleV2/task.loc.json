@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 148,
+    "Minor": 149,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -363,6 +363,10 @@
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
     "UnsupportedJdkWarning": "ms-resource:loc.messages.UnsupportedJdkWarning",
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
-    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
+    "InvalidBuildFile": "ms-resource:loc.messages.InvalidBuildFile",
+    "FileNotFound": "ms-resource:loc.messages.FileNotFound",
+    "FailedToAppendCC": "ms-resource:loc.messages.FailedToAppendCC",
+    "NoTestResults": "ms-resource:loc.messages.NoTestResults"
   }
 }

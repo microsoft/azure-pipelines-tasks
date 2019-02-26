@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 148,
-        "Patch": 0
+        "Minor": 149,
+        "Patch": 1
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
@@ -407,6 +407,7 @@
         "EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",
         "EffectivePomInvalid": "Could not parse the effective POM.",
         "AuthenticationNotNecessary": "No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.",
-        "UsingAuthFeed": "Using built-in feed: "
+        "UsingAuthFeed": "Using built-in feed: ",
+        "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
     }
 }

@@ -19,11 +19,12 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 147,
+        "Minor": 149,
         "Patch": 0
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
+    "showEnvironmentVariables": true,
     "groups": [
         {
             "name": "advanced",
