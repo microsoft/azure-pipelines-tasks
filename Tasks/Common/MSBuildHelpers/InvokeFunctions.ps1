@@ -136,7 +136,11 @@ function Invoke-MSBuild {
             }
 
             if ($LogFile) {
-                Write-Host "##vso[task.uploadfile]$LogFile"
+                if (Test-Path -Path $LogFile) {
+                    Write-Host "##vso[task.uploadfile]$LogFile"
+                } else {
+                    Write-Verbose "Skipping upload of '$LogFile' since it does not exist."
+                }
             }
         }
     } finally {
