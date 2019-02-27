@@ -5,7 +5,7 @@ import * as nutil from "packaging-common/nuget/Utility";
 import * as telemetry from "utility-common/telemetry";
 
 import { PackageUrlsBuilder } from "./packagebuilder";
-import { Extractor } from "./extractor";
+import { PackageFile } from "./packagefile";
 import { getConnection } from "./connections";
 import { Retry } from "./retry";
 import { downloadUniversalPackage } from "./universal";
@@ -21,7 +21,7 @@ async function main(): Promise<void> {
     let version = tl.getInput("version");
     let downloadPath = tl.getInput("downloadPath");
     let filesPattern = tl.getInput("files");
-    let extractPackage = tl.getInput("extract") === "true";
+    let extractPackage = tl.getInput("extract") === "true" && (packageType === "npm" || packageType === "nuget");
 
     // Getting variables.
     const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
@@ -34,23 +34,23 @@ async function main(): Promise<void> {
             tl.debug("Download Package skipped.");
             return Promise.resolve();
         }
-    
-        if(packageType === "Universal") {
+
+        if (packageType === "Universal") {
             return await downloadUniversalPackage(downloadPath, feedId, packageId, version);
         }
-    
+
         if (viewId && viewId.replace(/\s/g, "") !== "") {
             feedId = feedId + "@" + viewId;
         }
-    
+
         let files: string[] = [];
         if (filesPattern) {
             files = nutil.getPatternsArrayFromInput(filesPattern);
         }
-    
-        var feedConnection = await getConnection("7AB4E64E-C4D8-4F50-AE73-5EF2E21642A5", collectionUrl);
-        var pkgsConnection = await getConnection("B3BE7473-68EA-4A81-BFC7-9530BAAA19AD", collectionUrl);
-    
+
+        const feedConnection = await getConnection("7AB4E64E-C4D8-4F50-AE73-5EF2E21642A5", collectionUrl);
+        const pkgsConnection = await getConnection("B3BE7473-68EA-4A81-BFC7-9530BAAA19AD", collectionUrl);
+
         var p = await new PackageUrlsBuilder()
             .ofType(packageType)
             .withPkgsConnection(pkgsConnection)
@@ -58,15 +58,13 @@ async function main(): Promise<void> {
             .matchingPattern(files)
             .withRetries(Retry(retryLimit))
             .build();
-    
-        var extractors: Extractor[] = await p.download(feedId, packageId, version, downloadPath);
-    
-        if (packageType === "npm" || packageType === "nuget") {
-            extractors.forEach(extractor => {
-                extractor.process(extractPackage);
-            });
-        }
-    
+
+        const packageFiles: PackageFile[] = await p.download(feedId, packageId, version, downloadPath, extractPackage);
+
+        packageFiles.forEach(packageFile => {
+            packageFile.process();
+        });
+
         return Promise.resolve();
 
     } finally {
@@ -79,9 +77,8 @@ async function main(): Promise<void> {
             SkipDownload: skipDownload,
             ExtractPackage: extractPackage,
             IsTriggeringArtifact: tl.getInput("isTriggeringArtifact")
-        })
+        });
     }
-   
 }
 
 function logTelemetry(params: any) {
@@ -92,8 +89,6 @@ function logTelemetry(params: any) {
     }
 }
 
-
 main()
     .then(result => tl.setResult(tl.TaskResult.Succeeded, ""))
     .catch(error => tl.setResult(tl.TaskResult.Failed, error));
-    

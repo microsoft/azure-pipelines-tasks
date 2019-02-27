@@ -3,7 +3,7 @@ var path = require("path");
 
 import * as tl from "vsts-task-lib/task";
 
-import { Extractor } from "./extractor";
+import { PackageFile } from "./packagefile";
 import { PackageUrlsBuilder } from "./packagebuilder";
 import { WebApi } from "azure-devops-node-api";
 import { VsoClient } from "azure-devops-node-api/VsoClient";
@@ -71,7 +71,7 @@ export abstract class Package {
                 return resolve(result.requestUrl);
             });
             getVersioningDataPromise.catch(error => {
-                tl.debug("Geting URL from versioning data failed with error: " + error);
+                tl.debug("Getting URL from versioning data failed with error: " + error);
                 return reject(error);
             });
         });
@@ -108,24 +108,24 @@ export abstract class Package {
         feedId: string,
         packageId: string,
         packageVersion: string,
-        downloadPath: string
-    ): Promise<Extractor[]> {
-        return new Promise<Extractor[]>(async (resolve, reject) => {
+        downloadPath: string,
+        extract: boolean
+    ): Promise<PackageFile[]> {
+        return new Promise<PackageFile[]>(async (resolve, reject) => {
             return this.getDownloadUrls(feedId, packageId, packageVersion)
                 .then(async downloadUrls => {
                     if (!tl.exist(downloadPath)) {
                         tl.mkdirP(downloadPath);
                     }
-                    var promises: Promise<Extractor>[] = [];
+                    var promises: Promise<PackageFile>[] = [];
                     var coreApi = await this.pkgsConnection.getCoreApi();
                     Object.keys(downloadUrls).map(fileName => {
-                        var zipLocation = path.resolve(downloadPath, "../", fileName);
-                        var unzipLocation = path.join(downloadPath, "");
-                        tl.rmRF(zipLocation);
+                        const packageFile = new PackageFile(extract, downloadPath, fileName);
+                        tl.rmRF(packageFile.downloadPath);
                         promises.push(
                             downloadUrls[fileName].IsUrl
-                                ? this.downloadFile(coreApi, downloadUrls[fileName].Value, zipLocation, unzipLocation)
-                                : this.writeFile(downloadUrls[fileName].Value, zipLocation, unzipLocation)
+                                ? this.downloadFile(coreApi, downloadUrls[fileName].Value, packageFile)
+                                : this.writeFile(downloadUrls[fileName].Value, packageFile)
                         );
                     });
 
@@ -138,14 +138,14 @@ export abstract class Package {
         });
     }
 
-    private async writeFile(content: string, filePath: string, unzipLocation: string): Promise<Extractor> {
-        return new Promise<Extractor>((resolve, reject) => {
-            fs.writeFile(filePath, content, err => {
+    private async writeFile(content: string, packageFile: PackageFile): Promise<PackageFile> {
+        return new Promise<PackageFile>((resolve, reject) => {
+            fs.writeFile(packageFile.downloadPath, content, err => {
                 if (err) {
                     tl.debug("Writing file content failed with error: " + err);
                     return reject(err);
                 } else {
-                    return resolve(new Extractor(filePath, unzipLocation));
+                    return resolve(packageFile);
                 }
             });
         });
@@ -154,23 +154,21 @@ export abstract class Package {
     private async downloadFile(
         coreApi: ICoreApi,
         downloadUrl: string,
-        downloadPath: string,
-        unzipLocation: string
-    ): Promise<Extractor> {
-        return new Promise<Extractor>((resolve, reject) => {
+        packageFile: PackageFile
+    ): Promise<PackageFile> {
+        return new Promise<PackageFile>((resolve, reject) => {
             return this.executeWithRetries(() =>
                 coreApi.http.get(downloadUrl).then(response => {
                     if (response.message.statusCode >= 200 && response.message.statusCode < 300) {
                         var responseStream = response.message as stream.Readable;
-                        var file = fs.createWriteStream(downloadPath);
+                        var file = fs.createWriteStream(packageFile.downloadPath);
 
                         responseStream.pipe(file);
 
                         responseStream.on("end", () => {
                             tl.debug(tl.loc("PackageDownloadSuccessful"));
                             file.on("close", () => {
-                                var extractor = new Extractor(downloadPath, unzipLocation);
-                                return resolve(extractor);
+                                return resolve(packageFile);
                             });
                         });
                         responseStream.on("error", err => {

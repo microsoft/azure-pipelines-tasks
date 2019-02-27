@@ -5,37 +5,47 @@ var tar = require("tar-fs");
 var zlib = require("zlib");
 var DecompressZip = require('decompress-zip');
 
-export class Extractor {
+export class PackageFile {
     public readonly win: boolean;
 
-    private zipLocation: string;
-    private unzipLocation: string;
+    // file will be downloaded here
+    private initialLocation: string;
 
-    constructor(zipLocation: string, unzipLocation: string) {
-        this.zipLocation = zipLocation;
-        this.unzipLocation = unzipLocation;
-    }
+    // file will be extracted to this location
+    private finalLocation: string;
+    private extractFile: boolean;
 
-    async process(extractPackage: boolean): Promise<void> {
-        return extractPackage ? this.extract() : this.move();
-    }
-
-    private async extract(): Promise<void> {
-        const fileEnding = path.parse(this.zipLocation).ext;
-        switch (fileEnding) {
-            case ".zip":
-            case ".nupkg":
-                return this.unzip(this.zipLocation, this.unzipLocation);
-            case ".tgz":
-                return this.unTarGz(this.zipLocation, this.unzipLocation);
-            default:
-                return Promise.reject(tl.loc("UnsupportedArchiveType", fileEnding));
+    constructor(extract: boolean, destination: string, filename: string) {
+        this.finalLocation = destination;
+        this.extractFile = extract;
+        if (extract) {
+            this.initialLocation = path.resolve(destination, "../", filename);
+        } else {
+            this.initialLocation = path.resolve(destination, filename);
         }
     }
 
+    public async process(): Promise<void> {
+        if (this.extractFile) {
+            return this.extract();
+        }
+    }
 
-    private async move(): Promise<void> {
-        return Promise.resolve(tl.mv(this.zipLocation, this.unzipLocation));
+    get downloadPath() {
+        return this.initialLocation;
+    }
+
+    private async extract(): Promise<void> {
+        const fileEnding = path.parse(this.initialLocation).ext;
+        switch (fileEnding) {
+            case ".zip":
+            case ".nupkg":
+                return this.unzip(this.initialLocation, this.finalLocation);
+            case ".tgz":
+                return this.unTarGz(this.initialLocation, this.finalLocation);
+            default:
+                return Promise.reject(tl.loc("UnsupportedArchiveType", fileEnding));
+        }
     }
 
     private async unTarGz(zipLocation: string, unzipLocation: string): Promise<void> {

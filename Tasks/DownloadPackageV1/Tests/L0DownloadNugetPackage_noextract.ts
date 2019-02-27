@@ -4,18 +4,17 @@ import { WebApiMock } from "./helpers/webapimock";
 
 let taskPath = path.join(__dirname, "..", "main.js");
 let outputPath: string = path.join(__dirname, "out", "packageOutput");
-let jarLocation: string = path.join(outputPath, "packageName.jar");
-let pomLocation: string = path.join(outputPath, "packageName.pom");
+let zipLocation: string = path.join(outputPath, "singlePackageName.nupkg");
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs
-tr.setInput("packageType", "maven");
+tr.setInput("packageType", "nuget");
 tr.setInput("feed", "feedId");
 tr.setInput("view", "viewId");
 tr.setInput("definition", "packageId");
 tr.setInput("version", "versionId");
 tr.setInput("downloadPath", outputPath);
-tr.setInput("files", "*.jar; *.pom");
+tr.setInput("extract", "false");
 tr.setInput("verbosity", "verbose");
 
 // Set variables.
@@ -31,10 +30,7 @@ tr.setAnswers({
         [outputPath]: true
     },
     rmRF: {
-        [jarLocation]: {
-            success: true
-        },
-        [pomLocation]: {
+        [zipLocation]: {
             success: true
         }
     }
@@ -57,4 +53,5 @@ tr.registerMock("./universal", {
         return;
     }
 });
+
 tr.run();
