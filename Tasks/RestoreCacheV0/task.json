@@ -18,10 +18,10 @@
     "minimumAgentVersion": "2.140.1",
     "inputs": [
         {
-            "name": "fingerprint",
-            "type": "string",
+            "name": "fingerprints",
+            "type": "multiLine",
             "label": "The name of fingerprint.",
-            "defaultValue": "fingerprint",
+            "defaultValue": "",
             "required": true,
             "helpMarkDown": "The name of artifact to download. The artifact must be a pipeline artifact."
         },
