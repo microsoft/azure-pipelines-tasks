@@ -18,8 +18,9 @@ export class PackageFile {
     constructor(extract: boolean, destination: string, filename: string) {
         this.finalLocation = destination;
         this.extractFile = extract;
+
         if (extract) {
-            this.initialLocation = path.resolve(destination, "../", filename);
+            this.initialLocation = path.resolve(tl.getVariable('Agent.TempDirectory'), filename);
         } else {
             this.initialLocation = path.resolve(destination, filename);
         }

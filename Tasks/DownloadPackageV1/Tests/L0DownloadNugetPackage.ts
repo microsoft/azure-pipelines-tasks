@@ -4,7 +4,8 @@ import { WebApiMock } from "./helpers/webapimock";
 
 let taskPath = path.join(__dirname, "..", "main.js");
 let outputPath: string = path.join(__dirname, "out", "packageOutput");
-let zipLocation: string = path.join(__dirname, "out", "singlePackageName.nupkg");
+let tempPath: string = path.join(__dirname, "temp");
+let zipLocation: string = path.join(tempPath, "singlePackageName.nupkg");
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs
@@ -18,6 +19,7 @@ tr.setInput("extract", "true");
 tr.setInput("verbosity", "verbose");
 
 // Set variables.
+process.env["AGENT_TEMPDIRECTORY"] = tempPath;
 process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
 process.env["AGENT_VERSION"] = "2.116.0";
 process.env["HOME"] = "/users/test";
@@ -27,7 +29,8 @@ process.env["ENDPOINT_AUTH_SYSTEMVSSCONNECTION"] =
 // provide answers for task mock
 tr.setAnswers({
     exist: {
-        [outputPath]: true
+        [outputPath]: true,
+        [tempPath]: true
     },
     rmRF: {
         [zipLocation]: {
