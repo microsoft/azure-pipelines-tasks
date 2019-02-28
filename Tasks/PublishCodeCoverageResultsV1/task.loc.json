@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 148,
+    "Minor": 149,
     "Patch": 0
   },
   "demands": [],
@@ -44,12 +44,30 @@
       "helpMarkDown": "ms-resource:loc.input.help.summaryFileLocation"
     },
     {
+      "name": "autogenerateHtmlReport",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.autogenerateHtmlReport",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.autogenerateHtmlReport"
+    },
+    {
+      "name": "sourceDirectory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sourceDirectory",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sourceDirectory",
+      "visibleRule": "autogenerateHtmlReport = true"
+    },
+    {
       "name": "reportDirectory",
       "type": "string",
       "label": "ms-resource:loc.input.label.reportDirectory",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.reportDirectory"
+      "helpMarkDown": "ms-resource:loc.input.help.reportDirectory",
+      "visibleRule": "false = true"
     },
     {
       "name": "additionalCodeCoverageFiles",
@@ -77,6 +95,10 @@
   "messages": {
     "FoundNMatchesForPattern": "ms-resource:loc.messages.FoundNMatchesForPattern",
     "MultipleSummaryFilesFound": "ms-resource:loc.messages.MultipleSummaryFilesFound",
-    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
+    "InstallDotNetCoreForHtmlReport": "ms-resource:loc.messages.InstallDotNetCoreForHtmlReport",
+    "FailedToGenerateHtmlReport": "ms-resource:loc.messages.FailedToGenerateHtmlReport",
+    "IgnoringReportDirectory": "ms-resource:loc.messages.IgnoringReportDirectory",
+    "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage"
   }
 }

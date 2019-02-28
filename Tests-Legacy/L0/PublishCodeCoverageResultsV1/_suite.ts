@@ -4,16 +4,19 @@
 import assert = require('assert');
 import trm = require('../../lib/taskRunner');
 import path = require('path');
+import os = require('os');
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
+    process.env['TEMP'] = '/tmp';
 }
 
 describe('Publish Code Coverage Results Suite', function() {
     this.timeout(10000);
+    const winTmpCcPath = "\\tmp\\cchtml";
+    const nixTmpCcPath = "/tmp/cchtml";
 
     before((done) => {
-        // init here
         done();
     });
 
@@ -24,7 +27,34 @@ describe('Publish Code Coverage Results Suite', function() {
     it('Publish code coverage results with all input parameters', (done) => {
         setResponseFile('publishCCResponses.json');
 
-        var tr = new trm.TaskRunner('PublishCodeCoverageResults');
+        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
+
+        tr.setInput('codeCoverageTool', 'JaCoCo');
+        tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
+        tr.setInput('reportDirectory', '/user/admin/report');
+        tr.setInput('autogenerateHtmlReport', 'true');
+        tr.setInput('additionalCodeCoverageFiles', "/some/*pattern");
+
+        tr.run()
+            .then(() => {
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                if (os.type().match(/^Win/)) {
+                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                } else {
+                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/tmp\/cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                }
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
+    it('Publish code coverage results without autogenerate', (done) => {
+        setResponseFile('publishCCResponses.json');
+
+        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
 
         tr.setInput('codeCoverageTool', 'JaCoCo');
         tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
@@ -35,8 +65,37 @@ describe('Publish Code Coverage Results Suite', function() {
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/user\/admin\/report;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                if (os.type().match(/^Win/)) {
+                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                } else {
+                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/tmp\/cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                }
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
 
+    it('Publish code coverage results with autogenerate without reportDirectory', (done) => {
+        setResponseFile('publishCCResponses.json');
+
+        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
+
+        tr.setInput('codeCoverageTool', 'JaCoCo');
+        tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
+        tr.setInput('autogenerateHtmlReport', 'true');
+        tr.setInput('additionalCodeCoverageFiles', "/some/*pattern");
+
+        tr.run()
+            .then(() => {
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                if (os.type().match(/^Win/)) {
+                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                } else {
+                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/tmp\/cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                }
                 done();
             })
             .fail((err) => {
@@ -47,7 +106,7 @@ describe('Publish Code Coverage Results Suite', function() {
     it('Publish code coverage results without report directory input', (done) => {
         setResponseFile('publishCCResponses.json');
 
-        var tr = new trm.TaskRunner('PublishCodeCoverageResults');
+        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
 
         tr.setInput('codeCoverageTool', 'JaCoCo');
         tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
@@ -57,8 +116,11 @@ describe('Publish Code Coverage Results Suite', function() {
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                //assert(false, tr.stdout);
-                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                if (os.type().match(/^Win/)) {
+                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                }else{
+                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                }
 
                 done();
             })
@@ -70,7 +132,7 @@ describe('Publish Code Coverage Results Suite', function() {
     it('Publish code coverage results conditionally fail with empty results', (done) => {
         setResponseFile('publishCCEmptyResponse.json');
 
-        var tr = new trm.TaskRunner('PublishCodeCoverageResults');
+        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
 
         tr.setInput('codeCoverageTool', 'JaCoCo');
         tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
@@ -95,17 +157,16 @@ describe('Publish Code Coverage Results Suite', function() {
     it('Publish code coverage results without additional files input', (done) => {
         setResponseFile('publishCCResponses.json');
 
-        var tr = new trm.TaskRunner('PublishCodeCoverageResults');
+        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
 
         tr.setInput('codeCoverageTool', 'JaCoCo');
         tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
-        tr.setInput('reportDirectory', '/user/admin/report');
 
         tr.run()
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/user\/admin\/report;\]/) >= 0, 'should publish code coverage results.');
+                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;\]/) >= 0, 'should publish code coverage results.');
 
                 done();
             })
@@ -117,18 +178,17 @@ describe('Publish Code Coverage Results Suite', function() {
     it('Publish code coverage results when there are no additional files matching the given input', (done) => {
         setResponseFile('publishCCResponses.json');
 
-        var tr = new trm.TaskRunner('PublishCodeCoverageResults');
+        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
 
         tr.setInput('codeCoverageTool', 'JaCoCo');
         tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
-        tr.setInput('reportDirectory', '/user/admin/report');
         tr.setInput('additionalCodeCoverageFiles', "/other/*pattern");
 
         tr.run()
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/user\/admin\/report;additionalcodecoveragefiles=;\]/) >= 0, 'should publish code coverage results.');
+                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;additionalcodecoveragefiles=;\]/) >= 0, 'should publish code coverage results.');
                 done();
             })
             .fail((err) => {
@@ -139,18 +199,17 @@ describe('Publish Code Coverage Results Suite', function() {
     it('Publish code coverage results when directory path matches the given additonal files input', (done) => {
         setResponseFile('publishCCResponses.json');
 
-        var tr = new trm.TaskRunner('PublishCodeCoverageResults');
+        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
 
         tr.setInput('codeCoverageTool', 'JaCoCo');
         tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
-        tr.setInput('reportDirectory', '/user/admin/report');
         tr.setInput('additionalCodeCoverageFiles', "/some/*pattern/path");
 
         tr.run()
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/user\/admin\/report;additionalcodecoveragefiles=;\]/) >= 0, 'should publish code coverage results.');
+                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;additionalcodecoveragefiles=;\]/) >= 0, 'should publish code coverage results.');
 
                 done();
             })
@@ -162,18 +221,17 @@ describe('Publish Code Coverage Results Suite', function() {
     it('Publish code coverage results when file path matches the given additonal files input', (done) => {
         setResponseFile('publishCCResponses.json');
 
-        var tr = new trm.TaskRunner('PublishCodeCoverageResults');
+        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
 
         tr.setInput('codeCoverageTool', 'JaCoCo');
         tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
-        tr.setInput('reportDirectory', '/user/admin/report');
         tr.setInput('additionalCodeCoverageFiles', "/some/*pattern/one");
 
         tr.run()
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/user\/admin\/report;additionalcodecoveragefiles=some\/path\/one;\]/) >= 0, 'should publish code coverage results.');
+                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;additionalcodecoveragefiles=some\/path\/one;\]/) >= 0, 'should publish code coverage results.');
 
                 done();
             })
@@ -185,18 +243,17 @@ describe('Publish Code Coverage Results Suite', function() {
     it('Publish code coverage results when both directory and file path matches the given additonal files input', (done) => {
         setResponseFile('publishCCResponses.json');
 
-        var tr = new trm.TaskRunner('PublishCodeCoverageResults');
+        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
 
         tr.setInput('codeCoverageTool', 'JaCoCo');
         tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
-        tr.setInput('reportDirectory', '/user/admin/report');
         tr.setInput('additionalCodeCoverageFiles', "/some/*pattern");
 
         tr.run()
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/user\/admin\/report;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
 
                 done();
             })
@@ -208,7 +265,7 @@ describe('Publish Code Coverage Results Suite', function() {
     it('Publish code coverage results when code coverage tool is not provided', (done) => {
         setResponseFile('publishCCResponses.json');
 
-        var tr = new trm.TaskRunner('PublishCodeCoverageResults');
+        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
 
         tr.run()
             .then(() => {
@@ -228,7 +285,7 @@ describe('Publish Code Coverage Results Suite', function() {
     it('Publish code coverage results when summaryfile is not provided', (done) => {
         setResponseFile('publishCCResponses.json');
 
-        var tr = new trm.TaskRunner('PublishCodeCoverageResults');
+        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
         tr.setInput('codeCoverageTool', 'JaCoCo');
 
         tr.run()

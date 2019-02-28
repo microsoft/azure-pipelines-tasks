@@ -11,7 +11,23 @@
     "exist": {
         "/user/admin/summary.xml": true
     },
+    "which": {
+        "dotnet": "/tmp/dotnet"
+    },
+    "exec": {
+        "/tmp/dotnet ./netcoreapp2.0/ReportGenerator.dll -reports:/user/admin/summary.xml -targetdir:\\tmp\\cchtml -reporttypes:HtmlInline_AzurePipelines": {
+            "code": 0,
+            "stdout": "success"
+        },
+        "/tmp/dotnet ./netcoreapp2.0/ReportGenerator.dll -reports:/user/admin/summary.xml -targetdir:/tmp/cchtml -reporttypes:HtmlInline_AzurePipelines": {
+            "code": 0,
+            "stdout": "success"
+        }
+    },
     "findMatch": {
+        "/user/admin/summary.xml": [
+            "/user/admin/summary.xml"
+        ],
         "/some/*pattern": [
             "some/path",
             "some/path/one",
