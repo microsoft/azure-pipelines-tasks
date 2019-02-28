@@ -103,6 +103,33 @@ describe('Publish Code Coverage Results Suite', function() {
             });
     })
 
+    it('Publish code coverage results with autogenerate with source directory', (done) => {
+        setResponseFile('publishCCResponses.json');
+
+        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
+
+        tr.setInput('codeCoverageTool', 'JaCoCo');
+        tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
+        tr.setInput('autogenerateHtmlReport', 'true');
+        tr.setInput('additionalCodeCoverageFiles', '/some/*pattern');
+        tr.setInput('sourceDirectory', '/tmp/sources')
+
+        tr.run()
+            .then(() => {
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                if (os.type().match(/^Win/)) {
+                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                } else {
+                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/tmp\/cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                }
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
     it('Publish code coverage results without report directory input', (done) => {
         setResponseFile('publishCCResponses.json');
 
