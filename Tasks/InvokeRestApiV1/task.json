@@ -67,7 +67,7 @@
             "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select an Azure Resource Manager subscription to be used for invoking a management API. 'ManagementPortalUrl' of the cloud is used as the baseURL",
+            "helpMarkDown": "Select an Azure Resource Manager subscription to use for invoking a management API. 'ManagementPortalUrl' of the cloud is used as the baseURL",
             "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM"
         },
         {
