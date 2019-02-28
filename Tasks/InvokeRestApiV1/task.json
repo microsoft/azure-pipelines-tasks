@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
     "instanceNameFormat": "Invoke REST API: $(method)",
     "groups": [
@@ -47,7 +47,8 @@
         {
             "name": "connectedServiceName",
             "aliases": [
-                "serviceConnection"
+                "serviceConnection",
+                "genericService"
             ],
             "type": "connectedService:Generic",
             "label": "Generic service connection",
@@ -59,13 +60,14 @@
         {
             "name": "connectedServiceNameARM",
             "aliases": [
-                "azureServiceConnection"
+                "azureServiceConnection",
+                "azureSubscription"
             ],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select an Azure Resource Manager subscription that should be used to pick the url and construct authorization header for the http request.",
+            "helpMarkDown": "Select an Azure Resource Manager subscription to be used for invoking a management API. 'ManagementPortalUrl' of the cloud is used as the baseURL",
             "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM"
         },
         {
