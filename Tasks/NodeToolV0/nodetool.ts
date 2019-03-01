@@ -7,6 +7,10 @@ import * as path from 'path';
 let osPlat: string = os.platform();
 let osArch: string = os.arch();
 
+if (osArch.toLowerCase() == 'ia32') {
+    osArch = 'x86';
+}
+
 async function run() {
     try {
         let versionSpec = taskLib.getInput('versionSpec', true);
@@ -122,8 +126,8 @@ async function acquireNode(version: string): Promise<string> {
     // Download - a tool installer intimately knows how to get the tool (and construct urls)
     //
     version = toolLib.cleanVersion(version);
-    let fileName: string = osPlat == 'win32'? 'node-v' + version + '-win-' + os.arch() :
-                                                'node-v' + version + '-' + osPlat + '-' + os.arch();  
+    let fileName: string = osPlat == 'win32'? 'node-v' + version + '-win-' + osArch :
+                                                'node-v' + version + '-' + osPlat + '-' + osArch;  
     let urlFileName: string = osPlat == 'win32'? fileName + '.7z':
                                                     fileName + '.tar.gz';  
 
@@ -191,8 +195,8 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
     let exeUrl: string;
     let libUrl: string;
     try {
-        exeUrl = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.exe`;
-        libUrl = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.lib`;
+        exeUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.exe`;
+        libUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.lib`;
 
         await toolLib.downloadTool(exeUrl, path.join(tempDir, "node.exe"));
         await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));
