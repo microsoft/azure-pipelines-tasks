@@ -23,5 +23,6 @@
   "loc.messages.InstallDotNetCoreForHtmlReport": "Please install dotnet core to enable automatic generation of Html report.",
   "loc.messages.FailedToGenerateHtmlReport": "Failed to generate Html report. Error: %s",
   "loc.messages.IgnoringReportDirectory": "Ignoring coverage report directory with Html content as we are auto-generating Html content",
-  "loc.messages.UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases"
+  "loc.messages.UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
+  "loc.messages.GeneratedHtmlReport": "Generated code coverage html report: %s"
 }

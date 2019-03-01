@@ -9,12 +9,11 @@ import os = require('os');
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
     process.env['TEMP'] = '/tmp';
+    process.env['MOCK_NORMALIZE_SLASHES'] = true;
 }
 
 describe('Publish Code Coverage Results Suite', function() {
     this.timeout(10000);
-    const winTmpCcPath = "\\tmp\\cchtml";
-    const nixTmpCcPath = "/tmp/cchtml";
 
     before((done) => {
         done();
@@ -40,8 +39,10 @@ describe('Publish Code Coverage Results Suite', function() {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 if (os.type().match(/^Win/)) {
+                    assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\\tmp\\cchtml -reporttypes:HtmlInline_AzurePipelines/) > 0)
                     assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
                 } else {
+                    assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\/tmp\/cchtml -reporttypes:HtmlInline_AzurePipelines/) > 0)
                     assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/tmp\/cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
                 }
                 done();
@@ -66,8 +67,10 @@ describe('Publish Code Coverage Results Suite', function() {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 if (os.type().match(/^Win/)) {
+                    assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\\tmp\\cchtml -reporttypes:HtmlInline_AzurePipelines/) > 0)
                     assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
                 } else {
+                    assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\/tmp\/cchtml -reporttypes:HtmlInline_AzurePipelines/) > 0)
                     assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/tmp\/cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
                 }
                 done();
@@ -92,8 +95,10 @@ describe('Publish Code Coverage Results Suite', function() {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 if (os.type().match(/^Win/)) {
+                    assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\\tmp\\cchtml -reporttypes:HtmlInline_AzurePipelines/) > 0)
                     assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
                 } else {
+                    assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\/tmp\/cchtml -reporttypes:HtmlInline_AzurePipelines/) > 0)
                     assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/tmp\/cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
                 }
                 done();
@@ -119,8 +124,10 @@ describe('Publish Code Coverage Results Suite', function() {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 if (os.type().match(/^Win/)) {
+                    assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\\tmp\\cchtml -reporttypes:HtmlInline_AzurePipelines -sourcedirs:\/tmp\/sources/) > 0)
                     assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
                 } else {
+                    assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\/tmp\/cchtml -reporttypes:HtmlInline_AzurePipelines -sourcedirs:\/tmp\/sources/) > 0)
                     assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/tmp\/cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
                 }
                 done();
@@ -143,9 +150,10 @@ describe('Publish Code Coverage Results Suite', function() {
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml/) == -1)
                 if (os.type().match(/^Win/)) {
                     assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
-                }else{
+                } else {
                     assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
                 }
 
@@ -193,6 +201,7 @@ describe('Publish Code Coverage Results Suite', function() {
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml/) == -1)
                 assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;\]/) >= 0, 'should publish code coverage results.');
 
                 done();
@@ -215,6 +224,7 @@ describe('Publish Code Coverage Results Suite', function() {
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml/) == -1)
                 assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;additionalcodecoveragefiles=;\]/) >= 0, 'should publish code coverage results.');
                 done();
             })
@@ -236,6 +246,7 @@ describe('Publish Code Coverage Results Suite', function() {
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml /) == -1)
                 assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;additionalcodecoveragefiles=;\]/) >= 0, 'should publish code coverage results.');
 
                 done();
@@ -258,6 +269,7 @@ describe('Publish Code Coverage Results Suite', function() {
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml /) == -1)
                 assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;additionalcodecoveragefiles=some\/path\/one;\]/) >= 0, 'should publish code coverage results.');
 
                 done();
@@ -280,6 +292,7 @@ describe('Publish Code Coverage Results Suite', function() {
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml /) == -1)
                 assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
 
                 done();

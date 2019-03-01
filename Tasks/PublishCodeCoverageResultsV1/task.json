@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 149,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.102.0",
@@ -99,6 +99,7 @@
         "InstallDotNetCoreForHtmlReport": "Please install dotnet core to enable automatic generation of Html report.",
         "FailedToGenerateHtmlReport": "Failed to generate Html report. Error: %s",
         "IgnoringReportDirectory": "Ignoring coverage report directory with Html content as we are auto-generating Html content",
-        "UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases"
+        "UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
+        "GeneratedHtmlReport": "Generated code coverage html report: %s"
     }
 }

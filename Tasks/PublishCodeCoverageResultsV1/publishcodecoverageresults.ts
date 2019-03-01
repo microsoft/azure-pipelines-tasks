@@ -152,7 +152,7 @@ async function generateHtmlReport(summaryFile: string, targetDir: string, source
     }
 
     const dotnet = tl.tool(dotnetPath);
-    dotnet.arg('./netcoreapp2.0/ReportGenerator.dll')
+    dotnet.arg(path.join(__dirname, 'netcoreapp2.0', 'ReportGenerator.dll'));
     dotnet.line(coverageArg);
 
     tl.debug('Coverage report arguments: ' + coverageArg);
@@ -163,7 +163,7 @@ async function generateHtmlReport(summaryFile: string, targetDir: string, source
         });
 
         if (result === 0) {
-            console.log(tl.loc('GeneratedHtmlReport'));
+            console.log(tl.loc('GeneratedHtmlReport', targetDir));
         } else {
             tl.warning(tl.loc('FailedToGenerateHtmlReport', result));
         }

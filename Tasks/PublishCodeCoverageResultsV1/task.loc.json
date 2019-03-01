@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 149,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.102.0",
@@ -99,6 +99,7 @@
     "InstallDotNetCoreForHtmlReport": "ms-resource:loc.messages.InstallDotNetCoreForHtmlReport",
     "FailedToGenerateHtmlReport": "ms-resource:loc.messages.FailedToGenerateHtmlReport",
     "IgnoringReportDirectory": "ms-resource:loc.messages.IgnoringReportDirectory",
-    "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage"
+    "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
+    "GeneratedHtmlReport": "ms-resource:loc.messages.GeneratedHtmlReport"
   }
 }
