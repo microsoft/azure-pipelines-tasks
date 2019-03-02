@@ -58,10 +58,10 @@ class DotnetCoreInstaller {
                 }
                 // We trust the installation of an sdk if all known folders exists.
                 // The other folders we can't check because they have an other versioning
-                var path = cacheFolder + "/" + this.sdkFolder + "/" + d.name + "/"; 
+                var path = cacheFolder + "/" + this.sdkFolder + "/" + d.name + "/";
                 console.log(tl.loc("CheckPath", path));
                 return !tl.exist(path);
-            })            
+            })
             // distinct on version name            
             .filter(function (x, i, a) {
                 return a.map(function (d) { return d.name }).indexOf(x.name) == i;
@@ -79,7 +79,7 @@ class DotnetCoreInstaller {
             toolLib.prependPath(element.toolPath);
         }
         // set the biggest sdk as default
-        let biggestSdkVersion = sdkVersionNumber.sort(function (a, b) { return a.name.localeCompare(b.name); })[sdkVersionNumber.length - 1];        
+        let biggestSdkVersion = sdkVersionNumber.sort(function (a, b) { return a.name.localeCompare(b.name); })[sdkVersionNumber.length - 1];
         tl.setVariable('DOTNET_ROOT', biggestSdkVersion.toolPath);
     }
 
@@ -219,38 +219,30 @@ class DotnetCoreInstaller {
                 cachedDir = await toolLib.cacheDir(extPath, this.cachedToolName, "0.0.0", this.arch);
             } else {
                 // here we must do a little bit of magic.
-                
-                // copy the sdk
-                tl.cp(extPath + "/" + this.sdkFolder + "/" + version + "/" , availableGlobalTool + "/" + this.sdkFolder + "/" + version + "/", "-rf", false);
-
-                // copy all extra sdk files for the specific version
-                for (let index = 0; index < this.knownExtraSdkFolders.length; index++) {
-                    var sourceFolderPath = extPath + "/" + this.knownExtraSdkFolders[index] + "/";
-                    var versionOfSdkLibrary = tl.ls(null, [sourceFolderPath])[0];
-                    const currentFolderToCopy = sourceFolderPath + versionOfSdkLibrary + "/";
-                    const destinationFolder = availableGlobalTool + "/" + this.knownExtraSdkFolders[index] + "/" + versionOfSdkLibrary + "/";
-
-                    // If the last copy was broken we delete the old trash if it exists
-                    if (tl.exist(destinationFolder)) {
-                        console.log(tl.loc("DeleteSdkFolderOfAnBrokenInstallation", destinationFolder));
-                        tl.rmRF(destinationFolder);
+                for (let itemName of fileSystem.readdirSync(extPath)) {
+                    // Copy only directories. The files in the roots will copy with extra logic
+                    if(tl.stats(itemName).isDirectory()){
+                        let sourcePath = path.join(extPath, itemName);
+                        let destinationPath = path.join(availableGlobalTool, itemName);
+                        this.copyNotPresentFiles(sourcePath, destinationPath);
                     }
-                    console.log(tl.loc("CopySdkFromTo", currentFolderToCopy, destinationFolder));
-                    tl.cp(extPath + "/", availableGlobalTool, "-rf", false);
                 }
+                
                 //Override files that are there like dotnet.exe if they are newer as the current
                 if (!this.isInstalledDotnetNewer(version)) {
                     for (let index = 0; index < this.knowFilesInTheSdkThatWillOverride.length; index++) {
                         const fileToOverride = extPath + "/" + this.knowFilesInTheSdkThatWillOverride[index];
                         const clearPath = availableGlobalTool + "/" + this.knowFilesInTheSdkThatWillOverride[index];
                         const destinationPath = availableGlobalTool + "/";
-                        console.log(tl.loc("RemoveSdkFile", clearPath));
-                        tl.rmRF(clearPath);
+                        if (tl.exist(clearPath)) {
+                            console.log(tl.loc("RemoveSdkFile", clearPath));
+                            tl.rmRF(clearPath);
+                        }
                         console.log(tl.loc("InsertNewSdkFile", destinationPath));
                         tl.cp(fileToOverride, destinationPath, "-rf", false);
                     }
-                   this.createDotnetExeVersionFile(version);
-                }                
+                    this.createDotnetExeVersionFile(version);
+                }
                 cachedDir = availableGlobalTool;
             }
             console.log(tl.loc("AddGlobalJsonViaToCache"));
@@ -259,6 +251,27 @@ class DotnetCoreInstaller {
         }
         return cachedDir;
     }
+
+    private copyNotPresentFiles(sourceFolderPath: string, destinationFolderPath: string): void {
+        for (let itemName of fileSystem.readdirSync(sourceFolderPath)) {
+            let sourceItemPath = path.join(sourceFolderPath, itemName);
+            let destinationItemPath = path.join(destinationFolderPath, itemName);
+
+            if (tl.stats(sourceItemPath).isDirectory()) {
+                // try to copy sub directories.
+                this.copyNotPresentFiles(sourceItemPath, destinationItemPath);
+            } else if (!tl.exist(destinationItemPath)) {
+                if(!tl.exist(destinationFolderPath)){
+                    // Create the path if it not exists.
+                    tl.mkdirP(destinationFolderPath);
+                }
+                tl.cp(sourceItemPath, destinationItemPath, "-rf");
+            } else {
+                // the file exists so we do nothing.
+            }
+        }
+    }
+
 
     private getToolFolder(): string {
         return toolLib.findLocalTool(this.cachedToolName, "0.0.0", this.arch);
@@ -350,13 +363,7 @@ class DotnetCoreInstaller {
     private arch: string;
     private workingDirectory: string;
 
-    private readonly sdkFolder: string = "sdk";
-    private readonly knownExtraSdkFolders: string[] = [
-        "shared/Microsoft.AspNetCore.All",
-        "shared/Microsoft.AspNetCore.App",
-        "shared/Microsoft.NETCore.App",        
-        "host/fxr"
-    ];
+    private readonly sdkFolder: string = "sdk";   
     // we use here the index "0" because this is the primary platform
     // private readonly pathToDotnet: string = tl.osType().match(/^Win/) ? "dotnet.exe" : "dotnet"
     private readonly knowFilesInTheSdkThatWillOverride: string[] = [
