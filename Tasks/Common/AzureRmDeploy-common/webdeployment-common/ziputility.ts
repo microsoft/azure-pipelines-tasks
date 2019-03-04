@@ -90,7 +90,7 @@ export function checkIfFilesExistsInZip(archivedPackage: string, files: string[]
         deferred.resolve(fileCount == files.length);
     });
 
-    zip.on('error',error => {
+    zip.on('error', error => {
         deferred.reject(error);
     });
 
