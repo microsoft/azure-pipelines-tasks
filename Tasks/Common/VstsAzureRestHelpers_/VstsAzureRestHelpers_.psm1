@@ -542,7 +542,7 @@ function Get-AzStorageKeys
 
         $certificate = Get-Certificate $endpoint
 
-        $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
+        $storageKeys = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
         return $storageKeys.StorageService.StorageServiceKeys
     }
     catch
@@ -578,7 +578,7 @@ function Get-AzRMStorageKeys
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-        $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+        $storageKeys = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
         return $storageKeys
     }
     catch
@@ -624,7 +624,7 @@ function Get-AzRmVmCustomScriptExtension
         $headers = @{"accept-language" = "en-US"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
-        $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+        $customScriptExt = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
         return $customScriptExt.properties
     }
     catch
@@ -661,7 +661,7 @@ function Remove-AzRmVmCustomScriptExtension
         $headers = @{"accept-language" = "en-US"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
-        $response=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+        $response = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
         return $response
     }
     catch
@@ -695,7 +695,7 @@ function Get-AzStorageAccount
 
         $certificate = Get-Certificate $endpoint
 
-        $storageAccount=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
+        $storageAccount = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
         return $storageAccount.StorageService.StorageServiceProperties
     }
     catch
@@ -730,7 +730,7 @@ function Get-AzRmStorageAccount
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-        $storageAccountUnformatted=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+        $storageAccountUnformatted = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
 
         Write-Verbose "Constructing the storage account object"
         
@@ -779,7 +779,7 @@ function Get-AzRmResourceGroup
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-        $resourceGroup=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+        $resourceGroup = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
         return $resourceGroup
     }
     catch
@@ -814,7 +814,7 @@ function Get-AzureSqlDatabaseServerResourceId
 
     do {
         Write-Verbose "Fetching Resources from $uri"
-        $ResourceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+        $ResourceDetails = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType
         foreach ($resourceDetail in $ResourceDetails.Value)
         {
             if ($resourceDetail.name -eq $serverName -and $resourceDetail.type -eq $serverType)
@@ -1096,7 +1096,7 @@ function Get-AzureNetworkInterfaceDetails
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/networkInterfaces?api-version=$azureStackapiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $networkInterfaceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    $networkInterfaceDetails = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType
     
     if(-not $networkInterfaceDetails) 
     {
@@ -1126,7 +1126,7 @@ function Get-AzurePublicIpAddressDetails
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/publicIPAddresses?api-version=$azureStackapiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $publicIPAddressesDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    $publicIPAddressesDetails = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType
 
     if(-not $publicIPAddressesDetails) 
     {
@@ -1156,7 +1156,7 @@ function Get-AzureLoadBalancersDetails
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/loadBalancers?api-version=$azureStackapiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $loadBalancersDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    $loadBalancersDetails = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType
 
     if(-not $loadBalancersDetails) 
     {
@@ -1187,7 +1187,7 @@ function Get-AzureLoadBalancerDetails
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/loadBalancers/" + $name + "?api-version=$azureStackapiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $loadBalancerDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    $loadBalancerDetails = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType
     
     if($loadBalancerDetails)
     {
