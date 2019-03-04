@@ -120,7 +120,9 @@ export async function getAvailableKubectlVersions() {
                 break;
             }
             response.body.forEach(release => {
-                versions.push(release["tag_name"])
+                if (release["tag_name"]) {
+                    versions.push(release["tag_name"]);
+                }
             });
             page_number++;
         } catch (error) {
