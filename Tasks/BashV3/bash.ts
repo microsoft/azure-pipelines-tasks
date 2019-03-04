@@ -5,12 +5,16 @@ import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
 var uuidV4 = require('uuid/v4');
 
+const noProfile = tl.getBoolInput('noProfile');
+const noRc = tl.getBoolInput('noRc');
+
 async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
     let bashPwd = tl.tool(bashPath)
         .arg('--noprofile')
         .arg('--norc')
         .arg('-c')
         .arg('pwd');
+
     let bashPwdOptions = <tr.IExecOptions>{
         cwd: directoryPath,
         failOnStdErr: true,
@@ -98,10 +102,16 @@ async function run() {
         }
 
         // Create the tool runner.
-        let bash = tl.tool(bashPath)
-            .arg('--noprofile')
-            .arg('--norc')
-            .arg(filePath);
+        console.log('========================== Starting Command Output ===========================');
+        let bash = tl.tool(bashPath);
+        if (noProfile) {
+            bash.arg('--noprofile');
+        }
+        if (noRc) {
+            bash.arg('--norc');
+        }
+        bash.arg(filePath);
+
         let options = <tr.IExecOptions>{
             cwd: input_workingDirectory,
             failOnStdErr: false,

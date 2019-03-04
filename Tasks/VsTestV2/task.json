@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 148,
-        "Patch": 0
+        "Minor": 149,
+        "Patch": 2
     },
     "demands": [
         "vstest"
@@ -207,6 +207,7 @@
             "groupName": "executionOptions",
             "options": {
                 "latest": "Latest",
+                "16.0": "Visual Studio 2019",
                 "15.0": "Visual Studio 2017",
                 "14.0": "Visual Studio 2015",
                 "toolsInstaller": "Installed by Tools Installer"

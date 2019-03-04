@@ -12,7 +12,7 @@ const uuidV4 = require('uuid/v4');
 export async function bake() {
     let renderType = tl.getInput("renderType", true);
     switch (renderType) {
-        case "helm":
+        case "helm2":
             await HelmRenderEngine.bake();
             break;
         default:

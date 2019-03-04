@@ -106,4 +106,18 @@ describe('InstallAppleProvisioningProfile Suite', function () {
 
         done();
     });
+
+    it('postexecution should not fail for errors', function (done: MochaDone) {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0ErrorsInPostExecutionJob.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.succeeded, 'postexecutionjob should have succeeded with warnings even when there are errors.');
+        assert(tr.stdout.indexOf('InstallRequiresMac'), 'warning for macos requirement should be shown.');
+        
+        done();
+    });
 });

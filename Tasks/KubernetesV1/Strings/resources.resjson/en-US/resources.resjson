@@ -20,6 +20,8 @@
   "loc.input.help.azureResourceGroup": "Select an Azure resource group.",
   "loc.input.label.kubernetesCluster": "Kubernetes cluster",
   "loc.input.help.kubernetesCluster": "Select an Azure managed cluster.",
+  "loc.input.label.useClusterAdmin": "Use cluster admin credentials",
+  "loc.input.help.useClusterAdmin": "Use cluster administrator credentials instead of default cluster user credentials.",
   "loc.input.label.namespace": "Namespace",
   "loc.input.help.namespace": "Set the namespace for the kubectl command by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace.",
   "loc.input.label.command": "Command",

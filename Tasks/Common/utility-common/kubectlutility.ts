@@ -109,17 +109,25 @@ function getExecutableExtention(): string {
 
 export async function getAvailableKubectlVersions() {
     var request = new WebRequest();
-    request.uri = "https://api.github.com/repos/kubernetes/kubernetes/releases";
     request.method = "GET";
-
-    try {
-        var response = await sendRequest(request);
-        let versions = [];
-        response.body.forEach(release => {
-            versions.push(release["tag_name"])
-        });
-        return versions;
-    } catch (error) {
-        throw error;
+    let page_number = 0;
+    let versions = [];
+    while (true) {
+        try {
+            request.uri = `https://api.github.com/repos/kubernetes/kubernetes/releases?page=${page_number}&per_page=100`;
+            var response = await sendRequest(request);
+            if (response.body.length == 0) {
+                break;
+            }
+            response.body.forEach(release => {
+                if (release["tag_name"]) {
+                    versions.push(release["tag_name"]);
+                }
+            });
+            page_number++;
+        } catch (error) {
+            throw error;
+        }
     }
+    return versions;
 }
