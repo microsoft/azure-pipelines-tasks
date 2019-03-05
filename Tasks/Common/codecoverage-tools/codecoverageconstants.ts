@@ -26,9 +26,9 @@ subprojects {
 
         reports {
             html.enabled = true
-            html.destination "\${buildDir}/jacocoHtml"
+            html.destination file("\${buildDir}/jacocoHtml")
             xml.enabled = true
-            xml.destination "\${buildDir}/summary.xml"
+            xml.destination file("\${buildDir}/summary.xml")
         }
     }
     test {
@@ -60,8 +60,8 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     reports {
         html.enabled = true
         xml.enabled = true
-        xml.destination "${reportDir}/summary.xml"
-        html.destination "${reportDir}/"
+        xml.destination file("${reportDir}/summary.xml")
+        html.destination file("${reportDir}/")
     }
 }`;
 }
@@ -87,8 +87,8 @@ jacocoTestReport {
     reports {
         html.enabled = true
         xml.enabled = true
-        xml.destination "${reportDir}/summary.xml"
-        html.destination "${reportDir}"
+        xml.destination file("${reportDir}/summary.xml")
+        html.destination file("${reportDir}")
     }
 }
 
