@@ -5,6 +5,7 @@ var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility
 import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/AzureResourceFilterUtility';
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
+const skuDynamicValue: string = 'dynamic';
 
 const webAppKindMap = new Map([
     [ 'functionapp', 'functionApp' ],
@@ -28,15 +29,14 @@ export class TaskParametersUtility {
         }  
 
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
-        console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParameters.WebAppName));   
-        taskParameters.isConsumption = false;
+        console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParameters.WebAppName));
 
         var appDetails = await this.getWebAppKind(taskParameters);
         taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
         taskParameters.WebAppKind = appDetails["webAppKind"];
         taskParameters.sku = appDetails["sku"];
 
-        if(taskParameters.sku.toLowerCase() == "dynamic") {
+        if(taskParameters.sku.toLowerCase() == skuDynamicValue) {
             taskParameters.isConsumption = true;
         }
         
@@ -69,11 +69,13 @@ export class TaskParametersUtility {
             }
             tl.debug(`Resource Group: ${resourceGroupName}`);
         }
+
         var appService = new AzureAppService(taskParameters.azureEndpoint, resourceGroupName, taskParameters.WebAppName);
         var configSettings = await appService.get(true);
         if(!kind) {
             kind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
         }
+
         sku = configSettings.properties.sku;
         tl.debug(`Sku: ${sku}`);
         return {
@@ -134,5 +136,5 @@ export interface TaskParameters {
     azureEndpoint?: AzureEndpoint;
     isLinuxApp?: boolean;
     sku?: string;
-    isConsumption?:boolean;
+    isConsumption?: boolean;
 }

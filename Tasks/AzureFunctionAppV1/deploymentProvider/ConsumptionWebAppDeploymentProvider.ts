@@ -12,25 +12,33 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
     }
  
     public async DeployWebAppStep() {
+        var storageDetails =  await this.findStorageAccount();
+    }
+
+    private async findStorageAccount() {
         let appSettings = await this.appService.getApplicationSettings();
-        if(appSettings && appSettings.properties) {
-            if(appSettings.properties.AzureWebJobsStorage) {
-                var str = appSettings.properties.AzureWebJobsStorage;
-                let dictionary: [string, string] = keyValuePairs(str);
-                tl.debug(`Storage Account is: ${dictionary["AccountName"]}`);
-            }
+        var storageData = {};
+        if(appSettings && appSettings.properties && appSettings.properties.AzureWebJobsStorage) {
+            let str = appSettings.properties.AzureWebJobsStorage;
+            let dictionary = getKeyValuePairs(str);
+            tl.debug(`Storage Account is: ${dictionary["AccountName"]}`);
+            storageData["AccountName"] = dictionary["AccountName"];
+            storageData["AccountKey"] = dictionary["AccountKey"];
         }
+        else {
+            throw new Error(tl.loc('FailedToGetStorageAccountDetails'));
+        }
+        return storageData;
     }
 }
 
-function keyValuePairs(str : string) : [string, string]{
-    let keyValuePair: [string, string] = ['',''];
+function getKeyValuePairs(str : string) {
+    let keyValuePair = {};
     var splitted = str.split(";");
-    for (let i = 0; i < splitted.length; i++) {
-        var keyValue = splitted[i];
-        var indexOfSeparator = keyValue.indexOf("=");
-        var key : string = keyValue.substring(0,indexOfSeparator);
-        var value : string = keyValue.substring(indexOfSeparator + 1);
+    for(var keyValue of splitted) {
+        let indexOfSeparator = keyValue.indexOf("=");
+        let key : string = keyValue.substring(0,indexOfSeparator);
+        let value : string = keyValue.substring(indexOfSeparator + 1);
         keyValuePair[key] = value;
     }
     return keyValuePair;

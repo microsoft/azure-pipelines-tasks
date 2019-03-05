@@ -373,6 +373,7 @@
         "JarPathNotPresent": "Java jar path is not present",
         "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
         "InvalidDockerImageName": "Invalid Docker hub image name provided.",
-        "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task."
+        "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task.",
+        "FailedToGetStorageAccountDetails": "Unable to find the storage account associated with the function app."
     }
 }
