@@ -20,18 +20,12 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
         var storageData = {};
         if(appSettings && appSettings.properties && appSettings.properties.AzureWebJobsStorage) {
             let webStorageSetting = appSettings.properties.AzureWebJobsStorage;
-            if (!webStorageSetting) {
-                throw new Error(tl.loc('FailedToGetStorageAccountDetails'));
-            }
             let dictionary = getKeyValuePairs(webStorageSetting);
-            if (!dictionary["AccountName"] || !dictionary["AccountKey"]) {
-                throw new Error(tl.loc('FailedToGetStorageAccountDetails'));
-            }
             tl.debug(`Storage Account is: ${dictionary["AccountName"]}`);
             storageData["AccountName"] = dictionary["AccountName"];
             storageData["AccountKey"] = dictionary["AccountKey"];
         }
-        else {
+        if(!storageData["AccountName"] || !storageData["AccountKey"]) {
             throw new Error(tl.loc('FailedToGetStorageAccountDetails'));
         }
         return storageData;
