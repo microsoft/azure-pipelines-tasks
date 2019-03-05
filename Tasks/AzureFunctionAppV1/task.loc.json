@@ -373,6 +373,7 @@
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName",
-    "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported"
+    "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported",
+    "FailedToGetStorageAccountDetails": "ms-resource:loc.messages.FailedToGetStorageAccountDetails"
   }
 }
