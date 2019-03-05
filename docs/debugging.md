@@ -11,7 +11,7 @@ Start by changing the build scripts to generate the required source mappings fil
 }
 </pre>
 
-Now run a gulp build.
+Now build the sources.
 
 Next, create a launch.json file -- goto the debug section in VS Code, and click the gear icon, this will create a .vscode/launch.json file.
 
