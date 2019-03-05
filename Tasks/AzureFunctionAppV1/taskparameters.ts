@@ -34,11 +34,7 @@ export class TaskParametersUtility {
         var appDetails = await this.getWebAppKind(taskParameters);
         taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
         taskParameters.WebAppKind = appDetails["webAppKind"];
-        taskParameters.sku = appDetails["sku"];
-
-        if(taskParameters.sku.toLowerCase() == skuDynamicValue) {
-            taskParameters.isConsumption = true;
-        }
+        taskParameters.isConsumption = appDetails["sku"].toLowerCase() == skuDynamicValue;
         
         taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("Linux") !=-1;
 
@@ -135,6 +131,5 @@ export interface TaskParameters {
     /** Additional parameters */
     azureEndpoint?: AzureEndpoint;
     isLinuxApp?: boolean;
-    sku?: string;
     isConsumption?: boolean;
 }

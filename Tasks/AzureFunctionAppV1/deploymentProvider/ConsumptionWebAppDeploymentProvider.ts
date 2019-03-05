@@ -19,8 +19,14 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
         let appSettings = await this.appService.getApplicationSettings();
         var storageData = {};
         if(appSettings && appSettings.properties && appSettings.properties.AzureWebJobsStorage) {
-            let str = appSettings.properties.AzureWebJobsStorage;
-            let dictionary = getKeyValuePairs(str);
+            let webStorageSetting = appSettings.properties.AzureWebJobsStorage;
+            if (!webStorageSetting) {
+                throw new Error(tl.loc('FailedToGetStorageAccountDetails'));
+            }
+            let dictionary = getKeyValuePairs(webStorageSetting);
+            if (!dictionary["AccountName"] || !dictionary["AccountKey"]) {
+                throw new Error(tl.loc('FailedToGetStorageAccountDetails'));
+            }
             tl.debug(`Storage Account is: ${dictionary["AccountName"]}`);
             storageData["AccountName"] = dictionary["AccountName"];
             storageData["AccountKey"] = dictionary["AccountKey"];
@@ -32,13 +38,13 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
     }
 }
 
-function getKeyValuePairs(str : string) {
+function getKeyValuePairs(webStorageSetting : string) {
     let keyValuePair = {};
-    var splitted = str.split(";");
+    var splitted = webStorageSetting.split(";");
     for(var keyValue of splitted) {
         let indexOfSeparator = keyValue.indexOf("=");
-        let key : string = keyValue.substring(0,indexOfSeparator);
-        let value : string = keyValue.substring(indexOfSeparator + 1);
+        let key: string = keyValue.substring(0,indexOfSeparator);
+        let value: string = keyValue.substring(indexOfSeparator + 1);
         keyValuePair[key] = value;
     }
     return keyValuePair;
