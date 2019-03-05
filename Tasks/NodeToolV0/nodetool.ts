@@ -5,11 +5,7 @@ import * as os from 'os';
 import * as path from 'path';
 
 let osPlat: string = os.platform();
-let osArch: string = os.arch();
-
-if (osArch.toLowerCase() == 'ia32') {
-    osArch = 'x86';
-}
+let osArch: string = getArch();
 
 async function run() {
     try {
@@ -216,6 +212,14 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
         }
     }
     return await toolLib.cacheDir(tempDir, 'node', version);
+}
+
+function getArch(): string {
+    let arch: string = os.arch();
+    if (arch === 'ia32') {
+        arch = 'x86';
+    }
+    return arch;
 }
 
 run();
