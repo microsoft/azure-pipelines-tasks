@@ -285,11 +285,10 @@ function Run-SqlCmd {
     $commandToLog += " -Inputfile `"$sqlFilePath`" " + $sqlcmdAdditionalArguments
 
     Write-Host $commandToLog
-    
+
     if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) 
     {
-        $result = Invoke-Expression $commandToRun -Verbose 4>&1
-        $result | Out-String | foreach-object { $_ }
+        (Invoke-Expression $commandToRun 4>&1) | Out-String | foreach-object { $_ }
     }
     else
     {
