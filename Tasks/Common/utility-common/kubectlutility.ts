@@ -112,11 +112,13 @@ export async function getAvailableKubectlVersions() {
     request.method = "GET";
     let page_number = 0;
     let versions = [];
+    const countPerPage = 100;
     while (true) {
         try {
-            request.uri = `https://api.github.com/repos/kubernetes/kubernetes/releases?page=${page_number}&per_page=100`;
+            request.uri = `https://api.github.com/repos/kubernetes/kubernetes/releases?page=${page_number}&per_page=${countPerPage}`;
             var response = await sendRequest(request);
-            if (response.body.length == 0) {
+            // break if no more items or items are less then asked
+            if (response.body.length === 0 || response.body.length < countPerPage) {
                 break;
             }
             response.body.forEach(release => {
