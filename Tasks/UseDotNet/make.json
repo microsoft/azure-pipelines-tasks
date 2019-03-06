@@ -1,8 +1,9 @@
 {
-    "cp": [
+    "common": [
         {
-            "source": "externals",
-            "options": "-R"
+            "module": "../Common/packaging-common",
+            "type": "node",
+            "compile": true
         }
     ]
-}
+} 

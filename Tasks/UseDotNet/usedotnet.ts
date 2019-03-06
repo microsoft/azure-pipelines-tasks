@@ -1,5 +1,5 @@
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as toolLib from 'azure-pipelines-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as trm from 'azure-pipelines-task-lib/toolrunner';
 import { DotNetCoreReleaseFetcher } from "./releasesfetcher";
 import * as utilities from "./utilities";
@@ -151,7 +151,7 @@ async function run() {
             tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
         }
         catch (ex) {
-            tl.warning(tl.loc("CouldNotSetCodePaging", JSON.stringify(ex)))
+            tl.warning(tl.loc("CouldNotSetCodePaging", JSON.stringify(ex)));
         }
     }
 
