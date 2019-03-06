@@ -30,23 +30,35 @@ export class Utility {
         return githubEndpointToken;
     }
 
-    public static getUploadAssets(githubReleaseAssetInputPatterns: string[]): string[] {
+    public static getUploadAssets(pattern: string): string[] {
         let githubReleaseAssets: Set<string> = new Set();
 
-        (githubReleaseAssetInputPatterns || []).forEach(pattern => {
-            /** Check for one or multiples files into array
-             *  Accept wildcards to look for files
-             */
-            let filePaths: string[] = glob.sync(pattern);
+        /** Check for one or multiples files into array
+         *  Accept wildcards to look for files
+         */
+        let filePaths: string[] = glob.sync(pattern);
 
-            filePaths.forEach((filePath) => {
-                if (!githubReleaseAssets.has(filePath)) {
-                    githubReleaseAssets.add(filePath)
-                }
-            })
-        });
+        (filePaths || []).forEach((filePath) => {
+            if (!githubReleaseAssets.has(filePath)) {
+                githubReleaseAssets.add(filePath)
+            }
+        })
 
         return Array.from(githubReleaseAssets);
+    }
+
+    public static isFile(asset: string): boolean {
+        return fs.lstatSync(path.resolve(asset)).isFile();
+    }
+
+    public static isPatternADirectory(assets: string[], pattern: string): boolean {
+        if (assets && assets.length === 1 && pattern) {
+            if (path.resolve(assets[0]) === path.resolve(pattern)) {
+                tl.debug("Pattern is a directory " + pattern);
+                return true;
+            }
+        }
+        return false;
     }
 
     public static validateUploadAssets(assets: string[]): void {

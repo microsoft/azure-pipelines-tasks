@@ -14,8 +14,8 @@
     "preview": true,
     "version": {
         "Major": 0,
-        "Minor": 148,
-        "Patch": 1
+        "Minor": 149,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -224,12 +224,12 @@
         "NoReleaseFoundToDelete": "No release was found for tag: %s. Deleting the release failed.",
         "FetchReleaseForTag": "Fetching the release for tag: %s",
         "FetchReleaseForTagSuccess": "Found a release for tag: %s",
-        "FetchTagForTarget": "Fetching the tag for target: %s",
-        "FetchTagForTargetSuccess": "Found a tag for target: %s",
+        "FetchTagForTarget": "Searching for tags associated with target commit: %s",
+        "FetchTagForTargetSuccess": "Found a tag for target commit: %s",
         "MissingAssetError": "File not found: %s",
         "MultipleReleasesFoundError": "Only 1 release was expected but more than 1 release was found for tag: %s. Unable to perform the action.",
         "MultipleTagFound": "Only 1 tag was expected but more than 1 tag was found for the given commit: %s. Unable to perform the action.",
-        "NoTagFound": "No tag was found for the provided target: %s. Skipping further steps...",
+        "NoTagFound": "Release will not be created as no tags could be found for the target commit. For more details check out the ‘Tag Source’ section in documentation: https://aka.ms/AA4f03a.",
         "DeleteAllExistingAssets": "Deleting all existing assets...",
         "DuplicateAssetFound": "Duplicate asset found: %s",
         "AssetsDeletedSuccessfully": "Assets deleted successfully.",
@@ -242,9 +242,9 @@
         "DeletingAsset": "Deleting asset: %s",
         "NoAssetFoundToDelete": "No assets were found to delete.",
         "UploadingAssets": "Uploading assets...",
-        "UploadingAsset": "Uploading asset: %s",
+        "UploadingAsset": "Uploading file: '%s'.",
         "UploadAssetError": "An unexpected error occurred while uploading the asset: %s",
-        "UploadAssetSuccess": "Uploaded asset successfully: %s",
+        "UploadAssetSuccess": "Uploaded file successfully: '%s'",
         "NoAssetFoundToUpload": "No assets were found to upload.",
         "ReleaseNotesFileIsDirectoryError": "Release notes file: %s is a directory and not a file.",
         "AssetIsDirectoryError": "The asset is a directory and not a file. Skipping uploading directory: %s",
@@ -264,6 +264,9 @@
         "InvalidGitHubEndpoint": "Invalid GitHub service endpoint: %s.",
         "InvalidEndpointAuthScheme": "Invalid GitHub service connection scheme: %s. Only OAuth and GitHub personal access token connections are allowed.",
         "FetchInitialCommitError": "An unexpected error occurred while fetching the initial commit.",
-        "InvalidActionSet": "Invalid action: %s. Only 'create', 'edit', or 'delete' actions are allowed."
+        "InvalidActionSet": "Invalid action: %s. Only 'create', 'edit', or 'delete' actions are allowed.",
+        "NoFileFoundMatchingPattern": "No files found matching '%s'. Nothing to upload.",
+        "PatternIsADirectory": "'%s' cannot be uploaded as it is a directory. Please specify a file.",
+        "SearchingFileMatchingPattern": "Searching for file(s) matching '%s'."
     }
 }

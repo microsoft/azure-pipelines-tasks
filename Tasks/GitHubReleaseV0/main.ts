@@ -50,7 +50,7 @@ class Main {
                         // If no tag found, then give warning.
                         // Doing this because commits without associated tag will fail continuosly if we throw error.
                         // Other option is to have some task condition, which user can specify in task.
-                        tl.warning(tl.loc("NoTagFound", target));
+                        tl.warning(tl.loc("NoTagFound"));
                         tl.debug("No tag found"); // for purpose of L0 test only.
                     }
                 }
