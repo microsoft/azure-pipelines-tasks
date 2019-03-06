@@ -144,6 +144,7 @@ export class Action {
      */
     private async _uploadAssets(githubEndpointToken: string, repositoryName: string, githubReleaseAssetInputPatterns: string[], uploadUrl: string, existingAssets: any[], editMode: boolean): Promise<void> {
         const assetUploadMode = tl.getInput(Inputs.assetUploadMode);
+        Utility.validateAssetUploadMode(assetUploadMode);
 
         // Delete all assets in case of edit release before uploading new assets.
         if (editMode && !!assetUploadMode && assetUploadMode === AssetUploadMode.delete) {

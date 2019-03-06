@@ -73,10 +73,10 @@ export class Utility {
         }
     }
 
-    public static getReleaseNote(releaseNotesSelection: string, releaseNotesFile: any, releaseNoteInput: string, changeLog: string): string {
+    public static getReleaseNote(releaseNotesSource: string, releaseNotesFile: any, releaseNoteInput: string, changeLog: string): string {
         let releaseNote: string = "";
 
-        if (releaseNotesSelection === ReleaseNotesSelectionMode.file) {
+        if (releaseNotesSource === ReleaseNotesSelectionMode.file) {
 
             if (fs.lstatSync(path.resolve(releaseNotesFile)).isDirectory()) {
                 console.log(tl.loc("ReleaseNotesFileIsDirectoryError", releaseNotesFile));
@@ -197,7 +197,43 @@ export class Utility {
 
         return match[0];
     }
-    
+
+    public static isTagSourceAuto(tagSource: string) {
+        return (tagSource === TagSelectionMode.auto);
+    }
+
+    public static validateTagSource(tagSource: string) {
+        if (tagSource !== TagSelectionMode.auto && tagSource !== TagSelectionMode.manual) {
+            throw new Error(tl.loc("InvalidTagSource", tagSource));
+        }
+    }
+
+    public static validateAction(action: string) {
+        if (action !== ActionType.create && action !== ActionType.edit && action !== ActionType.delete) {
+            tl.debug("Invalid action input"); // for purpose of L0 test only.
+            throw new Error(tl.loc("InvalidActionSet", action));
+        }
+    }
+
+    public static validateReleaseNotesSource(releaseNotesSource: string) {
+        if (releaseNotesSource !== ReleaseNotesSelectionMode.file && releaseNotesSource !== ReleaseNotesSelectionMode.input) {
+            throw new Error(tl.loc("InvalidReleaseNotesSource", releaseNotesSource));
+        }
+    }
+
+    public static validateAssetUploadMode(assetUploadMode: string) {
+        if (assetUploadMode !== AssetUploadMode.delete && assetUploadMode !== AssetUploadMode.replace) {
+            throw new Error(tl.loc("InvalidAssetUploadMode", assetUploadMode));
+        }
+    }
+
+    public static validateTag(tag: string, tagSource: string, action: string) {
+        if (!tag && (action === ActionType.edit || action === ActionType.delete || (action === ActionType.create && !this.isTagSourceAuto(tagSource)))) {
+            throw new Error(tl.loc("TagRequired"));
+        }
+        
+    }
+
     private static readonly _onlyFirstLine = new RegExp("^.*$", "m");
     private static readonly _githubPaginatedLinkRegex = new RegExp("^<(.*)>$");
     private static readonly _githubPaginatedRelRegex = new RegExp('^rel="(.*)"$');
