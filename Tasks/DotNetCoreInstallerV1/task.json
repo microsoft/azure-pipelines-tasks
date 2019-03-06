@@ -63,7 +63,7 @@
             "name": "installationPath",
             "type": "string",
             "label": "Path To Install .Net Core",
-            "defaultValue": "$(Agent.ToolsDirectory)",
+            "defaultValue": "$(Agent.ToolsDirectory)/dotnet",
             "required": true,
             "groupName": "advanced",
             "helpMarkDown": "Specify where .Net Core SDK/Runtime should be installed. Different paths can have the following impact on dotnet's behavior.<li>Global installation path such as /usr/share/dotnet or C:\\Program Files\\Dotnet. This would cause the new version to be available machine-wide and be persisted. This requires that the agent process has permission on these folders</li><li>$(Agent.ToolsDirectory): This makes the version to be cached on the agent since this directory is not cleanup up across pipelines. All pipelines running on the agent, would have access to the versions installed previously using the agent.</li><li>$(Agent.TempDirectory): This can ensure that a pipeline doesn't use any cached version of .Net core since this folder is cleaned up after each pipeline.</li><li>Any other path: You can configure any other path given the agent process has access to the path.<br/>Note that you can also configure Multi-Level Lookup setting which can configures dotnet host's probing for a suitable version."
