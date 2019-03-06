@@ -21,6 +21,7 @@
         "DotNetCore"
     ],
     "demands": [],
+    "releaseNotes": "<li>Support for installing multiple versions side by side.</li><li>Support for patterns in version to fetch latest in minor/major version.</li><li>Restrict Multi-level lookup</li>",
     "instanceNameFormat": "Use .NET Core $(packageType) $(version)",
     "groups": [
         {
@@ -43,28 +44,29 @@
             }
         },
         {
-            "name": "includePreviewVersions",
-            "type": "boolean",
-            "label": "Include Preview Versions",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Kindly select if you want preview versions to be included while searching for versions, such as while searching 2.2.x. This need not be checked if you are specifing exact version, such as: 2.1.403"
-        },
-        {
             "name": "version",
             "type": "string",
             "label": "Version",
             "defaultValue": "2.2.x",
             "required": true,
-            "helpMarkDown": "Specify version of .NET Core SDK or runtime to install.<br/>Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [releases-index file.](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json)."
+            "helpMarkDown": "Specify version of .NET Core SDK or runtime to install.<br/>Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [releases-index file.](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json"
+        },
+        {
+            "name": "includePreviewVersions",
+            "type": "boolean",
+            "label": "Include Preview Versions",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Select if you want preview versions to be included while searching for versions, such as while searching 2.2.x. This setting is ingnored if you specify an exact version, such as: 2.1.403"
         },
         {
             "name": "installationPath",
             "type": "string",
-            "label": "Path To Install DotNet",
+            "label": "Path To Install .Net Core",
             "defaultValue": "$(Agent.ToolsDirectory)",
             "required": true,
-            "helpMarkDown": "Specify where DotNet SDK/Runtime should be installed. Different paths can have the following impact on dotnet's behaviour (below description is in the assumption that MultiLevelLookup is disabled. If it is not disabled, globally installed dotnet versions will be always available. You can choose to enable/disable this via <b>Restrict Multi Level Lookup</b> checkbox in advanced section.)<br/><li>$(Agent.ToolsDirectory) : As ToolsDirectory is not cleaned up after each build, other versions of dotnet installed at same location in other build/release, via tool installer, will also be available when dotnet is used.</li><li>$(Agent.TempDirectory) : As the TempDirectory is cleaned after each build/release, you will only have access to the dotnet version's installed in that particular build/release.</li><li>Global dotnet installation path such as /usr/share/dotnet : This would mean that all dotnet versions installed on the machine along with version installed by tool installer will be available for this and all subsequent build/release.</li>"
+            "groupName": "advanced",
+            "helpMarkDown": "Specify where .Net Core SDK/Runtime should be installed. Different paths can have the following impact on dotnet's behavior.<li>Global installation path such as /usr/share/dotnet or C:\\Program Files\\Dotnet. This would cause the new version to be available machine-wide and be persisted. This requires that the agent process has permission on these folders</li><li>$(Agent.ToolsDirectory): This makes the version to be cached on the agent since this directory is not cleanup up across pipelines. All pipelines running on the agent, would have access to the versions installed previously using the agent.</li><li>$(Agent.TempDirectory): This can ensure that a pipeline doesn't use any cached version of .Net core since this folder is cleaned up after each pipeline.</li><li>Any other path: You can configure any other path given the agent process has access to the path.<br/>Note that you can also configure Multi-Level Lookup setting which can configures dotnet host's probing for a suitable version."
         },
         {
             "name": "restrictMultiLevelLookup",
@@ -73,7 +75,7 @@
             "groupName": "advanced",
             "defaultValue": true,
             "required": false,
-            "helpMarkDown": "The host will probe several locations to find a suitable shared framework. If a folder is not there, it will attempt to look in pre-defined global locations using multi-level lookup. The default global locations are: <br/><b>For Windows:</b><br/>C:/Program Files/dotnet (64-bit processes)<br/>C:/Program Files (x86)/dotnet<br/><b>For MacOs:</b><br/>/usr/local/share/dotnet<br/><b>For Linux:</b><br/>/usr/share/dotnet<br/><br/>Selecting it would mean your application would be built using the SDK and will consume only those runtimes, which are installed by the tool installer and not the ones installed on the machine."
+            "helpMarkDown": "This configures the behavior of dontnet host process for looking up a suitable shared framework.<li>true: Only versions present in  the folder specified in this task would be looked by the host process.</li><li>false: The host will attempt to look in pre-defined global locations using multi-level lookup.<br/>The default global locations are: <br/><b>For Windows:</b><br/>C:\\Program Files\\dotnet (64-bit processes)<br/>C:\\Program Files (x86)\\dotnet (32-bit process)<br/><b>For MacOs:</b><br/>/usr/local/share/dotnet<br/><b>For Linux:</b><br/>/usr/share/dotnet<br/><br/></li> You can read more about it [HERE](https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/multilevel-sharedfx-lookup.md)."
         }
     ],
     "execution": {
