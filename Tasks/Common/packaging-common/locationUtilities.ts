@@ -226,7 +226,7 @@ export async function getFeedRegistryUrl(
 }
 
 // This should be replaced when retry is implemented in vso client.
-async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: number) : Promise<T> {
+export async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: number) : Promise<T> {
     try {
         return await cb();
     } catch(exception) {

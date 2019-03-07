@@ -285,7 +285,15 @@ function Run-SqlCmd {
     $commandToLog += " -Inputfile `"$sqlFilePath`" " + $sqlcmdAdditionalArguments
 
     Write-Host $commandToLog
-    Invoke-Expression $commandToRun
+
+    if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) 
+    {
+        (Invoke-Expression $commandToRun 4>&1) | Out-String | foreach-object { $_ }
+    }
+    else
+    {
+        Invoke-Expression $commandToRun
+    }
 }
 
 function Check-ConnectionString

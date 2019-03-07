@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "preview": true,
   "instanceNameFormat": "Azure IoT Edge - $(action)",
