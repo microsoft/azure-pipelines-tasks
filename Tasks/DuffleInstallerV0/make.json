@@ -1,0 +1,19 @@
+{
+	"common": [
+    {
+		"module": "../Common/utility-common",
+		"type": "node",
+		"dest" : "./",
+		"compile" : true
+	}
+],
+	"rm": [
+        {
+            "items": [               
+                "node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tool-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
+}

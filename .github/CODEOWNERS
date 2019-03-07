@@ -117,6 +117,8 @@ Tasks/DownloadPipelineArtifactV0/*      @mihaif
 
 Tasks/DownloadSecureFileV1/*    @madhurig
 
+Tasks/DuffleInstallerV0/*   @bansalaseem     @vithati
+
 Tasks/ExtractFilesV1/*      @bryanmacfarlane
 
 Tasks/FtpUploadV1/*     @madhurig
