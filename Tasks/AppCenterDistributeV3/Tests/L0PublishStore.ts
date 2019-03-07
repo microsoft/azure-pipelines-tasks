@@ -1,10 +1,5 @@
-
-import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
-import fs = require('fs');
-var Readable = require('stream').Readable
-var Stats = require('fs').Stats
 
 var nock = require('nock');
 
@@ -17,13 +12,8 @@ tmr.setInput('app', '/test/path/to/my.ipa');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
 tmr.setInput('isMandatory', 'True');
-tmr.setInput('destinationGroupIds', '11111111-1111-1111-1111-111111111111,22222222-2222-2222-2222-222222222222;  33333333-3333-3333-3333-333333333333, 44444444-4444-4444-4444-444444444444;; ');
-tmr.setInput('symbolsType', 'AndroidJava');
-tmr.setInput('mappingTxtPath', '/test/path/to/mappings.txt');
-
-process.env['BUILD_BUILDID'] = '2';
-process.env['BUILD_SOURCEBRANCH'] = 'refs/heads/master';
-process.env['BUILD_SOURCEVERSION'] = 'commitsha';
+tmr.setInput('destinationType', 'stores');
+tmr.setInput('destinationStoreId', '11111111-1111-1111-1111-111111111111');
 
 //prepare upload
 nock('https://example.test')
@@ -57,10 +47,7 @@ nock('https://example.test')
         release_notes: "my release notes",
         mandatory_update: true,
         destinations: [
-            { id: "11111111-1111-1111-1111-111111111111" },
-            { id: "22222222-2222-2222-2222-222222222222" },
-            { id: "33333333-3333-3333-3333-333333333333" },
-            { id: "44444444-4444-4444-4444-444444444444" }
+            { id: "11111111-1111-1111-1111-111111111111" }
         ],
         build: {
             id: '2',
@@ -95,45 +82,6 @@ nock('https://example.test')
     })
     .reply(200);
 
-// provide answers for task mock
-let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "checkPath": {
-        "/test/path/to/my.ipa": true,
-        "/test/path/to/mappings.txt": true
-    },
-    "findMatch": {
-        "/test/path/to/mappings.txt": [
-            "/test/path/to/mappings.txt"
-        ],
-        "/test/path/to/my.ipa": [
-            "/test/path/to/my.ipa"
-        ]
-    }
-};
-tmr.setAnswers(a);
-
-fs.createReadStream = (s: string) => {
-    let stream = new Readable;
-    stream.push(s);
-    stream.push(null);
-
-    return stream;
-};
-
-fs.statSync = (s: string) => {
-    let stat = new Stats;
-
-    stat.isFile = () => {
-        return !s.toLowerCase().endsWith(".dsym");
-    }
-    stat.isDirectory = () => {
-        return s.toLowerCase().endsWith(".dsym");
-    }
-    stat.size = 100;
-
-    return stat;
-}
-tmr.registerMock('fs', fs);
 
 tmr.run();
 

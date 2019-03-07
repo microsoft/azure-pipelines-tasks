@@ -75,6 +75,26 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.failed, 'task should have failed');
     });
 
+    it('Negative path: publish multiple stores destinations fail the task', function () {
+        this.timeout(4000);
+
+        let tp = path.join(__dirname, 'L0PublishMultipleStoresFails.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.failed, 'task should have failed');
+    });
+
+    it('Positive path: publish single store destination', function () {
+        this.timeout(4000);
+
+        let tp = path.join(__dirname, 'L0PublishStore.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.failed, 'task should have failed');
+    });
+
     it('Positive path: single file with Include Parent', function () {
         this.timeout(4000);
 
@@ -195,6 +215,17 @@ describe('AppCenterDistribute L0 Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
     });
+
+    it('Positive path: publish silent update', function () {
+        this.timeout(4000);
+
+        let tp = path.join(__dirname, 'L0PublishSilentUpdate.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
     it('Positive path: publish multiple destinations', function () {
         this.timeout(4000);
 
