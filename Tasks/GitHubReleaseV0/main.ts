@@ -17,8 +17,6 @@ class Main {
             let actions = new Action();
             let helper = new Helper()
 
-            helper.publishTelemetry();
-
             // Get basic task inputs
             const githubEndpoint = tl.getInput(Inputs.gitHubConnection, true);
             const githubEndpointToken = Utility.getGithubEndPointToken(githubEndpoint);
@@ -35,6 +33,7 @@ class Main {
             Utility.validateTag(tag, tagSource, action);
 
             if (action === ActionType.delete) {
+                helper.publishTelemetry();
                 await actions.deleteReleaseAction(githubEndpointToken, repositoryName, tag);
             }
             else {
@@ -53,6 +52,7 @@ class Main {
                     }
 
                     if (!!tag) {
+                        helper.publishTelemetry();
                         const releaseNote: string = await this._getReleaseNote(githubEndpointToken, repositoryName, target);
                         await actions.createReleaseAction(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, githubReleaseAssetInputPatterns);
                     }
@@ -65,6 +65,7 @@ class Main {
                     }
                 }
                 else if (action === ActionType.edit) {
+                    helper.publishTelemetry();
                     const releaseNote: string = await this._getReleaseNote(githubEndpointToken, repositoryName, target);
                     // Get the release id of the release to edit.
                     console.log(tl.loc("FetchReleaseForTag", tag));

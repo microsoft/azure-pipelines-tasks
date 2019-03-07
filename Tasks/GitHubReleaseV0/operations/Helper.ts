@@ -11,6 +11,7 @@ interface IRelease {
 
 interface ITelemetryData {
     area: string;
+    repositoryName: string;
     action: string;
     tagSource: string;
     isDraft: boolean;
@@ -216,6 +217,7 @@ export class Helper {
         const releaseId: string = tl.getVariable(AzureDevOpsVariables.releaseId);
 
         telemetryData.area = !!releaseId ? "release" : "build";
+        telemetryData.repositoryName = tl.getInput(Inputs.repositoryName, true);
         telemetryData.action = tl.getInput(Inputs.action, true).toLowerCase();
 
         if (telemetryData.action !== ActionType.delete) {
