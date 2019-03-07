@@ -32,7 +32,7 @@ async function main(): Promise<void> {
             "artifacttool");
     }
     catch (error) {
-        tl.setResult(tl.TaskResult.Failed, error.message);
+        tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToGetArtifactTool", error.message));
         return;
     } finally{
         _logUniversalStartupVariables(artifactToolPath);
