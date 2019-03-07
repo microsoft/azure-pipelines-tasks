@@ -63,6 +63,7 @@
         "DownloadPipelineArtifactV0",
         "DownloadPipelineArtifactV1",
         "DownloadSecureFileV1",
+        "DuffleInstallerV0",
         "ExtractFilesV1",
         "FileTransformV1",
         "FtpUploadV1",
