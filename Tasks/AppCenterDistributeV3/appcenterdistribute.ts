@@ -20,6 +20,12 @@ class SymbolsUploadInfo {
     expiration_date: string;
 }
 
+type DestinationType = "groups" | "store";
+const DestinationType = {
+    Groups: "groups" as DestinationType,
+    Store: "store" as DestinationType
+}
+
 function getEndpointDetails(endpointInputFieldName) {
     var errorMessage = tl.loc("CannotDecodeEndpoint");
     var endpoint = tl.getInput(endpointInputFieldName, true);
@@ -437,10 +443,11 @@ async function run() {
 
         let isMandatory: boolean = tl.getBoolInput('isMandatory', false);
 
-        const destinationType = tl.getInput('destinationType', false) || "groups";
-        const destinationsInputName = destinationType === 'groups' ? 'destinationGroupIds' : 'destinationStoreId';
+        const destinationType = tl.getInput('destinationType', false) as DestinationType || DestinationType.Groups;
+        const destinationsInputName = destinationType === DestinationType.Groups ? 'destinationGroupIds' : 'destinationStoreId';
+        const destinationIsMandatory = destinationType === DestinationType.Store;
 
-        let destinations = tl.getInput(destinationsInputName, destinationType === 'stores') || (destinationType === "groups" ? "00000000-0000-0000-0000-000000000000" : "");
+        let destinations = tl.getInput(destinationsInputName, destinationIsMandatory) || "00000000-0000-0000-0000-000000000000";
         tl.debug(`Effective destinationIds: ${destinations}`);
         let destinationIds = destinations.split(/[, ;]+/).map(id => id.trim()).filter(id => id);
 
@@ -451,11 +458,11 @@ async function run() {
         if (!destinationIds.length) {
             throw new Error(tl.loc("InvalidDestinationInput"));
         }
-        if (destinationType === "store" && destinationIds.length > 1) {
+        if (destinationType === DestinationType.Store && destinationIds.length > 1) {
             throw new Error(tl.loc("CanNotDistributeToMultipleStores"));
         }
 
-        const isSilent: boolean = destinationType === "groups" && tl.getBoolInput('silentRelease', false) || false;
+        const isSilent: boolean = destinationType === DestinationType.Groups && (tl.getBoolInput('isSilent', false) || false);
 
         let app = utils.resolveSinglePath(appFilePattern);
         tl.checkPath(app, "Binary file");

@@ -33,7 +33,7 @@
   "loc.input.help.destinationGroupIds": "IDs of the distribution groups to release to. Leave it empty to use the default group and use commas or semicolons to separate multiple IDs.",
   "loc.input.label.destinationStoreId": "Destination ID",
   "loc.input.help.destinationStoreId": "ID of the distribution store to deploy to.",
-  "loc.input.label.silentRelease": "Do not notify testers. Release will still be available to install.",
+  "loc.input.label.isSilent": "Do not notify testers. Release will still be available to install.",
   "loc.messages.CannotDecodeEndpoint": "Could not decode the endpoint.",
   "loc.messages.NoResponseFromServer": "No response from server.",
   "loc.messages.FailedToUploadFile": "Failed to complete file upload.",

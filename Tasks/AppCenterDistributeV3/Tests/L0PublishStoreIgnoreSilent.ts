@@ -1,10 +1,5 @@
-
-import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
-import fs = require('fs');
-var Readable = require('stream').Readable
-var Stats = require('fs').Stats
 
 var nock = require('nock');
 
@@ -18,12 +13,8 @@ tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
 tmr.setInput('isMandatory', 'True');
 tmr.setInput('isSilent', 'True');
-tmr.setInput('symbolsType', 'AndroidJava');
-tmr.setInput('mappingTxtPath', '/test/path/to/mappings.txt');
-
-process.env['BUILD_BUILDID'] = '2';
-process.env['BUILD_SOURCEBRANCH'] = 'refs/heads/master';
-process.env['BUILD_SOURCEVERSION'] = 'commitsha';
+tmr.setInput('destinationType', 'stores');
+tmr.setInput('destinationStoreId', '11111111-1111-1111-1111-111111111111');
 
 //prepare upload
 nock('https://example.test')
@@ -33,7 +24,7 @@ nock('https://example.test')
         upload_url: 'https://example.upload.test/release_upload'
     });
 
-//upload 
+//upload
 nock('https://example.upload.test')
     .post('/release_upload')
     .reply(201, {
@@ -46,7 +37,7 @@ nock('https://example.test')
         status: 'committed'
     })
     .reply(200, {
-        release_url: 'my_release_location' 
+        release_url: 'my_release_location'
     });
 
 //make it available
@@ -56,8 +47,9 @@ nock('https://example.test')
         status: "available",
         release_notes: "my release notes",
         mandatory_update: true,
-        destinations: [{ id: "00000000-0000-0000-0000-000000000000" }],
-        notify_testers: false,
+        destinations: [
+            { id: "11111111-1111-1111-1111-111111111111" }
+        ],
         build: {
             id: '2',
             branch: 'master',
@@ -84,52 +76,13 @@ nock('https://example.upload.test')
         status: 'success'
     });
 
-//finishing symbol upload, commit the symbol 
+//finishing symbol upload, commit the symbol
 nock('https://example.test')
     .patch("/v0.1/apps/testuser/testapp/symbol_uploads/100", {
         status: 'committed'
     })
     .reply(200);
 
-// provide answers for task mock
-let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "checkPath" : {
-        "/test/path/to/my.ipa": true,
-        "/test/path/to/mappings.txt": true
-    },
-    "findMatch" : {
-        "/test/path/to/mappings.txt": [
-            "/test/path/to/mappings.txt"
-        ],
-        "/test/path/to/my.ipa": [
-            "/test/path/to/my.ipa"
-        ]
-    }
-};
-tmr.setAnswers(a);
-
-fs.createReadStream = (s: string) => {
-    let stream = new Readable;
-    stream.push(s);
-    stream.push(null);
-
-    return stream;
-};
-
-fs.statSync = (s: string) => {
-    let stat = new Stats;
-    
-    stat.isFile = () => {
-        return !s.toLowerCase().endsWith(".dsym");
-    }
-    stat.isDirectory = () => {
-        return s.toLowerCase().endsWith(".dsym");
-    }
-    stat.size = 100;
-
-    return stat;
-}
-tmr.registerMock('fs', fs);
 
 tmr.run();
 

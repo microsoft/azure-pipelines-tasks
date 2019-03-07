@@ -205,9 +205,9 @@
       "visibleRule": "destinationType = store"
     },
     {
-      "name": "silentRelease",
+      "name": "isSilent",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.silentRelease",
+      "label": "ms-resource:loc.input.label.isSilent",
       "required": false,
       "visibleRule": "destinationType = groups"
     }

@@ -205,7 +205,7 @@
             "visibleRule": "destinationType = store"
         },
         {
-            "name": "silentRelease",
+            "name": "isSilent",
             "type": "boolean",
             "label": "Do not notify testers. Release will still be available to install.",
             "required": false,

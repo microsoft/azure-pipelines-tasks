@@ -85,10 +85,30 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.failed, 'task should have failed');
     });
 
+    it('Negative path: publish stores without destintation fail the task', function () {
+        this.timeout(4000);
+
+        let tp = path.join(__dirname, 'L0PublishNoStoresFails.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.failed, 'task should have failed');
+    });
+
     it('Positive path: publish single store destination', function () {
         this.timeout(4000);
 
         let tp = path.join(__dirname, 'L0PublishStore.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.failed, 'task should have failed');
+    });
+
+    it('Positive path: publish single store destination and ignores isSilent property', function () {
+        this.timeout(4000);
+
+        let tp = path.join(__dirname, 'L0PublishStoreIgnoreSilent.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
