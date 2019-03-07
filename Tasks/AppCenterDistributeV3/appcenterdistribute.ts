@@ -440,7 +440,7 @@ async function run() {
         const destinationType = tl.getInput('destinationType', false) || "groups";
         const destinationsInputName = destinationType === 'groups' ? 'destinationGroupIds' : 'destinationStoreId';
 
-        let destinations = tl.getInput(destinationsInputName, destinationType === 'stores') || destinationType === "groups" ? "00000000-0000-0000-0000-000000000000" : "";
+        let destinations = tl.getInput(destinationsInputName, destinationType === 'stores') || (destinationType === "groups" ? "00000000-0000-0000-0000-000000000000" : "");
         tl.debug(`Effective destinationIds: ${destinations}`);
         let destinationIds = destinations.split(/[, ;]+/).map(id => id.trim()).filter(id => id);
 
