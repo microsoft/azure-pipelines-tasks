@@ -228,8 +228,13 @@ export class Utility {
     }
 
     public static validateTag(tag: string, tagSource: string, action: string) {
-        if (!tag && (action === ActionType.edit || action === ActionType.delete || (action === ActionType.create && !this.isTagSourceAuto(tagSource)))) {
-            throw new Error(tl.loc("TagRequired"));
+        if (!tag) {
+            if (action === ActionType.edit || action === ActionType.delete) {
+                throw new Error(tl.loc("TagRequiredEditDeleteAction", action));
+            }
+            else if (action === ActionType.create && !this.isTagSourceAuto(tagSource)) {
+                throw new Error(tl.loc("TagRequiredCreateAction"));
+            }
         }
         
     }

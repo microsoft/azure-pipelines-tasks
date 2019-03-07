@@ -268,7 +268,8 @@
         "InvalidTagSource": "Invalid tag source: %s. Only 'auto', or 'manual' options are allowed.",
         "InvalidReleaseNotesSource": "Invalid release notes source: %s. Only 'file', or 'input' options are allowed.",
         "InvalidAssetUploadMode": "Invalid asset upload mode: %s. Only 'delete', or 'replace' options are allowed.",
-        "TagRequired": "For edit/delete action or create action with tag source set to manual, a tag is required. Please specify a tag in the step",
+        "TagRequiredEditDeleteAction": "For '%s' action, a tag is required. Please specify a tag in the step",
+        "TagRequiredCreateAction": "For create action and tag source set to manual, a tag is required. Please specify a tag in the step",
         "NoFileFoundMatchingPattern": "No files found matching '%s'. Nothing to upload.",
         "PatternIsADirectory": "'%s' cannot be uploaded as it is a directory. Please specify a file.",
         "SearchingFileMatchingPattern": "Searching for file(s) matching '%s'."
