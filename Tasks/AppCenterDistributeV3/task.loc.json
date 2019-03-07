@@ -166,16 +166,50 @@
       "required": false
     },
     {
-      "name": "destinationIds",
+      "name": "destinationType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.destinationType",
+      "required": true,
+      "defaultValue": "groups",
+      "options": {
+        "groups": "Groups",
+        "store": "Store"
+      }
+    },
+    {
+      "name": "destinationGroupIds",
       "aliases": [
+        "destinationIds",
         "distributionGroupId",
         "destinationId"
       ],
       "type": "string",
       "defaultValue": "",
-      "label": "ms-resource:loc.input.label.destinationIds",
-      "helpMarkDown": "ms-resource:loc.input.help.destinationIds",
-      "required": false
+      "label": "ms-resource:loc.input.label.destinationGroupIds",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationGroupIds",
+      "required": false,
+      "visibleRule": "destinationType = groups"
+    },
+    {
+      "name": "destinationStoreId",
+      "aliases": [
+        "destinationIds",
+        "distributionGroupId",
+        "destinationId"
+      ],
+      "type": "string",
+      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.destinationStoreId",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationStoreId",
+      "required": false,
+      "visibleRule": "destinationType = store"
+    },
+    {
+      "name": "silentRelease",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.silentRelease",
+      "required": false,
+      "visibleRule": "destinationType = groups"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -191,6 +225,7 @@
     "FailedToUploadFile": "ms-resource:loc.messages.FailedToUploadFile",
     "NoApiTokenFound": "ms-resource:loc.messages.NoApiTokenFound",
     "InvalidDestinationInput": "ms-resource:loc.messages.InvalidDestinationInput",
+    "CanNotDistributeToMultipleStores": "ms-resource:loc.messages.CanNotDistributeToMultipleStores",
     "Succeeded": "ms-resource:loc.messages.Succeeded",
     "CannotFindAnyFile": "ms-resource:loc.messages.CannotFindAnyFile",
     "FoundMultipleFiles": "ms-resource:loc.messages.FoundMultipleFiles",

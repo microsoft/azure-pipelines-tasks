@@ -145,7 +145,7 @@ function commitRelease(apiServer: string, apiVersion: string, appSlug: string, u
     return defer.promise;
 }
 
-function publishRelease(apiServer: string, releaseUrl: string, isMandatory: boolean, releaseNotes: string, destinationIds: string[], token: string, userAgent: string) {
+function publishRelease(apiServer: string, releaseUrl: string, isMandatory: boolean, isSilent: boolean, releaseNotes: string, destinationIds: string[], token: string, userAgent: string) {
     tl.debug("-- Mark package available.");
     let defer = Q.defer<void>();
     let publishReleaseUrl: string = `${apiServer}/${releaseUrl}`;
@@ -163,6 +163,10 @@ function publishRelease(apiServer: string, releaseUrl: string, isMandatory: bool
         "mandatory_update": isMandatory,
         "destinations": destinations
     };
+
+    if (isSilent) {
+        publishBody["notify_testers"] = false;
+    }
 
     let branchName = process.env['BUILD_SOURCEBRANCH'];
     branchName = getBranchName(branchName);
@@ -433,9 +437,12 @@ async function run() {
 
         let isMandatory: boolean = tl.getBoolInput('isMandatory', false);
 
-        let destinations = tl.getInput('destinationIds', false) || '00000000-0000-0000-0000-000000000000';
+        const destinationType = tl.getInput('destinationType', true) || "groups";
+        const destinationsInputName = destinationType === 'groups' ? 'destinationGroupIds' : 'destinationStoreId';
+
+        let destinations = tl.getInput(destinationsInputName, true);
         tl.debug(`Effective destinationIds: ${destinations}`);
-        let destinationIds = destinations.split(/[, ;]+/).filter(id => id);
+        let destinationIds = destinations.split(/[, ;]+/).map(id => id.trim()).filter(id => id);
 
         // Validate inputs
         if (!apiToken) {
@@ -444,6 +451,11 @@ async function run() {
         if (!destinationIds.length) {
             throw new Error(tl.loc("InvalidDestinationInput"));
         }
+        if (destinationType === "store" && destinationIds.length > 1) {
+            throw new Error(tl.loc("CanNotDistributeToMultipleStores"));
+        }
+
+        const isSilent: boolean = destinationType === "groups" && tl.getBoolInput('silentRelease', false) || false;
 
         let app = utils.resolveSinglePath(appFilePattern);
         tl.checkPath(app, "Binary file");
@@ -470,7 +482,7 @@ async function run() {
         let packageUrl = await commitRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken, userAgent);
 
         // Publish
-        await publishRelease(effectiveApiServer, packageUrl, isMandatory, releaseNotes, destinationIds, apiToken, userAgent);
+        await publishRelease(effectiveApiServer, packageUrl, isMandatory, isSilent, releaseNotes, destinationIds, apiToken, userAgent);
 
         if (symbolsFile) {
             // Begin preparing upload symbols

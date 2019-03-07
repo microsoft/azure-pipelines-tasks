@@ -166,16 +166,50 @@
             "required": false
         },
         {
-            "name": "destinationIds",
+            "name": "destinationType",
+            "type": "radio",
+            "label": "Release destination",
+            "required": true,
+            "defaultValue": "groups",
+            "options": {
+                "groups": "Groups",
+                "store": "Store"
+            }
+        },
+        {
+            "name": "destinationGroupIds",
             "aliases": [
+                "destinationIds",
                 "distributionGroupId",
                 "destinationId"
             ],
             "type": "string",
             "defaultValue": "",
             "label": "Destination IDs",
-            "helpMarkDown": "IDs of the distribution groups or stores the app will deploy to. Leave it empty to use the default group and use commas or semicolons to separate multiple IDs.",
-            "required": false
+            "helpMarkDown": "IDs of the distribution groups to release to. Leave it empty to use the default group and use commas or semicolons to separate multiple IDs.",
+            "required": false,
+            "visibleRule": "destinationType = groups"
+        },
+        {
+            "name": "destinationStoreId",
+            "aliases": [
+                "destinationIds",
+                "distributionGroupId",
+                "destinationId"
+            ],
+            "type": "string",
+            "defaultValue": "",
+            "label": "Destination ID",
+            "helpMarkDown": "ID of the distribution store to deploy to.",
+            "required": false,
+            "visibleRule": "destinationType = store"
+        },
+        {
+            "name": "silentRelease",
+            "type": "boolean",
+            "label": "Do not notify testers. Release will still be available to install.",
+            "required": false,
+            "visibleRule": "destinationType = groups"
         }
     ],
     "instanceNameFormat": "Deploy $(app) to Visual Studio App Center",
@@ -191,6 +225,7 @@
         "FailedToUploadFile": "Failed to complete file upload.",
         "NoApiTokenFound": "No API token found on the Visual Studio App Center service connection.",
         "InvalidDestinationInput": "The destination input provided was invalid",
+        "CanNotDistributeToMultipleStores": "Cannot distribute to multiple stores",
         "Succeeded": "App Center Distribute task succeeded",
         "CannotFindAnyFile": "Cannot find any file based on %s.",
         "FoundMultipleFiles": "Found multiple files matching %s.",
