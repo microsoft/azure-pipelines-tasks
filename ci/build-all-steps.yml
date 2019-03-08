@@ -62,15 +62,6 @@ steps:
   displayName: Legacy tests with node 6
   condition: ne(variables['numTasks'], 0)
 
-# Publish test results
-- task: PublishTestResults@2
-  displayName: Publish Test Results test-*.xml
-  condition: ne(variables['numTasks'], 0)
-  inputs:
-    testResultsFiles: 'test-*.xml'
-    testRunTitle: 'Node 6 Test Results'
-    searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
-
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
