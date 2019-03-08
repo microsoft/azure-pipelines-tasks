@@ -1,6 +1,6 @@
 {
-  "id": "D53CCAB4-555E-4494-9D06-11DB043FB4C9",
-  "name": "RestoreCacheTesting",
+  "id": "D53CCAB4-555E-4494-9D06-11DB043FB4A9",
+  "name": "RestoreCache",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "",
@@ -8,8 +8,8 @@
   "category": "Utility",
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 0,
+    "Major": 0,
+    "Minor": 1,
     "Patch": 0
   },
   "groups": [],
@@ -18,12 +18,12 @@
   "minimumAgentVersion": "2.140.1",
   "inputs": [
     {
-      "name": "fingerprint",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.fingerprint",
-      "defaultValue": "fingerprint",
+      "name": "fingerprints",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.fingerprints",
+      "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.fingerprint"
+      "helpMarkDown": "ms-resource:loc.input.help.fingerprints"
     },
     {
       "name": "targetPath",
@@ -34,10 +34,16 @@
       "helpMarkDown": "ms-resource:loc.input.help.targetPath"
     }
   ],
+  "outputVariables": [
+    {
+      "name": "CacheResored",
+      "description": "This variable indicates if the cache was restore successfully."
+    }
+  ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AgentPlugin": {
-      "target": "Agent.Plugins.PipelineCache.RestoreCache, Agent.Plugins"
+      "target": "Agent.Plugins.PipelineCache.RestorePipelineCacheV0, Agent.Plugins"
     }
   },
   "messages": {}

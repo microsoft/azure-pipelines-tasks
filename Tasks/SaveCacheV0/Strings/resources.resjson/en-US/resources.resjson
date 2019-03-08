@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "Save Cache Testing",
+  "loc.friendlyName": "Save Cache",
   "loc.helpMarkDown": "Publish a local cache for the current pipeline.",
   "loc.description": "Publish a local cache for the current pipeline.",
   "loc.instanceNameFormat": "Save Cache",
-  "loc.input.label.fingerprint": "The name of this fingerprint.",
-  "loc.input.help.fingerprint": "The name of this fingerprint.",
+  "loc.input.label.fingerprints": "The name of the fingerprint.",
+  "loc.input.help.fingerprints": "The name of the fingerprint.",
   "loc.input.label.targetPath": "Path to publish",
   "loc.input.help.targetPath": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
 }

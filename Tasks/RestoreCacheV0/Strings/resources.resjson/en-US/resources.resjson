@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Restore Cache",
+  "loc.helpMarkDown": "Downloads an associated cache to a local path.",
+  "loc.description": "Downloads an associated cache.",
+  "loc.instanceNameFormat": "Restore Cache",
+  "loc.input.label.fingerprints": "The name of fingerprint.",
+  "loc.input.help.fingerprints": "The name of the fingerprint.",
+  "loc.input.label.targetPath": "Path to download to",
+  "loc.input.help.targetPath": "The folder path to download the cache to. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported. If the folder doesn't exist it will be created."
+}
