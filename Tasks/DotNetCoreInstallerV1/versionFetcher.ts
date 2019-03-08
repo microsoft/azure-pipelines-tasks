@@ -39,7 +39,12 @@ export class DotNetCoreVersionFetcher {
         }
 
         if (!requiredVersion) {
-            throw tl.loc("VersionNotFound");
+            console.log("FallingBackToAdjacentChannels", version);
+            requiredVersion = await this.getVersionFromOtherChannels(version, packageType, includePreviewVersions);
+        }
+
+        if (!requiredVersion) {
+            throw tl.loc("VersionNotFound", version);
         }
 
         return requiredVersion;
@@ -148,6 +153,37 @@ export class DotNetCoreVersionFetcher {
         }
     }
 
+    private async getVersionFromOtherChannels(version: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
+        let fallbackChannels = this.getChannelsForMajorVersion(version);
+        if (!fallbackChannels && fallbackChannels.length < 1) {
+            throw tl.loc("NoSuitableChannelWereFound", version);
+        }
+
+        var versionInfo: VersionInfo = null;
+        for (var i = 0; i < fallbackChannels.length; i++) {
+            console.log("LookingForVersionInChannel", (fallbackChannels[i])["channel-version"]);
+            versionInfo = await this.getVersionFromChannel(fallbackChannels[i], version, packageType, includePreviewVersions);
+
+            if (versionInfo) {
+                break;
+            }
+        }
+
+        return versionInfo;
+    }
+
+    private getChannelsForMajorVersion(version: string): any {
+        var versionParts = utils.getVersionParts(version);
+        let adjacentChannels = [];
+        this.releasesIndex["releases-index"].forEach(channel => {
+            if (channel["channel-version"].startsWith(`${versionParts.majorVersion}`)) {
+                adjacentChannels.push(channel);
+            }
+        });
+
+        return adjacentChannels;
+    }
+
     private detectMachineOS(): string[] {
         let osSuffix = [];
         let scriptRunner: trm.ToolRunner;
@@ -217,6 +253,14 @@ export class DotNetCoreVersionFetcher {
 export class VersionInfo {
     public version: string;
     public files: VersionFilesData[];
+
+    public static getRuntimeVersion(versionInfo: VersionInfo): string {
+        if (versionInfo["runtime-version"]) {
+            return versionInfo["runtime-version"];
+        }
+
+        return versionInfo.version;
+    }
 }
 
 export class VersionFilesData {

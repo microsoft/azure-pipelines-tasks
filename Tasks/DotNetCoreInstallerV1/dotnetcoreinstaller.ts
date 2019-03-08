@@ -20,7 +20,7 @@ async function run() {
 
     let dotNetCoreInstaller = new VersionInstaller(packageType, installationPath);
     if (!dotNetCoreInstaller.isVersionInstalled(versionInfo.version)) {
-        await dotNetCoreInstaller.downloadAndInstall(versionInfo.version, versionFetcher.getDownloadUrl(versionInfo, packageType));
+        await dotNetCoreInstaller.downloadAndInstall(versionInfo, versionFetcher.getDownloadUrl(versionInfo, packageType));
     }
 
     // By default disable Multi Level Lookup unless user wants it enabled.

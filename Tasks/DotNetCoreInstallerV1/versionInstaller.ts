@@ -5,6 +5,7 @@ import * as tl from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 
 import * as utils from "./versionUtilities";
+import { VersionInfo } from './versionFetcher';
 
 export class VersionInstaller {
     constructor(packageType: string, installationPath: string) {
@@ -19,8 +20,9 @@ export class VersionInstaller {
         this.installationPath = installationPath;
     }
 
-    public async downloadAndInstall(version: string, downloadUrl: string): Promise<void> {
+    public async downloadAndInstall(versionInfo: VersionInfo, downloadUrl: string): Promise<void> {
         let downloadPath = "";
+        let version = versionInfo.version;
 
         try {
             downloadPath = await toolLib.downloadTool(downloadUrl);
@@ -48,16 +50,21 @@ export class VersionInstaller {
             });
 
             // Copy files
-            if (this.isLatestInstalledVersion(version)) {
-                tl.debug(tl.loc("CopyingFilesIntoPath", this.installationPath));
-                var filesToBeCopied = allEnteriesInDir.filter(path => !fs.lstatSync(path).isDirectory());
-                filesToBeCopied.forEach((filePath) => {
-                    tl.cp(filePath, this.installationPath, "-f", false);
-                });
+            try {
+                if (this.isLatestInstalledVersion(version)) {
+                    tl.debug(tl.loc("CopyingFilesIntoPath", this.installationPath));
+                    var filesToBeCopied = allEnteriesInDir.filter(path => !fs.lstatSync(path).isDirectory());
+                    filesToBeCopied.forEach((filePath) => {
+                        tl.cp(filePath, this.installationPath, "-f", false);
+                    });
+                }
+            }
+            catch (ex) {
+                tl.warning(tl.loc("FailedToCopyTopLevelFiles", ex));
             }
 
             // Cache tool
-            this.createInstallationCompleteFile(version);
+            this.createInstallationCompleteFile(versionInfo);
 
             console.log(tl.loc("SuccessfullyInstalled", this.packageType, version));
         }
@@ -74,29 +81,28 @@ export class VersionInstaller {
     public isVersionInstalled(version: string): boolean {
         var isInstalled: boolean = false;
         if (this.packageType == "sdk") {
-            isInstalled = toolLib.isExplicitVersion(version) && fs.existsSync(path.join(this.installationPath, "sdk", version));
-            if (!(globalInstallationPaths.find(path => path == this.installationPath))) {
-                isInstalled = isInstalled && fs.existsSync(path.join(this.installationPath, "sdk", `${version}.complete`));
-            }
+            isInstalled = toolLib.isExplicitVersion(version) && fs.existsSync(path.join(this.installationPath, "sdk", version)) && fs.existsSync(path.join(this.installationPath, "sdk", `${version}.complete`));
         }
         else {
-            isInstalled = toolLib.isExplicitVersion(version) && fs.existsSync(path.join(this.installationPath, "host", "fxr", version))
-            if (!(globalInstallationPaths.find(path => path == this.installationPath))) {
-                isInstalled = isInstalled && fs.existsSync(path.join(this.installationPath, "host", "fxr", `${version}.complete`));
-            }
+            isInstalled = toolLib.isExplicitVersion(version) && fs.existsSync(path.join(this.installationPath, "shared", "Microsoft.NETCore.App", version)) && fs.existsSync(path.join(this.installationPath, "shared", "Microsoft.NETCore.App", `${version}.complete`));
         }
 
         isInstalled ? console.log(tl.loc("VersionFoundInToolCache")) : console.log(tl.loc("VersionNotFoundInToolCache", version));
         return isInstalled;
     }
 
-    private createInstallationCompleteFile(version: string): void {
+    private createInstallationCompleteFile(versionInfo: VersionInfo): void {
+        let version = versionInfo.version;
         tl.debug(tl.loc("CreatingInstallationCompeleteFile", version, this.packageType));
-        if (!globalInstallationPaths.find(path => path == this.installationPath)) {
-            // always add for runtime as it is installed with SDK as well.
-            var pathToVersionCompleteFile = this.packageType == "sdk" ? path.join(this.installationPath, "sdk") : path.join(this.installationPath, "host", "fxr");
+        // always add for runtime as it is installed with SDK as well.
+        var pathToVersionCompleteFile: string = "";
+        if (this.packageType == "sdk") {
+            pathToVersionCompleteFile = path.join(this.installationPath, "sdk");
             fs.writeFileSync(path.join(pathToVersionCompleteFile, `${version}.complete`), `{ "version": "${version}" }`);
         }
+
+        pathToVersionCompleteFile = path.join(this.installationPath, "shared", "Microsoft.NETCore.App");
+        fs.writeFileSync(path.join(pathToVersionCompleteFile, `${VersionInfo.getRuntimeVersion(versionInfo)}.complete`), `{ "version": "${VersionInfo.getRuntimeVersion(versionInfo)}" }`);
     }
 
     private isLatestInstalledVersion(version: string): boolean {
@@ -107,14 +113,9 @@ export class VersionInstaller {
 
         var allEnteries: string[] = fs.readdirSync(pathTobeChecked).map(name => path.join(pathTobeChecked, name));
         var folderPaths: string[] = allEnteries.filter(element => fs.lstatSync(element).isDirectory());
-
         var isLatest: boolean = folderPaths.findIndex(folderPath => utils.versionCompareFunction(path.basename(folderPath), version) > 0) < 0;
-
-        if (!(globalInstallationPaths.find(path => path == this.installationPath))) {
-            var filePaths: string[] = allEnteries.filter(element => !fs.lstatSync(element).isDirectory());
-
-            isLatest = isLatest && filePaths.findIndex(filePath => utils.versionCompareFunction(this.getVersionCompleteFileName(path.basename(filePath)), version) > 0) < 0;
-        }
+        var filePaths: string[] = allEnteries.filter(element => !fs.lstatSync(element).isDirectory());
+        isLatest = isLatest && filePaths.findIndex(filePath => utils.versionCompareFunction(this.getVersionCompleteFileName(path.basename(filePath)), version) > 0) < 0;
 
         isLatest ? tl.debug(tl.loc("VersionIsLocalLatest")) : tl.debug(tl.loc("VersionIsNotLocalLatest"));
         return isLatest;
@@ -129,12 +130,3 @@ export class VersionInstaller {
     private packageType: string;
     private installationPath: string;
 }
-
-const globalInstallationPaths = [
-    "C:/Program Files/dotnet",
-    "C:/Program Files (x86)/dotnet",
-    "C:\\Program Files\\dotnet",
-    "C:\\Program Files (x86)\\dotnet",
-    "/usr/local/share/dotnet",
-    "/usr/share/dotnet"
-]
