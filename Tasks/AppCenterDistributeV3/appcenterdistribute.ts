@@ -26,6 +26,11 @@ const DestinationType = {
     Store: "store" as DestinationType
 }
 
+const DestinationTypeParameter = {
+    [DestinationType.Groups]: "groups",
+    [DestinationType.Store]: "stores"
+}
+
 function getEndpointDetails(endpointInputFieldName) {
     var errorMessage = tl.loc("CannotDecodeEndpoint");
     var endpoint = tl.getInput(endpointInputFieldName, true);
@@ -141,7 +146,7 @@ function commitRelease(apiServer: string, apiVersion: string, appSlug: string, u
     request.patch({ url: commitReleaseUrl, headers: headers, json: commitBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             if (body && body['release_url']) {
-                defer.resolve(body['release_url']);
+                defer.resolve(body['release_id']);
             } else {
                 defer.reject(tl.loc("FailedToUploadFile"));
             }
@@ -151,10 +156,10 @@ function commitRelease(apiServer: string, apiVersion: string, appSlug: string, u
     return defer.promise;
 }
 
-function publishRelease(apiServer: string, releaseUrl: string, isMandatory: boolean, isSilent: boolean, releaseNotes: string, destinationIds: string[], token: string, userAgent: string) {
+function publishRelease(apiServer: string, apiVersion: string, appSlug: string, releaseId: string, destinationType: DestinationType, isMandatory: boolean, isSilent: boolean, destinationId: string, token: string, userAgent: string) {
     tl.debug("-- Mark package available.");
     let defer = Q.defer<void>();
-    let publishReleaseUrl: string = `${apiServer}/${releaseUrl}`;
+    let publishReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/releases/${releaseId}/${DestinationTypeParameter[destinationType]}`;
     tl.debug(`---- url: ${publishReleaseUrl}`);
 
     let headers = {
@@ -162,17 +167,47 @@ function publishRelease(apiServer: string, releaseUrl: string, isMandatory: bool
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    const destinations = destinationIds.map(id => { return { "id": id }; });
     let publishBody = {
-        "status": "available",
-        "release_notes": releaseNotes,
-        "mandatory_update": isMandatory,
-        "destinations": destinations
+        "id": destinationId
     };
 
-    if (isSilent) {
-        publishBody["notify_testers"] = false;
+    if (destinationType === DestinationType.Groups) {
+        publishBody["mandatory_update"] = isMandatory;
+        if (isSilent) {
+            publishBody["notify_testers"] = false;
+        }
     }
+
+    // Builds started by App Center has the commit message set when distribution is enabled
+    const commitMessage = process.env['LASTCOMMITMESSAGE'];
+    // Updating the internal_request_source to distinguish the AppCenter triggered build and custom build
+    if (!!commitMessage) {
+        headers["internal-request-source"] = "VSTS-APPCENTER";
+    }
+
+    request.post({ url: publishReleaseUrl, headers: headers, json: publishBody }, (err, res, body) => {
+        responseHandler(defer, err, res, body, () => {
+            defer.resolve();
+        });
+    })
+
+    return defer.promise;
+}
+
+function updateRelease(apiServer: string, apiVersion: string, appSlug: string, releaseId: string, releaseNotes: string, token: string, userAgent: string) {
+    tl.debug("-- Updating release.");
+    let defer = Q.defer<void>();
+    let publishReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/releases/${releaseId}`;
+    tl.debug(`---- url: ${publishReleaseUrl}`);
+
+    let headers = {
+        "X-API-Token": token,
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
+    };
+    let publishBody = {
+        "release_notes": releaseNotes
+    };
 
     let branchName = process.env['BUILD_SOURCEBRANCH'];
     branchName = getBranchName(branchName);
@@ -202,7 +237,7 @@ function publishRelease(apiServer: string, releaseUrl: string, isMandatory: bool
         publishBody = Object.assign(publishBody, { build: build });
     }
 
-    request.patch({ url: publishReleaseUrl, headers: headers, json: publishBody }, (err, res, body) => {
+    request.put({ url: publishReleaseUrl, headers: headers, json: publishBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             defer.resolve();
         });
@@ -486,10 +521,13 @@ async function run() {
         await uploadRelease(uploadInfo.upload_url, app, userAgent);
 
         // Commit the upload
-        let packageUrl = await commitRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken, userAgent);
+        let releaseId = await commitRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken, userAgent);
 
-        // Publish
-        await publishRelease(effectiveApiServer, packageUrl, isMandatory, isSilent, releaseNotes, destinationIds, apiToken, userAgent);
+        await updateRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, releaseNotes, apiToken, userAgent);
+        
+        await Q.all(destinationIds.map(destinationId => {
+            return publishRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, destinationType, isMandatory, isSilent, destinationId, apiToken, userAgent);
+        }));
 
         if (symbolsFile) {
             // Begin preparing upload symbols
