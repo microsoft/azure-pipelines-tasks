@@ -198,10 +198,9 @@
                 "destinationId"
             ],
             "type": "string",
-            "defaultValue": "",
             "label": "Destination ID",
             "helpMarkDown": "ID of the distribution store to deploy to.",
-            "required": false,
+            "required": true,
             "visibleRule": "destinationType = store"
         },
         {

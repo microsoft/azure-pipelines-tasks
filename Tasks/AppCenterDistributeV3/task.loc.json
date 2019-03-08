@@ -198,10 +198,9 @@
         "destinationId"
       ],
       "type": "string",
-      "defaultValue": "",
       "label": "ms-resource:loc.input.label.destinationStoreId",
       "helpMarkDown": "ms-resource:loc.input.help.destinationStoreId",
-      "required": false,
+      "required": true,
       "visibleRule": "destinationType = store"
     },
     {
