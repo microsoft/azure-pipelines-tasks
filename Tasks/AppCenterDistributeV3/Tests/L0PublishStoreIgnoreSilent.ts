@@ -37,19 +37,21 @@ nock('https://example.test')
         status: 'committed'
     })
     .reply(200, {
+        release_id: '1',
         release_url: 'my_release_location'
     });
 
 //make it available
 //JSON.stringify to verify exact match of request body: https://github.com/node-nock/nock/issues/571
 nock('https://example.test')
-    .patch("/my_release_location", JSON.stringify({
-        status: "available",
-        release_notes: "my release notes",
-        mandatory_update: true,
-        destinations: [
-            { id: "11111111-1111-1111-1111-111111111111" }
-        ],
+    .post("/v0.1/apps/testuser/testapp/releases/1/stores", JSON.stringify({
+        id: "11111111-1111-1111-1111-111111111111"
+    }))
+    .reply(200);
+
+nock('https://example.test')
+    .put('/v0.1/apps/testuser/testapp/releases/1', JSON.stringify({
+        release_notes: 'my release notes',
         build: {
             id: '2',
             branch: 'master',

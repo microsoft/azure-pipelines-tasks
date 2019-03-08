@@ -46,22 +46,25 @@ nock('https://example.test')
         status: 'committed'
     })
     .reply(200, {
+        release_id: '1',
         release_url: 'my_release_location'
     });
 
-//make it available
-//JSON.stringify to verify exact match of request body: https://github.com/node-nock/nock/issues/571
+[
+    "11111111-1111-1111-1111-111111111111",
+    "22222222-2222-2222-2222-222222222222",
+    "33333333-3333-3333-3333-333333333333",
+    "44444444-4444-4444-4444-444444444444",
+].forEach(id => nock('https://example.test')
+    .post("/v0.1/apps/testuser/testapp/releases/1/groups", JSON.stringify({
+        id,
+        mandatory_update: true
+    }))
+    .reply(200));
+
 nock('https://example.test')
-    .patch("/my_release_location", JSON.stringify({
-        status: "available",
-        release_notes: "my release notes",
-        mandatory_update: true,
-        destinations: [
-            { id: "11111111-1111-1111-1111-111111111111" },
-            { id: "22222222-2222-2222-2222-222222222222" },
-            { id: "33333333-3333-3333-3333-333333333333" },
-            { id: "44444444-4444-4444-4444-444444444444" }
-        ],
+    .put('/v0.1/apps/testuser/testapp/releases/1', JSON.stringify({
+        release_notes: 'my release notes',
         build: {
             id: '2',
             branch: 'master',

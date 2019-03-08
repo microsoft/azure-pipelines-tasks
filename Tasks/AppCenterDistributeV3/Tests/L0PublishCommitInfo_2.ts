@@ -44,17 +44,22 @@ nock('https://example.test')
         status: 'committed'
     })
     .reply(200, {
-        release_url: 'my_release_location' 
+        release_id: '1',
+        release_url: 'my_release_location'
     });
 
 //make it available
 //JSON.stringify to verify exact match of request body: https://github.com/node-nock/nock/issues/571
 nock('https://example.test')
-    .patch("/my_release_location", JSON.stringify({
-        status: "available",
-        release_notes: "my release notes",
-        mandatory_update: false,
-        destinations: [{ id: "00000000-0000-0000-0000-000000000000" }],
+    .post("/v0.1/apps/testuser/testapp/releases/1/groups", JSON.stringify({
+        id: "00000000-0000-0000-0000-000000000000",
+        mandatory_update: false
+    }))
+    .reply(200);
+
+nock('https://example.test')
+    .put('/v0.1/apps/testuser/testapp/releases/1', JSON.stringify({
+        release_notes: 'my release notes',
         build: {
             id: '2',
             branch: 'master',
@@ -90,11 +95,11 @@ nock('https://example.test')
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "checkPath" : {
+    "checkPath": {
         "/test/path/to/my.ipa": true,
         "/test/path/to/mappings.txt": true
     },
-    "findMatch" : {
+    "findMatch": {
         "/test/path/to/mappings.txt": [
             "/test/path/to/mappings.txt"
         ],
@@ -115,7 +120,7 @@ fs.createReadStream = (s: string) => {
 
 fs.statSync = (s: string) => {
     let stat = new Stats;
-    
+
     stat.isFile = () => {
         return !s.toLowerCase().endsWith(".dsym");
     }

@@ -54,16 +54,21 @@ nock('https://example.test')
         status: 'committed'
     })
     .reply(200, {
+        release_id: '1',
         release_url: 'my_release_location' 
     });
 
 //make it available
 nock('https://example.test')
-    .patch('/my_release_location', {
-        status: 'available',
-        destinations: [{ id: "00000000-0000-0000-0000-000000000000" }],
-        release_notes: 'my release notes'
+    .post('/v0.1/apps/testuser/testapp/releases/1/groups', {
+        id: "00000000-0000-0000-0000-000000000000",
     })
+    .reply(200);
+
+nock('https://example.test')
+    .put('/v0.1/apps/testuser/testapp/releases/1', JSON.stringify({
+        release_notes: 'my release notes'
+    }))
     .reply(200);
 
 //begin symbol upload
