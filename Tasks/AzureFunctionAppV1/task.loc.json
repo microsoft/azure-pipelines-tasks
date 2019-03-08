@@ -374,6 +374,8 @@
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName",
     "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported",
-    "FailedToGetStorageAccountDetails": "ms-resource:loc.messages.FailedToGetStorageAccountDetails"
+    "FailedToGetStorageAccountDetails": "ms-resource:loc.messages.FailedToGetStorageAccountDetails",
+    "FailedToSyncTriggers": "ms-resource:loc.messages.FailedToSyncTriggers",
+    "SyncFunctionTriggersSuccess": "ms-resource:loc.messages.SyncFunctionTriggersSuccess"
   }
 }

@@ -374,6 +374,8 @@
         "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
         "InvalidDockerImageName": "Invalid Docker hub image name provided.",
         "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task.",
-        "FailedToGetStorageAccountDetails": "Unable to find the storage account associated with the function app."
+        "FailedToGetStorageAccountDetails": "Unable to find the storage account associated with the function app.",
+        "FailedToSyncTriggers": "Failed to sync triggers '%s' application settings. Error: %s",
+        "SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully"
     }
 }
