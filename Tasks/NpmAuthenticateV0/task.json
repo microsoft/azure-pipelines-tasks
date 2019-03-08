@@ -2,7 +2,7 @@
     "id": "ad884ca2-732e-4b85-b2d3-ed71bcbd2788",
     "name": "npmAuthenticate",
     "friendlyName": "npm Authenticate (for task runners)",
-    "description": "Don't use this task if you're also using the npm task. Provides npm credentials to an .npmrc file in your repository for the scope of the build. This enables npm task runners like gulp and Grunt to authenticate with private registries.",
+    "description": "Adds npm credentials to an .npmrc file in your repository. This enables npm task runners like gulp and Grunt to connect to npm registries that require authentication. Don't use this task if you're also using the npm task. ",
     "helpUrl": "",
     "helpMarkDown": "",
     "category": "Package",
@@ -10,7 +10,7 @@
     "version": {
         "Major": 0,
         "Minor": 149,
-        "Patch": 0
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -23,12 +23,13 @@
             "name": "workingFile",
             "label": ".npmrc file to authenticate",
             "helpMarkDown": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\".",
-            "type": "filePath"
+            "type": "filePath",
+            "required": true
         },
         {
             "name": "customEndpoint",
             "label": "Credentials for registries outside this organization/collection",
-            "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this organization/collection, leave this blank; the build’s credentials are used automatically.",
+            "helpMarkDown": "Credentials to use for registries outside this organization. For registries in the current organization, leave this blank to use the build’s credentials.",
             "type": "connectedService:externalnpmregistry",
             "properties": {
                 "MultiSelectFlatList": "true"
