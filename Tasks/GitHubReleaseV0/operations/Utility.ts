@@ -202,8 +202,8 @@ export class Utility {
         return (tagSource === TagSelectionMode.auto);
     }
 
-    public static validateTagSource(tagSource: string) {
-        if (tagSource !== TagSelectionMode.auto && tagSource !== TagSelectionMode.manual) {
+    public static validateTagSource(tagSource: string, action: string) {
+        if (action === ActionType.create && tagSource !== TagSelectionMode.auto && tagSource !== TagSelectionMode.manual) {
             throw new Error(tl.loc("InvalidTagSource", tagSource));
         }
     }

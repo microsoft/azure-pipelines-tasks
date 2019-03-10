@@ -1,6 +1,7 @@
 import tmrm = require('vsts-task-lib/mock-run');
 import * as path from 'path';
 import * as sinon from 'sinon';
+import { Inputs } from '../operations/Constants';
 
 export class ActionTests {
 
@@ -8,6 +9,8 @@ export class ActionTests {
         let tp = path.join(__dirname, 'ActionL0Tests.js');
         let tr : tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
         
+        tr.setInput(Inputs.assetUploadMode, "replace");
+
         this.stub(tr);
         
         tr.run();

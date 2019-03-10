@@ -241,10 +241,10 @@ export class Action {
             tl.debug("Delete asset response: " + JSON.stringify(deleteAssetResponse));
 
             if (deleteAssetResponse.statusCode === 204) {
-                console.log(tl.loc("AssetDeletedSuccessfully", asset));
+                console.log(tl.loc("AssetDeletedSuccessfully", asset[GitHubAttributes.nameAttribute]));
             }
             else {
-                tl.error(tl.loc("ErrorDeletingAsset", asset));
+                tl.error(tl.loc("ErrorDeletingAsset", asset[GitHubAttributes.nameAttribute]));
                 throw new Error(deleteAssetResponse.body[GitHubAttributes.message]);
             }
         }

@@ -26,8 +26,8 @@ class Main {
             const action = tl.getInput(Inputs.action, true).toLowerCase();
             Utility.validateAction(action);
 
-            let tagSource = tl.getInput(Inputs.tagSource, true);
-            Utility.validateTagSource(tagSource);
+            let tagSource = tl.getInput(Inputs.tagSource);
+            Utility.validateTagSource(tagSource, action);
             
             let tag = tl.getInput(Inputs.tag);
             Utility.validateTag(tag, tagSource, action);
