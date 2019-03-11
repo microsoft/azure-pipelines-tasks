@@ -13,11 +13,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 148,
+    "Minor": 149,
     "Patch": 0
   },
   "satisfies": [
-    "Node"
+    "Node",
+    "npm"
   ],
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
