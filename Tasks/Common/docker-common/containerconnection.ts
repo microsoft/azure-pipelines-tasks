@@ -53,18 +53,18 @@ export default class ContainerConnection {
         this.openRegistryEndpoint(authenticationToken, allowMultipleLogin);
     }
 
-    public qualifyImageName(imageName: string) {
-        if (!imageUtils.hasRegistryComponent(imageName) && this.registryAuth) {
-            imageName = this.prefixImageName(this.registryAuth["registry"], imageName);
+    public getQualifiedImageNameIfRequired(imageName: string) {
+        if (!imageUtils.hasRegistryComponent(imageName)) {
+            imageName = this.getQualifiedImageName(imageName);
         }
 
         return imageName;
     }
 
-    public getQualifiedImageName(repository: string) {
-        let imageName = "";
-        if (repository) {
-            imageName = this.prefixImageName(this.registryAuth["registry"], repository);
+    public getQualifiedImageName(repository: string): string {
+        let imageName = repository ? repository : "";
+        if (repository && this.registryAuth) {
+            imageName = this.prefixRegistryIfRequired(this.registryAuth["registry"], repository);
         }
 
         return imageName;
@@ -76,7 +76,7 @@ export default class ContainerConnection {
             let regUrls = this.getRegistryUrlsFromDockerConfig();
             if (regUrls && regUrls.length > 0) {
                 regUrls.forEach(regUrl => {
-                    let imageName = this.prefixImageName(regUrl, repository);
+                    let imageName = this.prefixRegistryIfRequired(regUrl, repository);
                     imageNames.push(imageName);
                 });
             }
@@ -220,13 +220,16 @@ export default class ContainerConnection {
         return path && path.startsWith(tempDir);
     }
 
-    private prefixImageName(registry: string, repository: string): string {
-        let regUrl = url.parse(registry);
-        let hostname = !regUrl.slashes ? regUrl.href : regUrl.host;        
+    private prefixRegistryIfRequired(registry: string, repository: string): string {
         let imageName = repository;
-        // For docker hub, repository name is the qualified image name.
-        if (hostname.toLowerCase() !== "index.docker.io") {
-            imageName = hostname + "/" + repository;
+
+        if (registry) {
+            let regUrl = url.parse(registry);
+            let hostname = !regUrl.slashes ? regUrl.href : regUrl.host;
+            // For docker hub, repository name is the qualified image name. Prepend hostname if the registry is not docker hub.
+            if (hostname.toLowerCase() !== "index.docker.io") {
+                imageName = hostname + "/" + repository;
+            }
         }
 
         return imageName;

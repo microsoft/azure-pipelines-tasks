@@ -3,6 +3,7 @@ import * as tl from "vsts-task-lib/task";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+import * as fileutils from "docker-common/fileutils";
 
 function getTaskOutputDir(command: string): string {
     let tempDirectory = tl.getVariable('agent.tempDirectory') || os.tmpdir();
@@ -18,6 +19,9 @@ export function writeTaskOutput(commandName: string, output: string): string {
 
     let outputFileName = commandName + "_" + Date.now() + ".txt";
     let taskOutputPath = path.join(taskOutputDir, outputFileName);
-    fs.writeFileSync(taskOutputPath, output);
+    if (fileutils.writeFileSync(taskOutputPath, output) == 0) {
+        tl.warning(tl.loc('NoDataWrittenOnFile', taskOutputPath));
+    }
+    
     return taskOutputPath;
 }

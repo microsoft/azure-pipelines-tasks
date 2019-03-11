@@ -9,8 +9,6 @@ import Q = require('q');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-const environmentVariableMaximumSize = 32766;
-
 let containerRegisitry = tl.getInput("containerRegistry");
 let authenticationProvider = new GenericAuthenticationTokenProvider(containerRegisitry);        
 let registryAuthenticationToken = authenticationProvider.getAuthenticationToken();
@@ -45,10 +43,9 @@ if (command in dockerCommandMap) {
     commandImplementation = require(dockerCommandMap[command]);
 }
 
-let result = "";
+let resultPaths = "";
 commandImplementation.run(connection, (pathToResult) => {
-    result += pathToResult;
-    
+    resultPaths += pathToResult;    
 })
 /* tslint:enable:no-var-requires */
 .fin(function cleanup() {
@@ -57,13 +54,7 @@ commandImplementation.run(connection, (pathToResult) => {
     }
 })
 .then(function success() {
-    let commandOutputLength = result.length;
-    if (commandOutputLength > environmentVariableMaximumSize) {
-        tl.warning(tl.loc('OutputVariableDataSizeExceeded', commandOutputLength, environmentVariableMaximumSize));
-    } else {
-        tl.setVariable("DockerOutput", result);
-    }
-
+    tl.setVariable("DockerOutput", resultPaths);
     tl.setResult(tl.TaskResult.Succeeded, "");
 }, function failure(err) {
     tl.setResult(tl.TaskResult.Failed, err.message);

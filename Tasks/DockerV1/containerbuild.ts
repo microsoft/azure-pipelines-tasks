@@ -2,7 +2,8 @@
 
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
-import * as azdevUtils from "docker-common/azdevutils";
+import * as fileUtils from "docker-common/fileutils";
+import * as pipelineUtils from "docker-common/pipelineutils";
 import ContainerConnection from "docker-common/containerconnection";
 import * as sourceUtils from "docker-common/sourceutils";
 import * as imageUtils from "docker-common/containerimageutils";
@@ -11,33 +12,12 @@ import * as utils from "./utils";
 import * as util from "util";
 import { ToolRunner } from "vsts-task-lib/toolrunner";
 
-function findDockerFile(dockerfilepath : string) : string {
-
-    if (dockerfilepath.indexOf('*') >= 0 || dockerfilepath.indexOf('?') >= 0) {
-        tl.debug(tl.loc('ContainerPatternFound'));
-        var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
-        var allFiles = tl.find(buildFolder);
-        var matchingResultsFiles = tl.match(allFiles, dockerfilepath, buildFolder, { matchBase: true });
-
-        if (!matchingResultsFiles || matchingResultsFiles.length == 0) {
-            throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
-        }
-
-        return matchingResultsFiles[0];
-    }
-    else
-    {
-        tl.debug(tl.loc('ContainerPatternNotFound'));
-        return dockerfilepath;
-    }
-}
-
 export function run(connection: ContainerConnection): any {
     var command = connection.createCommand();
     command.arg("build");
 
     var dockerfilepath = tl.getInput("dockerFile", true);
-    var dockerFile = findDockerFile(dockerfilepath);
+    let dockerFile = fileUtils.findDockerFile(dockerfilepath);
     
     if(!tl.exist(dockerFile)) {
         throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
@@ -47,7 +27,7 @@ export function run(connection: ContainerConnection): any {
 
     var addDefaultLabels = tl.getBoolInput("addDefaultLabels");
     if (addDefaultLabels) {        
-        azdevUtils.addDefaultLabels(command);
+        pipelineUtils.addDefaultLabels(command);
     }
 
     var commandArguments = tl.getInput("arguments", false); 
@@ -56,7 +36,7 @@ export function run(connection: ContainerConnection): any {
     var imageName = utils.getImageName(); 
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     if (qualifyImageName) {
-        imageName = connection.qualifyImageName(imageName);
+        imageName = connection.getQualifiedImageNameIfRequired(imageName);
     }
     command.arg(["-t", tl.getBoolInput("enforceDockerNamingConvention") ? imageUtils.generateValidImageName(imageName) : imageName]);
 
