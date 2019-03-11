@@ -32,12 +32,14 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.targetPath"
-    }
-  ],
-  "outputVariables": [
+    },
     {
-      "name": "CacheResored",
-      "description": "This variable indicates if the cache was restore successfully."
+      "name": "cacheHitVar",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.cacheHitVar",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.cacheHitVar"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

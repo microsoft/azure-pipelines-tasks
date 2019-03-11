@@ -32,12 +32,14 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The folder path to download the cache to. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported. If the folder doesn't exist it will be created."
-        }
-    ],
-    "outputVariables": [
+        },
         {
-            "name" : "CacheResored",
-            "description" : "This variable indicates if the cache was restore successfully."
+            "name": "cacheHitVar",
+            "type": "string",
+            "label": "Variable to set if there is a cache hit",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "This will set the following variable (PipelineCache.<variable-value>) to 'True'."
         }
     ],
     "instanceNameFormat": "Restore Cache",
