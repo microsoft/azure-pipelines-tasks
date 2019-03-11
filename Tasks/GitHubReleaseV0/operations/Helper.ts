@@ -33,44 +33,37 @@ export class Helper {
      * @param target 
      * @param tag 
      */
-    public async getTagForCreateAction(githubEndpointToken: string, repositoryName: string, target: string, tag: string): Promise<string> {
-        let tagSelection = tl.getInput(Inputs.tagSource);
+    public async getTagForCommitTarget(githubEndpointToken: string, repositoryName: string, target: string): Promise<string> {
+        console.log(tl.loc("FetchTagForTarget", target));
+        let tag = undefined; 
+        
+        let commit_sha: string = await this.getCommitShaFromTarget(githubEndpointToken, repositoryName, target);
+        tl.debug("commit sha for target: " + commit_sha);
+        let buildSourceVersion = tl.getVariable(AzureDevOpsVariables.buildSourceVersion);
 
-        if (!!tagSelection && tagSelection === TagSelectionMode.auto) {
-            console.log(tl.loc("FetchTagForTarget", target));
-            // Tag should be set to undefined as it can have some value even if tag selection mode is auto if user has changed it.
-            tag = undefined; 
-            let commit_sha: string = await this.getCommitShaFromTarget(githubEndpointToken, repositoryName, target);
-            tl.debug("commit sha for target: " + commit_sha);
-            let buildSourceVersion = tl.getVariable(AzureDevOpsVariables.buildSourceVersion);
-
-            // If the buildSourceVersion and user specified target does not match, then prefer user specified target
-            if (commit_sha !== buildSourceVersion) {
-                tag = await this._getTagForCommit(githubEndpointToken, repositoryName, commit_sha);
-            }
-            else {
-                let buildSourceBranch = tl.getVariable(AzureDevOpsVariables.buildSourceBranch);
-                let normalizedBranch = Utility.normalizeBranchName(buildSourceBranch);
-
-                // Check if branch is referencing to tag, if yes, then parse tag from branch name e.g. refs/tags/v1.0.1
-                // Else fetch tag from commit
-                if (!!normalizedBranch) {
-                    tag = normalizedBranch;
-                }
-                else {
-                    tag = await this._getTagForCommit(githubEndpointToken, repositoryName, commit_sha);
-                }
-            }
-
-            if (!!tag) {
-                console.log(tl.loc("FetchTagForTargetSuccess", target));
-            }
-            
-            return tag;
+        // If the buildSourceVersion and user specified target does not match, then prefer user specified target
+        if (commit_sha !== buildSourceVersion) {
+            tag = await this._getTagForCommit(githubEndpointToken, repositoryName, commit_sha);
         }
         else {
-            return tag;
+            let buildSourceBranch = tl.getVariable(AzureDevOpsVariables.buildSourceBranch);
+            let normalizedBranch = Utility.normalizeBranchName(buildSourceBranch);
+
+            // Check if branch is referencing to tag, if yes, then parse tag from branch name e.g. refs/tags/v1.0.1
+            // Else fetch tag from commit
+            if (!!normalizedBranch) {
+                tag = normalizedBranch;
+            }
+            else {
+                tag = await this._getTagForCommit(githubEndpointToken, repositoryName, commit_sha);
+            }
         }
+
+        if (!!tag) {
+            console.log(tl.loc("FetchTagForTargetSuccess", target));
+        }
+        
+        return tag;
     }
 
     /**
