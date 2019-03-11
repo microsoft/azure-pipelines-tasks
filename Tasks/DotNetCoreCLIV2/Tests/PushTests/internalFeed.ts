@@ -23,7 +23,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "dotnet": "c:\\path\\dotnet.exe"
     },
     "exec": {
-        "c:\\path\\dotnet.exe nuget push c:\\agent\\home\\directory\\foo.nupkg --source https://vsts/packagesource --api-key VSTS": {
+        "c:\\path\\dotnet.exe nuget push c:\\agent\\home\\directory\\foo.nupkg --source https://vsts/packagesource --api-key AzureDevOps": {
             "code": 0,
             "stdout": "dotnet output",
             "stderr": ""
