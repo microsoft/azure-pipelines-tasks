@@ -36,7 +36,6 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.succeeded, 'task should have succeeded');
     });
 
@@ -67,7 +66,6 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.succeeded, 'task should have succeeded');
     });
 
@@ -128,7 +126,6 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.succeeded, 'task should have succeeded');
     });
 
@@ -139,7 +136,6 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.succeeded, 'task should have succeeded');
     });
 
@@ -150,7 +146,6 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.succeeded, 'task should have succeeded');
     });
 
@@ -161,7 +156,6 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.succeeded, 'task should have succeeded');
     });
 
@@ -172,7 +166,6 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.succeeded, 'task should have succeeded');
     });
 
@@ -183,7 +176,6 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.succeeded, 'task should have succeeded');
     });
 
@@ -195,7 +187,6 @@ describe('AppCenterDistribute L0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.succeeded, 'task should have succeeded');
     });
 
