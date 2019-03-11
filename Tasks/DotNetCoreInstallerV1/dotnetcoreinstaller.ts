@@ -4,24 +4,29 @@ import * as tl from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 import { DotNetCoreVersionFetcher, VersionInfo } from "./versionFetcher";
 import { VersionInstaller } from "./versionInstaller";
+import { VersionParts } from "./versionUtilities";
 
 async function run() {
-    let packageType = tl.getInput('packageType', true);
-    let version = tl.getInput('version', true).trim();
+    let packageType = tl.getInput('packageType', true).toLowerCase();
+    let versionSpec = tl.getInput('version', true).trim();
     let installationPath = tl.getInput('installationPath', true).trim();
     let includePreviewVersions: boolean = tl.getBoolInput('includePreviewVersions', true);
-    console.log(tl.loc("ToolToInstall", packageType, version));
-    let versionFetcher = new DotNetCoreVersionFetcher();
 
-    let versionInfo: VersionInfo = await versionFetcher.getVersionInfo(version, packageType, includePreviewVersions);
+    console.log(tl.loc("ToolToInstall", packageType, versionSpec));
+    VersionParts.ValidateVersionSpec(versionSpec);
+
+    let versionFetcher = new DotNetCoreVersionFetcher();
+    let versionInfo: VersionInfo = await versionFetcher.getVersionInfo(versionSpec, packageType, includePreviewVersions);
     if (!versionInfo) {
-        throw tl.loc("MatchingVersionNotFound", version);
+        throw tl.loc("MatchingVersionNotFound", versionSpec);
     }
 
     let dotNetCoreInstaller = new VersionInstaller(packageType, installationPath);
     if (!dotNetCoreInstaller.isVersionInstalled(versionInfo.version)) {
         await dotNetCoreInstaller.downloadAndInstall(versionInfo, versionFetcher.getDownloadUrl(versionInfo, packageType));
     }
+
+    toolLib.prependPath(installationPath);
 
     // By default disable Multi Level Lookup unless user wants it enabled.
     if (tl.getBoolInput("restrictMultiLevelLookup", true)) {

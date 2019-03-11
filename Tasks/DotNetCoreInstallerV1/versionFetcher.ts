@@ -4,7 +4,6 @@ import * as path from 'path';
 
 import * as tl from 'vsts-task-lib/task';
 import * as trm from 'vsts-task-lib/toolrunner';
-import * as toolLib from 'vsts-task-tool-lib';
 
 import httpClient = require("typed-rest-client/HttpClient");
 import httpInterfaces = require("typed-rest-client/Interfaces");
@@ -38,7 +37,7 @@ export class DotNetCoreVersionFetcher {
             requiredVersion = await this.getVersionFromChannel(channelInformation, version, packageType, includePreviewVersions);
         }
 
-        if (!requiredVersion) {
+        if (!requiredVersion && !version.endsWith("x")) {
             console.log("FallingBackToAdjacentChannels", version);
             requiredVersion = await this.getVersionFromOtherChannels(version, packageType, includePreviewVersions);
         }
@@ -47,6 +46,8 @@ export class DotNetCoreVersionFetcher {
             throw tl.loc("VersionNotFound", version);
         }
 
+        let dotNetSdkVersionTelemetry = `{"userVersion":"${version}", "resolvedVersion":"${requiredVersion.version}"}`;
+        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=DotNetCoreInstallerV1]" + dotNetSdkVersionTelemetry);
         return requiredVersion;
     }
 
@@ -54,9 +55,19 @@ export class DotNetCoreVersionFetcher {
         console.log(tl.loc("GettingDownloadUrl", packageType, versionInfo.version));
 
         let osSuffixes = this.detectMachineOS();
-        let downloadPackageInfoObject: any = versionInfo.files.find((downloadPackageInfo: any) => {
-            if (downloadPackageInfo.rid.toLowerCase() == osSuffixes[0].toLowerCase()
-                && (osSuffixes[0].split("-")[0] == "win" && downloadPackageInfo.name.endsWith(".zip"))) {
+        let downloadPackageInfoObject: VersionFilesData = null;
+        osSuffixes.find((osSuffix) => {
+            downloadPackageInfoObject = versionInfo.files.find((downloadPackageInfo: any) => {
+                if (downloadPackageInfo.rid.toLowerCase() == osSuffix.toLowerCase()) {
+                    if (osSuffix.split("-")[0] != "win" || (osSuffix.split("-")[0] == "win" && downloadPackageInfo.name.endsWith(".zip"))) {
+                        return true;
+                    }
+                }
+
+                return false;
+            });
+
+            if (downloadPackageInfoObject) {
                 return true;
             }
 
@@ -64,28 +75,29 @@ export class DotNetCoreVersionFetcher {
         });
 
         if (!!downloadPackageInfoObject && downloadPackageInfoObject.url) {
+            tl.debug("Got download URL for platform with rid: " + downloadPackageInfoObject.rid);
             return downloadPackageInfoObject.url;
         }
 
         return "";
     }
 
-    private setReleasesIndex(): Promise<any> {
+    private setReleasesIndex(): Promise<void> {
         return this.httpCallbackClient.get(DotNetCoreReleasesIndexUrl)
             .then((response: HttpClientResponse) => {
                 return response.readBody();
             })
             .then((body: string) => {
                 this.releasesIndex = JSON.parse(body);
-                return this.releasesIndex;
+                return;
             })
             .catch((ex) => {
-                throw tl.loc("");
+                throw tl.loc("ExceptionWhileDownloadOrReadReleasesIndex", ex);
             });
     }
 
     private getVersionChannel(version: string): any {
-        let versionParts: any = utils.getVersionParts(version);
+        let versionParts: any = new utils.VersionParts(version);
 
         let channelVersion = `${versionParts.majorVersion}.${versionParts.minorVersion}`;
         if (versionParts.minorVersion == "x") {
@@ -107,7 +119,7 @@ export class DotNetCoreVersionFetcher {
     }
 
     private getVersionFromChannel(channelInformation: any, version: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
-        let versionParts: any = utils.getVersionParts(version);
+        let versionParts: utils.VersionParts = new utils.VersionParts(version);
         var releasesJsonUrl: string = channelInformation["releases.json"];
         var channelReleases: any = null;
 
@@ -119,13 +131,14 @@ export class DotNetCoreVersionFetcher {
                 .then((body: string) => {
                     channelReleases = JSON.parse(body).releases;
                     if (versionParts.minorVersion == "x" || versionParts.patchVersion == "x") {
-                        let dotNetSdkVersionTelemetry = `{"version":"${version}"}`;
-                        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=DotNetCoreInstallerV1]" + dotNetSdkVersionTelemetry);
 
                         let latestVersion = "0.0.0";
                         channelReleases.forEach(release => {
                             if (release[packageType] && utils.versionCompareFunction(release[packageType].version, latestVersion) > 0 && (includePreviewVersions || !release[packageType].version.includes('preview'))) {
-                                latestVersion = release[packageType].version;
+                                let matchedVersionParts = new utils.VersionParts(release[packageType].version);
+                                if (matchedVersionParts.majorVersion == versionParts.majorVersion && (versionParts.minorVersion == "x" || (versionParts.patchVersion == "x" && matchedVersionParts.minorVersion == versionParts.minorVersion))) {
+                                    latestVersion = release[packageType].version;
+                                }
                             }
                         });
 
@@ -173,7 +186,7 @@ export class DotNetCoreVersionFetcher {
     }
 
     private getChannelsForMajorVersion(version: string): any {
-        var versionParts = utils.getVersionParts(version);
+        var versionParts = new utils.VersionParts(version);
         let adjacentChannels = [];
         this.releasesIndex["releases-index"].forEach(channel => {
             if (channel["channel-version"].startsWith(`${versionParts.majorVersion}`)) {
@@ -254,12 +267,19 @@ export class VersionInfo {
     public version: string;
     public files: VersionFilesData[];
 
-    public static getRuntimeVersion(versionInfo: VersionInfo): string {
-        if (versionInfo["runtime-version"]) {
-            return versionInfo["runtime-version"];
+    public static getRuntimeVersion(versionInfo: VersionInfo, packageType: string): string {
+        if (packageType == "sdk") {
+            if (versionInfo["runtime-version"]) {
+                return versionInfo["runtime-version"];
+            }
+
+            tl.warning(tl.loc("runtimeVersionPropertyNotFound"));
+        }
+        else {
+            return versionInfo.version;
         }
 
-        return versionInfo.version;
+        return "";
     }
 }
 
