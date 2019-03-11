@@ -326,8 +326,6 @@ target.test = function() {
     mkdir('-p', path.join(buildTestsPath, 'lib'));
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(__dirname, 'Tests', 'lib'), path.join(buildTestsPath, 'lib'));
 
-    console.log(run(`cat ${path.join(__dirname, '_build/Tasks/AppCenterDistributeV3/Tests/L0OneIpaPass.js')}`))
-
     // find the tests
     var suiteType = options.suite || 'L0';
     var taskType = options.task || '*';
