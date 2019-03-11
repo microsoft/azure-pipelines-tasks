@@ -5,5 +5,11 @@
             "type": "node",
             "compile": true
         }
+    ],
+    "cp": [
+        {
+            "source": "externals",
+            "options": "-R"
+        }
     ]
 } 
