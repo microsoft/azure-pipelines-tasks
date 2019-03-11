@@ -129,6 +129,7 @@
         "SshV0",
         "TwineAuthenticateV0",
         "UniversalPackagesV0",
+        "UseDotNetV1",
         "UsePythonVersionV0",
         "UseRubyVersionV0",
         "VSBuildV1",
