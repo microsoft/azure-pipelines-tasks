@@ -22,6 +22,29 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
+      "name": "version",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.version",
+      "defaultValue": "1.0.4",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.version"
+    },
+    {
+      "name": "auth",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.auth",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.auth"
+    },
+    {
+      "name": "proxy",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.proxy",
+      "defaultValue": true,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.proxy"
+    },
+    {
       "name": "nuGetFeedType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.nuGetFeedType",
@@ -35,7 +58,7 @@
     }
   ],
   "execution": {
-    "Node10": {
+    "Node": {
       "target": "usedotnet.js"
     }
   },

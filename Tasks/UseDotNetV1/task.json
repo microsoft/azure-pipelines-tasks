@@ -58,7 +58,7 @@
         }
     ],
     "execution": {
-        "Node10": {
+        "Node": {
             "target": "usedotnet.js"
         }
     },
