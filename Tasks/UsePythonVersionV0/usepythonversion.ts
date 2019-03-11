@@ -15,12 +15,21 @@ interface TaskParameters {
     architecture: string
 }
 
+function useAnaconda(platform: Platform): void {
+    const installDir = path.join(
+        task.getVariable('CONDA'),
+        platform === Platform.Windows ? 'Scripts' : 'bin');
+
+    task.setVariable('pythonLocation', installDir);
+    toolUtil.prependPathSafe(installDir);
+}
+
 export function pythonVersionToSemantic(versionSpec: string) {
     const prereleaseVersion = /(\d+\.\d+\.\d+)((?:a|b|rc)\d*)/g;
     return versionSpec.replace(prereleaseVersion, '$1-$2');
 }
 
-export async function usePythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
+async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
     // Python's prelease versions look like `3.7.0b2`.
     // This is the one part of Python versioning that does not look like semantic versioning, which specifies `3.7.0-b2`.
     // If the version spec contains prerelease versions, we need to convert them to the semantic version equivalent
@@ -87,5 +96,12 @@ export async function usePythonVersion(parameters: Readonly<TaskParameters>, pla
 
             // On Linux and macOS, pip will create the --user directory and add it to PATH as needed.
         }
+    }
+}
+
+export async function usePythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
+    switch (parameters.versionSpec.toUpperCase()) {
+        case 'ANACONDA': return useAnaconda(platform);
+        default: return await useCpythonVersion(parameters, platform);
     }
 }

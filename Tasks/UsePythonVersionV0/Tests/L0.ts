@@ -66,4 +66,21 @@ describe('UsePythonVersion L0 Suite', function () {
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
     });
+
+    it('finds conda', function () {
+        const testFile = path.join(__dirname, 'L0Anaconda.js');
+        const testRunner = new MockTestRunner(testFile);
+
+        testRunner.run();
+
+        const anacondaDir = path.join('/', 'miniconda');
+        const anacondaBinDir = os.platform() === 'win32'
+            ? path.join(anacondaDir, 'Scripts')
+            : path.join(anacondaDir, 'bin');
+
+        assert(didSetVariable(testRunner, 'pythonLocation', anacondaBinDir));
+        assert(didPrependPath(testRunner, anacondaBinDir));
+        assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
+        assert(testRunner.succeeded, 'task should have succeeded');
+    });
 });
