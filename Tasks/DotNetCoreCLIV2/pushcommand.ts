@@ -105,7 +105,7 @@ export async function run(): Promise<void> {
             configFile = nuGetConfigHelper.tempNugetConfigPath;
             credCleanup = () => { tl.rmRF(tempNuGetConfigDirectory); };
 
-            apiKey = 'VSTS';
+            apiKey = 'AzureDevOps';
         } else {
             const externalAuthArr = commandHelper.GetExternalAuthInfoArray('externalEndpoint');
             authInfo = new auth.NuGetExtendedAuthInfo(internalAuthInfo, externalAuthArr);
