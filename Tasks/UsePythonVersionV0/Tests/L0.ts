@@ -1,11 +1,15 @@
 import * as assert from 'assert';
-import { EOL } from 'os';
+import * as os from 'os';
 import * as path from 'path';
 
 import { MockTestRunner } from 'vsts-task-lib/mock-test';
 
 function didSetVariable(testRunner: MockTestRunner, variableName: string, variableValue: string): boolean {
     return testRunner.stdOutContained(`##vso[task.setvariable variable=${variableName};issecret=false;]${variableValue}`);
+}
+
+function didPrependPath(testRunner: MockTestRunner, toolPath: string): boolean {
+    return testRunner.stdOutContained(`##vso[task.prependpath]${toolPath}`);
 }
 
 describe('UsePythonVersion L0 Suite', function () {
@@ -19,7 +23,14 @@ describe('UsePythonVersion L0 Suite', function () {
 
         testRunner.run();
 
-        assert(didSetVariable(testRunner, 'pythonLocation', path.join('/', 'Python', '3.6.4', 'x64')));
+        const pythonDir = path.join('/', 'Python', '3.6.4', 'x64');
+        const pythonBinDir = os.platform() === 'win32'
+            ? path.join(pythonDir, 'Scripts')
+            : path.join(pythonDir, 'bin');
+
+        assert(didSetVariable(testRunner, 'pythonLocation', pythonDir));
+        assert(didPrependPath(testRunner, pythonDir));
+        assert(didPrependPath(testRunner, pythonBinDir));
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
     });
@@ -39,7 +50,7 @@ describe('UsePythonVersion L0 Suite', function () {
             '2.7.13 (x64)',
             'loc_mock_ToolNotFoundMicrosoftHosted Python https://aka.ms/hosted-agent-software',
             'loc_mock_ToolNotFoundSelfHosted Python https://go.microsoft.com/fwlink/?linkid=871498',
-        ].join(EOL);
+        ].join(os.EOL);
 
         assert(testRunner.createdErrorIssue(errorMessage));
         assert(testRunner.failed, 'task should have failed');
