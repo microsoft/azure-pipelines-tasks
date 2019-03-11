@@ -10,8 +10,8 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
-        "Minor": 1,
+        "Major": 1,
+        "Minor": 0,
         "Patch": 0
     },
     "satisfies": [
@@ -21,6 +21,29 @@
     "ecosystem": ".NET Core",
     "instanceNameFormat": "Use .NET Core",
     "inputs": [
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "1.0.4",
+            "required": true,
+            "helpMarkDown": "Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0"
+        },
+        {
+            "name": "auth",
+            "type": "string",
+            "label": "Auth",
+            "required": false,
+            "helpMarkDown": "The authentication feed/service point to use"
+        },
+        {
+            "name": "proxy",
+            "type": "boolean",
+            "label": "Proxy",
+            "defaultValue": true,
+            "required": false,
+            "helpMarkDown": "Whether or not to set up the .Net ecosystem to use the agent's proxy"
+        },
         {
             "name": "nuGetFeedType",
             "type": "pickList",
