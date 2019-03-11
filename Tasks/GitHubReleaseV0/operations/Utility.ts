@@ -30,23 +30,35 @@ export class Utility {
         return githubEndpointToken;
     }
 
-    public static getUploadAssets(githubReleaseAssetInputPatterns: string[]): string[] {
+    public static getUploadAssets(pattern: string): string[] {
         let githubReleaseAssets: Set<string> = new Set();
 
-        (githubReleaseAssetInputPatterns || []).forEach(pattern => {
-            /** Check for one or multiples files into array
-             *  Accept wildcards to look for files
-             */
-            let filePaths: string[] = glob.sync(pattern);
+        /** Check for one or multiples files into array
+         *  Accept wildcards to look for files
+         */
+        let filePaths: string[] = glob.sync(pattern);
 
-            filePaths.forEach((filePath) => {
-                if (!githubReleaseAssets.has(filePath)) {
-                    githubReleaseAssets.add(filePath)
-                }
-            })
-        });
+        (filePaths || []).forEach((filePath) => {
+            if (!githubReleaseAssets.has(filePath)) {
+                githubReleaseAssets.add(filePath)
+            }
+        })
 
         return Array.from(githubReleaseAssets);
+    }
+
+    public static isFile(asset: string): boolean {
+        return fs.lstatSync(path.resolve(asset)).isFile();
+    }
+
+    public static isPatternADirectory(assets: string[], pattern: string): boolean {
+        if (assets && assets.length === 1 && pattern) {
+            if (path.resolve(assets[0]) === path.resolve(pattern)) {
+                tl.debug("Pattern is a directory " + pattern);
+                return true;
+            }
+        }
+        return false;
     }
 
     public static validateUploadAssets(assets: string[]): void {
@@ -61,10 +73,10 @@ export class Utility {
         }
     }
 
-    public static getReleaseNote(releaseNotesSelection: string, releaseNotesFile: any, releaseNoteInput: string, changeLog: string): string {
+    public static getReleaseNote(releaseNotesSource: string, releaseNotesFile: any, releaseNoteInput: string, changeLog: string): string {
         let releaseNote: string = "";
 
-        if (releaseNotesSelection === ReleaseNotesSelectionMode.file) {
+        if (releaseNotesSource === ReleaseNotesSelectionMode.file) {
 
             if (fs.lstatSync(path.resolve(releaseNotesFile)).isDirectory()) {
                 console.log(tl.loc("ReleaseNotesFileIsDirectoryError", releaseNotesFile));
@@ -185,7 +197,48 @@ export class Utility {
 
         return match[0];
     }
-    
+
+    public static isTagSourceAuto(tagSource: string) {
+        return (tagSource === TagSelectionMode.auto);
+    }
+
+    public static validateTagSource(tagSource: string, action: string) {
+        if (action === ActionType.create && tagSource !== TagSelectionMode.auto && tagSource !== TagSelectionMode.manual) {
+            throw new Error(tl.loc("InvalidTagSource", tagSource));
+        }
+    }
+
+    public static validateAction(action: string) {
+        if (action !== ActionType.create && action !== ActionType.edit && action !== ActionType.delete) {
+            tl.debug("Invalid action input"); // for purpose of L0 test only.
+            throw new Error(tl.loc("InvalidActionSet", action));
+        }
+    }
+
+    public static validateReleaseNotesSource(releaseNotesSource: string) {
+        if (releaseNotesSource !== ReleaseNotesSelectionMode.file && releaseNotesSource !== ReleaseNotesSelectionMode.input) {
+            throw new Error(tl.loc("InvalidReleaseNotesSource", releaseNotesSource));
+        }
+    }
+
+    public static validateAssetUploadMode(assetUploadMode: string) {
+        if (assetUploadMode !== AssetUploadMode.delete && assetUploadMode !== AssetUploadMode.replace) {
+            throw new Error(tl.loc("InvalidAssetUploadMode", assetUploadMode));
+        }
+    }
+
+    public static validateTag(tag: string, tagSource: string, action: string) {
+        if (!tag) {
+            if (action === ActionType.edit || action === ActionType.delete) {
+                throw new Error(tl.loc("TagRequiredEditDeleteAction", action));
+            }
+            else if (action === ActionType.create && !this.isTagSourceAuto(tagSource)) {
+                throw new Error(tl.loc("TagRequiredCreateAction"));
+            }
+        }
+        
+    }
+
     private static readonly _onlyFirstLine = new RegExp("^.*$", "m");
     private static readonly _githubPaginatedLinkRegex = new RegExp("^<(.*)>$");
     private static readonly _githubPaginatedRelRegex = new RegExp('^rel="(.*)"$');
