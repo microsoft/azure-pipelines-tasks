@@ -249,6 +249,8 @@ Tasks/TwineAuthenticateV0/*     @zackrun
 
 Tasks/UniversalPackagesV0/*     @zackrun
 
+Tasks/UseDotNetV1/*     @damccorm
+
 Tasks/UsePythonVersionV0/*      @madhurig
 
 Tasks/UseRubyVersionV0/*    @hross
