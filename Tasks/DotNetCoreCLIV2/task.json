@@ -134,6 +134,15 @@
             "helpMarkDown": "Enabling this option will generate a test results TRX file in `$(Agent.TempDirectory)` and results will be published to the server. <br>This option appends `--logger trx --results-directory $(Agent.TempDirectory)` to the command line arguments. <br><br>Code coverage can be collected by adding `--collect \"Code coverage\"` option to the command line arguments. This is currently only available on the Windows platform."
         },
         {
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test run title",
+            "defaultValue": "",
+            "visibleRule": "command = test",
+            "required": false,
+            "helpMarkDown": "Provide a name for the test run."
+        },
+        {
             "name": "zipAfterPublish",
             "type": "boolean",
             "visibleRule": "command = publish",
