@@ -66,3 +66,4 @@ function Initialize-Azure {
 Export-ModuleMember -Function Initialize-Azure
 Export-ModuleMember -Function CmdletHasMember
 Export-ModuleMember -Function Remove-EndpointSecrets
+Export-ModuleMember -Function Disconnect-AzureAndClearContext

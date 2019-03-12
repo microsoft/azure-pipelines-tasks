@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 143,
-        "Patch": 2
+        "Patch": 6
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",

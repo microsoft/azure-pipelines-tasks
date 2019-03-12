@@ -11,6 +11,8 @@ param (
     Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" 
     Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
 
+    . "$scriptRoot/Utility.ps1"
+
     Write-Verbose "Entering script RobocopyJob.ps1"
     Write-Verbose "fqdn = $fqdn"
     Write-Verbose "sourcePath = $sourcePath"
@@ -259,7 +261,7 @@ param (
                 Write-Verbose "Attempting to remove PSDrive 'WFCPSDrive'"
                 Remove-PSDrive -Name 'WFCPSDrive' -Force
                 Write-Verbose "RemoteSharePath: $remoteSharePath"
-                net use /delete "$remoteSharePath" 2>$null
+                Try-CleanupPSDrive -Path $remoteSharePath
             }
         }
     }
