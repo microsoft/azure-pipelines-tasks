@@ -42,6 +42,6 @@ process.env["MOCK_NORMALIZE_SLASHES"] = "true";
 tr.setAnswers(a);
 
 tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
-tr.registerMock('azure-pipelines-task-tool-lib/tool', require('./mock_node_modules/tool'));
+tr.registerMock('azure-pipelines-tool-lib/tool', require('./mock_node_modules/tool'));
 tr.registerMock('./releasesfetcher', require("./mock_node_modules/releasesfetcher"));
 tr.run();
