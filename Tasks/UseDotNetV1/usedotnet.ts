@@ -306,14 +306,12 @@ async function run() {
         }
         nugetFeedType = normalizedNuGetFeedType;
 
-        throw 'This shouldnt get called most times';
-
-        // if (nugetFeedType === 'internal') {
-        //     await addInternalFeed(feed);
-        // }
-        // else {
-        //     await addExternalFeed(feed);
-        // }
+        if (nugetFeedType === 'internal') {
+            await addInternalFeed(feed);
+        }
+        else {
+            await addExternalFeed(feed);
+        }
     }
 }
 
