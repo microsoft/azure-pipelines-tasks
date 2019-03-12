@@ -42,7 +42,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 
 tr.registerMock('./utilities', {
     getCurrentDir: function () {
-        return "/somedir/currdir";
+        return "C:\\currDir";
     },
     setFileAttribute: function (file, mode) {
         chmodSync(file, mode);
