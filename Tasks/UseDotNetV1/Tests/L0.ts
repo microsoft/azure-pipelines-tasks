@@ -38,8 +38,8 @@ describe('UseDotNet', function() {
                 assert(tr.stdout.indexOf("Checking local tool for dncs and version 1.0.4") > -1, "should check for local cached tool");
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") > -1, "should install fresh if cache miss");
                 assert(tr.stdout.indexOf("Downloading tool from https://primary-url") > -1, "should download from correct url");
-                assert(tr.stdout.indexOf("Extracting zip archive from C:\\agent\\_temp\\someArchive.zip") > -1, "Should extract downloaded archive corectly");
-                assert(tr.stdout.indexOf("Caching dir C:\\agent\\_temp\\someDir for tool dncs version 1.0.4") > -1, "should cache correctly");
+                assert(tr.stdout.indexOf("Extracting zip archive from C:\\") && tr.stdout.indexOf("\\someArchive.zip") > -1, "Should extract downloaded archive corectly");
+                assert(tr.stdout.indexOf("Caching dir C:\\") && tr.stdout.indexOf("someDir for tool dncs version 1.0.4") > -1, "should cache correctly");
                 assert(tr.stdout.indexOf("loc_mock_SuccessfullyInstalled sdk 1.0.4") > -1, "should print installed tool info");
                 assert(tr.stdout.indexOf("prepending path: C:\\agent\\_tools\\cacheDir") > -1, "should pre-prend to PATH");
             }, tr, done);
@@ -58,8 +58,8 @@ describe('UseDotNet', function() {
                 assert(tr.stdout.indexOf("Checking local tool for dncr and version 1.0.4") > -1, "should check for local cached tool");
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") > -1, "should install fresh if cache miss");
                 assert(tr.stdout.indexOf("Downloading tool from https://primary-runtime-url") > -1, "should download from correct url");
-                assert(tr.stdout.indexOf("Extracting zip archive from C:\\agent\\_temp\\someArchive.zip") > -1, "Should extract downloaded archive corectly");
-                assert(tr.stdout.indexOf("Caching dir C:\\agent\\_temp\\someDir for tool dncr version 1.0.4") > -1, "should cache correctly");
+                assert(tr.stdout.indexOf("Extracting zip archive from C:\\") && tr.stdout.indexOf("someArchive.zip") > -1, "Should extract downloaded archive corectly");
+                assert(tr.stdout.indexOf("Caching dir C:\\") && tr.stdout.indexOf("someDir for tool dncr version 1.0.4") > -1, "should cache correctly");
                 assert(tr.stdout.indexOf("loc_mock_SuccessfullyInstalled runtime 1.0.4") > -1, "should print installed tool info");
                 assert(tr.stdout.indexOf("prepending path: C:\\agent\\_tools\\cacheDir") > -1, "should pre-prend to PATH");
             }, tr, done);
