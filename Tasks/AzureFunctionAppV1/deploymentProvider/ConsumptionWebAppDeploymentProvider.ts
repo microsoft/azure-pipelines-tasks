@@ -40,19 +40,25 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
     }
 
     private async uploadPackage(storageDetails, deployPackage) : Promise<string> {
-        var defer = Q.defer<string>();
+        let defer = Q.defer<string>();
         let storageAccount = storageDetails["AccountName"];
         let storageKey = storageDetails["AccountKey"];
         const blobService = azureStorage.createBlobService(storageAccount, storageKey);
 
-        const containerName = 'azure-pipelines-deploy';
-        const blobName = `package_${Date.now()}.zip`;
+        const containerName: string = 'azure-pipelines-deploy';
+        const blobName: string = `package_${Date.now()}.zip`;
         let fileName;
 
         switch(deployPackage.getPackageType()){
             case PackageType.folder:
                 let tempPackagePath = webCommonUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
-                let archivedWebPackage = await zipUtility.archiveFolder(deployPackage.getPath(), "", tempPackagePath);
+                let archivedWebPackage;
+                try {
+                    archivedWebPackage = await zipUtility.archiveFolder(deployPackage.getPath(), "", tempPackagePath);
+                }
+                catch(error) {
+                    defer.reject(error);
+                }
                 tl.debug("Compressed folder into zip " +  archivedWebPackage);
                 fileName = archivedWebPackage;
             break;
@@ -90,16 +96,22 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
             
                 let token = blobService.generateSharedAccessSignature(containerName, blobName, sharedAccessPolicy);
                 let sasUrl = blobService.getUrl(containerName, blobName, token);
+                let index = sasUrl.indexOf("?");
+                let sasToken: string = sasUrl.substring(index + 1);
+                tl.setVariable('SAS_TOKEN', sasToken, true);
                 tl.debug(`SAS URL is: ${sasUrl}`);
                 defer.resolve(sasUrl);
             });
         });
+
         return defer.promise;
     }
 
     private async publishRunFromPackage(sasUrl) {
         await this.appService.patchApplicationSettings({'WEBSITE_RUN_FROM_PACKAGE': sasUrl});
+        console.log(tl.loc('UpdatedRunFromPackageSettings',sasUrl));
         await sleepFor(5);
+        console.log(tl.loc('SyncingFunctionTriggers'));
         await this.appService.syncFunctionTriggers();
         console.log(tl.loc('SyncFunctionTriggersSuccess'));
     }

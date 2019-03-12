@@ -376,6 +376,8 @@
     "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported",
     "FailedToGetStorageAccountDetails": "ms-resource:loc.messages.FailedToGetStorageAccountDetails",
     "FailedToSyncTriggers": "ms-resource:loc.messages.FailedToSyncTriggers",
-    "SyncFunctionTriggersSuccess": "ms-resource:loc.messages.SyncFunctionTriggersSuccess"
+    "SyncingFunctionTriggers": "ms-resource:loc.messages.SyncingFunctionTriggers",
+    "SyncFunctionTriggersSuccess": "ms-resource:loc.messages.SyncFunctionTriggersSuccess",
+    "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings"
   }
 }
