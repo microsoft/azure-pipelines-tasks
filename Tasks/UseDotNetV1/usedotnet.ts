@@ -1,6 +1,5 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as trm from 'azure-pipelines-task-lib/toolrunner';
-import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 import { DotNetCoreReleaseFetcher } from "./releasesfetcher";
@@ -166,21 +165,21 @@ function setProxy(){
     nuget.arg('config');
     nuget.arg('--set');
     nuget.arg('http_proxy=' + proxyUrl);
-    nuget.exec({} as IExecOptions);
+    nuget.exec({} as trm.IExecOptions);
 
     // Set proxy username
     nuget = tl.tool(nugetPath);
     nuget.arg('config');
     nuget.arg('--set');
     nuget.arg('http_proxy.user=' + proxyUsername);
-    nuget.exec({} as IExecOptions);
+    nuget.exec({} as trm.IExecOptions);
 
     // Set proxy password
     nuget = tl.tool(nugetPath);
     nuget.arg('config');
     nuget.arg('--set');
     nuget.arg('http_proxy.password=' + proxyPassword);
-    nuget.exec({} as IExecOptions);
+    nuget.exec({} as trm.IExecOptions);
 }
 
 async function addInternalFeed(feedName: string) {
