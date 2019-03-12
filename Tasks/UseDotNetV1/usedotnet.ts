@@ -306,6 +306,8 @@ async function run() {
         }
         nugetFeedType = normalizedNuGetFeedType;
 
+        tl.error('This shouldnt get called most times');
+
         // if (nugetFeedType === 'internal') {
         //     await addInternalFeed(feed);
         // }
