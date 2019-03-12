@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as fs from "fs";
+import * as url from "url";
 
 import * as tl from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
@@ -13,7 +14,7 @@ export class VersionInstaller {
             tl.exist(installationPath) || tl.mkdirP(installationPath);
         }
         catch (ex) {
-            throw tl.loc("UnableToAccessPath", installationPath, ex);
+            throw tl.loc("UnableToAccessPath", installationPath, JSON.stringify(ex));
         }
 
         this.packageType = packageType;
@@ -21,6 +22,10 @@ export class VersionInstaller {
     }
 
     public async downloadAndInstall(versionInfo: VersionInfo, downloadUrl: string): Promise<void> {
+        if (!versionInfo || !versionInfo.version || !url.parse(downloadUrl)) {
+            throw tl.loc("VersionCanNotBeDownloadedFromUrl", versionInfo, downloadUrl);
+        }
+
         let downloadPath = "";
         let version = versionInfo.version;
 
@@ -59,7 +64,7 @@ export class VersionInstaller {
                 }
             }
             catch (ex) {
-                tl.warning(tl.loc("FailedToCopyTopLevelFiles", ex));
+                tl.warning(tl.loc("FailedToCopyTopLevelFiles", this.installationPath, JSON.stringify(ex)));
             }
 
             // Cache tool
@@ -68,7 +73,7 @@ export class VersionInstaller {
             console.log(tl.loc("SuccessfullyInstalled", this.packageType, version));
         }
         catch (ex) {
-            throw tl.loc("FailedWhileInstallingVersionAtPath", version, this.installationPath, ex);
+            throw tl.loc("FailedWhileInstallingVersionAtPath", version, this.installationPath, JSON.stringify(ex));
         }
         finally {
             //todo: Release Lock and stop timer
@@ -79,43 +84,43 @@ export class VersionInstaller {
 
     public isVersionInstalled(version: string): boolean {
         if (!toolLib.isExplicitVersion(version)) {
-            throw tl.loc("VersionNotAllowed", version);
+            throw tl.loc("ExplicitVersionRequired", version);
         }
 
         var isInstalled: boolean = false;
-        if (this.packageType == "sdk") {
-            isInstalled = tl.exist(path.join(this.installationPath, "sdk", version)) && tl.exist(path.join(this.installationPath, "sdk", `${version}.complete`));
+        if (this.packageType == utils.Constants.sdk) {
+            isInstalled = tl.exist(path.join(this.installationPath, utils.Constants.relativeSdkPath, version)) && tl.exist(path.join(this.installationPath, utils.Constants.relativeSdkPath, `${version}.complete`));
         }
         else {
-            isInstalled = tl.exist(path.join(this.installationPath, "shared", "Microsoft.NETCore.App", version)) && tl.exist(path.join(this.installationPath, "shared", "Microsoft.NETCore.App", `${version}.complete`));
+            isInstalled = tl.exist(path.join(this.installationPath, utils.Constants.relativeRuntimePath, version)) && tl.exist(path.join(this.installationPath, utils.Constants.relativeRuntimePath, `${version}.complete`));
         }
 
-        isInstalled ? console.log(tl.loc("VersionFoundInToolCache")) : console.log(tl.loc("VersionNotFoundInToolCache", version));
+        isInstalled ? console.log(tl.loc("VersionFoundInCache", version)) : console.log(tl.loc("VersionNotFoundInCache", version));
         return isInstalled;
     }
 
     private createInstallationCompleteFile(versionInfo: VersionInfo): void {
         tl.debug(tl.loc("CreatingInstallationCompeleteFile", versionInfo.version, this.packageType));
-        // always add for runtime as it is installed with SDK as well.
+        // always add for runtime as it is installed with sdk as well.
         var pathToVersionCompleteFile: string = "";
-        if (this.packageType == "sdk") {
+        if (this.packageType == utils.Constants.sdk) {
             let sdkVersion = versionInfo.version;
-            pathToVersionCompleteFile = path.join(this.installationPath, "sdk");
+            pathToVersionCompleteFile = path.join(this.installationPath, utils.Constants.relativeSdkPath);
             tl.writeFile(path.join(pathToVersionCompleteFile, `${sdkVersion}.complete`), `{ "version": "${sdkVersion}" }`);
         }
 
         let runtimeVersion = VersionInfo.getRuntimeVersion(versionInfo, this.packageType);
         if (runtimeVersion) {
-            pathToVersionCompleteFile = path.join(this.installationPath, "shared", "Microsoft.NETCore.App");
+            pathToVersionCompleteFile = path.join(this.installationPath, utils.Constants.relativeRuntimePath);
             tl.writeFile(path.join(pathToVersionCompleteFile, `${runtimeVersion}.complete`), `{ "version": "${runtimeVersion}" }`);
         }
         else if (this.packageType == "runtime") {
-            throw tl.loc("CannotFindRuntimeVersionForCompletingInstllation", versionInfo.version, this.packageType);
+            throw tl.loc("CannotFindRuntimeVersionForCompletingInstallation", this.packageType, versionInfo.version);
         }
     }
 
     private isLatestInstalledVersion(version: string): boolean {
-        var pathTobeChecked = this.packageType == "sdk" ? path.join(this.installationPath, "sdk") : path.join(this.installationPath, "shared", "Microsoft.NETCore.App");
+        var pathTobeChecked = this.packageType == utils.Constants.sdk ? path.join(this.installationPath, utils.Constants.relativeSdkPath) : path.join(this.installationPath, utils.Constants.relativeRuntimePath);
         if (!tl.exist(pathTobeChecked)) {
             throw tl.loc("PathNotFoundException", pathTobeChecked);
         }
@@ -141,18 +146,20 @@ export class VersionInstaller {
             }
         }) < 0;
 
-        isLatest ? tl.debug(tl.loc("VersionIsLocalLatest")) : tl.debug(tl.loc("VersionIsNotLocalLatest"));
+        isLatest ? tl.debug(tl.loc("VersionIsLocalLatest", version, this.installationPath)) : tl.debug(tl.loc("VersionIsNotLocalLatest", version, this.installationPath));
         return isLatest;
     }
 
     private getVersionCompleteFileName(name: string): string {
-        var parts = name.split('.');
-        var fileNameWithoutExtensionLength = name.length - (parts[parts.length - 1].length + 1);
-        if (fileNameWithoutExtensionLength > 0) {
-            return name.substr(0, fileNameWithoutExtensionLength);
+        if (name && name.endsWith(".complete")) {
+            var parts = name.split('.');
+            var fileNameWithoutExtensionLength = name.length - (parts[parts.length - 1].length + 1);
+            if (fileNameWithoutExtensionLength > 0) {
+                return name.substr(0, fileNameWithoutExtensionLength);
+            }
         }
 
-        throw "Not correct Complete marker file name: " + name;
+        throw tl.loc("FileNameNotCorrectCompleteFileName", name);
     }
 
     private packageType: string;

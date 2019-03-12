@@ -24,31 +24,32 @@ export class DotNetCoreVersionFetcher {
         } : {};
 
         this.httpCallbackClient = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
+        this.channels = [];
     }
 
-    public async getVersionInfo(version: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
-        var requiredVersion: VersionInfo = null;
-        if (this.releasesIndex == null) {
+    public async getVersionInfo(versionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
+        var requiredVersionInfo: VersionInfo = null;
+        if (!this.channels || this.channels.length < 1) {
             await this.setReleasesIndex();
         }
 
-        let channelInformation: any = this.getVersionChannel(version);
+        let channelInformation = this.getVersionChannel(versionSpec);
         if (channelInformation) {
-            requiredVersion = await this.getVersionFromChannel(channelInformation, version, packageType, includePreviewVersions);
+            requiredVersionInfo = await this.getVersionFromChannel(channelInformation, versionSpec, packageType, includePreviewVersions);
         }
 
-        if (!requiredVersion && !version.endsWith("x")) {
-            console.log("FallingBackToAdjacentChannels", version);
-            requiredVersion = await this.getVersionFromOtherChannels(version, packageType, includePreviewVersions);
+        if (!requiredVersionInfo && !versionSpec.endsWith("x")) {
+            console.log(tl.loc("FallingBackToAdjacentChannels", versionSpec));
+            requiredVersionInfo = await this.getVersionFromOtherChannels(versionSpec, packageType, includePreviewVersions);
         }
 
-        if (!requiredVersion) {
-            throw tl.loc("VersionNotFound", version);
+        if (!requiredVersionInfo) {
+            throw tl.loc("VersionNotFound", versionSpec);
         }
 
-        let dotNetSdkVersionTelemetry = `{"userVersion":"${version}", "resolvedVersion":"${requiredVersion.version}"}`;
+        let dotNetSdkVersionTelemetry = `{"userVersion":"${versionSpec}", "resolvedVersion":"${requiredVersionInfo.version}"}`;
         console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=DotNetCoreInstallerV1]" + dotNetSdkVersionTelemetry);
-        return requiredVersion;
+        return requiredVersionInfo;
     }
 
     public getDownloadUrl(versionInfo: VersionInfo, packageType: string): string {
@@ -59,7 +60,7 @@ export class DotNetCoreVersionFetcher {
         osSuffixes.find((osSuffix) => {
             downloadPackageInfoObject = versionInfo.files.find((downloadPackageInfo: any) => {
                 if (downloadPackageInfo.rid.toLowerCase() == osSuffix.toLowerCase()) {
-                    if (osSuffix.split("-")[0] != "win" || (osSuffix.split("-")[0] == "win" && downloadPackageInfo.name.endsWith(".zip"))) {
+                    if ((osSuffix.split("-")[0] != "win" && osSuffix.split("-")[0] != "osx") || (osSuffix.split("-")[0] == "win" && downloadPackageInfo.name.endsWith(".zip")) || (osSuffix.split("-")[0] == "osx" && downloadPackageInfo.name.endsWith("tar.gz"))) {
                         return true;
                     }
                 }
@@ -79,7 +80,7 @@ export class DotNetCoreVersionFetcher {
             return downloadPackageInfoObject.url;
         }
 
-        return "";
+        throw tl.loc("DownloadUrlForMatchingOsNotFound", packageType, versionInfo.version, osSuffixes.toString());
     }
 
     private setReleasesIndex(): Promise<void> {
@@ -88,40 +89,52 @@ export class DotNetCoreVersionFetcher {
                 return response.readBody();
             })
             .then((body: string) => {
-                this.releasesIndex = JSON.parse(body);
-                return;
+                let parsedReleasesIndexBody = JSON.parse(body);
+                if (!parsedReleasesIndexBody || !parsedReleasesIndexBody["releases-index"] || parsedReleasesIndexBody["releases-index"].length < 1) {
+                    throw "Parsed releases index body is not correct."
+                }
+
+                parsedReleasesIndexBody["releases-index"].forEach(channelRelease => {
+                    if (channelRelease) {
+                        try {
+                            this.channels.push(new Channel(channelRelease));
+                        }
+                        catch (ex) {
+                            tl.debug("Channel information in releases-index.json was not proper. Error: " + JSON.stringify(ex));
+                            // do not fail, try to find version in the available channels.
+                        }
+                    }
+                });
             })
             .catch((ex) => {
-                throw tl.loc("ExceptionWhileDownloadOrReadReleasesIndex", ex);
+                throw tl.loc("ExceptionWhileDownloadOrReadReleasesIndex", JSON.stringify(ex));
             });
     }
 
-    private getVersionChannel(version: string): any {
-        let versionParts: any = new utils.VersionParts(version);
+    private getVersionChannel(versionSpec: string): Channel {
+        let versionParts = new utils.VersionParts(versionSpec);
 
-        let channelVersion = `${versionParts.majorVersion}.${versionParts.minorVersion}`;
+        let requiredChannelVersion = `${versionParts.majorVersion}.${versionParts.minorVersion}`;
         if (versionParts.minorVersion == "x") {
             var latestChannelVersion: string = `${versionParts.majorVersion}.0`;
-            this.releasesIndex["releases-index"].forEach(channel => {
-                if (utils.versionCompareFunction(channel["channel-version"], latestChannelVersion) > 0) {
-                    latestChannelVersion = channel["channel-version"];
+            this.channels.forEach(channel => {
+                if (utils.compareChannelVersion(channel.channelVersion, latestChannelVersion) > 0 && channel.channelVersion.startsWith(versionParts.majorVersion)) {
+                    latestChannelVersion = channel.channelVersion;
                 }
             });
 
-            channelVersion = latestChannelVersion;
+            requiredChannelVersion = latestChannelVersion;
         }
 
-        return this.releasesIndex["releases-index"].find(element => {
-            if (element["channel-version"] == channelVersion) {
+        return this.channels.find(channel => {
+            if (channel.channelVersion == requiredChannelVersion) {
                 return true
             }
         });
     }
 
-    private getVersionFromChannel(channelInformation: any, version: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
-        let versionParts: utils.VersionParts = new utils.VersionParts(version);
-        var releasesJsonUrl: string = channelInformation["releases.json"];
-        var channelReleases: any = null;
+    private getVersionFromChannel(channelInformation: Channel, versionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
+        var releasesJsonUrl: string = channelInformation.releasesJsonUrl;
 
         if (releasesJsonUrl) {
             return this.httpCallbackClient.get(releasesJsonUrl)
@@ -129,53 +142,37 @@ export class DotNetCoreVersionFetcher {
                     return response.readBody();
                 })
                 .then((body: string) => {
-                    channelReleases = JSON.parse(body).releases;
-                    if (versionParts.minorVersion == "x" || versionParts.patchVersion == "x") {
+                    var channelReleases = JSON.parse(body).releases;
 
-                        let latestVersion = "0.0.0";
-                        channelReleases.forEach(release => {
-                            if (release[packageType] && utils.versionCompareFunction(release[packageType].version, latestVersion) > 0 && (includePreviewVersions || !release[packageType].version.includes('preview'))) {
-                                let matchedVersionParts = new utils.VersionParts(release[packageType].version);
-                                if (matchedVersionParts.majorVersion == versionParts.majorVersion && (versionParts.minorVersion == "x" || (versionParts.patchVersion == "x" && matchedVersionParts.minorVersion == versionParts.minorVersion))) {
-                                    latestVersion = release[packageType].version;
-                                }
-                            }
-                        });
-
-                        if (latestVersion == "0.0.0") {
-                            throw tl.loc("MatchingVersionNotFound", version);
-                        }
-
-                        console.log(tl.loc("MatchingVersionForUserInputVersion", version, latestVersion));
-                        version = latestVersion;
-                    }
-
-                    var versionRelease = channelReleases.find(release => {
-                        if (release[packageType] && release[packageType].version == version) {
-                            return true;
-                        }
-
-                        return false;
+                    let versionInfoList: VersionInfo[] = channelReleases.map((release) => {
+                        return release[packageType] && release[packageType].version ? release[packageType] : null;
                     });
 
-                    return versionRelease ? versionRelease[packageType] : null;
+                    let matchedVersionInfo = utils.getMatchingVersionFromList(versionInfoList, versionSpec, includePreviewVersions);
+                    if (!matchedVersionInfo) {
+                        console.log(tl.loc("MatchingVersionNotFound", versionSpec));
+                        return null;
+                    }
+
+                    console.log(tl.loc("MatchingVersionForUserInputVersion", matchedVersionInfo.version, channelInformation.channelVersion, versionSpec))
+                    return matchedVersionInfo;
                 });
         }
         else {
-            throw tl.loc("UrlForReleaseChannelNotFound");
+            tl.error(tl.loc("UrlForReleaseChannelNotFound", channelInformation.channelVersion));
         }
     }
 
-    private async getVersionFromOtherChannels(version: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
-        let fallbackChannels = this.getChannelsForMajorVersion(version);
+    private async getVersionFromOtherChannels(versionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
+        let fallbackChannels = this.getChannelsForMajorVersion(versionSpec);
         if (!fallbackChannels && fallbackChannels.length < 1) {
-            throw tl.loc("NoSuitableChannelWereFound", version);
+            throw tl.loc("NoSuitableChannelWereFound", versionSpec);
         }
 
         var versionInfo: VersionInfo = null;
         for (var i = 0; i < fallbackChannels.length; i++) {
-            console.log("LookingForVersionInChannel", (fallbackChannels[i])["channel-version"]);
-            versionInfo = await this.getVersionFromChannel(fallbackChannels[i], version, packageType, includePreviewVersions);
+            console.log(tl.loc("LookingForVersionInChannel", (fallbackChannels[i]).channelVersion));
+            versionInfo = await this.getVersionFromChannel(fallbackChannels[i], versionSpec, packageType, includePreviewVersions);
 
             if (versionInfo) {
                 break;
@@ -185,11 +182,11 @@ export class DotNetCoreVersionFetcher {
         return versionInfo;
     }
 
-    private getChannelsForMajorVersion(version: string): any {
-        var versionParts = new utils.VersionParts(version);
-        let adjacentChannels = [];
-        this.releasesIndex["releases-index"].forEach(channel => {
-            if (channel["channel-version"].startsWith(`${versionParts.majorVersion}`)) {
+    private getChannelsForMajorVersion(versionSpec: string): Channel[] {
+        var versionParts = new utils.VersionParts(versionSpec);
+        let adjacentChannels: Channel[] = [];
+        this.channels.forEach(channel => {
+            if (channel.channelVersion.startsWith(`${versionParts.majorVersion}`)) {
                 adjacentChannels.push(channel);
             }
         });
@@ -245,7 +242,7 @@ export class DotNetCoreVersionFetcher {
             }
         }
         catch (ex) {
-            throw tl.loc("FailedInDetectingMachineArch", ex)
+            throw tl.loc("FailedInDetectingMachineArch", JSON.stringify(ex));
         }
 
         return osSuffix;
@@ -259,7 +256,7 @@ export class DotNetCoreVersionFetcher {
         return __dirname;
     }
 
-    private releasesIndex: any;
+    private channels: Channel[];
     private httpCallbackClient: httpClient.HttpClient;
 }
 
@@ -268,12 +265,12 @@ export class VersionInfo {
     public files: VersionFilesData[];
 
     public static getRuntimeVersion(versionInfo: VersionInfo, packageType: string): string {
-        if (packageType == "sdk") {
+        if (packageType == utils.Constants.sdk) {
             if (versionInfo["runtime-version"]) {
                 return versionInfo["runtime-version"];
             }
 
-            tl.warning(tl.loc("runtimeVersionPropertyNotFound"));
+            tl.warning(tl.loc("runtimeVersionPropertyNotFound", packageType, versionInfo.version));
         }
         else {
             return versionInfo.version;
@@ -288,6 +285,20 @@ export class VersionFilesData {
     public url: string;
     public rid: string;
     public hash?: string;
+}
+
+class Channel {
+    constructor(channelRelease: any) {
+        if (!channelRelease || !channelRelease["channel-version"] || !channelRelease["releases.json"]) {
+            throw "Object cannot be used as Channel, required properties such as channel-version, releases.json is missing. "
+        }
+
+        this.channelVersion = channelRelease["channel-version"];
+        this.releasesJsonUrl = channelRelease["releases.json"];
+    }
+
+    channelVersion: string;
+    releasesJsonUrl: string
 }
 
 const DotNetCoreReleasesIndexUrl: string = "https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases-index.json";

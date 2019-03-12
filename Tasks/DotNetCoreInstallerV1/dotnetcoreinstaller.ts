@@ -4,7 +4,7 @@ import * as tl from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 import { DotNetCoreVersionFetcher, VersionInfo } from "./versionFetcher";
 import { VersionInstaller } from "./versionInstaller";
-import { VersionParts } from "./versionUtilities";
+import { VersionParts, Constants } from "./versionUtilities";
 
 async function run() {
     let packageType = tl.getInput('packageType', true).toLowerCase();
@@ -44,9 +44,9 @@ function addDotNetCoreToolPath() {
     try {
         let globalToolPath: string = "";
         if (tl.osType().match(/^Win/)) {
-            globalToolPath = path.join(process.env.USERPROFILE, ".dotnet\\tools");
+            globalToolPath = path.join(process.env.USERPROFILE, Constants.relativeGlobalToolPath);
         } else {
-            globalToolPath = path.join(process.env.HOME, ".dotnet/tools");
+            globalToolPath = path.join(process.env.HOME, Constants.relativeGlobalToolPath);
         }
 
         console.log(tl.loc("PrependGlobalToolPath"));
