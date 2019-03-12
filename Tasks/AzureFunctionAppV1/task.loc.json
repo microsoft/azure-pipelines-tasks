@@ -192,7 +192,7 @@
     {
       "target": "appName",
       "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureRMWebAppNamesByAppType",
+      "dataSourceName": "AzureFunctionAppNamesByAppType",
       "parameters": {
         "WebAppKind": "$(appType)"
       }
