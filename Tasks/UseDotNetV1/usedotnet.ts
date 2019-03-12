@@ -155,7 +155,7 @@ async function run() {
         }
     }
 
-    let packageType = 'sdk';
+    let packageType = tl.getInput('packageType') || 'sdk';
     const version: string = tl.getInput('version');
     if (version) {
         console.log(tl.loc("ToolToInstall", packageType, version));

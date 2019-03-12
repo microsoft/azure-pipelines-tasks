@@ -48,12 +48,23 @@
             "name": "nuGetFeedType",
             "type": "pickList",
             "label": "NuGet Feed Type",
-            "defaultValue": "",
             "helpMarkDown": "The type of NugetFeed used in the auth field. Can either be an internal feed or external service connection",
             "required": false,
             "options": {
                 "internal": "internal",
                 "external": "external"
+            }
+        },
+        {
+            "name": "packageType",
+            "type": "pickList",
+            "label": "Package to install",
+            "defaultValue": "sdk",
+            "helpMarkDown": "Please select whether to install only runtime or full SDK.",
+            "required": false,
+            "options": {
+                "runtime": "Runtime",
+                "sdk": "SDK (contains runtime)"
             }
         }
     ],
