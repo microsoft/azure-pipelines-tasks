@@ -19,7 +19,7 @@ function runValidations(validator: () => void, tr, done) {
     }
 }
 
-describe('DotNetCoreInstaller', function() {
+describe('UseDotNet', function() {
     this.timeout(30000);
     before((done) => {
         done();
