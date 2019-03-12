@@ -104,6 +104,7 @@ describe('UseDotNet', function() {
             let tp = path.join(__dirname, "InstallWindows.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
+            delete process.env["__proxy__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 // TODO
@@ -115,6 +116,7 @@ describe('UseDotNet', function() {
             let tp = path.join(__dirname, "InstallWindows.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
+            delete process.env["__auth__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 // TODO
@@ -127,6 +129,8 @@ describe('UseDotNet', function() {
             let tp = path.join(__dirname, "InstallWindows.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
+            delete process.env["__auth__"];
+            delete process.env["__nuGetFeedType__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 // TODO
@@ -236,6 +240,7 @@ describe('UseDotNet', function() {
             let tp = path.join(__dirname, "InstallNix.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
+            delete process.env["__proxy__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 // TODO
@@ -247,6 +252,7 @@ describe('UseDotNet', function() {
             let tp = path.join(__dirname, "InstallNix.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
+            delete process.env["__auth__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 // TODO
@@ -259,6 +265,8 @@ describe('UseDotNet', function() {
             let tp = path.join(__dirname, "InstallNix.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
+            delete process.env["__auth__"];
+            delete process.env["__nuGetFeedType__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 // TODO
