@@ -1,10 +1,10 @@
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as trm from 'azure-pipelines-task-lib/toolrunner';
-import { DotNetCoreReleaseFetcher } from "./releasesfetcher";
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
-import * as utilities from "./utilities";
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
+import { DotNetCoreReleaseFetcher } from "./releasesfetcher";
+import * as utilities from "./utilities";
 import * as auth from 'packaging-common/nuget/Authentication';
 import * as commandHelper from 'packaging-common/nuget/CommandHelper';
 import * as nutil from 'packaging-common/nuget/Utility';
