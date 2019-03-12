@@ -1,6 +1,6 @@
 const assert = require('assert');
-const tl = require('azure-pipelines-task-lib');
 const ttm = require('azure-pipelines-task-lib/mock-test');
+const os = require('os');
 const path = require('path');
 
 function setResponseFile(name) {
@@ -27,7 +27,7 @@ describe('UseDotNet', function() {
     after(function() {
     });
 
-    if(tl.osType().match(/^Win/)) {
+    if(os.type().match(/^Win/)) {
         it("[windows]should succeed if sdk installed successfully", (done) => {
             let tp = path.join(__dirname, "InstallWindows.js");
             let tr = new ttm.MockTestRunner(tp);

@@ -3,6 +3,8 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import os = require('os');
 
+import { chmodSync } from 'fs';
+
 let taskPath = path.join(__dirname, '..', 'usedotnet.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
@@ -38,12 +40,13 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 };
 
-var ut = require('../utilities');
 tr.registerMock('./utilities', {
     getCurrentDir: function () {
-        return "C:\\currDir";
+        return "/somedir/currdir";
     },
-    setFileAttribute: ut.setFileAttribute
+    setFileAttribute: function (file, mode) {
+        chmodSync(file, mode);
+    }
 });
 
 process.env["MOCK_NORMALIZE_SLASHES"] = "true";

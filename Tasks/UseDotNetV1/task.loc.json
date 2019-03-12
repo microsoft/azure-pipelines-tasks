@@ -48,12 +48,23 @@
       "name": "nuGetFeedType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.nuGetFeedType",
-      "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.nuGetFeedType",
       "required": false,
       "options": {
         "internal": "internal",
         "external": "external"
+      }
+    },
+    {
+      "name": "packageType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.packageType",
+      "defaultValue": "sdk",
+      "helpMarkDown": "ms-resource:loc.input.help.packageType",
+      "required": false,
+      "options": {
+        "runtime": "Runtime",
+        "sdk": "SDK (contains runtime)"
       }
     }
   ],
