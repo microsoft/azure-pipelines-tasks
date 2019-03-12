@@ -3,7 +3,7 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import os = require('os');
 
-let taskPath = path.join(__dirname, '..', 'dotnetcoreinstaller.js');
+let taskPath = path.join(__dirname, '..', 'usedotnet.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput("packageType", process.env["__package_type__"] || 'sdk');
