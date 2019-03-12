@@ -255,7 +255,7 @@ function addNugetFeed(feedName: string, feedUri: string, apiKey: string = '', ad
 
     nuget.arg('-NonInteractive');
 
-    nuget.exec({} as IExecOptions);
+    nuget.exec({} as trm.IExecOptions);
 
     if (apiKey) {
         nuget = tl.tool(nugetPath);
@@ -267,7 +267,7 @@ function addNugetFeed(feedName: string, feedUri: string, apiKey: string = '', ad
 
         nuget.arg('-NonInteractive');
 
-        nuget.exec({} as IExecOptions);
+        nuget.exec({} as trm.IExecOptions);
     }
 }
 
