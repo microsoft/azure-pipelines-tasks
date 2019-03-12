@@ -295,8 +295,7 @@ async function run() {
     }
 
     const feed: string = tl.getInput('auth');
-    tl.warning("AUTH="+feed.length);
-    if (!!feed) {
+    if (feed) {
         // Get the info the type of feed
         let nugetFeedType = tl.getInput('nuGetFeedType') || 'internal';
 
