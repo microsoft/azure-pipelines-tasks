@@ -13,6 +13,9 @@ tr.setInput("auth", process.env["__auth__"]);
 tr.setInput("nuGetFeedType", process.env["__nuGetFeedType__"] || 'internal');
 
 process.env["AGENT_TOOLSDIRECTORY"] = "/agent/_tools";
+process.env["AGENT_PROXYURL"] = "https://proxy.com";
+process.env["AGENT_PROXYUSERNAME"] = "username";
+process.env["AGENT_PROXYPASSWORD"] = "password";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exec": {

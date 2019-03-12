@@ -149,38 +149,38 @@ class DotnetCoreInstaller {
     private arch: string;
 }
 
-// function setProxy(){
-//     const proxyUrl = tl.getVariable("agent.proxyurl");
-//     const proxyUsername = tl.getVariable("agent.proxyusername");
-//     const proxyPassword = tl.getVariable("agent.proxypassword");
+function setProxy(){
+    const proxyUrl = tl.getVariable("agent.proxyurl");
+    const proxyUsername = tl.getVariable("agent.proxyusername");
+    const proxyPassword = tl.getVariable("agent.proxypassword");
 
-//     if (!proxyUrl) {
-//         throw new Error('Agent proxy is not set.');
-//     }
+    if (!proxyUrl) {
+        throw new Error('Agent proxy is not set.');
+    }
 
-//     const nugetPath = tl.which('nuget');
+    const nugetPath = tl.which('nuget');
 
-//     // Set proxy url
-//     let nuget = tl.tool(nugetPath);
-//     nuget.arg('config');
-//     nuget.arg('--set');
-//     nuget.arg('http_proxy=' + proxyUrl);
-//     nuget.exec({} as trm.IExecOptions);
+    // Set proxy url
+    let nuget = tl.tool(nugetPath);
+    nuget.arg('config');
+    nuget.arg('--set');
+    nuget.arg('http_proxy=' + proxyUrl);
+    nuget.exec({} as trm.IExecOptions);
 
-//     // Set proxy username
-//     nuget = tl.tool(nugetPath);
-//     nuget.arg('config');
-//     nuget.arg('--set');
-//     nuget.arg('http_proxy.user=' + proxyUsername);
-//     nuget.exec({} as trm.IExecOptions);
+    // Set proxy username
+    nuget = tl.tool(nugetPath);
+    nuget.arg('config');
+    nuget.arg('--set');
+    nuget.arg('http_proxy.user=' + proxyUsername);
+    nuget.exec({} as trm.IExecOptions);
 
-//     // Set proxy password
-//     nuget = tl.tool(nugetPath);
-//     nuget.arg('config');
-//     nuget.arg('--set');
-//     nuget.arg('http_proxy.password=' + proxyPassword);
-//     nuget.exec({} as trm.IExecOptions);
-// }
+    // Set proxy password
+    nuget = tl.tool(nugetPath);
+    nuget.arg('config');
+    nuget.arg('--set');
+    nuget.arg('http_proxy.password=' + proxyPassword);
+    nuget.exec({} as trm.IExecOptions);
+}
 
 // async function addInternalFeed(feedName: string) {
 //     // Get feed info
@@ -291,7 +291,7 @@ async function run() {
 
     const proxy: boolean = tl.getBoolInput('proxy');
     if (proxy) {
-        // setProxy();
+        setProxy();
     }
 
     const feed: string = tl.getInput('auth');
