@@ -306,12 +306,12 @@ async function run() {
         }
         nugetFeedType = normalizedNuGetFeedType;
 
-        if (nugetFeedType === 'internal') {
-            await addInternalFeed(feed);
-        }
-        else {
-            // await addExternalFeed(feed);
-        }
+        // if (nugetFeedType === 'internal') {
+        //     await addInternalFeed(feed);
+        // }
+        // else {
+        //     await addExternalFeed(feed);
+        // }
     }
 }
 
