@@ -99,6 +99,40 @@ describe('UseDotNet', function() {
             }, tr, done);
         });
 
+        it("[windows]should set proxy if proxy input is true", (done) => {
+            process.env["__proxy__"] = "true";
+            let tp = path.join(__dirname, "InstallWindows.js");
+            let tr = new ttm.MockTestRunner(tp);
+            tr.run();
+            runValidations(() => {
+                assert(tr.succeeded, "Should have succeeded");
+                // TODO
+            }, tr, done);
+        });
+
+        it("[windows]should set internal auth correctly", (done) => {
+            process.env["__auth__"] = "myAuth";
+            let tp = path.join(__dirname, "InstallWindows.js");
+            let tr = new ttm.MockTestRunner(tp);
+            tr.run();
+            runValidations(() => {
+                assert(tr.succeeded, "Should have succeeded");
+                // TODO
+            }, tr, done);
+        });
+
+        it("[windows]should set external auth correctly", (done) => {
+            process.env["__auth__"] = "myAuth";
+            process.env["__nuGetFeedType__"] = "external";
+            let tp = path.join(__dirname, "InstallWindows.js");
+            let tr = new ttm.MockTestRunner(tp);
+            tr.run();
+            runValidations(() => {
+                assert(tr.succeeded, "Should have succeeded");
+                // TODO
+            }, tr, done);
+        });
+
         it("[windows]should fail if explicit version is not used", (done) => {
             process.env["__implicit_version__"] = "true";
             let tp = path.join(__dirname, "InstallWindows.js");
@@ -194,6 +228,40 @@ describe('UseDotNet', function() {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("404 not found https://primary-url") > -1, "should print primary url failure error")
                 assert(tr.stdout.indexOf("Downloading tool from https://legacy-url") > -1, "should download from legacy url");
+            }, tr, done);
+        });
+
+        it("[nix]should set proxy if proxy input is true", (done) => {
+            process.env["__proxy__"] = "true";
+            let tp = path.join(__dirname, "InstallNix.js");
+            let tr = new ttm.MockTestRunner(tp);
+            tr.run();
+            runValidations(() => {
+                assert(tr.succeeded, "Should have succeeded");
+                // TODO
+            }, tr, done);
+        });
+
+        it("[nix]should set internal auth correctly", (done) => {
+            process.env["__auth__"] = "myAuth";
+            let tp = path.join(__dirname, "InstallNix.js");
+            let tr = new ttm.MockTestRunner(tp);
+            tr.run();
+            runValidations(() => {
+                assert(tr.succeeded, "Should have succeeded");
+                // TODO
+            }, tr, done);
+        });
+
+        it("[nix]should set external auth correctly", (done) => {
+            process.env["__auth__"] = "myAuth";
+            process.env["__nuGetFeedType__"] = "external";
+            let tp = path.join(__dirname, "InstallNix.js");
+            let tr = new ttm.MockTestRunner(tp);
+            tr.run();
+            runValidations(() => {
+                assert(tr.succeeded, "Should have succeeded");
+                // TODO
             }, tr, done);
         });
     }
