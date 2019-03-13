@@ -54,7 +54,12 @@ export async function getKubectlVersion(versionSpec: string, checkLatest: boolea
         else {
             // Do not check for validity of the version here,
             // We'll return proper error message when the download fails
-            return versionSpec;
+            if(!versionSpec.startsWith("v")) {
+                return "v".concat(versionSpec);
+            }
+            else{
+                return versionSpec;
+            }
         } 
      }
  
