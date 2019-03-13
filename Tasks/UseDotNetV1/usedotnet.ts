@@ -184,7 +184,7 @@ function setProxy(){
 
 async function addInternalFeed(feedName: string) {
     // Get feed info
-    let packagingLocation: pkgLocationUtils.PackagingLocation;
+    let packagingLocation;
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
@@ -196,8 +196,7 @@ async function addInternalFeed(feedName: string) {
             DefaultPackagingUri: collectionUrl
         };
     }
-    // One of these 2 lines is culprit
-    const accessToken: string = 'token'; //pkgLocationUtils.getSystemAccessToken();
+    const accessToken: string = pkgLocationUtils.getSystemAccessToken();
     const feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feedName, null, accessToken, true);
 
     addNugetFeed(feedName, feedUri, 'VSTS');
