@@ -259,7 +259,7 @@ describe('UseDotNet', function() {
             delete process.env["__auth__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
-                // TODO
+                assert(tr.stdout.indexOf("Set internal auth") > -1, "should set internal auth");
             }, tr, done);
         });
 
@@ -273,6 +273,7 @@ describe('UseDotNet', function() {
             delete process.env["__nuGetFeedType__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
+                assert(tr.stdout.indexOf("Set external auth") > -1, "should set external auth");
                 // TODO
             }, tr, done);
         });

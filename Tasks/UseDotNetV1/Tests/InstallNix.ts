@@ -37,6 +37,14 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/somedir/nuget.exe config --set http_proxy.password=password": {
             "code": 0,
             "stdout": "Set proxy password" + os.EOL
+        },
+        "/somedir/nuget.exe sources Add -Name myAuth -Source registryUrl -NonInteractive": {
+            "code": 0,
+            "stdout": "Set internal auth" + os.EOL
+        },
+        "/somedir/nuget.exe sources Add -Name myAuth -Source feed.com -NonInteractive": {
+            "code": 0,
+            "stdout": "Set external auth" + os.EOL
         }
     },
     "osType": {
