@@ -8,6 +8,7 @@ import * as tool from 'azure-pipelines-tool-lib/tool';
 
 import { Platform } from './taskutil';
 import * as toolUtil  from './toolutil';
+import { desugarDevVersion, pythonVersionToSemantic } from './versionspec';
 
 interface TaskParameters {
     versionSpec: string,
@@ -15,25 +16,27 @@ interface TaskParameters {
     architecture: string
 }
 
-function useAnaconda(platform: Platform): void {
+function usePypy(platform: Platform): void {
     const installDir = path.join(
-        task.getVariable('CONDA'),
+        task.getVariable('CONDA'), // TODO
         platform === Platform.Windows ? 'Scripts' : 'bin');
 
     task.setVariable('pythonLocation', installDir);
     toolUtil.prependPathSafe(installDir);
 }
 
-export function pythonVersionToSemantic(versionSpec: string) {
-    const prereleaseVersion = /(\d+\.\d+\.\d+)((?:a|b|rc)\d*)/g;
-    return versionSpec.replace(prereleaseVersion, '$1-$2');
+function usePypy3(platform: Platform): void {
+    const installDir = path.join(
+        task.getVariable('CONDA'), // TODO
+        platform === Platform.Windows ? 'Scripts' : 'bin');
+
+    task.setVariable('pythonLocation', installDir);
+    toolUtil.prependPathSafe(installDir);
 }
 
 async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
-    // Python's prelease versions look like `3.7.0b2`.
-    // This is the one part of Python versioning that does not look like semantic versioning, which specifies `3.7.0-b2`.
-    // If the version spec contains prerelease versions, we need to convert them to the semantic version equivalent
-    const semanticVersionSpec = pythonVersionToSemantic(parameters.versionSpec);
+    const desugaredVersionSpec = desugarDevVersion(parameters.versionSpec);
+    const semanticVersionSpec = pythonVersionToSemantic(desugaredVersionSpec);
     task.debug(`Semantic version spec of ${parameters.versionSpec} is ${semanticVersionSpec}`);
 
     const installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
@@ -101,7 +104,8 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
 
 export async function usePythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
     switch (parameters.versionSpec.toUpperCase()) {
-        case 'ANACONDA': return useAnaconda(platform);
+        case 'PYPY': return usePypy(platform);
+        case 'PYPY3': return usePypy3(platform);
         default: return await useCpythonVersion(parameters, platform);
     }
 }

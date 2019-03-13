@@ -17,6 +17,10 @@ describe('UsePythonVersion L0 Suite', function () {
         require('./L0_usepythonversion');
     });
 
+    describe('versionspec.ts', function () {
+        require('./L0_versionspec');
+    });
+
     it('succeeds when version is found', function () {
         const testFile = path.join(__dirname, 'L0SucceedsWhenVersionIsFound.js');
         const testRunner = new MockTestRunner(testFile);
@@ -67,19 +71,19 @@ describe('UsePythonVersion L0 Suite', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
     });
 
-    it('finds conda', function () {
-        const testFile = path.join(__dirname, 'L0Anaconda.js');
+    it('finds PyPy', function () {
+        const testFile = path.join(__dirname, 'L0PyPy.js');
         const testRunner = new MockTestRunner(testFile);
 
         testRunner.run();
 
-        const anacondaDir = path.join('/', 'miniconda');
-        const anacondaBinDir = os.platform() === 'win32'
-            ? path.join(anacondaDir, 'Scripts')
-            : path.join(anacondaDir, 'bin');
+        const pypyDir = path.join('/', 'pypy');
+        const pypyBinDir = os.platform() === 'win32'
+            ? path.join(pypyDir, 'Scripts')
+            : path.join(pypyDir, 'bin');
 
-        assert(didSetVariable(testRunner, 'pythonLocation', anacondaBinDir));
-        assert(didPrependPath(testRunner, anacondaBinDir));
+        assert(didSetVariable(testRunner, 'pythonLocation', pypyBinDir));
+        assert(didPrependPath(testRunner, pypyBinDir));
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
     });
