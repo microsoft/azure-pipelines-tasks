@@ -196,8 +196,9 @@ async function addInternalFeed(feedName: string) {
             DefaultPackagingUri: collectionUrl
         };
     }
+    // One of these 2 lines is culprit
     const accessToken: string = pkgLocationUtils.getSystemAccessToken();
-    const feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feedName, null, accessToken, true);
+    // const feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feedName, null, accessToken, true);
 
     // addNugetFeed(feedName, feedUri, 'VSTS');
 }
