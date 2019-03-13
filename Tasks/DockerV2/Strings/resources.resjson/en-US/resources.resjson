@@ -15,7 +15,7 @@
   "loc.input.label.dockerFile": "Dockerfile",
   "loc.input.help.dockerFile": "Path to the Dockerfile.",
   "loc.input.label.buildContext": "Build context",
-  "loc.input.help.buildContext": "Path to the build context. If not specified, it defaults to the directory that contains the Dockerfile.",
+  "loc.input.help.buildContext": "Path to the build context. Pass ** to specify the directory that contains the Dockerfile.",
   "loc.input.label.tags": "Tags",
   "loc.input.help.tags": "A list of tags in separate lines. These tags are used in build, push and buildAndPush commands. Ex:<br><br>beta1.1<br>latest",
   "loc.input.label.arguments": "Arguments",

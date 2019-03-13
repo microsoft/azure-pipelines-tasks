@@ -83,7 +83,7 @@
       "name": "buildContext",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.buildContext",
-      "defaultValue": "",
+      "defaultValue": "**",
       "visibleRule": "command = build || command = buildAndPush",
       "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.buildContext"

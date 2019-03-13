@@ -83,10 +83,10 @@
             "name": "buildContext",
             "type": "filePath",
             "label": "Build context",
-            "defaultValue": "",
+            "defaultValue": "**",
             "visibleRule": "command = build || command = buildAndPush",
             "groupName": "commands",
-            "helpMarkDown": "Path to the build context. If not specified, it defaults to the directory that contains the Dockerfile."
+            "helpMarkDown": "Path to the build context. Pass ** to specify the directory that contains the Dockerfile."
         },
         {
             "name": "tags",

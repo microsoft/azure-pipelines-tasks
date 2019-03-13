@@ -8,6 +8,12 @@ import * as dockerCommandUtils from "docker-common/dockercommandutils";
 import * as fileUtils from "docker-common/fileutils";
 import * as utils from "./utils";
 
+function useDefaultBuildContext(buildContext: string): boolean {
+    let defaultWorkingDir = tl.getVariable("SYSTEM_DEFAULTWORKINGDIRECTORY");
+    let defaultPath = path.join(defaultWorkingDir, "**");
+    return buildContext === defaultPath;
+}
+
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any): any {
     // find dockerfile path
     let dockerfilepath = tl.getInput("dockerFile", true);
@@ -57,16 +63,13 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     }
 
     // get build context
-    let context: string;
     let buildContext = tl.getPathInput("buildContext");
-    if (!buildContext) {
-        context = path.dirname(dockerFile);
-    } else {
-        context = buildContext;
+    if (useDefaultBuildContext(buildContext)) {
+        buildContext = path.dirname(dockerFile);
     }
 
     let output = "";
-    return dockerCommandUtils.build(connection, dockerFile, context, commandArguments, tagArguments, (data) => output += data).then(() => {
+    return dockerCommandUtils.build(connection, dockerFile, buildContext, commandArguments, tagArguments, (data) => output += data).then(() => {
         let taskOutputPath = utils.writeTaskOutput("build", output);
         outputUpdate(taskOutputPath);
     });
