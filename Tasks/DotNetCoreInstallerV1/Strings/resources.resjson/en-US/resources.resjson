@@ -66,5 +66,8 @@
   "loc.messages.FileNameNotCorrectCompleteFileName": "File name %s is not correct version.complete file name.",
   "loc.messages.ChannelVersionsNotComparable": "Channel versions %s and %s can not be compared. They both must have numeric major and minor versions.",
   "loc.messages.LookingForVersionInChannel": "Searching for version in channel %s",
-  "loc.messages.FallingBackToAdjacentChannels": "Version %s could not be found in its channel, will now search in adjacent channels."
+  "loc.messages.FallingBackToAdjacentChannels": "Version %s could not be found in its channel, will now search in adjacent channels.",
+  "loc.messages.ErrorWhileSettingDotNetToolPath": "Failed while prepending .Net Core Tool path to PATH envrionment variable. Error: %s",
+  "loc.messages.RequiredChannelVersionForSpec": "Finding channel %s for version %s",
+  "loc.messages.ErrorWhileGettingVersionFromChannel": "Failed while getting version %s from channel %s with error: %s"
 }

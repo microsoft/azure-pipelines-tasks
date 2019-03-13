@@ -8,9 +8,12 @@ import { VersionParts, Constants } from "./versionUtilities";
 
 async function run() {
     let packageType = tl.getInput('packageType', true).toLowerCase();
-    let versionSpec = tl.getInput('version', true).trim();
-    let installationPath = tl.getInput('installationPath', true).trim();
-    let includePreviewVersions: boolean = tl.getBoolInput('includePreviewVersions', true);
+    let versionSpec = tl.getInput('version', true);
+    let installationPath = tl.getInput('installationPath', false);
+    if (!installationPath) {
+        installationPath = path.join(tl.getVariable('Agent.ToolsDirectory'), "dotnet");
+    }
+    let includePreviewVersions: boolean = tl.getBoolInput('includePreviewVersions', false) || false;
 
     console.log(tl.loc("ToolToInstall", packageType, versionSpec));
     VersionParts.ValidateVersionSpec(versionSpec);
@@ -29,10 +32,9 @@ async function run() {
     toolLib.prependPath(installationPath);
 
     // By default disable Multi Level Lookup unless user wants it enabled.
-    if (tl.getBoolInput("restrictMultiLevelLookup", true)) {
-        tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", "0");
-    }
+    tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", tl.getBoolInput("restrictMultiLevelLookup", false) ? "0" : "1");
 
+    // Add dot net tools path to "PATH" environment variables, so that tools can be used directly.
     addDotNetCoreToolPath();
 
     // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
@@ -40,7 +42,6 @@ async function run() {
 }
 
 function addDotNetCoreToolPath() {
-    // Add dot net tools path to "PATH" environment variables, so that tools can be used directly.
     try {
         let globalToolPath: string = "";
         if (tl.osType().match(/^Win/)) {
@@ -54,6 +55,7 @@ function addDotNetCoreToolPath() {
         toolLib.prependPath(globalToolPath);
     } catch (error) {
         //nop
+        tl.debug(tl.loc("ErrorWhileSettingDotNetToolPath", JSON.stringify(error)));
     }
 }
 

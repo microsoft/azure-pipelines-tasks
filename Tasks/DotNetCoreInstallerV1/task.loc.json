@@ -64,7 +64,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.installationPath",
       "defaultValue": "$(Agent.ToolsDirectory)/dotnet",
-      "required": true,
+      "required": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.installationPath"
     },
@@ -135,6 +135,9 @@
     "FileNameNotCorrectCompleteFileName": "ms-resource:loc.messages.FileNameNotCorrectCompleteFileName",
     "ChannelVersionsNotComparable": "ms-resource:loc.messages.ChannelVersionsNotComparable",
     "LookingForVersionInChannel": "ms-resource:loc.messages.LookingForVersionInChannel",
-    "FallingBackToAdjacentChannels": "ms-resource:loc.messages.FallingBackToAdjacentChannels"
+    "FallingBackToAdjacentChannels": "ms-resource:loc.messages.FallingBackToAdjacentChannels",
+    "ErrorWhileSettingDotNetToolPath": "ms-resource:loc.messages.ErrorWhileSettingDotNetToolPath",
+    "RequiredChannelVersionForSpec": "ms-resource:loc.messages.RequiredChannelVersionForSpec",
+    "ErrorWhileGettingVersionFromChannel": "ms-resource:loc.messages.ErrorWhileGettingVersionFromChannel"
   }
 }

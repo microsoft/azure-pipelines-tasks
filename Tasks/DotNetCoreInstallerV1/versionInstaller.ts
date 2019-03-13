@@ -47,8 +47,8 @@ export class VersionInstaller {
 
             // Copy folders
             tl.debug(tl.loc("CopyingFoldersIntoPath", this.installationPath));
-            var allEnteriesInDir: string[] = tl.ls("", [extPath]).map(name => path.join(extPath, name));
-            var directoriesTobeCopied: string[] = allEnteriesInDir.filter(path => fs.lstatSync(path).isDirectory());
+            var allRootLevelEnteriesInDir: string[] = tl.ls("", [extPath]).map(name => path.join(extPath, name));
+            var directoriesTobeCopied: string[] = allRootLevelEnteriesInDir.filter(path => fs.lstatSync(path).isDirectory());
             directoriesTobeCopied.forEach((directoryPath) => {
                 tl.cp(directoryPath, this.installationPath, "-rf", false);
             });
@@ -57,7 +57,7 @@ export class VersionInstaller {
             try {
                 if (this.isLatestInstalledVersion(version)) {
                     tl.debug(tl.loc("CopyingFilesIntoPath", this.installationPath));
-                    var filesToBeCopied = allEnteriesInDir.filter(path => !fs.lstatSync(path).isDirectory());
+                    var filesToBeCopied = allRootLevelEnteriesInDir.filter(path => !fs.lstatSync(path).isDirectory());
                     filesToBeCopied.forEach((filePath) => {
                         tl.cp(filePath, this.installationPath, "-f", false);
                     });
@@ -105,14 +105,14 @@ export class VersionInstaller {
         var pathToVersionCompleteFile: string = "";
         if (this.packageType == utils.Constants.sdk) {
             let sdkVersion = versionInfo.version;
-            pathToVersionCompleteFile = path.join(this.installationPath, utils.Constants.relativeSdkPath);
-            tl.writeFile(path.join(pathToVersionCompleteFile, `${sdkVersion}.complete`), `{ "version": "${sdkVersion}" }`);
+            pathToVersionCompleteFile = path.join(this.installationPath, utils.Constants.relativeSdkPath, `${sdkVersion}.complete`);
+            tl.writeFile(pathToVersionCompleteFile, `{ "version": "${sdkVersion}" }`);
         }
 
         let runtimeVersion = VersionInfo.getRuntimeVersion(versionInfo, this.packageType);
         if (runtimeVersion) {
-            pathToVersionCompleteFile = path.join(this.installationPath, utils.Constants.relativeRuntimePath);
-            tl.writeFile(path.join(pathToVersionCompleteFile, `${runtimeVersion}.complete`), `{ "version": "${runtimeVersion}" }`);
+            pathToVersionCompleteFile = path.join(this.installationPath, utils.Constants.relativeRuntimePath, `${runtimeVersion}.complete`);
+            tl.writeFile(pathToVersionCompleteFile, `{ "version": "${runtimeVersion}" }`);
         }
         else if (this.packageType == "runtime") {
             throw tl.loc("CannotFindRuntimeVersionForCompletingInstallation", this.packageType, versionInfo.version);

@@ -64,7 +64,7 @@
             "type": "string",
             "label": "Path To Install .Net Core",
             "defaultValue": "$(Agent.ToolsDirectory)/dotnet",
-            "required": true,
+            "required": false,
             "groupName": "advanced",
             "helpMarkDown": "Specify where .Net Core SDK/Runtime should be installed. Different paths can have the following impact on dotnet's behavior.<li>$(Agent.ToolsDirectory): This makes the version to be cached on the agent since this directory is not cleanup up across pipelines. All pipelines running on the agent, would have access to the versions installed previously using the agent.</li><li>$(Agent.TempDirectory): This can ensure that a pipeline doesn't use any cached version of .Net core since this folder is cleaned up after each pipeline.</li><li>Any other path: You can configure any other path given the agent process has access to the path. This will change the state of the machine and impact all processes running on it.<br/>Note that you can also configure Multi-Level Lookup setting which can configures dotnet host's probing for a suitable version."
         },
@@ -135,6 +135,9 @@
         "FileNameNotCorrectCompleteFileName": "File name %s is not correct version.complete file name.",
         "ChannelVersionsNotComparable": "Channel versions %s and %s can not be compared. They both must have numeric major and minor versions.",
         "LookingForVersionInChannel": "Searching for version in channel %s",
-        "FallingBackToAdjacentChannels": "Version %s could not be found in its channel, will now search in adjacent channels."
+        "FallingBackToAdjacentChannels": "Version %s could not be found in its channel, will now search in adjacent channels.",
+        "ErrorWhileSettingDotNetToolPath": "Failed while prepending .Net Core Tool path to PATH envrionment variable. Error: %s",
+        "RequiredChannelVersionForSpec": "Finding channel %s for version %s",
+        "ErrorWhileGettingVersionFromChannel": "Failed while getting version %s from channel %s with error: %s"
     }
 }

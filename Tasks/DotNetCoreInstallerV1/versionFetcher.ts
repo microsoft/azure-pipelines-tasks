@@ -126,6 +126,7 @@ export class DotNetCoreVersionFetcher {
             requiredChannelVersion = latestChannelVersion;
         }
 
+        tl.debug(tl.loc("RequiredChannelVersionForSpec", requiredChannelVersion, versionSpec));
         return this.channels.find(channel => {
             if (channel.channelVersion == requiredChannelVersion) {
                 return true
@@ -144,8 +145,11 @@ export class DotNetCoreVersionFetcher {
                 .then((body: string) => {
                     var channelReleases = JSON.parse(body).releases;
 
-                    let versionInfoList: VersionInfo[] = channelReleases.map((release) => {
-                        return release[packageType] && release[packageType].version ? release[packageType] : null;
+                    let versionInfoList: VersionInfo[] = [];
+                    channelReleases.forEach((release) => {
+                        if (release && release[packageType] && release[packageType].version) {
+                            versionInfoList.push(release[packageType]);
+                        }
                     });
 
                     let matchedVersionInfo = utils.getMatchingVersionFromList(versionInfoList, versionSpec, includePreviewVersions);
@@ -156,6 +160,10 @@ export class DotNetCoreVersionFetcher {
 
                     console.log(tl.loc("MatchingVersionForUserInputVersion", matchedVersionInfo.version, channelInformation.channelVersion, versionSpec))
                     return matchedVersionInfo;
+                })
+                .catch((ex) => {
+                    tl.error(tl.loc("ErrorWhileGettingVersionFromChannel", versionSpec, channelInformation.channelVersion, JSON.stringify(ex)));
+                    return null;
                 });
         }
         else {
@@ -163,16 +171,16 @@ export class DotNetCoreVersionFetcher {
         }
     }
 
-    private async getVersionFromOtherChannels(versionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
-        let fallbackChannels = this.getChannelsForMajorVersion(versionSpec);
+    private async getVersionFromOtherChannels(version: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
+        let fallbackChannels = this.getChannelsForMajorVersion(version);
         if (!fallbackChannels && fallbackChannels.length < 1) {
-            throw tl.loc("NoSuitableChannelWereFound", versionSpec);
+            throw tl.loc("NoSuitableChannelWereFound", version);
         }
 
         var versionInfo: VersionInfo = null;
         for (var i = 0; i < fallbackChannels.length; i++) {
             console.log(tl.loc("LookingForVersionInChannel", (fallbackChannels[i]).channelVersion));
-            versionInfo = await this.getVersionFromChannel(fallbackChannels[i], versionSpec, packageType, includePreviewVersions);
+            versionInfo = await this.getVersionFromChannel(fallbackChannels[i], version, packageType, includePreviewVersions);
 
             if (versionInfo) {
                 break;
@@ -182,8 +190,8 @@ export class DotNetCoreVersionFetcher {
         return versionInfo;
     }
 
-    private getChannelsForMajorVersion(versionSpec: string): Channel[] {
-        var versionParts = new utils.VersionParts(versionSpec);
+    private getChannelsForMajorVersion(version: string): Channel[] {
+        var versionParts = new utils.VersionParts(version);
         let adjacentChannels: Channel[] = [];
         this.channels.forEach(channel => {
             if (channel.channelVersion.startsWith(`${versionParts.majorVersion}`)) {

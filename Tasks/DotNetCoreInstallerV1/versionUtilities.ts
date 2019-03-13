@@ -43,8 +43,11 @@ export function compareChannelVersion(channelVersionA: string, channelVersionB: 
 }
 
 export function getMatchingVersionFromList(versionInfoList: VersionInfo[], versionSpec: string, includePreviewVersions: boolean = false): VersionInfo {
-    let versionList: string[] = versionInfoList.map(versionInfo => {
-        return versionInfo && versionInfo.version ? versionInfo.version : ""
+    let versionList: string[] = [];
+    versionInfoList.forEach(versionInfo => {
+        if (versionInfo && versionInfo.version) {
+            versionList.push(versionInfo.version);
+        }
     });
 
     let matchedVersion = semver.maxSatisfying(versionList, versionSpec, { includePrerelease: includePreviewVersions });
