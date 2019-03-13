@@ -22,7 +22,7 @@ steps:
     versionSpec: "8.x"
     
 
-- script: npm i -g npm@$6.7.0
+- script: npm i -g npm@6.7.0
   displayName: Use npm version 6.7.0
 
 # npm install
