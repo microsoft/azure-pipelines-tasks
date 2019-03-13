@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "commonjs",
+        "types": ["mocha"],
+        "sourceMap": true,
+        "sourceRoot": "C:\\github\\azure-pipelines-tasks\\tasks\\usedotnetv1\\"
+    }
+}
