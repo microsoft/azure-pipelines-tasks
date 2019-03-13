@@ -196,8 +196,8 @@ async function addInternalFeed(feedName: string) {
             DefaultPackagingUri: collectionUrl
         };
     }
-    // const accessToken: string = pkgLocationUtils.getSystemAccessToken();
-    // const feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feedName, null, accessToken, true);
+    const accessToken: string = pkgLocationUtils.getSystemAccessToken();
+    const feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feedName, null, accessToken, true);
 
     // addNugetFeed(feedName, feedUri, 'VSTS');
 }
