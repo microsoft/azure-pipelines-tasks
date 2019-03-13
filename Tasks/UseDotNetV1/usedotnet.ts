@@ -197,10 +197,10 @@ async function addInternalFeed(feedName: string) {
         };
     }
     // One of these 2 lines is culprit
-    const accessToken: string = pkgLocationUtils.getSystemAccessToken();
-    // const feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feedName, null, accessToken, true);
+    const accessToken: string = 'token'; //pkgLocationUtils.getSystemAccessToken();
+    const feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feedName, null, accessToken, true);
 
-    // addNugetFeed(feedName, feedUri, 'VSTS');
+    addNugetFeed(feedName, feedUri, 'VSTS');
 }
 
 async function addExternalFeed(feedName: string) {
