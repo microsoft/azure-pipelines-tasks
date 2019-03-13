@@ -121,7 +121,8 @@ describe('UseDotNet', function() {
             delete process.env["__auth__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
-                // TODO
+                assert(tr.stdout.indexOf("Set internal auth") > -1, "should set internal auth");
+                assert(tr.stdout.indexOf("Set internal api key") > -1, "should set internal api key");
             }, tr, done);
         });
 
@@ -135,7 +136,8 @@ describe('UseDotNet', function() {
             delete process.env["__nuGetFeedType__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
-                // TODO
+                assert(tr.stdout.indexOf("Set external auth") > -1, "should set external auth");
+                assert(tr.stdout.indexOf("Set external api key") > -1, "should set external api key");
             }, tr, done);
         });
 
@@ -260,6 +262,7 @@ describe('UseDotNet', function() {
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("Set internal auth") > -1, "should set internal auth");
+                assert(tr.stdout.indexOf("Set internal api key") > -1, "should set internal api key");
             }, tr, done);
         });
 
@@ -274,7 +277,7 @@ describe('UseDotNet', function() {
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("Set external auth") > -1, "should set external auth");
-                // TODO
+                assert(tr.stdout.indexOf("Set external api key") > -1, "should set external api key");
             }, tr, done);
         });
     }

@@ -56,6 +56,14 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "C:\\somedir\\nuget.exe sources Add -Name myAuth -Source feed.com -NonInteractive": {
             "code": 0,
             "stdout": "Set external auth" + os.EOL
+        },
+        "C:\\somedir\\nuget.exe setapikey VSTS -Source registryUrl -NonInteractive": {
+            "code": 0,
+            "stdout": "Set internal api key" + os.EOL
+        },
+        "C:\\somedir\\nuget.exe setapikey RequiredApiKey -Source feed.com -NonInteractive": {
+            "code": 0,
+            "stdout": "Set external api key" + os.EOL
         }
     },
     "osType": {
