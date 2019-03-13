@@ -84,7 +84,7 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
                 let startDate = new Date();
                 let expiryDate = new Date(startDate);
                 expiryDate.setFullYear(startDate.getUTCFullYear() + 1);
-                startDate.setMinutes(startDate.getUTCMinutes() - 5);
+                startDate.setMinutes(startDate.getMinutes()-5);
             
                 let sharedAccessPolicy = {
                     AccessPolicy: {
