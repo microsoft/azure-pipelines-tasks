@@ -107,7 +107,9 @@ describe('UseDotNet', function() {
             delete process.env["__proxy__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
-                // TODO
+                assert(tr.stdout.indexOf("Set proxy url") > -1, "should set proxy url");
+                assert(tr.stdout.indexOf("Set proxy username") > -1, "should set proxy username");
+                assert(tr.stdout.indexOf("Set proxy password") > -1, "should set proxy password");
             }, tr, done);
         });
 
@@ -243,7 +245,9 @@ describe('UseDotNet', function() {
             delete process.env["__proxy__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
-                // TODO
+                assert(tr.stdout.indexOf("Set proxy url") > -1, "should set proxy url");
+                assert(tr.stdout.indexOf("Set proxy username") > -1, "should set proxy username");
+                assert(tr.stdout.indexOf("Set proxy password") > -1, "should set proxy password");
             }, tr, done);
         });
 

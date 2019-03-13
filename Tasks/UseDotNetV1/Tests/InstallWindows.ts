@@ -2,6 +2,7 @@ import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import os = require('os');
+import auth = require('packaging-common/nuget/Authentication');
 
 import { chmodSync } from 'fs';
 
@@ -35,13 +36,26 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "C:\\somedir\\powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & 'C:\\currDir\\externals\\get-os-platform.ps1'": {
             "code": 0,
             "stdout": "Primary: win-x64" + os.EOL,
+        },
+        "C:\\somedir\\nuget.exe config --set http_proxy=https://proxy.com": {
+            "code": 0,
+            "stdout": "Set proxy url" + os.EOL
+        },
+        "C:\\somedir\\nuget.exe config --set http_proxy.user=username": {
+            "code": 0,
+            "stdout": "Set proxy username" + os.EOL
+        },
+        "C:\\somedir\\nuget.exe config --set http_proxy.password=password": {
+            "code": 0,
+            "stdout": "Set proxy password" + os.EOL
         }
     },
     "osType": {
         "osType": "Windows_NT"
     },
     "which": {
-        "powershell": "C:\\somedir\\powershell.exe"
+        "powershell": "C:\\somedir\\powershell.exe",
+        "nuget": "C:\\somedir\\nuget.exe"
     },
     "checkPath": {
         "C:\\somedir\\powershell.exe": true
@@ -54,6 +68,39 @@ tr.registerMock('./utilities', {
     },
     setFileAttribute: function (file, mode) {
         chmodSync(file, mode);
+    }
+});
+
+tr.registerMock('packaging-common/nuget/CommandHelper', {
+    GetExternalAuthInfoArray: function(endpoint: string) {
+        if (endpoint === 'externalEndpoint') {
+            const myEndpoint = {packageSource: {feedUri: 'feed.com'},
+                                authType: auth.ExternalAuthType.Token};
+            return [myEndpoint];
+        }
+        return null;
+    }
+});
+
+tr.registerMock('packaging-common/nuget/Utility', {
+    getNuGetFeedRegistryUrl: async function(packagingCollectionUrl: string, feedId: string, nuGetVersion: any, accessToken?: string, useSession?: boolean) {
+        if (packagingCollectionUrl === 'defaultUri' && feedId === process.env["__auth__"] && nuGetVersion == null && accessToken === 'accessToken' && useSession) {
+            return 'registryUrl';
+        }
+        return null;
+    }
+});
+
+tr.registerMock('packaging-common/locationUtilities', {
+    ProtocolType: {NuGet: 0},
+    getPackagingUris: async function(type: number) {
+        if (type === 0) {
+            return {PackagingUris: ['defaultUri'], DefaultPackagingUri: 'defaultUri'}
+        }
+        return null;
+    },
+    getSystemAccessToken: function() {
+        return 'accessToken';
     }
 });
 

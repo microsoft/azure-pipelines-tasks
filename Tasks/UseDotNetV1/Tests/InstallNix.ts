@@ -24,14 +24,27 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exec": {
         "/somedir/currdir/externals/get-os-distro.sh": {
             "code": 0,
-            "stdout": "Primary: linux" + os.EOL,
+            "stdout": "Primary: linux" + os.EOL
+        },
+        "/somedir/nuget.exe config --set http_proxy=https://proxy.com": {
+            "code": 0,
+            "stdout": "Set proxy url" + os.EOL
+        },
+        "/somedir/nuget.exe config --set http_proxy.user=username": {
+            "code": 0,
+            "stdout": "Set proxy username" + os.EOL
+        },
+        "/somedir/nuget.exe config --set http_proxy.password=password": {
+            "code": 0,
+            "stdout": "Set proxy password" + os.EOL
         }
     },
     "osType": {
         "osType": "Linux"
     },
     "which": {
-        "/somedir/currdir/externals/get-os-distro.sh": "/somedir/currdir/externals/get-os-distro.sh"
+        "/somedir/currdir/externals/get-os-distro.sh": "/somedir/currdir/externals/get-os-distro.sh",
+        "nuget": "/somedir/nuget.exe"
     },
     "checkPath": {
         "/somedir/currdir/externals/get-os-distro.sh": true
