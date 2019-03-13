@@ -25,7 +25,7 @@
   "dependencies": {
     "@types/node": "^6.0.101",
     "@types/q": "^1.0.7",
-    "vsts-task-lib": "^2.3.0",
-    "vsts-task-tool-lib": "^0.5.1"
+    "azure-pipelines-task-lib": "^2.8.0",
+    "azure-pipelines-tool-lib": "^0.12.0"
   }
 }

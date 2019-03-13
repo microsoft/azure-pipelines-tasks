@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
-import * as mockTask from 'vsts-task-lib/mock-task';
+import * as mockTask from 'azure-pipelines-task-lib/mock-task';
 
 import { Platform } from '../taskutil';
 import * as usePythonVersion from '../usepythonversion';
@@ -30,8 +30,8 @@ afterEach(function () {
 });
 
 it('converts Python prerelease versions to the semantic version format', function () {
-    mockery.registerMock('vsts-task-lib/task', mockTask);
-    mockery.registerMock('vsts-task-tool-lib/tool', {});
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-tool-lib/tool', {});
     const uut = reload();
 
     const testCases = [
@@ -76,10 +76,10 @@ it('converts Python prerelease versions to the semantic version format', functio
 })
 
 it('sets PATH correctly on Linux', async function () {
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     const findLocalTool = sinon.stub().returns('findLocalTool');
-    mockery.registerMock('vsts-task-tool-lib/tool', {
+    mockery.registerMock('azure-pipelines-tool-lib/tool', {
         findLocalTool
     });
 
@@ -103,12 +103,12 @@ it('sets PATH correctly on Linux', async function () {
 });
 
 it('sets PATH correctly on Windows', async function () {
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     // Windows PATH logic will parse this path, so it has to be realistic
     const toolPath = path.join('/', 'Python', '3.6.4', 'x64');
     const findLocalTool = sinon.stub().returns(toolPath);
-    mockery.registerMock('vsts-task-tool-lib/tool', {
+    mockery.registerMock('azure-pipelines-tool-lib/tool', {
         findLocalTool
     });
 

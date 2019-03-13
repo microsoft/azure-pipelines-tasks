@@ -3,8 +3,8 @@ import * as path from 'path';
 
 import * as semver from 'semver';
 
-import * as task from 'vsts-task-lib/task';
-import * as tool from 'vsts-task-tool-lib/tool';
+import * as task from 'azure-pipelines-task-lib/task';
+import * as tool from 'azure-pipelines-tool-lib/tool';
 
 import { Platform } from './taskutil';
 import * as toolUtil  from './toolutil';
