@@ -14,7 +14,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
 
     let outputPaths = "";
     let promise = dockerbuild.run(connection, (outputPath) => outputPaths += outputPath).then(() => {
-        dockerpush.run(connection, (outputPath) => outputPaths += ("\n" + outputPath)).then(() => {
+        return dockerpush.run(connection, (outputPath) => outputPaths += ("\n" + outputPath)).then(() => {
             outputUpdate(outputPaths);
         });
     })

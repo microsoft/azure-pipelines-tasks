@@ -52,6 +52,9 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
             }
         });
     }
+    else {
+        tl.debug(tl.loc('NotAddingAnyTagsToBuild'));
+    }
 
     // get build context
     let context: string;

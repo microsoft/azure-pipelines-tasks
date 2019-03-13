@@ -15,7 +15,9 @@ function pushMultipleImages(connection: ContainerConnection, imageNames: string[
                 tags.forEach(tag => {
                     let imageNameWithTag = imageName + ":" + tag;
                     if (promise) {
-                        promise = promise.then(() => dockerCommandUtils.push(connection, imageNameWithTag, commandArguments, onCommandOut));
+                        promise = promise.then(() => {
+                            return dockerCommandUtils.push(connection, imageNameWithTag, commandArguments, onCommandOut)
+                        });
                     }
                     else {
                         promise = dockerCommandUtils.push(connection, imageNameWithTag, commandArguments, onCommandOut);
@@ -24,7 +26,9 @@ function pushMultipleImages(connection: ContainerConnection, imageNames: string[
             }
             else {
                 if (promise) {
-                    promise = promise.then(() => dockerCommandUtils.push(connection, imageName, commandArguments, onCommandOut));
+                    promise = promise.then(() => {
+                        return dockerCommandUtils.push(connection, imageName, commandArguments, onCommandOut)
+                    });
                 }
                 else {
                     promise = dockerCommandUtils.push(connection, imageName, commandArguments, onCommandOut);
@@ -60,7 +64,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
 
     // push all tags
     let output = "";
-    let promise = this.pushMultipleImages(connection, imageNames, tags, commandArguments, (commandOut) => output += commandOut);
+    let promise = pushMultipleImages(connection, imageNames, tags, commandArguments, (commandOut) => output += commandOut);
     
     if (promise) {
         promise = promise.then(() => {
@@ -69,6 +73,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         });
     }
     else {
+        tl.debug(tl.loc('NotPushingAsNoLoginFound'));
         promise = Q.resolve(null);
     }
 

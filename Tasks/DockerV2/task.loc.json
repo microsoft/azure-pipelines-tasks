@@ -22,8 +22,7 @@
     {
       "name": "containerRepository",
       "displayName": "ms-resource:loc.group.displayName.containerRepository",
-      "isExpanded": true,
-      "visibleRule": "command != logout"
+      "isExpanded": true
     },
     {
       "name": "commands",
@@ -45,7 +44,7 @@
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.repository",
       "defaultValue": "",
-      "visibleRule": "command != login",
+      "visibleRule": "command != login && command != logout",
       "groupName": "containerRepository",
       "properties": {
         "EditableOptions": "True"
@@ -126,15 +125,30 @@
     }
   },
   "messages": {
+    "AddingAuthDataToDockerConfig": "ms-resource:loc.messages.AddingAuthDataToDockerConfig",
     "ArgumentsNotSupportedWithBuildAndPush": "ms-resource:loc.messages.ArgumentsNotSupportedWithBuildAndPush",
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
+    "CouldNotFindDockerConfig": "ms-resource:loc.messages.CouldNotFindDockerConfig",
+    "DeletingDockerConfigDirectory": "ms-resource:loc.messages.DeletingDockerConfigDirectory",
+    "DeletingAuthDataFromDockerConfig": "ms-resource:loc.messages.DeletingAuthDataFromDockerConfig",
     "DockerRegistryNotFound": "ms-resource:loc.messages.DockerRegistryNotFound",
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "FoundDockerConfigStoredInTempPath": "ms-resource:loc.messages.FoundDockerConfigStoredInTempPath",
+    "FoundPreviousLogin": "ms-resource:loc.messages.FoundPreviousLogin",
+    "FoundLoginsForOtherRegistries": "ms-resource:loc.messages.FoundLoginsForOtherRegistries",
+    "FoundPreviousLoginForRegistry": "ms-resource:loc.messages.FoundPreviousLoginForRegistry",
+    "LoggingOutFromRegistry": "ms-resource:loc.messages.LoggingOutFromRegistry",
+    "LoggingOutWithNoRegistrySpecified": "ms-resource:loc.messages.LoggingOutWithNoRegistrySpecified",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
-    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded"
+    "NotAddingAnyTagsToBuild": "ms-resource:loc.messages.NotAddingAnyTagsToBuild",
+    "NotPushingAsNoLoginFound": "ms-resource:loc.messages.NotPushingAsNoLoginFound",
+    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
+    "PathIsNotInTempDirectory": "ms-resource:loc.messages.PathIsNotInTempDirectory",
+    "RegistryAuthNotPresentInConfig": "ms-resource:loc.messages.RegistryAuthNotPresentInConfig",
+    "RestoringPreviousLoginAuth": "ms-resource:loc.messages.RestoringPreviousLoginAuth"
   }
 }

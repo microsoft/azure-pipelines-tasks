@@ -13,12 +13,13 @@ let containerRegisitry = tl.getInput("containerRegistry");
 let authenticationProvider = new GenericAuthenticationTokenProvider(containerRegisitry);        
 let registryAuthenticationToken = authenticationProvider.getAuthenticationToken();
 
-// Connect to any specified container registry
-let connection = new ContainerConnection();
-connection.open(null, registryAuthenticationToken, true);
-
 // Take the specified command
 let command = tl.getInput("command", true).toLowerCase();
+let isLogout = (command === "logout");
+
+// Connect to any specified container registry
+let connection = new ContainerConnection();
+connection.open(null, registryAuthenticationToken, true, isLogout);
 
 let dockerCommandMap = {
     "buildandpush": "./dockerbuildandpush",
@@ -50,7 +51,7 @@ commandImplementation.run(connection, (pathToResult) => {
 /* tslint:enable:no-var-requires */
 .fin(function cleanup() {
     if (command !== "login") {
-        connection.close();
+        connection.close(true, command);
     }
 })
 .then(function success() {
