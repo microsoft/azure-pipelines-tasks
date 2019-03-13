@@ -44,7 +44,7 @@ export class DotNetCoreVersionFetcher {
         }
 
         if (!requiredVersionInfo) {
-            throw tl.loc("VersionNotFound", versionSpec);
+            throw tl.loc("VersionNotFound", packageType, versionSpec);
         }
 
         let dotNetSdkVersionTelemetry = `{"userVersion":"${versionSpec}", "resolvedVersion":"${requiredVersionInfo.version}"}`;
@@ -58,8 +58,8 @@ export class DotNetCoreVersionFetcher {
         let osSuffixes = this.detectMachineOS();
         let downloadPackageInfoObject: VersionFilesData = null;
         osSuffixes.find((osSuffix) => {
-            downloadPackageInfoObject = versionInfo.files.find((downloadPackageInfo: any) => {
-                if (downloadPackageInfo.rid.toLowerCase() == osSuffix.toLowerCase()) {
+            downloadPackageInfoObject = versionInfo.files.find((downloadPackageInfo: VersionFilesData) => {
+                if (downloadPackageInfo.rid && osSuffix && downloadPackageInfo.rid.toLowerCase() == osSuffix.toLowerCase()) {
                     if ((osSuffix.split("-")[0] != "win" && osSuffix.split("-")[0] != "osx") || (osSuffix.split("-")[0] == "win" && downloadPackageInfo.name.endsWith(".zip")) || (osSuffix.split("-")[0] == "osx" && downloadPackageInfo.name.endsWith("tar.gz"))) {
                         return true;
                     }
@@ -154,7 +154,7 @@ export class DotNetCoreVersionFetcher {
 
                     let matchedVersionInfo = utils.getMatchingVersionFromList(versionInfoList, versionSpec, includePreviewVersions);
                     if (!matchedVersionInfo) {
-                        console.log(tl.loc("MatchingVersionNotFound", versionSpec));
+                        console.log(tl.loc("MatchingVersionNotFound", packageType, versionSpec));
                         return null;
                     }
 

@@ -1,7 +1,7 @@
 {
     "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
     "name": "DotNetCoreInstaller",
-    "friendlyName": "Dot NET Core SDK/Runtime Installer",
+    "friendlyName": ".NET Core SDK/Runtime Installer",
     "description": "Acquires a version of the .NET Core SDK/Runtime from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks.",
     "helpUrl": "",
     "helpMarkDown": "",
@@ -22,7 +22,7 @@
     ],
     "demands": [],
     "releaseNotes": "<li>Support for installing multiple versions side by side.</li><li>Support for patterns in version to fetch latest in minor/major version.</li><li>Restrict Multi-level lookup</li>",
-    "instanceNameFormat": "Use .NET Core $(packageType) $(version)",
+    "instanceNameFormat": "Install .NET Core $(packageType) $(version)",
     "groups": [
         {
             "name": "advanced",
@@ -49,7 +49,7 @@
             "label": "Version",
             "defaultValue": "2.2.x",
             "required": true,
-            "helpMarkDown": "Specify version of .NET Core SDK or runtime to install.<br/>Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [releases-index file.](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json"
+            "helpMarkDown": "Specify version of .NET Core SDK or runtime to install.<br/>Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json"
         },
         {
             "name": "includePreviewVersions",
@@ -57,7 +57,7 @@
             "label": "Include Preview Versions",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Select if you want preview versions to be included while searching for versions, such as while searching 2.2.x. This setting is ingnored if you specify an exact version, such as: 2.1.403"
+            "helpMarkDown": "Select if you want preview versions to be included while searching for versions, such as while searching 2.2.x. This setting is ignored if you specify an exact version, such as: 2.1.403"
         },
         {
             "name": "installationPath",
@@ -66,7 +66,7 @@
             "defaultValue": "$(Agent.ToolsDirectory)/dotnet",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Specify where .Net Core SDK/Runtime should be installed. Different paths can have the following impact on dotnet's behavior.<li>$(Agent.ToolsDirectory): This makes the version to be cached on the agent since this directory is not cleanup up across pipelines. All pipelines running on the agent, would have access to the versions installed previously using the agent.</li><li>$(Agent.TempDirectory): This can ensure that a pipeline doesn't use any cached version of .Net core since this folder is cleaned up after each pipeline.</li><li>Any other path: You can configure any other path given the agent process has access to the path. This will change the state of the machine and impact all processes running on it.<br/>Note that you can also configure Multi-Level Lookup setting which can configures dotnet host's probing for a suitable version."
+            "helpMarkDown": "Specify where .Net Core SDK/Runtime should be installed. Different paths can have the following impact on .Net's behavior.<li>$(Agent.ToolsDirectory): This makes the version to be cached on the agent since this directory is not cleanup up across pipelines. All pipelines running on the agent, would have access to the versions installed previously using the agent.</li><li>$(Agent.TempDirectory): This can ensure that a pipeline doesn't use any cached version of .Net core since this folder is cleaned up after each pipeline.</li><li>Any other path: You can configure any other path given the agent process has access to the path. This will change the state of the machine and impact all processes running on it.<br/>Note that you can also configure Multi-Level Lookup setting which can configure .Net host's probing for a suitable version."
         },
         {
             "name": "restrictMultiLevelLookup",
@@ -75,7 +75,7 @@
             "groupName": "advanced",
             "defaultValue": true,
             "required": false,
-            "helpMarkDown": "This configures the behavior of dontnet host process for looking up a suitable shared framework.<li>true: Only versions present in  the folder specified in this task would be looked by the host process.</li><li>false: The host will attempt to look in pre-defined global locations using multi-level lookup.<br/>The default global locations are: <br/><b>For Windows:</b><br/>C:\\Program Files\\dotnet (64-bit processes)<br/>C:\\Program Files (x86)\\dotnet (32-bit process)</li> You can read more about it [HERE](https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/multilevel-sharedfx-lookup.md).<br/>This is only applicable to Windows based agents."
+            "helpMarkDown": "This input is only applicable to Windows based agents. This configures the behavior of .Net host process for looking up a suitable shared framework.<li>checked: Only versions present in  the folder specified in this task would be looked by the host process.</li><li>unchecked: The host will attempt to look in pre-defined global locations using multi-level lookup.<br/>The default global locations are: <br/><b>For Windows:</b><br/>C:\\Program Files\\dotnet (64-bit processes)<br/>C:\\Program Files (x86)\\dotnet (32-bit process)</li> You can read more about it [**HERE**](https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/multilevel-sharedfx-lookup.md).<br/>"
         }
     ],
     "execution": {
@@ -87,7 +87,7 @@
         "ToolFailed": "Tool install failed: %s",
         "ImplicitVersionNotSupported": "Version should be a valid and explicit version: %s",
         "getMachinePlatformFailed": "Failed to get machine platform details. Error: %s.",
-        "getDownloadUrlsFailed": "Failed to get download urls. Error: %s.",
+        "getDownloadUrlsFailed": "Failed to get download URLS. Error: %s.",
         "UsingCachedTool": "Cached copy of .NET Core exists. No need to install afresh. Cached tool location: %s.",
         "CheckingToolCache": "Checking if a cached copy exists for this version...",
         "InstallingAfresh": "The cache does not contain the requested version of .NET Core. Downloading and installing it now.",
@@ -104,9 +104,9 @@
         "WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/dotnet/core/blob/master/release-notes/releases.json. Falling back to creating convention based URL.",
         "CouldNotDownload": "Could not download installation package from this URL: %s Error: %s",
         "FailedToDownloadPackage": "Failed to download package for installation",
-        "PrependGlobalToolPath": "Creating global tool path and pre-prending to PATH.",
+        "PrependGlobalToolPath": "Creating global tool path and pre-pending to PATH.",
         "VersionsFileMalformed": "The specified version's download links are not correctly formed in the supported versions document => %s/",
-        "MatchingVersionNotFound": "No matching version could be found for specified version: %s Kindly note the preview versions are only considered in latest version searches if Include Preview Versions checkbox is checked.",
+        "MatchingVersionNotFound": "No matching %s version could be found for specified version: %s Kindly note the preview versions are only considered in latest version searches if Include Preview Versions checkbox is checked.",
         "UnableToAccessPath": "Unable to access path: %s. Error: %s \n please make sure that agent process has path to the path.",
         "VersionCanNotBeDownloadedFromUrl": "Version: %s cannot be downloaded from URL: %s. Either the URL or version is incorrect.",
         "CopyingFoldersIntoPath": "Copying all root folders into installation path: %s",
@@ -129,7 +129,7 @@
         "DetectingPlatform": "Detecting OS platform to find correct download package for the OS.",
         "FailedInDetectingMachineArch": "Failed while detecting machine OS platform with error: %s",
         "runtimeVersionPropertyNotFound": "runtime-version property could not be found for .Net Core %s version %s.",
-        "VersionNotFound": "Version matching: %s could not be found",
+        "VersionNotFound": "%s version matching: %s could not be found",
         "VersionNotAllowed": "Version %s is not allowed. Allowed version types are: majorVersion.x, majorVersion.minorVersion.x, majorVersion.minorVersion.patchVersion",
         "VersionsCanNotBeCompared": "Versions %s and %s cannot be compared. Both versions should be explicit.",
         "FileNameNotCorrectCompleteFileName": "File name %s is not correct version.complete file name.",
