@@ -7,24 +7,27 @@ import { Kubectl } from "utility-common/kubectl-object-model";
 import * as utils from "../utils/utilities";
 import * as TaskInputParameters from '../models/TaskInputParameters';
 
-export async function deleteResources() {
+export async function reject() {
 
     let argsPrefix: string;
     
-    if(TaskInputParameters.useManifests)
+    var files = getManifestFiles();
+    if (!!files && files.length > 0) 
     {
-        var files = getManifestFiles();
-        if (!!files && files.length > 0) {
-            if (isCanaryDeploymentStrategy()) {
-                tl.debug("Strategy is canary deployment. So will delete canary objects");
-                argsPrefix = createCanaryObjectsArgumentString(files);
-            }
-            else {
-                tl.debug("Strategy is not canary deployment. So will delete all objects declared in file");
-                var filePaths = createInlineArray(files);
-                argsPrefix = "-f " + filePaths;
-            }
+        if (isCanaryDeploymentStrategy()) 
+        {
+            tl.debug("Deployment strategy selected is Canary. So will delete canary objects");
+            argsPrefix = createCanaryObjectsArgumentString(files);
         }
+        else 
+        {
+            tl.debug("Strategy is not canary deployment. Invalid request.");
+            //TODO fail the request
+        }
+    }
+    else
+    {
+        //TODO fail if manifest files are not present.
     }
 
     let args = getDeleteCmdArgs(argsPrefix, TaskInputParameters.args);
@@ -35,15 +38,13 @@ export async function deleteResources() {
 }
 
 function getManifestFiles(): string[] {
-    if (!TaskInputParameters.manifestsToDelete ||  TaskInputParameters.manifestsToDelete.trim().length == 0)
+    if (!TaskInputParameters.manifestsToReject ||  TaskInputParameters.manifestsToReject.trim().length == 0)
     {
         tl.debug("file input is not present");
         return null;
     }
 
-    var manifestsToDelete = TaskInputParameters.manifestsToDelete.trim();
-    tl.debug("file input is present : "+manifestsToDelete);
-    tl.debug("Finding matching files");
+    var manifestsToDelete = TaskInputParameters.manifestsToReject.trim();
     var files = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), manifestsToDelete);
 
     return files;

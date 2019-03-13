@@ -75,7 +75,8 @@
                 "deploy": "deploy",
                 "patch": "patch",
                 "scale": "scale",
-                "delete": "delete"
+                "delete": "delete",
+                "reject": "reject"
             },
             "helpMarkDown": "Choose the action to be performed."
         },
@@ -91,7 +92,7 @@
               "None": "None"
             },
             "helpMarkDown": "Strategy for deployment",
-            "visibleRule": "action = deploy || action = delete"
+            "visibleRule": "action = deploy || action = reject"
           },
           {
             "name": "percentage",
@@ -108,16 +109,6 @@
             }
           },
         {
-            "name": "useManifests",
-            "type": "boolean",
-            "label": "Supply manifests",
-            "required": false,
-            "defaultValue": false,
-            "groupName": "config",
-            "helpMarkDown": "Select this option to provide manifest files for deletion",
-            "visibleRule": "action = delete"
-        },
-        {
             "name": "manifests",
             "type": "filePath",
             "label": "Manifests",
@@ -128,14 +119,14 @@
             "visibleRule": "action = deploy"
         },
         {
-            "name": "manifestsToDelete",
+            "name": "manifestsToReject",
             "type": "filePath",
             "label": "Manifests",
             "required": false,
             "defaultValue": "",
             "groupName": "config",
-            "helpMarkDown": "Manifests to delete",
-            "visibleRule": "action = delete && useManifests = true"
+            "helpMarkDown": "Manifests to reject",
+            "visibleRule": "action = reject"
         },
         {
             "name": "containers",
@@ -267,7 +258,7 @@
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Arguments for `kubectl delete` command",
-            "visibleRule": "action = delete"
+            "visibleRule": "action = delete || action = reject"
         },
         {
             "name": "patch",
