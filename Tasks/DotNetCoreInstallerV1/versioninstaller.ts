@@ -5,8 +5,8 @@ import * as url from "url";
 import * as tl from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 
-import * as utils from "./versionUtilities";
-import { VersionInfo } from './versionFetcher';
+import * as utils from "./versionutilities";
+import { VersionInfo } from './versionfetcher';
 
 export class VersionInstaller {
     constructor(packageType: string, installationPath: string) {

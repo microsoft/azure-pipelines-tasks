@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as tl from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib';
 import * as semver from 'semver';
-import { VersionInfo } from './versionFetcher';
+import { VersionInfo } from './versionfetcher';
 
 export function versionCompareFunction(versionA: string, versionB: string): number {
     if (!toolLib.isExplicitVersion(versionA) || !toolLib.isExplicitVersion(versionB)) {

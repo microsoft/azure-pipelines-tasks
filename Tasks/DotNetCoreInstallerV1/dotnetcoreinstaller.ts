@@ -2,9 +2,9 @@ import * as path from 'path';
 
 import * as tl from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
-import { DotNetCoreVersionFetcher, VersionInfo } from "./versionFetcher";
-import { VersionInstaller } from "./versionInstaller";
-import { VersionParts, Constants } from "./versionUtilities";
+import { DotNetCoreVersionFetcher, VersionInfo } from "./versionfetcher";
+import { VersionInstaller } from "./versioninstaller";
+import { VersionParts, Constants } from "./versionutilities";
 
 async function run() {
     let packageType = tl.getInput('packageType', true).toLowerCase();

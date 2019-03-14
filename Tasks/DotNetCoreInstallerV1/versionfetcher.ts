@@ -9,7 +9,7 @@ import httpClient = require("typed-rest-client/HttpClient");
 import httpInterfaces = require("typed-rest-client/Interfaces");
 import { HttpClientResponse } from 'typed-rest-client/HttpClient';
 
-import * as utils from "./versionUtilities";
+import * as utils from "./versionutilities";
 
 export class DotNetCoreVersionFetcher {
     constructor() {
