@@ -74,7 +74,7 @@ describe('UseDotNet', function() {
 
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
-                assert(tr.stdout.indexOf("loc_mock_ToolToInstall sdk 1.0.4") > -1, "should print to-be-installed info");
+                assert(tr.stdout.indexOf("loc_mock_ToolToInstall runtime 1.0.4") > -1, "should print to-be-installed info");
                 assert(tr.stdout.indexOf("Checking local tool for dncr and version 1.0.4") > -1, "should check for local cached tool");
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") == -1, "should not install fresh");
                 assert(tr.stdout.indexOf("loc_mock_GettingDownloadUrls") == -1, "should not download");
@@ -215,7 +215,7 @@ describe('UseDotNet', function() {
 
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
-                assert(tr.stdout.indexOf("loc_mock_ToolToInstall sdk 1.0.4") > -1, "should print to-be-installed info");
+                assert(tr.stdout.indexOf("loc_mock_ToolToInstall runtime 1.0.4") > -1, "should print to-be-installed info");
                 assert(tr.stdout.indexOf("Checking local tool for dncr and version 1.0.4") > -1, "should check for local cached tool");
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") == -1, "should not install fresh");
                 assert(tr.stdout.indexOf("loc_mock_GettingDownloadUrls") == -1, "should not download");
