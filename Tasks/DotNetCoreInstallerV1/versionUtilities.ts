@@ -50,11 +50,13 @@ export function getMatchingVersionFromList(versionInfoList: VersionInfo[], versi
         }
     });
 
-    let matchedVersion = semver.maxSatisfying(versionList, versionSpec, { includePrerelease: includePreviewVersions });
-    if (matchedVersion) {
-        return versionInfoList.find(versionInfo => {
-            return versionInfo.version == matchedVersion
-        });
+    if (versionList.length > 0) {
+        let matchedVersion = semver.maxSatisfying(versionList, versionSpec, { includePrerelease: includePreviewVersions });
+        if (matchedVersion) {
+            return versionInfoList.find(versionInfo => {
+                return versionInfo.version == matchedVersion
+            });
+        }
     }
 
     return null;

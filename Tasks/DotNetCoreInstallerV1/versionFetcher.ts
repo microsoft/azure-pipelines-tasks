@@ -118,6 +118,11 @@ export class DotNetCoreVersionFetcher {
         if (versionParts.minorVersion == "x") {
             var latestChannelVersion: string = `${versionParts.majorVersion}.0`;
             this.channels.forEach(channel => {
+                // todo: should also check if the channel is in preview state, if so then only select the channel if includePreviewVersion should be true.
+                // As a channel with state in preview will only have preview releases.
+                // example: versionSpec: 3.x Channels: 3.0 (current), 3.1 (preview).
+                // if (includePreviewVersion == true) select 3.1
+                // else select 3.0
                 if (utils.compareChannelVersion(channel.channelVersion, latestChannelVersion) > 0 && channel.channelVersion.startsWith(versionParts.majorVersion)) {
                     latestChannelVersion = channel.channelVersion;
                 }
