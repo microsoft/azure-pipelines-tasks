@@ -25,7 +25,7 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.6",
-    "azure-pipelines-task-lib": "2.7.7",
+    "azure-pipelines-task-lib": "3.0.0-preview",
     "azure-pipelines-tool-lib": "0.11.0",
     "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz",
     "typed-rest-client": "0.11.0"

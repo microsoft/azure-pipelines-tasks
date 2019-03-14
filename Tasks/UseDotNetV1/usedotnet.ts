@@ -275,14 +275,14 @@ async function run() {
     // set the console code page to "UTF-8"
     if (tl.osType() === 'Windows_NT') {
         try {
-            tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
+            await tl.exec(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
         }
         catch (ex) {
             tl.warning(tl.loc("CouldNotSetCodePaging", JSON.stringify(ex)));
         }
     }
 
-    let packageType = tl.getInput('packageType') || 'sdk';
+    let packageType = tl.getInput('packageType') || 'runtime';
     const version: string = tl.getInput('version');
     if (version) {
         console.log(tl.loc("ToolToInstall", packageType, version));

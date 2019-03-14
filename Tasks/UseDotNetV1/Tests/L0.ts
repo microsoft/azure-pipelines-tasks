@@ -29,6 +29,7 @@ describe('UseDotNet', function() {
 
     if(os.type().match(/^Win/)) {
         it("[windows]should succeed if sdk installed successfully", (done) => {
+            process.env["__package_type__"] = "sdk";
             let tp = path.join(__dirname, "InstallWindows.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
@@ -46,7 +47,6 @@ describe('UseDotNet', function() {
         });
 
         it("[windows]should succeed if runtime installed successfully", (done) => {
-            process.env["__package_type__"] = "runtime";
             let tp = path.join(__dirname, "InstallWindows.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
@@ -75,11 +75,11 @@ describe('UseDotNet', function() {
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("loc_mock_ToolToInstall sdk 1.0.4") > -1, "should print to-be-installed info");
-                assert(tr.stdout.indexOf("Checking local tool for dncs and version 1.0.4") > -1, "should check for local cached tool");
+                assert(tr.stdout.indexOf("Checking local tool for dncr and version 1.0.4") > -1, "should check for local cached tool");
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") == -1, "should not install fresh");
                 assert(tr.stdout.indexOf("loc_mock_GettingDownloadUrls") == -1, "should not download");
                 assert(tr.stdout.indexOf("loc_mock_UsingCachedTool") > -1, "should print that cached dir is being used");
-                assert(tr.stdout.indexOf("Caching dir C:\\agent\\_temp\\someDir for tool dncs version 1.0.4") == -1, "should not update cache again");
+                assert(tr.stdout.indexOf("Caching dir C:\\agent\\_temp\\someDir for tool dncr version 1.0.4") == -1, "should not update cache again");
                 assert(tr.stdout.indexOf("prepending path: C:\\agent\\_tools\\oldCacheDir") > -1, "should pre-prend to PATH");
             }, tr, done);
         });
@@ -169,6 +169,7 @@ describe('UseDotNet', function() {
         });
     } else {
         it("[nix]should succeed if sdk installed successfully", (done) => {
+            process.env["__package_type__"] = "sdk";
             let tp = path.join(__dirname, "InstallNix.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
@@ -187,7 +188,6 @@ describe('UseDotNet', function() {
         });
 
         it("[nix]should succeed if runtime installed successfully", (done) => {
-            process.env["__package_type__"] = "runtime";
             let tp = path.join(__dirname, "InstallNix.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
@@ -216,11 +216,11 @@ describe('UseDotNet', function() {
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("loc_mock_ToolToInstall sdk 1.0.4") > -1, "should print to-be-installed info");
-                assert(tr.stdout.indexOf("Checking local tool for dncs and version 1.0.4") > -1, "should check for local cached tool");
+                assert(tr.stdout.indexOf("Checking local tool for dncr and version 1.0.4") > -1, "should check for local cached tool");
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") == -1, "should not install fresh");
                 assert(tr.stdout.indexOf("loc_mock_GettingDownloadUrls") == -1, "should not download");
                 assert(tr.stdout.indexOf("loc_mock_UsingCachedTool") > -1, "should print that cached dir is being used");
-                assert(tr.stdout.indexOf("Caching dir /agent/_temp/someDir for tool dncs version 1.0.4") == -1, "should not update cache again");
+                assert(tr.stdout.indexOf("Caching dir /agent/_temp/someDir for tool dncr version 1.0.4") == -1, "should not update cache again");
                 assert(tr.stdout.indexOf("prepending path: /agent/_tools/oldCacheDir") > -1, "should pre-prend to PATH");
             }, tr, done);
         });

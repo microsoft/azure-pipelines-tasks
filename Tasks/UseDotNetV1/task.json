@@ -59,7 +59,7 @@
             "name": "packageType",
             "type": "pickList",
             "label": "Package to install",
-            "defaultValue": "sdk",
+            "defaultValue": "runtime",
             "helpMarkDown": "Please select whether to install only runtime or full SDK.",
             "required": false,
             "options": {
