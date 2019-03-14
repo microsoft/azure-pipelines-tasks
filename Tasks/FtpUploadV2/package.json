@@ -1,6 +1,6 @@
 {
   "name": "FTP",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "FTP Upload Task",
   "main": "ftpuploadtask.js",
   "repository": {
@@ -14,9 +14,8 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@types/node": "^6.0.101",
-    "@types/q": "^1.0.7",
-    "vsts-task-lib": "^0.9.20",
-    "ftp": "0.3.10"
+    "@types/node": "^8.0.0",
+    "azure-pipelines-task-lib": "^2.8.0",
+    "basic-ftp": "^3.4.3"
   }
 }

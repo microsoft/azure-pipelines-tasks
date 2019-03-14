@@ -17,9 +17,9 @@
   ],
   "demands": [],
   "version": {
-    "Major": 1,
-    "Minor": 142,
-    "Patch": 2
+    "Major": 2,
+    "Minor": 150,
+    "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -132,15 +132,6 @@
       "visibleRule": "clean = false"
     },
     {
-      "name": "overwrite",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.overwrite",
-      "defaultValue": "true",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.overwrite",
-      "groupName": "advanced"
-    },
-    {
       "name": "preservePaths",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.preservePaths",
@@ -160,7 +151,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "ftpuploadtask.js",
       "argumentFormat": ""
     }
@@ -177,6 +168,7 @@
     "FTPNoProtocolSpecified": "ms-resource:loc.messages.FTPNoProtocolSpecified",
     "UploadRemoteDir": "ms-resource:loc.messages.UploadRemoteDir",
     "UploadSucceedMsg": "ms-resource:loc.messages.UploadSucceedMsg",
-    "UploadSucceedRes": "ms-resource:loc.messages.UploadSucceedRes"
+    "UploadSucceedRes": "ms-resource:loc.messages.UploadSucceedRes",
+    "UploadFailed": "ms-resource:loc.messages.UploadFailed"
   }
 }

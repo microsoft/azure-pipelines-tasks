@@ -67,6 +67,7 @@
         "ExtractFilesV1",
         "FileTransformV1",
         "FtpUploadV1",
+        "FtpUploadV2",
         "GitHubReleaseV0",
         "GoV0",
         "GoToolV0",

@@ -17,9 +17,9 @@
     ],
     "demands": [],
     "version": {
-        "Major": 1,
-        "Minor": 142,
-        "Patch": 2
+        "Major": 2,
+        "Minor": 150,
+        "Patch": 0
     },
     "instanceNameFormat": "FTP Upload: $(rootFolder)",
     "groups": [
@@ -132,15 +132,6 @@
             "visibleRule": "clean = false"
         },
         {
-            "name": "overwrite",
-            "type": "boolean",
-            "label": "Overwrite",
-            "defaultValue": "true",
-            "required": true,
-            "helpMarkDown": "Overwrite existing files in the remote directory.",
-            "groupName": "advanced"
-        },
-        {
             "name": "preservePaths",
             "type": "boolean",
             "label": "Preserve file paths",
@@ -160,7 +151,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "ftpuploadtask.js",
             "argumentFormat": ""
         }
@@ -177,6 +168,7 @@
         "FTPNoProtocolSpecified": "The FTP server URL must begin with ftp:// or ftps://",
         "UploadRemoteDir": "uploading files to remote directory: %s",
         "UploadSucceedMsg": "FTP upload successful %s",
-        "UploadSucceedRes": "FTP upload successful"
+        "UploadSucceedRes": "FTP upload successful",
+        "UploadFailed": "Ftp Upload failed"
     }
 }

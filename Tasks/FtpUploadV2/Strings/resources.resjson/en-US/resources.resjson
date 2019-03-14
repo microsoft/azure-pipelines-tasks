@@ -21,8 +21,6 @@
   "loc.input.help.clean": "Delete the remote directory including its contents before uploading.",
   "loc.input.label.cleanContents": "Clear remote directory contents",
   "loc.input.help.cleanContents": "Recursively delete all contents of the remote directory before uploading.  The existing directory will not be deleted.  For better performance, consider using `Delete remote directory` instead.",
-  "loc.input.label.overwrite": "Overwrite",
-  "loc.input.help.overwrite": "Overwrite existing files in the remote directory.",
   "loc.input.label.preservePaths": "Preserve file paths",
   "loc.input.help.preservePaths": "If selected, the relative local directory structure is recreated under the remote directory where files are uploaded.  Otherwise, files are uploaded directly to the remote directory without creating additional subdirectories.<p>For example, suppose your source folder is: <b>`/home/user/source/`</b> and contains the file: <b>`foo/bar/foobar.txt`</b>, and your remote directory is: <b>`/uploads/`</b>.<br>If selected, the file is uploaded to: <b>`/uploads/foo/bar/foobar.txt`</b>.  Otherwise, to: <b>`/uploads/foobar.txt`</b>.",
   "loc.input.label.trustSSL": "Trust server certificate",
@@ -38,5 +36,6 @@
   "loc.messages.FTPNoProtocolSpecified": "The FTP server URL must begin with ftp:// or ftps://",
   "loc.messages.UploadRemoteDir": "uploading files to remote directory: %s",
   "loc.messages.UploadSucceedMsg": "FTP upload successful %s",
-  "loc.messages.UploadSucceedRes": "FTP upload successful"
+  "loc.messages.UploadSucceedRes": "FTP upload successful",
+  "loc.messages.UploadFailed": "Ftp Upload failed"
 }
