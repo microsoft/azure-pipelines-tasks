@@ -33,6 +33,7 @@ describe('UseDotNet', function() {
             let tp = path.join(__dirname, "InstallWindows.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
+            delete process.env["__package_type__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("loc_mock_ToolToInstall sdk 1.0.4") > -1, "should print to-be-installed info");
@@ -50,7 +51,6 @@ describe('UseDotNet', function() {
             let tp = path.join(__dirname, "InstallWindows.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
-            delete process.env["__package_type__"];
 
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
@@ -173,6 +173,7 @@ describe('UseDotNet', function() {
             let tp = path.join(__dirname, "InstallNix.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
+            delete process.env["__package_type__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("loc_mock_ToolToInstall sdk 1.0.4") > -1, "should print to-be-installed info");
@@ -191,7 +192,6 @@ describe('UseDotNet', function() {
             let tp = path.join(__dirname, "InstallNix.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
-            delete process.env["__package_type__"];
 
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
