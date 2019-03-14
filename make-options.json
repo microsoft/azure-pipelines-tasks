@@ -55,6 +55,7 @@
         "DockerInstallerV0",
         "DotNetCoreCLIV2",
         "DotNetCoreInstallerV0",
+        "DotNetCoreInstallerV1",
         "DownloadBuildArtifactsV0",
         "DownloadFileshareArtifactsV0",
         "DownloadGitHubReleaseV0",
