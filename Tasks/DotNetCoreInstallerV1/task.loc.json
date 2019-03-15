@@ -3,7 +3,7 @@
   "name": "DotNetCoreInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "",
+  "helpUrl": "https://aka.ms/AA4ihfi",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [
@@ -39,7 +39,7 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.packageType",
       "options": {
-        "runtime": "Runtime",
+        "runtime": "Only Runtime",
         "sdk": "SDK (contains runtime)"
       }
     },
@@ -138,6 +138,8 @@
     "FallingBackToAdjacentChannels": "ms-resource:loc.messages.FallingBackToAdjacentChannels",
     "ErrorWhileSettingDotNetToolPath": "ms-resource:loc.messages.ErrorWhileSettingDotNetToolPath",
     "RequiredChannelVersionForSpec": "ms-resource:loc.messages.RequiredChannelVersionForSpec",
-    "ErrorWhileGettingVersionFromChannel": "ms-resource:loc.messages.ErrorWhileGettingVersionFromChannel"
+    "ErrorWhileGettingVersionFromChannel": "ms-resource:loc.messages.ErrorWhileGettingVersionFromChannel",
+    "ComparingInstalledFolderVersions": "ms-resource:loc.messages.ComparingInstalledFolderVersions",
+    "ComparingInstalledFileVersions": "ms-resource:loc.messages.ComparingInstalledFileVersions"
   }
 }

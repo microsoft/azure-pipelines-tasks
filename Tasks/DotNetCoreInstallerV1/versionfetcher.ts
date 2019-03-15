@@ -8,6 +8,7 @@ import * as trm from 'vsts-task-lib/toolrunner';
 import httpClient = require("typed-rest-client/HttpClient");
 import httpInterfaces = require("typed-rest-client/Interfaces");
 import { HttpClientResponse } from 'typed-rest-client/HttpClient';
+import { VersionInfo, Channel, VersionFilesData, VersionParts } from "./models"
 
 import * as utils from "./versionutilities";
 
@@ -68,11 +69,7 @@ export class DotNetCoreVersionFetcher {
                 return false;
             });
 
-            if (downloadPackageInfoObject) {
-                return true;
-            }
-
-            return false;
+            return !!downloadPackageInfoObject;
         });
 
         if (!!downloadPackageInfoObject && downloadPackageInfoObject.url) {
@@ -112,7 +109,7 @@ export class DotNetCoreVersionFetcher {
     }
 
     private getVersionChannel(versionSpec: string): Channel {
-        let versionParts = new utils.VersionParts(versionSpec);
+        let versionParts = new VersionParts(versionSpec);
 
         let requiredChannelVersion = `${versionParts.majorVersion}.${versionParts.minorVersion}`;
         if (versionParts.minorVersion == "x") {
@@ -196,7 +193,7 @@ export class DotNetCoreVersionFetcher {
     }
 
     private getChannelsForMajorVersion(version: string): Channel[] {
-        var versionParts = new utils.VersionParts(version);
+        var versionParts = new VersionParts(version);
         let adjacentChannels: Channel[] = [];
         this.channels.forEach(channel => {
             if (channel.channelVersion.startsWith(`${versionParts.majorVersion}`)) {
@@ -271,47 +268,6 @@ export class DotNetCoreVersionFetcher {
 
     private channels: Channel[];
     private httpCallbackClient: httpClient.HttpClient;
-}
-
-export class VersionInfo {
-    public version: string;
-    public files: VersionFilesData[];
-
-    public static getRuntimeVersion(versionInfo: VersionInfo, packageType: string): string {
-        if (packageType == utils.Constants.sdk) {
-            if (versionInfo["runtime-version"]) {
-                return versionInfo["runtime-version"];
-            }
-
-            tl.warning(tl.loc("runtimeVersionPropertyNotFound", packageType, versionInfo.version));
-        }
-        else {
-            return versionInfo.version;
-        }
-
-        return "";
-    }
-}
-
-export class VersionFilesData {
-    public name: string;
-    public url: string;
-    public rid: string;
-    public hash?: string;
-}
-
-class Channel {
-    constructor(channelRelease: any) {
-        if (!channelRelease || !channelRelease["channel-version"] || !channelRelease["releases.json"]) {
-            throw "Object cannot be used as Channel, required properties such as channel-version, releases.json is missing. "
-        }
-
-        this.channelVersion = channelRelease["channel-version"];
-        this.releasesJsonUrl = channelRelease["releases.json"];
-    }
-
-    channelVersion: string;
-    releasesJsonUrl: string
 }
 
 const DotNetCoreReleasesIndexUrl: string = "https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases-index.json";

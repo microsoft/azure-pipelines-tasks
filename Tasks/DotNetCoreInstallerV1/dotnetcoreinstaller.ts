@@ -2,9 +2,10 @@ import * as path from 'path';
 
 import * as tl from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
-import { DotNetCoreVersionFetcher, VersionInfo } from "./versionfetcher";
+import { DotNetCoreVersionFetcher } from "./versionfetcher";
 import { VersionInstaller } from "./versioninstaller";
-import { VersionParts, Constants } from "./versionutilities";
+import { Constants } from "./versionutilities";
+import { VersionInfo, VersionParts } from "./models"
 
 async function run() {
     let packageType = tl.getInput('packageType', true).toLowerCase();
@@ -63,7 +64,7 @@ function addDotNetCoreToolPath() {
         toolLib.prependPath(globalToolPath);
     } catch (error) {
         //nop
-        tl.debug(tl.loc("ErrorWhileSettingDotNetToolPath", JSON.stringify(error)));
+        console.log(tl.loc("ErrorWhileSettingDotNetToolPath", JSON.stringify(error)));
     }
 }
 

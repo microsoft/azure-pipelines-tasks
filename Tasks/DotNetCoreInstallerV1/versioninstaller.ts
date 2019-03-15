@@ -6,7 +6,7 @@ import * as tl from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 
 import * as utils from "./versionutilities";
-import { VersionInfo } from './versionfetcher';
+import { VersionInfo } from "./models"
 
 export class VersionInstaller {
     constructor(packageType: string, installationPath: string) {
@@ -55,7 +55,7 @@ export class VersionInstaller {
 
             // Copy files
             try {
-                if (this.isLatestInstalledVersion(version)) {
+                if (this.isLatestInstalledVersion(version) && this.packageType == utils.Constants.sdk) {
                     tl.debug(tl.loc("CopyingFilesIntoPath", this.installationPath));
                     var filesToBeCopied = allRootLevelEnteriesInDir.filter(path => !fs.lstatSync(path).isDirectory());
                     filesToBeCopied.forEach((filePath) => {
@@ -129,7 +129,9 @@ export class VersionInstaller {
         var folderPaths: string[] = allEnteries.filter(element => fs.lstatSync(element).isDirectory());
         var isLatest: boolean = folderPaths.findIndex(folderPath => {
             try {
-                return utils.versionCompareFunction(path.basename(folderPath), version) > 0;
+                let versionFolderName = path.basename(folderPath);
+                tl.debug(tl.loc("ComparingInstalledFolderVersions", version, versionFolderName));
+                return utils.versionCompareFunction(versionFolderName, version) > 0;
             }
             catch (ex) {
                 // no op, folder name might not be in version format
@@ -139,7 +141,9 @@ export class VersionInstaller {
         var filePaths: string[] = allEnteries.filter(element => !fs.lstatSync(element).isDirectory());
         isLatest = isLatest && filePaths.findIndex(filePath => {
             try {
-                return utils.versionCompareFunction(this.getVersionCompleteFileName(path.basename(filePath)), version) > 0
+                var versionCompleteFileName = this.getVersionCompleteFileName(path.basename(filePath));
+                tl.debug(tl.loc("ComparingInstalledFileVersions", version, versionCompleteFileName));
+                return utils.versionCompareFunction(versionCompleteFileName, version) > 0
             }
             catch (ex) {
                 // no op, file name might not be in version format

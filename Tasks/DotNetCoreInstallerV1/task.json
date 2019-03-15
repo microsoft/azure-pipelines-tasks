@@ -3,8 +3,8 @@
     "name": "DotNetCoreInstaller",
     "friendlyName": ".NET Core SDK/Runtime Installer",
     "description": "Acquires a version of the .NET Core SDK/Runtime from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks.",
-    "helpUrl": "",
-    "helpMarkDown": "",
+    "helpUrl": "https://aka.ms/AA4ihfi",
+    "helpMarkDown": "[More Information](https://aka.ms/AA4ihfi)",
     "category": "Tool",
     "runsOn": [
         "Agent",
@@ -39,7 +39,7 @@
             "required": true,
             "helpMarkDown": "Please select whether to install only runtime or full SDK.",
             "options": {
-                "runtime": "Runtime",
+                "runtime": "Only Runtime",
                 "sdk": "SDK (contains runtime)"
             }
         },
@@ -57,7 +57,7 @@
             "label": "Include Preview Versions",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Select if you want preview versions to be included while searching for versions, such as while searching 2.2.x. This setting is ignored if you specify an exact version, such as: 2.1.403"
+            "helpMarkDown": "Select if you want preview versions to be included while searching for latest versions, such as while searching 2.2.x. This setting is ignored if you specify an exact version, such as: 3.0.100-preview3-010431"
         },
         {
             "name": "installationPath",
@@ -138,6 +138,8 @@
         "FallingBackToAdjacentChannels": "Version %s could not be found in its channel, will now search in adjacent channels.",
         "ErrorWhileSettingDotNetToolPath": "Failed while prepending .Net Core Tool path to PATH envrionment variable. Error: %s",
         "RequiredChannelVersionForSpec": "Finding channel %s for version %s",
-        "ErrorWhileGettingVersionFromChannel": "Failed while getting version %s from channel %s with error: %s"
+        "ErrorWhileGettingVersionFromChannel": "Failed while getting version %s from channel %s with error: %s",
+        "ComparingInstalledFolderVersions": "Comparing if version being installed %s is greater than already installed version with folder name %s",
+        "ComparingInstalledFileVersions": "Comparing if version being installed %s is greater than already installed version with version complete file name %s"
     }
 }
