@@ -6,6 +6,7 @@ import * as tl from "vsts-task-lib/task";
 import ContainerConnection from "docker-common/containerconnection";
 import * as dockerCommandUtils from "docker-common/dockercommandutils";
 import * as fileUtils from "docker-common/fileutils";
+import * as pipelineUtils from "docker-common/pipelineutils";
 import * as utils from "./utils";
 
 function useDefaultBuildContext(buildContext: string): boolean {
@@ -41,6 +42,9 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName);
     }
 
+    // get label arguments
+    let labelArguments = pipelineUtils.getDefaultLabels();
+
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");
     let tagArguments: string[] = [];
@@ -69,7 +73,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     }
 
     let output = "";
-    return dockerCommandUtils.build(connection, dockerFile, buildContext, commandArguments, tagArguments, (data) => output += data).then(() => {
+    return dockerCommandUtils.build(connection, dockerFile, buildContext, commandArguments, labelArguments, tagArguments, (data) => output += data).then(() => {
         let taskOutputPath = utils.writeTaskOutput("build", output);
         outputUpdate(taskOutputPath);
     });

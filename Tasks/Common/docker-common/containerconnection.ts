@@ -115,7 +115,7 @@ export default class ContainerConnection {
     public unsetDockerConfigEnvVariable() {
         var dockerConfigPath = tl.getVariable("DOCKER_CONFIG");
         if (dockerConfigPath) {
-            tl.setVariable("DOCKER_CONFIG", "");
+            this.unsetEnvironmentVariable();
             del.sync(dockerConfigPath, {force: true});
         }    
     }
@@ -161,7 +161,7 @@ export default class ContainerConnection {
                 // should not come to this in a good case, since when registry is provided, we are adding docker config
                 // to a temp directory and setting DOCKER_CONFIG variable to its path.
                 tl.debug(tl.loc('CouldNotFindDockerConfig', this.configurationDirPath));
-                tl.setVariable("DOCKER_CONFIG", "");
+                this.unsetEnvironmentVariable();
             }
         }        
         // unset the docker config env variable, and delete the docker config file (if present)
@@ -178,7 +178,11 @@ export default class ContainerConnection {
             del.sync(dockerConfigDirPath, {force: true});
         }
         
-        tl.setVariable("DOCKER_CONFIG", "");
+        this.unsetEnvironmentVariable();
+    }
+
+    private unsetEnvironmentVariable(): void {
+        tl.setVariable("DOCKER_CONFIG", "");        
     }
 
     private isLogoutRequired(command: string): boolean {

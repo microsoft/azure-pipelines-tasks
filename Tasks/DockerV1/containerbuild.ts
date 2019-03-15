@@ -27,7 +27,7 @@ export function run(connection: ContainerConnection): any {
 
     var addDefaultLabels = tl.getBoolInput("addDefaultLabels");
     if (addDefaultLabels) {        
-        pipelineUtils.addDefaultLabels(command);
+        pipelineUtils.addDefaultLabelArgs(command);
     }
 
     var commandArguments = tl.getInput("arguments", false); 

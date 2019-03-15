@@ -4,12 +4,18 @@ import * as tl from "vsts-task-lib/task";
 import ContainerConnection from "./containerconnection";
 import * as pipelineUtils from "./pipelineutils";
 
-export function build(connection: ContainerConnection, dockerFile: string, context: string, commandArguments: string, tagArguments: string[], onCommandOut: (output) => any): any {
+export function build(connection: ContainerConnection, dockerFile: string, context: string, commandArguments: string, labelArguments: string[], tagArguments: string[], onCommandOut: (output) => any): any {
     var command = connection.createCommand();
 
     command.arg("build");    
     command.arg(["-f", dockerFile]);
-    pipelineUtils.addDefaultLabels(command);
+
+    if (labelArguments) {
+        labelArguments.forEach(label => {
+            command.arg(["--label", label]);
+        });
+    }
+    
     command.line(commandArguments);
     
     if (tagArguments) {

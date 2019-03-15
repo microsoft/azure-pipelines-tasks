@@ -5,35 +5,41 @@ import * as URL from 'url';
 import * as util from "util";
 import { ToolRunner } from "vsts-task-lib/toolrunner";
 
-function addLabelArg(command: ToolRunner, hostName: string, labelName: string, variableName: string)
-{  
+function addLabelArgs(command: ToolRunner, labels: string[]) {
+    labels.forEach(label => {
+        command.arg(["--label", label]);
+    });
+}
+
+function addLabel(hostName: string, labelName: string, variableName: string, labels: string[]): void {
     let labelValue = tl.getVariable(variableName);
     if (labelValue) {
-        command.arg(["--label", util.format("%s.image.%s=%s", hostName, labelName, labelValue)]);
+        let label = util.format("%s.image.%s=%s", hostName, labelName, labelValue);
+        labels.push(label);
     }
 }
 
-function addCommonLabelArgs(command: ToolRunner, hostName: string): void {
-    addLabelArg(command, hostName, "system.teamfoundationcollectionuri", "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI");
-    addLabelArg(command, hostName, "system.teamproject", "SYSTEM_TEAMPROJECT");
-    addLabelArg(command, hostName, "build.repository.name", "BUILD_REPOSITORY_NAME");
+function addCommonLabels(hostName: string, labels: string[]): void {
+    addLabel(hostName, "system.teamfoundationcollectionuri", "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI", labels);
+    addLabel(hostName, "system.teamproject", "SYSTEM_TEAMPROJECT", labels);
+    addLabel(hostName, "build.repository.name", "BUILD_REPOSITORY_NAME", labels);
 }
 
-function addBuildLabelArgs(command: ToolRunner, hostName: string): void {
-    addLabelArg(command, hostName, "build.repository.uri", "BUILD_REPOSITORY_URI");
-    addLabelArg(command, hostName, "build.sourcebranchname", "BUILD_SOURCEBRANCHNAME");
-    addLabelArg(command, hostName, "build.sourceversion", "BUILD_SOURCEVERSION");
-    addLabelArg(command, hostName, "build.definitionname", "BUILD_DEFINITIONNAME");
-    addLabelArg(command, hostName, "build.buildnumber", "BUILD_BUILDNUMBER");
-    addLabelArg(command, hostName, "build.builduri", "BUILD_BUILDURI");
-    addLabelArg(command, hostName, "build.requestedfor", "BUILD_REQUESTEDFOR");
+function addBuildLabels(hostName: string, labels: string[]): void {
+    addLabel(hostName, "build.repository.uri", "BUILD_REPOSITORY_URI", labels);
+    addLabel(hostName, "build.sourcebranchname", "BUILD_SOURCEBRANCHNAME", labels);
+    addLabel(hostName, "build.sourceversion", "BUILD_SOURCEVERSION", labels);
+    addLabel(hostName, "build.definitionname", "BUILD_DEFINITIONNAME", labels);
+    addLabel(hostName, "build.buildnumber", "BUILD_BUILDNUMBER", labels);
+    addLabel(hostName, "build.builduri", "BUILD_BUILDURI", labels);
+    addLabel(hostName, "build.requestedfor", "BUILD_REQUESTEDFOR", labels);
 }
 
-function addReleaseLabelArgs(command: ToolRunner, hostName: string): void {    
-    addLabelArg(command, hostName, "release.definitionname", "RELEASE_DEFINITIONNAME");
-    addLabelArg(command, hostName, "release.releaseid", "RELEASE_RELEASEID");
-    addLabelArg(command, hostName, "release.releaseweburl", "RELEASE_RELEASEWEBURL");
-    addLabelArg(command, hostName, "release.deployment.requestedfor", "RELEASE_DEPLOYMENT_REQUESTEDFOR");
+function addReleaseLabels(hostName: string, labels: string[]): void {    
+    addLabel(hostName, "release.definitionname", "RELEASE_DEFINITIONNAME", labels);
+    addLabel(hostName, "release.releaseid", "RELEASE_RELEASEID", labels);
+    addLabel(hostName, "release.releaseweburl", "RELEASE_RELEASEWEBURL", labels);
+    addLabel(hostName, "release.deployment.requestedfor", "RELEASE_DEPLOYMENT_REQUESTEDFOR", labels);
 }
 
 function getReverseDNSName(): string {
@@ -52,16 +58,24 @@ function getReverseDNSName(): string {
     return null;
 }
 
-export function addDefaultLabels(command: ToolRunner): void {
+export function addDefaultLabelArgs(command: ToolRunner): void {
+    let labels = getDefaultLabels();
+    addLabelArgs(command, labels);
+}
+
+export function getDefaultLabels(): string[] {
+    let labels: string[] = [];
     let hostName = getReverseDNSName();
     if (hostName) {
-        addCommonLabelArgs(command, hostName);
+        addCommonLabels(hostName, labels);
         let hostType = tl.getVariable("SYSTEM_HOSTTYPE");
         if (hostType.toLowerCase() === "build") {
-            addBuildLabelArgs(command, hostName);
+            addBuildLabels(hostName, labels);
         }
         else {
-            addReleaseLabelArgs(command, hostName);
+            addReleaseLabels(hostName, labels);
         }
     }
+
+    return labels;
 }
