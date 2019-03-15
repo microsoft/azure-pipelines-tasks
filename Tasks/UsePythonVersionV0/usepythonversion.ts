@@ -16,22 +16,53 @@ interface TaskParameters {
     architecture: string
 }
 
-function usePypy(platform: Platform): void {
-    const installDir = path.join(
-        task.getVariable('CONDA'), // TODO
-        platform === Platform.Windows ? 'Scripts' : 'bin');
-
-    task.setVariable('pythonLocation', installDir);
-    toolUtil.prependPathSafe(installDir);
+// Python has "scripts" or "bin" directories where command-line tools that come with packages are installed.
+// This is where pip is, along with anything that pip installs.
+// There is a seperate directory for `pip install --user`.
+//
+// For reference, these directories are as follows:
+//   macOS / Linux:
+//      <sys.prefix>/bin (by default /usr/local/bin, but not on hosted agents -- see the `else`)
+//      (--user) ~/.local/bin
+//   Windows:
+//      <Python installation dir>\Scripts
+//      (--user) %APPDATA%\Python\PythonXY\Scripts
+// See https://docs.python.org/3/library/sysconfig.html
+function binDir(installDir: string, platform: Platform): string {
+    if (platform === Platform.Windows) {
+        return path.join(installDir, 'Scripts');
+    } else {
+        return path.join(installDir, 'bin');
+    }
 }
 
-function usePypy3(platform: Platform): void {
-    const installDir = path.join(
-        task.getVariable('CONDA'), // TODO
-        platform === Platform.Windows ? 'Scripts' : 'bin');
+// Note on the tool cache layout for PyPy:
+// PyPy has its own versioning scheme that doesn't follow the Python versioning scheme,
+// But publishes separate binaries for "PyPy2" and "PyPy3", which correspond to Python 2 and 3 respectively.
+// We want to support switching between PyPy2 and PyPy3, but don't really care about the particular version of PyPy.
 
-    task.setVariable('pythonLocation', installDir);
-    toolUtil.prependPathSafe(installDir);
+function usePypy(addToPath: boolean, platform: Platform): void {
+    const installDir: string | null = tool.findLocalTool('PyPy2', '*', 'x64');
+
+    // For PyPy, the python executable is in the bin dir
+    const _binDir = binDir(installDir, platform);
+    task.setVariable('pythonLocation', _binDir); 
+
+    if (addToPath) {
+        toolUtil.prependPathSafe(_binDir);
+    }
+}
+
+function usePypy3(addToPath: boolean, platform: Platform): void {
+    const installDir: string | null = tool.findLocalTool('PyPy3', '*', 'x64');
+
+    // For PyPy, the python executable is in the bin dir
+    const _binDir = binDir(installDir, platform);
+    task.setVariable('pythonLocation', _binDir); 
+
+    if (addToPath) {
+        toolUtil.prependPathSafe(_binDir);
+    }
 }
 
 async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
@@ -63,25 +94,9 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
     task.setVariable('pythonLocation', installDir);
     if (parameters.addToPath) {
         toolUtil.prependPathSafe(installDir);
+        toolUtil.prependPathSafe(binDir(installDir, platform))
 
-        // Make sure Python's "bin" directories are in PATH.
-        // Python has "scripts" or "bin" directories where command-line tools that come with packages are installed.
-        // This is where pip is, along with anything that pip installs.
-        // There is a seperate directory for `pip install --user`.
-        //
-        // For reference, these directories are as follows:
-        //   macOS / Linux:
-        //      <sys.prefix>/bin (by default /usr/local/bin, but not on hosted agents -- see the `else`)
-        //      (--user) ~/.local/bin
-        //   Windows:
-        //      <Python installation dir>\Scripts
-        //      (--user) %APPDATA%\Python\PythonXY\Scripts
-        // See https://docs.python.org/3/library/sysconfig.html
         if (platform === Platform.Windows) {
-            // On Windows, these directories do not get added to PATH, so we will add them ourselves.
-            const scriptsDir = path.join(installDir, 'Scripts');
-            toolUtil.prependPathSafe(scriptsDir);
-
             // Add --user directory
             // `installDir` from tool cache should look like $AGENT_TOOLSDIRECTORY/Python/<semantic version>/x64/
             // So if `findLocalTool` succeeded above, we must have a conformant `installDir`
@@ -91,21 +106,15 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
 
             const userScriptsDir = path.join(process.env['APPDATA'], 'Python', `Python${major}${minor}`, 'Scripts');
             toolUtil.prependPathSafe(userScriptsDir);
-        } else {
-            // On Linux and macOS, tools cache should be set up so that each Python version has its own "bin" directory.
-            // We do this so that the tool cache can just be dropped on an agent with minimal installation (no copying to /usr/local).
-            // This allows us side-by-side the same minor version of Python with different patch versions or architectures (since Python uses /usr/local/lib/python3.6, etc.).
-            toolUtil.prependPathSafe(path.join(installDir, 'bin'));
-
-            // On Linux and macOS, pip will create the --user directory and add it to PATH as needed.
         }
+        // On Linux and macOS, pip will create the --user directory and add it to PATH as needed.
     }
 }
 
 export async function usePythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
     switch (parameters.versionSpec.toUpperCase()) {
-        case 'PYPY': return usePypy(platform);
-        case 'PYPY3': return usePypy3(platform);
+        case 'PYPY': return usePypy(parameters.addToPath, platform);
+        case 'PYPY3': return usePypy3(parameters.addToPath, platform);
         default: return await useCpythonVersion(parameters, platform);
     }
 }

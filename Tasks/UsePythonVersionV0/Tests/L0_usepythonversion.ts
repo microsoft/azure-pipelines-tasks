@@ -51,9 +51,9 @@ it('sets PATH correctly on Linux', async function () {
 
     await uut.usePythonVersion(parameters, Platform.Linux);
     assert(findLocalTool.calledOnceWithExactly('Python', '3.6', 'x64'));
-    assert(prependPathSafe.calledTwice);
     assert(prependPathSafe.calledWithExactly('findLocalTool'));
     assert(prependPathSafe.calledWithExactly(path.join('findLocalTool', 'bin')));
+    assert(prependPathSafe.calledTwice);
 });
 
 it('sets PATH correctly on Windows', async function () {
@@ -82,7 +82,6 @@ it('sets PATH correctly on Windows', async function () {
 
     await uut.usePythonVersion(parameters, Platform.Windows);
     assert(findLocalTool.calledOnceWithExactly('Python', '3.6', 'x64'));
-    assert(prependPathSafe.calledThrice);
     assert(prependPathSafe.calledWithExactly(toolPath));
 
     // On Windows, must add the two "Scripts" directories to PATH as well
@@ -90,4 +89,5 @@ it('sets PATH correctly on Windows', async function () {
     assert(prependPathSafe.calledWithExactly(expectedScripts));
     const expectedUserScripts = path.join(process.env['APPDATA'], 'Python', 'Python36', 'Scripts');
     assert(prependPathSafe.calledWithExactly(expectedUserScripts));
+    assert(prependPathSafe.calledThrice);
 });

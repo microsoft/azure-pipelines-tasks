@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 import * as os from 'os';
 import * as path from 'path';
+import * as task from 'azure-pipelines-task-lib/task';
 
 import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
 
@@ -28,7 +29,7 @@ describe('UsePythonVersion L0 Suite', function () {
         testRunner.run();
 
         const pythonDir = path.join('/', 'Python', '3.6.4', 'x64');
-        const pythonBinDir = os.platform() === 'win32'
+        const pythonBinDir = task.getPlatform() === task.Platform.Windows
             ? path.join(pythonDir, 'Scripts')
             : path.join(pythonDir, 'bin');
 
@@ -77,8 +78,8 @@ describe('UsePythonVersion L0 Suite', function () {
 
         testRunner.run();
 
-        const pypyDir = path.join('/', 'pypy');
-        const pypyBinDir = os.platform() === 'win32'
+        const pypyDir = path.join('/', 'PyPy2', '1.0.0', 'x64');
+        const pypyBinDir = task.getPlatform() === task.Platform.Windows
             ? path.join(pypyDir, 'Scripts')
             : path.join(pypyDir, 'bin');
 

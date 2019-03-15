@@ -10,7 +10,7 @@ taskRunner.setInput('addToPath', 'true');
 taskRunner.setInput('architecture', 'x64');
 
 // Mock azure-pipelines-tool-lib
-const toolPath = path.join('/', 'pypy');
+const toolPath = path.join('/', 'PyPy2', '1.0.0', 'x64');
 taskRunner.registerMock('azure-pipelines-tool-lib/tool', {
     findLocalTool: () => toolPath
 });
@@ -20,8 +20,5 @@ taskRunner.registerMock('./toolutil', {
         console.log('##vso[task.prependpath]' + toolPath);
     }
 });
-
-// `getVariable` is not supported by `TaskLibAnswers`
-process.env['CONDA'] = '/pypy';
 
 taskRunner.run();
