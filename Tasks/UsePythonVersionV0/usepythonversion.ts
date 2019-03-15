@@ -36,6 +36,15 @@ function binDir(installDir: string, platform: Platform): string {
     }
 }
 
+function pypyNotFoundError(pypyVersion: 2 | 3) {
+    throw new Error([
+        task.loc('PyPyNotFound', pypyVersion),
+        // 'Python' is intentional here
+        task.loc('ToolNotFoundMicrosoftHosted', 'Python', 'https://aka.ms/hosted-agent-software'),
+        task.loc('ToolNotFoundSelfHosted', 'Python', 'https://go.microsoft.com/fwlink/?linkid=871498')
+    ].join(os.EOL));
+}
+
 // Note on the tool cache layout for PyPy:
 // PyPy has its own versioning scheme that doesn't follow the Python versioning scheme,
 // But publishes separate binaries for "PyPy2" and "PyPy3", which correspond to Python 2 and 3 respectively.
@@ -43,6 +52,11 @@ function binDir(installDir: string, platform: Platform): string {
 
 function usePypy(addToPath: boolean, platform: Platform): void {
     const installDir: string | null = tool.findLocalTool('PyPy2', '*', 'x64');
+
+    if (!installDir) {
+        // PyPy2 not installed in $(Agent.ToolsDirectory)
+        throw pypyNotFoundError(2);
+    }
 
     // For PyPy, the python executable is in the bin dir
     const _binDir = binDir(installDir, platform);
@@ -56,9 +70,14 @@ function usePypy(addToPath: boolean, platform: Platform): void {
 function usePypy3(addToPath: boolean, platform: Platform): void {
     const installDir: string | null = tool.findLocalTool('PyPy3', '*', 'x64');
 
+    if (!installDir) {
+        // PyPy3 not installed in $(Agent.ToolsDirectory)
+        throw pypyNotFoundError(3);
+    }
+
     // For PyPy, the python executable is in the bin dir
     const _binDir = binDir(installDir, platform);
-    task.setVariable('pythonLocation', _binDir); 
+    task.setVariable('pythonLocation', _binDir);
 
     if (addToPath) {
         toolUtil.prependPathSafe(_binDir);

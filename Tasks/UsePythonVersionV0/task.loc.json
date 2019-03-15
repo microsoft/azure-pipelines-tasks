@@ -72,6 +72,7 @@
     "ListAvailableVersions": "ms-resource:loc.messages.ListAvailableVersions",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
     "PrependPath": "ms-resource:loc.messages.PrependPath",
+    "PyPyNotFound": "ms-resource:loc.messages.PyPyNotFound",
     "ToolNotFoundMicrosoftHosted": "ms-resource:loc.messages.ToolNotFoundMicrosoftHosted",
     "ToolNotFoundSelfHosted": "ms-resource:loc.messages.ToolNotFoundSelfHosted",
     "VersionNotFound": "ms-resource:loc.messages.VersionNotFound"
