@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 149,
-        "Patch": 1
+        "Minor": 150,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.102.0",
@@ -47,7 +47,7 @@
             "name": "autogenerateHtmlReport",
             "type": "boolean",
             "label": "Generate Html report",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "required": false,
             "helpMarkDown": "Generate code coverage html report."
         },
@@ -67,7 +67,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`",
-            "visibleRule": "false = true"
+            "visibleRule": "autogenerateHtmlReport = false"
         },
         {
             "name": "additionalCodeCoverageFiles",

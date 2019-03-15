@@ -13,7 +13,7 @@ function setResponseFile(name: string) {
 }
 
 describe('Publish Code Coverage Results Suite', function() {
-    this.timeout(10000);
+    this.timeout(15000);
 
     before((done) => {
         done();
@@ -335,6 +335,36 @@ describe('Publish Code Coverage Results Suite', function() {
                 assert(tr.stdErrContained('Input required: summaryFileLocation'));
                 assert(tr.failed, 'task should have failed');
                 assert(tr.invokedToolCount == 0, 'should exit before running PublishCodeCoverageResults');
+
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
+    it('Publish code coverage results with all input parameters with full net framework', (done) => {
+        setResponseFile('publishCCResponses_noncore.json');
+
+        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
+
+        tr.setInput('codeCoverageTool', 'JaCoCo');
+        tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
+        tr.setInput('reportDirectory', '/user/admin/report');
+        tr.setInput('autogenerateHtmlReport', 'true');
+        tr.setInput('additionalCodeCoverageFiles', "/some/*pattern");
+
+        if (!os.type().match(/^Win/)) {
+            done();
+        }
+
+        tr.run()
+            .then(() => {
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+
+                assert(tr.stdout.search(/net47\\ReportGenerator.exe -reports:\/user\/admin\/summary.xml -targetdir:\\tmp\\cchtml -reporttypes:HtmlInline_AzurePipelines/) > 0)
+                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
 
                 done();
             })

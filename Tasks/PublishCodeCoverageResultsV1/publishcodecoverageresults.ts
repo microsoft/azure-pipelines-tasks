@@ -140,26 +140,35 @@ function getTempFolder(): string {
 }
 
 async function generateHtmlReport(summaryFile: string, targetDir: string, sourceFolder: string, workingDir: string) {
+    const osvar = process.platform;
+    let dotnet: tr.ToolRunner;
+
     const dotnetPath = tl.which('dotnet', false);
-    if (!dotnetPath) {
+    if (!dotnetPath && osvar !== 'win32') {
         tl.warning(tl.loc('InstallDotNetCoreForHtmlReport'));
         return;
     }
 
-    let coverageArg = `"-reports:${summaryFile}" "-targetdir:${targetDir}" -reporttypes:HtmlInline_AzurePipelines`;
-    if (sourceFolder && pathExistsAsDir(sourceFolder)) {
-        coverageArg += ` "-sourcedirs:${sourceFolder}"`;
+    if (!dotnetPath && osvar === 'win32') {
+        // use full .NET to execute
+        dotnet = tl.tool(path.join(__dirname, 'net47', 'ReportGenerator.exe'));
+    } else {
+        dotnet = tl.tool(dotnetPath);
+        dotnet.arg(path.join(__dirname, 'netcoreapp2.0', 'ReportGenerator.dll'));
     }
 
-    const dotnet = tl.tool(dotnetPath);
-    dotnet.arg(path.join(__dirname, 'netcoreapp2.0', 'ReportGenerator.dll'));
-    dotnet.line(coverageArg);
-
-    tl.debug('Coverage report arguments: ' + coverageArg);
+    dotnet.arg(`"-reports:${summaryFile}"`);
+    dotnet.arg(`"-targetdir:${targetDir}"`);
+    dotnet.arg(`"-reporttypes:HtmlInline_AzurePipelines"`);
+    if (sourceFolder && pathExistsAsDir(sourceFolder)) {
+        dotnet.arg(`"-sourcedirs:${sourceFolder}"`);
+    }
 
     try {
         const result = await dotnet.exec(<tr.IExecOptions>{
-            cwd: workingDir
+            ignoreReturnCode: true,
+            failOnStdErr: false,
+            windowsVerbatimArguments: true
         });
 
         if (result === 0) {

@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 149,
-    "Patch": 1
+    "Minor": 150,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.102.0",
@@ -47,7 +47,7 @@
       "name": "autogenerateHtmlReport",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.autogenerateHtmlReport",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.autogenerateHtmlReport"
     },
@@ -67,7 +67,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.reportDirectory",
-      "visibleRule": "false = true"
+      "visibleRule": "autogenerateHtmlReport = false"
     },
     {
       "name": "additionalCodeCoverageFiles",
