@@ -72,13 +72,30 @@ describe('UsePythonVersion L0 Suite', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
     });
 
-    it('finds PyPy', function () {
+    it('finds PyPy2', function () {
         const testFile = path.join(__dirname, 'L0PyPy2.js');
         const testRunner = new MockTestRunner(testFile);
 
         testRunner.run();
 
         const pypyDir = path.join('/', 'PyPy2', '1.0.0', 'x64');
+        const pypyBinDir = task.getPlatform() === task.Platform.Windows
+            ? path.join(pypyDir, 'Scripts')
+            : path.join(pypyDir, 'bin');
+
+        assert(didSetVariable(testRunner, 'pythonLocation', pypyBinDir));
+        assert(didPrependPath(testRunner, pypyBinDir));
+        assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
+        assert(testRunner.succeeded, 'task should have succeeded');
+    });
+
+    it('finds PyPy3', function () {
+        const testFile = path.join(__dirname, 'L0PyPy3.js');
+        const testRunner = new MockTestRunner(testFile);
+
+        testRunner.run();
+
+        const pypyDir = path.join('/', 'PyPy3', '1.0.0', 'x64');
         const pypyBinDir = task.getPlatform() === task.Platform.Windows
             ? path.join(pypyDir, 'Scripts')
             : path.join(pypyDir, 'bin');
