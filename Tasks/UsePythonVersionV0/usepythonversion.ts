@@ -50,7 +50,7 @@ function pypyNotFoundError(pypyVersion: 2 | 3) {
 // But publishes separate binaries for "PyPy2" and "PyPy3", which correspond to Python 2 and 3 respectively.
 // We want to support switching between PyPy2 and PyPy3, but don't really care about the particular version of PyPy.
 
-function usePypy(addToPath: boolean, platform: Platform): void {
+function usePypy2(addToPath: boolean, platform: Platform): void {
     const installDir: string | null = tool.findLocalTool('PyPy2', '*', 'x64');
 
     if (!installDir) {
@@ -132,8 +132,11 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
 
 export async function usePythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
     switch (parameters.versionSpec.toUpperCase()) {
-        case 'PYPY': return usePypy(parameters.addToPath, platform);
-        case 'PYPY3': return usePypy3(parameters.addToPath, platform);
-        default: return await useCpythonVersion(parameters, platform);
+        case 'PYPY2':
+            return usePypy2(parameters.addToPath, platform);
+        case 'PYPY3':
+            return usePypy3(parameters.addToPath, platform);
+        default:
+            return await useCpythonVersion(parameters, platform);
     }
 }

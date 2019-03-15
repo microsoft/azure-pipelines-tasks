@@ -73,7 +73,7 @@ describe('UsePythonVersion L0 Suite', function () {
     });
 
     it('finds PyPy', function () {
-        const testFile = path.join(__dirname, 'L0PyPy.js');
+        const testFile = path.join(__dirname, 'L0PyPy2.js');
         const testRunner = new MockTestRunner(testFile);
 
         testRunner.run();
