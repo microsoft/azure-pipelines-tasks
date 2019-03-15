@@ -149,8 +149,8 @@ Function Override-TestSettingProperties
 }
 
 # Error out unless there is a workaround
-$supportrft = Get-VstsTaskVariable -Name 'RFTSupport' -AsBool
-if(-not $supportrft)
+$supportrft = Get-TaskVariable -Context $distributedTaskContext -Name "RFTSupport"
+if ($supportrft -notlike 'true')
 {
     throw "This task and its companion task (Visual Studio Test Agent Deployment) are now not supported. Use the 'Visual Studio Test' task instead. The VSTest task can run unit as well as functional tests. Run tests on one or more agents using the multi-agent phase setting. Use the 'Visual Studio Test Platform' task to run tests without needing Visual Studio on the agent. VSTest task also brings new capabilities such as automatically rerunning failed tests. Visit https://aka.ms/testingwithphases for more information."
 }
