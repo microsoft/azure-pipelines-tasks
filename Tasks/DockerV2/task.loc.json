@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
+    "Minor": 150,
     "Patch": 0
   },
   "demands": [],
@@ -125,7 +125,7 @@
     }
   },
   "messages": {
-    "AddingAuthDataToDockerConfig": "ms-resource:loc.messages.AddingAuthDataToDockerConfig",
+    "AddingNewAuthToExistingConfig": "ms-resource:loc.messages.AddingNewAuthToExistingConfig",
     "ArgumentsNotSupportedWithBuildAndPush": "ms-resource:loc.messages.ArgumentsNotSupportedWithBuildAndPush",
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
@@ -137,11 +137,11 @@
     "DockerRegistryNotFound": "ms-resource:loc.messages.DockerRegistryNotFound",
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
     "FoundDockerConfigStoredInTempPath": "ms-resource:loc.messages.FoundDockerConfigStoredInTempPath",
-    "FoundPreviousLogin": "ms-resource:loc.messages.FoundPreviousLogin",
     "FoundLoginsForOtherRegistries": "ms-resource:loc.messages.FoundLoginsForOtherRegistries",
-    "FoundPreviousLoginForRegistry": "ms-resource:loc.messages.FoundPreviousLoginForRegistry",
+    "OldDockerConfigContent": "ms-resource:loc.messages.OldDockerConfigContent",
     "LoggingOutFromRegistry": "ms-resource:loc.messages.LoggingOutFromRegistry",
     "LoggingOutWithNoRegistrySpecified": "ms-resource:loc.messages.LoggingOutWithNoRegistrySpecified",
+    "NoAuthInfoFoundInDockerConfig": "ms-resource:loc.messages.NoAuthInfoFoundInDockerConfig",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
     "NotAddingAnyTagsToBuild": "ms-resource:loc.messages.NotAddingAnyTagsToBuild",
@@ -149,6 +149,7 @@
     "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
     "PathIsNotInTempDirectory": "ms-resource:loc.messages.PathIsNotInTempDirectory",
     "RegistryAuthNotPresentInConfig": "ms-resource:loc.messages.RegistryAuthNotPresentInConfig",
-    "RestoringPreviousLoginAuth": "ms-resource:loc.messages.RestoringPreviousLoginAuth"
+    "RestoringOldLoginAuth": "ms-resource:loc.messages.RestoringOldLoginAuth",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   }
 }
