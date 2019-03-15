@@ -60,7 +60,7 @@
       "name": "connectionType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.connectionType",
-      "defaultValue": "Azure Resource Manager",
+      "defaultValue": "Kubernetes Service Connection",
       "required": true,
       "options": {
         "Azure Resource Manager": "Azure Resource Manager",
