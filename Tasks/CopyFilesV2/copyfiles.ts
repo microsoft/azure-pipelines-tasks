@@ -11,7 +11,7 @@ let targetFolder: string = tl.getPathInput('TargetFolder', true);
 let cleanTargetFolder: boolean = tl.getBoolInput('CleanTargetFolder', false);
 let overWrite: boolean = tl.getBoolInput('OverWrite', false);
 let flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
-let preserveTimestamp: boolean = tl.getBoolInput('preserveTimestamp', false);
+const preserveTimestamp: boolean = tl.getBoolInput('preserveTimestamp', false);
 
 // normalize the source folder path. this is important for later in order to accurately
 // determine the relative path of each found file (substring using sourceFolder.length).
