@@ -1,13 +1,17 @@
 
+ci/*  @damccorm   @stephenmichaelf  @bryanmacfarlane
+
 Tasks/AndroidSigningV2/*    @madhurig
 
 Tasks/AndroidSigningV3/*    @madhurig
 
 Tasks/ANTV1/*   @madhurig
 
-Tasks/AppCenterDistributeV1/*   @DennisPan
+Tasks/AppCenterDistributeV1/*   @DennisPan    @keerthanakumar
 
-Tasks/AppCenterDistributeV2/*   @DennisPan
+Tasks/AppCenterDistributeV2/*   @DennisPan    @keerthanakumar
+
+Tasks/AppCenterDistributeV3/*   @DennisPan    @keerthanakumar
 
 Tasks/AppCenterTestV1/*   @owenniblock
 
@@ -99,6 +103,8 @@ Tasks/DockerV0/*    @bansalaseem
 
 Tasks/DockerV1/*    @bansalaseem
 
+Tasks/DockerV2/*    @bansalaseem
+
 Tasks/DockerComposeV0/*     @bansalaseem
 
 Tasks/DotNetCoreCLIV2/*     @sachinma
@@ -164,6 +170,8 @@ Tasks/JenkinsQueueJobV2/*   @madhurig
 Tasks/KubernetesV0/*    @bansalaseem
 
 Tasks/KubernetesV1/*    @bansalaseem
+
+Tasks/KubernetesManifestV0/*    @bansalaseem
 
 Tasks/ManualInterventionV8/*    @bansalaseem
 
