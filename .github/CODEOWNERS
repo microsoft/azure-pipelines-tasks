@@ -101,6 +101,8 @@ Tasks/DockerV0/*    @bansalaseem
 
 Tasks/DockerV1/*    @bansalaseem
 
+Tasks/DockerV2/*    @bansalaseem
+
 Tasks/DockerComposeV0/*     @bansalaseem
 
 Tasks/DotNetCoreCLIV2/*     @sachinma
@@ -166,6 +168,8 @@ Tasks/JenkinsQueueJobV2/*   @madhurig
 Tasks/KubernetesV0/*    @bansalaseem
 
 Tasks/KubernetesV1/*    @bansalaseem
+
+Tasks/KubernetesManifestV0/*    @bansalaseem
 
 Tasks/ManualInterventionV8/*    @bansalaseem
 
