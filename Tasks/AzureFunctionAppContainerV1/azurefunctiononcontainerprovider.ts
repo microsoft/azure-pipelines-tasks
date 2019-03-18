@@ -10,6 +10,7 @@ import tl = require('vsts-task-lib/task');
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
 import { ContainerBasedDeploymentUtility } from 'azurermdeploycommon/operations/ContainerBasedDeploymentUtility';
 const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE false';
+import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility';
 
 export class AzureFunctionOnContainerDeploymentProvider{
     protected taskParams:TaskParameters;
@@ -44,10 +45,12 @@ export class AzureFunctionOnContainerDeploymentProvider{
     public async DeployWebAppStep() {
         tl.debug("Performing container based deployment.");
 
-        this.taskParams.AppSettings = this.taskParams.AppSettings ? this.taskParams.AppSettings.trim() + " " + linuxFunctionStorageSetting : linuxFunctionStorageSetting;
-
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
-        await containerDeploymentUtility.deployWebAppImage(this.taskParams);
+        await containerDeploymentUtility.deployWebAppImage(this.taskParams, false);
+
+        this.taskParams.AppSettings = this.taskParams.AppSettings ? this.taskParams.AppSettings.trim() + " " + linuxFunctionStorageSetting : linuxFunctionStorageSetting;
+        let customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
+        await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
         
         await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
     }
