@@ -27,15 +27,8 @@ export class ContainerBasedDeploymentUtility {
         tl.debug("Updating the webapp configuration.");
         await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], imageName);
 
-        tl.debug('Updating web app settings');
-        await this._updateApplicationSettings(properties["AppSettings"], imageName);   
-    }
-
-    private async _updateApplicationSettings(appSettings: any, imageName: string): Promise<void> {
-        var appSettingsParameters = appSettings ? appSettings.trim() : "";
-        appSettingsParameters =  await this._getContainerRegistrySettings(imageName, null) + ' ' + appSettingsParameters;
-        var appSettingsNewProperties = parse(appSettingsParameters);
-        await this._appServiceUtility.updateAndMonitorAppSettings(appSettingsNewProperties);
+        tl.debug('making a restart request to app service');
+        await this._appService.restart();
     }
 
     private async _updateConfigurationDetails(configSettings: any, startupCommand: string, imageName: string): Promise<void> {
