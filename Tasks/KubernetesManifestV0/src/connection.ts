@@ -23,7 +23,7 @@ export class Connection {
         if (!authorizationType || authorizationType === "Kubeconfig") {
             kubeconfig = kubectlutility.getKubeconfigForCluster(kubernetesServiceEndpoint);
         }
-        else if (authorizationType === "ServiceAccount") {
+        else if (authorizationType === "ServiceAccount" || authorizationType === "AzureSubscription") {
             kubeconfig = kubectlutility.createKubeconfig(kubernetesServiceEndpoint);
         }
 
