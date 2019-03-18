@@ -21,6 +21,9 @@ steps:
   inputs:
     versionSpec: "8.x"
 
+- script: npm i -g npm@latest
+  displayName: Use npm version latest
+
 # npm install
 - script: npm install
   displayName: npm install
