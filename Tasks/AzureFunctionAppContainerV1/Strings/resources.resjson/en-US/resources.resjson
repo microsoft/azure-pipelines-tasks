@@ -169,5 +169,11 @@
   "loc.messages.FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
   "loc.messages.JarPathNotPresent": "Java jar path is not present",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
-  "loc.messages.InvalidDockerImageName": "Invalid Docker hub image name provided."
+  "loc.messages.InvalidDockerImageName": "Invalid Docker hub image name provided.",
+  "loc.messages.RestartingAppService": "Restarting App Service : %s",
+  "loc.messages.RestartingAppServiceSlot": "Restarting App Service: %s-%s",
+  "loc.messages.RestartedAppService": "App Service '%s' restarted successfully.",
+  "loc.messages.RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
+  "loc.messages.FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
+  "loc.messages.FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s"
 }
