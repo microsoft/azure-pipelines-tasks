@@ -1,20 +1,8 @@
 import * as assert from 'assert';
 
-import * as mockery from 'mockery';
-import * as mockTask from 'azure-pipelines-task-lib/mock-task';
-
 import * as versionspec from '../versionspec';
 
-/** Reload the unit under test to use mocks that have been registered. */
-function reload(): typeof versionspec {
-    return require('../versionspec');
-}
-
 it('converts Python prerelease versions to the semantic version format', function () {
-    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
-    mockery.registerMock('azure-pipelines-tool-lib/tool', {});
-    const uut = reload();
-
     const testCases = [
         {
             versionSpec: '3.x',
@@ -51,7 +39,12 @@ it('converts Python prerelease versions to the semantic version format', functio
     ];
 
     for (const tc of testCases) { // Node 5 can't handle destructuring assignment
-        const actual = uut.pythonVersionToSemantic(tc.versionSpec);
+        const actual = versionspec.pythonVersionToSemantic(tc.versionSpec);
         assert.strictEqual(actual, tc.expected);
     }
+});
+
+it('converts -dev syntax to a semantic version', function () {
+    const actual = versionspec.desugarDevVersion('3.8-dev');
+    assert.strictEqual(actual, '>= 3.8.0-a0');
 });
