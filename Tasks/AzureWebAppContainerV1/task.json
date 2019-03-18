@@ -131,10 +131,7 @@
         {
             "target": "appName",
             "endpointId": "$(azureSubscription)",
-            "dataSourceName": "AzureRMWebAppNamesByAppType",
-            "parameters": {
-                "WebAppKind": "webAppContainer"
-            }
+            "dataSourceName": "AzureWebAppContainerNames"
         },
         {
             "target": "resourceGroupName",
