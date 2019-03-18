@@ -20,17 +20,15 @@ export class ContainerBasedDeploymentUtility {
         this._appServiceUtility = new AzureAppServiceUtility(appService);
     }
 
-    public async deployWebAppImage(properties: any, isRestartRequired?: boolean): Promise<void> {
+    public async deployWebAppImage(properties: any): Promise<void> {
         let imageName: string = properties["ImageName"];
         tl.debug("Deploying an image " + imageName + " to the webapp " + this._appService.getName());
 
         tl.debug("Updating the webapp configuration.");
         await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], imageName);
 
-        if(isRestartRequired) {
-            tl.debug('making a restart request to app service');
-            await this._appService.restart();
-        }
+        tl.debug('making a restart request to app service');
+        await this._appService.restart();
     }
 
     private async _updateConfigurationDetails(configSettings: any, startupCommand: string, imageName: string): Promise<void> {

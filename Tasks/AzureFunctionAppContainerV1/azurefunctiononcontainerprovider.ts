@@ -46,7 +46,7 @@ export class AzureFunctionOnContainerDeploymentProvider{
         tl.debug("Performing container based deployment.");
 
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
-        await containerDeploymentUtility.deployWebAppImage(this.taskParams, false);
+        await containerDeploymentUtility.deployWebAppImage(this.taskParams);
 
         this.taskParams.AppSettings = this.taskParams.AppSettings ? this.taskParams.AppSettings.trim() + " " + linuxFunctionStorageSetting : linuxFunctionStorageSetting;
         let customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);

@@ -45,7 +45,7 @@ export class AzureRmWebAppDeploymentProvider{
         tl.debug("Performing container based deployment.");
 
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
-        await containerDeploymentUtility.deployWebAppImage(this.taskParams, !this.taskParams.AppSettings);
+        await containerDeploymentUtility.deployWebAppImage(this.taskParams);
         
         if(this.taskParams.AppSettings) {
             var customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
