@@ -53,7 +53,7 @@ function pypyNotFoundError(majorVersion: 2 | 3) {
 // We only care about the Python version, so we don't use the PyPy version for the tool cache.
 
 function usePypy(majorVersion: 2 | 3, addToPath: boolean, platform: Platform): void {
-    const installDir: string | null = tool.findLocalTool('PyPy2', majorVersion.toString(), 'x64');
+    const installDir: string | null = tool.findLocalTool('PyPy', majorVersion.toString(), 'x64');
 
     if (!installDir) {
         // PyPy not installed in $(Agent.ToolsDirectory)
