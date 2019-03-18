@@ -44,9 +44,14 @@ export class ContainerBasedDeploymentUtility {
             'value': startupCommand
         }
 
+        appSettingsNewProperties.windowsFxVersion = {
+            'value': "DOCKER|" + imageName
+        }
+
         appSettingsNewProperties.linuxFxVersion = {
             'value': "DOCKER|" + imageName
         }
+
         tl.debug(`CONATINER UPDATE CONFIG VALUES : ${appSettingsNewProperties}`);
         await this._appServiceUtility.updateConfigurationSettings(appSettingsNewProperties);
     }
