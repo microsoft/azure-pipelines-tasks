@@ -63,7 +63,7 @@ async function run() {
         const auth = taskLib.getInput('auth', false);
         if (auth) {
             const authFile = taskLib.getInput('authFile', false);
-            authutil.setAuth(auth, authFile);
+            await authutil.setAuth(auth, authFile);
         }
     }
     catch (error) {
