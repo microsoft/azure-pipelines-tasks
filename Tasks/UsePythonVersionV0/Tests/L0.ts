@@ -78,7 +78,7 @@ describe('UsePythonVersion L0 Suite', function () {
 
         testRunner.run();
 
-        const pypyDir = path.join('/', 'PyPy2', '1.0.0', 'x64');
+        const pypyDir = path.join('/', 'PyPy', '2.7.9', 'x64');
         const pypyBinDir = task.getPlatform() === task.Platform.Windows
             ? path.join(pypyDir, 'Scripts')
             : path.join(pypyDir, 'bin');
@@ -95,7 +95,7 @@ describe('UsePythonVersion L0 Suite', function () {
 
         testRunner.run();
 
-        const pypyDir = path.join('/', 'PyPy3', '1.0.0', 'x64');
+        const pypyDir = path.join('/', 'PyPy', '3.5.2', 'x64');
         const pypyBinDir = task.getPlatform() === task.Platform.Windows
             ? path.join(pypyDir, 'Scripts')
             : path.join(pypyDir, 'bin');

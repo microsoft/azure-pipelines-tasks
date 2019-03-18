@@ -28,6 +28,7 @@ interface TaskParameters {
 //      <Python installation dir>\Scripts
 //      (--user) %APPDATA%\Python\PythonXY\Scripts
 // See https://docs.python.org/3/library/sysconfig.html
+
 function binDir(installDir: string, platform: Platform): string {
     if (platform === Platform.Windows) {
         return path.join(installDir, 'Scripts');
@@ -36,9 +37,9 @@ function binDir(installDir: string, platform: Platform): string {
     }
 }
 
-function pypyNotFoundError(pypyVersion: 2 | 3) {
+function pypyNotFoundError(majorVersion: 2 | 3) {
     throw new Error([
-        task.loc('PyPyNotFound', pypyVersion),
+        task.loc('PyPyNotFound', majorVersion),
         // 'Python' is intentional here
         task.loc('ToolNotFoundMicrosoftHosted', 'Python', 'https://aka.ms/hosted-agent-software'),
         task.loc('ToolNotFoundSelfHosted', 'Python', 'https://go.microsoft.com/fwlink/?linkid=871498')
@@ -46,38 +47,22 @@ function pypyNotFoundError(pypyVersion: 2 | 3) {
 }
 
 // Note on the tool cache layout for PyPy:
-// PyPy has its own versioning scheme that doesn't follow the Python versioning scheme,
-// But publishes separate binaries for "PyPy2" and "PyPy3", which correspond to Python 2 and 3 respectively.
-// We want to support switching between PyPy2 and PyPy3, but don't really care about the particular version of PyPy.
+// PyPy has its own versioning scheme that doesn't follow the Python versioning scheme.
+// A particular version of PyPy may contain one or more versions of the Python interpreter.
+// For example, PyPy 7.0 contains Python 2.7, 3.5, and 3.6-alpha.
+// We only care about the Python version, so we don't use the PyPy version for the tool cache.
 
-function usePypy2(addToPath: boolean, platform: Platform): void {
-    const installDir: string | null = tool.findLocalTool('PyPy2', '*', 'x64');
+function usePypy(majorVersion: 2 | 3, addToPath: boolean, platform: Platform): void {
+    const installDir: string | null = tool.findLocalTool('PyPy2', majorVersion.toString(), 'x64');
 
     if (!installDir) {
-        // PyPy2 not installed in $(Agent.ToolsDirectory)
-        throw pypyNotFoundError(2);
+        // PyPy not installed in $(Agent.ToolsDirectory)
+        throw pypyNotFoundError(majorVersion);
     }
 
     // For PyPy, the python executable is in the bin dir
     const _binDir = binDir(installDir, platform);
     task.setVariable('pythonLocation', _binDir); 
-
-    if (addToPath) {
-        toolUtil.prependPathSafe(_binDir);
-    }
-}
-
-function usePypy3(addToPath: boolean, platform: Platform): void {
-    const installDir: string | null = tool.findLocalTool('PyPy3', '*', 'x64');
-
-    if (!installDir) {
-        // PyPy3 not installed in $(Agent.ToolsDirectory)
-        throw pypyNotFoundError(3);
-    }
-
-    // For PyPy, the python executable is in the bin dir
-    const _binDir = binDir(installDir, platform);
-    task.setVariable('pythonLocation', _binDir);
 
     if (addToPath) {
         toolUtil.prependPathSafe(_binDir);
@@ -133,9 +118,9 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
 export async function usePythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
     switch (parameters.versionSpec.toUpperCase()) {
         case 'PYPY2':
-            return usePypy2(parameters.addToPath, platform);
+            return usePypy(2, parameters.addToPath, platform);
         case 'PYPY3':
-            return usePypy3(parameters.addToPath, platform);
+            return usePypy(3, parameters.addToPath, platform);
         default:
             return await useCpythonVersion(parameters, platform);
     }

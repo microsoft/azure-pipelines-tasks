@@ -10,7 +10,7 @@ taskRunner.setInput('addToPath', 'true');
 taskRunner.setInput('architecture', 'x64');
 
 // Mock azure-pipelines-tool-lib
-const toolPath = path.join('/', 'PyPy3', '1.0.0', 'x64');
+const toolPath = path.join('/', 'PyPy', '3.5.2', 'x64');
 taskRunner.registerMock('azure-pipelines-tool-lib/tool', {
     findLocalTool: () => toolPath
 });
