@@ -71,5 +71,7 @@
   "loc.messages.RequiredChannelVersionForSpec": "Finding channel %s for version %s",
   "loc.messages.ErrorWhileGettingVersionFromChannel": "Failed while getting version %s from channel %s with error: %s",
   "loc.messages.ComparingInstalledFolderVersions": "Comparing if version being installed %s is greater than already installed version with folder name %s",
-  "loc.messages.ComparingInstalledFileVersions": "Comparing if version being installed %s is greater than already installed version with version complete file name %s"
+  "loc.messages.ComparingInstalledFileVersions": "Comparing if version being installed %s is greater than already installed version with version complete file name %s",
+  "loc.messages.InvalidChannelObject": "Object cannot be used as Channel, required properties such as channel-version, releases.json is missing.",
+  "loc.messages.ReleasesIndexBodyIncorrect": "Parsed releases index body is not correct. Kindly see if the releases-index section is not empty in the file."
 }

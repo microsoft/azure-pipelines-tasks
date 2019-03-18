@@ -1,20 +1,28 @@
-import * as utils from "./versionutilities";
 import * as semver from "semver";
+import * as url from "url";
+
+import * as tl from 'vsts-task-lib/task';
+
+import * as utils from "./versionutilities";
 
 export class VersionInfo {
     public version: string;
     public files: VersionFilesData[];
 
     public static getRuntimeVersion(versionInfo: VersionInfo, packageType: string): string {
-        if (packageType == utils.Constants.sdk) {
-            if (versionInfo["runtime-version"]) {
-                return versionInfo["runtime-version"];
-            }
+        if (versionInfo) {
+            if (packageType == utils.Constants.sdk) {
+                if (versionInfo["runtime-version"]) {
+                    return versionInfo["runtime-version"];
+                }
 
-            tl.warning(tl.loc("runtimeVersionPropertyNotFound", packageType, versionInfo.version));
-        }
-        else {
-            return versionInfo.version;
+                tl.warning(tl.loc("runtimeVersionPropertyNotFound", packageType, versionInfo.version));
+            }
+            else {
+                if (versionInfo.version) {
+                    return versionInfo.version;
+                }
+            }
         }
 
         return "";
@@ -31,7 +39,7 @@ export class VersionFilesData {
 export class Channel {
     constructor(channelRelease: any) {
         if (!channelRelease || !channelRelease["channel-version"] || !channelRelease["releases.json"]) {
-            throw "Object cannot be used as Channel, required properties such as channel-version, releases.json is missing. "
+            throw tl.loc("InvalidChannelObject");
         }
 
         this.channelVersion = channelRelease["channel-version"];
@@ -39,7 +47,7 @@ export class Channel {
     }
 
     channelVersion: string;
-    releasesJsonUrl: string
+    releasesJsonUrl: string;
 }
 
 export class VersionParts {
@@ -67,7 +75,7 @@ export class VersionParts {
             return true;
         }
         catch (ex) {
-            tl.loc("VersionNotAllowed", version)
+            throw tl.loc("VersionNotAllowed", version)
         }
     }
 

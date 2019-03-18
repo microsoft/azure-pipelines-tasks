@@ -7,7 +7,6 @@ import * as trm from 'vsts-task-lib/toolrunner';
 
 import httpClient = require("typed-rest-client/HttpClient");
 import httpInterfaces = require("typed-rest-client/Interfaces");
-import { HttpClientResponse } from 'typed-rest-client/HttpClient';
 import { VersionInfo, Channel, VersionFilesData, VersionParts } from "./models"
 
 import * as utils from "./versionutilities";
@@ -82,13 +81,13 @@ export class DotNetCoreVersionFetcher {
 
     private setReleasesIndex(): Promise<void> {
         return this.httpCallbackClient.get(DotNetCoreReleasesIndexUrl)
-            .then((response: HttpClientResponse) => {
+            .then((response: httpClient.HttpClientResponse) => {
                 return response.readBody();
             })
             .then((body: string) => {
                 let parsedReleasesIndexBody = JSON.parse(body);
                 if (!parsedReleasesIndexBody || !parsedReleasesIndexBody["releases-index"] || parsedReleasesIndexBody["releases-index"].length < 1) {
-                    throw "Parsed releases index body is not correct."
+                    throw tl.loc("ReleasesIndexBodyIncorrect")
                 }
 
                 parsedReleasesIndexBody["releases-index"].forEach(channelRelease => {
@@ -141,7 +140,7 @@ export class DotNetCoreVersionFetcher {
 
         if (releasesJsonUrl) {
             return this.httpCallbackClient.get(releasesJsonUrl)
-                .then((response: HttpClientResponse) => {
+                .then((response: httpClient.HttpClientResponse) => {
                     return response.readBody();
                 })
                 .then((body: string) => {

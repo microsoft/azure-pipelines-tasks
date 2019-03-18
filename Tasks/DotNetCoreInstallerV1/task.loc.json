@@ -140,6 +140,8 @@
     "RequiredChannelVersionForSpec": "ms-resource:loc.messages.RequiredChannelVersionForSpec",
     "ErrorWhileGettingVersionFromChannel": "ms-resource:loc.messages.ErrorWhileGettingVersionFromChannel",
     "ComparingInstalledFolderVersions": "ms-resource:loc.messages.ComparingInstalledFolderVersions",
-    "ComparingInstalledFileVersions": "ms-resource:loc.messages.ComparingInstalledFileVersions"
+    "ComparingInstalledFileVersions": "ms-resource:loc.messages.ComparingInstalledFileVersions",
+    "InvalidChannelObject": "ms-resource:loc.messages.InvalidChannelObject",
+    "ReleasesIndexBodyIncorrect": "ms-resource:loc.messages.ReleasesIndexBodyIncorrect"
   }
 }
