@@ -1,4 +1,3 @@
-/*
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
@@ -124,5 +123,3 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 });
-
-*/
