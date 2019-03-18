@@ -7,7 +7,7 @@ interface ICurlProxy {
     setting: string
 }
 
-export function toCurlProxy(proxyCfg: taskLib.ProxyConfiguration): ICurlProxy {
+function toCurlProxy(proxyCfg: taskLib.ProxyConfiguration): ICurlProxy {
     let curlProxy: ICurlProxy;
     if (proxyCfg) {
         if (proxyCfg && proxyCfg.proxyUrl) {

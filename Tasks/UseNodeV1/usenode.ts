@@ -10,6 +10,7 @@
 import * as taskLib from 'vsts-task-lib/task';
 //import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as installer from './installer';
+import * as authutil from './authutil';
 import * as proxyutil from './proxyutil';
 import * as restm from 'typed-rest-client/RestClient';
 import * as url from 'url';
@@ -23,15 +24,15 @@ async function run() {
         // Version is optional.  If supplied, install / use from the tool cache
         // If not supplied then task is still used to setup proxy, auth, etc...
         //
-        let versionSpec = taskLib.getInput('version', true);
-        if (versionSpec) {
-            let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
+        const version = taskLib.getInput('version', false);
+        if (version) {
+            const checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
 
             // TODO: installer doesn't support proxy
-            await installer.getNode(versionSpec, checkLatest);
+            await installer.getNode(version, checkLatest);
         }
 
-        let proxyCfg: taskLib.ProxyConfiguration = taskLib.getHttpProxyConfiguration();
+        const proxyCfg: taskLib.ProxyConfiguration = taskLib.getHttpProxyConfiguration();
         if (proxyCfg) {
             proxyutil.setCurlProxySettings(proxyCfg);
         }
@@ -59,6 +60,11 @@ async function run() {
         //     }
         // }
 
+        const auth = taskLib.getInput('auth', false);
+        if (auth) {
+            const authFile = taskLib.getInput('authFile', false);
+            authutil.setAuth(auth, authFile);
+        }
     }
     catch (error) {
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
