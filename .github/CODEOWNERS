@@ -169,6 +169,8 @@ Tasks/KubernetesV0/*    @bansalaseem
 
 Tasks/KubernetesV1/*    @bansalaseem
 
+Tasks/KubernetesManifestV0/*    @bansalaseem
+
 Tasks/ManualInterventionV8/*    @bansalaseem
 
 Tasks/MavenV2/*     @madhurig

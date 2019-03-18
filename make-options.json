@@ -90,6 +90,7 @@
         "JenkinsQueueJobV2",
         "KubernetesV0",
         "KubernetesV1",
+        "KubernetesManifestV0",
         "ManualInterventionV8",
         "MavenV2",
         "MavenV3",
