@@ -11,6 +11,8 @@ import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnno
 import { ContainerBasedDeploymentUtility } from 'azurermdeploycommon/operations/ContainerBasedDeploymentUtility';
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility';
 
+const linuxAppKindSubstring: string = "linux";
+
 export class AzureRmWebAppDeploymentProvider{
     protected taskParams:TaskParameters;
     protected appService: AzureAppService;
@@ -28,9 +30,16 @@ export class AzureRmWebAppDeploymentProvider{
         this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppName));
         
-        if(!this.taskParams.DeployToSlotOrASEFlag){
-            var appDetails = await AzureResourceFilterUtility.getAppDetails(this.azureEndpoint, this.taskParams.WebAppName);
+        if(!this.taskParams.DeployToSlotOrASEFlag) {
+            let appDetails = await AzureResourceFilterUtility.getAppDetails(this.azureEndpoint, this.taskParams.WebAppName);
             this.taskParams.ResourceGroupName = appDetails["resourceGroupName"];
+            let appKind: string = appDetails["kind"];
+            this.taskParams.isLinuxContainerApp = appKind.indexOf(linuxAppKindSubstring) != -1;
+        }
+        else {
+            let appDetails = await this.appService.get();
+            let appKind: string = appDetails["kind"];
+            this.taskParams.isLinuxContainerApp = appKind.indexOf(linuxAppKindSubstring) != -1;
         }
 
         this.appService = new AzureAppService(this.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, this.taskParams.SlotName);
@@ -39,6 +48,7 @@ export class AzureRmWebAppDeploymentProvider{
         this.kuduService = await this.appServiceUtility.getKuduService();
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
         tl.debug(`Resource Group: ${this.taskParams.ResourceGroupName}`);
+        tl.debug(`is Linux container web app: ${this.taskParams.isLinuxContainerApp}`);
     }
 
     public async DeployWebAppStep() {

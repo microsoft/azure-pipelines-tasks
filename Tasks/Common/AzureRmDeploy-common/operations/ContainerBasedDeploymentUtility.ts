@@ -24,28 +24,32 @@ export class ContainerBasedDeploymentUtility {
         let imageName: string = properties["ImageName"];
         tl.debug("Deploying an image " + imageName + " to the webapp " + this._appService.getName());
 
+        let isLinuxApp: boolean = properties["isLinuxContainerApp"];
         tl.debug("Updating the webapp configuration.");
-        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], imageName);
+        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], imageName, isLinuxApp);
 
         tl.debug('making a restart request to app service');
         await this._appService.restart();
     }
 
-    private async _updateConfigurationDetails(configSettings: any, startupCommand: string, imageName: string): Promise<void> {
+    private async _updateConfigurationDetails(configSettings: any, startupCommand: string, imageName: string, isLinuxApp: boolean): Promise<void> {
         var appSettingsNewProperties = !!configSettings ? parse(configSettings.trim()): { };
         appSettingsNewProperties.appCommandLine = {
             'value': startupCommand
         }
 
-        appSettingsNewProperties.windowsFxVersion = {
-            'value': "DOCKER|" + imageName
+        if(isLinuxApp) {
+            appSettingsNewProperties.linuxFxVersion = {
+                'value': "DOCKER|" + imageName
+            }
+        }
+        else {
+            appSettingsNewProperties.windowsFxVersion = {
+                'value': "DOCKER|" + imageName
+            }
         }
 
-        appSettingsNewProperties.linuxFxVersion = {
-            'value': "DOCKER|" + imageName
-        }
-
-        tl.debug(`CONATINER UPDATE CONFIG VALUES : ${appSettingsNewProperties}`);
+        tl.debug(`CONATINER UPDATE CONFIG VALUES : ${JSON.stringify(appSettingsNewProperties)}`);
         await this._appServiceUtility.updateConfigurationSettings(appSettingsNewProperties);
     }
 

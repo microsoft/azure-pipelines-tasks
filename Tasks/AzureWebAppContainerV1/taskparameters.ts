@@ -32,4 +32,5 @@ export interface TaskParameters {
     ResourceGroupName?: string;
     DeployToSlotOrASEFlag?: boolean;
     SlotName?: string;
+    isLinuxContainerApp?: boolean;
 }

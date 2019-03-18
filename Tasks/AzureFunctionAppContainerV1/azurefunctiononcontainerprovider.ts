@@ -10,6 +10,7 @@ import tl = require('vsts-task-lib/task');
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
 import { ContainerBasedDeploymentUtility } from 'azurermdeploycommon/operations/ContainerBasedDeploymentUtility';
 const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE false';
+const linuxAppKindSubstring: string = "linux";
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility';
 
 export class AzureFunctionOnContainerDeploymentProvider{
@@ -29,9 +30,16 @@ export class AzureFunctionOnContainerDeploymentProvider{
         this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppName));
         
-        if(!this.taskParams.ResourceGroupName){
-            var appDetails = await AzureResourceFilterUtility.getAppDetails(this.azureEndpoint, this.taskParams.WebAppName);
+        if(!this.taskParams.DeployToSlotOrASEFlag) {
+            let appDetails = await AzureResourceFilterUtility.getAppDetails(this.azureEndpoint, this.taskParams.WebAppName);
             this.taskParams.ResourceGroupName = appDetails["resourceGroupName"];
+            let appKind: string = appDetails["kind"];
+            this.taskParams.isLinuxContainerApp = appKind.indexOf(linuxAppKindSubstring) != -1;
+        }
+        else {
+            let appDetails = await this.appService.get();
+            let appKind: string = appDetails["kind"];
+            this.taskParams.isLinuxContainerApp = appKind.indexOf(linuxAppKindSubstring) != -1;
         }
 
         this.appService = new AzureAppService(this.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, this.taskParams.SlotName);
@@ -40,6 +48,7 @@ export class AzureFunctionOnContainerDeploymentProvider{
         this.kuduService = await this.appServiceUtility.getKuduService();
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
         tl.debug(`Resource Group: ${this.taskParams.ResourceGroupName}`);
+        tl.debug(`is Linux container web app: ${this.taskParams.isLinuxContainerApp}`);
     }
 
     public async DeployWebAppStep() {
