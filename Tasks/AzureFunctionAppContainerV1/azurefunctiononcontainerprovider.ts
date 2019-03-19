@@ -30,7 +30,7 @@ export class AzureFunctionOnContainerDeploymentProvider{
         this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppName));
         
-        if(!this.taskParams.DeployToSlotOrASEFlag) {
+        if(!this.taskParams.ResourceGroupName) {
             let appDetails = await AzureResourceFilterUtility.getAppDetails(this.azureEndpoint, this.taskParams.WebAppName);
             this.taskParams.ResourceGroupName = appDetails["resourceGroupName"];
             let appKind: string = appDetails["kind"];
