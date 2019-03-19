@@ -189,6 +189,64 @@ class azureclitask {
   }
 }
 
+class imagevalidationtask {
+  static async runMain(deploymentJson) {
+    var executionError = null;
+    try {
+      let modules = deploymentJson.modulesContent.$edgeAgent["properties.desired"].modules;
+      if (modules) {
+        let hostRegex = /^(?:http[s]?:\/\/)?([^/?#]*)/; //https://tools.ietf.org/html/rfc3986#appendix-B, modified to capture host name of image
+        Object.keys(modules).forEach((key: string) => {
+          let module = modules[key];
+          let image = module.settings.image as string;
+          let hostNamecy = image.match(hostRegex);
+          if (hostNamecy) {
+            tl.execSync("docker", `logout ${hostNamecy[1]}`);
+          }
+        });
+      } else {
+        return; // There's no custom module
+      }
+
+      let credentials = deploymentJson.modulesContent.$edgeAgent["properties.desired"].runtime.settings.registryCredentials;
+      if (credentials) {
+        Object.keys(credentials).forEach((key: string) => {
+          let credential = credentials[key];
+          tl.execSync("docker", `logout ${credential.address}`, Constants.execSyncSilentOption);
+          let loginResult = tl.execSync("docker", `login ${credential.address} -u ${credential.username} -p ${credential.password}`, Constants.execSyncSilentOption);
+          if (loginResult.code != 0) {
+            throw new Error(`Failed to login ${credential.address} with given credential. ${loginResult.stderr}`);
+          }
+        });
+      }
+
+      tl.setTaskVariable("DOCKER_CLI_EXPERIMENTAL", "enabled");
+      Object.keys(modules).forEach((key: string) => {
+        let module = modules[key];
+        let image = module.settings.image;
+        let manifestResult = tl.execSync("docker", `manifest inspect ${image}`, Constants.execSyncSilentOption);
+        if (manifestResult.code != 0) {
+          throw new Error(`${image} does not exist or the credential is not set correctly. Error: ${manifestResult.stderr}`);
+        }
+      });
+    }
+    catch (err) {
+      if (err.stderr) {
+        executionError = err.stderr;
+      }
+      else {
+        executionError = err;
+      }
+    }
+    finally {
+      //set the task result to either succeeded or failed based on error was thrown or not
+      if (executionError) {
+        throw new Error(executionError);
+      }
+    }
+  }
+}
+
 export async function run(telemetryEvent: TelemetryEvent) {
   let inBuildPipeline: boolean = util.checkSelfInBuildPipeline();
   console.log(tl.loc('DeployTaskRunningInBuild', inBuildPipeline));
@@ -225,5 +283,6 @@ export async function run(telemetryEvent: TelemetryEvent) {
   if (!azureclitask.checkIfAzurePythonSdkIsInstalled()) {
     throw new Error(tl.loc('AzureSdkNotFound'));
   }
+  await imagevalidationtask.runMain(deploymentJson);
   await azureclitask.runMain(deploymentJson, telemetryEvent);
 }
