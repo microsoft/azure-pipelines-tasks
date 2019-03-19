@@ -24,7 +24,6 @@ export interface TestReportingSettings {
     TestRunTitle : string;
     TestResultsDirectory : string;
     TestRunSystem : string;
-    TestSourceSettings : TestSourceSettings;
 }
 
 export interface TestSelectionSettings {
@@ -101,10 +100,6 @@ export interface ExecutionSettings {
     TempFolder : string;
     VideoDataCollectorEnabled : boolean;
     DiagnosticsSettings : DiagnosticsSettings;
-}
-
-export interface TestSourceSettings {
-    PullRequestTargetBranchName : string;
 }
 
 export interface DiagnosticsSettings {
