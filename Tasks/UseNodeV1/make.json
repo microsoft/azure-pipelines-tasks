@@ -1,4 +1,11 @@
 {
+  "common": [
+    {
+        "module": "../Common/packaging-common",
+        "type": "node",
+        "compile": true
+    }
+  ],
   "externals": {
     "archivePackages": [
       {

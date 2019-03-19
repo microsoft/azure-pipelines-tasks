@@ -2,6 +2,18 @@ import assert = require('assert');
 import path = require('path');
 import * as ttm from 'vsts-task-lib/mock-test';
 
+function runValidations(validator: () => void, tr, done) {
+    try {
+        validator();
+        done();
+    }
+    catch (error) {
+        console.log("STDERR", tr.stderr);
+        console.log("STDOUT", tr.stdout);
+        done(error);
+    }
+}
+
 describe('NodeTool Suite', function () {
     this.timeout(60000);
 
@@ -13,10 +25,10 @@ describe('NodeTool Suite', function () {
 
         tr.run();
 
-        assert(tr.succeeded, 'NodeTool should have succeeded.');
-        assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
-
-        done();
+        runValidations(() => {
+            assert(tr.succeeded, 'NodeTool should have succeeded.');
+            assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+        }, tr, done);
     });
 
     it('Succeeds when the second download is available', (done: MochaDone) => {
@@ -27,10 +39,10 @@ describe('NodeTool Suite', function () {
 
         tr.run();
 
-        assert(tr.succeeded, 'NodeTool should have succeeded.');
-        assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
-
-        done();
+        runValidations(() => {
+            assert(tr.succeeded, 'NodeTool should have succeeded.');
+            assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+        }, tr, done);
     });
 
     it('Succeeds when the third download is available', (done: MochaDone) => {
@@ -41,10 +53,10 @@ describe('NodeTool Suite', function () {
 
         tr.run();
 
-        assert(tr.succeeded, 'NodeTool should have succeeded.');
-        assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
-
-        done();
+        runValidations(() => {
+            assert(tr.succeeded, 'NodeTool should have succeeded.');
+            assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+        }, tr, done);
     });
 
 });

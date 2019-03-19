@@ -3,7 +3,7 @@ import tmrm = require('vsts-task-lib/mock-run');
 import os = require('os');
 import path = require('path');
 
-let taskPath = path.join(__dirname, '..', 'nodetool.js');
+let taskPath = path.join(__dirname, '..', 'usenode.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('versionSpec', '5.10.1');

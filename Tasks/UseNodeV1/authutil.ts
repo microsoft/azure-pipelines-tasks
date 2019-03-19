@@ -1,9 +1,10 @@
 import * as taskLib from 'vsts-task-lib/task';
-import { NpmRegistry } from 'packaging-common/npm/npmregistry';}
+import * as locationUtil from 'packaging-common/locationUtilities';
+import { NormalizeRegistry } from 'packaging-common/npm/npmrcparser';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
-import * as pkgLocationUtils from 'packaging-common/locationUtilities';
+import * as url from 'url';
 
 function setNpmrc(registryUrl: string, registryToken: string, authFile?: string) {
     let projectNpmrc: string = path.resolve(process.cwd(), '.npmrc');
@@ -28,9 +29,9 @@ function setNpmrc(registryUrl: string, registryToken: string, authFile?: string)
 }
 
 export async function setAuth(auth: string, authFile?: string) {
-    let packagingLocation: pkgLocationUtils.PackagingLocation;
+    let packagingLocation: locationUtil.PackagingLocation;
     try {
-        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
+        packagingLocation = await locationUtil.getPackagingUris(locationUtil.ProtocolType.Npm);
     } catch (error) {
         taskLib.debug('Unable to get packaging URIs, using default collection URI');
         taskLib.debug(JSON.stringify(error));
@@ -40,6 +41,18 @@ export async function setAuth(auth: string, authFile?: string) {
             DefaultPackagingUri: collectionUrl
         };
     }
-    const registry = await NpmRegistry.FromFeedId(packagingLocation.DefaultPackagingUri, auth);
-    setNpmrc(registry.url, registry.auth, authFile);
+    const uri = NormalizeRegistry(await locationUtil.getFeedRegistryUrl(packagingLocation.DefaultPackagingUri, locationUtil.RegistryType.npm, auth, null, null));
+
+    // Nerf url
+    let parsed = url.parse(uri);
+    delete parsed.protocol;
+    delete parsed.auth;
+    delete parsed.query;
+    delete parsed.search;
+    delete parsed.hash;
+    const nerfed = url.resolve(url.format(parsed), '.');
+
+    const token = locationUtil.getSystemAccessToken();
+
+    setNpmrc(nerfed, token, authFile);
 }

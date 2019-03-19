@@ -12,11 +12,6 @@ import * as taskLib from 'vsts-task-lib/task';
 import * as installer from './installer';
 import * as authutil from './authutil';
 import * as proxyutil from './proxyutil';
-import * as restm from 'typed-rest-client/RestClient';
-import * as url from 'url';
-//import * as os from 'os';
-//import * as path from 'path';
-import * as qs from 'querystring'
 
 async function run() {
     try {
@@ -36,29 +31,6 @@ async function run() {
         if (proxyCfg) {
             proxyutil.setCurlProxySettings(proxyCfg);
         }
-        //
-        // Setup node / npm proxy variables from the agent proxy config
-        //
-        // let proxyCfg: taskLib.ProxyConfiguration = taskLib.getHttpProxyConfiguration();
-        // if (proxyCfg) {
-        //     if (proxyCfg && proxyCfg.proxyUrl) {
-        //         taskLib.debug(`using proxy ${proxyCfg.proxyUrl}`);
-        //         const parsedUrl = url.parse(proxyCfg.proxyUrl);
-        //         const httpEnvVarName: string = parsedUrl.protocol === 'https:'? "HTTPS_PROXY" : "HTTP_PROXY";
-
-        //         let proxyUrl = new URL(proxyCfg.proxyUrl);
-        //         proxyUrl.username = proxyCfg.proxyUsername;
-        //         proxyUrl.password = proxyCfg.proxyPassword;
-
-        //         // register the escaped versions of password
-        //         if (proxyCfg.proxyPassword) {
-        //             taskLib.setSecret(qs.escape(proxyCfg.proxyPassword))
-        //         }
-                
-        //         // set the variable available for the rest of the job
-        //         taskLib.setVariable(httpEnvVarName, url.toString());
-        //     }
-        // }
 
         const auth = taskLib.getInput('auth', false);
         if (auth) {

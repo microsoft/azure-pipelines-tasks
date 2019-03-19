@@ -43,7 +43,7 @@
   ],
   "execution": {
     "Node10": {
-      "target": "usetool.js",
+      "target": "usenode.js",
       "argumentFormat": ""
     }
   },
