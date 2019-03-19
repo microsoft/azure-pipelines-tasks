@@ -1,5 +1,6 @@
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
+import taskLib = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import os = require('os');
 import auth = require('packaging-common/nuget/Authentication');
@@ -16,9 +17,6 @@ if (process.env["__auth__"]) {
 tr.setInput("nuGetFeedType", process.env["__nuGetFeedType__"] || 'internal');
 
 process.env["AGENT_TOOLSDIRECTORY"] = "/agent/_tools";
-process.env["AGENT_PROXYURL"] = "https://proxy.com";
-process.env["AGENT_PROXYUSERNAME"] = "username";
-process.env["AGENT_PROXYPASSWORD"] = "password";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exec": {
@@ -108,6 +106,15 @@ tr.registerMock('packaging-common/locationUtilities', {
         return 'accessToken';
     }
 });
+
+if (process.env["__proxy__"]) {
+    const tl = require('azure-pipelines-task-lib/mock-task');
+    const tlClone = Object.assign({}, tl);
+    tlClone.getHttpProxyConfiguration = function(requestUrl?: string): taskLib.ProxyConfiguration | null {
+        return { proxyUrl: 'https://proxy.com', proxyUsername: 'username', proxyPassword: 'password', proxyBypassHosts: null};
+    }
+    tr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
+}
 
 process.env["MOCK_NORMALIZE_SLASHES"] = "true";
 tr.setAnswers(a);
