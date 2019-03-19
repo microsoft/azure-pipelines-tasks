@@ -52,8 +52,16 @@ function pypyNotFoundError(majorVersion: 2 | 3) {
 // For example, PyPy 7.0 contains Python 2.7, 3.5, and 3.6-alpha.
 // We only care about the Python version, so we don't use the PyPy version for the tool cache.
 
-function usePypy(majorVersion: 2 | 3, addToPath: boolean, platform: Platform): void {
-    const installDir: string | null = tool.findLocalTool('PyPy', majorVersion.toString(), 'x64');
+function usePyPy(majorVersion: 2 | 3, parameters: TaskParameters, platform: Platform): void {
+    const findPyPy = tool.findLocalTool.bind(undefined, 'PyPy', majorVersion.toString());
+    let installDir: string | null = findPyPy(parameters.architecture);
+
+    if (!installDir && platform === Platform.Windows) {
+        // PyPy only precompiles binaries for x86, but the architecture parameter defaults to x64.
+        // On Hosted VS2017, we only install an x86 version.
+        // Fall back to x86.
+        installDir = findPyPy('x86');
+    }
 
     if (!installDir) {
         // PyPy not installed in $(Agent.ToolsDirectory)
@@ -64,7 +72,7 @@ function usePypy(majorVersion: 2 | 3, addToPath: boolean, platform: Platform): v
     const _binDir = binDir(installDir, platform);
     task.setVariable('pythonLocation', _binDir); 
 
-    if (addToPath) {
+    if (parameters.addToPath) {
         toolUtil.prependPathSafe(_binDir);
     }
 }
@@ -118,9 +126,9 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
 export async function usePythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
     switch (parameters.versionSpec.toUpperCase()) {
         case 'PYPY2':
-            return usePypy(2, parameters.addToPath, platform);
+            return usePyPy(2, parameters, platform);
         case 'PYPY3':
-            return usePypy(3, parameters.addToPath, platform);
+            return usePyPy(3, parameters, platform);
         default:
             return await useCpythonVersion(parameters, platform);
     }
