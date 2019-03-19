@@ -78,9 +78,14 @@ describe('UsePythonVersion L0 Suite', function () {
 
         testRunner.run();
 
-        const pypyBinDir = path.join('/', 'PyPy', '2.7.9', 'x64', 'bin');
+        const pypyDir = path.join('/', 'PyPy', '2.7.9', 'x64');
+        const pypyBinDir = path.join(pypyDir, 'bin');
+        const pythonLocation = task.getPlatform() === task.Platform.Windows
+            ? pypyDir
+            : pypyBinDir;
 
-        assert(didSetVariable(testRunner, 'pythonLocation', pypyBinDir));
+        assert(didSetVariable(testRunner, 'pythonLocation', pythonLocation));
+        assert(didPrependPath(testRunner, pypyDir));
         assert(didPrependPath(testRunner, pypyBinDir));
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
@@ -92,9 +97,14 @@ describe('UsePythonVersion L0 Suite', function () {
 
         testRunner.run();
 
-        const pypyBinDir = path.join('/', 'PyPy', '3.5.2', 'x64', 'bin');
+        const pypyDir = path.join('/', 'PyPy', '3.5.2', 'x64');
+        const pypyBinDir = path.join(pypyDir, 'bin');
+        const pythonLocation = task.getPlatform() === task.Platform.Windows
+            ? pypyDir
+            : pypyBinDir;
 
-        assert(didSetVariable(testRunner, 'pythonLocation', pypyBinDir));
+        assert(didSetVariable(testRunner, 'pythonLocation', pythonLocation));
+        assert(didPrependPath(testRunner, pypyDir));
         assert(didPrependPath(testRunner, pypyBinDir));
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
