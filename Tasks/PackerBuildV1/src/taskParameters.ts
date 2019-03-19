@@ -42,8 +42,8 @@ export default class TaskParameters {
     constructor() {
         try {
             this.templateType = tl.getInput(constants.TemplateTypeInputName, true);
-            
-            if(this.templateType === constants.TemplateTypeCustom) {
+
+            if (this.templateType === constants.TemplateTypeCustom) {
                 this.customTemplateLocation = tl.getPathInput(constants.CustomTemplateLocationInputType, true, true);
                 console.log(tl.loc("ParsingCustomTemplateParameters"));
                 this.customTemplateParameters = JSON.parse(tl.getInput("customTemplateParameters"));
@@ -54,18 +54,19 @@ export default class TaskParameters {
                 this.location = tl.getInput(constants.LocationInputName, true);
                 this.isManagedImage = tl.getBoolInput(constants.ManagedImageInputName, false);
 
-                if(this.isManagedImage)
-                {
+                if (this.isManagedImage) {
                     this.managedImageName = tl.getInput(constants.ManagedImageNameInputName, true);
                 }
 
                 this.baseImageSource = tl.getInput(constants.BaseImageSourceInputName, true);
-                if(this.baseImageSource === constants.BaseImageSourceCustomVhd) {
-                    this.customBaseImageUrl = tl.getInput(constants.CustomImageUrlInputName, true);
-                    this.osType = tl.getInput(constants.CustomImageOsTypeInputName, true);
-                } else {
+                if (this.baseImageSource === constants.BaseImageSourceDefault) {
                     this.builtinBaseImage = tl.getInput(constants.BuiltinBaseImageInputName, true);
                     this._extractImageDetails();
+                } else if (this.isManagedImage) {
+                    throw (tl.loc("CreateManagedImageNotSupportedForVHDSource"));
+                } else {
+                    this.customBaseImageUrl = tl.getInput(constants.CustomImageUrlInputName, true);
+                    this.osType = tl.getInput(constants.CustomImageOsTypeInputName, true);
                 }
 
                 console.log(tl.loc("ResolvingDeployPackageInput"));
@@ -105,7 +106,7 @@ export default class TaskParameters {
 
     private _getResolvedPath(rootFolder: string, inputPath: string) {
         var matchingFiles = utils.findMatch(rootFolder, inputPath);
-        if(!utils.HasItems(matchingFiles)) {
+        if (!utils.HasItems(matchingFiles)) {
             throw tl.loc("ResolvedPathNotFound", inputPath, rootFolder);
         }
 
@@ -113,10 +114,10 @@ export default class TaskParameters {
     }
 
     private _normalizeRelativePathForTargetOS(inputPath: string) {
-        if(tl.osType().match(/^Win/) && !this.osType.toLowerCase().match(/^win/)) {
+        if (tl.osType().match(/^Win/) && !this.osType.toLowerCase().match(/^win/)) {
             var splitPath = inputPath.split(path.sep);
             return path.posix.join.apply(null, splitPath);
-        } else if(!tl.osType().match(/^Win/) && this.osType.toLocaleLowerCase().match(/^win/)) {
+        } else if (!tl.osType().match(/^Win/) && this.osType.toLocaleLowerCase().match(/^win/)) {
             var splitPath = inputPath.split(path.sep);
             return path.win32.join.apply(null, splitPath);
         }

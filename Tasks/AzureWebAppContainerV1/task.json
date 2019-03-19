@@ -309,6 +309,12 @@
         "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
         "JarPathNotPresent": "Java jar path is not present",
         "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
-        "InvalidDockerImageName": "Invalid Docker hub image name provided."
+        "InvalidDockerImageName": "Invalid Docker hub image name provided.",
+        "RestartingAppService": "Restarting App Service : %s",
+        "RestartingAppServiceSlot": "Restarting App Service: %s-%s",
+        "RestartedAppService": "App Service '%s' restarted successfully.",
+        "RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
+        "FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
+        "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s"
     }
 }

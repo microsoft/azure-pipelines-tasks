@@ -21,6 +21,9 @@ steps:
   inputs:
     versionSpec: "8.x"
 
+- script: npm i -g npm@6.9.0
+  displayName: Use npm version 6.9.0
+
 # npm install
 - script: npm install
   displayName: npm install
@@ -61,30 +64,6 @@ steps:
 - script: node make.js testLegacy --task "$(task_pattern)"
   displayName: Legacy tests with node 6
   condition: ne(variables['numTasks'], 0)
-
-# Publish test results
-- task: PublishTestResults@2
-  displayName: Publish Test Results test-*.xml
-  condition: ne(variables['numTasks'], 0)
-  inputs:
-    testResultsFiles: 'test-*.xml'
-    testRunTitle: 'Node 6 Test Results'
-    searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
-
-# Test with node 5
-- script: node make.js test --node 5 --runner ts
-  displayName: Test with node 5
-  condition: ne(variables['numTasks'], 0)
-- script: node make.js testLegacy --node 5 --runner ts --task "$(task_pattern)"
-  displayName: Legacy tests with node 5
-  condition: ne(variables['numTasks'], 0)
-- task: PublishTestResults@2
-  displayName: Publish Test Results test-*.xml
-  condition: ne(variables['numTasks'], 0)
-  inputs:
-    testResultsFiles: 'test-*.xml'
-    testRunTitle: 'Node 5 Test Results'
-    searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
 
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:

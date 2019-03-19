@@ -14,6 +14,7 @@ export class DeleteAction2L0Tests {
         tr.setInput(Inputs.gitHubConnection, "connection");
         tr.setInput(Inputs.repositoryName, "repo");
         tr.setInput(Inputs.action, "Delete");
+        tr.setInput(Inputs.tag, "tag");
 
         // Stub methods
         this.stub();

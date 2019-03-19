@@ -9,6 +9,7 @@ import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/Azure
 import tl = require('vsts-task-lib/task');
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
 import { ContainerBasedDeploymentUtility } from 'azurermdeploycommon/operations/ContainerBasedDeploymentUtility';
+import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility';
 
 export class AzureRmWebAppDeploymentProvider{
     protected taskParams:TaskParameters;
@@ -46,6 +47,11 @@ export class AzureRmWebAppDeploymentProvider{
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
         await containerDeploymentUtility.deployWebAppImage(this.taskParams);
         
+        if(this.taskParams.AppSettings) {
+            var customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
+            await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
+        }
+
         await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
     }
 
