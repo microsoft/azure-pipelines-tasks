@@ -1,6 +1,7 @@
 import * as taskLib from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as restm from 'typed-rest-client/RestClient';
+import { IRequestOptions } from "typed-rest-client/Interfaces";
 import * as os from 'os';
 import * as path from 'path';
 
@@ -103,7 +104,16 @@ async function queryLatestMatch(versionSpec: string): Promise<string> {
 
     let versions: string[] = [];
     let dataUrl = "https://nodejs.org/dist/index.json";
-    let rest: restm.RestClient = new restm.RestClient('vsts-node-tool');
+
+    const proxy = taskLib.getHttpProxyConfiguration();
+    const cert = taskLib.getHttpCertConfiguration()
+
+    const requestOptions: IRequestOptions = { };
+
+    if (proxy) { requestOptions.proxy = proxy }
+    if (cert) { requestOptions.cert = cert }
+
+    let rest: restm.RestClient = new restm.RestClient('vsts-node-tool', null, null, requestOptions);
     let nodeVersions: INodeVersion[] = (await rest.get<INodeVersion[]>(dataUrl)).result;
     nodeVersions.forEach((nodeVersion:INodeVersion) => {
         // ensure this version supports your os and platform
