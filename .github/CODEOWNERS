@@ -111,6 +111,8 @@ Tasks/DotNetCoreCLIV2/*     @sachinma
 
 Tasks/DotNetCoreInstallerV0/*   @sachinma
 
+Tasks/DotNetCoreInstallerV1/*   @sachinma
+
 Tasks/DownloadBuildArtifactsV0/*    @Lovakumar      @omeshp
 
 Tasks/DownloadFileshareArtifactsV0/*    @Lovakumar      @omeshp
