@@ -1,13 +1,12 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
+import taskLib = require('azure-pipelines-task-lib/task');
+import fs = require('fs');
 import os = require('os');
 import path = require('path');
 
 let taskPath = path.join(__dirname, '..', 'usenode.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
-
-tmr.setInput('versionSpec', '11.3.0');
-tmr.setInput('checkLatest', 'false');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "assertAgent": {
@@ -17,8 +16,21 @@ tmr.setAnswers(a);
 
 
 //Create assertAgent and getVariable mocks
-const tl = require('vsts-task-lib/mock-task');
+const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
+tlClone.getInput = function (inputName: string, required?: boolean) {
+    inputName = inputName.toLowerCase();
+    if (inputName === 'version') {
+        return '11.3.0';
+    }
+    if (inputName === 'checkLatest') {
+        return 'false';
+    }
+    if (inputName === 'auth' && process.env["__auth__"]) {
+        return process.env["__auth__"];
+    }
+    return tl.getInput(inputName, required);
+}
 tlClone.getVariable = function(variable: string) {
     if (variable.toLowerCase() == 'agent.tempdirectory') {
         return 'temp';
@@ -28,7 +40,13 @@ tlClone.getVariable = function(variable: string) {
 tlClone.assertAgent = function(variable: string) {
     return;
 };
-tmr.registerMock('vsts-task-lib/mock-task', tlClone);
+tlClone.setSecret = taskLib.setSecret;
+if (process.env["__proxy__"]) {
+    tlClone.getHttpProxyConfiguration = function(requestUrl?: string): taskLib.ProxyConfiguration | null {
+        return { proxyUrl: 'http://url.com', proxyUsername: 'username', proxyPassword: 'password', proxyBypassHosts: null};
+    }
+}
+tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 //Create tool-lib mock
 tmr.registerMock('vsts-task-tool-lib/tool', {
@@ -78,5 +96,46 @@ tmr.registerMock('vsts-task-tool-lib/tool', {
         return;
     }
 });
+
+tmr.registerMock('packaging-common/npm/npmrcparser', {
+    NormalizeRegistry: function(registry: string) {
+        if (registry === 'registryUrl') {
+            return 'https://npmregistry.com';
+            // should nerf to //npmregistry.com/
+        }
+    }
+});
+
+tmr.registerMock('packaging-common/locationUtilities', {
+    ProtocolType: {Npm: 0},
+    RegistryType: {npm: 0},
+    getPackagingUris: async function(type: number) {
+        if (type === 0) {
+            return {PackagingUris: ['defaultUri'], DefaultPackagingUri: 'defaultUri'}
+        }
+        return null;
+    },
+    getFeedRegistryUrl: async function(defaultUri: string, registryType: number, auth: string, accessToken?: string, useSession?: boolean) {
+        if (defaultUri === 'defaultUri' && registryType === 0 && auth === 'auth') {
+            return 'registryUrl';
+        }
+    },
+    getSystemAccessToken: function() {
+        return 'accessToken';
+    }
+});
+
+const fsClone = fs;
+fsClone.existsSync = function(pathToFile: string): boolean {
+    if (pathToFile !== path.resolve(process.cwd(), '.npmrc')) {
+        throw 'Incorrect path ' + pathToFile
+    }
+    return false;
+};
+fsClone.writeFileSync = function(path: string, data: any, options: fs.WriteFileOptions) {
+    console.log('Writing file to path', path);
+    console.log(data);
+};
+tmr.registerMock('fs', fsClone);
 
 tmr.run();

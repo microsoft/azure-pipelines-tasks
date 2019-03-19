@@ -1,4 +1,4 @@
-import * as taskLib from 'vsts-task-lib/task';
+import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as qs from 'querystring';
 import * as url from 'url';
 
@@ -14,14 +14,17 @@ function toCurlProxy(proxyCfg: taskLib.ProxyConfiguration): ICurlProxy {
             taskLib.debug(`using proxy ${proxyCfg.proxyUrl}`);
             const parsedUrl = url.parse(proxyCfg.proxyUrl);
             const httpEnvVarName: string = parsedUrl.protocol === 'https:'? "https_proxy" : "http_proxy";
+            taskLib.debug(`using proxy2 ${proxyCfg.proxyUrl}`);
 
             let proxyUrl = new URL(proxyCfg.proxyUrl);
             proxyUrl.username = proxyCfg.proxyUsername;
             proxyUrl.password = proxyCfg.proxyPassword;
+            taskLib.debug(`using proxy3 ${proxyCfg.proxyUrl}`);
             
             curlProxy = <ICurlProxy>{};
             curlProxy.variable = httpEnvVarName;
             curlProxy.setting = url.toString();
+            taskLib.debug(`using proxy4 ${proxyCfg.proxyUrl}`);
         }
     } 
     

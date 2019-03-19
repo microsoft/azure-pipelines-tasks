@@ -7,7 +7,7 @@
 // https://github.com/Microsoft/azure-pipelines-yaml/blob/master/design/use-statement.md
 //
 
-import * as taskLib from 'vsts-task-lib/task';
+import * as taskLib from 'azure-pipelines-task-lib/task';
 //import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as installer from './installer';
 import * as authutil from './authutil';

@@ -1,4 +1,4 @@
-import * as taskLib from 'vsts-task-lib/task';
+import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as locationUtil from 'packaging-common/locationUtilities';
 import { NormalizeRegistry } from 'packaging-common/npm/npmrcparser';
 import * as path from 'path';
@@ -29,22 +29,18 @@ function setNpmrc(registryUrl: string, registryToken: string, authFile?: string)
 }
 
 export async function setAuth(auth: string, authFile?: string) {
-    let packagingLocation: locationUtil.PackagingLocation;
+    let defaultUri: string;
     try {
-        packagingLocation = await locationUtil.getPackagingUris(locationUtil.ProtocolType.Npm);
+        defaultUri = (await locationUtil.getPackagingUris(locationUtil.ProtocolType.Npm)).DefaultPackagingUri;
     } catch (error) {
         taskLib.debug('Unable to get packaging URIs, using default collection URI');
         taskLib.debug(JSON.stringify(error));
-        const collectionUrl = taskLib.getVariable('System.TeamFoundationCollectionUri');
-        packagingLocation = {
-            PackagingUris: [collectionUrl],
-            DefaultPackagingUri: collectionUrl
-        };
+        defaultUri = taskLib.getVariable('System.TeamFoundationCollectionUri');
     }
-    const uri = NormalizeRegistry(await locationUtil.getFeedRegistryUrl(packagingLocation.DefaultPackagingUri, locationUtil.RegistryType.npm, auth, null, null));
+    const registryUrl = NormalizeRegistry(await locationUtil.getFeedRegistryUrl(defaultUri, locationUtil.RegistryType.npm, auth));
 
     // Nerf url
-    let parsed = url.parse(uri);
+    let parsed = url.parse(registryUrl);
     delete parsed.protocol;
     delete parsed.auth;
     delete parsed.query;
