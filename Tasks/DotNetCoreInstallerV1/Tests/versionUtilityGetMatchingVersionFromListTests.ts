@@ -11,14 +11,14 @@ if (process.env["__empty__"] == "true") {
     }
 
     // version info list with version field empty
-    if (versionutilities.getMatchingVersionFromList([new VersionInfo()], "2.1") != null) {
+    if (versionutilities.getMatchingVersionFromList([new VersionInfo(JSON.parse("{}"))], "2.1") != null) {
         throw "";
     }
 
     // form the version info list with preview versions as well
     let versionInfoList: VersionInfo[] = [];
     ["3.0.100", "3.1.0-preview-850", ""].forEach((version) => {
-        var temp = new VersionInfo();
+        var temp = new VersionInfo(JSON.parse(`{"version": "${version}"}`));
         temp.version = version;
         versionInfoList.push(temp);
     });
@@ -50,7 +50,7 @@ else {
     // form the version info list with preview versions as well
     let versionInfoList: VersionInfo[] = [];
     ["3.0.100", "3.0.200-preview-850", "3.1.100", "3.1.101-preview-850", ""].forEach((version) => {
-        var temp = new VersionInfo();
+        var temp = new VersionInfo(JSON.parse(`{"version": "${version}"}`));
         temp.version = version;
         versionInfoList.push(temp);
     });

@@ -2,7 +2,7 @@
 import { VersionInfo } from "../models";
 import * as tl from 'vsts-task-lib/task';
 
-let versionInfo = new VersionInfo();
+let versionInfo = new VersionInfo(JSON.parse(`{"version":"", "files":""}`));
 if (versionInfo.getRuntimeVersion("") != "") {
     throw "";
 }

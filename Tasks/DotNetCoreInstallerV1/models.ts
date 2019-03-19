@@ -9,21 +9,18 @@ export class VersionInfo {
     public version: string;
     public files: VersionFilesData[];
 
+    constructor(versionInfoObject: any) {
+        this.version = versionInfoObject.version;
+        this.files = versionInfoObject.files;
+    }
+
     public getRuntimeVersion(packageType: string): string {
         if (packageType == utils.Constants.sdk) {
-            if (this["runtime-version"]) {
-                return this["runtime-version"];
-            }
-
-            tl.warning(tl.loc("runtimeVersionPropertyNotFound", packageType, this.version));
+            return this["runtime-version"] || "";
         }
         else {
-            if (this.version) {
-                return this.version;
-            }
+            return this.version || "";
         }
-
-        return "";
     }
 }
 
@@ -53,7 +50,7 @@ export class VersionParts {
         VersionParts.ValidateVersionSpec(version);
         let parts: string[] = version.split(".");
 
-        this.versionSpec = this.versionSpec;
+        this.versionSpec = version;
         this.majorVersion = parts[0];
         this.minorVersion = parts[1];
         this.patchVersion = "";

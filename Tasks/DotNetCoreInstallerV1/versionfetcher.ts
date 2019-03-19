@@ -149,7 +149,12 @@ export class DotNetCoreVersionFetcher {
                     let versionInfoList: VersionInfo[] = [];
                     channelReleases.forEach((release) => {
                         if (release && release[packageType] && release[packageType].version) {
-                            versionInfoList.push(release[packageType]);
+                            let versionInfo: VersionInfo = new VersionInfo(release[packageType]);
+                            if (release[packageType]["runtime-version"]) {
+                                versionInfo["runtime-version"] = release[packageType]["runtime-version"];
+                            }
+
+                            versionInfoList.push(versionInfo);
                         }
                     });
 

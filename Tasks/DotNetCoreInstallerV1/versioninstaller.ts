@@ -114,7 +114,7 @@ export class VersionInstaller {
             pathToVersionCompleteFile = path.join(this.installationPath, utils.Constants.relativeRuntimePath, `${runtimeVersion}.complete`);
             tl.writeFile(pathToVersionCompleteFile, `{ "version": "${runtimeVersion}" }`);
         }
-        else if (this.packageType == "runtime") {
+        else if (this.packageType == utils.Constants.runtime) {
             throw tl.loc("CannotFindRuntimeVersionForCompletingInstallation", this.packageType, versionInfo.version);
         }
     }
