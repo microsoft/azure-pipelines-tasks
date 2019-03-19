@@ -1,8 +1,11 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as trm from 'azure-pipelines-task-lib/toolrunner';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
+
 import { DotNetCoreReleaseFetcher } from "./releasesfetcher";
 import * as utilities from "./utilities";
+
+import * as os from 'os';
 import * as path from 'path';
 
 export class DotnetCoreInstaller {
