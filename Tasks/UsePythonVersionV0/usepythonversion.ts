@@ -68,11 +68,16 @@ function usePyPy(majorVersion: 2 | 3, parameters: TaskParameters, platform: Plat
         throw pypyNotFoundError(majorVersion);
     }
 
-    // For PyPy, the python executable is in the bin dir
-    const _binDir = binDir(installDir, platform);
-    task.setVariable('pythonLocation', _binDir); 
+    // For PyPy, Windows uses 'bin', not 'Scripts'.
+    const _binDir = path.join(installDir, 'bin');
+
+    // On Linux and macOS, the Python interpreter is in 'bin'.
+    // On Windows, it is in the installation root.
+    const pythonLocation = platform === Platform.Windows ? installDir : _binDir;
+    task.setVariable('pythonLocation', pythonLocation);
 
     if (parameters.addToPath) {
+        toolUtil.prependPathSafe(installDir);
         toolUtil.prependPathSafe(_binDir);
     }
 }
