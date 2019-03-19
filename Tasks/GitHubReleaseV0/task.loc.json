@@ -14,8 +14,8 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 149,
-    "Patch": 1
+    "Minor": 150,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -32,7 +32,7 @@
       "name": "repositoryName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.repositoryName",
-      "defaultValue": "",
+      "defaultValue": "$(Build.Repository.Name)",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.repositoryName",
       "properties": {
