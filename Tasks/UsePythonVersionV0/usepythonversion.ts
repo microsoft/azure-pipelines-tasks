@@ -68,9 +68,10 @@ function usePyPy(majorVersion: 2 | 3, parameters: TaskParameters, platform: Plat
         throw pypyNotFoundError(majorVersion);
     }
 
-    // For PyPy, the python executable is in the bin dir
-    const _binDir = binDir(installDir, platform);
-    task.setVariable('pythonLocation', _binDir); 
+    // For PyPy, the python executable is in the 'bin' directory, not the installation root.
+    // Also, Windows uses 'bin', not 'Scripts'.
+    const _binDir = path.join(installDir, 'bin');
+    task.setVariable('pythonLocation', _binDir);
 
     if (parameters.addToPath) {
         toolUtil.prependPathSafe(_binDir);
