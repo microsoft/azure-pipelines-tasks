@@ -106,9 +106,10 @@ async function queryLatestMatch(versionSpec: string): Promise<string> {
     let dataUrl = "https://nodejs.org/dist/index.json";
 
     const proxy = taskLib.getHttpProxyConfiguration();
-    const cert = taskLib.getHttpCertConfiguration()
+    const cert = taskLib.getHttpCertConfiguration();
+    const ignoreSslError = !!taskLib.getVariable('Agent.SkipCertValidation');
 
-    const requestOptions: IRequestOptions = { };
+    const requestOptions: IRequestOptions = { ignoreSslError: ignoreSslError };
 
     if (proxy) { requestOptions.proxy = proxy }
     if (cert) { requestOptions.cert = cert }
