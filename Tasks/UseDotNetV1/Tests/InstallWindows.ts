@@ -1,5 +1,6 @@
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
+import taskLib = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import os = require('os');
 import auth = require('packaging-common/nuget/Authentication');
