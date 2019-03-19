@@ -18,13 +18,9 @@ The tool installer approach also allows you to decouple from the agent update cy
 
 Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work.  You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.
 
-## Pre-requisites for the task
-
-The task can run on either Windows or Linux.
-
 ### Parameters of the task
 
-* **Package to install\*:** You can choose to install either runtime or full SDK.
+* **Package to install\*:** You can choose to install either runtime or SDK.
 
 
 * **Version\*:** Specify version of .NET Core SDK or runtime to install. It also allows you to always get the latest version in a minor or major version. See below for examples

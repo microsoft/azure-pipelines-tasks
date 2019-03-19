@@ -89,26 +89,6 @@ describe('DotNetCoreInstaller', function () {
         }, tr, done);
     });
 
-    it("[Models] ValidateVersionSpec should throw when version spec is not valid range or version", (done) => {
-        process.env["__invalid_versionspec__"] = "true";
-        let tr = new ttm.MockTestRunner(path.join(__dirname, "modelsValidateVersionSpecTests.js"));
-        tr.run();
-        runValidations(() => {
-            assert(tr.succeeded == false, ("Should have failed"));
-            assert(tr.stdout.indexOf("FunctionThrewAsExpected") > -1, "Should have thrown for all invalid version specs.");
-        }, tr, done);
-    });
-
-    it("[Models] ValidateVersionSpec should return true when version spec is range or version", (done) => {
-        process.env["__invalid_versionspec__"] = "false";
-        let tr = new ttm.MockTestRunner(path.join(__dirname, "modelsValidateVersionSpecTests.js"));
-        tr.run();
-        runValidations(() => {
-            assert(tr.succeeded == true, ("Should have passed"));
-            assert(tr.stdout.indexOf("VersionsValidatedSuccessfully") > -1, "Should have returned true for all valid versions specs.");
-        }, tr, done);
-    });
-
     it("[Models.VersionParts] constructor should throw when version fails validation", (done) => {
         process.env["__invalid_versionparts__"] = "true";
         let tr = new ttm.MockTestRunner(path.join(__dirname, "modelsVersionPartsTests.js"));

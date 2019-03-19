@@ -9,19 +9,17 @@ export class VersionInfo {
     public version: string;
     public files: VersionFilesData[];
 
-    public static getRuntimeVersion(versionInfo: VersionInfo, packageType: string): string {
-        if (versionInfo) {
-            if (packageType == utils.Constants.sdk) {
-                if (versionInfo["runtime-version"]) {
-                    return versionInfo["runtime-version"];
-                }
-
-                tl.warning(tl.loc("runtimeVersionPropertyNotFound", packageType, versionInfo.version));
+    public getRuntimeVersion(packageType: string): string {
+        if (packageType == utils.Constants.sdk) {
+            if (this["runtime-version"]) {
+                return this["runtime-version"];
             }
-            else {
-                if (versionInfo.version) {
-                    return versionInfo.version;
-                }
+
+            tl.warning(tl.loc("runtimeVersionPropertyNotFound", packageType, this.version));
+        }
+        else {
+            if (this.version) {
+                return this.version;
             }
         }
 
@@ -46,8 +44,8 @@ export class Channel {
         this.releasesJsonUrl = channelRelease["releases.json"];
     }
 
-    channelVersion: string;
-    releasesJsonUrl: string;
+    public channelVersion: string;
+    public releasesJsonUrl: string;
 }
 
 export class VersionParts {
@@ -55,6 +53,7 @@ export class VersionParts {
         VersionParts.ValidateVersionSpec(version);
         let parts: string[] = version.split(".");
 
+        this.versionSpec = this.versionSpec;
         this.majorVersion = parts[0];
         this.minorVersion = parts[1];
         this.patchVersion = "";
@@ -63,7 +62,7 @@ export class VersionParts {
         }
     }
 
-    public static ValidateVersionSpec(version): boolean {
+    private static ValidateVersionSpec(version): boolean {
         try {
             let parts = version.split('.');
             // validate version
@@ -79,7 +78,8 @@ export class VersionParts {
         }
     }
 
-    majorVersion: string;
-    minorVersion: string;
-    patchVersion: string;
+    public majorVersion: string;
+    public minorVersion: string;
+    public patchVersion: string;
+    public versionSpec: string;
 }

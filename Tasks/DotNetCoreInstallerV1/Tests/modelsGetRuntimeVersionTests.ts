@@ -2,61 +2,56 @@
 import { VersionInfo } from "../models";
 import * as tl from 'vsts-task-lib/task';
 
-
-if (VersionInfo.getRuntimeVersion(null, "") != "") {
-    throw "";
-}
-
-if (VersionInfo.getRuntimeVersion(null, "") != "") {
-    throw "";
-}
-
 let versionInfo = new VersionInfo();
+if (versionInfo.getRuntimeVersion("") != "") {
+    throw "";
+}
+
 versionInfo.version = "";
 
 if (process.env["__sdk_runtime__"] == "true") {
-    if (VersionInfo.getRuntimeVersion(versionInfo, "sdk") != "") {
+    if (versionInfo.getRuntimeVersion("sdk") != "") {
         throw "";
     }
 
     versionInfo.version = "2.2.100"
-    if (VersionInfo.getRuntimeVersion(versionInfo, "sdk") != "") {
+    if (versionInfo.getRuntimeVersion("sdk") != "") {
         throw "";
     }
 
     versionInfo.version = "2.2.104";
     versionInfo["runtime-version"] = "2.2.4";
-    if (VersionInfo.getRuntimeVersion(versionInfo, "sdk") != "2.2.4") {
+    if (versionInfo.getRuntimeVersion("sdk") != "2.2.4") {
         throw "";
     }
 
     versionInfo.version = "";
     versionInfo["runtime-version"] = "2.2.4";
-    if (VersionInfo.getRuntimeVersion(null, "") != "") {
+    if (versionInfo.getRuntimeVersion("") != "") {
         throw "";
     }
 
     console.log(tl.loc("RuntimeVersionsReturnedForSdkAreCorrect"));
 }
 else {
-    if (VersionInfo.getRuntimeVersion(versionInfo, "runtime") != "") {
+    if (versionInfo.getRuntimeVersion("runtime") != "") {
         throw "";
     }
 
     versionInfo.version = "2.2.100"
-    if (VersionInfo.getRuntimeVersion(versionInfo, "runtime") != "2.2.100") {
+    if (versionInfo.getRuntimeVersion("runtime") != "2.2.100") {
         throw "";
     }
 
     versionInfo.version = "2.2.104";
     versionInfo["runtime-version"] = "2.2.4";
-    if (VersionInfo.getRuntimeVersion(versionInfo, "runtime") != "2.2.104") {
+    if (versionInfo.getRuntimeVersion("runtime") != "2.2.104") {
         throw "";
     }
 
     versionInfo.version = "";
     versionInfo["runtime-version"] = "2.2.4";
-    if (VersionInfo.getRuntimeVersion(null, "") != "") {
+    if (versionInfo.getRuntimeVersion("") != "") {
         throw "";
     }
 

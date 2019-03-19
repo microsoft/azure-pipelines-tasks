@@ -17,12 +17,12 @@ async function run() {
     let includePreviewVersions: boolean = tl.getBoolInput('includePreviewVersions', false) || false;
 
     console.log(tl.loc("ToolToInstall", packageType, versionSpec));
-    VersionParts.ValidateVersionSpec(versionSpec);
+    var versionSpecParts = new VersionParts(versionSpec);
 
     let versionFetcher = new DotNetCoreVersionFetcher();
-    let versionInfo: VersionInfo = await versionFetcher.getVersionInfo(versionSpec, packageType, includePreviewVersions);
+    let versionInfo: VersionInfo = await versionFetcher.getVersionInfo(versionSpecParts.versionSpec, packageType, includePreviewVersions);
     if (!versionInfo) {
-        throw tl.loc("MatchingVersionNotFound", versionSpec);
+        throw tl.loc("MatchingVersionNotFound", versionSpecParts.versionSpec);
     }
 
     let dotNetCoreInstaller = new VersionInstaller(packageType, installationPath);

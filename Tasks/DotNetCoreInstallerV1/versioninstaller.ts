@@ -109,7 +109,7 @@ export class VersionInstaller {
             tl.writeFile(pathToVersionCompleteFile, `{ "version": "${sdkVersion}" }`);
         }
 
-        let runtimeVersion = VersionInfo.getRuntimeVersion(versionInfo, this.packageType);
+        let runtimeVersion = versionInfo.getRuntimeVersion(this.packageType);
         if (runtimeVersion) {
             pathToVersionCompleteFile = path.join(this.installationPath, utils.Constants.relativeRuntimePath, `${runtimeVersion}.complete`);
             tl.writeFile(pathToVersionCompleteFile, `{ "version": "${runtimeVersion}" }`);
