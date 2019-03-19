@@ -1,0 +1,100 @@
+{
+    "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
+    "name": "UseDotNet",
+    "friendlyName": "Used .NET Core",
+    "description": "Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Additionally provides basic auth.",
+    "category": "Tool",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "satisfies": [
+        "DotNetCore"
+    ],
+    "demands": [],
+    "ecosystem": ".NET Core",
+    "instanceNameFormat": "Use .NET Core",
+    "inputs": [
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "1.0.4",
+            "required": true,
+            "helpMarkDown": "Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0"
+        },
+        {
+            "name": "auth",
+            "type": "string",
+            "label": "Auth",
+            "required": false,
+            "helpMarkDown": "The authentication feed/service point to use"
+        },
+        {
+            "name": "proxy",
+            "type": "boolean",
+            "label": "Proxy",
+            "defaultValue": true,
+            "required": false,
+            "helpMarkDown": "Whether or not to set up the .Net ecosystem to use the agent's proxy"
+        },
+        {
+            "name": "nuGetFeedType",
+            "type": "pickList",
+            "label": "NuGet Feed Type",
+            "helpMarkDown": "The type of NugetFeed used in the auth field. Can either be an internal feed or external service connection",
+            "required": false,
+            "options": {
+                "internal": "internal",
+                "external": "external"
+            }
+        },
+        {
+            "name": "packageType",
+            "type": "pickList",
+            "label": "Package to install",
+            "defaultValue": "runtime",
+            "helpMarkDown": "Please select whether to install only runtime or full SDK.",
+            "required": false,
+            "options": {
+                "runtime": "Runtime",
+                "sdk": "SDK (contains runtime)"
+            }
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "usedotnet.js"
+        }
+    },
+    "messages": {
+        "ToolFailed": "Tool install failed: %s",
+        "ImplicitVersionNotSupported": "Version should be a valid and explicit version: %s",
+        "getMachinePlatformFailed": "Failed to get machine platform details. Error: %s.",
+        "getDownloadUrlsFailed": "Failed to get download urls. Error: %s.",
+        "UsingCachedTool": "Cached copy of .NET Core exists. No need to install afresh. Cached tool location: %s.",
+        "CheckingToolCache": "Checking if a cached copy exists for this version...",
+        "InstallingAfresh": "The cache does not contain the requested version of .NET Core. Downloading and installing it now.",
+        "GettingDownloadUrl": "Getting URL to download .NET Core %s version: %s.",
+        "CouldNotDetectPlatform": "Could not detect the machine's OS",
+        "NullDownloadUrls": "Could not construct download URL. Please ensure that specified version %s is valid.",
+        "DownloadingUrl": "Downloading .NET Core package from URL: %s",
+        "ExtractingPackage": "Extracting downloaded package %s.",
+        "CachingTool": "Caching this installed tool.",
+        "SuccessfullyInstalled": "Successfully installed .NET Core %s version %s.",
+        "ToolToInstall": "Tool to install: .NET Core %s version %s.",
+        "PrimaryPlatform": "Detected platform (Primary): %s",
+        "LegacyPlatform": "Detected platform (Legacy): %s",
+        "WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/dotnet/core/blob/master/release-notes/releases.json. Falling back to creating convention based URL.",
+        "CouldNotDownload": "Could not download installation package from this URL: %s Error: %s",
+        "FailedToDownloadPackage": "Failed to download package for installation",
+        "PrependGlobalToolPath": "Creating global tool path and pre-prending to PATH.",
+        "VersionsFileMalformed": "The specified version's download links are not correctly formed in the supported versions document => %s/"
+    }
+}
