@@ -69,10 +69,6 @@ mockery.registerMock('vsts-task-lib/task', {
     setResourcePath: function (path) { return; }
 });
 
-mockery.registerMock('vsts-task-lib/toolrunner', {
-
-})
-
 import { DotNetCoreVersionFetcher } from "../versionfetcher";
 import { VersionInfo } from '../models';
 

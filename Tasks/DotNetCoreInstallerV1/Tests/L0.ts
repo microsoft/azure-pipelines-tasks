@@ -228,7 +228,7 @@ describe('DotNetCoreInstaller', function () {
     it("[VersionFetcher.DotNetCoreVersionFetcher] getDownloadUrl should throw if VersionFilesData doesn't contain download URL", (done) => {
         process.env["__ostype__"] = "win";
         process.env["__getmachineosfail__"] = "false";
-        process.env["__versionInfo__"] = `{"version":"2.2.104", "files": [{"name":"winpackage.zip", "rid":"win-x64", "url": ""}]}`;
+        process.env["__versioninfo__"] = `{"version":"2.2.104", "files": [{"name":"winpackage.zip", "rid":"win-x64", "url": ""}]}`;
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetDownloadUrlFailTests.js"));
         tr.run();
         runValidations(() => {
@@ -240,7 +240,7 @@ describe('DotNetCoreInstaller', function () {
     it("[VersionFetcher.DotNetCoreVersionFetcher] getDownloadUrl should throw if download information object with RID matching OS, could not be found", (done) => {
         process.env["__ostype__"] = "win";
         process.env["__getmachineosfail__"] = "false";
-        process.env["__versionInfo__"] = `{"version":"2.2.104", "files": [{"name": "linux.tar.gz", "rid":"linux-x64", "url": ""}, {"name": "win.zip", "rid":"win-x86", "url": ""}]}`;
+        process.env["__versioninfo__"] = `{"version":"2.2.104", "files": [{"name": "linux.tar.gz", "rid":"linux-x64", "url": ""}, {"name": "win.zip", "rid":"win-x86", "url": ""}]}`;
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetDownloadUrlFailTests.js"));
         tr.run();
         runValidations(() => {
@@ -252,7 +252,7 @@ describe('DotNetCoreInstaller', function () {
     it("[VersionFetcher.DotNetCoreVersionFetcher] getDownloadUrl should throw if error encountered while detecting machine os", (done) => {
         process.env["__ostype__"] = "win";
         process.env["__getmachineosfail__"] = "true";
-        process.env["__versionInfo__"] = `{"version":"2.2.104", "files": [{"name": "linux.tar.gz", "rid":"linux-x64", "url": ""}, {"name":"winpackage.zip", "rid":"win-x86", "url": ""}]}`;
+        process.env["__versioninfo__"] = `{"version":"2.2.104", "files": [{"name": "linux.tar.gz", "rid":"linux-x64", "url": ""}, {"name":"winpackage.zip", "rid":"win-x86", "url": ""}]}`;
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetDownloadUrlFailTests.js"));
         tr.run();
         runValidations(() => {
@@ -264,7 +264,7 @@ describe('DotNetCoreInstaller', function () {
     it("[VersionFetcher.DotNetCoreVersionFetcher] getDownloadUrl should throw if zip package is not found for windows os", (done) => {
         process.env["__ostype__"] = "win";
         process.env["__getmachineosfail__"] = "false";
-        process.env["__versionInfo__"] = `{"version":"2.2.104", "files": [{"name": "winpacakage.exe", "rid":"win-x64", "url": "https://path.to/file.exe"}, {"name": "winpacakage2.exe", "rid":"win-x86", "url": "https://path.to/file.exe"}]}`;
+        process.env["__versioninfo__"] = `{"version":"2.2.104", "files": [{"name": "winpacakage.exe", "rid":"win-x64", "url": "https://path.to/file.exe"}, {"name": "winpacakage2.exe", "rid":"win-x86", "url": "https://path.to/file.exe"}]}`;
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetDownloadUrlFailTests.js"));
         tr.run();
         runValidations(() => {
@@ -276,7 +276,7 @@ describe('DotNetCoreInstaller', function () {
     it("[VersionFetcher.DotNetCoreVersionFetcher] getDownloadUrl should throw if tar.gz package is not found for non windows os", (done) => {
         process.env["__ostype__"] = "osx";
         process.env["__getmachineosfail__"] = "false";
-        process.env["__versionInfo__"] = `{"version":"2.2.104", "files": [{"name": "linux.tar", "rid":"linux-x64", "url": "https://path.to/file.pkg"}, {"name": "osx.pkg", "rid":"osx-x64", "url": "https://path.to/file.pkg"}]}`;
+        process.env["__versioninfo__"] = `{"version":"2.2.104", "files": [{"name": "linux.tar", "rid":"linux-x64", "url": "https://path.to/file.pkg"}, {"name": "osx.pkg", "rid":"osx-x64", "url": "https://path.to/file.pkg"}]}`;
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetDownloadUrlFailTests.js"));
         tr.run();
         runValidations(() => {
