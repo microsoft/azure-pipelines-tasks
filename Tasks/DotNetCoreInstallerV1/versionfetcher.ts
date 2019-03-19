@@ -60,7 +60,7 @@ export class DotNetCoreVersionFetcher {
         osSuffixes.find((osSuffix) => {
             downloadPackageInfoObject = versionInfo.files.find((downloadPackageInfo: VersionFilesData) => {
                 if (downloadPackageInfo.rid && osSuffix && downloadPackageInfo.rid.toLowerCase() == osSuffix.toLowerCase()) {
-                    if ((osSuffix.split("-")[0] != "win" && osSuffix.split("-")[0] != "osx") || (osSuffix.split("-")[0] == "win" && downloadPackageInfo.name.endsWith(".zip")) || (osSuffix.split("-")[0] == "osx" && downloadPackageInfo.name.endsWith("tar.gz"))) {
+                    if ((osSuffix.split("-")[0] == "win" && downloadPackageInfo.name.endsWith(".zip")) || (osSuffix.split("-")[0] != "win" && downloadPackageInfo.name.endsWith("tar.gz"))) {
                         return true;
                     }
                 }

@@ -55,7 +55,7 @@ export class VersionInstaller {
 
             // Copy files
             try {
-                if (this.isLatestInstalledVersion(version) && this.packageType == utils.Constants.sdk) {
+                if (this.packageType == utils.Constants.sdk && this.isLatestInstalledVersion(version)) {
                     tl.debug(tl.loc("CopyingFilesIntoPath", this.installationPath));
                     var filesToBeCopied = allRootLevelEnteriesInDir.filter(path => !fs.lstatSync(path).isDirectory());
                     filesToBeCopied.forEach((filePath) => {
