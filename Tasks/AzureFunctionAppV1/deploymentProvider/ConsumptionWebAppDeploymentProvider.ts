@@ -8,6 +8,7 @@ import Q = require('q');
 var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
 var azureStorage = require('azure-storage');
+import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility';
 
 export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {
 
@@ -20,7 +21,10 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
     public async DeployWebAppStep() {
         let storageDetails =  await this.findStorageAccount();
         let sasUrl = await this.uploadPackage(storageDetails, this.taskParams.Package);
-        await this.publishRunFromPackage(sasUrl);
+        let userDefinedAppSettings = this._getUserDefinedAppSettings();
+        await this.publishRunFromPackage(sasUrl, userDefinedAppSettings);
+
+        await this.PostDeploymentStep();
     }
 
     private async findStorageAccount() {
@@ -107,13 +111,41 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
         return defer.promise;
     }
 
-    private async publishRunFromPackage(sasUrl) {
-        await this.appService.patchApplicationSettings({'WEBSITE_RUN_FROM_PACKAGE': sasUrl});
+    private async publishRunFromPackage(sasUrl, additionalAppSettings) {
+        additionalAppSettings = !!additionalAppSettings ? additionalAppSettings : {};
+        additionalAppSettings['WEBSITE_RUN_FROM_PACKAGE'] = sasUrl;
+
+        console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(additionalAppSettings)));
+        await this.appService.patchApplicationSettings(additionalAppSettings);
+        console.log(tl.loc('UpdatedOnlyAppServiceApplicationSettings'));
         console.log(tl.loc('UpdatedRunFromPackageSettings',sasUrl));
         await sleepFor(5);
         console.log(tl.loc('SyncingFunctionTriggers'));
         await this.appService.syncFunctionTriggers();
         console.log(tl.loc('SyncFunctionTriggersSuccess'));
+    }
+
+    protected async PostDeploymentStep() {
+        if(this.taskParams.ConfigurationSettings) {
+            var customApplicationSettings = ParameterParser.parse(this.taskParams.ConfigurationSettings);
+            await this.appServiceUtility.updateConfigurationSettings(customApplicationSettings);
+        }
+
+        await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
+    }
+
+    private _getUserDefinedAppSettings() {
+        let userDefinedAppSettings = {};
+        if(this.taskParams.AppSettings) {
+            var customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
+            for(var property in customApplicationSettings) {
+                if(!!customApplicationSettings[property] && customApplicationSettings[property].value !== undefined) {
+                    userDefinedAppSettings[property] = customApplicationSettings[property].value;
+                }
+            }
+        }
+
+        return userDefinedAppSettings;
     }
 }
 
