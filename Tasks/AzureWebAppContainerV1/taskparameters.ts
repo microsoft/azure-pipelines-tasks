@@ -4,9 +4,9 @@ import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
 import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
 
-const webAppKindMap = new Map([
-    [ 'app,conatiner,xenon', 'webAppContainerWindows' ],
-    [ 'app,linux,container', 'webAppContainerLinux' ]
+const osTypeMap = new Map([
+    [ 'app,conatiner,xenon', 'Windows' ],
+    [ 'app,linux,container', 'Linux' ]
 ]);
 
 export class TaskParametersUtility {
@@ -19,7 +19,7 @@ export class TaskParametersUtility {
             StartupCommand: tl.getInput('containerCommand', false),
             ConfigurationSettings: tl.getInput('configurationStrings', false),
             WebAppName: tl.getInput('appName', true),
-            WebAppKind: tl.getInput('appType', false),
+            OSType: tl.getInput('osType', false),
             DeployToSlotOrASEFlag: tl.getBoolInput('deployToSlotOrASE', false),
             ResourceGroupName: tl.getInput('resourceGroupName', false),
             SlotName:tl.getInput('slotName', false)
@@ -30,8 +30,8 @@ export class TaskParametersUtility {
 
         let appDetails = await this.getWebAppKind(taskParameters);
         taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
-        taskParameters.WebAppKind = appDetails["webAppKind"];
-        taskParameters.isLinuxContainerApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("Linux") !=-1;
+        taskParameters.OSType = appDetails["osType"];
+        taskParameters.isLinuxContainerApp = taskParameters.OSType && taskParameters.OSType.indexOf("Linux") !=-1;
 
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
@@ -41,23 +41,24 @@ export class TaskParametersUtility {
 
     private static async getWebAppKind(taskParameters: TaskParameters): Promise<any> {
         var resourceGroupName = taskParameters.ResourceGroupName;
-        var kind = taskParameters.WebAppKind;
+        var osType = taskParameters.OSType;
         if (!resourceGroupName) {
             var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);
             resourceGroupName = appDetails["resourceGroupName"];
-            if(!kind) {
-                kind = webAppKindMap.get(appDetails["kind"]) ? webAppKindMap.get(appDetails["kind"]) : appDetails["kind"];
+            if(!osType) {
+                osType = osTypeMap.get(appDetails["kind"]) ? osTypeMap.get(appDetails["kind"]) : appDetails["kind"];
             }
+            
             tl.debug(`Resource Group: ${resourceGroupName}`);
         }
-        else if(!kind) {
+        else if(!osType) {
             var appService = new AzureAppService(taskParameters.azureEndpoint, taskParameters.ResourceGroupName, taskParameters.WebAppName);
             var configSettings = await appService.get(true);
-            kind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
+            osType = osTypeMap.get(configSettings.kind) ? osTypeMap.get(configSettings.kind) : configSettings.kind;
         }
         return {
             resourceGroupName: resourceGroupName,
-            webAppKind: kind
+            osType: osType
         };
     }
 }
@@ -65,7 +66,7 @@ export class TaskParametersUtility {
 export interface TaskParameters {
     azureEndpoint?: AzureEndpoint;
     connectedServiceName: string;
-    WebAppKind: string;
+    OSType: string;
     WebAppName: string;
     AppSettings?: string;
     StartupCommand?: string;

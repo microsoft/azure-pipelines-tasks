@@ -39,14 +39,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscription"
     },
     {
-      "name": "appType",
+      "name": "osType",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.appType",
-      "defaultValue": "webAppContainerLinux",
+      "label": "ms-resource:loc.input.label.osType",
+      "defaultValue": "Linux",
       "required": true,
       "options": {
-        "webAppContainerWindows": "Web App on Windows",
-        "webAppContainerLinux": "Web App on Linux"
+        "Linux": "Linux",
+        "Windows": "Windows"
       }
     },
     {
@@ -142,9 +142,9 @@
     {
       "target": "appName",
       "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureWebAppContainerNamesByAppType",
+      "dataSourceName": "AzureWebAppContainerNamesByOSType",
       "parameters": {
-        "WebAppKind": "$(appType)"
+        "osType": "$(osType)"
       }
     },
     {
