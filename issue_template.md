@@ -1,5 +1,18 @@
+## Note  
+Issues in this repo are for tracking bugs, feature requests and questions for the tasks in this repo ( https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks )
+
+If you have an issue or request for the azure pipelines service, use developer community instead ( https://developercommunity.visualstudio.com/spaces/21/index.html )
+
 ## Troubleshooting
 Checkout how to troubleshoot failures and collect debug logs: https://docs.microsoft.com/en-us/vsts/build-release/actions/troubleshooting
+
+## Required Information
+
+Is this a Question, Bug, or Feature?  
+**Type**: here
+
+Enter Task Name ( https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks )  
+**Task**: here
 
 ## Environment
 - Server - Azure Pipelines or TFS on-premises?
