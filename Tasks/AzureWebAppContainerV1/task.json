@@ -39,6 +39,18 @@
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
         },
         {
+            "name": "osType",
+            "type": "pickList",
+            "label": "App OS type",
+            "defaultValue": "Linux",
+            "required": true,
+            "options": {
+                "Linux": "Linux",
+                "Windows": "Windows"
+                
+            }
+        },
+        {
             "name": "appName",
             "type": "pickList",
             "label": "App name",
@@ -131,9 +143,9 @@
         {
             "target": "appName",
             "endpointId": "$(azureSubscription)",
-            "dataSourceName": "AzureRMWebAppNamesByAppType",
+            "dataSourceName": "AzureWebAppContainerNamesByOSType",
             "parameters": {
-                "WebAppKind": "webAppContainer"
+                "osType": "$(osType)"
             }
         },
         {

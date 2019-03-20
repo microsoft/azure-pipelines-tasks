@@ -13,6 +13,7 @@ export function mockAzureARMPreDeploymentSteps() {
             id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.web/sites/mytestapp", 
             name: "MOCK_APP_INSIGHTS_NAME",
             type: "microsoft.insights/components",
+            kind: "app,linux,container",
             tags: {},
             properties: {}
         }]

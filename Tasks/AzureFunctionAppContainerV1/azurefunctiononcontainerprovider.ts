@@ -29,17 +29,18 @@ export class AzureFunctionOnContainerDeploymentProvider{
         this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppName));
         
-        if(!this.taskParams.ResourceGroupName){
-            var appDetails = await AzureResourceFilterUtility.getAppDetails(this.azureEndpoint, this.taskParams.WebAppName);
+        if(!this.taskParams.ResourceGroupName) {
+            let appDetails = await AzureResourceFilterUtility.getAppDetails(this.azureEndpoint, this.taskParams.WebAppName);
             this.taskParams.ResourceGroupName = appDetails["resourceGroupName"];
         }
 
         this.appService = new AzureAppService(this.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, this.taskParams.SlotName);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
-
+        this.taskParams.isLinuxContainerApp = true;
         this.kuduService = await this.appServiceUtility.getKuduService();
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
         tl.debug(`Resource Group: ${this.taskParams.ResourceGroupName}`);
+        tl.debug(`is Linux container web app: ${this.taskParams.isLinuxContainerApp}`);
     }
 
     public async DeployWebAppStep() {

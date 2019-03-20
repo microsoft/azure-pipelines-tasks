@@ -12,7 +12,8 @@ export function mockAzureARMPreDeploymentSteps() {
         value: [{ 
             id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.web/sites/mytestapp", 
             name: "MOCK_APP_INSIGHTS_NAME",
-            type: "microsoft.insights/components",
+            type: "microsoft.web/sites",
+            kind: "functionapp,linux,container",
             tags: {},
             properties: {}
         }]
