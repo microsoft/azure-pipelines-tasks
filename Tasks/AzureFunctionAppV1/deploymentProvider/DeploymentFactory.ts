@@ -3,6 +3,7 @@ import { BuiltInLinuxWebAppDeploymentProvider } from './BuiltInLinuxWebAppDeploy
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider';
 import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvider';
+import { ConsumptionWebAppDeploymentProvider } from './ConsumptionWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
@@ -18,7 +19,11 @@ export class DeploymentFactory {
     public async GetDeploymentProvider(): Promise<IWebAppDeploymentProvider> {
         if(this._taskParams.isLinuxApp) {
             tl.debug("Depolyment started for linux app service");
-            return new BuiltInLinuxWebAppDeploymentProvider(this._taskParams);
+            if(this._taskParams.isConsumption) {
+                return new ConsumptionWebAppDeploymentProvider(this._taskParams);
+            } else {
+                return new BuiltInLinuxWebAppDeploymentProvider(this._taskParams);
+            }        
         } else {
             tl.debug("Depolyment started for windows app service");
             return await this._getWindowsDeploymentProvider()
