@@ -78,13 +78,13 @@ rules:
   contains: 'PublishTest'
   addLabels: ['Area: Test']
 # Types
-- valueFor: '**Type**'
+- valueFor: '*Type*'
   contains: Feature
   addLabels: ['enhancement']
-- valueFor: '**Type**'
+- valueFor: '*Type*'
   contains: Bug
   addLabels: ['bug']
-- valueFor: '**Type**'
+- valueFor: '*Type*'
   contains: Question
   addLabels: ['question']  
 
