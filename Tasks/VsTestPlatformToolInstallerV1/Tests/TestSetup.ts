@@ -1,6 +1,5 @@
-import  * as ma from 'vsts-task-lib/mock-answer';
-import * as tmrm from 'vsts-task-lib/mock-run';
-import * as tmt from 'vsts-task-lib/mock-task';
+import  * as ma from 'azure-pipelines-task-lib/mock-answer';
+import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import * as testConstants from './TestConstants';
 import * as testHelpers from './TestHelpers';
 import * as constants from '../constants';
@@ -155,7 +154,7 @@ answers.exec[`${writeNugetConfigCommand}`] = {
 tr.setAnswers(<any>answers);
 
 // Mock toolrunner
-tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
+tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
 
 // Mock task-tool-lib
 const taskToolLibMock: any = {};
@@ -191,7 +190,7 @@ taskToolLibMock.cacheDir = function(toolRoot: string, packageName: string, versi
 tr.registerMock('vsts-task-tool-lib/tool', taskToolLibMock);
 
 // Create mock for getVariable
-const tl = require('vsts-task-lib/mock-task');
+const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
 tlClone.getVariable = function(variable: string) {
     return process.env[variable];
@@ -201,7 +200,7 @@ tlClone.assertAgent = function(variable: string) {
     return;
 };
 // Register the tl mock
-tr.registerMock('vsts-task-lib/mock-task', tlClone);
+tr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 const uuid = require('uuid');
 // Create a mock for the uuid module
