@@ -2,79 +2,79 @@
 # primary rules
 rules:
 # Area: AppCenter
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'AppCenter'
   addLabels: ['Area: AppCenter']
 # Area: Artifacts
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'Nuget'
   addLabels: ['Area: Artifacts']
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'Npm'
   addLabels: ['Area: Artifacts']  
 # Area: Build
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'VSBuild'
   addLabels: ['Area: Build']
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'MSBuild'
   addLabels: ['Area: Build']  
 # Area: Core
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'Bash'
   addLabels: ['Area: Core']
   assign: ['bryanmacfarlane']
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'CmdLine'
   addLabels: ['Area: Core']
   assign: ['ericsciple']  
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'PowerShellV2'
   addLabels: ['Area: Core']
   assign: ['ericsciple']
 # Area: CrossPlatform
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'Android'
   addLabels: ['Area: CrossPlatform']
   assign: ['madhurig']
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'Gradle'
   addLabels: ['Area: CrossPlatform']
   assign: ['madhurig']
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'Python'
   addLabels: ['Area: CrossPlatform']
   assign: ['madhurig']    
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'PyPI'
   addLabels: ['Area: CrossPlatform']
   assign: ['madhurig']  
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'XCode'
   addLabels: ['Area: CrossPlatform']
   assign: ['madhurig']      
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'Xamarin'
   addLabels: ['Area: CrossPlatform']
   assign: ['madhurig']     
 # Area: Release
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'Azure'
   addLabels: ['Area: Release']
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'Docker'
   addLabels: ['Area: Release']
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'Packer'
   addLabels: ['Area: Release']
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'IISWeb'
   addLabels: ['Area: Release']    
 # Area: Test
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'VSTest'
   addLabels: ['Area: Test']
-- valueFor: '**Task**'
+- valueFor: '**Enter Task Name**'
   contains: 'PublishTest'
   addLabels: ['Area: Test']
 # Types
