@@ -376,7 +376,7 @@
         "InvalidDockerImageName": "Invalid Docker hub image name provided.",
         "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task.",
         "FailedToGetStorageAccountDetails": "Unable to find the storage account associated with the function app.",
-        "FailedToSyncTriggers": "Failed to sync triggers '%s' application settings. Error: %s",
+        "FailedToSyncTriggers": "Failed to sync triggers for function app '%s'. Error: %s",
         "SyncingFunctionTriggers": "Syncing triggers for function app",
         "SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully",
         "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s"

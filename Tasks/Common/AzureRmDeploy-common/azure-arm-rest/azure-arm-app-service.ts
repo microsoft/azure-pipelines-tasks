@@ -207,7 +207,7 @@ export class AzureAppService {
         var isNewValueUpdated: boolean = false;
         for(var key in addProperties) {
             if(applicationSettings.properties[key] != addProperties[key]) {
-                tl.debug(`Value of ${key} has been changed`);
+                tl.debug(`Value of ${key} has been changed to ${addProperties[key]}`);
                 isNewValueUpdated = true;
             }
 
