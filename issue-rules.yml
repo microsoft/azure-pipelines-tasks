@@ -93,8 +93,6 @@ rules:
 nomatches:
 - contains: 'Xcode' 
   addLabels: ['Area: Cross Platform']
-- contains: 'Azure' 
-  addLabels: ['Area: Release']
 - contains: 'Bash' 
   addLabels: ['Area: Core']
 - contains: 'Nuget' 

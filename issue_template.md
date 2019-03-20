@@ -4,7 +4,7 @@ Issues in this repo are for tracking bugs, feature requests and questions for th
 For a list:  
 https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks
 
-If you have an issue or request for the azure pipelines service, use developer community instead:  
+If you have an issue or request for the Azure Pipelines service, use developer community instead:  
 
 https://developercommunity.visualstudio.com/spaces/21/index.html )
 
