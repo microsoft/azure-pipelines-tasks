@@ -158,7 +158,9 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
     inputDataContract.TestReportingSettings = <idc.TestReportingSettings>{};
     inputDataContract.TestReportingSettings.TestRunTitle = tl.getInput('testRunTitle');
     inputDataContract.TestReportingSettings.TestRunSystem = 'VSTS - vstest';
-
+    inputDataContract.TestReportingSettings.TestSourceSettings = <idc.TestSourceSettings>{};
+    inputDataContract.TestReportingSettings.TestSourceSettings.PullRequestTargetBranchName = tl.getVariable('System.PullRequest.TargetBranch');
+    
     if (utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestRunTitle)) {
 
         let definitionName = tl.getVariable('BUILD_DEFINITIONNAME');
