@@ -19,30 +19,21 @@ function Invoke-BuildTools {
             if ($NuGetRestore) {
                 Invoke-NuGetRestore -File $file
             }
-
-            if ($Clean) {
-                $splat = @{ }
+            
+            $splat = @{ }
                 if ($CreateLogFile) {
-                    $splat["LogFile"] = "$file-clean.log"
+                    $splat["LogFile"] = "$file.log"
                 }
 
                 if ($LogFileVerbosity) {
                     $splat["LogFileVerbosity"] = $LogFileVerbosity
                 }
 
+            if ($Clean) {
                 Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
+            } else {
+                Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
             }
-
-            $splat = @{ }
-            if ($CreateLogFile) {
-                $splat["LogFile"] = "$file.log"
-            }
-
-            if ($LogFileVerbosity) {
-                $splat["LogFileVerbosity"] = $LogFileVerbosity
-            }
-
-            Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
         }
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
