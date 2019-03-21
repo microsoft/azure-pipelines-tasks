@@ -179,9 +179,7 @@
         {
             "name": "destinationGroupIds",
             "aliases": [
-                "destinationIds",
-                "distributionGroupId",
-                "destinationId"
+                "distributionGroupId"
             ],
             "type": "string",
             "defaultValue": "",
@@ -192,11 +190,6 @@
         },
         {
             "name": "destinationStoreId",
-            "aliases": [
-                "destinationIds",
-                "distributionGroupId",
-                "destinationId"
-            ],
             "type": "string",
             "label": "Destination ID",
             "helpMarkDown": "ID of the distribution store to deploy to.",
