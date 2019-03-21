@@ -195,17 +195,16 @@ class imagevalidationtask {
     try {
       let modules = deploymentJson.modulesContent.$edgeAgent["properties.desired"].modules;
       if (modules) {
-        let hostRegex = /^(?:http[s]?:\/\/)?([^/?#]*)/; //https://tools.ietf.org/html/rfc3986#appendix-B, modified to capture host name of image
         Object.keys(modules).forEach((key: string) => {
           let module = modules[key];
           let image = module.settings.image as string;
-          let hostNamecy = image.match(hostRegex);
-          if (hostNamecy) {
-            tl.execSync("docker", `logout ${hostNamecy[1]}`);
+          let hostNameString = this.getDomainName(image);
+          if (hostNameString) {
+            tl.execSync("docker", `logout ${hostNameString}`);
           }
         });
       } else {
-        return; // There's no custom module
+        return; // There is no custom module so do not need to validate
       }
 
       let credentials = deploymentJson.modulesContent.$edgeAgent["properties.desired"].runtime.settings.registryCredentials;
@@ -229,6 +228,7 @@ class imagevalidationtask {
           throw new Error(`${image} does not exist or the credential is not set correctly. Error: ${manifestResult.stderr}`);
         }
       });
+      
     }
     catch (err) {
       if (err.stderr) {
@@ -243,6 +243,15 @@ class imagevalidationtask {
       if (executionError) {
         throw new Error(executionError);
       }
+    }
+  }
+
+  static getDomainName(name: string) {
+    let i = name.indexOf('/');
+    if (i == -1 || (name.substr(0, i).match(/\.|:/))) { // The image is in docker hub
+      return "";
+    } else {
+      return name.substr(0, i);
     }
   }
 }
