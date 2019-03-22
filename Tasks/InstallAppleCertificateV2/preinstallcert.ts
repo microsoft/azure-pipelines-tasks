@@ -4,8 +4,6 @@ import secureFilesCommon = require('securefiles-common/securefiles-common');
 import tl = require('vsts-task-lib/task');
 import os = require('os');
 
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
-
 async function run() {
     let secureFileId: string;
     let secureFileHelpers: secureFilesCommon.SecureFileHelpers;
