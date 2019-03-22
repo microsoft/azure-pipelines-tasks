@@ -75,7 +75,8 @@
         "deploy": "deploy",
         "patch": "patch",
         "scale": "scale",
-        "delete": "delete"
+        "delete": "delete",
+        "reject": "reject"
       },
       "helpMarkDown": "ms-resource:loc.input.help.action"
     },
@@ -91,7 +92,7 @@
         "None": "None"
       },
       "helpMarkDown": "ms-resource:loc.input.help.deploymentStrategy",
-      "visibleRule": "action = deploy"
+      "visibleRule": "action = deploy || action = promote || action = reject"
     },
     {
       "name": "percentage",
@@ -115,7 +116,7 @@
       "defaultValue": "",
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.manifests",
-      "visibleRule": "action = deploy"
+      "visibleRule": "action = deploy || action = promote || action = reject"
     },
     {
       "name": "containers",
@@ -247,7 +248,7 @@
       "defaultValue": "",
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.args",
-      "visibleRule": "action = delete"
+      "visibleRule": "action = delete || action = reject"
     },
     {
       "name": "patch",
@@ -284,6 +285,7 @@
     "ResourceKindNotDefined": "ms-resource:loc.messages.ResourceKindNotDefined",
     "NullInputObject": "ms-resource:loc.messages.NullInputObject",
     "NullInputObjectMetadata": "ms-resource:loc.messages.NullInputObjectMetadata",
-    "CanaryDeploymentAlreadyExistErrorMessage": "ms-resource:loc.messages.CanaryDeploymentAlreadyExistErrorMessage"
+    "CanaryDeploymentAlreadyExistErrorMessage": "ms-resource:loc.messages.CanaryDeploymentAlreadyExistErrorMessage",
+    "InvalidRejectActionDeploymentStrategy": "ms-resource:loc.messages.InvalidRejectActionDeploymentStrategy"
   }
 }

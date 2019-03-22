@@ -15,12 +15,54 @@ export function execCommand(command: ToolRunner, options?: IExecOptions) {
     return command.execSync(options);
 }
 
+export function getManifestFiles(manifestFilesPath: string): string[] {
+    if (!manifestFilesPath ||  manifestFilesPath.trim().length == 0)
+    {
+        tl.debug("file input is not present");
+        return null;
+    }
+
+    var files = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), manifestFilesPath.trim());
+    return files;
+}
+
 export async function getKubectl(): Promise<string> {
     try {
         return Promise.resolve(tl.which("kubectl", true));
     } catch (ex) {
         return kubectlutility.downloadKubectl(await kubectlutility.getStableKubectlVersion());
     }
+}
+
+export function createKubectlArgs(kinds: Set<string>, names: Set<string>): string {
+    let args = "";
+    if (!!kinds && kinds.size > 0) {
+        args = args + createInlineArray(Array.from(kinds.values()));
+    }
+
+    if (!!names && names.size > 0) {
+        args = args + " " + Array.from(names.values()).join(" ")
+    }
+
+    return args;
+}
+
+export function getDeleteCmdArgs(argsPrefix: string, inputArgs: string): string {
+    let args = "";
+
+    if (!!argsPrefix && argsPrefix.length > 0) {
+        args = argsPrefix;
+    }
+
+    if (!!inputArgs && inputArgs.length > 0) {
+        if (args.length > 0) {
+            args = args + " ";
+        }
+
+        args = args + inputArgs;
+    }
+
+    return args;
 }
 
 export function checkForErrors(execResults: IExecSyncResult[], warnIfError?: boolean) {
@@ -121,4 +163,9 @@ export function isEqual(str1: string, str2: string, stringComparer: StringCompar
     } else {
         return str1 === str2;
     }
+}
+
+function createInlineArray(str: string | string[]): string {
+    if (typeof str === "string") return str;
+    return str.join(",");
 }

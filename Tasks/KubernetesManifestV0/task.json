@@ -75,7 +75,8 @@
                 "deploy": "deploy",
                 "patch": "patch",
                 "scale": "scale",
-                "delete": "delete"
+                "delete": "delete",
+                "reject": "reject"
             },
             "helpMarkDown": "Choose the action to be performed."
         },
@@ -91,7 +92,7 @@
               "None": "None"
             },
             "helpMarkDown": "Strategy for deployment",
-            "visibleRule": "action = deploy"
+            "visibleRule": "action = deploy || action = promote || action = reject"
           },
           {
             "name": "percentage",
@@ -115,7 +116,7 @@
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Manifests to deploy",
-            "visibleRule": "action = deploy"
+            "visibleRule": "action = deploy || action = promote || action = reject"
         },
         {
             "name": "containers",
@@ -247,7 +248,7 @@
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Arguments for `kubectl delete` command",
-            "visibleRule": "action = delete"
+            "visibleRule": "action = delete || action = reject"
         },
         {
             "name": "patch",
@@ -284,6 +285,7 @@
         "ResourceKindNotDefined": "Resource kind is null",
         "NullInputObject": "Input object is null.",
         "NullInputObjectMetadata": "Input object metadata is null.",
-        "CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment"
+        "CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
+        "InvalidRejectActionDeploymentStrategy" : "Deployment strategy should be 'Canary' for reject action."
     }
 }
