@@ -13,7 +13,7 @@ The default value of this property is Agent, but you can change it to ServerGate
 
 #### Provide the result evaluation expression :
 
-In case you are using http request executions in your task, then you should provide the result evaluation expression so that the system can evaluate whether a particular run of a gate has passed or failed. You can learn more about the possible constructs in the expression in this [document](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/authoring/servertaskauthoring.md) and can also look at our built-in tasks for the real world usages ([Azure monitor task](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureMonitor/task.json), [Query work items](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/QueryWorkItems/task.json)).
+In case you are using http request executions in your task, then you should provide the result evaluation expression so that the system can evaluate whether a particular run of a gate has passed or failed. You can learn more about the possible constructs in the expression in this [document](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/authoring/servertaskauthoring.md) and can also look at our built-in tasks for the real world usages ([Azure monitor task](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureMonitorV0/task.json), [Query work items](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/QueryWorkItemsV0/task.json)).
 
 #### Understand the model difference between gate and server task:
 
