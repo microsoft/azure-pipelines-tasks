@@ -57,7 +57,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "keychain created"
         },
-        "/usr/bin/security set-keychain-settings -lut 7200 /build/temp/ios_signing_temp.keychain": {
+        "/usr/bin/security set-keychain-settings -lut 21600 /build/temp/ios_signing_temp.keychain": {
             "code": 0,
             "stdout": "keychain settings"
         },
