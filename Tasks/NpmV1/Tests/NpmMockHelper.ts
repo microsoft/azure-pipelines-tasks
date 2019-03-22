@@ -25,6 +25,10 @@ export class NpmMockHelper extends TaskMockRunner {
 
     constructor(taskPath: string) {
         super(taskPath);
+        let setSecret = function(variable: string) {
+            return;
+        }
+        this.registerMockExport('setSecret', setSecret);
 
         this.registerMock('vsts-task-lib/toolrunner', mtr);
         this.setAnswers(this.answers);

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613744)",
-  "loc.description": "[Depreciated] Testing mobile apps with Xamarin Test Cloud using Xamarin.UITest - recommended task is now AppCenterTest",
+  "loc.description": "[Deprecated] Testing mobile apps with Xamarin Test Cloud using Xamarin.UITest - recommended task is now AppCenterTest",
   "loc.instanceNameFormat": "Test $(app) with Xamarin.UITest in Xamarin Test Cloud",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.app": "App file",

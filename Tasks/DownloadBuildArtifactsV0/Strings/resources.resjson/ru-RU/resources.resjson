@@ -13,6 +13,8 @@
   "loc.input.label.specificBuildWithTriggering": "При необходимости скачайте артефакты из инициирующей сборки.",
   "loc.input.help.specificBuildWithTriggering": "Если этот флажок установлен, данная задача сборки попытается скачать артефакты из инициирующей сборки. Если нет инициирующей сборки из указанного конвейера, будут скачаны артефакты из сборки, указанной в параметрах ниже.",
   "loc.input.label.buildVersionToDownload": "Версия сборки для скачивания",
+  "loc.input.label.allowPartiallySucceededBuilds": "Download artifacts even from partially succeeded builds.",
+  "loc.input.help.allowPartiallySucceededBuilds": "If checked, this build task will try to download artifacts whether the build is succeeded or partially succeeded.",
   "loc.input.label.branchName": "Имя ветви",
   "loc.input.help.branchName": "Настройте фильтрацию по ветви и ссылочному имени, например: ```refs/heads/develop```.",
   "loc.input.label.buildId": "Сборка",

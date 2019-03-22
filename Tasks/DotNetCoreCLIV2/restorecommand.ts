@@ -3,6 +3,7 @@ import * as Q from 'q';
 import * as utility from './Common/utility';
 import * as auth from 'packaging-common/nuget/Authentication';
 import { NuGetConfigHelper2 } from 'packaging-common/nuget/NuGetConfigHelper2';
+import * as ngRunner from 'packaging-common/nuget/NuGetToolRunner2';
 import * as path from 'path';
 import { IExecOptions } from 'vsts-task-lib/toolrunner';
 import * as nutil from 'packaging-common/nuget/Utility';
@@ -119,7 +120,7 @@ export async function run(): Promise<void> {
         }
 
         // Setting creds in the temp NuGet.config if needed
-        await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
+        nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
 
         const configFile = nuGetConfigHelper.tempNugetConfigPath;
         const dotnetPath = tl.which('dotnet', true);
@@ -171,5 +172,6 @@ function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDir
         dotnet.arg(verbosity);
     }
 
-    return dotnet.exec({ cwd: path.dirname(projectFile) } as IExecOptions);
+    const envWithProxy = ngRunner.setNuGetProxyEnvironment(process.env, configFile, null);
+    return dotnet.exec({ cwd: path.dirname(projectFile), env: envWithProxy } as IExecOptions);
 }

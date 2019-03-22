@@ -3,6 +3,7 @@
   "name": "AndroidSigning",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613717",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -11,13 +12,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 141,
+    "Minor": 145,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
-    "JDK",
-    "AndroidSDK"
+    "JDK"
   ],
   "minimumAgentVersion": "2.116.0",
   "groups": [

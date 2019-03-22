@@ -3,6 +3,7 @@
   "name": "PackerBuild",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=845329",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -14,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 6
   },
   "demands": [],
   "preview": "true",
@@ -58,22 +59,6 @@
       "defaultValue": "builtin"
     },
     {
-      "name": "isManagedImage",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.isManagedImage",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.isManagedImage",
-      "defaultValue": true
-    },
-    {
-      "name": "managedImageName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.managedImageName",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.managedImageName",
-      "visibleRule": "isManagedImage = true && templateType = builtin"
-    },
-    {
       "name": "customTemplateLocation",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.customTemplateLocation",
@@ -99,6 +84,24 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "groupName": "AzureDetails"
+    },
+    {
+      "name": "isManagedImage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isManagedImage",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.isManagedImage",
+      "defaultValue": true,
+      "groupName": "AzureDetails"
+    },
+    {
+      "name": "managedImageName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.managedImageName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.managedImageName",
+      "visibleRule": "isManagedImage = true",
       "groupName": "AzureDetails"
     },
     {
@@ -220,7 +223,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.additionalBuilderParameters",
       "required": false,
-      "defaultValue": "{}",
+      "defaultValue": "{\"vm_size\":\"Standard_D3_v2\"}",
       "groupName": "Advanced",
       "helpMarkDown": "ms-resource:loc.input.help.additionalBuilderParameters",
       "properties": {
@@ -242,6 +245,15 @@
       "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.imageUri",
+      "groupName": "Output"
+    },
+    {
+      "name": "imageId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageId",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.imageId",
       "groupName": "Output"
     }
   ],
@@ -292,7 +304,9 @@
     "ExecutingPackerBuild": "ms-resource:loc.messages.ExecutingPackerBuild",
     "PackerBuildCompleted": "ms-resource:loc.messages.PackerBuildCompleted",
     "ImageURIOutputVariableNotFound": "ms-resource:loc.messages.ImageURIOutputVariableNotFound",
+    "ImageIDOutputVariableNotFound": "ms-resource:loc.messages.ImageIDOutputVariableNotFound",
     "ManagedImageNameOutputVariableNotFound": "ms-resource:loc.messages.ManagedImageNameOutputVariableNotFound",
+    "CustumTemplateOutputVariableNotFound": "ms-resource:loc.messages.CustumTemplateOutputVariableNotFound",
     "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName",
     "CustomTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.CustomTemplateNotFoundErrorMessagePathName",
     "CouldNotDeleteTemporaryTemplateDirectory": "ms-resource:loc.messages.CouldNotDeleteTemporaryTemplateDirectory",
@@ -320,6 +334,7 @@
     "FailedToFetchSPNDetailsRemotely": "ms-resource:loc.messages.FailedToFetchSPNDetailsRemotely",
     "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
-    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "CreateManagedImageNotSupportedForVHDSource": "ms-resource:loc.messages.CreateManagedImageNotSupportedForVHDSource"
   }
 }

@@ -4,6 +4,7 @@
     "friendlyName": "IIS Web App Manage",
     "description": "Create or update a Website, Web App, Virtual Directories, and Application Pool",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://aka.ms/iis-webapp-management-readme",
     "helpMarkDown": "[More Information](https://aka.ms/iis-webapp-management-readme)",
     "category": "Deploy",
     "visibility": [
@@ -16,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 9
+        "Patch": 10
     },
     "minimumAgentVersion": "2.111.0",
     "instanceNameFormat": "Manage $(IISDeploymentType)",

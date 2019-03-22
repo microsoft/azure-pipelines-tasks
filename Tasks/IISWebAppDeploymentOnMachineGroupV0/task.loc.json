@@ -3,6 +3,7 @@
   "name": "IISWebAppDeploymentOnMachineGroup",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=866789",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -15,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 49
+    "Patch": 51
   },
   "demands": [],
   "minimumAgentVersion": "2.104.1",
@@ -182,6 +183,7 @@
     "FailedToApplyTransformationReason2": "ms-resource:loc.messages.FailedToApplyTransformationReason2",
     "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage",
     "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed",
-    "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol"
+    "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol",
+    "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy"
   }
 }

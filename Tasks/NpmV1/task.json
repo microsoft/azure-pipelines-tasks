@@ -3,13 +3,14 @@
     "name": "Npm",
     "friendlyName": "npm",
     "description": "Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Package Management.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613746",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 31
+        "Minor": 149,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -18,7 +19,7 @@
     "demands": [
         "npm"
     ],
-    "minimumAgentVersion": "1.91.0",
+    "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "npm $(command)",
     "groups": [
         {
@@ -99,8 +100,8 @@
         {
             "groupName": "customRegistries",
             "name": "customEndpoint",
-            "label": "Credentials for registries outside this account/collection",
-            "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this account/collection, leave this blank; the build’s credentials are used automatically.",
+            "label": "Credentials for registries outside this organization/collection",
+            "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this organization/collection, leave this blank; the build’s credentials are used automatically.",
             "type": "connectedService:externalnpmregistry",
             "visibleRule": "customRegistry = useNpmrc",
             "properties": {
@@ -127,6 +128,15 @@
             "type": "pickList",
             "visibleRule": "publishRegistry = useFeed",
             "required": true
+        },
+        {
+            "name": "publishPackageMetadata",
+            "groupName": "advanced",
+            "type": "boolean",
+            "label": "Publish pipeline metadata",
+            "defaultValue": true,
+            "helpMarkDown": "Associate this build/release pipeline’s metadata (run #, source code information) with the package",
+            "visibleRule": "command = publish && publishRegistry = useFeed"
         },
         {
             "groupName": "publishRegistries",
@@ -175,7 +185,7 @@
         "PublishRegistry": "Publishing to registry: %s",
         "UsingRegistry": "Using registry: %s",
         "AddingAuthRegistry": "Adding auth for registry: %s",
-        "FoundLocalRegistries": "Found %d registries in this account/collection",
+        "FoundLocalRegistries": "Found %d registries in this organization/collection",
         "ForcePackagingUrl": "Packaging collection URL forced to: %s",
         "DebugLogNotFound": "Couldn't find a debug log in the cache or working directory",
         "NpmFailed": "Npm failed with return code: %s",

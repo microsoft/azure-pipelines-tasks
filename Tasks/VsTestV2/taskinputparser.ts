@@ -1,15 +1,12 @@
 import * as path from 'path';
 import * as Q from 'q';
-import * as tl from 'vsts-task-lib/task';
-import * as tr from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as models from './models';
 import * as utils from './helpers';
 import * as constants from './constants';
-import * as os from 'os';
 import * as ci from './cieventlogger';
 import * as versionFinder from './versionfinder';
 import { AreaCodes, ResultMessages } from './constants';
-import * as inputdatacontract from './inputdatacontract';
 import * as uuid from 'uuid';
 const regedit = require('regedit');
 
@@ -165,7 +162,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
             testConfiguration.vsTestLocation = testConfiguration.toolsInstallerConfig.vsTestConsolePathFromPackageLocation;
 
             testConfiguration.toolsInstallerConfig.isToolsInstallerInUse = true;
-        } else if ((testConfiguration.vsTestVersion !== '15.0') && (testConfiguration.vsTestVersion !== '14.0')
+        } else if ((testConfiguration.vsTestVersion !== '16.0') && (testConfiguration.vsTestVersion !== '15.0') && (testConfiguration.vsTestVersion !== '14.0')
             && (testConfiguration.vsTestVersion.toLowerCase() !== 'latest')) {
             throw new Error(tl.loc('vstestVersionInvalid', testConfiguration.vsTestVersion));
         }

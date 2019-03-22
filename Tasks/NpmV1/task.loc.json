@@ -3,13 +3,14 @@
   "name": "Npm",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613746",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 31
+    "Minor": 148,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -18,7 +19,7 @@
   "demands": [
     "npm"
   ],
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -127,6 +128,15 @@
       "type": "pickList",
       "visibleRule": "publishRegistry = useFeed",
       "required": true
+    },
+    {
+      "name": "publishPackageMetadata",
+      "groupName": "advanced",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishPackageMetadata",
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.publishPackageMetadata",
+      "visibleRule": "command = publish && publishRegistry = useFeed"
     },
     {
       "groupName": "publishRegistries",

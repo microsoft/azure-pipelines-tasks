@@ -2,7 +2,8 @@
     "id": "9E9DB38A-B40B-4C13-B7F0-31031C894C22",
     "name": "CloudLoadTest",
     "friendlyName": "Cloud-based Load Test",
-    "description": "Runs the load test in the cloud with Azure Pipelines",
+    "description": "Runs the load test in the cloud with Azure Pipelines.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=546976",
     "helpMarkDown": "This task triggers a cloud-based load test using Azure Pipelines. [Learn more](https://go.microsoft.com/fwlink/?linkid=546976)",
     "category": "Test",
     "visibility": [

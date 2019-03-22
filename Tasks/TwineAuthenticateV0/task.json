@@ -2,14 +2,15 @@
     "id": "e4d58330-c771-11e8-8f8f-81fbb42e2824",
     "name": "TwineAuthenticate",
     "friendlyName": "Python Twine Upload Authenticate",
-    "description": "Authentication for uploading python distributions using twine. Please add \"-r FeedName/EndpointName --config-file $(PYPIRC_PATH)\" to your twine upload command. For feeds present in this organization use feed name as repository(-r) otherwise use the endpoint name defined in the service connection.",
+    "description": "Authentication for uploading Python distributions using twine. Please add '-r FeedName/EndpointName --config-file $(PYPIRC_PATH)' to your twine upload command. For feeds present in this organization, use the feed name as the repository (-r). Otherwise, use the endpoint name defined in the service connection.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://pypi.org/project/twine/",
     "helpMarkDown": "[More Information](https://pypi.org/project/twine/)",
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 6
+        "Minor": 149,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -22,6 +23,11 @@
             "name": "feedAuthentication",
             "displayName": "Feeds and Authentication",
             "isExpanded": true
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "inputs": [
@@ -55,6 +61,14 @@
                 "MultiSelectFlatList": "True"
             },
             "groupName": "feedAuthentication"
+        },
+        {
+            "name": "publishPackageMetadata",
+            "groupName": "advanced",
+            "type": "boolean",
+            "label": "Publish pipeline metadata",
+            "defaultValue": true,
+            "helpMarkDown": "Associate this build/release pipeline’s metadata (run #, source code information) with the package when uploading to my feeds."
         }
     ],
     "dataSourceBindings": [

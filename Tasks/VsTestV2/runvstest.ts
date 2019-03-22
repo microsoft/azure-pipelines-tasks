@@ -1,4 +1,4 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as nondistributedtest from './nondistributedtest';
 import * as path from 'path';
 import * as distributedTest from './distributedtest';
@@ -16,6 +16,9 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
 async function execute() {
     const taskProps: { [key: string]: string; } = { state: 'started'};
     ci.publishEvent(taskProps);
+
+    const enableHydra = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
+        'TestExecution.EnableHydra', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
 
     const enableApiExecution = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
         'TestExecution.EnableTranslationApi', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
@@ -49,7 +52,7 @@ async function execute() {
             console.log(tl.loc('nonDistributedTestWorkflow'));
             console.log('======================================================');
             const inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
-            if (enableApiExecution || inputDataContract.EnableSingleAgentAPIFlow || (inputDataContract.ExecutionSettings
+            if (enableHydra || inputDataContract.EnableSingleAgentAPIFlow || (inputDataContract.ExecutionSettings
                 && inputDataContract.ExecutionSettings.RerunSettings
                 && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests)) {
                 if (enableApiExecution) {

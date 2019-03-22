@@ -1,0 +1,110 @@
+
+# primary rules
+rules:
+# Area: AppCenter
+- valueFor: '**Enter Task Name**'
+  contains: 'AppCenter'
+  addLabels: ['Area: AppCenter']
+# Area: Artifacts
+- valueFor: '**Enter Task Name**'
+  contains: 'Nuget'
+  addLabels: ['Area: Artifacts']
+- valueFor: '**Enter Task Name**'
+  contains: 'Npm'
+  addLabels: ['Area: Artifacts']  
+# Area: Build
+- valueFor: '**Enter Task Name**'
+  contains: 'VSBuild'
+  addLabels: ['Area: Build']
+- valueFor: '**Enter Task Name**'
+  contains: 'MSBuild'
+  addLabels: ['Area: Build']  
+# Area: Core
+- valueFor: '**Enter Task Name**'
+  contains: 'Bash'
+  addLabels: ['Area: Core']
+  assign: ['bryanmacfarlane']
+- valueFor: '**Enter Task Name**'
+  contains: 'CmdLine'
+  addLabels: ['Area: Core']
+  assign: ['ericsciple']  
+- valueFor: '**Enter Task Name**'
+  contains: 'PowerShellV2'
+  addLabels: ['Area: Core']
+  assign: ['ericsciple']
+# Area: CrossPlatform
+- valueFor: '**Enter Task Name**'
+  contains: 'Android'
+  addLabels: ['Area: CrossPlatform']
+  assign: ['madhurig']
+- valueFor: '**Enter Task Name**'
+  contains: 'Gradle'
+  addLabels: ['Area: CrossPlatform']
+  assign: ['madhurig']
+- valueFor: '**Enter Task Name**'
+  contains: 'Python'
+  addLabels: ['Area: CrossPlatform']
+  assign: ['madhurig']    
+- valueFor: '**Enter Task Name**'
+  contains: 'PyPI'
+  addLabels: ['Area: CrossPlatform']
+  assign: ['madhurig']  
+- valueFor: '**Enter Task Name**'
+  contains: 'XCode'
+  addLabels: ['Area: CrossPlatform']
+  assign: ['madhurig']      
+- valueFor: '**Enter Task Name**'
+  contains: 'Xamarin'
+  addLabels: ['Area: CrossPlatform']
+  assign: ['madhurig']     
+# Area: Release
+- valueFor: '**Enter Task Name**'
+  contains: 'Azure'
+  addLabels: ['Area: Release']
+- valueFor: '**Enter Task Name**'
+  contains: 'Docker'
+  addLabels: ['Area: Release']
+- valueFor: '**Enter Task Name**'
+  contains: 'Packer'
+  addLabels: ['Area: Release']
+- valueFor: '**Enter Task Name**'
+  contains: 'IISWeb'
+  addLabels: ['Area: Release']    
+# Area: Test
+- valueFor: '**Enter Task Name**'
+  contains: 'VSTest'
+  addLabels: ['Area: Test']
+- valueFor: '**Enter Task Name**'
+  contains: 'PublishTest'
+  addLabels: ['Area: Test']
+# Types
+- valueFor: '*Type*'
+  contains: Feature
+  addLabels: ['enhancement']
+- valueFor: '*Type*'
+  contains: Bug
+  addLabels: ['bug']
+- valueFor: '*Type*'
+  contains: Question
+  addLabels: ['question']  
+
+# runs if first set had no matches
+# add likely teams to look at based on text searches
+nomatches:
+- contains: 'Xcode' 
+  addLabels: ['Area: Cross Platform']
+- contains: 'Bash' 
+  addLabels: ['Area: Core']
+- contains: 'Nuget' 
+  addLabels: ['Area: Artifacts']
+- contains: 'Npm' 
+  addLabels: ['Area: Artifacts']
+- contains: 'Docker' 
+  addLabels: ['Area: Release']  
+
+# always runs after rules.  look for missing or invalid sets of tags
+tags:
+- noneIn: ['bug', 'enhancement', 'question']
+  addLabels: ['triage']
+- noneMatch: '\s*Area:\s*([^]*)'
+  addLabels: ['route']

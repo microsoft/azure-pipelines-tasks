@@ -69,28 +69,6 @@ function Get-AzureActiverDirectoryResourceId
     return $activeDirectoryResourceid
 }
 
-function Get-ProxyUri
-{
-    param([String] [Parameter(Mandatory=$true)] $serverUrl)
-    
-    $proxyUri = [System.Uri]($env:AGENT_PROXYURL)
-    Write-Verbose -Verbose ("Reading proxy from the AGENT_PROXYURL environment variable. Proxy url specified={0}" -f $proxyUri.OriginalString)
-
-    if($proxyUri -eq $null)
-    {
-        $proxy = [System.Net.WebRequest]::GetSystemWebProxy()
-        $proxyUri = $proxy.GetProxy("$serverUrl")
-        Write-Verbose -Verbose ("Reading proxy from IE. Proxy url specified={0}" -f $proxyUri.OriginalString)
-    }
-
-    if($serverUrl -eq $null -or ([System.Uri]$serverUrl).Host -eq $proxyUri.Host)
-    {
-        return $null
-    }
-
-    return $proxyUri
-}
-
 # Check if Azure connection type is classic or not.
 function IsLegacyAzureConnection
 {
@@ -223,19 +201,9 @@ function Add-AzureStackDependencyData {
     $StorageEndpointSuffix = ($stackdomain).ToLowerInvariant()
     
     $azureStackEndpointUri = $EndpointURI.ToString().TrimEnd('/')+"/metadata/endpoints?api-version=2015-01-01"
-    $proxyUri = Get-ProxyUri $azureStackEndpointUri
 
     Write-Verbose "Retrieving endpoints from the $ResourceManagerEndpoint"
-    if ($proxyUri -eq $null)
-    {
-        Write-Verbose "No proxy settings"
-        $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -ErrorAction Stop
-    }
-    else
-    {
-        Write-Verbose "Using Proxy settings"
-        $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -Proxy $proxyUri -ErrorAction Stop 
-    }
+    $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -ErrorAction Stop
     
     if ($endpointData) {
         $graphEndpoint = $endpointData.graphEndpoint
@@ -375,19 +343,8 @@ function Get-SpnAccessToken {
     
     try
     {
-        $proxyUri = Get-ProxyUri $authUri
-        if ($proxyUri -eq $null)
-        {
-            Write-Verbose "No proxy settings"
-            $accessToken = Invoke-RestMethod -Uri $authUri -Method $method -Body $body -ContentType $script:formContentType
-            return $accessToken
-        }
-        else
-        {
-            Write-Verbose "Using Proxy settings"
-            $accessToken = Invoke-RestMethod -Uri $authUri -Method $method -Body $body -ContentType $script:formContentType -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
-            return $accessToken
-        }
+        $accessToken = Invoke-RestMethod -Uri $authUri -Method $method -Body $body -ContentType $script:formContentType
+        return $accessToken
     }
     catch
     {
@@ -426,17 +383,7 @@ function Get-MsiAccessToken {
     try
     {
         $retryLimit = 5;
-        $proxyUri = Get-ProxyUri $authUri
-        if ($proxyUri -eq $null)
-        {
-            Write-Verbose "No proxy settings"
-            $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseBasicParsing
-        }
-        else
-        {
-            Write-Verbose "Using Proxy settings"
-            $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials -UseBasicParsing
-        }
+        $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseBasicParsing
 
         # Action on the based of response 
         if(($response.StatusCode -eq 429) -or ($response.StatusCode -eq 500))
@@ -595,19 +542,8 @@ function Get-AzStorageKeys
 
         $certificate = Get-Certificate $endpoint
 
-        $proxyUri = Get-ProxyUri $uri
-        if ($proxyUri -eq $null)
-        {
-            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
-            Write-Verbose "No Proxy settings"
-            return $storageKeys.StorageService.StorageServiceKeys
-        }
-        else
-        {
-            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
-            Write-Verbose "Using Proxy settings"
-            return $storageKeys.StorageService.StorageServiceKeys
-        }
+        $storageKeys = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
+        return $storageKeys.StorageService.StorageServiceKeys
     }
     catch
     {
@@ -642,19 +578,8 @@ function Get-AzRMStorageKeys
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-        $proxyUri = Get-ProxyUri $uri
-        if ($proxyUri -eq $null)
-        {
-            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
-            Write-Verbose "No Proxy settings"
-            return $storageKeys
-        }
-        else
-        {
-            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
-            Write-Verbose "Using Proxy settings"
-            return $storageKeys
-        }
+        $storageKeys = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+        return $storageKeys
     }
     catch
     {
@@ -699,19 +624,8 @@ function Get-AzRmVmCustomScriptExtension
         $headers = @{"accept-language" = "en-US"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
-        $proxyUri = Get-ProxyUri $uri
-        if ($proxyUri -eq $null)
-        {
-            $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
-            Write-Verbose "No proxy settings"
-            return $customScriptExt.properties
-        }
-        else
-        {
-            $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
-            Write-Verbose "Using proxy settings"
-            return $customScriptExt.properties
-        }
+        $customScriptExt = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+        return $customScriptExt.properties
     }
     catch
     {
@@ -747,19 +661,8 @@ function Remove-AzRmVmCustomScriptExtension
         $headers = @{"accept-language" = "en-US"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
-        $proxyUri = Get-ProxyUri $uri
-        if ($proxyUri -eq $null)
-        {
-            $response=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
-            Write-Verbose "No proxy settings"
-            return $response
-        }
-        else
-        {
-            $response=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
-            Write-Verbose "Using proxy settings"
-            return $response
-        }
+        $response = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+        return $response
     }
     catch
     {
@@ -792,19 +695,8 @@ function Get-AzStorageAccount
 
         $certificate = Get-Certificate $endpoint
 
-        $proxyUri = Get-ProxyUri $uri
-        if ($proxyUri -eq $null)
-        {
-            $storageAccount=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
-            Write-Verbose "No Proxy settings"
-            return $storageAccount.StorageService.StorageServiceProperties
-        }
-        else
-        {
-            $storageAccount=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
-            Write-Verbose "Using Proxy settings"
-            return $storageAccount.StorageService.StorageServiceProperties
-        }
+        $storageAccount = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
+        return $storageAccount.StorageService.StorageServiceProperties
     }
     catch
     {
@@ -838,18 +730,7 @@ function Get-AzRmStorageAccount
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-        $storageAccountUnformatted = $null
-        $proxyUri = Get-ProxyUri $uri
-        if ($proxyUri -eq $null)
-        {
-            $storageAccountUnformatted=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
-            Write-Verbose "No Proxy settings"
-        }
-        else
-        {
-            $storageAccountUnformatted=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
-            Write-Verbose "Using Proxy settings"
-        }
+        $storageAccountUnformatted = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
 
         Write-Verbose "Constructing the storage account object"
         
@@ -898,19 +779,8 @@ function Get-AzRmResourceGroup
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-        $proxyUri = Get-ProxyUri $uri
-        if ($proxyUri -eq $null)
-        {
-            $resourceGroup=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
-            Write-Verbose "No Proxy settings"
-            return $resourceGroup
-        }
-        else
-        {
-            $resourceGroup=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
-            Write-Verbose "Using Proxy settings"
-            return $resourceGroup
-        }
+        $resourceGroup = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+        return $resourceGroup
     }
     catch
     {
@@ -944,7 +814,7 @@ function Get-AzureSqlDatabaseServerResourceId
 
     do {
         Write-Verbose "Fetching Resources from $uri"
-        $ResourceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+        $ResourceDetails = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType
         foreach ($resourceDetail in $ResourceDetails.Value)
         {
             if ($resourceDetail.name -eq $serverName -and $resourceDetail.type -eq $serverType)
@@ -1226,16 +1096,7 @@ function Get-AzureNetworkInterfaceDetails
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/networkInterfaces?api-version=$azureStackapiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $proxyUri = Get-ProxyUri $uri
-
-    if($proxyUri)
-    {
-        $networkInterfaceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType -Proxy $proxyUri)
-    }
-    else
-    {
-        $networkInterfaceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
-    }
+    $networkInterfaceDetails = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType
     
     if(-not $networkInterfaceDetails) 
     {
@@ -1265,16 +1126,7 @@ function Get-AzurePublicIpAddressDetails
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/publicIPAddresses?api-version=$azureStackapiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $proxyUri = Get-ProxyUri $uri
-
-    if($proxyUri)
-    {
-        $publicIPAddressesDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType -Proxy $proxyUri)
-    }
-    else
-    {
-        $publicIPAddressesDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
-    }
+    $publicIPAddressesDetails = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType
 
     if(-not $publicIPAddressesDetails) 
     {
@@ -1304,16 +1156,7 @@ function Get-AzureLoadBalancersDetails
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/loadBalancers?api-version=$azureStackapiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $proxyUri = Get-ProxyUri $uri
-
-    if($proxyUri)
-    {
-        $loadBalancersDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType -Proxy $proxyUri)
-    }
-    else
-    {
-        $loadBalancersDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
-    }
+    $loadBalancersDetails = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType
 
     if(-not $loadBalancersDetails) 
     {
@@ -1344,16 +1187,7 @@ function Get-AzureLoadBalancerDetails
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/loadBalancers/" + $name + "?api-version=$azureStackapiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $proxyUri = Get-ProxyUri $uri
-
-    if($proxyUri)
-    {
-        $loadBalancerDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType -Proxy $proxyUri)
-    }
-    else
-    {
-        $loadBalancerDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
-    }
+    $loadBalancerDetails = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType
     
     if($loadBalancerDetails)
     {

@@ -1,7 +1,7 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
-import * as ParameterParser from '../operations/ParameterParserUtility'
+import * as ParameterParser from 'webdeployment-common/ParameterParserUtility';
 import { DeploymentType } from '../operations/TaskParameters';
 import { PackageType } from 'webdeployment-common/packageUtility';
 import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
@@ -13,6 +13,9 @@ var zipUtility = require('webdeployment-common/ziputility.js');
 export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProvider{
  
     public async DeployWebAppStep() {
+        let deploymentMethodtelemetry = '{"deploymentMethod":"Run from Package"}';
+        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureWebAppDeployment]" + deploymentMethodtelemetry);
+
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams);
         
         if(this.taskParams.UseWebDeploy && this.taskParams.DeploymentType === DeploymentType.runFromZip) {

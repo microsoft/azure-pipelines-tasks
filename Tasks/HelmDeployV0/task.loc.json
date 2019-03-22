@@ -3,6 +3,7 @@
   "name": "HelmDeploy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -13,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 138,
-    "Patch": 14
+    "Patch": 16
   },
   "demands": [],
   "groups": [

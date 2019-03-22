@@ -3,6 +3,7 @@
   "name": "XamarinTestCloud",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613744",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
@@ -12,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 135,
-    "Patch": 0
+    "Minor": 141,
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",

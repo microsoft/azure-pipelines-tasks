@@ -3,6 +3,7 @@
     "name": "Bash",
     "friendlyName": "Bash",
     "description": "Run a Bash script on macOS, Linux, or Windows",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613738",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613738)",
     "category": "Utility",
     "visibility": [
@@ -16,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 142,
+        "Minor": 148,
         "Patch": 2
     },
     "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
@@ -90,6 +91,23 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "noProfile",
+            "type": "boolean",
+            "label": "Don't load the profile startup/initialization files",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Don't load the system-wide startup file `/etc/profile' or any of the personal initialization files",
+            "groupName": "advanced"
+        },
+        {
+            "name": "noRc",
+            "type": "boolean",
+            "label": "Don't read the `~/.bashrc' initialization file",
+            "defaultValue": "true",
+            "required": false,
             "groupName": "advanced"
         }
     ],

@@ -2,8 +2,9 @@
     "id": "03DD16C3-43E0-4667-BA84-40515D27A410",
     "name": "CondaEnvironment",
     "friendlyName": "Conda Environment",
-    "description": "Create and activate a Conda environment.",
-    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=873466)",
+    "description": "This task is deprecated. Use `conda` directly in script to work with Anaconda environments.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=873466",
+    "helpMarkDown": "[More information](https://aka.ms/pipelines-anaconda-guide)<br>[Task documentation](https://go.microsoft.com/fwlink/?linkid=873466)",
     "category": "Package",
     "runsOn": [
         "Agent",
@@ -12,9 +13,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 144,
+        "Minor": 148,
         "Patch": 0
     },
+    "deprecated": true,
     "demands": [],
     "instanceNameFormat": "Conda environment $(environmentName)",
     "inputs": [

@@ -555,12 +555,23 @@ describe('Xcode L0 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdout.indexOf('##vso[task.issue type=error;]loc_mock_XcprettyNotInstalled') > 0, 'error message should indicate that xcpretty has to be installed.')
-        assert(tr.failed, 'post xcode task should have failed');
+        assert(tr.stdout.indexOf('##vso[task.issue type=warning;]loc_mock_XcprettyNotInstalled') > 0, 'warning message should indicate that xcpretty has to be installed.')
+        assert(tr.succeeded, 'post xcode task should have succeeded with warnings');
         done();
     });
 
+    it('postexecution should not fail for errors', function (done: MochaDone) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
+        let tp = path.join(__dirname, 'L0ErrorsInPostExecutionJob.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.succeeded, 'post xcode task should have succeeded with warnings even when there are errors.');
+        assert(tr.stdout.indexOf('XcodeRequiresMac'), 'warning for macos requirement should be shown.');
+        done();
+    });
 
     it('macOS auto export', function (done: MochaDone) {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);

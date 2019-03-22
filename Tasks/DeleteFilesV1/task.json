@@ -3,6 +3,7 @@
     "name": "DeleteFiles",
     "friendlyName": "Delete Files",
     "description": "Delete files or folders. (The minimatch patterns will only match file paths, not folder paths)",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=722333",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=722333)",
     "category": "Utility",
     "visibility": [
@@ -16,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 6
+        "Patch": 7
     },
     "demands": [],
     "minimumAgentVersion": "1.92.0",

@@ -4,6 +4,7 @@
     "friendlyName": "Service Fabric Application Deployment",
     "description": "Deploy a Service Fabric application to a cluster.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=820528",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820528)",
     "category": "Deploy",
     "visibility": [
@@ -17,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 29
+        "Patch": 31
     },
     "demands": [
         "Cmd"
@@ -121,7 +122,7 @@
                 "SameAppTypeAndVersion": "SameAppTypeAndVersion"
             },
             "groupname": "advanced",
-            "helpMarkDown": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured."
+            "helpMarkDown": "Overwrite Behavior: when upgrade is not configured and an Application with same name already exists in the cluster, then following actions are available => Never, Always, SameAppTypeAndVersion.\n    Never will not remove the existing Application. This is the default behavior.\n    Always will remove the existing Application even if its Application type and Version is different from the Application being created.\n    SameAppTypeAndVersion will remove the existing Application only if its Application type and Version is same as the Application being created."
         },
         {
             "name": "skipUpgradeSameTypeAndVersion",

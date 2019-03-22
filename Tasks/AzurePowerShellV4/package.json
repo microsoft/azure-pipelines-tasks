@@ -1,0 +1,10 @@
+{
+    "name": "azure-powershell-v4",
+    "author": {
+        "name": "Microsoft Corporation"
+    },
+    "dependencies": {
+        "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
+        "vsts-task-lib": "2.0.5"
+    }
+}

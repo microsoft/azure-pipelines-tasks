@@ -3,6 +3,7 @@
   "name": "Maven",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613723",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -16,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 143,
-    "Patch": 3
+    "Minor": 149,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -406,6 +407,7 @@
     "EntryAlreadyExists": "ms-resource:loc.messages.EntryAlreadyExists",
     "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid",
     "AuthenticationNotNecessary": "ms-resource:loc.messages.AuthenticationNotNecessary",
-    "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed"
+    "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed",
+    "NoTestResults": "ms-resource:loc.messages.NoTestResults"
   }
 }

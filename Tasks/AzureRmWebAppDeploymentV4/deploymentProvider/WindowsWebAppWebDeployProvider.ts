@@ -1,7 +1,7 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
-import * as ParameterParser from '../operations/ParameterParserUtility'
+import * as ParameterParser from 'webdeployment-common/ParameterParserUtility';
 import * as Constant from '../operations/Constants';
 import { WebDeployUtility } from '../operations/WebDeployUtility';
 import { Package } from 'webdeployment-common/packageUtility';
@@ -30,6 +30,9 @@ export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvi
         await this.appServiceUtility.updateAndMonitorAppSettings(updateApplicationSetting, deleteApplicationSetting);
         
         if(deployUtility.canUseWebDeploy(this.taskParams.UseWebDeploy)) {
+            let deploymentMethodtelemetry = '{"deploymentMethod":"Web Deploy"}';
+            console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureWebAppDeployment]" + deploymentMethodtelemetry);
+
             tl.debug("Performing the deployment of webapp.");
             
             if(!tl.osType().match(/^Win/)) {
@@ -43,6 +46,9 @@ export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvi
             
         }
         else {
+            let deploymentMethodtelemetry = '{"deploymentMethod":"Zip API"}';
+            console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureWebAppDeployment]" + deploymentMethodtelemetry);
+
             tl.debug("Initiated deployment via kudu service for webapp package : ");
             await this.kuduServiceUtility.deployWebPackage(webPackage, physicalPath, this.taskParams.VirtualApplication, this.taskParams.TakeAppOfflineFlag);
         }        

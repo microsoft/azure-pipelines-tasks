@@ -3,6 +3,7 @@
     "name": "JenkinsDownloadArtifacts",
     "friendlyName": "Jenkins Download Artifacts",
     "description": "Download artifacts produced by a Jenkins job",
+    "helpUrl": "",
     "helpMarkDown": "Download artifacts produced by a [Jenkins](https://jenkins.io/) job.",
     "category": "Utility",
     "visibility": [
@@ -17,8 +18,8 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 141,
-        "Patch": 3
+        "Minor": 147,
+        "Patch": 0
     },
     "groups": [
         {
@@ -365,6 +366,8 @@
         "GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-        "NoAssociatedArtifacts": "No associated artifacts found"
+        "NoAssociatedArtifacts": "No associated artifacts found",
+        "OperationFailed": "Failed in %s with error: %s",
+        "RetryingOperation": "Error: in %s, retrying the operation => retries pending: %s"
     }
 }
