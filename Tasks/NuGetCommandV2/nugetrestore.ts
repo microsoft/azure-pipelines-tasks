@@ -79,14 +79,6 @@ export async function run(nuGetPath: string): Promise<void> {
         tl.debug("Getting NuGet quirks");
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
-        // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
-        // is unconditionally displayed
-        const useV1CredProvider: boolean = ngToolRunner.isCredentialProviderEnabled(quirks);
-        const useV2CredProvider: boolean = ngToolRunner.isCredentialProviderV2Enabled(quirks);
-        const credProviderPath: string = nutil.locateCredentialProvider(useV2CredProvider);
-        const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks)
-                                && (!useV1CredProvider && !useV2CredProvider);
-
         // Setting up auth-related variables
         tl.debug("Setting up auth");
         let urlPrefixes = packagingLocation.PackagingUris;
@@ -98,8 +90,20 @@ export async function run(nuGetPath: string): Promise<void> {
             urlPrefixes = urlPrefixes.concat(testPrefixes.split(";"));
             tl.debug(`All URL prefixes: ${urlPrefixes}`);
         }
-        const accessToken = pkgLocationUtils.getSystemAccessToken();
+        
+        // If not windows and using external endpoints, temp nuget.config must be used instead of V1 cred provider
         const externalAuthArr: auth.ExternalAuthInfo[] = commandHelper.GetExternalAuthInfoArray("externalEndpoints");
+        const isWindows = tl.osType() === "Windows_NT";
+        let useCredConfig: boolean = (externalAuthArr.length > 0 && !isWindows) ? true : false;
+
+        // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
+        // is unconditionally displayed
+        let useV1CredProvider: boolean = useCredConfig ? false : ngToolRunner.isCredentialProviderEnabled(quirks);
+        let useV2CredProvider: boolean = useCredConfig ? false : ngToolRunner.isCredentialProviderV2Enabled(quirks);
+        const credProviderPath: string = nutil.locateCredentialProvider(useV2CredProvider);
+        useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && (!useV1CredProvider && !useV2CredProvider);
+
+        const accessToken = pkgLocationUtils.getSystemAccessToken();
         const authInfo = new auth.NuGetExtendedAuthInfo(
             new auth.InternalAuthInfo(
                 urlPrefixes,
