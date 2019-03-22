@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 11
   },
   "demands": [],
   "groups": [
@@ -76,7 +76,8 @@
         "patch": "patch",
         "scale": "scale",
         "delete": "delete",
-        "reject": "reject"
+        "reject": "reject",
+        "promote": "promote"
       },
       "helpMarkDown": "ms-resource:loc.input.help.action"
     },
@@ -102,7 +103,7 @@
       "groupName": "config",
       "helpMarkDown": "",
       "defaultValue": 0,
-      "visibleRule": "deploymentStrategy = Canary",
+      "visibleRule": "deploymentStrategy = Canary && action = deploy",
       "validation": {
         "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
         "message": "Enter valid percentage value i.e between 0 to 100."
@@ -126,7 +127,7 @@
       "defaultValue": "",
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.containers",
-      "visibleRule": "action = deploy"
+      "visibleRule": "action = deploy || action = promote"
     },
     {
       "name": "renderType",
@@ -244,7 +245,6 @@
       "name": "args",
       "type": "string",
       "label": "ms-resource:loc.input.label.args",
-      "required": true,
       "defaultValue": "",
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.args",
@@ -284,6 +284,7 @@
     "UnknownRenderType": "ms-resource:loc.messages.UnknownRenderType",
     "ResourceKindNotDefined": "ms-resource:loc.messages.ResourceKindNotDefined",
     "NullInputObject": "ms-resource:loc.messages.NullInputObject",
+    "ArgumentsInputNotSupplied": "ms-resource:loc.messages.ArgumentsInputNotSupplied",
     "NullInputObjectMetadata": "ms-resource:loc.messages.NullInputObjectMetadata",
     "CanaryDeploymentAlreadyExistErrorMessage": "ms-resource:loc.messages.CanaryDeploymentAlreadyExistErrorMessage",
     "InvalidRejectActionDeploymentStrategy": "ms-resource:loc.messages.InvalidRejectActionDeploymentStrategy"

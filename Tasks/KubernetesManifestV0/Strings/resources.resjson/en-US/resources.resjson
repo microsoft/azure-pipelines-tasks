@@ -54,6 +54,7 @@
   "loc.messages.UnknownRenderType": "Unknown render engine",
   "loc.messages.ResourceKindNotDefined": "Resource kind is null",
   "loc.messages.NullInputObject": "Input object is null.",
+  "loc.messages.ArgumentsInputNotSupplied": "Arguments are not supplied.",
   "loc.messages.NullInputObjectMetadata": "Input object metadata is null.",
   "loc.messages.CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
   "loc.messages.InvalidRejectActionDeploymentStrategy": "Deployment strategy should be 'Canary' for reject action."

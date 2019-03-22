@@ -12,7 +12,7 @@ export async function promote() {
 
     // Deploy input manifests
     tl.debug("Deploying input manifests");
-    deploymentHelper.deploy(kubectl, TaskInputParameters.manifests);
+    deploymentHelper.deploy(kubectl, TaskInputParameters.manifests, false);
     
     // delete canary deployment if strategy is canary
     if (canaryDeploymentHelper.isCanaryDeploymentStrategy()) 

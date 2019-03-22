@@ -14,7 +14,7 @@ import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import { Kubectl, Resource } from "utility-common/kubectl-object-model";
 
 
-export function deploy(kubectl: Kubectl, manifestFilesPath: string) {
+export function deploy(kubectl: Kubectl, manifestFilesPath: string, isCanaryDeploymentStrategy: boolean) {
 
     // get manifest files
     var inputManifestFiles: string[] = getManifestFiles(manifestFilesPath);
@@ -23,7 +23,7 @@ export function deploy(kubectl: Kubectl, manifestFilesPath: string) {
     inputManifestFiles = updateContainerImagesInConfigFiles(inputManifestFiles, TaskInputParameters.containers);
 
     // deployment
-    var deployedManifestFiles = deployManifests(inputManifestFiles, kubectl);
+    var deployedManifestFiles = deployManifests(inputManifestFiles, kubectl, isCanaryDeploymentStrategy);
 
     // check manifest stability
     let resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.recognizedWorkloadTypes);
@@ -43,9 +43,9 @@ function getManifestFiles(manifestFilesPath: string): string[] {
     return files;
 }
 
-function deployManifests(files: string[], kubectl: Kubectl): string[] {
+function deployManifests(files: string[], kubectl: Kubectl, isCanaryDeploymentStrategy: boolean): string[] {
     let result;
-    if (canaryDeploymentHelper.isCanaryDeploymentStrategy()) {
+    if (isCanaryDeploymentStrategy) {
         var canaryDeploymentOutput = canaryDeploymentHelper.deployCanary(kubectl, files);
         result = canaryDeploymentOutput.result;
         files = canaryDeploymentOutput.newFilePaths;
