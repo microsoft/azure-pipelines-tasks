@@ -11,12 +11,12 @@ tr.setInput('certSecureFile', 'mySecureFileId');
 tr.setInput('certPwd', 'mycertPwd');
 tr.setInput('keychain', 'temp');
 
+let secureFileHelperMock = require('securefiles-common/securefiles-common-mock');
+tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
+
 process.env['AGENT_VERSION'] = '2.116.0';
 process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
 process.env['HOME'] = '/users/test';
-
-let secureFileHelperMock = require('securefiles-common/securefiles-common-mock');
-tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
