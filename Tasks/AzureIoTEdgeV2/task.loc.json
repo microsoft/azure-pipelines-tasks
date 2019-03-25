@@ -237,7 +237,8 @@
     "DeploymentFileNotFound": "ms-resource:loc.messages.DeploymentFileNotFound",
     "ValidDeploymentFileNotFound": "ms-resource:loc.messages.ValidDeploymentFileNotFound",
     "AzureSdkNotFound": "ms-resource:loc.messages.AzureSdkNotFound",
-    "RootPathNotExist": "ms-resource:loc.messages.RootPathNotExist"
+    "RootPathNotExist": "ms-resource:loc.messages.RootPathNotExist",
+    "SkipModuleImageValidation": "ms-resource:loc.messages.SkipModuleImageValidation"
   },
   "OutputVariables": [
     {
