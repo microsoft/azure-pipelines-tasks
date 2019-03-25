@@ -4,8 +4,8 @@ import os = require("os");
 import * as path from "path";
 import * as semver from "semver";
 import * as pkgLocationUtils from "../locationUtilities";
-import * as tl from "vsts-task-lib";
-import * as toollib from "vsts-task-tool-lib/tool";
+import * as tl from "azure-pipelines-task-lib";
+import * as toollib from "azure-pipelines-tool-lib/tool";
 
 export function getArtifactToolLocation(dirName: string): string {
     let toolPath: string = path.join(dirName, "ArtifactTool.exe");
