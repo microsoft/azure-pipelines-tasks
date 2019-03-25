@@ -172,8 +172,6 @@ async function run() {
         // iOS signing and provisioning
         //--------------------------------------------------------
         let signingOption: string = tl.getInput('signingOption', true);
-        let keychainToDelete: string;
-        let profileToDelete: string;
         let xcode_codeSigningAllowed: string;
         let xcode_codeSignStyle: string;
         let xcode_otherCodeSignFlags: string;
