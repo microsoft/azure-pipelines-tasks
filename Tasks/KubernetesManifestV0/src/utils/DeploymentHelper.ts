@@ -14,16 +14,16 @@ import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import { Kubectl, Resource } from "utility-common/kubectl-object-model";
 
 
-export function deploy(kubectl: Kubectl, manifestFilesPath: string, isCanaryDeploymentStrategy: boolean) {
+export function deploy(kubectl: Kubectl, manifestFilesPath: string, deploymentStrategy: string) {
 
     // get manifest files
     var inputManifestFiles: string[] = getManifestFiles(manifestFilesPath);
-    
+
     // artifact substitution
     inputManifestFiles = updateContainerImagesInConfigFiles(inputManifestFiles, TaskInputParameters.containers);
 
     // deployment
-    var deployedManifestFiles = deployManifests(inputManifestFiles, kubectl, isCanaryDeploymentStrategy);
+    var deployedManifestFiles = deployManifests(inputManifestFiles, kubectl, isCanaryDeploymentStrategy(deploymentStrategy));
 
     // check manifest stability
     let resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.recognizedWorkloadTypes);
@@ -107,4 +107,8 @@ function updateContainerImagesInConfigFiles(filePaths: string[], containers): st
     }
 
     return filePaths;
+}
+
+function isCanaryDeploymentStrategy(deploymentStrategy: string): boolean {
+    return deploymentStrategy != null && deploymentStrategy.toUpperCase() == canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY.toUpperCase();
 }

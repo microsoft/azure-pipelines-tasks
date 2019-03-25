@@ -9,59 +9,19 @@ import yaml = require('js-yaml');
 import * as TaskInputParameters from '../models/TaskInputParameters';
 import * as fileHelper from "../utils/FileHelper";
 
-const CANARY_DEPLOYMENT_STRATEGY = "CANARY";
+export const CANARY_DEPLOYMENT_STRATEGY = "CANARY";
 const BASELINE_SUFFIX = "-baseline";
 const BASELINE_LABEL_VALUE = "baseline";
 const CANARY_SUFFIX = "-canary";
 const CANARY_LABEL_VALUE = "canary";
 const CANARY_VERSION_LABEL = "azure-pipelines/version";
 
-export function calculateReplicaCountForCanary(inputObject: any, percentage: number) {
-    var inputReplicaCount = helper.getReplicaCount(inputObject);
-    return Math.round((inputReplicaCount * percentage) / 100);
-}
-
-export function isDeploymentEntity(kind: string): boolean {
-    if (!kind) {
-        throw (tl.loc("ResourceKindNotDefined"));
-    }
-
-    return recognizedWorkloadTypes.some(function (elem) {
-        return utils.isEqual(elem, kind, utils.StringComparer.OrdinalIgnoreCase);
-    });
-}
-
-export function getNewBaselineResource(stableObject: any, replicas: number): object {
-    return getNewCanaryObject(stableObject, replicas, BASELINE_LABEL_VALUE);
-}
-
-export function getNewCanaryResource(inputObject: any, replicas: number): object {
-    return getNewCanaryObject(inputObject, replicas, CANARY_LABEL_VALUE);
-}
-export function getCanaryResourceName(name: string) {
-    return name + CANARY_SUFFIX;
-}
-
-export function getBaselineResourceName(name: string) {
-    return name + BASELINE_SUFFIX;
-}
-
-export function fetchResource(kubectl: Kubectl, kind: string, name: string): object {
-    var result = kubectl.getResource(kind, name);
-    return result.stderr ? null : JSON.parse(result.stdout);
-}
-
-export function fetchCanaryResource(kubectl: Kubectl, kind: string, name: string): object {
-    return fetchResource(kubectl, kind, getCanaryResourceName(name));
-}
-
 export function deleteCanaryDeployment(kubectl: Kubectl, manifestFilesPath: string) {
 
     // get manifest files
     var inputManifestFiles: string[] = utils.getManifestFiles(manifestFilesPath);
 
-    if (inputManifestFiles == null || inputManifestFiles.length == 0) 
-    {
+    if (inputManifestFiles == null || inputManifestFiles.length == 0) {
         throw (tl.loc("ManifestFileNotFound"));
     }
 
@@ -71,8 +31,8 @@ export function deleteCanaryDeployment(kubectl: Kubectl, manifestFilesPath: stri
 
     // append delete cmd args as suffix (if present)
     let args = utils.getDeleteCmdArgs(argsPrefix, TaskInputParameters.args);
-    tl.debug("Delete cmd args : "+args);
-    
+    tl.debug("Delete cmd args : " + args);
+
     // run kubectl delete cmd
     var result = kubectl.delete(args);
     utils.checkForErrors([result]);
@@ -124,6 +84,47 @@ export function deployCanary(kubectl: Kubectl, filePaths: string[]) {
 export function isCanaryDeploymentStrategy() {
     var deploymentStrategy = TaskInputParameters.deploymentStrategy;
     return deploymentStrategy && deploymentStrategy.toUpperCase() === CANARY_DEPLOYMENT_STRATEGY;
+}
+
+function calculateReplicaCountForCanary(inputObject: any, percentage: number) {
+    var inputReplicaCount = helper.getReplicaCount(inputObject);
+    return Math.round((inputReplicaCount * percentage) / 100);
+}
+
+function getNewBaselineResource(stableObject: any, replicas: number): object {
+    return getNewCanaryObject(stableObject, replicas, BASELINE_LABEL_VALUE);
+}
+
+function getNewCanaryResource(inputObject: any, replicas: number): object {
+    return getNewCanaryObject(inputObject, replicas, CANARY_LABEL_VALUE);
+}
+
+function getCanaryResourceName(name: string) {
+    return name + CANARY_SUFFIX;
+}
+
+function getBaselineResourceName(name: string) {
+    return name + BASELINE_SUFFIX;
+}
+
+function fetchResource(kubectl: Kubectl, kind: string, name: string): object {
+    var result = kubectl.getResource(kind, name);
+    return result.stderr ? null : JSON.parse(result.stdout);
+}
+
+function fetchCanaryResource(kubectl: Kubectl, kind: string, name: string): object {
+    return fetchResource(kubectl, kind, getCanaryResourceName(name));
+}
+
+
+function isDeploymentEntity(kind: string): boolean {
+    if (!kind) {
+        throw (tl.loc("ResourceKindNotDefined"));
+    }
+
+    return recognizedWorkloadTypes.some(function (elem) {
+        return utils.isEqual(elem, kind, utils.StringComparer.OrdinalIgnoreCase);
+    });
 }
 
 function getNewCanaryObject(inputObject: any, replicas: number, type: string): object {

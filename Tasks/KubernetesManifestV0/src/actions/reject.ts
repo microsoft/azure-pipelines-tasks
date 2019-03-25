@@ -9,13 +9,11 @@ export async function reject() {
 
     let kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace);
 
-    if (canaryDeploymentHelper.isCanaryDeploymentStrategy()) 
-    {
+    if (canaryDeploymentHelper.isCanaryDeploymentStrategy()) {
         tl.debug("Deployment strategy selected is Canary. So will delete canary objects");
         canaryDeploymentHelper.deleteCanaryDeployment(kubectl, TaskInputParameters.manifests);
     }
-    else 
-    {
+    else {
         tl.debug("Strategy is not canary deployment. Invalid request.");
         throw (tl.loc("InvalidRejectActionDeploymentStrategy"));
     }

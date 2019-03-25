@@ -16,8 +16,7 @@ export function execCommand(command: ToolRunner, options?: IExecOptions) {
 }
 
 export function getManifestFiles(manifestFilesPath: string): string[] {
-    if (!manifestFilesPath ||  manifestFilesPath.trim().length == 0)
-    {
+    if (!manifestFilesPath || manifestFilesPath.trim().length == 0) {
         tl.debug("file input is not present");
         return null;
     }
