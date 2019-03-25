@@ -14,7 +14,7 @@ export class TaskParametersUtility {
     public static async getParameters(): Promise<TaskParameters> {
         var taskParameters: TaskParameters = {
             connectedServiceName: tl.getInput('azureSubscription', true),
-            ImageName: tl.getInput('imageName', true),
+            ImageName: tl.getInput('imageName', false),
             AppSettings: tl.getInput('appSettings', false),
             StartupCommand: tl.getInput('containerCommand', false),
             ConfigurationSettings: tl.getInput('configurationStrings', false),

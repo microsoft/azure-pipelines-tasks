@@ -4,6 +4,7 @@ import util = require('util');
 import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';
 import { parse }  from './ParameterParserUtility';
 import { AzureAppServiceUtility } from './AzureAppServiceUtility';
+import fs = require('fs');
 
 enum registryTypes {
     "AzureContainerRegistry",
@@ -22,25 +23,52 @@ export class ContainerBasedDeploymentUtility {
 
     public async deployWebAppImage(properties: any): Promise<void> {
         let imageName: string = properties["ImageName"];
-        tl.debug("Deploying an image " + imageName + " to the webapp " + this._appService.getName());
+        let isMultiContainer: boolean = false;
+        if(imageName == null) {
+            isMultiContainer = true;
+        }
+        tl.debug(`is multicontainer app : ${isMultiContainer}`);
+        let configurationType: string = tl.getInput('ConfigurationType');
+        let configurationPath: string = tl.getPathInput('ConfigurationPath', false);
+        let configurationInline: string = tl.getInput('Inline', false);
+        if(imageName != null) {
+            tl.debug("Deploying an image " + imageName + " to the webapp " + this._appService.getName());
+        }
 
         let isLinuxApp: boolean = properties["isLinuxContainerApp"];
         tl.debug("Updating the webapp configuration.");
-        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], imageName, isLinuxApp);
+        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], imageName, isLinuxApp, isMultiContainer, configurationType, configurationPath, configurationInline);
 
         tl.debug('making a restart request to app service');
         await this._appService.restart();
     }
 
-    private async _updateConfigurationDetails(configSettings: any, startupCommand: string, imageName: string, isLinuxApp: boolean): Promise<void> {
+    private async _updateConfigurationDetails(configSettings: any, startupCommand: string, imageName: string, isLinuxApp: boolean, isMultiContainer: boolean, configurationType: string, configurationPath: string, configurationInline: string): Promise<void> {
         var appSettingsNewProperties = !!configSettings ? parse(configSettings.trim()): { };
         appSettingsNewProperties.appCommandLine = {
             'value': startupCommand
         }
 
         if(isLinuxApp) {
-            appSettingsNewProperties.linuxFxVersion = {
-                'value': "DOCKER|" + imageName
+            if(isMultiContainer) {
+                if (configurationType.toUpperCase() == 'FILEPATH') {
+                    let rawdata = fs.readFileSync(configurationPath);
+                    appSettingsNewProperties.linuxFxVersion = {
+                        'value': "COMPOSE|" + (new Buffer(rawdata).toString('base64'))
+                    }
+                    tl.debug('you requested filepath');
+                }
+                else {
+                    appSettingsNewProperties.linuxFxVersion = {
+                        'value': "COMPOSE|" + (new Buffer(configurationInline).toString('base64'))
+                    }
+                    tl.debug('you requested inline');
+                }
+            }
+            else {
+                appSettingsNewProperties.linuxFxVersion = {
+                    'value': "DOCKER|" + imageName
+                }
             }
         }
         else {
@@ -49,7 +77,7 @@ export class ContainerBasedDeploymentUtility {
             }
         }
 
-        tl.debug(`CONATINER UPDATE CONFIG VALUES : ${JSON.stringify(appSettingsNewProperties)}`);
+        tl.debug(`CONTAINER UPDATE CONFIG VALUES : ${JSON.stringify(appSettingsNewProperties)}`);
         await this._appServiceUtility.updateConfigurationSettings(appSettingsNewProperties);
     }
 

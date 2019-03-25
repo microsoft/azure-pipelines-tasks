@@ -97,8 +97,43 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.imageName",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.imageName"
+    },
+    {
+      "name": "ConfigurationType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ConfigurationType",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ConfigurationType",
+      "defaultValue": "FilePath",
+      "options": {
+        "FilePath": "Configuration File Path",
+        "InlineConfiguration": "Inline Configuration"
+      }
+    },
+    {
+      "name": "ConfigurationPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.ConfigurationPath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ConfigurationPath",
+      "visibleRule": "ConfigurationType = FilePath"
+    },
+    {
+      "name": "Inline",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Inline",
+      "required": false,
+      "defaultValue": "# You can write your configuration scripts inline here. \n# You can also pass predefined and custom variables to this script using arguments",
+      "helpMarkDown": "ms-resource:loc.input.help.Inline",
+      "visibleRule": "ConfigurationType = InlineConfiguration",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"
+      }
     },
     {
       "name": "containerCommand",
