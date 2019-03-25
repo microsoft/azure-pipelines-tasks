@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 7
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -192,7 +192,7 @@
         {
             "target": "appName",
             "endpointId": "$(azureSubscription)",
-            "dataSourceName": "AzureRMWebAppNamesByAppType",
+            "dataSourceName": "AzureFunctionAppNamesByAppType",
             "parameters": {
                 "WebAppKind": "$(appType)"
             }
@@ -348,6 +348,7 @@
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
         "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
+        "UpdatedOnlyAppServiceApplicationSettings": "Updated App Service Application settings.",
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
         "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
@@ -373,6 +374,11 @@
         "JarPathNotPresent": "Java jar path is not present",
         "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
         "InvalidDockerImageName": "Invalid Docker hub image name provided.",
-        "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task."
+        "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task.",
+        "FailedToGetStorageAccountDetails": "Unable to find the storage account associated with the function app.",
+        "FailedToSyncTriggers": "Failed to sync triggers for function app '%s'. Error: %s",
+        "SyncingFunctionTriggers": "Syncing triggers for function app",
+        "SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully",
+        "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s"
     }
 }

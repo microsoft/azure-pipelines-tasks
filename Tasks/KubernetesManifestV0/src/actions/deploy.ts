@@ -53,7 +53,7 @@ function deployManifests(files: string[], kubectl: Kubectl): string[] {
 function checkManifestStability(kubectl: Kubectl, resourceTypes: Resource[]) {
     let rolloutStatusResults = [];
     resourceTypes.forEach(resource => {
-        if (models.recognizedWorkloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) == -1) {
+        if (models.recognizedWorkloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
             rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
         }
     });
@@ -123,9 +123,11 @@ function updateContainerImagesInConfigFiles(filePaths: string[], containers): st
         filePaths.forEach((filePath: string) => {
             var contents = fs.readFileSync(filePath).toString();
             containers.forEach((container: string) => {
-                let imageName = container.split(":")[0] + ":";
+                let imageName = container.split(":")[0];
+                if (imageName.indexOf("@") > 0)
+                    imageName = imageName.split("@")[0];
                 if (contents.indexOf(imageName) > 0) {
-                    contents = utils.replaceAllTokens(contents, imageName, container);
+                    contents = utils.substituteImageNameInSpecFile(contents, imageName, container);
                 }
             });
 

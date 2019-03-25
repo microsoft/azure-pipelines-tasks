@@ -1,5 +1,5 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import ccUtil = require('codecoverage-tools/codecoverageutilities');
 
 // Main entry point of this task.
@@ -29,15 +29,18 @@ async function run() {
             // It may contain wildcards allowing the path to change between builds, such as for:
             // $(System.DefaultWorkingDirectory)\artifacts***$(Configuration)\testresults\coverage
             var resolvedReportDirectory: string = resolvePathToSingleItem(workingDirectory, reportDirectory, true);
-
+            
             // Get any 'Additional Files' to publish as build artifacts
+            var findOptions : tl.FindOptions = { allowBrokenSymbolicLinks : false, followSymbolicLinks : false, followSpecifiedSymbolicLink : false};
+            var matchOptions : tl.MatchOptions = { matchBase : true};
+
             if (additionalFiles) {
                 // Resolve matches of the 'Additional Files' pattern
                 var additionalFileMatches: string[] = tl.findMatch(
                     workingDirectory,
                     additionalFiles,
-                    { followSymbolicLinks: false, followSpecifiedSymbolicLink: false },
-                    { matchBase: true });
+                    findOptions,
+                    matchOptions);
 
                 additionalFileMatches = additionalFileMatches.filter(file => pathExistsAsFile(file));
                 tl.debug(tl.loc('FoundNMatchesForPattern', additionalFileMatches.length, additionalFiles));
@@ -65,10 +68,11 @@ function resolvePathToSingleItem(workingDirectory:string, pathInput: string, isD
             pathInput = pathInput.slice(0, -1);
         }
         // Resolve matches of the pathInput pattern
+        var findOptions : tl.FindOptions = { allowBrokenSymbolicLinks : false, followSymbolicLinks : false, followSpecifiedSymbolicLink : false};
         var pathMatches: string[] = tl.findMatch(
             workingDirectory,
             pathInput,
-            { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+            findOptions);
         tl.debug(tl.loc('FoundNMatchesForPattern', pathMatches.length, pathInput));
 
         // Were any matches found?

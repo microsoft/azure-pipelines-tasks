@@ -124,15 +124,14 @@ export default class ClusterConnection {
             fs.chmodSync(pathToKubectl, "777");
             return pathToKubectl;
         }
-        else if(versionOrLocation === "version") {
-            var defaultVersionSpec = "1.7.0";
+        else if (versionOrLocation === "version") {
+            var defaultVersionSpec = "1.13.2";
             let versionSpec = tl.getInput("versionSpec");
             let checkLatest: boolean = tl.getBoolInput('checkLatest', false);
             var version = await utils.getKubectlVersion(versionSpec, checkLatest);
             if (versionSpec != defaultVersionSpec || checkLatest)
             {
                tl.debug(tl.loc("DownloadingClient"));
-               var version = await utils.getKubectlVersion(versionSpec, checkLatest);
                return await utils.downloadKubectl(version); 
             }
 
@@ -145,7 +144,6 @@ export default class ClusterConnection {
             
            // Download the default version
            tl.debug(tl.loc("DownloadingClient"));
-           var version = await utils.getKubectlVersion(versionSpec, checkLatest);
            return await utils.downloadKubectl(version); 
         }
     }

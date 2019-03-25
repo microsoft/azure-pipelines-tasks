@@ -64,6 +64,9 @@ async function run() {
             // generate a keychain password for the temporary keychain
             // overriding any value we may have read because keychainPassword is hidden in the designer for 'temp'.
             keychainPwd = Math.random().toString(36);
+
+            // tl.setSecret would work too, except it's not available in mock-task yet.
+            tl.setVariable('keychainPassword', keychainPwd, true);
         } else if (keychain === 'default') {
             keychainPath = await sign.getDefaultKeychainPath();
         } else if (keychain === 'custom') {

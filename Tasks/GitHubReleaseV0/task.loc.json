@@ -14,7 +14,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 148,
+    "Minor": 150,
     "Patch": 0
   },
   "demands": [],
@@ -32,7 +32,7 @@
       "name": "repositoryName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.repositoryName",
-      "defaultValue": "",
+      "defaultValue": "$(Build.Repository.Name)",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.repositoryName",
       "properties": {
@@ -192,8 +192,7 @@
     {
       "target": "userRepositorySearch",
       "endpointId": "$(gitHubConnection)",
-      "dataSourceName": "SearchRepositoriesByName",
-      "resultSelector": "jsonpath:$['items'][*]",
+      "dataSourceName": "SearchRepositoriesByNameForTasks",
       "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }",
       "parameters": {
         "searchText": "$(searchText)",
@@ -265,6 +264,14 @@
     "InvalidGitHubEndpoint": "ms-resource:loc.messages.InvalidGitHubEndpoint",
     "InvalidEndpointAuthScheme": "ms-resource:loc.messages.InvalidEndpointAuthScheme",
     "FetchInitialCommitError": "ms-resource:loc.messages.FetchInitialCommitError",
-    "InvalidActionSet": "ms-resource:loc.messages.InvalidActionSet"
+    "InvalidActionSet": "ms-resource:loc.messages.InvalidActionSet",
+    "InvalidTagSource": "ms-resource:loc.messages.InvalidTagSource",
+    "InvalidReleaseNotesSource": "ms-resource:loc.messages.InvalidReleaseNotesSource",
+    "InvalidAssetUploadMode": "ms-resource:loc.messages.InvalidAssetUploadMode",
+    "TagRequiredEditDeleteAction": "ms-resource:loc.messages.TagRequiredEditDeleteAction",
+    "TagRequiredCreateAction": "ms-resource:loc.messages.TagRequiredCreateAction",
+    "NoFileFoundMatchingPattern": "ms-resource:loc.messages.NoFileFoundMatchingPattern",
+    "PatternIsADirectory": "ms-resource:loc.messages.PatternIsADirectory",
+    "SearchingFileMatchingPattern": "ms-resource:loc.messages.SearchingFileMatchingPattern"
   }
 }
