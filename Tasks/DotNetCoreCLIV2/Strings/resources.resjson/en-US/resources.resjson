@@ -22,6 +22,8 @@
   "loc.input.help.arguments": "Arguments to the selected command. For example, build configuration, output folder, runtime. The arguments depend on the command selected.",
   "loc.input.label.publishTestResults": "Publish test results and code coverage",
   "loc.input.help.publishTestResults": "Enabling this option will generate a test results TRX file in `$(Agent.TempDirectory)` and results will be published to the server. <br>This option appends `--logger trx --results-directory $(Agent.TempDirectory)` to the command line arguments. <br><br>Code coverage can be collected by adding `--collect \"Code coverage\"` option to the command line arguments. This is currently only available on the Windows platform.",
+  "loc.input.label.testRunTitle": "Test run title",
+  "loc.input.help.testRunTitle": "Provide a name for the test run.",
   "loc.input.label.zipAfterPublish": "Zip Published Projects",
   "loc.input.help.zipAfterPublish": "If true, folder created by the publish command will be zipped.",
   "loc.input.label.modifyOutputPath": "Add project name to publish path",
