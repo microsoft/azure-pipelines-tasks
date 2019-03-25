@@ -192,7 +192,7 @@ class azureclitask {
 class imagevalidationtask {
   static async runMain(deploymentJson) {
     let skipValidation = tl.getVariable("SKIP_MODULE_IMAGE_VALIDATION");
-    if(skipValidation && skipValidation.toLowerCase() === "true") {
+    if (skipValidation && skipValidation.toLowerCase() === "true") {
       console.log(tl.loc("SkipModuleImageValidation"));
       return;
     }
@@ -207,7 +207,7 @@ class imagevalidationtask {
           let image = module.settings.image as string;
           let hostNameString = this.getDomainName(image);
           if (hostNameString) {
-            let result=tl.execSync("docker", `logout ${hostNameString}`, Constants.execSyncSilentOption);
+            let result = tl.execSync("docker", `logout ${hostNameString}`, Constants.execSyncSilentOption);
             tl.debug(JSON.stringify(result));
           }
         });
@@ -239,7 +239,7 @@ class imagevalidationtask {
           throw new Error(`${image} does not exist or the credential is not set correctly. Error: ${manifestResult.stderr}`);
         }
       });
-      
+
     }
     catch (err) {
       if (err.stderr) {
