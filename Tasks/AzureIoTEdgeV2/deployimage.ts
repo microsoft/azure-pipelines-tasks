@@ -259,7 +259,7 @@ class imagevalidationtask {
 
   static getDomainName(name: string) {
     let i = name.indexOf('/');
-    if (i == -1 || (name.substr(0, i).match(/\.|:/))) { // The image is in docker hub
+    if (i == -1 || (!name.substr(0, i).match(/\.|:/))) { // The image is in docker hub
       return "";
     } else {
       return name.substr(0, i);
