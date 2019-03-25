@@ -191,19 +191,28 @@ class azureclitask {
 
 class imagevalidationtask {
   static async runMain(deploymentJson) {
+    let skipValidation = tl.getVariable("SKIP_MODULE_IMAGE_VALIDATION");
+    if(skipValidation && skipValidation.toLowerCase() === "true") {
+      console.log(tl.loc("SkipModuleImageValidation"));
+      return;
+    }
+
     var executionError = null;
     try {
       let modules = deploymentJson.modulesContent.$edgeAgent["properties.desired"].modules;
       if (modules) {
+        tl.debug("Logging out all registries.");
         Object.keys(modules).forEach((key: string) => {
           let module = modules[key];
           let image = module.settings.image as string;
           let hostNameString = this.getDomainName(image);
           if (hostNameString) {
-            tl.execSync("docker", `logout ${hostNameString}`);
+            let result=tl.execSync("docker", `logout ${hostNameString}`, Constants.execSyncSilentOption);
+            tl.debug(JSON.stringify(result));
           }
         });
       } else {
+        tl.debug("No custom modules found in deployment.json");
         return; // There is no custom module so do not need to validate
       }
 
@@ -211,19 +220,21 @@ class imagevalidationtask {
       if (credentials) {
         Object.keys(credentials).forEach((key: string) => {
           let credential = credentials[key];
-          tl.execSync("docker", `logout ${credential.address}`, Constants.execSyncSilentOption);
           let loginResult = tl.execSync("docker", `login ${credential.address} -u ${credential.username} -p ${credential.password}`, Constants.execSyncSilentOption);
+          tl.debug(JSON.stringify(loginResult));
           if (loginResult.code != 0) {
             throw new Error(`Failed to login ${credential.address} with given credential. ${loginResult.stderr}`);
           }
         });
       }
 
-      tl.setTaskVariable("DOCKER_CLI_EXPERIMENTAL", "enabled");
+      tl.setVariable("DOCKER_CLI_EXPERIMENTAL", "enabled");
+      tl.debug(`Checking DOCKER_CLI_EXPERIMENTAL value: ${tl.getVariable("DOCKER_CLI_EXPERIMENTAL")}`);
       Object.keys(modules).forEach((key: string) => {
         let module = modules[key];
         let image = module.settings.image;
         let manifestResult = tl.execSync("docker", `manifest inspect ${image}`, Constants.execSyncSilentOption);
+        tl.debug(JSON.stringify(manifestResult));
         if (manifestResult.code != 0) {
           throw new Error(`${image} does not exist or the credential is not set correctly. Error: ${manifestResult.stderr}`);
         }
