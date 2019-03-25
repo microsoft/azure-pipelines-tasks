@@ -53,7 +53,7 @@ export class Utility {
 
     public static isPatternADirectory(assets: string[], pattern: string): boolean {
         if (assets && assets.length === 1 && pattern) {
-            if (path.resolve(assets[0]) === path.resolve(pattern)) {
+            if ((path.resolve(assets[0]) === path.resolve(pattern)) && tl.exist(path.resolve(pattern)) && tl.stats(path.resolve(pattern)).isDirectory()) {
                 tl.debug("Pattern is a directory " + pattern);
                 return true;
             }

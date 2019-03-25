@@ -14,7 +14,7 @@
     "preview": true,
     "version": {
         "Major": 0,
-        "Minor": 149,
+        "Minor": 150,
         "Patch": 0
     },
     "demands": [],
@@ -32,7 +32,7 @@
             "name": "repositoryName",
             "type": "pickList",
             "label": "Repository",
-            "defaultValue": "",
+            "defaultValue": "$(Build.Repository.Name)",
             "required": true,
             "helpMarkDown": "Specify the name of the GitHub repository in which the GitHub release will be created, edited, or deleted.",
             "properties": {

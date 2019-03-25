@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 6
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -37,6 +37,17 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscription"
+    },
+    {
+      "name": "osType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.osType",
+      "defaultValue": "Linux",
+      "required": true,
+      "options": {
+        "Linux": "Linux",
+        "Windows": "Windows"
+      }
     },
     {
       "name": "appName",
@@ -131,9 +142,9 @@
     {
       "target": "appName",
       "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureRMWebAppNamesByAppType",
+      "dataSourceName": "AzureWebAppContainerNamesByOSType",
       "parameters": {
-        "WebAppKind": "webAppContainer"
+        "osType": "$(osType)"
       }
     },
     {
@@ -309,6 +320,12 @@
     "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
-    "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName"
+    "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName",
+    "RestartingAppService": "ms-resource:loc.messages.RestartingAppService",
+    "RestartingAppServiceSlot": "ms-resource:loc.messages.RestartingAppServiceSlot",
+    "RestartedAppService": "ms-resource:loc.messages.RestartedAppService",
+    "RestartedAppServiceSlot": "ms-resource:loc.messages.RestartedAppServiceSlot",
+    "FailedToRestartAppService": "ms-resource:loc.messages.FailedToRestartAppService",
+    "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot"
   }
 }
