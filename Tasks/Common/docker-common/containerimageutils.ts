@@ -41,7 +41,7 @@ export function getBaseImageName(contents: string): string {
     return null;
 }
 
-export function getResourceUrl(image: string, digest: string) {
+export function getResourceName(image: string, digest: string) {
     var match = image.match(/^(?:([^\/]+)\/)?(?:([^\/]+)\/)?([^@:\/]+)(?:[@:](.+))?$/);
     if (!match) {
         return null;
@@ -54,11 +54,16 @@ export function getResourceUrl(image: string, digest: string) {
   
     if (!namespace && registry && !/[:.]/.test(registry)) {
       namespace = registry
-      registry = null
+      registry = 'docker.io'
     }
 
-    registry = registry ? registry : 'docker.io';
-    namespace = namespace ? namespace : 'library';
+    if (!namespace && !registry) {
+      registry = 'docker.io'
+      namespace = 'library'
+    }
 
-    return "https://" + registry + "/" + namespace + "/" + repository + "@sha256" + digest;
+    registry = registry ? registry + '/' : '';
+    namespace = namespace ? namespace + '/' : '';
+    
+    return "https://" + registry  + namespace  + repository + "@sha256:" + digest;
   }

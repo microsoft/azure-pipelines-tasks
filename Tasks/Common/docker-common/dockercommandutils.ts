@@ -74,85 +74,41 @@ export function push(connection: ContainerConnection, image: string, commandArgu
 }
 
 export function getLayers(connection: ContainerConnection, imageId: string): any {
-    const NONE_TAG = '<none>:<none>';
-    const NOP_PREFIX = '#(nop) ';
-    const TOKEN_WHITESPACE = RegExp(/[\t\v\f\r ]+/);
-
-    var imageDetails = images(connection, "--format \"{{json . }}\"").split(/[\r?\n]/);;
-    var i = 0;
-    var tags: { [imageId: string] : string }  = {}
-    for (i = 0; i < imageDetails.length; i++){
-        var imageDetail = JSON.parse(imageDetails[i]);
-        var tag = imageDetail.info['RepoTags'].first
-        if (tag != NONE_TAG){
-            tags[imageDetail['Id']] = tag;
-        }
-    }
-
     var layers = [];
-    while (true){
-        if(tags[imageId]){
-            layers.push({ Directive : "FROM", Arguments : "", Id : imageId, Size : "", CreatedOn : "" });
+    var lines = history(connection, imageId).split(/[\r?\n]/);
+    lines.forEach(line => {
+        line = line.trim();
+        if (line.length != 0){
+            layers.push(parseHistory(line));
         }
-
-        var imageDetail = inspect(connection, imageId);
-
-        if (!imageDetail){
-            tl.warning("Specified Image Id : " + imageId + "could not be found.")
-            break;
-        }
-
-        var cmds = imageDetail.info['ContainerConfig']['Cmd']
-
-        if (cmds && cmds.length > 0){
-            var cmd : string = cmds.last;
-            if (cmd.startsWith(NOP_PREFIX)){
-                cmd.replace(NOP_PREFIX, "");
-                var match = cmd.match(TOKEN_WHITESPACE);
-                if (!match) {
-                    layers.push ({ Directive: "UNSPECIFIED", Arguments: cmd, Id: imageId, Size: "", CreatedOn: "" });
-                }
-                else {
-                    var directive = cmd.substr(0, match.index).toUpperCase().trim();
-                    var rest = cmd.substr(match.index + match[0].length).trim();
-                    layers.push ({ Directive: directive, Arguments: rest, Id: imageId, Size: "", CreatedOn: "" });
-                }
-            }
-            else {
-                layers.push({ Directive: "RUN", Arguments: cmd, Id: imageId, Size: "", CreatedOn: "" });
-            }       
-        }
-
-        imageId = imageDetail.info['Parent'];
-
-        if (imageId == ''){
-            break;
-        }
-    }
+    });    
     
     return layers.reverse();
 }
 
-export function images(connection: ContainerConnection, commandArguments: string): any {
-    var command = connection.createCommand();
-    command.arg("images");
-    command.line(commandArguments);
+function parseHistory(input: string) {
+    const NOP = '#(nop)';
+    var directive = 'UNSPECIFIED';
+    var argument = '';
+    var index = input.indexOf(NOP);
+    if (index != -1) {
+        argument = input.substr(index+6).trim();
+        directive = argument.substr(0, argument.indexOf(' '));
+        argument = argument.substr(argument.indexOf(' ') + 1).trim();
+    }
+    else {
+        directive = 'RUN';
+        argument = input;
+    }
 
-    // setup variable to store the command output
-    let output = "";
-    command.on("stdout", data => {
-        output += data;
-    });
-
-    return connection.execCommand(command).then(() => {
-        // Return the std output of the command by calling the delegate
-        output;
-    });
+    return { Directive : directive, Arguments : argument };
 }
 
-export function inspect(connection: ContainerConnection, image: string): any {
+function history(connection: ContainerConnection, image: string): any {
     var command = connection.createCommand();
-    command.arg("inspect");
+    command.arg("history");
+    command.arg(["--format", "{{.CreatedBy}}"]);
+    command.arg("--no-trunc");
     command.arg(image);
 
     // setup variable to store the command output
@@ -162,7 +118,6 @@ export function inspect(connection: ContainerConnection, image: string): any {
     });
 
     return connection.execCommand(command).then(() => {
-        // Return the std output of the command by calling the delegate
         output;
     });
 }
