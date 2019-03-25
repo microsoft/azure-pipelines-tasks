@@ -27,9 +27,9 @@ export async function installCertInTemporaryKeychain(keychainPath: string, keych
         createKeychainCommand.arg(['create-keychain', '-p', keychainPwd, keychainPath]);
         await createKeychainCommand.exec();
 
-        //update keychain settings
+        //update keychain settings, keep keychain unlocked for 6h = 21600 sec, which is the job timeout for paid hosted VMs
         let keychainSettingsCommand: ToolRunner = tl.tool(tl.which('security', true));
-        keychainSettingsCommand.arg(['set-keychain-settings', '-lut', '7200', keychainPath]);
+        keychainSettingsCommand.arg(['set-keychain-settings', '-lut', '21600', keychainPath]);
         await keychainSettingsCommand.exec();
     }
 
@@ -477,7 +477,7 @@ export async function deleteProvisioningProfile(uuid: string): Promise<void> {
         const provProfiles: string[] = tl.findMatch(getUserProvisioningProfilesPath(), uuid.trim() + '*');
         if (provProfiles) {
             for (const provProfilePath of provProfiles) {
-                tl.warning('Deleting provisioning profile: ' + provProfilePath);
+                console.log('Deleting provisioning profile: ' + provProfilePath);
                 if (tl.exist(provProfilePath)) {
                     const deleteProfileCommand: ToolRunner = tl.tool(tl.which('rm', true));
                     deleteProfileCommand.arg(['-f', provProfilePath]);

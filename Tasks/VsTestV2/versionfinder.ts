@@ -1,7 +1,6 @@
-import * as tl from 'vsts-task-lib/task';
-import tr = require('vsts-task-lib/toolrunner');
+import * as tl from 'azure-pipelines-task-lib/task';
+import tr = require('azure-pipelines-task-lib/toolrunner');
 import * as path from 'path';
-import * as Q from 'q';
 import * as models from './models';
 import * as version from './vstestversion';
 import * as utils from './helpers';

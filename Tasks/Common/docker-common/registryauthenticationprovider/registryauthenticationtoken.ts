@@ -49,4 +49,11 @@ export default class RegistryServerAuthenticationToken {
         var auths = util.format('{"auths": { "%s": {"auth": "%s", "email": "%s" } }, "HttpHeaders":{"X-Meta-Source-Client":"%s"} }', this.registry, authenticationToken,this.email, this.xMetaSourceClient);
         return auths;
     }
+
+    public getDockerAuth(): string {
+        var authenticationToken = new Buffer(this.username+":"+this.password).toString('base64')
+        console.log("##vso[task.setvariable variable=CONTAINER_AUTHENTICATIONTOKEN;issecret=true;]" + authenticationToken);
+        let auth = util.format('{ "%s": {"auth": "%s", "email": "%s" } }', this.registry, authenticationToken, this.email );
+        return auth;
+    }
 }

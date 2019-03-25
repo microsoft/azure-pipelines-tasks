@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
-    "Patch": 23
+    "Minor": 150,
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -60,7 +60,7 @@
       "name": "connectionType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.connectionType",
-      "defaultValue": "Azure Resource Manager",
+      "defaultValue": "Kubernetes Service Connection",
       "required": true,
       "options": {
         "Azure Resource Manager": "Azure Resource Manager",
@@ -114,6 +114,15 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "useClusterAdmin",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useClusterAdmin",
+      "defaultValue": "false",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "groupName": "kubernetesCluster",
+      "helpMarkDown": "ms-resource:loc.input.help.useClusterAdmin"
     },
     {
       "name": "namespace",
@@ -466,6 +475,7 @@
     "ConfigurationFileNotFound": "ms-resource:loc.messages.ConfigurationFileNotFound",
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
     "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
-    "InvalidConfiguration": "ms-resource:loc.messages.InvalidConfiguration"
+    "InvalidConfiguration": "ms-resource:loc.messages.InvalidConfiguration",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   }
 }

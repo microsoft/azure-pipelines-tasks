@@ -60,7 +60,7 @@ export default class DockerComposeConnection extends ContainerConnection {
             var services = {};
             if (qualifyImageNames) {
                 for (var serviceName in images) {
-                    images[serviceName] = this.qualifyImageName(images[serviceName]);
+                    images[serviceName] = this.getQualifiedImageNameIfRequired(images[serviceName]);
                 }
             }
             for (var serviceName in images) {

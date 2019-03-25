@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 6
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -37,6 +37,18 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+        },
+        {
+            "name": "osType",
+            "type": "pickList",
+            "label": "App OS type",
+            "defaultValue": "Linux",
+            "required": true,
+            "options": {
+                "Linux": "Linux",
+                "Windows": "Windows"
+                
+            }
         },
         {
             "name": "appName",
@@ -67,7 +79,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "The Resource group name is required when the deployment target is either a deployment slot or an App Service Environment.<br />Enter or Select the Azure Resource group that contains the Azure App Service specified above.",
-            "visibleRule": "DeployToSlotOrASEFlag = true"
+            "visibleRule": "deployToSlotOrASE = true"
         },
         {
             "name": "slotName",
@@ -79,7 +91,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "Enter or Select an existing Slot other than the Production slot.",
-            "visibleRule": "DeployToSlotOrASEFlag = true"
+            "visibleRule": "deployToSlotOrASE = true"
         },
         {
             "name": "imageName",
@@ -131,9 +143,9 @@
         {
             "target": "appName",
             "endpointId": "$(azureSubscription)",
-            "dataSourceName": "AzureRMWebAppNamesByAppType",
+            "dataSourceName": "AzureWebAppContainerNamesByOSType",
             "parameters": {
-                "WebAppKind": "webAppContainer"
+                "osType": "$(osType)"
             }
         },
         {
@@ -309,6 +321,12 @@
         "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
         "JarPathNotPresent": "Java jar path is not present",
         "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
-        "InvalidDockerImageName": "Invalid Docker hub image name provided."
+        "InvalidDockerImageName": "Invalid Docker hub image name provided.",
+        "RestartingAppService": "Restarting App Service : %s",
+        "RestartingAppServiceSlot": "Restarting App Service: %s-%s",
+        "RestartedAppService": "App Service '%s' restarted successfully.",
+        "RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
+        "FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
+        "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s"
     }
 }
