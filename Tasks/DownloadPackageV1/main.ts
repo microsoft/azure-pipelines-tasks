@@ -1,6 +1,6 @@
 var path = require("path");
 
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as nutil from "packaging-common/nuget/Utility";
 import * as telemetry from "utility-common/telemetry";
 
