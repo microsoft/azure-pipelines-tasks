@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as publishTestResultsTool from './publishtestresultstool';
 import * as tl from 'vsts-task-lib/task';
 import { publishEvent } from './cieventlogger';
+import * as ci from './cieventlogger';
 
 const MERGE_THRESHOLD = 100;
 const TESTRUN_SYSTEM = 'VSTS - PTR';
@@ -66,6 +67,8 @@ async function run() {
         tl.debug('publishRunAttachments: ' + publishRunAttachments);
         tl.debug('failTaskOnFailedTests: ' + failTaskOnFailedTests);
 
+        
+
         if (isNullOrWhitespace(searchFolder)) {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
         }
@@ -83,6 +86,12 @@ async function run() {
         const testResultsFilesCount = matchingTestResultsFiles ? matchingTestResultsFiles.length : 0;
 
         tl.debug(`Detected ${testResultsFilesCount} test result files`);
+
+        ci.addToConsolidatedCi('testRunner', testRunner);
+        ci.addToConsolidatedCi('failTaskOnFailedTests', failTaskOnFailedTests);
+        ci.addToConsolidatedCi('mergeResultsUserPreference', mergeResults);
+        ci.addToConsolidatedCi('testResultsFilesCount', testResultsFilesCount);   
+
         const forceMerge = testResultsFilesCount > MERGE_THRESHOLD;
         if (forceMerge) {
             tl.debug('Detected large number of test result files. Merged all of them into a single file and published a single test run to optimize for test result publish performance instead of publishing hundreds of test runs');
@@ -123,6 +132,7 @@ async function run() {
                 }
                 else if(exitCode == 40000){
                     // The exe returns with exit code: 40000 if there are test failures found and failTaskOnFailedTests is true
+                    ci.addToConsolidatedCi('failedTestsInRun', true);
                     tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnFailedTests'));
                 }
             } else {
@@ -136,14 +146,11 @@ async function run() {
                     TESTRUN_SYSTEM);
             }
         }
-
-        publishEvent({
-            'mergeResultsUserPreference': mergeResults,
-            'testResultsFilesCount': testResultsFilesCount
-        });
-
+        ci.fireConsolidatedCi();
         tl.setResult(tl.TaskResult.Succeeded, '');
     } catch (err) {
+
+        ci.fireConsolidatedCi();
         tl.setResult(tl.TaskResult.Failed, err);
     }
 }

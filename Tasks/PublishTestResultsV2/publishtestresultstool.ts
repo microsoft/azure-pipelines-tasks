@@ -67,9 +67,7 @@ export class TestResultsPublisher {
             fs.writeFileSync(responseFilePath, fileContent);
         } catch (ex) {
             // Log telemetry and return null path
-            publishEvent({
-                "exception": ex
-            });
+            publishEvent('publishTestResultsTaskEvent',{"exception": ex});
             tl.warning("Exception while writing to response file: " + ex);
             return null;
         }
