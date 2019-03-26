@@ -158,7 +158,7 @@ async function generateHtmlReport(summaryFile: string, targetDir: string): Promi
     const dotnetPath = tl.which('dotnet', false);
     if (!dotnetPath && osvar !== 'win32') {
         tl.warning(tl.loc('InstallDotNetCoreForHtmlReport'));
-        return;
+        return false;
     }
 
     if (!dotnetPath && osvar === 'win32') {
