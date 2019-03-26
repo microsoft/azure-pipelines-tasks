@@ -91,7 +91,6 @@ export class Kubectl {
         command.arg(resourceType + "/" + name);
         command.arg(["--namespace", this.namespace]);
         command.arg(["-o", "json"])
-        command.arg("--export=true");
         return command.execSync();
     }
 

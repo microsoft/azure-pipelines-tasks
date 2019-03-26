@@ -55,14 +55,19 @@ export function deployCanary(kubectl: Kubectl, filePaths: string[]) {
                     throw (tl.loc("CanaryDeploymentAlreadyExistErrorMessage"));
                 }
 
+                tl.debug("Calculating replica count for canary");
                 var canaryReplicaCount = calculateReplicaCountForCanary(inputObject, percentage);
+                tl.debug("Replica count is "+canaryReplicaCount);
                 // Get stable object
+                tl.debug("Querying stable object");
                 var stable_object = fetchResource(kubectl, kind, name);
                 if (!stable_object) {
+                    tl.debug("Stable object not found. Creating only canary object");
                     // If stable object not found, create canary deployment.
                     var newCanaryObject = getNewCanaryResource(inputObject, canaryReplicaCount);
                     newObjectsList.push(newCanaryObject);
                 } else {
+                    tl.debug("Stable object found. Creating canary and baseline objects");
                     // If canary object not found, create canary and baseline object.
                     var newCanaryObject = getNewCanaryResource(inputObject, canaryReplicaCount);
                     var newBaselineObject = getNewBaselineResource(stable_object, canaryReplicaCount);
@@ -109,7 +114,52 @@ function getBaselineResourceName(name: string) {
 
 function fetchResource(kubectl: Kubectl, kind: string, name: string): object {
     var result = kubectl.getResource(kind, name);
-    return result.stderr ? null : JSON.parse(result.stdout);
+
+    if (!!result.stderr) {
+        return null;
+    }
+
+    try {
+        var resource = JSON.parse(result.stdout);
+        return resource;
+    } catch (ex) {
+        tl.debug("Exception occurred while Parsing " + resource + " in Json object");
+    }
+
+    try {
+        UnsetsClusterSpecficDetails(resource);
+    } catch (ex) {
+        tl.debug("Exception occurred unsetting cluster specific details in " + resource + "object");
+    }
+
+    return null;
+}
+
+function UnsetsClusterSpecficDetails(resource: any) {
+    tl.debug("Resource found " + JSON.stringify(resource));
+
+    // Unsets the cluster specific details in the object
+    if (!!resource) {
+        tl.debug("Resource is not null, updating metadata and status");
+        var metadata = resource.metadata;
+        var status = resource.status;
+
+        if (!!metadata) {
+            tl.debug("Metadata is not null, updating metadata");
+            var newMetadata;
+            newMetadata.annotations = metadata.annotations;
+            newMetadata.labels = metadata.labels;
+            newMetadata.name = metadata.name;
+            resource.metadata = newMetadata;
+            tl.debug("New metadata " + JSON.stringify(newMetadata));
+            tl.debug("New resource" + JSON.stringify(resource));
+        }
+
+        if (!!status) {
+            resource.status = null;
+        }
+    }
+    return resource;
 }
 
 function fetchCanaryResource(kubectl: Kubectl, kind: string, name: string): object {
