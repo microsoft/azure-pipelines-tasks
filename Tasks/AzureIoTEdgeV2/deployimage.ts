@@ -228,16 +228,19 @@ class imagevalidationtask {
 
       tl.setVariable("DOCKER_CLI_EXPERIMENTAL", "enabled");
       tl.debug(`Checking DOCKER_CLI_EXPERIMENTAL value: ${tl.getVariable("DOCKER_CLI_EXPERIMENTAL")}`);
+      let validationErr = "";
       Object.keys(modules).forEach((key: string) => {
         let module = modules[key];
         let image = module.settings.image;
         let manifestResult = tl.execSync("docker", `manifest inspect ${image}`, Constants.execSyncSilentOption);
         tl.debug(JSON.stringify(manifestResult));
         if (manifestResult.code != 0) {
-          throw new Error(tl.loc("CheckModuleImageExistenceError", image, manifestResult.stderr));
+          validationErr += tl.loc("CheckModuleImageExistenceError", image, manifestResult.stderr);
         }
       });
-
+      if (validationErr) {
+        throw new Error(validationErr);
+      }
     }
     catch (err) {
       if (err.stderr) {

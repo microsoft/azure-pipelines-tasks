@@ -62,5 +62,5 @@
   "loc.messages.RootPathNotExist": "The Root path %s does not exist",
   "loc.messages.SkipModuleImageValidation": "SKIP_MODULE_IMAGE_VALIDATION set to true, skipping module image validation.",
   "loc.messages.InvalidRegistryCredentialWarning": "Failed to login %s with given credential. %s",
-  "loc.messages.CheckModuleImageExistenceError": "%s does not exist or the credential is not set correctly. Error: %s"
+  "loc.messages.CheckModuleImageExistenceError": "%s does not exist or the credential is not set correctly. Error: %s \n"
 }
