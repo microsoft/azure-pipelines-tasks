@@ -1,7 +1,6 @@
 import * as path from 'path';
 import * as publishTestResultsTool from './publishtestresultstool';
 import * as tl from 'vsts-task-lib/task';
-import { publishEvent } from './cieventlogger';
 import * as ci from './cieventlogger';
 
 const MERGE_THRESHOLD = 100;
@@ -67,8 +66,6 @@ async function run() {
         tl.debug('publishRunAttachments: ' + publishRunAttachments);
         tl.debug('failTaskOnFailedTests: ' + failTaskOnFailedTests);
 
-        
-
         if (isNullOrWhitespace(searchFolder)) {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
         }
@@ -90,7 +87,9 @@ async function run() {
         ci.addToConsolidatedCi('testRunner', testRunner);
         ci.addToConsolidatedCi('failTaskOnFailedTests', failTaskOnFailedTests);
         ci.addToConsolidatedCi('mergeResultsUserPreference', mergeResults);
-        ci.addToConsolidatedCi('testResultsFilesCount', testResultsFilesCount);   
+        ci.addToConsolidatedCi('config', config);
+        ci.addToConsolidatedCi('platform', platform);
+        ci.addToConsolidatedCi('testResultsFilesCount', testResultsFilesCount);
 
         const forceMerge = testResultsFilesCount > MERGE_THRESHOLD;
         if (forceMerge) {
@@ -99,6 +98,7 @@ async function run() {
 
         if (testResultsFilesCount === 0) {
             tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
+            ci.addToConsolidatedCi('noeResultsFileFound', true);
         } else {
             const osType = tl.osType();
             // This variable can be set as build variable to force the task to use command flow
@@ -146,12 +146,11 @@ async function run() {
                     TESTRUN_SYSTEM);
             }
         }
-        ci.fireConsolidatedCi();
         tl.setResult(tl.TaskResult.Succeeded, '');
-    } catch (err) {
-
-        ci.fireConsolidatedCi();
+    } catch (err) {       
         tl.setResult(tl.TaskResult.Failed, err);
+    } finally {
+        ci.fireConsolidatedCi();
     }
 }
 
