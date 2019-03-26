@@ -28,36 +28,7 @@ describe('Publish Code Coverage Results Suite', function() {
 
         var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
 
-        tr.setInput('codeCoverageTool', 'JaCoCo');
-        tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
-        tr.setInput('reportDirectory', '/user/admin/report');
-        tr.setInput('autogenerateHtmlReport', 'true');
-        tr.setInput('additionalCodeCoverageFiles', "/some/*pattern");
-
-        tr.run()
-            .then(() => {
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
-                assert(tr.succeeded, 'task should have succeeded');
-                if (os.type().match(/^Win/)) {
-                    assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\\tmp\\cchtml -reporttypes:HtmlInline_AzurePipelines/) > 0)
-                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
-                } else {
-                    assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\/tmp\/cchtml -reporttypes:HtmlInline_AzurePipelines/) > 0)
-                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/tmp\/cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
-                }
-                done();
-            })
-            .fail((err) => {
-                done(err);
-            });
-    })
-
-    it('Publish code coverage results without autogenerate', (done) => {
-        setResponseFile('publishCCResponses.json');
-
-        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
-
-        tr.setInput('codeCoverageTool', 'JaCoCo');
+        tr.setInput('codeCoverageTool', 'Cobertura');
         tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
         tr.setInput('reportDirectory', '/user/admin/report');
         tr.setInput('additionalCodeCoverageFiles', "/some/*pattern");
@@ -68,10 +39,10 @@ describe('Publish Code Coverage Results Suite', function() {
                 assert(tr.succeeded, 'task should have succeeded');
                 if (os.type().match(/^Win/)) {
                     assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\\tmp\\cchtml -reporttypes:HtmlInline_AzurePipelines/) > 0)
-                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
                 } else {
                     assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\/tmp\/cchtml -reporttypes:HtmlInline_AzurePipelines/) > 0)
-                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/tmp\/cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/tmp\/cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
                 }
                 done();
             })
@@ -85,9 +56,8 @@ describe('Publish Code Coverage Results Suite', function() {
 
         var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
 
-        tr.setInput('codeCoverageTool', 'JaCoCo');
+        tr.setInput('codeCoverageTool', 'Cobertura');
         tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
-        tr.setInput('autogenerateHtmlReport', 'true');
         tr.setInput('additionalCodeCoverageFiles', "/some/*pattern");
 
         tr.run()
@@ -96,39 +66,10 @@ describe('Publish Code Coverage Results Suite', function() {
                 assert(tr.succeeded, 'task should have succeeded');
                 if (os.type().match(/^Win/)) {
                     assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\\tmp\\cchtml -reporttypes:HtmlInline_AzurePipelines/) > 0)
-                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
                 } else {
                     assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\/tmp\/cchtml -reporttypes:HtmlInline_AzurePipelines/) > 0)
-                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/tmp\/cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
-                }
-                done();
-            })
-            .fail((err) => {
-                done(err);
-            });
-    })
-
-    it('Publish code coverage results with autogenerate with source directory', (done) => {
-        setResponseFile('publishCCResponses.json');
-
-        var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
-
-        tr.setInput('codeCoverageTool', 'JaCoCo');
-        tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
-        tr.setInput('autogenerateHtmlReport', 'true');
-        tr.setInput('additionalCodeCoverageFiles', '/some/*pattern');
-        tr.setInput('sourceDirectory', '/tmp/sources')
-
-        tr.run()
-            .then(() => {
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
-                assert(tr.succeeded, 'task should have succeeded');
-                if (os.type().match(/^Win/)) {
-                    assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\\tmp\\cchtml -reporttypes:HtmlInline_AzurePipelines -sourcedirs:\/tmp\/sources/) > 0)
-                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
-                } else {
-                    assert(tr.stdout.search(/ReportGenerator.dll -reports:\/user\/admin\/summary.xml -targetdir:\/tmp\/cchtml -reporttypes:HtmlInline_AzurePipelines -sourcedirs:\/tmp\/sources/) > 0)
-                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/tmp\/cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                    assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\/tmp\/cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
                 }
                 done();
             })
@@ -348,10 +289,9 @@ describe('Publish Code Coverage Results Suite', function() {
 
         var tr = new trm.TaskRunner('PublishCodeCoverageResultsV1');
 
-        tr.setInput('codeCoverageTool', 'JaCoCo');
+        tr.setInput('codeCoverageTool', 'Cobertura');
         tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
         tr.setInput('reportDirectory', '/user/admin/report');
-        tr.setInput('autogenerateHtmlReport', 'true');
         tr.setInput('additionalCodeCoverageFiles', "/some/*pattern");
 
         if (!os.type().match(/^Win/)) {
@@ -360,11 +300,12 @@ describe('Publish Code Coverage Results Suite', function() {
 
         tr.run()
             .then(() => {
+                console.log(tr.stdout);
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
 
                 assert(tr.stdout.search(/net47\\ReportGenerator.exe -reports:\/user\/admin\/summary.xml -targetdir:\\tmp\\cchtml -reporttypes:HtmlInline_AzurePipelines/) > 0)
-                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=\/user\/admin\/summary.xml;reportdirectory=\\tmp\\cchtml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
 
                 done();
             })

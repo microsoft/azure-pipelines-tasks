@@ -1,6 +1,7 @@
 {
     "getVariable": {
-        "System.DefaultWorkingDirectory": "/someDir"
+        "System.DefaultWorkingDirectory": "/someDir",
+        "ignore.coverage.autogenerate": true
     },
     "find": {
         "/someDir": [
