@@ -69,8 +69,7 @@ export class TestResultsPublisher {
         } catch (ex) {
             // Log telemetry and return null path
             ci.addToConsolidatedCi('exception', ex);
-            ci.fireConsolidatedCi();
-
+            
             tl.warning("Exception while writing to response file: " + ex);
             return null;
         }
