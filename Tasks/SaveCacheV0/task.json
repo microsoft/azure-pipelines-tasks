@@ -18,15 +18,15 @@
     "minimumAgentVersion": "2.140.1",
     "inputs": [
         {
-            "name": "fingerprints",
+            "name": "key",
             "type": "multiLine",
-            "label": "The name of the fingerprint.",
-            "defaultValue": "fingerprints",
+            "label": "The name of the key.",
+            "defaultValue": "key",
             "required": true,
-            "helpMarkDown": "The name of the fingerprint."
+            "helpMarkDown": "The name of the key."
         },
         {
-            "name": "targetPath",
+            "name": "path",
             "type": "filePath",
             "label": "Path to publish",
             "defaultValue": "",

@@ -18,20 +18,20 @@
   "minimumAgentVersion": "2.140.1",
   "inputs": [
     {
-      "name": "fingerprints",
+      "name": "key",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.fingerprints",
-      "defaultValue": "fingerprints",
+      "label": "ms-resource:loc.input.label.key",
+      "defaultValue": "key",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.fingerprints"
+      "helpMarkDown": "ms-resource:loc.input.help.key"
     },
     {
-      "name": "targetPath",
+      "name": "path",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.targetPath",
+      "label": "ms-resource:loc.input.label.path",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.targetPath"
+      "helpMarkDown": "ms-resource:loc.input.help.path"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
