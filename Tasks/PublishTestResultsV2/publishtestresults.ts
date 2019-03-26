@@ -98,7 +98,7 @@ async function run() {
 
         if (testResultsFilesCount === 0) {
             tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
-            ci.addToConsolidatedCi('noeResultsFileFound', true);
+            ci.addToConsolidatedCi('noResultsFileFound', true);
         } else {
             const osType = tl.osType();
             // This variable can be set as build variable to force the task to use command flow
