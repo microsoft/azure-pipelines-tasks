@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 150,
-        "Patch": 5
+        "Patch": 0
     },
     "demands": [],
     "groups": [
@@ -82,7 +82,7 @@
             "helpMarkDown": "Choose the action to be performed."
         },
         {
-            "name": "deploymentStrategy",
+            "name": "strategy",
             "type": "pickList",
             "label": "Strategy",
             "required": false,
@@ -103,7 +103,7 @@
             "groupName": "config",
             "helpMarkDown": "",
             "defaultValue": 0,
-            "visibleRule": "deploymentStrategy = Canary && action = deploy",  
+            "visibleRule": "strategy = Canary && action = deploy",  
             "validation": {
               "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')", 
               "message": "Enter valid percentage value i.e between 0 to 100."
@@ -242,7 +242,7 @@
             "visibleRule": "action = patch"
         },
         {
-            "name": "args",
+            "name": "arguments",
             "type": "string",
             "label": "Arguments",
             "defaultValue": "",

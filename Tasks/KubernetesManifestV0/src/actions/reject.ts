@@ -10,7 +10,7 @@ export async function reject() {
     let kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace);
 
     if (canaryDeploymentHelper.isCanaryDeploymentStrategy()) {
-        tl.debug("Deployment strategy selected is Canary. So will delete canary objects");
+        tl.debug("Deployment strategy selected is Canary. Deleting baseline and canary workloads.");
         canaryDeploymentHelper.deleteCanaryDeployment(kubectl, TaskInputParameters.manifests);
     }
     else {

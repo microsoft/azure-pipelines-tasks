@@ -16,7 +16,7 @@ export async function promote() {
 
     // delete canary deployment if strategy is canary
     if (canaryDeploymentHelper.isCanaryDeploymentStrategy()) {
-        tl.debug("Deployment strategy selected is Canary. Deleting canary deployment");
+        tl.debug("Deployment strategy selected is Canary. Deleting canary and baseline workloads.");
         canaryDeploymentHelper.deleteCanaryDeployment(kubectl, TaskInputParameters.manifests);
     }
 }
