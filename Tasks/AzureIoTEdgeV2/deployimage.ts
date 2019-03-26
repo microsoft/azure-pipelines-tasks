@@ -206,10 +206,8 @@ class imagevalidationtask {
           let module = modules[key];
           let image = module.settings.image as string;
           let hostNameString = this.getDomainName(image);
-          if (hostNameString) {
-            let result = tl.execSync("docker", `logout ${hostNameString}`, Constants.execSyncSilentOption);
-            tl.debug(JSON.stringify(result));
-          }
+          let result = tl.execSync("docker", `logout ${hostNameString}`, Constants.execSyncSilentOption);
+          tl.debug(JSON.stringify(result));
         });
       } else {
         tl.debug("No custom modules found in deployment.json");
@@ -223,7 +221,7 @@ class imagevalidationtask {
           let loginResult = tl.execSync("docker", `login ${credential.address} -u ${credential.username} -p ${credential.password}`, Constants.execSyncSilentOption);
           tl.debug(JSON.stringify(loginResult));
           if (loginResult.code != 0) {
-            throw new Error(`Failed to login ${credential.address} with given credential. ${loginResult.stderr}`);
+            tl.warning(tl.loc("InvalidRegistryCredentialWarning", credential.address, loginResult.stderr));
           }
         });
       }
@@ -236,7 +234,7 @@ class imagevalidationtask {
         let manifestResult = tl.execSync("docker", `manifest inspect ${image}`, Constants.execSyncSilentOption);
         tl.debug(JSON.stringify(manifestResult));
         if (manifestResult.code != 0) {
-          throw new Error(`${image} does not exist or the credential is not set correctly. Error: ${manifestResult.stderr}`);
+          throw new Error(tl.loc("CheckModuleImageExistenceError", image, manifestResult.stderr));
         }
       });
 
