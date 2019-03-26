@@ -98,6 +98,8 @@ function isJsonOrYamlOutputFormatSupported(kubecommand) : boolean
           return false;
        case "logs":
           return false;
+       case "rollout":
+          return false;
        default: 
           return true;
    }
