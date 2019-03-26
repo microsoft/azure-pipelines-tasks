@@ -21,16 +21,21 @@ function Invoke-BuildTools {
             }
             
             $splat = @{ }
-                if ($CreateLogFile) {
-                    $splat["LogFile"] = "$file.log"
-                }
+            if ($CreateLogFile) {
+                $splat["LogFile"] = "$file.log"
+            }
 
-                if ($LogFileVerbosity) {
-                    $splat["LogFileVerbosity"] = $LogFileVerbosity
-                }
+            if ($LogFileVerbosity) {
+                $splat["LogFileVerbosity"] = $LogFileVerbosity
+            }
 
             if ($Clean) {
-                Invoke-MSBuild -ProjectFile $file -Targets Rebuild -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
+                if ($MSBuildArguments.Contains("/t")) {
+                    Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
+                } else {
+                    Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
+                    Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
+                }
             } else {
                 Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
             }
