@@ -44,30 +44,12 @@
             "helpMarkDown": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`"
         },
         {
-            "name": "autogenerateHtmlReport",
-            "type": "boolean",
-            "label": "Generate Html report",
-            "defaultValue": "true",
-            "required": false,
-            "helpMarkDown": "Generate code coverage html report."
-        },
-        {
-            "name": "sourceDirectory",
-            "type": "string",
-            "label": "Source directory",
-            "defaultValue": "$(System.DefaultWorkingDirectory)",
-            "required": false,
-            "helpMarkDown": "Path to source code for generating code coverage Html report. For example: `$(System.DefaultWorkingDirectory)/MyApp/`",
-            "visibleRule": "autogenerateHtmlReport = true"
-        },
-        {
             "name": "reportDirectory",
             "type": "string",
             "label": "Report directory",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`",
-            "visibleRule": "autogenerateHtmlReport = false"
+            "helpMarkDown": "Path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`"
         },
         {
             "name": "additionalCodeCoverageFiles",

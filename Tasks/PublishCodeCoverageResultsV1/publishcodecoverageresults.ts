@@ -17,9 +17,15 @@ async function run() {
         const additionalFiles = tl.getInput('additionalCodeCoverageFiles');
         const failIfCoverageIsEmpty: boolean = tl.getBoolInput('failIfCoverageEmpty');
         const workingDirectory: string = tl.getVariable('System.DefaultWorkingDirectory');
-        const sourceDirectory: string = tl.getInput('sourceDirectory');
-        let autogenerateHtmlReport: boolean = tl.getBoolInput('autogenerateHtmlReport');
+
+        let autogenerateHtmlReport: boolean = codeCoverageTool === 'Cobertura';
         let tempFolder = undefined;
+        const disableAutoGenerate = tl.getVariable('disable.coverage.autogenerate');
+
+        if (disableAutoGenerate) {
+            tl.debug('disabling auto generation');
+            autogenerateHtmlReport = false;
+        }
 
         // Resolve the summary file path.
         // It may contain wildcards allowing the path to change between builds, such as for:
@@ -34,19 +40,25 @@ async function run() {
             tl.warning(tl.loc('NoCodeCoverage'));
         } else {
 
-            // Ignore Html Report dirs going forward
-            if (reportDirectory) {
-                // Resolve the report directory.
-                // It may contain wildcards allowing the path to change between builds, such as for:
-                // $(System.DefaultWorkingDirectory)\artifacts***$(Configuration)\testresults\coverage
-                //const resolvedReportDirectory: string = resolvePathToSingleItem(workingDirectory, reportDirectory, true);
-                tl.warning(tl.loc('IgnoringReportDirectory'));
-                autogenerateHtmlReport = true;
-            }
-
             if (autogenerateHtmlReport) {
                 tempFolder = path.join(getTempFolder(), 'cchtml');
-                await generateHtmlReport(summaryFileLocation, tempFolder, sourceDirectory, tempFolder);
+                tl.debug('Generating Html Report using ReportGenerator: ' + tempFolder);
+
+                const result = await generateHtmlReport(summaryFileLocation, tempFolder);
+                tl.debug('Result: ' + result);
+                if (!result) {
+                    tempFolder = resolvePathToSingleItem(workingDirectory, reportDirectory, true);
+                } else {
+                    // Ignore Html Report dirs going forward
+                    if (reportDirectory) {
+                        // Resolve the report directory.
+                        // It may contain wildcards allowing the path to change between builds, such as for:
+                        // $(System.DefaultWorkingDirectory)\artifacts***$(Configuration)\testresults\coverage
+                        tl.warning(tl.loc('IgnoringReportDirectory'));
+                        autogenerateHtmlReport = true;
+                    }
+                }
+                tl.debug('Report directory: ' + tempFolder);
             }
 
             let additionalFileMatches: string[] = undefined;
@@ -139,7 +151,7 @@ function getTempFolder(): string {
     }
 }
 
-async function generateHtmlReport(summaryFile: string, targetDir: string, sourceFolder: string, workingDir: string) {
+async function generateHtmlReport(summaryFile: string, targetDir: string): Promise<boolean> {
     const osvar = process.platform;
     let dotnet: tr.ToolRunner;
 
@@ -160,26 +172,32 @@ async function generateHtmlReport(summaryFile: string, targetDir: string, source
     dotnet.arg(`"-reports:${summaryFile}"`);
     dotnet.arg(`"-targetdir:${targetDir}"`);
     dotnet.arg(`"-reporttypes:HtmlInline_AzurePipelines"`);
-    if (sourceFolder && pathExistsAsDir(sourceFolder)) {
-        dotnet.arg(`"-sourcedirs:${sourceFolder}"`);
-    }
 
     try {
         const result = await dotnet.exec(<tr.IExecOptions>{
             ignoreReturnCode: true,
             failOnStdErr: false,
-            windowsVerbatimArguments: true
+            windowsVerbatimArguments: true,
+            errStream: process.stdout,
+            outStream: process.stdout
         });
 
-        if (result === 0) {
+        // Listen for stderr.
+        let isError = false;
+        dotnet.on('stderr', () => {
+            isError = true;
+        });
+
+        if (result === 0 && !isError) {
             console.log(tl.loc('GeneratedHtmlReport', targetDir));
+            return true;
         } else {
             tl.warning(tl.loc('FailedToGenerateHtmlReport', result));
         }
     } catch (err) {
         tl.warning(tl.loc('FailedToGenerateHtmlReport', err));
     }
-    return;
+    return false;
 }
 
 run();
