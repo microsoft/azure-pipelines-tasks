@@ -18,7 +18,6 @@ async function run() {
 
         // download decrypted contents
         secureFileId = tl.getInput('certSecureFile', true);
-        tl.debug('downloading secure file ' + secureFileId);
         
         secureFileHelpers = new secureFilesCommon.SecureFileHelpers();
         let certPath: string = await secureFileHelpers.downloadSecureFile(secureFileId);

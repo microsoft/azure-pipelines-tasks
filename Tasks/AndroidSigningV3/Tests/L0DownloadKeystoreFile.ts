@@ -9,6 +9,8 @@ const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('apksign', 'true');
 tr.setInput('keystoreFile', 'mySecureFileId');
 
+process.env['AGENT_VERSION'] = '2.116.0';
+
 const secureFileHelperMock = require('securefiles-common/securefiles-common-mock');
 tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
 
@@ -17,8 +19,6 @@ tr.registerMock('fs', {
         // empty
     }
 });
-
-process.env['AGENT_VERSION'] = '2.116.0';
 
 // provide answers for task mock
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
