@@ -94,46 +94,19 @@
     },
     {
       "name": "imageName",
-      "type": "string",
+      "type": "multiline",
       "label": "ms-resource:loc.input.label.imageName",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.imageName"
     },
     {
-      "name": "ConfigurationType",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.ConfigurationType",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.ConfigurationType",
-      "defaultValue": "FilePath",
-      "options": {
-        "FilePath": "Configuration File Path",
-        "InlineConfiguration": "Inline Configuration"
-      }
-    },
-    {
-      "name": "ConfigurationPath",
+      "name": "configFilePath",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.ConfigurationPath",
+      "label": "ms-resource:loc.input.label.configFilePath",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.ConfigurationPath",
-      "visibleRule": "ConfigurationType = FilePath"
-    },
-    {
-      "name": "Inline",
-      "type": "multiLine",
-      "label": "ms-resource:loc.input.label.Inline",
-      "required": false,
-      "defaultValue": "# You can write your configuration scripts inline here. \n# You can also pass predefined and custom variables to this script using arguments",
-      "helpMarkDown": "ms-resource:loc.input.help.Inline",
-      "visibleRule": "ConfigurationType = InlineConfiguration",
-      "properties": {
-        "resizable": "true",
-        "rows": "10",
-        "maxLength": "5000"
-      }
+      "helpMarkDown": "ms-resource:loc.input.help.configFilePath"
     },
     {
       "name": "containerCommand",
@@ -361,6 +334,7 @@
     "RestartedAppService": "ms-resource:loc.messages.RestartedAppService",
     "RestartedAppServiceSlot": "ms-resource:loc.messages.RestartedAppServiceSlot",
     "FailedToRestartAppService": "ms-resource:loc.messages.FailedToRestartAppService",
-    "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot"
+    "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot",
+    "FailedToGetConfigurationFile": "ms-resource:loc.messages.FailedToGetConfigurationFile"
   }
 }

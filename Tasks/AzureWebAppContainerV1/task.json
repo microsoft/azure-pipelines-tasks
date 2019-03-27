@@ -95,46 +95,19 @@
         },
         {
             "name": "imageName",
-            "type": "string",
+            "type": "multiline",
             "label": "Image name",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
         },
         {
-            "name": "ConfigurationType",
-            "type": "radio",
-            "label": "Configuration Type",
-            "required": false,
-            "helpMarkDown": "Type of the configuration: File Path or Inline Configuration",
-            "defaultValue": "FilePath",
-            "options": {
-                "FilePath": "Configuration File Path",
-                "InlineConfiguration": "Inline Configuration"
-            }
-        },
-        {
-            "name": "ConfigurationPath",
+            "name": "configFilePath",
             "type": "filePath",
-            "label": "Configuration Path",
+            "label": "Configuration File",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path of the configuration. Should be fully qualified path or relative to the default working directory.",
-            "visibleRule": "ConfigurationType = FilePath"
-        },
-        {
-            "name": "Inline",
-            "type": "multiLine",
-            "label": "Inline Configuration",
-            "required": false,
-            "defaultValue": "# You can write your configuration scripts inline here. \n# You can also pass predefined and custom variables to this script using arguments",
-            "helpMarkDown": "Enter the script to execute.",
-            "visibleRule": "ConfigurationType = InlineConfiguration",
-            "properties": {
-                "resizable": "true",
-                "rows": "10",
-                "maxLength": "5000"
-            }
+            "helpMarkDown": "Path of the configuration. Should be fully qualified path or relative to the default working directory."
         },
         {
             "name": "containerCommand",
@@ -362,6 +335,7 @@
         "RestartedAppService": "App Service '%s' restarted successfully.",
         "RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
         "FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
-        "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s"
+        "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s",
+        "FailedToGetConfigurationFile": "Failed to get configuration file for multi containers"
     }
 }

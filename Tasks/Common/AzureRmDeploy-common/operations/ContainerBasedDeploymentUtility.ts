@@ -5,6 +5,8 @@ import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';
 import { parse }  from './ParameterParserUtility';
 import { AzureAppServiceUtility } from './AzureAppServiceUtility';
 import fs = require('fs');
+import * as os from "os";
+import path = require('path');
 
 enum registryTypes {
     "AzureContainerRegistry",
@@ -23,27 +25,29 @@ export class ContainerBasedDeploymentUtility {
 
     public async deployWebAppImage(properties: any): Promise<void> {
         let imageName: string = properties["ImageName"];
-        let isMultiContainer: boolean = false;
-        if(imageName == null) {
-            isMultiContainer = true;
-        }
-        tl.debug(`is multicontainer app : ${isMultiContainer}`);
-        let configurationType: string = tl.getInput('ConfigurationType');
-        let configurationPath: string = tl.getPathInput('ConfigurationPath', false);
-        let configurationInline: string = tl.getInput('Inline', false);
-        if(imageName != null) {
-            tl.debug("Deploying an image " + imageName + " to the webapp " + this._appService.getName());
+        let configFilePath: string = properties["ConfigFilePath"];
+        let isMultiContainer: boolean = properties["isMultiContainer"];
+        let isLinuxApp: boolean = properties["isLinuxContainerApp"];
+        let updatedConfigFilePath: string;
+        tl.debug("Deploying image " + imageName + " to the webapp " + this._appService.getName());
+
+        if(isMultiContainer) {
+            updatedConfigFilePath = this.updateImagesInConfigFile(configFilePath, imageName);
         }
 
-        let isLinuxApp: boolean = properties["isLinuxContainerApp"];
         tl.debug("Updating the webapp configuration.");
-        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], imageName, isLinuxApp, isMultiContainer, configurationType, configurationPath, configurationInline);
+        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], imageName, isLinuxApp, isMultiContainer, configFilePath);
 
         tl.debug('making a restart request to app service');
         await this._appService.restart();
+
+        // uploading log file
+        if(isMultiContainer) {
+            console.log(`##vso[task.uploadfile]${updatedConfigFilePath}`);
+        }
     }
 
-    private async _updateConfigurationDetails(configSettings: any, startupCommand: string, imageName: string, isLinuxApp: boolean, isMultiContainer: boolean, configurationType: string, configurationPath: string, configurationInline: string): Promise<void> {
+    private async _updateConfigurationDetails(configSettings: any, startupCommand: string, imageName: string, isLinuxApp: boolean, isMultiContainer?: boolean, configFilePath?: string): Promise<void> {
         var appSettingsNewProperties = !!configSettings ? parse(configSettings.trim()): { };
         appSettingsNewProperties.appCommandLine = {
             'value': startupCommand
@@ -51,18 +55,9 @@ export class ContainerBasedDeploymentUtility {
 
         if(isLinuxApp) {
             if(isMultiContainer) {
-                if (configurationType.toUpperCase() == 'FILEPATH') {
-                    let rawdata = fs.readFileSync(configurationPath);
-                    appSettingsNewProperties.linuxFxVersion = {
-                        'value': "COMPOSE|" + (new Buffer(rawdata).toString('base64'))
-                    }
-                    tl.debug('you requested filepath');
-                }
-                else {
-                    appSettingsNewProperties.linuxFxVersion = {
-                        'value': "COMPOSE|" + (new Buffer(configurationInline).toString('base64'))
-                    }
-                    tl.debug('you requested inline');
+                let fileData = fs.readFileSync(configFilePath);
+                appSettingsNewProperties.linuxFxVersion = {
+                    'value': "COMPOSE|" + (new Buffer(fileData).toString('base64'))
                 }
             }
             else {
@@ -230,5 +225,57 @@ export class ContainerBasedDeploymentUtility {
         delete webAppSettings["properties"]["DOCKER_REGISTRY_SERVER_URL"];
         delete webAppSettings["properties"]["DOCKER_REGISTRY_SERVER_USERNAME"];
         delete webAppSettings["properties"]["DOCKER_REGISTRY_SERVER_PASSWORD"];
+    }
+
+    private updateImagesInConfigFile(configFilePath, images): string {
+        const tempDirectory = this.getTempDirectory();
+        var contents = fs.readFileSync(configFilePath).toString();
+        var imageList = images.split("\n");
+        imageList.forEach((image: string) => {
+            let imageName = image.split(":")[0];
+            if (contents.indexOf(imageName) > 0) {
+                contents = this.tokenizeImages(contents, imageName, image);
+            }
+        });
+
+        let newFilePath = path.join(tempDirectory, path.basename(configFilePath));
+        fs.writeFileSync(
+            path.join(newFilePath),
+            contents
+        );
+        
+        return newFilePath;
+    }
+
+    private getTempDirectory(): string {
+        return tl.getVariable('agent.tempDirectory') || os.tmpdir();
+    }
+
+    private tokenizeImages(currentString: string, imageName: string, imageNameWithNewTag: string) {
+        let i = currentString.indexOf(imageName);
+        if (i < 0) {
+            tl.debug(`No occurence of replacement token: ${imageName} found`);
+            return currentString;
+        }
+
+        let newString = "";
+        currentString.split("\n")
+            .forEach((line) => {
+                if (line.indexOf(imageName) > 0 && line.toLocaleLowerCase().indexOf("image") > 0) {
+                    let i = line.indexOf(imageName);
+                    newString += line.substring(0, i);
+                    let leftOverString = line.substring(i);
+                    if (leftOverString.endsWith("\"")) {
+                        newString += imageNameWithNewTag + "\"" + "\n";
+                    } else {
+                        newString += imageNameWithNewTag + "\n";
+                    }
+                }
+                else {
+                    newString += line + "\n";
+                }
+            });
+            
+        return newString;
     }
 }

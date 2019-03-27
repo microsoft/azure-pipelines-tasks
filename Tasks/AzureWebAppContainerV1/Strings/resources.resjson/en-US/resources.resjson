@@ -17,12 +17,8 @@
   "loc.input.help.slotName": "Enter or Select an existing Slot other than the Production slot.",
   "loc.input.label.imageName": "Image name",
   "loc.input.help.imageName": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'.",
-  "loc.input.label.ConfigurationType": "Configuration Type",
-  "loc.input.help.ConfigurationType": "Type of the configuration: File Path or Inline Configuration",
-  "loc.input.label.ConfigurationPath": "Configuration Path",
-  "loc.input.help.ConfigurationPath": "Path of the configuration. Should be fully qualified path or relative to the default working directory.",
-  "loc.input.label.Inline": "Inline Configuration",
-  "loc.input.help.Inline": "Enter the script to execute.",
+  "loc.input.label.configFilePath": "Configuration File",
+  "loc.input.help.configFilePath": "Path of the configuration. Should be fully qualified path or relative to the default working directory.",
   "loc.input.label.containerCommand": "Startup command ",
   "loc.input.label.appSettings": "App settings",
   "loc.input.help.appSettings": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
@@ -181,5 +177,6 @@
   "loc.messages.RestartedAppService": "App Service '%s' restarted successfully.",
   "loc.messages.RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
   "loc.messages.FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
-  "loc.messages.FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s"
+  "loc.messages.FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s",
+  "loc.messages.FailedToGetConfigurationFile": "Failed to get configuration file for multi containers"
 }

@@ -3,6 +3,7 @@ import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/Azure
 import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
 import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
+import fs = require('fs');
 
 const osTypeMap = new Map([
     [ 'app,conatiner,xenon', 'Windows' ],
@@ -14,7 +15,7 @@ export class TaskParametersUtility {
     public static async getParameters(): Promise<TaskParameters> {
         var taskParameters: TaskParameters = {
             connectedServiceName: tl.getInput('azureSubscription', true),
-            ImageName: tl.getInput('imageName', false),
+            ImageName: tl.getInput('imageName', true),
             AppSettings: tl.getInput('appSettings', false),
             StartupCommand: tl.getInput('containerCommand', false),
             ConfigurationSettings: tl.getInput('configurationStrings', false),
@@ -22,7 +23,8 @@ export class TaskParametersUtility {
             OSType: tl.getInput('osType', false),
             DeployToSlotOrASEFlag: tl.getBoolInput('deployToSlotOrASE', false),
             ResourceGroupName: tl.getInput('resourceGroupName', false),
-            SlotName:tl.getInput('slotName', false)
+            SlotName: tl.getInput('slotName', false),
+            ConfigFilePath: tl.getPathInput('configFilePath', false)
         }
 
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
@@ -35,6 +37,14 @@ export class TaskParametersUtility {
 
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
+
+        taskParameters.isMultiContainer = false;
+        taskParameters.isMultiContainer = taskParameters.ImageName && taskParameters.ImageName.indexOf("\n") !=-1;
+        tl.debug(`is multicontainer app : ${taskParameters.isMultiContainer}`);
+
+        if(taskParameters.isMultiContainer && fs.statSync(taskParameters.ConfigFilePath).isDirectory()) {
+            throw new Error(tl.loc('FailedToGetConfigurationFile'));
+        }
 
         return taskParameters;
     }
@@ -76,4 +86,6 @@ export interface TaskParameters {
     DeployToSlotOrASEFlag?: boolean;
     SlotName?: string;
     isLinuxContainerApp?: boolean;
+    ConfigFilePath?: string;
+    isMultiContainer?: boolean;
 }
