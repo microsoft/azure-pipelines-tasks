@@ -135,6 +135,7 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
 export function getVSTestConsolePath(versionLowerLimit : string, versionUpperLimit : string): string {
     let vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
 
+    console.log(tl.loc('LookingForVsInstalltion'));
     vswhereTool.line(`-version [${versionLowerLimit},${versionUpperLimit}) -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath`);
     let vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
     vsPath = utils.Helper.trimString(vsPath);
@@ -144,7 +145,7 @@ export function getVSTestConsolePath(versionLowerLimit : string, versionUpperLim
     }
 
     // look for build tool installation if full VS not present
-    tl.debug('Attempting to find vstest.console from a visual studio build tools installation.');
+    console.log(tl.loc('LookingForBuildToolsInstalltion'));
     vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
     vswhereTool.line(`-version [${versionLowerLimit},${versionUpperLimit}) -latest -products * -requires Microsoft.VisualStudio.Component.TestTools.BuildTools -property installationPath`);
     vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
