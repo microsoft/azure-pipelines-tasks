@@ -26,7 +26,7 @@ describe('Xcode L0 Suite', function () {
         assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
                 '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme myscheme build'),
             'xcodebuild for building the ios project/workspace should have been run.');
-        assert(tr.invokedToolCount == 2, 'should have xcodebuild for version, xcodebuild for build and xcrun for packaging');
+        assert(tr.invokedToolCount == 2, 'should have run xcodebuild version, and xcodebuild build');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         done();
@@ -44,7 +44,7 @@ describe('Xcode L0 Suite', function () {
         assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
                 'build -project test.xcodeproj'),
             'xcodebuild for building the ios project should have been run.');
-        assert(tr.invokedToolCount == 2, 'should have xcodebuild for version, xcodebuild for build and xcrun for packaging');
+        assert(tr.invokedToolCount == 2, 'should have run xcodebuild version, and xcodebuild build.');
         assert(tr.stderr.length == 0, 'should not have written to stderr std=' + tr.stdout + ' err=' + tr.stderr);
         assert(tr.succeeded, 'task should have succeeded');
         done();
@@ -99,12 +99,6 @@ describe('Xcode L0 Suite', function () {
 
     it('run Xcode build, signing with P12 and provisioning profile', function (done: MochaDone) {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-
-        // if(/^win/.test(process.platform)) {
-        //     //test fails on windows with error in string.indexOf returning -1 in iOS signing code
-        //     //skip running on windows till root cause is identified
-        //     done();
-        // }
 
         let tp = path.join(__dirname, 'L0Signing.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
