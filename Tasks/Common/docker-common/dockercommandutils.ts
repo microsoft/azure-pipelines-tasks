@@ -72,3 +72,52 @@ export function push(connection: ContainerConnection, image: string, commandArgu
         onCommandOut(output + "\n");
     });
 }
+
+export function getLayers(connection: ContainerConnection, imageId: string): any {
+    var layers = [];
+    var lines = history(connection, imageId).split(/[\r?\n]/);
+    lines.forEach(line => {
+        line = line.trim();
+        if (line.length != 0){
+            layers.push(parseHistory(line));
+        }
+    });    
+    
+    return layers.reverse();
+}
+
+function parseHistory(input: string) {
+    const NOP = '#(nop)';
+    var directive = 'UNSPECIFIED';
+    var argument = '';
+    var index = input.indexOf(NOP);
+    if (index != -1) {
+        argument = input.substr(index+6).trim();
+        directive = argument.substr(0, argument.indexOf(' '));
+        argument = argument.substr(argument.indexOf(' ') + 1).trim();
+    }
+    else {
+        directive = 'RUN';
+        argument = input;
+    }
+
+    return { Directive : directive, Arguments : argument };
+}
+
+function history(connection: ContainerConnection, image: string): any {
+    var command = connection.createCommand();
+    command.arg("history");
+    command.arg(["--format", "{{.CreatedBy}}"]);
+    command.arg("--no-trunc");
+    command.arg(image);
+
+    // setup variable to store the command output
+    let output = "";
+    command.on("stdout", data => {
+        output += data;
+    });
+
+    return connection.execCommand(command).then(() => {
+        output;
+    });
+}

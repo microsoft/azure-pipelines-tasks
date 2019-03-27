@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 20
+        "Patch": 21
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -179,7 +179,7 @@
             "type": "filePath",
             "label": "Deployment Package",
             "required": true,
-            "helpMarkDown": "Specify the path for deployment package directory relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern. Example path: FrontendWebApp/**/GalleryApp",
+            "helpMarkDown": "Specify the path for deployment package directory relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern. Example path: FrontendWebApp/**/GalleryApp <br/> Please note that this package will be copied to temporary virtual machine which Packer creates. If the package contains large number of files and/or the files are very large in size, the upload can take quite long time (possibly running into few hours). To optimize the upload time, please see if size of the package can be meaningfully reduced. Another alternative is to use an intermediary Azure storage account. Upload the package to a storage account prior to running this task. And for this task, use a package containing a script which will download the required package from the storage account.",
             "groupName": "DeploymentInputs"
         },
         {

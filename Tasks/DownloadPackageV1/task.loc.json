@@ -28,7 +28,7 @@
       "label": "ms-resource:loc.input.label.packageType",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.packageType",
-      "defaultValue": "NuGet",
+      "defaultValue": "nuget",
       "options": {
         "maven": "Maven",
         "npm": "Npm",
