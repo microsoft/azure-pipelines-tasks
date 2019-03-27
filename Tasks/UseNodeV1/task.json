@@ -6,6 +6,7 @@
     "helpUrl": "",
     "helpMarkDown": "",
     "category": "Tool",
+    "preview": true,
     "ecosystem": "node",
     "minimumAgentVersion": "2.144.0",
     "runsOn": [
