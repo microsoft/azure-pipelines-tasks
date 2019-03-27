@@ -122,12 +122,6 @@ describe('Xcode L0 Suite', function () {
     it('run Xcode build, signing with P12 only, no provisioning profile', function (done: MochaDone) {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
-        // if(/^win/.test(process.platform)) {
-        //     //test fails on windows with error in string.indexOf returning -1 in iOS signing code
-        //     //skip running on windows till root cause is identified
-        //     done();
-        // }
-
         let tp = path.join(__dirname, 'L0SigningWithP12.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -143,12 +137,6 @@ describe('Xcode L0 Suite', function () {
 
     it('run Xcode build, signing with provisioning profile only, no P12', function (done: MochaDone) {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-
-        // if(/^win/.test(process.platform)) {
-        //     //test fails on windows with error in string.indexOf returning -1 in iOS signing code
-        //     //skip running on windows till root cause is identified
-        //     done();
-        // }
 
         let tp = path.join(__dirname, 'L0SigningWithProfile.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
