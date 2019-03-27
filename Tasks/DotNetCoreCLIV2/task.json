@@ -120,7 +120,7 @@
             "type": "string",
             "label": "Arguments",
             "defaultValue": "",
-            "visibleRule": "command = build || command = publish || command = run || command = test || command = custom",
+            "visibleRule": "command = build || command = publish || command = run || command = test || command = custom || command = pack",
             "required": false,
             "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, runtime. The arguments depend on the command selected."
         },
@@ -364,6 +364,24 @@
             "label": "Do not build",
             "defaultValue": "false",
             "helpMarkDown": "Don't build the project before packing. Corresponds to the --no-build command line parameter.",
+            "required": false,
+            "visibleRule": "command = pack"
+        },
+        {
+            "name": "includesymbols",
+            "type": "boolean",
+            "label": "Include Symbols",
+            "defaultValue": "false",
+            "helpMarkDown": "Additionally creates symbol nuget packages. Corresponds to the --include-symbols command line parameter.",
+            "required": false,
+            "visibleRule": "command = pack"
+        },
+        {
+            "name": "includesource",
+            "type": "boolean",
+            "label": "Include Source",
+            "defaultValue": "false",
+            "helpMarkDown": "Includes source code in the package. Corresponds to the --include-source command line parameter.",
             "required": false,
             "visibleRule": "command = pack"
         },

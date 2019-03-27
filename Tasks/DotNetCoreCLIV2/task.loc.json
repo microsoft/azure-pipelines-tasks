@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 148,
-    "Patch": 2
+    "Minor": 150,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -120,7 +120,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.arguments",
       "defaultValue": "",
-      "visibleRule": "command = build || command = publish || command = run || command = test || command = custom",
+      "visibleRule": "command = build || command = publish || command = run || command = test || command = custom || command = pack",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.arguments"
     },
@@ -132,6 +132,15 @@
       "visibleRule": "command = test",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.publishTestResults"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "visibleRule": "command = test",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle"
     },
     {
       "name": "zipAfterPublish",
@@ -355,6 +364,24 @@
       "label": "ms-resource:loc.input.label.nobuild",
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.nobuild",
+      "required": false,
+      "visibleRule": "command = pack"
+    },
+    {
+      "name": "includesymbols",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.includesymbols",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.includesymbols",
+      "required": false,
+      "visibleRule": "command = pack"
+    },
+    {
+      "name": "includesource",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.includesource",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.includesource",
       "required": false,
       "visibleRule": "command = pack"
     },

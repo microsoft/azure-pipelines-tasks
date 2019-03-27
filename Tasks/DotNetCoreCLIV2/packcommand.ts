@@ -18,6 +18,9 @@ export async function run(): Promise<void> {
     let propertiesInput = tl.getInput("buildProperties");
     let verbosity = tl.getInput("verbosityPack");
     let nobuild = tl.getBoolInput("nobuild");
+    let includeSymbols = tl.getBoolInput("includesymbols");
+    let includeSource = tl.getBoolInput("includesource");
+    let additionalArguments = tl.getInput("arguments") || "";
     let outputDir = undefined;
 
     try {
@@ -124,7 +127,7 @@ export async function run(): Promise<void> {
         const dotnetPath = tl.which("dotnet", true);
 
         for (const file of filesList) {
-            await dotnetPackAsync(dotnetPath, file, outputDir, nobuild, version, props, verbosity);
+            await dotnetPackAsync(dotnetPath, file, outputDir, nobuild, includeSymbols, includeSource, additionalArguments, version, props, verbosity);
         }
     } catch (err) {
         tl.error(err);
@@ -132,7 +135,7 @@ export async function run(): Promise<void> {
     }
 }
 
-function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: string, nobuild: boolean, version: string, properties: string[], verbosity: string): Q.Promise<number> {
+function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: string, nobuild: boolean, includeSymbols: boolean, includeSource: boolean, additionalArguments: string, version: string, properties: string[], verbosity: string): Q.Promise<number> {
     let dotnet = tl.tool(dotnetPath);
 
     dotnet.arg("pack");
@@ -147,6 +150,14 @@ function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: str
         dotnet.arg("--no-build");
     }
 
+    if (includeSymbols) {
+        dotnet.arg("--include-symbols");
+    }   
+ 
+    if (includeSource) {
+        dotnet.arg("--include-source");
+    }
+
     if (properties && properties.length > 0) {
         dotnet.arg("/p:" + properties.join(";"));
     }
@@ -159,6 +170,8 @@ function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: str
         dotnet.arg("--verbosity");
         dotnet.arg(verbosity);
     }
+
+    dotnet.line(additionalArguments);
 
     return dotnet.exec({ cwd: path.dirname(packageFile) } as IExecOptions);
 }
