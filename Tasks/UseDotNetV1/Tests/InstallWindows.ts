@@ -17,6 +17,8 @@ if (process.env["__auth__"]) {
     tr.setInput("auth", process.env["__auth__"]);
 }
 tr.setInput("nuGetFeedType", process.env["__nuGetFeedType__"] || 'internal');
+tr.setInput("feedId", process.env["__auth__"]);
+tr.setInput("externalEndpoint", process.env["__auth__"]);
 
 process.env["AGENT_TOOLSDIRECTORY"] = "C:\\agent\\_tools";
 

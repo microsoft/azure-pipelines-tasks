@@ -4,6 +4,7 @@
     "friendlyName": "Use .NET Core",
     "description": "Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Additionally provides basic auth.",
     "category": "Tool",
+    "preview": true,
     "runsOn": [
         "Agent",
         "DeploymentGroup"
@@ -25,35 +26,8 @@
             "name": "version",
             "type": "string",
             "label": "Version",
-            "defaultValue": "1.0.4",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0"
-        },
-        {
-            "name": "auth",
-            "type": "string",
-            "label": "Auth",
-            "required": false,
-            "helpMarkDown": "The authentication feed/service point to use"
-        },
-        {
-            "name": "proxy",
-            "type": "boolean",
-            "label": "Proxy",
-            "defaultValue": true,
-            "required": false,
-            "helpMarkDown": "Whether or not to set up the .Net ecosystem to use the agent's proxy"
-        },
-        {
-            "name": "nuGetFeedType",
-            "type": "pickList",
-            "label": "NuGet Feed Type",
-            "helpMarkDown": "The type of NugetFeed used in the auth field. Can either be an internal feed or external service connection",
-            "required": false,
-            "options": {
-                "internal": "internal",
-                "external": "external"
-            }
         },
         {
             "name": "packageType",
@@ -66,6 +40,41 @@
                 "runtime": "Runtime",
                 "sdk": "SDK (contains runtime)"
             }
+        },
+        {
+            "name": "auth",
+            "type": "string",
+            "label": "Auth",
+            "required": false,
+            "helpMarkDown": "The authentication feed name to use"
+        },
+        {
+            "name": "nuGetFeedType",
+            "type": "pickList",
+            "label": "NuGet Feed Type",
+            "helpMarkDown": "The type of NugetFeed used in the auth field. Can either be an internal feed or external service connection",
+            "required": true,
+            "options": {
+                "internal": "internal",
+                "external": "external"
+            },
+            "visibleRule": "auth != "
+        },
+        {
+            "name": "feedId",
+            "type": "string",
+            "label": "Feed id",
+            "required": true,
+            "helpMarkDown": "The id of the internal feed to use for auth",
+            "visibleRule": "nuGetFeedType = internal"
+        },
+        {
+            "name": "externalEndpoint",
+            "type": "connectedService:ExternalNuGetFeed",
+            "label": "NuGet server",
+            "required": true,
+            "helpMarkDown": "The external feed to use for auth",
+            "visibleRule": "nuGetFeedType = external"
         }
     ],
     "execution": {
