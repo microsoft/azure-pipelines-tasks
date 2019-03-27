@@ -235,7 +235,7 @@ class imagevalidationtask {
         let manifestResult = tl.execSync("docker", `manifest inspect ${image}`, Constants.execSyncSilentOption);
         tl.debug(JSON.stringify(manifestResult));
         if (manifestResult.code != 0) {
-          validationErr += tl.loc("CheckModuleImageExistenceError", image, manifestResult.stderr);
+          validationErr += tl.loc("CheckModuleImageExistenceError", image, manifestResult.stderr) + "\n";
         }
       });
       if (validationErr) {

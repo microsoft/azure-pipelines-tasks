@@ -240,7 +240,7 @@
     "RootPathNotExist": "The Root path %s does not exist",
     "SkipModuleImageValidation": "SKIP_MODULE_IMAGE_VALIDATION set to true, skipping module image validation.",
     "InvalidRegistryCredentialWarning": "Failed to login %s with given credential. %s",
-    "CheckModuleImageExistenceError": "%s does not exist or the credential is not set correctly. Error: %s \n"
+    "CheckModuleImageExistenceError": "%s does not exist or the credential is not set correctly. Error: %s"
   },
   "OutputVariables": [{
     "name" : "DEPLOYMENT_FILE_PATH",
