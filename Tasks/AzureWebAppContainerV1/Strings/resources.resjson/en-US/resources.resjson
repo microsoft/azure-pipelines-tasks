@@ -178,5 +178,5 @@
   "loc.messages.RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
   "loc.messages.FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
   "loc.messages.FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s",
-  "loc.messages.FailedToGetConfigurationFile": "Failed to get configuration file for multi containers"
+  "loc.messages.FailedToGetConfigurationFile": "Failed to get configuration file for multi containers. Please enter the valid configuration file path."
 }

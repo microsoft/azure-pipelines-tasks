@@ -336,6 +336,6 @@
         "RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
         "FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
         "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s",
-        "FailedToGetConfigurationFile": "Failed to get configuration file for multi containers"
+        "FailedToGetConfigurationFile": "Failed to get configuration file for multi containers. Please enter the valid configuration file path."
     }
 }

@@ -3,6 +3,7 @@ import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/Azure
 import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
 import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
+import { PackageUtility } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import fs = require('fs');
 
 const osTypeMap = new Map([
@@ -42,8 +43,12 @@ export class TaskParametersUtility {
         taskParameters.isMultiContainer = taskParameters.ImageName && taskParameters.ImageName.indexOf("\n") !=-1;
         tl.debug(`is multicontainer app : ${taskParameters.isMultiContainer}`);
 
-        if(taskParameters.isMultiContainer && fs.statSync(taskParameters.ConfigFilePath).isDirectory()) {
-            throw new Error(tl.loc('FailedToGetConfigurationFile'));
+        if(taskParameters.isMultiContainer)
+        {
+            PackageUtility.getPackagePath(taskParameters.ConfigFilePath);
+            if(fs.statSync(taskParameters.ConfigFilePath).isDirectory()) {
+                throw new Error(tl.loc('FailedToGetConfigurationFile'));
+            }
         }
 
         return taskParameters;
