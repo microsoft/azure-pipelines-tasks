@@ -47,7 +47,7 @@
       "code": 0,
       "stdout": "temporary keychain created"
     },
-    "/usr/bin/security set-keychain-settings -lut 7200 /user/build/_xcodetasktmp.keychain": {
+    "/usr/bin/security set-keychain-settings -lut 21600 /user/build/_xcodetasktmp.keychain": {
       "code": 0,
       "stdout": "set-keychain-settings on temporary keychain output"
     },

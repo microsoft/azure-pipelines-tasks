@@ -15,10 +15,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 7
   },
   "demands": [],
-  "preview": "true",
   "minimumAgentVersion": "2.0.0",
   "groups": [
     {
@@ -334,6 +333,7 @@
     "FailedToFetchSPNDetailsRemotely": "ms-resource:loc.messages.FailedToFetchSPNDetailsRemotely",
     "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
-    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "CreateManagedImageNotSupportedForVHDSource": "ms-resource:loc.messages.CreateManagedImageNotSupportedForVHDSource"
   }
 }

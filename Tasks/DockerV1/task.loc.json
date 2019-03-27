@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
-    "Patch": 31
+    "Minor": 150,
+    "Patch": 1
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -374,6 +374,7 @@
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
     "DockerRegistryNotFound": "ms-resource:loc.messages.DockerRegistryNotFound",
-    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded"
+    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   }
 }

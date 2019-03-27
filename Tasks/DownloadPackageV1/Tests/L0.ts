@@ -4,6 +4,7 @@ import path = require("path");
 import * as tl from "vsts-task-lib/task";
 import * as ttm from "vsts-task-lib/mock-test";
 
+const tempDir = path.join(__dirname, "temp");
 const rootDir = path.join(__dirname, "out");
 const destinationDir = path.join(rootDir, "packageOutput");
 
@@ -12,10 +13,12 @@ describe("Download single file package suite", function() {
 
     beforeEach(() => {
         tl.mkdirP(destinationDir);
+        tl.mkdirP(tempDir);
     });
 
     afterEach(() => {
         tl.rmRF(rootDir);
+        tl.rmRF(tempDir);
     });
 
     it("downloads nuget file as nupkg and extracts it", (done: MochaDone) => {
@@ -27,8 +30,8 @@ describe("Download single file package suite", function() {
 
         tr.run();
 
-        assert(tl.ls(null, [rootDir]).length == 2, "should have only 1 file and 1 folder.");
-        const zipPath = path.join(rootDir, "singlePackageName.nupkg");
+        assert.equal(tl.ls(null, [tempDir]).length, 1, "should have only 1 file.");
+        const zipPath = path.join(tempDir, "singlePackageName.nupkg");
         const zipStats = tl.stats(zipPath);
         assert(zipStats && zipStats.isFile(), "nupkg file should be downloaded");
 
@@ -51,7 +54,9 @@ describe("Download single file package suite", function() {
 
         tr.run();
 
-        assert(tl.ls(null, [destinationDir]).length == 1, "should have only 1 file.");
+        assert.equal(tl.ls(null, [tempDir]).length, 0, "no files should be in temp folder.");
+
+        assert.equal(tl.ls(null, [destinationDir]).length, 1, "should have only 1 file.");
         const zipPath = path.join(destinationDir, "singlePackageName.nupkg");
         const zipStats = tl.stats(zipPath);
         assert(zipStats && zipStats.isFile(), "nupkg file should be downloaded");
@@ -71,8 +76,8 @@ describe("Download single file package suite", function() {
 
         tr.run();
 
-        assert(tl.ls(null, [rootDir]).length == 2, "should have only 1 file and 1 folder.");
-        const zipPath = path.join(rootDir, "singlePackageName.tgz");
+        assert.equal(tl.ls(null, [tempDir]).length, 1, "should have only 1 file.");
+        const zipPath = path.join(tempDir, "singlePackageName.tgz");
         const zipStats = tl.stats(zipPath);
         assert(zipStats && zipStats.isFile(), "tgz file should be downloaded");
 
@@ -109,7 +114,7 @@ describe("Download multi file package suite", function() {
 
         let outputJarPath: string = path.join(destinationDir, "packageName.jar");
         let outputPomPath: string = path.join(destinationDir, "packageName.pom");
-        assert(tl.ls(null, [destinationDir]).length == 2, "should have only 2 files.");
+        assert.equal(tl.ls(null, [destinationDir]).length, 2, "should have only 2 files.");
         const statsJar = tl.stats(outputJarPath);
         const statsPom = tl.stats(outputPomPath);
 

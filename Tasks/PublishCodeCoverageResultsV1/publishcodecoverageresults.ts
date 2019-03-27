@@ -1,6 +1,6 @@
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
-import * as tr from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import * as ccUtil from 'codecoverage-tools/codecoverageutilities';
 import * as os from 'os';
 
@@ -67,13 +67,16 @@ async function run() {
 
             let additionalFileMatches: string[] = undefined;
             // Get any 'Additional Files' to publish as build artifacts
+            const findOptions : tl.FindOptions = { allowBrokenSymbolicLinks : false, followSymbolicLinks : false, followSpecifiedSymbolicLink : false};
+            const matchOptions : tl.MatchOptions = { matchBase : true};
+
             if (additionalFiles) {
                 // Resolve matches of the 'Additional Files' pattern
                 additionalFileMatches = tl.findMatch(
                     workingDirectory,
                     additionalFiles,
-                    { followSymbolicLinks: false, followSpecifiedSymbolicLink: false },
-                    { matchBase: true });
+                    findOptions,
+                    matchOptions);
 
                 additionalFileMatches = additionalFileMatches.filter(file => pathExistsAsFile(file));
                 tl.debug(tl.loc('FoundNMatchesForPattern', additionalFileMatches.length, additionalFiles));
@@ -100,10 +103,11 @@ function resolvePathToSingleItem(workingDirectory: string, pathInput: string, is
             pathInput = pathInput.slice(0, -1);
         }
         // Resolve matches of the pathInput pattern
+        const findOptions : tl.FindOptions = { allowBrokenSymbolicLinks : false, followSymbolicLinks : false, followSpecifiedSymbolicLink : false};
         const pathMatches: string[] = tl.findMatch(
             workingDirectory,
             pathInput,
-            { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+            findOptions);
         tl.debug(tl.loc('FoundNMatchesForPattern', pathMatches.length, pathInput));
 
         // Were any matches found?
