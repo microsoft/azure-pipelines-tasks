@@ -3,6 +3,7 @@ import * as ftp from "basic-ftp";
 import * as fs from "fs";
 import * as path from "path";
 import * as url from "url";
+import { MatchOptions } from "azure-pipelines-task-lib/task";
 
 interface FtpOptions {
     // url
@@ -119,11 +120,12 @@ function getFtpOptions(): FtpOptions {
 }
 
 function getAccessOption(options: FtpOptions): ftp.AccessOptions {
-    const secure: boolean = options.serverEndpointUrl.protocol.toLowerCase() === "ftps:";
+    const protocol = options.serverEndpointUrl.protocol;
+    const secure: boolean = protocol != undefined ? protocol.toLowerCase() === "ftps:" : false;
     const secureOptions: any = { rejectUnauthorized: !options.trustSSL };
 
-    const hostName: string = options.serverEndpointUrl.hostname;
-    const portStr: string = options.serverEndpointUrl.port;
+    const hostName: string = options.serverEndpointUrl.hostname!;
+    const portStr: string = options.serverEndpointUrl.port!;
     let port: number = 21;
     if (portStr) {
         // port not explicitly specifed, use default
@@ -159,7 +161,7 @@ async function getFtpClient(options: FtpOptions): Promise<ftp.Client> {
     return ftpClient;
 }
 
-function sleep(millis) {
+function sleep(millis: number) {
     return new Promise(resolve => setTimeout(resolve, millis));
 }
 
@@ -184,7 +186,7 @@ function findFiles(ftpOptions: FtpOptions): string[] {
     );
 
     // minimatch options
-    const matchOptions = { matchBase: true, dot: true };
+    const matchOptions = { matchBase: true, dot: true } as MatchOptions;
     const platform = tl.getPlatform()
     tl.debug("Platform: " + platform);
     if (platform === tl.Platform.Windows) {
@@ -207,7 +209,7 @@ function findFiles(ftpOptions: FtpOptions): string[] {
 
         tl.debug("searching for files, pattern: " + normalizedPattern);
 
-        const matched = tl.match(allFiles, normalizedPattern, null, matchOptions);
+        const matched = tl.match(allFiles, normalizedPattern, undefined, matchOptions);
         tl.debug("Found total matches: " + matched.length);
         // ensure each result is only added once
         for (let j = 0; j < matched.length; j++) {
