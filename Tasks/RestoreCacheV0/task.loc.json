@@ -40,6 +40,13 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.cacheHitVar"
+    },
+    {
+      "name": "salt",
+      "type": "string",
+      "label": "A salt to use for generating a fingerprint.",
+      "required": true,
+      "helpMarkDown": "A salt to use to append to the fingerprint hash."
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
