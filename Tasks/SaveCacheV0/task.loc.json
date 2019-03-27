@@ -31,10 +31,7 @@
       "label": "ms-resource:loc.input.label.path",
       "defaultValue": "",
       "required": true,
-<<<<<<< Updated upstream
       "helpMarkDown": "ms-resource:loc.input.help.path"
-=======
-      "helpMarkDown": "ms-resource:loc.input.help.targetPath"
     },
     {
       "name": "salt",
@@ -42,7 +39,6 @@
       "label": "ms-resource:loc.input.label.salt",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.salt"
->>>>>>> Stashed changes
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

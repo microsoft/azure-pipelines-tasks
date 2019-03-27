@@ -44,9 +44,9 @@
     {
       "name": "salt",
       "type": "string",
-      "label": "A salt to use for generating a fingerprint.",
+      "label": "ms-resource:loc.input.label.salt",
       "required": true,
-      "helpMarkDown": "A salt to use to append to the fingerprint hash."
+      "helpMarkDown": "ms-resource:loc.input.help.salt"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
