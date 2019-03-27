@@ -58,7 +58,7 @@ try {
 
     # Telemetry for endpoint id
     $encodedServerName = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($serverName))
-    $encodedDatabaseName = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($serverName))
+    $encodedDatabaseName = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($databaseName))
     $telemetryJsonContent = -join("{`"endpointId`":`"$connectedServiceName`",", 
                                   "`"subscriptionId`":`"$subscriptionId`",",
                                   "`"serverName`": `"$encodedServerName`",",
