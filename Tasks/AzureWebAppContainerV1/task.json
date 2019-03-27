@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 6
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -37,6 +37,18 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+        },
+        {
+            "name": "osType",
+            "type": "pickList",
+            "label": "App OS type",
+            "defaultValue": "Linux",
+            "required": true,
+            "options": {
+                "Linux": "Linux",
+                "Windows": "Windows"
+                
+            }
         },
         {
             "name": "appName",
@@ -131,7 +143,7 @@
         {
             "target": "appName",
             "endpointId": "$(azureSubscription)",
-            "dataSourceName": "AzureWebAppContainerNames",
+            "dataSourceName": "AzureWebAppContainerNamesByOSType",
             "parameters": {
                 "osType": "$(osType)"
             }
