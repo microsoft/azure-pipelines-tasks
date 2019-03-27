@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 150,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [
         "vstest"
@@ -618,6 +618,8 @@
         "UserProvidedSourceFilter": "Source filter: %s",
         "UnableToGetFeatureFlag": "Unable to get feature flag: %s",
         "diagnosticsInput": "Diagnostics enabled : %s",
-        "UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory)."
+        "UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory).",
+        "LookingForBuildToolsInstalltion": "Attempting to find vstest.console from a visual studio build tools installation.",
+        "LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation."
     }
 }

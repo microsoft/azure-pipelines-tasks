@@ -536,14 +536,26 @@ function getTestPlatformPath(inputDataContract : idc.InputDataContract) {
 }
 
 function getVSTestConsolePath(versionLowerLimit : string, versionUpperLimit : string): string {
-    const vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
+    let vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
 
+    console.log(tl.loc('LookingForVsInstalltion'));
     vswhereTool.line(`-version [${versionLowerLimit},${versionUpperLimit}) -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath`);
     let vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
     vsPath = utils.Helper.trimString(vsPath);
-    tl.debug('Visual Studio 15.0 or higher installed path: ' + vsPath);
 
     if (!utils.Helper.isNullOrWhitespace(vsPath)) {
+        tl.debug('Visual Studio 15.0 or higher installed path: ' + vsPath);
+        return vsPath;
+    }
+
+    // Look for build tool installation if full VS not present
+    console.log(tl.loc('LookingForBuildToolsInstalltion'));
+    vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
+    vswhereTool.line(`-version [${versionLowerLimit},${versionUpperLimit}) -latest -products * -requires Microsoft.VisualStudio.Component.TestTools.BuildTools -property installationPath`);
+    vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+    vsPath = utils.Helper.trimString(vsPath);
+    if (!utils.Helper.isNullOrWhitespace(vsPath)) {
+        tl.debug('Build tools installed path: ' + vsPath);
         return vsPath;
     }
 
