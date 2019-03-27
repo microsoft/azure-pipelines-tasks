@@ -27,8 +27,8 @@ async function run() {
         proxyutil.setProxy(proxy);
     }
 
-    const feed: string = tl.getInput('auth');
-    if (feed) {
+    const feedName: string = tl.getInput('auth');
+    if (feedName) {
         // Get the info the type of feed
         let nugetFeedType = tl.getInput('nuGetFeedType') || 'internal';
 
@@ -40,10 +40,10 @@ async function run() {
         nugetFeedType = normalizedNuGetFeedType;
 
         if (nugetFeedType === 'internal') {
-            await authutil.addInternalFeed(feed);
+            await authutil.addInternalFeed(feedName);
         }
         else {
-            await authutil.addExternalFeed(feed);
+            await authutil.addExternalFeed(feedName);
         }
     }
 }

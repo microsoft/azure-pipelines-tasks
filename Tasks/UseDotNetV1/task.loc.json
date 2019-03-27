@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "category": "Tool",
+  "preview": true,
   "runsOn": [
     "Agent",
     "DeploymentGroup"
@@ -25,35 +26,8 @@
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
-      "defaultValue": "1.0.4",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.version"
-    },
-    {
-      "name": "auth",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.auth",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.auth"
-    },
-    {
-      "name": "proxy",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.proxy",
-      "defaultValue": true,
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.proxy"
-    },
-    {
-      "name": "nuGetFeedType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.nuGetFeedType",
-      "helpMarkDown": "ms-resource:loc.input.help.nuGetFeedType",
-      "required": false,
-      "options": {
-        "internal": "internal",
-        "external": "external"
-      }
     },
     {
       "name": "packageType",
@@ -66,6 +40,41 @@
         "runtime": "Runtime",
         "sdk": "SDK (contains runtime)"
       }
+    },
+    {
+      "name": "auth",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.auth",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.auth"
+    },
+    {
+      "name": "nuGetFeedType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.nuGetFeedType",
+      "helpMarkDown": "ms-resource:loc.input.help.nuGetFeedType",
+      "required": true,
+      "options": {
+        "internal": "internal",
+        "external": "external"
+      },
+      "visibleRule": "auth != "
+    },
+    {
+      "name": "feedId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.feedId",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.feedId",
+      "visibleRule": "nuGetFeedType = internal"
+    },
+    {
+      "name": "externalEndpoint",
+      "type": "connectedService:ExternalNuGetFeed",
+      "label": "ms-resource:loc.input.label.externalEndpoint",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.externalEndpoint",
+      "visibleRule": "nuGetFeedType = external"
     }
   ],
   "execution": {

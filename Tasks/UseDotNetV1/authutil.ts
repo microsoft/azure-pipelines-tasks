@@ -7,6 +7,7 @@ import * as pkgLocationUtils from 'packaging-common/locationUtilities';
 
 export async function addInternalFeed(feedName: string) {
     // Get feed info
+    const feedId: string = tl.getInput('feedId');
     let packagingLocation;
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
@@ -20,7 +21,7 @@ export async function addInternalFeed(feedName: string) {
         };
     }
     const accessToken: string = pkgLocationUtils.getSystemAccessToken();
-    const feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feedName, null, accessToken, true);
+    const feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feedId, null, accessToken, true);
 
     addNugetFeed(feedName, feedUri, 'VSTS');
 }

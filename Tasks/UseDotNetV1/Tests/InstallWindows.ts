@@ -10,13 +10,15 @@ import { chmodSync } from 'fs';
 let taskPath = path.join(__dirname, '..', 'usedotnet.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput("packageType", process.env["__package_type__"] || 'runtime');
+tr.setInput("packageType", process.env["__package_type__"] || 'sdk');
 tr.setInput("version", "1.0.4");
 tr.setInput("proxy", process.env["__proxy__"] || 'false');
 if (process.env["__auth__"]) {
     tr.setInput("auth", process.env["__auth__"]);
 }
 tr.setInput("nuGetFeedType", process.env["__nuGetFeedType__"] || 'internal');
+tr.setInput("feedId", process.env["__auth__"]);
+tr.setInput("externalEndpoint", process.env["__auth__"]);
 
 process.env["AGENT_TOOLSDIRECTORY"] = "C:\\agent\\_tools";
 
