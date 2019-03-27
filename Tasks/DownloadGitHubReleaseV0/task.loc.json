@@ -10,8 +10,8 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 148,
-    "Patch": 2
+    "Minor": 149,
+    "Patch": 0
   },
   "minimumAgentVersion": "1.99.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -90,7 +90,7 @@
       "target": "version",
       "endpointId": "$(connection)",
       "dataSourceName": "Releases",
-      "resultTemplate": "{ \"Value\" : \"{{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{id}}{{/equals}}\", \"DisplayValue\" : \" {{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{#if name}}{{name}}{{else}}{{id}}{{/if}}{{/equals}}\" }",
+      "resultTemplate": "{ \"Value\" : \"{{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{id}}{{/equals}}\", \"DisplayValue\" : \" {{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{#if name}}{{name}}{{else}}{{tag_name}}{{/if}}{{/equals}}{{#if prerelease}} (Pre-release){{/if}}\" }",
       "parameters": {
         "repositoryName": "$(userRepository)",
         "releaseByTagName": "$(defaultVersionType)"
@@ -115,6 +115,8 @@
   },
   "messages": {
     "DownloadArtifacts": "ms-resource:loc.messages.DownloadArtifacts",
-    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded"
+    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
+    "InvalidRelease": "ms-resource:loc.messages.InvalidRelease",
+    "InvalidDefaultVersionType": "ms-resource:loc.messages.InvalidDefaultVersionType"
   }
 }
