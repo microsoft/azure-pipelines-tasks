@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as url from "url";
 
-class FtpOptions {
+interface FtpOptions {
     // url
     serverEndpointUrl: url.Url;
 
@@ -24,14 +24,11 @@ class FtpOptions {
     trustSSL: boolean;
 }
 
-class ProgressTracking {
-    ftpOptions: FtpOptions = null;
-    fileCount: number = -1;
-
+class ProgressTracker {
     progressFilesUploaded: number = 0;
     progressDirectoriesProcessed: number = 0;
 
-    constructor(ftpOptions: FtpOptions, fileCount: number) {
+    constructor(private ftpOptions: FtpOptions, private fileCount: number) {
         this.ftpOptions = ftpOptions;
         this.fileCount = fileCount;
     }
@@ -49,9 +46,9 @@ class ProgressTracking {
     }
 
     printProgress(message: string): void {
-        let total: number =
+        const total: number =
             this.progressFilesUploaded + this.progressDirectoriesProcessed;
-        let remaining: number = this.fileCount - total;
+        const remaining: number = this.fileCount - total;
         console.log(
             "files uploaded: " + this.progressFilesUploaded +
             ", directories processed: " + this.progressDirectoriesProcessed +
@@ -71,9 +68,9 @@ class ProgressTracking {
     }
 
     getFailureStatusMessage() {
-        let total: number =
+        const total: number =
             this.progressFilesUploaded + this.progressDirectoriesProcessed;
-        let remaining: number = this.fileCount - total;
+            const remaining: number = this.fileCount - total;
         return (
             this.getSuccessStatusMessage() +
             "\nunprocessed files & directories: " +
@@ -83,16 +80,16 @@ class ProgressTracking {
 }
 
 function getFtpOptions(): FtpOptions {
-    let options: FtpOptions = new FtpOptions();
+    const options: FtpOptions = {} as FtpOptions;
 
     if (tl.getInput("credsType") === "serviceEndpoint") {
         // server endpoint
-        let serverEndpoint: string = tl.getInput("serverEndpoint", true);
+        const serverEndpoint: string = tl.getInput("serverEndpoint", true);
         options.serverEndpointUrl = url.parse(
             tl.getEndpointUrl(serverEndpoint, false)
         );
 
-        let serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(
+        const serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(
             serverEndpoint,
             false
         );
@@ -122,12 +119,11 @@ function getFtpOptions(): FtpOptions {
 }
 
 function getAccessOption(options: FtpOptions): ftp.AccessOptions {
-    let secure: boolean =
-        options.serverEndpointUrl.protocol.toLowerCase() == "ftps:" ? true : false;
-    let secureOptions: any = { rejectUnauthorized: !options.trustSSL };
+    const secure: boolean = options.serverEndpointUrl.protocol.toLowerCase() === "ftps:";
+    const secureOptions: any = { rejectUnauthorized: !options.trustSSL };
 
-    let hostName: string = options.serverEndpointUrl.hostname;
-    let portStr: string = options.serverEndpointUrl.port;
+    const hostName: string = options.serverEndpointUrl.hostname;
+    const portStr: string = options.serverEndpointUrl.port;
     let port: number = 21;
     if (portStr) {
         // port not explicitly specifed, use default
@@ -147,7 +143,7 @@ function getAccessOption(options: FtpOptions): ftp.AccessOptions {
 }
 
 async function getFtpClient(options: FtpOptions): Promise<ftp.Client> {
-    let ftpClient = new ftp.Client();
+    const ftpClient = new ftp.Client();
     ftpClient.ftp.log = tl.debug;
     const accessOptions = getAccessOption(options);
     const response = await ftpClient.access(accessOptions);
@@ -170,14 +166,14 @@ function sleep(millis) {
 function findFiles(ftpOptions: FtpOptions): string[] {
     tl.debug("Searching for files to upload");
 
-    let rootFolderStats = tl.stats(ftpOptions.rootFolder);
+    const rootFolderStats = tl.stats(ftpOptions.rootFolder);
     if (rootFolderStats.isFile()) {
-        let file = ftpOptions.rootFolder;
+        const file = ftpOptions.rootFolder;
         tl.debug(file + " is a file. Ignoring all file patterns");
         return [file];
     }
 
-    let allFiles = tl.find(ftpOptions.rootFolder);
+    const allFiles = tl.find(ftpOptions.rootFolder);
 
     // filePatterns is a multiline input containing glob patterns
     tl.debug(
@@ -188,10 +184,10 @@ function findFiles(ftpOptions: FtpOptions): string[] {
     );
 
     // minimatch options
-    let matchOptions = { matchBase: true, dot: true };
-    let win = tl.osType().match(/^Win/);
-    tl.debug("win: " + win);
-    if (win) {
+    const matchOptions = { matchBase: true, dot: true };
+    const platform = tl.getPlatform()
+    tl.debug("Platform: " + platform);
+    if (platform === tl.Platform.Windows) {
         matchOptions["nocase"] = true;
     }
 
@@ -211,7 +207,7 @@ function findFiles(ftpOptions: FtpOptions): string[] {
 
         tl.debug("searching for files, pattern: " + normalizedPattern);
 
-        let matched = tl.match(allFiles, normalizedPattern, null, matchOptions);
+        const matched = tl.match(allFiles, normalizedPattern, null, matchOptions);
         tl.debug("Found total matches: " + matched.length);
         // ensure each result is only added once
         for (let j = 0; j < matched.length; j++) {
@@ -251,7 +247,7 @@ async function run() {
 
     const files: string[] = findFiles(ftpOptions);
     let ftpClient = await getFtpClient(ftpOptions);
-    const tracker = new ProgressTracking(ftpOptions, files.length + 1); // add one extra for the root directory
+    const tracker = new ProgressTracker(ftpOptions, files.length + 1); // add one extra for the root directory
 
     let retryWithNewClient = async (task: () => {}, retry: number) => {
         let e = null;
@@ -301,7 +297,7 @@ async function run() {
 
         for (const file of files) {
             tl.debug("file: " + file);
-            var remoteFile: string = ftpOptions.preservePaths
+            let remoteFile: string = ftpOptions.preservePaths
                 ? path.join(
                     ftpOptions.remotePath,
                     file.substring(ftpOptions.rootFolder.length)
