@@ -27,13 +27,13 @@
             "type": "string",
             "label": "Version",
             "required": false,
-            "helpMarkDown": "Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0"
+            "helpMarkDown": "Version to use.  Examples: 1.1.13, 2.2.102"
         },
         {
             "name": "packageType",
             "type": "pickList",
             "label": "Package to install",
-            "defaultValue": "runtime",
+            "defaultValue": "sdk",
             "helpMarkDown": "Please select whether to install only runtime or full SDK.",
             "required": false,
             "options": {

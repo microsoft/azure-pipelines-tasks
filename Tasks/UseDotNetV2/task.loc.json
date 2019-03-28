@@ -33,7 +33,7 @@
       "name": "packageType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.packageType",
-      "defaultValue": "runtime",
+      "defaultValue": "sdk",
       "helpMarkDown": "ms-resource:loc.input.help.packageType",
       "required": false,
       "options": {

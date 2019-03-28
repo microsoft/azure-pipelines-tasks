@@ -3,7 +3,7 @@
   "loc.description": "Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Additionally provides basic auth.",
   "loc.instanceNameFormat": "Use .NET Core",
   "loc.input.label.version": "Version",
-  "loc.input.help.version": "Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0",
+  "loc.input.help.version": "Version to use.  Examples: 1.1.13, 2.2.102",
   "loc.input.label.packageType": "Package to install",
   "loc.input.help.packageType": "Please select whether to install only runtime or full SDK.",
   "loc.input.label.auth": "Auth",
