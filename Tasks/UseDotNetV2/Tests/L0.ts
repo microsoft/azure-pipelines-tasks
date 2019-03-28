@@ -116,10 +116,12 @@ describe('UseDotNet', function() {
 
         it("[windows]should set internal auth correctly", (done) => {
             process.env["__auth__"] = "myAuth";
+            process.env["__nuGetFeedType__"] = "internal";
             let tp = path.join(__dirname, "InstallWindows.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
             delete process.env["__auth__"];
+            delete process.env["__nuGetFeedType__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("Set internal auth") > -1, "should set internal auth");
@@ -257,10 +259,12 @@ describe('UseDotNet', function() {
 
         it("[nix]should set internal auth correctly", (done) => {
             process.env["__auth__"] = "myAuth";
+            process.env["__nuGetFeedType__"] = "internal";
             let tp = path.join(__dirname, "InstallNix.js");
             let tr = new ttm.MockTestRunner(tp);
             tr.run();
             delete process.env["__auth__"];
+            delete process.env["__nuGetFeedType__"];
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("Set internal auth") > -1, "should set internal auth");
