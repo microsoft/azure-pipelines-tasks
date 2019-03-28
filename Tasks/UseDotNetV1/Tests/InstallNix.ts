@@ -24,15 +24,15 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "Primary: linux" + os.EOL
         },
-        "/somedir/nuget.exe config --set http_proxy=https://proxy.com": {
+        "/somedir/nuget.exe config -set http_proxy=https://proxy.com": {
             "code": 0,
             "stdout": "Set proxy url" + os.EOL
         },
-        "/somedir/nuget.exe config --set http_proxy.user=username": {
+        "/somedir/nuget.exe config -set http_proxy.user=username": {
             "code": 0,
             "stdout": "Set proxy username" + os.EOL
         },
-        "/somedir/nuget.exe config --set http_proxy.password=password": {
+        "/somedir/nuget.exe config -set http_proxy.password=password": {
             "code": 0,
             "stdout": "Set proxy password" + os.EOL
         },
@@ -71,6 +71,12 @@ tr.registerMock('./utilities', {
     },
     setFileAttribute: function (file, mode) {
         console.log("Changing attribute for file " + file + " to " + mode);
+    }
+});
+
+tr.registerMock('packaging-common/nuget/NuGetToolGetter', {
+    getNuGet: function(version: string) {
+        console.log('Getting nuget version', version);
     }
 });
 

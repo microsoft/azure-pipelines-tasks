@@ -1,5 +1,5 @@
 import * as tl from 'azure-pipelines-task-lib/task';
-import { DotnetCoreInstaller } from './installer';
+import { DotnetCoreInstaller} from './installer';
 import * as proxyutil from './proxyutil';
 import * as authutil from './authutil';
 import * as path from 'path';
@@ -15,11 +15,14 @@ async function run() {
         }
     }
 
-    let packageType = tl.getInput('packageType') || 'runtime';
+    let packageType = tl.getInput('packageType') || 'sdk';
     const version: string = tl.getInput('version');
     if (version) {
         console.log(tl.loc("ToolToInstall", packageType, version));
-        await new DotnetCoreInstaller(packageType, version).install();
+        const installer: DotnetCoreInstaller = new DotnetCoreInstaller(packageType, version);
+        await installer.install();
+        const nugetVersion = tl.getInput('nugetVersion') || '3.3.0';
+        await installer.installNuGet(nugetVersion);
     }
 
     const proxy: tl.ProxyConfiguration = tl.getHttpProxyConfiguration();

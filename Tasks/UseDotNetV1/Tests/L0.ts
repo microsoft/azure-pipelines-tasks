@@ -42,6 +42,7 @@ describe('UseDotNet', function() {
                 assert(tr.stdout.indexOf("Caching dir C:\\") && tr.stdout.indexOf("someDir for tool dncs version 1.0.4") > -1, "should cache correctly");
                 assert(tr.stdout.indexOf("loc_mock_SuccessfullyInstalled sdk 1.0.4") > -1, "should print installed tool info");
                 assert(tr.stdout.indexOf("prepending path: C:\\agent\\_tools\\cacheDir") > -1, "should pre-prend to PATH");
+                assert(tr.stdout.indexOf("Getting nuget version 3.3.0") > -1, "should download nuget");
             }, tr, done);
         });
 
@@ -183,6 +184,7 @@ describe('UseDotNet', function() {
                 assert(tr.stdout.indexOf("Caching dir ") > -1 && tr.stdout.indexOf(" for tool dncs version 1.0.4") > -1, "should cache correctly");
                 assert(tr.stdout.indexOf("loc_mock_SuccessfullyInstalled sdk 1.0.4") > -1, "should print installed tool info");
                 assert(tr.stdout.indexOf("prepending path: /agent/_tools/cacheDir") > -1, "should pre-prend to PATH");
+                assert(tr.stdout.indexOf("Getting nuget version 3.3.0") > -1, "should download nuget");
             }, tr, done);
         });
 

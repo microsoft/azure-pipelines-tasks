@@ -5,6 +5,7 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import { DotNetCoreReleaseFetcher } from "./releasesfetcher";
 import * as utilities from "./utilities";
 
+import * as nuGetGetter from 'packaging-common/nuget/NuGetToolGetter';
 import * as os from 'os';
 import * as path from 'path';
 
@@ -56,6 +57,16 @@ export class DotnetCoreInstaller {
 
         // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
         tl.setVariable('DOTNET_ROOT', toolPath);
+    }
+
+    public async installNuGet(version: string) {
+        try {
+            await nuGetGetter.getNuGet(version, false, true);
+        }
+        catch (error) {
+            console.error('ERR:' + error.message);
+            tl.setResult(tl.TaskResult.Failed, '');
+        }
     }
 
     private getLocalTool(): string {
