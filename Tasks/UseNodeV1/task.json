@@ -2,7 +2,7 @@
     "id": "31C75BBB-BCDF-4706-8D7C-4DA6A1959BC2",
     "name": "UseNode",
     "friendlyName": "Use Node.js Eco-System",
-    "description": "Sets up a Node.js environment and optionally installs it to the PATH.",
+    "description": "Sets up a Node.js environment and optionally installs it to the PATH. Additionally provides proxy support.",
     "helpUrl": "",
     "helpMarkDown": "",
     "category": "Tool",

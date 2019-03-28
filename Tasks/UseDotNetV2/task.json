@@ -2,7 +2,7 @@
     "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
     "name": "UseDotNet",
     "friendlyName": "Use .NET Core",
-    "description": "Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Additionally provides basic auth.",
+    "description": "Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Additionally provides proxy support.",
     "category": "Tool",
     "preview": true,
     "runsOn": [
