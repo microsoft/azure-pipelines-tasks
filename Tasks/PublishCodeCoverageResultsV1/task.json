@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 148,
+        "Minor": 150,
         "Patch": 0
     },
     "demands": [],
@@ -77,6 +77,11 @@
     "messages": {
         "FoundNMatchesForPattern": "Found %s result(s) matching pattern: %s",
         "MultipleSummaryFilesFound": "Multiple file or directory matches were found. Using the first match: %s",
-        "NoCodeCoverage": "No code coverage results were found to publish."
+        "NoCodeCoverage": "No code coverage results were found to publish.",
+        "InstallDotNetCoreForHtmlReport": "Please install dotnet core to enable automatic generation of Html report.",
+        "FailedToGenerateHtmlReport": "Failed to generate Html report. Error: %s",
+        "IgnoringReportDirectory": "Ignoring coverage report directory with Html content as we are auto-generating Html content",
+        "UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
+        "GeneratedHtmlReport": "Generated code coverage html report: %s"
     }
 }

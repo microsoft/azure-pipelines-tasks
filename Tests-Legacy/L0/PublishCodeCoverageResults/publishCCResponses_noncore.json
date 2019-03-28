@@ -7,21 +7,15 @@
         "/someDir": [
             "someDir/someFile2",
             "/someDir/someFile1"
-        ],
-        "\\user\\admin\\summary.xml": [
-            "/user/admin/summary.xml"
         ]
     },
     "exist": {
         "/user/admin/summary.xml": true
     },
     "which": {
-        "dotnet": "/tmp/dotnet"
+        "dotnet": false
     },
     "findMatch": {
-        "\\user\\admin\\summary.xml": [
-            "/user/admin/summary.xml"
-        ],
         "/user/admin/summary.xml": [
             "/user/admin/summary.xml"
         ],
@@ -37,11 +31,6 @@
             "some/path/one"
         ],
         "/other/*pattern": []
-    },
-    "findPath": {
-        "\\user\\admin\\summary.xml": [
-            "/user/admin/summary.xml"
-        ]
     },
     "stats": {
         "some/path": {
