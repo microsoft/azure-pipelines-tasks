@@ -55,7 +55,7 @@ export function command(connection: ContainerConnection, dockerCommand: string, 
     });
 }
 
-export function push(connection: ContainerConnection, image: string, commandArguments: string, onCommandOut: (output) => any): any {
+export function push(connection: ContainerConnection, image: string, commandArguments: string, onCommandOut: (image, output) => any): any {
     var command = connection.createCommand();
     command.arg("push");
     command.arg(image);
@@ -69,7 +69,7 @@ export function push(connection: ContainerConnection, image: string, commandArgu
 
     return connection.execCommand(command).then(() => {
         // Return the std output of the command by calling the delegate
-        onCommandOut(output + "\n");
+        onCommandOut(image, output + "\n");
     });
 }
 

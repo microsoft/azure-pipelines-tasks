@@ -1,5 +1,6 @@
 "use strict";
 import * as tl from "vsts-task-lib/task";
+import * as fs from 'fs';
 
 export function hasRegistryComponent(imageName: string): boolean {
     var periodIndex = imageName.indexOf("."),
@@ -24,6 +25,11 @@ export function generateValidImageName(imageName: string): string {
     imageName = imageName.toLowerCase();
     imageName = imageName.replace(/ /g,"");
     return imageName;
+}
+
+export function getBaseImageNameFromDockerFileContent(dockerFilePath: string): string {
+    const dockerFileContent = fs.readFileSync(dockerFilePath, 'utf-8').toString();
+    return getBaseImageName(dockerFileContent);
 }
 
 export function getBaseImageName(contents: string): string {
