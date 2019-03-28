@@ -21,7 +21,6 @@ async function run() {
         let autogenerateHtmlReport: boolean = codeCoverageTool === 'Cobertura';
         let tempFolder = undefined;
         const disableAutoGenerate = tl.getVariable('disable.coverage.autogenerate');
-        const ignoreReportError = tl.getVariable('ignore.coverage.autogenerate');
 
         if (disableAutoGenerate) {
             tl.debug('disabling auto generation');
@@ -45,11 +44,9 @@ async function run() {
                 tempFolder = path.join(getTempFolder(), 'cchtml');
                 tl.debug('Generating Html Report using ReportGenerator: ' + tempFolder);
 
-                let result = await generateHtmlReport(summaryFileLocation, tempFolder);
+                const result = await generateHtmlReport(summaryFileLocation, tempFolder);
                 tl.debug('Result: ' + result);
-                if (ignoreReportError) {
-                    result = true;
-                }
+
                 if (!result) {
                     tempFolder = resolvePathToSingleItem(workingDirectory, reportDirectory, true);
                 } else {
