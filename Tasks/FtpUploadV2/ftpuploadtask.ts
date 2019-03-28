@@ -168,70 +168,79 @@ function sleep(millis: number) {
 function findFiles(ftpOptions: FtpOptions): string[] {
     tl.debug("Searching for files to upload");
 
-    const rootFolderStats = tl.stats(ftpOptions.rootFolder);
-    if (rootFolderStats.isFile()) {
-        const file = ftpOptions.rootFolder;
-        tl.debug(file + " is a file. Ignoring all file patterns");
-        return [file];
-    }
+    try {
+        const rootFolderStats = tl.stats(ftpOptions.rootFolder);
+        if (rootFolderStats.isFile()) {
+            const file = ftpOptions.rootFolder;
+            tl.debug(file + " is a file. Ignoring all file patterns");
+            return [file];
+        }
 
-    const allFiles = tl.find(ftpOptions.rootFolder);
+        const allFiles = tl.find(ftpOptions.rootFolder);
 
-    // filePatterns is a multiline input containing glob patterns
-    tl.debug(
-        "searching for files using: " +
-        ftpOptions.filePatterns.length +
-        " filePatterns: " +
-        ftpOptions.filePatterns
-    );
-
-    // minimatch options
-    const matchOptions = { matchBase: true, dot: true } as MatchOptions;
-    const platform = tl.getPlatform()
-    tl.debug("Platform: " + platform);
-    if (platform === tl.Platform.Windows) {
-        matchOptions["nocase"] = true;
-    }
-
-    tl.debug("Candidates found for match: " + allFiles.length);
-    for (let i = 0; i < allFiles.length; i++) {
-        tl.debug("file: " + allFiles[i]);
-    }
-
-    // use a set to avoid duplicates
-    let matchingFilesSet: Set<string> = new Set();
-
-    for (let i = 0; i < ftpOptions.filePatterns.length; i++) {
-        let normalizedPattern: string = path.join(
-            ftpOptions.rootFolder,
-            path.normalize(ftpOptions.filePatterns[i])
+        // filePatterns is a multiline input containing glob patterns
+        tl.debug(
+            "searching for files using: " +
+            ftpOptions.filePatterns.length +
+            " filePatterns: " +
+            ftpOptions.filePatterns
         );
 
-        tl.debug("searching for files, pattern: " + normalizedPattern);
+        // minimatch options
+        const matchOptions = { matchBase: true, dot: true } as MatchOptions;
+        const platform = tl.getPlatform()
+        tl.debug("Platform: " + platform);
+        if (platform === tl.Platform.Windows) {
+            matchOptions["nocase"] = true;
+        }
 
-        const matched = tl.match(allFiles, normalizedPattern, undefined, matchOptions);
-        tl.debug("Found total matches: " + matched.length);
-        // ensure each result is only added once
-        for (let j = 0; j < matched.length; j++) {
-            let match = path.normalize(matched[j]);
-            let stats = tl.stats(match);
-            if (!ftpOptions.preservePaths && stats.isDirectory()) {
-                // if not preserving paths, skip all directories
-            } else if (matchingFilesSet.add(match)) {
-                tl.debug(
-                    "adding " + (stats.isFile() ? "file:   " : "folder: ") + match
-                );
-                if (stats.isFile() && ftpOptions.preservePaths) {
-                    // if preservePaths, make sure the parent directory is also included
-                    let parent = path.normalize(path.dirname(match));
-                    if (matchingFilesSet.add(parent)) {
-                        tl.debug("adding folder: " + parent);
+        tl.debug("Candidates found for match: " + allFiles.length);
+        for (let i = 0; i < allFiles.length; i++) {
+            tl.debug("file: " + allFiles[i]);
+        }
+
+        // use a set to avoid duplicates
+        let matchingFilesSet: Set<string> = new Set();
+
+        for (let i = 0; i < ftpOptions.filePatterns.length; i++) {
+            let normalizedPattern: string = path.join(
+                ftpOptions.rootFolder,
+                path.normalize(ftpOptions.filePatterns[i])
+            );
+
+            tl.debug("searching for files, pattern: " + normalizedPattern);
+
+            const matched = tl.match(allFiles, normalizedPattern, undefined, matchOptions);
+            tl.debug("Found total matches: " + matched.length);
+            // ensure each result is only added once
+            for (let j = 0; j < matched.length; j++) {
+                let match = path.normalize(matched[j]);
+                let stats = tl.stats(match);
+                if (!ftpOptions.preservePaths && stats.isDirectory()) {
+                    // if not preserving paths, skip all directories
+                } else if (matchingFilesSet.add(match)) {
+                    tl.debug(
+                        "adding " + (stats.isFile() ? "file:   " : "folder: ") + match
+                    );
+                    if (stats.isFile() && ftpOptions.preservePaths) {
+                        // if preservePaths, make sure the parent directory is also included
+                        let parent = path.normalize(path.dirname(match));
+                        if (matchingFilesSet.add(parent)) {
+                            tl.debug("adding folder: " + parent);
+                        }
                     }
                 }
             }
         }
+
+        return Array.from(matchingFilesSet).sort();
     }
-    return Array.from(matchingFilesSet).sort();
+    catch (err) {
+        tl.error(err);
+        tl.setResult(tl.TaskResult.Failed, tl.loc("UploadFailed"));
+    }
+
+    return [];
 }
 
 async function run() {
@@ -248,8 +257,13 @@ async function run() {
     }
 
     const files: string[] = findFiles(ftpOptions);
+    const tracker = new ProgressTracker(ftpOptions, files.length);
+    if (files.length === 0) {
+        tl.warning(tl.loc("NoFilesFound"));
+        return;
+    }
+    
     let ftpClient = await getFtpClient(ftpOptions);
-    const tracker = new ProgressTracker(ftpOptions, files.length + 1); // add one extra for the root directory
 
     let retryWithNewClient = async (task: () => {}, retry: number) => {
         let e = null;
@@ -337,3 +351,4 @@ async function run() {
 }
 
 run();
+
