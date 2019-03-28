@@ -202,7 +202,7 @@ describe('UseDotNet', function() {
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") > -1, "should install fresh if cache miss");
                 assert(tr.stdout.indexOf("Downloading tool from https://primary-runtime-url") > -1, "should download from correct url");
                 assert(tr.stdout.indexOf("Extracting tar archive from ") > -1 && tr.stdout.indexOf("someArchive.tar") > -1, "Should extract downloaded archive corectly");
-                assert(tr.stdout.indexOf("Caching dir ") > -1 && tr.stdout.indexOf(" for tool dncs version 1.0.4") > -1, "should cache correctly");
+                assert(tr.stdout.indexOf("Caching dir ") > -1 && tr.stdout.indexOf(" for tool dncr version 1.0.4") > -1, "should cache correctly");
                 assert(tr.stdout.indexOf("loc_mock_SuccessfullyInstalled runtime 1.0.4") > -1, "should print installed tool info");
                 assert(tr.stdout.indexOf("prepending path: /agent/_tools/cacheDir") > -1, "should pre-prend to PATH");
             }, tr, done);
