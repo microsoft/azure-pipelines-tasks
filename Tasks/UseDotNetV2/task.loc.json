@@ -53,18 +53,16 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.nuGetFeedType",
       "helpMarkDown": "ms-resource:loc.input.help.nuGetFeedType",
-      "required": true,
+      "defaultValue": "external",
       "options": {
         "internal": "internal",
         "external": "external"
-      },
-      "visibleRule": "auth != "
+      }
     },
     {
       "name": "feedId",
       "type": "string",
       "label": "ms-resource:loc.input.label.feedId",
-      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.feedId",
       "visibleRule": "nuGetFeedType = internal"
     },
@@ -72,7 +70,6 @@
       "name": "externalEndpoint",
       "type": "connectedService:ExternalNuGetFeed",
       "label": "ms-resource:loc.input.label.externalEndpoint",
-      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.externalEndpoint",
       "visibleRule": "nuGetFeedType = external"
     }

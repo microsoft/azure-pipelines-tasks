@@ -33,7 +33,7 @@ async function run() {
     const feedName: string = tl.getInput('auth');
     if (feedName) {
         // Get the info the type of feed
-        let nugetFeedType = tl.getInput('nuGetFeedType') || 'internal';
+        let nugetFeedType = tl.getInput('nuGetFeedType') || 'external';
 
         // Make sure the feed type is an expected one
         const normalizedNuGetFeedType = ['internal', 'external'].find(x => nugetFeedType.toUpperCase() === x.toUpperCase());

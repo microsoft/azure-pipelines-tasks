@@ -52,19 +52,17 @@
             "name": "nuGetFeedType",
             "type": "pickList",
             "label": "NuGet Feed Type",
-            "helpMarkDown": "The type of NugetFeed used in the auth field. Can either be an internal feed or external service connection",
-            "required": true,
+            "helpMarkDown": "The type of NugetFeed to auth with.",
+            "defaultValue": "external",
             "options": {
                 "internal": "internal",
                 "external": "external"
-            },
-            "visibleRule": "auth != "
+            }
         },
         {
             "name": "feedId",
             "type": "string",
             "label": "Feed id",
-            "required": true,
             "helpMarkDown": "The id of the internal feed to use for auth",
             "visibleRule": "nuGetFeedType = internal"
         },
@@ -72,8 +70,7 @@
             "name": "externalEndpoint",
             "type": "connectedService:ExternalNuGetFeed",
             "label": "NuGet server",
-            "required": true,
-            "helpMarkDown": "The external feed to use for auth",
+            "helpMarkDown": "The external feed service connection to use for auth",
             "visibleRule": "nuGetFeedType = external"
         }
     ],
