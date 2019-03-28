@@ -35,6 +35,7 @@ describe('Publish Code Coverage Results Suite', function() {
 
         tr.run()
             .then(() => {
+                console.log(tr.stdout);
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 if (os.type().match(/^Win/)) {
@@ -62,6 +63,7 @@ describe('Publish Code Coverage Results Suite', function() {
 
         tr.run()
             .then(() => {
+                console.log(tr.stdout);
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 if (os.type().match(/^Win/)) {
@@ -300,6 +302,7 @@ describe('Publish Code Coverage Results Suite', function() {
 
         tr.run()
             .then(() => {
+                console.log(tr.stdout);
                 console.log(tr.stdout);
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
