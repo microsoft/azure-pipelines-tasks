@@ -26,8 +26,8 @@ async function run() {
     }
 
     let dotNetCoreInstaller = new VersionInstaller(packageType, installationPath);
-    if (!dotNetCoreInstaller.isVersionInstalled(versionInfo.version)) {
-        await dotNetCoreInstaller.downloadAndInstall(versionInfo, versionFetcher.getDownloadUrl(versionInfo, packageType));
+    if (!dotNetCoreInstaller.isVersionInstalled(versionInfo.getVersion())) {
+        await dotNetCoreInstaller.downloadAndInstall(versionInfo, versionFetcher.getDownloadUrl(versionInfo));
     }
 
     toolLib.prependPath(installationPath);

@@ -22,64 +22,60 @@ export class VersionInstaller {
     }
 
     public async downloadAndInstall(versionInfo: VersionInfo, downloadUrl: string): Promise<void> {
-        if (!versionInfo || !versionInfo.version || !url.parse(downloadUrl)) {
-            throw tl.loc("VersionCanNotBeDownloadedFromUrl", versionInfo, downloadUrl);
-        }
+        return new Promise<void>((resolve, reject) => {
+            if (!versionInfo || !versionInfo.getVersion() || !downloadUrl || !url.parse(downloadUrl)) {
+                reject(tl.loc("VersionCanNotBeDownloadedFromUrl", versionInfo, downloadUrl));
+            }
 
-        let downloadPath = "";
-        let version = versionInfo.version;
+            let version = versionInfo.getVersion();
 
-        try {
-            downloadPath = await toolLib.downloadTool(downloadUrl);
-        } catch (error) {
-            throw tl.loc("CouldNotDownload", downloadUrl, JSON.stringify(error));
-        }
+            toolLib.downloadTool(downloadUrl)
+                .then((downloadPath) => {
+                    // Extract
+                    console.log(tl.loc("ExtractingPackage", downloadPath));
+                    let extPathPromise: Promise<string> = tl.osType().match(/^Win/) ? toolLib.extractZip(downloadPath) : toolLib.extractTar(downloadPath);
 
-        try {
-            //todo: if installation path is outside agents directory, acquire Lock for installation and start timer of 10-20 minutes, after which lock shall be auto released.
+                    extPathPromise
+                        .then((extPath) => {
+                            // Copy folders
+                            tl.debug(tl.loc("CopyingFoldersIntoPath", this.installationPath));
+                            var allRootLevelEnteriesInDir: string[] = tl.ls("", [extPath]).map(name => path.join(extPath, name));
+                            var directoriesTobeCopied: string[] = allRootLevelEnteriesInDir.filter(path => fs.lstatSync(path).isDirectory());
+                            directoriesTobeCopied.forEach((directoryPath) => {
+                                tl.cp(directoryPath, this.installationPath, "-rf", false);
+                            });
 
-            //todo when lock work is done: Check if already installed
-            // this.isVersionInstalled(version);
+                            // Copy files
+                            try {
+                                if (this.packageType == utils.Constants.sdk && this.isLatestInstalledVersion(version)) {
+                                    tl.debug(tl.loc("CopyingFilesIntoPath", this.installationPath));
+                                    var filesToBeCopied = allRootLevelEnteriesInDir.filter(path => !fs.lstatSync(path).isDirectory());
+                                    filesToBeCopied.forEach((filePath) => {
+                                        tl.cp(filePath, this.installationPath, "-f", false);
+                                    });
+                                }
+                            }
+                            catch (ex) {
+                                tl.warning(tl.loc("FailedToCopyTopLevelFiles", this.installationPath, ex));
+                            }
 
-            // Extract
-            console.log(tl.loc("ExtractingPackage", downloadPath));
-            let extPath: string = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath) : await toolLib.extractTar(downloadPath);
+                            // Cache tool
+                            this.createInstallationCompleteFile(versionInfo);
 
-            // Copy folders
-            tl.debug(tl.loc("CopyingFoldersIntoPath", this.installationPath));
-            var allRootLevelEnteriesInDir: string[] = tl.ls("", [extPath]).map(name => path.join(extPath, name));
-            var directoriesTobeCopied: string[] = allRootLevelEnteriesInDir.filter(path => fs.lstatSync(path).isDirectory());
-            directoriesTobeCopied.forEach((directoryPath) => {
-                tl.cp(directoryPath, this.installationPath, "-rf", false);
-            });
-
-            // Copy files
-            try {
-                if (this.packageType == utils.Constants.sdk && this.isLatestInstalledVersion(version)) {
-                    tl.debug(tl.loc("CopyingFilesIntoPath", this.installationPath));
-                    var filesToBeCopied = allRootLevelEnteriesInDir.filter(path => !fs.lstatSync(path).isDirectory());
-                    filesToBeCopied.forEach((filePath) => {
-                        tl.cp(filePath, this.installationPath, "-f", false);
+                            console.log(tl.loc("SuccessfullyInstalled", this.packageType, version));
+                            resolve();
+                        },
+                            (ex) => {
+                                reject(tl.loc("FailedWhileExtractingPacakge", ex));
+                            })
+                        .catch((ex) => {
+                            reject(tl.loc("FailedWhileInstallingVersionAtPath", version, this.installationPath, ex));
+                        });
+                },
+                    (ex) => {
+                        reject(tl.loc("CouldNotDownload", downloadUrl, JSON.stringify(ex)));
                     });
-                }
-            }
-            catch (ex) {
-                tl.warning(tl.loc("FailedToCopyTopLevelFiles", this.installationPath, JSON.stringify(ex)));
-            }
-
-            // Cache tool
-            this.createInstallationCompleteFile(versionInfo);
-
-            console.log(tl.loc("SuccessfullyInstalled", this.packageType, version));
-        }
-        catch (ex) {
-            throw tl.loc("FailedWhileInstallingVersionAtPath", version, this.installationPath, JSON.stringify(ex));
-        }
-        finally {
-            //todo: Release Lock and stop timer
-        }
-
-        //todo: in case of failure due to: unable to acquire lock or timeout, 3 retries to install.
+        });
     }
 
     public isVersionInstalled(version: string): boolean {
@@ -100,22 +96,22 @@ export class VersionInstaller {
     }
 
     private createInstallationCompleteFile(versionInfo: VersionInfo): void {
-        tl.debug(tl.loc("CreatingInstallationCompeleteFile", versionInfo.version, this.packageType));
+        tl.debug(tl.loc("CreatingInstallationCompeleteFile", versionInfo.getVersion(), this.packageType));
         // always add for runtime as it is installed with sdk as well.
         var pathToVersionCompleteFile: string = "";
         if (this.packageType == utils.Constants.sdk) {
-            let sdkVersion = versionInfo.version;
+            let sdkVersion = versionInfo.getVersion();
             pathToVersionCompleteFile = path.join(this.installationPath, utils.Constants.relativeSdkPath, `${sdkVersion}.complete`);
             tl.writeFile(pathToVersionCompleteFile, `{ "version": "${sdkVersion}" }`);
         }
 
-        let runtimeVersion = versionInfo.getRuntimeVersion(this.packageType);
+        let runtimeVersion = versionInfo.getRuntimeVersion();
         if (runtimeVersion) {
             pathToVersionCompleteFile = path.join(this.installationPath, utils.Constants.relativeRuntimePath, `${runtimeVersion}.complete`);
             tl.writeFile(pathToVersionCompleteFile, `{ "version": "${runtimeVersion}" }`);
         }
         else if (this.packageType == utils.Constants.runtime) {
-            throw tl.loc("CannotFindRuntimeVersionForCompletingInstallation", this.packageType, versionInfo.version);
+            throw tl.loc("CannotFindRuntimeVersionForCompletingInstallation", this.packageType, versionInfo.getVersion());
         }
     }
 

@@ -10,16 +10,10 @@ if (process.env["__empty__"] == "true") {
         throw ""
     }
 
-    // version info list with version field empty
-    if (versionutilities.getMatchingVersionFromList([new VersionInfo(JSON.parse("{}"))], "2.1") != null) {
-        throw "";
-    }
-
     // form the version info list with preview versions as well
     let versionInfoList: VersionInfo[] = [];
-    ["3.0.100", "3.1.0-preview-850", ""].forEach((version) => {
-        var temp = new VersionInfo(JSON.parse(`{"version": "${version}"}`));
-        temp.version = version;
+    ["3.0.100", "3.1.0-preview-850"].forEach((version) => {
+        var temp = new VersionInfo(JSON.parse(`{"version": "${version}", "files": []}`), "sdk");
         versionInfoList.push(temp);
     });
 
@@ -49,39 +43,38 @@ if (process.env["__empty__"] == "true") {
 else {
     // form the version info list with preview versions as well
     let versionInfoList: VersionInfo[] = [];
-    ["3.0.100", "3.0.200-preview-850", "3.1.100", "3.1.101-preview-850", ""].forEach((version) => {
-        var temp = new VersionInfo(JSON.parse(`{"version": "${version}"}`));
-        temp.version = version;
+    ["3.0.100", "3.0.200-preview-850", "3.1.100", "3.1.101-preview-850"].forEach((version) => {
+        var temp = new VersionInfo(JSON.parse(`{"version": "${version}", "files": []}`), "sdk");
         versionInfoList.push(temp);
     });
 
     // should return heighest non preview version in major version 3
-    if (versionutilities.getMatchingVersionFromList(versionInfoList, "3.x", false).version != "3.1.100") {
+    if (versionutilities.getMatchingVersionFromList(versionInfoList, "3.x", false).getVersion() != "3.1.100") {
         throw "";
     }
 
     // should return heighest version (may be preview as well) in major version 3
-    if (versionutilities.getMatchingVersionFromList(versionInfoList, "3.x", true).version != "3.1.101-preview-850") {
+    if (versionutilities.getMatchingVersionFromList(versionInfoList, "3.x", true).getVersion() != "3.1.101-preview-850") {
         throw "";
     }
 
     // should return heighest non preview version in major version 3 and minor version 0
-    if (versionutilities.getMatchingVersionFromList(versionInfoList, "3.0.x", false).version != "3.0.100") {
+    if (versionutilities.getMatchingVersionFromList(versionInfoList, "3.0.x", false).getVersion() != "3.0.100") {
         throw "";
     }
 
     // should return heighest version (may be preview as well) in major version 3 and minor version 0
-    if (versionutilities.getMatchingVersionFromList(versionInfoList, "3.0.x", true).version != "3.0.200-preview-850") {
+    if (versionutilities.getMatchingVersionFromList(versionInfoList, "3.0.x", true).getVersion() != "3.0.200-preview-850") {
         throw "";
     }
 
     // should return exact version from list
-    if (versionutilities.getMatchingVersionFromList(versionInfoList, "3.0.100", false).version != "3.0.100") {
+    if (versionutilities.getMatchingVersionFromList(versionInfoList, "3.0.100", false).getVersion() != "3.0.100") {
         throw "";
     }
 
     // should return exact version from list even if includePreviewVersion is false and the version spec is preview
-    if (versionutilities.getMatchingVersionFromList(versionInfoList, "3.0.200-preview-850", false).version != "3.0.200-preview-850") {
+    if (versionutilities.getMatchingVersionFromList(versionInfoList, "3.0.200-preview-850", false).getVersion() != "3.0.200-preview-850") {
         throw "";
     }
 
