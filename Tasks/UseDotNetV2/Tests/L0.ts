@@ -114,36 +114,6 @@ describe('UseDotNet', function() {
             }, tr, done);
         });
 
-        it("[windows]should set internal auth correctly", (done) => {
-            process.env["__auth__"] = "myAuth";
-            process.env["__nuGetFeedType__"] = "internal";
-            let tp = path.join(__dirname, "InstallWindows.js");
-            let tr = new ttm.MockTestRunner(tp);
-            tr.run();
-            delete process.env["__auth__"];
-            delete process.env["__nuGetFeedType__"];
-            runValidations(() => {
-                assert(tr.succeeded, "Should have succeeded");
-                assert(tr.stdout.indexOf("Set internal auth") > -1, "should set internal auth");
-                assert(tr.stdout.indexOf("Set internal api key") > -1, "should set internal api key");
-            }, tr, done);
-        });
-
-        it("[windows]should set external auth correctly", (done) => {
-            process.env["__auth__"] = "myAuth";
-            process.env["__nuGetFeedType__"] = "external";
-            let tp = path.join(__dirname, "InstallWindows.js");
-            let tr = new ttm.MockTestRunner(tp);
-            tr.run();
-            delete process.env["__auth__"];
-            delete process.env["__nuGetFeedType__"];
-            runValidations(() => {
-                assert(tr.succeeded, "Should have succeeded");
-                assert(tr.stdout.indexOf("Set external auth") > -1, "should set external auth");
-                assert(tr.stdout.indexOf("Set external api key") > -1, "should set external api key");
-            }, tr, done);
-        });
-
         it("[windows]should fail if explicit version is not used", (done) => {
             process.env["__implicit_version__"] = "true";
             let tp = path.join(__dirname, "InstallWindows.js");
@@ -254,36 +224,6 @@ describe('UseDotNet', function() {
                 assert(tr.stdout.indexOf("Set proxy url") > -1, "should set proxy url");
                 assert(tr.stdout.indexOf("Set proxy username") > -1, "should set proxy username");
                 assert(tr.stdout.indexOf("Set proxy password") > -1, "should set proxy password");
-            }, tr, done);
-        });
-
-        it("[nix]should set internal auth correctly", (done) => {
-            process.env["__auth__"] = "myAuth";
-            process.env["__nuGetFeedType__"] = "internal";
-            let tp = path.join(__dirname, "InstallNix.js");
-            let tr = new ttm.MockTestRunner(tp);
-            tr.run();
-            delete process.env["__auth__"];
-            delete process.env["__nuGetFeedType__"];
-            runValidations(() => {
-                assert(tr.succeeded, "Should have succeeded");
-                assert(tr.stdout.indexOf("Set internal auth") > -1, "should set internal auth");
-                assert(tr.stdout.indexOf("Set internal api key") > -1, "should set internal api key");
-            }, tr, done);
-        });
-
-        it("[nix]should set external auth correctly", (done) => {
-            process.env["__auth__"] = "myAuth";
-            process.env["__nuGetFeedType__"] = "external";
-            let tp = path.join(__dirname, "InstallNix.js");
-            let tr = new ttm.MockTestRunner(tp);
-            tr.run();
-            delete process.env["__auth__"];
-            delete process.env["__nuGetFeedType__"];
-            runValidations(() => {
-                assert(tr.succeeded, "Should have succeeded");
-                assert(tr.stdout.indexOf("Set external auth") > -1, "should set external auth");
-                assert(tr.stdout.indexOf("Set external api key") > -1, "should set external api key");
             }, tr, done);
         });
     }

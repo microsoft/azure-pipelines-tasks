@@ -26,9 +26,6 @@ tlClone.getInput = function (inputName: string, required?: boolean) {
     if (inputName === 'checkLatest') {
         return 'false';
     }
-    if (inputName === 'auth' && process.env["__auth__"]) {
-        return process.env["__auth__"];
-    }
     return tl.getInput(inputName, required);
 }
 tlClone.getVariable = function(variable: string) {
@@ -94,34 +91,6 @@ tmr.registerMock('vsts-task-tool-lib/tool', {
     },
     prependPath(toolPath) {
         return;
-    }
-});
-
-tmr.registerMock('packaging-common/npm/npmrcparser', {
-    NormalizeRegistry: function(registry: string) {
-        if (registry === 'registryUrl') {
-            return 'https://npmregistry.com';
-            // should nerf to //npmregistry.com/
-        }
-    }
-});
-
-tmr.registerMock('packaging-common/locationUtilities', {
-    ProtocolType: {Npm: 0},
-    RegistryType: {npm: 0},
-    getPackagingUris: async function(type: number) {
-        if (type === 0) {
-            return {PackagingUris: ['defaultUri'], DefaultPackagingUri: 'defaultUri'}
-        }
-        return null;
-    },
-    getFeedRegistryUrl: async function(defaultUri: string, registryType: number, auth: string, accessToken?: string, useSession?: boolean) {
-        if (defaultUri === 'defaultUri' && registryType === 0 && auth === 'auth') {
-            return 'registryUrl';
-        }
-    },
-    getSystemAccessToken: function() {
-        return 'accessToken';
     }
 });
 

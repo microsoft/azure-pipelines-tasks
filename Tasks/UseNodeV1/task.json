@@ -40,22 +40,6 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool."
-        },
-        {
-            "name": "auth",
-            "type": "string",
-            "label": "NPM feed to authenticate with",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Id of the npm feed you would like to authenticate with"
-        },
-        {
-            "name": "authFile",
-            "type": "string",
-            "label": "Location of npmrc file to write auth info to",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Location of npmrc file to write auth info to. By default uses the cwd."
         }
     ],
     "execution": {

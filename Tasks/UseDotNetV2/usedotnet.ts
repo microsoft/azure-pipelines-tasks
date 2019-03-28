@@ -1,7 +1,6 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import { DotnetCoreInstaller} from './installer';
 import * as proxyutil from './proxyutil';
-import * as authutil from './authutil';
 import * as path from 'path';
 
 async function run() {
@@ -28,26 +27,6 @@ async function run() {
     const proxy: tl.ProxyConfiguration = tl.getHttpProxyConfiguration();
     if (proxy) {
         proxyutil.setProxy(proxy);
-    }
-
-    const feedName: string = tl.getInput('auth');
-    if (feedName) {
-        // Get the info the type of feed
-        let nugetFeedType = tl.getInput('nuGetFeedType') || 'external';
-
-        // Make sure the feed type is an expected one
-        const normalizedNuGetFeedType = ['internal', 'external'].find(x => nugetFeedType.toUpperCase() === x.toUpperCase());
-        if (!normalizedNuGetFeedType) {
-            throw new Error(tl.loc('UnknownFeedType', nugetFeedType));
-        }
-        nugetFeedType = normalizedNuGetFeedType;
-
-        if (nugetFeedType === 'internal') {
-            await authutil.addInternalFeed(feedName);
-        }
-        else {
-            await authutil.addExternalFeed(feedName);
-        }
     }
 }
 

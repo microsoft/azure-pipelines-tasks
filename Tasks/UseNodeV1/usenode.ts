@@ -10,7 +10,6 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
 //import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as installer from './installer';
-import * as authutil from './authutil';
 import * as proxyutil from './proxyutil';
 
 async function run() {
@@ -30,12 +29,6 @@ async function run() {
         const proxyCfg: taskLib.ProxyConfiguration = taskLib.getHttpProxyConfiguration();
         if (proxyCfg) {
             proxyutil.setCurlProxySettings(proxyCfg);
-        }
-
-        const auth = taskLib.getInput('auth', false);
-        if (auth) {
-            const authFile = taskLib.getInput('authFile', false);
-            await authutil.setAuth(auth, authFile);
         }
     }
     catch (error) {

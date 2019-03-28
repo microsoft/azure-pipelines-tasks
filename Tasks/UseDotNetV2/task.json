@@ -40,38 +40,6 @@
                 "runtime": "Runtime",
                 "sdk": "SDK (contains runtime)"
             }
-        },
-        {
-            "name": "auth",
-            "type": "string",
-            "label": "Auth",
-            "required": false,
-            "helpMarkDown": "The authentication feed name to use"
-        },
-        {
-            "name": "nuGetFeedType",
-            "type": "pickList",
-            "label": "NuGet Feed Type",
-            "helpMarkDown": "The type of NugetFeed to auth with.",
-            "defaultValue": "external",
-            "options": {
-                "internal": "internal",
-                "external": "external"
-            }
-        },
-        {
-            "name": "feedId",
-            "type": "string",
-            "label": "Feed id",
-            "helpMarkDown": "The id of the internal feed to use for auth",
-            "visibleRule": "nuGetFeedType = internal"
-        },
-        {
-            "name": "externalEndpoint",
-            "type": "connectedService:ExternalNuGetFeed",
-            "label": "NuGet server",
-            "helpMarkDown": "The external feed service connection to use for auth",
-            "visibleRule": "nuGetFeedType = external"
         }
     ],
     "execution": {
