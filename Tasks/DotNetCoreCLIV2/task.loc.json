@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 148,
-    "Patch": 2
+    "Minor": 150,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -132,6 +132,15 @@
       "visibleRule": "command = test",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.publishTestResults"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "visibleRule": "command = test",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle"
     },
     {
       "name": "zipAfterPublish",

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as ini from 'ini';
 
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 export function GetRegistries(npmrc: string, saveNormalizedRegistries: boolean): string[] {
     let registries: string[] = [];
