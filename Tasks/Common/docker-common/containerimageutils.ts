@@ -27,7 +27,7 @@ export function generateValidImageName(imageName: string): string {
     return imageName;
 }
 
-export function getBaseImageNameFromDockerFileContent(dockerFilePath: string): string {
+export function getBaseImageNameFromDockerFile(dockerFilePath: string): string {
     const dockerFileContent = fs.readFileSync(dockerFilePath, 'utf-8').toString();
     return getBaseImageName(dockerFileContent);
 }

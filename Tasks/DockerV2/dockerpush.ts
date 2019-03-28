@@ -7,7 +7,7 @@ import * as dockerCommandUtils from "docker-common/dockercommandutils";
 import * as utils from "./utils";
 import { findDockerFile } from "docker-common/fileutils";
 import { WebRequest, WebResponse, sendRequest } from 'utility-common/restutilities';
-import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFileContent } from "docker-common/containerimageutils";
+import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "docker-common/containerimageutils";
 
 import Q = require('q');
 
@@ -106,10 +106,8 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
 async function publishToImageMetadataStore(connection: ContainerConnection, imageName: string, tags: string[], digest: string, dockerFilePath: string): Promise<any> {
     // Getting imageDetails
     const imageUri = getResourceName(imageName, digest);
-    const baseImageName = getBaseImageNameFromDockerFileContent(dockerFilePath);
-    // ToDO:: Fix the getLayers code in dockerCommandUtils to handle the promise returned in history-> execCommand
-    const layers = [{ "directive": "", "arguments": "" }];
-    // const layers = dockerCommandUtils.getLayers(connection, imageName);
+    const baseImageName = getBaseImageNameFromDockerFile(dockerFilePath);
+     const layers = await dockerCommandUtils.getLayers(connection, imageName);
 
     // Getting pipeline variables
     const buildId = parseInt(tl.getVariable("Build.BuildId"));
@@ -140,6 +138,13 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
 }
 
 function extractDigestFromOutput(dockerPushCommandOutput: string): string {
+    // SampleCommandOutput : The push refers to repository [xyz.azurecr.io/acr-helloworld]
+    // 3b7670606102: Pushed 
+    // e2af85e4b310: Pushed ce8609e9fdad: Layer already exists
+    // f2b18e6d6636: Layer already exists
+    // 62: digest: sha256:5e3c9cf1692e129744fe7db8315f05485c6bb2f3b9f6c5096ebaae5d5bfbbe60 size: 5718
+
+    // Below regex will extract part after sha256, so expected return value will be 5e3c9cf1692e129744fe7db8315f05485c6bb2f3b9f6c5096ebaae5d5bfbbe60
     const matchPatternForDigest = new RegExp(/sha256\:([\w]+)/);
     const imageMatch = dockerPushCommandOutput.match(matchPatternForDigest);
     if (imageMatch && imageMatch.length >= 1) {
