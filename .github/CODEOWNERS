@@ -121,7 +121,7 @@ Tasks/DownloadFileshareArtifactsV0/*    @Lovakumar      @omeshp
 
 Tasks/DownloadGitHubReleasesV0/*    @Lovakumar      @gykuma
 
-Tasks/DownloadPackageV0/*       @zackrun
+Tasks/DownloadPackageV0/*       @zjrunner
 
 Tasks/DownloadPipelineArtifactV0/*      @mihaif
 
@@ -189,19 +189,19 @@ Tasks/MysqlDeploymentOnMachineGroupV1/*     @kmkumaran      @RoshanKumarMicrosof
 
 Tasks/NodeToolV0/*      @hross
 
-Tasks/NpmV1/*       @zackrun @jotaylo
+Tasks/NpmV1/*       @zjrunner @jotaylo
 
-Tasks/NpmAuthenticateV0/*       @zackrun
+Tasks/NpmAuthenticateV0/*       @zjrunner
 
-Tasks/NuGetV0/*     @zackrun
+Tasks/NuGetV0/*     @zjrunner
 
-Tasks/NuGetCommandV2/*      @zackrun @jotaylo
+Tasks/NuGetCommandV2/*      @zjrunner @jotaylo
 
-Tasks/NuGetPackagerV0/*     @zackrun
+Tasks/NuGetPackagerV0/*     @zjrunner
 
-Tasks/NuGetPublisherV0/*    @zackrun
+Tasks/NuGetPublisherV0/*    @zjrunner
 
-Tasks/NuGetToolInstallerV0/*    @zackrun
+Tasks/NuGetToolInstallerV0/*    @zjrunner
 
 Tasks/PackerBuildV0/*   @sachinma
 
@@ -259,9 +259,9 @@ Tasks/SqlServerDacpacDeployment/*   @kmkumaran
 
 Tasks/SshV0/*   @madhurig
 
-Tasks/TwineAuthenticateV0/*     @zackrun
+Tasks/TwineAuthenticateV0/*     @zjrunner
 
-Tasks/UniversalPackagesV0/*     @zackrun
+Tasks/UniversalPackagesV0/*     @zjrunner
 
 Tasks/UsePythonVersionV0/*      @madhurig
 
