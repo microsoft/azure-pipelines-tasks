@@ -5,6 +5,7 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import { DotNetCoreReleaseFetcher } from "./releasesfetcher";
 import * as utilities from "./utilities";
 
+import * as nuGetGetter from 'packaging-common/nuget/NuGetToolGetter';
 import * as os from 'os';
 import * as path from 'path';
 
@@ -58,6 +59,16 @@ export class DotnetCoreInstaller {
         tl.setVariable('DOTNET_ROOT', toolPath);
     }
 
+    public async installNuGet(version: string) {
+        try {
+            await nuGetGetter.getNuGet(version, false, true);
+        }
+        catch (error) {
+            console.error('ERR:' + error.message);
+            tl.setResult(tl.TaskResult.Failed, '');
+        }
+    }
+
     private getLocalTool(): string {
         console.log(tl.loc("CheckingToolCache"));
         return toolLib.findLocalTool(this.cachedToolName, this.version, this.arch);
@@ -68,7 +79,7 @@ export class DotnetCoreInstaller {
         let scriptRunner: trm.ToolRunner;
 
         if (tl.osType().match(/^Win/)) {
-            let escapedScript = path.join(utilities.getCurrentDir(), 'externals', 'get-os-platform.ps1').replace(/'/g, "''");
+            let escapedScript = path.join(utilities.getDirname(), 'externals', 'get-os-platform.ps1').replace(/'/g, "''");
             let command = `& '${escapedScript}'`
 
             let powershellPath = tl.which('powershell', true);
@@ -77,7 +88,7 @@ export class DotnetCoreInstaller {
                 .arg(command);
         }
         else {
-            let scriptPath = path.join(utilities.getCurrentDir(), 'externals', 'get-os-distro.sh');
+            let scriptPath = path.join(utilities.getDirname(), 'externals', 'get-os-distro.sh');
             utilities.setFileAttribute(scriptPath, "777");
 
             scriptRunner = tl.tool(tl.which(scriptPath, true));

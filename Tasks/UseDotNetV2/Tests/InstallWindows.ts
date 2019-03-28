@@ -37,15 +37,15 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "Primary: win-x64" + os.EOL,
         },
-        "C:\\somedir\\nuget.exe config --set http_proxy=https://proxy.com": {
+        "C:\\somedir\\nuget.exe config -set http_proxy=https://proxy.com": {
             "code": 0,
             "stdout": "Set proxy url" + os.EOL
         },
-        "C:\\somedir\\nuget.exe config --set http_proxy.user=username": {
+        "C:\\somedir\\nuget.exe config -set http_proxy.user=username": {
             "code": 0,
             "stdout": "Set proxy username" + os.EOL
         },
-        "C:\\somedir\\nuget.exe config --set http_proxy.password=password": {
+        "C:\\somedir\\nuget.exe config -set http_proxy.password=password": {
             "code": 0,
             "stdout": "Set proxy password" + os.EOL
         },
@@ -79,11 +79,17 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 
 tr.registerMock('./utilities', {
-    getCurrentDir: function () {
+    getDirname: function () {
         return "C:\\currDir";
     },
     setFileAttribute: function (file, mode) {
         chmodSync(file, mode);
+    }
+});
+
+tr.registerMock('packaging-common/nuget/NuGetToolGetter', {
+    getNuGet: function(version: string) {
+        console.log('Getting nuget version', version);
     }
 });
 
