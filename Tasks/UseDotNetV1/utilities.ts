@@ -1,6 +1,6 @@
 import { chmodSync } from 'fs';
 
-export function getCurrentDir(): string {
+export function getDirname(): string {
     return __dirname;
 }
 

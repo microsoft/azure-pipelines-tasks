@@ -79,7 +79,7 @@ export class DotnetCoreInstaller {
         let scriptRunner: trm.ToolRunner;
 
         if (tl.osType().match(/^Win/)) {
-            let escapedScript = path.join(utilities.getCurrentDir(), 'externals', 'get-os-platform.ps1').replace(/'/g, "''");
+            let escapedScript = path.join(utilities.getDirname(), 'externals', 'get-os-platform.ps1').replace(/'/g, "''");
             let command = `& '${escapedScript}'`
 
             let powershellPath = tl.which('powershell', true);
@@ -88,7 +88,7 @@ export class DotnetCoreInstaller {
                 .arg(command);
         }
         else {
-            let scriptPath = path.join(utilities.getCurrentDir(), 'externals', 'get-os-distro.sh');
+            let scriptPath = path.join(utilities.getDirname(), 'externals', 'get-os-distro.sh');
             utilities.setFileAttribute(scriptPath, "777");
 
             scriptRunner = tl.tool(tl.which(scriptPath, true));

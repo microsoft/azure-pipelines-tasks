@@ -79,7 +79,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 
 tr.registerMock('./utilities', {
-    getCurrentDir: function () {
+    getDirname: function () {
         return "C:\\currDir";
     },
     setFileAttribute: function (file, mode) {
