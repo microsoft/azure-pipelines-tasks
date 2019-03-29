@@ -41,7 +41,7 @@ export class TaskParametersUtility {
 
         taskParameters.isMultiContainer = taskParameters.ImageName && taskParameters.ImageName.indexOf("\n") !=-1;
         taskParameters.ConfigFilePath = PackageUtility.getPackagePath(taskParameters.ConfigFilePath);
-        if(fs.statSync(taskParameters.ConfigFilePath).isFile()) {
+        if(tl.stats(taskParameters.ConfigFilePath).isFile()) {
             taskParameters.isMultiContainer = true;
         }
         else if (taskParameters.isMultiContainer) {
