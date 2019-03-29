@@ -159,20 +159,17 @@ async function main(): Promise<void> {
             }
         }
 
-        if (!!defaultVersionType) {
-            switch (defaultVersionType.toLowerCase()) {
-                case 'latest': release = await executeWithRetries("getLatestRelease", () => getLatestRelease(repositoryName, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
-                    break;
-                case 'specifictag': release = await executeWithRetries("getTaggedRelease", () => getTaggedRelease(repositoryName, version, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
-                    break;
-                case 'specificversion': release = await executeWithRetries("getSpecificRelease", () => getSpecificRelease(repositoryName, version, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
-                    break;
-                default: release = null;
-            }
-        } else {
+        if (!!defaultVersionType && defaultVersionType.toLowerCase() == 'specificversion') {
+            release = await executeWithRetries("getSpecificRelease", () => getSpecificRelease(repositoryName, version, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
+        }
+        else if (!!defaultVersionType && defaultVersionType.toLowerCase() == 'specifictag') {
+            release = await executeWithRetries("getTaggedRelease", () => getTaggedRelease(repositoryName, version, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
+        }
+        else if (!defaultVersionType || defaultVersionType.toLowerCase() == 'latest') {
             if (!!version) {
                 release = await executeWithRetries("getTaggedRelease", () => getTaggedRelease(repositoryName, version, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
-            } else {
+            }
+            else {
                 release = await executeWithRetries("getLatestRelease", () => getLatestRelease(repositoryName, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
             }
         }

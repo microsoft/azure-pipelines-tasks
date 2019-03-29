@@ -11,7 +11,7 @@
   "version": {
     "Major": 0,
     "Minor": 149,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "1.99.0",
   "instanceNameFormat": "Download GitHub Release",
@@ -40,7 +40,7 @@
     {
       "name": "defaultVersionType",
       "type": "pickList",
-      "label": "Default release version type",
+      "label": "Default version",
       "defaultValue": "latest",
       "required": true,
       "options": {

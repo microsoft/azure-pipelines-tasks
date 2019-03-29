@@ -7,7 +7,7 @@
   "loc.input.help.connection": "GitHub service connection",
   "loc.input.label.userRepository": "Repository",
   "loc.input.help.userRepository": "GitHub repository full name",
-  "loc.input.label.defaultVersionType": "Default release version type",
+  "loc.input.label.defaultVersionType": "Default version",
   "loc.input.help.defaultVersionType": "Download assets from latest release or specific release version/tag",
   "loc.input.label.version": "Release",
   "loc.input.help.version": "Release version/tag to download",
