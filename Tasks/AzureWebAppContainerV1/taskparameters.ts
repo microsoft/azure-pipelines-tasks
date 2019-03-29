@@ -39,17 +39,18 @@ export class TaskParametersUtility {
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
 
-        taskParameters.isMultiContainer = false;
         taskParameters.isMultiContainer = taskParameters.ImageName && taskParameters.ImageName.indexOf("\n") !=-1;
-        tl.debug(`is multicontainer app : ${taskParameters.isMultiContainer}`);
-
-        if(taskParameters.isMultiContainer)
-        {
-            PackageUtility.getPackagePath(taskParameters.ConfigFilePath);
-            if(fs.statSync(taskParameters.ConfigFilePath).isDirectory()) {
+        taskParameters.ConfigFilePath = PackageUtility.getPackagePath(taskParameters.ConfigFilePath);
+        if(fs.statSync(taskParameters.ConfigFilePath).isFile()) {
+            taskParameters.isMultiContainer = true;
+        }
+        else {
+            if(taskParameters.isMultiContainer) {
                 throw new Error(tl.loc('FailedToGetConfigurationFile'));
             }
         }
+
+        tl.debug(`is multicontainer app : ${taskParameters.isMultiContainer}`);
 
         return taskParameters;
     }

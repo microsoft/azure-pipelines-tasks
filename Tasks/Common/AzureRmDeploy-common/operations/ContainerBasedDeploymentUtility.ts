@@ -33,6 +33,9 @@ export class ContainerBasedDeploymentUtility {
 
         if(isMultiContainer) {
             updatedConfigFilePath = this.updateImagesInConfigFile(configFilePath, imageName);
+
+            // uploading log file
+            console.log(`##vso[task.uploadfile]${updatedConfigFilePath}`);
         }
 
         tl.debug("Updating the webapp configuration.");
@@ -40,11 +43,6 @@ export class ContainerBasedDeploymentUtility {
 
         tl.debug('making a restart request to app service');
         await this._appService.restart();
-
-        // uploading log file
-        if(isMultiContainer) {
-            console.log(`##vso[task.uploadfile]${updatedConfigFilePath}`);
-        }
     }
 
     private async _updateConfigurationDetails(configSettings: any, startupCommand: string, imageName: string, isLinuxApp: boolean, isMultiContainer?: boolean, configFilePath?: string): Promise<void> {
