@@ -4,16 +4,6 @@ import * as proxyutil from './proxyutil';
 import * as path from 'path';
 
 async function run() {
-    // set the console code page to "UTF-8"
-    if (tl.osType() === 'Windows_NT') {
-        try {
-            await tl.exec(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
-        }
-        catch (ex) {
-            tl.warning(tl.loc("CouldNotSetCodePaging", JSON.stringify(ex)));
-        }
-    }
-
     let packageType = tl.getInput('packageType') || 'sdk';
     const version: string = tl.getInput('version');
     if (version) {

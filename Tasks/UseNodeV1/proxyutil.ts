@@ -13,7 +13,7 @@ function toCurlProxy(proxyCfg: taskLib.ProxyConfiguration): ICurlProxy {
         if (proxyCfg && proxyCfg.proxyUrl) {
             taskLib.debug(`using proxy ${proxyCfg.proxyUrl}`);
             const parsedUrl = url.parse(proxyCfg.proxyUrl);
-            const httpEnvVarName: string = parsedUrl.protocol === 'https:'? "https_proxy" : "http_proxy";
+            const httpEnvVarName: string = parsedUrl.protocol === 'https:'? "HTTPS_PROXY" : "HTTP_PROXY";
             taskLib.debug(`using proxy2 ${proxyCfg.proxyUrl}`);
 
             let proxyUrl = new URL(proxyCfg.proxyUrl);
@@ -32,13 +32,17 @@ function toCurlProxy(proxyCfg: taskLib.ProxyConfiguration): ICurlProxy {
 }
 
 export function setCurlProxySettings(proxyConfig: taskLib.ProxyConfiguration) {
+    if (taskLib.getVariable("HTTP_PROXY") || taskLib.getVariable("HTTPS_PROXY")) {
+        // Short circuit if proxy already set.
+        return;
+    }
     let curlProxy: ICurlProxy = toCurlProxy(proxyConfig);
     if (curlProxy) {
-        taskLib.setVariable(curlProxy.variable, curlProxy.setting);
-
         // register the escaped versions of password
         if (proxyConfig.proxyPassword) {
             taskLib.setSecret(qs.escape(proxyConfig.proxyPassword))
-        }        
+        }
+
+        taskLib.setVariable(curlProxy.variable, curlProxy.setting);   
     }
 }
