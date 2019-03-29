@@ -1,5 +1,5 @@
-import tl = require('vsts-task-lib/task');
-import { IExecOptions, IExecSyncResult, IExecSyncOptions } from 'vsts-task-lib/toolrunner';
+import tl = require('azure-pipelines-task-lib/task');
+import { IExecOptions, IExecSyncResult, IExecSyncOptions } from 'azure-pipelines-task-lib/toolrunner';
 
 export interface Resource {
     name: string;

@@ -267,6 +267,7 @@ target.build = function() {
 
             // npm install the common modules to the task dir
             if (commonPacks.length) {
+                console.log(JSON.stringify(commonPacks));
                 cd(taskPath);
                 var installPaths = commonPacks.map(function (commonPack) {
                     return `file:${path.relative(taskPath, commonPack.packFilePath)}`;

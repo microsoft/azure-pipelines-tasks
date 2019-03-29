@@ -1,15 +1,14 @@
 import * as os from "os";
 import * as path from "path";
-import * as toolLib from 'vsts-task-tool-lib/tool';
-import * as tl from "vsts-task-lib/task";
-import * as downloadutility from "./downloadutility";
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
+import * as tl from "azure-pipelines-task-lib/task";
+import * as downloadutility from "utility-common/downloadutility";
 import * as util from "util";
 import * as yaml from "js-yaml";
 const uuidV4 = require('uuid/v4');
 const kubectlToolName = "kubectl";
 export const stableKubectlVersion = "v1.13.2";
-import { WebRequest, sendRequest } from "./restutilities";
-import { async } from "q";
+import { WebRequest, sendRequest } from "utility-common/restutilities";
 
 var fs = require('fs');
 
