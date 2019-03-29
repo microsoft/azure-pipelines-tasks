@@ -6,16 +6,11 @@ import kubectlutility = require("utility-common/kubectlutility");
 
 export async function getKuberctlVersion(): Promise<string> {
     let kubectlVersion = tl.getInput("kubectlVersion");
-    if(kubectlVersion) {        
-        if (kubectlVersion === "latest" || kubectlVersion === "")
-        {
-            return await kubectlutility.getStableKubectlVersion();
-        }
-
-        return sanitizeVersionString(kubectlVersion);
+    if(kubectlVersion && kubectlVersion != "latest") {
+        return sanitizeVersionString(kubectlVersion.trim());
     }
 
-    return kubectlutility.stableKubectlVersion;
+    return await kubectlutility.getStableKubectlVersion();
 }
 
 export async function downloadKubectl(version : string): Promise<string> {
