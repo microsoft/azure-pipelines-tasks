@@ -85,8 +85,8 @@ Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
 . "$PSScriptRoot\GenerateSqlBatchFiles.ps1"
 
 # Telemetry for SQL Dacpac deployment on machine group
-$encodedServerName = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($serverName))
-$encodedDatabaseName = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($databaseName))
+$encodedServerName = GetSHA256String($serverName)
+$encodedDatabaseName = GetSHA256String($databaseName)
 $telemetryJsonContent = -join("{`"serverName`": `"$encodedServerName`",",
                               "`"databaseName`": `"$encodedDatabaseName`"}")
 Write-Host "##vso[telemetry.publish area=SqlDacpacDeploymentOnMachineGroup;feature=SqlDacpacDeploymentOnMachineGroup]$telemetryJsonContent"
