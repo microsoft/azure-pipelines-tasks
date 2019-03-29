@@ -1,7 +1,7 @@
 "use strict";
 import tl = require('vsts-task-lib/task');
 import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
-import { Kubectl } from "utility-common/kubectl-object-model";
+import { Kubectl } from "kubernetes-common/kubectl-object-model";
 import * as utils from "../utils/utilities";
 import * as TaskInputParameters from '../models/TaskInputParameters';
 

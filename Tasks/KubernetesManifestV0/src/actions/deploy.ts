@@ -3,7 +3,7 @@
 import * as deploymentHelper from '../utils/DeploymentHelper';
 import * as TaskInputParameters from '../models/TaskInputParameters';
 import * as utils from "../utils/utilities";
-import { Kubectl } from "utility-common/kubectl-object-model";
+import { Kubectl } from "kubernetes-common/kubectl-object-model";
 
 export async function deploy() {
     var kubectlPath = await utils.getKubectl();

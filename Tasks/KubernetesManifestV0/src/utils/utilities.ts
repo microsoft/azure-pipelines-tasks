@@ -3,7 +3,7 @@
 import * as tl from "vsts-task-lib/task";
 import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import kubectlutility = require("utility-common/kubectlutility");
-import { Kubectl } from "utility-common/kubectl-object-model";
+import { Kubectl } from "kubernetes-common/kubectl-object-model";
 import { pipelineAnnotations } from "../models/constants"
 
 export enum StringComparer {
