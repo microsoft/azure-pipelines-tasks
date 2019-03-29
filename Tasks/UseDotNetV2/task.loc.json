@@ -19,7 +19,7 @@
     "DotNetCore"
   ],
   "demands": [],
-  "ecosystem": ".NET Core",
+  "ecosystem": "dotnet",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
