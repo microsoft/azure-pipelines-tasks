@@ -379,7 +379,6 @@ function GetSHA256String {
     }
 
     return ""
-    
 }
 
 
