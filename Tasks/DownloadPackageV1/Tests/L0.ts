@@ -1,8 +1,8 @@
 import fs = require("fs");
 import assert = require("assert");
 import path = require("path");
-import * as tl from "vsts-task-lib/task";
-import * as ttm from "vsts-task-lib/mock-test";
+import * as tl from "azure-pipelines-task-lib/task";
+import * as ttm from "azure-pipelines-task-lib/mock-test";
 
 const tempDir = path.join(__dirname, "temp");
 const rootDir = path.join(__dirname, "out");

@@ -24,30 +24,32 @@ export class ContainerBasedDeploymentUtility {
         let imageName: string = properties["ImageName"];
         tl.debug("Deploying an image " + imageName + " to the webapp " + this._appService.getName());
 
+        let isLinuxApp: boolean = properties["isLinuxContainerApp"];
         tl.debug("Updating the webapp configuration.");
-        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], imageName);
+        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], imageName, isLinuxApp);
 
-        tl.debug('Updating web app settings');
-        await this._updateApplicationSettings(properties["AppSettings"], imageName);   
+        tl.debug('making a restart request to app service');
+        await this._appService.restart();
     }
 
-    private async _updateApplicationSettings(appSettings: any, imageName: string): Promise<void> {
-        var appSettingsParameters = appSettings ? appSettings.trim() : "";
-        appSettingsParameters =  await this._getContainerRegistrySettings(imageName, null) + ' ' + appSettingsParameters;
-        var appSettingsNewProperties = parse(appSettingsParameters);
-        await this._appServiceUtility.updateAndMonitorAppSettings(appSettingsNewProperties);
-    }
-
-    private async _updateConfigurationDetails(configSettings: any, startupCommand: string, imageName: string): Promise<void> {
+    private async _updateConfigurationDetails(configSettings: any, startupCommand: string, imageName: string, isLinuxApp: boolean): Promise<void> {
         var appSettingsNewProperties = !!configSettings ? parse(configSettings.trim()): { };
         appSettingsNewProperties.appCommandLine = {
             'value': startupCommand
         }
 
-        appSettingsNewProperties.linuxFxVersion = {
-            'value': "DOCKER|" + imageName
+        if(isLinuxApp) {
+            appSettingsNewProperties.linuxFxVersion = {
+                'value': "DOCKER|" + imageName
+            }
         }
-        tl.debug(`CONATINER UPDATE CONFIG VALUES : ${appSettingsNewProperties}`);
+        else {
+            appSettingsNewProperties.windowsFxVersion = {
+                'value': "DOCKER|" + imageName
+            }
+        }
+
+        tl.debug(`CONATINER UPDATE CONFIG VALUES : ${JSON.stringify(appSettingsNewProperties)}`);
         await this._appServiceUtility.updateConfigurationSettings(appSettingsNewProperties);
     }
 

@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 export function getPypircPath(): string {
     let pypircPath: string;

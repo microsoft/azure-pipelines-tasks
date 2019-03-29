@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 import { publishEvent } from './cieventlogger';
+import * as ci from './cieventlogger';
 let uuid = require('uuid');
 
 export class TestResultsPublisher {
@@ -67,9 +68,8 @@ export class TestResultsPublisher {
             fs.writeFileSync(responseFilePath, fileContent);
         } catch (ex) {
             // Log telemetry and return null path
-            publishEvent({
-                "exception": ex
-            });
+            ci.addToConsolidatedCi('exception', ex);
+            
             tl.warning("Exception while writing to response file: " + ex);
             return null;
         }

@@ -1,13 +1,17 @@
 
+ci/*  @damccorm   @stephenmichaelf  @bryanmacfarlane
+
 Tasks/AndroidSigningV2/*    @madhurig
 
 Tasks/AndroidSigningV3/*    @madhurig
 
 Tasks/ANTV1/*   @madhurig
 
-Tasks/AppCenterDistributeV1/*   @DennisPan
+Tasks/AppCenterDistributeV1/*   @DennisPan    @keerthanakumar
 
-Tasks/AppCenterDistributeV2/*   @DennisPan
+Tasks/AppCenterDistributeV2/*   @DennisPan    @keerthanakumar
+
+Tasks/AppCenterDistributeV3/*   @DennisPan    @keerthanakumar
 
 Tasks/AppCenterTestV1/*   @owenniblock
 
@@ -77,6 +81,8 @@ Tasks/CmdLineV2/*   @bryanmacfarlane
 
 Tasks/CocoaPodsV0/*     @madhurig
 
+Tasks/Common/packaging-common/* @jotaylo
+
 Tasks/CondaEnvironmentV0/*      @madhurig
 
 Tasks/CondaEnvironmentV1/*      @madhurig
@@ -99,11 +105,15 @@ Tasks/DockerV0/*    @bansalaseem
 
 Tasks/DockerV1/*    @bansalaseem
 
+Tasks/DockerV2/*    @bansalaseem
+
 Tasks/DockerComposeV0/*     @bansalaseem
 
 Tasks/DotNetCoreCLIV2/*     @sachinma
 
 Tasks/DotNetCoreInstallerV0/*   @sachinma
+
+Tasks/DotNetCoreInstallerV1/*   @sachinma
 
 Tasks/DownloadBuildArtifactsV0/*    @Lovakumar      @omeshp
 
@@ -116,6 +126,8 @@ Tasks/DownloadPackageV0/*       @zackrun
 Tasks/DownloadPipelineArtifactV0/*      @mihaif
 
 Tasks/DownloadSecureFileV1/*    @madhurig
+
+Tasks/DuffleInstallerV0/*   @bansalaseem     @vithati
 
 Tasks/ExtractFilesV1/*      @bryanmacfarlane
 
@@ -163,6 +175,8 @@ Tasks/KubernetesV0/*    @bansalaseem
 
 Tasks/KubernetesV1/*    @bansalaseem
 
+Tasks/KubernetesManifestV0/*    @bansalaseem
+
 Tasks/ManualInterventionV8/*    @bansalaseem
 
 Tasks/MavenV2/*     @madhurig
@@ -175,13 +189,13 @@ Tasks/MysqlDeploymentOnMachineGroupV1/*     @kmkumaran      @RoshanKumarMicrosof
 
 Tasks/NodeToolV0/*      @hross
 
-Tasks/NpmV1/*       @zackrun
+Tasks/NpmV1/*       @zackrun @jotaylo
 
 Tasks/NpmAuthenticateV0/*       @zackrun
 
 Tasks/NuGetV0/*     @zackrun
 
-Tasks/NuGetCommandV2/*      @zackrun
+Tasks/NuGetCommandV2/*      @zackrun @jotaylo
 
 Tasks/NuGetPackagerV0/*     @zackrun
 
@@ -248,6 +262,10 @@ Tasks/SshV0/*   @madhurig
 Tasks/TwineAuthenticateV0/*     @zackrun
 
 Tasks/UniversalPackagesV0/*     @zackrun
+
+Tasks/UseDotNetV2/*     @damccorm
+
+Tasks/UseNodeV1/*     @damccorm
 
 Tasks/UsePythonVersionV0/*      @madhurig
 

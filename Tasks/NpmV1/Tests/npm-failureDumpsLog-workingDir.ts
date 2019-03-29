@@ -1,7 +1,6 @@
 import * as path from 'path';
 
-import { TaskLibAnswerExecResult } from 'vsts-task-lib/mock-answer';
-import * as tmrm from 'vsts-task-lib/mock-run';
+import { TaskLibAnswerExecResult } from 'azure-pipelines-task-lib/mock-answer';
 
 import { NpmCommand, NpmTaskInput } from '../constants';
 import { NpmMockHelper } from './NpmMockHelper';

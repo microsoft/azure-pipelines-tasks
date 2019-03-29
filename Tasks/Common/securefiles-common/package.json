@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "vso-node-api": "6.5.0",
-    "vsts-task-lib": "2.0.6"
+    "azure-pipelines-task-lib": "^2.8.0",
+    "vso-node-api": "6.5.0"
   }
 }
