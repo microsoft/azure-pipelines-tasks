@@ -25,9 +25,13 @@ My gut feel is that 4-5 inputs is about the most I ever want to pass to a single
 - Keep your inputs orthogonal.
 The designer lets you go crazy with `groups` and `visibleRule`s, allowing you to funnel the users to a small set of inputs.
 In YAML, there's no affordance for which inputs go together, which are mutually exclusive, and which ones cause others to become required.
+- Choose human-friendly input names.
+The name will be used in the `input` block.
 - Follow the principle of least surprise when choosing `defaultValue`s.
 None of our YAML experiences offer insight into task defaults right now.
 Users have to trust you won't do something silly.
+- Document your inputs, including a YAML snippet showing how to use it.
+We're improving on the product side with things like IntelliSense in the editor, but at the moment, discovering inputs isn't easy.
 
 ### Should a task even be a task?
 
@@ -43,4 +47,42 @@ This can occasionally be the only mechanism to accomplish something: for instanc
 
 ## Advice for upgrading tasks
 
-_TODO_
+Obviously, updating an existing task is _much_ trickier than building a new task.
+If, after reviewing this advice, you can't find a clean way to upgrade, you might consider marking your current task deprecated and offering a new, "green field" task that follows the above guidance.
+Consider that a last resort, though, since it's fairly disruptive for your customers.
+
+### Easing life for YAML users
+
+- YAML exposes the raw input name in a way that the designer did not.
+If you don't want to make a breaking change to your task, you can add an `aliases` array to the `input` definition.
+It's an array of strings which will be considered equivalent to the input's real name.
+The first one in the list will usually be suggested by IntelliSense.
+Example: the `InstallSSHKey` task took an input called `hostName` but actually expected a line from a `known_hosts` file.
+In the designer, this was clear because the label was "Known hosts entry".
+I added an alias, `knownHostsEntry`, so that it's also clear in YAML what's actually expected.
+- The syntax for referring to an extension-installed task is a little verbose.
+It includes the extension publisher and extension ID, plus the task's `name` (NOT `friendlyName`).
+_TODO: check if we support bare task name when it's unambiguous._
+We're trying to clean this up over time, and need your feedback.
+  - If you're doing the kind of "one-time setup as a dev might do on their machine", consider using the `ecosystem` feature.
+  `ecosystem` tells the YAML parser that your task will set the machine's PATH to point to a tool at a specific version, optionally that it knows how download versions of a tool, and that it will set the tool's proxy settings to match the agent's.
+  (In the future, `use` will also map authentication settings and install problem matchers.)
+  Instead of referring to `- task: UseNodeVersion@0`, the end user simply writes `- use: node`.
+  - We're actively soliciting other classes of syntactic sugar we can add over top of raw `- task` usage.\
+  If you have ideas, please open an issue in https://github.com/Microsoft/azure-pipelines-yaml to discuss.
+- You can change your task name when you do a major version.
+As long as it uses the same `id` GUID, the designer won't break.
+(Technically you can change it on a minor or patch version, but you risk breaking existing YAML users.)
+
+### Keeping your designer users in mind
+
+- When you offer a new major version of a task, a designer user is notified by a little badge.
+When they click the dropdown to go to the new major version, inputs with the same names and types should automatically remain.
+New inputs and inputs whose types have changed will be set to their defaults.
+Inputs which no longer exist will disappear.
+Carefully consider this behavior when you decide which inputs to bring forward in a new task version.
+
+### Contributions welcomed!
+
+If you have additional thoughts, feel free to open a PR against this doc.
+I hope it's a living document that changes as the YAML pipelines system continues to evolve.
