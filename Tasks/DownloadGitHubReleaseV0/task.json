@@ -116,7 +116,6 @@
   "messages": {
     "DownloadArtifacts": "Downloading assets of release '%s' from: %s",
     "ArtifactsSuccessfullyDownloaded": "Successfully downloaded release assets to '%s'",
-    "InvalidRelease": "The release Id/Tag input '%s' is not valid",
-    "InvalidDefaultVersionType": "The DefaultVersionType input '%s' is not valid"
+    "InvalidRelease": "The release version/tag input '%s' is not valid"
   }
 }

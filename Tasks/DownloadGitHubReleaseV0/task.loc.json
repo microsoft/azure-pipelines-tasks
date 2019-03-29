@@ -116,7 +116,6 @@
   "messages": {
     "DownloadArtifacts": "ms-resource:loc.messages.DownloadArtifacts",
     "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
-    "InvalidRelease": "ms-resource:loc.messages.InvalidRelease",
-    "InvalidDefaultVersionType": "ms-resource:loc.messages.InvalidDefaultVersionType"
+    "InvalidRelease": "ms-resource:loc.messages.InvalidRelease"
   }
 }
