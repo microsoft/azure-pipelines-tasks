@@ -19,6 +19,7 @@ describe('Kubernetes Manifests Suite', function() {
         delete process.env[shared.TestEnvVars.isStableDeploymentPresent];
         delete process.env[shared.TestEnvVars.isCanaryDeploymentPresent];
         delete process.env[shared.TestEnvVars.isBaselineDeploymentPresent];
+        delete process.env[shared.TestEnvVars.arguments];
     });
     after(function () {
     });
@@ -107,6 +108,24 @@ describe('Kubernetes Manifests Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.reject;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.none;   
+        tr.run();
+        assert(tr.failed, 'task should have failed');
+        done();
+    });
+    it('Run successfuly for delete with arguments', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.arguments] = "deployment nginx-deployment"
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.delete;
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("deleted successfuly") != -1, "Deleted successfuly");
+        done();
+    });
+    it('Run should fail for delete with no arguments', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.delete;
         tr.run();
         assert(tr.failed, 'task should have failed');
         done();

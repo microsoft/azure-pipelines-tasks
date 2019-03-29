@@ -45,7 +45,6 @@ process.env["BUILD_BUILDID"] = BuildId;
 process.env["BUILD_BUILDNUMBER"] = BuildNumber;
 process.env["BUILD_DEFINITIONNAME"] = DefinitionName;
 
-
 process.env[shared.TestEnvVars.manifests] = process.env[shared.TestEnvVars.manifests] || shared.ManifestFilesPath;
 process.env["ENDPOINT_DATA_kubernetesConnection_AUTHORIZATIONTYPE"] = process.env[shared.TestEnvVars.endpointAuthorizationType] ||  shared.AuthorizationType.Kubeconfig;
 process.env["ENDPOINT_AUTH_PARAMETER_kubernetesConnection_KUBECONFIG"] = "{\"apiVersion\":\"v1\", \"clusters\": [{\"cluster\": {\"insecure-skip-tls-verify\":\"true\", \"server\":\"https://5.6.7.8\", \"name\" : \"scratch\"}}], \"contexts\": [{\"context\" : {\"cluster\": \"scratch\", \"namespace\" : \"default\", \"user\": \"experimenter\", \"name\" : \"exp-scratch\"}], \"current-context\" : \"exp-scratch\", \"kind\": \"Config\", \"users\" : [{\"user\": {\"password\": \"regpassword\", \"username\" : \"test\"}]}";
@@ -109,7 +108,7 @@ a.exec[`${KubectlPath} apply -f ${process.env[shared.TestEnvVars.manifests]} --n
     "stdout": "deployment.apps/nginx-deployment created."
 };
 
-a.exec[`${KubectlPath} apply -f TEST_Deployment_nginx-deployment-canary,TEST_Deployment_nginx-deployment-baseline --namespace default`] = {
+a.exec[`${KubectlPath} apply -f ${shared.CanaryManifestFilesPath},${shared.BaselineManifestFilesPath} --namespace default`] = {
     "code": 0,
     "stdout": "deployment.apps/nginx-deployment-canary created. deployment.extensions/nginx-deployment-baseline created "
 };
@@ -160,7 +159,7 @@ var pipelineAnnotations: string =
     `azure-pipelines/executionuri=${TeamFoundationCollectionUri}_build/results?buildId=${BuildId}` +" "+
     `azure-pipelines/project=${TeamProject}`+ " "+
     `azure-pipelines/org=${CollectionId}`;
-var annotateCanaryCmd = `${KubectlPath} annotate -f TEST_Deployment_nginx-deployment-canary,TEST_Deployment_nginx-deployment-baseline --namespace default `+pipelineAnnotations+` --overwrite`;
+var annotateCanaryCmd = `${KubectlPath} annotate -f ${shared.CanaryManifestFilesPath},${shared.BaselineManifestFilesPath} --namespace default `+pipelineAnnotations+` --overwrite`;
 
 a.exec[annotateCanaryCmd] = {
     "code": 0,
@@ -172,6 +171,16 @@ a.exec[annotateStableCmd] = {
     "code": 0,
     "stdout": "deployment.extensions/nginx-deployment annotated"
 };
+
+if (process.env[shared.TestEnvVars.arguments])
+{
+    var deleteCmd = `${KubectlPath} delete ${process.env[shared.TestEnvVars.arguments]}`;
+    console.log('---DELTE cmd' +deleteCmd);
+    a.exec[deleteCmd] = {
+        "code": 0,
+        "stdout": "deleted successfuly"
+    };
+}
 
 tr.setAnswers(<any>a);
 tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
@@ -201,13 +210,8 @@ var fh = require('../src/utils/FileHelper');
 tr.registerMock('../utils/FileHelper', {
     writeObjectsToFile: function(inputObjects: any[]) {
         let newFilePaths = [];
-        inputObjects.forEach((inputObject: any) => {
-            var fileName = "TEST_"+inputObject.kind+"_"+inputObject.metadata.name;
-            newFilePaths.push(fileName);
-            var inputObjectString = JSON.stringify(inputObject);
-            fs.writeFileSync(path.join(fileName),inputObjectString);
-        });
-    
+        newFilePaths.push(shared.CanaryManifestFilesPath);
+        newFilePaths.push(shared.BaselineManifestFilesPath);
         return newFilePaths;
     },
     getTempDirectory: fh.getTempDirectory,
