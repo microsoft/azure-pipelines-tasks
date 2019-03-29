@@ -11,7 +11,7 @@
   "version": {
     "Major": 0,
     "Minor": 149,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "1.99.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -116,7 +116,6 @@
   "messages": {
     "DownloadArtifacts": "ms-resource:loc.messages.DownloadArtifacts",
     "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
-    "InvalidRelease": "ms-resource:loc.messages.InvalidRelease",
-    "InvalidDefaultVersionType": "ms-resource:loc.messages.InvalidDefaultVersionType"
+    "InvalidRelease": "ms-resource:loc.messages.InvalidRelease"
   }
 }
