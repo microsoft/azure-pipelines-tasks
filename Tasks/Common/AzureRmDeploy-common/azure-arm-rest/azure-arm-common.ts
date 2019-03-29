@@ -182,6 +182,9 @@ export class ApplicationTokenCredentials {
                 if (response.statusCode == 200) {
                     deferred.resolve(response.body.access_token);
                 }
+                else if(response.statusCode == 401) {
+                    deferred.reject(tl.loc('ExpiredServicePrincipal'));
+                }
                 else {
                     deferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', response.statusCode, response.statusMessage));
                 }
@@ -211,12 +214,13 @@ export class ApplicationTokenCredentials {
 
         webClient.sendRequest(webRequest).then(
             (response: webClient.WebResponse) => {
-                if (response.statusCode == 200) 
-                {
+                if (response.statusCode == 200) {
                     deferred.resolve(response.body.access_token);
                 }
-                else 
-                {
+                else if(response.statusCode == 401) {
+                    deferred.reject(tl.loc('ExpiredServicePrincipal'));
+                }
+                else {
                     deferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', response.statusCode, response.statusMessage));
                 }
             },
