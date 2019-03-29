@@ -44,10 +44,8 @@ export class TaskParametersUtility {
         if(fs.statSync(taskParameters.ConfigFilePath).isFile()) {
             taskParameters.isMultiContainer = true;
         }
-        else {
-            if(taskParameters.isMultiContainer) {
-                throw new Error(tl.loc('FailedToGetConfigurationFile'));
-            }
+        else if (taskParameters.isMultiContainer) {
+            throw new Error(tl.loc('FailedToGetConfigurationFile'));
         }
 
         tl.debug(`is multicontainer app : ${taskParameters.isMultiContainer}`);
