@@ -1,5 +1,5 @@
-import { TaskLibAnswers, TaskLibAnswerExecResult } from 'vsts-task-lib/mock-answer';
-import tmrm = require('vsts-task-lib/mock-run');
+import { TaskLibAnswers, TaskLibAnswerExecResult } from 'azure-pipelines-task-lib/mock-answer';
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import * as pkgMock from 'packaging-common/Tests/MockHelper';
 import * as artMock from 'packaging-common/Tests/ArtifactToolMockHelper';
 

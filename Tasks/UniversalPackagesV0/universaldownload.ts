@@ -1,6 +1,6 @@
-import * as tl from "vsts-task-lib";
+import * as tl from "azure-pipelines-task-lib";
 import * as pkgLocationUtils from "packaging-common/locationUtilities"; 
-import {IExecSyncResult, IExecOptions} from "vsts-task-lib/toolrunner";
+import {IExecSyncResult, IExecOptions} from "azure-pipelines-task-lib/toolrunner";
 import * as telemetry from "utility-common/telemetry";
 import * as artifactToolRunner from "packaging-common/universal/ArtifactToolRunner";
 import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolUtilities";
