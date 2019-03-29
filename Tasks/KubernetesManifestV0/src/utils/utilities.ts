@@ -1,18 +1,13 @@
 "use strict";
 
 import * as tl from "vsts-task-lib/task";
-import { ToolRunner, IExecOptions, IExecSyncResult } from 'vsts-task-lib/toolrunner';
+import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import kubectlutility = require("utility-common/kubectlutility");
 import { Kubectl } from "utility-common/kubectl-object-model";
 import { pipelineAnnotations } from "../models/constants"
 
 export enum StringComparer {
     Ordinal, OrdinalIgnoreCase
-}
-
-export function execCommand(command: ToolRunner, options?: IExecOptions) {
-    command.on("errline", tl.error);
-    return command.execSync(options);
 }
 
 export function getManifestFiles(manifestFilesPath: string): string[] {
@@ -82,10 +77,10 @@ export function checkForErrors(execResults: IExecSyncResult[], warnIfError?: boo
     }
 }
 
-export function annotateChildPods(kubectl: Kubectl, resourceType, resourceName, allPods): IExecSyncResult[] {
+export function annotateChildPods(kubectl: Kubectl, resourceType: string, resourceName: string, allPods): IExecSyncResult[] {
     let commandExecutionResults = [];
     var owner = resourceName;
-    if (resourceType.indexOf("deployment") > -1) {
+    if (resourceType.toLowerCase().indexOf("deployment") > -1) {
         owner = kubectl.getNewReplicaSet(resourceName);
     }
 

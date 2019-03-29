@@ -57,7 +57,7 @@ export function deployCanary(kubectl: Kubectl, filePaths: string[]) {
 
                 tl.debug("Calculating replica count for canary");
                 var canaryReplicaCount = calculateReplicaCountForCanary(inputObject, percentage);
-                tl.debug("Replica count is "+canaryReplicaCount);
+                tl.debug("Replica count is " + canaryReplicaCount);
                 // Get stable object
                 tl.debug("Querying stable object");
                 var stable_object = fetchResource(kubectl, kind, name);
@@ -115,51 +115,48 @@ function getBaselineResourceName(name: string) {
 function fetchResource(kubectl: Kubectl, kind: string, name: string): object {
     var result = kubectl.getResource(kind, name);
 
-    if (!!result.stderr) {
+    if (result == null || !!result.stderr) {
         return null;
     }
 
-    try {
-        var resource = JSON.parse(result.stdout);
-        return resource;
-    } catch (ex) {
-        tl.debug("Exception occurred while Parsing " + resource + " in Json object");
+    if (!!result.stdout) {
+        try {
+            var resource = JSON.parse(result.stdout);
+            UnsetsClusterSpecficDetails(resource);
+            return resource;
+        } catch (ex) {
+            tl.debug("Exception occurred while Parsing " + resource + " in Json object");
+            return null;
+        }
     }
-
-    try {
-        UnsetsClusterSpecficDetails(resource);
-    } catch (ex) {
-        tl.debug("Exception occurred unsetting cluster specific details in " + resource + "object");
-    }
-
     return null;
 }
 
 function UnsetsClusterSpecficDetails(resource: any) {
-    tl.debug("Resource found " + JSON.stringify(resource));
+
+    if (resource == null) {
+        return;
+    }
 
     // Unsets the cluster specific details in the object
     if (!!resource) {
-        tl.debug("Resource is not null, updating metadata and status");
         var metadata = resource.metadata;
         var status = resource.status;
 
         if (!!metadata) {
-            tl.debug("Metadata is not null, updating metadata");
-            var newMetadata;
-            newMetadata.annotations = metadata.annotations;
-            newMetadata.labels = metadata.labels;
-            newMetadata.name = metadata.name;
+            var newMetadata = {
+                "annotations" : metadata.annotations,
+                "labels" : metadata.labels,
+                "name" : metadata.name
+            };
+
             resource.metadata = newMetadata;
-            tl.debug("New metadata " + JSON.stringify(newMetadata));
-            tl.debug("New resource" + JSON.stringify(resource));
         }
 
         if (!!status) {
-            resource.status = null;
+            resource.status = {};
         }
     }
-    return resource;
 }
 
 function fetchCanaryResource(kubectl: Kubectl, kind: string, name: string): object {

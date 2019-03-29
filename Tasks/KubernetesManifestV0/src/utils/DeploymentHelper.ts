@@ -20,7 +20,7 @@ export function deploy(kubectl: Kubectl, manifestFilesPath: string, deploymentSt
     var inputManifestFiles: string[] = getManifestFiles(manifestFilesPath);
 
     // artifact substitution
-    inputManifestFiles = updateContainerImagesInConfigFiles(inputManifestFiles, TaskInputParameters.containers);
+    inputManifestFiles = updateContainerImagesInConfigFiles(inputManifestFiles, TaskInputParameters.containers);;
 
     // deployment
     var deployedManifestFiles = deployManifests(inputManifestFiles, kubectl, isCanaryDeploymentStrategy(deploymentStrategy));
@@ -79,8 +79,8 @@ function annotateResources(files: string[], kubectl: Kubectl, resourceTypes: Res
     utils.checkForErrors(annotateResults, true);
 }
 
-function updateContainerImagesInConfigFiles(filePaths: string[], containers): string[] {
-    if (containers != []) {
+function updateContainerImagesInConfigFiles(filePaths: string[], containers: string[]): string[] {
+    if (!!containers && containers.length > 0) {
         let newFilePaths = [];
         const tempDirectory = fileHelper.getTempDirectory();
         filePaths.forEach((filePath: string) => {

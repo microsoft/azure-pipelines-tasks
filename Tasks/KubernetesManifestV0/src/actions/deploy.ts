@@ -6,6 +6,7 @@ import * as utils from "../utils/utilities";
 import { Kubectl } from "utility-common/kubectl-object-model";
 
 export async function deploy() {
-    let kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace);
+    var kubectlPath = await utils.getKubectl();
+    let kubectl = new Kubectl(kubectlPath, TaskInputParameters.namespace);
     deploymentHelper.deploy(kubectl, TaskInputParameters.manifests, TaskInputParameters.deploymentStrategy);
 }

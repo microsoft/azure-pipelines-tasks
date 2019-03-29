@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 150,
-    "Patch": 5
+    "Patch": 0
   },
   "demands": [],
   "groups": [
@@ -33,24 +33,11 @@
   ],
   "inputs": [
     {
-      "name": "connectionType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.connectionType",
-      "defaultValue": "Kubernetes Service Connection",
-      "required": true,
-      "options": {
-        "Kubernetes Service Connection": "Kubernetes Service Connection",
-        "None": "None"
-      },
-      "groupName": "kubernetesCluster",
-      "helpMarkDown": "ms-resource:loc.input.help.connectionType"
-    },
-    {
-      "name": "kubernetesServiceEndpoint",
+      "name": "kubernetesServiceConnection",
       "type": "connectedService:kubernetes",
-      "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
+      "label": "ms-resource:loc.input.label.kubernetesServiceConnection",
       "visibleRule": "connectionType = Kubernetes Service Connection",
-      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceConnection",
       "groupName": "kubernetesCluster",
       "required": true
     },
@@ -82,17 +69,17 @@
       "helpMarkDown": "ms-resource:loc.input.help.action"
     },
     {
-      "name": "deploymentStrategy",
+      "name": "strategy",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.deploymentStrategy",
+      "label": "ms-resource:loc.input.label.strategy",
       "required": false,
       "groupName": "config",
-      "defaultValue": "None",
+      "defaultValue": "none",
       "options": {
         "canary": "Canary",
-        "None": "None"
+        "none": "None"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.deploymentStrategy",
+      "helpMarkDown": "ms-resource:loc.input.help.strategy",
       "visibleRule": "action = deploy || action = promote || action = reject"
     },
     {
@@ -103,7 +90,7 @@
       "groupName": "config",
       "helpMarkDown": "",
       "defaultValue": 0,
-      "visibleRule": "deploymentStrategy = Canary && action = deploy",
+      "visibleRule": "strategy = Canary && action = deploy",
       "validation": {
         "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
         "message": "Enter valid percentage value i.e between 0 to 100."
@@ -242,12 +229,12 @@
       "visibleRule": "action = patch"
     },
     {
-      "name": "args",
+      "name": "arguments",
       "type": "string",
-      "label": "ms-resource:loc.input.label.args",
+      "label": "ms-resource:loc.input.label.arguments",
       "defaultValue": "",
       "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.args",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
       "visibleRule": "action = delete || action = reject"
     },
     {

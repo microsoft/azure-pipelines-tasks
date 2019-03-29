@@ -1,8 +1,8 @@
 {
     "id": "DEE316A2-586F-4DEF-BE79-488A1F503DFE",
     "name": "KubernetesManifest",
-    "friendlyName": "Manifest based Kubernetes deployments",
-    "description": "Manifest based deployments to kubernetes",
+    "friendlyName": "Kubernetes manifests",
+    "description": "Manifest based deployments to Kubernetes",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
@@ -33,20 +33,7 @@
     ],
     "inputs": [
         {
-            "name": "connectionType",
-            "type": "pickList",
-            "label": "Service connection type",
-            "defaultValue": "Kubernetes Service Connection",
-            "required": true,
-            "options": {
-                "Kubernetes Service Connection": "Kubernetes Service Connection",
-                "None": "None"
-            },
-            "groupName": "kubernetesCluster",
-            "helpMarkDown": "Select a service connection type."
-        },
-        {
-            "name": "kubernetesServiceEndpoint",
+            "name": "kubernetesServiceConnection",
             "type": "connectedService:kubernetes",
             "label": "Kubernetes service connection",
             "visibleRule": "connectionType = Kubernetes Service Connection",
@@ -87,10 +74,10 @@
             "label": "Strategy",
             "required": false,
             "groupName": "config",
-            "defaultValue": "None",
+            "defaultValue": "none",
             "options": {
               "canary": "Canary",
-              "None": "None"
+              "none": "None"
             },
             "helpMarkDown": "Strategy for deployment",
             "visibleRule": "action = deploy || action = promote || action = reject"

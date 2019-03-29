@@ -17,7 +17,7 @@ function run(): Promise<void> {
     if (action === "bake") {
         return bake();
     }
-    let connection = new Connection(!!tl.getVariable("KUBECONFIG"));
+    let connection = new Connection();
     let action_func = null;
     switch (action) {
         case "deploy":
