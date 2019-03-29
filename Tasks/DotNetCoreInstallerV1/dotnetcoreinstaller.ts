@@ -33,15 +33,8 @@ async function run() {
     toolLib.prependPath(installationPath);
 
     // By default disable Multi Level Lookup unless user wants it enabled.
-    let restrictMultiLevelLookup = true;
-    try {
-        restrictMultiLevelLookup = tl.getBoolInput("restrictMultiLevelLookup", true);
-    }
-    catch (ex) {
-        // no op, restrictMultiLevelLookup is defaulted to true
-    }
-
-    tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", restrictMultiLevelLookup ? "0" : "1");
+    let  performMultiLevelLookup = tl.getBoolInput("performMultiLevelLookup", false);
+    tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", !performMultiLevelLookup ? "0" : "1");
 
     // Add dot net tools path to "PATH" environment variables, so that tools can be used directly.
     addDotNetCoreToolPath();

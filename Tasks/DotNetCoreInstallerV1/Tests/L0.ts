@@ -405,24 +405,51 @@ describe('DotNetCoreInstaller', function () {
         }, tr, done);
     });
 
-    // it("[dotnetcoreinstaller] run should default to use $(Agent.ToolsDirectory)/dotnet as installation path if installationPath input is empty.", (done) => {
-    // });
+    it("[dotnetcoreinstaller] run should throw if versionSpec is invalid.", (done) => {
+        process.env["__case__"] = "matchingversionnotfound";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "dotnetcoreInstallerTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == false, ("Should have failed."));
+            assert(tr.stdout.indexOf("MatchingVersionNotFound") > -1, "Should not have thrown this message as versionInfo for a matching version could not be found.");
+        }, tr, done);
+    });
 
-    // it("[dotnetcoreinstaller] run should throw if versionSpec is invalid.", (done) => {
-    // });
+    it("[dotnetcoreinstaller] run should skip installation if version found in cache but should prepend all the required paths and should also use $(Agent.ToolsDirectory)/dotnet as installation when input is missing.", (done) => {
+        process.env["__case__"] = "skipinstallation";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "dotnetcoreInstallerTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("PrependingInstallationPath") > -1, "Should have prepended installation path");
+            assert(tr.stdout.indexOf("PrependGlobalToolPath") > -1, "Should have printed this message as addDotNetCoreToolPath function should have been called.");
+            assert(tr.stdout.indexOf("PrependingGlobalToolPath") > -1, "Should have prepended global tool path");
+            assert(tr.stdout.indexOf("DownloadAndInstallCalled") == -1, "Should not have printed this message as DownloadAndInstall function should not have been called.");
+        }, tr, done);
+    });
 
-    // it("[dotnetcoreinstaller] run should throw if versionInfo for the version spec could not be found.", (done) => {
-    // });
+    it("[dotnetcoreinstaller] run should install if version is not found in cache and prepend the required paths.", (done) => {
+        process.env["__case__"] = "installversion";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "dotnetcoreInstallerTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("PrependingInstallationPath") > -1, "Should have prepended installation path");
+            assert(tr.stdout.indexOf("PrependGlobalToolPath") > -1, "Should have printed this message as addDotNetCoreToolPath function should have been called.");
+            assert(tr.stdout.indexOf("PrependingGlobalToolPath") > -1, "Should have prepended global tool path");
+            assert(tr.stdout.indexOf("DownloadAndInstallCalled") > -1, "Should have printed this message as DownloadAndInstall function should have been called.");
+        }, tr, done);
+    });
 
-    // it("[dotnetcoreinstaller] run should skip installation if version found in cache.", (done) => {
-    // });
-
-    // it("[dotnetcoreinstaller] run should always prepend installationPath & dotnet_root to PATH environment variable.", (done) => {
-    // });
-
-    // it("[dotnetcoreinstaller] run should not fail if globalToolPath could not be created or set.", (done) => {
-    // });
-
-    // it("[dotnetcoreinstaller] run should always set multilevel lookup environment variable and by default restrict if input is not present.", (done) => {
-    // });
+    it("[dotnetcoreinstaller] run should not fail if globalToolPath could not be created or set.", (done) => {
+        process.env["__case__"] = "globaltoolpathfailure";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "dotnetcoreInstallerTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("PrependingInstallationPath") > -1, "Should have prepended installation path");
+            assert(tr.stdout.indexOf("PrependGlobalToolPath") > -1, "Should have printed this message as addDotNetCoreToolPath function should have been called.");
+            assert(tr.stdout.indexOf("ErrorWhileSettingDotNetToolPath") > -1, "Should have printed this message as error must have been encountered while setting GlobalToolPath.");
+        }, tr, done);
+    });
 });

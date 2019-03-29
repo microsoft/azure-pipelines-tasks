@@ -69,13 +69,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.installationPath"
     },
     {
-      "name": "restrictMultiLevelLookup",
+      "name": "performMultiLevelLookup",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.restrictMultiLevelLookup",
+      "label": "ms-resource:loc.input.label.performMultiLevelLookup",
       "groupName": "advanced",
-      "defaultValue": true,
+      "defaultValue": false,
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.restrictMultiLevelLookup"
+      "helpMarkDown": "ms-resource:loc.input.help.performMultiLevelLookup"
     }
   ],
   "execution": {

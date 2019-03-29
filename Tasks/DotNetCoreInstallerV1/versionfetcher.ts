@@ -154,7 +154,7 @@ export class DotNetCoreVersionFetcher {
                                 versionInfoList.push(versionInfo);
                             }
                             catch (err) {
-                                tl.warning(tl.loc("VersionInformationNotComplete", release[packageType].version, err));
+                                tl.debug(tl.loc("VersionInformationNotComplete", release[packageType].version, err));
                             }
                         }
                     });
