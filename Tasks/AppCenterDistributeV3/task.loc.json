@@ -14,7 +14,7 @@
   "version": {
     "Major": 3,
     "Minor": 150,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -179,9 +179,7 @@
     {
       "name": "destinationGroupIds",
       "aliases": [
-        "destinationIds",
-        "distributionGroupId",
-        "destinationId"
+        "distributionGroupId"
       ],
       "type": "string",
       "defaultValue": "",
@@ -192,11 +190,6 @@
     },
     {
       "name": "destinationStoreId",
-      "aliases": [
-        "destinationIds",
-        "distributionGroupId",
-        "destinationId"
-      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.destinationStoreId",
       "helpMarkDown": "ms-resource:loc.input.help.destinationStoreId",
