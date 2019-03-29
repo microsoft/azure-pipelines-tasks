@@ -9,8 +9,8 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 148,
-    "Patch": 3
+    "Minor": 150,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.115.0",
@@ -28,7 +28,7 @@
       "label": "ms-resource:loc.input.label.packageType",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.packageType",
-      "defaultValue": "NuGet",
+      "defaultValue": "nuget",
       "options": {
         "maven": "Maven",
         "npm": "Npm",

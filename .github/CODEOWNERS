@@ -1,4 +1,6 @@
 
+ci/*  @damccorm   @stephenmichaelf  @bryanmacfarlane
+
 Tasks/AndroidSigningV2/*    @madhurig
 
 Tasks/AndroidSigningV3/*    @madhurig
@@ -79,6 +81,8 @@ Tasks/CmdLineV2/*   @bryanmacfarlane
 
 Tasks/CocoaPodsV0/*     @madhurig
 
+Tasks/Common/packaging-common/* @jotaylo
+
 Tasks/CondaEnvironmentV0/*      @madhurig
 
 Tasks/CondaEnvironmentV1/*      @madhurig
@@ -108,6 +112,8 @@ Tasks/DockerComposeV0/*     @bansalaseem
 Tasks/DotNetCoreCLIV2/*     @sachinma
 
 Tasks/DotNetCoreInstallerV0/*   @sachinma
+
+Tasks/DotNetCoreInstallerV1/*   @sachinma
 
 Tasks/DownloadBuildArtifactsV0/*    @Lovakumar      @omeshp
 
@@ -183,13 +189,13 @@ Tasks/MysqlDeploymentOnMachineGroupV1/*     @kmkumaran      @RoshanKumarMicrosof
 
 Tasks/NodeToolV0/*      @hross
 
-Tasks/NpmV1/*       @zackrun
+Tasks/NpmV1/*       @zackrun @jotaylo
 
 Tasks/NpmAuthenticateV0/*       @zackrun
 
 Tasks/NuGetV0/*     @zackrun
 
-Tasks/NuGetCommandV2/*      @zackrun
+Tasks/NuGetCommandV2/*      @zackrun @jotaylo
 
 Tasks/NuGetPackagerV0/*     @zackrun
 

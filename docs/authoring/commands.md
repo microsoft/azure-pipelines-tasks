@@ -74,7 +74,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
             </td>
             <td>
                 <p align="left">
-                    <code>result</code>=<code>Succeeded</code>|<code>SucceededWithIssues</code>|<code>Failed</code>|<code>Cancelled</code>|<code>Skipped</code>
+                    <code>result</code>=<code>Succeeded</code>|<code>SucceededWithIssues</code>|<code>Failed</code>|<code>Canceled</code>|<code>Skipped</code>
                 </p>
             </td>
             <td>
@@ -105,13 +105,13 @@ To invoke a logging command, simply emit the command via standard output. For ex
                     <code>finishtime</code>=Datetime <br>
                     <code>progress</code>=percentage of completion <br>
                     <code>state</code>=<code>Unknown</code>|<code>Initialized</code>|<code>InProgress</code>|<code>Completed</code> <br>
-                    <code>result</code>=<code>Succeeded</code>|<code>SucceededWithIssues</code>|<code>Failed</code>|<code>Cancelled</code>|<code>Skipped</code> <br>
+                    <code>result</code>=<code>Succeeded</code>|<code>SucceededWithIssues</code>|<code>Failed</code>|<code>Canceled</code>|<code>Skipped</code> <br>
                 </p>
             </td>
             <td>
                 <p align="left">
                     Create and update detail timeline records. <br>
-                    The first time a <code>##vso[task.detail]</code> message is seen for a given task, a detailed timeline is created for that task. <br>
+                    The first time a <code>##vso[task.logdetail]</code> message is seen for a given task, a detailed timeline is created for that task. <br>
                     Nested timeline records are created and updated based on id and parentid. <br>
                     The task author needs to remember which Guid they used for each timeline record. The logging system tracks the Guid for each timeline record that has been created, so any new Guid results in a new timeline record. <br>
                     <b>Examples:</b> <br>

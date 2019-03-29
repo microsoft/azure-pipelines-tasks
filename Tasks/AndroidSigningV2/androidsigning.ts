@@ -1,5 +1,5 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
+import * as tl from 'azure-pipelines-task-lib/task';
 
 /*
 Signing the specified file.  Move the current file to fn.unsigned, and

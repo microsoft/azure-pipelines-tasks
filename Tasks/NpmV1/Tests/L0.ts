@@ -1,9 +1,7 @@
 import * as assert from 'assert';
 import * as path from 'path';
 import * as mockery from 'mockery';
-import * as ttm from 'vsts-task-lib/mock-test';
-
-import { NpmMockHelper } from './NpmMockHelper';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('Npm Task', function () {
     before(() => {

@@ -84,6 +84,12 @@ Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
 . "$PSScriptRoot\Utility.ps1"
 . "$PSScriptRoot\GenerateSqlBatchFiles.ps1"
 
+# Telemetry for SQL Dacpac deployment on machine group
+$encodedServerName = GetSHA256String($serverName)
+$encodedDatabaseName = GetSHA256String($databaseName)
+$telemetryJsonContent = -join("{`"serverName`": `"$encodedServerName`",",
+                              "`"databaseName`": `"$encodedDatabaseName`"}")
+Write-Host "##vso[telemetry.publish area=SqlDacpacDeploymentOnMachineGroup;feature=SqlDacpacDeploymentOnMachineGroup]$telemetryJsonContent"
 
 Try
 {

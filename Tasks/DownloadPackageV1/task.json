@@ -9,7 +9,7 @@
     "author": "ms-vscs-rm",
     "version": {
         "Major": 1,
-        "Minor": 149,
+        "Minor": 150,
         "Patch": 0
     },
     "demands": [],
@@ -28,7 +28,7 @@
             "label": "Package Type",
             "required": true,
             "helpMarkDown": "Select the package type",
-            "defaultValue": "NuGet",
+            "defaultValue": "nuget",
             "options": {
                 "maven": "Maven",
                 "npm": "Npm",
