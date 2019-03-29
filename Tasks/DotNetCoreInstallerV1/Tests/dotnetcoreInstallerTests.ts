@@ -1,3 +1,4 @@
+import * as os from 'os';
 import * as tl from 'vsts-task-lib/task';
 import { Constants } from '../versionutilities';
 import { VersionInfo } from '../models';
@@ -50,7 +51,7 @@ mockery.registerMock('vsts-task-tool-lib/tool', {
 })
 
 mockery.registerMock('vsts-task-lib/task', {
-    osType: function () { return osType; },
+    osType: function () { return os.type(); },
     mkdirP: function (directoryPath) { return; },
     loc: function (locString, ...param: string[]) { return tl.loc(locString, param); },
     debug: function (message) { return tl.debug(message); },
@@ -163,5 +164,8 @@ mockery.registerMock('./versioninstaller', {
         }
     }
 });
+
+process.env["USERPROFILE"] = "userprofile"
+process.env.HOME = "home"
 
 require('../dotnetcoreinstaller');
