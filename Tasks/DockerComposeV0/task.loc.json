@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 4,
-    "Patch": 26
+    "Minor": 150,
+    "Patch": 3
   },
   "demands": [],
   "preview": "false",
@@ -326,6 +326,7 @@
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
-    "ImageNameWithoutTag": "ms-resource:loc.messages.ImageNameWithoutTag"
+    "ImageNameWithoutTag": "ms-resource:loc.messages.ImageNameWithoutTag",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   }
 }

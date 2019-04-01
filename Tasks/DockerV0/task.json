@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 3,
-        "Patch": 27
+        "Minor": 150,
+        "Patch": 4
     },
     "demands": [],
     "preview": "false",
@@ -341,6 +341,7 @@
         "CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
         "NoDataWrittenOnFile": "No data was written into the file %s",
         "FileContentSynced": "Synced the file content to the disk. The content is %s.",
-        "OutputVariableDataSizeExceeded": "Output variable not set as Docker command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s"
+        "OutputVariableDataSizeExceeded": "Output variable not set as Docker command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
+        "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
     }
 }

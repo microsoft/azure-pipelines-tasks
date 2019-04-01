@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 148,
+    "Minor": 150,
     "Patch": 0
   },
   "demands": [],
@@ -77,6 +77,11 @@
   "messages": {
     "FoundNMatchesForPattern": "ms-resource:loc.messages.FoundNMatchesForPattern",
     "MultipleSummaryFilesFound": "ms-resource:loc.messages.MultipleSummaryFilesFound",
-    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
+    "InstallDotNetCoreForHtmlReport": "ms-resource:loc.messages.InstallDotNetCoreForHtmlReport",
+    "FailedToGenerateHtmlReport": "ms-resource:loc.messages.FailedToGenerateHtmlReport",
+    "IgnoringReportDirectory": "ms-resource:loc.messages.IgnoringReportDirectory",
+    "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
+    "GeneratedHtmlReport": "ms-resource:loc.messages.GeneratedHtmlReport"
   }
 }
