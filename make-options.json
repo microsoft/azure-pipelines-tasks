@@ -88,6 +88,7 @@
         "JavaToolInstallerV0",
         "JenkinsDownloadArtifactsV1",
         "JenkinsQueueJobV2",
+        "KubectlInstallerV0",
         "KubernetesV0",
         "KubernetesV1",
         "KubernetesManifestV0",
