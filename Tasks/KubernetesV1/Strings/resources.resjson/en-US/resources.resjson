@@ -95,5 +95,9 @@
   "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
   "loc.messages.OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
   "loc.messages.InvalidConfiguration": "No Kubernetes configuration found, supply either inline configuration or configuration file path",
+  "loc.messages.CallToolRunnerExec": "Calling Toolrunner exec() method asynchronously to execute the kubectl command and store the returned promise object.",
+  "loc.messages.ReturningToolRunnerExecPromise": "Called Toolrunner exec() method asynchronously. Returning the promise.",
+  "loc.messages.ToolRunnerExecCallFailed": "Toolrunner exec() method returned error for the kubectl command. Error: %s.",
+  "loc.messages.ToolRunnerExecCallSucceeded": "Toolrunner exec() method returned successfully for the kubectl command.",
   "loc.messages.WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
 }

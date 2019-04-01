@@ -1,7 +1,6 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import * as ma from 'azure-pipelines-task-lib/mock-answer';
+import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import path = require('path');
-import fs = require('fs');
 
 const postTaskPath = path.join(__dirname, '..', 'postinstallsshkey.js');
 const sshPublicKey: string = 'ssh-rsa KEYINFORMATIONHERE sample@example.com'
@@ -12,7 +11,6 @@ postTr.setInput('sshPublicKey', sshPublicKey);
 postTr.setInput('hostName', 'host name entry');
 
 process.env['AGENT_VERSION'] = '2.117.0';
-process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
 process.env['AGENT_HOMEDIRECTORY'] = '';
 process.env['SSH_AGENT_PID'] = '123456';
 process.env['VSTS_TASKVARIABLE_INSTALL_SSH_KEY_DELETE_KEY'] = "keyToRemove";
