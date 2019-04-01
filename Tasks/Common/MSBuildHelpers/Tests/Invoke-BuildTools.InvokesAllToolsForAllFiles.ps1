@@ -23,9 +23,7 @@ $actual = Invoke-BuildTools -NuGetRestore -SolutionFiles $file1, $file2 -MSBuild
 # Assert.
 Assert-AreEqual -Expected @(
         'Some NuGet output 1'
-        'MSBuild clean 1'
         'Some MSBuild output 1'
         'Some NuGet output 2'
-        'MSBuild clean 2'
         'Some MSBuild output 2'
     ) -Actual $actual
