@@ -2,7 +2,7 @@
 import fs = require("fs");
 import tl = require('vsts-task-lib/task');
 import yaml = require('js-yaml');
-import { Resource } from "utility-common/kubectl-object-model";
+import { Resource } from "kubernetes-common/kubectl-object-model";
 import { KubernetesWorkload } from "../models/constants"
 import * as utils from "../utils/utilities"
 import { StringComparer } from "../utils/utilities"

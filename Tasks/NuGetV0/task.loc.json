@@ -10,7 +10,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "version": {
     "Major": 0,
-    "Minor": 148,
+    "Minor": 150,
     "Patch": 1
   },
   "runsOn": [

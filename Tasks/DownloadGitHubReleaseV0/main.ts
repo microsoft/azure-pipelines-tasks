@@ -133,6 +133,10 @@ async function main(): Promise<void> {
         let version = tl.getInput("version", false);
         let release: Release = null;
 
+        if (!defaultVersionType) {
+            defaultVersionType = "latest";
+        }
+
         var token = tl.getEndpointAuthorizationParameter(connection, 'AccessToken', false);
         var retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : defaultRetryLimit;
 
@@ -159,30 +163,22 @@ async function main(): Promise<void> {
             }
         }
 
-        if (!!defaultVersionType) {
-            switch (defaultVersionType.toLowerCase()) {
-                case 'latest': release = await executeWithRetries("getLatestRelease", () => getLatestRelease(repositoryName, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
-                    break;
-                case 'specifictag': release = await executeWithRetries("getTaggedRelease", () => getTaggedRelease(repositoryName, version, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
-                    break;
-                case 'specificversion': release = await executeWithRetries("getSpecificRelease", () => getSpecificRelease(repositoryName, version, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
-                    break;
-                default: release = null;
-            }
-        } else {
+        if (defaultVersionType.toLowerCase() == 'specificversion') {
+            release = await executeWithRetries("getSpecificRelease", () => getSpecificRelease(repositoryName, version, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
+        }
+        else if (defaultVersionType.toLowerCase() == 'specifictag') {
+            release = await executeWithRetries("getTaggedRelease", () => getTaggedRelease(repositoryName, version, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
+        }
+        else {
             if (!!version) {
                 release = await executeWithRetries("getTaggedRelease", () => getTaggedRelease(repositoryName, version, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
-            } else {
+            }
+            else {
                 release = await executeWithRetries("getLatestRelease", () => getLatestRelease(repositoryName, customCredentialHandler), retryLimit).catch((reason) => { reject(reason); });
             }
         }
 
-        if (!release) {
-            reject(tl.loc("InvalidDefaultVersionType", defaultVersionType));
-            return;
-        }
-
-        if (!release.Id) {
+        if (!release || !release.Id) {
             reject(tl.loc("InvalidRelease", version));
             return;
         }

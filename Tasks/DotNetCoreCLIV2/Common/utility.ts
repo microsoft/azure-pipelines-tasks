@@ -1,4 +1,4 @@
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 export function getProjectFiles(projectPattern: string[]): string[] {
     if (projectPattern.length == 0) {

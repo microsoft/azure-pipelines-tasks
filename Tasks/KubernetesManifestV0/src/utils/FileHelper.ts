@@ -35,10 +35,8 @@ export function assertFileExists(path: string) {
 export function writeObjectsToFile(inputObjects: any[]): string[] {
     let newFilePaths = [];
     inputObjects.forEach((inputObject: any) => {
-        var filePath = inputObject.kind + "_" + inputObject.metadata.name + "_" + getCurrentTime().toString();
         var inputObjectString = JSON.stringify(inputObject);
-        const tempDirectory = getTempDirectory();
-        let fileName = path.join(tempDirectory, path.basename(filePath));
+        let fileName = getManifestFileName(inputObject.kind, inputObject.metadata.name);
         fs.writeFileSync(
             path.join(fileName),
             inputObjectString);
@@ -46,6 +44,14 @@ export function writeObjectsToFile(inputObjects: any[]): string[] {
     });
 
     return newFilePaths;
+}
+
+function getManifestFileName(kind: string, name: string)
+{
+    var filePath = kind + "_" + name + "_" + getCurrentTime().toString();
+    const tempDirectory = getTempDirectory();
+    var fileName =  path.join(tempDirectory, path.basename(filePath));
+    return fileName;
 }
 
 function getCurrentTime(): number {

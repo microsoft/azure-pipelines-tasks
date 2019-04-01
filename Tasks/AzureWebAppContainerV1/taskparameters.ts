@@ -19,7 +19,6 @@ export class TaskParametersUtility {
             StartupCommand: tl.getInput('containerCommand', false),
             ConfigurationSettings: tl.getInput('configurationStrings', false),
             WebAppName: tl.getInput('appName', true),
-            OSType: tl.getInput('osType', false),
             DeployToSlotOrASEFlag: tl.getBoolInput('deployToSlotOrASE', false),
             ResourceGroupName: tl.getInput('resourceGroupName', false),
             SlotName:tl.getInput('slotName', false)
@@ -40,22 +39,21 @@ export class TaskParametersUtility {
     }
 
     private static async getWebAppKind(taskParameters: TaskParameters): Promise<any> {
-        var resourceGroupName = taskParameters.ResourceGroupName;
-        var osType = taskParameters.OSType;
+        let resourceGroupName: string = taskParameters.ResourceGroupName;
+        let osType: string;
         if (!resourceGroupName) {
             var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);
             resourceGroupName = appDetails["resourceGroupName"];
-            if(!osType) {
-                osType = osTypeMap.get(appDetails["kind"]) ? osTypeMap.get(appDetails["kind"]) : appDetails["kind"];
-            }
+            osType = osTypeMap.get(appDetails["kind"]) ? osTypeMap.get(appDetails["kind"]) : appDetails["kind"];
             
             tl.debug(`Resource Group: ${resourceGroupName}`);
         }
-        else if(!osType) {
+        else {
             var appService = new AzureAppService(taskParameters.azureEndpoint, taskParameters.ResourceGroupName, taskParameters.WebAppName);
             var configSettings = await appService.get(true);
             osType = osTypeMap.get(configSettings.kind) ? osTypeMap.get(configSettings.kind) : configSettings.kind;
         }
+        
         return {
             resourceGroupName: resourceGroupName,
             osType: osType
@@ -66,7 +64,7 @@ export class TaskParametersUtility {
 export interface TaskParameters {
     azureEndpoint?: AzureEndpoint;
     connectedServiceName: string;
-    OSType: string;
+    OSType?: string;
     WebAppName: string;
     AppSettings?: string;
     StartupCommand?: string;

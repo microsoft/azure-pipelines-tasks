@@ -1,8 +1,8 @@
 {
     "id": "DEE316A2-586F-4DEF-BE79-488A1F503DFE",
     "name": "KubernetesManifest",
-    "friendlyName": "Manifest based Kubernetes deployments",
-    "description": "Manifest based deployments to kubernetes",
+    "friendlyName": "Kubernetes manifests",
+    "description": "Manifest based deployments to Kubernetes",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
@@ -14,7 +14,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 149,
+        "Minor": 150,
         "Patch": 0
     },
     "demands": [],
@@ -33,20 +33,7 @@
     ],
     "inputs": [
         {
-            "name": "connectionType",
-            "type": "pickList",
-            "label": "Service connection type",
-            "defaultValue": "Kubernetes Service Connection",
-            "required": true,
-            "options": {
-                "Kubernetes Service Connection": "Kubernetes Service Connection",
-                "None": "None"
-            },
-            "groupName": "kubernetesCluster",
-            "helpMarkDown": "Select a service connection type."
-        },
-        {
-            "name": "kubernetesServiceEndpoint",
+            "name": "kubernetesServiceConnection",
             "type": "connectedService:kubernetes",
             "label": "Kubernetes service connection",
             "visibleRule": "connectionType = Kubernetes Service Connection",
@@ -75,23 +62,25 @@
                 "deploy": "deploy",
                 "patch": "patch",
                 "scale": "scale",
-                "delete": "delete"
+                "delete": "delete",
+                "reject": "reject",
+                "promote": "promote"
             },
             "helpMarkDown": "Choose the action to be performed."
         },
         {
-            "name": "deploymentStrategy",
+            "name": "strategy",
             "type": "pickList",
             "label": "Strategy",
             "required": false,
             "groupName": "config",
-            "defaultValue": "None",
+            "defaultValue": "none",
             "options": {
               "canary": "Canary",
-              "None": "None"
+              "none": "None"
             },
-            "helpMarkDown": "Strategy for deployment",
-            "visibleRule": "action = deploy"
+            "helpMarkDown": "Deployment strategy to be used",
+            "visibleRule": "action = deploy || action = promote || action = reject"
           },
           {
             "name": "percentage",
@@ -101,7 +90,7 @@
             "groupName": "config",
             "helpMarkDown": "",
             "defaultValue": 0,
-            "visibleRule": "deploymentStrategy = Canary",  
+            "visibleRule": "strategy = Canary && action = deploy",  
             "validation": {
               "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')", 
               "message": "Enter valid percentage value i.e between 0 to 100."
@@ -115,7 +104,7 @@
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Manifests to deploy",
-            "visibleRule": "action = deploy"
+            "visibleRule": "action = deploy || action = promote || action = reject"
         },
         {
             "name": "containers",
@@ -125,7 +114,7 @@
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Containers",
-            "visibleRule": "action = deploy"
+            "visibleRule": "action = deploy || action = promote"
         },
         {
             "name": "renderType",
@@ -240,14 +229,13 @@
             "visibleRule": "action = patch"
         },
         {
-            "name": "args",
+            "name": "arguments",
             "type": "string",
             "label": "Arguments",
-            "required": true,
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Arguments for `kubectl delete` command",
-            "visibleRule": "action = delete"
+            "visibleRule": "action = delete || action = reject"
         },
         {
             "name": "patch",
@@ -283,7 +271,10 @@
         "UnknownRenderType": "Unknown render engine",
         "ResourceKindNotDefined": "Resource kind is null",
         "NullInputObject": "Input object is null.",
+        "ArgumentsInputNotSupplied" : "Arguments are not supplied.",
         "NullInputObjectMetadata": "Input object metadata is null.",
-        "CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment"
+        "CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
+        "InvalidRejectActionDeploymentStrategy" : "Reject action works only with strategy: canary",
+        "InvalidPromotetActionDeploymentStrategy" : "Promote action works only with strategy: canary"
     }
 }

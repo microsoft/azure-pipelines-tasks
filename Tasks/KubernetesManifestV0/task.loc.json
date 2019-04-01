@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 149,
+    "Minor": 150,
     "Patch": 0
   },
   "demands": [],
@@ -33,24 +33,11 @@
   ],
   "inputs": [
     {
-      "name": "connectionType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.connectionType",
-      "defaultValue": "Kubernetes Service Connection",
-      "required": true,
-      "options": {
-        "Kubernetes Service Connection": "Kubernetes Service Connection",
-        "None": "None"
-      },
-      "groupName": "kubernetesCluster",
-      "helpMarkDown": "ms-resource:loc.input.help.connectionType"
-    },
-    {
-      "name": "kubernetesServiceEndpoint",
+      "name": "kubernetesServiceConnection",
       "type": "connectedService:kubernetes",
-      "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
+      "label": "ms-resource:loc.input.label.kubernetesServiceConnection",
       "visibleRule": "connectionType = Kubernetes Service Connection",
-      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceConnection",
       "groupName": "kubernetesCluster",
       "required": true
     },
@@ -75,23 +62,25 @@
         "deploy": "deploy",
         "patch": "patch",
         "scale": "scale",
-        "delete": "delete"
+        "delete": "delete",
+        "reject": "reject",
+        "promote": "promote"
       },
       "helpMarkDown": "ms-resource:loc.input.help.action"
     },
     {
-      "name": "deploymentStrategy",
+      "name": "strategy",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.deploymentStrategy",
+      "label": "ms-resource:loc.input.label.strategy",
       "required": false,
       "groupName": "config",
-      "defaultValue": "None",
+      "defaultValue": "none",
       "options": {
         "canary": "Canary",
-        "None": "None"
+        "none": "None"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.deploymentStrategy",
-      "visibleRule": "action = deploy"
+      "helpMarkDown": "ms-resource:loc.input.help.strategy",
+      "visibleRule": "action = deploy || action = promote || action = reject"
     },
     {
       "name": "percentage",
@@ -101,7 +90,7 @@
       "groupName": "config",
       "helpMarkDown": "",
       "defaultValue": 0,
-      "visibleRule": "deploymentStrategy = Canary",
+      "visibleRule": "strategy = Canary && action = deploy",
       "validation": {
         "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
         "message": "Enter valid percentage value i.e between 0 to 100."
@@ -115,7 +104,7 @@
       "defaultValue": "",
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.manifests",
-      "visibleRule": "action = deploy"
+      "visibleRule": "action = deploy || action = promote || action = reject"
     },
     {
       "name": "containers",
@@ -125,7 +114,7 @@
       "defaultValue": "",
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.containers",
-      "visibleRule": "action = deploy"
+      "visibleRule": "action = deploy || action = promote"
     },
     {
       "name": "renderType",
@@ -240,14 +229,13 @@
       "visibleRule": "action = patch"
     },
     {
-      "name": "args",
+      "name": "arguments",
       "type": "string",
-      "label": "ms-resource:loc.input.label.args",
-      "required": true,
+      "label": "ms-resource:loc.input.label.arguments",
       "defaultValue": "",
       "groupName": "config",
-      "helpMarkDown": "ms-resource:loc.input.help.args",
-      "visibleRule": "action = delete"
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
+      "visibleRule": "action = delete || action = reject"
     },
     {
       "name": "patch",
@@ -283,7 +271,10 @@
     "UnknownRenderType": "ms-resource:loc.messages.UnknownRenderType",
     "ResourceKindNotDefined": "ms-resource:loc.messages.ResourceKindNotDefined",
     "NullInputObject": "ms-resource:loc.messages.NullInputObject",
+    "ArgumentsInputNotSupplied": "ms-resource:loc.messages.ArgumentsInputNotSupplied",
     "NullInputObjectMetadata": "ms-resource:loc.messages.NullInputObjectMetadata",
-    "CanaryDeploymentAlreadyExistErrorMessage": "ms-resource:loc.messages.CanaryDeploymentAlreadyExistErrorMessage"
+    "CanaryDeploymentAlreadyExistErrorMessage": "ms-resource:loc.messages.CanaryDeploymentAlreadyExistErrorMessage",
+    "InvalidRejectActionDeploymentStrategy": "ms-resource:loc.messages.InvalidRejectActionDeploymentStrategy",
+    "InvalidPromotetActionDeploymentStrategy": "ms-resource:loc.messages.InvalidPromotetActionDeploymentStrategy"
   }
 }
