@@ -1,6 +1,7 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import * as ftp from "basic-ftp";
 import * as fs from "fs";
+import * as os from "os";
 import * as path from "path";
 import * as url from "url";
 import { MatchOptions } from "azure-pipelines-task-lib/task";
@@ -61,108 +62,21 @@ class ProgressTracker {
 
     getSuccessStatusMessage(): string {
         return (
-            "\nhost: " + this.ftpOptions.serverEndpointUrl.host +
-            "\npath: " + this.ftpOptions.remotePath +
-            "\nfiles uploaded: " + this.progressFilesUploaded +
-            "\ndirectories processed: " + this.progressDirectoriesProcessed
+            os.EOL + "host: " + this.ftpOptions.serverEndpointUrl.host +
+            os.EOL + "path: " + this.ftpOptions.remotePath +
+            os.EOL + "files uploaded: " + this.progressFilesUploaded +
+            os.EOL + "directories processed: " + this.progressDirectoriesProcessed
         );
     }
 
-    getFailureStatusMessage() {
+    getFailureStatusMessage(): string {
         const total: number =
             this.progressFilesUploaded + this.progressDirectoriesProcessed;
             const remaining: number = this.fileCount - total;
         return (
-            this.getSuccessStatusMessage() +
-            "\nunprocessed files & directories: " +
-            remaining
+            this.getSuccessStatusMessage() + os.EOL + "unprocessed files & directories: " + remaining
         );
     }
-}
-
-function getFtpOptions(): FtpOptions {
-    const options: FtpOptions = {} as FtpOptions;
-
-    if (tl.getInput("credsType") === "serviceEndpoint") {
-        // server endpoint
-        const serverEndpoint: string = tl.getInput("serverEndpoint", true);
-        options.serverEndpointUrl = url.parse(
-            tl.getEndpointUrl(serverEndpoint, false)
-        );
-
-        const serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(
-            serverEndpoint,
-            false
-        );
-        options.username = serverEndpointAuth["parameters"]["username"];
-        options.password = serverEndpointAuth["parameters"]["password"];
-    } else if (tl.getInput("credsType") === "inputs") {
-        options.serverEndpointUrl = url.parse(tl.getInput("serverUrl", true));
-        options.username = tl.getInput("username", true);
-        options.password = tl.getInput("password", true);
-    }
-
-    // other standard options
-    options.rootFolder = tl.getPathInput("rootFolder", true);
-    options.filePatterns = tl.getDelimitedInput("filePatterns", "\n", true);
-    options.remotePath = tl
-        .getInput("remotePath", true)
-        .trim()
-        .replace(/\\/gi, "/"); // use forward slashes always
-
-    // advanced options
-    options.clean = tl.getBoolInput("clean", true);
-    options.cleanContents = tl.getBoolInput("cleanContents", false);
-    options.preservePaths = tl.getBoolInput("preservePaths", true);
-    options.trustSSL = tl.getBoolInput("trustSSL", true);
-
-    return options;
-}
-
-function getAccessOption(options: FtpOptions): ftp.AccessOptions {
-    const protocol = options.serverEndpointUrl.protocol;
-    const secure: boolean = protocol != undefined ? protocol.toLowerCase() === "ftps:" : false;
-    const secureOptions: any = { rejectUnauthorized: !options.trustSSL };
-
-    const hostName: string = options.serverEndpointUrl.hostname!;
-    const portStr: string = options.serverEndpointUrl.port!;
-    let port: number = 21;
-    if (portStr) {
-        // port not explicitly specifed, use default
-        port = parseInt(portStr);
-    }
-
-    console.log(tl.loc("ConnectPort", hostName, port));
-
-    return {
-        host: hostName,
-        port: port,
-        user: options.username,
-        password: options.password,
-        secure: secure,
-        secureOptions: secureOptions
-    };
-}
-
-async function getFtpClient(options: FtpOptions): Promise<ftp.Client> {
-    const ftpClient = new ftp.Client();
-    ftpClient.ftp.log = tl.debug;
-    const accessOptions = getAccessOption(options);
-    const response = await ftpClient.access(accessOptions);
-    tl.debug("ftp client greeting");
-    console.log(tl.loc("FTPConnected", response.message));
-
-    ftpClient.trackProgress(info => {
-        console.log(
-            `File: ${info.name} Type: ${info.type} Transferred: ${info.bytes}`
-        );
-    });
-
-    return ftpClient;
-}
-
-function sleep(millis: number) {
-    return new Promise(resolve => setTimeout(resolve, millis));
 }
 
 function findFiles(ftpOptions: FtpOptions): string[] {
@@ -243,6 +157,91 @@ function findFiles(ftpOptions: FtpOptions): string[] {
     return [];
 }
 
+function getFtpOptions(): FtpOptions {
+    let serverEndpointUrl: url.UrlWithStringQuery;
+    let username: string;
+    let password: string;
+
+    if (tl.getInput("credsType") === "serviceEndpoint") {
+        // server endpoint
+        const serverEndpoint: string = tl.getInput("serverEndpoint", true);
+        serverEndpointUrl = url.parse(
+            tl.getEndpointUrl(serverEndpoint, false)
+        );
+
+        const serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(
+            serverEndpoint,
+            false
+        );
+        username = serverEndpointAuth["parameters"]["username"];
+        password = serverEndpointAuth["parameters"]["password"];
+    } else {
+        // user entered credentials directly
+        serverEndpointUrl = url.parse(tl.getInput("serverUrl", true));
+        username = tl.getInput("username", true);
+        password = tl.getInput("password", true);
+    }
+
+    return {
+        serverEndpointUrl: serverEndpointUrl,
+        username: username,
+        password: password,
+
+        // other standard options
+        rootFolder: tl.getPathInput("rootFolder", true),
+        filePatterns: tl.getDelimitedInput("filePatterns", "\n", true),
+        remotePath: tl .getInput("remotePath", true).trim().replace(/\\/gi, "/"), // use forward slashes alway
+
+        // advanced options
+        clean: tl.getBoolInput("clean", true),
+        cleanContents: tl.getBoolInput("cleanContents", false),
+        preservePaths: tl.getBoolInput("preservePaths", true),
+        trustSSL: tl.getBoolInput("trustSSL", true)
+    };
+}
+
+function getAccessOption(options: FtpOptions): ftp.AccessOptions {
+    const protocol = options.serverEndpointUrl.protocol;
+    const secure: boolean = protocol != undefined ? protocol.toLowerCase() === "ftps:" : false;
+    const secureOptions: any = { rejectUnauthorized: !options.trustSSL };
+
+    const hostName: string = options.serverEndpointUrl.hostname!;
+    const portStr: string = options.serverEndpointUrl.port!;
+    let port: number = 21;
+    if (portStr) {
+        // port not explicitly specified, use default
+        port = parseInt(portStr);
+    }
+
+    console.log(tl.loc("ConnectPort", hostName, port));
+
+    return {
+        host: hostName,
+        port: port,
+        user: options.username,
+        password: options.password,
+        secure: secure,
+        secureOptions: secureOptions
+    };
+}
+
+async function getFtpClient(options: FtpOptions): Promise<ftp.Client> {
+    const ftpClient = new ftp.Client();
+    ftpClient.ftp.log = tl.debug;
+    const accessOptions = getAccessOption(options);
+    const response = await ftpClient.access(accessOptions);
+    tl.debug("ftp client greeting");
+    console.log(tl.loc("FTPConnected", response.message));
+
+    ftpClient.trackProgress(info => {
+        console.log(
+            `File: ${info.name} Type: ${info.type} Transferred: ${info.bytes}`
+        );
+    });
+
+    return ftpClient;
+}
+
 async function run() {
     tl.setResourcePath(path.join(__dirname, "task.json"));
 
@@ -264,6 +263,10 @@ async function run() {
     }
     
     let ftpClient = await getFtpClient(ftpOptions);
+
+    let sleep = (milliseconds: number) => {
+        return new Promise(resolve => setTimeout(resolve, milliseconds));
+    }
 
     let retryWithNewClient = async (task: () => {}, retry: number) => {
         let e = null;
@@ -351,4 +354,3 @@ async function run() {
 }
 
 run();
-
