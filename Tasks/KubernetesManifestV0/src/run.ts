@@ -8,6 +8,7 @@ import { patch } from "./actions/patch";
 import { deleteResources } from './actions/delete';
 import { promote } from './actions/promote';
 import { reject } from './actions/reject';
+import { createSecret } from './actions/createSecret';
 import { Connection } from "./connection";
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
@@ -37,6 +38,9 @@ function run(): Promise<void> {
             break;
         case "reject":
             action_func = reject;
+            break;
+        case "create secret":
+            action_func = createSecret;
             break;
         default:
             tl.setResult(tl.TaskResult.Failed, 'Not a supported action, choose from "bake", "deploy", "patch", "scale", "delete", "promote", "reject"');
