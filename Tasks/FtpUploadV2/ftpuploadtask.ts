@@ -190,7 +190,7 @@ function getFtpOptions(): FtpOptions {
         // other standard options
         rootFolder: tl.getPathInput("rootFolder", true),
         filePatterns: tl.getDelimitedInput("filePatterns", "\n", true),
-        remotePath: tl .getInput("remotePath", true).trim().replace(/\\/gi, "/"), // use forward slashes alway
+        remotePath: tl.getInput("remotePath", true).trim().replace(/\\/gi, "/"), // use forward slashes always
 
         // advanced options
         clean: tl.getBoolInput("clean", true),
