@@ -48,8 +48,8 @@ function pushMultipleImages(connection: ContainerConnection, imageNames: string[
     return promise;
 }
 
-export function run(connection: ContainerConnection, outputUpdate: (data: string) => any): any {
-    var commandArguments = tl.getInput("arguments", false);
+export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, ignoreArguments?: boolean): any {
+    let commandArguments = ignoreArguments ? "" : tl.getInput("arguments");
 
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");

@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 150,
-        "Patch": 0
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -26,6 +26,9 @@
     "inputs": [
         {
             "name": "hostName",
+            "aliases": [
+                "knownHostsEntry"
+            ],
             "type": "string",
             "label": "Known Hosts Entry",
             "defaultValue": "",
