@@ -57,13 +57,16 @@ export class Kubectl {
     }
 
     public getNewReplicaSet(deployment): string {
-        let stdout = this.describe("deployment", deployment, true).stdout.split("\n");
         let newReplicaSet = "";
-        stdout.forEach((line: string) => {
-            if (!!line && line.toLowerCase().indexOf("newreplicaset") > -1) {
-                newReplicaSet = line.substr(14).trim().split(" ")[0];
-            }
-        });
+        let result = this.describe("deployment", deployment, true);
+        if (result != null && result.stdout != null) {
+            let stdout = result.stdout.split("\n");
+            stdout.forEach((line: string) => {
+                if (!!line && line.toLowerCase().indexOf("newreplicaset") > -1) {
+                    newReplicaSet = line.substr(14).trim().split(" ")[0];
+                }
+            });
+        }
 
         return newReplicaSet;
     }
@@ -91,7 +94,6 @@ export class Kubectl {
         command.arg(resourceType + "/" + name);
         command.arg(["--namespace", this.namespace]);
         command.arg(["-o", "json"])
-        command.arg("--export=true");
         return command.execSync();
     }
 
