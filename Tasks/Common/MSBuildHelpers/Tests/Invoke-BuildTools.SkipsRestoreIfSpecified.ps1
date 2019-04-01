@@ -8,7 +8,6 @@ $file = "$directory1\Some solution"
 $msBuildLocation = 'Some MSBuild location'
 $msBuildArguments = 'Some MSBuild arguments'
 Register-Mock Invoke-NuGetRestore
-Register-Mock Invoke-MSBuild { 'MSbuild clean' } -- -ProjectFile $file -Targets Clean -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true
 Register-Mock Invoke-MSBuild { 'Some MSBuild output' } -- -ProjectFile $file -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true -LogFile: "$file.log"
 
 # Act.
@@ -16,7 +15,6 @@ $actual = Invoke-BuildTools -SolutionFiles $file -MSBuildLocation 'Some MSBuild 
 
 # Assert.
 Assert-AreEqual -Expected @(
-        'MSbuild clean'
         'Some MSBuild output'
     ) -Actual $actual
 Assert-WasCalled Invoke-NuGetRestore -Times 0
