@@ -171,6 +171,8 @@ Tasks/JenkinsDownloadArtifactsV1/*      @Lovakumar      @kasubram
 
 Tasks/JenkinsQueueJobV2/*   @madhurig
 
+Tasks/KubectlInstallerV0/*  @bansalaseem
+
 Tasks/KubernetesV0/*    @bansalaseem
 
 Tasks/KubernetesV1/*    @bansalaseem
@@ -262,6 +264,10 @@ Tasks/SshV0/*   @madhurig
 Tasks/TwineAuthenticateV0/*     @zackrun
 
 Tasks/UniversalPackagesV0/*     @zackrun
+
+Tasks/UseDotNetV2/*     @damccorm
+
+Tasks/UseNodeV1/*     @damccorm
 
 Tasks/UsePythonVersionV0/*      @madhurig
 
