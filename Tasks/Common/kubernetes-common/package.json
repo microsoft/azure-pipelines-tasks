@@ -13,7 +13,6 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@types/node": "^6.0.101",
     "vsts-task-lib": "2.6.0"
   }
 }
