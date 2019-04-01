@@ -148,7 +148,6 @@ export function updateSelectorLabels(inputObject: any, newLabels: Map<string, st
 }
 
 export function getResources(filePaths: string[], filterResourceTypes: string[]): Resource[] {
-
     if (!filePaths) {
         return [];
     }
@@ -158,8 +157,8 @@ export function getResources(filePaths: string[], filterResourceTypes: string[])
     filePaths.forEach((filePath: string) => {
         var fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
-
-            if (filterResourceTypes.filter(type => utils.isEqual(inputObject.kind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
+            let inputObjectKind = inputObject ? inputObject.kind : "";
+            if (filterResourceTypes.filter(type => utils.isEqual(inputObjectKind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
                 var resource = {
                     type: inputObject.kind,
                     name: inputObject.metadata.name
