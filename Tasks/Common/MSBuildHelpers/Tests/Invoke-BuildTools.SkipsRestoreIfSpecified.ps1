@@ -14,7 +14,5 @@ Register-Mock Invoke-MSBuild { 'Some MSBuild output' } -- -ProjectFile $file -MS
 $actual = Invoke-BuildTools -SolutionFiles $file -MSBuildLocation 'Some MSBuild location' -MSBuildArguments 'Some MSBuild arguments' -Clean -NoTimelineLogger -CreateLogFile
 
 # Assert.
-Assert-AreEqual -Expected @(
-        'Some MSBuild output'
-    ) -Actual $actual
+Assert-AreEqual -Expected 'Some MSBuild output' -Actual $actual
 Assert-WasCalled Invoke-NuGetRestore -Times 0
