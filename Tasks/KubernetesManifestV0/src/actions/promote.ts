@@ -10,13 +10,15 @@ export async function promote() {
 
     let kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace);
 
-    // Deploy input manifests
-    tl.debug("Deploying input manifests");
-    deploymentHelper.deploy(kubectl, TaskInputParameters.manifests, "None");
-
-    // delete canary deployment if strategy is canary
     if (canaryDeploymentHelper.isCanaryDeploymentStrategy()) {
+        // Deploy input manifests
+        tl.debug("Deploying input manifests");
+        deploymentHelper.deploy(kubectl, TaskInputParameters.manifests, "None");
         tl.debug("Deployment strategy selected is Canary. Deleting canary and baseline workloads.");
         canaryDeploymentHelper.deleteCanaryDeployment(kubectl, TaskInputParameters.manifests);
+    }
+    else {
+        tl.debug("Strategy is not canary deployment. Invalid request.");
+        throw (tl.loc("InvalidPromotetActionDeploymentStrategy"));
     }
 }

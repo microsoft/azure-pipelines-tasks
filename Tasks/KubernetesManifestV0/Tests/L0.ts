@@ -54,7 +54,7 @@ describe('Kubernetes Manifests Suite', function() {
         assert(tr.stdout.indexOf("nginx-deployment-baseline annotated") != -1, "Baseline deployment is annotated");
         done();
     });
-    it('Run should fail when canary deployment already exit', (done:MochaDone) => {
+    it('Run should fail when canary deployment already exits', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.deploy;
@@ -67,17 +67,13 @@ describe('Kubernetes Manifests Suite', function() {
         assert(tr.failed, 'task should have failed');
         done();
     });
-    it('Run successfuly for promote with none strategy', (done:MochaDone) => {
+    it('Run should fail for promote with none strategy', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.promote;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.none;   
         tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf("nginx-deployment created") != -1, "deployment is created");
-        assert(tr.stdout.indexOf("deployment \"nginx-deployment\" successfully rolled out") != -1, "deployment is successfully rolled out");
-        assert(tr.stdout.indexOf("nginx-deployment annotated") != -1, "nginx-deployment created.");
-        assert(tr.stdout.indexOf("\"nginx-deployment-canary\" deleted. \"nginx-deployment-baseline\" deleted") == -1, "Baseline and canary workloads are deleted");
+        assert(tr.failed, 'task should have failed');
         done();
     });
     it('Run successfuly for promote with canary strategy', (done:MochaDone) => {

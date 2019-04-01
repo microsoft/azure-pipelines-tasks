@@ -79,7 +79,7 @@
               "canary": "Canary",
               "none": "None"
             },
-            "helpMarkDown": "Strategy for deployment",
+            "helpMarkDown": "Deployment strategy to be used",
             "visibleRule": "action = deploy || action = promote || action = reject"
           },
           {
@@ -274,6 +274,7 @@
         "ArgumentsInputNotSupplied" : "Arguments are not supplied.",
         "NullInputObjectMetadata": "Input object metadata is null.",
         "CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
-        "InvalidRejectActionDeploymentStrategy" : "Deployment strategy should be 'Canary' for reject action."
+        "InvalidRejectActionDeploymentStrategy" : "Reject action works only with strategy: canary",
+        "InvalidPromotetActionDeploymentStrategy" : "Promote action works only with strategy: canary"
     }
 }

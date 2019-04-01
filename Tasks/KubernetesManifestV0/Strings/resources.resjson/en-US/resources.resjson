@@ -12,7 +12,7 @@
   "loc.input.label.action": "Action",
   "loc.input.help.action": "Choose the action to be performed.",
   "loc.input.label.strategy": "Strategy",
-  "loc.input.help.strategy": "Strategy for deployment",
+  "loc.input.help.strategy": "Deployment strategy to be used",
   "loc.input.label.percentage": "Percentage",
   "loc.input.label.manifests": "Manifests",
   "loc.input.help.manifests": "Manifests to deploy",
@@ -55,5 +55,6 @@
   "loc.messages.ArgumentsInputNotSupplied": "Arguments are not supplied.",
   "loc.messages.NullInputObjectMetadata": "Input object metadata is null.",
   "loc.messages.CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
-  "loc.messages.InvalidRejectActionDeploymentStrategy": "Deployment strategy should be 'Canary' for reject action."
+  "loc.messages.InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
+  "loc.messages.InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary"
 }

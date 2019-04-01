@@ -274,6 +274,7 @@
     "ArgumentsInputNotSupplied": "ms-resource:loc.messages.ArgumentsInputNotSupplied",
     "NullInputObjectMetadata": "ms-resource:loc.messages.NullInputObjectMetadata",
     "CanaryDeploymentAlreadyExistErrorMessage": "ms-resource:loc.messages.CanaryDeploymentAlreadyExistErrorMessage",
-    "InvalidRejectActionDeploymentStrategy": "ms-resource:loc.messages.InvalidRejectActionDeploymentStrategy"
+    "InvalidRejectActionDeploymentStrategy": "ms-resource:loc.messages.InvalidRejectActionDeploymentStrategy",
+    "InvalidPromotetActionDeploymentStrategy": "ms-resource:loc.messages.InvalidPromotetActionDeploymentStrategy"
   }
 }
