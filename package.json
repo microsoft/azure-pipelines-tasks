@@ -42,8 +42,5 @@
     "typed-rest-client": "1.0.9",
     "typescript": "2.3.4",
     "validator": "3.33.0"
-  },
-  "dependencies": {
-    "kubernetes-common": "file:Tasks/Common/kubernetes-common"
   }
 }
