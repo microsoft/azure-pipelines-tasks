@@ -149,6 +149,8 @@ Tasks/HelmDeployV0/*    @bansalaseem
 
 Tasks/HelmInstallerV0/*     @bansalaseem
 
+Tasks/HelmInstallerV1/*     @bansalaseem
+
 Tasks/IISWebAppDeployment/*     @kmkumaran
 
 Tasks/IISWebAppDeploymentOnMachineGroupV0/*     @kmkumaran
