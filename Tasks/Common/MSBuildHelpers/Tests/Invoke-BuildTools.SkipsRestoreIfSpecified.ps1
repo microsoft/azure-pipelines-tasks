@@ -8,7 +8,7 @@ $file = "$directory1\Some solution"
 $msBuildLocation = 'Some MSBuild location'
 $msBuildArguments = 'Some MSBuild arguments'
 Register-Mock Invoke-NuGetRestore
-Register-Mock Invoke-MSBuild -- -ProjectFile $file -Targets Clean -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true
+Register-Mock Invoke-MSBuild { } -- -ProjectFile $file -Targets Clean -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true
 Register-Mock Invoke-MSBuild { 'Some MSBuild output' } -- -ProjectFile $file -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true -LogFile: "$file.log"
 
 # Act.
