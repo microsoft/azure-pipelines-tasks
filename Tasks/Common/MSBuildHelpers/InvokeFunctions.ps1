@@ -30,13 +30,11 @@ function Invoke-BuildTools {
             }
 
             if ($Clean) {
-                if ($MSBuildArguments.Contains("/t")) {
-                    Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
-                } else {
-                    Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
-                    Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
-                }
-            } else {
+                Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
+            }
+
+            # If we cleaned and passed /t targets, we don't need to run them again
+            if (!$Clean -or -not $MSBuildArguments.Contains("/t")) {
                 Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
             }
         }
