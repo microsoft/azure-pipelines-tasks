@@ -33,9 +33,11 @@ export function deleteCanaryDeployment(kubectl: Kubectl, manifestFilesPath: stri
     let args = utils.getDeleteCmdArgs(argsPrefix, TaskInputParameters.args);
     tl.debug("Delete cmd args : " + args);
 
-    // run kubectl delete cmd
-    var result = kubectl.delete(args);
-    utils.checkForErrors([result]);
+    if (!!args && args.length > 0) {
+        // run kubectl delete cmd
+        var result = kubectl.delete(args);
+        utils.checkForErrors([result]);
+    }
 }
 
 export function deployCanary(kubectl: Kubectl, filePaths: string[]) {
@@ -65,13 +67,15 @@ export function deployCanary(kubectl: Kubectl, filePaths: string[]) {
                     tl.debug("Stable object not found. Creating only canary object");
                     // If stable object not found, create canary deployment.
                     var newCanaryObject = getNewCanaryResource(inputObject, canaryReplicaCount);
-                    tl.debug("\n-------NEw canary object is " + JSON.stringify(newCanaryObject));
+                    tl.debug("New canary object is: " + JSON.stringify(newCanaryObject));
                     newObjectsList.push(newCanaryObject);
                 } else {
                     tl.debug("Stable object found. Creating canary and baseline objects");
                     // If canary object not found, create canary and baseline object.
                     var newCanaryObject = getNewCanaryResource(inputObject, canaryReplicaCount);
                     var newBaselineObject = getNewBaselineResource(stable_object, canaryReplicaCount);
+                    tl.debug("New canary object is: " + JSON.stringify(newCanaryObject));
+                    tl.debug("New baseline object is: " + JSON.stringify(newBaselineObject));
                     newObjectsList.push(newCanaryObject);
                     newObjectsList.push(newBaselineObject);
                 }
@@ -212,6 +216,10 @@ function createCanaryObjectsArgumentString(files: string[]) {
             }
         });
     });
+
+    if (kindList.size == 0) {
+        tl.debug("CanaryDeploymentHelper : No deployment objects found");
+    }
 
     var args = utils.createKubectlArgs(kindList, nameList);
     return args;

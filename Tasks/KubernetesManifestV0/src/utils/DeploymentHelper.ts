@@ -123,12 +123,12 @@ function updateImagePullSecretsInManifestFiles(filePaths: string[], imagePullSec
                     var kind = inputObject.kind;
                     if (KubernetesObjectUtility.isDeploymentEntity(kind)) {
                         KubernetesObjectUtility.updateImagePullSecrets(inputObject, imagePullSecrets, false);
-
                     }
                     newObjectsList.push(inputObject);
                 }
             });
         });
+        tl.debug("New K8s objects after addin imagePullSecrets are :"+JSON.stringify(newObjectsList));
         var newFilePaths = fileHelper.writeObjectsToFile(newObjectsList);
         return newFilePaths;
     }

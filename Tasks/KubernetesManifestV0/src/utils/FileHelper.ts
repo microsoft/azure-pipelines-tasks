@@ -34,14 +34,26 @@ export function assertFileExists(path: string) {
 
 export function writeObjectsToFile(inputObjects: any[]): string[] {
     let newFilePaths = [];
-    inputObjects.forEach((inputObject: any) => {
-        var inputObjectString = JSON.stringify(inputObject);
-        let fileName = getManifestFileName(inputObject.kind, inputObject.metadata.name);
-        fs.writeFileSync(
-            path.join(fileName),
-            inputObjectString);
-        newFilePaths.push(fileName);
-    });
+
+    if (!!inputObjects) {
+        inputObjects.forEach((inputObject: any) => {
+            try {
+                var inputObjectString = JSON.stringify(inputObject);
+
+                if (!!inputObject.kind && !!inputObject.metadata && !!inputObject.metadata.name) {
+                    let fileName = getManifestFileName(inputObject.kind, inputObject.metadata.name);
+                    fs.writeFileSync(path.join(fileName), inputObjectString);
+                    newFilePaths.push(fileName);
+                }
+                else
+                {
+                    tl.debug("Input object is not proper K8s resource object. Object: "+inputObjectString);
+                }
+            } catch (ex) {
+                tl.debug("Exception occurred while wrting object to file : " + inputObject + " . Exception: " + ex);
+            }
+        });
+    }
 
     return newFilePaths;
 }
