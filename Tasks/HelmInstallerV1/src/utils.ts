@@ -5,7 +5,7 @@ import * as toolLib from 'vsts-task-tool-lib/tool';
 import helmutility = require("utility-common/helmutility");
 
 export async function getHelmVersion(): Promise<string> {
-    let helmVersion = tl.getInput("helmVersion");
+    let helmVersion = tl.getInput("helmVersionToInstall");
     if (helmVersion && helmVersion != "latest") {
         return sanitizeVersionString(helmVersion);
     }
