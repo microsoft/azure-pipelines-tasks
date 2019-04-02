@@ -48,6 +48,24 @@ export class Kubectl {
         return command.execSync();
     }
 
+    public createSecret(args: string, force?: boolean, secretName?: string): IExecSyncResult {
+        if (!!force && !!secretName) {
+            let command = tl.tool(this.kubectlPath);
+            command.arg("delete");
+            command.arg("secret");
+            command.arg(["--namespace", this.namespace]);
+            command.arg(secretName);
+            command.execSync();    
+        }
+
+        var command = tl.tool(this.kubectlPath);
+        command.arg("create");
+        command.arg("secret");
+        command.arg(["--namespace", this.namespace]);
+        command.line(args);
+        return command.execSync();
+    }
+
     public describe(resourceType, resourceName, silent?: boolean): IExecSyncResult {
         var command = tl.tool(this.kubectlPath);
         command.arg("describe");
