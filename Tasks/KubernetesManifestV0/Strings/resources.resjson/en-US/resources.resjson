@@ -18,6 +18,8 @@
   "loc.input.help.manifests": "Manifests to deploy",
   "loc.input.label.containers": "Containers",
   "loc.input.help.containers": "Containers",
+  "loc.input.label.imagePullSecrets": "ImagePullSecrets",
+  "loc.input.help.imagePullSecrets": "ImagePullSecret to pull image from private registry",
   "loc.input.label.renderType": "Render Engine",
   "loc.input.help.renderType": "Tool to generate manifest",
   "loc.input.label.helmChart": "Helm Chart",
