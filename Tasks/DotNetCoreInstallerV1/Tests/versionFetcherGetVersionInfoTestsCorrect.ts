@@ -68,22 +68,22 @@ const ReleasesJsonUrl3: string = "https://releases.file.com/version2.3.json";
 let versionFetcher = new DotNetCoreVersionFetcher();
 versionFetcher.getVersionInfo(process.env["__versionspec__"], "sdk", process.env["__inlcudepreviewversion__"] == "true")
     .then((versionInfo) => {
-        if (process.env["__versionspec__"] == "2.2.103" && versionInfo.version != "2.2.103") {
+        if (process.env["__versionspec__"] == "2.2.103" && versionInfo.getVersion() != "2.2.103") {
             throw "";
         }
-        else if (process.env["__versionspec__"] == "2.1.104" && versionInfo.version != "2.1.104") {
+        else if (process.env["__versionspec__"] == "2.1.104" && versionInfo.getVersion() != "2.1.104") {
             throw "";
         }
-        else if (process.env["__versionspec__"] == "2.x" && versionInfo.version != "2.3.105" ) {
+        else if (process.env["__versionspec__"] == "2.x" && versionInfo.getVersion() != "2.3.105" ) {
             throw "";
         }
-        else if (process.env["__versionspec__"] == "2.2.x" && process.env["__inlcudepreviewversion__"] != "true" && versionInfo.version != "2.2.105") {
+        else if (process.env["__versionspec__"] == "2.2.x" && process.env["__inlcudepreviewversion__"] != "true" && versionInfo.getVersion() != "2.2.105") {
             throw "";
         }
-        else if (process.env["__versionspec__"] == "2.2.x" && process.env["__inlcudepreviewversion__"] == "true" && versionInfo.version != "2.2.106-preview-1") {
+        else if (process.env["__versionspec__"] == "2.2.x" && process.env["__inlcudepreviewversion__"] == "true" && versionInfo.getVersion() != "2.2.106-preview-1") {
             throw "";
         }
-        else if (process.env["__versionspec__"] == "2.3.x" && process.env["__inlcudepreviewversion__"] == "true" && versionInfo.version != "2.3.105") {
+        else if (process.env["__versionspec__"] == "2.3.x" && process.env["__inlcudepreviewversion__"] == "true" && versionInfo.getVersion() != "2.3.105") {
             throw "";
         }
 
