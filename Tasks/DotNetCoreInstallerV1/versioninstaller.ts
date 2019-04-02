@@ -22,60 +22,59 @@ export class VersionInstaller {
     }
 
     public async downloadAndInstall(versionInfo: VersionInfo, downloadUrl: string): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            if (!versionInfo || !versionInfo.getVersion() || !downloadUrl || !url.parse(downloadUrl)) {
-                reject(tl.loc("VersionCanNotBeDownloadedFromUrl", versionInfo, downloadUrl));
+        if (!versionInfo || !versionInfo.getVersion() || !downloadUrl || !url.parse(downloadUrl)) {
+            throw tl.loc("VersionCanNotBeDownloadedFromUrl", versionInfo, downloadUrl);
+        }
+
+        let version = versionInfo.getVersion();
+
+        try {
+            try {
+                var downloadPath = await toolLib.downloadTool(downloadUrl)
+            }
+            catch (ex) {
+                throw tl.loc("CouldNotDownload", downloadUrl, ex);
             }
 
-            let version = versionInfo.getVersion();
+            // Extract
+            console.log(tl.loc("ExtractingPackage", downloadPath));
+            try {
+                var extPath = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath) : await toolLib.extractTar(downloadPath);
+            }
+            catch (ex) {
+                throw tl.loc("FailedWhileExtractingPacakge", ex);
+            }
 
-            toolLib.downloadTool(downloadUrl)
-                .then((downloadPath) => {
-                    // Extract
-                    console.log(tl.loc("ExtractingPackage", downloadPath));
-                    let extPathPromise: Promise<string> = tl.osType().match(/^Win/) ? toolLib.extractZip(downloadPath) : toolLib.extractTar(downloadPath);
+            // Copy folders
+            tl.debug(tl.loc("CopyingFoldersIntoPath", this.installationPath));
+            var allRootLevelEnteriesInDir: string[] = tl.ls("", [extPath]).map(name => path.join(extPath, name));
+            var directoriesTobeCopied: string[] = allRootLevelEnteriesInDir.filter(path => fs.lstatSync(path).isDirectory());
+            directoriesTobeCopied.forEach((directoryPath) => {
+                tl.cp(directoryPath, this.installationPath, "-rf", false);
+            });
 
-                    extPathPromise
-                        .then((extPath) => {
-                            // Copy folders
-                            tl.debug(tl.loc("CopyingFoldersIntoPath", this.installationPath));
-                            var allRootLevelEnteriesInDir: string[] = tl.ls("", [extPath]).map(name => path.join(extPath, name));
-                            var directoriesTobeCopied: string[] = allRootLevelEnteriesInDir.filter(path => fs.lstatSync(path).isDirectory());
-                            directoriesTobeCopied.forEach((directoryPath) => {
-                                tl.cp(directoryPath, this.installationPath, "-rf", false);
-                            });
-
-                            // Copy files
-                            try {
-                                if (this.packageType == utils.Constants.sdk && this.isLatestInstalledVersion(version)) {
-                                    tl.debug(tl.loc("CopyingFilesIntoPath", this.installationPath));
-                                    var filesToBeCopied = allRootLevelEnteriesInDir.filter(path => !fs.lstatSync(path).isDirectory());
-                                    filesToBeCopied.forEach((filePath) => {
-                                        tl.cp(filePath, this.installationPath, "-f", false);
-                                    });
-                                }
-                            }
-                            catch (ex) {
-                                tl.warning(tl.loc("FailedToCopyTopLevelFiles", this.installationPath, ex));
-                            }
-
-                            // Cache tool
-                            this.createInstallationCompleteFile(versionInfo);
-
-                            console.log(tl.loc("SuccessfullyInstalled", this.packageType, version));
-                            resolve();
-                        },
-                            (ex) => {
-                                reject(tl.loc("FailedWhileExtractingPacakge", ex));
-                            })
-                        .catch((ex) => {
-                            reject(tl.loc("FailedWhileInstallingVersionAtPath", version, this.installationPath, ex));
-                        });
-                },
-                    (ex) => {
-                        reject(tl.loc("CouldNotDownload", downloadUrl, JSON.stringify(ex)));
+            // Copy files
+            try {
+                if (this.packageType == utils.Constants.sdk && this.isLatestInstalledVersion(version)) {
+                    tl.debug(tl.loc("CopyingFilesIntoPath", this.installationPath));
+                    var filesToBeCopied = allRootLevelEnteriesInDir.filter(path => !fs.lstatSync(path).isDirectory());
+                    filesToBeCopied.forEach((filePath) => {
+                        tl.cp(filePath, this.installationPath, "-f", false);
                     });
-        });
+                }
+            }
+            catch (ex) {
+                tl.warning(tl.loc("FailedToCopyTopLevelFiles", this.installationPath, ex));
+            }
+
+            // Cache tool
+            this.createInstallationCompleteFile(versionInfo);
+
+            console.log(tl.loc("SuccessfullyInstalled", this.packageType, version));
+        }
+        catch (ex) {
+            throw tl.loc("FailedWhileInstallingVersionAtPath", version, this.installationPath, ex);
+        }
     }
 
     public isVersionInstalled(version: string): boolean {
