@@ -77,4 +77,5 @@ export function mockTaskInputParameters(tr) {
     tr.setInput('azureSubscription', 'AzureRMSpn');
     tr.setInput('appName', 'mytestapp');
     tr.setInput('imageName', 'dockernamespace/dockerrepository:DockerImageTag');
+    tr.setInput('AppSettings', '-port 1173');
 }

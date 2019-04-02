@@ -1,8 +1,9 @@
 import tl = require("vsts-task-lib/task");
 import * as telemetry from "utility-common/telemetry";
-import { TagSelectionMode, Utility, GitHubAttributes, AzureDevOpsVariables, ActionType} from "./Utility";
+import { Utility, GitHubAttributes, AzureDevOpsVariables, ActionType} from "./Utility";
 import { Inputs } from "./Constants";
 import { Release } from "./Release";
+import * as crypto from "crypto";
 
 interface IRelease {
     tagName: string;
@@ -12,6 +13,7 @@ interface IRelease {
 interface ITelemetryData {
     area: string;
     action: string;
+    repository: string;
     tagSource: string;
     isDraft: boolean;
     isPreRelease: boolean;
@@ -217,6 +219,8 @@ export class Helper {
 
         telemetryData.area = !!releaseId ? "release" : "build";
         telemetryData.action = tl.getInput(Inputs.action, true).toLowerCase();
+        let repositoryName = tl.getInput(Inputs.repositoryName, true);
+        telemetryData.repository = crypto.createHash('sha256').update(repositoryName).digest('hex');
 
         if (telemetryData.action !== ActionType.delete) {
 

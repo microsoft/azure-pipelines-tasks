@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import util = require('../DotnetMockHelper');
 
@@ -48,7 +48,7 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 
 // Create mock for getVariable
-const tl = require('vsts-task-lib/mock-task');
+const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
 tlClone.getVariable = function(variable: string) {
     if (variable.toUpperCase() === "Agent.TempDirectory".toUpperCase())
@@ -60,7 +60,7 @@ tlClone.getVariable = function(variable: string) {
         return tl.getVariable(variable);
     }    
 };
-tmr.registerMock('vsts-task-lib/mock-task', tlClone);
+tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 nmh.setAnswers(a);
 nmh.registerNugetUtilityMock(['c:\\agent\\home\\directory\\temp.csproj']);
