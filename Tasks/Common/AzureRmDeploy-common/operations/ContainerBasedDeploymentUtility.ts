@@ -5,8 +5,8 @@ import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';
 import { parse }  from './ParameterParserUtility';
 import { AzureAppServiceUtility } from './AzureAppServiceUtility';
 import fs = require('fs');
-import * as os from "os";
 import path = require('path');
+var deployUtility = require('../webdeployment-common/utility.js');
 
 enum registryTypes {
     "AzureContainerRegistry",
@@ -39,7 +39,7 @@ export class ContainerBasedDeploymentUtility {
         }
 
         tl.debug("Updating the webapp configuration.");
-        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], imageName, isLinuxApp, isMultiContainer, configFilePath);
+        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], imageName, isLinuxApp, isMultiContainer, updatedConfigFilePath);
 
         tl.debug('making a restart request to app service');
         await this._appService.restart();
@@ -226,7 +226,7 @@ export class ContainerBasedDeploymentUtility {
     }
 
     private updateImagesInConfigFile(configFilePath, images): string {
-        const tempDirectory = this.getTempDirectory();
+        const tempDirectory = deployUtility.getTempDirectory();
         var contents = fs.readFileSync(configFilePath).toString();
         var imageList = images.split("\n");
         imageList.forEach((image: string) => {
@@ -243,10 +243,6 @@ export class ContainerBasedDeploymentUtility {
         );
         
         return newFilePath;
-    }
-
-    private getTempDirectory(): string {
-        return tl.getVariable('agent.tempDirectory') || os.tmpdir();
     }
 
     private tokenizeImages(currentString: string, imageName: string, imageNameWithNewTag: string) {
@@ -273,7 +269,7 @@ export class ContainerBasedDeploymentUtility {
                     newString += line + "\n";
                 }
             });
-            
+
         return newString;
     }
 }
