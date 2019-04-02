@@ -1,7 +1,7 @@
 import { Package, PackageFileResult } from "./package";
 import { PackageUrlsBuilder } from "./packagebuilder";
-import { match } from "vsts-task-lib";
-import * as tl from "vsts-task-lib/task";
+import { match } from "azure-pipelines-task-lib";
+import * as tl from "azure-pipelines-task-lib/task";
 
 export class MultiFilePackage extends Package {
     private getRouteParams: (feedId: string, packageMetadata: any, fileMetadata: any) => any;

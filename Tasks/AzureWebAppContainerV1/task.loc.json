@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 8
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -37,17 +37,6 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscription"
-    },
-    {
-      "name": "osType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.osType",
-      "defaultValue": "Linux",
-      "required": true,
-      "options": {
-        "Linux": "Linux",
-        "Windows": "Windows"
-      }
     },
     {
       "name": "appName",
@@ -142,10 +131,7 @@
     {
       "target": "appName",
       "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureWebAppContainerNamesByOSType",
-      "parameters": {
-        "osType": "$(osType)"
-      }
+      "dataSourceName": "AzureWebAppContainerNames"
     },
     {
       "target": "resourceGroupName",

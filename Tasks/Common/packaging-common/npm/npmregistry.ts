@@ -1,5 +1,5 @@
 import * as os from 'os';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import { HttpClient }  from 'typed-rest-client/HttpClient';
 import { IHeaders, IRequestOptions } from 'typed-rest-client/Interfaces';
