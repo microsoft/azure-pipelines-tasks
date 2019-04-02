@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 150,
-    "Patch": 2
+    "Minor": 151,
+    "Patch": 0
   },
   "demands": [],
   "groups": [
@@ -114,6 +114,16 @@
       "defaultValue": "",
       "groupName": "config",
       "helpMarkDown": "ms-resource:loc.input.help.containers",
+      "visibleRule": "action = deploy || action = promote"
+    },
+    {
+      "name": "imagePullSecrets",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.imagePullSecrets",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.imagePullSecrets",
       "visibleRule": "action = deploy || action = promote"
     },
     {
