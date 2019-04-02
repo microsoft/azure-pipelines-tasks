@@ -8,7 +8,9 @@ const BuildId = "1";
 const TeamProject = "project1";
 const CollectionId = "collection1";
 const DefinitionName = "test";
+const DefinitionId = "123";
 const TeamFoundationCollectionUri = "https://abc.visualstudio.com/";
+const JobName = "jobName";
 
 const DefaultWorkingDirectory: string = shared.formatPath("a/w");
 const KubectlPath = shared.formatPath("newUserDir/kubectl.exe");
@@ -40,10 +42,14 @@ process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = TeamFoundationCollectionUri;
 process.env["SYSTEM_TEAMPROJECT"] = TeamProject;
 process.env["SYSTEM_COLLECTIONID"] = CollectionId;
+process.env["SYSTEM_DEFINITIONID"] = DefinitionId;
 
 process.env["BUILD_BUILDID"] = BuildId;
 process.env["BUILD_BUILDNUMBER"] = BuildNumber;
 process.env["BUILD_DEFINITIONNAME"] = DefinitionName;
+
+process.env["AGENT_JOBNAME"] = JobName;
+process.env["TF_BUILD"] = "True";
 
 process.env[shared.TestEnvVars.manifests] = process.env[shared.TestEnvVars.manifests] || shared.ManifestFilesPath;
 process.env["ENDPOINT_DATA_kubernetesConnection_AUTHORIZATIONTYPE"] = process.env[shared.TestEnvVars.endpointAuthorizationType] ||  shared.AuthorizationType.Kubeconfig;
@@ -153,12 +159,15 @@ a.exec[`${KubectlPath} delete Deployment nginx-deployment-canary nginx-deploymen
     "stdout": " \"nginx-deployment-canary\" deleted. \"nginx-deployment-baseline\" deleted"
 };
 
-var pipelineAnnotations: string =
-    `azure-pipelines/execution=${BuildNumber}` +" "+
-    `azure-pipelines/pipeline="${DefinitionName}"`+" "+
-    `azure-pipelines/executionuri=${TeamFoundationCollectionUri}_build/results?buildId=${BuildId}` +" "+
-    `azure-pipelines/project=${TeamProject}`+ " "+
-    `azure-pipelines/org=${CollectionId}`;
+var pipelineAnnotations: string = [
+    `azure-pipelines/execution=${BuildNumber}`,
+    `azure-pipelines/pipeline="${DefinitionName}"`,
+    `azure-pipelines/pipelineId="${DefinitionId}"`,
+    `azure-pipelines/jobName="${JobName}"`,
+    `azure-pipelines/executionuri=${TeamFoundationCollectionUri}${TeamProject}/_build/results?buildId=${BuildId}`,
+    `azure-pipelines/project=${TeamProject}`,
+    `azure-pipelines/org=${CollectionId}`
+].join(" ");
 var annotateCanaryCmd = `${KubectlPath} annotate -f ${shared.CanaryManifestFilesPath},${shared.BaselineManifestFilesPath} --namespace default `+pipelineAnnotations+` --overwrite`;
 
 a.exec[annotateCanaryCmd] = {
