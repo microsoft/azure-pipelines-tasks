@@ -2,6 +2,7 @@ import * as tl from 'vsts-task-lib/task';
 import * as os from 'os';
 import { toolrunner } from './mocks/mockedModels'
 var mockery = require('mockery');
+var osType = "win";
 
 mockery.enable({
     useCleanCache: true,
@@ -20,7 +21,7 @@ mockery.registerMock('typed-rest-client/HttpClient', {
 });
 
 mockery.registerMock('vsts-task-lib/task', {
-    osType: function () { return process.env["__ostype__"]; },
+    osType: function () { return osType; },
     which: function (tool: string, check: boolean) {
         if (tool == 'powershell') {
             return "C:/Program Files/PowerShell";
@@ -30,11 +31,7 @@ mockery.registerMock('vsts-task-lib/task', {
         }
     },
     tool: function (pathToTool) {
-        if (process.env["__ostype__"].toLowerCase().includes("win")) {
-            if (process.env["__getmachineosfail__"] == "true") {
-                return new toolrunner(pathToTool, {code: 1, error: null, stderr: "failedWhileExecutingScript"});
-            }
-
+        if (osType.toLowerCase().includes("win")) {
             return new toolrunner(pathToTool, {
                 code: 0,
                 error: null,
@@ -42,7 +39,7 @@ mockery.registerMock('vsts-task-lib/task', {
                 stdout: `Primary:win-x64${os.EOL}Legacy:win-x64`
             });
         }
-        else if (process.env["__ostype__"].toLowerCase().includes("linux")) {
+        else if (osType.toLowerCase().includes("linux")) {
             return new toolrunner(pathToTool, {
                 code: 0,
                 error: null,
@@ -50,7 +47,7 @@ mockery.registerMock('vsts-task-lib/task', {
                 stdout: `Primary:linux-x64${os.EOL}Legacy:ubuntu16.04`
             });
         }
-        else if (process.env["__ostype__"].toLowerCase().includes("osx")) {
+        else if (osType.toLowerCase().includes("osx")) {
             return new toolrunner(pathToTool, {
                 code: 0,
                 error: null,
@@ -67,18 +64,35 @@ mockery.registerMock('vsts-task-lib/task', {
     setResourcePath: function (path) { return; }
 });
 
+
 import { DotNetCoreVersionFetcher } from "../versionfetcher";
 import { VersionInfo } from '../models';
-
 let versionFetcher = new DotNetCoreVersionFetcher();
 try {
-    let versionInfo = new VersionInfo(JSON.parse(process.env["__versioninfo__"]), "sdk");
+    let versionInfo = new VersionInfo(JSON.parse(`{"version":"2.2.104", "files": [{"name": "linux.tar.gz", "rid":"linux-x64", "url": "https://path.to/file.tar.gz"}, {"name": "osx.pkg", "rid":"osx-x64", "url": "https://path.to/file.pkg"}, {"name": "osx.tar.gz", "rid":"osx-x64", "url": "https://path.toMac/file.tar.gz"}, {"name": "win.exe", "rid":"win-x64", "url": "https://path.to/file.exe"}, {"name": "win.zip", "rid":"win-x64", "url": "https://path.to/file.zip"}]}`), "sdk");
+
+    // Test for windows
+    osType = "win";
     let downloadUrl = versionFetcher.getDownloadUrl(versionInfo);
-    if (downloadUrl) {
-        tl.setResult(tl.TaskResult.Succeeded, "succeeded");
+    if (downloadUrl != "https://path.to/file.zip") {
+        throw "";
     }
 
-    tl.setResult(tl.TaskResult.Failed, "DownloadUrlWasNotReturned");
+    // Test for linux
+    osType = "linux";
+    downloadUrl = versionFetcher.getDownloadUrl(versionInfo);
+    if (downloadUrl != "https://path.to/file.tar.gz") {
+        throw "";
+    }
+
+    // Test for mac os
+    osType = "osx";
+    downloadUrl = versionFetcher.getDownloadUrl(versionInfo);
+    if (downloadUrl != "https://path.toMac/file.tar.gz") {
+        throw "";
+    }
+
+    tl.setResult(tl.TaskResult.Succeeded, "CorrectDownloadUrlsSuccessfullyReturnedForAllOs");
 }
 catch (ex) {
     tl.setResult(tl.TaskResult.Failed, "TestThrewException" + ex);
