@@ -6,21 +6,50 @@ import * as tl from 'vsts-task-lib/task';
 import * as utils from "./versionutilities";
 
 export class VersionInfo {
-    public version: string;
-    public files: VersionFilesData[];
+    private version: string;
+    private files: VersionFilesData[];
+    private packageType: string;
+    private runtimeVersion: string;
 
-    constructor(versionInfoObject: any) {
+    constructor(versionInfoObject: any, packageType: string) {
+        if (!versionInfoObject.version || !versionInfoObject.files) {
+            throw tl.loc("InvalidVersionObject", packageType, versionInfoObject)
+        }
+
         this.version = versionInfoObject.version;
-        this.files = versionInfoObject.files;
-    }
+        this.files = [];
+        versionInfoObject.files.forEach(fileData => {
+            try {
+                this.files.push(new VersionFilesData(fileData));
+            }
+            catch (ex) {
+                tl.debug(tl.loc("FilesDataIsIncorrectInVersion", this.packageType, this.version, ex));
+            }
+        });
 
-    public getRuntimeVersion(packageType: string): string {
-        if (packageType == utils.Constants.sdk) {
-            return this["runtime-version"] || "";
+        this.packageType = packageType;
+        if (this.packageType == utils.Constants.sdk) {
+            this.runtimeVersion = versionInfoObject["runtime-version"] || "";
         }
         else {
-            return this.version || "";
+            this.runtimeVersion = this.version;
         }
+    }
+
+    public getVersion(): string {
+        return this.version;
+    }
+
+    public getFiles(): VersionFilesData[] {
+        return this.files;
+    }
+
+    public getRuntimeVersion(): string {
+        return this.runtimeVersion;
+    }
+
+    public getPackageType(): string {
+        return this.packageType;
     }
 }
 
@@ -29,6 +58,17 @@ export class VersionFilesData {
     public url: string;
     public rid: string;
     public hash?: string;
+
+    constructor(versionFilesData: any) {
+        if(!versionFilesData || !versionFilesData.name || !versionFilesData.url || !versionFilesData.rid) {
+            throw tl.loc("VersionFilesDataIncorrect");
+        }
+
+        this.name = versionFilesData.name;
+        this.url = versionFilesData.url;
+        this.rid = versionFilesData.rid;
+        this.hash = versionFilesData.hash;
+    }
 }
 
 export class Channel {
