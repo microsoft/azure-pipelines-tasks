@@ -1,7 +1,7 @@
 var fs = require("fs");
 var path = require("path");
 
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 import { PackageFile } from "./packagefile";
 import { PackageUrlsBuilder } from "./packagebuilder";

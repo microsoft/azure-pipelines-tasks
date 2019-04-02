@@ -2,7 +2,7 @@
 import fs = require("fs");
 import tl = require('vsts-task-lib/task');
 import yaml = require('js-yaml');
-import { Resource } from "utility-common/kubectl-object-model";
+import { Resource } from "kubernetes-common/kubectl-object-model";
 import { KubernetesWorkload } from "../models/constants"
 import * as utils from "../utils/utilities"
 import { StringComparer } from "../utils/utilities"
@@ -148,7 +148,6 @@ export function updateSelectorLabels(inputObject: any, newLabels: Map<string, st
 }
 
 export function getResources(filePaths: string[], filterResourceTypes: string[]): Resource[] {
-
     if (!filePaths) {
         return [];
     }
@@ -158,8 +157,8 @@ export function getResources(filePaths: string[], filterResourceTypes: string[])
     filePaths.forEach((filePath: string) => {
         var fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
-
-            if (filterResourceTypes.filter(type => utils.isEqual(inputObject.kind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
+            let inputObjectKind = inputObject ? inputObject.kind : "";
+            if (filterResourceTypes.filter(type => utils.isEqual(inputObjectKind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
                 var resource = {
                     type: inputObject.kind,
                     name: inputObject.metadata.name

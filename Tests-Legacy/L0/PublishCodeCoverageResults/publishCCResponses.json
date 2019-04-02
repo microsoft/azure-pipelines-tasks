@@ -1,17 +1,30 @@
 {
     "getVariable": {
-        "System.DefaultWorkingDirectory": "/someDir"
+        "System.DefaultWorkingDirectory": "/someDir",
+        "ignore.coverage.autogenerate": true
     },
     "find": {
         "/someDir": [
             "someDir/someFile2",
             "/someDir/someFile1"
+        ],
+        "\\user\\admin\\summary.xml": [
+            "/user/admin/summary.xml"
         ]
     },
     "exist": {
         "/user/admin/summary.xml": true
     },
+    "which": {
+        "dotnet": "/tmp/dotnet"
+    },
     "findMatch": {
+        "\\user\\admin\\summary.xml": [
+            "/user/admin/summary.xml"
+        ],
+        "/user/admin/summary.xml": [
+            "/user/admin/summary.xml"
+        ],
         "/some/*pattern": [
             "some/path",
             "some/path/one",
@@ -25,6 +38,11 @@
         ],
         "/other/*pattern": []
     },
+    "findPath": {
+        "\\user\\admin\\summary.xml": [
+            "/user/admin/summary.xml"
+        ]
+    },
     "stats": {
         "some/path": {
             "isFile": false
@@ -34,6 +52,9 @@
         },
         "some/path/two": {
             "isFile": true
+        },
+        "/tmp/sources": {
+            "isDirectory" : true
         }
     }
 }
