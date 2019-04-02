@@ -5,7 +5,7 @@ var path = require('path')
 
 import * as corem from 'vso-node-api/CoreApi';
 import * as locationUtility from "packaging-common/locationUtilities";
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as vsom from 'vso-node-api/VsoClient';
 import * as vsts from "vso-node-api/WebApi"
 import bearm = require('vso-node-api/handlers/bearertoken');

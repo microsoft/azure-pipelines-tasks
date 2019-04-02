@@ -1,4 +1,6 @@
 
+ci/*  @damccorm   @stephenmichaelf  @bryanmacfarlane
+
 Tasks/AndroidSigningV2/*    @madhurig
 
 Tasks/AndroidSigningV3/*    @madhurig
@@ -79,6 +81,8 @@ Tasks/CmdLineV2/*   @bryanmacfarlane
 
 Tasks/CocoaPodsV0/*     @madhurig
 
+Tasks/Common/packaging-common/* @jotaylo
+
 Tasks/CondaEnvironmentV0/*      @madhurig
 
 Tasks/CondaEnvironmentV1/*      @madhurig
@@ -109,13 +113,15 @@ Tasks/DotNetCoreCLIV2/*     @sachinma
 
 Tasks/DotNetCoreInstallerV0/*   @sachinma
 
+Tasks/DotNetCoreInstallerV1/*   @sachinma
+
 Tasks/DownloadBuildArtifactsV0/*    @Lovakumar      @omeshp
 
 Tasks/DownloadFileshareArtifactsV0/*    @Lovakumar      @omeshp
 
 Tasks/DownloadGitHubReleasesV0/*    @Lovakumar      @gykuma
 
-Tasks/DownloadPackageV0/*       @zackrun
+Tasks/DownloadPackageV0/*       @zjrunner
 
 Tasks/DownloadPipelineArtifactV0/*      @mihaif
 
@@ -165,6 +171,8 @@ Tasks/JenkinsDownloadArtifactsV1/*      @Lovakumar      @kasubram
 
 Tasks/JenkinsQueueJobV2/*   @madhurig
 
+Tasks/KubectlInstallerV0/*  @bansalaseem
+
 Tasks/KubernetesV0/*    @bansalaseem
 
 Tasks/KubernetesV1/*    @bansalaseem
@@ -183,19 +191,19 @@ Tasks/MysqlDeploymentOnMachineGroupV1/*     @kmkumaran      @RoshanKumarMicrosof
 
 Tasks/NodeToolV0/*      @hross
 
-Tasks/NpmV1/*       @zackrun
+Tasks/NpmV1/*       @zjrunner @jotaylo
 
-Tasks/NpmAuthenticateV0/*       @zackrun
+Tasks/NpmAuthenticateV0/*       @zjrunner
 
-Tasks/NuGetV0/*     @zackrun
+Tasks/NuGetV0/*     @zjrunner
 
-Tasks/NuGetCommandV2/*      @zackrun
+Tasks/NuGetCommandV2/*      @zjrunner @jotaylo
 
-Tasks/NuGetPackagerV0/*     @zackrun
+Tasks/NuGetPackagerV0/*     @zjrunner
 
-Tasks/NuGetPublisherV0/*    @zackrun
+Tasks/NuGetPublisherV0/*    @zjrunner
 
-Tasks/NuGetToolInstallerV0/*    @zackrun
+Tasks/NuGetToolInstallerV0/*    @zjrunner
 
 Tasks/PackerBuildV0/*   @sachinma
 
@@ -253,9 +261,13 @@ Tasks/SqlServerDacpacDeployment/*   @kmkumaran
 
 Tasks/SshV0/*   @madhurig
 
-Tasks/TwineAuthenticateV0/*     @zackrun
+Tasks/TwineAuthenticateV0/*     @zjrunner
 
-Tasks/UniversalPackagesV0/*     @zackrun
+Tasks/UniversalPackagesV0/*     @zjrunner
+
+Tasks/UseDotNetV2/*     @damccorm
+
+Tasks/UseNodeV1/*     @damccorm
 
 Tasks/UsePythonVersionV0/*      @madhurig
 

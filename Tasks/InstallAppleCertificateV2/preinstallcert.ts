@@ -1,10 +1,8 @@
 import path = require('path');
 import sign = require('ios-signing-common/ios-signing-common');
 import secureFilesCommon = require('securefiles-common/securefiles-common');
-import tl = require('vsts-task-lib/task');
+import * as tl from 'azure-pipelines-task-lib/task';
 import os = require('os');
-
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 async function run() {
     let secureFileId: string;
@@ -20,6 +18,7 @@ async function run() {
 
         // download decrypted contents
         secureFileId = tl.getInput('certSecureFile', true);
+        
         secureFileHelpers = new secureFilesCommon.SecureFileHelpers();
         let certPath: string = await secureFileHelpers.downloadSecureFile(secureFileId);
 
@@ -64,6 +63,9 @@ async function run() {
             // generate a keychain password for the temporary keychain
             // overriding any value we may have read because keychainPassword is hidden in the designer for 'temp'.
             keychainPwd = Math.random().toString(36);
+
+            // tl.setSecret would work too, except it's not available in mock-task yet.
+            tl.setVariable('keychainPassword', keychainPwd, true);
         } else if (keychain === 'default') {
             keychainPath = await sign.getDefaultKeychainPath();
         } else if (keychain === 'custom') {

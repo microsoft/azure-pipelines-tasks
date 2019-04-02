@@ -1,7 +1,7 @@
 import * as path from 'path';
 
-import {IExecSyncResult} from 'vsts-task-lib/toolrunner';
-import * as tl from 'vsts-task-lib/task';
+import {IExecSyncResult} from 'azure-pipelines-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import { NpmCommand, NpmTaskInput } from './constants';
 import * as npmCustom from './npmcustom';
