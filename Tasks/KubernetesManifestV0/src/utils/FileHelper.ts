@@ -46,11 +46,10 @@ export function writeObjectsToFile(inputObjects: any[]): string[] {
     return newFilePaths;
 }
 
-function getManifestFileName(kind: string, name: string)
-{
+function getManifestFileName(kind: string, name: string) {
     var filePath = kind + "_" + name + "_" + getCurrentTime().toString();
     const tempDirectory = getTempDirectory();
-    var fileName =  path.join(tempDirectory, path.basename(filePath));
+    var fileName = path.join(tempDirectory, path.basename(filePath));
     return fileName;
 }
 

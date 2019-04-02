@@ -3,6 +3,7 @@
 import fs = require("fs");
 import path = require('path');
 import tl = require('vsts-task-lib/task');
+import yaml = require('js-yaml');
 import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
 import * as KubernetesObjectUtility from '../utils/KubernetesObjectUtility';
 import * as constants from '../models/constants';
@@ -20,7 +21,10 @@ export function deploy(kubectl: Kubectl, manifestFilesPath: string, deploymentSt
     var inputManifestFiles: string[] = getManifestFiles(manifestFilesPath);
 
     // artifact substitution
-    inputManifestFiles = updateContainerImagesInConfigFiles(inputManifestFiles, TaskInputParameters.containers);;
+    inputManifestFiles = updateContainerImagesInManifestFiles(inputManifestFiles, TaskInputParameters.containers);
+
+    // imagePullSecrets addition
+    inputManifestFiles = updateImagePullSecretsInManifestFiles(inputManifestFiles, TaskInputParameters.imagePullSecrets);
 
     // deployment
     var deployedManifestFiles = deployManifests(inputManifestFiles, kubectl, isCanaryDeploymentStrategy(deploymentStrategy));
@@ -79,7 +83,7 @@ function annotateResources(files: string[], kubectl: Kubectl, resourceTypes: Res
     utils.checkForErrors(annotateResults, true);
 }
 
-function updateContainerImagesInConfigFiles(filePaths: string[], containers: string[]): string[] {
+function updateContainerImagesInManifestFiles(filePaths: string[], containers: string[]): string[] {
     if (!!containers && containers.length > 0) {
         let newFilePaths = [];
         const tempDirectory = fileHelper.getTempDirectory();
@@ -106,6 +110,28 @@ function updateContainerImagesInConfigFiles(filePaths: string[], containers: str
         return newFilePaths;
     }
 
+    return filePaths;
+}
+
+function updateImagePullSecretsInManifestFiles(filePaths: string[], imagePullSecrets: string[]): string[] {
+    if (!!imagePullSecrets && imagePullSecrets.length > 0) {
+        var newObjectsList = [];
+        filePaths.forEach((filePath: string) => {
+            var fileContents = fs.readFileSync(filePath);
+            yaml.safeLoadAll(fileContents, function (inputObject) {
+                if (!!inputObject && !!inputObject.kind) {
+                    var kind = inputObject.kind;
+                    if (KubernetesObjectUtility.isDeploymentEntity(kind)) {
+                        KubernetesObjectUtility.updateImagePullSecrets(inputObject, imagePullSecrets, false);
+
+                    }
+                    newObjectsList.push(inputObject);
+                }
+            });
+        });
+        var newFilePaths = fileHelper.writeObjectsToFile(newObjectsList);
+        return newFilePaths;
+    }
     return filePaths;
 }
 

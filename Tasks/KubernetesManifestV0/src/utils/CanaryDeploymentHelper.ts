@@ -1,7 +1,7 @@
 "use strict";
 import { Kubectl } from "kubernetes-common/kubectl-object-model";
 import * as helper from './KubernetesObjectUtility';
-import { KubernetesWorkload, recognizedWorkloadTypes } from "../models/constants"
+import { KubernetesWorkload } from "../models/constants"
 import * as utils from "./utilities";
 import tl = require('vsts-task-lib/task');
 import fs = require("fs");
@@ -48,7 +48,7 @@ export function deployCanary(kubectl: Kubectl, filePaths: string[]) {
 
             var name = inputObject.metadata.name;
             var kind = inputObject.kind;
-            if (isDeploymentEntity(kind)) {
+            if (helper.isDeploymentEntity(kind)) {
                 var existing_canary_object = fetchCanaryResource(kubectl, kind, name);
 
                 if (!!existing_canary_object) {
@@ -65,6 +65,7 @@ export function deployCanary(kubectl: Kubectl, filePaths: string[]) {
                     tl.debug("Stable object not found. Creating only canary object");
                     // If stable object not found, create canary deployment.
                     var newCanaryObject = getNewCanaryResource(inputObject, canaryReplicaCount);
+                    tl.debug("\n-------NEw canary object is " + JSON.stringify(newCanaryObject));
                     newObjectsList.push(newCanaryObject);
                 } else {
                     tl.debug("Stable object found. Creating canary and baseline objects");
@@ -145,9 +146,9 @@ function UnsetsClusterSpecficDetails(resource: any) {
 
         if (!!metadata) {
             var newMetadata = {
-                "annotations" : metadata.annotations,
-                "labels" : metadata.labels,
-                "name" : metadata.name
+                "annotations": metadata.annotations,
+                "labels": metadata.labels,
+                "name": metadata.name
             };
 
             resource.metadata = newMetadata;
@@ -161,17 +162,6 @@ function UnsetsClusterSpecficDetails(resource: any) {
 
 function fetchCanaryResource(kubectl: Kubectl, kind: string, name: string): object {
     return fetchResource(kubectl, kind, getCanaryResourceName(name));
-}
-
-
-function isDeploymentEntity(kind: string): boolean {
-    if (!kind) {
-        throw (tl.loc("ResourceKindNotDefined"));
-    }
-
-    return recognizedWorkloadTypes.some(function (elem) {
-        return utils.isEqual(elem, kind, utils.StringComparer.OrdinalIgnoreCase);
-    });
 }
 
 function getNewCanaryObject(inputObject: any, replicas: number, type: string): object {
@@ -213,7 +203,7 @@ function createCanaryObjectsArgumentString(files: string[]) {
         yaml.safeLoadAll(fileContents, function (inputObject) {
             var name = inputObject.metadata.name;
             var kind = inputObject.kind;
-            if (isDeploymentEntity(kind)) {
+            if (helper.isDeploymentEntity(kind)) {
                 var canaryObjectName = getCanaryResourceName(name);
                 var baselineObjectName = getBaselineResourceName(name);
                 kindList.add(kind);
