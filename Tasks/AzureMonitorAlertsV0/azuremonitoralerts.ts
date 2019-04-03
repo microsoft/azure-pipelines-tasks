@@ -1,4 +1,4 @@
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as path from "path";
 import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
 import { AzureEndpoint, IAzureMetricAlertRulesList } from 'azure-arm-rest/azureModels';

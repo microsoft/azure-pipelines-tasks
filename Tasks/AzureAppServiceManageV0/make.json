@@ -10,7 +10,7 @@
     "rm": [
         {
             "items": [
-                "node_modules/azure-arm-rest/node_modules/vsts-task-lib"
+                "node_modules/azure-arm-rest/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

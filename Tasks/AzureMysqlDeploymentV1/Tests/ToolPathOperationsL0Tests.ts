@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 import { ToolPathOperations } from '../operations/ToolPathOperations';
 
 export class ToolPathOperationsL0Tests  {

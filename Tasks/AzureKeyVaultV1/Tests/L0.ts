@@ -2,7 +2,7 @@
 'use strict';
 
 const assert = require('assert');
-const ttm = require('vsts-task-lib/mock-test');
+const ttm = require('azure-pipelines-task-lib/mock-test');
 const path = require('path');
 
 describe('Azure Key Vault', function () {

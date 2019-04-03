@@ -1,6 +1,6 @@
 /*import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
-import tl = require('vsts-task-lib');
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import tl = require('azure-pipelines-task-lib');
 import * as path from 'path';
 var AppServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service.js");
 var KuduServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service-kudu-tests.js");

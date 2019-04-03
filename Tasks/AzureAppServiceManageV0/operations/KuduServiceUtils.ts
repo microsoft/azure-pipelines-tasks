@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
 import webClient = require('azure-arm-rest/webClient');

@@ -1,5 +1,5 @@
 import msRestAzure = require('azure-arm-rest/azure-arm-common');
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import util = require("util");
 
 import { AzureEndpoint } from 'azure-arm-rest/azureModels';
