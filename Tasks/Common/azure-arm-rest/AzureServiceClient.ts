@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import util = require("util")
 import msRestAzure = require("./azure-arm-common");
 import webClient = require("./webClient");

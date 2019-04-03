@@ -1,6 +1,6 @@
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
-import tl = require('vsts-task-lib/task');
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import tl = require('azure-pipelines-task-lib/task');
 import * as path from 'path';
 
 export function AzureAppServiceMockTests() {

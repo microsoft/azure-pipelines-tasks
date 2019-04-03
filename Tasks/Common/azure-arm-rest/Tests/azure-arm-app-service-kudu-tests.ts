@@ -1,5 +1,5 @@
 import { Kudu } from '../azure-arm-app-service-kudu';
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 import { getMockEndpoint, nock } from './mock_utils';
 import { mockKuduServiceTests } from './mock_utils'; 
 import path = require('path');

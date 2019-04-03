@@ -16,6 +16,6 @@
     "jsonwebtoken": "7.3.0",
     "q": "1.4.1",
     "typed-rest-client": "0.12.0",
-    "vsts-task-lib": "2.0.5"
+    "azure-pipelines-task-lib": "2.8.0"
   }
 }

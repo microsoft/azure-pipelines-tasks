@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import querystring = require('querystring');
 import webClient = require("./webClient");
