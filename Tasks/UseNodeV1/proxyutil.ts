@@ -7,8 +7,8 @@ interface ICurlProxy {
     setting: string
 }
 
-function toCurlProxy(proxyCfg: taskLib.ProxyConfiguration): ICurlProxy {
-    let curlProxy: ICurlProxy;
+function toCurlProxy(proxyCfg: taskLib.ProxyConfiguration): ICurlProxy | null {
+    let curlProxy: ICurlProxy | null;
     if (proxyCfg) {
         if (proxyCfg && proxyCfg.proxyUrl) {
             taskLib.debug(`using proxy ${proxyCfg.proxyUrl}`);
@@ -33,7 +33,7 @@ export function setCurlProxySettings(proxyConfig: taskLib.ProxyConfiguration) {
         // Short circuit if proxy already set.
         return;
     }
-    let curlProxy: ICurlProxy = toCurlProxy(proxyConfig);
+    let curlProxy: ICurlProxy | null = toCurlProxy(proxyConfig);
     if (curlProxy) {
         // register the escaped versions of password
         if (proxyConfig.proxyPassword) {
