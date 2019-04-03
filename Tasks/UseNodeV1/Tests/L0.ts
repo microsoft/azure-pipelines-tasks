@@ -72,8 +72,8 @@ describe('NodeTool Suite', function () {
         runValidations(() => {
             assert(tr.succeeded, 'NodeTool should have succeeded.');
             assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
-            assert(tr.stdout.indexOf('##vso[task.setvariable variable=HTTP_PROXY;issecret=false;][object Object]') > -1, "Proxy should be set");
-            assert(tr.stdout.indexOf('##vso[task.setsecret]password') > -1, "Password should be set");
+            assert(tr.stdout.indexOf('Setting secret password') > -1, "Password should be set");
+            assert(tr.stdout.indexOf('Setting HTTP_PROXY to http://username:password@url.com/') > -1, "Proxy should be set");
         }, tr, done);
     });
 });
