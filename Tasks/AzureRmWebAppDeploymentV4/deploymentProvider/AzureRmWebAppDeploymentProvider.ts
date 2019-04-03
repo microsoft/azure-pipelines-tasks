@@ -7,7 +7,7 @@ import { KuduServiceUtility } from '../operations/KuduServiceUtility';
 import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
 import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import * as ParameterParser from 'webdeployment-common/ParameterParserUtility';
 import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
 

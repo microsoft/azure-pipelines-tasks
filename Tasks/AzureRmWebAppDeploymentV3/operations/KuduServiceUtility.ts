@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipeliness-task-lib/task');
 import Q = require('q');
 import path = require('path');
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';

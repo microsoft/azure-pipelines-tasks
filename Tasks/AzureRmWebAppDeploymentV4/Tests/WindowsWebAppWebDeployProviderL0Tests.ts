@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 import { DeploymentFactory } from '../deploymentProvider/DeploymentFactory';
 import { WindowsWebAppWebDeployProvider } from '../deploymentProvider/WindowsWebAppWebDeployProvider'
 import { IWebAppDeploymentProvider } from '../deploymentProvider/IWebAppDeploymentProvider';

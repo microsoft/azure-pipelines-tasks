@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import * as Constant from '../operations/Constants'
 import { Package, PackageType } from 'webdeployment-common/packageUtility';
 var webCommonUtility = require('webdeployment-common/utility.js');

@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import { TaskParameters, TaskParametersUtility } from './operations/TaskParameters';
 import { DeploymentFactory } from './deploymentProvider/DeploymentFactory';

@@ -1,4 +1,4 @@
-import ma = require('vsts-task-lib/mock-answer');
+import ma = require('azure-pipelines-task-lib/mock-answer');
 
 export function extendObject(output, target) {
     output = output || {};

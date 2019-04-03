@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 import { TaskParametersUtility, TaskParameters } from '../operations/TaskParameters';
 import { getMockEndpoint } from '../node_modules/azure-arm-rest/Tests/mock_utils';
 

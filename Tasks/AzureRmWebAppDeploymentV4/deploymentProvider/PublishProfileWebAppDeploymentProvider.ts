@@ -4,7 +4,7 @@ import { PublishProfileUtility, PublishingProfile } from '../operations/PublishP
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import * as Constant from '../operations/Constants';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 

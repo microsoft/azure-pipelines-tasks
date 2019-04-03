@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { TaskParameters } from './TaskParameters';
 import fs = require('fs');
 import * as Constant from './Constants';

@@ -6,6 +6,6 @@
     "azurestack-common": "file:../../_build/Tasks/Common/azurestack-common-1.0.0.tgz",
     "moment": "2.21.0",
     "typed-rest-client": "0.12.0",
-    "vsts-task-lib": "2.0.5"
+    "azure-pipelines-task-lib": "2.8.0"
   }
 }

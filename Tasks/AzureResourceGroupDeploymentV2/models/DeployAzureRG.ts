@@ -1,4 +1,4 @@
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import msRestAzure = require('azure-arm-rest/azure-arm-common');
 import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
 
