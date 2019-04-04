@@ -68,9 +68,11 @@ The first one in the list will usually be suggested by IntelliSense.
 Example: the `InstallSSHKey` task took an input called `hostName` but actually expected a line from a `known_hosts` file.
 In the classic editor, this was clear because the label was "Known hosts entry".
 I added an alias, `knownHostsEntry`, so that it's also clear in YAML what's actually expected.
-- The syntax for referring to an extension-installed task is a little verbose.
-It includes the extension publisher and extension ID, plus the task's `name` (NOT `friendlyName`).
-_TODO: check if we support bare task name when it's unambiguous._
+- The full syntax for referring to an extension-installed task is a little verbose.
+It includes the extension publisher, extension ID, task contribution ID, and task `name` (NOT `friendlyName`).
+(_TODO: we probably don't need ALL of those._)
+If your task is unlikely to collide with any other task a customer is likely to install, your users can drop all the leading segments and refer just to the task name.
+For example: `publisher-id.extension-id.task-contribution-id.printHelloWorld` can also be written as just `printHelloWorld`.
   - If you're doing the kind of "one-time setup as a dev might do on their machine", consider using the `ecosystem` feature.
   `ecosystem` tells the YAML parser that your task will set the machine's PATH to point to a tool at a specific version, optionally that it knows how download versions of a tool, and that it will set the tool's proxy settings to match the agent's.
   (In the future, `use` will also map authentication settings and install problem matchers.)
