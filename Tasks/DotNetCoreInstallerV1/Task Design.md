@@ -85,8 +85,8 @@ There are a few advantages of `version.completed` based approach over `folder on
 - Handles failed installation attempts: in case the last installation was left incomplete, the version.completed file would not exist and thus in next try, the version will be installed.
 
 
-## **- Inbuilt option to restrict Multi-Level lookup**
-This feature is introduced as users had asked for an option to disable Multi-Level lookup, to know more about user's ask, refer [here](https://github.com/Microsoft/azure-pipelines-tasks/issues/9608). This is applicable to Windows based agents only.
+## **- Inbuilt option to perform Multi-Level lookup**
+This feature is introduced as users had asked for an option to configure Multi-Level lookup, to know more about user's ask, refer [here](https://github.com/Microsoft/azure-pipelines-tasks/issues/9608). This is applicable to Windows based agents only.
 
 Multi-level lookup configures the .Net core host to probe several locations to find a suitable shared framework. If a folder is not found in folder containing dotnet.exe, it will attempt to look in pre-defined global locations using multi-level lookup. The default global locations are:
 
