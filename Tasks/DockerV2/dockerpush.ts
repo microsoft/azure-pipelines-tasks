@@ -92,7 +92,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         publishToImageMetadataStore(connection, outputImageName, tags, digest, dockerFile, imageSize).then((result) => {
             tl.debug("ImageDetailsApiResponse: " + result);
         }, (error) => {
-            tl.debug("publishToImageMetadataStore failed with error: " + error);
+            tl.warning("publishToImageMetadataStore failed with error: " + error);
         });
     });
 
