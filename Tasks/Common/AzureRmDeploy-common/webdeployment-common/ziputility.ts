@@ -76,7 +76,7 @@ export function checkIfFilesExistsInZip(archivedPackage: string, files: string[]
     const zip = new StreamZip({
         file: archivedPackage,
         storeEntries: true,
-        kipEntryNameValidation: true
+        skipEntryNameValidation: true
     });
 
     zip.on('ready', () => {
