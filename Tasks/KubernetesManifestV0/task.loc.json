@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 151,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "groups": [
@@ -58,7 +58,7 @@
       "groupName": "config",
       "options": {
         "bake": "bake",
-        "create secret": "create secret",
+        "createSecret": "create secret",
         "delete": "delete",
         "deploy": "deploy",
         "patch": "patch",
@@ -262,7 +262,7 @@
       "label": "ms-resource:loc.input.label.secretType",
       "defaultValue": "dockerRegistry",
       "required": true,
-      "visibleRule": "action = create secret",
+      "visibleRule": "action = createSecret",
       "groupName": "config",
       "options": {
         "dockerRegistry": "dockerRegistry",
@@ -276,7 +276,7 @@
       "label": "ms-resource:loc.input.label.secretName",
       "required": false,
       "groupName": "config",
-      "visibleRule": "action = create secret",
+      "visibleRule": "action = createSecret",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.secretName"
     },
@@ -292,7 +292,7 @@
       "label": "ms-resource:loc.input.label.secretArguments",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.secretArguments",
-      "visibleRule": "action = create secret && secretType = generic"
+      "visibleRule": "action = createSecret && secretType = generic"
     },
     {
       "name": "dockerRegistryEndpoint",
@@ -300,7 +300,7 @@
       "groupName": "config",
       "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
-      "visibleRule": "action = create secret && secretType = dockerRegistry"
+      "visibleRule": "action = createSecret && secretType = dockerRegistry"
     }
   ],
   "dataSourceBindings": [],

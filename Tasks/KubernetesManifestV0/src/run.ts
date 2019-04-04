@@ -39,7 +39,7 @@ function run(): Promise<void> {
         case "reject":
             action_func = reject;
             break;
-        case "create secret":
+        case "createSecret":
             action_func = createSecret;
             break;
         default:
