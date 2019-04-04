@@ -20,8 +20,17 @@ export async function createSecret() {
 }
 
 let getDockerRegistrySecretArgs = () => {
-    let dockerRegistryAuth = tl.getEndpointAuthorization(TaskInputParameters.dockerRegistryEndpoint, false).parameters;
-    return `docker-registry ${TaskInputParameters.secretName.trim()} --docker-username=${dockerRegistryAuth["username"]} --docker-password=${dockerRegistryAuth["password"]} --docker-server=${dockerRegistryAuth["registry"]} --docker-email=${dockerRegistryAuth["email"]}`
+    var registryType = tl.getInput("containerRegistryType", true);
+    if (registryType === "Azure Container Registry") {
+        let spnId = tl.getEndpointAuthorizationParameter(TaskInputParameters.dockerRegistryEndpoint, 'serviceprincipalid', true);
+        let spnKey = tl.getEndpointAuthorizationParameter(TaskInputParameters.dockerRegistryEndpoint, 'serviceprincipalkey', true);
+        let loginServer = tl.getEndpointAuthorizationParameter(TaskInputParameters.dockerRegistryEndpoint, "loginServer", true);
+        return `docker-registry ${TaskInputParameters.secretName.trim()} --docker-username=${spnId} --docker-password=${spnKey} --docker-server=${loginServer} --docker-email=ServicePrincipal@AzureRM`;
+    }
+    else {
+        let dockerRegistryAuth = tl.getEndpointAuthorization(TaskInputParameters.dockerRegistryEndpoint, false).parameters;
+        return `docker-registry ${TaskInputParameters.secretName.trim()} --docker-username=${dockerRegistryAuth["username"]} --docker-password=${dockerRegistryAuth["password"]} --docker-server=${dockerRegistryAuth["registry"]} --docker-email=${dockerRegistryAuth["email"]}`;
+    }
 }
 
 let getGenericSecretArgs = () => {
