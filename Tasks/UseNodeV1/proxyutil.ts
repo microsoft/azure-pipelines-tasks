@@ -10,7 +10,7 @@ interface ICurlProxy {
 function toCurlProxy(proxyCfg: taskLib.ProxyConfiguration): ICurlProxy | null {
     let curlProxy: ICurlProxy | null;
     if (proxyCfg) {
-        if (proxyCfg && proxyCfg.proxyUrl) {
+        if (proxyCfg.proxyUrl) {
             taskLib.debug(`using proxy ${proxyCfg.proxyUrl}`);
             const parsedUrl = url.parse(proxyCfg.proxyUrl);
             const httpEnvVarName: string = parsedUrl.protocol === 'https:'? "HTTPS_PROXY" : "HTTP_PROXY";
