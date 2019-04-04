@@ -91,9 +91,11 @@ export async function getLayers(connection: ContainerConnection, imageId: string
 
 function parseHistory(input: string) {
     const NOP = '#(nop)';
-    var directive = 'UNSPECIFIED';
-    var argument = '';
-    var index = input.indexOf(NOP);
+    let directive = "UNSPECIFIED";
+    let argument = "";
+    let index: number = input.indexOf(NOP);
+    const createdByMatch = "; createdBy:";
+    const indexCreatedBy = input.indexOf(createdByMatch);
     if (index != -1) {
         argument = input.substr(index + 6).trim();
         directive = argument.substr(0, argument.indexOf(' '));
@@ -101,16 +103,27 @@ function parseHistory(input: string) {
     }
     else {
         directive = 'RUN';
-        argument = input;
+        argument = input.substring(indexCreatedBy + createdByMatch.length, input.length -1);
     }
 
-    return { "directive": directive, "arguments": argument };
+    let createdAt: string = "";
+    let layerSize: string = "";
+    const createdAtMatch = "createdAt:";
+    const layerSizeMatch = "; layerSize:";
+    const indexCreatedAt = input.indexOf(createdAtMatch);
+    const indexLayerSize = input.indexOf(layerSizeMatch);    
+    if (indexCreatedAt >= 0 && indexLayerSize >= 0) {
+        createdAt = input.substring(indexCreatedAt + createdAtMatch.length, indexLayerSize);
+        layerSize = input.substring(indexLayerSize + layerSizeMatch.length, indexCreatedBy);
+    }
+
+    return { "directive": directive, "arguments": argument, "createdOn" : createdAt, "size": layerSize };
 }
 
 async function getHistory(connection: ContainerConnection, image: string): Promise<string> {
     var command = connection.createCommand();
     command.arg("history");
-    command.arg(["--format", "{{.CreatedBy}}"]);
+    command.arg(["--format", "createdAt:{{.CreatedAt}}; layerSize:{{.Size}}; createdBy:{{.CreatedBy}}"]);
     command.arg("--no-trunc");
     command.arg(image);
 
