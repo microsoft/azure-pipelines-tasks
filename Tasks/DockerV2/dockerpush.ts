@@ -115,10 +115,11 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
     const layers = await dockerCommandUtils.getLayers(connection, imageName);
 
     // Getting pipeline variables
+    const build = "build";
     const hostType = tl.getVariable("System.HostType").toLowerCase();
-    const runId = hostType === "build" ? parseInt(tl.getVariable("Build.BuildId")) : parseInt(tl.getVariable("Release.ReleaseId"));
-    const pipelineVersion = hostType === "build" ? tl.getVariable("Build.BuildNumber") : tl.getVariable("Release.ReleaseName");
-    const pipelineName = hostType === "build" ? tl.getVariable("Build.DefinitionName") : tl.getVariable("Release.DefinitionName");
+    const runId = hostType === build ? parseInt(tl.getVariable("Build.BuildId")) : parseInt(tl.getVariable("Release.ReleaseId"));
+    const pipelineVersion = hostType === build ? tl.getVariable("Build.BuildNumber") : tl.getVariable("Release.ReleaseName");
+    const pipelineName = tl.getVariable("System.DefinitionName");
     const pipelineId = tl.getVariable("System.DefinitionId");
     const jobName = tl.getVariable("System.PhaseDisplayName");
 
