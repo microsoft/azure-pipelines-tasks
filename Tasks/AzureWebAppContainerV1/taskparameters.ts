@@ -16,7 +16,7 @@ export class TaskParametersUtility {
     public static async getParameters(): Promise<TaskParameters> {
         var taskParameters: TaskParameters = {
             connectedServiceName: tl.getInput('azureSubscription', true),
-            ImageName: tl.getInput('imageName', true),
+            ImageName: tl.getInput('imageName', false),
             AppSettings: tl.getInput('appSettings', false),
             StartupCommand: tl.getInput('containerCommand', false),
             ConfigurationSettings: tl.getInput('configurationStrings', false),
@@ -39,16 +39,10 @@ export class TaskParametersUtility {
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
 
-        taskParameters.isMultiContainer = taskParameters.ImageName && taskParameters.ImageName.indexOf("\n") !=-1;
-        taskParameters.ConfigFilePath = PackageUtility.getPackagePath(taskParameters.ConfigFilePath);
-        if(tl.stats(taskParameters.ConfigFilePath).isFile()) {
-            taskParameters.isMultiContainer = true;
-        }
-        else if (taskParameters.isMultiContainer) {
-            throw new Error(tl.loc('FailedToGetConfigurationFile'));
-        }
-
-        tl.debug(`is multicontainer app : ${taskParameters.isMultiContainer}`);
+        let containerDetails = await this.getContainerKind(taskParameters);
+        taskParameters.ImageName = containerDetails["imageName"];
+        taskParameters.isMultiContainer = containerDetails["isMultiContainer"];
+        taskParameters.ConfigFilePath = containerDetails["configFilePath"];
 
         return taskParameters;
     }
@@ -73,6 +67,42 @@ export class TaskParametersUtility {
         return {
             resourceGroupName: resourceGroupName,
             osType: osType
+        };
+    }
+
+    private static async getContainerKind(taskParameters: TaskParameters): Promise<any> {
+        let imageName = taskParameters.ImageName;
+        let isMultiLineImages: boolean = imageName && imageName.indexOf("\n") != -1; 
+        let isMultiContainer = false;
+        let configFilePath = PackageUtility.getPackagePath(taskParameters.ConfigFilePath);
+
+        if(!imageName && tl.stats(configFilePath).isDirectory()) {
+            throw new Error(tl.loc('FailedToDeployToWebApp', taskParameters.WebAppName));
+        }
+
+        if(imageName && !isMultiLineImages && tl.stats(configFilePath).isDirectory()) {
+            console.log(tl.loc("SingleContainerDeployment", taskParameters.WebAppName));
+        }
+
+        if(tl.stats(configFilePath).isFile()) {
+            isMultiContainer = true;
+            if(imageName) {
+                console.log(tl.loc("MultiContainerDeploymentWithTransformation", taskParameters.WebAppName));
+            }
+            else {
+                console.log(tl.loc("MultiContainerDeploymentWithoutTransformation", taskParameters.WebAppName));
+            }
+        }
+        else if (isMultiLineImages) {
+            throw new Error(tl.loc('FailedToGetConfigurationFile'));
+        }
+
+        tl.debug(`is multicontainer app : ${isMultiContainer}`);
+
+        return {
+            imageName: imageName,
+            isMultiContainer: isMultiContainer,
+            configFilePath: configFilePath
         };
     }
 }

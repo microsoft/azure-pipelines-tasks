@@ -28,24 +28,29 @@ export class ContainerBasedDeploymentUtility {
         let configFilePath: string = properties["ConfigFilePath"];
         let isMultiContainer: boolean = properties["isMultiContainer"];
         let isLinuxApp: boolean = properties["isLinuxContainerApp"];
-        let updatedConfigFilePath: string;
-        tl.debug("Deploying image " + imageName + " to the webapp " + this._appService.getName());
+        let updatedConfigFilePath: string = configFilePath;
+
+        if(imageName) {
+            tl.debug("Deploying image " + imageName + " to the webapp " + this._appService.getName());
+        }
 
         if(isMultiContainer) {
-            updatedConfigFilePath = this.updateImagesInConfigFile(configFilePath, imageName);
+            if(imageName) {
+                updatedConfigFilePath = this.updateImagesInConfigFile(configFilePath, imageName);
+            }
 
             // uploading log file
             console.log(`##vso[task.uploadfile]${updatedConfigFilePath}`);
         }
 
         tl.debug("Updating the webapp configuration.");
-        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], imageName, isLinuxApp, isMultiContainer, updatedConfigFilePath);
+        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], isLinuxApp, imageName, isMultiContainer, updatedConfigFilePath);
 
         tl.debug('making a restart request to app service');
         await this._appService.restart();
     }
 
-    private async _updateConfigurationDetails(configSettings: any, startupCommand: string, imageName: string, isLinuxApp: boolean, isMultiContainer?: boolean, configFilePath?: string): Promise<void> {
+    private async _updateConfigurationDetails(configSettings: any, startupCommand: string, isLinuxApp: boolean, imageName?: string, isMultiContainer?: boolean, configFilePath?: string): Promise<void> {
         var appSettingsNewProperties = !!configSettings ? parse(configSettings.trim()): { };
         appSettingsNewProperties.appCommandLine = {
             'value': startupCommand

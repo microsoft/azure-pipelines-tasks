@@ -98,7 +98,7 @@
             "type": "multiline",
             "label": "Image name",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
         },
         {
@@ -336,6 +336,10 @@
         "RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
         "FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
         "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s",
-        "FailedToGetConfigurationFile": "Failed to get configuration file for multi containers. Please enter the valid configuration file path."
+        "FailedToGetConfigurationFile": "Failed to get configuration file for multi containers. Please enter the valid configuration file path.",
+        "FailedToDeployToWebApp": "No deployment can happen to the webapp '%s'. For single-container, provide a valid image name and for multi-container, config file is mandatory and image names can also be provided if you want tags to be substituted.",
+        "SingleContainerDeployment": "Single Container Deployment to the webapp '%s' because only image name is given",
+        "MultiContainerDeploymentWithTransformation": "Multi Container Deployment to the webapp '%s' with transformation of configuration file because both image name and configuration file are given",
+        "MultiContainerDeploymentWithoutTransformation": "Multi Container Deployment to the webapp '%s' without transformation of configuration file because only configuration file is given"
     }
 }

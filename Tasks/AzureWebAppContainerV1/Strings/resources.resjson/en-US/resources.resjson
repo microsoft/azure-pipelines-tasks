@@ -178,5 +178,9 @@
   "loc.messages.RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
   "loc.messages.FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
   "loc.messages.FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s",
-  "loc.messages.FailedToGetConfigurationFile": "Failed to get configuration file for multi containers. Please enter the valid configuration file path."
+  "loc.messages.FailedToGetConfigurationFile": "Failed to get configuration file for multi containers. Please enter the valid configuration file path.",
+  "loc.messages.FailedToDeployToWebApp": "No deployment can happen to the webapp '%s'. For single-container, provide a valid image name and for multi-container, config file is mandatory and image names can also be provided if you want tags to be substituted.",
+  "loc.messages.SingleContainerDeployment": "Single Container Deployment to the webapp '%s' because only image name is given",
+  "loc.messages.MultiContainerDeploymentWithTransformation": "Multi Container Deployment to the webapp '%s' with transformation of configuration file because both image name and configuration file are given",
+  "loc.messages.MultiContainerDeploymentWithoutTransformation": "Multi Container Deployment to the webapp '%s' without transformation of configuration file because only configuration file is given"
 }
