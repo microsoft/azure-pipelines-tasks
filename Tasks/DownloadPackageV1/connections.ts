@@ -2,7 +2,7 @@ import { BearerCredentialHandler } from "azure-devops-node-api/handlers/bearerto
 import { WebApi } from "azure-devops-node-api";
 import { IRequestOptions } from "azure-devops-node-api/interfaces/common/VsoBaseInterfaces";
 
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as locationUtility from "packaging-common/locationUtilities";
 
 // TODO Remove this once this bug is resolved: https://github.com/Microsoft/typed-rest-client/issues/126

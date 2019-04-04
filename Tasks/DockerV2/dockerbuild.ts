@@ -2,7 +2,7 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "docker-common/containerconnection";
 import * as dockerCommandUtils from "docker-common/dockercommandutils";
 import * as fileUtils from "docker-common/fileutils";

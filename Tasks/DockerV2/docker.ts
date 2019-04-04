@@ -1,7 +1,7 @@
 "use strict";
 
 import path = require('path');
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import AuthenticationTokenProvider  from "docker-common/registryauthenticationprovider/authenticationtokenprovider";
 import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
 import GenericAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/genericauthenticationtokenprovider";

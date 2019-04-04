@@ -1,11 +1,11 @@
-﻿import tl = require('vsts-task-lib/task');
+﻿import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 import Q = require('q');
 import os = require('os');
 
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
-import { IExecOptions } from 'vsts-task-lib/toolrunner';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
+import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 
 import sqGradle = require('codeanalysis-common/gradlesonar');
 import { CodeAnalysisOrchestrator } from 'codeanalysis-common/Common/CodeAnalysisOrchestrator';

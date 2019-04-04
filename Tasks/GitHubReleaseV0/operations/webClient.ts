@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import httpClient = require("typed-rest-client/HttpClient");
 import httpInterfaces = require("typed-rest-client/Interfaces");
 import util = require("util");
