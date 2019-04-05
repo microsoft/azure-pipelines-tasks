@@ -263,8 +263,6 @@ Tasks/UniversalPackagesV0/*     @zackrun
 
 Tasks/UseDotNetCoreV2/*   @sachinma
 
-Tasks/UseDotNetV2/*     @damccorm
-
 Tasks/UseNodeV1/*     @damccorm
 
 Tasks/UsePythonVersionV0/*      @madhurig

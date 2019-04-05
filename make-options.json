@@ -134,7 +134,6 @@
         "TwineAuthenticateV0",
         "UniversalPackagesV0",
         "UseDotNetCoreV2",
-        "UseDotNetV2",
         "UseNodeV1",
         "UsePythonVersionV0",
         "UseRubyVersionV0",
