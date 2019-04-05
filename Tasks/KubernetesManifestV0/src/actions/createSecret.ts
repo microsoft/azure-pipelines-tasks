@@ -4,6 +4,8 @@ import tl = require('vsts-task-lib/task');
 import { Kubectl } from "kubernetes-common/kubectl-object-model";
 import * as utils from "../utils/utilities";
 import * as TaskInputParameters from '../models/TaskInputParameters';
+import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
+import { getDockerRegistryEndpointAuthenticationToken } from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
 
 export async function createSecret() {
     let args = "";
@@ -20,17 +22,8 @@ export async function createSecret() {
 }
 
 let getDockerRegistrySecretArgs = () => {
-    var registryType = tl.getInput("containerRegistryType", true);
-    if (registryType === "Azure Container Registry") {
-        let spnId = tl.getEndpointAuthorizationParameter(TaskInputParameters.dockerRegistryEndpoint, 'serviceprincipalid', true);
-        let spnKey = tl.getEndpointAuthorizationParameter(TaskInputParameters.dockerRegistryEndpoint, 'serviceprincipalkey', true);
-        let loginServer = tl.getEndpointAuthorizationParameter(TaskInputParameters.dockerRegistryEndpoint, "loginServer", true);
-        return `docker-registry ${TaskInputParameters.secretName.trim()} --docker-username=${spnId} --docker-password=${spnKey} --docker-server=${loginServer} --docker-email=ServicePrincipal@AzureRM`;
-    }
-    else {
-        let dockerRegistryAuth = tl.getEndpointAuthorization(TaskInputParameters.dockerRegistryEndpoint, false).parameters;
-        return `docker-registry ${TaskInputParameters.secretName.trim()} --docker-username=${dockerRegistryAuth["username"]} --docker-password=${dockerRegistryAuth["password"]} --docker-server=${dockerRegistryAuth["registry"]} --docker-email=${dockerRegistryAuth["email"]}`;
-    }
+    let authProvider: AuthenticationToken = getDockerRegistryEndpointAuthenticationToken(TaskInputParameters.dockerRegistryEndpoint);
+    return `docker-registry ${TaskInputParameters.secretName.trim()} --docker-username=${authProvider.getUsername()} --docker-password=${authProvider.getPassword()} --docker-server=${authProvider.getLoginServerUrl()} --docker-email=${authProvider.getEmail()}`;
 }
 
 let getGenericSecretArgs = () => {
