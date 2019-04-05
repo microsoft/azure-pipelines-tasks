@@ -1,8 +1,8 @@
 {
-    "id": "8413C881-4959-43D5-8840-B4EA0FFC5CFD",
-    "name": "KubectlInstaller",
-    "friendlyName": "Kubectl tool installer",
-    "description": "Install Kubectl on agent machine.",
+    "id": "068D5909-43E6-48C5-9E01-7C8A94816220",
+    "name": "HelmInstaller",
+    "friendlyName": "Helm tool installer",
+    "description": "Install Helm on agent machine.",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Tool",
@@ -10,35 +10,35 @@
         "Build",
         "Release"
     ],
-    "preview": true,
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
+        "Major": 1,
         "Minor": 151,
         "Patch": 0
     },
+    "preview": true,
     "demands": [],
     "satisfies": [
-        "Kubectl"
+        "Helm"
     ],
     "groups": [],
     "inputs": [
         {
-            "name": "kubectlVersion",
-            "label": "Kubectl Version Spec",
+            "name": "helmVersionToInstall",
+            "label": "Helm Version Spec",
             "type": "string",
-            "helpMarkDown": "Specify the version of Kubectl to install",
+            "helpMarkDown": "Specify the version of Helm to install.",
             "defaultValue": "latest"
         }
     ],
-    "instanceNameFormat": "Install Kubectl $(kubectlVersion)",
+    "instanceNameFormat": "Install Helm $(helmVersionToInstall)",
     "execution": {
         "Node": {
-            "target": "src//kubectltoolinstaller.js"
+            "target": "src//helmtoolinstaller.js"
         }
     },
     "messages": {
         "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
-        "VerifyKubectlInstallation": "Verifying kubectl installation..."
+        "VerifyHelmInstallation": "Verifying helm installation..."
     }
 }
