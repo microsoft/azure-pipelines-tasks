@@ -22,11 +22,12 @@ function getPlatform(): Platform {
 
 interface TaskParameters {
     readonly version: string;
+    readonly architecture: string;
 }
 
 export async function installRubyVersion(parameters: TaskParameters): Promise<void> {
     const toolName: string = "Ruby";
-    const installDir: string | null = tool.findLocalTool(toolName, parameters.version);
+    const installDir: string | null = tool.findLocalTool(toolName, parameters.version, parameters.architecture);
     if (!installDir) {
         // Fail and list available versions
         throw new Error([
@@ -49,4 +50,5 @@ export async function installRubyVersion(parameters: TaskParameters): Promise<vo
     }
 
     task.setVariable("rubyLocation", toolPath);
+    tool.prependPath(toolPath);
 }
