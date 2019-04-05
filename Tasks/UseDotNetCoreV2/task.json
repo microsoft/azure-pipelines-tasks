@@ -150,6 +150,6 @@
         "FailedWhileExtractingPacakge": "Failed while extracting downloaded package with error: %s",
         "InstallingNuGetVersion": "Installing NuGet version %s",
         "FailureWhileInstallingNuGetVersion": "Failed while installing NuGet version. Error: %s",
-        "SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet. http_proxy= %s \nhttp_proxy.user= %s \nhttp_proxy.password= %s"
+        "SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet."
     }
 }

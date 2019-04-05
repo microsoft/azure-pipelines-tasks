@@ -14,18 +14,14 @@ export class NuGetInstaller {
             }
         }
         catch (error) {
-            tl.error(tl.loc("FailureWhileInstallingNuGetVersion", version, error.message));
-            tl.setResult(tl.TaskResult.Failed, '');
+            throw tl.loc("FailureWhileInstallingNuGetVersion", version, error.message);
         }
     }
 
     private static setProxy(proxyConfig: tl.ProxyConfiguration) {
         const nugetPath = tl.which('nuget');
 
-        console.log(tl.loc("SettingUpNugetProxySettings",
-            + proxyConfig.proxyUrl,
-            + proxyConfig.proxyUsername,
-            + proxyConfig.proxyPassword));
+        console.log(tl.loc("SettingUpNugetProxySettings"));
         // Set proxy url
         let nuget = tl.tool(nugetPath);
         nuget.arg('config');

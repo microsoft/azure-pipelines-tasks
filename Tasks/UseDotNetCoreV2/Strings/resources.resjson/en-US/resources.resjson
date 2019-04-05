@@ -81,5 +81,5 @@
   "loc.messages.FailedWhileExtractingPacakge": "Failed while extracting downloaded package with error: %s",
   "loc.messages.InstallingNuGetVersion": "Installing NuGet version %s",
   "loc.messages.FailureWhileInstallingNuGetVersion": "Failed while installing NuGet version. Error: %s",
-  "loc.messages.SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet. http_proxy= %s \nhttp_proxy.user= %s \nhttp_proxy.password= %s"
+  "loc.messages.SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet."
 }
