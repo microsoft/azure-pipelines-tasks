@@ -6,6 +6,7 @@ import { DotNetCoreVersionFetcher } from "./versionfetcher";
 import { VersionInstaller } from "./versioninstaller";
 import { Constants } from "./versionutilities";
 import { VersionInfo, VersionParts } from "./models"
+import { NuGetInstaller } from "./nugetinstaller";
 
 async function run() {
     let packageType = tl.getInput('packageType', true).toLowerCase();
@@ -29,6 +30,11 @@ async function run() {
     if (!dotNetCoreInstaller.isVersionInstalled(versionInfo.getVersion())) {
         await dotNetCoreInstaller.downloadAndInstall(versionInfo, versionFetcher.getDownloadUrl(versionInfo));
     }
+
+    // Install NuGet version specified by user or 4.4.1 in case none is specified
+    // Also sets up the proxy configuration settings.
+    const nugetVersion = tl.getInput('nugetVersion', false) || '4.4.1';
+    await NuGetInstaller.installNuGet(nugetVersion);
 
     toolLib.prependPath(installationPath);
 

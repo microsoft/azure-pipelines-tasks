@@ -22,7 +22,15 @@
     "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
-  "devDependencies": {
-    "@types/mocha": "^5.2.0"
+  "dependencies": {
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.5.0",
+    "@types/semver": "6.0.0",
+    "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz",
+    "semver": "5.6.0",
+    "typed-rest-client": "0.11.0",
+    "vsts-task-lib": "2.0.6",
+    "vsts-task-tool-lib": "0.4.1"
   }
 }

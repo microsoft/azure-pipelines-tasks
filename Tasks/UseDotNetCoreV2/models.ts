@@ -107,7 +107,7 @@ export class VersionParts {
                 throw "";
             }
 
-            semver.Range(version);
+            new semver.Range(version);
             return true;
         }
         catch (ex) {

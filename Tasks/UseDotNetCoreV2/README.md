@@ -1,8 +1,8 @@
-#  .NET Core Tool Installer
+#  Use .NET Core SDK/Runtime
 
 ## Overview
 
-The .NET Core Tool Installer task acquires a specific version of [.NET Core](https://docs.microsoft.com/en-us/dotnet/core/tools/?tabs=netcore2x) from internet or the tools cache and adds it to the PATH of the Azure Pipelines Agent (hosted or private). Use this task to change the version of .NET Core used in subsequent tasks like [.NET Core cli task](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/DotNetCoreCLIV2).
+The Use .NET Core task acquires a specific version of [.NET Core](https://docs.microsoft.com/en-us/dotnet/core/tools/?tabs=netcore2x) from internet or the tools cache and adds it to the PATH of the Azure Pipelines Agent (hosted or private). Use this task to change the version of .NET Core used in subsequent tasks like [.NET Core cli task](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/DotNetCoreCLIV2).
 Adding this task before the [.NET Core cli task](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/DotNetCoreCLIV2) in a build definition ensures that the version would be available at the time of  building, testing and publishing your app.
 
 The tool installer approach also allows you to decouple from the agent update cycles. If the .NET Core version you are looking for is missing from the Azure Pipelines agent (Hosted or Private), then you can use this task to get the right version installed on the agent.
@@ -13,6 +13,8 @@ The tool installer approach also allows you to decouple from the agent update cy
 - Support for patterns in version to fetch latest in minor/major version. Example you can now specify 2.2.x to get the latest patch.
 
 - Restrict Multi-level lookup. This input is only applicable to Windows based agents. It configures the .Net Core's host process behviour for looking for a suitable shared framework on the machine. You can read more about it **[HERE](https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/multilevel-sharedfx-lookup.md)**
+
+- Installs NuGet version 4.4.1 and sets up proxy configuration if present in NuGet config.
 
 ## Contact Information
 

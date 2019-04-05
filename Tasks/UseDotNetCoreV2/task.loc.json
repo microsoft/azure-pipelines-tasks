@@ -1,6 +1,6 @@
 {
   "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
-  "name": "DotNetCoreInstaller",
+  "name": "UseDotNetCore",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://aka.ms/AA4ihfi",
@@ -12,7 +12,7 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
     "Patch": 1
   },
@@ -39,7 +39,7 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.packageType",
       "options": {
-        "runtime": "Only Runtime",
+        "runtime": "Runtime",
         "sdk": "SDK (contains runtime)"
       }
     },
@@ -80,7 +80,7 @@
   ],
   "execution": {
     "Node": {
-      "target": "dotnetcoreinstaller.js"
+      "target": "usedotnetcore.js"
     }
   },
   "messages": {
@@ -147,6 +147,9 @@
     "FilesDataIsIncorrectInVersion": "ms-resource:loc.messages.FilesDataIsIncorrectInVersion",
     "VersionFilesDataIncorrect": "ms-resource:loc.messages.VersionFilesDataIncorrect",
     "VersionInformationNotComplete": "ms-resource:loc.messages.VersionInformationNotComplete",
-    "FailedWhileExtractingPacakge": "ms-resource:loc.messages.FailedWhileExtractingPacakge"
+    "FailedWhileExtractingPacakge": "ms-resource:loc.messages.FailedWhileExtractingPacakge",
+    "InstallingNuGetVersion": "ms-resource:loc.messages.InstallingNuGetVersion",
+    "FailureWhileInstallingNuGetVersion": "ms-resource:loc.messages.FailureWhileInstallingNuGetVersion",
+    "SettingUpNugetProxySettings": "ms-resource:loc.messages.SettingUpNugetProxySettings"
   }
 }

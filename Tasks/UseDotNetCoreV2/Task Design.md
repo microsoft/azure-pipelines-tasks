@@ -1,4 +1,4 @@
-#  **.NET Core Installer Task V1**
+#  **Use .NET Core Task V2**
 
 The task installs user specified version of .NET Core SDK/Runtime. This can be consumed to supply a particular version of .Net Core SDK/runtime to the subsequent tasks in pipeline.
 
@@ -99,3 +99,5 @@ It's value will be set as an environment variable: `DOTNET_MULTILEVEL_LOOKUP` wi
 - `1` : Enabled
 
 For more information on Multi-Level Lookup refer [HERE](https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/multilevel-sharedfx-lookup.md).
+
+## **- Installs NuGet and sets up NuGet proxy configuration**

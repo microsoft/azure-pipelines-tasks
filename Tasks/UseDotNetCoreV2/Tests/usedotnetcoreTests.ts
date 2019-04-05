@@ -165,7 +165,17 @@ mockery.registerMock('./versioninstaller', {
     }
 });
 
+mockery.registerMock('./nugetinstaller', {
+    NuGetInstaller: {
+        installNuGet: function (version) {
+            return new Promise((resolve, reject) => {
+                resolve();
+            })
+        }
+    }
+})
+
 process.env["USERPROFILE"] = "userprofile"
 process.env.HOME = "home"
 
-require('../dotnetcoreinstaller');
+require('../usedotnetcore');

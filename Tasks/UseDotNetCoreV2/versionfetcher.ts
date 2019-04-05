@@ -48,7 +48,7 @@ export class DotNetCoreVersionFetcher {
         }
 
         let dotNetSdkVersionTelemetry = `{"userVersion":"${versionSpec}", "resolvedVersion":"${requiredVersionInfo.getVersion()}"}`;
-        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=DotNetCoreInstallerV1]" + dotNetSdkVersionTelemetry);
+        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=UseDotNetCoreV2]" + dotNetSdkVersionTelemetry);
         return requiredVersionInfo;
     }
 

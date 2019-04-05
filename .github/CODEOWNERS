@@ -113,8 +113,6 @@ Tasks/DotNetCoreCLIV2/*     @sachinma
 
 Tasks/DotNetCoreInstallerV0/*   @sachinma
 
-Tasks/DotNetCoreInstallerV1/*   @sachinma
-
 Tasks/DownloadBuildArtifactsV0/*    @Lovakumar      @omeshp
 
 Tasks/DownloadFileshareArtifactsV0/*    @Lovakumar      @omeshp
@@ -262,6 +260,8 @@ Tasks/SshV0/*   @madhurig
 Tasks/TwineAuthenticateV0/*     @zackrun
 
 Tasks/UniversalPackagesV0/*     @zackrun
+
+Tasks/UseDotNetCoreV2/*   @sachinma
 
 Tasks/UseDotNetV2/*     @damccorm
 

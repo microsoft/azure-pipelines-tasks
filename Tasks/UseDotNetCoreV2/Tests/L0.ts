@@ -407,7 +407,7 @@ describe('DotNetCoreInstaller', function () {
 
     it("[dotnetcoreinstaller] run should throw if versionSpec is invalid.", (done) => {
         process.env["__case__"] = "matchingversionnotfound";
-        let tr = new ttm.MockTestRunner(path.join(__dirname, "dotnetcoreInstallerTests.js"))
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "usedotnetcoreTests.js"))
         tr.run();
         runValidations(() => {
             assert(tr.succeeded == false, ("Should have failed."));
@@ -417,7 +417,7 @@ describe('DotNetCoreInstaller', function () {
 
     it("[dotnetcoreinstaller] run should skip installation if version found in cache but should prepend all the required paths and should also use $(Agent.ToolsDirectory)/dotnet as installation when input is missing.", (done) => {
         process.env["__case__"] = "skipinstallation";
-        let tr = new ttm.MockTestRunner(path.join(__dirname, "dotnetcoreInstallerTests.js"))
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "usedotnetcoreTests.js"))
         tr.run();
         runValidations(() => {
             assert(tr.succeeded == true, ("Should have passed."));
@@ -430,7 +430,7 @@ describe('DotNetCoreInstaller', function () {
 
     it("[dotnetcoreinstaller] run should install if version is not found in cache and prepend the required paths.", (done) => {
         process.env["__case__"] = "installversion";
-        let tr = new ttm.MockTestRunner(path.join(__dirname, "dotnetcoreInstallerTests.js"))
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "usedotnetcoreTests.js"))
         tr.run();
         runValidations(() => {
             assert(tr.succeeded == true, ("Should have passed."));
@@ -443,7 +443,7 @@ describe('DotNetCoreInstaller', function () {
 
     it("[dotnetcoreinstaller] run should not fail if globalToolPath could not be created or set.", (done) => {
         process.env["__case__"] = "globaltoolpathfailure";
-        let tr = new ttm.MockTestRunner(path.join(__dirname, "dotnetcoreInstallerTests.js"))
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "usedotnetcoreTests.js"))
         tr.run();
         runValidations(() => {
             assert(tr.succeeded == true, ("Should have passed."));

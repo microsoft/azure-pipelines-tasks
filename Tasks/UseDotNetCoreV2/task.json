@@ -1,7 +1,7 @@
 {
     "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
-    "name": "DotNetCoreInstaller",
-    "friendlyName": ".NET Core SDK/Runtime Installer",
+    "name": "UseDotNetCore",
+    "friendlyName": "Use .NET Core SDK/Runtime",
     "description": "Acquires a version of the .NET Core SDK/Runtime from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks.",
     "helpUrl": "https://aka.ms/AA4ihfi",
     "helpMarkDown": "[More Information](https://aka.ms/AA4ihfi)",
@@ -12,7 +12,7 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
         "Patch": 1
     },
@@ -21,8 +21,8 @@
         "DotNetCore"
     ],
     "demands": [],
-    "releaseNotes": "<li>Support for installing multiple versions side by side.</li><li>Support for patterns in version to fetch latest in minor/major version.</li><li>Restrict Multi-level lookup</li>",
-    "instanceNameFormat": "Install .NET Core $(packageType) $(version)",
+    "releaseNotes": "<li>Support for installing multiple versions side by side.</li><li>Support for patterns in version to fetch latest in minor/major version.</li><li>Restrict Multi-level lookup</li><li>Installs NuGet and provides proxy support.</li>",
+    "instanceNameFormat": "Use .NET Core $(packageType) $(version)",
     "groups": [
         {
             "name": "advanced",
@@ -39,7 +39,7 @@
             "required": true,
             "helpMarkDown": "Please select whether to install only runtime or SDK.",
             "options": {
-                "runtime": "Only Runtime",
+                "runtime": "Runtime",
                 "sdk": "SDK (contains runtime)"
             }
         },
@@ -80,7 +80,7 @@
     ],
     "execution": {
         "Node": {
-            "target": "dotnetcoreinstaller.js"
+            "target": "usedotnetcore.js"
         }
     },
     "messages": {
@@ -147,6 +147,9 @@
         "FilesDataIsIncorrectInVersion": "In release %s for version %s, File data is incorrect (might have missing required fields, such as name, rid and url): %s",
         "VersionFilesDataIncorrect": "Version's files data is missing or has missing required fields.",
         "VersionInformationNotComplete": "Version: %s required information is not complete in releases.json file. Error: %s",
-        "FailedWhileExtractingPacakge": "Failed while extracting downloaded package with error: %s"
+        "FailedWhileExtractingPacakge": "Failed while extracting downloaded package with error: %s",
+        "InstallingNuGetVersion": "Installing NuGet version %s",
+        "FailureWhileInstallingNuGetVersion": "Failed while installing NuGet version. Error: %s",
+        "SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet. http_proxy= %s \nhttp_proxy.user= %s \nhttp_proxy.password= %s"
     }
 }
