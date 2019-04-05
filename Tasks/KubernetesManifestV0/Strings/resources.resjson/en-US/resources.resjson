@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Kubernetes manifests",
+  "loc.friendlyName": "Deploy Kubernetes manifests",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Manifest based deployments to Kubernetes",
+  "loc.description": "Use Kubernetes manifest files to deploy to clusters or even bake the manifest files to be used for deployments using Helm charts",
   "loc.instanceNameFormat": "$(action)",
   "loc.input.label.action": "Action",
   "loc.input.help.action": "Choose the action to be performed.",
