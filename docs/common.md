@@ -39,7 +39,13 @@ but means we would need 2 PRs to use Common, one to introduce common change and 
 
 #### Task authors have a tendency to import more than needed from Common
 
-Introduce [webpack](https://webpack.js.org/) into our build to remove unused dependencies.
+Explored Webpack, pretty sure its not the answer - since its a static module bundler and we have too much dynamic require logic required around loading resource files. We can remove some of this with the goal of getting there eventually, but we'd have to upgrade every tasks version of the task-lib that they're consuming first.
+
+Other potential optimizations:
+
+1. Compress/minify files - Reduces size but leads to ugly/hard to diagnose tasks.
+2. Introduce tooling to track size of tasks (probably run during CI and flag changes that introduce lots of storage overhead - maybe require admin approval?)
+3. Manually go through tasks and try to clean up extra imports. This could be done in conjunction with (2) (aka (2) finds overhead, we go in and fix it - or shell that work out to task authors)
 
 #### There is no clear owner of Common or the individual components within
 
