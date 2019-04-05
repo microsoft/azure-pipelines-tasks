@@ -64,8 +64,8 @@ async function run() {
 
             let additionalFileMatches: string[] = undefined;
             // Get any 'Additional Files' to publish as build artifacts
-            const findOptions : tl.FindOptions = { allowBrokenSymbolicLinks : false, followSymbolicLinks : false, followSpecifiedSymbolicLink : false};
-            const matchOptions : tl.MatchOptions = { matchBase : true};
+            const findOptions: tl.FindOptions = { allowBrokenSymbolicLinks: false, followSymbolicLinks: false, followSpecifiedSymbolicLink: false };
+            const matchOptions: tl.MatchOptions = { matchBase: true };
 
             if (additionalFiles) {
                 // Resolve matches of the 'Additional Files' pattern
@@ -100,7 +100,7 @@ function resolvePathToSingleItem(workingDirectory: string, pathInput: string, is
             pathInput = pathInput.slice(0, -1);
         }
         // Resolve matches of the pathInput pattern
-        const findOptions : tl.FindOptions = { allowBrokenSymbolicLinks : false, followSymbolicLinks : false, followSpecifiedSymbolicLink : false};
+        const findOptions: tl.FindOptions = { allowBrokenSymbolicLinks: false, followSymbolicLinks: false, followSpecifiedSymbolicLink: false };
         const pathMatches: string[] = tl.findMatch(
             workingDirectory,
             pathInput,
@@ -174,9 +174,9 @@ async function generateHtmlReport(summaryFile: string, targetDir: string): Promi
         dotnet.arg(path.join(__dirname, 'netcoreapp2.0', 'ReportGenerator.dll'));
     }
 
-    dotnet.arg(`"-reports:${summaryFile}"`);
-    dotnet.arg(`"-targetdir:${targetDir}"`);
-    dotnet.arg(`"-reporttypes:HtmlInline_AzurePipelines"`);
+    dotnet.arg('-reports:' + summaryFile);
+    dotnet.arg('-targetdir:' + targetDir);
+    dotnet.arg('-reporttypes:HtmlInline_AzurePipelines');
 
     try {
         const result = await dotnet.exec(<tr.IExecOptions>{
