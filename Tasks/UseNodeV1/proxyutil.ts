@@ -7,10 +7,10 @@ interface ICurlProxy {
     setting: string
 }
 
-function toCurlProxy(proxyCfg: taskLib.ProxyConfiguration): ICurlProxy {
-    let curlProxy: ICurlProxy;
+function toCurlProxy(proxyCfg: taskLib.ProxyConfiguration): ICurlProxy | null {
+    let curlProxy: ICurlProxy | null;
     if (proxyCfg) {
-        if (proxyCfg && proxyCfg.proxyUrl) {
+        if (proxyCfg.proxyUrl) {
             taskLib.debug(`using proxy ${proxyCfg.proxyUrl}`);
             const parsedUrl = url.parse(proxyCfg.proxyUrl);
             const httpEnvVarName: string = parsedUrl.protocol === 'https:'? "HTTPS_PROXY" : "HTTP_PROXY";
@@ -33,7 +33,7 @@ export function setCurlProxySettings(proxyConfig: taskLib.ProxyConfiguration) {
         // Short circuit if proxy already set.
         return;
     }
-    let curlProxy: ICurlProxy = toCurlProxy(proxyConfig);
+    let curlProxy: ICurlProxy | null = toCurlProxy(proxyConfig);
     if (curlProxy) {
         // register the escaped versions of password
         if (proxyConfig.proxyPassword) {
