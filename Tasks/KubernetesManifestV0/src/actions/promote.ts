@@ -15,7 +15,11 @@ export async function promote() {
         tl.debug("Deploying input manifests");
         deploymentHelper.deploy(kubectl, TaskInputParameters.manifests, "None");
         tl.debug("Deployment strategy selected is Canary. Deleting canary and baseline workloads.");
-        canaryDeploymentHelper.deleteCanaryDeployment(kubectl, TaskInputParameters.manifests);
+        try {
+            canaryDeploymentHelper.deleteCanaryDeployment(kubectl, TaskInputParameters.manifests);
+        } catch (ex) {
+            tl.warning("Exception occurred while deleting canary and baseline workloads. Exception: " + ex);
+        }
     }
     else {
         tl.debug("Strategy is not canary deployment. Invalid request.");

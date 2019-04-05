@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 2
     },
     "demands": [],
     "groups": [
@@ -58,7 +58,7 @@
             "groupName": "config",
             "options": {
                 "bake": "bake",
-                "create secret": "create secret",
+                "createSecret": "create secret",
                 "delete": "delete",
                 "deploy": "deploy",
                 "patch": "patch",
@@ -114,6 +114,16 @@
             "defaultValue": "",
             "groupName": "config",
             "helpMarkDown": "Containers",
+            "visibleRule": "action = deploy || action = promote"
+        },
+        {
+            "name": "imagePullSecrets",
+            "type": "multiLine",
+            "label": "ImagePullSecrets",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "config",
+            "helpMarkDown": "ImagePullSecret to pull image from private registry",
             "visibleRule": "action = deploy || action = promote"
         },
         {
@@ -252,7 +262,7 @@
             "label": "Type of secret",
             "defaultValue": "dockerRegistry",
             "required": true,
-            "visibleRule": "action = create secret",
+            "visibleRule": "action = createSecret",
             "groupName": "config",
             "options": {
                 "dockerRegistry": "dockerRegistry",
@@ -266,7 +276,7 @@
             "label": "Secret name",
             "required": false,
             "groupName": "config",
-            "visibleRule": "action = create secret",
+            "visibleRule": "action = createSecret",
             "defaultValue": "",
             "helpMarkDown": "Name of the secret. You can use this secret name in the Kubernetes YAML configuration file."
         },
@@ -282,7 +292,7 @@
             "label": "Arguments",
             "defaultValue": "",
             "helpMarkDown": "Specify keys and literal values to insert in secret.For example, --from-literal=key1=value1 --from-literal=key2=\"top secret\".",
-            "visibleRule": "action = create secret && secretType = generic"
+            "visibleRule": "action = createSecret && secretType = generic"
         },
         {
             "name": "dockerRegistryEndpoint",
@@ -290,7 +300,7 @@
             "groupName": "config",
             "label": "Docker registry service connection",
             "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
-            "visibleRule": "action = create secret && secretType = dockerRegistry"
+            "visibleRule": "action = createSecret && secretType = dockerRegistry"
         }
     ],
     "dataSourceBindings": [],

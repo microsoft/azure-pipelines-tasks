@@ -10,6 +10,7 @@ const skuDynamicValue: string = 'dynamic';
 const webAppKindMap = new Map([
     [ 'functionapp', 'functionApp' ],
     [ 'functionapp,linux,container', 'functionAppLinux' ],
+    [ 'functionapp,linux', 'functionAppLinux' ]
 ]);
 
 export class TaskParametersUtility {

@@ -1,7 +1,7 @@
 "use strict";
 import { Kubectl } from "kubernetes-common/kubectl-object-model";
 import * as helper from './KubernetesObjectUtility';
-import { KubernetesWorkload, recognizedWorkloadTypes } from "../models/constants"
+import { KubernetesWorkload } from "../models/constants"
 import * as utils from "./utilities";
 import tl = require('vsts-task-lib/task');
 import fs = require("fs");
@@ -33,9 +33,11 @@ export function deleteCanaryDeployment(kubectl: Kubectl, manifestFilesPath: stri
     let args = utils.getDeleteCmdArgs(argsPrefix, TaskInputParameters.args);
     tl.debug("Delete cmd args : " + args);
 
-    // run kubectl delete cmd
-    var result = kubectl.delete(args);
-    utils.checkForErrors([result]);
+    if (!!args && args.length > 0) {
+        // run kubectl delete cmd
+        var result = kubectl.delete(args);
+        utils.checkForErrors([result]);
+    }
 }
 
 export function deployCanary(kubectl: Kubectl, filePaths: string[]) {
@@ -48,7 +50,7 @@ export function deployCanary(kubectl: Kubectl, filePaths: string[]) {
 
             var name = inputObject.metadata.name;
             var kind = inputObject.kind;
-            if (isDeploymentEntity(kind)) {
+            if (helper.isDeploymentEntity(kind)) {
                 var existing_canary_object = fetchCanaryResource(kubectl, kind, name);
 
                 if (!!existing_canary_object) {
@@ -65,12 +67,15 @@ export function deployCanary(kubectl: Kubectl, filePaths: string[]) {
                     tl.debug("Stable object not found. Creating only canary object");
                     // If stable object not found, create canary deployment.
                     var newCanaryObject = getNewCanaryResource(inputObject, canaryReplicaCount);
+                    tl.debug("New canary object is: " + JSON.stringify(newCanaryObject));
                     newObjectsList.push(newCanaryObject);
                 } else {
                     tl.debug("Stable object found. Creating canary and baseline objects");
                     // If canary object not found, create canary and baseline object.
                     var newCanaryObject = getNewCanaryResource(inputObject, canaryReplicaCount);
                     var newBaselineObject = getNewBaselineResource(stable_object, canaryReplicaCount);
+                    tl.debug("New canary object is: " + JSON.stringify(newCanaryObject));
+                    tl.debug("New baseline object is: " + JSON.stringify(newBaselineObject));
                     newObjectsList.push(newCanaryObject);
                     newObjectsList.push(newBaselineObject);
                 }
@@ -145,9 +150,9 @@ function UnsetsClusterSpecficDetails(resource: any) {
 
         if (!!metadata) {
             var newMetadata = {
-                "annotations" : metadata.annotations,
-                "labels" : metadata.labels,
-                "name" : metadata.name
+                "annotations": metadata.annotations,
+                "labels": metadata.labels,
+                "name": metadata.name
             };
 
             resource.metadata = newMetadata;
@@ -161,17 +166,6 @@ function UnsetsClusterSpecficDetails(resource: any) {
 
 function fetchCanaryResource(kubectl: Kubectl, kind: string, name: string): object {
     return fetchResource(kubectl, kind, getCanaryResourceName(name));
-}
-
-
-function isDeploymentEntity(kind: string): boolean {
-    if (!kind) {
-        throw (tl.loc("ResourceKindNotDefined"));
-    }
-
-    return recognizedWorkloadTypes.some(function (elem) {
-        return utils.isEqual(elem, kind, utils.StringComparer.OrdinalIgnoreCase);
-    });
 }
 
 function getNewCanaryObject(inputObject: any, replicas: number, type: string): object {
@@ -213,7 +207,7 @@ function createCanaryObjectsArgumentString(files: string[]) {
         yaml.safeLoadAll(fileContents, function (inputObject) {
             var name = inputObject.metadata.name;
             var kind = inputObject.kind;
-            if (isDeploymentEntity(kind)) {
+            if (helper.isDeploymentEntity(kind)) {
                 var canaryObjectName = getCanaryResourceName(name);
                 var baselineObjectName = getBaselineResourceName(name);
                 kindList.add(kind);
@@ -222,6 +216,10 @@ function createCanaryObjectsArgumentString(files: string[]) {
             }
         });
     });
+
+    if (kindList.size == 0) {
+        tl.debug("CanaryDeploymentHelper : No deployment objects found");
+    }
 
     var args = utils.createKubectlArgs(kindList, nameList);
     return args;
