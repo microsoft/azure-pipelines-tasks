@@ -9,10 +9,12 @@
     "author": "ms-vscs-rm",
     "version": {
         "Major": 1,
-        "Minor": 150,
+        "Minor": 151,
         "Patch": 0
     },
     "demands": [],
+    "preview": true,
+    "releaseNotes": "Adds support to download Maven, Python and Npm packages.",
     "minimumAgentVersion": "2.115.0",
     "groups": [
         {

@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "preview": "true",
     "satisfies": [
@@ -37,7 +37,7 @@
             "label": "Package to install",
             "defaultValue": "sdk",
             "required": true,
-            "helpMarkDown": "Please select whether to install only runtime or full SDK.",
+            "helpMarkDown": "Please select whether to install only runtime or SDK.",
             "options": {
                 "runtime": "Only Runtime",
                 "sdk": "SDK (contains runtime)"
@@ -69,13 +69,13 @@
             "helpMarkDown": "Specify where .Net Core SDK/Runtime should be installed. Different paths can have the following impact on .Net's behavior.<li>$(Agent.ToolsDirectory): This makes the version to be cached on the agent since this directory is not cleanup up across pipelines. All pipelines running on the agent, would have access to the versions installed previously using the agent.</li><li>$(Agent.TempDirectory): This can ensure that a pipeline doesn't use any cached version of .Net core since this folder is cleaned up after each pipeline.</li><li>Any other path: You can configure any other path given the agent process has access to the path. This will change the state of the machine and impact all processes running on it.<br/>Note that you can also configure Multi-Level Lookup setting which can configure .Net host's probing for a suitable version."
         },
         {
-            "name": "restrictMultiLevelLookup",
+            "name": "performMultiLevelLookup",
             "type": "boolean",
-            "label": "Restrict Multi Level Lookup",
+            "label": "Perform Multi Level Lookup",
             "groupName": "advanced",
-            "defaultValue": true,
+            "defaultValue": false,
             "required": false,
-            "helpMarkDown": "This input is only applicable to Windows based agents. This configures the behavior of .Net host process for looking up a suitable shared framework.<li>checked: Only versions present in  the folder specified in this task would be looked by the host process.</li><li>unchecked: The host will attempt to look in pre-defined global locations using multi-level lookup.<br/>The default global locations are: <br/><b>For Windows:</b><br/>C:\\Program Files\\dotnet (64-bit processes)<br/>C:\\Program Files (x86)\\dotnet (32-bit process)</li> You can read more about it [**HERE**](https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/multilevel-sharedfx-lookup.md).<br/>"
+            "helpMarkDown": "This input is only applicable to Windows based agents. This configures the behavior of .Net host process for looking up a suitable shared framework.<li>unchecked: Only versions present in the folder specified in this task would be looked by the host process.</li><li>checked: The host will attempt to look in pre-defined global locations using multi-level lookup.<br/>The default global locations are: <br/><b>For Windows:</b><br/>C:\\Program Files\\dotnet (64-bit processes)<br/>C:\\Program Files (x86)\\dotnet (32-bit process)</li> You can read more about it [**HERE**](https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/multilevel-sharedfx-lookup.md).<br/>"
         }
     ],
     "execution": {
@@ -142,6 +142,11 @@
         "ComparingInstalledFolderVersions": "Comparing if version being installed %s is greater than already installed version with folder name %s",
         "ComparingInstalledFileVersions": "Comparing if version being installed %s is greater than already installed version with version complete file name %s",
         "InvalidChannelObject": "Object cannot be used as Channel, required properties such as channel-version, releases.json is missing.",
-        "ReleasesIndexBodyIncorrect": "Parsed releases index body is not correct. Kindly see if the releases-index section is not empty in the file."
+        "ReleasesIndexBodyIncorrect": "Parsed releases index body is not correct. Kindly see if the releases-index section is not empty in the file.",
+        "InvalidVersionObject": "Releases.json has a release with invalid %s object: %s",
+        "FilesDataIsIncorrectInVersion": "In release %s for version %s, File data is incorrect (might have missing required fields, such as name, rid and url): %s",
+        "VersionFilesDataIncorrect": "Version's files data is missing or has missing required fields.",
+        "VersionInformationNotComplete": "Version: %s required information is not complete in releases.json file. Error: %s",
+        "FailedWhileExtractingPacakge": "Failed while extracting downloaded package with error: %s"
     }
 }

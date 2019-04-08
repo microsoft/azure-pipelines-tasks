@@ -153,7 +153,7 @@ export default class ContainerConnection {
                     }
                     else {
                         // trying to logout from a registry where no login was done. Nothing to be done here.
-                        tl.debug(tl.loc('RegistryAuthNotPresentInConfig', registry, existingConfigJson));
+                        tl.debug(tl.loc('RegistryAuthNotPresentInConfig', registry));
                     }
                 }
             }
@@ -247,7 +247,7 @@ export default class ContainerConnection {
                             // If auth is already present for the same registry, then cache it so that we can 
                             // preserve it back on logout. 
                             if (existingConfigJson.auths[registryName]) {
-                                this.oldDockerConfigContent = existingConfigJson;
+                                this.oldDockerConfigContent = JSON.stringify(existingConfigJson);
                                 tl.debug(tl.loc('OldDockerConfigContent', this.oldDockerConfigContent));
                             }
 
@@ -277,10 +277,19 @@ export default class ContainerConnection {
         return null;
     }
 
-    private getDockerConfigJson(configurationFilePath : string ): any {
+    private getDockerConfigJson(configurationFilePath : string): any {
+        let configJson: any;
         let dockerConfig = fs.readFileSync(configurationFilePath, "utf-8");
         tl.debug(tl.loc('FoundDockerConfigStoredInTempPath', configurationFilePath, dockerConfig));
-        return JSON.parse(dockerConfig);
+        try {
+            configJson = JSON.parse(dockerConfig);
+        }
+        catch(err) {
+            let errorMessage = tl.loc('ErrorParsingDockerConfig', err);
+            throw new Error(errorMessage);
+        }
+
+        return configJson;
     }
 
     private writeDockerConfigJson(dockerConfigContent: string, configurationFilePath?: string): void {
@@ -325,7 +334,7 @@ export default class ContainerConnection {
                 regUrls = Object.keys(existingConfigJson.auths);
             }
             else {
-                tl.debug(tl.loc('NoAuthInfoFoundInDockerConfig', existingConfigJson));
+                tl.debug(tl.loc('NoAuthInfoFoundInDockerConfig'));
             }
         }
         else {

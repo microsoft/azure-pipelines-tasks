@@ -22,28 +22,28 @@ export class VersionInstaller {
     }
 
     public async downloadAndInstall(versionInfo: VersionInfo, downloadUrl: string): Promise<void> {
-        if (!versionInfo || !versionInfo.version || !url.parse(downloadUrl)) {
+        if (!versionInfo || !versionInfo.getVersion() || !downloadUrl || !url.parse(downloadUrl)) {
             throw tl.loc("VersionCanNotBeDownloadedFromUrl", versionInfo, downloadUrl);
         }
 
-        let downloadPath = "";
-        let version = versionInfo.version;
+        let version = versionInfo.getVersion();
 
         try {
-            downloadPath = await toolLib.downloadTool(downloadUrl);
-        } catch (error) {
-            throw tl.loc("CouldNotDownload", downloadUrl, JSON.stringify(error));
-        }
-
-        try {
-            //todo: if installation path is outside agents directory, acquire Lock for installation and start timer of 10-20 minutes, after which lock shall be auto released.
-
-            //todo when lock work is done: Check if already installed
-            // this.isVersionInstalled(version);
+            try {
+                var downloadPath = await toolLib.downloadTool(downloadUrl)
+            }
+            catch (ex) {
+                throw tl.loc("CouldNotDownload", downloadUrl, ex);
+            }
 
             // Extract
             console.log(tl.loc("ExtractingPackage", downloadPath));
-            let extPath: string = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath) : await toolLib.extractTar(downloadPath);
+            try {
+                var extPath = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath) : await toolLib.extractTar(downloadPath);
+            }
+            catch (ex) {
+                throw tl.loc("FailedWhileExtractingPacakge", ex);
+            }
 
             // Copy folders
             tl.debug(tl.loc("CopyingFoldersIntoPath", this.installationPath));
@@ -64,7 +64,7 @@ export class VersionInstaller {
                 }
             }
             catch (ex) {
-                tl.warning(tl.loc("FailedToCopyTopLevelFiles", this.installationPath, JSON.stringify(ex)));
+                tl.warning(tl.loc("FailedToCopyTopLevelFiles", this.installationPath, ex));
             }
 
             // Cache tool
@@ -73,13 +73,8 @@ export class VersionInstaller {
             console.log(tl.loc("SuccessfullyInstalled", this.packageType, version));
         }
         catch (ex) {
-            throw tl.loc("FailedWhileInstallingVersionAtPath", version, this.installationPath, JSON.stringify(ex));
+            throw tl.loc("FailedWhileInstallingVersionAtPath", version, this.installationPath, ex);
         }
-        finally {
-            //todo: Release Lock and stop timer
-        }
-
-        //todo: in case of failure due to: unable to acquire lock or timeout, 3 retries to install.
     }
 
     public isVersionInstalled(version: string): boolean {
@@ -100,22 +95,22 @@ export class VersionInstaller {
     }
 
     private createInstallationCompleteFile(versionInfo: VersionInfo): void {
-        tl.debug(tl.loc("CreatingInstallationCompeleteFile", versionInfo.version, this.packageType));
+        tl.debug(tl.loc("CreatingInstallationCompeleteFile", versionInfo.getVersion(), this.packageType));
         // always add for runtime as it is installed with sdk as well.
         var pathToVersionCompleteFile: string = "";
         if (this.packageType == utils.Constants.sdk) {
-            let sdkVersion = versionInfo.version;
+            let sdkVersion = versionInfo.getVersion();
             pathToVersionCompleteFile = path.join(this.installationPath, utils.Constants.relativeSdkPath, `${sdkVersion}.complete`);
             tl.writeFile(pathToVersionCompleteFile, `{ "version": "${sdkVersion}" }`);
         }
 
-        let runtimeVersion = versionInfo.getRuntimeVersion(this.packageType);
+        let runtimeVersion = versionInfo.getRuntimeVersion();
         if (runtimeVersion) {
             pathToVersionCompleteFile = path.join(this.installationPath, utils.Constants.relativeRuntimePath, `${runtimeVersion}.complete`);
             tl.writeFile(pathToVersionCompleteFile, `{ "version": "${runtimeVersion}" }`);
         }
         else if (this.packageType == utils.Constants.runtime) {
-            throw tl.loc("CannotFindRuntimeVersionForCompletingInstallation", this.packageType, versionInfo.version);
+            throw tl.loc("CannotFindRuntimeVersionForCompletingInstallation", this.packageType, versionInfo.getVersion());
         }
     }
 
