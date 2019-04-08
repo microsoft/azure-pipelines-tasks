@@ -85,8 +85,8 @@ describe('UsePythonVersion L0 Suite', function () {
             : pypyBinDir;
 
         assert(didSetVariable(testRunner, 'pythonLocation', pythonLocation));
-        assert(didPrependPath(testRunner, pypyDir));
-        assert(didPrependPath(testRunner, pypyBinDir));
+        assert(didPrependPath(testRunner, pypyDir), 'Pypy directory was not prepended to path');
+        assert(didPrependPath(testRunner, pypyBinDir), 'Pypy bin directory was not prepended to path');
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
     });
@@ -103,9 +103,9 @@ describe('UsePythonVersion L0 Suite', function () {
             ? pypyDir
             : pypyBinDir;
 
-        assert(didSetVariable(testRunner, 'pythonLocation', pythonLocation));
-        assert(didPrependPath(testRunner, pypyDir));
-        assert(didPrependPath(testRunner, pypyBinDir));
+        assert(didSetVariable(testRunner, 'pythonLocation', pythonLocation), 'Variable was not set');
+        assert(didPrependPath(testRunner, pypyDir), 'Pypy directory was not prepended to path');
+        assert(didPrependPath(testRunner, pypyBinDir), 'Pypy bin directory was not prepended to path');
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
     });
