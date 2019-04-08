@@ -31,7 +31,7 @@ export async function installRubyVersion(parameters: TaskParameters): Promise<vo
     if (!installDir) {
         // Fail and list available versions
         throw new Error([
-            task.loc("VersionNotFound", parameters.version),
+            task.loc("VersionNotFound", parameters.version, parameters.architecture),
             task.loc("ListAvailableVersions", task.getVariable("Agent.ToolsDirectory")),
             tool.findLocalToolVersions("Ruby"),
             task.loc("ToolNotFoundMicrosoftHosted", "Ruby", "https://aka.ms/hosted-agent-software"),

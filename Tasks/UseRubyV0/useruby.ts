@@ -6,8 +6,8 @@ import * as proxyutil from "./proxyutil";
 
 async function run() {
     try {
-        const version = task.getInput("version", true);
-        const architecture = task.getInput("architecture", false) || os.arch();
+        const version: string = task.getInput("version", true);
+        const architecture: string = task.getInput("architecture", false) || os.arch();
 
         // Install tool
         if (version) {
@@ -20,7 +20,7 @@ async function run() {
 
         // Configure proxy
         const proxyCfg: task.ProxyConfiguration = task.getHttpProxyConfiguration();
-        if (proxyCfg) {
+        if (proxyCfg && proxyCfg.proxyUrl) {
             proxyutil.setProxySettings(proxyCfg);
         }
 
