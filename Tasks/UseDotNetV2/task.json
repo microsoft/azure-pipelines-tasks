@@ -1,8 +1,8 @@
 {
     "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
     "name": "UseDotNet",
-    "friendlyName": "Use .NET Core SDK/Runtime",
-    "description": "Acquires a version of the .NET Core SDK/Runtime from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks.",
+    "friendlyName": "Use dotnet",
+    "description": "Acquires a version of the .NET Core SDK/Runtime from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks. Additionally provides proxy support.",
     "helpUrl": "https://aka.ms/AA4ihfi",
     "helpMarkDown": "[More Information](https://aka.ms/AA4ihfi)",
     "category": "Tool",
@@ -37,7 +37,7 @@
             "type": "pickList",
             "label": "Package to install",
             "defaultValue": "sdk",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Please select whether to install only runtime or SDK.",
             "options": {
                 "runtime": "Runtime",
@@ -48,7 +48,7 @@
             "name": "version",
             "type": "string",
             "label": "Version",
-            "defaultValue": "2.2.x",
+            "defaultValue": "",
             "required": false,
             "helpMarkDown": "Specify version of .NET Core SDK or runtime to install.<br/>Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json"
         },

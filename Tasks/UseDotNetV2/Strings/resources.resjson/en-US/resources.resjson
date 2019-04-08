@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Use .NET Core SDK/Runtime",
+  "loc.friendlyName": "Use dotnet",
   "loc.helpMarkDown": "[More Information](https://aka.ms/AA4ihfi)",
-  "loc.description": "Acquires a version of the .NET Core SDK/Runtime from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks.",
+  "loc.description": "Acquires a version of the .NET Core SDK/Runtime from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks. Additionally provides proxy support.",
   "loc.instanceNameFormat": "Use .NET Core $(packageType) $(version)",
   "loc.releaseNotes": "<li>Support for installing multiple versions side by side.</li><li>Support for patterns in version to fetch latest in minor/major version.</li><li>Restrict Multi-level lookup</li><li>Installs NuGet and provides proxy support.</li>",
   "loc.group.displayName.advanced": "Advanced",

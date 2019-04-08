@@ -37,7 +37,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.packageType",
       "defaultValue": "sdk",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.packageType",
       "options": {
         "runtime": "Runtime",
@@ -48,7 +48,7 @@
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
-      "defaultValue": "2.2.x",
+      "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.version"
     },
