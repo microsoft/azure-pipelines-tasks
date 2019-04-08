@@ -37,6 +37,12 @@ async function run() {
         // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
         tl.setVariable('DOTNET_ROOT', installationPath);
     }
+    else {
+        let dotnetPath: string = tl.which("dotnet", false);
+        if (!!dotnetPath) {
+            toolLib.prependPath(dotnetPath);
+        }
+    }
 
     // Install NuGet version specified by user or 4.4.1 in case none is specified
     // Also sets up the proxy configuration settings.
