@@ -1,6 +1,6 @@
 {
   "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
-  "name": "UseDotNetCore",
+  "name": "UseDotNet",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://aka.ms/AA4ihfi",
@@ -22,6 +22,7 @@
   ],
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
+  "ecosystem": "dotnet",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -80,7 +81,7 @@
   ],
   "execution": {
     "Node": {
-      "target": "usedotnetcore.js"
+      "target": "usedotnet.js"
     }
   },
   "messages": {

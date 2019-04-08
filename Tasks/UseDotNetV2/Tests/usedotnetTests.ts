@@ -178,4 +178,4 @@ mockery.registerMock('./nugetinstaller', {
 process.env["USERPROFILE"] = "userprofile"
 process.env.HOME = "home"
 
-require('../usedotnetcore');
+require('../usedotnet');
