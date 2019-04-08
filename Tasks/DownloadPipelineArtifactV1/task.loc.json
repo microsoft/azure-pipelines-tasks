@@ -90,9 +90,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.branchName"
     },
     {
-      "name": "buildId",
+      "name": "pipelineId",
+      "aliases": [
+        "buildId"
+      ],
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.buildId",
+      "label": "ms-resource:loc.input.label.pipelineId",
       "defaultValue": "",
       "required": true,
       "visibleRule": "buildType == specific && buildVersionToDownload == specific",
@@ -100,7 +103,7 @@
         "EditableOptions": "True",
         "DisableManageLink": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.buildId"
+      "helpMarkDown": "ms-resource:loc.input.help.pipelineId"
     },
     {
       "name": "tags",
@@ -136,12 +139,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
     },
     {
-      "name": "downloadPath",
+      "name": "targetPath",
+      "aliases": [
+        "downloadPath"
+      ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.downloadPath",
+      "label": "ms-resource:loc.input.label.targetPath",
       "defaultValue": "$(System.ArtifactsDirectory)",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.downloadPath"
+      "helpMarkDown": "ms-resource:loc.input.help.targetPath"
     }
   ],
   "dataSourceBindings": [
@@ -171,7 +177,7 @@
     },
     {
       "endpointId": "tfs:teamfoundation",
-      "target": "buildId",
+      "target": "pipelineId",
       "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds?definitions={{definition}}&resultFilter=succeeded,partiallySucceeded&$top=200",
       "resultSelector": "jsonpath:$.value[*]",
       "parameters": {
