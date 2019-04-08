@@ -5,8 +5,7 @@ import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 const taskPath = path.join(__dirname, '..', 'main.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
-taskRunner.setInput('versionSpec', 'pypy3');
-taskRunner.setInput('addToPath', 'true');
+taskRunner.setInput('version', 'pypy3');
 taskRunner.setInput('architecture', 'x64');
 
 // Mock azure-pipelines-tool-lib

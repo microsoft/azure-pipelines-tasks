@@ -2,7 +2,7 @@
     "id": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
     "name": "UsePython",
     "friendlyName": "Use Python",
-    "description": "Retrieves the specified version of Python from the tool cache. Optionally add it to PATH. -- TODO FIX THIS",
+    "description": "Sets up Python environment.",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=871498",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=871498)",
     "category": "Tool",
@@ -28,20 +28,12 @@
     ],
     "inputs": [
         {
-            "name": "versionSpec",
+            "name": "version",
             "type": "string",
-            "label": "Version spec",
-            "required": true,
+            "label": "Version",
+            "required": false,
             "defaultValue": "3.x",
             "helpMarkDown": "Version range or exact version of a Python version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)"
-        },
-        {
-            "name": "addToPath",
-            "type": "boolean",
-            "label": "Add to PATH",
-            "required": true,
-            "defaultValue": "true",
-            "helpMarkDown": "Whether to prepend the retrieved Python version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable."
         },
         {
             "name": "architecture",

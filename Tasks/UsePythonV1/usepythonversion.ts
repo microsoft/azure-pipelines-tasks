@@ -8,11 +8,10 @@ import * as tool from 'azure-pipelines-tool-lib/tool';
 
 import { Platform } from './taskutil';
 import * as toolUtil  from './toolutil';
-import { desugarDevVersion, pythonVersionToSemantic } from './versionspec';
+import { desugarDevVersion, pythonVersionToSemantic } from './version';
 
 interface TaskParameters {
-    versionSpec: string,
-    addToPath: boolean,
+    version: string,
     architecture: string
 }
 
@@ -76,18 +75,17 @@ function usePyPy(majorVersion: 2 | 3, parameters: TaskParameters, platform: Plat
     const pythonLocation = platform === Platform.Windows ? installDir : _binDir;
     task.setVariable('pythonLocation', pythonLocation);
 
-    if (parameters.addToPath) {
-        toolUtil.prependPathSafe(installDir);
-        toolUtil.prependPathSafe(_binDir);
-    }
+    // Add to path
+    toolUtil.prependPathSafe(installDir);
+    toolUtil.prependPathSafe(_binDir);
 }
 
 async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
-    const desugaredVersionSpec = desugarDevVersion(parameters.versionSpec);
-    const semanticVersionSpec = pythonVersionToSemantic(desugaredVersionSpec);
-    task.debug(`Semantic version spec of ${parameters.versionSpec} is ${semanticVersionSpec}`);
+    const desugaredversion = desugarDevVersion(parameters.version);
+    const semanticversion = pythonVersionToSemantic(desugaredversion);
+    task.debug(`Semantic version spec of ${parameters.version} is ${semanticversion}`);
 
-    const installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+    const installDir: string | null = tool.findLocalTool('Python', semanticversion, parameters.architecture);
     if (!installDir) {
         // Fail and list available versions
         const x86Versions = tool.findLocalToolVersions('Python', 'x86')
@@ -99,7 +97,7 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
             .join(os.EOL);
 
         throw new Error([
-            task.loc('VersionNotFound', parameters.versionSpec, parameters.architecture),
+            task.loc('VersionNotFound', parameters.version, parameters.architecture),
             task.loc('ListAvailableVersions', task.getVariable('Agent.ToolsDirectory')),
             x86Versions,
             x64Versions,
@@ -109,27 +107,32 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
     }
 
     task.setVariable('pythonLocation', installDir);
-    if (parameters.addToPath) {
-        toolUtil.prependPathSafe(installDir);
-        toolUtil.prependPathSafe(binDir(installDir, platform))
 
-        if (platform === Platform.Windows) {
-            // Add --user directory
-            // `installDir` from tool cache should look like $AGENT_TOOLSDIRECTORY/Python/<semantic version>/x64/
-            // So if `findLocalTool` succeeded above, we must have a conformant `installDir`
-            const version = path.basename(path.dirname(installDir));
-            const major = semver.major(version);
-            const minor = semver.minor(version);
+    // Append to path
+    toolUtil.prependPathSafe(installDir);
+    toolUtil.prependPathSafe(binDir(installDir, platform))
 
-            const userScriptsDir = path.join(process.env['APPDATA'], 'Python', `Python${major}${minor}`, 'Scripts');
-            toolUtil.prependPathSafe(userScriptsDir);
-        }
-        // On Linux and macOS, pip will create the --user directory and add it to PATH as needed.
+    if (platform === Platform.Windows) {
+        // Add --user directory
+        // `installDir` from tool cache should look like $AGENT_TOOLSDIRECTORY/Python/<semantic version>/x64/
+        // So if `findLocalTool` succeeded above, we must have a conformant `installDir`
+        const version = path.basename(path.dirname(installDir));
+        const major = semver.major(version);
+        const minor = semver.minor(version);
+
+        const userScriptsDir = path.join(process.env['APPDATA'], 'Python', `Python${major}${minor}`, 'Scripts');
+        toolUtil.prependPathSafe(userScriptsDir);
     }
+    // On Linux and macOS, pip will create the --user directory and add it to PATH as needed.
 }
 
 export async function usePythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
-    switch (parameters.versionSpec.toUpperCase()) {
+    // If the user doesn't specify a version, tasks are expected to do the equivalent of which to locate the existing tool.
+    if(!parameters.version) {
+        return;
+    }
+
+    switch (parameters.version.toUpperCase()) {
         case 'PYPY2':
             return usePyPy(2, parameters, platform);
         case 'PYPY3':

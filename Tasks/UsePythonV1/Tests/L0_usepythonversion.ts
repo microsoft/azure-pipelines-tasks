@@ -44,8 +44,7 @@ it('sets PATH correctly on Linux', async function () {
 
     const uut = reload();
     const parameters = {
-        versionSpec: '3.6',
-        addToPath: true,
+        version: '3.6',
         architecture: 'x64'
     };
 
@@ -75,8 +74,7 @@ it('sets PATH correctly on Windows', async function () {
 
     const uut = reload();
     const parameters = {
-        versionSpec: '3.6',
-        addToPath: true,
+        version: '3.6',
         architecture: 'x64'
     };
 
