@@ -139,6 +139,7 @@
         "UniversalPackagesV0",
         "UseDotNetV2",
         "UseNodeV1",
+		"UsePythonV1",
         "UsePythonVersionV0",
         "UseRubyVersionV0",
         "VSBuildV1",
