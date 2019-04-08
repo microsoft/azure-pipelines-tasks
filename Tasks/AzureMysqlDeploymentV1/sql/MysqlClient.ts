@@ -3,7 +3,7 @@ import { FirewallConfiguration } from '../models/FirewallConfiguration';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
 import { Utility } from '../operations/MysqlUtiliy';
 import * as telemetry from 'utility-common/telemetry';
-import task = require("vsts-task-lib/task");
+import task = require("azure-pipelines-task-lib/task");
 var packageUtility = require('webdeployment-common/packageUtility.js');
 import Q = require('q');
 

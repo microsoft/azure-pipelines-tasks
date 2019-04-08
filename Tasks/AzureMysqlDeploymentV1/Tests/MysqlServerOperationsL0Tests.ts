@@ -1,6 +1,6 @@
 import { getMockEndpoint, nock, getMockMysqlServers } from './mock_utils';
 import * as querystring from 'querystring';
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 import { MysqlServerOperations } from '../operations/MysqlServerOperations';
 import { MysqlServer } from '../models/MysqlServer';
 var endpoint = getMockEndpoint();
