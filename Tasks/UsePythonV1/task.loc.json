@@ -1,20 +1,21 @@
 {
   "id": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
-  "name": "UsePythonVersion",
+  "name": "UsePython",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://go.microsoft.com/fwlink/?linkid=871498",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
+  "ecosystem": "python",
   "runsOn": [
     "Agent",
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 150,
-    "Patch": 1
+    "Major": 1,
+    "Minor": 151,
+    "Patch": 0
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -27,20 +28,12 @@
   ],
   "inputs": [
     {
-      "name": "versionSpec",
+      "name": "version",
       "type": "string",
-      "label": "ms-resource:loc.input.label.versionSpec",
-      "required": true,
+      "label": "ms-resource:loc.input.label.version",
+      "required": false,
       "defaultValue": "3.x",
-      "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
-    },
-    {
-      "name": "addToPath",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.addToPath",
-      "required": true,
-      "defaultValue": "true",
-      "helpMarkDown": "ms-resource:loc.input.help.addToPath"
+      "helpMarkDown": "ms-resource:loc.input.help.version"
     },
     {
       "name": "architecture",
