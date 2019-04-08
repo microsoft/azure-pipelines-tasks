@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 150,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [
     "vstest"
@@ -618,6 +618,8 @@
     "UserProvidedSourceFilter": "ms-resource:loc.messages.UserProvidedSourceFilter",
     "UnableToGetFeatureFlag": "ms-resource:loc.messages.UnableToGetFeatureFlag",
     "diagnosticsInput": "ms-resource:loc.messages.diagnosticsInput",
-    "UncPathNotSupported": "ms-resource:loc.messages.UncPathNotSupported"
+    "UncPathNotSupported": "ms-resource:loc.messages.UncPathNotSupported",
+    "LookingForBuildToolsInstalltion": "ms-resource:loc.messages.LookingForBuildToolsInstalltion",
+    "LookingForVsInstalltion": "ms-resource:loc.messages.LookingForVsInstalltion"
   }
 }

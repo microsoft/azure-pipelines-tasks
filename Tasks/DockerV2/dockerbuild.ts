@@ -15,9 +15,9 @@ function useDefaultBuildContext(buildContext: string): boolean {
     return buildContext === defaultPath;
 }
 
-export function run(connection: ContainerConnection, outputUpdate: (data: string) => any): any {
+export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, ignoreArguments?: boolean): any {
     // find dockerfile path
-    let dockerfilepath = tl.getInput("dockerFile", true);
+    let dockerfilepath = tl.getInput("Dockerfile", true);
     let dockerFile = fileUtils.findDockerFile(dockerfilepath);
     
     if(!tl.exist(dockerFile)) {
@@ -25,7 +25,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     }
 
     // get command arguments
-    let commandArguments = tl.getInput("arguments", false);
+    let commandArguments = ignoreArguments ? "" : tl.getInput("arguments", false);
     
     // get qualified image names by combining container registry(s) and repository
     let repositoryName = tl.getInput("repository");

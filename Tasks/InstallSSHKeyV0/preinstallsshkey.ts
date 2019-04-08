@@ -2,8 +2,7 @@ import fs = require('fs');
 import os = require('os');
 import path = require('path');
 import secureFilesCommon = require('securefiles-common/securefiles-common');
-import tl = require('vsts-task-lib/task');
-import trm = require('vsts-task-lib/toolrunner');
+import * as tl from 'azure-pipelines-task-lib/task';
 import util = require('./installsshkey-util');
 
 async function run() {
