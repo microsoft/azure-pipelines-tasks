@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 151,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "preview": true,
@@ -29,13 +29,13 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.packageType",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.packageType",
       "defaultValue": "nuget",
       "options": {
         "maven": "Maven",
         "npm": "Npm",
         "nuget": "NuGet",
-        "pypi": "Python"
+        "pypi": "Python",
+        "upack": "Universal"
       }
     },
     {
@@ -46,8 +46,7 @@
       "required": true,
       "properties": {
         "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.feed"
+      }
     },
     {
       "name": "view",

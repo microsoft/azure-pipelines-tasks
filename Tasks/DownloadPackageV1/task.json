@@ -10,7 +10,7 @@
     "version": {
         "Major": 1,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "preview": true,
@@ -29,13 +29,13 @@
             "type": "pickList",
             "label": "Package Type",
             "required": true,
-            "helpMarkDown": "Select the package type",
             "defaultValue": "nuget",
             "options": {
                 "maven": "Maven",
                 "npm": "Npm",
                 "nuget": "NuGet",
-                "pypi": "Python"
+                "pypi": "Python",
+                "upack": "Universal"
             }
         },
         {
@@ -46,8 +46,7 @@
             "required": true,
             "properties": {
                 "EditableOptions": "True"
-            },
-            "helpMarkDown": "Select the feed"
+            }
         },
         {
             "name": "view",
@@ -58,7 +57,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Select the view"
+            "helpMarkDown": "Select a view to use only versions promoted to that view."
         },
         {
             "name": "definition",
@@ -69,7 +68,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Select the package to download."
+            "helpMarkDown": "If you don't find the package in the list, you can provide the package ID, which you can find using the instructions [here](https://docs.microsoft.com/en-us/rest/api/azure/devops/?view=azure-devops-rest-5.0#get-packages)."
         },
         {
             "name": "version",
@@ -93,7 +92,7 @@
                 "EditableOptions": "True"
             },
             "groupName": "advancedOptions",
-            "helpMarkDown": "Set the files pattern filter"
+            "helpMarkDown": "Specify which files to download using [file matching patterns](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/file-matching-patterns?view=azure-devops)."
         },
         {
             "name": "extract",
@@ -106,7 +105,7 @@
                 "EditableOptions": "True"
             },
             "groupName": "advancedOptions",
-            "helpMarkDown": "Check to extract package contents."
+            "helpMarkDown": "Instead of extracting the package contents and removing the archive, the artifact folder will contain the package archive."
         },
         {
             "name": "downloadPath",
@@ -173,7 +172,7 @@
         "FailedToDownloadPackage": "Failed to download package file from %s got the following error: %s",
         "PackageDownloadSuccessful": "Package download successful",
         "CredentialsNotFound": "Could not determine credentials to connect to Package Management service.",
-        "StartingDownloadOfPackage": "Starting download of NuGet package %s to location %s",
+        "StartingDownloadOfPackage": "Starting download of package %s to location %s",
         "ExtractingPackage": "Extracting package %s to directory %s",
         "PackageTypeNotSupported": "Only Nuget, Python, Universal, Npm, and Maven packages types can be downloaded using this task.",
         "ExtractionFailed": "Failed to extract package with error %s",
