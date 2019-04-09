@@ -25,10 +25,10 @@ export class ContainerBasedDeploymentUtility {
 
     public async deployWebAppImage(properties: any): Promise<void> {
         let imageName: string = properties["ImageName"];
-        let configFilePath: string = properties["ConfigFilePath"];
+        let multicontainerConfigFile: string = properties["MulticontainerConfigFile"];
         let isMultiContainer: boolean = properties["isMultiContainer"];
         let isLinuxApp: boolean = properties["isLinuxContainerApp"];
-        let updatedConfigFilePath: string = configFilePath;
+        let updatedMulticontainerConfigFile: string = multicontainerConfigFile;
 
         if(imageName) {
             tl.debug("Deploying image " + imageName + " to the webapp " + this._appService.getName());
@@ -36,21 +36,21 @@ export class ContainerBasedDeploymentUtility {
 
         if(isMultiContainer) {
             if(imageName) {
-                updatedConfigFilePath = this.updateImagesInConfigFile(configFilePath, imageName);
+                updatedMulticontainerConfigFile = this.updateImagesInConfigFile(multicontainerConfigFile, imageName);
             }
 
             // uploading log file
-            console.log(`##vso[task.uploadfile]${updatedConfigFilePath}`);
+            console.log(`##vso[task.uploadfile]${updatedMulticontainerConfigFile}`);
         }
 
         tl.debug("Updating the webapp configuration.");
-        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], isLinuxApp, imageName, isMultiContainer, updatedConfigFilePath);
+        await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], isLinuxApp, imageName, isMultiContainer, updatedMulticontainerConfigFile);
 
         tl.debug('making a restart request to app service');
         await this._appService.restart();
     }
 
-    private async _updateConfigurationDetails(configSettings: any, startupCommand: string, isLinuxApp: boolean, imageName?: string, isMultiContainer?: boolean, configFilePath?: string): Promise<void> {
+    private async _updateConfigurationDetails(configSettings: any, startupCommand: string, isLinuxApp: boolean, imageName?: string, isMultiContainer?: boolean, multicontainerConfigFile?: string): Promise<void> {
         var appSettingsNewProperties = !!configSettings ? parse(configSettings.trim()): { };
         appSettingsNewProperties.appCommandLine = {
             'value': startupCommand
@@ -58,7 +58,7 @@ export class ContainerBasedDeploymentUtility {
 
         if(isLinuxApp) {
             if(isMultiContainer) {
-                let fileData = fs.readFileSync(configFilePath);
+                let fileData = fs.readFileSync(multicontainerConfigFile);
                 appSettingsNewProperties.linuxFxVersion = {
                     'value': "COMPOSE|" + (new Buffer(fileData).toString('base64'))
                 }
@@ -230,9 +230,9 @@ export class ContainerBasedDeploymentUtility {
         delete webAppSettings["properties"]["DOCKER_REGISTRY_SERVER_PASSWORD"];
     }
 
-    private updateImagesInConfigFile(configFilePath, images): string {
+    private updateImagesInConfigFile(multicontainerConfigFile, images): string {
         const tempDirectory = deployUtility.getTempDirectory();
-        var contents = fs.readFileSync(configFilePath).toString();
+        var contents = fs.readFileSync(multicontainerConfigFile).toString();
         var imageList = images.split("\n");
         imageList.forEach((image: string) => {
             let imageName = image.split(":")[0];
@@ -241,7 +241,7 @@ export class ContainerBasedDeploymentUtility {
             }
         });
 
-        let newFilePath = path.join(tempDirectory, path.basename(configFilePath));
+        let newFilePath = path.join(tempDirectory, path.basename(multicontainerConfigFile));
         fs.writeFileSync(
             path.join(newFilePath),
             contents

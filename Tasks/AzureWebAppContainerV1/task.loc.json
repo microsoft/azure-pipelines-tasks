@@ -101,12 +101,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.imageName"
     },
     {
-      "name": "configFilePath",
+      "name": "multicontainerConfigFile",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.configFilePath",
+      "label": "ms-resource:loc.input.label.multicontainerConfigFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.configFilePath"
+      "helpMarkDown": "ms-resource:loc.input.help.multicontainerConfigFile"
     },
     {
       "name": "containerCommand",

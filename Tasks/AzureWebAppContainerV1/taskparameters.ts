@@ -25,7 +25,7 @@ export class TaskParametersUtility {
             DeployToSlotOrASEFlag: tl.getBoolInput('deployToSlotOrASE', false),
             ResourceGroupName: tl.getInput('resourceGroupName', false),
             SlotName: tl.getInput('slotName', false),
-            ConfigFilePath: tl.getPathInput('configFilePath', false)
+            MulticontainerConfigFile: tl.getPathInput('multicontainerConfigFile', false)
         }
 
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
@@ -42,7 +42,7 @@ export class TaskParametersUtility {
         let containerDetails = await this.getContainerKind(taskParameters);
         taskParameters.ImageName = containerDetails["imageName"];
         taskParameters.isMultiContainer = containerDetails["isMultiContainer"];
-        taskParameters.ConfigFilePath = containerDetails["configFilePath"];
+        taskParameters. MulticontainerConfigFile = containerDetails["multicontainerConfigFile"];
 
         return taskParameters;
     }
@@ -74,17 +74,17 @@ export class TaskParametersUtility {
         let imageName = taskParameters.ImageName;
         let isMultiLineImages: boolean = imageName && imageName.indexOf("\n") != -1; 
         let isMultiContainer = false;
-        let configFilePath = PackageUtility.getPackagePath(taskParameters.ConfigFilePath);
+        let multicontainerConfigFile = PackageUtility.getPackagePath(taskParameters.MulticontainerConfigFile);
 
-        if(!imageName && tl.stats(configFilePath).isDirectory()) {
+        if(!imageName && tl.stats(multicontainerConfigFile).isDirectory()) {
             throw new Error(tl.loc('FailedToDeployToWebApp', taskParameters.WebAppName));
         }
 
-        if(imageName && !isMultiLineImages && tl.stats(configFilePath).isDirectory()) {
+        if(imageName && !isMultiLineImages && tl.stats(multicontainerConfigFile).isDirectory()) {
             console.log(tl.loc("SingleContainerDeployment", taskParameters.WebAppName));
         }
 
-        if(tl.stats(configFilePath).isFile()) {
+        if(tl.stats(multicontainerConfigFile).isFile()) {
             isMultiContainer = true;
             if(imageName) {
                 console.log(tl.loc("MultiContainerDeploymentWithTransformation", taskParameters.WebAppName));
@@ -102,7 +102,7 @@ export class TaskParametersUtility {
         return {
             imageName: imageName,
             isMultiContainer: isMultiContainer,
-            configFilePath: configFilePath
+            multicontainerConfigFile: multicontainerConfigFile
         };
     }
 }
@@ -120,6 +120,6 @@ export interface TaskParameters {
     DeployToSlotOrASEFlag?: boolean;
     SlotName?: string;
     isLinuxContainerApp?: boolean;
-    ConfigFilePath?: string;
+    MulticontainerConfigFile?: string;
     isMultiContainer?: boolean;
 }
