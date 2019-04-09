@@ -30,17 +30,17 @@ async function run() {
 
 		var nicLbBackendPoolConfig = null;
 		if (action == "Connect") {
-			tl._writeLine(tl.loc("ConnectingVMtoLB", loadBalancerName));
+			console.log(tl.loc("ConnectingVMtoLB", loadBalancerName));
 			var lb = await nlbUtility.getLoadBalancer(SPN, endpointUrl, loadBalancerName, resourceGroupName);
 			nicLbBackendPoolConfig = lb.properties.backendAddressPools;
 		}
 		else {
-			tl._writeLine(tl.loc("DisconnectingVMfromLB", loadBalancerName));
+			console.log(tl.loc("DisconnectingVMfromLB", loadBalancerName));
 		}
 		nicVm.properties.ipConfigurations[0].properties['loadBalancerBackendAddressPools'] = nicLbBackendPoolConfig;
 		var setNIStatus = await nlbUtility.setNetworkInterface(SPN, endpointUrl, nicVm, resourceGroupName);
-		tl._writeLine(tl.loc(setNIStatus, nicVm.name));
-		tl._writeLine(tl.loc("ActionCompletedSuccefully", action, process.env.COMPUTERNAME, loadBalancerName));
+		console.log(tl.loc(setNIStatus, nicVm.name));
+		console.log(tl.loc("ActionCompletedSuccefully", action, process.env.COMPUTERNAME, loadBalancerName));
 	}
 	catch(error) {
 		tl.setResult(tl.TaskResult.Failed, error);

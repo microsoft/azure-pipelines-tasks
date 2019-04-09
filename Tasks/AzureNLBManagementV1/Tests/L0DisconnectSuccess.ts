@@ -101,7 +101,7 @@ tmr.registerMock('./nlbazureutility', {
 		];
 	},
 	setNetworkInterface: function(SPN, endpointUrl, nic, resourceGroupName) {
-		tl._writeLine(tl.loc("SettingTheNetworkInterface"));
+		console.log(tl.loc("SettingTheNetworkInterface"));
 		return "setNICStatusSuccess";
 	}
 });

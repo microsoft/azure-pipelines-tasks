@@ -147,7 +147,7 @@ export async function setNetworkInterface(SPN, endpointUrl: string, nic, resourc
 		"Authorization": 'Bearer ' + accessToken
 	};
 
-	tl._writeLine(tl.loc("SettingTheNetworkInterface", nic.name));
+	console.log(tl.loc("SettingTheNetworkInterface", nic.name));
 	var maxRetries = 10;	
 	var sleepTime = (Math.floor(Math.random() * 6) + 5) * 1000;	// sleep time in ms
 	var retryCount = 1;
