@@ -60,7 +60,7 @@ tmr.registerMock('vsts-task-tool-lib/tool', {
         if (url === `https://nodejs.org/dist/v5.10.1/node-v5.10.1-win-${os.arch()}.7z` ||
             url === `https://nodejs.org/dist/v5.10.1/node-v5.10.1-${os.platform()}-${os.arch()}.tar.gz`) {
             let err = new Error();
-            err['httpStatusCode'] = '404';
+            err['httpStatusCode'] = 404;
             throw err;
         }
         else if (url === `https://nodejs.org/dist/v5.10.1/win-${os.arch()}/node.exe`) {

@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Скачать пакет",
+  "loc.helpMarkDown": "Должно быть установлено расширение управления пакетами",
+  "loc.description": "Скачать пакет из веб-канала управления пакетами в Azure Artifacts или TFS. \r\n Требуется расширение управления пакетами.",
+  "loc.instanceNameFormat": "Скачать пакет",
+  "loc.input.label.feed": "Веб-канал",
+  "loc.input.help.feed": "Выбор источника пакетов",
+  "loc.input.label.definition": "Пакет",
+  "loc.input.help.definition": "Выберите пакет для скачивания. В настоящее время поддерживаются только пакеты NuGet.",
+  "loc.input.label.version": "Версия",
+  "loc.input.help.version": "Версия пакета",
+  "loc.input.label.downloadPath": "Каталог назначения",
+  "loc.input.help.downloadPath": "Путь для скачивания пакета на компьютере агента",
+  "loc.messages.FailedToGetPackageMetadata": "Не удалось получить метаданные пакета. Ошибка: %s",
+  "loc.messages.FailedToDownloadNugetPackage": "Не удалось скачать пакет NuGet из расположения %s. Ошибка: %s",
+  "loc.messages.PackageDownloadSuccessful": "Пакет успешно скачан.",
+  "loc.messages.CredentialsNotFound": "Не удается определить учетные данные для подключения к службе управления пакетами.",
+  "loc.messages.StartingDownloadOfPackage": "Начинается скачивание пакета NuGet %s в расположение %s.",
+  "loc.messages.ExtractingNugetPackage": "Извлечение пакета NuGet %s в каталог %s",
+  "loc.messages.PackageTypeNotSupported": "С помощью этой задачи можно скачивать только пакеты типа NuGet.",
+  "loc.messages.ExtractionFailed": "Не удалось распаковать пакет. Ошибка: %s"
+}

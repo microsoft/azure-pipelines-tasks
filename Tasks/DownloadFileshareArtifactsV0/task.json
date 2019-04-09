@@ -1,7 +1,7 @@
 {
     "id": "E3CF3806-AD30-4EC4-8F1E-8ECD98771AA0",
     "name": "DownloadFileshareArtifacts",
-    "friendlyName": "Download Fileshare Artifacts",
+    "friendlyName": "Download Artifacts - Fileshare",
     "description": "Download artifacts from a file share e.g \\\\share\\drop",
     "helpUrl": "",
     "helpMarkDown": "",
@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 147,
+        "Minor": 149,
         "Patch": 0
     },
     "groups": [
@@ -66,7 +66,7 @@
             "helpMarkDown": "Number of files to download simultaneously"
         }
     ],
-    "instanceNameFormat": "Download artifacts from Fileshare",
+    "instanceNameFormat": "Download Artifacts - Fileshare",
     "execution": {
         "Node": {
             "target": "main.js",

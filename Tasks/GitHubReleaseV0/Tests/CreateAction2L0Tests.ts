@@ -12,7 +12,9 @@ export class CreateAction2L0Tests {
         tr.setInput(Inputs.gitHubConnection, "connection");
         tr.setInput(Inputs.repositoryName, "repo");
         tr.setInput(Inputs.action, "create");
+        tr.setInput(Inputs.tagSource, "auto");
         tr.setInput(Inputs.target, "master");
+        tr.setInput(Inputs.releaseNotesSource, "input");
         
         this.stub(tr);
         tr.run();
@@ -29,7 +31,7 @@ export class CreateAction2L0Tests {
         tr.registerMock("./operations/Helper", {
             Helper: function () {
                 return {
-                    getTagForCreateAction: function() {
+                    getTagForCommitTarget: function() {
                         return null;
                     },
                     publishTelemetry: function() {

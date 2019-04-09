@@ -32,6 +32,7 @@ async function run() {
         }
 
         // Create the tool runner.
+        console.log('========================== Starting Command Output ===========================');
         let bash = tl.tool(tl.which('bash', true))
             .arg('--noprofile')
             .arg(`--norc`)

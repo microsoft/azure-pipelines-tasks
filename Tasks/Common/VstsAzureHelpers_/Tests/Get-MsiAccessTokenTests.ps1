@@ -2,6 +2,7 @@
 param()
 
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
+Register-Mock Get-VstsWebProxy { }
 Register-Mock Add-Tls12InSession { }
 
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru

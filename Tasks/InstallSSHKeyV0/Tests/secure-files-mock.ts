@@ -1,4 +1,4 @@
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 export class SecureFileHelpers {
 
@@ -9,7 +9,7 @@ export class SecureFileHelpers {
     async downloadSecureFile(secureFileId: string) {
         tl.debug('Mock downloadSecureFile with id = ' + secureFileId);
         let fileName: string = secureFileId + '.filename';
-        let tempDownloadPath: string = tl.getVariable('Agent.TempDirectory') + '/' + fileName;
+        let tempDownloadPath: string = '/build/temp/' + fileName;
         return tempDownloadPath;
     }
 

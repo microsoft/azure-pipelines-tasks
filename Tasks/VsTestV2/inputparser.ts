@@ -1,11 +1,11 @@
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import * as utils from './helpers';
 import * as constants from './constants';
 import * as ci from './cieventlogger';
 import { AreaCodes, DistributionTypes } from './constants';
 import * as idc from './inputdatacontract';
-import * as versionfinder from './versionfinder';
 import * as Q from "q";
 import * as isUncPath from 'is-unc-path';
 const regedit = require('regedit');
@@ -64,7 +64,6 @@ export function parseInputsForNonDistributedTestRun() : idc.InputDataContract {
     inputDataContract.RunIdentifier = getRunIdentifier();
     inputDataContract.EnableSingleAgentAPIFlow = utils.Helper.stringToBool(tl.getVariable('Hydra.EnableApiFlow'));
     inputDataContract.SourcesDirectory = tl.getVariable('Build.SourcesDirectory');
-
 
     logWarningForWER(tl.getBoolInput('uiTests'));
 
@@ -145,6 +144,7 @@ function getTfsSpecificSettings(inputDataContract : idc.InputDataContract) : idc
         inputDataContract.TfsSpecificSettings.ReleaseUri = tl.getVariable('Release.ReleaseUri');
         inputDataContract.TfsSpecificSettings.ReleaseEnvironmentUri = tl.getVariable('Release.EnvironmentUri');
         inputDataContract.TfsSpecificSettings.WorkFolder = tl.getVariable('System.DefaultWorkingDirectory');
+
         return inputDataContract;
 }
 
@@ -158,8 +158,11 @@ function getTargetBinariesSettings(inputDataContract : idc.InputDataContract) : 
 function getTestReportingSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     inputDataContract.TestReportingSettings = <idc.TestReportingSettings>{};
     inputDataContract.TestReportingSettings.TestRunTitle = tl.getInput('testRunTitle');
-    inputDataContract.TestReportingSettings.TestRunSystem = "VSTS - vstest";
-    
+    inputDataContract.TestReportingSettings.TestRunSystem = 'VSTS - vstest';
+
+    inputDataContract.TestReportingSettings.TestSourceSettings = <idc.TestSourceSettings>{};
+    inputDataContract.TestReportingSettings.TestSourceSettings.PullRequestTargetBranchName = tl.getVariable('System.PullRequest.TargetBranch');
+
     if (utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestRunTitle)) {
 
         let definitionName = tl.getVariable('BUILD_DEFINITIONNAME');
@@ -209,7 +212,7 @@ function getTestPlatformSettings(inputDataContract : idc.InputDataContract) : id
 
             ci.publishEvent({ subFeature: 'ToolsInstallerInstallationSuccessful' });
 
-        } else if ((vsTestVersion !== '15.0') && (vsTestVersion !== '14.0')
+        } else if ((vsTestVersion !== '16.0') && (vsTestVersion !== '15.0') && (vsTestVersion !== '14.0')
             && (vsTestVersion.toLowerCase() !== 'latest')) {
             throw new Error(tl.loc('vstestVersionInvalid', vsTestVersion));
         } else if (vsTestLocationMethod === utils.Constants.vsTestVersionString && vsTestVersion === '12.0') {
@@ -360,7 +363,7 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
 
     inputDataContract.ExecutionSettings.CodeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
     console.log(tl.loc('codeCoverageInput', inputDataContract.ExecutionSettings.CodeCoverageEnabled));
-    
+
     inputDataContract = getDiagnosticsSettings(inputDataContract);
     console.log(tl.loc('diagnosticsInput', inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled));
 
@@ -372,12 +375,10 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
 
 function getDiagnosticsSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     inputDataContract.ExecutionSettings.DiagnosticsSettings = <idc.DiagnosticsSettings>{};
-    if(enableDiagnosticsSettings)
-    {
+    if (enableDiagnosticsSettings) {
         inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled = tl.getBoolInput('diagnosticsEnabled');
         inputDataContract.ExecutionSettings.DiagnosticsSettings.DumpCollectionType = tl.getInput('collectDumpOn').toLowerCase();
-    }
-    else {
+    } else {
         inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled = false;
     }
     return inputDataContract;
@@ -404,8 +405,8 @@ function getTiaSettings(inputDataContract : idc.InputDataContract) : idc.InputDa
 
     // This option gives the user ability to add Fully Qualified name filters for test impact. Does not work with XUnit
     inputDataContract.ExecutionSettings.TiaSettings.UseTestCaseFilterInResponseFile = utils.Helper.stringToBool(tl.getVariable('tia.useTestCaseFilterInResponseFile'));
-    
-    // A legacy  switch to disable test impact from build variables
+
+    // A legacy switch to disable test impact from build variables
     inputDataContract.ExecutionSettings.TiaSettings.Enabled = !utils.Helper.stringToBool(tl.getVariable('DisableTestImpactAnalysis'));
 
     const buildReason = tl.getVariable('Build.Reason');
@@ -423,7 +424,7 @@ function getTiaSettings(inputDataContract : idc.InputDataContract) : idc.InputDa
 }
 
 function getRerunSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
-    // Rerun settings
+
     if (tl.getBoolInput('rerunFailedTests') === false) {
         return inputDataContract;
     }
@@ -459,6 +460,7 @@ function getRerunSettings(inputDataContract : idc.InputDataContract) : idc.Input
     } else {
         tl.warning(tl.loc('invalidRerunMaxAttempts'));
     }
+
     return inputDataContract;
 }
 
@@ -490,35 +492,82 @@ function getTIALevel(fileLevel: string) {
 }
 
 function getTestPlatformPath(inputDataContract : idc.InputDataContract) {
-    let vsTestVersion = tl.getInput('vsTestVersion');
+    const vsTestVersion = tl.getInput('vsTestVersion');
+
     if (vsTestVersion.toLowerCase() === 'latest') {
-        // latest
-        tl.debug('Searching for latest Visual Studio');
-        const vstestconsole15Path = versionfinder.getVSTestConsole15Path();
-        if (vstestconsole15Path) {
-            vsTestVersion = '15.0';
-            return vstestconsole15Path;
+        tl.debug('Searching for latest Visual Studio.');
+
+        let vstestconsolePath = getVSTestConsolePath('16.0', '17.0');
+        if (vstestconsolePath) {
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
+        }
+
+        vstestconsolePath = getVSTestConsolePath('15.0', '16.0');
+        if (vstestconsolePath) {
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow');
         }
 
         // fallback
-        tl.debug('Unable to find an instance of Visual Studio 2017..');
+        tl.debug('Unable to find an instance of Visual Studio 2017 or higher.');
         tl.debug('Searching for Visual Studio 2015..');
-        vsTestVersion = '14.0';
-        return versionfinder.getVSTestLocation(14);
+        return getVSTestLocation(14);
     }
 
     const vsVersion: number = parseFloat(vsTestVersion);
 
+    if (vsVersion === 16.0) {
+        const vstestconsolePath = getVSTestConsolePath('15.0', '17.0');
+        if (vstestconsolePath) {
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
+        }
+        throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
+    }
+
     if (vsVersion === 15.0) {
-        const vstestconsole15Path = versionfinder.getVSTestConsole15Path();
-        if (vstestconsole15Path) {
-            return vstestconsole15Path;
+        const vstestconsolePath = getVSTestConsolePath('15.0', '16.0');
+        if (vstestconsolePath) {
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow');
         }
         throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
     }
 
     tl.debug('Searching for Visual Studio ' + vsVersion.toString());
-    return versionfinder.getVSTestLocation(vsVersion);
+    return getVSTestLocation(vsVersion);
+}
+
+function getVSTestConsolePath(versionLowerLimit : string, versionUpperLimit : string): string {
+    let vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
+
+    console.log(tl.loc('LookingForVsInstalltion'));
+    vswhereTool.line(`-version [${versionLowerLimit},${versionUpperLimit}) -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath`);
+    let vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+    vsPath = utils.Helper.trimString(vsPath);
+
+    if (!utils.Helper.isNullOrWhitespace(vsPath)) {
+        tl.debug('Visual Studio 15.0 or higher installed path: ' + vsPath);
+        return vsPath;
+    }
+
+    // Look for build tool installation if full VS not present
+    console.log(tl.loc('LookingForBuildToolsInstalltion'));
+    vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
+    vswhereTool.line(`-version [${versionLowerLimit},${versionUpperLimit}) -latest -products * -requires Microsoft.VisualStudio.Component.TestTools.BuildTools -property installationPath`);
+    vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+    vsPath = utils.Helper.trimString(vsPath);
+    if (!utils.Helper.isNullOrWhitespace(vsPath)) {
+        tl.debug('Build tools installed path: ' + vsPath);
+        return vsPath;
+    }
+
+    return null;
+}
+
+export function getVSTestLocation(vsVersion: number): string {
+    const vsCommon: string = tl.getVariable('VS' + vsVersion + '0COMNTools');
+    if (!vsCommon) {
+        throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
+    }
+    return path.join(vsCommon, '..\\IDE\\CommonExtensions\\Microsoft\\TestWindow');
 }
 
 async function logWarningForWER(runUITests: boolean) {

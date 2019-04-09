@@ -19,7 +19,8 @@ export default class ContainerConnection {
     private certPath: string;
     private keyPath: string;
     private registryAuth: { [key: string]: string };
-    private configurationDirPath: string;
+    private configurationDirPath: string;    
+    private oldDockerConfigContent: string;
 
     constructor() {
         this.dockerPath = tl.which("docker", true);
@@ -48,28 +49,56 @@ export default class ContainerConnection {
         });
     }
 
-    public open(hostEndpoint?: string, authenticationToken?: AuthenticationToken): void {
+    public open(hostEndpoint?: string, authenticationToken?: AuthenticationToken, multipleLoginSupported?: boolean, doNotAddAuthToConfig?: boolean): void {
         this.openHostEndPoint(hostEndpoint);
-        this.openRegistryEndpoint(authenticationToken);
+        this.openRegistryEndpoint(authenticationToken, multipleLoginSupported, doNotAddAuthToConfig);
     }
 
-    public qualifyImageName(imageName: string) {
-        if (!imageUtils.hasRegistryComponent(imageName) && this.registryAuth) {
-            var regUrl = url.parse(this.registryAuth["registry"]),
-                hostname = !regUrl.slashes ? regUrl.href : regUrl.host;
-            if (hostname.toLowerCase() !== "index.docker.io") {
-                imageName = hostname + "/" + imageName;
-            }
+    public getQualifiedImageNameIfRequired(imageName: string) {
+        if (!imageUtils.hasRegistryComponent(imageName)) {
+            imageName = this.getQualifiedImageName(imageName);
         }
+
         return imageName;
     }
 
-    public close(): void {
-        if (this.configurationDirPath && fs.existsSync(this.configurationDirPath)) {
-            del.sync(this.configurationDirPath, {force: true});
+    public getQualifiedImageName(repository: string): string {
+        let imageName = repository ? repository : "";
+        if (repository && this.registryAuth) {
+            imageName = this.prefixRegistryIfRequired(this.registryAuth["registry"], repository);
         }
-        if (this.certsDir && fs.existsSync(this.certsDir)) {
-            del.sync(this.certsDir);
+
+        return imageName;
+    }
+
+    public getQualifiedImageNamesFromConfig(repository: string) {
+        let imageNames: string[] = [];
+        if (repository) {
+            let regUrls = this.getRegistryUrlsFromDockerConfig();
+            if (regUrls && regUrls.length > 0) {
+                regUrls.forEach(regUrl => {
+                    let imageName = this.prefixRegistryIfRequired(regUrl, repository);
+                    imageNames.push(imageName);
+                });
+            }
+        }
+
+        return imageNames;
+    }
+
+    public close(multipleLoginSupported?: boolean, command?: string): void {
+        if (multipleLoginSupported) {
+            if (this.isLogoutRequired(command)) {
+                this.logout();
+            }
+        }
+        else {
+            if (this.configurationDirPath && fs.existsSync(this.configurationDirPath)) {
+                del.sync(this.configurationDirPath, {force: true});
+            }
+            if (this.certsDir && fs.existsSync(this.certsDir)) {
+                del.sync(this.certsDir);
+            }
         }
     }
     
@@ -86,9 +115,78 @@ export default class ContainerConnection {
     public unsetDockerConfigEnvVariable() {
         var dockerConfigPath = tl.getVariable("DOCKER_CONFIG");
         if (dockerConfigPath) {
-            tl.setVariable("DOCKER_CONFIG", "");
+            this.unsetEnvironmentVariable();
             del.sync(dockerConfigPath, {force: true});
         }    
+    }
+
+    private logout() {
+        // If registry info is present, remove auth for only that registry. (This can happen for any command - build, push, logout etc.)
+        // Else, remove all auth data. (This would happen only in case of logout command. For other commands, logout is not called.)
+        let registry = this.registryAuth ? this.registryAuth["registry"] : "";
+        if (registry) {
+            tl.debug(tl.loc('LoggingOutFromRegistry', registry));
+            let existingConfigurationFile = this.getExistingDockerConfigFilePath();
+
+            if (existingConfigurationFile) {
+                if (this.oldDockerConfigContent) {
+                    // restore the old docker config, cached in connection.open()
+                    tl.debug(tl.loc('RestoringOldLoginAuth', registry));
+                    this.writeDockerConfigJson(this.oldDockerConfigContent, existingConfigurationFile);
+                }
+                else {                    
+                    let existingConfigJson = this.getDockerConfigJson(existingConfigurationFile);
+                    if (existingConfigJson && existingConfigJson.auths && existingConfigJson.auths[registry]) {
+                        if (Object.keys(existingConfigJson.auths).length > 1) {
+                            // if the config contains other auths, then delete only the auth entry for the registry
+                            tl.debug(tl.loc('FoundLoginsForOtherRegistries', registry));                        
+                            delete existingConfigJson.auths[registry];
+                            let dockerConfigContent = JSON.stringify(existingConfigJson);
+                            tl.debug(tl.loc('DeletingAuthDataFromDockerConfig', registry, dockerConfigContent));
+                            this.writeDockerConfigJson(dockerConfigContent, existingConfigurationFile);
+                        }
+                        else {
+                            // if no other auth data is present, delete the config file and unset the DOCKER_CONFIG variable
+                            tl.debug(tl.loc('DeletingDockerConfigDirectory', existingConfigurationFile));
+                            this.removeConfigDirAndUnsetEnvVariable();
+                        }
+                    }
+                    else {
+                        // trying to logout from a registry where no login was done. Nothing to be done here.
+                        tl.debug(tl.loc('RegistryAuthNotPresentInConfig', registry));
+                    }
+                }
+            }
+            else {
+                // should not come to this in a good case, since when registry is provided, we are adding docker config
+                // to a temp directory and setting DOCKER_CONFIG variable to its path.
+                tl.debug(tl.loc('CouldNotFindDockerConfig', this.configurationDirPath));
+                this.unsetEnvironmentVariable();
+            }
+        }        
+        // unset the docker config env variable, and delete the docker config file (if present)
+        else {
+            tl.debug(tl.loc('LoggingOutWithNoRegistrySpecified'));
+            this.removeConfigDirAndUnsetEnvVariable();
+        }
+    }
+
+    private removeConfigDirAndUnsetEnvVariable(): void {
+        let dockerConfigDirPath = tl.getVariable("DOCKER_CONFIG");
+        if (dockerConfigDirPath && this.isPathInTempDirectory(dockerConfigDirPath) && fs.existsSync(dockerConfigDirPath)) {
+            tl.debug(tl.loc('DeletingDockerConfigDirectory', dockerConfigDirPath));
+            del.sync(dockerConfigDirPath, {force: true});
+        }
+        
+        this.unsetEnvironmentVariable();
+    }
+
+    private unsetEnvironmentVariable(): void {
+        tl.setVariable("DOCKER_CONFIG", "");        
+    }
+
+    private isLogoutRequired(command: string): boolean {
+        return command === "logout" || (this.registryAuth && !!this.registryAuth["registry"]);
     }
 
     private openHostEndPoint(hostEndpoint?: string): void {
@@ -116,8 +214,8 @@ export default class ContainerConnection {
         }
     }
     
-    protected openRegistryEndpoint(authenticationToken?: AuthenticationToken): void {
-        
+    protected openRegistryEndpoint(authenticationToken?: AuthenticationToken, multipleLoginSupported?: boolean, doNotAddAuthToConfig?: boolean): void {        
+        this.oldDockerConfigContent = null;
         if (authenticationToken) {     
             this.registryAuth = {};
 
@@ -125,17 +223,86 @@ export default class ContainerConnection {
             this.registryAuth["password"] = authenticationToken.getPassword();
             this.registryAuth["registry"] = authenticationToken.getLoginServerUrl();
 
-            if (this.registryAuth) {
-                this.configurationDirPath  = this.getDockerConfigDirPath();
-                process.env["DOCKER_CONFIG"] = this.configurationDirPath;
-                var json = authenticationToken.getDockerConfig();
-                var configurationFilePath = path.join(this.configurationDirPath, "config.json");
-                if(fileutils.writeFileSync(configurationFilePath, json) == 0)
-                {
-                    tl.error(tl.loc('NoDataWrittenOnFile', configurationFilePath));
-                    throw new Error(tl.loc('NoDataWrittenOnFile', configurationFilePath));
+            // don't add auth data to config file if doNotAddAuthToConfig is true.
+            // In this case we only need this.registryAuth to be populated correctly (to logout from this particular registry when close() is called) but we don't intend to login.
+            if (this.registryAuth && !doNotAddAuthToConfig) {
+                let existingConfigurationFile = this.getExistingDockerConfigFilePath();
+
+                if (multipleLoginSupported && existingConfigurationFile) {
+                    let existingConfigJson = this.getDockerConfigJson(existingConfigurationFile);
+                    if (existingConfigJson && existingConfigJson.auths) {
+                        let newAuth = authenticationToken.getDockerAuth();
+                        let newAuthJson = JSON.parse(newAuth);
+                        // Think of json object as a dictionary and authJson looks like 
+                        //      "auths": {
+                        //          "aj.azurecr.io": {
+                        //              "auth": "***",
+                        //              "email": "***"
+                        //          }
+                        //      }
+                        //    key will be aj.azurecr.io
+                        //
+                        for (let registryName in newAuthJson) {
+                            
+                            // If auth is already present for the same registry, then cache it so that we can 
+                            // preserve it back on logout. 
+                            if (existingConfigJson.auths[registryName]) {
+                                this.oldDockerConfigContent = JSON.stringify(existingConfigJson);
+                                tl.debug(tl.loc('OldDockerConfigContent', this.oldDockerConfigContent));
+                            }
+
+                            existingConfigJson.auths[registryName] = newAuthJson[registryName];
+                            tl.debug(tl.loc('AddingNewAuthToExistingConfig', registryName));
+                        }
+
+                        let dockerConfigContent = JSON.stringify(existingConfigJson);
+                        this.writeDockerConfigJson(dockerConfigContent, existingConfigurationFile);
+                    }
                 }
+                else {
+                    var json = authenticationToken.getDockerConfig();
+                    this.writeDockerConfigJson(json);
+                }                
             }
+        }
+    }
+
+    private getExistingDockerConfigFilePath(): string {
+        this.configurationDirPath = tl.getVariable("DOCKER_CONFIG");
+        let configurationFilePath = this.configurationDirPath ? path.join(this.configurationDirPath, "config.json") : "";                
+        if (this.configurationDirPath && this.isPathInTempDirectory(configurationFilePath) && fs.existsSync(configurationFilePath)) {
+            return configurationFilePath;
+        }
+
+        return null;
+    }
+
+    private getDockerConfigJson(configurationFilePath : string): any {
+        let configJson: any;
+        let dockerConfig = fs.readFileSync(configurationFilePath, "utf-8");
+        tl.debug(tl.loc('FoundDockerConfigStoredInTempPath', configurationFilePath, dockerConfig));
+        try {
+            configJson = JSON.parse(dockerConfig);
+        }
+        catch(err) {
+            let errorMessage = tl.loc('ErrorParsingDockerConfig', err);
+            throw new Error(errorMessage);
+        }
+
+        return configJson;
+    }
+
+    private writeDockerConfigJson(dockerConfigContent: string, configurationFilePath?: string): void {
+        if (!configurationFilePath){
+            this.configurationDirPath  = this.getDockerConfigDirPath();
+            process.env["DOCKER_CONFIG"] = this.configurationDirPath;
+            configurationFilePath = path.join(this.configurationDirPath, "config.json");    
+        }
+    
+        tl.debug(tl.loc('WritingDockerConfigToTempFile', configurationFilePath, dockerConfigContent));
+        if(fileutils.writeFileSync(configurationFilePath, dockerConfigContent) == 0) {
+            tl.error(tl.loc('NoDataWrittenOnFile', configurationFilePath));
+            throw new Error(tl.loc('NoDataWrittenOnFile', configurationFilePath));
         }
     }
 
@@ -156,5 +323,49 @@ export default class ContainerConnection {
 
     private getTempDirectory(): string {
         return tl.getVariable('agent.tempDirectory') || os.tmpdir();
+    }
+
+    private getRegistryUrlsFromDockerConfig(): string[] {
+        let regUrls: string[] = [];        
+        let existingConfigurationFile = this.getExistingDockerConfigFilePath();
+        if (existingConfigurationFile) {            
+            let existingConfigJson = this.getDockerConfigJson(existingConfigurationFile);
+            if (existingConfigJson && existingConfigJson.auths) {
+                regUrls = Object.keys(existingConfigJson.auths);
+            }
+            else {
+                tl.debug(tl.loc('NoAuthInfoFoundInDockerConfig'));
+            }
+        }
+        else {
+            tl.debug(tl.loc('CouldNotFindDockerConfig', this.configurationDirPath));
+        }
+
+        return regUrls;
+    }
+
+    private isPathInTempDirectory(path): boolean {
+        let tempDir = this.getTempDirectory();
+        let result = path && path.startsWith(tempDir);
+        if (!result) {
+            tl.debug(tl.loc('PathIsNotInTempDirectory', path, tempDir));
+        }
+
+        return result;
+    }
+
+    private prefixRegistryIfRequired(registry: string, repository: string): string {
+        let imageName = repository;
+
+        if (registry) {
+            let regUrl = url.parse(registry);
+            let hostname = !regUrl.slashes ? regUrl.href : regUrl.host;
+            // For docker hub, repository name is the qualified image name. Prepend hostname if the registry is not docker hub.
+            if (hostname.toLowerCase() !== "index.docker.io") {
+                imageName = hostname + "/" + repository;
+            }
+        }
+
+        return imageName;
     }
 }

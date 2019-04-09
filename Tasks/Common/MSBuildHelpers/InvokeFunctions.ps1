@@ -19,20 +19,7 @@ function Invoke-BuildTools {
             if ($NuGetRestore) {
                 Invoke-NuGetRestore -File $file
             }
-
-            if ($Clean) {
-                $splat = @{ }
-                if ($CreateLogFile) {
-                    $splat["LogFile"] = "$file-clean.log"
-                }
-
-                if ($LogFileVerbosity) {
-                    $splat["LogFileVerbosity"] = $LogFileVerbosity
-                }
-
-                Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
-            }
-
+            
             $splat = @{ }
             if ($CreateLogFile) {
                 $splat["LogFile"] = "$file.log"
@@ -42,7 +29,14 @@ function Invoke-BuildTools {
                 $splat["LogFileVerbosity"] = $LogFileVerbosity
             }
 
-            Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
+            if ($Clean) {
+                Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
+            }
+
+            # If we cleaned and passed /t targets, we don't need to run them again
+            if (!$Clean -or -not $MSBuildArguments.Contains("/t")) {
+                Invoke-MSBuild -ProjectFile $file -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
+            }
         }
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
@@ -136,7 +130,11 @@ function Invoke-MSBuild {
             }
 
             if ($LogFile) {
-                Write-Host "##vso[task.uploadfile]$LogFile"
+                if (Test-Path -Path $LogFile) {
+                    Write-Host "##vso[task.uploadfile]$LogFile"
+                } else {
+                    Write-Verbose "Skipping upload of '$LogFile' since it does not exist."
+                }
             }
         }
     } finally {

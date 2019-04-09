@@ -93,6 +93,7 @@ try {
     $failed = $false
 
     # Run the script.
+    Write-Host '========================== Starting Command Output ==========================='
     if (!$input_failOnStderr) {
         Invoke-VstsTool @splat
     } else {
