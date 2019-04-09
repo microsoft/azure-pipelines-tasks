@@ -16,7 +16,11 @@ let flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
 // determine the relative path of each found file (substring using sourceFolder.length).
 sourceFolder = path.normalize(sourceFolder);
 
-let allPaths: string[] = tl.find(sourceFolder); // default find options (follow sym links)
+// Default find options except for allowing broken sym links.
+const findOptions: tl.FindOptions = <tl.FindOptions>{allowBrokenSymbolicLinks: true,
+                                                     followSpecifiedSymbolicLink: true,
+                                                     followSymbolicLinks: true };
+let allPaths: string[] = tl.find(sourceFolder, findOptions);
 let matchedPaths: string[] = tl.match(allPaths, contents, sourceFolder); // default match options
 let matchedFiles: string[] = matchedPaths.filter((itemPath: string) => !tl.stats(itemPath).isDirectory()); // filter-out directories
 
