@@ -9,7 +9,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "groups": [],
   "demands": [],
@@ -201,7 +201,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AgentPlugin": {
-      "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV1_1_0, Agent.Plugins"
+      "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV1_1_1, Agent.Plugins"
     }
   },
   "messages": {}
