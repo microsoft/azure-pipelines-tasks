@@ -1,8 +1,8 @@
 {
     "id": "DEE316A2-586F-4DEF-BE79-488A1F503DFE",
     "name": "KubernetesManifest",
-    "friendlyName": "Kubernetes manifests",
-    "description": "Manifest based deployments to Kubernetes",
+    "friendlyName": "Deploy Kubernetes manifests",
+    "description": "Use Kubernetes manifest files to deploy to clusters or even bake the manifest files to be used for deployments using Helm charts",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
