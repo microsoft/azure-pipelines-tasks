@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "Needs Package Management extension to be installed",
   "loc.description": "Download a package from a Package Management feed in Azure Artifacts or TFS. \r\n Requires the Package Management extension.",
   "loc.instanceNameFormat": "Download Package $(definition)",
-  "loc.releaseNotes": "Adds support to download Maven, Python and Npm packages.",
+  "loc.releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",
   "loc.group.displayName.advancedOptions": "Advanced",
   "loc.input.label.packageType": "Package Type",
   "loc.input.label.feed": "Feed",
