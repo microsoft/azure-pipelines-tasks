@@ -147,7 +147,7 @@ exports.initializePackagePath = initializePackagePath;
 var linkNonAggregateLayoutContent = function (sourceRoot, destRoot, metadataOnly) {
     assert(sourceRoot, 'sourceRoot');
     assert(destRoot, 'destRoot');
-    var metadataFileNames = ['TASK.JSON', 'TASK.LOC.JSON', 'STRINGS', 'ICON.PNG'];
+    var metadataFileNames = ['TASK.JSON', 'TASK.LOC.JSON', 'STRINGS', 'ICON.PNG', 'ICON.SVG'];
     // process each file/folder within the source root
     fs.readdirSync(sourceRoot).forEach(function (itemName) {
         var taskSourcePath = path.join(sourceRoot, itemName);
