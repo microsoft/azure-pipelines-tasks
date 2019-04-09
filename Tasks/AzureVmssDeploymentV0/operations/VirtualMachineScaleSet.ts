@@ -1,7 +1,7 @@
 import path = require("path");
 import os = require('os');
 import util = require('util');
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 
 import armCompute = require('azure-arm-rest/azure-arm-compute');
 import armStorage = require('azure-arm-rest/azure-arm-storage');

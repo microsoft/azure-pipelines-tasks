@@ -1,5 +1,5 @@
 import * as os from 'os';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import { Constants } from '../versionutilities';
 import { VersionInfo } from '../models';
 
@@ -50,7 +50,7 @@ mockery.registerMock('vsts-task-tool-lib/tool', {
     },
 })
 
-mockery.registerMock('vsts-task-lib/task', {
+mockery.registerMock('azure-pipelines-task-lib/task', {
     osType: function () { return os.type(); },
     mkdirP: function (directoryPath) { return; },
     loc: function (locString, ...param: string[]) { return tl.loc(locString, param); },

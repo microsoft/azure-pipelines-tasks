@@ -3,7 +3,7 @@
 //'File buffer is too short to detect encoding type'
 
 var fs = require('fs');
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 
 export class FileEncoding {
     public type: string;

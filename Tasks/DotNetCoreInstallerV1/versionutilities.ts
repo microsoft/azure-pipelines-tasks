@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib';
 import * as semver from 'semver';
 import { VersionInfo } from "./models"

@@ -3,7 +3,7 @@
 import azureGraph = require('azure-arm-rest/azure-graph');
 import msRestAzure = require("azure-arm-rest/azure-arm-common");
 
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as constants from "./constants";
 import * as definitions from "./definitions"
 import TaskParameters from "./taskParameters"

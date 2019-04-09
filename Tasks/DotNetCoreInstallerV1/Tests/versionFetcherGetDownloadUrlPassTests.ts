@@ -1,4 +1,4 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
 import { toolrunner } from './mocks/mockedModels'
 var mockery = require('mockery');
@@ -20,7 +20,7 @@ mockery.registerMock('typed-rest-client/HttpClient', {
     }
 });
 
-mockery.registerMock('vsts-task-lib/task', {
+mockery.registerMock('azure-pipelines-task-lib/task', {
     osType: function () { return osType; },
     which: function (tool: string, check: boolean) {
         if (tool == 'powershell') {

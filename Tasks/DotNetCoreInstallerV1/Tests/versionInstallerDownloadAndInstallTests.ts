@@ -1,4 +1,4 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
 import { toolrunner } from './mocks/mockedModels'
 import { Constants } from "../versionutilities";
@@ -54,7 +54,7 @@ mockery.registerMock('vsts-task-tool-lib/tool', {
     }
 })
 
-mockery.registerMock('vsts-task-lib/task', {
+mockery.registerMock('azure-pipelines-task-lib/task', {
     exist: function (elementPath: string) {
         if (elementPath.startsWith(installationPath)) {
             return true;

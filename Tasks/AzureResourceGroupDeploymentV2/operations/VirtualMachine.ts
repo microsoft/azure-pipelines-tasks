@@ -1,5 +1,5 @@
 import path = require("path");
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import armCompute = require('azure-arm-rest/azure-arm-compute');
 import deployAzureRG = require("../models/DeployAzureRG");
 import utils = require("./Utils")

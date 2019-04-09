@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": ".NET Core SDK Installer",
+  "loc.friendlyName": ".NET Core SDK/Runtime Installer",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=853651)",
   "loc.description": "Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks.",
   "loc.instanceNameFormat": "Use .NET Core $(packageType) $(version)",
