@@ -109,10 +109,15 @@ if (matchedFiles.length > 0) {
                     console.log(tl.loc('CopyingTo', file, targetPath));
                     tl.cp(file, targetPath);
                     if (preserveTimestamp) {
-                        const fileStats: tl.FsStats = tl.stats(file);
-                        fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
-                            console.log(`Error: ${err}`);
-                          });
+                        try {
+                            const fileStats = tl.stats(targetPath);
+                            fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
+                                console.warn(`Problem applying the timestamp: ${err}`);
+                            });
+                        }
+                        catch (err) {
+                            console.warn(`Problem preserving the timestamp: ${err}`)
+                        }
                     }
                 }
             }
@@ -140,10 +145,15 @@ if (matchedFiles.length > 0) {
 
                 tl.cp(file, targetPath, "-f");
                 if (preserveTimestamp) {
-                    const fileStats: tl.FsStats = tl.stats(file);
-                    fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
-                        console.log(`Error: ${err}`);
-                      });
+                    try {
+                        const fileStats: tl.FsStats = tl.stats(file);
+                        fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
+                            console.warn(`Problem applying the timestamp: ${err}`);
+                        });
+                    }
+                    catch (err) {
+                        console.warn(`Problem preserving the timestamp: ${err}`)
+                    }
                 }
             }
         });
