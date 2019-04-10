@@ -269,6 +269,8 @@ Tasks/UniversalPackagesV0/*     @zjrunner
 
 Tasks/UseDotNetV2/*     @damccorm
 
+Tasks/UseGoV1/*     @damccorm
+
 Tasks/UseNodeV1/*     @damccorm
 
 Tasks/UsePythonVersionV0/*      @madhurig
