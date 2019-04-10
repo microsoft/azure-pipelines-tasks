@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "パッケージのダウンロード",
+  "loc.helpMarkDown": "Package Management 拡張機能をインストールする必要があります",
+  "loc.description": "Azure Artifacts または TFS で Package Management フィードからパッケージをダウンロードします。\r\nPackage Management 拡張機能が必要です。",
+  "loc.instanceNameFormat": "パッケージのダウンロード",
+  "loc.input.label.feed": "フィード",
+  "loc.input.help.feed": "パッケージのソースを選択します",
+  "loc.input.label.definition": "パッケージ",
+  "loc.input.help.definition": "ダウンロードするパッケージを選択します。現在サポートされているのは NuGet パッケージのみです。",
+  "loc.input.label.version": "バージョン",
+  "loc.input.help.version": "パッケージのバージョン",
+  "loc.input.label.downloadPath": "ダウンロード先ディレクトリ",
+  "loc.input.help.downloadPath": "パッケージのダウンロード先になるエージェント マシン上の場所へのパス",
+  "loc.messages.FailedToGetPackageMetadata": "次のエラーが発生したため、パッケージのメタデータを取得できませんでした: %s",
+  "loc.messages.FailedToDownloadNugetPackage": "NuGet パッケージを %s からダウンロードできませんでした。発生したエラー: %s",
+  "loc.messages.PackageDownloadSuccessful": "パッケージが正常にダウンロードされました",
+  "loc.messages.CredentialsNotFound": "Package Management サービスに接続するための資格情報を判別できませんでした。",
+  "loc.messages.StartingDownloadOfPackage": "NuGet パッケージ %s を場所 %s にダウンロードする処理を開始しています",
+  "loc.messages.ExtractingNugetPackage": "NuGet パッケージ %s をディレクトリ %s に抽出しています",
+  "loc.messages.PackageTypeNotSupported": "このタスクを使ってダウンロードできるパッケージの種類は、NuGet パッケージのみです。",
+  "loc.messages.ExtractionFailed": "次のエラーが発生したため、パッケージを抽出できませんでした: %s"
+}

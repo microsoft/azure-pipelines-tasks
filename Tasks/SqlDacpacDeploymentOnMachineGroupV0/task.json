@@ -3,6 +3,7 @@
     "name": "SqlDacpacDeploymentOnMachineGroup",
     "friendlyName": "SQL Server Database Deploy",
     "description": "Deploy to SQL Server Database using DACPAC or SQL scripts",
+    "helpUrl": "https://aka.ms/sqldacpacmachinegroupreadme",
     "helpMarkDown": "[More Information](https://aka.ms/sqldacpacmachinegroupreadme)",
     "category": "Deploy",
     "visibility": [
@@ -15,7 +16,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 15
+        "Patch": 16
     },
     "demands": [],
     "minimumAgentVersion": "1.102.0",

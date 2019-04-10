@@ -3,6 +3,7 @@
   "name": "AzureIoTEdge",
   "friendlyName": "Azure IoT Edge",
   "description": "Azure IoT Edge pipelines tasks for continuous integration(build and push docker image) and continuous deployment(create Edge deployment on Azure)",
+  "helpUrl": "https://aka.ms/azure-iot-edge-ci-cd-docs",
   "helpMarkDown": "Visit the [documentation](https://aka.ms/azure-iot-edge-ci-cd-docs) for help",
   "category": "Build",
   "visibility": [
@@ -13,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 5
   },
   "preview": true,
   "instanceNameFormat": "Azure IoT Edge - $(action)",
@@ -236,7 +237,10 @@
     "DeploymentFileNotFound": "Deployment file can't be found. Please ensure Path of deployment file is correctly set in the task.",
     "ValidDeploymentFileNotFound": "Cannot find a valid deployment file. Please ensure Path of deployment file is correctly set in the task.",
     "AzureSdkNotFound": "Azure SDK not found",
-    "RootPathNotExist": "The Root path %s does not exist"
+    "RootPathNotExist": "The Root path %s does not exist",
+    "SkipModuleImageValidation": "SKIP_MODULE_IMAGE_VALIDATION set to true, skipping module image validation.",
+    "InvalidRegistryCredentialWarning": "Failed to login %s with given credential. %s",
+    "CheckModuleImageExistenceError": "%s does not exist or the credential is not set correctly. Error: %s"
   },
   "OutputVariables": [{
     "name" : "DEPLOYMENT_FILE_PATH",

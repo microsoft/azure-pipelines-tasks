@@ -3,6 +3,7 @@
     "name": "AzureVmssDeployment",
     "friendlyName": "Azure VM scale set Deployment",
     "description": "Deploy Virtual Machine scale set image",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=852117",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=852117)",
     "category": "Deploy",
     "releaseNotes": "- Updates Azure Virtual Machine scale set with a custom machine image.",
@@ -14,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 22
+        "Patch": 27
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",

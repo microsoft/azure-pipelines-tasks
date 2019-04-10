@@ -5,6 +5,9 @@ Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
+    # Get task variables.
+    [bool]$debug = Get-VstsTaskVariable -Name System.Debug -AsBool
+
     # Get the inputs.
     [string]$vsVersion = Get-VstsInput -Name VSVersion
     [string]$msBuildArchitecture = Get-VstsInput -Name MSBuildArchitecture
@@ -16,7 +19,8 @@ try {
     [bool]$maximumCpuCount = Get-VstsInput -Name MaximumCpuCount -AsBool
     [bool]$restoreNugetPackages = Get-VstsInput -Name RestoreNugetPackages -AsBool
     [bool]$logProjectEvents = Get-VstsInput -Name LogProjectEvents -AsBool
-    [bool]$createLogFile = Get-VstsInput -Name CreateLogFile -AsBool
+    [bool]$createLogFile = (Get-VstsInput -Name CreateLogFile -AsBool) -or $debug
+    [string]$logFileVerbosity = if ($debug) { "diagnostic" } else { Get-VstsInput -Name LogFileVerbosity }
 
     # Warn if deprecated inputs were specified.
     if ([string]$vsLocation = Get-VstsInput -Name VSLocation) {
@@ -49,6 +53,7 @@ try {
     $msBuildVersion = $null;
     switch ("$vsVersion") {
         '' { $msBuildVersion = '14.0' ; break } # VS wasn't found. Attempt to find MSBuild 14.0 or lower.
+        '16.0' { $msBuildVersion = '16.0' ; break }
         '15.0' { $msBuildVersion = '15.0' ; break }
         '14.0' { $msBuildVersion = '14.0' ; break }
         '12.0' { $msBuildVersion = '12.0' ; break }
@@ -71,7 +76,7 @@ try {
     $global:ErrorActionPreference = 'Continue'
 
     # Build each solution.
-    Invoke-BuildTools -NuGetRestore:$RestoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $MSBuildLocation -MSBuildArguments $MSBuildArgs -Clean:$Clean -NoTimelineLogger:(!$LogProjectEvents) -CreateLogFile:$createLogFile
+    Invoke-BuildTools -NuGetRestore:$RestoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $MSBuildLocation -MSBuildArguments $MSBuildArgs -Clean:$Clean -NoTimelineLogger:(!$LogProjectEvents) -CreateLogFile:$createLogFile -LogFileVerbosity:$logFileVerbosity
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
 }

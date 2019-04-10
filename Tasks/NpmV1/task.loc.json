@@ -3,12 +3,13 @@
   "name": "Npm",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613746",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
+    "Minor": 151,
     "Patch": 0
   },
   "runsOn": [
@@ -18,7 +19,7 @@
   "demands": [
     "npm"
   ],
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {

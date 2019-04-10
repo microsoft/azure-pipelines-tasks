@@ -3,25 +3,24 @@
 import path = require('path');
 import * as tl from "vsts-task-lib/task";
 import ContainerConnection from "docker-common/containerconnection";
-import AuthenticationTokenProvider  from "docker-common/registryauthenticationprovider/authenticationtokenprovider"
 import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
-import GenericAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/genericauthenticationtokenprovider"
+import { getDockerRegistryEndpointAuthenticationToken } from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
 import Q = require('q');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 // get the registry server authentication provider 
-var registryType = tl.getInput("containerregistrytype", true);
-var authenticationProvider : AuthenticationTokenProvider;
+var containerRegistryType = tl.getInput("containerregistrytype", true);
+const environmentVariableMaximumSize = 32766;
 
-if(registryType ==  "Azure Container Registry"){
-    authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry"));
-} 
-else {
-    authenticationProvider = new GenericAuthenticationTokenProvider(tl.getInput("dockerRegistryEndpoint"));
+var registryAuthenticationToken;
+if (containerRegistryType == "Azure Container Registry") {
+    registryAuthenticationToken = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry")).getAuthenticationToken();
 }
-
-var registryAuthenticationToken = authenticationProvider.getAuthenticationToken();
+else {
+    let endpointId = tl.getInput("dockerRegistryEndpoint");
+    registryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
+}
 
 // Connect to any specified container host and/or registry 
 var connection = new ContainerConnection();
@@ -45,7 +44,7 @@ var dockerCommandMap = {
 }
 
 var telemetry = {
-    registryType: registryType,
+    registryType: containerRegistryType,
     command: command
 };
 
@@ -68,7 +67,13 @@ commandImplementation.run(connection, (data) => result += data)
     }
 })
 .then(function success() {
-    tl.setVariable("DockerOutput", result);
+    var commandOutputLength = result.length;
+    if (commandOutputLength > environmentVariableMaximumSize) {
+        tl.warning(tl.loc('OutputVariableDataSizeExceeded', commandOutputLength, environmentVariableMaximumSize));
+    } else {
+        tl.setVariable("DockerOutput", result);
+    }
+
     tl.setResult(tl.TaskResult.Succeeded, "");
 }, function failure(err) {
     tl.setResult(tl.TaskResult.Failed, err.message);

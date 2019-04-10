@@ -138,7 +138,7 @@ async function acquireNode(version: string): Promise<string> {
     catch (err)
     {
         if (err['httpStatusCode'] && 
-            err['httpStatusCode'] == '404')
+            err['httpStatusCode'] == 404)
         {
             return await acquireNodeFromFallbackLocation(version);
         }
@@ -177,21 +177,40 @@ async function acquireNode(version: string): Promise<string> {
 // In this case, there will be two files located at:
 //      /dist/v5.10.1/win-x64/node.exe
 //      /dist/v5.10.1/win-x64/node.lib
-// This method attempts to download and cache the resources from this alternative location.
+// If this is not the structure, there may also be two files located at:
+//      /dist/v0.12.18/node.exe
+//      /dist/v0.12.18/node.lib
+// This method attempts to download and cache the resources from these alternative locations.
 // Note also that the files are normally zipped but in this case they are just an exe
 // and lib file in a folder, not zipped.
 async function acquireNodeFromFallbackLocation(version: string): Promise<string> {
-    let exeUrl: string = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.exe`;
-    let libUrl: string = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.lib`;
-
     // Create temporary folder to download in to
     let tempDownloadFolder: string = 'temp_' + Math.floor(Math.random() * 2000000000);
     let tempDir: string = path.join(taskLib.getVariable('agent.tempDirectory'), tempDownloadFolder);
     taskLib.mkdirP(tempDir);
+    let exeUrl: string;
+    let libUrl: string;
+    try {
+        exeUrl = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.exe`;
+        libUrl = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.lib`;
 
-    let exeDownloadPath: string = await toolLib.downloadTool(exeUrl, path.join(tempDir, "node.exe"));
-    let libDownloadPath: string = await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));
+        await toolLib.downloadTool(exeUrl, path.join(tempDir, "node.exe"));
+        await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));
+    }
+    catch (err) {
+        if (err['httpStatusCode'] && 
+            err['httpStatusCode'] == 404)
+        {
+            exeUrl = `https://nodejs.org/dist/v${version}/node.exe`;
+            libUrl = `https://nodejs.org/dist/v${version}/node.lib`;
 
+            await toolLib.downloadTool(exeUrl, path.join(tempDir, "node.exe"));
+            await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));
+        }
+        else {
+            throw err;
+        }
+    }
     return await toolLib.cacheDir(tempDir, 'node', version);
 }
 

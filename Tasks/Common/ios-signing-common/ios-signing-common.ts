@@ -1,7 +1,6 @@
 import path = require('path');
-import Q = require('q');
-import tl = require('vsts-task-lib/task');
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 /**
  * Creates a temporary keychain and installs the P12 cert in the temporary keychain
@@ -27,9 +26,9 @@ export async function installCertInTemporaryKeychain(keychainPath: string, keych
         createKeychainCommand.arg(['create-keychain', '-p', keychainPwd, keychainPath]);
         await createKeychainCommand.exec();
 
-        //update keychain settings
+        //update keychain settings, keep keychain unlocked for 6h = 21600 sec, which is the job timeout for paid hosted VMs
         let keychainSettingsCommand: ToolRunner = tl.tool(tl.which('security', true));
-        keychainSettingsCommand.arg(['set-keychain-settings', '-lut', '7200', keychainPath]);
+        keychainSettingsCommand.arg(['set-keychain-settings', '-lut', '21600', keychainPath]);
         await keychainSettingsCommand.exec();
     }
 
@@ -477,7 +476,7 @@ export async function deleteProvisioningProfile(uuid: string): Promise<void> {
         const provProfiles: string[] = tl.findMatch(getUserProvisioningProfilesPath(), uuid.trim() + '*');
         if (provProfiles) {
             for (const provProfilePath of provProfiles) {
-                tl.warning('Deleting provisioning profile: ' + provProfilePath);
+                console.log('Deleting provisioning profile: ' + provProfilePath);
                 if (tl.exist(provProfilePath)) {
                     const deleteProfileCommand: ToolRunner = tl.tool(tl.which('rm', true));
                     deleteProfileCommand.arg(['-f', provProfilePath]);
@@ -514,12 +513,12 @@ export function getTempKeychainPath(): string {
 }
 
 /**
- * Get the SHA1 hash (thumbprint) for the certificate in a P12 file.
+ * Get several x509 properties from the certificate in a P12 file.
  * @param p12Path Path to the P12 file
  * @param p12Pwd Password for the P12 file
  */
-export async function getP12SHA1Hash(p12Path: string, p12Pwd: string): Promise<string> {
-    //openssl pkcs12 -in <p12Path> -nokeys -passin pass:"<p12Pwd>" | openssl x509 -noout –fingerprint
+export async function getP12Properties(p12Path: string, p12Pwd: string): Promise<{ fingerprint: string, commonName: string, notBefore: Date, notAfter: Date}> {
+    //openssl pkcs12 -in <p12Path> -nokeys -passin pass:"<p12Pwd>" | openssl x509 -noout -fingerprint –subject -dates
     let opensslPath: string = tl.which('openssl', true);
     let openssl1: ToolRunner = tl.tool(opensslPath);
     if (!p12Pwd) {
@@ -529,23 +528,54 @@ export async function getP12SHA1Hash(p12Path: string, p12Pwd: string): Promise<s
     openssl1.arg(['pkcs12', '-in', p12Path, '-nokeys', '-passin', 'pass:' + p12Pwd]);
 
     let openssl2: ToolRunner = tl.tool(opensslPath);
-    openssl2.arg(['x509', '-noout', '-fingerprint']);
+    openssl2.arg(['x509', '-noout', '-fingerprint', '-subject', '-dates']);
     openssl1.pipeExecOutputToTool(openssl2);
 
-    let sha1Hash: string;
-    openssl1.on('stdout', function (data) {
-        if (data) {
-            // find the fingerprint
-            data = data.toString().trim();
-            let fingerprint: string[] = data.match(/SHA1 Fingerprint=.+/g);
-            if (fingerprint && fingerprint[0]) {
-                sha1Hash = fingerprint[0].replace('SHA1 Fingerprint=', '').replace(/:/g, '').trim();
+    let fingerprint: string;
+    let commonName: string;
+    let notBefore: Date;
+    let notAfter: Date;
+
+    function onLine(line: string) {
+        if (line) {
+            const tuple = splitIntoKeyValue(line);
+            const key: string = tuple.key;
+            const value: string = tuple.value;
+
+            if (key === 'SHA1 Fingerprint') {
+                // Example value: "BB:26:83:C6:AA:88:35:DE:36:94:F2:CF:37:0A:D4:60:BB:AE:87:0C"
+                // Remove colons separating each octet.
+                fingerprint = value.replace(/:/g, '').trim();
+            } else if (key === 'subject') {
+                // Example value: "/UID=E848ASUQZY/CN=iPhone Developer: Chris Sidi (7RZ3N927YF)/OU=DJ8T2973U7/O=Chris Sidi/C=US"
+                // Extract the common name.
+                const matches: string[] = value.match(/\/CN=([^/]+)/);
+                if (matches && matches[1]) {
+                    commonName = matches[1].trim();
+                }
+            } else if (key === 'notBefore') {
+                // Example value: "Nov 13 03:37:42 2018 GMT"
+                notBefore = new Date(value);
+            } else if (key === 'notAfter') {
+                notAfter = new Date(value);
             }
         }
-    })
+    }
+
+    // Concat all of stdout to avoid shearing. This can be updated to `openssl1.on('stdline', onLine)` once stdline mocking is available.
+    let output = '';
+    openssl1.on('stdout', (data) => {
+        output = output + data.toString();
+    });
 
     try {
         await openssl1.exec();
+
+        // process the collected stdout.
+        let line: string;
+        for (line of output.split('\n')) {
+            onLine(line);
+        }
     } catch (err) {
         if (!p12Pwd) {
             tl.warning(tl.loc('NoP12PwdWarning'));
@@ -553,49 +583,12 @@ export async function getP12SHA1Hash(p12Path: string, p12Pwd: string): Promise<s
         throw err;
     }
 
-    tl.debug('P12 SHA1 hash = ' + sha1Hash);
-    return sha1Hash;
-}
+    tl.debug(`P12 fingerprint: ${fingerprint}`);
+    tl.debug(`P12 common name (CN): ${commonName}`);
+    tl.debug(`NotBefore: ${notBefore}`);
+    tl.debug(`NotAfter: ${notAfter}`);
 
-/**
- * Get the common name from the certificate in a P12 file, with 'CN=' removed.
- * @param p12Path Path to the P12 file
- * @param p12Pwd Password for the P12 file
- */
-export async function getP12CommonName(p12Path: string, p12Pwd: string): Promise<string> {
-    //openssl pkcs12 -in <p12Path> -nokeys -passin pass:"<p12Pwd>" | openssl x509 -noout –subject
-    let opensslPath: string = tl.which('openssl', true);
-    let openssl1: ToolRunner = tl.tool(opensslPath);
-    if (!p12Pwd) {
-        // if password is null or not defined, set it to empty
-        p12Pwd = '';
-    }
-    openssl1.arg(['pkcs12', '-in', p12Path, '-nokeys', '-passin', 'pass:' + p12Pwd]);
-
-    let openssl2: ToolRunner = tl.tool(opensslPath);
-    openssl2.arg(['x509', '-noout', '-subject']);
-    openssl1.pipeExecOutputToTool(openssl2);
-
-    let commonName: string;
-    openssl1.on('stdout', function (data) {
-        if (data) {
-            // find the subject
-            data = data.toString().trim();
-            let subject: string[] = data.match(/subject=.+\/CN=.+\(?.+\)?.+/g);
-            if (subject && subject[0]) {
-                // find the CN from the subject
-                let cn: string[] = subject[0].trim().split('/').filter((s) => {
-                    return s.startsWith('CN=')
-                });
-                if (cn && cn[0]) {
-                    commonName = cn[0].replace('CN=', '').trim();
-                }
-            }
-        }
-    })
-    await openssl1.exec();
-    tl.debug('P12 common name (CN) = ' + commonName);
-    return commonName;
+    return { fingerprint, commonName, notBefore, notAfter };
 }
 
 /**
@@ -734,4 +727,15 @@ function generatePassword(): string {
 
 function getUserProvisioningProfilesPath(): string {
     return tl.resolve(tl.getVariable('HOME'), 'Library', 'MobileDevice', 'Provisioning Profiles');
+}
+
+function splitIntoKeyValue(line: string): {key: string, value: string} {
+    // Don't use `split`. The value may contain `=` (e.g. "/UID=E848ASUQZY/CN=iPhone Developer: ...")
+    const index: number = line.indexOf('=');
+
+    if (index) {
+        return {key: line.substring(0, index), value: line.substring(index + 1)};
+    } else {
+        return undefined;
+    }
 }

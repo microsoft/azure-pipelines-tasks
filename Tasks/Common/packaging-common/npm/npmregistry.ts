@@ -1,5 +1,5 @@
 import * as os from 'os';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import { HttpClient }  from 'typed-rest-client/HttpClient';
 import { IHeaders, IRequestOptions } from 'typed-rest-client/Interfaces';
@@ -60,7 +60,7 @@ export class NpmRegistry implements INpmRegistry {
                 password = endpointAuth.parameters['password'];
                 email = username; // npm needs an email to be set in order to publish, this is ignored on npmjs
                 password64 = (new Buffer(password).toString('base64'));
-                console.log('##vso[task.setvariable variable=' + endpointId + 'BASE64_PASSWORD;issecret=true;]' + password64);
+                tl.setSecret(password64);
 
                 auth = nerfed + ':username=' + username + lineEnd;
                 auth += nerfed + ':_password=' + password64 + lineEnd;
@@ -76,7 +76,7 @@ export class NpmRegistry implements INpmRegistry {
                     email = 'VssEmail';
                     username = 'VssToken';
                     password64 = (new Buffer(apitoken).toString('base64'));
-                    console.log('##vso[task.setvariable variable=' + endpointId + 'BASE64_PASSWORD;issecret=true;]' + password64);
+                    tl.setSecret(password64);
 
                     auth = nerfed + ':username=' + username + lineEnd;
                     auth += nerfed + ':_password=' + password64 + lineEnd;

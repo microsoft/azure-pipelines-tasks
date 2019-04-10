@@ -48,7 +48,7 @@
   "loc.input.label.codeCoverageEnabled": "Code coverage enabled",
   "loc.input.help.codeCoverageEnabled": "Collect code coverage information from the test run.",
   "loc.input.label.otherConsoleOptions": "Other console options",
-  "loc.input.help.otherConsoleOptions": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ option. The options can be specified using a settings file instead.</p>",
+  "loc.input.help.otherConsoleOptions": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ or 'Test run' option or when a custom batching option is selected. The options can be specified using a settings file instead.</p>",
   "loc.input.label.distributionBatchType": "Batch tests",
   "loc.input.help.distributionBatchType": "A batch is a group of tests. A batch of tests runs its tests at the same time and results are published for the batch. If the job in which the task runs is set to use multiple agents, each agent picks up any available batches of tests to run in parallel.<br><br><b>Based on the number of tests and agents:</b> Simple batching based on the number of tests and agents participating in the test run.<br><br><b>Based on past running time of tests:</b> This batching considers past running time to create batches of tests such that each batch has approximately equal running time.<br><br><b>Based on test assemblies:</b> Tests from an assembly are batched together.",
   "loc.input.label.batchingBasedOnAgentsOption": "Batch options",
@@ -119,7 +119,7 @@
   "loc.messages.testSettingPropertiesNotSupported": "Properties specified in testsettings file can be accessed via the TestContext using Visual Studio 2017 Update 4 or higher",
   "loc.messages.vstestVersionInvalid": "Given test platform version %s is not supported.",
   "loc.messages.configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
-  "loc.messages.otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent job setting. This option will be ignored.",
+  "loc.messages.otherConsoleOptionsNotSupported": "Other console options is not supported for this task configuration. This option will be ignored.",
   "loc.messages.distributedTestWorkflow": "In distributed testing flow",
   "loc.messages.nonDistributedTestWorkflow": "Running tests using vstest.console.exe runner.",
   "loc.messages.dtaNumberOfAgents": "Distributed test execution, number of agents in job : %s",
@@ -178,5 +178,7 @@
   "loc.messages.UserProvidedSourceFilter": "Source filter: %s",
   "loc.messages.UnableToGetFeatureFlag": "Unable to get feature flag: %s",
   "loc.messages.diagnosticsInput": "Diagnostics enabled : %s",
-  "loc.messages.UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory)."
+  "loc.messages.UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory).",
+  "loc.messages.LookingForBuildToolsInstalltion": "Attempting to find vstest.console from a visual studio build tools installation.",
+  "loc.messages.LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation."
 }

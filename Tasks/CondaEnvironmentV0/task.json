@@ -3,6 +3,7 @@
     "name": "CondaEnvironment",
     "friendlyName": "Conda Environment",
     "description": "Create and activate a Conda environment.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=873466",
     "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=873466)",
     "category": "Package",
     "runsOn": [

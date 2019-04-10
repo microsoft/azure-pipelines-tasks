@@ -3,6 +3,7 @@
   "name": "CopyFiles",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=708389",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -16,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 117,
-    "Patch": 0
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [],

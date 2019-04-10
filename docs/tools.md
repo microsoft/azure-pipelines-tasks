@@ -44,7 +44,7 @@ The downloader should guard against incomplete downloads and be robust to virus 
 
 The tools folder will be pre-pended to the path.  This sets up the environment so subsequent tasks and scripts use the tool version specified.  For example, if npm 3.0 is chosen, it doesn't matter if subsequent execution is via the npm task, a cmd line task or a script.  It will be used.  This also keeps the tasks simple - use the tool in the path regardless if that's a result of a pre-requisite being installed or an installer task acquiring the tool.  
 
-The binary folder which will be used may not be directly under the root of the binaries.  As as example, node is in the bin folder and expects the libs to be in a sibling lib folder.  We should not manipulate the layout of the toolset.  The installer has first hand knowledge of that layout (might even vary by version) and knows what folder to prepend to the path (next section).
+The binary folder which will be used may not be directly under the root of the binaries.  As an example, node is in the bin folder and expects the libs to be in a sibling lib folder.  We should not manipulate the layout of the toolset.  The installer has firsthand knowledge of that layout (might even vary by version) and knows what folder to prepend to the path (next section).
 
 Some tools have specific  env vars like M2_HOME.
 
@@ -89,7 +89,7 @@ To achieve this, add a tool installer task and for the version, reference a vari
 
 ## Safe Tool Execution under Multiple Agents 
 
-Some tools have caches of there own which when used by multiple agents on the same machine can lead to concurrency issues and failures.  Examples are nuget and npm which have cache locations which can be overriden by environment variables.  Since the tool installer has the first class knowledge of the tool, it can set the cache location.
+Some tools have caches of their own which when used by multiple agents on the same machine can lead to concurrency issues and failures.  Examples are nuget and npm which have cache locations which can be overriden by environment variables.  Since the tool installer has the first class knowledge of the tool, it can set the cache location.
 
 The agent will provide a caches well known folder in the _work folder which has caches keyed by the tool name.
 

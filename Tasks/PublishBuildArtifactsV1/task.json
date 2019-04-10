@@ -3,6 +3,7 @@
     "name": "PublishBuildArtifacts",
     "friendlyName": "Publish Build Artifacts",
     "description": "Publish build artifacts to Azure Pipelines/TFS or a file share",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=708390",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=708390)",
     "category": "Utility",
     "visibility": [

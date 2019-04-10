@@ -5,7 +5,7 @@ var path = require('path')
 
 import * as corem from 'vso-node-api/CoreApi';
 import * as locationUtility from "packaging-common/locationUtilities";
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as vsom from 'vso-node-api/VsoClient';
 import * as vsts from "vso-node-api/WebApi"
 import bearm = require('vso-node-api/handlers/bearertoken');
@@ -30,8 +30,13 @@ async function main(): Promise<void> {
 	var credentialHandler = vsts.getBearerHandler(accessToken);
 	var vssConnection = new vsts.WebApi(collectionUrl, credentialHandler);
 	var coreApi = vssConnection.getCoreApi();
+	const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
+	const retryLimit: number = (!!retryLimitValue && !isNaN(parseInt(retryLimitValue))) ? parseInt(retryLimitValue) : 4;
+	tl.debug(`RetryLimit set to ${retryLimit}`);
 
-	await downloadPackage(collectionUrl, accessToken, credentialHandler, feedId, packageId, version, downloadPath);
+	await executeWithRetries("downloadPackage", () => downloadPackage(collectionUrl, accessToken, credentialHandler, feedId, packageId, version, downloadPath).catch((reason) => {
+		throw reason;
+	}), retryLimit);
 }
 
 function getAuthToken() {
@@ -159,6 +164,30 @@ export async function downloadNugetPackage(coreApi: corem.ICoreApi, downloadUrl:
 	});
 
 	file.end(null, null, file.close);
+}
+
+function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount): Promise<any> {
+    var executePromise = new Promise((resolve, reject) => {
+        executeWithRetriesImplementation(operationName, operation, retryCount, resolve, reject);
+    });
+
+    return executePromise;
+}
+
+function executeWithRetriesImplementation(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject) {
+    operation().then((result) => {
+        resolve(result);
+    }).catch((error) => {
+        if (currentRetryCount <= 0) {
+            tl.error(tl.loc("OperationFailed", operationName, error));
+            reject(error);
+        }
+        else {
+            console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
+            currentRetryCount = currentRetryCount - 1;
+            setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject), 4 * 1000);
+        }
+    });
 }
 
 export async function unzip(zipLocation: string, unzipLocation: string): Promise<void> {

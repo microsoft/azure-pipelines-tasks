@@ -1,8 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as url from "url";
-import * as Q from "q";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 import * as auth from "./Authentication";
 import { IPackageSource } from "./Authentication";
@@ -10,8 +9,7 @@ import { INuGetXmlHelper } from "./INuGetXmlHelper";
 import * as ngToolRunner from "./NuGetToolRunner2";
 import { NuGetExeXmlHelper } from "./NuGetExeXmlHelper";
 import { NuGetXmlHelper } from "./NuGetXmlHelper";
-
-let xmlreader = require("xmlreader");
+import * as ngutil from "./Utility";
 
 // NuGetConfigHelper2 handles authenticated scenarios where the user selects a source from the UI or from a service connection.
 // It is used by the NuGetCommand >= v2.0.0 and DotNetCoreCLI >= v2.0.0
@@ -25,7 +23,7 @@ export class NuGetConfigHelper2 {
         private nugetConfigPath: string,
         private authInfo: auth.NuGetExtendedAuthInfo,
         private environmentSettings: ngToolRunner.NuGetEnvironmentSettings,
-        private tempConfigPath: string /*optional*/,
+        tempConfigPath: string /*optional*/,
         useNuGetToModifyConfigFile?: boolean /* optional */)
     {
         this.tempNugetConfigPath = tempConfigPath || this.getTempNuGetConfigPath();
@@ -37,8 +35,7 @@ export class NuGetConfigHelper2 {
 
     public static getTempNuGetConfigBasePath() {
         return tl.getVariable("Agent.BuildDirectory")
-        || tl.getVariable("Agent.ReleaseDirectory")
-        || process.cwd();
+        || tl.getVariable("Agent.TempDirectory");
      }
 
     public ensureTempConfigCreated() {
@@ -71,12 +68,12 @@ export class NuGetConfigHelper2 {
         this.addSourcesToTempNugetConfigInternal(packageSources);
     }
 
-    public async setAuthForSourcesInTempNuGetConfigAsync(): Promise<void>
+    public setAuthForSourcesInTempNuGetConfig(): void
     {
         tl.debug('Setting auth in the temp nuget.config');
         this.ensureTempConfigCreated();
 
-        let sources = await this.getSourcesFromTempNuGetConfig();
+        let sources = this.getSourcesFromTempNuGetConfig();
         if (sources.length < 1)
         {
             tl.debug('Not setting up auth for temp nuget.config as there are no sources');
@@ -91,6 +88,15 @@ export class NuGetConfigHelper2 {
                     tl.debug('Setting auth for internal source ' + source.feedUri);
                     // Removing source first
                     this.removeSourceFromTempNugetConfig(source);
+
+                    // Cannot add tag that starts with number as a child node of PackageSourceCredentials because of
+                    // Bug in nuget 4.9.1 and dotnet 2.1.500
+                    // https://github.com/NuGet/Home/issues/7517
+                    // https://github.com/NuGet/Home/issues/7524
+                    // so working around this by prefixing source with string
+                    tl.debug('Prefixing internal source feed name ' + source.feedName + ' with feed-');
+                    source.feedName = 'feed-' + source.feedName;
+
                     // Re-adding source with creds
                     this.addSourceWithUsernamePasswordToTempNuGetConfig(source, "VssSessionToken", this.authInfo.internalAuthInfo.accessToken);
                 }
@@ -139,71 +145,22 @@ export class NuGetConfigHelper2 {
         return path.join(tempNuGetConfigBaseDir, "Nuget", tempNuGetConfigFileName);
     }
 
-    private getSourcesFromTempNuGetConfig(): Q.Promise<IPackageSource[]> {
+    public getSourcesFromTempNuGetConfig(): IPackageSource[] {
         // load content of the user's nuget.config
         let configPath: string = this.tempNugetConfigPath ? this.tempNugetConfigPath : this.nugetConfigPath;
 
         if (!configPath)
         {
-            return Q.resolve([]);
+            return [];
         }
 
-        tl.debug('Getting sources from NuGet.config in this location: ' + configPath);
-
-        let xmlString = fs.readFileSync(configPath).toString();
-
-        // strip BOM; xml parser doesn't like it
-        if (xmlString.charCodeAt(0) === 0xFEFF) {
-            xmlString = xmlString.substr(1);
-        }
-
-        // get package sources
-        return Q.nfcall<any>(xmlreader.read, xmlString)
-            .then(configXml => {
-                let packageSources = [];
-                let packageSource: IPackageSource;
-                let sourceKey;
-                let sourceValue;
-
-                // give clearer errors if the user has set an invalid nuget.config
-                if (!configXml.configuration) {
-                    if (configXml.packages) {
-                        throw new Error(tl.loc(
-                            "NGCommon_NuGetConfigIsPackagesConfig",
-                            this.nugetConfigPath || this.tempNugetConfigPath,
-                            tl.getVariable("Task.DisplayName")));
-                    }
-                    else {
-                        throw new Error(tl.loc("NGCommon_NuGetConfigIsInvalid", this.nugetConfigPath || this.tempNugetConfigPath));
-                    }
-                }
-
-                if (!configXml.configuration.packageSources || !configXml.configuration.packageSources.add) {
-                    tl.warning(tl.loc("NGCommon_NoSourcesFoundInConfig", this.nugetConfigPath || this.tempNugetConfigPath));
-                    return [];
-                }
-
-                for (let i = 0; i < configXml.configuration.packageSources.add.count(); i++) {
-                    sourceKey = configXml.configuration.packageSources.add.at(i).attributes().key;
-                    sourceValue = configXml.configuration.packageSources.add.at(i).attributes().value;
-                    if (!sourceKey || !sourceValue) {
-                        continue;
-                    }
-
-                    packageSource = { feedName: sourceKey, feedUri: sourceValue, isInternal: false };
-                    let isInternalFeed: boolean = this.shouldGetCredentialsForFeed(packageSource);
-                    packageSource.isInternal = isInternalFeed;
-                    packageSources.push(packageSource);
-                }
-
-                return packageSources;
-            });
+        let packageSources = ngutil.getSourcesFromNuGetConfig(configPath);
+        return packageSources.map((source) => this.convertToIPackageSource(source));
     }
 
     private removeSourceFromTempNugetConfig(packageSource: IPackageSource) {
         this.nugetXmlHelper.RemoveSourceFromNuGetConfig(packageSource.feedName);
     }
-
 
     private addSourcesToTempNugetConfigInternal(packageSources: IPackageSource[]) {
         packageSources.forEach((source) => {
@@ -221,8 +178,14 @@ export class NuGetConfigHelper2 {
         this.nugetXmlHelper.SetApiKeyInNuGetConfig(source.feedName, apiKey);
     }
 
-    private shouldGetCredentialsForFeed(source: IPackageSource): boolean {
-        let uppercaseUri = source.feedUri.toUpperCase();
-        return this.authInfo.internalAuthInfo.uriPrefixes.some(prefix => uppercaseUri.indexOf(prefix.toUpperCase()) === 0);
+    private convertToIPackageSource(source: auth.IPackageSourceBase): IPackageSource {
+        const uppercaseUri = source.feedUri.toUpperCase();
+        const isInternal = this.authInfo.internalAuthInfo.uriPrefixes.some(prefix => uppercaseUri.indexOf(prefix.toUpperCase()) === 0);
+
+        return {
+            feedName: source.feedName,
+            feedUri: source.feedUri,
+            isInternal
+        };
     }
 }

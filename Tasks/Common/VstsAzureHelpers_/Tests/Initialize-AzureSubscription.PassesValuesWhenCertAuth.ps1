@@ -5,6 +5,7 @@ param()
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 Unregister-Mock Import-Module
 Register-Mock Write-VstsTaskError
+Register-Mock Get-VstsWebProxy { }
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 & $module { $script:azureModule = @{ Version = [version]'1.0' } }
 $endpoint = @{

@@ -1,7 +1,11 @@
+import * as fs from "fs";
+import * as ltx from "ltx";
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as locationUtilities from "../locationUtilities";
 import { VersionInfo } from "../pe-parser/VersionResource";
+
+import { IPackageSourceBase } from "./Authentication";
 
 export function getPatternsArrayFromInput(pattern: string): string[]
 {
@@ -206,3 +210,72 @@ export async function getNuGetFeedRegistryUrl(
     return await locationUtilities.getFeedRegistryUrl(packagingCollectionUrl, registryType, feedId, accessToken, useSession);
 }
 
+export function getSourcesFromNuGetConfig(configPath: string): IPackageSourceBase[] {
+    // load content of the user's nuget.config
+    if (!configPath) {
+        return [];
+    }
+
+    tl.debug('Getting sources from NuGet.config in this location: ' + configPath);
+
+    let xmlString = fs.readFileSync(configPath).toString();
+
+    // strip BOM; xml parser doesn't like it
+    if (xmlString.charCodeAt(0) === 0xFEFF) {
+        xmlString = xmlString.substr(1);
+    }
+
+    // parse sources xml
+    let xml: ltx.Element;
+    try {
+        xml = ltx.parse(xmlString);
+    } catch (e) {
+        throw new Error(tl.loc("NGCommon_NuGetConfigIsInvalid", configPath));
+    }
+
+    // give clearer errors if the user has set an invalid nuget.config
+    if(!xml.nameEquals(new ltx.Element("configuration"))) {
+        if(xml.nameEquals(new ltx.Element("packages"))) {
+            throw new Error(tl.loc(
+                "NGCommon_NuGetConfigIsPackagesConfig",
+                configPath,
+                tl.getVariable("Task.DisplayName")));
+        }
+        else {
+            throw new Error(tl.loc("NGCommon_NuGetConfigIsInvalid", configPath));
+        }
+    }
+
+    // check that the config contains packageSources entries
+    let hasSources = false;
+    let packageSources = xml.getChild("packageSources");
+    let addPackageSources: ltx.Element[];
+    if (packageSources) {
+        addPackageSources = packageSources.getChildren("add");
+        if (addPackageSources) {
+            hasSources = true;
+        }
+    }
+
+    if (!hasSources) {
+        tl.warning(tl.loc("NGCommon_NoSourcesFoundInConfig", configPath));
+        return [];
+    }
+
+    // convert to IPackageSourceBase[]
+    let sources = addPackageSources.reduce((result, current) => {
+        const k = current.attrs["key"];
+        const v = current.attrs["value"];
+        // filter out any invalid entries
+        if (k != null && v != null) {
+            let packageSource: IPackageSourceBase = {
+                feedName: k,
+                feedUri: v
+            }
+            result.push(packageSource);
+        }
+        return result;
+    }, []);
+
+    return sources;
+}

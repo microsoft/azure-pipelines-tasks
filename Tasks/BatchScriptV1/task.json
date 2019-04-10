@@ -3,6 +3,7 @@
     "name": "BatchScript",
     "friendlyName": "Batch Script",
     "description": "Run a windows cmd or bat script and optionally allow it to change the environment",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613733",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613733)",
     "category": "Utility",
     "visibility": [

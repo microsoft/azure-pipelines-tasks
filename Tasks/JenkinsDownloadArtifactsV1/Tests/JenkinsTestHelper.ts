@@ -7,6 +7,9 @@ export interface ExpectedResult {
 
 export function RegisterHttpClientMock(tr: tmrm.TaskMockRunner, getResultCallback: any)
 {
+    // setting retry value to zero as we don't want the test to hang up
+    process.env['VSTS_HTTP_RETRY'] = "0"
+
     tr.registerMock("artifact-engine/Providers/typed-rest-client/HttpClient", {
         HttpClient: function(name, handlers, options) {
             return {

@@ -18,7 +18,7 @@
   "demands": [
     "npm"
   ],
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {

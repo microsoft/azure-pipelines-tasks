@@ -2,7 +2,8 @@
     "id": "0675668A-7BBA-4CCB-901D-5AD6554CA653",
     "name": "PublishSymbols",
     "friendlyName": "Index Sources & Publish Symbols",
-    "description": "Index your source code and publish symbols to a file share or Azure Artifacts Symbol Server",
+    "description": "Index your source code and publish symbols to a file share or Azure Artifacts symbol server.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613722",
     "helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task.",
     "category": "Build",
     "visibility": [
@@ -62,7 +63,7 @@
             "label": "Symbol server type",
             "required": true,
             "defaultValue": " ",
-            "helpMarkDown": "Choose where to publish symbols. Symbols published to the Azure Artifacts Symbol Server are accessible by any user with access to the organization/collection. Azure DevOps Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in Azure Artifacts.",
+            "helpMarkDown": "Choose where to publish symbols. Symbols published to the Azure Artifacts symbol server are accessible by any user with access to the organization/collection. Azure DevOps Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in Azure Artifacts.",
             "options": {
                 " ": "Select one",
                 "TeamServices": "Symbol Server in this organization/collection (requires Azure Artifacts)",

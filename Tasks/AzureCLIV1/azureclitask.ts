@@ -31,12 +31,13 @@ export class azureclitask {
                 }
             }
             else {
+                var tmpDir = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
                 var script: string = tl.getInput("inlineScript", true);
                 if (os.type() != "Windows_NT") {
-                    scriptPath = path.join(os.tmpdir(), "azureclitaskscript" + new Date().getTime() + ".sh");
+                    scriptPath = path.join(tmpDir, "azureclitaskscript" + new Date().getTime() + ".sh");
                 }
                 else {
-                    scriptPath = path.join(os.tmpdir(), "azureclitaskscript" + new Date().getTime() + ".bat");
+                    scriptPath = path.join(tmpDir, "azureclitaskscript" + new Date().getTime() + ".bat");
                 }
                 this.createFile(scriptPath, script);
             }
@@ -57,12 +58,16 @@ export class azureclitask {
                 tool = tl.tool(tl.which(scriptPath, true));
             }
             this.throwIfError(tl.execSync("az", "--version"));
-            this.loginAzure();
+            // set az cli config dir
+            this.setConfigDirectory();
+            this.setAzureCloudBasedOnServiceEndpoint();
+            var connectedService: string = tl.getInput("connectedServiceNameARM", true);
+            this.loginAzureRM(connectedService);
 
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
 
             var addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
-            if (!!addSpnToEnvironment) {
+            if (!!addSpnToEnvironment && tl.getEndpointAuthorizationScheme(connectedService, true) == "ServicePrincipal") {
                 await tool.exec({
                     failOnStdErr: failOnStdErr,
                     env: { ...process.env, ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey } }
@@ -92,15 +97,6 @@ export class azureclitask {
                 tl.rmRF(this.cliPasswordPath);
             }
 
-            //Logout of Azure if logged in
-            if (this.isLoggedIn) {
-                this.logoutAzure();
-            }
-
-            if (this.azCliConfigPath) {
-                tl.rmRF(this.azCliConfigPath);
-            }
-
             //set the task result to either succeeded or failed based on error was thrown or not
             if (toolExecutionError) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailed", toolExecutionError));
@@ -108,64 +104,81 @@ export class azureclitask {
             else {
                 tl.setResult(tl.TaskResult.Succeeded, tl.loc("ScriptReturnCode", 0));
             }
+            
+            //Logout of Azure if logged in
+            if (this.isLoggedIn) {
+                this.logoutAzure();
+            }
         }
     }
 
     private static isLoggedIn: boolean = false;
     private static cliPasswordPath: string = null;
-    private static azCliConfigPath: string;
-
     private static servicePrincipalId: string = null;
     private static servicePrincipalKey: string = null;
 
-    private static loginAzure() {
-        var connectedService: string = tl.getInput("connectedServiceNameARM", true);
-        this.loginAzureRM(connectedService);
-    }
-
     private static loginAzureRM(connectedService: string): void {
-        var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-        let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
-        let cliPassword: string = null;
-        if (authType == "spnCertificate") {
-            tl.debug('certificate based endpoint');
-            let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
-            cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
-            fs.writeFileSync(cliPassword, certificateContent);
-            this.cliPasswordPath = cliPassword;
-
-        }
-        else {
-            tl.debug('key based endpoint');
-            cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
-            this.servicePrincipalId = servicePrincipalId;
-            this.servicePrincipalKey = cliPassword;
-        }
-
-        var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+        var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
-        // set az cli config dir
-        this.setConfigDirectory();
+        if(authScheme.toLowerCase() == "serviceprincipal") {
+            let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
+            let cliPassword: string = null;
+            var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+            if (authType == "spnCertificate") {
+                tl.debug('certificate based endpoint');
+                let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
+                cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
+                fs.writeFileSync(cliPassword, certificateContent);
+                this.cliPasswordPath = cliPassword;
 
-        //login using svn
-        this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
+            }
+            else {
+                tl.debug('key based endpoint');
+                cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
+                this.servicePrincipalId = servicePrincipalId;
+                this.servicePrincipalKey = cliPassword;
+            }
+
+            var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+
+            //login using svn
+            this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
+        }
+        else if(authScheme.toLowerCase() == "managedserviceidentity") {
+            //login using msi
+            this.throwIfError(tl.execSync("az", "login --identity"), tl.loc("MSILoginFailed"));
+        }
+        else{
+            throw tl.loc('AuthSchemeNotSupported', authScheme);
+        }
+
         this.isLoggedIn = true;
-
         //set the subscription imported to the current subscription
         this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
     }
 
     private static setConfigDirectory(): void {
-        var configDirName: string = "c" + new Date().getTime(); // 'c' denotes config
-        if (tl.osType().match(/^Win/)) {
-            this.azCliConfigPath = path.join(process.env.USERPROFILE, ".azclitask", configDirName);
-        }
-        else {
-            this.azCliConfigPath = path.join(process.env.HOME, ".azclitask", configDirName);
+        if (tl.getBoolInput("useGlobalConfig")) {
+            return;
         }
 
-        process.env['AZURE_CONFIG_DIR'] = this.azCliConfigPath;
+        if (!!tl.getVariable('Agent.TempDirectory')) {
+            var azCliConfigPath = path.join(tl.getVariable('Agent.TempDirectory'), ".azclitask");
+            console.log(tl.loc('SettingAzureConfigDir', azCliConfigPath));
+            process.env['AZURE_CONFIG_DIR'] = azCliConfigPath;
+        } else {
+            console.warn(tl.loc('GlobalCliConfigAgentVersionWarning'));
+        }
+    }
+
+    private static setAzureCloudBasedOnServiceEndpoint(): void {
+        var connectedService: string = tl.getInput("connectedServiceNameARM", true);
+        var environment = tl.getEndpointDataParameter(connectedService, 'environment', true);
+        if(!!environment) {
+            console.log(tl.loc('SettingAzureCloud', environment));
+            this.throwIfError(tl.execSync("az", "cloud set -n " + environment));
+        }
     }
 
     private static logoutAzure() {

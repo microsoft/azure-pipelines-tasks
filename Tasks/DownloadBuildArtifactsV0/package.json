@@ -8,17 +8,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Microsoft/vsts-tasks.git"
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
-  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "vsts-task-lib": "2.1.0",
     "vso-node-api": "^6.2.8-preview",
-    "artifact-engine": "0.1.24"
+    "artifact-engine": "0.1.26"
   }
 }

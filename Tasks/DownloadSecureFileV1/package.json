@@ -8,17 +8,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
-  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/node": "^6.0.0",
-    "securefiles-common": "file:../../_build/Tasks/Common/securefiles-common-1.0.0.tgz",
-    "vsts-task-lib": "2.4.0"
+    "azure-pipelines-task-lib": "^2.8.0",
+    "securefiles-common": "file:../../_build/Tasks/Common/securefiles-common-1.0.0.tgz"
   }
 }

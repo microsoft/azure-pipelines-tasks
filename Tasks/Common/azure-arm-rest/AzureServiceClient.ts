@@ -143,7 +143,10 @@ export class ServiceClient {
 
             throw exception;
         }
-
+        
+        if(httpResponse.headers["azure-asyncoperation"] || httpResponse.headers["location"])
+            tl.debug(request.uri + " ==> " + httpResponse.headers["azure-asyncoperation"] || httpResponse.headers["location"])
+        
         return httpResponse;
     }
 
@@ -157,11 +160,13 @@ export class ServiceClient {
         if (!request.uri) {
             throw new Error(tl.loc("InvalidResponseLongRunningOperation"));
         }
-
         while (true) {
             response = await this.beginRequest(request);
             tl.debug(`Response status code : ${response.statusCode}`);
             if (response.statusCode === 202 || (response.body && (response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress"))) {
+                if(response.body && response.body.status) {
+                    tl.debug(`Response status : ${response.body.status}`);
+                }
                 // If timeout; throw;
                 if (!waitIndefinitely && timeout < new Date().getTime()) {
                     throw new Error(tl.loc("TimeoutWhileWaiting"));

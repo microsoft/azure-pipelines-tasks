@@ -1,0 +1,30 @@
+{
+  "name": "vsts-tasks-azurefunctionapp",
+  "version": "1.0.0",
+  "description": "Azure Pipelines Azure Function Deployment",
+  "main": "azurermWebappdeployment.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "@types/mocha": "2.2.48",
+    "@types/node": "6.0.68",
+    "@types/q": "1.0.7",
+    "azure-storage": "2.2.1",
+    "azurermdeploycommon": "file:../../_build/Tasks/Common/azurermdeploycommon-1.0.0.tgz",
+    "moment": "2.21.0",
+    "q": "1.4.1",
+    "uuid": "3.1.0",
+    "xml2js": "0.4.13"
+  }
+}

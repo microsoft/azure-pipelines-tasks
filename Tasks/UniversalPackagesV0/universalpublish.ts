@@ -1,18 +1,18 @@
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import {ProvenanceHelper} from "packaging-common/provenance";
 import * as telemetry from "utility-common/telemetry";
-import * as tl from "vsts-task-lib";
-import {IExecOptions, IExecSyncResult} from "vsts-task-lib/toolrunner";
-import * as artifactToolRunner from "./Common/ArtifactToolRunner";
-import * as artifactToolUtilities from "./Common/ArtifactToolUtilities";
-import * as auth from "./Common/Authentication";
+import * as tl from "azure-pipelines-task-lib";
+import {IExecOptions, IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
+import * as artifactToolRunner from "packaging-common/universal/ArtifactToolRunner";
+import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolUtilities";
+import * as auth from "packaging-common/universal/Authentication";
 
 export async function run(artifactToolPath: string): Promise<void> {
-    let buildIdentityDisplayName: string = null;
-    let buildIdentityAccount: string = null;
+    const buildIdentityDisplayName: string = null;
+    const buildIdentityAccount: string = null;
     try {
         // Get directory to publish
-        let publishDir: string = tl.getInput("publishDirectory");
+        const publishDir: string = tl.getInput("publishDirectory");
         if (publishDir.length < 1)
         {
             tl.debug(tl.loc("Info_PublishDirectoryNotFound"));
@@ -25,6 +25,7 @@ export async function run(artifactToolPath: string): Promise<void> {
         let version: string;
         let accessToken: string;
         let feedUri: string;
+        const publishedPackageVar: string = tl.getInput("publishedPackageVar");
         const versionRadio = tl.getInput("versionPublishSelector");
 
         // Feed Auth
@@ -39,7 +40,7 @@ export async function run(artifactToolPath: string): Promise<void> {
 
         let internalAuthInfo: auth.InternalAuthInfo;
 
-        let toolRunnerOptions = artifactToolRunner.getOptions();
+        const toolRunnerOptions = artifactToolRunner.getOptions();
 
         let sessionId: string;
 
@@ -57,28 +58,24 @@ export async function run(artifactToolPath: string): Promise<void> {
 
             toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = internalAuthInfo.accessToken;
 
-            // creating session
-            const useSessionEnabled = tl.getVariable("Packaging.SavePublishMetadata");
-            if (useSessionEnabled) {
-                let packagingLocation: string;
-                try {
-                    // This call is to get the packaging URI(abc.pkgs.vs.com) which is same for all protocols.
-                    packagingLocation = await pkgLocationUtils.getNuGetUriFromBaseServiceUri(
-                        serviceUri,
-                        accessToken);
-                } catch (error) {
-                    tl.debug(JSON.stringify(error));
-                    packagingLocation = serviceUri;
-                }
-
-                const pkgConn = pkgLocationUtils.getWebApiWithProxy(packagingLocation, accessToken);
-                sessionId = await ProvenanceHelper.GetSessionId(
-                    feedId,
-                    "upack", /* must match protocol name on the server */
-                    pkgConn.serverUrl,
-                    [pkgConn.authHandler],
-                    pkgConn.options);
+            let packagingLocation: string;
+            try {
+                // This call is to get the packaging URI(abc.pkgs.vs.com) which is same for all protocols.
+                packagingLocation = await pkgLocationUtils.getNuGetUriFromBaseServiceUri(
+                    serviceUri,
+                    accessToken);
+            } catch (error) {
+                tl.debug(JSON.stringify(error));
+                packagingLocation = serviceUri;
             }
+
+            const pkgConn = pkgLocationUtils.getWebApiWithProxy(packagingLocation, accessToken);
+            sessionId = await ProvenanceHelper.GetSessionId(
+                feedId,
+                "upack", /* must match protocol name on the server */
+                pkgConn.serverUrl,
+                [pkgConn.authHandler],
+                pkgConn.options);
         }
         else {
             const externalAuthInfo = auth.GetExternalAuthInfo("externalEndpoints");
@@ -104,7 +101,11 @@ export async function run(artifactToolPath: string): Promise<void> {
         else{
             feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
 
-            let highestVersion = await artifactToolUtilities.getHighestPackageVersionFromFeed(feedUri, accessToken, feedId, packageName);
+            const highestVersion = await artifactToolUtilities.getHighestPackageVersionFromFeed(
+                feedUri,
+                accessToken,
+                feedId,
+                packageName);
 
             version = artifactToolUtilities.getVersionUtility(tl.getInput("versionPublishSelector"), highestVersion);
         }
@@ -124,6 +125,9 @@ export async function run(artifactToolPath: string): Promise<void> {
         } as artifactToolRunner.IArtifactToolOptions;
 
         publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
+        if(publishedPackageVar) {
+            tl.setVariable(publishedPackageVar, `${packageName} ${version}`);
+        }
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesPublishedSuccessfully"));
     } catch (err) {
@@ -137,8 +141,11 @@ export async function run(artifactToolPath: string): Promise<void> {
     }
 }
 
-function publishPackageUsingArtifactTool(publishDir: string, options: artifactToolRunner.IArtifactToolOptions, execOptions: IExecOptions) {
-    let command = new Array<string>();
+function publishPackageUsingArtifactTool(
+    publishDir: string,
+    options: artifactToolRunner.IArtifactToolOptions,
+    execOptions: IExecOptions) {
+    const command = new Array<string>();
     command.push("universal", "publish",
         "--feed", options.feedId,
         "--service", options.accountUrl,
@@ -150,7 +157,10 @@ function publishPackageUsingArtifactTool(publishDir: string, options: artifactTo
         "--description", tl.getInput("packagePublishDescription"));
 
     console.log(tl.loc("Info_Publishing", options.packageName, options.packageVersion, options.feedId));
-    const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(options.artifactToolPath, command, execOptions);
+    const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(
+        options.artifactToolPath,
+        command,
+        execOptions);
 
     if (execResult.code === 0) {
         return;

@@ -1,0 +1,33 @@
+{
+  "name": "usedotnet",
+  "version": "0.1.0",
+  "description": "Use .Net Core",
+  "main": "usedotnet.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "keywords": [
+    "Azure",
+    "Pipelines",
+    "Tasks",
+    "DotNetCore",
+    "Use"
+  ],
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/mocha": "^5.2.6",
+    "azure-pipelines-task-lib": "3.0.0-preview",
+    "azure-pipelines-tool-lib": "0.11.0",
+    "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz",
+    "typed-rest-client": "0.11.0"
+  }
+}

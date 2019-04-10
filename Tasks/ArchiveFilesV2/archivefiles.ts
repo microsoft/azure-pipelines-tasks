@@ -1,5 +1,6 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
+import fs = require('fs');
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 
@@ -8,6 +9,8 @@ var includeRootFolder: boolean = tl.getBoolInput('includeRootFolder', true);
 var archiveType: string = tl.getInput('archiveType', true);
 var archiveFile: string = path.normalize(tl.getPathInput('archiveFile', true, false).trim());
 var replaceExistingArchive: boolean = tl.getBoolInput('replaceExistingArchive', true);
+var verbose: boolean = tl.getBoolInput('verbose', false);
+var quiet: boolean = tl.getBoolInput('quiet', false);
 
 tl.debug('repoRoot: ' + repoRoot);
 
@@ -56,6 +59,28 @@ function makeAbsolute(normalizedPath: string): string {
     return result;
 }
 
+function createFileList(files: string[]): string {
+    const tempDirectory: string = tl.getVariable('Agent.TempDirectory');
+    const fileName: string = Math.random().toString(36).replace('0.', '');
+    const file: string = path.resolve(tempDirectory, fileName);
+
+    try {
+        fs.writeFileSync(
+            file,
+            files.reduce((prev, cur) => prev + cur + "\n", ""),
+            { encoding: "utf8" });
+    }
+    catch (error) {
+        if (fs.existsSync(file)) {
+            fs.unlinkSync(file);
+        }
+
+        throw error;
+    }
+
+    return file;
+}
+
 function getOptions() {
     var dirName: string;
     if (includeRootFolder) {
@@ -79,10 +104,15 @@ function sevenZipArchive(archive: string, compression: string, files: string[]) 
     var sevenZip = tl.createToolRunner(getSevenZipLocation());
     sevenZip.arg('a');
     sevenZip.arg('-t' + compression);
-    sevenZip.arg(archive);
-    for (var i = 0; i < files.length; i++) {
-        sevenZip.arg(files[i]);
+    if (verbose) {
+        // Set highest logging level
+        sevenZip.arg('-bb3');
     }
+    sevenZip.arg(archive);
+
+    const fileList: string = createFileList(files);
+    sevenZip.arg('@' + fileList);
+
     return handleExecResult(sevenZip.execSync(getOptions()), archive);
 }
 
@@ -94,6 +124,13 @@ function zipArchive(archive: string, files: string[]) {
     }
     var zip = tl.createToolRunner(xpZipLocation);
     zip.arg('-r');
+    // Verbose gets priority over quiet
+    if (verbose) {
+        zip.arg('-v');
+    }
+    else if (quiet) {
+        zip.arg('-q');
+    }
     zip.arg(archive);
     for (var i = 0; i < files.length; i++) {
         zip.arg(files[i]);
@@ -113,6 +150,9 @@ function tarArchive(archive: string, compression: string, files: string[]) {
         tar.arg('-r'); // append files to existing tar
     } else {
         tar.arg('-c'); // create new tar otherwise
+    }
+    if (verbose) {
+        tar.arg('-v');
     }
     if (compression) {
         tar.arg('--' + compression);
@@ -143,7 +183,7 @@ export class FailTaskError extends Error {
  * Windows only
  * standard gnu-tar extension formats with recognized auto compression formats
  * https://www.gnu.org/software/tar/manual/html_section/tar_69.html
- *   
+ *
  * Computes the name of the tar to use inside a compressed tar.
  * E.g. foo.tar.gz is expected to have foo.tar inside
  */
