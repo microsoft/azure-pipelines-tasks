@@ -83,11 +83,14 @@
         },
         {
             "name": "imageName",
+            "aliases": [
+                "containers"
+            ],
             "type": "multiline",
             "label": "Image name",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
+            "helpMarkDown": "Specify the fully qualified container image name. For example, '<b>myregistry.azurecr.io</b>/nginx:latest' or '<b>python:3.7.2-alpine</b>/'. For multi-container scenario multiple container image names can be provided."
         },
         {
             "name": "multicontainerConfigFile",

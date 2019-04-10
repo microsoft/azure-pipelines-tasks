@@ -15,7 +15,7 @@
   "loc.input.label.slotName": "Slot",
   "loc.input.help.slotName": "Enter or Select an existing Slot other than the Production slot.",
   "loc.input.label.imageName": "Image name",
-  "loc.input.help.imageName": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'.",
+  "loc.input.help.imageName": "Specify the fully qualified container image name. For example, '<b>myregistry.azurecr.io</b>/nginx:latest' or '<b>python:3.7.2-alpine</b>/'. For multi-container scenario multiple container image names can be provided.",
   "loc.input.label.multicontainerConfigFile": "Configuration File",
   "loc.input.help.multicontainerConfigFile": "Path of the Docker-Compose file. Should be a fully qualified path or relative to the default working directory.",
   "loc.input.label.containerCommand": "Startup command ",

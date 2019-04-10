@@ -83,6 +83,9 @@
     },
     {
       "name": "imageName",
+      "aliases": [
+        "containers"
+      ],
       "type": "multiline",
       "label": "ms-resource:loc.input.label.imageName",
       "defaultValue": "",
