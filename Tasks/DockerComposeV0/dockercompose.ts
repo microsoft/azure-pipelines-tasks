@@ -4,10 +4,9 @@ import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as DockerComposeUtils from "./dockercomposeutils";
 
-import AuthenticationTokenProvider  from "docker-common/registryauthenticationprovider/authenticationtokenprovider"
 import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
 import DockerComposeConnection from "./dockercomposeconnection";
-import GenericAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/genericauthenticationtokenprovider"
+import { getDockerRegistryEndpointAuthenticationToken } from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
 
 import Q = require('q');
 
@@ -18,16 +17,14 @@ tl.cd(tl.getInput("cwd"));
 
 // get the registry server authentication provider 
 var registryType = tl.getInput("containerregistrytype", true);
-var authenticationProvider: AuthenticationTokenProvider;
+var registryAuthenticationToken;
 
 if (registryType == "Azure Container Registry") {
-    authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry"));
+    registryAuthenticationToken = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry")).getAuthenticationToken();
 }
 else {
-    authenticationProvider = new GenericAuthenticationTokenProvider(tl.getInput("dockerRegistryEndpoint"));
+    registryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(tl.getInput("dockerRegistryEndpoint"))
 }
-
-var registryAuthenticationToken = authenticationProvider.getAuthenticationToken();
 
 var dockerComposeFile = tl.getInput("dockerComposeFile", true);
 var nopIfNoDockerComposeFile = tl.getBoolInput("nopIfNoDockerComposeFile");

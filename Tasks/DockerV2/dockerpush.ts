@@ -11,8 +11,7 @@ import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } fro
 
 import Q = require('q');
 
-const matchPatternForDigest = new RegExp(/sha256\:([\w]+)/);
-const matchPatternForSize = new RegExp(/size\:\s([\w]+)/);
+const matchPatternForDigestAndSize = new RegExp(/sha256\:([\w]+)(\s+)size\:\s([\w]+)/);
 
 function pushMultipleImages(connection: ContainerConnection, imageNames: string[], tags: string[], commandArguments: string, onCommandOut: (image, output) => any): any {
     let promise: Q.Promise<void>;
@@ -86,11 +85,14 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     let promise = pushMultipleImages(connection, imageNames, tags, commandArguments, (image, commandOutput) => {
         output += commandOutput;
         outputImageName = image;
-        digest = extractFromOutput(commandOutput, matchPatternForDigest);
-        imageSize = extractFromOutput(commandOutput, matchPatternForSize);
+        let extractedResult = extractDigestAndSizeFromOutput(commandOutput, matchPatternForDigestAndSize);
+        digest = extractedResult[0];
+        imageSize = extractedResult[1];
         tl.debug("outputImageName: " + outputImageName + "\n" + "commandOutput: " + commandOutput + "\n" + "digest:" + digest + "imageSize:" + imageSize);
         publishToImageMetadataStore(connection, outputImageName, tags, digest, dockerFile, imageSize).then((result) => {
             tl.debug("ImageDetailsApiResponse: " + result);
+        }, (error) => {
+            tl.warning("publishToImageMetadataStore failed with error: " + error);
         });
     });
 
@@ -147,7 +149,7 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
     return sendRequestToImageStore(requestBody, requestUrl);
 }
 
-function extractFromOutput(dockerPushCommandOutput: string, matchPattern: RegExp): string {
+function extractDigestAndSizeFromOutput(dockerPushCommandOutput: string, matchPattern: RegExp): string[] {
     // SampleCommandOutput : The push refers to repository [xyz.azurecr.io/acr-helloworld]
     // 3b7670606102: Pushed 
     // e2af85e4b310: Pushed ce8609e9fdad: Layer already exists
@@ -156,11 +158,18 @@ function extractFromOutput(dockerPushCommandOutput: string, matchPattern: RegExp
 
     // Below regex will extract part after sha256, so expected return value will be 5e3c9cf1692e129744fe7db8315f05485c6bb2f3b9f6c5096ebaae5d5bfbbe60
     const imageMatch = dockerPushCommandOutput.match(matchPattern);
-    if (imageMatch && imageMatch.length >= 1) {
-        return imageMatch[1];
+    let digest = "";
+    let size = "";
+    if (imageMatch) {
+        if (imageMatch.length >= 1) {
+            digest = imageMatch[1];
+        }
+        if (imageMatch.length >= 3) {
+            size = imageMatch[3];
+        }
     }
 
-    return "";
+    return [digest, size];
 }
 
 async function sendRequestToImageStore(requestBody: string, requestUrl: string): Promise<any> {

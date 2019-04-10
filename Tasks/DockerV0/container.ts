@@ -3,9 +3,8 @@
 import path = require('path');
 import * as tl from "vsts-task-lib/task";
 import ContainerConnection from "docker-common/containerconnection";
-import AuthenticationTokenProvider  from "docker-common/registryauthenticationprovider/authenticationtokenprovider";
 import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider";
-import GenericAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/genericauthenticationtokenprovider";
+import { getDockerRegistryEndpointAuthenticationToken } from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
 import Q = require('q');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -15,25 +14,16 @@ tl.cd(tl.getInput("cwd"));
 
 // get the registry server authentication provider 
 var containerRegistryType = tl.getInput("containerregistrytype", true);
-var authenticationProvider : AuthenticationTokenProvider;
 const environmentVariableMaximumSize = 32766;
 
-if(containerRegistryType ==  "Azure Container Registry"){
-    authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry"));
-} 
+var registryAuthenticationToken;
+if (containerRegistryType == "Azure Container Registry") {
+    registryAuthenticationToken = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry")).getAuthenticationToken();
+}
 else {
     let endpointId = tl.getInput("dockerRegistryEndpoint");
-    const registryType: string = tl.getEndpointDataParameter(endpointId, "registrytype", true);
-    if(registryType ==  "ACR"){
-        const loginServer = tl.getEndpointAuthorizationParameter(endpointId, "loginServer", false);
-        authenticationProvider = new ACRAuthenticationTokenProvider(endpointId, loginServer);
-    }
-    else {
-        authenticationProvider = new GenericAuthenticationTokenProvider(tl.getInput("dockerRegistryEndpoint"));
-    }
+    registryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
 }
-
-var registryAuthenticationToken = authenticationProvider.getAuthenticationToken();
 
 // Connect to any specified container host and/or registry 
 var connection = new ContainerConnection();
