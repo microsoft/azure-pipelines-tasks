@@ -7,7 +7,7 @@ import { usePythonVersion } from './usepythonversion';
     try {
         task.setResourcePath(path.join(__dirname, 'task.json'));
         await usePythonVersion({
-            version: task.getInput('versionSpec', true),
+            version: task.getInput('version', true),
             architecture: task.getInput('architecture', true)
         },
         getPlatform());
