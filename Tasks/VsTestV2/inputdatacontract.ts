@@ -105,6 +105,11 @@ export interface ExecutionSettings {
 
 export interface TestSourceSettings {
     PullRequestTargetBranchName : string;
+    PhaseName: string;
+    StageName: string;
+    JobName: string;
+    JobAttempt: string;
+    JobIdentifier: string;
 }
 
 export interface DiagnosticsSettings {
