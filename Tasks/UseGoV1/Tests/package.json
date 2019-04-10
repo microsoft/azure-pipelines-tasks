@@ -1,0 +1,19 @@
+{
+  "name": "gotooltests",
+  "version": "0.1.0",
+  "description": "GoLang Tool Installer Tests",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "keywords": [
+    "VSTS",
+    "Tasks",
+    "Node"
+  ],
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "dependencies": {
+    "@types/mocha": "2.2.48"
+  }
+}

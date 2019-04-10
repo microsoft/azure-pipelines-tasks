@@ -1,0 +1,66 @@
+{
+    "id": "334727F4-9495-4F9D-A391-FC621D671474",
+    "name": "UseGo",
+    "friendlyName": "Use Go",
+    "description": "Sets up a Go environment and installs it to the PATH. Additionally provides proxy support (except for go get which is done through source control providers).",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=867581",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867581)",
+    "category": "Tool",
+    "preview": true,
+    "ecosystem": "go",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "satisfies": [
+        "GO"
+    ],
+    "demands": [],
+    "instanceNameFormat": "Use Go $(version)",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Version",
+            "required": false,
+            "helpMarkDown": "The Go version to download (if necessary) and use. Example: 1.9.3"
+        },
+        {
+            "name": "goPath",
+            "type": "string",
+            "label": "GOPATH",
+            "helpMarkDown": "A custom value for the GOPATH environment variable.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "goBin",
+            "type": "string",
+            "label": "GOBIN",
+            "helpMarkDown": "A custom value for the GOBIN environment variable.",
+            "groupName": "advanced"
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "usego.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "FailedToDownload": "Failed to download Go version %s. Verify that the version is valid and resolve any other issues. Error: %s",
+        "TempDirNotSet": "The 'Agent.TempDirectory' environment variable was expected to be set."
+    }
+}
