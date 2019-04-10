@@ -65,7 +65,8 @@ function downloadPackageUsingArtifactTool(
     execOptions: IExecOptions
 ) {
     let command = new Array<string>();
-
+    var verbosity = tl.getVariable("Packaging.ArtifactTool.Verbosity") || "Error";
+    
     command.push("universal", "download",
         "--feed", options.feedId,
         "--service", options.accountUrl,
@@ -73,7 +74,7 @@ function downloadPackageUsingArtifactTool(
         "--package-version", options.packageVersion,
         "--path", downloadPath,
         "--patvar", "UNIVERSAL_DOWNLOAD_PAT",
-        "--verbosity", tl.getInput("verbosity"));
+        "--verbosity", verbosity);
 
     console.log(tl.loc("Info_Downloading", options.packageName, options.packageVersion, options.feedId));
     const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(

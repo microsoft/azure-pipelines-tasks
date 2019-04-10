@@ -35,7 +35,7 @@ async function main(): Promise<void> {
             return Promise.resolve();
         }
 
-        if (packageType === "Universal") {
+        if (packageType === "upack") {
             return await downloadUniversalPackage(downloadPath, feedId, packageId, version);
         }
 
