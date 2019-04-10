@@ -7,7 +7,6 @@
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870240",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
     "category": "Utility",
-    "preview": true,
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added support for query unified Azure monitor alerts.",
     "visibility": [
         "Build",
@@ -19,8 +18,8 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 4
+        "Minor": 151,
+        "Patch": 0
     },
     "instanceNameFormat": "Query Azure Monitor alerts",
     "groups": [

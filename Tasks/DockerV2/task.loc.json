@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 150,
-    "Patch": 0
+    "Minor": 151,
+    "Patch": 1
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -70,14 +70,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.command"
     },
     {
-      "name": "dockerFile",
+      "name": "Dockerfile",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.dockerFile",
+      "label": "ms-resource:loc.input.label.Dockerfile",
       "defaultValue": "**/Dockerfile",
       "required": true,
       "visibleRule": "command = build || command = buildAndPush",
       "groupName": "commands",
-      "helpMarkDown": "ms-resource:loc.input.help.dockerFile"
+      "helpMarkDown": "ms-resource:loc.input.help.Dockerfile"
     },
     {
       "name": "buildContext",
@@ -114,7 +114,7 @@
   "outputVariables": [
     {
       "name": "DockerOutput",
-      "description": "The path of the file(s) which contains the output of the command"
+      "description": "The path of the file(s) which contains the output of the command. This contains two file paths (separated by newline characters) in case of buildAndPush command, and one file path for any other command."
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -126,7 +126,6 @@
   },
   "messages": {
     "AddingNewAuthToExistingConfig": "ms-resource:loc.messages.AddingNewAuthToExistingConfig",
-    "ArgumentsNotSupportedWithBuildAndPush": "ms-resource:loc.messages.ArgumentsNotSupportedWithBuildAndPush",
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
@@ -135,10 +134,11 @@
     "DeletingDockerConfigDirectory": "ms-resource:loc.messages.DeletingDockerConfigDirectory",
     "DeletingAuthDataFromDockerConfig": "ms-resource:loc.messages.DeletingAuthDataFromDockerConfig",
     "DockerRegistryNotFound": "ms-resource:loc.messages.DockerRegistryNotFound",
+    "ErrorParsingDockerConfig": "ms-resource:loc.messages.ErrorParsingDockerConfig",
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
     "FoundDockerConfigStoredInTempPath": "ms-resource:loc.messages.FoundDockerConfigStoredInTempPath",
     "FoundLoginsForOtherRegistries": "ms-resource:loc.messages.FoundLoginsForOtherRegistries",
-    "OldDockerConfigContent": "ms-resource:loc.messages.OldDockerConfigContent",
+    "IgnoringArgumentsInput": "ms-resource:loc.messages.IgnoringArgumentsInput",
     "LoggingOutFromRegistry": "ms-resource:loc.messages.LoggingOutFromRegistry",
     "LoggingOutWithNoRegistrySpecified": "ms-resource:loc.messages.LoggingOutWithNoRegistrySpecified",
     "NoAuthInfoFoundInDockerConfig": "ms-resource:loc.messages.NoAuthInfoFoundInDockerConfig",
@@ -146,6 +146,7 @@
     "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
     "NotAddingAnyTagsToBuild": "ms-resource:loc.messages.NotAddingAnyTagsToBuild",
     "NotPushingAsNoLoginFound": "ms-resource:loc.messages.NotPushingAsNoLoginFound",
+    "OldDockerConfigContent": "ms-resource:loc.messages.OldDockerConfigContent",
     "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
     "PathIsNotInTempDirectory": "ms-resource:loc.messages.PathIsNotInTempDirectory",
     "RegistryAuthNotPresentInConfig": "ms-resource:loc.messages.RegistryAuthNotPresentInConfig",

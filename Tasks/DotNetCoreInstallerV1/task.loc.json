@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": "true",
   "satisfies": [
@@ -69,13 +69,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.installationPath"
     },
     {
-      "name": "restrictMultiLevelLookup",
+      "name": "performMultiLevelLookup",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.restrictMultiLevelLookup",
+      "label": "ms-resource:loc.input.label.performMultiLevelLookup",
       "groupName": "advanced",
-      "defaultValue": true,
+      "defaultValue": false,
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.restrictMultiLevelLookup"
+      "helpMarkDown": "ms-resource:loc.input.help.performMultiLevelLookup"
     }
   ],
   "execution": {
@@ -142,6 +142,11 @@
     "ComparingInstalledFolderVersions": "ms-resource:loc.messages.ComparingInstalledFolderVersions",
     "ComparingInstalledFileVersions": "ms-resource:loc.messages.ComparingInstalledFileVersions",
     "InvalidChannelObject": "ms-resource:loc.messages.InvalidChannelObject",
-    "ReleasesIndexBodyIncorrect": "ms-resource:loc.messages.ReleasesIndexBodyIncorrect"
+    "ReleasesIndexBodyIncorrect": "ms-resource:loc.messages.ReleasesIndexBodyIncorrect",
+    "InvalidVersionObject": "ms-resource:loc.messages.InvalidVersionObject",
+    "FilesDataIsIncorrectInVersion": "ms-resource:loc.messages.FilesDataIsIncorrectInVersion",
+    "VersionFilesDataIncorrect": "ms-resource:loc.messages.VersionFilesDataIncorrect",
+    "VersionInformationNotComplete": "ms-resource:loc.messages.VersionInformationNotComplete",
+    "FailedWhileExtractingPacakge": "ms-resource:loc.messages.FailedWhileExtractingPacakge"
   }
 }

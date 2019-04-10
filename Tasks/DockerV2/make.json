@@ -4,5 +4,11 @@
 		"type": "node",
 		"dest" : "./",
 		"compile" : true
+	},
+	{
+		"module": "../Common/utility-common",
+		"type": "node",
+		"dest" : "./",
+		"compile" : true
 	}]
 }

@@ -6,7 +6,6 @@
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
   "loc.input.label.azureSubscription": "Azure subscription",
   "loc.input.help.azureSubscription": "Select the Azure Resource Manager subscription for the deployment.",
-  "loc.input.label.osType": "App OS type",
   "loc.input.label.appName": "App name",
   "loc.input.help.appName": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed.",
   "loc.input.label.deployToSlotOrASE": "Deploy to Slot or App Service Environment",
