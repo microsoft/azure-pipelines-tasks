@@ -11,9 +11,9 @@ runner.setInput('TargetFolder', path.normalize('/destDir'));
 runner.setInput('CleanTargetFolder', 'false');
 runner.setInput('Overwrite', 'false');
 runner.setInput('preserveTimestamp', 'true');
-let answers = <mockanswer.TaskLibAnswers> {
-    checkPath: { },
-    find: { },
+let answers = <mockanswer.TaskLibAnswers>{
+    checkPath: {},
+    find: {},
 };
 answers.checkPath[path.normalize('/srcDir')] = true;
 answers.find[path.normalize('/srcDir')] = [
@@ -46,8 +46,9 @@ runner.registerMockExport('stats', (itemPath: string) => {
     }
 });
 
-// as a precaution, disable fs.chmodSync. it should not be called during this scenario.
-fs.chmodSync = null;
+fs.utimes = function (targetPath, atime, mtime, err) {
+    return;
+}
 runner.registerMock('fs', fs);
 
 runner.run();
