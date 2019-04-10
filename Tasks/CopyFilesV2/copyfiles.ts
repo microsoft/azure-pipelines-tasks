@@ -110,7 +110,7 @@ if (matchedFiles.length > 0) {
                     tl.cp(file, targetPath);
                     if (preserveTimestamp) {
                         try {
-                            const fileStats = tl.stats(targetPath);
+                            const fileStats = tl.stats(file);
                             fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
                                 console.warn(`Problem applying the timestamp: ${err}`);
                             });
