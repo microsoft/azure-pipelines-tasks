@@ -222,5 +222,6 @@
   "loc.messages.FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
   "loc.messages.JarPathNotPresent": "Java jar path is not present",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
-  "loc.messages.RunFromZipPreventsFileInUseError": "Move from Web Deploy to RunFrom Package, which helps in avoiding FILE_IN_USE error. Note that Run From Package does not support msBuild package type. Please change your package format to use this deployment method."
+  "loc.messages.RunFromZipPreventsFileInUseError": "Move from Web Deploy to RunFrom Package, which helps in avoiding FILE_IN_USE error. Note that Run From Package does not support msBuild package type. Please change your package format to use this deployment method.",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }
