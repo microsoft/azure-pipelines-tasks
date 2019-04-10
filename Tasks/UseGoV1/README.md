@@ -1,10 +1,12 @@
-#  Go Tool Installer 
+#  Use Go 
  
 ## Overview
  
-The Go Tool Installer task acquires a specific version of Go Tool from the Internet or tools cache and adds it to the PATH of the Azure Pipelines Agent (hosted or private). You can use this task to change the version of Go Tool used in subsequent tasks. 
+The Use Go task acquires a specific version of Go Tool from the Internet or tools cache and adds it to the PATH of the Azure Pipelines Agent (hosted or private). You can use this task to change the version of Go Tool used in subsequent tasks. 
  
 If the targeted Go Tool version is already installed on the Azure Pipelines Agent (hosted or private), this task will skip the process of downloading and installing it again.
+
+The task also configures the proxy settings. This will work for all commands except for `go get` commands which are dependent on the source control provider used.
  
 ## Contact Information
  
