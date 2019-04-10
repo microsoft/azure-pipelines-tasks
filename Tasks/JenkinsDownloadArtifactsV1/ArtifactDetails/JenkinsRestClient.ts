@@ -213,11 +213,27 @@ export class JenkinsRestClient {
         const jobName = tl.getInput("jobName", true);
         const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(endpoint, 'acceptUntrustedCerts', true));
         const jobUrlInfix = JenkinsJobDetails.GetJobUrlInfix(jobName);
+        
+        const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
+        const retryLimit: number = (!!retryLimitValue && !isNaN(parseInt(retryLimitValue))) ? parseInt(retryLimitValue) : 4;
+        tl.debug(`RetryLimit set to ${retryLimit}`);
 
         let requestUrl: string = `${endpointUrl}${jobUrlInfix}/${urlPath}`;
         console.log(tl.loc("DownloadingContentFromJenkinsServer", requestUrl, strictSSL));
 
         let httpClient: HttpClient = this.GetClient();
+        this.ExecuteWithRetries("DownloadJsonContent", () => this.DownloadJsonContentWithRetries(httpClient, requestUrl, handlebarSource, additionalHandlebarContext), retryLimit).then((result) => {
+            defer.resolve(result);
+        },(err) => {
+            defer.reject(err);
+        });
+
+        return defer.promise;
+    }
+
+    public DownloadJsonContentWithRetries(httpClient: HttpClient, requestUrl: string, handlebarSource: string, additionalHandlebarContext: { [key: string]: any }, ): Q.Promise<any> {    
+        let defer = Q.defer<any>();
+
         httpClient.get(requestUrl).then((response: HttpClientResponse) => {
             response.readBody().then((body: string) => {
                 if (!!body && response.message.statusCode === 200)  {
@@ -452,6 +468,29 @@ export class JenkinsRestClient {
         }
 
         return true;
+    }
+
+    private ExecuteWithRetries(operationName: string, operation: () => Q.Promise<any>, retryCount): Q.Promise<any> {
+        let defer = Q.defer<any>();
+        this.ExecuteWithRetriesImplementation(operationName, operation, retryCount, defer);
+            
+        return defer.promise;
+    }
+    
+    private ExecuteWithRetriesImplementation(operationName: string, operation: () => Q.Promise<any>, currentRetryCount, defer: Q.Deferred<any>) {
+        operation().then((result) => {
+            defer.resolve(result);
+        }).catch((error) => {
+            if (currentRetryCount <= 0) {
+                tl.error(tl.loc("OperationFailed", operationName, error));
+                defer.reject(error);
+            }
+            else {
+                console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
+                currentRetryCount = currentRetryCount - 1;
+                setTimeout(() => this.ExecuteWithRetriesImplementation(operationName, operation, currentRetryCount, defer), 5 * 1000);
+            }
+        });
     }
 
     public static JenkinsBranchPathSeparator: string = "/";

@@ -10,7 +10,7 @@ try{
     $CsCfg = Get-VstsInput -Name CsCfg -Require
     $Slot = Get-VstsInput -Name Slot -Require
     $DeploymentLabel = Get-VstsInput -Name DeploymentLabel
-    $AppendDateTimeToLabel = Get-VstsInput -Name AppendDateTimeToLabel -Require
+    $AppendDateTimeToLabel = Get-VstsInput -Name AppendDateTimeToLabel -Require -AsBool
     $AllowUpgrade = Get-VstsInput -Name AllowUpgrade -Require -AsBool
     $SimultaneousUpgrade = Get-VstsInput -Name SimultaneousUpgrade -AsBool
     $ForceUpgrade = Get-VstsInput -Name ForceUpgrade -AsBool

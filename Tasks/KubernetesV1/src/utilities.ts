@@ -27,7 +27,7 @@ export function getNewUserDirPath(): string {
     ensureDirExists(userDir);
 
     return userDir;
-} 
+}
 
 function ensureDirExists(dirPath : string) : void
 {
@@ -47,8 +47,19 @@ export async function getKubectlVersion(versionSpec: string, checkLatest: boolea
             tl.warning(tl.loc("UsingLatestStableVersion"));
             return kubectlutility.getStableKubectlVersion();
         } 
+        else if ("v".concat(versionSpec) === kubectlutility.stableKubectlVersion) {
+            tl.debug(util.format("Using default versionSpec:%s.", versionSpec));
+            return kubectlutility.stableKubectlVersion;
+        }
         else {
-            return sanitizeVersionString(versionSpec);
+            // Do not check for validity of the version here,
+            // We'll return proper error message when the download fails
+            if(!versionSpec.startsWith("v")) {
+                return "v".concat(versionSpec);
+            }
+            else{
+                return versionSpec;
+            }
         } 
      }
  
@@ -59,13 +70,13 @@ export async function downloadKubectl(version: string): Promise<string> {
     return await kubectlutility.downloadKubectl(version);
 }
 
-export function sanitizeVersionString(inputVersion: string) : string{
-    var version = toolLib.cleanVersion(inputVersion);
-    if(!version) {
-        throw new Error(tl.loc("NotAValidSemverVersion"));
+export function sanitizeVersionString(versions, inputVersion: string): string {
+    var version = toolLib.evaluateVersions(versions, inputVersion);
+    if (!version) {
+        throw new Error(tl.loc("NotAValidVersion", JSON.stringify(versions)));
     }
-    
-    return "v"+version;
+
+    return version;
 }
 
 export function assertFileExists(path: string) {
@@ -73,4 +84,11 @@ export function assertFileExists(path: string) {
         tl.error(tl.loc('FileNotFoundException', path));
         throw new Error(tl.loc('FileNotFoundException', path));
     }
+}
+
+export function writeInlineConfigInTempPath(inlineConfig: string): string {
+    var tempInlinePath = getNewUserDirPath();
+    tempInlinePath = path.join(tempInlinePath, "inlineconfig.yaml");
+    fs.writeFileSync(tempInlinePath, inlineConfig);
+    return tempInlinePath;
 }

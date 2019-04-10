@@ -3,6 +3,7 @@
   "name": "InstallSSHKey",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=875267",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -12,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 141,
+    "Minor": 151,
     "Patch": 0
   },
   "runsOn": [
@@ -25,6 +26,9 @@
   "inputs": [
     {
       "name": "hostName",
+      "aliases": [
+        "knownHostsEntry"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.hostName",
       "defaultValue": "",

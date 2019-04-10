@@ -4,6 +4,7 @@
     "friendlyName": ".NET Core",
     "description": "Build, test, package, or publish a dotnet application, or run a custom dotnet command. For package commands, supports NuGet.org and authenticated feeds like Package Management and MyGet.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=832194",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=832194)",
     "category": "Build",
     "visibility": [
@@ -16,10 +17,10 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 141,
-        "Patch": 5
+        "Minor": 151,
+        "Patch": 0
     },
-    "minimumAgentVersion": "2.0.0",
+    "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet $(command)",
     "groups": [
         {
@@ -130,7 +131,16 @@
             "defaultValue": "true",
             "visibleRule": "command = test",
             "required": false,
-            "helpMarkDown": "Enabling this option will generate a test results TRX file in `$(Agent.TempDirectory)` and results will be published to the server. <br>This option appends `--logger trx --results-directory $(Agent.TempDirectory)` to the command line arguments. <br><br>Code coverage can be collected by adding `--collect “Code coverage”` option to the command line arguments. This is currently only available on the Windows platform."
+            "helpMarkDown": "Enabling this option will generate a test results TRX file in `$(Agent.TempDirectory)` and results will be published to the server. <br>This option appends `--logger trx --results-directory $(Agent.TempDirectory)` to the command line arguments. <br><br>Code coverage can be collected by adding `--collect \"Code coverage\"` option to the command line arguments. This is currently only available on the Windows platform."
+        },
+        {
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test run title",
+            "defaultValue": "",
+            "visibleRule": "command = test",
+            "required": false,
+            "helpMarkDown": "Provide a name for the test run."
         },
         {
             "name": "zipAfterPublish",
@@ -264,7 +274,7 @@
             "type": "filePath",
             "label": "Path to NuGet package(s) to publish",
             "defaultValue": "$(Build.ArtifactStagingDirectory)/*.nupkg",
-            "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**/*.nupkg;-:**/*.Tests.nupkg`",
+            "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon.",
             "required": true,
             "visibleRule": "command = push"
         },
@@ -290,6 +300,15 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select a feed hosted in this organization. You must have Package Management installed and licensed to select a feed here.",
+            "visibleRule": "command = push && nuGetFeedType = internal"
+        },
+        {
+            "name": "publishPackageMetadata",
+            "groupName": "pushAdvanced",
+            "type": "boolean",
+            "label": "Publish pipeline metadata",
+            "defaultValue": true,
+            "helpMarkDown": "Associate this build/release pipeline’s metadata (run #, source code information) with the package",
             "visibleRule": "command = push && nuGetFeedType = internal"
         },
         {

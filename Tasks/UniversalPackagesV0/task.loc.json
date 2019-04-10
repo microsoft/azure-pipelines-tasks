@@ -4,12 +4,13 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://aka.ms/universalpackagesannounce",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 0,
-    "Patch": 8
+    "Minor": 151,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -33,6 +34,12 @@
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
+    },
+    {
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": true,
+      "visibleRule": "command = publish"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -78,8 +85,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.internalOrExternalDownload",
       "required": "true",
       "options": {
-        "internal": "This account/collection",
-        "external": "Another account/collection"
+        "internal": "This organization/collection",
+        "external": "Another organization/collection"
       },
       "groupName": "packageDownloadDetails"
     },
@@ -201,8 +208,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.internalOrExternalPublish",
       "required": "true",
       "options": {
-        "internal": "This account/collection",
-        "external": "Another account/collection"
+        "internal": "This organization/collection",
+        "external": "Another organization/collection"
       },
       "groupName": "packagePublishDetails"
     },
@@ -236,6 +243,15 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "publishPackageMetadata",
+      "groupName": "advanced",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishPackageMetadata",
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.publishPackageMetadata",
+      "visibleRule": "command = publish && internalOrExternalPublish = internal"
     },
     {
       "name": "packageListPublish",
@@ -333,6 +349,15 @@
         "Error": "Error",
         "Critical": "Citical"
       }
+    },
+    {
+      "name": "publishedPackageVar",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.publishedPackageVar",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.publishedPackageVar"
     }
   ],
   "dataSourceBindings": [
@@ -409,6 +434,8 @@
     "FailedToGetArtifactTool": "ms-resource:loc.messages.FailedToGetArtifactTool",
     "Error_UnexpectedErrorFailedToGetToolMetadata": "ms-resource:loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata",
     "FailedToGetLatestPackageVersion": "ms-resource:loc.messages.FailedToGetLatestPackageVersion",
-    "Warn_CredentialsNotFound": "ms-resource:loc.messages.Warn_CredentialsNotFound"
+    "Warn_CredentialsNotFound": "ms-resource:loc.messages.Warn_CredentialsNotFound",
+    "Error_UniversalPackagesNotSupportedOnPrem": "ms-resource:loc.messages.Error_UniversalPackagesNotSupportedOnPrem",
+    "Error_ProcessorArchitectureNotSupported": "ms-resource:loc.messages.Error_ProcessorArchitectureNotSupported"
   }
 }

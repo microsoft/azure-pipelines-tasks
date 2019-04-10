@@ -3,13 +3,14 @@
     "name": "DownloadBuildArtifacts",
     "friendlyName": "Download Build Artifacts",
     "description": "Download Build Artifacts",
+    "helpUrl": "",
     "helpMarkDown": "",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 142,
-        "Patch": 3
+        "Minor": 148,
+        "Patch": 1
     },
     "groups": [
         {
@@ -83,6 +84,15 @@
                 "latestFromBranch": "Latest from specific branch and specified Build Tags",
                 "specific": "Specific version"
             }
+        },
+        {
+            "name": "allowPartiallySucceededBuilds",
+            "type": "boolean",
+            "label": "Download artifacts even from partially succeeded builds.",
+            "defaultValue": "false",
+            "visibleRule": "buildType == specific && buildVersionToDownload != specific",
+            "required": false,
+            "helpMarkDown": "If checked, this build task will try to download artifacts whether the build is succeeded or partially succeeded."
         },
         {
             "name": "branchName",
@@ -188,7 +198,7 @@
             "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
             "parameters": {
                 "project": "$(project)",
-                "name": "$(name)"
+                "name": "$(searchText)"
             },
             "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
             "callbackContextTemplate": "{\"continuationToken\" : \"{{{headers.x-ms-continuationtoken}}}\"}",

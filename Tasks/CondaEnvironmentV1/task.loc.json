@@ -3,6 +3,7 @@
   "name": "CondaEnvironment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=873466",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "runsOn": [
@@ -12,9 +13,10 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 144,
+    "Minor": 148,
     "Patch": 0
   },
+  "deprecated": true,
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [

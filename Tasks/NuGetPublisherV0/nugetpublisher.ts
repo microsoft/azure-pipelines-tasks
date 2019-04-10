@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as Q  from "q";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 import * as auth from "packaging-common/nuget/Authentication";
 import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions";
@@ -109,8 +109,11 @@ async function main(): Promise<void> {
                 throw new Error(tl.loc("NGCommon_UnabletoDetectNuGetVersion"));
             }
 
+            // save and reset the tool path env var, so this task doesn't act as a tool installer
+            const tempNuGetPath = tl.getVariable(ngToolGetter.NUGET_EXE_TOOL_PATH_ENV_VAR);
             const cachedVersion = await ngToolGetter.cacheBundledNuGet(versionToUse, nuGetPathSuffix);
             nuGetPath = await ngToolGetter.getNuGet(cachedVersion);
+            tl.setVariable(ngToolGetter.NUGET_EXE_TOOL_PATH_ENV_VAR, tempNuGetPath);
         }
 
         //find nuget location to use

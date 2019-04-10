@@ -44,10 +44,10 @@ export default class ClusterConnection {
             if (!authorizationType || authorizationType === "Kubeconfig")
             {
                 if (kubernetesEndpoint) {
-                     kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesEndpoint, 'kubeconfig', false);
+                     kubeconfig = kubectlutility.getKubeconfigForCluster(kubernetesEndpoint);
                 } 
             }
-            else if (authorizationType === "ServiceAccount")
+            else if (authorizationType === "ServiceAccount" || authorizationType === "AzureSubscription")
             {
                 kubeconfig = kubectlutility.createKubeconfig(kubernetesEndpoint);
             }
@@ -68,10 +68,21 @@ export default class ClusterConnection {
         command.on("errline", line => {
             errlines.push(line);
         });
-        return command.exec(options).fail(error => {
+
+        tl.debug(tl.loc('CallToolRunnerExec'));
+
+        let promise = command.exec(options)
+        .fail(error => {
+            tl.debug(tl.loc('ToolRunnerExecCallFailed', error));
             errlines.forEach(line => tl.error(line));
             throw error;
+        })
+        .then(() => {
+            tl.debug(tl.loc('ToolRunnerExecCallSucceeded'));
         });
+
+        tl.debug(tl.loc('ReturningToolRunnerExecPromise'));
+        return promise;
     }
 
     private getExecutableExtention(): string {

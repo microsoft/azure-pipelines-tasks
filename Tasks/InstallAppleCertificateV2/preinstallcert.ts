@@ -1,10 +1,8 @@
 import path = require('path');
 import sign = require('ios-signing-common/ios-signing-common');
 import secureFilesCommon = require('securefiles-common/securefiles-common');
-import tl = require('vsts-task-lib/task');
+import * as tl from 'azure-pipelines-task-lib/task';
 import os = require('os');
-
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 async function run() {
     let secureFileId: string;
@@ -20,26 +18,41 @@ async function run() {
 
         // download decrypted contents
         secureFileId = tl.getInput('certSecureFile', true);
+        
         secureFileHelpers = new secureFilesCommon.SecureFileHelpers();
         let certPath: string = await secureFileHelpers.downloadSecureFile(secureFileId);
 
         let certPwd: string = tl.getInput('certPwd');
 
-        // get the P12 details - SHA1 hash and common name (CN)
-        let p12Hash: string = await sign.getP12SHA1Hash(certPath, certPwd);
+        // get the P12 details - SHA1 hash, common name (CN) and expiration.
+        const p12Properties = await sign.getP12Properties(certPath, certPwd);
+        let commonName: string = p12Properties.commonName;
+        const fingerprint: string = p12Properties.fingerprint,
+            notBefore: Date = p12Properties.notBefore,
+            notAfter: Date = p12Properties.notAfter;
+
         // give user an option to override the CN as a workaround if we can't parse the certificate's subject.
-        let p12CN: string = tl.getInput('certSigningIdentity', false);
-        if (!p12CN) {
-            p12CN = await sign.getP12CommonName(certPath, certPwd);
+        const commonNameOverride: string = tl.getInput('certSigningIdentity', false);
+        if (commonNameOverride) {
+            commonName = commonNameOverride;
         }
 
-        if (!p12Hash || !p12CN) {
-            throw tl.loc('INVALID_P12');
+        if (!fingerprint || !commonName) {
+            throw new Error(tl.loc('INVALID_P12'));
         }
-        tl.setTaskVariable('APPLE_CERTIFICATE_SHA1HASH', p12Hash);
+        tl.setTaskVariable('APPLE_CERTIFICATE_SHA1HASH', fingerprint);
 
         // set the signing identity output variable.
-        tl.setVariable('signingIdentity', p12CN);
+        tl.setVariable('signingIdentity', commonName);
+
+        // Warn if the certificate is not yet valid or expired. If the dates are undefined or invalid, the comparisons below will return false.
+        const now: Date = new Date();
+        if (notBefore > now) {
+            throw new Error(tl.loc('CertNotValidYetError', commonName, fingerprint, notBefore));
+        }
+        if (notAfter < now) {
+            throw new Error(tl.loc('CertExpiredError', commonName, fingerprint, notAfter));
+        }
 
         // install the certificate in specified keychain, keychain is created if required
         let keychain: string = tl.getInput('keychain');
@@ -50,6 +63,9 @@ async function run() {
             // generate a keychain password for the temporary keychain
             // overriding any value we may have read because keychainPassword is hidden in the designer for 'temp'.
             keychainPwd = Math.random().toString(36);
+
+            // tl.setSecret would work too, except it's not available in mock-task yet.
+            tl.setVariable('keychainPassword', keychainPwd, true);
         } else if (keychain === 'default') {
             keychainPath = await sign.getDefaultKeychainPath();
         } else if (keychain === 'custom') {
@@ -64,7 +80,7 @@ async function run() {
 
         // Set the legacy variables that doesn't use the task's refName, unlike our output variables.
         // If there are multiple InstallAppleCertificate tasks, the last one wins.
-        tl.setVariable('APPLE_CERTIFICATE_SIGNING_IDENTITY', p12CN);
+        tl.setVariable('APPLE_CERTIFICATE_SIGNING_IDENTITY', commonName);
         tl.setVariable('APPLE_CERTIFICATE_KEYCHAIN', keychainPath);
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);

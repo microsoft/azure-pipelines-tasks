@@ -16,7 +16,7 @@ The following pre-requisites need to be setup for the task to work properly.
 
 To deploy to Azure SQL Database, an Azure subscription has to be linked to Team Foundation Server or to Azure Pipelines using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab.
 
-- For Azure Classic resources use 'Azure' endpoint type with Certificate or Credentials based authentication. If you are using credentials based auth, ensure that the credentials are for a [**work account**](https://azure.microsoft.com/en-in/pricing/member-offers/msdn-benefits-details/work-accounts-faq/) because Microsoft accounts like [**joe@live.com**](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup) or [**joe@hotmail.com**](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup) are not supported.
+- For Azure Classic resources use 'Azure' endpoint type with Certificate or Credentials based authentication. If you are using credentials based auth, ensure that the credentials are for a [**work account**](https://azure.microsoft.com/en-in/pricing/member-offers/msdn-benefits-details/work-accounts-faq/) because Microsoft accounts like [**joe@live.com**](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/DeployAzureResourceGroup) or [**joe@hotmail.com**](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/DeployAzureResourceGroup) are not supported.
 
 - For [ARM](https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/), use 'Azure Resource Manager' endpoint type, for more details follow the steps listed in the link [here](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
 
@@ -126,17 +126,17 @@ Other supported versions:
 
 ### Troubleshooting :
 
-- **Get debug logs to diagnose problems** 
+- **Get debug logs to diagnose problems**
     Start by looking at the logs in your completed build/release. If they don't provide enough detail, you can make them more verbose:
-    * On the Variables tab, add system.debug and set it to true. 
+    * On the Variables tab, add system.debug and set it to true.
     * Queue the Build/Release
 
 - **Unable to connect to master or target server ‘xyz’. You must have a user with the same password in master or target server ‘xyz’.**
-    * Possible cause of failure include connection failures : 
+    * Possible cause of failure include connection failures :
         * Check if any firewall rules are preventing the connection.
         * Check if the supplied credentials have appropriate permission to either the master DB or the specific DB.
         * Check if the SQL server name resolution succeeds.
 	* DAC tooling is not up to date and the target database is configured with an incompatible Compatibility Level. It tend to happen when Azure SQL receives an update and you are deploying on a new database. You can either update DAC tooling on self hosted agent or [reduce the compatibility level of your DB](https://azure.microsoft.com/en-us/blog/default-compatibility-level-140-for-azure-sql-databases/)
 - **Connection timed out**
     * Consider using /TargetTimeout: property for connections that times out
-    
+

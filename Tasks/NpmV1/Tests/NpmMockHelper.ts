@@ -1,9 +1,8 @@
 import * as path from 'path';
 
-import { TaskLibAnswers, TaskLibAnswerExecResult } from 'vsts-task-lib/mock-answer';
-import { TaskMockRunner } from 'vsts-task-lib/mock-run';
-import * as mtr from 'vsts-task-lib/mock-toolrunner';
-import { debug } from 'vsts-task-lib';
+import { TaskLibAnswers, TaskLibAnswerExecResult } from 'azure-pipelines-task-lib/mock-answer';
+import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
+import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner';
 
 import * as pkgMock from 'packaging-common/Tests/MockHelper';
 
@@ -25,8 +24,12 @@ export class NpmMockHelper extends TaskMockRunner {
 
     constructor(taskPath: string) {
         super(taskPath);
+        let setSecret = function(variable: string) {
+            return;
+        }
+        this.registerMockExport('setSecret', setSecret);
 
-        this.registerMock('vsts-task-lib/toolrunner', mtr);
+        this.registerMock('azure-pipelines-task-lib/toolrunner', mtr);
         this.setAnswers(this.answers);
 
         NpmMockHelper._setVariable('Agent.HomeDirectory', 'c:\\agent\\home\\directory');
@@ -127,9 +130,4 @@ export class NpmMockHelper extends TaskMockRunner {
             stdout: '; debug cli configs'} as TaskLibAnswerExecResult);
     }
 
-    private _registerMockToolRunner() {
-        let tmr = require('vsts-task-lib/mock-toolrunner');
-        this.registerMock('vsts-task-lib/toolrunner', tmr);
-    }
 }
-

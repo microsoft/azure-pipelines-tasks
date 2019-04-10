@@ -3,13 +3,14 @@
   "name": "DownloadPackage",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "ms-vscs-rm",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 15
+    "Minor": 151,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.99.0",
@@ -101,6 +102,8 @@
     "StartingDownloadOfPackage": "ms-resource:loc.messages.StartingDownloadOfPackage",
     "ExtractingNugetPackage": "ms-resource:loc.messages.ExtractingNugetPackage",
     "PackageTypeNotSupported": "ms-resource:loc.messages.PackageTypeNotSupported",
-    "ExtractionFailed": "ms-resource:loc.messages.ExtractionFailed"
+    "ExtractionFailed": "ms-resource:loc.messages.ExtractionFailed",
+    "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
+    "OperationFailed": "ms-resource:loc.messages.OperationFailed"
   }
 }

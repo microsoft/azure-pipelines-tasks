@@ -28,7 +28,7 @@
   "loc.input.help.calabashSkipConfigCheck": "Forcez l'exécution sans profil Cucumber.",
   "loc.input.label.uitestBuildDir": "Répertoire de build",
   "loc.input.help.uitestBuildDir": "Chemin du répertoire des assemblys de tests.",
-  "loc.input.label.uitestStoreFile": "Stocker le fichier",
+  "loc.input.label.uitestStorePath": "Stocker le fichier",
   "loc.input.label.uitestStorePass": "Enregistrer le mot de passe",
   "loc.input.label.uitestKeyAlias": "Alias de clé",
   "loc.input.label.uitestKeyPass": "Mot de passe de la clé",

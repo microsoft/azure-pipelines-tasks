@@ -15,6 +15,9 @@ export function run(connection: ContainerConnection): any {
         command.arg("-d");
     }
 
+    var commandArguments = tl.getInput("arguments", false); 
+    command.line(commandArguments);
+
     var entrypointOverride = tl.getInput("entrypointOverride");
     if (entrypointOverride) {
         command.arg(["--entrypoint", entrypointOverride]);
@@ -74,7 +77,7 @@ export function run(connection: ContainerConnection): any {
     var imageName = utils.getImageName();
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     if (qualifyImageName) {
-        imageName = connection.qualifyImageName(imageName);
+        imageName = connection.getQualifiedImageNameIfRequired(imageName);
     }
     command.arg(imageName);
 

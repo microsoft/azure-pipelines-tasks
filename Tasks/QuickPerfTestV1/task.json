@@ -2,7 +2,8 @@
     "id": "9648625C-1523-4EB5-B015-DFE7C685840C",
     "name": "QuickPerfTest",
     "friendlyName": "Cloud-based Web Performance Test",
-    "description": "Runs a quick web performance test in the cloud with Azure Pipelines",
+    "description": "Runs a quick web performance test in the cloud with Azure Pipelines.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=613203",
     "helpMarkDown": "Triggers a cloud-based load test using Azure Pipelines. [Learn more](https://go.microsoft.com/fwlink/?linkid=613203)",
     "category": "Test",
     "visibility": [

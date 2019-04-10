@@ -3,13 +3,14 @@
   "name": "NuGetCommand",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613747",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 47
+    "Minor": 151,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -210,7 +211,7 @@
       "required": true,
       "defaultValue": "internal",
       "options": {
-        "internal": "This account/collection",
+        "internal": "This organization/collection",
         "external": "External NuGet server (including other accounts/collections)"
       },
       "visibleRule": "command = push"
@@ -225,6 +226,15 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.feedPublish",
+      "visibleRule": "command = push && nuGetFeedType = internal"
+    },
+    {
+      "name": "publishPackageMetadata",
+      "groupName": "pushAdvanced",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishPackageMetadata",
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.publishPackageMetadata",
       "visibleRule": "command = push && nuGetFeedType = internal"
     },
     {

@@ -3,6 +3,7 @@
     "name": "VSTest",
     "friendlyName": "Visual Studio Test",
     "description": "Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test (VsTest) runner. Test frameworks that have a Visual Studio test adapter such as MsTest, xUnit, NUnit, Chutzpah (for JavaScript tests using QUnit, Mocha and Jasmine), etc. can be run. Tests can be distributed on multiple agents using this task (version 2).",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=835764",
     "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkId=835764)",
     "category": "Test",
     "visibility": [
@@ -16,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 143,
-        "Patch": 5
+        "Minor": 151,
+        "Patch": 0
     },
     "demands": [
         "vstest"
@@ -206,6 +207,7 @@
             "groupName": "executionOptions",
             "options": {
                 "latest": "Latest",
+                "16.0": "Visual Studio 2019",
                 "15.0": "Visual Studio 2017",
                 "14.0": "Visual Studio 2015",
                 "toolsInstaller": "Installed by Tools Installer"
@@ -289,7 +291,7 @@
             "label": "Other console options",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ option. The options can be specified using a settings file instead.</p>",
+            "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ or 'Test run' option or when a custom batching option is selected. The options can be specified using a settings file instead.</p>",
             "groupName": "executionOptions"
         },
         {
@@ -363,7 +365,7 @@
         {
             "name": "dontDistribute",
             "type": "boolean",
-            "label": "Do not distribute tests and replicate instead when multiple agents are used in the job",
+            "label": "Replicate tests instead of distributing when multiple agents are used in the job",
             "defaultValue": "False",
             "required": false,
             "helpMarkDown": "Choosing this option will not distribute tests across agents when the task is running in a multi-agent job.<br>Each of the selected test(s) will be repeated on each agent.<br>The option is not applicable when the agent job is configured to run with no parallelism or with the multi-config option.",
@@ -557,7 +559,7 @@
         "testSettingPropertiesNotSupported": "Properties specified in testsettings file can be accessed via the TestContext using Visual Studio 2017 Update 4 or higher",
         "vstestVersionInvalid": "Given test platform version %s is not supported.",
         "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
-        "otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent job setting. This option will be ignored.",
+        "otherConsoleOptionsNotSupported": "Other console options is not supported for this task configuration. This option will be ignored.",
         "distributedTestWorkflow": "In distributed testing flow",
         "nonDistributedTestWorkflow": "Running tests using vstest.console.exe runner.",
         "dtaNumberOfAgents": "Distributed test execution, number of agents in job : %s",
@@ -616,6 +618,8 @@
         "UserProvidedSourceFilter": "Source filter: %s",
         "UnableToGetFeatureFlag": "Unable to get feature flag: %s",
         "diagnosticsInput": "Diagnostics enabled : %s",
-        "UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory)."
+        "UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory).",
+        "LookingForBuildToolsInstalltion": "Attempting to find vstest.console from a visual studio build tools installation.",
+        "LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation."
     }
 }

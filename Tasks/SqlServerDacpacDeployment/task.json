@@ -3,6 +3,7 @@
     "name": "SqlServerDacpacDeployment",
     "friendlyName": "[Deprecated] SQL Server Database Deploy",
     "description": "Deploy SQL Server Database using DACPAC",
+    "helpUrl": "https://aka.ms/sqlserverdacpackdeprecatedreadme",
     "helpMarkDown": "[More Information](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
     "category": "Deploy",
     "visibility": [

@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as URL from 'url';
 import * as fs from 'fs';
 import * as constants from './constants';
@@ -29,7 +29,7 @@ async function main(): Promise<void> {
          saveNpmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
     }
     else {
-        let tempPath = tl.getVariable('Agent.BuildDirectory') || tl.getVariable('Agent.ReleaseDirectory') || process.cwd();
+        let tempPath = tl.getVariable('Agent.BuildDirectory') || tl.getVariable('Agent.TempDirectory');
         tempPath = path.join(tempPath, 'npmAuthenticate');
         tl.mkdirP(tempPath);
         saveNpmrcPath = fs.mkdtempSync(tempPath + path.sep); 
@@ -82,7 +82,7 @@ async function main(): Promise<void> {
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
     
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
-    for (let RegistryURLString of npmrcparser.GetRegistries(npmrc)) {
+    for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
         let registryURL = URL.parse(RegistryURLString);
         let registry: npmregistry.NpmRegistry;
         if (endpointRegistries && endpointRegistries.length > 0) {
@@ -119,9 +119,10 @@ async function main(): Promise<void> {
     }
 }
 
-
 main().catch(error => {
-    tl.rmRF(util.getTempPath());
+    if(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY")) {
+        tl.rmRF(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY"));
+    } 
     tl.setResult(tl.TaskResult.Failed, error);
 });
 function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url) {

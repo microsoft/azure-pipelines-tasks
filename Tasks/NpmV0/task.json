@@ -3,13 +3,14 @@
     "name": "Npm",
     "friendlyName": "npm",
     "description": "Run an npm command",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613746",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 2,
-        "Patch": 25
+        "Minor": 148,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -18,7 +19,7 @@
     "demands": [
         "npm"
     ],
-    "minimumAgentVersion": "1.91.0",
+    "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "npm $(command)",
     "inputs": [
         {

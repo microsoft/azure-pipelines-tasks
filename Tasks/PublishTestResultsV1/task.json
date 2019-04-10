@@ -3,6 +3,7 @@
     "name": "PublishTestResults",
     "friendlyName": "Publish Test Results",
     "description": "Publish Test Results to VSTS/TFS",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613742",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613742)",
     "category": "Test",
     "visibility": [

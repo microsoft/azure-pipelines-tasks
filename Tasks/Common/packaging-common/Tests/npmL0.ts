@@ -36,7 +36,7 @@ export function npmcommon() {
                 // no-op
             }
         };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
         let npmrc = `registry=http://example.com
                      always-auth=true
                      @scoped:registry=http://scoped.com
@@ -110,7 +110,7 @@ export function npmcommon() {
                 // no-op
             }
         };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
         let npmutil = require('../npm/npmutil');
 
@@ -127,7 +127,7 @@ export function npmcommon() {
     });
 
     it('does Basic auth for hosted when service endpoint auth is Token and endpoint is in the .visualstudio.com domain',
-        async (done: MochaDone) => {
+        async () => {
         // Scenario: Cross account on visualstudio.com
         let mockTask = {
             getVariable: (v) => {
@@ -146,9 +146,12 @@ export function npmcommon() {
             },
             getHttpProxyConfiguration: (endpoint) => {
                 return null;
+            },
+            setSecret: () => {
+                return;
             }
         };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
         mockery.registerMock('typed-rest-client/HttpClient', {
             HttpClient: function() {
@@ -176,13 +179,11 @@ export function npmcommon() {
         assert(registry.auth.match(BASIC_AUTH_PAT_EML_REGEX), `Auth must contain a email. Auth is: (${registry.auth})`);
         assert(registry.auth.match(BASIC_AUTH_PAT_USERNAME_REGEX), `Auth must contain a email. Auth is: (${registry.auth})`);
         assert(registry.auth.match(ALWAYS_AUTH_REGEX), `Auth must contain always-auth. Auth is: (${registry.auth})`);
-
-        done();
     });
 
 
 
-    it('does Bearer auth for hosted when service endpoint auth is Token and endpoint is 3rd party', async (done: MochaDone) => {
+    it('does Bearer auth for hosted when service endpoint auth is Token and endpoint is 3rd party', async () => {
         // Scenario: User is connecting to a non-visualstudio.com registry
         let mockTask = {
             getVariable: (v) => {
@@ -203,7 +204,7 @@ export function npmcommon() {
                 return null;
             }
         };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
 
         mockery.registerMock('typed-rest-client/HttpClient', {
             HttpClient: function() {
@@ -229,11 +230,9 @@ export function npmcommon() {
 
         assert(registry.auth.match(BEARER_AUTH_REGEX), `Auth must contain _authToken. Auth is: (${registry.auth})`);
         assert(registry.auth.match(ALWAYS_AUTH_REGEX), `Auth must contain always-auth. Auth is: (${registry.auth})`);
-
-        done();
     });
 
-    it('handles views in registry URL', async (done: MochaDone) => {
+    it('handles views in registry URL', async () => {
         // Scenario: Includes view (e.g. @Release) within the registry entry
         const hostName = 'https://mytfsserver.visualstudio.com';
         const nerfedRegistry = "//mytfsserver.pkgs.visualstudio.com/npmRegistry@Release/npm/registry/";
@@ -254,7 +253,7 @@ export function npmcommon() {
         const mockParser = {
             GetRegistries: (npmrc: string) => [registry]
         };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
         mockery.registerMock('./npmrcparser', mockParser);
         
         const npmutil = require('../npm/npmutil');
@@ -265,7 +264,5 @@ export function npmcommon() {
         assert.equal(npmRegistry.url, registry, "Registry needs to match");
         assert.equal(npmRegistry.auth, `${nerfedRegistry}:_authToken=${authToken}`, "Auth needs to match");
         assert.equal(npmRegistry.authOnly, true, "Authonly needs to match");
-        
-        done();
     });
 };

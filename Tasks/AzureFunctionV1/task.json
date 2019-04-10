@@ -4,6 +4,7 @@
     "friendlyName": "Invoke Azure Function",
     "description": "Invoke an Azure Function as a part of your pipeline.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870235",
     "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=870235)",
     "category": "Utility",
     "visibility": [

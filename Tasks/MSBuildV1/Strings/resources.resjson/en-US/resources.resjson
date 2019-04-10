@@ -27,6 +27,8 @@
   "loc.input.help.logProjectEvents": "Optionally record timeline details for each project (Windows only).",
   "loc.input.label.createLogFile": "Create Log File",
   "loc.input.help.createLogFile": "Optionally create a log file (Windows only).",
+  "loc.input.label.logFileVerbosity": "Log File Verbosity",
+  "loc.input.help.logFileVerbosity": "Optional log file verbosity.",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "`Record Project Details` is only supported on Windows.",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "`Create Log File` is only supported on Windows.",
   "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."

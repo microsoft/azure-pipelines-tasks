@@ -19,7 +19,10 @@ import ccUtil = require('codecoverage-tools/codecoverageutilities');
 import javacommons = require('java-common/java-common');
 import systemToken = require('utility-common/accesstoken');
 
-const accessTokenEnvSetting: string = 'VSTS_ENV_ACCESS_TOKEN';
+// Setting the access token env var to both VSTS and AZURE_ARTIFACTS for 
+// backwards compatibility with repos that already use the older env var.
+const accessTokenEnvSettingLegacy: string = 'VSTS_ENV_ACCESS_TOKEN';
+const accessTokenEnvSetting: string = 'AZURE_ARTIFACTS_ENV_ACCESS_TOKEN';
 const TESTRUN_SYSTEM = "VSTS - gradle"; 
 
 // Configure the JVM associated with this run.
@@ -44,12 +47,13 @@ function publishTestResults(publishJUnitResults: boolean, testResultsFiles: stri
         }
 
         if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
-            tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
+            console.log(tl.loc('NoTestResults', testResultsFiles));
             return 0;
         }
 
         let tp: tl.TestPublisher = new tl.TestPublisher('JUnit');
-        tp.publish(matchingTestResultsFiles, true, '', '', '', true, TESTRUN_SYSTEM);
+        const testRunTitle = tl.getInput('testRunTitle');
+        tp.publish(matchingTestResultsFiles, true, '', '', testRunTitle, true, TESTRUN_SYSTEM);
     }
 }
 
@@ -157,7 +161,7 @@ function setJavaHome(javaHomeSelection: string): void {
 
 function getExecOptions(): IExecOptions {
     var env = process.env;
-    env[accessTokenEnvSetting] = systemToken.getSystemAccessToken();
+    env[accessTokenEnvSetting] = env[accessTokenEnvSettingLegacy] = systemToken.getSystemAccessToken();
     return <IExecOptions> {
         env: env,
     };

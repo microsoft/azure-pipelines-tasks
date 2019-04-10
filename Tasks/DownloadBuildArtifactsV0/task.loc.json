@@ -3,13 +3,14 @@
   "name": "DownloadBuildArtifacts",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 142,
-    "Patch": 2
+    "Minor": 148,
+    "Patch": 1
   },
   "groups": [
     {
@@ -83,6 +84,15 @@
         "latestFromBranch": "Latest from specific branch and specified Build Tags",
         "specific": "Specific version"
       }
+    },
+    {
+      "name": "allowPartiallySucceededBuilds",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowPartiallySucceededBuilds",
+      "defaultValue": "false",
+      "visibleRule": "buildType == specific && buildVersionToDownload != specific",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.allowPartiallySucceededBuilds"
     },
     {
       "name": "branchName",
@@ -188,7 +198,7 @@
       "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
       "parameters": {
         "project": "$(project)",
-        "name": "$(name)"
+        "name": "$(searchText)"
       },
       "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
       "callbackContextTemplate": "{\"continuationToken\" : \"{{{headers.x-ms-continuationtoken}}}\"}",

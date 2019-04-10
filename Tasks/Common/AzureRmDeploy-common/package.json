@@ -1,0 +1,30 @@
+{
+  "name": "azurermdeploycommon",
+  "version": "1.0.0",
+  "description": "Common Lib for Azure ARM REST apis",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "@types/mocha": "2.2.48",
+    "@types/node": "6.0.68",
+    "@types/q": "1.0.7",
+    "jsonwebtoken": "7.3.0",
+    "q": "1.4.1",
+    "typed-rest-client": "0.12.0",
+    "vsts-task-lib": "2.0.5",
+    "archiver": "1.2.0",
+    "decompress-zip": "0.3.0",
+    "ltx": "2.6.2",
+    "winreg": "1.2.2",
+    "xml2js": "0.4.13",
+    "node-stream-zip": "1.7.0"
+  }
+}
