@@ -182,7 +182,7 @@ export class ApplicationTokenCredentials {
                 if (response.statusCode == 200) {
                     deferred.resolve(response.body.access_token);
                 }
-                else if(response.statusCode == 401) {
+                else if(response.statusCode == 401 || response.statusCode == 403) {
                     deferred.reject(tl.loc('ExpiredServicePrincipal'));
                 }
                 else {
@@ -217,7 +217,7 @@ export class ApplicationTokenCredentials {
                 if (response.statusCode == 200) {
                     deferred.resolve(response.body.access_token);
                 }
-                else if(response.statusCode == 401) {
+                else if(response.statusCode == 401 || response.statusCode == 403) {
                     deferred.reject(tl.loc('ExpiredServicePrincipal'));
                 }
                 else {
