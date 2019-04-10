@@ -16,7 +16,7 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
+        "Major": 1,
         "Minor": 0,
         "Patch": 0
     },
@@ -29,8 +29,14 @@
             "type": "string",
             "label": "Version",
             "required": false,
-            "defaultValue": ">= 2.4",
             "helpMarkDown": "Version Spec to use. For example: 2.x, 2.5.3, >=2.5.0"
+        },
+        {
+            "name": "architecture",
+            "type": "string",
+            "label": "Architecture",
+            "required": false,
+            "helpMarkDown": "Architecture to use. For example: x64. Defaults to platform architecture."
         }
     ],
     "execution": {

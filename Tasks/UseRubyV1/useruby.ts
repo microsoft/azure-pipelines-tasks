@@ -6,7 +6,7 @@ import * as proxyutil from "./proxyutil";
 
 async function run() {
     try {
-        const version: string = task.getInput("version", true);
+        const version: string = task.getInput("version", false);
         const architecture: string = task.getInput("architecture", false) || os.arch();
 
         // Install tool
