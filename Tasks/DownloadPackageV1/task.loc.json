@@ -86,7 +86,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.files",
       "defaultValue": "*",
-      "visibleRule": "packageType == 'maven' || packageType == 'pypi' || packageType == 'universal'",
+      "visibleRule": "packageType == 'maven' || packageType == 'pypi' || packageType == 'upack'",
       "required": false,
       "properties": {
         "EditableOptions": "True"
