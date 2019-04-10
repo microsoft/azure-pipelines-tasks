@@ -9,7 +9,8 @@ export async function downloadUniversalPackage(
     downloadPath: string,
     feedId: string,
     packageId: string,
-    version: string
+    version: string,
+    filterPattern: string
 ): Promise<void> {
     try {
         const accessToken = pkgLocationUtils.getSystemAccessToken();
@@ -43,7 +44,7 @@ export async function downloadUniversalPackage(
 
         let toolRunnerOptions = artifactToolRunner.getOptions();
         toolRunnerOptions.env.UNIVERSAL_DOWNLOAD_PAT = accessToken;
-        downloadPackageUsingArtifactTool(downloadPath, downloadOptions, toolRunnerOptions);
+        downloadPackageUsingArtifactTool(downloadPath, downloadOptions, toolRunnerOptions, filterPattern);
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error.message);
         return;
@@ -62,7 +63,8 @@ export async function downloadUniversalPackage(
 function downloadPackageUsingArtifactTool(
     downloadPath: string,
     options: artifactToolRunner.IArtifactToolOptions,
-    execOptions: IExecOptions
+    execOptions: IExecOptions,
+    filterPattern: string
 ) {
     let command = new Array<string>();
     var verbosity = tl.getVariable("Packaging.ArtifactTool.Verbosity") || "Error";
@@ -74,7 +76,8 @@ function downloadPackageUsingArtifactTool(
         "--package-version", options.packageVersion,
         "--path", downloadPath,
         "--patvar", "UNIVERSAL_DOWNLOAD_PAT",
-        "--verbosity", verbosity);
+        "--verbosity", verbosity,
+        "--filter", filterPattern);
 
     console.log(tl.loc("Info_Downloading", options.packageName, options.packageVersion, options.feedId));
     const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(
