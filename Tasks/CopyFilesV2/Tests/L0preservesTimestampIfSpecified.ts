@@ -47,7 +47,7 @@ runner.registerMockExport('stats', (itemPath: string) => {
 });
 
 fs.utimes = function (targetPath, atime, mtime, err) {
-    return;
+    console.log('Calling fs.utimes on', targetPath);
 }
 runner.registerMock('fs', fs);
 

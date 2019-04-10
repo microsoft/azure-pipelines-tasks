@@ -199,6 +199,7 @@ describe('CopyFiles L0 Suite', function () {
         assert(
             runner.succeeded,
             'should have succeeded');
+        assert(runner.stdOutContained(`Calling fs.utimes on ${path.normalize('/destDir')}`));
         assert(
             runner.stdOutContained(`creating path: ${path.normalize('/destDir')}`),
             'should have mkdirP destDir');
