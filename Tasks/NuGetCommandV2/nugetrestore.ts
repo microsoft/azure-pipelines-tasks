@@ -1,6 +1,6 @@
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
-import {IExecOptions, IExecSyncResult} from "vsts-task-lib/toolrunner";
+import * as tl from "azure-pipelines-task-lib/task";
+import {IExecOptions, IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
 
 import * as auth from "packaging-common/nuget/Authentication";
 import * as commandHelper from "packaging-common/nuget/CommandHelper";

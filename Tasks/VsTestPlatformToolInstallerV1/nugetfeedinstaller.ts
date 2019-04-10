@@ -162,6 +162,7 @@ export class NugetFeedInstaller {
 
         nugetTool.arg(constants.sources).arg(constants.add).arg(constants.noninteractive)
             .arg(constants.name).arg(feedId).arg(constants.source).arg(feedUrl)
+            .arg(constants.validAuthenticationTypes).arg(constants.basic)
             .argIf(password, constants.usernameParam).argIf(password, username)
             .argIf(password, constants.passwordParam).argIf(password, password)
             .argIf(configFilePath, constants.configFile).argIf(configFilePath, configFilePath);

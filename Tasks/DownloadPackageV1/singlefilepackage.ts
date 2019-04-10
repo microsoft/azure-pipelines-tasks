@@ -1,6 +1,6 @@
 import { PackageUrlsBuilder } from "./packagebuilder";
 import { Package, PackageFileResult } from "./package";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 export class SingleFilePackage extends Package {
     constructor(builder: PackageUrlsBuilder) {

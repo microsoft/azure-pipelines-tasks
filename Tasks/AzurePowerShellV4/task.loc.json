@@ -17,7 +17,7 @@
   "version": {
     "Major": 4,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 4
   },
   "preview": true,
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -149,6 +149,10 @@
       "platforms": [
         "windows"
       ]
+    },
+    "Node": {
+      "target": "azurepowershell.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

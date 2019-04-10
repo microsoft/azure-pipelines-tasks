@@ -91,16 +91,16 @@ function getCommandArguments(): string {
 
 function isJsonOrYamlOutputFormatSupported(kubecommand) : boolean
 {
-   switch (kubecommand) {
-       case "delete":
-          return false;
-       case "exec":
-          return false;
-       case "logs":
-          return false;
-       default: 
-          return true;
-   }
+    var commandsThatDontSupportYamlAndJson: string[] = ["explain", "cluster-info", "top", "cordon", "uncordon", "drain", "describe", "logs", "attach", "exec", "port-forward", "proxy", "cp", "auth", "completion", "api-versions", "config", "help", "plugin", "rollout"];    
+    
+    if (commandsThatDontSupportYamlAndJson.findIndex(command => command === kubecommand) > -1)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 export function getNameSpace(): string[] {
