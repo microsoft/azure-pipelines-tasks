@@ -1,6 +1,6 @@
 import computeManagementClient = require("azure-arm-rest/azure-arm-compute");
 import util = require("util");
-import tl = require("azure-pipelines-task-lib/task");
+import tl = require("vsts-task-lib/task");
 import azure_utils = require("./AzureUtil");
 import deployAzureRG = require("../models/DeployAzureRG");
 import az = require("azure-arm-rest/azureModels");
