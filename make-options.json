@@ -79,6 +79,7 @@
         "GulpV1",
         "HelmDeployV0",
         "HelmInstallerV0",
+        "HelmInstallerV1",
         "IISWebAppDeployment",
         "IISWebAppDeploymentOnMachineGroupV0",
         "IISWebAppManagementOnMachineGroupV0",

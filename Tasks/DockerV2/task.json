@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 150,
-        "Patch": 5
+        "Minor": 151,
+        "Patch": 1
     },
     "demands": [],
     "releaseNotes": "Simplified the task YAML by:<br/>&nbsp;- Removing the Container registry type input<br/>&nbsp;- Removing complex inputs as they can be passed as arguments to the command.",
@@ -110,8 +110,7 @@
             "helpMarkDown": "Docker command options. Ex:<br> For build command,<br>--build-arg HTTP_PROXY=http://10.20.30.2:1234 --quiet"
         }
     ],
-    "dataSourceBindings": [
-    ],
+    "dataSourceBindings": [],
     "outputVariables": [
         {
             "name": "DockerOutput",
