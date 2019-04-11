@@ -20,6 +20,10 @@ steps:
   displayName: Use node 8
   inputs:
     versionSpec: "10.15.1"
+    
+- script: |
+    git fetch origin pull/10081/head:#10080ConfusingMessageInDocsForDeployingWebApp
+    git merge-base #10080ConfusingMessageInDocsForDeployingWebApp origin/master
 
 - script: npm i -g npm@6.9.0
   displayName: Use npm version 6.9.0
