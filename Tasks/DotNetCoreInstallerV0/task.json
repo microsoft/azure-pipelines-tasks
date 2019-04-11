@@ -1,7 +1,7 @@
 {
     "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
     "name": "DotNetCoreInstaller",
-    "friendlyName": ".NET Core SDK Installer",
+    "friendlyName": ".NET Core SDK/Runtime Installer",
     "description": "Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks.",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=853651",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=853651)",

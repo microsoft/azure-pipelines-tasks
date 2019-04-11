@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 5
+        "Minor": 150,
+        "Patch": 0
     },
     "satisfies": [
         "VsTest"
@@ -51,7 +51,7 @@
             "defaultValue": "latestPreRelease",
             "required": true,
             "groupName": "packageSettings",
-            "helpMarkDown": "Pick whether to install the latest version or a specific version of the Visual Studio Test Platform.",
+            "helpMarkDown": "Pick whether to install the latest version or a specific version of the Visual Studio Test Platform. <br>If you use the test platform installer to run Coded UI tests, ensure that the version you choose matches the major version of Visual Studio with which the test binaries were built. For e.g., if the Coded UI test project was built using Visual Studio 2017 (version 15.x), you must use test platform version 15.x.",
             "options": {
                 "latestPreRelease": "Latest (Includes Pre-Release)",
                 "latestStable": "Latest Stable",

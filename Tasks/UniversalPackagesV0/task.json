@@ -9,7 +9,7 @@
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 148,
+        "Minor": 151,
         "Patch": 0
     },
     "runsOn": [
@@ -431,10 +431,11 @@
         "Info_UsingToolPath": "Using tool path: %s",
         "Info_UsingVersion": "Using version: %s",
         "FailedToGetPackageMetadata": "Failed to get package metadata.",
-        "FailedToGetArtifactTool": "Failed to get artifact tool from service. %s",
+        "FailedToGetArtifactTool": "Failed to get artifact tool. %s",
         "Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",
         "FailedToGetLatestPackageVersion": "Failed to get package versions",
         "Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages",
-        "Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server."
+        "Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server.",
+        "Error_ProcessorArchitectureNotSupported": "Universal Packages require an x64 agent."
     }
 }

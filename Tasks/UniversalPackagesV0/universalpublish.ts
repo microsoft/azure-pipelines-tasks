@@ -1,8 +1,8 @@
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import {ProvenanceHelper} from "packaging-common/provenance";
 import * as telemetry from "utility-common/telemetry";
-import * as tl from "vsts-task-lib";
-import {IExecOptions, IExecSyncResult} from "vsts-task-lib/toolrunner";
+import * as tl from "azure-pipelines-task-lib";
+import {IExecOptions, IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
 import * as artifactToolRunner from "packaging-common/universal/ArtifactToolRunner";
 import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolUtilities";
 import * as auth from "packaging-common/universal/Authentication";

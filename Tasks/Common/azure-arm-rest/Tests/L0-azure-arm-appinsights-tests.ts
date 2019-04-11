@@ -32,13 +32,13 @@ export function ApplicationInsightsTests() {
 function get(tr) {
     assert(tr.stdOutContained('GET APP INSIGHTS RESOURCE ID MOCKED: subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.insights/components/MOCK_APP_INSIGHTS_NAME'),
         'Should have printed: GET APP INSIGHTS RESOURCE ID MOCKED: subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.insights/components/MOCK_APP_INSIGHTS_NAME');
-    assert(tr.stdOutContained('FailedToGetApplicationInsightsResource FAIL_MOCK_APP_INSIGHTS_NAME Internal Server error occured. (CODE: 500)'),
-        'Should have printed: FailedToGetApplicationInsightsResource FAIL_MOCK_APP_INSIGHTS_NAME Internal Server error occured. (CODE: 500)');
+    assert(tr.stdOutContained('FailedToGetApplicationInsightsResource FAIL_MOCK_APP_INSIGHTS_NAME Internal Server error occured. (CODE: 501)'),
+        'Should have printed: FailedToGetApplicationInsightsResource FAIL_MOCK_APP_INSIGHTS_NAME Internal Server error occured. (CODE: 501)');
 }
 
 function update(tr) {
     assert(tr.stdOutContained('UPDATE APP INSIGHTS RESOURCE ID MOCKED: subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.insights/components/MOCK_APP_INSIGHTS_NAME'),
         'Should have printed: UPDATE APP INSIGHTS RESOURCE ID MOCKED: subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.insights/components/MOCK_APP_INSIGHTS_NAME');
-    assert(tr.stdOutContained('FailedToUpdateApplicationInsightsResource FAIL_MOCK_APP_INSIGHTS_NAME Internal Server error occured. (CODE: 500)'),
-        'Should have printed: FailedToUpdateApplicationInsightsResource FAIL_MOCK_APP_INSIGHTS_NAME Internal Server error occured. (CODE: 500)');
+    assert(tr.stdOutContained('FailedToUpdateApplicationInsightsResource FAIL_MOCK_APP_INSIGHTS_NAME Internal Server error occured. (CODE: 501)'),
+        'Should have printed: FailedToUpdateApplicationInsightsResource FAIL_MOCK_APP_INSIGHTS_NAME Internal Server error occured. (CODE: 501)');
 }

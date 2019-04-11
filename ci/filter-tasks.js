@@ -116,6 +116,7 @@ var getTasksToBuildForPR = function() {
     var prId = process.env['SYSTEM_PULLREQUEST_PULLREQUESTNUMBER'];
     var targetBranch = process.env['SYSTEM_PULLREQUEST_TARGETBRANCH'];
     var commonChanges = [];
+    var commonTestChanges = [];
     var toBeBuilt = [];
     try {
         if (sourceBranch.includes(':')) {
@@ -137,7 +138,12 @@ var getTasksToBuildForPR = function() {
             var taskPath = filePath.slice(6);
             if(taskPath.slice(0, 6) == 'Common') {
                 var commonName = taskPath.slice(7);
-                commonChanges.push('../common/' + commonName.slice(0, commonName.indexOf('/')).toLowerCase());
+                if (taskPath.toLowerCase().indexOf('test') > -1) {
+                    commonTestChanges.push('../common/' + commonName.slice(0, commonName.indexOf('/')).toLowerCase());
+                }
+                else {
+                    commonChanges.push('../common/' + commonName.slice(0, commonName.indexOf('/')).toLowerCase());
+                }
             }
             else {
                 var taskName = taskPath.slice(0, taskPath.indexOf('/'));
@@ -148,6 +154,7 @@ var getTasksToBuildForPR = function() {
         }
     });
     var changedTasks = getTasksDependentOnChangedCommonFiles(commonChanges);
+    var changedTests = getTasksDependentOnChangedCommonFiles(commonTestChanges);
     var shouldBeBumped = [];
     changedTasks.forEach(task => {
         if (!toBeBuilt.includes(task)) {
@@ -156,10 +163,14 @@ var getTasksToBuildForPR = function() {
         }
     });
     if (shouldBeBumped.length > 0) {
-        // TODO - change this to an error once its proven to be working.
-        console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=160;]The following tasks should have their versions bumped due to changes in common:', shouldBeBumped);
-        // throw new Error('The following tasks should have their versions bumped due to changes in common: ' + shouldBeBumped);
+        throw new Error('The following tasks should have their versions bumped due to changes in common: ' + shouldBeBumped);
     }
+    
+    changedTests.forEach(task => {
+        if (!toBeBuilt.includes(task)) {
+            toBeBuilt.push(task);
+        }
+    });
 
     return toBeBuilt;
 }

@@ -1,1 +1,1 @@
-# Azure virtual machine scale set deployment sask
+# Azure virtual machine scale set deployment task

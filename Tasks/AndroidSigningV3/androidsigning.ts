@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 const findAndroidTool = (tool: string): string => {
     const androidHome = tl.getVariable('ANDROID_HOME');

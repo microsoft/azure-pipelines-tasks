@@ -1,0 +1,14 @@
+{
+	"common": [{
+		"module": "../Common/docker-common",
+		"type": "node",
+		"dest" : "./",
+		"compile" : true
+	},
+	{
+		"module": "../Common/utility-common",
+		"type": "node",
+		"dest" : "./",
+		"compile" : true
+	}]
+}
