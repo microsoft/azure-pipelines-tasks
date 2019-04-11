@@ -3,6 +3,7 @@
 // If its a PR build, all tasks that have been changed will be built.
 // Any other type of build will build all tasks.
 var fs = require('fs');
+var os = require('os');
 var path = require('path');
 var semver = require('semver');
 var restClient = require('typed-rest-client/RestClient');
@@ -130,6 +131,13 @@ var getTasksToBuildForPR = function() {
         console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=125;]Unable to reach github, building all tasks', err);
         return makeOptions.tasks;
     }
+    
+    // We need to escape # on Unix platforms since that turns the rest of the string into a comment
+    if (os.platform() != 'win32') {
+        sourceBranch = sourceBranch.replace(/#/gi, "\\#");
+        targetBranch = targetBranch.replace(/#/gi, "\\#");
+    }
+
     var baseCommit = run('git merge-base ' + sourceBranch + ' origin/' + targetBranch);
     run('git --no-pager diff --name-only ' + baseCommit + ' ' + sourceBranch)
         .split('\n')
