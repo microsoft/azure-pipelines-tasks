@@ -103,6 +103,7 @@ var run = function (cl, inheritStreams) {
             console.error(err.output ? err.output.toString() : err.message);
         }
 
+        console.log(err.message);
         throw new Error(`The following command line failed: '${cl}'`);
     }
 
