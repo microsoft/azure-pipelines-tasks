@@ -72,6 +72,17 @@ describe('UsePythonVersion L0 Suite', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
     });
 
+    it('does nothing if no version is passed', function () {
+        const testFile = path.join(__dirname, 'L0NoVersionPassed.js');
+        const testRunner = new MockTestRunner(testFile);
+
+        testRunner.run();
+
+        assert(!didSetVariable(testRunner, 'pythonLocation', 'x86ToolPath'));
+        assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
+        assert(testRunner.succeeded, 'task should have succeeded');
+    });
+
     it('finds PyPy2', function () {
         const testFile = path.join(__dirname, 'L0PyPy2.js');
         const testRunner = new MockTestRunner(testFile);

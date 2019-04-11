@@ -128,9 +128,9 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
 
 export async function usePythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
     // If the user doesn't specify a version, tasks are expected to do the equivalent of which to locate the existing tool.
-    // if(!parameters.version) {
-    //     return;
-    // }
+    if (!parameters.version) {
+        return;
+    }
 
     switch (parameters.version.toUpperCase()) {
         case 'PYPY2':
