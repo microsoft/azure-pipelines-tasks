@@ -21,10 +21,5 @@
   "bugs": {
     "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
-  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
-  "dependencies": {
-    "azure-pipelines-task-lib": "3.0.0-preview",
-    "azure-pipelines-tool-lib": "^0.12.0",
-    "mocha": "^6.0.2"
-  }
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme"
 }
