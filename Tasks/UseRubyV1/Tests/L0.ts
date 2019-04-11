@@ -18,9 +18,10 @@ describe('UseRubyVersion L0 Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
+
         assert(tr.succeeded, `task should have succeeded. error(s): ${tr.errorIssues}`);
         assert(tr.stdout.includes("task.setvariable variable=rubyLocation"), 'variable was not set as expected');
-        assert(tr.stdout.includes(path.join('/', 'Ruby', '2.5.4', 'bin')), 'ruby location is not set as expected');
+        assert(tr.stdout.includes('/Ruby/2.5.4/bin'), 'ruby location is not set as expected');
     });
 
 
@@ -50,9 +51,8 @@ describe('UseRubyVersion L0 Suite', function () {
 
         assert(tr.succeeded, `task should have succeeded. error(s): ${tr.errorIssues}`);
         assert(tr.stdout.includes("task.setvariable variable=rubyLocation"), 'variable was not set as expected');
-        assert(tr.stdout.includes(path.join('/', 'Ruby', '2.4.4', 'bin')), 'ruby location is not set as expected');
-        assert(tr.stdout.includes(path.join('/', 'Ruby', '2.4.4', 'bin')), 'ruby location is not set as expected');
-        assert(tr.stdout.includes('##vso[task.prependpath]' + path.join('/', 'Ruby', '2.4.4', 'bin')), 'ruby tool location was not added to PATH as expected');
+        assert(tr.stdout.includes('/Ruby/2.4.4/bin'), 'ruby location is not set as expected');
+        assert(tr.stdout.includes('##vso[task.prependpath]' + '/Ruby/2.4.4/bin'), 'ruby tool location was not added to PATH as expected');
     });
 
     it('sets PATH correctly on Windows', function () {
@@ -65,7 +65,7 @@ describe('UseRubyVersion L0 Suite', function () {
 
         assert(tr.succeeded, `task should have succeeded. error(s): ${tr.errorIssues}`);
         assert(tr.stdout.includes("task.setvariable variable=rubyLocation"), 'variable was not set as expected');
-        assert(tr.stdout.includes(path.join('/', 'Ruby', '2.4.4', 'bin')), 'ruby location is not set as expected');
-        assert(tr.stdout.includes('##vso[task.prependpath]' + path.join('/', 'Ruby', '2.4.4', 'bin')), 'ruby tool location was not added to PATH as expected');
+        assert(tr.stdout.includes('\\Ruby\\2.4.4\\bin'), 'ruby location is not set as expected');
+        assert(tr.stdout.includes('##vso[task.prependpath]' + '\\Ruby\\2.4.4\\bin'), 'ruby tool location was not added to PATH as expected');
     });
 });

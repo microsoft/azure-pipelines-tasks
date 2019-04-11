@@ -6,16 +6,14 @@ import * as proxyutil from "./proxyutil";
 
 async function run() {
     try {
-        const version: string = task.getInput("version", false);
-        const architecture: string = task.getInput("architecture", false) || os.arch();
+        task.setResourcePath(path.join(__dirname, "task.json"));
 
         // Install tool
+        const version: string = task.getInput("version", false);
+        task.debug(version);
         if (version) {
-            task.setResourcePath(path.join(__dirname, "task.json"));
-            await installRubyVersion({
-                version,
-                architecture
-            });
+            const architecture: string = task.getInput("architecture", false) || os.arch();
+            await installRubyVersion(version, architecture);
         }
 
         // Configure proxy

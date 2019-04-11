@@ -1,37 +1,16 @@
-import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 
 import * as task from "azure-pipelines-task-lib/task";
 import * as tool from "azure-pipelines-tool-lib/tool"
 
-enum Platform {
-    Windows,
-    MacOS,
-    Linux
-}
-
-function getPlatform(): Platform {
-    switch (process.platform) {
-        case "win32": return Platform.Windows;
-        case "darwin": return Platform.MacOS;
-        case "linux": return Platform.Linux;
-        default: throw Error(task.loc("PlatformNotRecognized"));
-    }
-}
-
-interface TaskParameters {
-    readonly version: string;
-    readonly architecture: string;
-}
-
-export async function installRubyVersion(parameters: TaskParameters): Promise<void> {
+export async function installRubyVersion(version: string, architecture: string): Promise<void> {
     const toolName: string = "Ruby";
-    const installDir: string | null = tool.findLocalTool(toolName, parameters.version, parameters.architecture);
+    const installDir: string | null = tool.findLocalTool(toolName, version, architecture);
     if (!installDir) {
         // Fail and list available versions
         throw new Error([
-            task.loc("VersionNotFound", parameters.version, parameters.architecture),
+            task.loc("VersionNotFound", version, architecture),
             task.loc("ListAvailableVersions", task.getVariable("Agent.ToolsDirectory")),
             tool.findLocalToolVersions("Ruby"),
             task.loc("ToolNotFoundMicrosoftHosted", "Ruby", "https://aka.ms/hosted-agent-software"),
@@ -40,8 +19,8 @@ export async function installRubyVersion(parameters: TaskParameters): Promise<vo
     }
 
     const toolPath: string = path.join(installDir, "bin");
-    const platform = getPlatform();
-    if (platform !== Platform.Windows) {
+    const platform = task.getPlatform();
+    if (platform !== task.Platform.Windows) {
         // Ruby / Gem heavily use the "#!/usr/bin/ruby" to find ruby, so this task needs to
         // replace that version of ruby so all the correct version of ruby gets selected
         // replace the default

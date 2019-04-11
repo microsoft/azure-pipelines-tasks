@@ -1,6 +1,5 @@
 import * as task from 'azure-pipelines-task-lib/task';
 import * as qs from 'querystring';
-import * as url from 'url';
 
 export function setProxySettings(proxyCfg: task.ProxyConfiguration) {
     // Ruby Net::HTTP uses 'http_proxy' / 'https_proxy`
