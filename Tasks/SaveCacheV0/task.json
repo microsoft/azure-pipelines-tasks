@@ -32,13 +32,6 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
-        },
-        {
-            "name": "salt",
-            "type": "string",
-            "label": "A salt to use for generating a fingerprint.",
-            "required": true,
-            "helpMarkDown": "A salt to use to append to the fingerprint hash."
         }
     ],
     "instanceNameFormat": "Save Cache",

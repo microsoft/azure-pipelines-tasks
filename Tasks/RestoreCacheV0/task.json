@@ -40,13 +40,6 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "This will set the following variable (PipelineCache.<variable-value>) to 'True'."
-        },
-        {
-            "name": "salt",
-            "type": "string",
-            "label": "A salt to use for generating a fingerprint.",
-            "required": true,
-            "helpMarkDown": "A salt to use to append to the fingerprint hash."
         }
     ],
     "instanceNameFormat": "Restore Cache",

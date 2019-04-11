@@ -6,7 +6,5 @@
   "loc.input.label.key": "The name of the key.",
   "loc.input.help.key": "The name of the key.",
   "loc.input.label.path": "Path to publish",
-  "loc.input.help.path": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported.",
-  "loc.input.label.salt": "A salt to use for generating a fingerprint.",
-  "loc.input.help.salt": "A salt to use to append to the fingerprint hash."
+  "loc.input.help.path": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
 }

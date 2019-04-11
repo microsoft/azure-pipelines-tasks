@@ -8,7 +8,5 @@
   "loc.input.label.path": "Path to download to",
   "loc.input.help.path": "The folder path to download the cache to. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported. If the folder doesn't exist it will be created.",
   "loc.input.label.cacheHitVar": "Variable to set if there is a cache hit",
-  "loc.input.help.cacheHitVar": "This will set the following variable (PipelineCache.<variable-value>) to 'True'.",
-  "loc.input.label.salt": "A salt to use for generating a fingerprint.",
-  "loc.input.help.salt": "A salt to use to append to the fingerprint hash."
+  "loc.input.help.cacheHitVar": "This will set the following variable (PipelineCache.<variable-value>) to 'True'."
 }

@@ -40,13 +40,6 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.cacheHitVar"
-    },
-    {
-      "name": "salt",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.salt",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.salt"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
