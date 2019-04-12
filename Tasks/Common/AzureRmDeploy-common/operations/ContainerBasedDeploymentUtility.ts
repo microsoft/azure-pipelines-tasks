@@ -30,17 +30,17 @@ export class ContainerBasedDeploymentUtility {
         let isLinuxApp: boolean = properties["isLinuxContainerApp"];
         let updatedMulticontainerConfigFile: string = multicontainerConfigFile;
 
-        if(imageName) {
-            tl.debug("Deploying image " + imageName + " to the webapp " + this._appService.getName());
-        }
-
         if(isMultiContainer) {
+            tl.debug("Deploying Docker-Compose file " + multicontainerConfigFile + " to the webapp " + this._appService.getName());
             if(imageName) {
                 updatedMulticontainerConfigFile = this.updateImagesInConfigFile(multicontainerConfigFile, imageName);
             }
 
             // uploading log file
             console.log(`##vso[task.uploadfile]${updatedMulticontainerConfigFile}`);
+        }
+        else if(imageName) {
+            tl.debug("Deploying image " + imageName + " to the webapp " + this._appService.getName());
         }
 
         tl.debug("Updating the webapp configuration.");
