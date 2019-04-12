@@ -83,11 +83,22 @@
     },
     {
       "name": "imageName",
-      "type": "string",
+      "aliases": [
+        "containers"
+      ],
+      "type": "multiline",
       "label": "ms-resource:loc.input.label.imageName",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.imageName"
+    },
+    {
+      "name": "multicontainerConfigFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.multicontainerConfigFile",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.multicontainerConfigFile"
     },
     {
       "name": "containerCommand",
@@ -312,6 +323,11 @@
     "RestartedAppService": "ms-resource:loc.messages.RestartedAppService",
     "RestartedAppServiceSlot": "ms-resource:loc.messages.RestartedAppServiceSlot",
     "FailedToRestartAppService": "ms-resource:loc.messages.FailedToRestartAppService",
-    "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot"
+    "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot",
+    "FailedToGetConfigurationFile": "ms-resource:loc.messages.FailedToGetConfigurationFile",
+    "FailedToDeployToWebApp": "ms-resource:loc.messages.FailedToDeployToWebApp",
+    "SingleContainerDeployment": "ms-resource:loc.messages.SingleContainerDeployment",
+    "MultiContainerDeploymentWithTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithTransformation",
+    "MultiContainerDeploymentWithoutTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithoutTransformation"
   }
 }
