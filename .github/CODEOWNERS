@@ -273,6 +273,8 @@ Tasks/UseNodeV1/*     @damccorm
 
 Tasks/UsePythonVersionV0/*      @madhurig
 
+Tasks/UseRubyV1/*   @dakale
+
 Tasks/UseRubyVersionV0/*    @hross
 
 Tasks/VSBuildV1/*   @daveken
