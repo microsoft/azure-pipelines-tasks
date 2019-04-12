@@ -60,4 +60,31 @@ describe('UseRubyVersion L0 Suite', function () {
         assert(tr.stdout.includes('\\Ruby\\2.4.4\\bin'), 'ruby location is not set as expected');
         assert(tr.stdout.includes('##vso[task.prependpath]' + '\\Ruby\\2.4.4\\bin'), 'ruby tool location was not added to PATH as expected');
     });
+
+    it('sets proxy correctly', function() {
+        let tp: string = path.join(__dirname, 'L0SetProxy.js');
+        // Http url
+        process.env['__proxy_url__'] = 'http://url.tld';
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        delete process.env["__proxy_url__"];
+
+        assert(tr.succeeded, `task should have succeeded. error(s): ${tr.errorIssues}`);
+        assert(tr.stdout.includes("Setting http_proxy to http://url.tld/"), 'http_proxy was not set as expected');
+
+        // Https url
+        process.env['__proxy_url__'] = 'https://url.tld';
+        process.env['__proxy_username__'] = 'username';
+        process.env['__proxy_password__'] = 'password';
+        tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        delete process.env["__proxy_url__"];
+        delete process.env["__proxy_username__"];
+        delete process.env["__proxy_password__"]
+
+        assert(tr.succeeded, `task should have succeeded. error(s): ${tr.errorIssues}`);
+        assert(tr.stdout.includes("Setting https_proxy to https://username:password@url.tld/"), 'https_proxy was not set as expected');
+        assert(tr.stdout.includes("Setting secret password"), 'proxy password was not set as a secret as expected');
+    });
 });
