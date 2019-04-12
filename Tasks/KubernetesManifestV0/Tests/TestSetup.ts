@@ -50,7 +50,7 @@ process.env["BUILD_BUILDNUMBER"] = BuildNumber;
 process.env["BUILD_DEFINITIONNAME"] = DefinitionName;
 
 process.env["AGENT_JOBNAME"] = JobName;
-process.env["TF_BUILD"] = "True";
+process.env["SYSTEM_HOSTTYPE"] = "build";
 
 process.env[shared.TestEnvVars.manifests] = process.env[shared.TestEnvVars.manifests] || shared.ManifestFilesPath;
 process.env["ENDPOINT_DATA_kubernetesConnection_AUTHORIZATIONTYPE"] = process.env[shared.TestEnvVars.endpointAuthorizationType] || shared.AuthorizationType.Kubeconfig;
