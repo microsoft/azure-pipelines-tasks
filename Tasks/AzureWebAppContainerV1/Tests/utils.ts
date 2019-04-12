@@ -83,5 +83,5 @@ export function mockTaskInputParameters(tr) {
     tr.setInput('appName', 'mytestapp');
     tr.setInput('imageName', 'dockernamespace/dockerrepository:DockerImageTag');
     tr.setInput('AppSettings', '-port 1173');
-    tr.setInput(' multicontainerConfigFile', '/home/site/wwwroot');
+    tr.setInput('multicontainerConfigFile', '/home/site/wwwroot');
 }
