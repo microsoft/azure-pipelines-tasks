@@ -15,26 +15,11 @@
   "version": {
     "Major": 0,
     "Minor": 151,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [],
   "groups": [],
   "inputs": [
-    {
-      "name": "kubernetesServiceConnection",
-      "type": "connectedService:kubernetes",
-      "label": "ms-resource:loc.input.label.kubernetesServiceConnection",
-      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceConnection",
-      "required": true
-    },
-    {
-      "name": "namespace",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.namespace",
-      "required": true,
-      "defaultValue": "default",
-      "helpMarkDown": "ms-resource:loc.input.help.namespace"
-    },
     {
       "name": "action",
       "type": "pickList",
@@ -52,6 +37,23 @@
         "reject": "reject"
       },
       "helpMarkDown": "ms-resource:loc.input.help.action"
+    },
+    {
+      "name": "kubernetesServiceConnection",
+      "type": "connectedService:kubernetes",
+      "label": "ms-resource:loc.input.label.kubernetesServiceConnection",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceConnection",
+      "visibleRule": "action != bake",
+      "required": true
+    },
+    {
+      "name": "namespace",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.namespace",
+      "required": true,
+      "defaultValue": "default",
+      "visibleRule": "action != bake",
+      "helpMarkDown": "ms-resource:loc.input.help.namespace"
     },
     {
       "name": "strategy",
