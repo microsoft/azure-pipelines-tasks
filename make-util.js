@@ -176,6 +176,8 @@ var buildNodeTask = function (taskPath, outDir) {
 exports.buildNodeTask = buildNodeTask;
 
 var copyTaskResources = function (taskMake, srcPath, destPath) {
+    console.log('copyTaskResources');
+
     assert(taskMake, 'taskMake');
     assert(srcPath, 'srcPath');
     assert(destPath, 'destPath');
@@ -193,6 +195,7 @@ var copyTaskResources = function (taskMake, srcPath, destPath) {
 
     // remove the locally defined set of resources
     if (taskMake.hasOwnProperty('rm')) {
+        console.log('YES ' + JSON.stringify(taskMake.rm));
         removeGroups(taskMake.rm, destPath);
     }
 }
@@ -566,6 +569,8 @@ var removeGroup = function (group, pathRoot) {
     var rootedItems = group.items.map(function (val) { // root the paths
         return path.join(pathRoot, val);
     });
+
+    console.log('rootedItems: ' + JSON.stringify(rootedItems));
 
     // remove the items
     rm(group.options, rootedItems);
