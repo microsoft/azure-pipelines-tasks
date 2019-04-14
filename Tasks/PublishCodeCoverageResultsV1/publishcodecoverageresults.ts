@@ -56,11 +56,13 @@ async function run() {
                         // It may contain wildcards allowing the path to change between builds, such as for:
                         // $(System.DefaultWorkingDirectory)\artifacts***$(Configuration)\testresults\coverage
                         tl.warning(tl.loc('IgnoringReportDirectory'));
-                        autogenerateHtmlReport = true;
                     }
                 }
-                tl.debug('Report directory: ' + tempFolder);
+
+            } else {
+                tempFolder = resolvePathToSingleItem(workingDirectory, reportDirectory, true);
             }
+            tl.debug('Report directory: ' + tempFolder);
 
             let additionalFileMatches: string[] = undefined;
             // Get any 'Additional Files' to publish as build artifacts
