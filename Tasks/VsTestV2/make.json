@@ -28,5 +28,16 @@
                 "dest": "./vswhere.exe"
             }
         ]
-    }
+    },
+    "rm": [
+        {
+            "items": [
+                "Modules/*.pdb",
+                "Tests/*.pdb",
+                "TestSelector/*.pdb",
+                "TestSelector/14.0/*.pdb"
+            ],
+            "options": "-Rf"
+        }
+    ]
 }
