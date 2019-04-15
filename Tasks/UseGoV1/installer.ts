@@ -41,7 +41,7 @@ async function acquireGo(version: string): Promise<string> {
     } catch (error) {
         tl.debug(error);
 
-        throw (util.format("Failed to download version %s. Please verify that the version is valid. %s", version, error));
+        throw (util.format(tl.loc('FailedToDownload'), version, error));
     }
 
     tl.assertAgent('2.115.0');
@@ -51,7 +51,7 @@ async function acquireGo(version: string): Promise<string> {
     //
     let extPath: string = tl.getVariable('Agent.TempDirectory');
     if (!extPath) {
-        throw new Error("Expected Agent.TempDirectory to be set");
+        throw new Error(tl.loc('TempDirNotSet'));
     }
 
     if (osPlat == 'win32') {

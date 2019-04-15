@@ -1,6 +1,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as proxyutil from './proxyutil';
 import * as installer from './installer';
+import * as path from 'path';
 
 async function run() {
     try {
@@ -22,5 +23,9 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, error);
     }
 }
+
+const taskManifestPath = path.join(__dirname, "task.json");
+tl.debug("Setting resource path to " + taskManifestPath);
+tl.setResourcePath(taskManifestPath);
 
 run();
