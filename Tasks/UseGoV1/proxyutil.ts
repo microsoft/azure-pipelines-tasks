@@ -9,21 +9,18 @@ interface ICurlProxy {
 
 function toCurlProxy(proxyCfg: taskLib.ProxyConfiguration): ICurlProxy | null {
     let curlProxy: ICurlProxy | null;
-    if (proxyCfg) {
-        if (proxyCfg.proxyUrl) {
-            taskLib.debug(`using proxy ${proxyCfg.proxyUrl}`);
-            const parsedUrl = url.parse(proxyCfg.proxyUrl);
-            const httpEnvVarName: string = parsedUrl.protocol === 'https:'? "HTTPS_PROXY" : "HTTP_PROXY";
+    if (proxyCfg && proxyCfg.proxyUrl) {
+        taskLib.debug(`using proxy ${proxyCfg.proxyUrl}`);
+        const parsedUrl: url.UrlWithStringQuery = url.parse(proxyCfg.proxyUrl);
+        const httpEnvVarName: string = parsedUrl.protocol === 'https:'? "HTTPS_PROXY" : "HTTP_PROXY";
 
-            console.log(url);
-            let proxyUrl = new URL(proxyCfg.proxyUrl);
-            proxyUrl.username = proxyCfg.proxyUsername;
-            proxyUrl.password = proxyCfg.proxyPassword;
-            
-            curlProxy = <ICurlProxy>{};
-            curlProxy.variable = httpEnvVarName;
-            curlProxy.setting = proxyUrl.toString();
-        }
+        const proxyUrl: URL = new URL(proxyCfg.proxyUrl);
+        proxyUrl.username = proxyCfg.proxyUsername;
+        proxyUrl.password = proxyCfg.proxyPassword;
+        
+        curlProxy = <ICurlProxy>{};
+        curlProxy.variable = httpEnvVarName;
+        curlProxy.setting = proxyUrl.toString();
     } 
     
     return curlProxy;
@@ -34,7 +31,7 @@ export function setCurlProxySettings(proxyConfig: taskLib.ProxyConfiguration) {
         // Short circuit if proxy already set.
         return;
     }
-    let curlProxy: ICurlProxy | null = toCurlProxy(proxyConfig);
+    const curlProxy: ICurlProxy | null = toCurlProxy(proxyConfig);
     if (curlProxy) {
         // register the escaped versions of password
         if (proxyConfig.proxyPassword) {

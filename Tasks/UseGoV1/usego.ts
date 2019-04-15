@@ -4,9 +4,12 @@ import * as installer from './installer';
 
 async function run() {
     try {
-        let version = tl.getInput('version', false);
+        const version = tl.getInput('version', false);
         if (version) {
             await installer.getGo(version.trim());
+        }
+        else {
+            tl.debug('Version not set, skipping installation step.');
         }
 
         // Note - proxy will not work with go get since that is done through source control providers.

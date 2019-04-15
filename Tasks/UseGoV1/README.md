@@ -10,8 +10,8 @@ The task also configures the proxy settings. This will work for all commands exc
  
 ## Contact Information
  
-If you have a problem using this task, report it at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html). In addition, go there to share feedback about the task and the new features you would like to see.
- 
+If you have a problem using this task, report it in [the tasks repository](https://github.com/Microsoft/azure-pipelines-tasks/issues).
+
 ## Pre-requisites for the task
  
 This task can run on Windows, Linux, or Mac machines.

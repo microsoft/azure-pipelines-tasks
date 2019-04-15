@@ -11,7 +11,7 @@
     "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
   },
   "keywords": [
-    "VSTS",
+    "Azure DevOps",
     "Tasks",
     "Node"
   ],

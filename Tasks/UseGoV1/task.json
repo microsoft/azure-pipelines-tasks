@@ -19,7 +19,7 @@
         "Patch": 0
     },
     "satisfies": [
-        "GO"
+        "Go"
     ],
     "demands": [],
     "instanceNameFormat": "Use Go $(version)",
