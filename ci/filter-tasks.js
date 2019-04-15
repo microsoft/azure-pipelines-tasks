@@ -3,6 +3,7 @@
 // If its a PR build, all tasks that have been changed will be built.
 // Any other type of build will build all tasks.
 var fs = require('fs');
+var os = require('os');
 var path = require('path');
 var semver = require('semver');
 var restClient = require('typed-rest-client/RestClient');
@@ -118,6 +119,13 @@ var getTasksToBuildForPR = function() {
     var commonChanges = [];
     var commonTestChanges = [];
     var toBeBuilt = [];
+
+    // We need to escape # on Unix platforms since that turns the rest of the string into a comment
+    if (os.platform() != 'win32') {
+        sourceBranch = sourceBranch.replace(/#/gi, "\\#");
+        targetBranch = targetBranch.replace(/#/gi, "\\#");
+    }
+
     try {
         if (sourceBranch.includes(':')) {
             // We only care about the branch name, not the source repo
