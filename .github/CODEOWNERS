@@ -313,13 +313,7 @@ Tasks/TwineAuthenticateV0/*     @zjrunner
 
 Tasks/UniversalPackagesV0/*     @zjrunner
 
-Tasks/UseDotNetV2/*     @damccorm
-
-Tasks/UseNodeV1/*     @damccorm
-
 Tasks/UsePythonVersionV0/*      @madhurig
-
-Tasks/UseRubyV1/*   @dakale
 
 Tasks/UseRubyVersionV0/*    @hross
 
