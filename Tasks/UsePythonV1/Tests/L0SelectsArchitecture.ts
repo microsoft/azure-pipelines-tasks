@@ -18,4 +18,10 @@ taskRunner.registerMock('azure-pipelines-tool-lib/tool', {
     findLocalTool: findLocalTool
 });
 
+taskRunner.registerMock('./toolutil', {
+    prependPathSafe: (toolPath: string) => {
+        console.log('##vso[task.prependpath]' + toolPath);
+    }
+});
+
 taskRunner.run();

@@ -86,6 +86,9 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
     task.debug(`Semantic version spec of ${parameters.version} is ${semanticversion}`);
 
     const installDir: string | null = tool.findLocalTool('Python', semanticversion, parameters.architecture);
+
+    console.log('INSTALL DIR - ' + installDir);
+
     if (!installDir) {
         // Fail and list available versions
         const x86Versions = tool.findLocalToolVersions('Python', 'x86')
