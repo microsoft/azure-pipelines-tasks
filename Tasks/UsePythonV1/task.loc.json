@@ -6,6 +6,7 @@
   "helpUrl": "https://go.microsoft.com/fwlink/?linkid=871498",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
+  "preview": true,
   "ecosystem": "python",
   "runsOn": [
     "Agent",

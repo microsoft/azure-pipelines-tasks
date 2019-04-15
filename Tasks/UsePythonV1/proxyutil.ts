@@ -1,7 +1,7 @@
 import * as task from 'azure-pipelines-task-lib/task';
 import * as qs from 'querystring';
 
-export function setProxySettings(proxyCfg: task.ProxyConfiguration) {
+export function setProxy(proxyCfg: task.ProxyConfiguration) {
     const proxy = new URL(proxyCfg.proxyUrl);
     const proxyEnvVarName: string = proxy.protocol === 'https:'? "https_proxy" : "http_proxy";
 
