@@ -39,6 +39,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.version"
     },
     {
+      "name": "architecture",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.architecture",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.architecture"
+    },
+    {
       "name": "goPath",
       "type": "string",
       "label": "ms-resource:loc.input.label.goPath",

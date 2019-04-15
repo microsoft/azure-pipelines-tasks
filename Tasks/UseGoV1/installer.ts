@@ -6,7 +6,13 @@ import * as util from 'util';
 import * as os from 'os';
 
 const osPlat: string = os.platform();
-const osArch: string = os.arch();
+let osArch: string = tl.getInput('architecture', false);
+if (!osArch) {
+    osArch = os.arch();
+}
+if (osArch != 'x64' && osArch != 'x32') {
+    throw new Error('Invalid architecture ' + osArch);
+}
 
 export async function getGo(version: string) {
     // check cache

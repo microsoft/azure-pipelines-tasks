@@ -39,6 +39,13 @@
             "helpMarkDown": "The Go version to download (if necessary) and use. Example: 1.9.3"
         },
         {
+            "name": "architecture",
+            "type": "string",
+            "label": "Architecture",
+            "required": false,
+            "helpMarkDown": "The Go architecture to download (either x32 or x64). Defaults to agent architecture."
+        },
+        {
             "name": "goPath",
             "type": "string",
             "label": "GOPATH",

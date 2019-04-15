@@ -6,6 +6,8 @@
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.version": "Version",
   "loc.input.help.version": "The Go version to download (if necessary) and use. Example: 1.9.3",
+  "loc.input.label.architecture": "Architecture",
+  "loc.input.help.architecture": "The Go architecture to download (either x32 or x64). Defaults to agent architecture.",
   "loc.input.label.goPath": "GOPATH",
   "loc.input.help.goPath": "A custom value for the GOPATH environment variable.",
   "loc.input.label.goBin": "GOBIN",
