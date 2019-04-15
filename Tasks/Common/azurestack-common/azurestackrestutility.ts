@@ -4,7 +4,7 @@ import * as rm from "typed-rest-client/RestClient";
 import httpInterfaces = require("typed-rest-client/Interfaces");
 
 let proxyUrl: string = tl.getVariable("agent.proxyurl"); 
-var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? { 
+const requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? { 
     proxy: { 
         proxyUrl: proxyUrl, 
         proxyUsername: tl.getVariable("agent.proxyusername"), 
@@ -17,12 +17,12 @@ let ignoreSslErrors: string = tl.getVariable("VSTS_ARM_REST_IGNORE_SSL_ERRORS");
 requestOptions.ignoreSslError = ignoreSslErrors && ignoreSslErrors.toLowerCase() == "true";
 let rc = new rm.RestClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, null, requestOptions);
 
-var azureStackEnvironment = "AzureStack";
-var defaultAuthorityUrl = "https://login.windows.net/";
+const azureStackEnvironment = "AzureStack";
+const defaultAuthorityUrl = "https://login.windows.net/";
 
 export async function initializeAzureRMEndpointData(connectedServiceName)
 {
-    var endPoint = new Array();
+    let endPoint = new Array();
     endPoint["servicePrincipalClientID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalid', false);
     endPoint["servicePrincipalKey"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalkey', false);
     endPoint["tenantID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'tenantid', false);
@@ -56,28 +56,28 @@ export async function initializeAzureRMEndpointData(connectedServiceName)
 
 export async function initializeAzureStackData(endpoint): Promise<any>
 {
-    var deferred = Q.defer<any>();
-    var headers = {
+    const deferred = Q.defer<any>();
+    const headers = {
         'Content-Type': 'application/json'
     };
      
-    var azureStackDependencyDataUrl = endpoint.url + "/metadata/endpoints?api-version=2015-01-01"
+    const azureStackDependencyDataUrl = endpoint.url + "/metadata/endpoints?api-version=2015-01-01"
     let options: rm.IRequestOptions = {};
     options.additionalHeaders = headers;
     let promise: Promise<any> = rc.get(azureStackDependencyDataUrl, options);
     promise.then((response) => {
         if(response.statusCode === 200) {
             let result = response.result;
-            var authenticationData = result.authentication;
+            const authenticationData = result.authentication;
             if(authenticationData) {
-                var loginEndpoint = authenticationData.loginEndpoint;
+                let loginEndpoint = authenticationData.loginEndpoint;
                 if(loginEndpoint) {
                     loginEndpoint += (loginEndpoint.lastIndexOf("/") == loginEndpoint.length - 1) ? "" : "/";
                     endpoint['activeDirectoryAuthority'] = loginEndpoint;
                     endpoint['environmentAuthorityUrl'] = loginEndpoint;
                 }
 
-                var audiences = authenticationData.audiences;
+                const audiences = authenticationData.audiences;
                 if(audiences) {
                     if(audiences.length > 0) {
                         endpoint['activeDirectoryServiceEndpointResourceId'] = audiences[0];
@@ -97,11 +97,11 @@ export async function initializeAzureStackData(endpoint): Promise<any>
                 endpoint['portalEndpoint'] = result.portalEndpoint;
             }
             
-            var endpointUrl =  endpoint.url;
+            let endpointUrl =  endpoint.url;
             endpointUrl += (endpointUrl.lastIndexOf("/") == endpointUrl.length-1) ? "":"/";
-            var domain = "";
+            let domain = "";
             try {
-                var index = endpointUrl.indexOf('.');
+                const index = endpointUrl.indexOf('.');
                 domain = endpointUrl.substring(index+1);
                 domain = (domain.lastIndexOf("/") == domain.length-1) ? domain.substring(0, domain.length-1): domain;
             } catch(error) {
