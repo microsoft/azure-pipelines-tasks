@@ -23,6 +23,8 @@ describe('UsePythonVersion L0 Suite', function () {
     });
 
     it('succeeds when version is found', function () {
+        this.timeout(4000);
+
         const testFile = path.join(__dirname, 'L0SucceedsWhenVersionIsFound.js');
         const testRunner = new MockTestRunner(testFile);
 
