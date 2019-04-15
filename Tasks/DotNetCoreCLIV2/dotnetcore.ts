@@ -2,7 +2,7 @@ import tl = require("azure-pipelines-task-lib/task");
 import tr = require("azure-pipelines-task-lib/toolrunner");
 import path = require("path");
 import fs = require("fs");
-var archiver = require('archiver');
+const archiver = require('archiver');
 
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
@@ -73,29 +73,29 @@ export class dotNetExe {
     }
 
     private async executeBasicCommand() {
-        var dotnetPath = tl.which("dotnet", true);
+        const dotnetPath = tl.which("dotnet", true);
 
         this.extractOutputArgument();
 
         // Use empty string when no project file is specified to operate on the current directory
-        var projectFiles = this.getProjectFiles();
+        const projectFiles = this.getProjectFiles();
         if (projectFiles.length === 0) {
             throw tl.loc("noProjectFilesFound");
         }
-        var failedProjects: string[] = [];
+        const failedProjects: string[] = [];
         for (const fileIndex of Object.keys(projectFiles)) {
-            var projectFile = projectFiles[fileIndex];
-            var dotnet = tl.tool(dotnetPath);
+            const projectFile = projectFiles[fileIndex];
+            const dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
             dotnet.arg(projectFile);
-            var dotnetArguments = this.arguments;
+            let dotnetArguments = this.arguments;
             if (this.isPublishCommand() && this.outputArgument && tl.getBoolInput("modifyOutputPath")) {
-                var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
+                const output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
                 dotnetArguments = this.replaceOutputArgument(output);
             }
             dotnet.line(dotnetArguments);
             try {
-                var result = await dotnet.exec(<tr.IExecOptions>{
+                const result = await dotnet.exec(<tr.IExecOptions>{
                     cwd: this.workingDirectory
                 });
                 await this.zipAfterPublishIfRequired(projectFile);
@@ -181,15 +181,15 @@ export class dotNetExe {
     }
 
     private replaceOutputArgument(modifiedOutput: string) {
-        var str = this.arguments;
-        var index = this.outputArgumentIndex;
+        const str = this.arguments;
+        const index = this.outputArgumentIndex;
         return str.substr(0, index) + str.substr(index).replace(this.outputArgument, modifiedOutput);
     }
 
     private async zipAfterPublishIfRequired(projectFile: string) {
         if (this.isPublishCommand() && this.zipAfterPublish) {
-            var outputSource: string = "";
-            var moveZipToOutputSource = false;
+            let outputSource: string = "";
+            let moveZipToOutputSource = false;
             if (this.outputArgument) {
                 if (tl.getBoolInput("modifyOutputPath") && projectFile) {
                     outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
@@ -200,10 +200,10 @@ export class dotNetExe {
 
             }
             else {
-                var pattern = "**/publish";
-                var files = tl.findMatch(path.dirname(projectFile), pattern);
-                for (var fileIndex in files) {
-                    var file = files[fileIndex];
+                const pattern = "**/publish";
+                const files = tl.findMatch(path.dirname(projectFile), pattern);
+                for (const fileIndex in files) {
+                    const file = files[fileIndex];
                     if (fs.lstatSync(file).isDirectory) {
                         outputSource = file;
                         break;
@@ -213,7 +213,7 @@ export class dotNetExe {
 
             tl.debug("Zip Source: " + outputSource);
             if (outputSource) {
-                var outputTarget = outputSource + ".zip";
+                const outputTarget = outputSource + ".zip";
                 await this.zip(outputSource, outputTarget);
                 tl.rmRF(outputSource);
                 if (moveZipToOutputSource) {
@@ -231,7 +231,7 @@ export class dotNetExe {
         tl.debug("Zip arguments: Source: " + source + " , target: " + target);
 
         return new Promise((resolve, reject) => {
-            var output = fs.createWriteStream(target);
+            const output = fs.createWriteStream(target);
 
             output.on('close', function () {
                 tl.debug('Successfully created archive ' + target);
@@ -242,7 +242,7 @@ export class dotNetExe {
                 reject(error);
             });
 
-            var archive = archiver('zip');
+            const archive = archiver('zip');
             archive.pipe(output);
             archive.directory(source, '/');
             archive.finalize();
@@ -254,13 +254,13 @@ export class dotNetExe {
             return;
         }
 
-        var argString = this.arguments.trim();
-        var isOutputOption = false;
-        var inQuotes = false;
-        var escaped = false;
-        var arg = '';
-        var i = 0;
-        var append = function (c) {
+        const argString = this.arguments.trim();
+        let isOutputOption = false;
+        let inQuotes = false;
+        let escaped = false;
+        let arg = '';
+        let i = 0;
+        const append = function (c) {
             // we only escape double quotes.
             if (escaped && c !== '"') {
                 arg += '\\';
@@ -268,10 +268,10 @@ export class dotNetExe {
             arg += c;
             escaped = false;
         };
-        var nextArg = function () {
+        const nextArg = function () {
             arg = '';
             for (; i < argString.length; i++) {
-                var c = argString.charAt(i);
+                const c = argString.charAt(i);
                 if (c === '"') {
                     if (!escaped) {
                         inQuotes = !inQuotes;
@@ -301,9 +301,9 @@ export class dotNetExe {
             return null;
         }
 
-        var token = nextArg();
+        let token = nextArg();
         while (token) {
-            var tokenUpper = token.toUpperCase();
+            const tokenUpper = token.toUpperCase();
             if (this.isPublishCommand() && (tokenUpper === "--OUTPUT" || tokenUpper === "-O")) {
                 isOutputOption = true;
                 this.outputArgumentIndex = i;
@@ -318,17 +318,17 @@ export class dotNetExe {
     }
 
     private getProjectFiles(): string[] {
-        var projectPattern = this.projects;
-        var searchWebProjects = this.isPublishCommand() && this.publishWebProjects;
+        let projectPattern = this.projects;
+        const searchWebProjects = this.isPublishCommand() && this.publishWebProjects;
         if (searchWebProjects) {
             projectPattern = ["**/*.csproj", "**/*.vbproj", "**/*.fsproj"];
         }
 
-        var projectFiles = utility.getProjectFiles(projectPattern);
+        let projectFiles = utility.getProjectFiles(projectPattern);
 
         if (searchWebProjects) {
             projectFiles = projectFiles.filter(function (file, index, files): boolean {
-                var directory = path.dirname(file);
+                const directory = path.dirname(file);
                 return tl.exist(path.join(directory, "web.config"))
                     || tl.exist(path.join(directory, "wwwroot"));
             });
@@ -350,5 +350,5 @@ export class dotNetExe {
     }
 }
 
-var exe = new dotNetExe();
+let exe = new dotNetExe();
 exe.execute().catch((reason) => tl.setResult(tl.TaskResult.Failed, reason));
