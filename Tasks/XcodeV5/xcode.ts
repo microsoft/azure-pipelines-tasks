@@ -446,7 +446,7 @@ async function run() {
                 //export path
                 let exportPath: string = tl.getInput('exportPath');
 
-                for (var i = 0; i < archiveFolders.length; i++) {
+                for (let i = 0; i < archiveFolders.length; i++) {
                     let archive: string = archiveFolders.pop();
 
                     //export the archive
