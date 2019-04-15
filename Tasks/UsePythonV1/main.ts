@@ -15,7 +15,7 @@ import { usePythonVersion } from './usepythonversion';
         getPlatform());
 
         // Always set proxy.
-        const proxy: tl.ProxyConfiguration = tl.getHttpProxyConfiguration();
+        const proxy: tl.ProxyConfiguration | null = tl.getHttpProxyConfiguration();
         if (proxy) {
             proxyutil.setProxy(proxy);
         }

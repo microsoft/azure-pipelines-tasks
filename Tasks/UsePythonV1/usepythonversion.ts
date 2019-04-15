@@ -11,8 +11,8 @@ import * as toolUtil  from './toolutil';
 import { desugarDevVersion, pythonVersionToSemantic } from './version';
 
 interface TaskParameters {
-    version: string,
-    architecture: string
+    version: string | undefined,
+    architecture: string | undefined
 }
 
 // Python has "scripts" or "bin" directories where command-line tools that come with packages are installed.
@@ -82,7 +82,7 @@ function usePyPy(majorVersion: 2 | 3, parameters: TaskParameters, platform: Plat
 
 async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
     const desugaredversion = desugarDevVersion(parameters.version);
-    const semanticversion = pythonVersionToSemantic(desugaredversion);
+    const semanticversion: string = pythonVersionToSemantic(desugaredversion);
     task.debug(`Semantic version spec of ${parameters.version} is ${semanticversion}`);
 
     const installDir: string | null = tool.findLocalTool('Python', semanticversion, parameters.architecture);
