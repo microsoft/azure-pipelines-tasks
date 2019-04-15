@@ -68,7 +68,7 @@
       "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
-  "instanceNameFormat": "Azure Policy compliance assessment for $(ConnectedServiceName):$(ResourceGroupName)",
+  "instanceNameFormat": "Check Policy Compliance",
   "execution": {
     "HttpRequestChain": {
       "Execute": [
