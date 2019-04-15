@@ -32,5 +32,6 @@
   "loc.messages.PS_FormattedCommand": "Commande mise en forme : {0}",
   "loc.messages.PS_InvalidErrorActionPreference": "ErrorActionPreference '{0}' non valide. La valeur doit correspondre à 'Stop', 'Continue' ou 'SilentlyContinue'",
   "loc.messages.PS_InvalidFilePath": "Chemin de fichier '{0}' non valide. Le chemin d'un fichier .ps1 est obligatoire.",
-  "loc.messages.PS_UnableToDetermineExitCode": "Exception inattendue. Impossible de déterminer le code de sortie de PowerShell."
+  "loc.messages.PS_UnableToDetermineExitCode": "Exception inattendue. Impossible de déterminer le code de sortie de PowerShell.",
+  "loc.messages.PS_InvalidErrorActionPreference": "TargetType '{0}' non valide. La valeur doit correspondre à 'filePath' ou 'inline'",
 }

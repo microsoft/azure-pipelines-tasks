@@ -10,8 +10,8 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 148,
-    "Patch": 0
+    "Minor": 149,
+    "Patch": 1
   },
   "minimumAgentVersion": "1.99.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -32,7 +32,8 @@
       "defaultValue": "",
       "required": true,
       "properties": {
-        "EditableOptions": "True"
+        "EditableOptions": "True",
+        "SearchDataSourceName": "userRepositorySearch"
       },
       "helpMarkDown": "ms-resource:loc.input.help.userRepository"
     },
@@ -89,10 +90,20 @@
       "target": "version",
       "endpointId": "$(connection)",
       "dataSourceName": "Releases",
-      "resultTemplate": "{ \"Value\" : \"{{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{id}}{{/equals}}\", \"DisplayValue\" : \" {{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{#if name}}{{name}}{{else}}{{id}}{{/if}}{{/equals}}\" }",
+      "resultTemplate": "{ \"Value\" : \"{{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{id}}{{/equals}}\", \"DisplayValue\" : \" {{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{#if name}}{{name}}{{else}}{{tag_name}}{{/if}}{{/equals}}{{#if prerelease}} (Pre-release){{/if}}\" }",
       "parameters": {
         "repositoryName": "$(userRepository)",
         "releaseByTagName": "$(defaultVersionType)"
+      }
+    },
+    {
+      "target": "userRepositorySearch",
+      "endpointId": "$(connection)",
+      "dataSourceName": "SearchRepositoriesByNameForTasks",
+      "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }",
+      "parameters": {
+        "searchText": "$(searchText)",
+        "name": "$(searchText)"
       }
     }
   ],
@@ -104,6 +115,7 @@
   },
   "messages": {
     "DownloadArtifacts": "ms-resource:loc.messages.DownloadArtifacts",
-    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded"
+    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
+    "InvalidRelease": "ms-resource:loc.messages.InvalidRelease"
   }
 }
