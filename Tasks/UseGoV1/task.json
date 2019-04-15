@@ -60,7 +60,7 @@
         }
     },
     "messages": {
-        "FailedToDownload": "Failed to download Go version %s. Verify that the version is valid and resolve any other issues. Error: %s",
+        "FailedToDownload": "Failed to download Go version %s. Verify that the version is valid. Error: %s",
         "TempDirNotSet": "The 'Agent.TempDirectory' environment variable was expected to be set."
     }
 }
