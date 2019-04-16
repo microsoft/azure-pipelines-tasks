@@ -3,7 +3,7 @@
     "name": "AzureRmWebAppDeployment",
     "friendlyName": "Azure App Service deploy",
     "description": "Deploy to Azure App Service a web, mobile, or API app using Docker, Java, .NET, .NET Core, Node.js, PHP, Python, or Ruby",
-    "helpUrl": "https://aka.ms/azurermwebdeployreadme",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-web-app-deployment",
     "helpMarkDown": "[More information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [

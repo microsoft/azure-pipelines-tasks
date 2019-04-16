@@ -3,7 +3,7 @@
     "name": "AzureFileCopy",
     "friendlyName": "Azure file copy",
     "description": "Copy files to Azure Blob Storage or virtual machines",
-    "helpUrl": "https://aka.ms/azurefilecopyreadme",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-file-copy",
     "helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
     "category": "Deploy",
     "visibility": [

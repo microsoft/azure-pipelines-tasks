@@ -3,7 +3,7 @@
     "name": "AppCenterDistribute",
     "friendlyName": "App Center distribute",
     "description": "Distribute app builds to testers and users via App Center",
-    "helpUrl": "https://aka.ms/appcentersupport/",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/app-center-distribute",
     "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport/).",
     "category": "Deploy",
     "visibility": [

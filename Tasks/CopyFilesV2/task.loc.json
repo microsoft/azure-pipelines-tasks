@@ -3,7 +3,7 @@
   "name": "CopyFiles",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=708389",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/copy-files",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [

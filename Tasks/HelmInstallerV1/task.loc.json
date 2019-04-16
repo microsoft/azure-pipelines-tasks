@@ -3,7 +3,7 @@
   "name": "HelmInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/helm-installer",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "visibility": [

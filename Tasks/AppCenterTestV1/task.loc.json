@@ -3,7 +3,7 @@
   "name": "AppCenterTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/appcentersupport",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/app-center-test",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [

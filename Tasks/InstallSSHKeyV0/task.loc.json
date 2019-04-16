@@ -3,7 +3,7 @@
   "name": "InstallSSHKey",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=875267",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-ssh-key",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [

@@ -3,7 +3,7 @@
     "name": "ShellScript",
     "friendlyName": "Shell script",
     "description": "Run a shell script using Bash",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613738",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/shell-script",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613738)",
     "category": "Utility",
     "visibility": [

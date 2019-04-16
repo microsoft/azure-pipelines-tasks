@@ -3,7 +3,7 @@
     "name": "gulp",
     "friendlyName": "gulp",
     "description": "Run the gulp Node.js streaming task-based build system",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613721",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/gulp",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613721)",
     "category": "Build",
     "visibility": [

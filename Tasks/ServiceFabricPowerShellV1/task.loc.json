@@ -3,7 +3,7 @@
   "name": "ServiceFabricPowerShell",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=841538",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/service-fabric-powershell",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [

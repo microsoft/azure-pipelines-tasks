@@ -4,7 +4,7 @@
   "friendlyName": "Download GitHub Release",
   "description": "Downloads a GitHub Release from a repository",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://aka.ms/AA3x715",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-github-release",
   "helpMarkDown": "[More Information](https://aka.ms/AA3x715)",
   "category": "Utility",
   "demands": [],

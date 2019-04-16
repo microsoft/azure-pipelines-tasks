@@ -3,7 +3,7 @@
     "name": "Kubernetes",
     "friendlyName": "Deploy to Kubernetes",
     "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running kubectl commands",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/kubernetes",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
     "visibility": [

@@ -3,7 +3,7 @@
     "name": "SqlDacpacDeploymentOnMachineGroup",
     "friendlyName": "SQL Server database deploy",
     "description": "Deploy a SQL Server database using DACPAC or SQL scripts",
-    "helpUrl": "https://aka.ms/sqldacpacmachinegroupreadme",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/sql-dacpac-deployment-on-machine-group",
     "helpMarkDown": "[More Information](https://aka.ms/sqldacpacmachinegroupreadme)",
     "category": "Deploy",
     "visibility": [

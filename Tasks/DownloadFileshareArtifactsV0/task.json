@@ -3,7 +3,7 @@
     "name": "DownloadFileshareArtifacts",
     "friendlyName": "Download artifacts from file share",
     "description": "Download artifacts from a file share, like \\\\share\\drop",
-    "helpUrl": "",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-fileshare-artifacts",
     "helpMarkDown": "",
     "category": "Utility",
     "author": "Microsoft Corporation",

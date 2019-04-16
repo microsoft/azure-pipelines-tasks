@@ -3,7 +3,7 @@
     "name": "Npm",
     "friendlyName": "npm",
     "description": "Run an npm command",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613746",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
     "category": "Package",
     "author": "Microsoft Corporation",

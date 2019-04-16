@@ -4,7 +4,7 @@
     "friendlyName": "Python pip authenticate",
     "description": "Authentication task for the pip client used for installing Python distributions",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://pip.pypa.io/en/stable/reference/pip_install/",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/pip-authenticate",
     "helpMarkDown": "[More Information](https://pip.pypa.io/en/stable/reference/pip_install/)",
     "category": "Package",
     "version": {

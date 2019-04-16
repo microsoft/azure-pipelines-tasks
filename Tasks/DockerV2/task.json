@@ -3,7 +3,7 @@
     "name": "Docker",
     "friendlyName": "Docker",
     "description": "Build or push Docker images, login or logout, or run a Docker command",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=848006",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
     "category": "Build",
     "visibility": [

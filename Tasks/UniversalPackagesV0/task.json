@@ -4,7 +4,7 @@
     "friendlyName": "Universal packages",
     "description": "Download or publish Universal Packages",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://aka.ms/universalpackagesannounce",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[More Information](https://aka.ms/universalpackagesannounce)",
     "category": "Package",
     "version": {

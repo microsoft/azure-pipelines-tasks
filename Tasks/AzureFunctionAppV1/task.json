@@ -3,7 +3,7 @@
     "name": "AzureFunctionApp",
     "friendlyName": "Azure Function",
     "description": "Deploy an Azure Function for Linux or Windows",
-    "helpUrl": "https://aka.ms/azurefunctiondeployreadme",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[More information](https://aka.ms/azurefunctiondeployreadme)",
     "category": "Deploy",
     "visibility": [

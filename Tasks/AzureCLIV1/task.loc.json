@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "http://go.microsoft.com/fwlink/?LinkID=827160",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "category": "Deploy",

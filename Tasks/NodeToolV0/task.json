@@ -3,7 +3,7 @@
     "name": "NodeTool",
     "friendlyName": "Node.js tool installer",
     "description": "Finds or downloads and caches the specified version spec of Node.js and adds it to the PATH",
-    "helpUrl": "",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/node-js",
     "helpMarkDown": "",
     "category": "Tool",
     "runsOn": [

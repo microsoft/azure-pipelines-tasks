@@ -3,7 +3,7 @@
     "name": "Grunt",
     "friendlyName": "Grunt",
     "description": "Run the Grunt JavaScript task runner",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=627413",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/grunt",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627413)",
     "category": "Build",
     "visibility": [

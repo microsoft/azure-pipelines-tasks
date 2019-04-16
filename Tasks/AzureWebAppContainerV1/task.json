@@ -3,7 +3,7 @@
     "name": "AzureWebAppContainer",
     "friendlyName": "Azure Web App for Containers",
     "description": "Deploy containers to Azure App Service",
-    "helpUrl": "https://aka.ms/azurewebapponcontainerdeployreadme",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-web-app-containers",
     "helpMarkDown": "[More information](https://aka.ms/azurewebapponcontainerdeployreadme)",
     "category": "Deploy",
     "visibility": [

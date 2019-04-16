@@ -3,7 +3,7 @@
   "name": "CmdLine",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613735",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/command-line",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [

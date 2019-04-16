@@ -3,7 +3,7 @@
   "name": "GitHubRelease",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/AA3aeiw",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/github-release",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [

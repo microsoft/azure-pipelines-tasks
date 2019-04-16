@@ -3,7 +3,7 @@
     "name": "KubectlInstaller",
     "friendlyName": "Kubectl tool installer",
     "description": "Install Kubectl on agent machine",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Tool",
     "visibility": [

@@ -3,7 +3,7 @@
     "name": "PythonScript",
     "friendlyName": "Python script",
     "description": "Run a Python file or inline script",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=2006181",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/python-script",
     "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkID=2006181)",
     "category": "Utility",
     "visibility": [

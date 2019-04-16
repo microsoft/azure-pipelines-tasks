@@ -3,7 +3,7 @@
     "name": "BatchScript",
     "friendlyName": "Batch script",
     "description": "Run a Windows command or batch script and optionally allow it to change the environment",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613733",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/batch-script",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613733)",
     "category": "Utility",
     "visibility": [

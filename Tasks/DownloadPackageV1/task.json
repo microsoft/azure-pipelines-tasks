@@ -3,7 +3,7 @@
     "name": "DownloadPackage",
     "friendlyName": "Download package",
     "description": "Download a package from a package management feed in Azure Artifacts",
-    "helpUrl": "",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-package",
     "helpMarkDown": "Requires the Package Management extension to be installed",
     "category": "Utility",
     "author": "ms-vscs-rm",

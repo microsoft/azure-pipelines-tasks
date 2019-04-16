@@ -3,7 +3,7 @@
     "name": "PowerShellOnTargetMachines",
     "friendlyName": "PowerShell on target machines",
     "description": "Execute PowerShell scripts on remote machines using PSSession and Invoke-Command for remoting",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=873465",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/powershell-on-target-machines",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=873465)",
     "category": "Deploy",
     "visibility": [

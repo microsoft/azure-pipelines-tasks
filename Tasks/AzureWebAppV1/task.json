@@ -3,7 +3,7 @@
     "name": "AzureWebApp",
     "friendlyName": "Azure Web App",
     "description": "Deploy an Azure Web App for Linux or Windows",
-    "helpUrl": "https://aka.ms/azurewebappdeployreadme",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[More information](https://aka.ms/azurewebappdeployreadme)",
     "category": "Deploy",
     "visibility": [

@@ -3,7 +3,7 @@
     "name": "DecryptFile",
     "friendlyName": "Decrypt file (OpenSSL)",
     "description": "Decrypt a file using OpenSSL",
-    "helpUrl": "",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/decrypt-file",
     "helpMarkDown": "",
     "category": "Utility",
     "visibility": [

@@ -3,7 +3,7 @@
     "name": "NuGetInstaller",
     "friendlyName": "NuGet installer",
     "description": "Installs or restores missing NuGet packages",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613747",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/nuget",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613747)",
     "category": "Package",
     "author": "Microsoft Corporation",

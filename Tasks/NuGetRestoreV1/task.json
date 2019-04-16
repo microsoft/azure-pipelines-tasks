@@ -3,7 +3,7 @@
     "name": "NuGetRestore",
     "friendlyName": "NuGet restore",
     "description": "Restores NuGet packages in preparation for a Visual Studio build step",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613747",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613747)",
     "category": "Package",
     "author": "Microsoft Corporation",

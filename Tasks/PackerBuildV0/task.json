@@ -3,7 +3,7 @@
     "name": "PackerBuild",
     "friendlyName": "Build machine image",
     "description": "Build a machine image using Packer, which may be used for Azure Virtual machine scale set deployment",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=845329",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/packer-build",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=845329)",
     "category": "Deploy",
     "releaseNotes": "- Works with cross-platform agents (Linux, macOS, or Windows)\n- Supports building images for both Windows and Linux. These images can be used to deploy Azure Virtual machine scale set.",

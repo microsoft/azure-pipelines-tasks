@@ -4,7 +4,7 @@
     "friendlyName": ".NET Core",
     "description": "Build, test, package, or publish a dotnet application, or run a custom dotnet command",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=832194",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/dotnet-core-cli",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=832194)",
     "category": "Build",
     "visibility": [

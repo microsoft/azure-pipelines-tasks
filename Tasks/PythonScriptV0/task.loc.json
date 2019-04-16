@@ -3,7 +3,7 @@
   "name": "PythonScript",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=2006181",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/python-script",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [

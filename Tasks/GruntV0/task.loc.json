@@ -3,7 +3,7 @@
   "name": "Grunt",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=627413",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/grunt",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [

@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870240",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-monitor",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "releaseNotes": "ms-resource:loc.releaseNotes",

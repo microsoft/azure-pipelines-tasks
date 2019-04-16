@@ -3,7 +3,7 @@
     "name": "UseRuby",
     "friendlyName": "Use Ruby ecosystem",
     "description": "Use the specified version of the Ruby ecosystem",
-    "helpUrl": "",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/use-ruby-version",
     "helpMarkDown": "",
     "category": "Tool",
     "ecosystem": "ruby",

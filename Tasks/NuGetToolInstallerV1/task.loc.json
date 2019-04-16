@@ -3,7 +3,7 @@
   "name": "NuGetToolInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=852538",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/nuget",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [

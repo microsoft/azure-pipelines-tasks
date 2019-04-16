@@ -3,7 +3,7 @@
     "name": "JavaToolInstaller",
     "friendlyName": "Java tool installer",
     "description": "Acquire a specific version of Java from a user-supplied Azure blob or the tool cache and sets JAVA_HOME",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=875287",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/java-tool-installer",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=875287)",
     "category": "Tool",
     "runsOn": [
