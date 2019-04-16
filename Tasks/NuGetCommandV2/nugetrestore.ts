@@ -1,6 +1,6 @@
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
-import {IExecOptions, IExecSyncResult} from "vsts-task-lib/toolrunner";
+import * as tl from "azure-pipelines-task-lib/task";
+import {IExecOptions, IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
 
 import * as auth from "packaging-common/nuget/Authentication";
 import * as commandHelper from "packaging-common/nuget/CommandHelper";
@@ -166,7 +166,7 @@ export async function run(nuGetPath: string): Promise<void> {
             if (includeNuGetOrg) {
                 const nuGetSource: auth.IPackageSource = nuGetVersion.productVersion.a < 3
                                         ? auth.NuGetOrgV2PackageSource
-                                        : auth.NuGetOrgV2PackageSource;
+                                        : auth.NuGetOrgV3PackageSource;
                 sources.push(nuGetSource);
             }
 
@@ -206,6 +206,7 @@ export async function run(nuGetPath: string): Promise<void> {
             }
         }
         tl.debug(`ConfigFile: ${configFile}`);
+        environmentSettings.configFile = configFile;
 
         try {
             const restoreOptions = new RestoreOptions(

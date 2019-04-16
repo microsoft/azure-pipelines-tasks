@@ -3,6 +3,7 @@
   "name": "InstallAppleCertificate",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=862067",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -12,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 145,
+    "Minor": 151,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",

@@ -3,6 +3,7 @@
   "name": "HelmDeploy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -12,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 138,
-    "Patch": 14
+    "Minor": 151,
+    "Patch": 2
   },
   "demands": [],
   "groups": [
@@ -428,6 +429,7 @@
     "SkipDeleteSecureFiles": "ms-resource:loc.messages.SkipDeleteSecureFiles",
     "SkipDownloadSecureFiles": "ms-resource:loc.messages.SkipDownloadSecureFiles",
     "FileNotFound": "ms-resource:loc.messages.FileNotFound",
-    "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound"
+    "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

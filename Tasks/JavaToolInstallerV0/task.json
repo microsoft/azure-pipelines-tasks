@@ -3,6 +3,7 @@
     "name": "JavaToolInstaller",
     "friendlyName": "Java Tool Installer",
     "description": "Acquires a specific version of Java from a user supplied Azure blob or the tools cache and sets JAVA_HOME. Use this task to change the version of Java used in Java tasks.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=875287",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=875287)",
     "category": "Tool",
     "runsOn": [
@@ -13,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 141,
-        "Patch": 2
+        "Patch": 4
     },
     "satisfies": [
         "Java"
@@ -168,6 +169,7 @@
         "UnsupportedFileExtension": "Specified JDK source file does not have a supported file extension.",
         "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

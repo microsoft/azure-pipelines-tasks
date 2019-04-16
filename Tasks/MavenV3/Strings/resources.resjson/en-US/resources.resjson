@@ -91,5 +91,6 @@
   "loc.messages.EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",
   "loc.messages.EffectivePomInvalid": "Could not parse the effective POM.",
   "loc.messages.AuthenticationNotNecessary": "No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.",
-  "loc.messages.UsingAuthFeed": "Using built-in feed: "
+  "loc.messages.UsingAuthFeed": "Using built-in feed: ",
+  "loc.messages.NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
 }

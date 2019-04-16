@@ -3,6 +3,7 @@
     "name": "CopyFiles",
     "friendlyName": "Copy Files",
     "description": "Copy files from source folder to target folder using match patterns (The match patterns will only match file paths, not folder paths)",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=708389",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=708389)",
     "category": "Utility",
     "visibility": [
@@ -78,6 +79,15 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Flatten the folder structure and copy all files into the specified target folder.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "preserveTimestamp",
+            "type": "boolean",
+            "label": "Preserve Target Timestamp",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Using the original source file, preserve the target file timestamp.",
             "groupName": "advanced"
         }
     ],

@@ -3,12 +3,13 @@
   "name": "npmAuthenticate",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 145,
+    "Minor": 150,
     "Patch": 0
   },
   "runsOn": [

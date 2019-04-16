@@ -3,13 +3,14 @@
     "name": "DownloadBuildArtifacts",
     "friendlyName": "Download Build Artifacts",
     "description": "Download Build Artifacts",
+    "helpUrl": "",
     "helpMarkDown": "",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 142,
-        "Patch": 3
+        "Minor": 151,
+        "Patch": 0
     },
     "groups": [
         {
@@ -197,7 +198,7 @@
             "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
             "parameters": {
                 "project": "$(project)",
-                "name": "$(name)"
+                "name": "$(searchText)"
             },
             "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
             "callbackContextTemplate": "{\"continuationToken\" : \"{{{headers.x-ms-continuationtoken}}}\"}",

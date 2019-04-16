@@ -5,12 +5,13 @@ function Initialize-AzModule {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        $Endpoint)
+        $Endpoint,
+        [string] $azVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
-        Import-AzModule
+        Import-AzModule -azVersion $azVersion
 
         Write-Verbose "Initializing Az Module."
         Initialize-AzSubscription -Endpoint $Endpoint
@@ -21,7 +22,7 @@ function Initialize-AzModule {
 
 function Import-AzModule {
     [CmdletBinding()]
-    param()
+    param([string] $azVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -29,10 +30,27 @@ function Import-AzModule {
         $moduleName = "Az.Accounts"
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
-        $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+        
+        if($azVersion -eq ""){
+            $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+        }
+        else{
+            $modules = Get-Module -Name $moduleName -ListAvailable
+            foreach ($moduleVal in $modules) {
+                # $moduleVal.Path will have value like C:\Program Files\WindowsPowerShell\Modules\Az.Accounts\1.2.1\Az.Accounts.psd1
+                $azModulePath = Split-Path (Split-Path (Split-Path $moduleVal.Path -Parent) -Parent) -Parent
+                $azModulePath = $azModulePath + "\Az\*"
+                $azModuleVersion = split-path -path $azModulePath -Leaf -Resolve
+                if($azModuleVersion -eq $azVersion) {
+                    $module = $moduleVal
+                    break
+                }   
+            }
+        }
+      
         if (!$module) {
             Write-Verbose "No module found with name: $moduleName"
-            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList "Any version", "Az.Accounts")
+            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, "Az.Accounts")
         }
 
         # Import the module.

@@ -28,7 +28,7 @@
   "loc.input.help.calabashSkipConfigCheck": "強制在沒有 Cucunber 設定檔的情況下執行。",
   "loc.input.label.uitestBuildDir": "組建目錄",
   "loc.input.help.uitestBuildDir": "具有已建置測試組件的目錄路徑。",
-  "loc.input.label.uitestStoreFile": "儲存檔案",
+  "loc.input.label.uitestStorePath": "儲存檔案",
   "loc.input.label.uitestStorePass": "儲存密碼",
   "loc.input.label.uitestKeyAlias": "金鑰別名",
   "loc.input.label.uitestKeyPass": "金鑰密碼",

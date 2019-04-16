@@ -1,0 +1,166 @@
+{
+    "id": "72A1931B-EFFB-4D2E-8FD8-F8472A07CB62",
+    "name": "AzurePowerShell",
+    "friendlyName": "Azure PowerShell",
+    "description": "Run a PowerShell script within an Azure environment",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613749)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 4,
+        "Minor": 0,
+        "Patch": 5
+    },
+    "preview": true,
+    "releaseNotes": "Added support for Az Module and cross platform agents.",
+    "groups": [
+        {
+            "name": "AzurePowerShellVersionOptions",
+            "displayName": "Azure PowerShell version options",
+            "isExpanded": true
+        }
+    ],
+    "minimumAgentVersion": "2.115.0",
+    "inputs": [
+        {
+            "name": "ConnectedServiceNameARM",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure Subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
+            }
+        },
+        {
+            "name": "ScriptType",
+            "type": "radio",
+            "label": "Script Type",
+            "required": false,
+            "helpMarkDown": "Type of the script: File Path or Inline Script",
+            "defaultValue": "FilePath",
+            "options": {
+                "FilePath": "Script File Path",
+                "InlineScript": "Inline Script"
+            }
+        },
+        {
+            "name": "ScriptPath",
+            "type": "filePath",
+            "label": "Script Path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path of the script. Should be fully qualified path or relative to the default working directory.",
+            "visibleRule": "ScriptType = FilePath"
+        },
+        {
+            "name": "Inline",
+            "type": "multiLine",
+            "label": "Inline Script",
+            "required": false,
+            "defaultValue": "# You can write your azure powershell scripts inline here. \n# You can also pass predefined and custom variables to this script using arguments",
+            "helpMarkDown": "Enter the script to execute.",
+            "visibleRule": "ScriptType = InlineScript",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "5000"
+            }
+        },
+        {
+            "name": "ScriptArguments",
+            "type": "string",
+            "label": "Script Arguments",
+            "defaultValue": "",
+            "visibleRule": "ScriptType = FilePath",
+            "required": false,
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
+            },
+            "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
+        },
+        {
+            "name": "errorActionPreference",
+            "type": "pickList",
+            "label": "ErrorActionPreference",
+            "required": false,
+            "defaultValue": "stop",
+            "options": {
+                "stop": "Stop",
+                "continue": "Continue",
+                "silentlyContinue": "SilentlyContinue"
+            },
+            "helpMarkDown": "Select the value of the ErrorActionPreference variable for executing the script."
+        },
+        {
+            "name": "FailOnStandardError",
+            "type": "boolean",
+            "label": "Fail on Standard Error",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream."
+        },
+        {
+            "name": "TargetAzurePs",
+            "aliases": [
+                "azurePowerShellVersion"
+            ],
+            "type": "radio",
+            "label": "Azure PowerShell Version",
+            "defaultValue": "OtherVersion",
+            "required": false,
+            "options": {
+                "LatestVersion": "Latest installed version",
+                "OtherVersion": "Specify other version"
+            },
+            "groupName": "AzurePowerShellVersionOptions",
+            "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Version is: 1.0.0(Hosted VS2017 Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
+        },
+        {
+            "name": "CustomTargetAzurePs",
+            "aliases": [
+                "preferredAzurePowerShellVersion"
+            ],
+            "type": "string",
+            "label": "Preferred Azure PowerShell Version",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "TargetAzurePs = OtherVersion",
+            "groupName": "AzurePowerShellVersionOptions",
+            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0"
+        }
+    ],
+    "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
+    "execution": {
+        "PowerShell3": {
+            "target": "azurepowershell.ps1",
+            "platforms": [
+                "windows"
+            ]
+        },
+        "Node": {
+            "target": "azurepowershell.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
+        "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
+        "InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1",
+        "JS_ExitCode": "PowerShell exited with code '%s'.",
+        "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+    }
+}

@@ -3,6 +3,7 @@
   "name": "NuGetToolInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=852538",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [
@@ -13,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 145,
+    "Minor": 150,
     "Patch": 0
   },
   "preview": false,

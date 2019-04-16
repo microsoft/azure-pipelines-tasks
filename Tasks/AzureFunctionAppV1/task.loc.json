@@ -3,13 +3,13 @@
   "name": "AzureFunctionApp",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azurefunctiondeployreadme",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Build",
     "Release"
   ],
-  "preview": "true",
   "runsOn": [
     "Agent",
     "DeploymentGroup"
@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 11
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -191,7 +191,7 @@
     {
       "target": "appName",
       "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureRMWebAppNamesByAppType",
+      "dataSourceName": "AzureFunctionAppNamesByAppType",
       "parameters": {
         "WebAppKind": "$(appType)"
       }
@@ -347,6 +347,7 @@
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
     "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
+    "UpdatedOnlyAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedOnlyAppServiceApplicationSettings",
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
     "PackageDeploymentInitiated": "ms-resource:loc.messages.PackageDeploymentInitiated",
@@ -372,6 +373,12 @@
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName",
-    "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported"
+    "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported",
+    "FailedToGetStorageAccountDetails": "ms-resource:loc.messages.FailedToGetStorageAccountDetails",
+    "FailedToSyncTriggers": "ms-resource:loc.messages.FailedToSyncTriggers",
+    "SyncingFunctionTriggers": "ms-resource:loc.messages.SyncingFunctionTriggers",
+    "SyncFunctionTriggersSuccess": "ms-resource:loc.messages.SyncFunctionTriggersSuccess",
+    "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

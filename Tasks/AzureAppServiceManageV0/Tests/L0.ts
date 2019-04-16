@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+/*import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
 import tl = require('vsts-task-lib');
 import * as path from 'path';
@@ -34,3 +34,4 @@ describe('Azure App Service Manage Suite', function() {
     AppInsightsWebTests.ApplicationInsightsTests();
     ResourcesTests.ResourcesTests();
 });
+*/

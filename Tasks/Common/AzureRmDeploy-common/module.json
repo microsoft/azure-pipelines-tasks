@@ -140,6 +140,7 @@
         "FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s",
         "ResponseNotValid": "Response is not in a valid format",
         "Updatemachinetoenablesecuretlsprotocol" : "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
-        "JarPathNotPresent" : "Java jar path is not present"
+        "JarPathNotPresent" : "Java jar path is not present",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

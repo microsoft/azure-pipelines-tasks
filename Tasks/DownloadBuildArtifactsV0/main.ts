@@ -167,7 +167,7 @@ async function main(): Promise<void> {
         // verify that buildId belongs to the definition selected
         if (definitionId) {
             var build: Build;
-            if (buildVersionToDownload != "specific") {
+            if (buildVersionToDownload != "specific" && !triggeringBuildFound) {
                 var resultFilter = BuildResult.Succeeded;
                 if (allowPartiallySucceededBuilds) {
                     resultFilter |= BuildResult.PartiallySucceeded;

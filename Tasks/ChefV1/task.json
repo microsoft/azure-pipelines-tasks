@@ -3,6 +3,7 @@
     "name": "Chef",
     "friendlyName": "Chef",
     "description": "Deploy to Chef environments by editing environment attributes",
+    "helpUrl": "https://aka.ms/chef-readme",
     "helpMarkDown": "[More Information](https://aka.ms/chef-readme)",
     "category": "Deploy",
     "visibility": [

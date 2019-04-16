@@ -3,13 +3,14 @@
     "name": "DownloadPackage",
     "friendlyName": "Download Package",
     "description": "Download a package from a Package Management feed in Azure Artifacts or TFS. \r\n Requires the Package Management extension.",
+    "helpUrl": "",
     "helpMarkDown": "Needs Package Management extension to be installed",
     "category": "Utility",
     "author": "ms-vscs-rm",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 18
+        "Minor": 151,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "1.99.0",

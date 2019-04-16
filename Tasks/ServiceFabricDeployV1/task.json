@@ -4,6 +4,7 @@
     "friendlyName": "Service Fabric Application Deployment",
     "description": "Deploy a Service Fabric application to a cluster.",
     "author": "Microsoft Corporation",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=820528",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820528)",
     "category": "Deploy",
     "visibility": [
@@ -17,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 30
+        "Patch": 31
     },
     "demands": [
         "Cmd"

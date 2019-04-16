@@ -4,6 +4,7 @@
     "friendlyName": "Publish To Azure Service Bus",
     "description": "Sends a message to azure service bus using a service connection (no agent required).",
     "category": "Utility",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870237",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870237)",
     "visibility": [
         "Build",
@@ -16,12 +17,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 13
     },
     "groups": [
         {
-            "name": "signingDetails",
-            "displayName": "Signing Properties",
+            "name": "advancedProperties",
+            "displayName": "Advanced",
             "isExpanded": false
         }
     ],
@@ -52,13 +53,22 @@
             }
         },
         {
+            "name": "sessionId",
+            "type": "string",
+            "label": "Session Id",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Session id with which message is published. For session based queues, publishing fails if value not specified. For Non Session Based Queues, it will not matter.",
+            "groupName": "advancedProperties"
+        },
+        {
             "name": "signPayload",
             "type": "boolean",
             "label": "Sign the Message",
             "defaultValue": "false",
             "required": true,
             "helpMarkDown": "If this is set to true, message will be signed provided a private certificate.",
-            "groupName": "signingDetails"
+            "groupName": "advancedProperties"
         },
         {
             "name": "certificateString",
@@ -68,7 +78,7 @@
             "defaultValue": "",
             "helpMarkDown": "Specify the secret variable that contains the certificate content.  This can also be a certificate stored in an Azure key vault that is [linked](https://docs.microsoft.com/en-us/vsts/pipelines/library/variable-groups?view=vsts#link-secrets-from-an-azure-key-vault-as-variables) to a Variable Group used by this release pipeline.",
             "visibleRule": "signPayload = true",
-            "groupName": "signingDetails"
+            "groupName": "advancedProperties"
         },
         {
             "name": "signatureKey",
@@ -78,7 +88,7 @@
             "defaultValue": "signature",
             "helpMarkDown": "Key where you want signature to be in Message Properties. If left Empty, default is 'signature' in message properties",
             "visibleRule": "signPayload = true",
-            "groupName": "signingDetails"
+            "groupName": "advancedProperties"
         },
         {
             "name": "waitForCompletion",
@@ -102,6 +112,7 @@
                 "connectionString": "$(endpoint.serviceBusConnectionString)",
                 "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
                 "messageBody": "$(messageBody)",
+                "sessionId": "$(sessionId)",
                 "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(certificateString){{/notEquals}}{{else}}{{/notEquals}}",
                 "signaturePropertyKey": "$(signatureKey)",
                 "messageProperties": {

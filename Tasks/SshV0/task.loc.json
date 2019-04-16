@@ -3,6 +3,7 @@
   "name": "SSH",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "http://go.microsoft.com/fwlink/?LinkId=821892",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -16,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 145,
-    "Patch": 1
+    "Minor": 148,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.102.0",

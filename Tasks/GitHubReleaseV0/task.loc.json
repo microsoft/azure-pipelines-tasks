@@ -3,6 +3,7 @@
   "name": "GitHubRelease",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/AA3aeiw",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -13,7 +14,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 0,
+    "Minor": 151,
     "Patch": 1
   },
   "demands": [],
@@ -31,11 +32,12 @@
       "name": "repositoryName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.repositoryName",
-      "defaultValue": "",
+      "defaultValue": "$(Build.Repository.Name)",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.repositoryName",
       "properties": {
-        "DisableManageLink": "True"
+        "DisableManageLink": "True",
+        "EditableOptions": "True"
       }
     },
     {
@@ -179,13 +181,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.addChangeLog"
     }
   ],
-  "sourceDefinitions": [
+  "dataSourceBindings": [
     {
       "target": "repositoryName",
-      "endpoint": "/$(system.teamProject)/_apis/sourceProviders/GitHub/repositories?serviceEndpointId=$(gitHubConnection)",
-      "selector": "jsonpath:$.repositories[*].id",
-      "keySelector": "jsonpath:$.repositories[*].id",
-      "authKey": "tfs:teamfoundation"
+      "endpointId": "$(gitHubConnection)",
+      "dataSourceName": "UserRepositories",
+      "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -252,6 +253,14 @@
     "InvalidGitHubEndpoint": "ms-resource:loc.messages.InvalidGitHubEndpoint",
     "InvalidEndpointAuthScheme": "ms-resource:loc.messages.InvalidEndpointAuthScheme",
     "FetchInitialCommitError": "ms-resource:loc.messages.FetchInitialCommitError",
-    "InvalidActionSet": "ms-resource:loc.messages.InvalidActionSet"
+    "InvalidActionSet": "ms-resource:loc.messages.InvalidActionSet",
+    "InvalidTagSource": "ms-resource:loc.messages.InvalidTagSource",
+    "InvalidReleaseNotesSource": "ms-resource:loc.messages.InvalidReleaseNotesSource",
+    "InvalidAssetUploadMode": "ms-resource:loc.messages.InvalidAssetUploadMode",
+    "TagRequiredEditDeleteAction": "ms-resource:loc.messages.TagRequiredEditDeleteAction",
+    "TagRequiredCreateAction": "ms-resource:loc.messages.TagRequiredCreateAction",
+    "NoFileFoundMatchingPattern": "ms-resource:loc.messages.NoFileFoundMatchingPattern",
+    "PatternIsADirectory": "ms-resource:loc.messages.PatternIsADirectory",
+    "SearchingFileMatchingPattern": "ms-resource:loc.messages.SearchingFileMatchingPattern"
   }
 }

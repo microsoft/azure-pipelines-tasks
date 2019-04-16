@@ -3,6 +3,7 @@
   "name": "CloudLoadTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=546976",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [

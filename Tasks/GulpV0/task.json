@@ -1,8 +1,9 @@
 {
     "id": "B82CFBE4-34F9-40F5-889E-C8842CA9DD9D",
-    "name": "Gulp",
-    "friendlyName": "Gulp",
-    "description": "Node.js streaming task based build system",
+    "name": "gulp",
+    "friendlyName": "gulp",
+    "description": "Run the Node.js streaming task-based build system.",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613721",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613721)",
     "category": "Build",
     "visibility": [

@@ -3,13 +3,13 @@
     "name": "AzureWebApp",
     "friendlyName": "Azure Web App",
     "description": "Update Azure App Services on Windows, Web App on Linux with built-in images, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Mobile Apps, API applications",
+    "helpUrl": "https://aka.ms/azurewebappdeployreadme",
     "helpMarkDown": "[More information](https://aka.ms/azurewebappdeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
         "Release"
     ],
-    "preview": "true",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 10
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -377,6 +377,7 @@
         "JarPathNotPresent": "Java jar path is not present",
         "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
         "InvalidDockerImageName": "Invalid Docker hub image name provided.",
-        "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task."
+        "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task.",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

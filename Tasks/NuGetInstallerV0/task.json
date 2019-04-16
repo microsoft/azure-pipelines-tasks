@@ -3,12 +3,13 @@
     "name": "NuGetInstaller",
     "friendlyName": "NuGet Installer",
     "description": "Installs or restores missing NuGet packages",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613747",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613747)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 146,
+        "Minor": 147,
         "Patch": 0
     },
     "runsOn": [

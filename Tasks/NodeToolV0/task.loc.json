@@ -3,6 +3,7 @@
   "name": "NodeTool",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [
@@ -12,11 +13,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 145,
+    "Minor": 149,
     "Patch": 0
   },
   "satisfies": [
-    "Node"
+    "Node",
+    "npm"
   ],
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

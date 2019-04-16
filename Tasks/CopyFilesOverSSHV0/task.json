@@ -3,6 +3,7 @@
     "name": "CopyFilesOverSSH",
     "friendlyName": "Copy Files Over SSH",
     "description": "Copy files or build artifacts to a remote machine over SSH",
+    "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=821894",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=821894)",
     "category": "Deploy",
     "visibility": [
@@ -16,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 142,
-        "Patch": 2
+        "Minor": 148,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.102.0",

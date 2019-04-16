@@ -1,0 +1,166 @@
+{
+  "id": "72A1931B-EFFB-4D2E-8FD8-F8472A07CB62",
+  "name": "AzurePowerShell",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 4,
+    "Minor": 0,
+    "Patch": 5
+  },
+  "preview": true,
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "groups": [
+    {
+      "name": "AzurePowerShellVersionOptions",
+      "displayName": "ms-resource:loc.group.displayName.AzurePowerShellVersionOptions",
+      "isExpanded": true
+    }
+  ],
+  "minimumAgentVersion": "2.115.0",
+  "inputs": [
+    {
+      "name": "ConnectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
+      }
+    },
+    {
+      "name": "ScriptType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ScriptType",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptType",
+      "defaultValue": "FilePath",
+      "options": {
+        "FilePath": "Script File Path",
+        "InlineScript": "Inline Script"
+      }
+    },
+    {
+      "name": "ScriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.ScriptPath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptPath",
+      "visibleRule": "ScriptType = FilePath"
+    },
+    {
+      "name": "Inline",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Inline",
+      "required": false,
+      "defaultValue": "# You can write your azure powershell scripts inline here. \n# You can also pass predefined and custom variables to this script using arguments",
+      "helpMarkDown": "ms-resource:loc.input.help.Inline",
+      "visibleRule": "ScriptType = InlineScript",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"
+      }
+    },
+    {
+      "name": "ScriptArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ScriptArguments",
+      "defaultValue": "",
+      "visibleRule": "ScriptType = FilePath",
+      "required": false,
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
+    },
+    {
+      "name": "errorActionPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.errorActionPreference",
+      "required": false,
+      "defaultValue": "stop",
+      "options": {
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.errorActionPreference"
+    },
+    {
+      "name": "FailOnStandardError",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.FailOnStandardError",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.FailOnStandardError"
+    },
+    {
+      "name": "TargetAzurePs",
+      "aliases": [
+        "azurePowerShellVersion"
+      ],
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.TargetAzurePs",
+      "defaultValue": "OtherVersion",
+      "required": false,
+      "options": {
+        "LatestVersion": "Latest installed version",
+        "OtherVersion": "Specify other version"
+      },
+      "groupName": "AzurePowerShellVersionOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.TargetAzurePs"
+    },
+    {
+      "name": "CustomTargetAzurePs",
+      "aliases": [
+        "preferredAzurePowerShellVersion"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.CustomTargetAzurePs",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "TargetAzurePs = OtherVersion",
+      "groupName": "AzurePowerShellVersionOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.CustomTargetAzurePs"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell3": {
+      "target": "azurepowershell.ps1",
+      "platforms": [
+        "windows"
+      ]
+    },
+    "Node": {
+      "target": "azurepowershell.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
+    "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
+    "InvalidAzurePsVersion": "ms-resource:loc.messages.InvalidAzurePsVersion",
+    "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
+    "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+  }
+}

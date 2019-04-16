@@ -20,7 +20,7 @@
         },
         {
             "items": [
-                "node_modules/packaging-common/node_modules/vsts-task-lib"
+                "node_modules/packaging-common/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

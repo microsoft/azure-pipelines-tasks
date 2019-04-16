@@ -9,9 +9,9 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
-  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
     "moment": "2.21.0",
