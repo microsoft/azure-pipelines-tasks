@@ -25,6 +25,7 @@ async function run() {
         if (disableAutoGenerate) {
             tl.debug('disabling auto generation');
             autogenerateHtmlReport = false;
+            tempFolder = resolvePathToSingleItem(workingDirectory, reportDirectory, true);
         }
 
         // Resolve the summary file path.

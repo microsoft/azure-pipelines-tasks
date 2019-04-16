@@ -175,5 +175,6 @@
   "loc.messages.RestartedAppService": "App Service '%s' restarted successfully.",
   "loc.messages.RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
   "loc.messages.FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
-  "loc.messages.FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s"
+  "loc.messages.FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }
