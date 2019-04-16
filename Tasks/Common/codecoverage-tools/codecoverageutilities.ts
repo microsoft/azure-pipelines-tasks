@@ -1,24 +1,21 @@
-import Q = require('q');
-import * as tl from "vsts-task-lib/task";
-import * as util from "./utilities";
+import * as tl from 'vsts-task-lib/task';
+import * as util from './utilities';
 
-export function isCodeCoverageFileEmpty(codeCoverageFile: string, codeCoverageTool: string): Q.Promise<boolean> {
+export async function isCodeCoverageFileEmpty(codeCoverageFile: string, codeCoverageTool: string): Promise<boolean> {
     if (!tl.exist(codeCoverageFile)) {
-        return Q.resolve(true);
+        return Promise.resolve(true);
     }
-    return util.readXmlFileAsJson(codeCoverageFile)
-        .then(function (resp) {
-            if (resp) {
-                if (codeCoverageTool.toLowerCase() === 'jacoco' && resp.report && resp.report.counter) {
-                    return Q.resolve(false);
-                }
-                else if (codeCoverageTool.toLowerCase() === 'cobertura' && resp.coverage) {
-                    let lines_covered: number = Number(resp.coverage.$["lines-covered"]);
-                    if (lines_covered && lines_covered > 0) {
-                        return Q.resolve(false);
-                    }
-                }
+
+    const resp = await util.readXmlFileAsJson(codeCoverageFile);
+    if (resp) {
+        if (codeCoverageTool.toLowerCase() === 'jacoco' && resp.report && resp.report.counter) {
+            return Promise.resolve(false);
+        } else if (codeCoverageTool.toLowerCase() === 'cobertura' && resp.coverage) {
+            const linesCovered: number = Number(resp.coverage.$['lines-covered']);
+            if (linesCovered && linesCovered > 0) {
+                return Promise.resolve(false);
             }
-            return Q.resolve(true);
-        });
+        }
+    }
+    return Promise.resolve(true);
 }

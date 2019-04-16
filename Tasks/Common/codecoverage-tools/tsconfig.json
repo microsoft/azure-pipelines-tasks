@@ -4,7 +4,8 @@
         "target": "es6",
         "declaration": true,
         "noImplicitAny": false,
-        "sourceMap": false
+        "sourceMap": false,
+        "esModuleInterop": true
     },
     "exclude": [
         "node_modules"
