@@ -2,7 +2,7 @@
     "id": "E28912F1-0114-4464-802A-A3A35437FD16",
     "name": "Docker",
     "friendlyName": "Docker",
-    "description": "Build, tag, push, or run Docker images, or run a Docker command. Task can be used with Docker or Azure Container registry.",
+    "description": "Build, tag, push, or run Docker images, or run a Docker command",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=848006",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
     "category": "Build",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 150,
-        "Patch": 6
+        "Minor": 151,
+        "Patch": 0
     },
     "demands": [],
     "preview": "false",

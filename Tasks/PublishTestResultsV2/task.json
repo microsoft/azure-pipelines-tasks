@@ -2,7 +2,7 @@
     "id": "0B0F01ED-7DDE-43FF-9CBB-E48954DAF9B1",
     "name": "PublishTestResults",
     "friendlyName": "Publish Test Results",
-    "description": "Publish Test Results to Azure Pipelines/TFS",
+    "description": "Publish test results to Azure Pipelines",
     "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613742",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613742)",
     "category": "Test",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 151,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",

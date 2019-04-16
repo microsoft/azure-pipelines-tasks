@@ -6,6 +6,11 @@
   "helpUrl": "",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
+  "ecosystem": "ruby",
+  "satisfies": [
+    "Ruby"
+  ],
+  "preview": true,
   "runsOn": [
     "Agent",
     "DeploymentGroup"
@@ -14,9 +19,8 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
-  "ecosystem": "ruby",
   "demands": [],
   "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -29,11 +33,11 @@
       "helpMarkDown": "ms-resource:loc.input.help.version"
     },
     {
-        "name": "architecture",
-        "type": "string",
-        "label": "ms-resource:loc.input.label.architecture",
-        "required": false,
-        "helpMarkDown": "ms-resource:loc.input.help.architecture"
+      "name": "architecture",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.architecture",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.architecture"
     }
   ],
   "execution": {

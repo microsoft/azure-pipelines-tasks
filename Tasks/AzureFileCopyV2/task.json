@@ -1,8 +1,8 @@
 {
     "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
     "name": "AzureFileCopy",
-    "friendlyName": "Azure File Copy",
-    "description": "Copy files to Azure blob or VM(s)",
+    "friendlyName": "Azure file copy",
+    "description": "Copy files to Azure Blob Storage or virtual machines",
     "helpUrl": "https://aka.ms/azurefilecopyreadme",
     "helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
     "category": "Deploy",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 5
+        "Patch": 6
     },
     "demands": [
         "azureps"

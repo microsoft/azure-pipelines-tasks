@@ -2,7 +2,7 @@
     "id": "E28912F1-0114-4464-802A-A3A35437FD16",
     "name": "Docker",
     "friendlyName": "Docker",
-    "description": "Build or push Docker images, login or logout, or run a Docker command. Task can be used with Docker registry.",
+    "description": "Build or push Docker images, login or logout, or run a Docker command",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=848006",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
     "category": "Build",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 151,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "releaseNotes": "Simplified the task YAML by:<br/>&nbsp;- Removing the Container registry type input<br/>&nbsp;- Removing complex inputs as they can be passed as arguments to the command.",

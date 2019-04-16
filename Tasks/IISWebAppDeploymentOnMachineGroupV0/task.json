@@ -1,7 +1,7 @@
 {
     "id": "1B467810-6725-4B6D-ACCD-886174C09BBA",
     "name": "IISWebAppDeploymentOnMachineGroup",
-    "friendlyName": "IIS Web App Deploy",
+    "friendlyName": "IIS web app deploy",
     "description": "Deploy a website or web application using Web Deploy",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=866789",
     "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=866789)",
@@ -16,7 +16,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 52
+        "Patch": 53
     },
     "demands": [],
     "minimumAgentVersion": "2.104.1",

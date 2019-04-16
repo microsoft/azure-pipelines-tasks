@@ -1,8 +1,8 @@
 {
   "id": "8BA74703-E94F-4A35-814E-FC21F44578A2",
   "name": "AzurePolicyCheckGate",
-  "friendlyName": "Check Azure Policy Compliance",
-  "description": "Security and compliance assessment with Azure policies on resources that belong to the resource group and Azure subscription.",
+  "friendlyName": "Check Azure Policy compliance",
+  "description": "Security and compliance assessment for Azure Policy",
   "helpUrl": "",
   "helpMarkDown": "",
   "category": "Deploy",
@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 151,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": "true",
   "inputs": [

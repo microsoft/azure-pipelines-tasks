@@ -2,7 +2,7 @@
     "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
     "name": "HelmDeploy",
     "friendlyName": "Package and deploy Helm charts",
-    "description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running helm commands.",
+    "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 151,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [],
     "groups": [

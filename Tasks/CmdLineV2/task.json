@@ -1,8 +1,8 @@
 {
     "id": "D9BAFED4-0B18-4F58-968D-86655B4D2CE9",
     "name": "CmdLine",
-    "friendlyName": "Command Line",
-    "description": "Run a command line script using cmd.exe on Windows and bash on macOS and Linux.",
+    "friendlyName": "Command line",
+    "description": "Run a command line script using Bash on Linux and macOS and cmd.exe on Windows",
     "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613735",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613735)",
     "category": "Utility",
@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 148,
+        "Minor": 151,
         "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for multiple lines.",

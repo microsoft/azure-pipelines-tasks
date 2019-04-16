@@ -2,7 +2,7 @@
     "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
     "name": "DotNetCoreCLI",
     "friendlyName": ".NET Core",
-    "description": "Build, test, package, or publish a dotnet application, or run a custom dotnet command. For package commands, supports NuGet.org and authenticated feeds like Package Management and MyGet.",
+    "description": "Build, test, package, or publish a dotnet application, or run a custom dotnet command",
     "author": "Microsoft Corporation",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=832194",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=832194)",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -182,7 +182,7 @@
                 "vstsFeed"
             ],
             "type": "pickList",
-            "label": "Use packages from this Azure Artifacts/TFS feed",
+            "label": "Use packages from this Azure Artifacts feed",
             "defaultValue": "",
             "helpMarkDown": "Include the selected feed in the generated NuGet.config. You must have Package Management installed and licensed to select a feed here.",
             "required": "false",

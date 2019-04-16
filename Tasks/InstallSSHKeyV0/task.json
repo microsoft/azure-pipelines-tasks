@@ -1,8 +1,8 @@
 {
     "id": "5c9af2eb-5fc5-42dc-9b91-dc234a8c4400",
     "name": "InstallSSHKey",
-    "friendlyName": "Install SSH Key",
-    "description": "Install an SSH key prior to a build or release",
+    "friendlyName": "Install SSH key",
+    "description": "Install an SSH key prior to a build or deployment",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=875267",
     "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=875267)",
     "category": "Utility",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 1
     },
     "runsOn": [
         "Agent",

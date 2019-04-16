@@ -1,8 +1,8 @@
 {
     "id": "6392F95F-7E76-4A18-B3C7-7F078D2F7700",
     "name": "PythonScript",
-    "friendlyName": "Python Script",
-    "description": "Run a Python script.",
+    "friendlyName": "Python script",
+    "description": "Run a Python file or inline script",
     "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=2006181",
     "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkID=2006181)",
     "category": "Utility",
@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 147,
+        "Minor": 151,
         "Patch": 0
     },
     "demands": [],

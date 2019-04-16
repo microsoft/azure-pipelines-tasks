@@ -1,8 +1,8 @@
 {
     "id": "31C75BBB-BCDF-4706-8D7C-4DA6A1959BC2",
     "name": "UseNode",
-    "friendlyName": "Use Node.js Eco-System",
-    "description": "Sets up a Node.js environment and installs it to the PATH. Additionally provides proxy support.",
+    "friendlyName": "Use Node.js ecosystem",
+    "description": "Set up a Node.js environment and add it to the PATH, additionally providing proxy support",
     "helpUrl": "",
     "helpMarkDown": "",
     "category": "Tool",
@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "satisfies": [
         "Node"

@@ -2,7 +2,7 @@
     "id": "CBC316A2-586F-4DEF-BE79-488A1F503564",
     "name": "Kubernetes",
     "friendlyName": "Deploy to Kubernetes",
-    "description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running kubectl commands.",
+    "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running kubectl commands",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 151,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [],
     "preview": "false",

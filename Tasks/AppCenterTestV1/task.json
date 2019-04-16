@@ -1,8 +1,8 @@
 {
     "id": "AD5CD22A-BE4E-48BB-ADCE-181A32432DA5",
     "name": "AppCenterTest",
-    "friendlyName": "App Center Test",
-    "description": "Test app packages with Visual Studio App Center.",
+    "friendlyName": "App Center test",
+    "description": "Test app packages with Visual Studio App Center",
     "helpUrl": "https://aka.ms/appcentersupport",
     "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport).",
     "category": "Test",
@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 148,
+        "Minor": 151,
         "Patch": 0
     },
     "groups": [

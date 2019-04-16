@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
@@ -86,11 +86,11 @@
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish to Azure Pipelines/TFS",
+            "label": "Publish to Azure Pipelines",
             "required": true,
             "defaultValue": "true",
             "groupName": "junitTestResults",
-            "helpMarkDown": "Select this option to publish JUnit test results produced by the Gradle build to Azure Pipelines/TFS. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines/TFS."
+            "helpMarkDown": "Select this option to publish JUnit test results produced by the Gradle build to Azure Pipelines. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines."
         },
         {
             "name": "testResultsFiles",

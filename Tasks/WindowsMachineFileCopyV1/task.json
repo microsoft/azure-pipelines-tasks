@@ -1,8 +1,8 @@
 {
     "id": "731004D4-1D66-4F70-8C05-638018B22210",
     "name": "WindowsMachineFileCopy",
-    "friendlyName": "Windows Machine File Copy",
-    "description": "Copy files to remote machine(s)",
+    "friendlyName": "Windows machine file copy",
+    "description": "Copy files to remote Windows machines",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=627415",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
     "category": "Deploy",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 44
+        "Patch": 45
     },
     "minimumAgentVersion": "1.104.0",
     "groups": [

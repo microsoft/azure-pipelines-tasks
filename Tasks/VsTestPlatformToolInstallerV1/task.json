@@ -1,8 +1,8 @@
 {
     "id": "2C65196A-54FD-4A02-9BE8-D9D1837B7111",
     "name": "VisualStudioTestPlatformInstaller",
-    "friendlyName": "Visual Studio Test Platform Installer",
-    "description": "Acquires the test platform from nuget.org or the tools cache. Satisfies the ‘vstest’ demand and can be used for running tests and collecting diagnostic data using the Visual Studio Test task.",
+    "friendlyName": "Visual Studio test platform installer",
+    "description": "Acquire the test platform from nuget.org or the tool cache. Satisfies the ‘vstest’ demand and can be used for running tests and collecting diagnostic data using the Visual Studio Test task.",
     "helpUrl": "https://www.nuget.org/packages/Microsoft.TestPlatform/",
     "helpMarkDown": "[Test platform package on NuGet](https://www.nuget.org/packages/Microsoft.TestPlatform/)",
     "category": "Tool",
@@ -14,7 +14,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 150,
+        "Minor": 151,
         "Patch": 0
     },
     "satisfies": [

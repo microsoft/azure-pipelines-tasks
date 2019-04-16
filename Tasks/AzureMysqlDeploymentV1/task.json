@@ -1,8 +1,8 @@
 {
     "id": "BD1BED02-F04E-11E7-8C3F-9A214CF093AE",
     "name": "AzureMysqlDeployment",
-    "friendlyName": "Azure Database for MySQL Deployment",
-    "description": "Run your scripts and make changes to your Azure Database for MySQL.",
+    "friendlyName": "Azure Database for MySQL deployment",
+    "description": "Run your scripts and make changes to your Azure Database for MySQL",
     "helpUrl": "https://aka.ms/mysqlazuredeployreadme",
     "helpMarkDown": "[More Information](https://aka.ms/mysqlazuredeployreadme)",
     "category": "Deploy",
@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 20
+        "Patch": 21
     },
     "demands": [],
     "minimumAgentVersion": "1.100.0",

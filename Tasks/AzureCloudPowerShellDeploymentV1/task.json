@@ -1,7 +1,7 @@
 {
     "id": "2CA8FE15-42EA-4B26-80F1-E0738EC17E89",
     "name": "AzureCloudPowerShellDeployment",
-    "friendlyName": "Azure Cloud Service Deployment",
+    "friendlyName": "Azure Cloud Service deployment",
     "description": "Deploy an Azure Cloud Service",
     "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613748",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613748)",
@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 3,
-        "Patch": 13
+        "Patch": 14
     },
     "demands": [
         "azureps"

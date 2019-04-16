@@ -1,8 +1,8 @@
 {
     "id": "15858991-8BAC-4542-99E7-577FEF9B5BE6",
     "name": "AzureWebAppContainer",
-    "friendlyName": "Azure Web App for Container",
-    "description": "Update Azure App Services on Docker containers",
+    "friendlyName": "Azure Web App for Containers",
+    "description": "Deploy containers to Azure App Service",
     "helpUrl": "https://aka.ms/azurewebapponcontainerdeployreadme",
     "helpMarkDown": "[More information](https://aka.ms/azurewebapponcontainerdeployreadme)",
     "category": "Deploy",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 11
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [

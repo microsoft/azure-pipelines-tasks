@@ -1,7 +1,7 @@
 {
     "id": "86c37a92-59a7-444b-93c7-220fcf91e29c",
     "name": "JenkinsDownloadArtifacts",
-    "friendlyName": "Jenkins Download Artifacts",
+    "friendlyName": "Jenkins download artifacts",
     "description": "Download artifacts produced by a Jenkins job",
     "helpUrl": "",
     "helpMarkDown": "Download artifacts produced by a [Jenkins](https://jenkins.io/) job.",
@@ -18,8 +18,8 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 147,
-        "Patch": 2
+        "Minor": 151,
+        "Patch": 0
     },
     "groups": [
         {

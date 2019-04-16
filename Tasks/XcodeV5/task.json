@@ -12,10 +12,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 5,
-        "Minor": 150,
+        "Minor": 151,
         "Patch": 0
     },
-    "releaseNotes": "This version of the task is compatible with Xcode 8, Xcode 9 and Xcode 10. Features that were there solely to maintain compat with Xcode 7 have been removed. The task has better options to work with the Hosted macOS pool.",
+    "releaseNotes": "This version of the task is compatible with Xcode 8, Xcode 9 and Xcode 10. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
     "demands": [
         "xcode"
     ],
@@ -333,11 +333,11 @@
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish test results to Azure Pipelines/TFS",
+            "label": "Publish test results to Azure Pipelines",
             "required": false,
             "defaultValue": false,
             "groupName": "advanced",
-            "helpMarkDown": "Specify whether to publish JUnit test results to Azure Pipelines/TFS. This requires xcpretty to be enabled to generate JUnit test results."
+            "helpMarkDown": "Specify whether to publish JUnit test results to Azure Pipelines. This requires xcpretty to be enabled to generate JUnit test results."
         }
     ],
     "execution": {

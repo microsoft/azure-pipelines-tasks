@@ -2,7 +2,7 @@
     "id": "068D5909-43E6-48C5-9E01-7C8A94816220",
     "name": "HelmInstaller",
     "friendlyName": "Helm tool installer",
-    "description": "Install Helm and Kubernetes on agent machine.",
+    "description": "Install Helm and Kubernetes on an agent machine",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Tool",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "satisfies": [

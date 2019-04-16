@@ -2,7 +2,7 @@
     "id": "18BDE28A-8172-45CB-B204-5CEF1393DBB1",
     "name": "AzureWebApp",
     "friendlyName": "Azure Web App",
-    "description": "Update Azure App Services on Windows, Web App on Linux with built-in images, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Mobile Apps, API applications",
+    "description": "Deploy an Azure Web App for Linux or Windows",
     "helpUrl": "https://aka.ms/azurewebappdeployreadme",
     "helpMarkDown": "[More information](https://aka.ms/azurewebappdeployreadme)",
     "category": "Deploy",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 11
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [

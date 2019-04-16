@@ -2,7 +2,7 @@
     "id": "8413C881-4959-43D5-8840-B4EA0FFC5CFD",
     "name": "KubectlInstaller",
     "friendlyName": "Kubectl tool installer",
-    "description": "Install Kubectl on agent machine.",
+    "description": "Install Kubectl on agent machine",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Tool",
@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "satisfies": [
