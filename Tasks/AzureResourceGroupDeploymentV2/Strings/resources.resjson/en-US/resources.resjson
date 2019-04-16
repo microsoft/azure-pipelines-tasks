@@ -189,5 +189,6 @@
   "loc.messages.ASE_SSLIssueRecommendation": "To use a certificate, the certificate must be signed by a trusted certificate authority. If getting certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline.",
   "loc.messages.MoreInformationOnAzurePortal": "More information on Azure Portal",
   "loc.messages.ResponseNotValid": "Response is not in a valid format",
-  "loc.messages.LogDeploymentName": "Deployment name is %s"
+  "loc.messages.LogDeploymentName": "Deployment name is %s",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }
