@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 150,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": "true",
   "inputs": [
@@ -94,9 +94,9 @@
         {
           "RequestInputs": {
             "EndpointId": "$(connectedServiceName)",
-            "EndpointUrl": "{{#if ResourceGroupName}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/queryResults?api-version=2018-04-04&$filter=IsCompliant eq false{{else}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/providers/Microsoft.PolicyInsights/policyStates/latest/queryResults?api-version=2018-04-04&$filter=IsCompliant eq false{{/if}}",
+            "EndpointUrl": "{{#if ResourceGroupName}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/summarize?api-version=2018-04-04{{else}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/providers/Microsoft.PolicyInsights/policyStates/latest/summarize?api-version=2018-04-04{{/if}}",
             "Method": "POST",
-            "Expression": "or(and(eq(isNullOrEmpty(taskInputs['resources']), true), eq(count(jsonpath('value[*].resourceId')), 0)), and(eq(isNullOrEmpty(taskInputs['resources']), false), eq(count(intersect(split(taskInputs['resources'], ','), jsonpath('value[*].resourceId'))) ,0)))"
+            "Expression": "eq(root['value'][0].results.nonCompliantPolicies, 0)"
           }
         }
       ]
