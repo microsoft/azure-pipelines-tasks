@@ -2,7 +2,6 @@
 
 import fs = require('fs');
 import tl = require('vsts-task-lib/task');
-import secureFilesCommon = require('securefiles-common/securefiles-common');
 import path = require('path');
 
 tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
@@ -15,8 +14,6 @@ async function run() {
     }
 
     try {
-        var secureFileHelpers = new secureFilesCommon.SecureFileHelpers();
-
         var caCertFilePath = tl.getTaskVariable('CACERT_FILE_PATH');
         if (caCertFilePath && tl.exist(caCertFilePath)) {
             fs.unlinkSync(caCertFilePath);
