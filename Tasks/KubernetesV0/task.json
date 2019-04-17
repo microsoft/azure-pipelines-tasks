@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 151,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "preview": "false",
@@ -272,7 +272,7 @@
             "type": "string",
             "label": "Version spec",
             "defaultValue": "1.7.0",
-            "helpMarkDown": "Version Spec of version to get.  Examples: 1.7.0, 1.x.0, 4.x.0, 6.10.0, >=6.10.0",
+            "helpMarkDown": "Version Spec of version to get.  Examples: 1.7.0, 1.x.0, 4.x.0, 6.10.0",
             "groupName": "advanced",
             "visibleRule": "versionOrLocation = version"
         },

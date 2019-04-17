@@ -1,7 +1,7 @@
 {
   "id": "8BA74703-E94F-4A35-814E-FC21F44578A2",
   "name": "AzurePolicyCheckGate",
-  "friendlyName": "Azure Policy Check Gate",
+  "friendlyName": "Check Azure Policy Compliance",
   "description": "Security and compliance assessment with Azure policies on resources that belong to the resource group and Azure subscription.",
   "helpUrl": "",
   "helpMarkDown": "",
@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 0,
+    "Minor": 151,
     "Patch": 1
   },
   "preview": "true",
@@ -34,7 +34,6 @@
       "name": "ResourceGroupName",
       "type": "pickList",
       "label": "Resource group",
-      "required": true,
       "helpMarkDown": "Provide name of a resource group.",
       "properties": {
         "EditableOptions": "True"
@@ -69,14 +68,14 @@
       "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
-  "instanceNameFormat": "Azure Policy compliance assessment for $(ResourceGroupName)",
+  "instanceNameFormat": "Check Policy Compliance",
   "execution": {
     "HttpRequestChain": {
       "Execute": [
         {
           "RequestInputs": {
             "EndpointId": "$(connectedServiceName)",
-            "EndpointUrl": "$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/triggerEvaluation?api-version=2018-07-01-preview",
+            "EndpointUrl": "{{#if ResourceGroupName}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/triggerEvaluation?api-version=2018-07-01-preview{{else}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/providers/Microsoft.PolicyInsights/policyStates/latest/triggerEvaluation?api-version=2018-07-01-preview{{/if}}",
             "Method": "POST"
           },
           "ExecutionOptions": {
@@ -95,9 +94,9 @@
         {
           "RequestInputs": {
             "EndpointId": "$(connectedServiceName)",
-            "EndpointUrl": "$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/queryResults?api-version=2018-04-04&$filter=IsCompliant eq false",
+            "EndpointUrl": "{{#if ResourceGroupName}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/summarize?api-version=2018-04-04{{else}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/providers/Microsoft.PolicyInsights/policyStates/latest/summarize?api-version=2018-04-04{{/if}}",
             "Method": "POST",
-            "Expression": "or(and(eq(isNullOrEmpty(taskInputs['resources']), true), eq(count(jsonpath('value[*].resourceId')), 0)), and(eq(isNullOrEmpty(taskInputs['resources']), false), eq(count(intersect(split(taskInputs['resources'], ','), jsonpath('value[*].resourceId'))) ,0)))"
+            "Expression": "eq(root['value'][0].results.nonCompliantPolicies, 0)"
           }
         }
       ]

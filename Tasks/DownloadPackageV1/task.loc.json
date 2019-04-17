@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 151,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "preview": true,
@@ -85,8 +85,8 @@
       "name": "files",
       "type": "string",
       "label": "ms-resource:loc.input.label.files",
-      "defaultValue": "*",
-      "visibleRule": "packageType == 'maven' || packageType == 'pypi' || packageType == 'universal'",
+      "defaultValue": "**",
+      "visibleRule": "packageType = maven || packageType = pypi || packageType = upack",
       "required": false,
       "properties": {
         "EditableOptions": "True"
@@ -100,7 +100,7 @@
       "label": "ms-resource:loc.input.label.extract",
       "defaultValue": "true",
       "required": false,
-      "visibleRule": "packageType == 'nuget' || packageType == 'npm'",
+      "visibleRule": "packageType = nuget || packageType = npm",
       "properties": {
         "EditableOptions": "True"
       },

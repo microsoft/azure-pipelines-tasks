@@ -10,7 +10,7 @@
     "version": {
         "Major": 1,
         "Minor": 151,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "preview": true,
@@ -68,7 +68,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "If you don't find the package in the list, you can provide the package ID, which you can find using the instructions [here](https://docs.microsoft.com/en-us/rest/api/azure/devops/?view=azure-devops-rest-5.0#get-packages)."
+            "helpMarkDown": "If you don't find the package in the list, you can provide the package ID, which you can find using the instructions [here](https://go.microsoft.com/fwlink/?linkid=2086778)."
         },
         {
             "name": "version",
@@ -85,14 +85,14 @@
             "name": "files",
             "type": "string",
             "label": "Files",
-            "defaultValue": "*",
-            "visibleRule": "packageType == 'maven' || packageType == 'pypi' || packageType == 'universal'",
+            "defaultValue": "**",
+            "visibleRule": "packageType = maven || packageType = pypi || packageType = upack",
             "required": false,
             "properties": {
                 "EditableOptions": "True"
             },
             "groupName": "advancedOptions",
-            "helpMarkDown": "Specify which files to download using [file matching patterns](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/file-matching-patterns?view=azure-devops)."
+            "helpMarkDown": "Specify which files to download using [file matching patterns](https://go.microsoft.com/fwlink/?linkid=2086953)."
         },
         {
             "name": "extract",
@@ -100,7 +100,7 @@
             "label": "Extract package contents",
             "defaultValue": "true",
             "required": false,
-            "visibleRule": "packageType == 'nuget' || packageType == 'npm'",
+            "visibleRule": "packageType = nuget || packageType = npm",
             "properties": {
                 "EditableOptions": "True"
             },
