@@ -18,7 +18,7 @@ async function run() {
         const failIfCoverageIsEmpty: boolean = tl.getBoolInput('failIfCoverageEmpty');
         const workingDirectory: string = tl.getVariable('System.DefaultWorkingDirectory');
 
-        let autogenerateHtmlReport: boolean = codeCoverageTool === 'Cobertura';
+        let autogenerateHtmlReport: boolean = codeCoverageTool.toLowerCase() === 'cobertura';
         let tempFolder = undefined;
         const disableAutoGenerate = tl.getVariable('disable.coverage.autogenerate');
 
