@@ -18,13 +18,14 @@ async function run() {
         const failIfCoverageIsEmpty: boolean = tl.getBoolInput('failIfCoverageEmpty');
         const workingDirectory: string = tl.getVariable('System.DefaultWorkingDirectory');
 
-        let autogenerateHtmlReport: boolean = codeCoverageTool === 'Cobertura';
+        let autogenerateHtmlReport: boolean = codeCoverageTool.toLowerCase() === 'cobertura';
         let tempFolder = undefined;
         const disableAutoGenerate = tl.getVariable('disable.coverage.autogenerate');
 
         if (disableAutoGenerate) {
             tl.debug('disabling auto generation');
             autogenerateHtmlReport = false;
+            tempFolder = resolvePathToSingleItem(workingDirectory, reportDirectory, true);
         }
 
         // Resolve the summary file path.

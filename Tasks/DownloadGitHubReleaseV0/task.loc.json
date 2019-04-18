@@ -10,7 +10,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 149,
+    "Minor": 151,
     "Patch": 1
   },
   "minimumAgentVersion": "1.99.0",
@@ -32,8 +32,7 @@
       "defaultValue": "",
       "required": true,
       "properties": {
-        "EditableOptions": "True",
-        "SearchDataSourceName": "userRepositorySearch"
+        "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.userRepository"
     },
@@ -94,16 +93,6 @@
       "parameters": {
         "repositoryName": "$(userRepository)",
         "releaseByTagName": "$(defaultVersionType)"
-      }
-    },
-    {
-      "target": "userRepositorySearch",
-      "endpointId": "$(connection)",
-      "dataSourceName": "SearchRepositoriesByNameForTasks",
-      "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }",
-      "parameters": {
-        "searchText": "$(searchText)",
-        "name": "$(searchText)"
       }
     }
   ],
