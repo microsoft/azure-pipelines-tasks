@@ -1,5 +1,5 @@
 {
-    "common": [
+    "common": [ 
         {
             "module": "../Common/java-common",
             "type": "node",
