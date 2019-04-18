@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Command Line",
+  "loc.friendlyName": "Command line",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613735)",
-  "loc.description": "Run a command line script using cmd.exe on Windows and bash on macOS and Linux.",
+  "loc.description": "Run a command line script using Bash on Linux and macOS and cmd.exe on Windows",
   "loc.instanceNameFormat": "Command Line Script",
   "loc.releaseNotes": "Script task consistency. Added support for multiple lines.",
   "loc.group.displayName.advanced": "Advanced",

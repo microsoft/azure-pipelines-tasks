@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Delay",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870239)",
-  "loc.description": "Delay further execution of the workflow by a fixed time.",
+  "loc.description": "Delay further execution of a workflow by a fixed time",
   "loc.instanceNameFormat": "Delay by $(delayForMinutes) minutes",
   "loc.input.label.delayForMinutes": "Delay Time (minutes)",
   "loc.input.help.delayForMinutes": "Delay the execution of the workflow by specified time in minutes. 0 value means that workflow execution will start without delay."
