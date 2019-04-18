@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 4,
-    "Patch": 22
+    "Patch": 25
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -760,6 +760,7 @@
     "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
     "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
-    "JarNotSupported": "ms-resource:loc.messages.JarNotSupported"
+    "JarNotSupported": "ms-resource:loc.messages.JarNotSupported",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

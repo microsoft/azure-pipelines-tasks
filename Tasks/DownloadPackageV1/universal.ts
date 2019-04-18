@@ -1,6 +1,6 @@
-import { IExecSyncResult, IExecOptions } from "vsts-task-lib/toolrunner";
+import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
 import * as artifactToolRunner from "packaging-common/universal/ArtifactToolRunner";
-import * as tl from "vsts-task-lib";
+import * as tl from "azure-pipelines-task-lib";
 import * as telemetry from "utility-common/telemetry";
 import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolUtilities";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
@@ -9,7 +9,8 @@ export async function downloadUniversalPackage(
     downloadPath: string,
     feedId: string,
     packageId: string,
-    version: string
+    version: string,
+    filterPattern: string
 ): Promise<void> {
     try {
         const accessToken = pkgLocationUtils.getSystemAccessToken();
@@ -43,7 +44,7 @@ export async function downloadUniversalPackage(
 
         let toolRunnerOptions = artifactToolRunner.getOptions();
         toolRunnerOptions.env.UNIVERSAL_DOWNLOAD_PAT = accessToken;
-        downloadPackageUsingArtifactTool(downloadPath, downloadOptions, toolRunnerOptions);
+        downloadPackageUsingArtifactTool(downloadPath, downloadOptions, toolRunnerOptions, filterPattern);
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error.message);
         return;
@@ -62,10 +63,12 @@ export async function downloadUniversalPackage(
 function downloadPackageUsingArtifactTool(
     downloadPath: string,
     options: artifactToolRunner.IArtifactToolOptions,
-    execOptions: IExecOptions
+    execOptions: IExecOptions,
+    filterPattern: string
 ) {
     let command = new Array<string>();
-
+    var verbosity = tl.getVariable("Packaging.ArtifactTool.Verbosity") || "Error";
+    
     command.push("universal", "download",
         "--feed", options.feedId,
         "--service", options.accountUrl,
@@ -73,7 +76,8 @@ function downloadPackageUsingArtifactTool(
         "--package-version", options.packageVersion,
         "--path", downloadPath,
         "--patvar", "UNIVERSAL_DOWNLOAD_PAT",
-        "--verbosity", tl.getInput("verbosity"));
+        "--verbosity", verbosity,
+        "--filter", filterPattern);
 
     console.log(tl.loc("Info_Downloading", options.packageName, options.packageVersion, options.feedId));
     const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(

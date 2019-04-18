@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 31
+    "Patch": 33
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -101,6 +101,7 @@
     "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
-    "RetryingWithVaultResourceIdFromResponse": "ms-resource:loc.messages.RetryingWithVaultResourceIdFromResponse"
+    "RetryingWithVaultResourceIdFromResponse": "ms-resource:loc.messages.RetryingWithVaultResourceIdFromResponse",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

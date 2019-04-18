@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 4
+    "Patch": 6
   },
   "minimumAgentVersion": "2.111.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -134,6 +134,7 @@
     "Couldnotfetchaccesstoken": "ms-resource:loc.messages.Couldnotfetchaccesstoken",
     "SPNExpiredCheck": "ms-resource:loc.messages.SPNExpiredCheck",
     "FailedToGetAzureMetricAlerts": "ms-resource:loc.messages.FailedToGetAzureMetricAlerts",
-    "FailedToUpdateAzureMetricAlerts": "ms-resource:loc.messages.FailedToUpdateAzureMetricAlerts"
+    "FailedToUpdateAzureMetricAlerts": "ms-resource:loc.messages.FailedToUpdateAzureMetricAlerts",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

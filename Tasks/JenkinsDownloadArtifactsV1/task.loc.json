@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 147,
-    "Patch": 0
+    "Patch": 2
   },
   "groups": [
     {
@@ -368,6 +368,7 @@
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
     "NoAssociatedArtifacts": "ms-resource:loc.messages.NoAssociatedArtifacts",
     "OperationFailed": "ms-resource:loc.messages.OperationFailed",
-    "RetryingOperation": "ms-resource:loc.messages.RetryingOperation"
+    "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

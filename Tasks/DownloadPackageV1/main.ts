@@ -1,6 +1,6 @@
 var path = require("path");
 
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as nutil from "packaging-common/nuget/Utility";
 import * as telemetry from "utility-common/telemetry";
 
@@ -35,8 +35,8 @@ async function main(): Promise<void> {
             return Promise.resolve();
         }
 
-        if (packageType === "Universal") {
-            return await downloadUniversalPackage(downloadPath, feedId, packageId, version);
+        if (packageType === "upack") {
+            return await downloadUniversalPackage(downloadPath, feedId, packageId, version, filesPattern);
         }
 
         if (viewId && viewId.replace(/\s/g, "") !== "") {

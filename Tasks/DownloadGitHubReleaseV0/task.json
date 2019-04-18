@@ -10,8 +10,8 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 148,
-    "Patch": 2
+    "Minor": 151,
+    "Patch": 1
   },
   "minimumAgentVersion": "1.99.0",
   "instanceNameFormat": "Download GitHub Release",
@@ -32,15 +32,14 @@
       "defaultValue": "",
       "required": true,
       "properties": {
-        "EditableOptions": "True",
-        "SearchDataSourceName": "userRepositorySearch"
+        "EditableOptions": "True"
       },
       "helpMarkDown": "GitHub repository full name"
     },
     {
       "name": "defaultVersionType",
       "type": "pickList",
-      "label": "Default release version type",
+      "label": "Default version",
       "defaultValue": "latest",
       "required": true,
       "options": {
@@ -90,20 +89,10 @@
       "target": "version",
       "endpointId": "$(connection)",
       "dataSourceName": "Releases",
-      "resultTemplate": "{ \"Value\" : \"{{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{id}}{{/equals}}\", \"DisplayValue\" : \" {{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{#if name}}{{name}}{{else}}{{id}}{{/if}}{{/equals}}\" }",
+      "resultTemplate": "{ \"Value\" : \"{{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{id}}{{/equals}}\", \"DisplayValue\" : \" {{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{#if name}}{{name}}{{else}}{{tag_name}}{{/if}}{{/equals}}{{#if prerelease}} (Pre-release){{/if}}\" }",
       "parameters": {
         "repositoryName": "$(userRepository)",
         "releaseByTagName": "$(defaultVersionType)"
-      }
-    },
-    {
-      "target": "userRepositorySearch",
-      "endpointId": "$(connection)",
-      "dataSourceName": "SearchRepositoriesByNameForTasks",
-      "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }",
-      "parameters": {
-        "searchText": "$(searchText)",
-        "name": "$(searchText)"
       }
     }
   ],
@@ -114,7 +103,8 @@
     }
   },
   "messages": {
-    "DownloadArtifacts": "Downloading assets of release %s from: %s",
-    "ArtifactsSuccessfullyDownloaded": "Successfully downloaded release assets to %s"
+    "DownloadArtifacts": "Downloading assets of release '%s' from: %s",
+    "ArtifactsSuccessfullyDownloaded": "Successfully downloaded release assets to '%s'",
+    "InvalidRelease": "The release version/tag input '%s' is not valid"
   }
 }

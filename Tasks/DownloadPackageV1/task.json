@@ -9,10 +9,12 @@
     "author": "ms-vscs-rm",
     "version": {
         "Major": 1,
-        "Minor": 149,
-        "Patch": 0
+        "Minor": 151,
+        "Patch": 2
     },
     "demands": [],
+    "preview": true,
+    "releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",
     "minimumAgentVersion": "2.115.0",
     "groups": [
         {
@@ -27,13 +29,13 @@
             "type": "pickList",
             "label": "Package Type",
             "required": true,
-            "helpMarkDown": "Select the package type",
-            "defaultValue": "NuGet",
+            "defaultValue": "nuget",
             "options": {
                 "maven": "Maven",
                 "npm": "Npm",
                 "nuget": "NuGet",
-                "pypi": "Python"
+                "pypi": "Python",
+                "upack": "Universal"
             }
         },
         {
@@ -44,8 +46,7 @@
             "required": true,
             "properties": {
                 "EditableOptions": "True"
-            },
-            "helpMarkDown": "Select the feed"
+            }
         },
         {
             "name": "view",
@@ -56,7 +57,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Select the view"
+            "helpMarkDown": "Select a view to use only versions promoted to that view."
         },
         {
             "name": "definition",
@@ -67,7 +68,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Select the package to download."
+            "helpMarkDown": "If you don't find the package in the list, you can provide the package ID, which you can find using the instructions [here](https://go.microsoft.com/fwlink/?linkid=2086778)."
         },
         {
             "name": "version",
@@ -84,14 +85,14 @@
             "name": "files",
             "type": "string",
             "label": "Files",
-            "defaultValue": "*",
-            "visibleRule": "packageType == 'maven' || packageType == 'pypi' || packageType == 'universal'",
+            "defaultValue": "**",
+            "visibleRule": "packageType = maven || packageType = pypi || packageType = upack",
             "required": false,
             "properties": {
                 "EditableOptions": "True"
             },
             "groupName": "advancedOptions",
-            "helpMarkDown": "Set the files pattern filter"
+            "helpMarkDown": "Specify which files to download using [file matching patterns](https://go.microsoft.com/fwlink/?linkid=2086953)."
         },
         {
             "name": "extract",
@@ -99,12 +100,12 @@
             "label": "Extract package contents",
             "defaultValue": "true",
             "required": false,
-            "visibleRule": "packageType == 'nuget' || packageType == 'npm'",
+            "visibleRule": "packageType = nuget || packageType = npm",
             "properties": {
                 "EditableOptions": "True"
             },
             "groupName": "advancedOptions",
-            "helpMarkDown": "Check to extract package contents."
+            "helpMarkDown": "Instead of extracting the package contents and removing the archive, the artifact folder will contain the package archive."
         },
         {
             "name": "downloadPath",
@@ -171,7 +172,7 @@
         "FailedToDownloadPackage": "Failed to download package file from %s got the following error: %s",
         "PackageDownloadSuccessful": "Package download successful",
         "CredentialsNotFound": "Could not determine credentials to connect to Package Management service.",
-        "StartingDownloadOfPackage": "Starting download of NuGet package %s to location %s",
+        "StartingDownloadOfPackage": "Starting download of package %s to location %s",
         "ExtractingPackage": "Extracting package %s to directory %s",
         "PackageTypeNotSupported": "Only Nuget, Python, Universal, Npm, and Maven packages types can be downloaded using this task.",
         "ExtractionFailed": "Failed to extract package with error %s",

@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 1,
-    "Patch": 3
+    "Patch": 5
   },
   "demands": [
     "azureps"
@@ -366,6 +366,7 @@
     "AFC_RedirectResponseLocationHeaderIsNull": "ms-resource:loc.messages.AFC_RedirectResponseLocationHeaderIsNull",
     "AFC_AzCopyBlobUploadNonZeroExitCode": "ms-resource:loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode",
     "AFC_PreexecutionJob_UnableToGetStorageKey": "ms-resource:loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey",
-    "AFC_UninstallWinRMCustomScriptExtension": "ms-resource:loc.messages.AFC_UninstallWinRMCustomScriptExtension"
+    "AFC_UninstallWinRMCustomScriptExtension": "ms-resource:loc.messages.AFC_UninstallWinRMCustomScriptExtension",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

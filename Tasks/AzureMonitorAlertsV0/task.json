@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 4
+        "Patch": 6
     },
     "minimumAgentVersion": "2.111.0",
     "instanceNameFormat": "Configure Azure Alerts : $(ResourceName)",
@@ -134,6 +134,7 @@
         "Couldnotfetchaccesstoken": "Could not fetch access token for Azure. Status Code: %s (%s) %s.",
         "SPNExpiredCheck": "Check if the SPN is valid and not expired.",
         "FailedToGetAzureMetricAlerts": "Failed to get Application Insights Alert rule: %s. Error: %s",
-        "FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s"
+        "FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }
