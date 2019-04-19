@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "PyPI Publisher",
+  "loc.friendlyName": "PyPI publisher",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=875289)",
-  "loc.description": "Create and upload an sdist or wheel to a PyPI-compatible index using Twine.",
+  "loc.description": "Create and upload an sdist or wheel to a PyPI-compatible index using Twine",
   "loc.instanceNameFormat": "Package and publish to PyPI",
   "loc.input.label.serviceEndpoint": "PyPI service connection",
   "loc.input.help.serviceEndpoint": "A generic service connection for connecting to the package index.",

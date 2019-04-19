@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure Function",
   "loc.helpMarkDown": "[More information](https://aka.ms/azurefunctiondeployreadme)",
-  "loc.description": "Update Azure Function on Windows, Function on Linux with built-in images, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications",
+  "loc.description": "Deploy an Azure Function for Linux or Windows",
   "loc.instanceNameFormat": "Azure Function App Deploy: $(appName)",
   "loc.group.displayName.AdditionalDeploymentOptions": "Additional Deployment Options",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
@@ -184,5 +184,6 @@
   "loc.messages.FailedToSyncTriggers": "Failed to sync triggers for function app '%s'. Error: %s",
   "loc.messages.SyncingFunctionTriggers": "Syncing triggers for function app",
   "loc.messages.SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully",
-  "loc.messages.UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s"
+  "loc.messages.UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }

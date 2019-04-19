@@ -3,7 +3,7 @@
   "name": "AzureWebAppContainer",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/azurewebapponcontainerdeployreadme",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-web-app-containers",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 11
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -323,6 +323,7 @@
     "RestartedAppServiceSlot": "ms-resource:loc.messages.RestartedAppServiceSlot",
     "FailedToRestartAppService": "ms-resource:loc.messages.FailedToRestartAppService",
     "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "FailedToGetConfigurationFile": "ms-resource:loc.messages.FailedToGetConfigurationFile",
     "FailedToDeployToWebApp": "ms-resource:loc.messages.FailedToDeployToWebApp",
     "SingleContainerDeployment": "ms-resource:loc.messages.SingleContainerDeployment",

@@ -3,7 +3,7 @@
   "name": "PowerShell",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613736",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/powershell",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 148,
+    "Minor": 151,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -149,7 +149,6 @@
     "PS_FormattedCommand": "ms-resource:loc.messages.PS_FormattedCommand",
     "PS_InvalidErrorActionPreference": "ms-resource:loc.messages.PS_InvalidErrorActionPreference",
     "PS_InvalidFilePath": "ms-resource:loc.messages.PS_InvalidFilePath",
-    "PS_UnableToDetermineExitCode": "ms-resource:loc.messages.PS_UnableToDetermineExitCode",
-    "PS_InvalidTargetType": "ms-resource:loc.messages.PS_InvalidTargetType"
+    "PS_UnableToDetermineExitCode": "ms-resource:loc.messages.PS_UnableToDetermineExitCode"
   }
 }

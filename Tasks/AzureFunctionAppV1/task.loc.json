@@ -3,7 +3,7 @@
   "name": "AzureFunctionApp",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/azurefunctiondeployreadme",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 12
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -378,6 +378,7 @@
     "FailedToSyncTriggers": "ms-resource:loc.messages.FailedToSyncTriggers",
     "SyncingFunctionTriggers": "ms-resource:loc.messages.SyncingFunctionTriggers",
     "SyncFunctionTriggersSuccess": "ms-resource:loc.messages.SyncFunctionTriggersSuccess",
-    "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings"
+    "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

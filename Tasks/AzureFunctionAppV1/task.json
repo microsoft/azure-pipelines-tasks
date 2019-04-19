@@ -2,8 +2,8 @@
     "id": "501DD25D-1785-43E4-B4E5-A5C78CCC0573",
     "name": "AzureFunctionApp",
     "friendlyName": "Azure Function",
-    "description": "Update Azure Function on Windows, Function on Linux with built-in images, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications",
-    "helpUrl": "https://aka.ms/azurefunctiondeployreadme",
+    "description": "Deploy an Azure Function for Linux or Windows",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[More information](https://aka.ms/azurefunctiondeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 12
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -378,6 +378,7 @@
         "FailedToSyncTriggers": "Failed to sync triggers for function app '%s'. Error: %s",
         "SyncingFunctionTriggers": "Syncing triggers for function app",
         "SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully",
-        "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s"
+        "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Download Pipeline Artifact",
-  "loc.helpMarkDown": "Download named artifact from a pipeline to a local path.",
-  "loc.description": "Download Pipeline Artifact",
+  "loc.friendlyName": "Download pipeline artifact",
+  "loc.helpMarkDown": "Download a named artifact from a pipeline to a local path",
+  "loc.description": "Download a named artifact from a pipeline to a local path",
   "loc.instanceNameFormat": "Download Pipeline Artifact",
   "loc.input.label.buildType": "Download artifacts produced by",
   "loc.input.help.buildType": "Download artifacts produced by the current build, or from a specific build.",
