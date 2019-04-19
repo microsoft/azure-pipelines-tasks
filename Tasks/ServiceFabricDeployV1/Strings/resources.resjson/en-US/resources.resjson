@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Service Fabric Application Deployment",
+  "loc.friendlyName": "Service Fabric application deployment",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820528)",
-  "loc.description": "Deploy a Service Fabric application to a cluster.",
+  "loc.description": "Deploy an Azure Service Fabric application to a cluster",
   "loc.instanceNameFormat": "Deploy Service Fabric Application",
   "loc.group.displayName.advanced": "Advanced Settings",
   "loc.group.displayName.upgrade": "Upgrade Settings",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure Web App",
   "loc.helpMarkDown": "[More information](https://aka.ms/azurewebappdeployreadme)",
-  "loc.description": "Update Azure App Services on Windows, Web App on Linux with built-in images, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Mobile Apps, API applications",
+  "loc.description": "Deploy an Azure Web App for Linux or Windows",
   "loc.instanceNameFormat": "Azure Web App Deploy: $(appName)",
   "loc.group.displayName.AdditionalDeploymentOptions": "Additional Deployment Options",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",

@@ -3,7 +3,7 @@
   "name": "PackerBuild",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=845329",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/packer-build",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 10
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
