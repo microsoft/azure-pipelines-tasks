@@ -1,8 +1,8 @@
 {
     "id": "DEE316A2-586F-4DEF-BE79-488A1F503DFE",
     "name": "KubernetesManifest",
-    "friendlyName": "Manifest based Kubernetes deployments",
-    "description": "Manifest based deployments to kubernetes",
+    "friendlyName": "Deploy Kubernetes manifests",
+    "description": "Use Kubernetes manifest files to deploy to clusters or even bake the manifest files to be used for deployments using Helm charts",
     "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
@@ -14,44 +14,36 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 149,
-        "Patch": 0
+        "Minor": 151,
+        "Patch": 4
     },
     "demands": [],
-    "groups": [
-        {
-            "name": "config",
-            "displayName": "Config",
-            "isExpanded": true
-        },
-        {
-            "name": "kubernetesCluster",
-            "displayName": "Kubernetes Cluster",
-            "isExpanded": true,
-            "visibleRule": "action != bake"
-        }
-    ],
+    "groups": [],
     "inputs": [
         {
-            "name": "connectionType",
+            "name": "action",
             "type": "pickList",
-            "label": "Service connection type",
-            "defaultValue": "Kubernetes Service Connection",
-            "required": true,
+            "label": "Action",
+            "required": false,
+            "defaultValue": "deploy",
             "options": {
-                "Kubernetes Service Connection": "Kubernetes Service Connection",
-                "None": "None"
+                "bake": "bake",
+                "createSecret": "create secret",
+                "delete": "delete",
+                "deploy": "deploy",
+                "patch": "patch",
+                "promote": "promote",
+                "scale": "scale",
+                "reject": "reject"
             },
-            "groupName": "kubernetesCluster",
-            "helpMarkDown": "Select a service connection type."
+            "helpMarkDown": "Choose the action to be performed."
         },
         {
-            "name": "kubernetesServiceEndpoint",
+            "name": "kubernetesServiceConnection",
             "type": "connectedService:kubernetes",
             "label": "Kubernetes service connection",
-            "visibleRule": "connectionType = Kubernetes Service Connection",
             "helpMarkDown": "Select a Kubernetes service connection.",
-            "groupName": "kubernetesCluster",
+            "visibleRule": "action != bake",
             "required": true
         },
         {
@@ -60,62 +52,43 @@
             "label": "Namespace",
             "required": true,
             "defaultValue": "default",
-            "groupName": "kubernetesCluster",
+            "visibleRule": "action != bake",
             "helpMarkDown": "Sets the namespace for the commands by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
         },
         {
-            "name": "action",
-            "type": "pickList",
-            "label": "Action",
-            "required": false,
-            "defaultValue": "deploy",
-            "groupName": "config",
-            "options": {
-                "bake": "bake",
-                "deploy": "deploy",
-                "patch": "patch",
-                "scale": "scale",
-                "delete": "delete"
-            },
-            "helpMarkDown": "Choose the action to be performed."
-        },
-        {
-            "name": "deploymentStrategy",
+            "name": "strategy",
             "type": "pickList",
             "label": "Strategy",
             "required": false,
-            "groupName": "config",
-            "defaultValue": "None",
+            "defaultValue": "none",
             "options": {
-              "canary": "Canary",
-              "None": "None"
+                "canary": "Canary",
+                "none": "None"
             },
-            "helpMarkDown": "Strategy for deployment",
-            "visibleRule": "action = deploy"
-          },
-          {
+            "helpMarkDown": "Deployment strategy to be used",
+            "visibleRule": "action = deploy || action = promote || action = reject"
+        },
+        {
             "name": "percentage",
             "type": "string",
             "label": "Percentage",
             "required": true,
-            "groupName": "config",
             "helpMarkDown": "",
             "defaultValue": 0,
-            "visibleRule": "deploymentStrategy = Canary",  
+            "visibleRule": "strategy = Canary && action = deploy",
             "validation": {
-              "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')", 
-              "message": "Enter valid percentage value i.e between 0 to 100."
+                "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
+                "message": "Enter valid percentage value i.e between 0 to 100."
             }
-          },
+        },
         {
             "name": "manifests",
             "type": "filePath",
             "label": "Manifests",
             "required": true,
             "defaultValue": "",
-            "groupName": "config",
             "helpMarkDown": "Manifests to deploy",
-            "visibleRule": "action = deploy"
+            "visibleRule": "action = deploy || action = promote || action = reject"
         },
         {
             "name": "containers",
@@ -123,9 +96,17 @@
             "label": "Containers",
             "required": false,
             "defaultValue": "",
-            "groupName": "config",
             "helpMarkDown": "Containers",
-            "visibleRule": "action = deploy"
+            "visibleRule": "action = deploy || action = promote"
+        },
+        {
+            "name": "imagePullSecrets",
+            "type": "multiLine",
+            "label": "ImagePullSecrets",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "ImagePullSecret to pull image from private registry",
+            "visibleRule": "action = deploy || action = promote"
         },
         {
             "name": "renderType",
@@ -133,7 +114,6 @@
             "label": "Render Engine",
             "required": false,
             "defaultValue": "helm2",
-            "groupName": "config",
             "visibleRule": "action = bake",
             "options": {
                 "helm2": "Helm 2"
@@ -146,7 +126,6 @@
             "label": "Helm Chart",
             "required": true,
             "defaultValue": "",
-            "groupName": "config",
             "helpMarkDown": "Helm chart path to bake",
             "visibleRule": "action = bake && renderType = helm2"
         },
@@ -156,7 +135,6 @@
             "label": "Override Files",
             "required": false,
             "defaultValue": "",
-            "groupName": "config",
             "helpMarkDown": "Override files to set",
             "visibleRule": "action = bake && renderType = helm2"
         },
@@ -166,7 +144,6 @@
             "label": "Overrides",
             "required": false,
             "defaultValue": "",
-            "groupName": "config",
             "helpMarkDown": "Override values to set",
             "visibleRule": "action = bake && renderType = helm2"
         },
@@ -180,7 +157,6 @@
                 "file": "file",
                 "name": "name"
             },
-            "groupName": "config",
             "helpMarkDown": "to identify the resource",
             "visibleRule": "action = patch"
         },
@@ -190,7 +166,6 @@
             "label": "File path",
             "required": true,
             "defaultValue": "",
-            "groupName": "config",
             "helpMarkDown": "Path to the file used for patch",
             "visibleRule": "action = patch && resourceToPatch = file"
         },
@@ -200,7 +175,6 @@
             "label": "Kind",
             "required": true,
             "defaultValue": "",
-            "groupName": "config",
             "helpMarkDown": "Kind of K8s object; deployment, replicaSet etc.",
             "visibleRule": "action = scale || resourceToPatch = name"
         },
@@ -210,7 +184,6 @@
             "label": "Name",
             "required": true,
             "defaultValue": "",
-            "groupName": "config",
             "helpMarkDown": "Name of the k8s object",
             "visibleRule": "action = scale || resourceToPatch = name"
         },
@@ -220,7 +193,6 @@
             "label": "Replica count",
             "required": true,
             "defaultValue": "",
-            "groupName": "config",
             "helpMarkDown": "Number of replicas to scale to",
             "visibleRule": "action = scale"
         },
@@ -235,17 +207,14 @@
                 "merge": "merge",
                 "strategic": "strategic"
             },
-            "groupName": "config",
             "helpMarkDown": "The type of patch being provided; one of [json merge strategic]",
             "visibleRule": "action = patch"
         },
         {
-            "name": "args",
+            "name": "arguments",
             "type": "string",
             "label": "Arguments",
-            "required": true,
             "defaultValue": "",
-            "groupName": "config",
             "helpMarkDown": "Arguments for `kubectl delete` command",
             "visibleRule": "action = delete"
         },
@@ -254,9 +223,50 @@
             "type": "string",
             "label": "Patch",
             "required": true,
-            "groupName": "config",
             "helpMarkDown": "Contents of patch",
             "visibleRule": "action = patch"
+        },
+        {
+            "name": "secretType",
+            "type": "pickList",
+            "label": "Type of secret",
+            "defaultValue": "dockerRegistry",
+            "required": true,
+            "visibleRule": "action = createSecret",
+            "options": {
+                "dockerRegistry": "dockerRegistry",
+                "generic": "generic"
+            },
+            "helpMarkDown": "Create/update a generic or docker imagepullsecret. Select dockerRegistry to create/update the imagepullsecret of the selected registry. An imagePullSecret is a way to pass a secret that contains a container registry password to the Kubelet so it can pull a private image on behalf of your Pod."
+        },
+        {
+            "name": "secretName",
+            "type": "string",
+            "label": "Secret name",
+            "required": false,
+            "visibleRule": "action = createSecret",
+            "defaultValue": "",
+            "helpMarkDown": "Name of the secret. You can use this secret name in the Kubernetes YAML configuration file."
+        },
+        {
+            "name": "secretArguments",
+            "type": "multiLine",
+            "properties": {
+                "resizable": "true",
+                "rows": "2",
+                "editorExtension": "ms.vss-services-azure.kubernetes-parameters-grid"
+            },
+            "label": "Arguments",
+            "defaultValue": "",
+            "helpMarkDown": "Specify keys and literal values to insert in secret.For example, --from-literal=key1=value1 --from-literal=key2=\"top secret\".",
+            "visibleRule": "action = createSecret && secretType = generic"
+        },
+        {
+            "name": "dockerRegistryEndpoint",
+            "type": "connectedService:dockerregistry",
+            "label": "Docker registry service connection",
+            "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
+            "visibleRule": "action = createSecret && secretType = dockerRegistry"
         }
     ],
     "dataSourceBindings": [],
@@ -283,7 +293,10 @@
         "UnknownRenderType": "Unknown render engine",
         "ResourceKindNotDefined": "Resource kind is null",
         "NullInputObject": "Input object is null.",
+        "ArgumentsInputNotSupplied": "Arguments are not supplied.",
         "NullInputObjectMetadata": "Input object metadata is null.",
-        "CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment"
+        "CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
+        "InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
+        "InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary"
     }
 }

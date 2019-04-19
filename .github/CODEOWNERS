@@ -81,6 +81,54 @@ Tasks/CmdLineV2/*   @bryanmacfarlane
 
 Tasks/CocoaPodsV0/*     @madhurig
 
+Tasks/Common/AzureRmDeploy-common/*   @vincentdass  @SumiranAgg
+
+Tasks/Common/Deployment/*   @bishal-pdMSFT  @chshrikh
+
+Tasks/Common/MSBuildHelpers/*   @ericsciple   @austin-jensen
+
+Tasks/Common/PowershellHelpers/*  @bishal-pdMSFT  @hiyadav
+
+Tasks/Common/RemoteDeployer/*   @arjgupta
+
+Tasks/Common/ServiceFabricHelpers/*   @bishal-pdMSFT  @tejasd1990
+
+Tasks/Common/TlsHelper_/*   @rajatagrawal-dev   @arjgupta
+
+Tasks/Common/VstsAzureHelpers_/*  @rajatagrawal-dev   @vincentdass
+
+Tasks/Common/VstsAzureRestHelpers_/*  @Ajay-MS  @rajatagrawal-dev
+
+Tasks/Common/azure-arm-rest/*   @vincentdass    @Ajay-MS
+
+Tasks/Common/azure-blobstorage-artifactProvider/*   @omeshp   @hiyadav
+
+Tasks/Common/azurestack-common/*    @Ajay-MS
+
+Tasks/Common/codeanalysis-common/*    @lkillgore
+
+Tasks/Common/codecoverage-tools/*     @nigurr   @lkillgore
+
+Tasks/Common/docker-common/*      @jikuma   @vithati
+
+Tasks/Common/find-files-legacy/*      @nigurr
+
+Tasks/Common/ios-signing-common/*     @madhurig   @hashtagchris
+
+Tasks/Common/java-common/*        @madhurig   @kelliejos
+
+Tasks/Common/kubernetes-common/*      @nishubansal    @ds-ms
+
+Tasks/Common/packaging-common-old/*   @jotaylo
+
+Tasks/Common/packaging-common/*     @jotaylo
+
+Tasks/Common/securefiles-common/*   @madhurig   @hashtagchris
+
+Tasks/Common/utility-common/*       @nishubansal    @ds-ms
+
+Tasks/Common/webdeployment-common/*   @SumiranAgg   @vincentdass
+
 Tasks/CondaEnvironmentV0/*      @madhurig
 
 Tasks/CondaEnvironmentV1/*      @madhurig
@@ -119,7 +167,7 @@ Tasks/DownloadFileshareArtifactsV0/*    @Lovakumar      @omeshp
 
 Tasks/DownloadGitHubReleasesV0/*    @Lovakumar      @gykuma
 
-Tasks/DownloadPackageV0/*       @zackrun
+Tasks/DownloadPackageV0/*       @zjrunner
 
 Tasks/DownloadPipelineArtifactV0/*      @mihaif
 
@@ -149,6 +197,8 @@ Tasks/HelmDeployV0/*    @bansalaseem
 
 Tasks/HelmInstallerV0/*     @bansalaseem
 
+Tasks/HelmInstallerV1/*     @bansalaseem
+
 Tasks/IISWebAppDeployment/*     @kmkumaran
 
 Tasks/IISWebAppDeploymentOnMachineGroupV0/*     @kmkumaran
@@ -169,6 +219,8 @@ Tasks/JenkinsDownloadArtifactsV1/*      @Lovakumar      @kasubram
 
 Tasks/JenkinsQueueJobV2/*   @madhurig
 
+Tasks/KubectlInstallerV0/*  @bansalaseem
+
 Tasks/KubernetesV0/*    @bansalaseem
 
 Tasks/KubernetesV1/*    @bansalaseem
@@ -187,19 +239,19 @@ Tasks/MysqlDeploymentOnMachineGroupV1/*     @kmkumaran      @RoshanKumarMicrosof
 
 Tasks/NodeToolV0/*      @hross
 
-Tasks/NpmV1/*       @zackrun
+Tasks/NpmV1/*       @zjrunner @jotaylo
 
-Tasks/NpmAuthenticateV0/*       @zackrun
+Tasks/NpmAuthenticateV0/*       @zjrunner
 
-Tasks/NuGetV0/*     @zackrun
+Tasks/NuGetV0/*     @zjrunner
 
-Tasks/NuGetCommandV2/*      @zackrun
+Tasks/NuGetCommandV2/*      @zjrunner @jotaylo
 
-Tasks/NuGetPackagerV0/*     @zackrun
+Tasks/NuGetPackagerV0/*     @zjrunner
 
-Tasks/NuGetPublisherV0/*    @zackrun
+Tasks/NuGetPublisherV0/*    @zjrunner
 
-Tasks/NuGetToolInstallerV0/*    @zackrun
+Tasks/NuGetToolInstallerV0/*    @zjrunner
 
 Tasks/PackerBuildV0/*   @sachinma
 
@@ -257,9 +309,13 @@ Tasks/SqlServerDacpacDeployment/*   @kmkumaran
 
 Tasks/SshV0/*   @madhurig
 
-Tasks/TwineAuthenticateV0/*     @zackrun
+Tasks/TwineAuthenticateV0/*     @zjrunner
 
-Tasks/UniversalPackagesV0/*     @zackrun
+Tasks/UniversalPackagesV0/*     @zjrunner
+
+Tasks/UseDotNetV2/*     @damccorm
+
+Tasks/UseNodeV1/*     @damccorm
 
 Tasks/UsePythonVersionV0/*      @madhurig
 

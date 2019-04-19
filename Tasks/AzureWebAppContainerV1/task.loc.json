@@ -10,7 +10,6 @@
     "Build",
     "Release"
   ],
-  "preview": "true",
   "runsOn": [
     "Agent",
     "DeploymentGroup"
@@ -19,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 10
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -37,17 +36,6 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscription"
-    },
-    {
-      "name": "osType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.osType",
-      "defaultValue": "Linux",
-      "required": true,
-      "options": {
-        "Linux": "Linux",
-        "Windows": "Windows"
-      }
     },
     {
       "name": "appName",
@@ -94,11 +82,22 @@
     },
     {
       "name": "imageName",
-      "type": "string",
+      "aliases": [
+        "containers"
+      ],
+      "type": "multiline",
       "label": "ms-resource:loc.input.label.imageName",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.imageName"
+    },
+    {
+      "name": "multicontainerConfigFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.multicontainerConfigFile",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.multicontainerConfigFile"
     },
     {
       "name": "containerCommand",
@@ -142,10 +141,7 @@
     {
       "target": "appName",
       "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureWebAppContainerNamesByOSType",
-      "parameters": {
-        "osType": "$(osType)"
-      }
+      "dataSourceName": "AzureWebAppContainerNames"
     },
     {
       "target": "resourceGroupName",
@@ -326,6 +322,12 @@
     "RestartedAppService": "ms-resource:loc.messages.RestartedAppService",
     "RestartedAppServiceSlot": "ms-resource:loc.messages.RestartedAppServiceSlot",
     "FailedToRestartAppService": "ms-resource:loc.messages.FailedToRestartAppService",
-    "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot"
+    "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "FailedToGetConfigurationFile": "ms-resource:loc.messages.FailedToGetConfigurationFile",
+    "FailedToDeployToWebApp": "ms-resource:loc.messages.FailedToDeployToWebApp",
+    "SingleContainerDeployment": "ms-resource:loc.messages.SingleContainerDeployment",
+    "MultiContainerDeploymentWithTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithTransformation",
+    "MultiContainerDeploymentWithoutTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithoutTransformation"
   }
 }

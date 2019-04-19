@@ -6,7 +6,7 @@
                 "dest": "./"
             },
             {
-                "url": "https://testexecution.blob.core.windows.net/testexecution/8958107/TestAgent.zip",
+                "url": "https://testexecution.blob.core.windows.net/testexecution/9265029/TestAgent.zip",
                 "dest": "./Modules"
             },
             {
@@ -28,5 +28,16 @@
                 "dest": "./vswhere.exe"
             }
         ]
-    }
+    },
+    "rm": [
+        {
+            "items": [
+                "Modules/*.pdb",
+                "Tests/*.pdb",
+                "TestSelector/*.pdb",
+                "TestSelector/14.0/*.pdb"
+            ],
+            "options": "-Rf"
+        }
+    ]
 }

@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 138,
-        "Patch": 16
+        "Minor": 151,
+        "Patch": 2
     },
     "demands": [],
     "groups": [
@@ -429,6 +429,7 @@
         "SkipDeleteSecureFiles": "TLS not enabled in the Task. Skipping delete of certificates.",
         "SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
         "FileNotFound": "File not found at %s",
-        "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found."
+        "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

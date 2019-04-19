@@ -1,5 +1,5 @@
-import * as toolLib from 'vsts-task-tool-lib/tool';
-import * as taskLib from 'vsts-task-lib/task';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
+import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as restm from 'typed-rest-client/RestClient';
 import * as path from 'path';
 import * as commandHelper from './CommandHelper';

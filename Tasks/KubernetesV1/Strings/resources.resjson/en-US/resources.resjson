@@ -65,7 +65,7 @@
   "loc.input.label.versionOrLocation": "Kubectl",
   "loc.input.help.versionOrLocation": "kubectl is a command line interface for running commands against Kubernetes clusters.",
   "loc.input.label.versionSpec": "Version spec",
-  "loc.input.help.versionSpec": "Version Spec of version to get.  Examples: 1.7.0, 1.x.0, 4.x.0, 6.10.0, >=6.10.0",
+  "loc.input.help.versionSpec": "Version Spec of version to get.  Examples: 1.7.0, 1.x.0, 4.x.0, 6.10.0",
   "loc.input.label.checkLatest": "Check for latest version",
   "loc.input.help.checkLatest": "Always checks online for the latest available version (stable.txt) that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
   "loc.input.label.specifyLocation": "Path to kubectl",
@@ -95,5 +95,10 @@
   "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
   "loc.messages.OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
   "loc.messages.InvalidConfiguration": "No Kubernetes configuration found, supply either inline configuration or configuration file path",
-  "loc.messages.WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+  "loc.messages.CallToolRunnerExec": "Calling Toolrunner exec() method asynchronously to execute the kubectl command and store the returned promise object.",
+  "loc.messages.ReturningToolRunnerExecPromise": "Called Toolrunner exec() method asynchronously. Returning the promise.",
+  "loc.messages.ToolRunnerExecCallFailed": "Toolrunner exec() method returned error for the kubectl command. Error: %s.",
+  "loc.messages.ToolRunnerExecCallSucceeded": "Toolrunner exec() method returned successfully for the kubectl command.",
+  "loc.messages.WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }

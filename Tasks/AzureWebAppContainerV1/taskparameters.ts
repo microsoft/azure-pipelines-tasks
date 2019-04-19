@@ -3,6 +3,8 @@ import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/Azure
 import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
 import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
+import { PackageUtility } from 'azurermdeploycommon/webdeployment-common/packageUtility';
+import fs = require('fs');
 
 const osTypeMap = new Map([
     [ 'app,conatiner,xenon', 'Windows' ],
@@ -14,15 +16,15 @@ export class TaskParametersUtility {
     public static async getParameters(): Promise<TaskParameters> {
         var taskParameters: TaskParameters = {
             connectedServiceName: tl.getInput('azureSubscription', true),
-            ImageName: tl.getInput('imageName', true),
+            ImageName: tl.getInput('imageName', false),
             AppSettings: tl.getInput('appSettings', false),
             StartupCommand: tl.getInput('containerCommand', false),
             ConfigurationSettings: tl.getInput('configurationStrings', false),
             WebAppName: tl.getInput('appName', true),
-            OSType: tl.getInput('osType', false),
             DeployToSlotOrASEFlag: tl.getBoolInput('deployToSlotOrASE', false),
             ResourceGroupName: tl.getInput('resourceGroupName', false),
-            SlotName:tl.getInput('slotName', false)
+            SlotName: tl.getInput('slotName', false),
+            MulticontainerConfigFile: tl.getPathInput('multicontainerConfigFile', false)
         }
 
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
@@ -36,29 +38,69 @@ export class TaskParametersUtility {
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
 
+        let containerDetails = await this.getContainerKind(taskParameters);
+        taskParameters.ImageName = containerDetails["imageName"];
+        taskParameters.isMultiContainer = containerDetails["isMultiContainer"];
+        taskParameters. MulticontainerConfigFile = containerDetails["multicontainerConfigFile"];
+
         return taskParameters;
     }
 
     private static async getWebAppKind(taskParameters: TaskParameters): Promise<any> {
-        var resourceGroupName = taskParameters.ResourceGroupName;
-        var osType = taskParameters.OSType;
+        let resourceGroupName: string = taskParameters.ResourceGroupName;
+        let osType: string;
         if (!resourceGroupName) {
             var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);
             resourceGroupName = appDetails["resourceGroupName"];
-            if(!osType) {
-                osType = osTypeMap.get(appDetails["kind"]) ? osTypeMap.get(appDetails["kind"]) : appDetails["kind"];
-            }
+            osType = osTypeMap.get(appDetails["kind"]) ? osTypeMap.get(appDetails["kind"]) : appDetails["kind"];
             
             tl.debug(`Resource Group: ${resourceGroupName}`);
         }
-        else if(!osType) {
+        else {
             var appService = new AzureAppService(taskParameters.azureEndpoint, taskParameters.ResourceGroupName, taskParameters.WebAppName);
             var configSettings = await appService.get(true);
             osType = osTypeMap.get(configSettings.kind) ? osTypeMap.get(configSettings.kind) : configSettings.kind;
         }
+        
         return {
             resourceGroupName: resourceGroupName,
             osType: osType
+        };
+    }
+
+    private static async getContainerKind(taskParameters: TaskParameters): Promise<any> {
+        let imageName = taskParameters.ImageName;
+        let isMultiLineImages: boolean = imageName && imageName.indexOf("\n") != -1; 
+        let isMultiContainer = false;
+        let multicontainerConfigFile = PackageUtility.getPackagePath(taskParameters.MulticontainerConfigFile);
+
+        if(!imageName && tl.stats(multicontainerConfigFile).isDirectory()) {
+            throw new Error(tl.loc('FailedToDeployToWebApp', taskParameters.WebAppName));
+        }
+
+        if(imageName && !isMultiLineImages && tl.stats(multicontainerConfigFile).isDirectory()) {
+            console.log(tl.loc("SingleContainerDeployment", taskParameters.WebAppName));
+        }
+
+        if(tl.stats(multicontainerConfigFile).isFile()) {
+            isMultiContainer = true;
+            if(imageName) {
+                console.log(tl.loc("MultiContainerDeploymentWithTransformation", taskParameters.WebAppName));
+            }
+            else {
+                console.log(tl.loc("MultiContainerDeploymentWithoutTransformation", taskParameters.WebAppName));
+            }
+        }
+        else if (isMultiLineImages) {
+            throw new Error(tl.loc('FailedToGetConfigurationFile'));
+        }
+
+        tl.debug(`is multicontainer app : ${isMultiContainer}`);
+
+        return {
+            imageName: imageName,
+            isMultiContainer: isMultiContainer,
+            multicontainerConfigFile: multicontainerConfigFile
         };
     }
 }
@@ -66,7 +108,7 @@ export class TaskParametersUtility {
 export interface TaskParameters {
     azureEndpoint?: AzureEndpoint;
     connectedServiceName: string;
-    OSType: string;
+    OSType?: string;
     WebAppName: string;
     AppSettings?: string;
     StartupCommand?: string;
@@ -76,4 +118,6 @@ export interface TaskParameters {
     DeployToSlotOrASEFlag?: boolean;
     SlotName?: string;
     isLinuxContainerApp?: boolean;
+    MulticontainerConfigFile?: string;
+    isMultiContainer?: boolean;
 }

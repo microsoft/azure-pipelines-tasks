@@ -15,10 +15,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 9
   },
   "demands": [],
-  "preview": "true",
   "minimumAgentVersion": "2.0.0",
   "groups": [
     {
@@ -335,6 +334,7 @@
     "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
-    "CreateManagedImageNotSupportedForVHDSource": "ms-resource:loc.messages.CreateManagedImageNotSupportedForVHDSource"
+    "CreateManagedImageNotSupportedForVHDSource": "ms-resource:loc.messages.CreateManagedImageNotSupportedForVHDSource",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

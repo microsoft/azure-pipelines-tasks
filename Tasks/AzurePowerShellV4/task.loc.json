@@ -17,7 +17,7 @@
   "version": {
     "Major": 4,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 5
   },
   "preview": true,
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -149,6 +149,10 @@
       "platforms": [
         "windows"
       ]
+    },
+    "Node": {
+      "target": "azurepowershell.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -156,6 +160,7 @@
     "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
     "InvalidAzurePsVersion": "ms-resource:loc.messages.InvalidAzurePsVersion",
     "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
-    "JS_Stderr": "ms-resource:loc.messages.JS_Stderr"
+    "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

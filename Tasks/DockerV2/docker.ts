@@ -2,16 +2,14 @@
 
 import path = require('path');
 import * as tl from "vsts-task-lib/task";
-import GenericAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/genericauthenticationtokenprovider";
 import RegistryAuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
 import ContainerConnection from 'docker-common/containerconnection';
-import Q = require('q');
+import { getDockerRegistryEndpointAuthenticationToken } from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-let containerRegisitry = tl.getInput("containerRegistry");
-let authenticationProvider = new GenericAuthenticationTokenProvider(containerRegisitry);        
-let registryAuthenticationToken = authenticationProvider.getAuthenticationToken();
+let endpointId = tl.getInput("containerRegistry");
+let registryAuthenticationToken: RegistryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
 
 // Take the specified command
 let command = tl.getInput("command", true).toLowerCase();

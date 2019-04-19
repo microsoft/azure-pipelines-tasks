@@ -184,5 +184,6 @@
   "loc.messages.FailedToSyncTriggers": "Failed to sync triggers for function app '%s'. Error: %s",
   "loc.messages.SyncingFunctionTriggers": "Syncing triggers for function app",
   "loc.messages.SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully",
-  "loc.messages.UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s"
+  "loc.messages.UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }

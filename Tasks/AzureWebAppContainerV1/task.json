@@ -10,7 +10,6 @@
         "Build",
         "Release"
     ],
-    "preview": "true",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
@@ -19,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 10
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -37,18 +36,6 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
-        },
-        {
-            "name": "osType",
-            "type": "pickList",
-            "label": "App OS type",
-            "defaultValue": "Linux",
-            "required": true,
-            "options": {
-                "Linux": "Linux",
-                "Windows": "Windows"
-                
-            }
         },
         {
             "name": "appName",
@@ -95,11 +82,22 @@
         },
         {
             "name": "imageName",
-            "type": "string",
+            "aliases": [
+                "containers"
+            ],
+            "type": "multiline",
             "label": "Image name",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
+            "required": false,
+            "helpMarkDown": "Specify the fully qualified container image name. For example, '<b>myregistry.azurecr.io</b>/nginx:latest' or '<b>python:3.7.2-alpine</b>/'. For multi-container scenario multiple container image names can be provided."
+        },
+        {
+            "name": "multicontainerConfigFile",
+            "type": "filePath",
+            "label": "Configuration File",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path of the Docker-Compose file. Should be a fully qualified path or relative to the default working directory."
         },
         {
             "name": "containerCommand",
@@ -143,10 +141,7 @@
         {
             "target": "appName",
             "endpointId": "$(azureSubscription)",
-            "dataSourceName": "AzureWebAppContainerNamesByOSType",
-            "parameters": {
-                "osType": "$(osType)"
-            }
+            "dataSourceName": "AzureWebAppContainerNames"
         },
         {
             "target": "resourceGroupName",
@@ -327,6 +322,12 @@
         "RestartedAppService": "App Service '%s' restarted successfully.",
         "RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
         "FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
-        "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s"
+        "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "FailedToGetConfigurationFile": "Failed to locate the Docker-Compose file which is required for deploying multi-container apps. Please enter a valid Docker-Compose file path.",
+        "FailedToDeployToWebApp": "Deployment to the webapp '%s' failed. For single-container, just specify a valid image name. For multi-container specifying a Docker-Compose file is mandatory and specifying image names is optional. Provided images names if the tags in Docker-Compose file need to be substituted.",
+        "SingleContainerDeployment": "Single-container Deployment to the webapp '%s' as only the image detail was sepcified.",
+        "MultiContainerDeploymentWithTransformation": "Multi-container deployment to the webapp '%s' with the transformation of Docker-Compose file as both image name and Docker-Compose file were specified",
+        "MultiContainerDeploymentWithoutTransformation": "Multi-container deployment to the webapp '%s' without transformation of Docker-Compose file because only Docker-Compose file was specified."
     }
 }

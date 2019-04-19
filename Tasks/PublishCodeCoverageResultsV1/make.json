@@ -13,5 +13,13 @@
             ],
             "options": "-Rf"
         }
-    ]
+    ],
+    "externals": {
+        "archivePackages": [
+            {
+                "url": "https://github.com/danielpalme/ReportGenerator/releases/download/v4.0.15/ReportGenerator_4.0.15.zip",
+                "dest": "./"
+            }
+        ]
+    }
 }

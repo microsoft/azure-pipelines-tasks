@@ -7,9 +7,8 @@ import * as util from "util";
 import * as yaml from "js-yaml";
 const uuidV4 = require('uuid/v4');
 const kubectlToolName = "kubectl";
-export const stableKubectlVersion = "v1.13.2";
+export const stableKubectlVersion = "v1.14.0";
 import { WebRequest, sendRequest } from "./restutilities";
-import { async } from "q";
 
 var fs = require('fs');
 
@@ -46,7 +45,7 @@ export async function downloadKubectl(version: string) : Promise<string> {
     }
     
     var kubectlPath = path.join(cachedToolpath, kubectlToolName + getExecutableExtention());
-    fs.chmod(kubectlPath, "777");
+    fs.chmodSync(kubectlPath, "777");
     return kubectlPath;
 }
 

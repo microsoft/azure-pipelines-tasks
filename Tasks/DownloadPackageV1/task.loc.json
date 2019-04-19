@@ -9,10 +9,12 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 148,
-    "Patch": 3
+    "Minor": 151,
+    "Patch": 2
   },
   "demands": [],
+  "preview": true,
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
   "groups": [
     {
@@ -27,13 +29,13 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.packageType",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.packageType",
-      "defaultValue": "NuGet",
+      "defaultValue": "nuget",
       "options": {
         "maven": "Maven",
         "npm": "Npm",
         "nuget": "NuGet",
-        "pypi": "Python"
+        "pypi": "Python",
+        "upack": "Universal"
       }
     },
     {
@@ -44,8 +46,7 @@
       "required": true,
       "properties": {
         "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.feed"
+      }
     },
     {
       "name": "view",
@@ -84,8 +85,8 @@
       "name": "files",
       "type": "string",
       "label": "ms-resource:loc.input.label.files",
-      "defaultValue": "*",
-      "visibleRule": "packageType == 'maven' || packageType == 'pypi' || packageType == 'universal'",
+      "defaultValue": "**",
+      "visibleRule": "packageType = maven || packageType = pypi || packageType = upack",
       "required": false,
       "properties": {
         "EditableOptions": "True"
@@ -99,7 +100,7 @@
       "label": "ms-resource:loc.input.label.extract",
       "defaultValue": "true",
       "required": false,
-      "visibleRule": "packageType == 'nuget' || packageType == 'npm'",
+      "visibleRule": "packageType = nuget || packageType = npm",
       "properties": {
         "EditableOptions": "True"
       },

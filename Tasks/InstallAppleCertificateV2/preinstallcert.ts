@@ -1,10 +1,8 @@
 import path = require('path');
 import sign = require('ios-signing-common/ios-signing-common');
 import secureFilesCommon = require('securefiles-common/securefiles-common');
-import tl = require('vsts-task-lib/task');
+import * as tl from 'azure-pipelines-task-lib/task';
 import os = require('os');
-
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 async function run() {
     let secureFileId: string;
@@ -20,6 +18,7 @@ async function run() {
 
         // download decrypted contents
         secureFileId = tl.getInput('certSecureFile', true);
+        
         secureFileHelpers = new secureFilesCommon.SecureFileHelpers();
         let certPath: string = await secureFileHelpers.downloadSecureFile(secureFileId);
 

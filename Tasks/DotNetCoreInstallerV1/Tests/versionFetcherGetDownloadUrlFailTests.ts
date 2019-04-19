@@ -1,4 +1,5 @@
 import * as tl from 'vsts-task-lib/task';
+import * as os from 'os';
 import { toolrunner } from './mocks/mockedModels'
 var mockery = require('mockery');
 
@@ -38,8 +39,7 @@ mockery.registerMock('vsts-task-lib/task', {
                 code: 0,
                 error: null,
                 stderr: "",
-                stdout: `Primary:win-x64
-                Legacy:win-x64`
+                stdout: `Primary:win-x64${os.EOL}Legacy:win-x64`
             });
         }
         else if (process.env["__ostype__"].toLowerCase().includes("linux")) {
@@ -47,8 +47,7 @@ mockery.registerMock('vsts-task-lib/task', {
                 code: 0,
                 error: null,
                 stderr: "",
-                stdout: `Primary:linux-x64
-                Legacy:ubuntu16.04`
+                stdout: `Primary:linux-x64${os.EOL}Legacy:ubuntu16.04`
             });
         }
         else if (process.env["__ostype__"].toLowerCase().includes("osx")) {
@@ -56,8 +55,7 @@ mockery.registerMock('vsts-task-lib/task', {
                 code: 0,
                 error: null,
                 stderr: "",
-                stdout: `Primary:osx-x64
-                Legacy:osx-x64`
+                stdout: `Primary:osx-x64${os.EOL}Legacy:osx-x64`
             });
         }
     },
@@ -74,7 +72,8 @@ import { VersionInfo } from '../models';
 
 let versionFetcher = new DotNetCoreVersionFetcher();
 try {
-    let downloadUrl = versionFetcher.getDownloadUrl(JSON.parse(process.env["__versioninfo__"]) as VersionInfo, "sdk");
+    let versionInfo = new VersionInfo(JSON.parse(process.env["__versioninfo__"]), "sdk");
+    let downloadUrl = versionFetcher.getDownloadUrl(versionInfo);
     if (downloadUrl) {
         tl.setResult(tl.TaskResult.Succeeded, "succeeded");
     }

@@ -139,6 +139,7 @@
         "FailedToGetAzureMetricAlerts": "Failed to get Azure metric alerts: %s. Error: %s",
         "FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s",
         "ResponseNotValid": "Response is not in a valid format",
-        "NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s"
+        "NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }
