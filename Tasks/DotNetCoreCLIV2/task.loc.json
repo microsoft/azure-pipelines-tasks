@@ -120,7 +120,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.arguments",
       "defaultValue": "",
-      "visibleRule": "command = build || command = publish || command = run || command = test || command = custom || command = pack",
+      "visibleRule": "command = build || command = publish || command = run || command = test || command = custom",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.arguments"
     },
