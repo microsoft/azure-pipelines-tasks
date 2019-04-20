@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=859947",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-monitor-alerts",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 6
+    "Patch": 7
   },
   "minimumAgentVersion": "2.111.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

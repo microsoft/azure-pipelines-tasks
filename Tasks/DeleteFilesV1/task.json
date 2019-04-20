@@ -1,9 +1,9 @@
 {
     "id": "B7E8B412-0437-4065-9371-EDC5881DE25B",
     "name": "DeleteFiles",
-    "friendlyName": "Delete Files",
-    "description": "Delete files or folders. (The minimatch patterns will only match file paths, not folder paths)",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=722333",
+    "friendlyName": "Delete files",
+    "description": "Delete folders, or files matching a pattern",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/delete-files",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=722333)",
     "category": "Utility",
     "visibility": [
@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 7
+        "Patch": 8
     },
     "demands": [],
     "minimumAgentVersion": "1.92.0",

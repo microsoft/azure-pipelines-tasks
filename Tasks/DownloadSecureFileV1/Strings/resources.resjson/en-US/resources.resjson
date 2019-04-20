@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Download Secure File",
+  "loc.friendlyName": "Download secure file",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "Download a secure file to a temporary location on the build or release agent",
+  "loc.description": "Download a secure file to a temporary location on the agent machine",
   "loc.instanceNameFormat": "Download secure file",
   "loc.input.label.secureFile": "Secure File",
-  "loc.input.help.secureFile": "Select the secure file to download to a temporary location on the agent. The file will be cleaned up after the build or release."
+  "loc.input.help.secureFile": "Select the secure file to download to a temporary location on the agent. The file will be cleaned up after the pipeline runs."
 }
