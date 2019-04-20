@@ -62,7 +62,7 @@
   "loc.input.label.nobuild": "Do not build",
   "loc.input.help.nobuild": "Don't build the project before packing. Corresponds to the --no-build command line parameter.",
   "loc.input.label.includesymbols": "Include Symbols",
-  "loc.input.help.includesymbols": "Additionally creates symbol nuget packages. Corresponds to the --include-symbols command line parameter.",
+  "loc.input.help.includesymbols": "Additionally creates symbol NuGet packages. Corresponds to the --include-symbols command line parameter.",
   "loc.input.label.includesource": "Include Source",
   "loc.input.help.includesource": "Includes source code in the package. Corresponds to the --include-source command line parameter.",
   "loc.input.label.versioningScheme": "Automatic package versioning",
