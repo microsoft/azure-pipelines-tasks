@@ -372,7 +372,7 @@
             "type": "boolean",
             "label": "Include Symbols",
             "defaultValue": "false",
-            "helpMarkDown": "Additionally creates symbol nuget packages. Corresponds to the --include-symbols command line parameter.",
+            "helpMarkDown": "Additionally creates symbol NuGet packages. Corresponds to the --include-symbols command line parameter.",
             "required": false,
             "visibleRule": "command = pack"
         },
