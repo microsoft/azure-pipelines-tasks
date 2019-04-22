@@ -233,6 +233,22 @@ describe('NuGetCommand Suite', function () {
         done();
     });
 
+    it('pushes successfully to internal project scoped feed using VstsNuGetPush.exe', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './PublishTests/internalFeedVstsNuGetPushProjectScoped.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 1, 'should have run VstsNuGetPush once');
+        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\VstsNuGetPush.exe c:\\agent\\home\\directory\\foo.nupkg -Source https://vsts/ProjectId/packagesource -AccessToken token -NonInteractive'), 'it should have run NuGet');
+        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
+        assert(tr.stdOutContained('VstsNuGetPush output here'), "should have VstsNuGetPush output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
     it('succeeds when conflict occurs using VstsNuGetPush.exe (allow conflict)', (done: MochaDone) => {
         this.timeout(1000);
 

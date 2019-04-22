@@ -8,43 +8,43 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr);
 
 nmh.setNugetVersionInputDefault();
-tmr.setInput('command', 'restore');
-tmr.setInput('solution', 'packages.config');
-tmr.setInput('selectOrConfig', 'select');
-tmr.setInput('feed', 'projectId/feedId');
+tmr.setInput('command', 'push');
+tmr.setInput('searchPatternPush', 'foo.nupkg');
+tmr.setInput('nuGetFeedType', 'internal');
+tmr.setInput('feedPublish', 'ProjectId/FeedFooId');
+tmr.setInput('allowPackageConflicts', 'false');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
     "checkPath": {
-        "c:\\agent\\home\\directory\\packages.config": true
+        "c:\\agent\\home\\directory\\foo.nupkg": true
     },
     "which": {},
     "exec": {
-        "c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config": {
+        "c:\\agent\\home\\directory\\externals\\nuget\\VstsNuGetPush.exe c:\\agent\\home\\directory\\foo.nupkg -Source https://vsts/ProjectId/packagesource -AccessToken token -NonInteractive": {
             "code": 0,
-            "stdout": "NuGet output here",
+            "stdout": "VstsNuGetPush output here",
             "stderr": ""
         }
     },
     "exist": {},
     "stats": {
-        "c:\\agent\\home\\directory\\packages.config": {
+        "c:\\agent\\home\\directory\\foo.nupkg": {
             "isFile": true
         }
-    },
-    "rmRF": {
-        "c:\\agent\\home\\directory\\tempNuGet_.config": { success: true }
     }, 
     "findMatch": {
-        "packages.config" : ["c:\\agent\\home\\directory\\packages.config"]
+        "foo.nupkg" : ["c:\\agent\\home\\directory\\foo.nupkg"]
     }
 };
 nmh.setAnswers(a);
 
-process.env["NuGet_ForceEnableCredentialConfig"] = "false";
-nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\packages.config"]);
+process.env["NUGET_FORCEVSTSNUGETPUSHFORPUSH"] = "true";
+process.env["SYSTEM_SERVERTYPE"] = "Hosted";
+nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\foo.nupkg"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 nmh.registerNugetConfigMock();
+nmh.registerVstsNuGetPushRunnerMock();
 
 tmr.run();
