@@ -155,7 +155,9 @@ export async function run(nuGetPath: string): Promise<void> {
                 const feedProjectParts = feedProject.split("/");
                 project = feedProjectParts[0] || null;
                 feed = feedProjectParts[1];
-            }            if (feed) {
+            }            
+            
+            if (feed) {
                 const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(
                     packagingLocation.DefaultPackagingUri,
                     feed,

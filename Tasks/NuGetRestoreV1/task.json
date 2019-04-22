@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 148,
+        "Minor": 152,
         "Patch": 0
     },
     "runsOn": [
@@ -116,7 +116,7 @@
         "endpointId": "tfs:feed",
         "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
         "resultSelector": "jsonpath:$.value[*]",
-        "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {

@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('NuGetRestore Suite', function () {
     before(() => {
@@ -137,8 +137,23 @@ describe('NuGetRestore Suite', function () {
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
+    
+    it('restore select vsts source for project scoped feed', (done: MochaDone) => {
+        this.timeout(1000);
 
-        it('restore select nuget.org source', (done: MochaDone) => {
+        let tp = path.join(__dirname, 'selectSourceVstsProjectScopedFeed.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet with a vsts source');
+        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
+    it('restore select nuget.org source', (done: MochaDone) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'selectSourceNuGetOrg.js')
