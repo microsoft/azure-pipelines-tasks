@@ -103,7 +103,7 @@ export async function run(): Promise<void> {
             }
 
             if (feed) {
-                const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed,project, null, accessToken);
+                const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed, project, null, accessToken);
                 sources.push(<auth.IPackageSource>
                     {
                         feedName: feed,
