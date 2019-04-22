@@ -27,7 +27,7 @@ export function registerLocationHelpersMock(tmr: tmrm.TaskMockRunner) {
         getSystemAccessToken: function() {
             return "token";
         },
-        getFeedRegistryUrl: function(packagingUrl: string, registryType, feedId: string, accessToken?: string) {
+        getFeedRegistryUrl: function(packagingUrl: string, registryType, feedId: string, project: string, accessToken?: string) {
             return packagingUrl + "/" + feedId;
         },
         ProtocolType: {NuGet: 1, Npm: 2, Maven: 3, PyPi: 4},
