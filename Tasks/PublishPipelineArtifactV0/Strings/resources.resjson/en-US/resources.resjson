@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Publish pipeline artifact",
+  "loc.friendlyName": "Publish Pipeline Artifact",
   "loc.helpMarkDown": "Publish a local directory or file as a named artifact for the current pipeline.",
   "loc.description": "Publish a local directory or file as a named artifact for the current pipeline",
   "loc.instanceNameFormat": "Publish Pipeline Artifact",
