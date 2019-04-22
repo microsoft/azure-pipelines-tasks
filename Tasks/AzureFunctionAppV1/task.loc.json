@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 13
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -127,7 +127,8 @@
       "label": "ms-resource:loc.input.label.startUpCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "appType = functionAppLinux"
+      "visibleRule": "appType = functionAppLinux",
+      "helpMarkDown": "ms-resource:loc.input.help.startUpCommand"
     },
     {
       "name": "customWebConfig",

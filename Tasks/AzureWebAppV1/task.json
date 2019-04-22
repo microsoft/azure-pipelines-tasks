@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 12
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -123,7 +123,8 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "appType = webAppLinux"
+            "visibleRule": "appType = webAppLinux",
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
         },
         {
             "name": "customWebConfig",
