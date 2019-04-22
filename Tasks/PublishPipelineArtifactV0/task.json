@@ -21,8 +21,8 @@
             "name": "artifactName",
             "type": "string",
             "label": "The name of this artifact",
-            "defaultValue": "drop",
-            "required": true,
+            "defaultValue": "",
+            "required": false,
             "helpMarkDown": "The name of this artifact."
         },
         {
