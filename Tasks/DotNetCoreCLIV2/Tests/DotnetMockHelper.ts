@@ -80,6 +80,7 @@ export class DotnetMockHelper {
             getNuGetFeedRegistryUrl(
                 packagingCollectionUrl: string,
                 feedId: string,
+                project: string,
                 nuGetVersion: VersionInfo,
                 accessToken?: string,
                 useSession?: boolean) {
