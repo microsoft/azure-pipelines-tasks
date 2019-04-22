@@ -15,7 +15,7 @@ tl.setResourcePath(path.join(__dirname, "task.json"));
 async function main(): Promise<void> {
     // Getting inputs.
     let packageType = tl.getInput("packageType");
-    let feedId = tl.getInput("feed");
+    let projectFeed = tl.getInput("feed");
     let viewId = tl.getInput("view");
     let packageId = tl.getInput("definition");
     let version = tl.getInput("version");
@@ -35,6 +35,14 @@ async function main(): Promise<void> {
             return Promise.resolve();
         }
 
+        var feedId = projectFeed;
+        var project = null;
+        if(projectFeed.includes("/")) {
+            const projectFeedParts = projectFeed.split("/");
+            project = projectFeedParts[0] || null;
+            feedId = projectFeedParts[1];
+        }
+        
         if (packageType === "upack") {
             return await downloadUniversalPackage(downloadPath, feedId, packageId, version, filesPattern);
         }
@@ -59,7 +67,7 @@ async function main(): Promise<void> {
             .withRetries(Retry(retryLimit))
             .build();
 
-        const packageFiles: PackageFile[] = await p.download(feedId, packageId, version, downloadPath, extractPackage);
+        const packageFiles: PackageFile[] = await p.download(feedId, project, packageId, version, downloadPath, extractPackage);
 
         packageFiles.forEach(packageFile => {
             packageFile.process();
@@ -71,6 +79,7 @@ async function main(): Promise<void> {
         logTelemetry({
             PackageType: packageType,
             FeedId : feedId,
+            Project: project,
             ViewId : viewId,
             PackageId: packageId,
             Version: version,

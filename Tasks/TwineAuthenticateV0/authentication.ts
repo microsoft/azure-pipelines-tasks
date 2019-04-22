@@ -62,6 +62,7 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<AuthIn
             packagingLocation,
             pkgLocationUtils.RegistryType.PyPiUpload,
             feedName,
+            null,
             localAccessToken,
             true /* useSession */);
         return new AuthInfo({

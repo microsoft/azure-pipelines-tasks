@@ -9,8 +9,8 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 151,
-    "Patch": 3
+    "Minor": 152,
+    "Patch": 0
   },
   "demands": [],
   "preview": true,
@@ -122,7 +122,7 @@
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "view",
@@ -130,7 +130,7 @@
       "parameters": {
         "feed": "$(feed)"
       },
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds/{{{feed}}}/views",
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]*/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}/views",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
@@ -142,7 +142,7 @@
         "view": "$(view)",
         "packageType": "$(packageType)"
       },
-      "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false&protocolType={{{packageType}}}",
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]*/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false&protocolType={{{packageType}}}",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
@@ -155,9 +155,9 @@
         "definition": "$(definition)",
         "packageType": "$(packageType)"
       },
-      "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false&protocolType={{{packageType}}}",
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]*/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false&protocolType={{{packageType}}}",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{{normalizedVersion}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

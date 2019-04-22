@@ -148,11 +148,18 @@ export async function run(nuGetPath: string): Promise<void> {
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === "select") {
             const sources: auth.IPackageSource[] = new Array<auth.IPackageSource>();
-            const feed = tl.getInput("feedRestore");
-            if (feed) {
+            const feedProject = tl.getInput('feedRestore');
+            var project = null;
+            var feed = feedProject;
+            if(feedProject && feedProject.includes("/")) {
+                const feedProjectParts = feedProject.split("/");
+                project = feedProjectParts[0] || null;
+                feed = feedProjectParts[1];
+            }            if (feed) {
                 const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(
                     packagingLocation.DefaultPackagingUri,
                     feed,
+                    project,
                     nuGetVersion,
                     accessToken);
                 sources.push({

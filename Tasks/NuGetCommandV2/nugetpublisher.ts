@@ -139,11 +139,19 @@ export async function run(nuGetPath: string): Promise<void> {
             authInfo = new auth.NuGetExtendedAuthInfo(internalAuthInfo);
             nuGetConfigHelper = new NuGetConfigHelper2(nuGetPath, null, authInfo, environmentSettings, null);
 
-            const internalFeedId = tl.getInput("feedPublish");
+            const feedProject = tl.getInput('feedPublish');
+            var project = null;
+            var internalFeedId = feedProject;
+            if(feedProject && feedProject.includes("/")) {
+                const feedProjectParts = feedProject.split("/");
+                project = feedProjectParts[0] || null;
+                internalFeedId = feedProjectParts[1];
+            }
             const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
             feedUri = await nutil.getNuGetFeedRegistryUrl(
                 packagingLocation.DefaultPackagingUri,
                 internalFeedId,
+                project,
                 nuGetVersion,
                 accessToken,
                 true /* useSession */);

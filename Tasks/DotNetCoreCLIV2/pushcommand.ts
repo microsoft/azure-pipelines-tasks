@@ -99,8 +99,16 @@ export async function run(): Promise<void> {
                 tempNuGetPath,
                 false /* useNugetToModifyConfigFile */);
 
-            const internalFeedId = tl.getInput('feedPublish');
-            feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, internalFeedId, null, accessToken, /* useSession */ true);
+            const feedProject = tl.getInput('feedPublish');
+            var project = null;
+            var internalFeedId = feedProject;
+            if(feedProject && feedProject.includes("/")) {
+                const feedProjectParts = feedProject.split("/");
+                project = feedProjectParts[0] || null;
+                internalFeedId = feedProjectParts[1];
+            }
+
+            feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, internalFeedId, project, null, accessToken, /* useSession */ true);
             nuGetConfigHelper.addSourcesToTempNuGetConfig([<auth.IPackageSource>{ feedName: internalFeedId, feedUri: feedUri, isInternal: true }]);
             configFile = nuGetConfigHelper.tempNugetConfigPath;
             credCleanup = () => { tl.rmRF(tempNuGetConfigDirectory); };
