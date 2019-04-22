@@ -243,7 +243,7 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppKind = functionAppLinux",
-            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run filename.exe<br/>dotnet filename.dll"
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
         },
         {
             "name": "ScriptType",
