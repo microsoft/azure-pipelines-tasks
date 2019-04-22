@@ -15,20 +15,9 @@ export const recognizedWorkloadTypes: string[] = ["deployment", "replicaset", "d
 export const recognizedWorkloadTypesWithRolloutStatus: string[] = ["deployment", "daemonset", "statefulset"];
 
 let isRelease = utils.isEqual(tl.getVariable("SYSTEM_HOSTTYPE"), "release", utils.StringComparer.OrdinalIgnoreCase);
+const orgUrl = tl.getVariable("System.TeamFoundationCollectionUri");
 
 export let pipelineAnnotations: string[] = [];
-const devAzurePrefix = "dev.azure.com";
-const vstsPrefix = "visualstudio.com";
-
-let orgName = "";
-let orgUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-if (orgUrl.indexOf(devAzurePrefix) > -1) {
-    orgName = orgName.substring(orgName.indexOf(devAzurePrefix) + devAzurePrefix.length).trim().replace("/", "");
-}
-
-if (orgUrl.indexOf(vstsPrefix) > -1) {
-    orgName = orgName.split(".")[0].replace("https://", "");
-}
 
 if (isRelease) {
     pipelineAnnotations = [
@@ -38,7 +27,7 @@ if (isRelease) {
         `azure-pipelines/jobName="${tl.getVariable("Agent.JobName")}"`,
         `azure-pipelines/runuri=${orgUrl}${tl.getVariable("System.TeamProject")}/_releaseProgress?releaseId=${tl.getVariable("Release.ReleaseId")}`,
         `azure-pipelines/project=${tl.getVariable("System.TeamProject")}`,
-        `azure-pipelines/org=${orgName}`
+        `azure-pipelines/org=${orgUrl}`
     ];
 }
 else {
@@ -49,6 +38,6 @@ else {
         `azure-pipelines/jobName="${tl.getVariable("Agent.JobName")}"`,
         `azure-pipelines/runuri=${orgUrl}${tl.getVariable("System.TeamProject")}/_build/results?buildId=${tl.getVariable("Build.BuildId")}`,
         `azure-pipelines/project=${tl.getVariable("System.TeamProject")}`,
-        `azure-pipelines/org=${orgName}`
+        `azure-pipelines/org=${orgUrl}`
     ];
 }
