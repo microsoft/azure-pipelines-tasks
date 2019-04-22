@@ -3,7 +3,7 @@
     "name": "VSTest",
     "friendlyName": "Visual Studio Test",
     "description": "Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test (VsTest) runner. Test frameworks that have a Visual Studio test adapter such as MsTest, xUnit, NUnit, Chutzpah (for JavaScript tests using QUnit, Mocha and Jasmine), etc. can be run. Tests can be distributed on multiple agents using this task (version 2).",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=835764",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/vstest",
     "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkId=835764)",
     "category": "Test",
     "visibility": [
@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 151,
-        "Patch": 1
+        "Patch": 4
     },
     "demands": [
         "vstest"

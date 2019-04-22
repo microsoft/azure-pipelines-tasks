@@ -1,15 +1,15 @@
 {
     "id": "61F2A582-95AE-4948-B34D-A1B3C4F6A737",
     "name": "DownloadPipelineArtifact",
-    "friendlyName": "Download Pipeline Artifact",
-    "description": "Download Pipeline Artifact",
-    "helpMarkDown": "Download named artifact from a pipeline to a local path.",
+    "friendlyName": "Download pipeline artifact",
+    "description": "Download a named artifact from a pipeline to a local path",
+    "helpMarkDown": "Download a named artifact from a pipeline to a local path",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 2
     },
     "groups": [],
     "demands": [],
