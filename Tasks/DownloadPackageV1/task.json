@@ -13,7 +13,6 @@
         "Patch": 0
     },
     "demands": [],
-    "preview": true,
     "releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",
     "minimumAgentVersion": "2.115.0",
     "groups": [
