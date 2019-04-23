@@ -9,7 +9,7 @@ import { Helm, NameValuePair } from "utility-common/helm-object-model";
 
 const uuidV4 = require('uuid/v4');
 
-export async function bake() {
+export async function bake(ignoreSslErrors?: boolean) {
     let renderType = tl.getInput("renderType", true);
     switch (renderType) {
         case "helm2":
