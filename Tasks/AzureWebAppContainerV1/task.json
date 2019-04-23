@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 12
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -104,7 +104,8 @@
             "type": "string",
             "label": "Startup command ",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
         },
         {
             "name": "appSettings",
