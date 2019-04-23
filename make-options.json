@@ -104,6 +104,7 @@
         "NpmAuthenticateV0",
         "NuGetV0",
         "NuGetCommandV2",
+        "NuGetInstallerV0",
         "NuGetPackagerV0",
         "NuGetPublisherV0",
         "NuGetToolInstallerV0",
