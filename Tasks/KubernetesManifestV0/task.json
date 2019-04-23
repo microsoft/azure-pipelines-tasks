@@ -171,10 +171,15 @@
         },
         {
             "name": "kind",
-            "type": "string",
+            "type": "pickList",
             "label": "Kind",
             "required": true,
             "defaultValue": "",
+            "options": {
+                "deployment": "deployment",
+                "replicaset": "replicaset",
+                "statefulset": "statefulset"
+            },
             "helpMarkDown": "Kind of K8s object; deployment, replicaSet etc.",
             "visibleRule": "action = scale || resourceToPatch = name"
         },
