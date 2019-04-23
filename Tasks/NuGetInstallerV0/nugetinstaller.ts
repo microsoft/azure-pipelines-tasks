@@ -10,6 +10,7 @@ import * as ngToolGetter from "packaging-common/nuget/NuGetToolGetter";
 import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner";
 import * as nutil from "packaging-common/nuget/Utility";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
+// Test
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
