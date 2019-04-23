@@ -32,8 +32,10 @@ function Import-AzureRMModule {
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
         $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
         if (!$module) {
-            Write-Verbose "No module found with name: $moduleName"
-            return $false
+            $azureRMModulePath = $($env:SystemDrive + "\Modules\azurerm_2.1.0")
+            $env:PSModulePath = $azureRMModulePath + ";" + $env:PSModulePath
+            $env:PSModulePath = $env:PSModulePath.TrimStart(';')
+            $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
         }
 
         # Import the module.
