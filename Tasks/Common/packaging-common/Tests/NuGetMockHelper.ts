@@ -1,7 +1,6 @@
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 
 import {VersionInfo} from '../pe-parser/VersionResource'
-import { isRegExp } from 'util';
 	
 export function registerNugetToolGetterMock(tmr: tmrm.TaskMockRunner) {
     tmr.registerMock('packaging-common/nuget/NuGetToolGetter', {
