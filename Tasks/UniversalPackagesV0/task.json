@@ -1,16 +1,16 @@
 {
     "id": "e0b79640-8625-11e8-91be-db2878ff888a",
     "name": "UniversalPackages",
-    "friendlyName": "Universal Packages",
-    "description": "Download or publish Universal Packages.",
+    "friendlyName": "Universal packages",
+    "description": "Download or publish Universal Packages",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://aka.ms/universalpackagesannounce",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[More Information](https://aka.ms/universalpackagesannounce)",
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 148,
-        "Patch": 0
+        "Minor": 151,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -406,9 +406,9 @@
     "messages": {
         "PackagesDownloadedSuccessfully": "Package were downloaded successfully",
         "PackagesFailedToDownload": "Packages failed to download",
-        "ConnectingAs": "Connecting to feeds in your Azure Pipelines/TFS project collection as '%s' [%s]",
+        "ConnectingAs": "Connecting to feeds in your Azure DevOps organization as '%s' [%s]",
         "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
-        "CouldNotFindUniversalPackagesService": "Could not find the Universal Packages service. This task will not be able to authenticate to feeds hosted in your Azure Pipelines/TFS project collection.",
+        "CouldNotFindUniversalPackagesService": "Could not find the Universal Packages service. This task will not be able to authenticate to feeds hosted in your Azure DevOps organization.",
         "Error_NoValueFoundForEnvVar": "No value was found for the provided environment variable.",
         "PackagesPublishedSuccessfully": "Packages were published successfully",
         "PackagesFailedToPublish": "Packages failed to publish",
@@ -431,10 +431,11 @@
         "Info_UsingToolPath": "Using tool path: %s",
         "Info_UsingVersion": "Using version: %s",
         "FailedToGetPackageMetadata": "Failed to get package metadata.",
-        "FailedToGetArtifactTool": "Failed to get artifact tool from service. %s",
+        "FailedToGetArtifactTool": "Failed to get artifact tool. %s",
         "Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",
         "FailedToGetLatestPackageVersion": "Failed to get package versions",
         "Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages",
-        "Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server."
+        "Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server.",
+        "Error_ProcessorArchitectureNotSupported": "Universal Packages require an x64 agent."
     }
 }

@@ -1,0 +1,75 @@
+{
+  "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
+  "name": "UseDotNet",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Tool",
+  "preview": true,
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 0,
+    "Patch": 1
+  },
+  "satisfies": [
+    "DotNetCore"
+  ],
+  "demands": [],
+  "ecosystem": "dotnet",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "version",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.version",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.version"
+    },
+    {
+      "name": "packageType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.packageType",
+      "defaultValue": "sdk",
+      "helpMarkDown": "ms-resource:loc.input.help.packageType",
+      "required": false,
+      "options": {
+        "runtime": "Runtime",
+        "sdk": "SDK (contains runtime)"
+      }
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "usedotnet.js"
+    }
+  },
+  "messages": {
+    "ToolFailed": "ms-resource:loc.messages.ToolFailed",
+    "ImplicitVersionNotSupported": "ms-resource:loc.messages.ImplicitVersionNotSupported",
+    "getMachinePlatformFailed": "ms-resource:loc.messages.getMachinePlatformFailed",
+    "getDownloadUrlsFailed": "ms-resource:loc.messages.getDownloadUrlsFailed",
+    "UsingCachedTool": "ms-resource:loc.messages.UsingCachedTool",
+    "CheckingToolCache": "ms-resource:loc.messages.CheckingToolCache",
+    "InstallingAfresh": "ms-resource:loc.messages.InstallingAfresh",
+    "GettingDownloadUrl": "ms-resource:loc.messages.GettingDownloadUrl",
+    "CouldNotDetectPlatform": "ms-resource:loc.messages.CouldNotDetectPlatform",
+    "NullDownloadUrls": "ms-resource:loc.messages.NullDownloadUrls",
+    "DownloadingUrl": "ms-resource:loc.messages.DownloadingUrl",
+    "ExtractingPackage": "ms-resource:loc.messages.ExtractingPackage",
+    "CachingTool": "ms-resource:loc.messages.CachingTool",
+    "SuccessfullyInstalled": "ms-resource:loc.messages.SuccessfullyInstalled",
+    "ToolToInstall": "ms-resource:loc.messages.ToolToInstall",
+    "PrimaryPlatform": "ms-resource:loc.messages.PrimaryPlatform",
+    "LegacyPlatform": "ms-resource:loc.messages.LegacyPlatform",
+    "WarningVersionNotFound": "ms-resource:loc.messages.WarningVersionNotFound",
+    "CouldNotDownload": "ms-resource:loc.messages.CouldNotDownload",
+    "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
+    "PrependGlobalToolPath": "ms-resource:loc.messages.PrependGlobalToolPath",
+    "VersionsFileMalformed": "ms-resource:loc.messages.VersionsFileMalformed"
+  },
+  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+}

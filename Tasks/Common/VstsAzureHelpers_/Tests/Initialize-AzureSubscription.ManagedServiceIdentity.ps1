@@ -6,6 +6,7 @@ param()
 Microsoft.PowerShell.Core\Import-Module Microsoft.PowerShell.Security
 Unregister-Mock Import-Module
 Register-Mock Write-VstsTaskError
+Register-Mock Get-VstsWebProxy { }
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 
 $endpoint = @{

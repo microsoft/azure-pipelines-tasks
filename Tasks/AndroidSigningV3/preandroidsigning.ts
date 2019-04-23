@@ -1,8 +1,6 @@
 import * as path from 'path';
 import * as secureFilesCommon from 'securefiles-common/securefiles-common';
-import * as tl from 'vsts-task-lib/task';
-
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 async function run() {
     try {

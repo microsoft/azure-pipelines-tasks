@@ -1,0 +1,49 @@
+{
+  "id": "11EA7CF0-8A3E-4B5A-98A2-8756CC3094B0",
+  "name": "DuffleInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "preview": true,
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 5
+  },
+  "demands": [],
+  "groups": [],
+  "inputs": [
+    {
+      "name": "version",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.version",
+      "defaultValue": "0.1.0-ralpha.4+dramallamabuie",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.version"
+    },
+    {
+      "name": "checkLatestVersion",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkLatestVersion",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.checkLatestVersion"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "src//duffle.js"
+    }
+  },
+  "messages": {
+    "DownloadDuffleFailed": "ms-resource:loc.messages.DownloadDuffleFailed",
+    "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed"
+  }
+}

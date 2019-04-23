@@ -3,14 +3,13 @@
   "name": "AzureFunctionAppContainer",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/azurefunctiononcontainerdeployreadme",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-functionapp-containers",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Build",
     "Release"
   ],
-  "preview": "true",
   "runsOn": [
     "Agent",
     "DeploymentGroup"
@@ -19,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 10
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -310,6 +309,13 @@
     "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
-    "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName"
+    "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName",
+    "RestartingAppService": "ms-resource:loc.messages.RestartingAppService",
+    "RestartingAppServiceSlot": "ms-resource:loc.messages.RestartingAppServiceSlot",
+    "RestartedAppService": "ms-resource:loc.messages.RestartedAppService",
+    "RestartedAppServiceSlot": "ms-resource:loc.messages.RestartedAppServiceSlot",
+    "FailedToRestartAppService": "ms-resource:loc.messages.FailedToRestartAppService",
+    "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

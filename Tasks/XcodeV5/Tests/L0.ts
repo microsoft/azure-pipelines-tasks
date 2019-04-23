@@ -3,7 +3,7 @@
 
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('Xcode L0 Suite', function () {
     before(() => {
@@ -13,6 +13,167 @@ describe('Xcode L0 Suite', function () {
     after(() => {
 
     });
+
+    it('run Xcode with all default inputs', function (done: MochaDone) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        let tp = path.join(__dirname, 'L0XcodeDefaults.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+        assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
+                '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme myscheme build'),
+            'xcodebuild for building the ios project/workspace should have been run.');
+        assert(tr.invokedToolCount == 2, 'should have run xcodebuild version, and xcodebuild build');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('run Xcode with project and no workspace', function (done: MochaDone) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        let tp = path.join(__dirname, 'L0XcodeNoWorkspace.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+        assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
+                'build -project test.xcodeproj'),
+            'xcodebuild for building the ios project should have been run.');
+        assert(tr.invokedToolCount == 2, 'should have run xcodebuild version, and xcodebuild build.');
+        assert(tr.stderr.length == 0, 'should not have written to stderr std=' + tr.stdout + ' err=' + tr.stderr);
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('run Xcode build with test action, with xcpretty', function (done: MochaDone) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        let tp = path.join(__dirname, 'L0Xcpretty.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+
+        assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
+                '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme myscheme test ' +
+                '| /home/bin/xcpretty -r junit --no-color'),
+            'xcodebuild for running tests in the ios project/workspace should have been run with xcpretty formatting.');
+
+        assert(tr.invokedToolCount == 2, 'should have xcodebuild for version, xcodebuild for test with xcpretty');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('run Xcode build with test action, without choosing xcpretty', function (done: MochaDone) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        let tp = path.join(__dirname, 'L0NoXcpretty.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+
+        assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
+                '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme myscheme test'),
+            'xcodebuild for running tests in the ios project/workspace should have been run without xcpretty formatting.');
+
+        assert(tr.stdout.search(/##vso\[results.publish type=JUnit;publishRunAttachments=true;resultFiles=\/user\/build\/build\/reports\/junit.xml;\]/) < 0,
+            'publish test results should not have been called');
+
+        assert(tr.stdout.search(/[When using xcodebuild, check 'Use xcpretty' to publish test results. No results will be published.]/) >=0,
+            'warning should have been provided that test results cannot be published with xcodebuild if xcpretty is not used.');
+
+        assert(tr.invokedToolCount == 2, 'should have xcodebuild for version, xcodebuild for test with xcpretty');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('run Xcode build, signing with P12 and provisioning profile', function (done: MochaDone) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        let tp = path.join(__dirname, 'L0Signing.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+        assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid PROVISIONING_PROFILE_SPECIFIER='),
+            'xcodebuild for building the ios project/workspace should have been run with signing options.');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('run Xcode build, signing with P12 only, no provisioning profile', function (done: MochaDone) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        let tp = path.join(__dirname, 'L0SigningWithP12.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+        assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE= PROVISIONING_PROFILE_SPECIFIER='),
+            'xcodebuild for building the ios project/workspace should have been run with signing options with P12 signing identity, and empty provisioning profile/specifier values that override any values in the pbxproj file.');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('run Xcode build, signing with provisioning profile only, no P12', function (done: MochaDone) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        let tp = path.join(__dirname, 'L0SigningWithProfile.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+        assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE=testuuid PROVISIONING_PROFILE_SPECIFIER='),
+            'xcodebuild for building the ios project/workspace should have been run with signing options with provisioning profile only.');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('run Xcode with required arg is not specified', function (done: MochaDone) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        let tp = path.join(__dirname, 'L0ErrorArgs.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdout.search(/Input required: actions/) > 0, 'Error should be shown if actions are not specified.');
+        assert(tr.failed, 'task should have failed');
+        done();
+    });
+
+    it('run Xcode with optional args specified', function (done: MochaDone) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        let tp = path.join(__dirname, 'L0OptionalArgs.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+        assert(tr.ran('/home/bin/xcodebuild -sdk iphone -configuration Release -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun clean build -exportArchive -exportPath /user/build/output/iphone/release'),
+            'xcodebuild for building the ios project/workspace should have been run with all optional args.');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
 
     it('Xcode 7 create IPA with archive and auto export', function (done: MochaDone) {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
@@ -555,12 +716,23 @@ describe('Xcode L0 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdout.indexOf('##vso[task.issue type=error;]loc_mock_XcprettyNotInstalled') > 0, 'error message should indicate that xcpretty has to be installed.')
-        assert(tr.failed, 'post xcode task should have failed');
+        assert(tr.stdout.indexOf('##vso[task.issue type=warning;]loc_mock_XcprettyNotInstalled') > 0, 'warning message should indicate that xcpretty has to be installed.')
+        assert(tr.succeeded, 'post xcode task should have succeeded with warnings');
         done();
     });
 
+    it('postexecution should not fail for errors', function (done: MochaDone) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
+        let tp = path.join(__dirname, 'L0ErrorsInPostExecutionJob.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.succeeded, 'post xcode task should have succeeded with warnings even when there are errors.');
+        assert(tr.stdout.indexOf('XcodeRequiresMac'), 'warning for macos requirement should be shown.');
+        done();
+    });
 
     it('macOS auto export', function (done: MochaDone) {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);

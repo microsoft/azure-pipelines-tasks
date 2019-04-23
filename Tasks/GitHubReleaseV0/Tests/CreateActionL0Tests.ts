@@ -12,7 +12,10 @@ export class CreateActionL0Tests {
         tr.setInput(Inputs.gitHubConnection, "connection");
         tr.setInput(Inputs.repositoryName, "repo");
         tr.setInput(Inputs.action, "create");
+        tr.setInput(Inputs.tagSource, "manual");
+        tr.setInput(Inputs.tag, "tag");
         tr.setInput(Inputs.target, "master");
+        tr.setInput(Inputs.releaseNotesSource, "input");
         
         this.stub(tr);
         tr.run();

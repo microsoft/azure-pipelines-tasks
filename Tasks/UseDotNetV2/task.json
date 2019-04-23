@@ -1,0 +1,74 @@
+{
+    "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
+    "name": "UseDotNet",
+    "friendlyName": "Use dotnet",
+    "description": "Acquires a specific version of the .NET Core SDK from the internet or local cache and adds it to the PATH., additionally providing proxy support",
+    "category": "Tool",
+    "preview": true,
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 2,
+        "Minor": 0,
+        "Patch": 1
+    },
+    "satisfies": [
+        "DotNetCore"
+    ],
+    "demands": [],
+    "ecosystem": "dotnet",
+    "instanceNameFormat": "Use dotnet",
+    "inputs": [
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Version",
+            "required": false,
+            "helpMarkDown": "Version to use.  Examples: 1.1.13, 2.2.102"
+        },
+        {
+            "name": "packageType",
+            "type": "pickList",
+            "label": "Package to install",
+            "defaultValue": "sdk",
+            "helpMarkDown": "Please select whether to install only runtime or full SDK.",
+            "required": false,
+            "options": {
+                "runtime": "Runtime",
+                "sdk": "SDK (contains runtime)"
+            }
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "usedotnet.js"
+        }
+    },
+    "messages": {
+        "ToolFailed": "Tool install failed: %s",
+        "ImplicitVersionNotSupported": "Version should be a valid and explicit version: %s",
+        "getMachinePlatformFailed": "Failed to get machine platform details. Error: %s.",
+        "getDownloadUrlsFailed": "Failed to get download urls. Error: %s.",
+        "UsingCachedTool": "Cached copy of .NET Core exists. No need to install afresh. Cached tool location: %s.",
+        "CheckingToolCache": "Checking if a cached copy exists for this version...",
+        "InstallingAfresh": "The cache does not contain the requested version of .NET Core. Downloading and installing it now.",
+        "GettingDownloadUrl": "Getting URL to download .NET Core %s version: %s.",
+        "CouldNotDetectPlatform": "Could not detect the machine's OS",
+        "NullDownloadUrls": "Could not construct download URL. Please ensure that specified version %s is valid.",
+        "DownloadingUrl": "Downloading .NET Core package from URL: %s",
+        "ExtractingPackage": "Extracting downloaded package %s.",
+        "CachingTool": "Caching this installed tool.",
+        "SuccessfullyInstalled": "Successfully installed .NET Core %s version %s.",
+        "ToolToInstall": "Tool to install: .NET Core %s version %s.",
+        "PrimaryPlatform": "Detected platform (Primary): %s",
+        "LegacyPlatform": "Detected platform (Legacy): %s",
+        "WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/dotnet/core/blob/master/release-notes/releases.json. Falling back to creating convention based URL.",
+        "CouldNotDownload": "Could not download installation package from this URL: %s Error: %s",
+        "FailedToDownloadPackage": "Failed to download package for installation",
+        "PrependGlobalToolPath": "Creating global tool path and pre-prending to PATH.",
+        "VersionsFileMalformed": "The specified version's download links are not correctly formed in the supported versions document => %s/"
+    }
+}

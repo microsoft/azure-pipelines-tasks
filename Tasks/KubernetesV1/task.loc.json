@@ -3,7 +3,7 @@
   "name": "Kubernetes",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/kubernetes",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
-    "Patch": 24
+    "Minor": 151,
+    "Patch": 4
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -60,7 +60,7 @@
       "name": "connectionType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.connectionType",
-      "defaultValue": "Azure Resource Manager",
+      "defaultValue": "Kubernetes Service Connection",
       "required": true,
       "options": {
         "Azure Resource Manager": "Azure Resource Manager",
@@ -475,6 +475,12 @@
     "ConfigurationFileNotFound": "ms-resource:loc.messages.ConfigurationFileNotFound",
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
     "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
-    "InvalidConfiguration": "ms-resource:loc.messages.InvalidConfiguration"
+    "InvalidConfiguration": "ms-resource:loc.messages.InvalidConfiguration",
+    "CallToolRunnerExec": "ms-resource:loc.messages.CallToolRunnerExec",
+    "ReturningToolRunnerExecPromise": "ms-resource:loc.messages.ReturningToolRunnerExecPromise",
+    "ToolRunnerExecCallFailed": "ms-resource:loc.messages.ToolRunnerExecCallFailed",
+    "ToolRunnerExecCallSucceeded": "ms-resource:loc.messages.ToolRunnerExecCallSucceeded",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

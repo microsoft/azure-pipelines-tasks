@@ -1,6 +1,6 @@
 "use strict";
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import secureFilesCommon = require('securefiles-common/securefiles-common');
 import path = require('path');
 

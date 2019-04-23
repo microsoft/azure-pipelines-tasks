@@ -1,0 +1,44 @@
+{
+    "id": "8413C881-4959-43D5-8840-B4EA0FFC5CFD",
+    "name": "KubectlInstaller",
+    "friendlyName": "Kubectl tool installer",
+    "description": "Install Kubectl on agent machine",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "category": "Tool",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "preview": true,
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 151,
+        "Patch": 1
+    },
+    "demands": [],
+    "satisfies": [
+        "Kubectl"
+    ],
+    "groups": [],
+    "inputs": [
+        {
+            "name": "kubectlVersion",
+            "label": "Kubectl Version Spec",
+            "type": "string",
+            "helpMarkDown": "Specify the version of Kubectl to install",
+            "defaultValue": "latest"
+        }
+    ],
+    "instanceNameFormat": "Install Kubectl $(kubectlVersion)",
+    "execution": {
+        "Node": {
+            "target": "src//kubectltoolinstaller.js"
+        }
+    },
+    "messages": {
+        "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+        "VerifyKubectlInstallation": "Verifying kubectl installation..."
+    }
+}

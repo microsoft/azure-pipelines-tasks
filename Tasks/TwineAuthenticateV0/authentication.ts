@@ -1,5 +1,5 @@
+import * as tl from "azure-pipelines-task-lib/task";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import * as tl from "vsts-task-lib/task";
 
 export interface IPackageSource {
     feedUri: string;

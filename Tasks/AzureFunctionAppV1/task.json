@@ -2,15 +2,14 @@
     "id": "501DD25D-1785-43E4-B4E5-A5C78CCC0573",
     "name": "AzureFunctionApp",
     "friendlyName": "Azure Function",
-    "description": "Update Azure Function on Windows, Function on Linux with built-in images, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications",
-    "helpUrl": "https://aka.ms/azurefunctiondeployreadme",
+    "description": "Deploy an Azure Function for Linux or Windows",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[More information](https://aka.ms/azurefunctiondeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
         "Release"
     ],
-    "preview": "true",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
@@ -19,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 13
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -128,7 +127,8 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "appType = functionAppLinux"
+            "visibleRule": "appType = functionAppLinux",
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
         },
         {
             "name": "customWebConfig",
@@ -192,7 +192,7 @@
         {
             "target": "appName",
             "endpointId": "$(azureSubscription)",
-            "dataSourceName": "AzureRMWebAppNamesByAppType",
+            "dataSourceName": "AzureFunctionAppNamesByAppType",
             "parameters": {
                 "WebAppKind": "$(appType)"
             }
@@ -348,6 +348,7 @@
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
         "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
+        "UpdatedOnlyAppServiceApplicationSettings": "Updated App Service Application settings.",
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
         "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
@@ -373,6 +374,12 @@
         "JarPathNotPresent": "Java jar path is not present",
         "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
         "InvalidDockerImageName": "Invalid Docker hub image name provided.",
-        "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task."
+        "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task.",
+        "FailedToGetStorageAccountDetails": "Unable to find the storage account associated with the function app.",
+        "FailedToSyncTriggers": "Failed to sync triggers for function app '%s'. Error: %s",
+        "SyncingFunctionTriggers": "Syncing triggers for function app",
+        "SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully",
+        "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

@@ -1,16 +1,15 @@
 {
     "id": "13C22CE0-3B93-43F9-AEB7-71FBCE7BF5B2",
     "name": "AzureFunctionAppContainer",
-    "friendlyName": "Azure Function for Container",
-    "description": "Update Function Apps with Docker Containers",
-    "helpUrl": "https://aka.ms/azurefunctiononcontainerdeployreadme",
+    "friendlyName": "Azure Function for container",
+    "description": "Update Function Apps with Docker containers",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-functionapp-containers",
     "helpMarkDown": "[More information](https://aka.ms/azurefunctiononcontainerdeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
         "Release"
     ],
-    "preview": "true",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
@@ -19,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 10
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -96,7 +95,7 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Enter the start up command."
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
         },
         {
             "name": "appSettings",
@@ -311,6 +310,13 @@
         "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
         "JarPathNotPresent": "Java jar path is not present",
         "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
-        "InvalidDockerImageName": "Invalid Docker hub image name provided."
+        "InvalidDockerImageName": "Invalid Docker hub image name provided.",
+        "RestartingAppService": "Restarting App Service : %s",
+        "RestartingAppServiceSlot": "Restarting App Service: %s-%s",
+        "RestartedAppService": "App Service '%s' restarted successfully.",
+        "RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
+        "FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
+        "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }
