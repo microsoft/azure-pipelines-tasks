@@ -1,5 +1,5 @@
 import tl = require('vsts-task-lib/task');
-import { IExecOptions, IExecSyncResult, IExecSyncOptions } from 'vsts-task-lib/toolrunner';
+import { IExecOptions, IExecSyncResult, IExecSyncOptions, ToolRunner } from 'vsts-task-lib/toolrunner';
 
 export interface Resource {
     name: string;
@@ -9,8 +9,9 @@ export interface Resource {
 export class Kubectl {
     private kubectlPath: string;
     private namespace: string;
+    private ignoreSSLErrors: boolean;
 
-    constructor(kubectlPath: string, namespace?: string) {
+    constructor(kubectlPath: string, namespace?: string, ignoreSSLErrors?: boolean) {
         this.kubectlPath = kubectlPath;
         if (!!namespace) {
             this.namespace = namespace;
@@ -18,6 +19,8 @@ export class Kubectl {
         else {
             this.namespace = "default";
         }
+
+        this.ignoreSSLErrors = !!ignoreSSLErrors;
     }
 
     public apply(configurationPaths: string | string[]): IExecSyncResult {
@@ -25,7 +28,7 @@ export class Kubectl {
         command.arg("apply");
         command.arg(["-f", this.createInlineArray(configurationPaths)]);
         command.arg(["--namespace", this.namespace]);
-        return command.execSync();
+        return this.execute(command);
     }
 
     public annotate(resourceType: string, resourceName: string, annotations: string[], overwrite?: boolean): IExecSyncResult {
@@ -35,7 +38,7 @@ export class Kubectl {
         command.arg(["--namespace", this.namespace]);
         command.arg(annotations);
         if (!!overwrite) command.arg(`--overwrite`)
-        return command.execSync();
+        return this.execute(command);
     }
 
     public annotateFiles(files: string | string[], annotations: string[], overwrite?: boolean): IExecSyncResult {
@@ -45,7 +48,7 @@ export class Kubectl {
         command.arg(["--namespace", this.namespace]);
         command.arg(annotations);
         if (!!overwrite) command.arg(`--overwrite`)
-        return command.execSync();
+        return this.execute(command);
     }
 
     public createSecret(args: string, force?: boolean, secretName?: string): IExecSyncResult {
@@ -55,7 +58,7 @@ export class Kubectl {
             command.arg("secret");
             command.arg(["--namespace", this.namespace]);
             command.arg(secretName);
-            command.execSync();    
+            this.execute(command);
         }
 
         var command = tl.tool(this.kubectlPath);
@@ -63,7 +66,7 @@ export class Kubectl {
         command.arg("secret");
         command.arg(["--namespace", this.namespace]);
         command.line(args);
-        return command.execSync();
+        return this.execute(command);
     }
 
     public describe(resourceType, resourceName, silent?: boolean): IExecSyncResult {
@@ -71,7 +74,7 @@ export class Kubectl {
         command.arg("describe");
         command.arg([resourceType, resourceName]);
         command.arg(["--namespace", this.namespace]);
-        return command.execSync({ silent: !!silent } as IExecOptions);
+        return this.execute(command, silent);
     }
 
     public getNewReplicaSet(deployment): string {
@@ -95,7 +98,7 @@ export class Kubectl {
         command.arg("pods");
         command.arg(["--namespace", this.namespace]);
         command.arg(["-o", "json"])
-        return command.execSync({ silent: true } as IExecSyncOptions);
+        return this.execute(command, true)
     }
 
     public checkRolloutStatus(resourceType, name): IExecSyncResult {
@@ -103,7 +106,7 @@ export class Kubectl {
         command.arg(["rollout", "status"]);
         command.arg(resourceType + "/" + name);
         command.arg(["--namespace", this.namespace]);
-        return command.execSync();
+        return this.execute(command);
     }
 
     public getResource(resourceType: string, name: string): IExecSyncResult {
@@ -112,7 +115,7 @@ export class Kubectl {
         command.arg(resourceType + "/" + name);
         command.arg(["--namespace", this.namespace]);
         command.arg(["-o", "json"])
-        return command.execSync();
+        return this.execute(command);
     }
 
     public getResources(applyOutput: string, filterResourceTypes: string[]): Resource[] {
@@ -140,7 +143,7 @@ export class Kubectl {
         command.arg(resourceType + "/" + resourceName);
         command.arg(`--replicas=${replicas}`);
         command.arg(["--namespace", this.namespace]);
-        return command.execSync();
+        return this.execute(command);
     }
 
     public patch(resourceType, resourceName, patch, strategy) {
@@ -150,16 +153,23 @@ export class Kubectl {
         command.arg(["--namespace", this.namespace]);
         command.arg(`--type=${strategy}`);
         command.arg([`-p`, patch]);
-        return command.execSync();
+        return this.execute(command);
     }
 
     public delete(args) {
         var command = tl.tool(this.kubectlPath);
         command.arg("delete");
         command.line(args);
-        return command.execSync();
+        return this.execute(command);
     }
 
+    private execute(command: ToolRunner, silent?: boolean) {
+        if (this.ignoreSSLErrors) {
+            command.arg("--insecure-skip-tls-verify");
+        }
+
+        return command.execSync({ silent: !!silent } as IExecOptions);
+    }
 
     private createInlineArray(str: string | string[]): string {
         if (typeof str === "string") return str;
