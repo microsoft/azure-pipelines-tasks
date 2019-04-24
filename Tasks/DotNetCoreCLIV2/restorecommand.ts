@@ -9,6 +9,7 @@ import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 import * as nutil from 'packaging-common/nuget/Utility';
 import * as commandHelper from 'packaging-common/nuget/CommandHelper';
 import * as pkgLocationUtils from 'packaging-common/locationUtilities';
+import { getProjectAndFeedIdFromInputParam } from 'packaging-common/util';
 
 export async function run(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
@@ -92,18 +93,10 @@ export async function run(): Promise<void> {
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === 'select') {
             const sources: Array<auth.IPackageSource> = new Array<auth.IPackageSource>();
+            const feed = getProjectAndFeedIdFromInputParam('feedRestore');
 
-            const feedProject = tl.getInput('feedRestore');
-            var project = null;
-            var feed = feedProject;
-            if(feedProject && feedProject.includes("/")) {
-                const feedProjectParts = feedProject.split("/");
-                project = feedProjectParts[0] || null;
-                feed = feedProjectParts[1];
-            }
-
-            if (feed) {
-                const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed, project, null, accessToken);
+            if (feed.feedId) {
+                const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed.feedId, feed.projectId, null, accessToken);
                 sources.push(<auth.IPackageSource>
                     {
                         feedName: feed,

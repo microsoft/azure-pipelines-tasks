@@ -12,6 +12,7 @@ import * as nutil from "packaging-common/nuget/Utility";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as telemetry from "utility-common/telemetry";
 import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions2";
+import { getProjectAndFeedIdFromInputParam } from 'packaging-common/util';
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
@@ -148,24 +149,17 @@ export async function run(nuGetPath: string): Promise<void> {
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === "select") {
             const sources: auth.IPackageSource[] = new Array<auth.IPackageSource>();
-            const feedProject = tl.getInput('feedRestore');
-            var project = null;
-            var feed = feedProject;
-            if(feedProject && feedProject.includes("/")) {
-                const feedProjectParts = feedProject.split("/");
-                project = feedProjectParts[0] || null;
-                feed = feedProjectParts[1];
-            }            
-            
-            if (feed) {
+            const feed = getProjectAndFeedIdFromInputParam('feedRestore');
+
+            if (feed.feedId) {
                 const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(
                     packagingLocation.DefaultPackagingUri,
-                    feed,
-                    project,
+                    feed.feedId,
+                    feed.projectId,
                     nuGetVersion,
                     accessToken);
                 sources.push({
-                    feedName: feed,
+                    feedName: feed.feedId,
                     feedUri: feedUrl,
                     isInternal: true,
                 });

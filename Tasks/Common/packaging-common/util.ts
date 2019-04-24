@@ -75,3 +75,19 @@ export function toNerfDart(uri: string): string {
 
     return url.resolve(url.format(parsed), '.');
 }
+
+export function getProjectAndFeedIdFromInputParam(inputParam: string): any {
+    const feedProject = tl.getInput(inputParam);
+    var projectId = null;
+    var feedId = feedProject;
+    if(feedProject && feedProject.includes("/")) {
+        const feedProjectParts = feedProject.split("/");
+        projectId = feedProjectParts[0] || null;
+        feedId = feedProjectParts[1];
+    }
+
+    return {
+        feedId: feedId,
+        projectId: projectId
+    }
+}
