@@ -169,9 +169,9 @@ Tasks/DownloadGitHubReleasesV0/*    @Lovakumar      @gykuma
 
 Tasks/DownloadPackageV0/*       @zjrunner
 
-Tasks/DownloadPipelineArtifactV0/*      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
+Tasks/DownloadPipelineArtifactV0/*      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
-Tasks/DownloadPipelineArtifactV1/*      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
+Tasks/DownloadPipelineArtifactV1/*      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
 Tasks/DownloadSecureFileV1/*    @madhurig
 
@@ -271,9 +271,9 @@ Tasks/PublishBuildArtifactsV1/*     @madhurig
 
 Tasks/PublishCodeCoverageResultsV1/*    @madhurig
 
-Tasks/PublishPipelineArtifactV0/*       @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
+Tasks/PublishPipelineArtifactV0/*       @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
-Tasks/PublishSymbolsV2/*    @arunkm
+Tasks/PublishSymbolsV2/*    @arunkm @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
 
 Tasks/PublishTestResultsV1/*    @smalpani
 
