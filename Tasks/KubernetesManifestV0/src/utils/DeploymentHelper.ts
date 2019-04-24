@@ -15,7 +15,7 @@ import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import { Kubectl, Resource } from "kubernetes-common/kubectl-object-model";
 
 
-export function deploy(kubectl: Kubectl, manifestFilesPath: string, deploymentStrategy: string) {
+export function deploy(kubectl: Kubectl, manifestFilesPath: string[], deploymentStrategy: string) {
 
     // get manifest files
     var inputManifestFiles: string[] = getManifestFiles(manifestFilesPath);
@@ -37,7 +37,7 @@ export function deploy(kubectl: Kubectl, manifestFilesPath: string, deploymentSt
     annotateResources(deployedManifestFiles, kubectl, resourceTypes);
 }
 
-function getManifestFiles(manifestFilesPath: string): string[] {
+function getManifestFiles(manifestFilesPath: string[]): string[] {
     var files: string[] = utils.getManifestFiles(manifestFilesPath);
 
     if (files == null || files.length == 0) {
