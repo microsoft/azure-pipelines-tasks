@@ -243,7 +243,7 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
                         continue;
                         }
                         if (url && url.toLowerCase().includes(oldCollectionName)) {
-                            tl.warning('Your pom file is still using the old style organization urls, please switch to the new url styles and update your pom file. Using credentials for old style url: ' + url);
+                            tl.warning(tl.loc('OldStyleUrlsInPomFile', url));
                             repos.push({
                                 id: (repo.id && repo.id instanceof Array)
                                     ? repo.id[0]
