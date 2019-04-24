@@ -1,9 +1,9 @@
 {
     "id": "13C22CE0-3B93-43F9-AEB7-71FBCE7BF5B2",
     "name": "AzureFunctionAppContainer",
-    "friendlyName": "Azure Function for Container",
-    "description": "Update Function Apps with Docker Containers",
-    "helpUrl": "https://aka.ms/azurefunctiononcontainerdeployreadme",
+    "friendlyName": "Azure Function for container",
+    "description": "Update Function Apps with Docker containers",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-functionapp-containers",
     "helpMarkDown": "[More information](https://aka.ms/azurefunctiononcontainerdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 10
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -95,7 +95,7 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Enter the start up command."
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
         },
         {
             "name": "appSettings",

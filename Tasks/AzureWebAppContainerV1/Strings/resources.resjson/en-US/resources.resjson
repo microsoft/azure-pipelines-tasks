@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Web App for Container",
+  "loc.friendlyName": "Azure Web App for Containers",
   "loc.helpMarkDown": "[More information](https://aka.ms/azurewebapponcontainerdeployreadme)",
-  "loc.description": "Update Azure App Services on Docker containers",
+  "loc.description": "Deploy containers to Azure App Service",
   "loc.instanceNameFormat": "Azure Web App on Container Deploy: $(appName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
   "loc.input.label.azureSubscription": "Azure subscription",
@@ -19,6 +19,7 @@
   "loc.input.label.multicontainerConfigFile": "Configuration File",
   "loc.input.help.multicontainerConfigFile": "Path of the Docker-Compose file. Should be a fully qualified path or relative to the default working directory.",
   "loc.input.label.containerCommand": "Startup command ",
+  "loc.input.help.containerCommand": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll",
   "loc.input.label.appSettings": "App settings",
   "loc.input.help.appSettings": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.configurationStrings": "Configuration settings",

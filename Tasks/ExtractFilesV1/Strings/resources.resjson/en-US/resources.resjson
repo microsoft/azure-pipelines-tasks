@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Extract Files",
+  "loc.friendlyName": "Extract files",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "loc.description": "Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip.",
+  "loc.description": "Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip",
   "loc.instanceNameFormat": "Extract files $(message)",
   "loc.input.label.archiveFilePatterns": "Archive file patterns",
   "loc.input.help.archiveFilePatterns": "File paths or patterns of the archive files to extract.  Supports multiple lines of minimatch patterns.  [More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",

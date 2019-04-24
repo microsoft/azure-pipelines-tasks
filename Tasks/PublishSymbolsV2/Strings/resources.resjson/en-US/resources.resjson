@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Index Sources & Publish Symbols",
+  "loc.friendlyName": "Index sources and publish symbols",
   "loc.helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task.",
-  "loc.description": "Index your source code and publish symbols to a file share or Azure Artifacts symbol server.",
+  "loc.description": "Index your source code and publish symbols to a file share or Azure Artifacts symbol server",
   "loc.instanceNameFormat": "Publish symbols path",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.SymbolsFolder": "Path to symbols folder",

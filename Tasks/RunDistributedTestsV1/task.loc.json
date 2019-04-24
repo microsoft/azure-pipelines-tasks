@@ -3,7 +3,7 @@
   "name": "RunVisualStudioTestsusingTestAgent",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=624389",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/run-functional-tests",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 150,
-    "Patch": 2
+    "Minor": 151,
+    "Patch": 0
   },
   "deprecated": true,
   "runsOn": [

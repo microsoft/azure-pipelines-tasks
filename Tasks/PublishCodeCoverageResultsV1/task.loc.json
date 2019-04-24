@@ -3,7 +3,7 @@
   "name": "PublishCodeCoverageResults",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=626485",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 151,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.102.0",

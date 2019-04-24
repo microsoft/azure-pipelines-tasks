@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "CocoaPods",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613745)",
-  "loc.description": "CocoaPods is a dependency manager for Swift and Objective-C Cocoa projects. This task runs 'pod install'.",
+  "loc.description": "Install CocoaPods dependencies for Swift and Objective-C Cocoa projects",
   "loc.instanceNameFormat": "pod install",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.cwd": "Working directory",

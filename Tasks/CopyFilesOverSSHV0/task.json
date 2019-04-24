@@ -1,9 +1,9 @@
 {
     "id": "67cec91b-0351-4c2f-8465-d74b3d2a2d96",
     "name": "CopyFilesOverSSH",
-    "friendlyName": "Copy Files Over SSH",
+    "friendlyName": "Copy files Over SSH",
     "description": "Copy files or build artifacts to a remote machine over SSH",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=821894",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/copy-files-over-ssh",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=821894)",
     "category": "Deploy",
     "visibility": [
@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 148,
+        "Minor": 151,
         "Patch": 0
     },
     "demands": [],

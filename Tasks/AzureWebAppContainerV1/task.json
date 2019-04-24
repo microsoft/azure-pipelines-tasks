@@ -1,9 +1,9 @@
 {
     "id": "15858991-8BAC-4542-99E7-577FEF9B5BE6",
     "name": "AzureWebAppContainer",
-    "friendlyName": "Azure Web App for Container",
-    "description": "Update Azure App Services on Docker containers",
-    "helpUrl": "https://aka.ms/azurewebapponcontainerdeployreadme",
+    "friendlyName": "Azure Web App for Containers",
+    "description": "Deploy containers to Azure App Service",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-web-app-containers",
     "helpMarkDown": "[More information](https://aka.ms/azurewebapponcontainerdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 12
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -104,7 +104,8 @@
             "type": "string",
             "label": "Startup command ",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
         },
         {
             "name": "appSettings",
