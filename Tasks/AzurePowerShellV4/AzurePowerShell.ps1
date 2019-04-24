@@ -33,8 +33,15 @@ if ($targetAzurePs -eq $otherVersion) {
     } else {
         $targetAzurePs = $customTargetAzurePs.Trim()        
     }
-} else {
+}
+
+$pattern = "^[0-9]+\.[0-9]+\.[0-9]+$"
+$regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
+
+if ($targetAzurePs -eq $latestVersion) {
     $targetAzurePs = ""
+} elseif (-not($regex.IsMatch($targetAzurePs))) {
+    throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
 
 . "$PSScriptRoot\Utility.ps1"
