@@ -144,6 +144,11 @@ function getTfsSpecificSettings(inputDataContract : idc.InputDataContract) : idc
         inputDataContract.TfsSpecificSettings.ReleaseUri = tl.getVariable('Release.ReleaseUri');
         inputDataContract.TfsSpecificSettings.ReleaseEnvironmentUri = tl.getVariable('Release.EnvironmentUri');
         inputDataContract.TfsSpecificSettings.WorkFolder = tl.getVariable('System.DefaultWorkingDirectory');
+        inputDataContract.TfsSpecificSettings.PhaseName = tl.getVariable('System.PhaseName');
+        inputDataContract.TfsSpecificSettings.StageName = tl.getVariable('System.StageName');
+        inputDataContract.TfsSpecificSettings.JobName = tl.getVariable('System.JobName');
+        inputDataContract.TfsSpecificSettings.JobAttempt = tl.getVariable('System.JobAttempt');
+        inputDataContract.TfsSpecificSettings.JobIdentifier = tl.getVariable('System.JobIdentifier');
 
         return inputDataContract;
 }
@@ -162,11 +167,6 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
 
     inputDataContract.TestReportingSettings.TestSourceSettings = <idc.TestSourceSettings>{};
     inputDataContract.TestReportingSettings.TestSourceSettings.PullRequestTargetBranchName = tl.getVariable('System.PullRequest.TargetBranch');
-    inputDataContract.TestReportingSettings.TestSourceSettings.PhaseName = tl.getVariable('System.PhaseName');
-    inputDataContract.TestReportingSettings.TestSourceSettings.StageName = tl.getVariable('System.StageName');
-    inputDataContract.TestReportingSettings.TestSourceSettings.JobName = tl.getVariable('System.JobName');
-    inputDataContract.TestReportingSettings.TestSourceSettings.JobAttempt = tl.getVariable('System.JobAttempt');
-    inputDataContract.TestReportingSettings.TestSourceSettings.JobIdentifier = tl.getVariable('System.JobIdentifier');
 
     if (utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestRunTitle)) {
 

@@ -51,6 +51,11 @@ export interface TfsSpecificSettings {
     ReleaseUri : string;
     ReleaseEnvironmentUri : string;
     WorkFolder : string;
+    PhaseName: string;
+    StageName: string;
+    JobName: string;
+    JobAttempt: string;
+    JobIdentifier: string;
 }
 
 export interface TestSpecificSettings {
@@ -105,11 +110,6 @@ export interface ExecutionSettings {
 
 export interface TestSourceSettings {
     PullRequestTargetBranchName : string;
-    PhaseName: string;
-    StageName: string;
-    JobName: string;
-    JobAttempt: string;
-    JobIdentifier: string;
 }
 
 export interface DiagnosticsSettings {
