@@ -36,16 +36,16 @@ async function run() {
 
         // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
         tl.setVariable('DOTNET_ROOT', installationPath);
+
+        // By default disable Multi Level Lookup unless user wants it enabled.
+        let performMultiLevelLookup = tl.getBoolInput("performMultiLevelLookup", false);
+        tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", !performMultiLevelLookup ? "0" : "1");
     }
 
     // Install NuGet version specified by user or 4.4.1 in case none is specified
     // Also sets up the proxy configuration settings.
     const nugetVersion = tl.getInput('nugetVersion') || '4.4.1';
     await NuGetInstaller.installNuGet(nugetVersion);
-
-    // By default disable Multi Level Lookup unless user wants it enabled.
-    let  performMultiLevelLookup = tl.getBoolInput("performMultiLevelLookup", false);
-    tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", !performMultiLevelLookup ? "0" : "1");
 
     // Add dot net tools path to "PATH" environment variables, so that tools can be used directly.
     addDotNetCoreToolPath();
@@ -70,8 +70,10 @@ function addDotNetCoreToolPath() {
 }
 
 const taskManifestPath = path.join(__dirname, "task.json");
+const packagingCommonManifestPath = path.join(__dirname, "node_modules/packaging-common/module.json");
 tl.debug("Setting resource path to " + taskManifestPath);
 tl.setResourcePath(taskManifestPath);
+tl.setResourcePath(packagingCommonManifestPath);
 
 run()
     .then(() => tl.setResult(tl.TaskResult.Succeeded, ""))
