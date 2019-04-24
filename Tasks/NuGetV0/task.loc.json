@@ -6,12 +6,12 @@
   "category": "Package",
   "author": "Microsoft Corporation",
   "preview": "true",
-  "helpUrl": "",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "version": {
     "Major": 0,
     "Minor": 151,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",

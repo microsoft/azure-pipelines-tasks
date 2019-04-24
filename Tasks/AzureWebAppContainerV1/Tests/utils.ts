@@ -50,6 +50,10 @@ export function mockTaskArgument():  ma.TaskLibAnswers{
                 },
                 "webAppPkg": {
                     "isDirectory": true
+                },
+                "/home/site/wwwroot": {
+                    "isDirectory": true,
+                    "isFile": false
                 }
             },
             "osType": {
@@ -66,7 +70,8 @@ export function mockTaskArgument():  ma.TaskLibAnswers{
                 "webAppPkg.zip": true,
                 "webAppPkg": true,
                 "publishxml.pubxml": true,
-                "publishxml": true
+                "publishxml": true,
+                "/home/site/wwwroot": true
             }
         }
 
@@ -78,4 +83,5 @@ export function mockTaskInputParameters(tr) {
     tr.setInput('appName', 'mytestapp');
     tr.setInput('imageName', 'dockernamespace/dockerrepository:DockerImageTag');
     tr.setInput('AppSettings', '-port 1173');
+    tr.setInput('multicontainerConfigFile', '/home/site/wwwroot');
 }
