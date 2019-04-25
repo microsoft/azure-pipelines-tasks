@@ -9,6 +9,7 @@ import { PackageFile } from "./packagefile";
 import { getConnection } from "./connections";
 import { Retry } from "./retry";
 import { downloadUniversalPackage } from "./universal";
+import { getProjectAndFeedIdFromInputParam } from "packaging-common/util"
 
 tl.setResourcePath(path.join(__dirname, "task.json"));
 
@@ -35,20 +36,14 @@ async function main(): Promise<void> {
             return Promise.resolve();
         }
 
-        var feedId = projectFeed;
-        var project = null;
-        if(projectFeed.includes("/")) {
-            const projectFeedParts = projectFeed.split("/");
-            project = projectFeedParts[0] || null;
-            feedId = projectFeedParts[1];
-        }
-        
+        var feed = getProjectAndFeedIdFromInputParam("feed");
+
         if (packageType === "upack") {
-            return await downloadUniversalPackage(downloadPath, feedId, packageId, version, filesPattern);
+            return await downloadUniversalPackage(downloadPath, feed.feedId, packageId, version, filesPattern);
         }
 
         if (viewId && viewId.replace(/\s/g, "") !== "") {
-            feedId = feedId + "@" + viewId;
+            feed.feedId = feed.feedId + "@" + viewId;
         }
 
         let files: string[] = [];
@@ -67,7 +62,7 @@ async function main(): Promise<void> {
             .withRetries(Retry(retryLimit))
             .build();
 
-        const packageFiles: PackageFile[] = await p.download(feedId, project, packageId, version, downloadPath, extractPackage);
+        const packageFiles: PackageFile[] = await p.download(feed.feedId, feed.projectId, packageId, version, downloadPath, extractPackage);
 
         packageFiles.forEach(packageFile => {
             packageFile.process();
@@ -78,8 +73,8 @@ async function main(): Promise<void> {
     } finally {
         logTelemetry({
             PackageType: packageType,
-            FeedId : feedId,
-            Project: project,
+            FeedId : feed.feedId,
+            Project: feed.projectId,
             ViewId : viewId,
             PackageId: packageId,
             Version: version,

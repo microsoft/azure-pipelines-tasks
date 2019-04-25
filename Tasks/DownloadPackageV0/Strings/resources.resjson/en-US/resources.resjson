@@ -20,5 +20,6 @@
   "loc.messages.PackageTypeNotSupported": "Only NuGet packages types can be downloaded using this task.",
   "loc.messages.ExtractionFailed": "Failed to extract package with error %s",
   "loc.messages.RetryingOperation": "Error: in %s, so retrying => retries pending: %s",
-  "loc.messages.OperationFailed": "Failed in %s with error: %s"
+  "loc.messages.OperationFailed": "Failed in %s with error: %s",
+  "loc.messages.UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"Download Package\" task. Please use version 1 or higher."
 }

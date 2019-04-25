@@ -24,11 +24,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Select the package source",
-            "validation": {
-                "expression": "not(isMatch(value, '^projectScopedFeed[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','IgnoreCase'))",
-                "message": "Project scoped feeds are not supported by this version of the \"Download Package\" task. Please use version 1 or higher."
-            }
+            "helpMarkDown": "Select the package source"
         },
         {
             "name": "definition",
@@ -67,7 +63,7 @@
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{#if project}}projectScopedFeed{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "definition",
@@ -75,7 +71,7 @@
             "parameters": {
                 "feed": "$(feed)"
             },
-            "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}/Packages?includeUrls=false",
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+\/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*\/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false",
             "resultSelector": "jsonpath:$.value[?(@.protocolType=='NuGet')]",
             "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
@@ -86,7 +82,7 @@
                 "feed": "$(feed)",
                 "definition": "$(definition)"
             },
-            "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}/Packages/{{{definition}}}/Versions?includeUrls=false",
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]*\/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*\/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false&protocolType={{{packageType}}}",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
         }
@@ -108,6 +104,7 @@
         "PackageTypeNotSupported": "Only NuGet packages types can be downloaded using this task.",
         "ExtractionFailed": "Failed to extract package with error %s",
         "RetryingOperation" : "Error: in %s, so retrying => retries pending: %s",
-        "OperationFailed": "Failed in %s with error: %s"
+        "OperationFailed": "Failed in %s with error: %s",
+        "UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"Download Package\" task. Please use version 1 or higher."
     }
 }

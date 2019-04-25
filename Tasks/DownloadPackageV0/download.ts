@@ -9,12 +9,17 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as vsom from 'vso-node-api/VsoClient';
 import * as vsts from "vso-node-api/WebApi"
 import bearm = require('vso-node-api/handlers/bearertoken');
+import { getProjectAndFeedIdFromInputParam } from "packaging-common/util"
 
 const ApiVersion = "3.0-preview.1";
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function main(): Promise<void> {
-	let feedId = tl.getInput("feed");
+	var feed = getProjectAndFeedIdFromInputParam("feed");
+	if(feed.projectId) {
+		throw new Error(tl.loc("UnsupportedProjectScopedFeeds"));
+	}
+	let feedId = feed.feedId;
 	let regexGuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 	let packageId = tl.getInput("definition");
 
