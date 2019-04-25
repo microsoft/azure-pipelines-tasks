@@ -148,7 +148,6 @@ function getTfsSpecificSettings(inputDataContract : idc.InputDataContract) : idc
         inputDataContract.TfsSpecificSettings.StageName = tl.getVariable('System.StageName');
         inputDataContract.TfsSpecificSettings.JobName = tl.getVariable('System.JobName');
         inputDataContract.TfsSpecificSettings.JobAttempt = tl.getVariable('System.JobAttempt');
-        inputDataContract.TfsSpecificSettings.JobIdentifier = tl.getVariable('System.JobIdentifier');
 
         return inputDataContract;
 }

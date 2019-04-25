@@ -55,7 +55,6 @@ export interface TfsSpecificSettings {
     StageName: string;
     JobName: string;
     JobAttempt: string;
-    JobIdentifier: string;
 }
 
 export interface TestSpecificSettings {
