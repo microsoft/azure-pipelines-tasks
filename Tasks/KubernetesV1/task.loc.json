@@ -45,8 +45,7 @@
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false,
-      "visibleRule": "command != logout"
+      "isExpanded": false
     },
     {
       "name": "output",

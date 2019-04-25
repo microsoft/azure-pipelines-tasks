@@ -45,8 +45,7 @@
         {
             "name": "advanced",
             "displayName": "Advanced",
-            "isExpanded": false,
-            "visibleRule": "command != logout"
+            "isExpanded": false
         },
         {
             "name": "output",
