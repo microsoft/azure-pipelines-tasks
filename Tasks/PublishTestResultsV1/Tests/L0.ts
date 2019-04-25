@@ -3,6 +3,7 @@ import assert = require('assert');
 import path = require('path');
 const ffPath = path.join(__dirname, '..', 'find-files-legacy.js');
 let ff = require(ffPath);
+console.log('FF', ff);
 
 describe('PublishTestResultsV1 Find files legacy suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
