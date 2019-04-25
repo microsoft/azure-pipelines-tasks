@@ -12,7 +12,7 @@ import * as models from '../models/constants';
 import * as fileHelper from "../utils/FileHelper";
 import * as utils from "../utils/utilities";
 import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
-import { Kubectl, Resource } from "kubernetes-common/kubectl-object-model";
+import { Kubectl, Resource } from "../models/kubectl-object-model";
 
 
 export function deploy(kubectl: Kubectl, manifestFilesPath: string, deploymentStrategy: string) {

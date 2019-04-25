@@ -117,8 +117,6 @@ Tasks/Common/ios-signing-common/*     @madhurig   @hashtagchris
 
 Tasks/Common/java-common/*        @madhurig   @kelliejos
 
-Tasks/Common/kubernetes-common/*      @nishubansal    @ds-ms
-
 Tasks/Common/packaging-common-old/*   @jotaylo
 
 Tasks/Common/packaging-common/*     @jotaylo

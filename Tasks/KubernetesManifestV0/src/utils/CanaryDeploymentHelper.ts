@@ -1,5 +1,5 @@
 "use strict";
-import { Kubectl } from "kubernetes-common/kubectl-object-model";
+import { Kubectl } from "../models/kubectl-object-model";
 import * as helper from './KubernetesObjectUtility';
 import { KubernetesWorkload } from "../models/constants"
 import * as utils from "./utilities";

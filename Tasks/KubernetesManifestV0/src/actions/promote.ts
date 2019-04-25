@@ -2,7 +2,7 @@
 import tl = require('vsts-task-lib/task');
 import * as deploymentHelper from '../utils/DeploymentHelper';
 import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
-import { Kubectl } from "kubernetes-common/kubectl-object-model";
+import { Kubectl } from "../models/kubectl-object-model";
 import * as utils from "../utils/utilities";
 import * as TaskInputParameters from '../models/TaskInputParameters';
 
