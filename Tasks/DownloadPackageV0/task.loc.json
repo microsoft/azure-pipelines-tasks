@@ -24,7 +24,11 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.feed"
+      "helpMarkDown": "ms-resource:loc.input.help.feed",
+      "validation": {
+        "expression": "not(isMatch(value, '^projectScopedFeed[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','IgnoreCase'))",
+        "message": "Project scoped feeds are not supported by this version of the \"Download Package\" task. Please use version 1 or higher."
+      }
     },
     {
       "name": "definition",
@@ -63,7 +67,7 @@
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}projectScopedFeed{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "definition",
@@ -71,7 +75,7 @@
       "parameters": {
         "feed": "$(feed)"
       },
-      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]*/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}/Packages?includeUrls=false",
+      "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}/Packages?includeUrls=false",
       "resultSelector": "jsonpath:$.value[?(@.protocolType=='NuGet')]",
       "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
@@ -82,7 +86,7 @@
         "feed": "$(feed)",
         "definition": "$(definition)"
       },
-      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]*/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}/Packages/{{{definition}}}/Versions?includeUrls=false",
+      "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}/Packages/{{{definition}}}/Versions?includeUrls=false",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
     }

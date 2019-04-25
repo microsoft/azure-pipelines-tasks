@@ -56,6 +56,10 @@
       "visibleRule": "selectOrConfig = select",
       "properties": {
         "EditableOptions": "True"
+      },
+      "validation": {
+        "expression": "not(isMatch(value, '^projectScopedFeed[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','IgnoreCase'))",
+        "message": "Project scoped feeds are not supported by this version of the \"NuGet Restore\" task. Please use the \"NuGet\" task version 2 or higher."
       }
     },
     {
@@ -116,7 +120,7 @@
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}projectScopedFeed{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "execution": {

@@ -14,15 +14,7 @@ const ApiVersion = "3.0-preview.1";
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function main(): Promise<void> {
-	var projectFeed = tl.getInput("feed");
-	var feedId = projectFeed;
-	var project = null;
-	if(projectFeed.includes("/")) {
-		const projectFeedParts = projectFeed.split("/");
-		project = projectFeedParts[0] || null;
-		feedId = projectFeedParts[1];
-	}
-
+	let feedId = tl.getInput("feed");
 	let regexGuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 	let packageId = tl.getInput("definition");
 
@@ -42,7 +34,7 @@ async function main(): Promise<void> {
 	const retryLimit: number = (!!retryLimitValue && !isNaN(parseInt(retryLimitValue))) ? parseInt(retryLimitValue) : 4;
 	tl.debug(`RetryLimit set to ${retryLimit}`);
 
-	await executeWithRetries("downloadPackage", () => downloadPackage(collectionUrl, accessToken, credentialHandler, feedId, project, packageId, version, downloadPath).catch((reason) => {
+	await executeWithRetries("downloadPackage", () => downloadPackage(collectionUrl, accessToken, credentialHandler, feedId, packageId, version, downloadPath).catch((reason) => {
 		throw reason;
 	}), retryLimit);
 }
@@ -57,7 +49,7 @@ function getAuthToken() {
 	}
 }
 
-export async function downloadPackage(collectionUrl: string, accessToken, credentialHandler: bearm.BearerCredentialHandler, feedId: string, project: string, packageId: string, version: string, downloadPath: string) {
+export async function downloadPackage(collectionUrl: string, accessToken, credentialHandler: bearm.BearerCredentialHandler, feedId: string, packageId: string, version: string, downloadPath: string) {
 	
 	var feedsUrl = await locationUtility.getFeedUriFromBaseServiceUri(collectionUrl, accessToken);
 	var feedConnection = new vsts.WebApi(feedsUrl, credentialHandler);
@@ -65,7 +57,7 @@ export async function downloadPackage(collectionUrl: string, accessToken, creden
 	var packagesUrl = await locationUtility.getNuGetUriFromBaseServiceUri(collectionUrl, accessToken);
 	var packageConnection = new vsts.WebApi(packagesUrl, credentialHandler);
 	
-	var packageUrl = await getNuGetPackageUrl(feedConnection.getCoreApi().vsoClient, feedId, project, packageId);
+	var packageUrl = await getNuGetPackageUrl(feedConnection.getCoreApi().vsoClient, feedId, packageId);
 	
 	await new Promise((resolve, reject) => {
 		feedConnection.getCoreApi().restClient.get(packageUrl, ApiVersion, null, { responseIsCollection: false }, async function (error, status, result) {
@@ -78,7 +70,7 @@ export async function downloadPackage(collectionUrl: string, accessToken, creden
 
 			if (packageType == "nuget") {
 				
-				var getDownloadUrlPromise = getDownloadUrl(packageConnection.getCoreApi().vsoClient, feedId, project, packageName, version)
+				var getDownloadUrlPromise = getDownloadUrl(packageConnection.getCoreApi().vsoClient, feedId, packageName, version)
 				getDownloadUrlPromise.catch((error) => {
 					return reject(error)
 				});
@@ -120,12 +112,12 @@ export async function downloadPackage(collectionUrl: string, accessToken, creden
 	});
 }
 
-export async function getNuGetPackageUrl(vsoClient: vsom.VsoClient, feedId: string, project: string, packageId: string): Promise<string> {
+export async function getNuGetPackageUrl(vsoClient: vsom.VsoClient, feedId: string, packageId: string): Promise<string> {
 	var PackagingAreaName = "Packaging";
 	var PackageAreaId = "7A20D846-C929-4ACC-9EA2-0D5A7DF1B197";
 	
 	return new Promise<string>((resolve, reject) => {
-		var getVersioningDataPromise = vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId: feedId, packageId: packageId, project: project });
+		var getVersioningDataPromise = vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId: feedId, packageId: packageId });
 		getVersioningDataPromise.then((result) => {
 			return resolve(result.requestUrl); 
 		});
@@ -135,11 +127,11 @@ export async function getNuGetPackageUrl(vsoClient: vsom.VsoClient, feedId: stri
 	});
 }
 
-export async function getDownloadUrl(vsoClient: vsom.VsoClient, feedId: string, project: string, packageName: string, version: string): Promise<string> {
+export async function getDownloadUrl(vsoClient: vsom.VsoClient, feedId: string, packageName: string, version: string): Promise<string> {
 	var NugetArea = "NuGet"
 	var PackageVersionContentResourceId = "6EA81B8C-7386-490B-A71F-6CF23C80B388"
 	return new Promise<string>((resolve, reject) => {
-		var getVersioningDataPromise = vsoClient.getVersioningData(ApiVersion, NugetArea, PackageVersionContentResourceId, { feedId: feedId, packageName: packageName, packageVersion: version, project: project });
+		var getVersioningDataPromise = vsoClient.getVersioningData(ApiVersion, NugetArea, PackageVersionContentResourceId, { feedId: feedId, packageName: packageName, packageVersion: version });
 		getVersioningDataPromise.then((result) => {
 			return resolve(result.requestUrl); 
 		});

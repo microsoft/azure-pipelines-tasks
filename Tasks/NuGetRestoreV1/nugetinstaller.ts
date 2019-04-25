@@ -135,16 +135,9 @@ async function main(): Promise<void> {
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === "select" ) {
             let sources: Array<IPackageSource> = new Array<IPackageSource>();
-            const feedProject = tl.getInput('feed');
-            var project = null;
-            var feed = feedProject;
-            if(feedProject && feedProject.includes("/")) {
-                const feedProjectParts = feedProject.split("/");
-                project = feedProjectParts[0] || null;
-                feed = feedProjectParts[1];
-            }         
+            let feed = tl.getInput("feed");
             if (feed) {
-                let feedUrl:string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed, project, nuGetVersion, accessToken);
+                let feedUrl:string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed, null, nuGetVersion, accessToken);
                 sources.push(<IPackageSource>
                 {
                     feedName: feed,
