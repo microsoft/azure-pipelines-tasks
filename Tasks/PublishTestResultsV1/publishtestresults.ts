@@ -1,5 +1,5 @@
 import tl = require('vsts-task-lib/task');
-import ffl = require('find-files-legacy/findfiles.legacy');
+import ffl = require('./find-files-legacy');
 
 var testRunner = tl.getInput('testRunner', true);
 var testResultsFiles = tl.getInput('testResultsFiles', true);

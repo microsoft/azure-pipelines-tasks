@@ -111,8 +111,6 @@ Tasks/Common/codecoverage-tools/*     @nigurr   @lkillgore
 
 Tasks/Common/docker-common/*      @jikuma   @vithati
 
-Tasks/Common/find-files-legacy/*      @nigurr
-
 Tasks/Common/ios-signing-common/*     @madhurig   @hashtagchris
 
 Tasks/Common/java-common/*        @madhurig   @kelliejos
