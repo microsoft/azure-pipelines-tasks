@@ -1,10 +1,7 @@
 import Q = require('q');
 import assert = require('assert');
 import path = require('path');
-import fs = require('fs');
-const ffPath = path.join(__dirname, '..', 'find-files-legacy.js');
 let ff = require(ffPath);
-console.log('FF', ff);
 
 describe('PublishTestResultsV1 Find files legacy suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
@@ -20,7 +17,6 @@ describe('PublishTestResultsV1 Find files legacy suite', function () {
     });
 
     it('Search simple pattern', (done) => {
-        console.log(fs.readdirSync(data));
         let test = ff.findFiles(path.join(data, '*.log'));
         assert(test.length === 2);
         assert(test[0] === posixFormat(path.join(data, 'a.log')));
