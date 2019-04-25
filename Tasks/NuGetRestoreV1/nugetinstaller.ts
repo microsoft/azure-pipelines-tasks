@@ -145,7 +145,7 @@ async function main(): Promise<void> {
                     let feedUrl:string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed.feedId, null, nuGetVersion, accessToken);
                     sources.push(<IPackageSource>
                     {
-                        feedName: feed,
+                        feedName: feed.feedId,
                         feedUri: feedUrl
                     })
                 }
