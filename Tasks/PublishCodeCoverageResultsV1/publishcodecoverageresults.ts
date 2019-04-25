@@ -22,6 +22,7 @@ async function run() {
         let tempFolder = undefined;
         const disableAutoGenerate = tl.getVariable('disable.coverage.autogenerate');
 
+        // fix for jacoco
         if (disableAutoGenerate || !autogenerateHtmlReport) {
             tl.debug('disabling auto generation');
             autogenerateHtmlReport = false;
