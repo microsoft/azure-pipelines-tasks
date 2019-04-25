@@ -1,7 +1,7 @@
 import Q = require('q');
 import assert = require('assert');
 import path = require('path');
-let ff = require(path.join(__dirname, '..', 'find-files-legacy.js'));
+const ff = require(path.join(__dirname, '..', 'find-files-legacy.js'));
 
 describe('PublishTestResultsV1 Find files legacy suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
