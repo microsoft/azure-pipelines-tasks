@@ -103,8 +103,6 @@ Tasks/Common/azure-arm-rest/*   @vincentdass    @Ajay-MS
 
 Tasks/Common/azure-blobstorage-artifactProvider/*   @omeshp   @hiyadav
 
-Tasks/Common/azurestack-common/*    @Ajay-MS
-
 Tasks/Common/codeanalysis-common/*    @lkillgore
 
 Tasks/Common/codecoverage-tools/*     @nigurr   @lkillgore

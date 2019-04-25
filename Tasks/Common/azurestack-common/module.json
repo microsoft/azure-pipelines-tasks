@@ -1,6 +1,0 @@
-{
-    "messages": {
-        "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",
-        "FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data. Error Code: %s"
-    }
-}

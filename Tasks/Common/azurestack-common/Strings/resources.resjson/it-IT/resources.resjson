@@ -1,4 +1,0 @@
-{
-  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "L'URL dell'endpoint di AzureRm specificato: '{0}' non è valido.",
-  "loc.messages.FailedToFetchAzureStackDependencyData": "Non è stato possibile recuperare i dati delle dipendenze di Azure Stack. Codice errore: %s"
-}

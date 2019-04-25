@@ -3,7 +3,6 @@
   "main": "main.js",
   "dependencies": {
     "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
-    "azurestack-common": "file:../../_build/Tasks/Common/azurestack-common-1.0.0.tgz",
     "moment": "2.21.0",
     "typed-rest-client": "0.12.0",
     "vsts-task-lib": "2.0.5"
