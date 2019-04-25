@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure Key Vault",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848891)",
-  "loc.description": "Download Azure Key Vault Secrets",
+  "loc.description": "Download Azure Key Vault secrets",
   "loc.instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
   "loc.releaseNotes": "Works with cross-platform agents (Linux, macOS, or Windows)",
   "loc.input.label.ConnectedServiceName": "Azure subscription",

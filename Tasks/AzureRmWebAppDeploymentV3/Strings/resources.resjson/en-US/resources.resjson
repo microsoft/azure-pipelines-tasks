@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure App Service Deploy",
+  "loc.friendlyName": "Azure App Service deploy",
   "loc.helpMarkDown": "[More information](https://aka.ms/azurermwebdeployreadme)",
-  "loc.description": "Update Azure App Services on Windows, Web App on Linux with built-in images or Docker containers, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Function Apps, Mobile Apps, API applications, Web Jobs using Web Deploy / Kudu REST APIs",
+  "loc.description": "Deploy to Azure App Service a web, mobile, or API app using Docker, Java, .NET, .NET Core, Node.js, PHP, Python, or Ruby",
   "loc.instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
   "loc.releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "File Transforms & Variable Substitution Options",

@@ -3,7 +3,7 @@
   "name": "CopyFilesOverSSH",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=821894",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/copy-files-over-ssh",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 148,
+    "Minor": 151,
     "Patch": 0
   },
   "demands": [],

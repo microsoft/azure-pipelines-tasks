@@ -1,9 +1,9 @@
 {
     "id": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
     "name": "UsePythonVersion",
-    "friendlyName": "Use Python Version",
-    "description": "Retrieves the specified version of Python from the tool cache. Optionally add it to PATH.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=871498",
+    "friendlyName": "Use Python version",
+    "description": "Use the specified version of Python from the tool cache, optionally adding it to the PATH",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/use-python-version",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=871498)",
     "category": "Tool",
     "runsOn": [
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 150,
-        "Patch": 1
+        "Minor": 151,
+        "Patch": 0
     },
     "demands": [],
     "instanceNameFormat": "Use Python $(versionSpec)",

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Manual Intervention",
+  "loc.friendlyName": "Manual intervention",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870234)",
-  "loc.description": "Pause deployment and wait for intervention",
+  "loc.description": "Pause deployment and wait for manual intervention",
   "loc.instanceNameFormat": "Manual Intervention",
   "loc.input.label.instructions": "Instructions",
   "loc.input.help.instructions": "These instructions will be shown to the user for resuming or rejecting the manual intervention. Based on these instructions the user will take an informed decision about this manual intervention.",

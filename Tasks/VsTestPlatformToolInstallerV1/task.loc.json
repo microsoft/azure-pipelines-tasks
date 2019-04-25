@@ -3,7 +3,7 @@
   "name": "VisualStudioTestPlatformInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://www.nuget.org/packages/Microsoft.TestPlatform/",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/vstest-platform-tool-installer",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [
@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 150,
+    "Minor": 151,
     "Patch": 0
   },
   "satisfies": [
