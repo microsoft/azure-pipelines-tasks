@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Resource Group Deployment",
+  "loc.friendlyName": "Azure resource group deployment",
   "loc.helpMarkDown": "[More Information](https://aka.ms/argtaskreadme)",
-  "loc.description": "Deploy an Azure resource manager (ARM) template to a resource group. You can also start, stop, delete, deallocate all Virtual Machines (VM) in a resource group",
+  "loc.description": "Deploy an Azure Resource Manager (ARM) template to a resource group and manage virtual machines",
   "loc.instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
   "loc.releaseNotes": "-Works with cross-platform agents (Linux, macOS, or Windows)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
   "loc.group.displayName.AzureDetails": "Azure Details",
@@ -31,8 +31,8 @@
   "loc.input.help.deploymentMode": "Refer to [this](https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes) for more details. \n\n Incremental mode handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. Complete mode takes relatively more time than incremental mode. If the task times out, consider increasing the timeout, or changing the mode to 'Incremental'. \n [Warning] This action will delete all the existing resources in the resource group that are not specified in the template. \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
   "loc.input.label.enableDeploymentPrerequisites": "Enable prerequisites",
   "loc.input.help.enableDeploymentPrerequisites": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Choosing Deployment Group option would configure Deployment Group agent on each of the virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
-  "loc.input.label.deploymentGroupEndpoint": "Azure Pipelines/TFS service connection",
-  "loc.input.help.deploymentGroupEndpoint": "Specify the service connection to connect to an Azure DevOps organization or TFS collection for agent registration.<br><br>You can create a service connection using \"+New\", and select \"Token-based authentication\". You need a [personal access token(PAT)](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate?view=vsts) to setup a service connection. <br><br>​Click \"Manage\" to update the service connection details.",
+  "loc.input.label.deploymentGroupEndpoint": "Azure Pipelines service connection",
+  "loc.input.help.deploymentGroupEndpoint": "Specify the service connection to connect to an Azure DevOps organization or collection for agent registration.<br><br>You can create a service connection using \"+New\", and select \"Token-based authentication\". You need a [personal access token(PAT)](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate?view=vsts) to setup a service connection. <br><br>​Click \"Manage\" to update the service connection details.",
   "loc.input.label.project": "Team project",
   "loc.input.help.project": "Specify the Team Project which has the Deployment Group defined in it​",
   "loc.input.label.deploymentGroupName": "Deployment Group",
@@ -189,5 +189,6 @@
   "loc.messages.ASE_SSLIssueRecommendation": "To use a certificate, the certificate must be signed by a trusted certificate authority. If getting certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline.",
   "loc.messages.MoreInformationOnAzurePortal": "More information on Azure Portal",
   "loc.messages.ResponseNotValid": "Response is not in a valid format",
-  "loc.messages.LogDeploymentName": "Deployment name is %s"
+  "loc.messages.LogDeploymentName": "Deployment name is %s",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }

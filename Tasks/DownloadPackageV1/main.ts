@@ -35,8 +35,8 @@ async function main(): Promise<void> {
             return Promise.resolve();
         }
 
-        if (packageType === "Universal") {
-            return await downloadUniversalPackage(downloadPath, feedId, packageId, version);
+        if (packageType === "upack") {
+            return await downloadUniversalPackage(downloadPath, feedId, packageId, version, filesPattern);
         }
 
         if (viewId && viewId.replace(/\s/g, "") !== "") {
