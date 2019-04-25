@@ -1,6 +1,7 @@
 import Q = require('q');
 import assert = require('assert');
 import path = require('path');
+import fs = require('fs');
 const ffPath = path.join(__dirname, '..', 'find-files-legacy.js');
 let ff = require(ffPath);
 console.log('FF', ff);
