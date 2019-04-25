@@ -5,8 +5,7 @@ import path = require('path');
 import fs = require('fs');
 import { getTempDirectory } from "../utils/FileHelper";
 import helmutility = require("utility-common/helmutility");
-import { Helm, NameValuePair } from "utility-common/helm-object-model";
-import { IExecOptions, IExecSyncResult, IExecSyncOptions } from 'vsts-task-lib/toolrunner';
+import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 
 const uuidV4 = require('uuid/v4');
 
