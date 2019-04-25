@@ -1,3 +1,4 @@
+"use strict";
 const assert = require('assert');
 const ttm = require('azure-pipelines-task-lib/mock-test');
 const os = require('os');

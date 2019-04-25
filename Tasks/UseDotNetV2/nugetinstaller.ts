@@ -1,3 +1,4 @@
+"use strict";
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as trm from 'azure-pipelines-task-lib/toolrunner';
 import * as nuGetGetter from 'packaging-common/nuget/NuGetToolGetter';
