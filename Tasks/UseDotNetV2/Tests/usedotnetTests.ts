@@ -1,3 +1,4 @@
+"use strict";
 import * as os from 'os';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { Constants } from '../versionutilities';
