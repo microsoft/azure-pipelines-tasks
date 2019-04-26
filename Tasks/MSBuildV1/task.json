@@ -3,7 +3,7 @@
     "name": "MSBuild",
     "friendlyName": "MSBuild",
     "description": "Build with MSBuild",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613724",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/msbuild",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613724)",
     "category": "Build",
     "visibility": [
@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 147,
+        "Minor": 151,
         "Patch": 0
     },
     "demands": [

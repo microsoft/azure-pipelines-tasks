@@ -2,8 +2,8 @@
     "id": "7B5A6198-ADF8-4B16-9939-7ADDF85708B2",
     "name": "GitHubRelease",
     "friendlyName": "GitHub Release",
-    "description": "Create, edit, or delete a GitHub release.",
-    "helpUrl": "https://aka.ms/AA3aeiw",
+    "description": "Create, edit, or delete a GitHub release",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/github-release",
     "helpMarkDown": "[More Information](https://aka.ms/AA3aeiw)",
     "category": "Utility",
     "visibility": [
@@ -14,8 +14,8 @@
     "preview": true,
     "version": {
         "Major": 0,
-        "Minor": 148,
-        "Patch": 0
+        "Minor": 151,
+        "Patch": 2
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -32,13 +32,12 @@
             "name": "repositoryName",
             "type": "pickList",
             "label": "Repository",
-            "defaultValue": "",
+            "defaultValue": "$(Build.Repository.Name)",
             "required": true,
             "helpMarkDown": "Specify the name of the GitHub repository in which the GitHub release will be created, edited, or deleted.",
             "properties": {
                 "DisableManageLink": "True",
-                "EditableOptions": "True",
-                "SearchDataSourceName": "userRepositorySearch"
+                "EditableOptions": "True"
             }
         },
         {
@@ -188,18 +187,7 @@
             "endpointId": "$(gitHubConnection)",
             "dataSourceName": "UserRepositories",
             "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }"
-          },
-          {
-            "target": "userRepositorySearch",
-            "endpointId": "$(gitHubConnection)",
-            "dataSourceName": "SearchRepositoriesByName",
-            "resultSelector": "jsonpath:$['items'][*]",
-            "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }",
-            "parameters": {
-              "searchText": "$(searchText)",
-              "name": "$(searchText)"
-            }
-          }
+        }
     ],
     "instanceNameFormat": "GitHub release ($(action))",
     "execution": {
@@ -225,12 +213,12 @@
         "NoReleaseFoundToDelete": "No release was found for tag: %s. Deleting the release failed.",
         "FetchReleaseForTag": "Fetching the release for tag: %s",
         "FetchReleaseForTagSuccess": "Found a release for tag: %s",
-        "FetchTagForTarget": "Fetching the tag for target: %s",
-        "FetchTagForTargetSuccess": "Found a tag for target: %s",
+        "FetchTagForTarget": "Searching for tags associated with target commit: %s",
+        "FetchTagForTargetSuccess": "Found a tag for target commit: %s",
         "MissingAssetError": "File not found: %s",
         "MultipleReleasesFoundError": "Only 1 release was expected but more than 1 release was found for tag: %s. Unable to perform the action.",
         "MultipleTagFound": "Only 1 tag was expected but more than 1 tag was found for the given commit: %s. Unable to perform the action.",
-        "NoTagFound": "No tag was found for the provided target: %s. Skipping further steps...",
+        "NoTagFound": "Release will not be created as no tags could be found for the target commit. For more details check out the ‘Tag Source’ section in documentation: https://aka.ms/AA4f03a.",
         "DeleteAllExistingAssets": "Deleting all existing assets...",
         "DuplicateAssetFound": "Duplicate asset found: %s",
         "AssetsDeletedSuccessfully": "Assets deleted successfully.",
@@ -243,9 +231,9 @@
         "DeletingAsset": "Deleting asset: %s",
         "NoAssetFoundToDelete": "No assets were found to delete.",
         "UploadingAssets": "Uploading assets...",
-        "UploadingAsset": "Uploading asset: %s",
-        "UploadAssetError": "An unexpected error occurred while uploading the asset: %s",
-        "UploadAssetSuccess": "Uploaded asset successfully: %s",
+        "UploadingAsset": "Uploading file: '%s'.",
+        "UploadAssetError": "An unexpected error occurred while uploading the file: %s",
+        "UploadAssetSuccess": "Uploaded file successfully: '%s'",
         "NoAssetFoundToUpload": "No assets were found to upload.",
         "ReleaseNotesFileIsDirectoryError": "Release notes file: %s is a directory and not a file.",
         "AssetIsDirectoryError": "The asset is a directory and not a file. Skipping uploading directory: %s",
@@ -254,7 +242,7 @@
         "CommitDiffBehind": "Cannot compute the changes as the provided target commit is older than the commit of the last published release.",
         "CommitDiffEqual": "No changes were found. The provided target commit is the same as the commit of the last published release.",
         "FetchLatestPublishRelease": "Fetching the latest published release...",
-        "FetchLatestPublishReleaseSuccess": "Found the latest published release.",
+        "FetchLatestPublishReleaseSuccess": "Found the latest published release: %s",
         "GetLatestReleaseError": "An unexpected error occurred while fetching the latest published release.",
         "NoLatestPublishRelease": "No releases are published yet in the repository.",
         "FetchCommitDiff": "Fetching the list of commits since the last published release...",
@@ -265,6 +253,14 @@
         "InvalidGitHubEndpoint": "Invalid GitHub service endpoint: %s.",
         "InvalidEndpointAuthScheme": "Invalid GitHub service connection scheme: %s. Only OAuth and GitHub personal access token connections are allowed.",
         "FetchInitialCommitError": "An unexpected error occurred while fetching the initial commit.",
-        "InvalidActionSet": "Invalid action: %s. Only 'create', 'edit', or 'delete' actions are allowed."
+        "InvalidActionSet": "Invalid action: %s. Only 'create', 'edit', or 'delete' actions are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
+        "InvalidTagSource": "Invalid tag source: %s. Only 'auto', or 'manual' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
+        "InvalidReleaseNotesSource": "Invalid release notes source: %s. Only 'file', or 'input' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
+        "InvalidAssetUploadMode": "Invalid asset upload mode: %s. Only 'delete', or 'replace' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
+        "TagRequiredEditDeleteAction": "For '%s' action, a tag is required. Please specify a tag in the step. For yaml syntax see: https://aka.ms/AA3m1bq",
+        "TagRequiredCreateAction": "Tag source is set to manual- please specify a tag for create action. For yaml syntax see: https://aka.ms/AA3m1bq",
+        "NoFileFoundMatchingPattern": "No files found matching '%s'. Nothing to upload.",
+        "PatternIsADirectory": "'%s' cannot be uploaded as it is a directory. Please specify a file.",
+        "SearchingFileMatchingPattern": "Searching for file(s) matching '%s'."
     }
 }

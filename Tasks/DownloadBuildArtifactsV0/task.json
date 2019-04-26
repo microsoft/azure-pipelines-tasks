@@ -1,16 +1,16 @@
 {
     "id": "a433f589-fce1-4460-9ee6-44a624aeb1fb",
     "name": "DownloadBuildArtifacts",
-    "friendlyName": "Download Build Artifacts",
-    "description": "Download Build Artifacts",
-    "helpUrl": "",
+    "friendlyName": "Download build artifacts",
+    "description": "Download files that were saved as artifacts of a completed build",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-build-artifacts",
     "helpMarkDown": "",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 148,
-        "Patch": 0
+        "Minor": 151,
+        "Patch": 1
     },
     "groups": [
         {

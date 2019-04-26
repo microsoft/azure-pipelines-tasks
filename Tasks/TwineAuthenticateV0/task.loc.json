@@ -4,12 +4,12 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://pypi.org/project/twine/",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 145,
+    "Minor": 151,
     "Patch": 1
   },
   "runsOn": [

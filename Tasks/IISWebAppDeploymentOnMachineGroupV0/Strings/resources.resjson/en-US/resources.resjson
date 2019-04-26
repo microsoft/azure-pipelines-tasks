@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "IIS Web App Deploy",
+  "loc.friendlyName": "IIS web app deploy",
   "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=866789)",
   "loc.description": "Deploy a website or web application using Web Deploy",
   "loc.instanceNameFormat": "Deploy IIS Website/App: $(WebDeployPackage)",

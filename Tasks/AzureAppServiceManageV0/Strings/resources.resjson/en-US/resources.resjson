@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure App Service Manage",
+  "loc.friendlyName": "Azure App Service manage",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "loc.description": "Start, Stop, Restart, Slot swap, Install site extensions or Enable Continuous Monitoring for an Azure App Service",
+  "loc.description": "Start, stop, restart, slot swap, install site extensions or enable continuous monitoring for an Azure App Service",
   "loc.instanceNameFormat": "$(Action): $(WebAppName)",
   "loc.group.displayName.AdvancedSettings": "Advanced Settings",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
@@ -170,5 +170,6 @@
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-  "loc.messages.ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your Web App gives you certificate validation errors, you're probably using a self-signed certificate. To resolve such errors, you must set a variable named `VSTS_ARM_REST_IGNORE_SSL_ERRORS` to the value `true` in the build or release pipeline."
+  "loc.messages.ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your Web App gives you certificate validation errors, you're probably using a self-signed certificate. To resolve such errors, you must set a variable named `VSTS_ARM_REST_IGNORE_SSL_ERRORS` to the value `true` in the build or release pipeline.",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }

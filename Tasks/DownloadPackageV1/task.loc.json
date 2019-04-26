@@ -1,0 +1,186 @@
+{
+  "id": "8d6e8f7e-267d-442d-8c92-1f586864c62f",
+  "name": "DownloadPackage",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-package",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "author": "ms-vscs-rm",
+  "version": {
+    "Major": 1,
+    "Minor": 151,
+    "Patch": 3
+  },
+  "demands": [],
+  "preview": true,
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "minimumAgentVersion": "2.115.0",
+  "groups": [
+    {
+      "name": "advancedOptions",
+      "displayName": "ms-resource:loc.group.displayName.advancedOptions",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "packageType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.packageType",
+      "required": true,
+      "defaultValue": "nuget",
+      "options": {
+        "maven": "Maven",
+        "npm": "Npm",
+        "nuget": "NuGet",
+        "pypi": "Python",
+        "upack": "Universal"
+      }
+    },
+    {
+      "name": "feed",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.feed",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "view",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.view",
+      "defaultValue": " ",
+      "required": false,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.view"
+    },
+    {
+      "name": "definition",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.definition",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.definition"
+    },
+    {
+      "name": "version",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.version",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.version"
+    },
+    {
+      "name": "files",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.files",
+      "defaultValue": "**",
+      "visibleRule": "packageType = maven || packageType = pypi || packageType = upack",
+      "required": false,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "groupName": "advancedOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.files"
+    },
+    {
+      "name": "extract",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.extract",
+      "defaultValue": "true",
+      "required": false,
+      "visibleRule": "packageType = nuget || packageType = npm",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "groupName": "advancedOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.extract"
+    },
+    {
+      "name": "downloadPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.downloadPath",
+      "defaultValue": "$(System.ArtifactsDirectory)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.downloadPath"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "feed",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "target": "view",
+      "endpointId": "tfs:feed",
+      "parameters": {
+        "feed": "$(feed)"
+      },
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds/{{{feed}}}/views",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "target": "definition",
+      "endpointId": "tfs:feed",
+      "parameters": {
+        "feed": "$(feed)",
+        "view": "$(view)",
+        "packageType": "$(packageType)"
+      },
+      "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false&protocolType={{{packageType}}}",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "target": "version",
+      "endpointId": "tfs:feed",
+      "parameters": {
+        "feed": "$(feed)",
+        "view": "$(view)",
+        "definition": "$(definition)",
+        "packageType": "$(packageType)"
+      },
+      "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false&protocolType={{{packageType}}}",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "FailedToGetPackageMetadata": "ms-resource:loc.messages.FailedToGetPackageMetadata",
+    "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
+    "PackageDownloadSuccessful": "ms-resource:loc.messages.PackageDownloadSuccessful",
+    "CredentialsNotFound": "ms-resource:loc.messages.CredentialsNotFound",
+    "StartingDownloadOfPackage": "ms-resource:loc.messages.StartingDownloadOfPackage",
+    "ExtractingPackage": "ms-resource:loc.messages.ExtractingPackage",
+    "PackageTypeNotSupported": "ms-resource:loc.messages.PackageTypeNotSupported",
+    "ExtractionFailed": "ms-resource:loc.messages.ExtractionFailed",
+    "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
+    "RedirectUrlError": "ms-resource:loc.messages.RedirectUrlError",
+    "UnsupportedArchiveType": "ms-resource:loc.messages.UnsupportedArchiveType",
+    "Error_UnexpectedErrorArtifactToolDownload": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolDownload",
+    "Info_Downloading": "ms-resource:loc.messages.Info_Downloading",
+    "Info_UsingArtifactToolDownload": "ms-resource:loc.messages.Info_UsingArtifactToolDownload"
+  }
+}

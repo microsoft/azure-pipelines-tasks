@@ -3,14 +3,13 @@
   "name": "AzureWebApp",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/azurewebappdeployreadme",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Build",
     "Release"
   ],
-  "preview": "true",
   "runsOn": [
     "Agent",
     "DeploymentGroup"
@@ -19,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 12
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -124,7 +123,8 @@
       "label": "ms-resource:loc.input.label.startUpCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "appType = webAppLinux"
+      "visibleRule": "appType = webAppLinux",
+      "helpMarkDown": "ms-resource:loc.input.help.startUpCommand"
     },
     {
       "name": "customWebConfig",
@@ -378,6 +378,7 @@
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName",
-    "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported"
+    "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

@@ -1,0 +1,86 @@
+{
+  "id": "2C65196A-54FD-4A02-9BE8-D9D1837B7C5D",
+  "name": "NuGetToolInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/nuget",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.115.0",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 151,
+    "Patch": 0
+  },
+  "preview": false,
+  "satisfies": [
+    "NuGet"
+  ],
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "versionSpec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionSpec",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.versionSpec",
+      "groupName": "advanced"
+    },
+    {
+      "name": "checkLatest",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkLatest",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.checkLatest",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "nugettoolinstaller.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Error_ApiKeyNotSupported": "ms-resource:loc.messages.Error_ApiKeyNotSupported",
+    "Error_ExpectedConfigurationElement": "ms-resource:loc.messages.Error_ExpectedConfigurationElement",
+    "Error_NoMatchingFilesFoundForPattern": "ms-resource:loc.messages.Error_NoMatchingFilesFoundForPattern",
+    "Error_NoUrlWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoUrlWasFoundWhichMatches",
+    "Error_NoVersionWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoVersionWasFoundWhichMatches",
+    "Error_NuGetToolInstallerFailer": "ms-resource:loc.messages.Error_NuGetToolInstallerFailer",
+    "Info_AvailableVersions": "ms-resource:loc.messages.Info_AvailableVersions",
+    "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "ms-resource:loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery",
+    "Info_MatchingUrlWasFoundSettingAuth": "ms-resource:loc.messages.Info_MatchingUrlWasFoundSettingAuth",
+    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
+    "Info_SavingTempConfig": "ms-resource:loc.messages.Info_SavingTempConfig",
+    "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
+    "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
+    "NGCommon_AddingSources": "ms-resource:loc.messages.NGCommon_AddingSources",
+    "NGCommon_AreaNotFoundInSps": "ms-resource:loc.messages.NGCommon_AreaNotFoundInSps",
+    "NGCommon_DetectedNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_DetectedNuGetExtensionsPath",
+    "NGCommon_DetectedNuGetVersion": "ms-resource:loc.messages.NGCommon_DetectedNuGetVersion",
+    "NGCommon_IgnoringNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_IgnoringNuGetExtensionsPath",
+    "NGCommon_NoSourcesFoundInConfig": "ms-resource:loc.messages.NGCommon_NoSourcesFoundInConfig",
+    "NGCommon_NuGetConfigIsInvalid": "ms-resource:loc.messages.NGCommon_NuGetConfigIsInvalid",
+    "NGCommon_NuGetConfigIsPackagesConfig": "ms-resource:loc.messages.NGCommon_NuGetConfigIsPackagesConfig",
+    "NGCommon_RemovingSources": "ms-resource:loc.messages.NGCommon_RemovingSources",
+    "NGCommon_SpsNotFound": "ms-resource:loc.messages.NGCommon_SpsNotFound",
+    "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
+    "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
+    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
+  }
+}

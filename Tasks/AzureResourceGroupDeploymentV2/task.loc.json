@@ -3,7 +3,7 @@
   "name": "AzureResourceGroupDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/argtaskreadme",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 147,
-    "Patch": 2
+    "Minor": 151,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -478,6 +478,7 @@
     "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
     "MoreInformationOnAzurePortal": "ms-resource:loc.messages.MoreInformationOnAzurePortal",
     "ResponseNotValid": "ms-resource:loc.messages.ResponseNotValid",
-    "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName"
+    "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

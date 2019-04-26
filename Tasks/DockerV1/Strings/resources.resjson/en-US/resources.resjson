@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
-  "loc.description": "Build, tag, push, or run Docker images, or run a Docker command. Task can be used with Docker or Azure Container registry.",
+  "loc.description": "Build, tag, push, or run Docker images, or run a Docker command",
   "loc.instanceNameFormat": "$(command)",
   "loc.releaseNotes": "Simplified the task by:<br/>&nbsp;- Providing an option to simply select or type a command.<br/>&nbsp;- Retaining the useful input fields and providing an option to pass the rest as an argument to the command.",
   "loc.group.displayName.containerRegistry": "Container Registry",
@@ -77,5 +77,6 @@
   "loc.messages.NoDataWrittenOnFile": "No data was written into the file %s",
   "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s.",
   "loc.messages.DockerRegistryNotFound": "Docker registry service connection not specified.",
-  "loc.messages.OutputVariableDataSizeExceeded": "Output variable not set as Docker command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s"
+  "loc.messages.OutputVariableDataSizeExceeded": "Output variable not set as Docker command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
+  "loc.messages.WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
 }

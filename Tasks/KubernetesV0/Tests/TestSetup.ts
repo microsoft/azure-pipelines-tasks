@@ -62,7 +62,7 @@ process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
 process.env["ENDPOINT_DATA_AzureRMSpn_SPNOBJECTID"] =  "oId";
 
 // provide answers for task mock
-let a = {
+let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "which" : {
     },
      "checkPath": {
@@ -154,8 +154,10 @@ a.exec[`kubectl --kubeconfig ${KubconfigFile} logs nginx`] = {
     "code": 0
 };
 
+process.env["MOCK_NORMALIZE_SLASHES"] = "true";
 tr.setAnswers(<any>a);
 
+tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
 // Create mock for fs module
 let fs = require('fs');
 let fsClone = Object.assign({}, fs);
@@ -218,7 +220,6 @@ fsClone.statSync = (s: string) => {
 
     return stat;
 }
-
 
 tr.registerMock('fs', fsClone);
 

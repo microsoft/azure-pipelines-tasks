@@ -2,8 +2,8 @@
     "id": "E28912F1-0114-4464-802A-A3A35437FD16",
     "name": "Docker",
     "friendlyName": "Docker",
-    "description": "Build, tag, push, or run Docker images, or run a Docker command. Task can be used with Docker or Azure Container registry.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=848006",
+    "description": "Build, tag, push, or run Docker images, or run a Docker command",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
     "category": "Build",
     "visibility": [
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 31
+        "Minor": 151,
+        "Patch": 0
     },
     "demands": [],
     "releaseNotes": "Simplified the task by:<br/>&nbsp;- Providing an option to simply select or type a command.<br/>&nbsp;- Retaining the useful input fields and providing an option to pass the rest as an argument to the command.",
@@ -374,6 +374,7 @@
         "NoDataWrittenOnFile": "No data was written into the file %s",
         "FileContentSynced": "Synced the file content to the disk. The content is %s.",
         "DockerRegistryNotFound": "Docker registry service connection not specified.",
-        "OutputVariableDataSizeExceeded": "Output variable not set as Docker command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s"
+        "OutputVariableDataSizeExceeded": "Output variable not set as Docker command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
+        "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
     }
 }

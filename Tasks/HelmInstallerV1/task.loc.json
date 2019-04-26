@@ -1,0 +1,44 @@
+{
+  "id": "068D5909-43E6-48C5-9E01-7C8A94816220",
+  "name": "HelmInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/helm-installer",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 151,
+    "Patch": 1
+  },
+  "preview": true,
+  "demands": [],
+  "satisfies": [
+    "Helm"
+  ],
+  "groups": [],
+  "inputs": [
+    {
+      "name": "helmVersionToInstall",
+      "label": "ms-resource:loc.input.label.helmVersionToInstall",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.helmVersionToInstall",
+      "defaultValue": "latest"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "src//helmtoolinstaller.js"
+    }
+  },
+  "messages": {
+    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
+    "VerifyHelmInstallation": "ms-resource:loc.messages.VerifyHelmInstallation"
+  }
+}

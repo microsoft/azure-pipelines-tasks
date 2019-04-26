@@ -334,12 +334,13 @@ function publishJUnitTestResults(testResultsFiles: string) {
     }
 
     if (!matchingJUnitResultFiles || matchingJUnitResultFiles.length == 0) {
-        tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
+        console.log(tl.loc('NoTestResults',testResultsFiles));
         return 0;
     }
 
     var tp = new tl.TestPublisher("JUnit");
-    tp.publish(matchingJUnitResultFiles, true, "", "", "", true, TESTRUN_SYSTEM);
+    const testRunTitle = tl.getInput('testRunTitle');
+    tp.publish(matchingJUnitResultFiles, true, "", "", testRunTitle, true, TESTRUN_SYSTEM);
 }
 
 function execEnableCodeCoverage(): Q.Promise<string> {

@@ -1,4 +1,4 @@
-import * as tl from "vsts-task-lib/task";
+import tl = require("azure-pipelines-task-lib/task");
 
 export class NuGetConfigHelper2 {
     tempNugetConfigPath = tl.getVariable("Agent.HomeDirectory") + "\\tempNuGet_.config";
