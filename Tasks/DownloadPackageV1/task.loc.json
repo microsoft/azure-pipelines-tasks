@@ -3,14 +3,14 @@
   "name": "DownloadPackage",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-package",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
     "Minor": 151,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "preview": true,

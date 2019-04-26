@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Go",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867582)",
-  "loc.description": "Get, build, or test a Go application, or run a custom Go command.",
+  "loc.description": "Get, build, or test a Go application, or run a custom Go command",
   "loc.instanceNameFormat": "go $(command)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.command": "Command",
