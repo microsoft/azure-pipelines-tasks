@@ -45,7 +45,6 @@
   "loc.input.label.mavenOpts": "將 MAVEN_OPTS 設為",
   "loc.input.help.mavenOpts": "設定 MAVEN_OPTS 環境變數，用以傳送命令列引數以啟動 JVM。-Xmx 旗標會指定 JVM 可用的記憶體上限。",
   "loc.input.label.mavenFeedAuthenticate": "驗證內建 Maven 摘要",
-  "loc.input.help.mavenFeedAuthenticate": "從 Azure Artifacts/TFS [套件管理](https://marketplace.visualstudio.com/items?itemName=ms.feed) 延伸模組自動驗證內建 Maven 摘要。如果內建 Maven 摘要不在使用中，請取消選取此選項以加快建置速度。",
   "loc.input.label.sqAnalysisEnabled": "執行 SonarQube 或 SonarCloud 分析",
   "loc.input.help.sqAnalysisEnabled": "此選項已從版本 1 的 **Maven** 工作變更為使用 [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) 和 [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) 市集延伸模組。啟用此選項可在於 [目標]**** 欄位中執行目標後，執行 [SonarQube 或 SonarCloud 分析](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html)。[安裝]**** 或 [套件]**** 目標應先執行。您也必須在此 Maven 工作前，將其中一個延伸模組中的 [準備分析組態]**** 工作新增至建置管線。",
   "loc.input.label.sqMavenPluginVersionChoice": "適用於 Maven 的 SonarQube 掃描器版本",
