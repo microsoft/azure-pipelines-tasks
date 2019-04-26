@@ -7,7 +7,7 @@ import { PackageUtility } from 'azurermdeploycommon/webdeployment-common/package
 import fs = require('fs');
 
 const osTypeMap = new Map([
-    [ 'app,conatiner,xenon', 'Windows' ],
+    [ 'app,container,xenon', 'Windows' ],
     [ 'app,linux,container', 'Linux' ]
 ]);
 
