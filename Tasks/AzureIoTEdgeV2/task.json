@@ -2,8 +2,8 @@
   "id": "80F3F6A0-82A6-4A22-BA7A-E5B8C541B9B8",
   "name": "AzureIoTEdge",
   "friendlyName": "Azure IoT Edge",
-  "description": "Azure IoT Edge pipelines tasks for continuous integration(build and push docker image) and continuous deployment(create Edge deployment on Azure)",
-  "helpUrl": "https://aka.ms/azure-iot-edge-ci-cd-docs",
+  "description": "Build and deploy an Azure IoT Edge image",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/azure-iot-edge",
   "helpMarkDown": "Visit the [documentation](https://aka.ms/azure-iot-edge-ci-cd-docs) for help",
   "category": "Build",
   "visibility": [
@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 6
   },
   "preview": true,
   "instanceNameFormat": "Azure IoT Edge - $(action)",

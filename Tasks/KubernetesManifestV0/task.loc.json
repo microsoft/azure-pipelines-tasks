@@ -3,7 +3,7 @@
   "name": "KubernetesManifest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "preview": true,
@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 151,
-    "Patch": 5
+    "Patch": 6
   },
   "demands": [],
   "groups": [],
@@ -171,10 +171,15 @@
     },
     {
       "name": "kind",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.kind",
       "required": true,
       "defaultValue": "",
+      "options": {
+        "deployment": "deployment",
+        "replicaset": "replicaset",
+        "statefulset": "statefulset"
+      },
       "helpMarkDown": "ms-resource:loc.input.help.kind",
       "visibleRule": "action = scale || resourceToPatch = name"
     },

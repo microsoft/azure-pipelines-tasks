@@ -3,7 +3,7 @@
   "name": "Docker",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=848006",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 150,
-    "Patch": 6
+    "Minor": 151,
+    "Patch": 0
   },
   "demands": [],
   "preview": "false",

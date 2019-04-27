@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Copy Files",
+  "loc.friendlyName": "Copy files",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=708389)",
-  "loc.description": "Copy files from source folder to target folder using match patterns (The match patterns will only match file paths, not folder paths)",
+  "loc.description": "Copy files from a source folder to a target folder using patterns matching file paths (not folder paths)",
   "loc.instanceNameFormat": "Copy Files to: $(TargetFolder)",
   "loc.releaseNotes": "Match pattern consistency.",
   "loc.group.displayName.advanced": "Advanced",
@@ -17,6 +17,8 @@
   "loc.input.help.OverWrite": "Replace existing file in target folder",
   "loc.input.label.flattenFolders": "Flatten Folders",
   "loc.input.help.flattenFolders": "Flatten the folder structure and copy all files into the specified target folder.",
+  "loc.input.label.preserveTimestamp": "Preserve Target Timestamp",
+  "loc.input.help.preserveTimestamp": "Using the original source file, preserve the target file timestamp.",
   "loc.messages.FoundNFiles": "found %d files",
   "loc.messages.CleaningTargetFolder": "Cleaning target folder: %s",
   "loc.messages.FileAlreadyExistAt": "File %s already exist at %s",

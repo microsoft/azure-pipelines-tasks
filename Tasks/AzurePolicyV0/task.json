@@ -1,9 +1,9 @@
 {
   "id": "8BA74703-E94F-4A35-814E-FC21F44578A2",
   "name": "AzurePolicyCheckGate",
-  "friendlyName": "Check Azure Policy Compliance",
-  "description": "Security and compliance assessment with Azure policies on resources that belong to the resource group and Azure subscription.",
-  "helpUrl": "",
+  "friendlyName": "Check Azure Policy compliance",
+  "description": "Security and compliance assessment for Azure Policy",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-policy-check-gate",
   "helpMarkDown": "",
   "category": "Deploy",
   "visibility": [
@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 151,
+    "Minor": 152,
     "Patch": 0
   },
   "preview": "true",
@@ -68,7 +68,7 @@
       "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
-  "instanceNameFormat": "Azure Policy compliance assessment for $(ConnectedServiceName):$(ResourceGroupName)",
+  "instanceNameFormat": "Check Policy Compliance",
   "execution": {
     "HttpRequestChain": {
       "Execute": [
@@ -89,6 +89,13 @@
             "EndpointUrl": "$(locationUrl)",
             "Method": "GET",
             "Expression": "and(eq(response['statuscode'], 'OK'), eq(response['content']['status'], 'Succeeded'))"
+          }
+        },
+        {
+          "RequestInputs": {
+            "EndpointId": "$(connectedServiceName)",
+            "EndpointUrl": "{{#if ResourceGroupName}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/summarize?api-version=2018-04-04{{else}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/providers/Microsoft.PolicyInsights/policyStates/latest/summarize?api-version=2018-04-04{{/if}}",
+            "Method": "POST"
           }
         },
         {

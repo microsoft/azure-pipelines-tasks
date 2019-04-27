@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "MySQL Database Deploy",
+  "loc.friendlyName": "MySQL database deploy",
   "loc.helpMarkDown": "[More Information](https://aka.ms/mysql-deployment-on-machine-group)",
-  "loc.description": "This is an early preview. Run your scripts and make changes to your MySQL Database.",
+  "loc.description": "Run scripts and make changes to a MySQL Database",
   "loc.instanceNameFormat": "Deploy Using : $(TaskNameSelector)",
   "loc.input.label.TaskNameSelector": "Deploy MySql Using",
   "loc.input.help.TaskNameSelector": "Select one of the options between Script File & Inline Script.",
