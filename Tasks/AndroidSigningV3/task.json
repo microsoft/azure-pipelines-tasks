@@ -1,9 +1,9 @@
 {
     "id": "80F3F6A0-82A6-4A22-BA7A-E5B8C541B9B9",
     "name": "AndroidSigning",
-    "friendlyName": "Android Signing",
+    "friendlyName": "Android signing",
     "description": "Sign and align Android APK files",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613717",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/android-signing",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613717)",
     "category": "Build",
     "visibility": [
@@ -13,7 +13,7 @@
     "version": {
         "Major": 3,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "This version of the task uses apksigner instead of jarsigner to sign APKs.",
     "demands": [

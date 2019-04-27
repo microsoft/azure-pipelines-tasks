@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Package and deploy Helm charts",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running helm commands.",
+  "loc.description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
   "loc.instanceNameFormat": "helm $(command)",
   "loc.group.displayName.cluster": "Kubernetes Cluster",
   "loc.group.displayName.commands": "Commands",
@@ -84,5 +84,6 @@
   "loc.messages.SkipDeleteSecureFiles": "TLS not enabled in the Task. Skipping delete of certificates.",
   "loc.messages.SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
   "loc.messages.FileNotFound": "File not found at %s",
-  "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found."
+  "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }

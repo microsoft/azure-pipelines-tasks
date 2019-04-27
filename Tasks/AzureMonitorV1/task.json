@@ -1,10 +1,10 @@
 {
     "id": "99A72E7F-25E4-4576-BF38-22A42B995ED8",
     "name": "AzureMonitor",
-    "friendlyName": "Query Azure Monitor Alerts",
-    "description": "Observe the configured Azure monitor rules for active alerts.",
+    "friendlyName": "Query Azure Monitor alerts",
+    "description": "Observe the configured Azure Monitor rules for active alerts",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870240",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-monitor",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
     "category": "Utility",
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added support for query unified Azure monitor alerts.",
@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 1
     },
     "instanceNameFormat": "Query Azure Monitor alerts",
     "groups": [

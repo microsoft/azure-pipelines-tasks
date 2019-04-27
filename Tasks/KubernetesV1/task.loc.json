@@ -3,7 +3,7 @@
   "name": "Kubernetes",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/kubernetes",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 151,
-    "Patch": 2
+    "Patch": 5
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -45,8 +45,7 @@
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false,
-      "visibleRule": "command != login && command != logout"
+      "isExpanded": false
     },
     {
       "name": "output",
@@ -480,6 +479,7 @@
     "ReturningToolRunnerExecPromise": "ms-resource:loc.messages.ReturningToolRunnerExecPromise",
     "ToolRunnerExecCallFailed": "ms-resource:loc.messages.ToolRunnerExecCallFailed",
     "ToolRunnerExecCallSucceeded": "ms-resource:loc.messages.ToolRunnerExecCallSucceeded",
-    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

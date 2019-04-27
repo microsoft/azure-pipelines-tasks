@@ -2,8 +2,8 @@
     "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
     "name": "HelmDeploy",
     "friendlyName": "Package and deploy Helm charts",
-    "description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running helm commands.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
+    "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/helm-deploy",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
     "visibility": [
@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 151,
-        "Patch": 1
+        "Patch": 3
     },
     "demands": [],
     "groups": [
@@ -429,6 +429,7 @@
         "SkipDeleteSecureFiles": "TLS not enabled in the Task. Skipping delete of certificates.",
         "SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
         "FileNotFound": "File not found at %s",
-        "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found."
+        "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

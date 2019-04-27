@@ -3,7 +3,7 @@
   "name": "AppCenterDistribute",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/appcentersupport/",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/app-center-distribute",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 147,
+    "Minor": 151,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",

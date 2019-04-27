@@ -1,9 +1,9 @@
 {
     "id": "70A3A82D-4A3C-4A09-8D30-A793739DC94F",
     "name": "SqlServerDacpacDeployment",
-    "friendlyName": "[Deprecated] SQL Server Database Deploy",
-    "description": "Deploy SQL Server Database using DACPAC",
-    "helpUrl": "https://aka.ms/sqlserverdacpackdeprecatedreadme",
+    "friendlyName": "[Deprecated] SQL Server database deploy",
+    "description": "Deploy a SQL Server database using DACPAC",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment",
     "helpMarkDown": "[More Information](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
     "category": "Deploy",
     "visibility": [
@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 21
+        "Patch": 22
     },
     "demands": [],
     "minimumAgentVersion": "1.96.2",
