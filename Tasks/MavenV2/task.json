@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 152,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
@@ -300,7 +300,7 @@
             "required": true,
             "defaultValue": "true",
             "groupName": "advanced",
-            "helpMarkDown": "Automatically authenticate built-in Maven feeds from the Azure Artifacts/TFS [Package Management](https://marketplace.visualstudio.com/items?itemName=ms.feed) extension. If built-in Maven feeds are not in use, deselect this option for faster builds."
+            "helpMarkDown": "Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds."
         },
         {
             "name": "sqAnalysisEnabled",

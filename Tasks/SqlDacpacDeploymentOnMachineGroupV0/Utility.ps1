@@ -72,7 +72,7 @@ function EscapeSpecialChars
 function GetSHA256String {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$false)]
         [string] $inputString)
     
     if ($inputString) {
