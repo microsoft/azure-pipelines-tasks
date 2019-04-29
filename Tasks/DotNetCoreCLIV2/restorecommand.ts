@@ -99,7 +99,7 @@ export async function run(): Promise<void> {
                 const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed.feedId, feed.projectId, null, accessToken);
                 sources.push(<auth.IPackageSource>
                     {
-                        feedName: feed,
+                        feedName: feed.feedId,
                         feedUri: feedUrl,
                         isInternal: true
                     });
