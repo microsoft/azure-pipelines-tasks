@@ -2,16 +2,16 @@
   "id": "263abc27-4582-4174-8789-af599697778e",
   "name": "DownloadGitHubRelease",
   "friendlyName": "Download GitHub Release",
-  "description": "Downloads a GitHub Release from a repository.",
+  "description": "Downloads a GitHub Release from a repository",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://aka.ms/AA3x715",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-github-release",
   "helpMarkDown": "[More Information](https://aka.ms/AA3x715)",
   "category": "Utility",
   "demands": [],
   "version": {
     "Major": 0,
     "Minor": 151,
-    "Patch": 1
+    "Patch": 2
   },
   "minimumAgentVersion": "1.99.0",
   "instanceNameFormat": "Download GitHub Release",

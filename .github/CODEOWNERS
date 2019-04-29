@@ -103,8 +103,6 @@ Tasks/Common/azure-arm-rest/*   @vincentdass    @Ajay-MS
 
 Tasks/Common/azure-blobstorage-artifactProvider/*   @omeshp   @hiyadav
 
-Tasks/Common/azurestack-common/*    @Ajay-MS
-
 Tasks/Common/codeanalysis-common/*    @lkillgore
 
 Tasks/Common/codecoverage-tools/*     @nigurr   @lkillgore
@@ -313,13 +311,11 @@ Tasks/TwineAuthenticateV0/*     @zjrunner
 
 Tasks/UniversalPackagesV0/*     @zjrunner
 
-Tasks/UseDotNetV2/*     @damccorm
+Tasks/UseDotNetV2/*     @sachinma
 
 Tasks/UseNodeV1/*     @damccorm
 
 Tasks/UsePythonVersionV0/*      @madhurig
-
-Tasks/UseRubyV1/*   @dakale
 
 Tasks/UseRubyVersionV0/*    @hross
 

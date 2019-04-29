@@ -3,7 +3,7 @@
   "name": "DownloadSecureFile",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=862069",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 151,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",

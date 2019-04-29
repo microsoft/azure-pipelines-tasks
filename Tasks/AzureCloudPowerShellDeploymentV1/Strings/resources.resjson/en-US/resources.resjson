@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure Cloud Service Deployment",
+  "loc.friendlyName": "Azure Cloud Service deployment",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "Deploy an Azure Cloud Service",
   "loc.instanceNameFormat": "Azure Deployment: $(CsPkg)",

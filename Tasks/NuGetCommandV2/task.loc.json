@@ -3,14 +3,14 @@
   "name": "NuGetCommand",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613747",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
     "Minor": 151,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",

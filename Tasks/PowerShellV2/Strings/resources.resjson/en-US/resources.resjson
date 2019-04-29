@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "PowerShell",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
-  "loc.description": "Run a PowerShell script on Windows, macOS, or Linux.",
+  "loc.description": "Run a PowerShell script on Linux, macOS, or Windows",
   "loc.instanceNameFormat": "PowerShell Script",
   "loc.releaseNotes": "Script task consistency. Added support for macOS and Linux.",
   "loc.group.displayName.advanced": "Advanced",
@@ -33,5 +33,4 @@
   "loc.messages.PS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '{0}'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
   "loc.messages.PS_InvalidFilePath": "Invalid file path '{0}'. A path to a .ps1 file is required.",
   "loc.messages.PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from powershell."
-  "loc.messages.PS_InvalidTargetType": "Invalid TargetType '{0}'. The value must be one of: 'filePath' or 'inline'"
 }
