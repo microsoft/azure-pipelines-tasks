@@ -91,6 +91,9 @@
         },
         {
             "name": "buildId",
+            "aliases": [
+                "pipelineId"
+            ],
             "type": "pickList",
             "label": "Build",
             "defaultValue": "",
@@ -137,6 +140,9 @@
         },
         {
             "name": "downloadPath",
+            "aliases": [
+                "targetPath"
+            ],
             "type": "string",
             "label": "Destination directory",
             "defaultValue": "$(System.ArtifactsDirectory)",

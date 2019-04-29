@@ -91,6 +91,9 @@
     },
     {
       "name": "buildId",
+      "aliases": [
+        "pipelineId"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.buildId",
       "defaultValue": "",
@@ -137,6 +140,9 @@
     },
     {
       "name": "downloadPath",
+      "aliases": [
+        "targetPath"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.downloadPath",
       "defaultValue": "$(System.ArtifactsDirectory)",
