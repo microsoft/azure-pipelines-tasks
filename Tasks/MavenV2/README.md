@@ -46,14 +46,3 @@ Use the next options to manage your `JAVA_HOME` attribute by JDK Version and Pat
 - **Run PMD :** You can choose to run the PMD static code analysis tool, which examines your source code for possible bugs. You will receive a code analysis report with the number of violations detected, as well as the original report files if there were any violations.
 
 - **Run FindBugs :** You can choose to run the FindBugs static code analysis tool, which examines the bytecode of your program for possible bugs. You will receive a code analysis report with the number of violations detected, as well as the original report files if there were any violations.
-
-
-
-
-
-
-
-
-
-
-
