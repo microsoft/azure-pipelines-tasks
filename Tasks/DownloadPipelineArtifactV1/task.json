@@ -92,7 +92,7 @@
         {
             "name": "buildId",
             "aliases": [
-                "pipelineI"
+                "pipelineId"
             ],
             "type": "pickList",
             "label": "Build",
