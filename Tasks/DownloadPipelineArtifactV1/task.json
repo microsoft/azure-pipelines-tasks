@@ -90,9 +90,9 @@
             "helpMarkDown": "Specify to filter on branch/ref name, for example: ```refs/heads/develop```."
         },
         {
-            "name": "pipelineId",
+            "name": "buildId",
             "aliases": [
-                "buildId"
+                "pipelineId"
             ],
             "type": "pickList",
             "label": "Build",
@@ -139,9 +139,9 @@
             "helpMarkDown": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples).</p>"
         },
         {
-            "name": "targetPath",
+            "name": "downloadPath",
             "aliases": [
-                "downloadPath"
+                "targetPath"
             ],
             "type": "string",
             "label": "Destination directory",
@@ -177,7 +177,7 @@
         },
         {
             "endpointId": "tfs:teamfoundation",
-            "target": "pipelineId",
+            "target": "buildId",
             "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds?definitions={{definition}}&resultFilter=succeeded,partiallySucceeded&$top=200",
             "resultSelector": "jsonpath:$.value[*]",
             "parameters": {
