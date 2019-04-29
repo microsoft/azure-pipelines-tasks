@@ -17,7 +17,7 @@
   "version": {
     "Major": 4,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 6
   },
   "preview": true,
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -139,7 +139,11 @@
       "required": true,
       "visibleRule": "TargetAzurePs = OtherVersion",
       "groupName": "AzurePowerShellVersionOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.CustomTargetAzurePs"
+      "helpMarkDown": "ms-resource:loc.input.help.CustomTargetAzurePs",
+      "validation": {
+        "expression": "isMatch(value, '^[0-9]+\\.[0-9]+\\.[0-9]+$','Multiline')",
+        "message": "Enter valid Azure PowerShell Version"
+      }
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
