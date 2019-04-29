@@ -14,14 +14,14 @@
   "loc.input.label.buildVersionToDownload": "Build version to download",
   "loc.input.label.branchName": "Branch name",
   "loc.input.help.branchName": "Specify to filter on branch/ref name, for example: ```refs/heads/develop```.",
-  "loc.input.label.pipelineId": "Pipeline",
-  "loc.input.help.pipelineId": "The pipeline from which to download the artifacts.",
+  "loc.input.label.buildId": "Build",
+  "loc.input.help.buildId": "The build from which to download the artifacts.",
   "loc.input.label.tags": "Build Tags",
   "loc.input.help.tags": "A comma-delimited list of tags. Only builds with these tags will be returned.",
   "loc.input.label.artifactName": "Artifact name",
   "loc.input.help.artifactName": "The name of the artifact to download.",
   "loc.input.label.itemPattern": "Matching pattern",
   "loc.input.help.itemPattern": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples).</p>",
-  "loc.input.label.targetPath": "Destination directory",
-  "loc.input.help.targetPath": "Path on the agent machine where the artifacts will be downloaded."
+  "loc.input.label.downloadPath": "Destination directory",
+  "loc.input.help.downloadPath": "Path on the agent machine where the artifacts will be downloaded."
 }
