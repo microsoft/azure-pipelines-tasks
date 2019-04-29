@@ -144,6 +144,10 @@ function getTfsSpecificSettings(inputDataContract : idc.InputDataContract) : idc
         inputDataContract.TfsSpecificSettings.ReleaseUri = tl.getVariable('Release.ReleaseUri');
         inputDataContract.TfsSpecificSettings.ReleaseEnvironmentUri = tl.getVariable('Release.EnvironmentUri');
         inputDataContract.TfsSpecificSettings.WorkFolder = tl.getVariable('System.DefaultWorkingDirectory');
+        inputDataContract.TfsSpecificSettings.PhaseName = tl.getVariable('System.PhaseName');
+        inputDataContract.TfsSpecificSettings.StageName = tl.getVariable('System.StageName');
+        inputDataContract.TfsSpecificSettings.JobName = tl.getVariable('System.JobName');
+        inputDataContract.TfsSpecificSettings.JobAttempt = tl.getVariable('System.JobAttempt');
 
         return inputDataContract;
 }
