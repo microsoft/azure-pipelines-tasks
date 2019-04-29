@@ -22,6 +22,6 @@
   "loc.input.help.artifactName": "The name of the artifact to download.",
   "loc.input.label.itemPattern": "Matching pattern",
   "loc.input.help.itemPattern": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples).</p>",
-  "loc.input.label.targetPath": "Destination directory",
-  "loc.input.help.targetPath": "Path on the agent machine where the artifacts will be downloaded."
+  "loc.input.label.downloadPath": "Destination directory",
+  "loc.input.help.downloadPath": "Path on the agent machine where the artifacts will be downloaded."
 }
