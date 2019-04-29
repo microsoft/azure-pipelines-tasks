@@ -3,6 +3,8 @@ import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/Azure
 import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
 import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
+import { PackageUtility } from 'azurermdeploycommon/webdeployment-common/packageUtility';
+import fs = require('fs');
 
 const osTypeMap = new Map([
     [ 'app,conatiner,xenon', 'Windows' ],
@@ -14,14 +16,15 @@ export class TaskParametersUtility {
     public static async getParameters(): Promise<TaskParameters> {
         var taskParameters: TaskParameters = {
             connectedServiceName: tl.getInput('azureSubscription', true),
-            ImageName: tl.getInput('imageName', true),
+            ImageName: tl.getInput('imageName', false),
             AppSettings: tl.getInput('appSettings', false),
             StartupCommand: tl.getInput('containerCommand', false),
             ConfigurationSettings: tl.getInput('configurationStrings', false),
             WebAppName: tl.getInput('appName', true),
             DeployToSlotOrASEFlag: tl.getBoolInput('deployToSlotOrASE', false),
             ResourceGroupName: tl.getInput('resourceGroupName', false),
-            SlotName:tl.getInput('slotName', false)
+            SlotName: tl.getInput('slotName', false),
+            MulticontainerConfigFile: tl.getPathInput('multicontainerConfigFile', false)
         }
 
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
@@ -34,6 +37,11 @@ export class TaskParametersUtility {
 
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
+
+        let containerDetails = await this.getContainerKind(taskParameters);
+        taskParameters.ImageName = containerDetails["imageName"];
+        taskParameters.isMultiContainer = containerDetails["isMultiContainer"];
+        taskParameters. MulticontainerConfigFile = containerDetails["multicontainerConfigFile"];
 
         return taskParameters;
     }
@@ -59,6 +67,42 @@ export class TaskParametersUtility {
             osType: osType
         };
     }
+
+    private static async getContainerKind(taskParameters: TaskParameters): Promise<any> {
+        let imageName = taskParameters.ImageName;
+        let isMultiLineImages: boolean = imageName && imageName.indexOf("\n") != -1; 
+        let isMultiContainer = false;
+        let multicontainerConfigFile = PackageUtility.getPackagePath(taskParameters.MulticontainerConfigFile);
+
+        if(!imageName && tl.stats(multicontainerConfigFile).isDirectory()) {
+            throw new Error(tl.loc('FailedToDeployToWebApp', taskParameters.WebAppName));
+        }
+
+        if(imageName && !isMultiLineImages && tl.stats(multicontainerConfigFile).isDirectory()) {
+            console.log(tl.loc("SingleContainerDeployment", taskParameters.WebAppName));
+        }
+
+        if(tl.stats(multicontainerConfigFile).isFile()) {
+            isMultiContainer = true;
+            if(imageName) {
+                console.log(tl.loc("MultiContainerDeploymentWithTransformation", taskParameters.WebAppName));
+            }
+            else {
+                console.log(tl.loc("MultiContainerDeploymentWithoutTransformation", taskParameters.WebAppName));
+            }
+        }
+        else if (isMultiLineImages) {
+            throw new Error(tl.loc('FailedToGetConfigurationFile'));
+        }
+
+        tl.debug(`is multicontainer app : ${isMultiContainer}`);
+
+        return {
+            imageName: imageName,
+            isMultiContainer: isMultiContainer,
+            multicontainerConfigFile: multicontainerConfigFile
+        };
+    }
 }
 
 export interface TaskParameters {
@@ -74,4 +118,6 @@ export interface TaskParameters {
     DeployToSlotOrASEFlag?: boolean;
     SlotName?: string;
     isLinuxContainerApp?: boolean;
+    MulticontainerConfigFile?: string;
+    isMultiContainer?: boolean;
 }

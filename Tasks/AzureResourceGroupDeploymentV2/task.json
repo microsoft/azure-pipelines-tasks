@@ -1,9 +1,9 @@
 {
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
     "name": "AzureResourceGroupDeployment",
-    "friendlyName": "Azure Resource Group Deployment",
-    "description": "Deploy an Azure resource manager (ARM) template to a resource group. You can also start, stop, delete, deallocate all Virtual Machines (VM) in a resource group",
-    "helpUrl": "https://aka.ms/argtaskreadme",
+    "friendlyName": "Azure resource group deployment",
+    "description": "Deploy an Azure Resource Manager (ARM) template to a resource group and manage virtual machines",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
     "helpMarkDown": "[More Information](https://aka.ms/argtaskreadme)",
     "category": "Deploy",
     "releaseNotes": "-Works with cross-platform agents (Linux, macOS, or Windows)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 147,
-        "Patch": 3
+        "Minor": 151,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -196,11 +196,11 @@
                 "teamServicesConnection"
             ],
             "type": "connectedService:ExternalTfs",
-            "label": "Azure Pipelines/TFS service connection",
+            "label": "Azure Pipelines service connection",
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "required": true,
-            "helpMarkDown": "Specify the service connection to connect to an Azure DevOps organization or TFS collection for agent registration.<br><br>You can create a service connection using \"+New\", and select \"Token-based authentication\". You need a [personal access token(PAT)](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate?view=vsts) to setup a service connection. <br><br>​Click \"Manage\" to update the service connection details.",
+            "helpMarkDown": "Specify the service connection to connect to an Azure DevOps organization or collection for agent registration.<br><br>You can create a service connection using \"+New\", and select \"Token-based authentication\". You need a [personal access token(PAT)](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate?view=vsts) to setup a service connection. <br><br>​Click \"Manage\" to update the service connection details.",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -478,6 +478,7 @@
         "ASE_SSLIssueRecommendation": "To use a certificate, the certificate must be signed by a trusted certificate authority. If getting certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline.",
         "MoreInformationOnAzurePortal": "More information on Azure Portal",
         "ResponseNotValid": "Response is not in a valid format",
-        "LogDeploymentName": "Deployment name is %s"
+        "LogDeploymentName": "Deployment name is %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }
