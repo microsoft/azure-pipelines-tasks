@@ -1,4 +1,0 @@
-{
-  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "指定的 AzureRm 终结点 URL“{0}”无效。",
-  "loc.messages.FailedToFetchAzureStackDependencyData": "未能提取 Azure Stack 依赖关系数据。错误代码: %s"
-}
