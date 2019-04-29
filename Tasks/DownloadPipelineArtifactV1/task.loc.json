@@ -90,9 +90,9 @@
       "helpMarkDown": "ms-resource:loc.input.help.branchName"
     },
     {
-      "label": "ms-resource:loc.input.label.buildId",
+      "name": "buildId",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.pipelineId",
+      "label": "ms-resource:loc.input.label.buildId",
       "defaultValue": "",
       "required": true,
       "visibleRule": "buildType == specific && buildVersionToDownload == specific",
