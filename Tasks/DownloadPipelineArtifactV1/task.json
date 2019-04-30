@@ -9,12 +9,12 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 2
+        "Patch": 3
     },
     "groups": [],
     "demands": [],
     "preview": true,
-    "minimumAgentVersion": "2.150.0",
+    "minimumAgentVersion": "2.150.3",
     "inputs": [
         {
             "name": "buildType",
@@ -201,7 +201,7 @@
     "instanceNameFormat": "Download Pipeline Artifact",
     "execution": {
         "AgentPlugin": {
-            "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV1_1_2, Agent.Plugins"
+            "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV1_1_3, Agent.Plugins"
         }
     },
     "messages": {}
