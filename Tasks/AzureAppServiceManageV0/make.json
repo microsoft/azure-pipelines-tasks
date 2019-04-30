@@ -6,13 +6,5 @@
             "dest": "./",
             "compile": true
         }
-    ],
-    "rm": [
-        {
-            "items": [
-                "node_modules/azure-arm-rest-v2/node_modules/azure-pipelines-task-lib"
-            ],
-            "options": "-Rf"
-        }
     ]
 }

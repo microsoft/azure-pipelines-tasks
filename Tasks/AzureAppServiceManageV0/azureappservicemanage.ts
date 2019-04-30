@@ -16,6 +16,7 @@ import { enableContinuousMonitoring } from './operations/ContinuousMonitoringUti
 async function run() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
+		tl.setResourcePath(path.join( __dirname, 'module.json'));
         var connectedServiceName = tl.getInput('ConnectedServiceName', true);
         var action = tl.getInput('Action', true);
         var webAppName: string = tl.getInput('WebAppName', true);

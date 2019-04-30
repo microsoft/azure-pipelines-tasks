@@ -101,6 +101,8 @@ Tasks/Common/VstsAzureRestHelpers_/*  @Ajay-MS  @rajatagrawal-dev
 
 Tasks/Common/azure-arm-rest/*   @vincentdass    @Ajay-MS
 
+Tasks/Common/azure-arm-rest-v2/*    @kmkumaran      @SumiranAgg     @vincentdass
+
 Tasks/Common/azure-blobstorage-artifactProvider/*   @omeshp   @hiyadav
 
 Tasks/Common/azurestack-common/*    @Ajay-MS
