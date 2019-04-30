@@ -59,7 +59,7 @@
                 "PublishProfile": "Publish Profile"
             },
             "required": true,
-            "helpMarkDown": "Select the service connection type to use to deploy the Web App.<br />Select Publish Profile for using Visual Studio created Publish profile."
+            "helpMarkDown": "Select the service connection type to use to deploy the Web App.<br />Select Publish Profile for using Visual Studio created Publish profile. [More Information](https://aka.ms/vsPublishProfile)."
         },
         {
             "name": "ConnectedServiceName",
