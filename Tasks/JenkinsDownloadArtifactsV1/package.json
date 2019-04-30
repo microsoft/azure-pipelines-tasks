@@ -3,12 +3,12 @@
   "description": "Azure Pipelines Jenkins Download Task",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",
   "dependencies": {
-    "artifact-engine": "0.1.24",
+    "artifact-engine": "0.1.26",
     "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
     "azure-blobstorage-artifactProvider": "file:../../_build/Tasks/Common/azure-blobstorage-artifactProvider-1.0.0.tgz",
     "decompress-zip": "0.3.0",

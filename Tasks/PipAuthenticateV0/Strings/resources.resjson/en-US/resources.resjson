@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Python Pip Authenticate",
+  "loc.friendlyName": "Python pip authenticate",
   "loc.helpMarkDown": "[More Information](https://pip.pypa.io/en/stable/reference/pip_install/)",
-  "loc.description": "Authentication task for pip client used for installing python distributions.",
+  "loc.description": "Authentication task for the pip client used for installing Python distributions",
   "loc.instanceNameFormat": "Pip Authenticate $(message)",
   "loc.group.displayName.feedAuthentication": "Feeds and Authentication",
   "loc.input.label.feedList": "My feeds (select below)",

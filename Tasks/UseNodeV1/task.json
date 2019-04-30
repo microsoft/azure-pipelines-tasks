@@ -1,0 +1,54 @@
+{
+    "id": "31C75BBB-BCDF-4706-8D7C-4DA6A1959BC2",
+    "name": "UseNode",
+    "friendlyName": "Use Node.js ecosystem",
+    "description": "Set up a Node.js environment and add it to the PATH, additionally providing proxy support",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpMarkDown": "",
+    "category": "Tool",
+    "preview": true,
+    "ecosystem": "node",
+    "minimumAgentVersion": "2.144.0",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 2
+    },
+    "satisfies": [
+        "Node"
+    ],
+    "demands": [],
+    "instanceNameFormat": "Use Node $(versionSpec)",
+    "inputs": [
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "10.x",
+            "required": false,
+            "helpMarkDown": "Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0"
+        },
+        {
+            "name": "checkLatest",
+            "type": "boolean",
+            "label": "Check for Latest Version",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool."
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "usenode.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "ToolFailed": "Node install failed: %s"
+    }
+}

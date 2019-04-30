@@ -1,8 +1,8 @@
-import * as tl from "vsts-task-lib";
+import * as tl from 'azure-pipelines-task-lib';
 
 import * as VsoBaseInterfaces from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
 import { ClientVersioningData } from 'azure-devops-node-api/VsoClient';
-import vstsClientBases = require("azure-devops-node-api/ClientApiBases");
+import vstsClientBases = require('azure-devops-node-api/ClientApiBases');
 
 import * as restclient from 'typed-rest-client/RestClient';
 

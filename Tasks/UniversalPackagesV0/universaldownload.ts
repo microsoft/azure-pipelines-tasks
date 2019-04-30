@@ -1,10 +1,10 @@
-import * as tl from "vsts-task-lib";
+import * as tl from "azure-pipelines-task-lib";
 import * as pkgLocationUtils from "packaging-common/locationUtilities"; 
-import {IExecSyncResult, IExecOptions} from "vsts-task-lib/toolrunner";
+import {IExecSyncResult, IExecOptions} from "azure-pipelines-task-lib/toolrunner";
 import * as telemetry from "utility-common/telemetry";
-import * as artifactToolRunner from "./Common/ArtifactToolRunner";
-import * as artifactToolUtilities from "./Common/ArtifactToolUtilities";
-import * as auth from "./Common/Authentication";
+import * as artifactToolRunner from "packaging-common/universal/ArtifactToolRunner";
+import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolUtilities";
+import * as auth from "packaging-common/universal/Authentication";
 
 export async function run(artifactToolPath: string): Promise<void> {
     let buildIdentityDisplayName: string = null;
@@ -113,7 +113,6 @@ function downloadPackageUsingArtifactTool(downloadDir: string, options: artifact
         "--path", downloadDir,
         "--patvar", "UNIVERSAL_DOWNLOAD_PAT",
         "--verbosity", tl.getInput("verbosity"));
-
     console.log(tl.loc("Info_Downloading", options.packageName, options.packageVersion, options.feedId));
     const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(options.artifactToolPath, command, execOptions);
     if (execResult.code === 0) {

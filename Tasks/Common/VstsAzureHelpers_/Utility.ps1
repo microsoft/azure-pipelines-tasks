@@ -498,19 +498,35 @@ function Disconnect-AzureAndClearContext {
             if (Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Disconnect-AzureRmAccount -memberName Scope) {	
                 Write-Host "##[command]Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop"	
                 $null = Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop
-            }	
+            }
+            elseif (Get-Command -Name "Disconnect-AzAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Disconnect-AzAccount -memberName Scope) {	
+                Write-Host "##[command]Disconnect-AzAccount -Scope Process -ErrorAction Stop"	
+                $null = Disconnect-AzAccount -Scope Process -ErrorAction Stop
+            }
             elseif (Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Remove-AzureRmAccount -memberName Scope) {	
                 Write-Host "##[command]Remove-AzureRmAccount -Scope Process -ErrorAction Stop"	
                 $null = Remove-AzureRmAccount -Scope Process -ErrorAction Stop
+            }
+            elseif (Get-Command -Name "Remove-AzAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Remove-AzAccount -memberName Scope) {	
+                Write-Host "##[command]Remove-AzAccount -Scope Process -ErrorAction Stop"	
+                $null = Remove-AzAccount -Scope Process -ErrorAction Stop
             }	
             elseif (Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Logout-AzureRmAccount -memberName Scope) {	
                 Write-Host "##[command]Logout-AzureRmAccount -Scope Process -ErrorAction Stop"	
                 $null = Logout-AzureRmAccount -Scope Process -ErrorAction Stop
             }
+            elseif (Get-Command -Name "Logout-AzAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Logout-AzAccount -memberName Scope) {	
+                Write-Host "##[command]Logout-AzAccount -Scope Process -ErrorAction Stop"	
+                $null = Logout-AzAccount -Scope Process -ErrorAction Stop
+            }
 
             if (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue") {
                 Write-Host "##[command]Clear-AzureRmContext -Scope Process -ErrorAction Stop"
                 $null = Clear-AzureRmContext -Scope Process -ErrorAction Stop
+            }
+            if (Get-Command -Name "Clear-AzContext" -ErrorAction "SilentlyContinue") {
+                Write-Host "##[command]Clear-AzContext -Scope Process -ErrorAction Stop"
+                $null = Clear-AzContext -Scope Process -ErrorAction Stop
             }
         }
     } catch {

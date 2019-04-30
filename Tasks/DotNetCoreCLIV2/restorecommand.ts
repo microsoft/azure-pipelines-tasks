@@ -1,11 +1,11 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as Q from 'q';
 import * as utility from './Common/utility';
 import * as auth from 'packaging-common/nuget/Authentication';
 import { NuGetConfigHelper2 } from 'packaging-common/nuget/NuGetConfigHelper2';
 import * as ngRunner from 'packaging-common/nuget/NuGetToolRunner2';
 import * as path from 'path';
-import { IExecOptions } from 'vsts-task-lib/toolrunner';
+import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 import * as nutil from 'packaging-common/nuget/Utility';
 import * as commandHelper from 'packaging-common/nuget/CommandHelper';
 import * as pkgLocationUtils from 'packaging-common/locationUtilities';

@@ -3,6 +3,7 @@
   "name": "DeployVisualStudioTestAgent",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/visual-studio-test-agent-deployment",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
@@ -12,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 1,
-    "Patch": 37
+    "Minor": 151,
+    "Patch": 0
   },
   "deprecated": true,
   "runsOn": [

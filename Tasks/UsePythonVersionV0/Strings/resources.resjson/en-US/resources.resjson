@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Use Python Version",
+  "loc.friendlyName": "Use Python version",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=871498)",
-  "loc.description": "Retrieves the specified version of Python from the tool cache. Optionally add it to PATH.",
+  "loc.description": "Use the specified version of Python from the tool cache, optionally adding it to the PATH",
   "loc.instanceNameFormat": "Use Python $(versionSpec)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.versionSpec": "Version spec",
@@ -13,6 +13,7 @@
   "loc.messages.ListAvailableVersions": "Versions in %s:",
   "loc.messages.PlatformNotRecognized": "Platform not recognized",
   "loc.messages.PrependPath": "Prepending PATH environment variable with directory: %s",
+  "loc.messages.PyPyNotFound": "Could not find an installation of PyPy%d in Agent.ToolsDirectory.",
   "loc.messages.ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
   "loc.messages.ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
   "loc.messages.VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory."

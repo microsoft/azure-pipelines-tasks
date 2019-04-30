@@ -3,21 +3,20 @@
   "name": "cURLUploader",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/curl-upload-files",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 142,
-    "Patch": 2
+    "Minor": 151,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
     "DeploymentGroup"
   ],
-  "demands": [
-    "curl"
-  ],
+  "demands": [],
   "groups": [
     {
       "name": "advanced",

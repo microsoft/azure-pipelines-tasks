@@ -3,6 +3,7 @@
   "name": "AppCenterTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/app-center-test",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
@@ -11,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 137,
+    "Minor": 151,
     "Patch": 0
   },
   "groups": [
@@ -179,9 +180,9 @@
       "groupName": "prepare"
     },
     {
-      "name": "uitestStoreFile",
+      "name": "uitestStorePath",
       "type": "string",
-      "label": "ms-resource:loc.input.label.uitestStoreFile",
+      "label": "ms-resource:loc.input.label.uitestStorePath",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = uitest",
       "required": false,

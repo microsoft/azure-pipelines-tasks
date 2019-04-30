@@ -1,0 +1,54 @@
+{
+  "id": "31C75BBB-BCDF-4706-8D7C-4DA6A1959BC2",
+  "name": "UseNode",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "preview": true,
+  "ecosystem": "node",
+  "minimumAgentVersion": "2.144.0",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 2
+  },
+  "satisfies": [
+    "Node"
+  ],
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "version",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.version",
+      "defaultValue": "10.x",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.version"
+    },
+    {
+      "name": "checkLatest",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkLatest",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.checkLatest"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "usenode.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ToolFailed": "ms-resource:loc.messages.ToolFailed"
+  }
+}

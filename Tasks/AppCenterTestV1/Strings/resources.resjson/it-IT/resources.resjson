@@ -28,7 +28,7 @@
   "loc.input.help.calabashSkipConfigCheck": "Forza l'esecuzione senza profilo di Cucumber.",
   "loc.input.label.uitestBuildDir": "Directory di compilazione",
   "loc.input.help.uitestBuildDir": "Percorso della directory con gli assembly di test compilati.",
-  "loc.input.label.uitestStoreFile": "File di archivio",
+  "loc.input.label.uitestStorePath": "File di archivio",
   "loc.input.label.uitestStorePass": "Password dell'archivio",
   "loc.input.label.uitestKeyAlias": "Alias della chiave",
   "loc.input.label.uitestKeyPass": "Password della chiave",

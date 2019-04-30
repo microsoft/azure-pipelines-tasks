@@ -1,6 +1,6 @@
-import * as path from 'path';
-import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as assert from "assert";
+import * as ttm from "azure-pipelines-task-lib/mock-test";
+import * as path from "path";
 
 describe('NuGetCommand Suite', function () {
     before(() => {
@@ -249,6 +249,20 @@ describe('NuGetCommand Suite', function () {
         done();
     });
 
+    it('succeeds when conflict occurs using NuGet.exe on Linux (allow conflict)', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './PublishTests/failWithContinueOnConflictOnLinux.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.invokedToolCount == 1, 'should have run NuGet.exe once');
+        assert(tr.stdErrContained, "stderr output is here");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
     it('fails when conflict occurs using VstsNuGetPush.exe (disallow conflict)', (done: MochaDone) => {
         this.timeout(1000);
 
@@ -403,7 +417,7 @@ describe('NuGetCommand Suite', function () {
         done();
     });
 
-    it('publish fails when duplicates are skipped and exit code!=[0|2]', (done: MochaDone) => {
+    it('publish fails when duplicates are skipped and exit code!=[0|2] on Windows_NT', (done: MochaDone) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, './PublishTests/failWithContinueOnConflict.js')

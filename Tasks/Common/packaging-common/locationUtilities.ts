@@ -1,6 +1,6 @@
 import * as vsts from 'azure-devops-node-api';
 import * as interfaces from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import { IRequestOptions } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
 
 import * as provenance from "./provenance";
@@ -226,7 +226,7 @@ export async function getFeedRegistryUrl(
 }
 
 // This should be replaced when retry is implemented in vso client.
-async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: number) : Promise<T> {
+export async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: number) : Promise<T> {
     try {
         return await cb();
     } catch(exception) {

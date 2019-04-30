@@ -1,4 +1,4 @@
-import tmrm = require('vsts-task-lib/mock-run');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 
 import {VersionInfo} from '../pe-parser/VersionResource'
 	
@@ -51,7 +51,7 @@ export function registerNugetUtilityMock(tmr: tmrm.TaskMockRunner, projectFile: 
             return 'c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider';
         },
         setConsoleCodePage: function() {
-            var tlm = require('vsts-task-lib/mock-task');
+            var tlm = require('azure-pipelines-task-lib/mock-task');
             tlm.debug(`setting console code page`);
         },
         getNuGetFeedRegistryUrl(
@@ -85,7 +85,7 @@ export function registerNugetUtilityMockUnix(tmr: tmrm.TaskMockRunner, projectFi
             return '~/myagent/_work/_tasks/NuGet/CredentialProvider';
         },
         setConsoleCodePage: function() {
-            var tlm = require('vsts-task-lib/mock-task');
+            var tlm = require('azure-pipelines-task-lib/mock-task');
             tlm.debug(`setting console code page`);
         },
         getNuGetFeedRegistryUrl(

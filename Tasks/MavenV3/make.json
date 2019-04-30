@@ -11,7 +11,7 @@
             "compile": true
         },
         {
-            "module": "../Common/packaging-common",
+            "module": "../Common/packaging-common-old",
             "type": "node",
             "compile": true
         },
@@ -26,7 +26,7 @@
             "items": [
                 "node_modules/java-common/node_modules/vsts-task-lib",
                 "node_modules/codecoverage-tools/node_modules/vsts-task-lib",
-                "node_modules/packaging-common/node_modules/vsts-task-lib",
+                "node_modules/packaging-common-old/node_modules/vsts-task-lib",
                 "node_modules/codeanalysis-common/node_modules/vsts-task-lib"
             ],
             "options": "-Rf"

@@ -1,0 +1,156 @@
+{
+  "id": "E28912F1-0114-4464-802A-A3A35437FD16",
+  "name": "Docker",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 151,
+    "Patch": 2
+  },
+  "demands": [],
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "groups": [
+    {
+      "name": "containerRepository",
+      "displayName": "ms-resource:loc.group.displayName.containerRepository",
+      "isExpanded": true
+    },
+    {
+      "name": "commands",
+      "displayName": "ms-resource:loc.group.displayName.commands",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "containerRegistry",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.containerRegistry",
+      "groupName": "containerRepository",
+      "helpMarkDown": "ms-resource:loc.input.help.containerRegistry"
+    },
+    {
+      "name": "repository",
+      "label": "ms-resource:loc.input.label.repository",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.repository",
+      "defaultValue": "",
+      "visibleRule": "command != login && command != logout",
+      "groupName": "containerRepository",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "buildAndPush",
+      "required": true,
+      "options": {
+        "buildAndPush": "buildAndPush",
+        "build": "build",
+        "push": "push",
+        "login": "login",
+        "logout": "logout"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.command"
+    },
+    {
+      "name": "Dockerfile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.Dockerfile",
+      "defaultValue": "**/Dockerfile",
+      "required": true,
+      "visibleRule": "command = build || command = buildAndPush",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.Dockerfile"
+    },
+    {
+      "name": "buildContext",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.buildContext",
+      "defaultValue": "**",
+      "visibleRule": "command = build || command = buildAndPush",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.buildContext"
+    },
+    {
+      "name": "tags",
+      "type": "multiLine",
+      "defaultValue": "$(Build.BuildId)",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "visibleRule": "command = build || command = push || command = buildAndPush",
+      "label": "ms-resource:loc.input.label.tags",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.tags"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "visibleRule": "command != login && command != logout && command != buildAndPush",
+      "label": "ms-resource:loc.input.label.arguments",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    }
+  ],
+  "dataSourceBindings": [],
+  "outputVariables": [
+    {
+      "name": "DockerOutput",
+      "description": "The path of the file(s) which contains the output of the command. This contains two file paths (separated by newline characters) in case of buildAndPush command, and one file path for any other command."
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "showEnvironmentVariables": true,
+  "execution": {
+    "Node": {
+      "target": "docker.js"
+    }
+  },
+  "messages": {
+    "AddingNewAuthToExistingConfig": "ms-resource:loc.messages.AddingNewAuthToExistingConfig",
+    "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
+    "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
+    "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
+    "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
+    "CouldNotFindDockerConfig": "ms-resource:loc.messages.CouldNotFindDockerConfig",
+    "DeletingDockerConfigDirectory": "ms-resource:loc.messages.DeletingDockerConfigDirectory",
+    "DeletingAuthDataFromDockerConfig": "ms-resource:loc.messages.DeletingAuthDataFromDockerConfig",
+    "DockerRegistryNotFound": "ms-resource:loc.messages.DockerRegistryNotFound",
+    "ErrorParsingDockerConfig": "ms-resource:loc.messages.ErrorParsingDockerConfig",
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "FoundDockerConfigStoredInTempPath": "ms-resource:loc.messages.FoundDockerConfigStoredInTempPath",
+    "FoundLoginsForOtherRegistries": "ms-resource:loc.messages.FoundLoginsForOtherRegistries",
+    "IgnoringArgumentsInput": "ms-resource:loc.messages.IgnoringArgumentsInput",
+    "LoggingOutFromRegistry": "ms-resource:loc.messages.LoggingOutFromRegistry",
+    "LoggingOutWithNoRegistrySpecified": "ms-resource:loc.messages.LoggingOutWithNoRegistrySpecified",
+    "NoAuthInfoFoundInDockerConfig": "ms-resource:loc.messages.NoAuthInfoFoundInDockerConfig",
+    "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
+    "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
+    "NotAddingAnyTagsToBuild": "ms-resource:loc.messages.NotAddingAnyTagsToBuild",
+    "NotPushingAsNoLoginFound": "ms-resource:loc.messages.NotPushingAsNoLoginFound",
+    "OldDockerConfigContent": "ms-resource:loc.messages.OldDockerConfigContent",
+    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
+    "PathIsNotInTempDirectory": "ms-resource:loc.messages.PathIsNotInTempDirectory",
+    "RegistryAuthNotPresentInConfig": "ms-resource:loc.messages.RegistryAuthNotPresentInConfig",
+    "RestoringOldLoginAuth": "ms-resource:loc.messages.RestoringOldLoginAuth",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+  }
+}

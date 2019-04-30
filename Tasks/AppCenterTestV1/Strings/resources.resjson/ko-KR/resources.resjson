@@ -28,7 +28,7 @@
   "loc.input.help.calabashSkipConfigCheck": "Cucumber 프로필 없이 강제 실행합니다.",
   "loc.input.label.uitestBuildDir": "빌드 디렉터리",
   "loc.input.help.uitestBuildDir": "빌드된 테스트 어셈블리가 포함된 디렉터리의 경로입니다.",
-  "loc.input.label.uitestStoreFile": "저장소 파일",
+  "loc.input.label.uitestStorePath": "저장소 파일",
   "loc.input.label.uitestStorePass": "저장소 암호",
   "loc.input.label.uitestKeyAlias": "키 별칭",
   "loc.input.label.uitestKeyPass": "키 암호",

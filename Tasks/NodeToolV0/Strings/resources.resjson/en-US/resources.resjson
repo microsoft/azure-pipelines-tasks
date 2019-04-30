@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Node Tool Installer",
+  "loc.friendlyName": "Node.js tool installer",
   "loc.helpMarkDown": "",
-  "loc.description": "Finds or Downloads and caches specified version spec of Node and adds it to the PATH.",
+  "loc.description": "Finds or downloads and caches the specified version spec of Node.js and adds it to the PATH",
   "loc.instanceNameFormat": "Use Node $(versionSpec)",
   "loc.input.label.versionSpec": "Version Spec",
   "loc.input.help.versionSpec": "Version Spec of version to get.  Examples: 6.x, 4.x, 6.10.0, >=6.10.0",

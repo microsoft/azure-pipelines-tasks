@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/work-item-query",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -17,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 13
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [

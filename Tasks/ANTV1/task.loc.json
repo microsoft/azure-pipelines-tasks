@@ -3,6 +3,7 @@
   "name": "Ant",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/ant",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -16,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 143,
+    "Minor": 151,
     "Patch": 0
   },
   "demands": [
@@ -259,6 +260,7 @@
     "UnsupportedJdkWarning": "ms-resource:loc.messages.UnsupportedJdkWarning",
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
     "DiscontinueAntCodeCoverage": "ms-resource:loc.messages.DiscontinueAntCodeCoverage",
-    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
+    "NoTestResults": "ms-resource:loc.messages.NoTestResults"
   }
 }

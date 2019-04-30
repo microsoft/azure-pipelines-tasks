@@ -1,0 +1,186 @@
+{
+    "id": "8d6e8f7e-267d-442d-8c92-1f586864c62f",
+    "name": "DownloadPackage",
+    "friendlyName": "Download package",
+    "description": "Download a package from a package management feed in Azure Artifacts",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-package",
+    "helpMarkDown": "Requires the Package Management extension to be installed",
+    "category": "Utility",
+    "author": "ms-vscs-rm",
+    "version": {
+        "Major": 1,
+        "Minor": 151,
+        "Patch": 3
+    },
+    "demands": [],
+    "preview": true,
+    "releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",
+    "minimumAgentVersion": "2.115.0",
+    "groups": [
+        {
+            "name": "advancedOptions",
+            "displayName": "Advanced",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "packageType",
+            "type": "pickList",
+            "label": "Package Type",
+            "required": true,
+            "defaultValue": "nuget",
+            "options": {
+                "maven": "Maven",
+                "npm": "Npm",
+                "nuget": "NuGet",
+                "pypi": "Python",
+                "upack": "Universal"
+            }
+        },
+        {
+            "name": "feed",
+            "type": "pickList",
+            "label": "Feed",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "view",
+            "type": "pickList",
+            "label": "View",
+            "defaultValue": " ",
+            "required": false,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Select a view to use only versions promoted to that view."
+        },
+        {
+            "name": "definition",
+            "type": "pickList",
+            "label": "Package",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "If you don't find the package in the list, you can provide the package ID, which you can find using the instructions [here](https://go.microsoft.com/fwlink/?linkid=2086778)."
+        },
+        {
+            "name": "version",
+            "type": "pickList",
+            "label": "Version",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Version of the package"
+        },
+        {
+            "name": "files",
+            "type": "string",
+            "label": "Files",
+            "defaultValue": "**",
+            "visibleRule": "packageType = maven || packageType = pypi || packageType = upack",
+            "required": false,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "groupName": "advancedOptions",
+            "helpMarkDown": "Specify which files to download using [file matching patterns](https://go.microsoft.com/fwlink/?linkid=2086953)."
+        },
+        {
+            "name": "extract",
+            "type": "boolean",
+            "label": "Extract package contents",
+            "defaultValue": "true",
+            "required": false,
+            "visibleRule": "packageType = nuget || packageType = npm",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "groupName": "advancedOptions",
+            "helpMarkDown": "Instead of extracting the package contents and removing the archive, the artifact folder will contain the package archive."
+        },
+        {
+            "name": "downloadPath",
+            "type": "string",
+            "label": "Destination directory",
+            "defaultValue": "$(System.ArtifactsDirectory)",
+            "required": true,
+            "helpMarkDown": "Path on the agent machine where the package will be downloaded"
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "feed",
+            "endpointId": "tfs:feed",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        },
+        {
+            "target": "view",
+            "endpointId": "tfs:feed",
+            "parameters": {
+                "feed": "$(feed)"
+            },
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds/{{{feed}}}/views",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        },
+        {
+            "target": "definition",
+            "endpointId": "tfs:feed",
+            "parameters": {
+                "feed": "$(feed)",
+                "view": "$(view)",
+                "packageType": "$(packageType)"
+            },
+            "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false&protocolType={{{packageType}}}",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        },
+        {
+            "target": "version",
+            "endpointId": "tfs:feed",
+            "parameters": {
+                "feed": "$(feed)",
+                "view": "$(view)",
+                "definition": "$(definition)",
+                "packageType": "$(packageType)"
+            },
+            "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false&protocolType={{{packageType}}}",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
+        }
+    ],
+    "instanceNameFormat": "Download Package $(definition)",
+    "execution": {
+        "Node": {
+            "target": "main.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "FailedToGetPackageMetadata": "Fetching package metadata using url %s failed with error %s",
+        "FailedToDownloadPackage": "Failed to download package file from %s got the following error: %s",
+        "PackageDownloadSuccessful": "Package download successful",
+        "CredentialsNotFound": "Could not determine credentials to connect to Package Management service.",
+        "StartingDownloadOfPackage": "Starting download of package %s to location %s",
+        "ExtractingPackage": "Extracting package %s to directory %s",
+        "PackageTypeNotSupported": "Only Nuget, Python, Universal, Npm, and Maven packages types can be downloaded using this task.",
+        "ExtractionFailed": "Failed to extract package with error %s",
+        "RetryingOperation": "Operation failed, waiting %sms before retrying, retries remaining: %s",
+        "RedirectUrlError": "Unable to get redirect URL with error %.",
+        "UnsupportedArchiveType": "Unsupported archive type: %s",
+        "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
+        "Info_Downloading": "Downloading package: %s, version: %s using feed id: %s",
+        "Info_UsingArtifactToolDownload": "Using artifact tool to download the package"
+    }
+}

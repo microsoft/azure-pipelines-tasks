@@ -14,8 +14,8 @@
   "loc.input.help.cwd": "Working directory in which to run the Gradle build. If not specified, the repository root directory is used.",
   "loc.input.label.options": "Options",
   "loc.input.label.tasks": "Tasks",
-  "loc.input.label.publishJUnitResults": "Publish to Azure Pipelines/TFS",
-  "loc.input.help.publishJUnitResults": "Select this option to publish JUnit test results produced by the Gradle build to Azure Pipelines/TFS. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines/TFS.",
+  "loc.input.label.publishJUnitResults": "Publish to Azure Pipelines",
+  "loc.input.help.publishJUnitResults": "Select this option to publish JUnit test results produced by the Gradle build to Azure Pipelines. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines.",
   "loc.input.label.testResultsFiles": "Test results files",
   "loc.input.help.testResultsFiles": "Test results files path. Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)). For example, `**/TEST-*.xml` for all XML files whose name starts with TEST-.",
   "loc.input.label.testRunTitle": "Test run title",
@@ -81,5 +81,9 @@
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
   "loc.messages.UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
   "loc.messages.FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK.",
-  "loc.messages.NoCodeCoverage": "No code coverage results were found to publish."
+  "loc.messages.NoCodeCoverage": "No code coverage results were found to publish.",
+  "loc.messages.InvalidBuildFile": "Invalid or unsupported build file",
+  "loc.messages.FileNotFound": "File or folder doesn't exist: %s",
+  "loc.messages.FailedToAppendCC": "Unable to append code coverage data: %s",
+  "loc.messages.NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
 }

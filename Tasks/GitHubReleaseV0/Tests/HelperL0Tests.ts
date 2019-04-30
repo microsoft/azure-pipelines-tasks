@@ -9,7 +9,7 @@ export class HelperL0Tests {
     }
 
     public static async validateGetTagForCreateAction() {
-        let tag = await new Helper().getTagForCreateAction("endpoint", "repo", "target", "tagName");
+        let tag = await new Helper().getTagForCommitTarget("endpoint", "repo", "abc");
 
         if (tag === "tagName") {
             console.log(TestString.getTagForCreateActionKeyword);

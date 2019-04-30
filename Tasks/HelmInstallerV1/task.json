@@ -1,0 +1,44 @@
+{
+    "id": "068D5909-43E6-48C5-9E01-7C8A94816220",
+    "name": "HelmInstaller",
+    "friendlyName": "Helm tool installer",
+    "description": "Install Helm on an agent machine",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/helm-installer",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "category": "Tool",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 151,
+        "Patch": 1
+    },
+    "preview": true,
+    "demands": [],
+    "satisfies": [
+        "Helm"
+    ],
+    "groups": [],
+    "inputs": [
+        {
+            "name": "helmVersionToInstall",
+            "label": "Helm Version Spec",
+            "type": "string",
+            "helpMarkDown": "Specify the version of Helm to install.",
+            "defaultValue": "latest"
+        }
+    ],
+    "instanceNameFormat": "Install Helm $(helmVersionToInstall)",
+    "execution": {
+        "Node": {
+            "target": "src//helmtoolinstaller.js"
+        }
+    },
+    "messages": {
+        "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+        "VerifyHelmInstallation": "Verifying helm installation..."
+    }
+}

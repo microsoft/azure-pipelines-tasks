@@ -1,7 +1,13 @@
-import tmrm = require('vsts-task-lib/mock-run');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 	
 export function registerLocationHelpersMock(tmr: tmrm.TaskMockRunner) {
     const mockLocationUtils = {
+        getFeedUriFromBaseServiceUri: function (serviceUri: string, accesstoken: string) {
+            return serviceUri + "/feed"
+        },
+        getBlobstoreUriFromBaseServiceUri: function (serviceUri: string, accesstoken: string) {
+            return serviceUri + "/blobstore"
+        },
         getPackagingUris: function(input) {
             const collectionUrl: string = "https://vsts/packagesource";
             return {

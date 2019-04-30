@@ -1,0 +1,156 @@
+{
+    "id": "E28912F1-0114-4464-802A-A3A35437FD16",
+    "name": "Docker",
+    "friendlyName": "Docker",
+    "description": "Build or push Docker images, login or logout, or run a Docker command",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
+    "category": "Build",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 2,
+        "Minor": 151,
+        "Patch": 2
+    },
+    "demands": [],
+    "releaseNotes": "Simplified the task YAML by:<br/>&nbsp;- Removing the Container registry type input<br/>&nbsp;- Removing complex inputs as they can be passed as arguments to the command.",
+    "groups": [
+        {
+            "name": "containerRepository",
+            "displayName": "Container Repository",
+            "isExpanded": true
+        },
+        {
+            "name": "commands",
+            "displayName": "Commands",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "containerRegistry",
+            "type": "connectedService:dockerregistry",
+            "label": "Container registry",
+            "groupName": "containerRepository",
+            "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry."
+        },
+        {
+            "name": "repository",
+            "label": "Container repository",
+            "type": "string",
+            "helpMarkDown": "Name of the repository.",
+            "defaultValue": "",
+            "visibleRule": "command != login && command != logout",
+            "groupName": "containerRepository",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "command",
+            "type": "pickList",
+            "label": "Command",
+            "defaultValue": "buildAndPush",
+            "required": true,
+            "options": {
+                "buildAndPush": "buildAndPush",
+                "build": "build",
+                "push": "push",
+                "login": "login",
+                "logout": "logout"
+            },
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "groupName": "commands",
+            "helpMarkDown": "Select a Docker command."
+        },
+        {
+            "name": "Dockerfile",
+            "type": "filePath",
+            "label": "Dockerfile",
+            "defaultValue": "**/Dockerfile",
+            "required": true,
+            "visibleRule": "command = build || command = buildAndPush",
+            "groupName": "commands",
+            "helpMarkDown": "Path to the Dockerfile."
+        },
+        {
+            "name": "buildContext",
+            "type": "filePath",
+            "label": "Build context",
+            "defaultValue": "**",
+            "visibleRule": "command = build || command = buildAndPush",
+            "groupName": "commands",
+            "helpMarkDown": "Path to the build context. Pass ** to specify the directory that contains the Dockerfile."
+        },
+        {
+            "name": "tags",
+            "type": "multiLine",
+            "defaultValue": "$(Build.BuildId)",
+            "properties": {
+                "resizable": "true",
+                "rows": "2"
+            },
+            "visibleRule": "command = build || command = push || command = buildAndPush",
+            "label": "Tags",
+            "groupName": "commands",
+            "helpMarkDown": "A list of tags in separate lines. These tags are used in build, push and buildAndPush commands. Ex:<br><br>beta1.1<br>latest"
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "visibleRule": "command != login && command != logout && command != buildAndPush",
+            "label": "Arguments",
+            "groupName": "commands",
+            "helpMarkDown": "Docker command options. Ex:<br> For build command,<br>--build-arg HTTP_PROXY=http://10.20.30.2:1234 --quiet"
+        }
+    ],
+    "dataSourceBindings": [],
+    "outputVariables": [
+        {
+            "name": "DockerOutput",
+            "description": "The path of the file(s) which contains the output of the command. This contains two file paths (separated by newline characters) in case of buildAndPush command, and one file path for any other command."
+        }
+    ],
+    "instanceNameFormat": "$(command)",
+    "showEnvironmentVariables": true,
+    "execution": {
+        "Node": {
+            "target": "docker.js"
+        }
+    },
+    "messages": {
+        "AddingNewAuthToExistingConfig": "Adding auth data for registry to Docker config file. Registry: %s.",
+        "ContainerPatternFound": "Pattern found in Docker filepath parameter",
+        "ContainerPatternNotFound": "No pattern found in Docker filepath parameter",
+        "ContainerDockerFileNotFound": "No Dockerfile matching  %s  was found.",
+        "CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
+        "CouldNotFindDockerConfig": "Could not find Docker Config. Either DOCKER_CONFIG variable is not set, or the config file is outside the temp directory, or the file does not exist. DOCKER_CONFIG: %s",
+        "DeletingDockerConfigDirectory": "Deleting Docker config directory. Path: %s",
+        "DeletingAuthDataFromDockerConfig": "Deleting auth data for registry from Docker config file. Registry: %s, New Docker config: %s",
+        "DockerRegistryNotFound": "Docker registry service connection not specified.",
+        "ErrorParsingDockerConfig": "Could not parse the Docker config obtained from the file. Error: %s",
+        "FileContentSynced": "Synced the file content to the disk. The content is %s.",
+        "FoundDockerConfigStoredInTempPath": "Found the Docker Config stored in the temp path. Docker config path: %s, Docker config: %s",
+        "FoundLoginsForOtherRegistries": "Found login info for other registry(s). Trying to remove auth from the Docker config for the registry: %s",
+        "IgnoringArgumentsInput": "The arguments input is not supported when the command is buildAndPush. Ignoring the input.",
+        "LoggingOutFromRegistry": "Trying to logout from registry: %s",
+        "LoggingOutWithNoRegistrySpecified": "Logging out. Removing all auth data from temp docker config, since no registry is specified.",
+        "NoAuthInfoFoundInDockerConfig": "No auths found in Docker config. Hence returning 0 registry url's.",
+        "NoDataWrittenOnFile": "No data was written into the file %s",
+        "NoImagesInImageNamesFile": "At least one image name is expected in file '%s'.",
+        "NotAddingAnyTagsToBuild": "Not adding any container registry tags to the build image as no login information was found.",
+        "NotPushingAsNoLoginFound": "Not pushing to any registry as no login information was found.",
+        "OldDockerConfigContent": "Found an earlier login to the same registry. Saving old auth data and continuing with the new login. Old docker config: %s",
+        "OutputVariableDataSizeExceeded": "Output variable not set as Docker command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
+        "PathIsNotInTempDirectory": "The config path is not inside the temp directory. Config path: %s, Temp directory: %s",
+        "RegistryAuthNotPresentInConfig": "Could not find the auth data for registry in the Docker config file. Nothing to be done to logout. Registry: %s",
+        "RestoringOldLoginAuth": "Restoring the previous login auth data for the registry: %s",
+        "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+    }
+}

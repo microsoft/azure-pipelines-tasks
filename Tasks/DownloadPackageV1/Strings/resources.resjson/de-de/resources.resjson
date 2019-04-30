@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Paket herunterladen",
+  "loc.helpMarkDown": "Die Paketverwaltungserweiterung muss installiert sein.",
+  "loc.description": "Hiermit wird ein Paket aus dem Paketverwaltungsfeed in Azure Artifacts oder TFS heruntergeladen. \r\n Erfordert die Erweiterung für die Paketverwaltung.",
+  "loc.instanceNameFormat": "Paket herunterladen",
+  "loc.input.label.feed": "Feed",
+  "loc.input.help.feed": "Paketquelle auswählen",
+  "loc.input.label.definition": "Paket",
+  "loc.input.help.definition": "Wählen Sie das Paket zum Herunterladen aus. Aktuell werden nur NuGet-Pakete unterstützt.",
+  "loc.input.label.version": "Version",
+  "loc.input.help.version": "Version des Pakets",
+  "loc.input.label.downloadPath": "Zielverzeichnis",
+  "loc.input.help.downloadPath": "Pfad zum Agent-Computer, auf den das Paket heruntergeladen wird",
+  "loc.messages.FailedToGetPackageMetadata": "Fehler beim Abrufen der Paketmetadaten: %s.",
+  "loc.messages.FailedToDownloadNugetPackage": "Fehler beim Herunterladen des NuGet-Pakets von %s: %s.",
+  "loc.messages.PackageDownloadSuccessful": "Herunterladen des Pakets erfolgreich",
+  "loc.messages.CredentialsNotFound": "Die Anmeldeinformationen zum Herstellen einer Verbindung mit dem Paketverwaltungsdienst konnten nicht ermittelt werden.",
+  "loc.messages.StartingDownloadOfPackage": "Herunterladen des NuGet-Pakets %s zum Speicherort %s wird gestartet",
+  "loc.messages.ExtractingNugetPackage": "NuGet-Paket %s wird in das Verzeichnis %s extrahiert",
+  "loc.messages.PackageTypeNotSupported": "Nur NuGet-Pakettypen können mithilfe dieser Aufgabe heruntergeladen werden.",
+  "loc.messages.ExtractionFailed": "Fehler beim Extrahieren des Pakets: %s."
+}

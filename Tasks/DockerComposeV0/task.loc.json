@@ -3,6 +3,7 @@
   "name": "DockerCompose",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker-compose",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -12,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 4,
-    "Patch": 25
+    "Minor": 151,
+    "Patch": 0
   },
   "demands": [],
   "preview": "false",
@@ -325,6 +326,7 @@
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
-    "ImageNameWithoutTag": "ms-resource:loc.messages.ImageNameWithoutTag"
+    "ImageNameWithoutTag": "ms-resource:loc.messages.ImageNameWithoutTag",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   }
 }

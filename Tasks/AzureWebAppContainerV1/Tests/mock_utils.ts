@@ -13,6 +13,7 @@ export function mockAzureARMPreDeploymentSteps() {
             id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.web/sites/mytestapp", 
             name: "MOCK_APP_INSIGHTS_NAME",
             type: "microsoft.insights/components",
+            kind: "app,linux,container",
             tags: {},
             properties: {}
         }]
@@ -121,7 +122,8 @@ export function mockContainerDeploySettings() {
             "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES": "1",
             "WEBSITE_RUN_FROM_PACKAGE":"0",
-            "DOCKER_CUSTOM_IMAGE_NAME": "dockernamespace/dockerrepository:DockerImageTag"
+            "DOCKER_CUSTOM_IMAGE_NAME": "dockernamespace/dockerrepository:DockerImageTag",
+            "port": "1173"
         }
     }).persist();
 
@@ -157,4 +159,13 @@ export function mockContainerDeploySettings() {
             "DOCKER_CUSTOM_IMAGE_NAME": "dockernamespace/dockerrepository:DockerImageTag"
         }
     }).persist();
+
+    nock('https://management.azure.com', {
+        reqheaders: {
+            "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+            "content-type": "application/json; charset=utf-8",
+            "user-agent": "TFS_useragent"
+        }
+    }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/restart?api-version=2016-08-01")
+    .reply(200);
 }

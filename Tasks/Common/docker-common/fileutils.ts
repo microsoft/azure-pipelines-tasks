@@ -23,3 +23,23 @@ export function writeFileSync(filePath: string, data: string): number {
         throw e;
     }
 }
+
+export function findDockerFile(dockerfilepath : string) : string {
+    if (dockerfilepath.indexOf('*') >= 0 || dockerfilepath.indexOf('?') >= 0) {
+        tl.debug(tl.loc('ContainerPatternFound'));
+        let workingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
+        let allFiles = tl.find(workingDirectory);
+        let matchingResultsFiles = tl.match(allFiles, dockerfilepath, workingDirectory, { matchBase: true });
+
+        if (!matchingResultsFiles || matchingResultsFiles.length == 0) {
+            throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
+        }
+
+        return matchingResultsFiles[0];
+    }
+    else
+    {
+        tl.debug(tl.loc('ContainerPatternNotFound'));
+        return dockerfilepath;
+    }
+}

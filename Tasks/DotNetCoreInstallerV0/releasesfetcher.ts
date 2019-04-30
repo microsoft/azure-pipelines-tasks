@@ -29,9 +29,9 @@ export class DotNetCoreReleaseFetcher {
             let blobUrl: string = release['blob-' + type];
             let dlcUrl: string = release['dlc-' + type];
             let fileName: string = release[type + '-' + osSuffixes[0]] ? release[type + '-' + osSuffixes[0]] : release[type + '-' + osSuffixes[1]];
-            fileName = fileName.trim();
 
             if (!!fileName) {
+                fileName = fileName.trim();
                 // For some latest version, the filename itself can be full download url.
                 // Do a very basic check for url(instead of regex) as the url is only for downloading and
                 // is coming from .net core releases json and not some ransom user input
@@ -46,6 +46,9 @@ export class DotNetCoreReleaseFetcher {
                         downloadUrls.push(util.format("%s%s", dlcUrl.trim(), fileName));
                     }
                 }
+            }
+            else {
+                throw taskLib.loc("VersionsFileMalformed", DotNetCoreReleasesUrl);
             }
         }
         else {

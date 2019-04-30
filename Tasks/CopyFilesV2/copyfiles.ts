@@ -11,6 +11,7 @@ let targetFolder: string = tl.getPathInput('TargetFolder', true);
 let cleanTargetFolder: boolean = tl.getBoolInput('CleanTargetFolder', false);
 let overWrite: boolean = tl.getBoolInput('OverWrite', false);
 let flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
+const preserveTimestamp: boolean = tl.getBoolInput('preserveTimestamp', false);
 
 // normalize the source folder path. this is important for later in order to accurately
 // determine the relative path of each found file (substring using sourceFolder.length).
@@ -107,6 +108,17 @@ if (matchedFiles.length > 0) {
                 else { // copy
                     console.log(tl.loc('CopyingTo', file, targetPath));
                     tl.cp(file, targetPath);
+                    if (preserveTimestamp) {
+                        try {
+                            const fileStats = tl.stats(file);
+                            fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
+                                console.warn(`Problem applying the timestamp: ${err}`);
+                            });
+                        }
+                        catch (err) {
+                            console.warn(`Problem preserving the timestamp: ${err}`)
+                        }
+                    }
                 }
             }
             else {
@@ -132,6 +144,17 @@ if (matchedFiles.length > 0) {
                 }
 
                 tl.cp(file, targetPath, "-f");
+                if (preserveTimestamp) {
+                    try {
+                        const fileStats: tl.FsStats = tl.stats(file);
+                        fs.utimes(targetPath, fileStats.atime, fileStats.mtime, (err) => {
+                            console.warn(`Problem applying the timestamp: ${err}`);
+                        });
+                    }
+                    catch (err) {
+                        console.warn(`Problem preserving the timestamp: ${err}`)
+                    }
+                }
             }
         });
     }

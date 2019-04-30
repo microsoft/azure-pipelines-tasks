@@ -1,7 +1,7 @@
 import * as path from "path";
+import * as tl from "azure-pipelines-task-lib";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as telemetry from "utility-common/telemetry";
-import * as tl from "vsts-task-lib";
 import * as auth from "./authentication";
 import * as utils from "./utilities";
 

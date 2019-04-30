@@ -35,7 +35,7 @@ export class Action {
             try {
                 // Upload the assets
                 const uploadUrl: string = response.body[GitHubAttributes.uploadUrl];
-                await this._uploadAssets(githubEndpointToken, repositoryName, githubReleaseAssetInputPatterns, uploadUrl, []);
+                await this._uploadAssets(githubEndpointToken, repositoryName, githubReleaseAssetInputPatterns, uploadUrl, [], false);
                 console.log(tl.loc("CreateReleaseSuccess", response.body[GitHubAttributes.htmlUrl]));  
             }
             catch (error) {
@@ -84,7 +84,7 @@ export class Action {
 
         if (response.statusCode === 200) {
             const uploadUrl: string = response.body[GitHubAttributes.uploadUrl];
-            await this._uploadAssets(githubEndpointToken, repositoryName, githubReleaseAssetInputPatterns, uploadUrl, response.body[GitHubAttributes.assets]);
+            await this._uploadAssets(githubEndpointToken, repositoryName, githubReleaseAssetInputPatterns, uploadUrl, response.body[GitHubAttributes.assets], true);
             console.log(tl.loc("EditReleaseSuccess", response.body[GitHubAttributes.htmlUrl]));
         }
         else {
@@ -142,19 +142,17 @@ export class Action {
      * @param uploadUrl 
      * @param existingAssets 
      */
-    private async _uploadAssets(githubEndpointToken: string, repositoryName: string, githubReleaseAssetInputPatterns: string[], uploadUrl: string, existingAssets: any[]): Promise<void> {
+    private async _uploadAssets(githubEndpointToken: string, repositoryName: string, githubReleaseAssetInputPatterns: string[], uploadUrl: string, existingAssets: any[], editMode: boolean): Promise<void> {
         const assetUploadMode = tl.getInput(Inputs.assetUploadMode);
-        let assets: string[] = Utility.getUploadAssets(githubReleaseAssetInputPatterns) || [];
+        Utility.validateAssetUploadMode(assetUploadMode);
 
-        Utility.validateUploadAssets(assets);
-
-        // Delete all assets
-        if (!!assetUploadMode && assetUploadMode === AssetUploadMode.delete) {
+        // Delete all assets in case of edit release before uploading new assets.
+        if (editMode && !!assetUploadMode && assetUploadMode === AssetUploadMode.delete) {
             console.log(tl.loc("DeleteAllExistingAssets"));
             await this._deleteAssets(githubEndpointToken, repositoryName, existingAssets);
         }
 
-        if (assets && assets.length > 0) {
+        if (githubReleaseAssetInputPatterns && githubReleaseAssetInputPatterns.length > 0) {
             console.log(tl.loc("UploadingAssets"));
         }
         else {
@@ -162,14 +160,35 @@ export class Action {
             return;
         }
 
+        for (let pattern of (githubReleaseAssetInputPatterns || [])) {
+            await this._uploadAssetsForGivenPattern(githubEndpointToken, repositoryName, uploadUrl, existingAssets, pattern, assetUploadMode);
+        }
+
+        console.log(tl.loc("AllAssetsUploadedSuccessfully"));
+    }
+
+    private async _uploadAssetsForGivenPattern(githubEndpointToken: string, repositoryName: string, uploadUrl: string, existingAssets: any[], pattern: string, assetUploadMode: string): Promise<void> {
+        console.log(tl.loc("SearchingFileMatchingPattern", pattern));
+            
+        let assets: string[] = Utility.getUploadAssets(pattern) || [];
+
+        if (Utility.isPatternADirectory(assets, pattern)) {
+            console.log(tl.loc("PatternIsADirectory", pattern));
+            return;
+        }
+        
+        assets = assets.filter(asset => Utility.isFile(asset));
+
+        if (assets.length === 0) {
+            console.log(tl.loc("NoFileFoundMatchingPattern", pattern));
+            return;
+        }
+        
+        Utility.validateUploadAssets(assets);
+
         for (let index = 0; index < assets.length; index++) {
             const asset = assets[index];
             console.log(tl.loc("UploadingAsset", asset));
-
-            if (fs.lstatSync(path.resolve(asset)).isDirectory()) {
-                tl.warning(tl.loc("AssetIsDirectoryError", asset));
-                continue;
-            }
 
             let uploadResponse = await new Release().uploadReleaseAsset(githubEndpointToken, asset, uploadUrl);
             tl.debug("Upload asset response: " + JSON.stringify(uploadResponse));
@@ -194,7 +213,7 @@ export class Action {
                     }
                 }
                 else {
-                    tl.warning(tl.loc("SkipDuplicateAssetFound", asset));
+                    console.log(tl.loc("SkipDuplicateAssetFound", asset));
                 }
             }
             else {
@@ -202,7 +221,6 @@ export class Action {
                 throw new Error(uploadResponse.body[GitHubAttributes.message]);
             }
         }
-        console.log(tl.loc("AllAssetsUploadedSuccessfully"));
     }
 
     /**
@@ -218,15 +236,15 @@ export class Action {
         }
 
         for (let asset of assets) {
-            console.log(tl.loc("DeletingAsset", asset));
+            console.log(tl.loc("DeletingAsset", asset[GitHubAttributes.nameAttribute]));
             let deleteAssetResponse = await new Release().deleteReleaseAsset(githubEndpointToken, repositoryName, asset.id);
             tl.debug("Delete asset response: " + JSON.stringify(deleteAssetResponse));
 
             if (deleteAssetResponse.statusCode === 204) {
-                console.log(tl.loc("AssetDeletedSuccessfully", asset));
+                console.log(tl.loc("AssetDeletedSuccessfully", asset[GitHubAttributes.nameAttribute]));
             }
             else {
-                tl.error(tl.loc("ErrorDeletingAsset", asset));
+                tl.error(tl.loc("ErrorDeletingAsset", asset[GitHubAttributes.nameAttribute]));
                 throw new Error(deleteAssetResponse.body[GitHubAttributes.message]);
             }
         }

@@ -24,6 +24,7 @@
     "decompress-zip": "0.3.0",
     "ltx": "2.6.2",
     "winreg": "1.2.2",
-    "xml2js": "0.4.13"
+    "xml2js": "0.4.13",
+    "node-stream-zip": "1.7.0"
   }
 }

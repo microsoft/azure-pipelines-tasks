@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import * as ma from 'azure-pipelines-task-lib/mock-answer';
+import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import path = require('path');
 import fs = require('fs');
 import os = require('os');
@@ -10,10 +10,6 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('certSecureFile', 'mySecureFileId');
 tr.setInput('certPwd', 'mycertPwd');
 tr.setInput('keychain', 'temp');
-
-process.env['AGENT_VERSION'] = '2.116.0';
-process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
-process.env['HOME'] = '/users/test';
 
 let secureFileHelperMock = require('securefiles-common/securefiles-common-mock');
 tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
@@ -31,6 +27,10 @@ Math.random = function (): number {
 // 10 minutes ago. The notAfter date string is generated instead of hardcoded to ensure the positive test,
 // L0CertificateValid.ts, is actually testing expiration times since reading them from the certificate is best effort.
 const expiredDate: Date = new Date(new Date().getTime() - 10 * 60 * 1000);
+
+process.env['AGENT_VERSION'] = '2.116.0';
+process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
+process.env['HOME'] = '/users/test';
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{

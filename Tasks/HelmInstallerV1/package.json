@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.5.0",
+    "azure-pipelines-task-lib": "2.7.7",
+    "azure-pipelines-tool-lib": "0.11.0",
+    "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz"
+  }
+}

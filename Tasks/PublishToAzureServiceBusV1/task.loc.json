@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "category": "Utility",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-to-azure-service-bus",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "visibility": [
     "Build",
@@ -16,12 +17,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 14
   },
   "groups": [
     {
-      "name": "signingDetails",
-      "displayName": "ms-resource:loc.group.displayName.signingDetails",
+      "name": "advancedProperties",
+      "displayName": "ms-resource:loc.group.displayName.advancedProperties",
       "isExpanded": false
     }
   ],
@@ -52,13 +53,22 @@
       }
     },
     {
+      "name": "sessionId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sessionId",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.sessionId",
+      "groupName": "advancedProperties"
+    },
+    {
       "name": "signPayload",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.signPayload",
       "defaultValue": "false",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.signPayload",
-      "groupName": "signingDetails"
+      "groupName": "advancedProperties"
     },
     {
       "name": "certificateString",
@@ -68,7 +78,7 @@
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.certificateString",
       "visibleRule": "signPayload = true",
-      "groupName": "signingDetails"
+      "groupName": "advancedProperties"
     },
     {
       "name": "signatureKey",
@@ -78,7 +88,7 @@
       "defaultValue": "signature",
       "helpMarkDown": "ms-resource:loc.input.help.signatureKey",
       "visibleRule": "signPayload = true",
-      "groupName": "signingDetails"
+      "groupName": "advancedProperties"
     },
     {
       "name": "waitForCompletion",
@@ -102,6 +112,7 @@
         "connectionString": "$(endpoint.serviceBusConnectionString)",
         "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
         "messageBody": "$(messageBody)",
+        "sessionId": "$(sessionId)",
         "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(certificateString){{/notEquals}}{{else}}{{/notEquals}}",
         "signaturePropertyKey": "$(signatureKey)",
         "messageProperties": {

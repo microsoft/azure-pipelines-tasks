@@ -3,6 +3,7 @@
   "name": "InstallSSHKey",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-ssh-key",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -12,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 141,
-    "Patch": 0
+    "Minor": 151,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -25,6 +26,9 @@
   "inputs": [
     {
       "name": "hostName",
+      "aliases": [
+        "knownHostsEntry"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.hostName",
       "defaultValue": "",

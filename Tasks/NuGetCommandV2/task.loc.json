@@ -3,13 +3,14 @@
   "name": "NuGetCommand",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 147,
-    "Patch": 2
+    "Minor": 151,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -210,7 +211,7 @@
       "required": true,
       "defaultValue": "internal",
       "options": {
-        "internal": "This account/collection",
+        "internal": "This organization/collection",
         "external": "External NuGet server (including other accounts/collections)"
       },
       "visibleRule": "command = push"

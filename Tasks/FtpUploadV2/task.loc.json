@@ -1,0 +1,175 @@
+{
+  "id": "6f8c69a5-b023-428e-a125-fccf4efcb929",
+  "name": "FtpUpload",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/ftp-upload",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [],
+  "version": {
+    "Major": 2,
+    "Minor": 151,
+    "Patch": 1
+  },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "credsType",
+      "aliases": [
+        "credentialsOption"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.credsType",
+      "defaultValue": "serviceEndpoint",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.credsType",
+      "options": {
+        "serviceEndpoint": "FTP service connection",
+        "inputs": "Enter credentials"
+      }
+    },
+    {
+      "name": "serverEndpoint",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.serverEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serverEndpoint",
+      "visibleRule": "credsType = serviceEndpoint"
+    },
+    {
+      "name": "serverUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.serverUrl",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "credsType = inputs"
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.username",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "credsType = inputs"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.password",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "credsType = inputs"
+    },
+    {
+      "name": "rootFolder",
+      "aliases": [
+        "rootDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.rootFolder",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.rootFolder"
+    },
+    {
+      "name": "filePatterns",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.filePatterns",
+      "defaultValue": "**",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.filePatterns",
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      }
+    },
+    {
+      "name": "remotePath",
+      "aliases": [
+        "remoteDirectory"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.remotePath",
+      "defaultValue": "/upload/$(Build.BuildId)/",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.remotePath"
+    },
+    {
+      "name": "clean",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.clean",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.clean",
+      "groupName": "advanced"
+    },
+    {
+      "name": "cleanContents",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.cleanContents",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.cleanContents",
+      "groupName": "advanced",
+      "visibleRule": "clean = false"
+    },
+    {
+      "name": "preservePaths",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.preservePaths",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.preservePaths",
+      "groupName": "advanced"
+    },
+    {
+      "name": "trustSSL",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.trustSSL",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.trustSSL",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "ftpuploadtask.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "CleanRemoteDir": "ms-resource:loc.messages.CleanRemoteDir",
+    "CleanRemoteDirContents": "ms-resource:loc.messages.CleanRemoteDirContents",
+    "CleanFileDeleteFail": "ms-resource:loc.messages.CleanFileDeleteFail",
+    "ConnectPort": "ms-resource:loc.messages.ConnectPort",
+    "Disconnected": "ms-resource:loc.messages.Disconnected",
+    "DisconnectHost": "ms-resource:loc.messages.DisconnectHost",
+    "FTPConnected": "ms-resource:loc.messages.FTPConnected",
+    "FTPNoHostSpecified": "ms-resource:loc.messages.FTPNoHostSpecified",
+    "FTPNoProtocolSpecified": "ms-resource:loc.messages.FTPNoProtocolSpecified",
+    "NoFilesFound": "ms-resource:loc.messages.NoFilesFound",
+    "UploadRemoteDir": "ms-resource:loc.messages.UploadRemoteDir",
+    "UploadSucceedMsg": "ms-resource:loc.messages.UploadSucceedMsg",
+    "UploadSucceedRes": "ms-resource:loc.messages.UploadSucceedRes",
+    "UploadFailed": "ms-resource:loc.messages.UploadFailed"
+  }
+}

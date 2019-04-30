@@ -21,6 +21,18 @@ export class HelperTests {
         tr.registerMock("./Release", {
             Release: function () {
                 return {
+                    getTags: function() {
+                        return {
+                            statusCode: 200,
+                            headers: { "link": ""},
+                            body: [
+                                { 
+                                    "commit": { "sha": "abc" },
+                                    "name": "tagName"
+                                }
+                            ]
+                        }
+                    },
                     getBranch: function() {
                         return {
                             statusCode: 200,

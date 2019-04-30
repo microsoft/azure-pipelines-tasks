@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Delete Files",
+  "loc.friendlyName": "Delete files",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=722333)",
-  "loc.description": "Delete files or folders. (The minimatch patterns will only match file paths, not folder paths)",
+  "loc.description": "Delete folders, or files matching a pattern",
   "loc.instanceNameFormat": "Delete files from $(SourceFolder)",
   "loc.input.label.SourceFolder": "Source Folder",
   "loc.input.help.SourceFolder": "The source folder that the deletion(s) will be run from.  Empty is the root of the repo.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)",

@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Scarica pacchetto",
+  "loc.helpMarkDown": "Richiede l'installazione dell'estensione Gestione pacchetti",
+  "loc.description": "Consente di scaricare un pacchetto da un feed di Gestione pacchetti in Azure Artifacts o TFS. \r\n Richiede l'estensione Gestione pacchetti.",
+  "loc.instanceNameFormat": "Scarica pacchetto",
+  "loc.input.label.feed": "Feed",
+  "loc.input.help.feed": "Consente di selezionare l'origine dei pacchetti",
+  "loc.input.label.definition": "Pacchetto",
+  "loc.input.help.definition": "Consente di selezionare il pacchetto da scaricare. Sono attualmente supportati solo i pacchetti NuGet.",
+  "loc.input.label.version": "Versione",
+  "loc.input.help.version": "Versione del pacchetto",
+  "loc.input.label.downloadPath": "Directory di destinazione",
+  "loc.input.help.downloadPath": "Percorso nel computer agente in cui verrà scaricato il pacchetto",
+  "loc.messages.FailedToGetPackageMetadata": "Non è stato possibile ottenere i metadati del pacchetto. Errore: %s",
+  "loc.messages.FailedToDownloadNugetPackage": "Non è stato possibile scaricare il pacchetto NuGet da %s. Errore restituito: %s",
+  "loc.messages.PackageDownloadSuccessful": "Download del pacchetto completato",
+  "loc.messages.CredentialsNotFound": "Non è stato possibile determinare le credenziali per la connessione al servizio Gestione pacchetti.",
+  "loc.messages.StartingDownloadOfPackage": "Avvio del download del pacchetto NuGet %s nel percorso %s",
+  "loc.messages.ExtractingNugetPackage": "Estrazione del pacchetto NuGet %s nella directory %s",
+  "loc.messages.PackageTypeNotSupported": "Con questa attività è possibile scaricare solo tipi di pacchetti NuGet.",
+  "loc.messages.ExtractionFailed": "Non è stato possibile estrarre il pacchetto. Errore: %s"
+}

@@ -99,6 +99,9 @@ describe('Common-MSBuildHelpers Suite', function () {
         it('(Invoke-MSBuild) omits timeline detail', (done) => {
             psr.run(path.join(__dirname, 'Invoke-MSBuild.OmitsTimelineDetail.ps1'), done);
         })
+        it('(Invoke-MSBuild) skips log file upload if missing', (done) => {
+            psr.run(path.join(__dirname, 'Invoke-MSBuild.SkipsLogUploadIfMissing.ps1'), done);
+        })
         it('(Invoke-MSBuild) writes root timeline detail', (done) => {
             psr.run(path.join(__dirname, 'Invoke-MSBuild.WritesRootTimelineDetail.ps1'), done);
         })

@@ -3,6 +3,7 @@
   "name": "ManualIntervention",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/manual-intervention",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -15,7 +16,7 @@
   "version": {
     "Major": 8,
     "Minor": 2,
-    "Patch": 4
+    "Patch": 7
   },
   "inputs": [
     {

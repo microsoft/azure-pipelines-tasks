@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as ltx from "ltx";
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as locationUtilities from "../locationUtilities";
 import { VersionInfo } from "../pe-parser/VersionResource";
 

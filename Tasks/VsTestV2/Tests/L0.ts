@@ -1,7 +1,6 @@
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
-import * as tl from 'vsts-task-lib';
+import * as tl from 'azure-pipelines-task-lib';
 import * as fs from 'fs';
 
 describe('VsTest Suite', function() {

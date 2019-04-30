@@ -1,0 +1,49 @@
+{
+    "id": "11EA7CF0-8A3E-4B5A-98A2-8756CC3094B0",
+    "name": "DuffleInstaller",
+    "friendlyName": "Duffle tool installer",
+    "description": "Install a specified version of Duffle for installing and managing CNAB bundles",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "category": "Tool",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "preview": true,
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 5
+    },
+    "demands": [],
+    "groups": [],
+    "inputs": [       
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "0.1.0-ralpha.4+dramallamabuie",
+            "required": true,
+            "helpMarkDown": "Specify the version of Duffle to install."
+        },
+        {
+            "name": "checkLatestVersion",
+            "type": "boolean",
+            "label": "Check for latest version",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Always checks online for the latest available version (stable.txt) that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool."
+        }
+    ],
+    "instanceNameFormat": "Install Duffle $(version)",
+    "execution": {
+        "Node": {
+            "target": "src//duffle.js"
+        }
+    },
+    "messages": {
+        "DownloadDuffleFailed": "Can not download the Duffle client of version %s. Check if the version is correct https://github.com/deislabs/duffle/releases",
+        "DownloadStableVersionFailed": "Can not download Duffle stable version file from %s. Falling back to %s"
+    }
+}

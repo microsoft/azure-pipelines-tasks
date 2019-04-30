@@ -36,7 +36,7 @@ tr.setInput('useConfigMapFile', process.env[shared.TestEnvVars.useConfigMapFile]
 tr.setInput('configMapFile', process.env[shared.TestEnvVars.configMapFile] || ConfigMapFilePath);
 tr.setInput('configMapArguments', process.env[shared.TestEnvVars.configMapArguments] || '');
 tr.setInput('versionOrLocation', process.env[shared.TestEnvVars.versionOrLocation] || 'version');
-tr.setInput('versionSpec', process.env[shared.TestEnvVars.versionSpec] || "1.7.0");
+tr.setInput('versionSpec', process.env[shared.TestEnvVars.versionSpec] || "1.13.2");
 tr.setInput('checkLatest', process.env[shared.TestEnvVars.checkLatest] || "false");
 tr.setInput('specifyLocation', process.env[shared.TestEnvVars.specifyLocation] || "");
 tr.setInput('outputFormat', process.env[shared.TestEnvVars.outputFormat] || 'json');

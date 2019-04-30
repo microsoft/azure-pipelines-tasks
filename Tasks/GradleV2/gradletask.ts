@@ -47,12 +47,13 @@ function publishTestResults(publishJUnitResults: boolean, testResultsFiles: stri
         }
 
         if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
-            tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
+            console.log(tl.loc('NoTestResults', testResultsFiles));
             return 0;
         }
 
         let tp: tl.TestPublisher = new tl.TestPublisher('JUnit');
-        tp.publish(matchingTestResultsFiles, true, '', '', '', true, TESTRUN_SYSTEM);
+        const testRunTitle = tl.getInput('testRunTitle');
+        tp.publish(matchingTestResultsFiles, true, '', '', testRunTitle, true, TESTRUN_SYSTEM);
     }
 }
 

@@ -3,6 +3,7 @@
   "name": "Bash",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/bash",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -16,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 142,
+    "Minor": 151,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -90,6 +91,23 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
+      "groupName": "advanced"
+    },
+    {
+      "name": "noProfile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.noProfile",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.noProfile",
+      "groupName": "advanced"
+    },
+    {
+      "name": "noRc",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.noRc",
+      "defaultValue": "true",
+      "required": false,
       "groupName": "advanced"
     }
   ],
