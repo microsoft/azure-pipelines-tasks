@@ -1,4 +1,0 @@
-{
-  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "지정한 AzureRm 엔드포인트 URL: '{0}'이(가) 잘못되었습니다.",
-  "loc.messages.FailedToFetchAzureStackDependencyData": "Azure Stack 종속성 데이터를 페치하지 못했습니다. 오류 코드: %s"
-}
