@@ -1,3 +1,4 @@
+"use strict";
 import * as semver from "semver";
 import * as url from "url";
 
