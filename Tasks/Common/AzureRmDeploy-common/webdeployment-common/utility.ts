@@ -2,6 +2,7 @@ import path = require('path');
 import tl = require('vsts-task-lib/task');
 import { PackageType } from './packageUtility';
 import zipUtility = require('./ziputility.js');
+import * as os from "os";
 /**
  * Validates the input package and finds out input type
  * 
@@ -217,4 +218,8 @@ export function getFileNameFromPath(filePath: string, extension?: string): strin
     }
 
     return fileName;
+}
+
+export function getTempDirectory(): string {
+    return tl.getVariable('agent.tempDirectory') || os.tmpdir();
 }

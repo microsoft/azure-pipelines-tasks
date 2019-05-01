@@ -3,14 +3,13 @@
   "name": "AzureFunctionApp",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/azurefunctiondeployreadme",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Build",
     "Release"
   ],
-  "preview": "true",
   "runsOn": [
     "Agent",
     "DeploymentGroup"
@@ -19,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 13
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -128,7 +127,8 @@
       "label": "ms-resource:loc.input.label.startUpCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "appType = functionAppLinux"
+      "visibleRule": "appType = functionAppLinux",
+      "helpMarkDown": "ms-resource:loc.input.help.startUpCommand"
     },
     {
       "name": "customWebConfig",
@@ -379,6 +379,7 @@
     "FailedToSyncTriggers": "ms-resource:loc.messages.FailedToSyncTriggers",
     "SyncingFunctionTriggers": "ms-resource:loc.messages.SyncingFunctionTriggers",
     "SyncFunctionTriggersSuccess": "ms-resource:loc.messages.SyncFunctionTriggersSuccess",
-    "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings"
+    "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

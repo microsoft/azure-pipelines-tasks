@@ -4,14 +4,14 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://aka.ms/AA3x715",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-github-release",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 149,
-    "Patch": 1
+    "Minor": 151,
+    "Patch": 2
   },
   "minimumAgentVersion": "1.99.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -32,8 +32,7 @@
       "defaultValue": "",
       "required": true,
       "properties": {
-        "EditableOptions": "True",
-        "SearchDataSourceName": "userRepositorySearch"
+        "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.userRepository"
     },
@@ -94,16 +93,6 @@
       "parameters": {
         "repositoryName": "$(userRepository)",
         "releaseByTagName": "$(defaultVersionType)"
-      }
-    },
-    {
-      "target": "userRepositorySearch",
-      "endpointId": "$(connection)",
-      "dataSourceName": "SearchRepositoriesByNameForTasks",
-      "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }",
-      "parameters": {
-        "searchText": "$(searchText)",
-        "name": "$(searchText)"
       }
     }
   ],
