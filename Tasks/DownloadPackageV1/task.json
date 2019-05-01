@@ -4,7 +4,7 @@
     "friendlyName": "Download package",
     "description": "Download a package from a package management feed in Azure Artifacts",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-package",
-    "helpMarkDown": "Requires the Package Management extension to be installed",
+    "helpMarkDown": "Requires the Azure Artifacts extension to be installed",
     "category": "Utility",
     "author": "ms-vscs-rm",
     "version": {
@@ -170,7 +170,7 @@
         "FailedToGetPackageMetadata": "Fetching package metadata using url %s failed with error %s",
         "FailedToDownloadPackage": "Failed to download package file from %s got the following error: %s",
         "PackageDownloadSuccessful": "Package download successful",
-        "CredentialsNotFound": "Could not determine credentials to connect to Package Management service.",
+        "CredentialsNotFound": "Could not determine credentials to connect to Azure Artifacts service.",
         "StartingDownloadOfPackage": "Starting download of package %s to location %s",
         "ExtractingPackage": "Extracting package %s to directory %s",
         "PackageTypeNotSupported": "Only Nuget, Python, Universal, Npm, and Maven packages types can be downloaded using this task.",
