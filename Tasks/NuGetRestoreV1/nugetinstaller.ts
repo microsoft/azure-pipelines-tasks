@@ -140,7 +140,7 @@ async function main(): Promise<void> {
             
             if (feed.feedId) {
                 if(feed.projectId) {
-                    tl.warning(tl.loc("UnsupportedProjectScopedFeeds"));
+                    throw new Error(tl.loc("UnsupportedProjectScopedFeeds"));
                 } else {
                     let feedUrl:string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed.feedId, null, nuGetVersion, accessToken);
                     sources.push(<IPackageSource>
