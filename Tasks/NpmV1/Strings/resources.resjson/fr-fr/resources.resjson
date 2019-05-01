@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "npm",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613746)",
-  "loc.description": "Installez et publiez des packages npm, ou exécutez une commande npm. Prend en charge npmjs.com et les registres authentifiés tels que Package Management.",
+  "loc.description": "Installez et publiez des packages npm, ou exécutez une commande npm. Prend en charge npmjs.com et les registres authentifiés tels que Azure Artifacts.",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.group.displayName.customRegistries": "Registres personnalisés et authentification",
   "loc.group.displayName.publishRegistries": "Registre de destination et authentification",
@@ -23,7 +23,7 @@
   "loc.input.label.publishRegistry": "Emplacement du registre",
   "loc.input.help.publishRegistry": "Registre ciblé par la commande.",
   "loc.input.label.publishFeed": "Registre cible",
-  "loc.input.help.publishFeed": "Sélectionnez un registre hébergé dans ce compte. Pour permettre la sélection d'un registre, la fonctionnalité Package Management doit être installée et associée à une licence.",
+  "loc.input.help.publishFeed": "Sélectionnez un registre hébergé dans ce compte. Pour permettre la sélection d'un registre, la fonctionnalité Azure Artifacts doit être installée et associée à une licence.",
   "loc.input.label.publishEndpoint": "Registre externe",
   "loc.input.help.publishEndpoint": "Informations d'identification à utiliser pour la publication sur un registre externe.",
   "loc.messages.FoundBuildCredentials": "Informations d'identification de build trouvées",
