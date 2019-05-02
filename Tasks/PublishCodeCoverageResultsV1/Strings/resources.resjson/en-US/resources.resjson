@@ -7,6 +7,8 @@
   "loc.input.help.codeCoverageTool": "The tool with which code coverage results are generated.",
   "loc.input.label.summaryFileLocation": "Summary file",
   "loc.input.help.summaryFileLocation": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`",
+  "loc.input.label.pathToSources": "Path to Source files",
+  "loc.input.help.pathToSources": "Path to source files in case reporting xml doesn't contain absolute path to source files. For example: Java specific reporting `$(System.DefaultWorkingDirectory)/MyApp/**/src/main/java/`, and Javascript specifc reporters `$(System.DefaultWorkingDirectory)/MyApp/`",
   "loc.input.label.reportDirectory": "Report directory",
   "loc.input.help.reportDirectory": "Path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`",
   "loc.input.label.additionalCodeCoverageFiles": "Additional files",

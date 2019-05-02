@@ -44,6 +44,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.summaryFileLocation"
     },
     {
+      "name": "pathToSources",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pathToSources",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pathToSources"
+    },
+    {
       "name": "reportDirectory",
       "type": "string",
       "label": "ms-resource:loc.input.label.reportDirectory",
