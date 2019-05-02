@@ -1,13 +1,9 @@
-/// <reference path="../../definitions/mocha.d.ts"/>
-/// <reference path="../../definitions/node.d.ts"/>
-/// <reference path="../../definitions/Q.d.ts"/>
-
 import Q = require('q');
 import assert = require('assert');
 import path = require('path');
-let ff = require('../../../Tasks/Common/find-files-legacy/findfiles.legacy');
+const ff = require(path.join(__dirname, '..', 'find-files-legacy.js'));
 
-describe('Common find files legacy suite', function () {
+describe('PublishTestResultsV1 Find files legacy suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     let data = path.join(__dirname, 'data');
