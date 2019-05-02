@@ -136,7 +136,7 @@ export class PackageUrlsBuilder {
 
     private getMavenRouteParams(feedId: string, project: string, packageMetadata: any, fileMetadata: any): any {
         var fileName = fileMetadata.name;
-        var groupId = packageMetadata.protocolMetadata.data.groupId.replace(new RegExp("\\."), "/");
+        var groupId = packageMetadata.protocolMetadata.data.groupId || packageMetadata.protocolMetadata.data.parent.groupId;
         var artifactId = packageMetadata.protocolMetadata.data.artifactId;
         var version = packageMetadata.protocolMetadata.data.version;
 
