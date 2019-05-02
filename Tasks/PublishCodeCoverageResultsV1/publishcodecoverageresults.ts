@@ -137,14 +137,11 @@ function pathExistsAsFile(path: string) {
     }
 }
 
-// Gets whether the specified path exists as Dir.
-function pathExistsAsDir(path: string) {
-    try {
-        return tl.stats(path).isDirectory();
-    } catch (error) {
-        tl.debug(error);
-        return false;
+function isNullOrWhitespace(input: any) {
+    if (typeof input === 'undefined' || input == null) {
+        return true;
     }
+    return input.replace(/\s/g, '').length < 1;
 }
 
 function getTempFolder(): string {
@@ -180,7 +177,7 @@ async function generateHtmlReport(summaryFile: string, targetDir: string, pathTo
     dotnet.arg('-targetdir:' + targetDir);
     dotnet.arg('-reporttypes:HtmlInline_AzurePipelines');
 
-    if (pathToSources) {
+    if (!isNullOrWhitespace(pathToSources)) {
         dotnet.arg('-sourcedirs:' + pathToSources);
     }
 
