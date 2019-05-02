@@ -1,0 +1,10 @@
+{
+	"common": [
+    {
+		"module": "../Common/utility-common",
+		"type": "node",
+		"dest" : "./",
+		"compile" : true
+	}
+]
+}

@@ -1,7 +1,5 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as webapim from 'vso-node-api/WebApi';
-import * as testapim from 'vso-node-api/TestApi';
-import * as testInterfaces from 'vso-node-api/interfaces/TestInterfaces';
 import * as models from './models';
 
 export class TestAgent {

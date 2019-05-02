@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Helm tool installer",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Install Helm and Kubernetes on agent machine.",
+  "loc.description": "Install Helm and Kubernetes on an agent machine",
   "loc.instanceNameFormat": "Install Helm $(helmVersion)",
   "loc.group.displayName.prerequisite": "Prerequisite",
   "loc.input.label.helmVersion": "Helm Version Spec",

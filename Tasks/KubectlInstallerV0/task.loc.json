@@ -1,0 +1,44 @@
+{
+  "id": "8413C881-4959-43D5-8840-B4EA0FFC5CFD",
+  "name": "KubectlInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "preview": true,
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 151,
+    "Patch": 1
+  },
+  "demands": [],
+  "satisfies": [
+    "Kubectl"
+  ],
+  "groups": [],
+  "inputs": [
+    {
+      "name": "kubectlVersion",
+      "label": "ms-resource:loc.input.label.kubectlVersion",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.kubectlVersion",
+      "defaultValue": "latest"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "src//kubectltoolinstaller.js"
+    }
+  },
+  "messages": {
+    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
+    "VerifyKubectlInstallation": "ms-resource:loc.messages.VerifyKubectlInstallation"
+  }
+}

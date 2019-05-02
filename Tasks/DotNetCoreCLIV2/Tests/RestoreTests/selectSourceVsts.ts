@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import util = require('../DotnetMockHelper');
 
@@ -11,7 +11,7 @@ nmh.setNugetVersionInputDefault();
 tmr.setInput('command', 'restore');
 tmr.setInput('projects', 'single.csproj');
 tmr.setInput('selectOrConfig', 'select');
-tmr.setInput('feedRestore', 'b7fb1a0d-637d-4dc0-978c-a5e43d8e0a98');
+tmr.setInput('feedRestore', '98320bea-3915-4ef2-9333-908d3290289c/b7fb1a0d-637d-4dc0-978c-a5e43d8e0a98');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},

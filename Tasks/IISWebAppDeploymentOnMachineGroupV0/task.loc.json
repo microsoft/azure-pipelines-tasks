@@ -3,7 +3,7 @@
   "name": "IISWebAppDeploymentOnMachineGroup",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=866789",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/iis-web-app-deployment-on-machine-group",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 51
+    "Patch": 53
   },
   "demands": [],
   "minimumAgentVersion": "2.104.1",

@@ -4,12 +4,12 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://aka.ms/universalpackagesannounce",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 148,
+    "Minor": 152,
     "Patch": 0
   },
   "runsOn": [
@@ -435,6 +435,7 @@
     "Error_UnexpectedErrorFailedToGetToolMetadata": "ms-resource:loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata",
     "FailedToGetLatestPackageVersion": "ms-resource:loc.messages.FailedToGetLatestPackageVersion",
     "Warn_CredentialsNotFound": "ms-resource:loc.messages.Warn_CredentialsNotFound",
-    "Error_UniversalPackagesNotSupportedOnPrem": "ms-resource:loc.messages.Error_UniversalPackagesNotSupportedOnPrem"
+    "Error_UniversalPackagesNotSupportedOnPrem": "ms-resource:loc.messages.Error_UniversalPackagesNotSupportedOnPrem",
+    "Error_ProcessorArchitectureNotSupported": "ms-resource:loc.messages.Error_ProcessorArchitectureNotSupported"
   }
 }

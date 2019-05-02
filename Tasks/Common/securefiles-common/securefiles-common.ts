@@ -1,20 +1,20 @@
 import * as fs from 'fs';
 import * as Q from 'q';
-import * as tl from 'vsts-task-lib/task';
-import * as vsts from 'vso-node-api';
+import * as tl from 'azure-pipelines-task-lib/task';
+import { getPersonalAccessTokenHandler, WebApi } from 'azure-devops-node-api';
 
 export class SecureFileHelpers {
-    serverConnection: vsts.WebApi;
+    serverConnection: WebApi;
 
     constructor() {
         const serverUrl: string = tl.getVariable('System.TeamFoundationCollectionUri');
         const serverCreds: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
-        const authHandler = vsts.getPersonalAccessTokenHandler(serverCreds);
+        const authHandler = getPersonalAccessTokenHandler(serverCreds);
 
         const proxy = tl.getHttpProxyConfiguration();
         const options = proxy ? { proxy, ignoreSslError: true } : undefined;
 
-        this.serverConnection = new vsts.WebApi(serverUrl, authHandler, options);
+        this.serverConnection = new WebApi(serverUrl, authHandler, options);
     }
 
     /**

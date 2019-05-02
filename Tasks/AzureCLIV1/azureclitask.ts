@@ -97,17 +97,17 @@ export class azureclitask {
                 tl.rmRF(this.cliPasswordPath);
             }
 
-            //Logout of Azure if logged in
-            if (this.isLoggedIn) {
-                this.logoutAzure();
-            }
-
             //set the task result to either succeeded or failed based on error was thrown or not
             if (toolExecutionError) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailed", toolExecutionError));
             }
             else {
                 tl.setResult(tl.TaskResult.Succeeded, tl.loc("ScriptReturnCode", 0));
+            }
+            
+            //Logout of Azure if logged in
+            if (this.isLoggedIn) {
+                this.logoutAzure();
             }
         }
     }

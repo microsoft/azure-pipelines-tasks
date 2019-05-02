@@ -1,7 +1,6 @@
-import * as tl from 'vsts-task-lib/task';
-import tr = require('vsts-task-lib/toolrunner');
+import * as tl from 'azure-pipelines-task-lib/task';
+import tr = require('azure-pipelines-task-lib/toolrunner');
 import * as path from 'path';
-import * as Q from 'q';
 import * as models from './models';
 import * as version from './vstestversion';
 import * as utils from './helpers';
@@ -134,15 +133,28 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
 }
 
 export function getVSTestConsolePath(versionLowerLimit : string, versionUpperLimit : string): string {
-    const vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
+    let vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
 
+    console.log(tl.loc('LookingForVsInstalltion'));
     vswhereTool.line(`-version [${versionLowerLimit},${versionUpperLimit}) -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath`);
     let vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
     vsPath = utils.Helper.trimString(vsPath);
-    tl.debug('Visual Studio 15.0 or higher installed path: ' + vsPath);
     if (!utils.Helper.isNullOrWhitespace(vsPath)) {
+        tl.debug('Visual Studio 15.0 or higher installed path: ' + vsPath);
         return vsPath;
     }
+
+    // look for build tool installation if full VS not present
+    console.log(tl.loc('LookingForBuildToolsInstalltion'));
+    vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
+    vswhereTool.line(`-version [${versionLowerLimit},${versionUpperLimit}) -latest -products * -requires Microsoft.VisualStudio.Component.TestTools.BuildTools -property installationPath`);
+    vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+    vsPath = utils.Helper.trimString(vsPath);
+    if (!utils.Helper.isNullOrWhitespace(vsPath)) {
+        tl.debug('Build tools installed path: ' + vsPath);
+        return vsPath;
+    }
+
     return null;
 }
 

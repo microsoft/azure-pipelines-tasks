@@ -3,7 +3,7 @@
   "name": "AzureCloudPowerShellDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613748",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cloud-powershell-deployment",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 3,
-    "Patch": 12
+    "Patch": 14
   },
   "demands": [
     "azureps"

@@ -3,7 +3,7 @@ import * as url from 'url';
 
 import * as util from '../util';
 
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import { INpmRegistry, NpmRegistry } from './npmregistry';
 import * as NpmrcParser from './npmrcparser';

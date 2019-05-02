@@ -47,9 +47,19 @@ export async function getKubectlVersion(versionSpec: string, checkLatest: boolea
             tl.warning(tl.loc("UsingLatestStableVersion"));
             return kubectlutility.getStableKubectlVersion();
         } 
+        else if ("v".concat(versionSpec) === kubectlutility.stableKubectlVersion) {
+            tl.debug(util.format("Using default versionSpec:%s.", versionSpec));
+            return kubectlutility.stableKubectlVersion;
+        }
         else {
-            let versions = await kubectlutility.getAvailableKubectlVersions();
-            return sanitizeVersionString(versions, versionSpec);
+            // Do not check for validity of the version here,
+            // We'll return proper error message when the download fails
+            if(!versionSpec.startsWith("v")) {
+                return "v".concat(versionSpec);
+            }
+            else{
+                return versionSpec;
+            }
         } 
      }
  

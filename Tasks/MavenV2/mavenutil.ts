@@ -4,7 +4,7 @@ import path = require('path');
 import fs = require('fs');
 import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
-import * as pkgLocationUtils from "packaging-common/locationUtilities";
+import * as pkgLocationUtils from "packaging-common-old/locationUtilities";
 
 import * as url from "url";
 import * as xml2js from 'xml2js';
@@ -230,7 +230,8 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
                         repo = repo instanceof Array ? repo[0] : repo;
                         let url:string = repo.url instanceof Array ? repo.url[0] : repo.url;
                         if (url && (url.toLowerCase().includes(collectionName) ||
-                                    url.toLowerCase().includes(packageUrl))) {
+                                    url.toLowerCase().includes(packageUrl) ||
+                                    packagingLocation.PackagingUris.some(uri => url.toLowerCase().startsWith(uri.toLowerCase())))) {
                         tl.debug('using credentials for url: ' + url);
                         repos.push({
                             id: (repo.id && repo.id instanceof Array)

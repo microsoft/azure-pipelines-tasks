@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as ltx from "ltx";
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as locationUtilities from "../locationUtilities";
 import { VersionInfo } from "../pe-parser/VersionResource";
 
@@ -189,6 +189,7 @@ export function setConsoleCodePage() {
 export async function getNuGetFeedRegistryUrl(
     packagingCollectionUrl: string,
     feedId: string,
+    project: string,
     nuGetVersion: VersionInfo,
     accessToken?: string,
     useSession?: boolean): Promise<string>
@@ -207,7 +208,7 @@ export async function getNuGetFeedRegistryUrl(
         packagingCollectionUrl = collectionUrl;
     }
 
-    return await locationUtilities.getFeedRegistryUrl(packagingCollectionUrl, registryType, feedId, accessToken, useSession);
+    return await locationUtilities.getFeedRegistryUrl(packagingCollectionUrl, registryType, feedId, project, accessToken, useSession);
 }
 
 export function getSourcesFromNuGetConfig(configPath: string): IPackageSourceBase[] {

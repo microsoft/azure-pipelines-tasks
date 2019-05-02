@@ -6,6 +6,9 @@ import { bake } from "./actions/bake";
 import { scale } from "./actions/scale";
 import { patch } from "./actions/patch";
 import { deleteResources } from './actions/delete';
+import { promote } from './actions/promote';
+import { reject } from './actions/reject';
+import { createSecret } from './actions/createSecret';
 import { Connection } from "./connection";
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
@@ -15,7 +18,7 @@ function run(): Promise<void> {
     if (action === "bake") {
         return bake();
     }
-    let connection = new Connection(!!tl.getVariable("KUBECONFIG"));
+    let connection = new Connection();
     let action_func = null;
     switch (action) {
         case "deploy":
@@ -30,8 +33,17 @@ function run(): Promise<void> {
         case "delete":
             action_func = deleteResources;
             break;
+        case "promote":
+            action_func = promote;
+            break;
+        case "reject":
+            action_func = reject;
+            break;
+        case "createSecret":
+            action_func = createSecret;
+            break;
         default:
-            tl.setResult(tl.TaskResult.Failed, 'Not a supported action, choose from "bake", "deploy", "patch", "scale", "delete"');
+            tl.setResult(tl.TaskResult.Failed, 'Not a supported action, choose from "bake", "deploy", "patch", "scale", "delete", "promote", "reject"');
             process.exit(1);
     }
     connection.open()

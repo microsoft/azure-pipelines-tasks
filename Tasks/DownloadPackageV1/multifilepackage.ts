@@ -1,10 +1,10 @@
 import { Package, PackageFileResult } from "./package";
 import { PackageUrlsBuilder } from "./packagebuilder";
-import { match } from "vsts-task-lib";
-import * as tl from "vsts-task-lib/task";
+import { match } from "azure-pipelines-task-lib";
+import * as tl from "azure-pipelines-task-lib/task";
 
 export class MultiFilePackage extends Package {
-    private getRouteParams: (feedId: string, packageMetadata: any, fileMetadata: any) => any;
+    private getRouteParams: (feedId: string, project: string, packageMetadata: any, fileMetadata: any) => any;
     private pattern: string[];
 
     constructor(builder: PackageUrlsBuilder) {
@@ -23,6 +23,7 @@ export class MultiFilePackage extends Package {
 
     private async getPackageFileDownloadUrl(
         feedId: string,
+        project: string,
         packageMetadata: any,
         fileMetadata: any
     ): Promise<Map<string, PackageFileResult>> {
@@ -31,7 +32,7 @@ export class MultiFilePackage extends Package {
                 this.pkgsConnection.vsoClient,
                 this.packageProtocolAreaName,
                 this.packageProtocolDownloadAreadId,
-                this.getRouteParams(feedId, packageMetadata, fileMetadata)
+                this.getRouteParams(feedId, project, packageMetadata, fileMetadata)
             )
                 .then(downloadUrl => {
                     var url = new Map<string, PackageFileResult>();
@@ -53,10 +54,11 @@ export class MultiFilePackage extends Package {
         });
     }
 
-    async getDownloadUrls(feedId: string, packageId: string, packageVersion: string): Promise<Map<string, PackageFileResult>> {
+    async getDownloadUrls(feedId: string, project: string, packageId: string, packageVersion: string): Promise<Map<string, PackageFileResult>> {
         return new Promise<Map<string, PackageFileResult>>((resolve, reject) => {
             return this.getPackageMetadata(this.feedConnection, {
                 feedId: feedId,
+                project: project,
                 packageId: packageId,
                 packageVersionId: packageVersion
             })
@@ -73,7 +75,7 @@ export class MultiFilePackage extends Package {
                             const fileMetadata = fileMetadatas[i];
                             pkgFileUrlPromises.push(
                                 fileMetadata.protocolMetadata.data.storageId != null
-                                    ? this.getPackageFileDownloadUrl(feedId, packageMetadata, fileMetadata)
+                                    ? this.getPackageFileDownloadUrl(feedId, project, packageMetadata, fileMetadata)
                                     : this.getPackageFileContent(fileMetadata)
                             );
                         }

@@ -1,9 +1,9 @@
 {
     "id": "31C75BBB-BCDF-4706-8D7C-4DA6A1959BC2",
     "name": "NodeTool",
-    "friendlyName": "Node.js Tool Installer",
-    "description": "Finds or downloads and caches the specified version spec of Node.js and adds it to the PATH.",
-    "helpUrl": "",
+    "friendlyName": "Node.js tool installer",
+    "description": "Finds or downloads and caches the specified version spec of Node.js and adds it to the PATH",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/node-js",
     "helpMarkDown": "",
     "category": "Tool",
     "runsOn": [
@@ -13,11 +13,12 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 148,
+        "Minor": 151,
         "Patch": 0
     },
     "satisfies": [
-        "Node"
+        "Node",
+        "npm"
     ],
     "demands": [],
     "instanceNameFormat": "Use Node $(versionSpec)",

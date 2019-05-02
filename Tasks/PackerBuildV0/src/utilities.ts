@@ -107,7 +107,7 @@ export function findMatch(root: string, patterns: string[] | string): string[] {
 }
 
 export function getTempDirectory(): string {
-    return os.tmpdir();
+    return tl.getVariable('Agent.TempDirectory');
 }
 
 export function getCurrentTime(): number {

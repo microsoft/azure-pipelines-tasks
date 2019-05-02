@@ -1,4 +1,4 @@
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 import { Package } from "./package";
 import { SingleFilePackage } from "./singlefilepackage";
@@ -16,7 +16,7 @@ export class PackageUrlsBuilder {
     private packageProtocolAreaName: string;
     private executeWithRetries: <T>(operation: () => Promise<T>) => Promise<T>;
 
-    private getRouteParams: (feedId: string, packageMetadata: any, fileMetadata: any) => any;
+    private getRouteParams: (feedId: string, project: string, packageMetadata: any, fileMetadata: any) => any;
 
     get Type() {
         return this.type;
@@ -124,25 +124,27 @@ export class PackageUrlsBuilder {
         }
     }
 
-    private getPythonRouteParams(feedId: string, packageMetadata: any, fileMetadata: any): any {
+    private getPythonRouteParams(feedId: string, project: string, packageMetadata: any, fileMetadata: any): any {
         return {
             feedId: feedId,
             packageName: packageMetadata.protocolMetadata.data.name,
             packageVersion: packageMetadata.protocolMetadata.data.version,
-            fileName: fileMetadata.name
+            fileName: fileMetadata.name,
+            project: project
         };
     }
 
-    private getMavenRouteParams(feedId: string, packageMetadata: any, fileMetadata: any): any {
+    private getMavenRouteParams(feedId: string, project: string, packageMetadata: any, fileMetadata: any): any {
         var fileName = fileMetadata.name;
-        var groupId = packageMetadata.protocolMetadata.data.groupId.replace(new RegExp("\\."), "/");
+        var groupId = packageMetadata.protocolMetadata.data.groupId || packageMetadata.protocolMetadata.data.parent.groupId;
         var artifactId = packageMetadata.protocolMetadata.data.artifactId;
         var version = packageMetadata.protocolMetadata.data.version;
 
         var artifactPath = `${groupId}/${artifactId}/${version}/${fileName}`;
         return {
             feed: feedId,
-            path: artifactPath
+            path: artifactPath,
+            project: project
         };
     }
 }

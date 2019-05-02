@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Install Apple Provisioning Profile",
+  "loc.friendlyName": "Install Apple provisioning profile",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862068)",
-  "loc.description": "Install an Apple provisioning profile required to build on a macOS agent",
+  "loc.description": "Install an Apple provisioning profile required to build on a macOS agent machine",
   "loc.instanceNameFormat": "Install an Apple provisioning profile",
   "loc.input.label.provisioningProfileLocation": "Provisioning profile location",
   "loc.input.help.provisioningProfileLocation": "Select the location of the provisioning profile to install. The provisioning profile can be uploaded to `Secure Files` or stored in your source repository or a local path on the agent.",

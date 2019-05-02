@@ -87,7 +87,7 @@ export class Kudu {
         httpRequest.uri = this._client.getRequestUri(`/api/deployments/${requestBody.id}`);
 
         try {
-            let webRequestOptions: webClient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true};
+            let webRequestOptions: webClient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: null, retryCount: 5, retryIntervalInSeconds: 5, retryRequestTimedout: true};
             var response = await this._client.beginRequest(httpRequest, webRequestOptions);
             tl.debug(`updateDeployment. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {

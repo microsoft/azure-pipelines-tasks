@@ -1,4 +1,4 @@
-import * as tl from "vsts-task-lib";
+import * as tl from "azure-pipelines-task-lib";
 
 export interface IPackageSource {
     accountUrl: string;

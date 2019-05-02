@@ -2,7 +2,7 @@
   "name": "Agent.Tasks",
   "version": "0.5.0",
   "description": "Tasks for the Azure Pipelines build system",
-  "main": "gulpfile.js",
+  "main": "make.js",
   "directories": {
     "doc": "docs"
   },
@@ -29,8 +29,6 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks",
   "devDependencies": {
-    "gulp": "3.9.0",
-    "gulp-util": "3.0.4",
     "markdown-toc": "^1.2.0",
     "minimatch": "3.0.2",
     "minimist": "1.1.1",

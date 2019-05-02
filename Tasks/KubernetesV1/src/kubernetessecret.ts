@@ -9,7 +9,7 @@ import ClusterConnection from "./clusterconnection";
 import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
 import AuthenticationTokenProvider  from "docker-common/registryauthenticationprovider/authenticationtokenprovider";
 import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider";
-import GenericAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/genericauthenticationtokenprovider";
+import { getDockerRegistryEndpointAuthenticationToken } from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
 
 export function run(connection: ClusterConnection, secret: string): any {
    
@@ -103,7 +103,7 @@ function getRegistryAuthenticationToken(): AuthenticationToken {
         authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpointForSecrets"), tl.getInput("azureContainerRegistry"));
     } 
     else {
-        authenticationProvider = new GenericAuthenticationTokenProvider(tl.getInput("dockerRegistryEndpoint"));
+        return getDockerRegistryEndpointAuthenticationToken(tl.getInput("dockerRegistryEndpoint"));
     }
 
     return authenticationProvider.getAuthenticationToken();

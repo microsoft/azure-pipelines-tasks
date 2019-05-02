@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure App Service Deploy",
+  "loc.friendlyName": "Azure App Service deploy",
   "loc.helpMarkDown": "[More information](https://aka.ms/azurermwebdeployreadme)",
-  "loc.description": "Update Azure App Services on Windows, Web App on Linux with built-in images or Docker containers, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Function Apps on Windows or Linux with Docker Containers, Mobile Apps, API applications, Web Jobs using Web Deploy / Kudu REST APIs",
+  "loc.description": "Deploy to Azure App Service a web, mobile, or API app using Docker, Java, .NET, .NET Core, Node.js, PHP, Python, or Ruby",
   "loc.instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
   "loc.releaseNotes": "What's new in version 4.*<br />Supports Zip Deploy, Run From Package, War Deploy [Details here](https://aka.ms/appServiceDeploymentMethods)<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "File Transforms & Variable Substitution Options",
@@ -9,10 +9,11 @@
   "loc.group.displayName.PostDeploymentAction": "Post Deployment Action",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
   "loc.input.label.ConnectionType": "Connection type",
-  "loc.input.help.ConnectionType": "Select the service connection type to use to deploy the Web App.",
+  "loc.input.help.ConnectionType": "Select the service connection type to use to deploy the Web App.<br />Select Publish Profile for using Visual Studio created Publish profile. [More Information](https://aka.ms/vsPublishProfile).",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",
   "loc.input.label.PublishProfilePath": "Publish profile path",
+  "loc.input.help.PublishProfilePath": "Path of the Publish profile created from Visual Studio",
   "loc.input.label.PublishProfilePassword": "Publish profile password",
   "loc.input.help.PublishProfilePassword": "It is recommended to store password in a secret variable and use that variable here e.g. $(Password).",
   "loc.input.label.WebAppKind": "App Service type",
@@ -40,7 +41,7 @@
   "loc.input.label.RuntimeStackFunction": "Runtime Stack",
   "loc.input.help.RuntimeStackFunction": "Select the framework and version.",
   "loc.input.label.StartupCommand": "Startup command ",
-  "loc.input.help.StartupCommand": "Enter the start up command.",
+  "loc.input.help.StartupCommand": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll",
   "loc.input.label.ScriptType": "Deployment script type",
   "loc.input.help.ScriptType": "Customize the deployment by providing a script that will run on the Azure App service once the task has completed the deployment successfully . For example restore packages for Node, PHP, Python applications. [Learn more](https://go.microsoft.com/fwlink/?linkid=843471).",
   "loc.input.label.InlineScript": "Inline Script",
@@ -222,5 +223,6 @@
   "loc.messages.FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
   "loc.messages.JarPathNotPresent": "Java jar path is not present",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
-  "loc.messages.RunFromZipPreventsFileInUseError": "Move from Web Deploy to RunFrom Package, which helps in avoiding FILE_IN_USE error. Note that Run From Package does not support msBuild package type. Please change your package format to use this deployment method."
+  "loc.messages.RunFromZipPreventsFileInUseError": "Move from Web Deploy to RunFrom Package, which helps in avoiding FILE_IN_USE error. Note that Run From Package does not support msBuild package type. Please change your package format to use this deployment method.",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }

@@ -1,6 +1,6 @@
 import * as vsts from 'azure-devops-node-api';
 import * as interfaces from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import { IRequestOptions } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
 
 import * as provenance from "./provenance";
@@ -161,6 +161,7 @@ export async function getFeedRegistryUrl(
     packagingUrl: string, 
     registryType: RegistryType, 
     feedId: string,
+    project: string,
     accessToken?: string,
     useSession?: boolean): Promise<string> {
     let loc : RegistryLocation;
@@ -211,6 +212,7 @@ export async function getFeedRegistryUrl(
     if (useSession) {
         sessionId = await provenance.ProvenanceHelper.GetSessionId(
             feedId,
+            project,
             loc.area /* protocol */,
             vssConnection.serverUrl,
             [vssConnection.authHandler],
@@ -218,7 +220,7 @@ export async function getFeedRegistryUrl(
     }
 
     const data = await Retry(async () => {
-        return await vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: sessionId });
+        return await vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: sessionId, project: project });
     }, 4, 100);
 
     tl.debug("Feed registry url: " + data.requestUrl);
@@ -226,7 +228,7 @@ export async function getFeedRegistryUrl(
 }
 
 // This should be replaced when retry is implemented in vso client.
-async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: number) : Promise<T> {
+export async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: number) : Promise<T> {
     try {
         return await cb();
     } catch(exception) {

@@ -50,8 +50,19 @@ try {
 
     $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
 
+    $subscriptionId = $null
+    if ($endpoint -and $endpoint.Data)
+    {
+        $subscriptionId = $endpoint.Data.SubscriptionId
+    }
+
     # Telemetry for endpoint id
-    $telemetryJsonContent = "{`"endpointId`":`"$connectedServiceName`"}"
+    $encodedServerName = GetSHA256String($serverName)
+    $encodedDatabaseName = GetSHA256String($databaseName)
+    $telemetryJsonContent = -join("{`"endpointId`":`"$connectedServiceName`",", 
+                                  "`"subscriptionId`":`"$subscriptionId`",",
+                                  "`"serverName`": `"$encodedServerName`",",
+                                  "`"databaseName`": `"$encodedDatabaseName`"}")
     Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=SqlAzureDacpacDeployment]$telemetryJsonContent"
 
     Import-Sqlps

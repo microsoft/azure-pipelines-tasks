@@ -2,6 +2,7 @@ import * as tl from 'vsts-task-lib/task';
 
 const area: string = 'TestExecution';
 const feature: string = 'PublishTestResultsTask';
+const consolidatedCiData: { [key: string]: any; } = <{ [key: string]: any; }>{};
 
 function getDefaultProps() {
     return {
@@ -13,8 +14,17 @@ function getDefaultProps() {
     };
 }
 
-export function publishEvent(properties: { [key: string]: any }): void {
+export function addToConsolidatedCi(key: string, value: any) {
+    consolidatedCiData[key] = value;
+}
+
+export function fireConsolidatedCi() {
+    publishEvent('publishTestResultsTaskConsolidatedCiEvent', consolidatedCiData);
+}
+
+export function publishEvent(subFeature: string, properties: { [key: string]: any }): void {
     try {
+        properties.subFeature = subFeature;
         _writeTelemetry(area, feature, Object.assign(getDefaultProps(), properties));
     } catch (err) {
         tl.debug('Unable to publish telemetry due to lower agent version.');

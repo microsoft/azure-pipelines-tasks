@@ -1,9 +1,9 @@
-import * as tl from "vsts-task-lib";
+import * as tl from "azure-pipelines-task-lib";
 let fs = require("fs");
 let os = require("os");
 import child = require("child_process");
 import stream = require("stream");
-import {IExecOptions, IExecSyncResult} from "vsts-task-lib/toolrunner";
+import {IExecOptions, IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
 
 export interface IArtifactToolOptions {
     artifactToolPath: string;

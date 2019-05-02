@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "Build, test, or archive an Xcode workspace on macOS. Optionally package an app.",
   "loc.instanceNameFormat": "Xcode $(actions)",
-  "loc.releaseNotes": "This version of the task is compatible with Xcode 8, Xcode 9 and Xcode 10. Features that were there solely to maintain compat with Xcode 7 have been removed. The task has better options to work with the Hosted macOS pool.",
+  "loc.releaseNotes": "This version of the task is compatible with Xcode 8, Xcode 9 and Xcode 10. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
   "loc.group.displayName.sign": "Signing & provisioning",
   "loc.group.displayName.package": "Package options",
   "loc.group.displayName.devices": "Devices & simulators",
@@ -64,8 +64,8 @@
   "loc.input.help.cwd": "(Optional) Enter the working directory in which to run the build. If no value is entered, the root of the repository will be used.",
   "loc.input.label.useXcpretty": "Use xcpretty",
   "loc.input.help.useXcpretty": "Specify whether to use xcpretty to format xcodebuild output. Enabling this requires xcpretty to be installed on the agent machine. If xcpretty is not installed, raw xcodebuild output is shown. xcpretty is preinstalled on Azure Pipelines hosted build agents. See [xcpretty](https://github.com/supermarin/xcpretty) on GitHub.",
-  "loc.input.label.publishJUnitResults": "Publish test results to Azure Pipelines/TFS",
-  "loc.input.help.publishJUnitResults": "Specify whether to publish JUnit test results to Azure Pipelines/TFS. This requires xcpretty to be enabled to generate JUnit test results.",
+  "loc.input.label.publishJUnitResults": "Publish test results to Azure Pipelines",
+  "loc.input.help.publishJUnitResults": "Specify whether to publish JUnit test results to Azure Pipelines. This requires xcpretty to be enabled to generate JUnit test results.",
   "loc.messages.SignIdNotFound": "Failed to find the iOS signing identity. Verify that signing and provisioning information is provided.",
   "loc.messages.TempKeychainSetupFailed": "Failed to add the temporary keychain to the keychains search path.",
   "loc.messages.ProvProfileDetailsNotFound": "Failed to find details for the provisioning profile: %s",
@@ -91,5 +91,6 @@
   "loc.messages.FailedToFindScheme": "Failed to find a scheme in the workspace. Use `Scheme` to specify a target scheme.",
   "loc.messages.OutputDirectoryIgnored": "Output directory for build output (binaries) ignored. Specifying an output directory is incompatible with the '%s' action.",
   "loc.messages.NoDestinationPlatformWarning": "UI tests must be run against a simulator or a connected device. In the Xcode task, set `Destination platform` to a value other than `Default`.",
-  "loc.messages.XcprettyNotInstalled": "xcpretty is not installed on the build server. xcodebuild raw output will be shown. Publishing test results will fail if xcpretty is not installed."
+  "loc.messages.XcprettyNotInstalled": "xcpretty is not installed on the build server. xcodebuild raw output will be shown. Publishing test results will fail if xcpretty is not installed.",
+  "loc.messages.XcodeRequiresMac": "Using Xcode requires a macOS agent. Building with Xcode on Linux or Windows is not supported by Apple."
 }

@@ -1,6 +1,6 @@
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
-import {IExecOptions, IExecSyncResult} from "vsts-task-lib/toolrunner";
+import * as tl from "azure-pipelines-task-lib/task";
+import {IExecOptions, IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
 
 import * as auth from "packaging-common/nuget/Authentication";
 import * as commandHelper from "packaging-common/nuget/CommandHelper";
@@ -12,6 +12,7 @@ import * as nutil from "packaging-common/nuget/Utility";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as telemetry from "utility-common/telemetry";
 import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions2";
+import { getProjectAndFeedIdFromInputParam } from 'packaging-common/util';
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
@@ -148,15 +149,17 @@ export async function run(nuGetPath: string): Promise<void> {
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === "select") {
             const sources: auth.IPackageSource[] = new Array<auth.IPackageSource>();
-            const feed = tl.getInput("feedRestore");
-            if (feed) {
+            const feed = getProjectAndFeedIdFromInputParam('feedRestore');
+
+            if (feed.feedId) {
                 const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(
                     packagingLocation.DefaultPackagingUri,
-                    feed,
+                    feed.feedId,
+                    feed.projectId,
                     nuGetVersion,
                     accessToken);
                 sources.push({
-                    feedName: feed,
+                    feedName: feed.feedId,
                     feedUri: feedUrl,
                     isInternal: true,
                 });

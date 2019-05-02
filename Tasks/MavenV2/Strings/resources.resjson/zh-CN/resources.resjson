@@ -45,7 +45,6 @@
   "loc.input.label.mavenOpts": "将 MAVEN_OPTS 设置为",
   "loc.input.help.mavenOpts": "设置 MAVEN_OPTS 环境变量，此变量将用于发送命令行参数以启动 JVM。-Xmx 标志指定 JVM 可用的最大内存。",
   "loc.input.label.mavenFeedAuthenticate": "对内置 Maven 源进行身份验证",
-  "loc.input.help.mavenFeedAuthenticate": "自动对 Azure Artifacts/TFS [包管理](https://marketplace.visualstudio.com/items?itemName=ms.feed)扩展中的内置 Maven 源进行验证。如果未使用内置 Maven 源，请取消选择该选项，以便更快生成。",
   "loc.input.label.sqAnalysisEnabled": "运行 SonarQube 或 SonarCloud 分析",
   "loc.input.help.sqAnalysisEnabled": "此选项已从 **Maven** 任务的版本 1 更改为使用[SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube)和[SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud)市场扩展。启用此选项，在执行 **目标** 字段中的目标后运行[SonarQube 或 SonarCloud 分析](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html)。须首先运行 **安装** 或 **包** 目标。还必须在此 Maven 任务之前将其中一个扩展的 **准备分析配置** 任务添加到生成管道 。",
   "loc.input.label.sqMavenPluginVersionChoice": "Maven 版本的 SonarQube 扫描仪",

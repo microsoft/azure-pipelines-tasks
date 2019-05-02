@@ -4,8 +4,8 @@ import os = require("os");
 import * as path from "path";
 import * as semver from "semver";
 import * as pkgLocationUtils from "../locationUtilities";
-import * as tl from "vsts-task-lib";
-import * as toollib from "vsts-task-tool-lib/tool";
+import * as tl from "azure-pipelines-task-lib";
+import * as toollib from "azure-pipelines-tool-lib/tool";
 
 export function getArtifactToolLocation(dirName: string): string {
     let toolPath: string = path.join(dirName, "ArtifactTool.exe");
@@ -45,11 +45,22 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
 
     let osName = tl.osType();
     let arch = os.arch();
-    if(osName === "Windows_NT"){
+    if (osName === "Windows_NT"){
         osName = "windows";
     }
     if (arch === "x64"){
         arch = "amd64";
+    }
+
+    // https://github.com/nodejs/node-v0.x-archive/issues/2862
+    if (arch === "ia32") {
+        if (process.env.PROCESSOR_ARCHITEW6432 != null && process.env.PROCESSOR_ARCHITEW6432.toUpperCase() === "AMD64") {
+            arch = "amd64";
+        }
+    }
+
+    if (arch.toLowerCase() !== "amd64") {
+        throw new Error(tl.loc("Error_ProcessorArchitectureNotSupported"));
     }
 
     const blobstoreAreaName = "clienttools";
@@ -58,37 +69,32 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
 
     const blobstoreConnection = pkgLocationUtils.getWebApiWithProxy(serviceUri, accessToken);
 
-    try{
-        const artifactToolGetUrl = await blobstoreConnection.vsoClient.getVersioningData(ApiVersion,
-            blobstoreAreaName, blobstoreAreaId, { toolName }, {osName, arch});
+    const artifactToolGetUrl = await pkgLocationUtils.Retry(async () => {
+        return await blobstoreConnection.vsoClient.getVersioningData(ApiVersion,
+        blobstoreAreaName, blobstoreAreaId, { toolName }, {osName, arch});
+    }, 4, 100);
 
-        const artifactToolUri =  await blobstoreConnection.rest.get(artifactToolGetUrl.requestUrl);
+    const artifactToolUri =  await blobstoreConnection.rest.get(artifactToolGetUrl.requestUrl);
 
-        if (artifactToolUri.statusCode !== 200){
-            tl.debug(tl.loc("Error_UnexpectedErrorFailedToGetToolMetadata", artifactToolUri.toString()));
-            throw new Error(tl.loc("Error_UnexpectedErrorFailedToGetToolMetadata", artifactToolGetUrl.requestUrl));
-        }
-
-        let artifactToolPath = toollib.findLocalTool(toolName, artifactToolUri.result['version']);
-        if (!artifactToolPath) {
-            tl.debug(tl.loc("Info_DownloadingArtifactTool", artifactToolUri.result['uri']));
-
-            const zippedToolsDir: string = await toollib.downloadTool(artifactToolUri.result['uri']);
-
-            tl.debug("Downloaded zipped artifact tool to " + zippedToolsDir);
-            const unzippedToolsDir = await extractZip(zippedToolsDir);
-
-            artifactToolPath = await toollib.cacheDir(unzippedToolsDir, "ArtifactTool", artifactToolUri.result['version']);
-        }
-        else{
-            tl.debug(tl.loc("Info_ResolvedToolFromCache", artifactToolPath));
-        }
-        return getArtifactToolLocation(artifactToolPath);
+    if (artifactToolUri.statusCode !== 200) {
+        tl.debug(tl.loc("Error_UnexpectedErrorFailedToGetToolMetadata", artifactToolUri.result.toString()));
+        throw new Error(tl.loc("Error_UnexpectedErrorFailedToGetToolMetadata", artifactToolGetUrl.requestUrl));
     }
-    catch(err){
-        tl.error(err);
-        tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToGetArtifactTool", err));
+
+    let artifactToolPath = toollib.findLocalTool(toolName, artifactToolUri.result['version']);
+    if (!artifactToolPath) {
+        tl.debug(tl.loc("Info_DownloadingArtifactTool", artifactToolUri.result['uri']));
+
+        const zippedToolsDir: string = await toollib.downloadTool(artifactToolUri.result['uri']);
+
+        tl.debug("Downloaded zipped artifact tool to " + zippedToolsDir);
+        const unzippedToolsDir = await extractZip(zippedToolsDir);
+
+        artifactToolPath = await toollib.cacheDir(unzippedToolsDir, "ArtifactTool", artifactToolUri.result['version']);
+    } else {
+        tl.debug(tl.loc("Info_ResolvedToolFromCache", artifactToolPath));
     }
+    return getArtifactToolLocation(artifactToolPath);
 }
 
 export function getVersionUtility(versionRadio: string, highestVersion: string): string {

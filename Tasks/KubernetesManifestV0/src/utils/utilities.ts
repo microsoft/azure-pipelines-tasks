@@ -1,18 +1,23 @@
 "use strict";
 
 import * as tl from "vsts-task-lib/task";
-import { ToolRunner, IExecOptions, IExecSyncResult } from 'vsts-task-lib/toolrunner';
+import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import kubectlutility = require("utility-common/kubectlutility");
-import { Kubectl } from "utility-common/kubectl-object-model";
+import { Kubectl } from "kubernetes-common/kubectl-object-model";
 import { pipelineAnnotations } from "../models/constants"
 
 export enum StringComparer {
     Ordinal, OrdinalIgnoreCase
 }
 
-export function execCommand(command: ToolRunner, options?: IExecOptions) {
-    command.on("errline", tl.error);
-    return command.execSync(options);
+export function getManifestFiles(manifestFilesPath: string): string[] {
+    if (!manifestFilesPath || manifestFilesPath.trim().length == 0) {
+        tl.debug("file input is not present");
+        return null;
+    }
+
+    var files = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), manifestFilesPath.trim());
+    return files;
 }
 
 export async function getKubectl(): Promise<string> {
@@ -21,6 +26,37 @@ export async function getKubectl(): Promise<string> {
     } catch (ex) {
         return kubectlutility.downloadKubectl(await kubectlutility.getStableKubectlVersion());
     }
+}
+
+export function createKubectlArgs(kinds: Set<string>, names: Set<string>): string {
+    let args = "";
+    if (!!kinds && kinds.size > 0) {
+        args = args + createInlineArray(Array.from(kinds.values()));
+    }
+
+    if (!!names && names.size > 0) {
+        args = args + " " + Array.from(names.values()).join(" ")
+    }
+
+    return args;
+}
+
+export function getDeleteCmdArgs(argsPrefix: string, inputArgs: string): string {
+    let args = "";
+
+    if (!!argsPrefix && argsPrefix.length > 0) {
+        args = argsPrefix;
+    }
+
+    if (!!inputArgs && inputArgs.length > 0) {
+        if (args.length > 0) {
+            args = args + " ";
+        }
+
+        args = args + inputArgs;
+    }
+
+    return args;
 }
 
 export function checkForErrors(execResults: IExecSyncResult[], warnIfError?: boolean) {
@@ -41,10 +77,10 @@ export function checkForErrors(execResults: IExecSyncResult[], warnIfError?: boo
     }
 }
 
-export function annotateChildPods(kubectl: Kubectl, resourceType, resourceName, allPods): IExecSyncResult[] {
+export function annotateChildPods(kubectl: Kubectl, resourceType: string, resourceName: string, allPods): IExecSyncResult[] {
     let commandExecutionResults = [];
     var owner = resourceName;
-    if (resourceType.indexOf("deployment") > -1) {
+    if (resourceType.toLowerCase().indexOf("deployment") > -1) {
         owner = kubectl.getNewReplicaSet(resourceName);
     }
 
@@ -121,4 +157,9 @@ export function isEqual(str1: string, str2: string, stringComparer: StringCompar
     } else {
         return str1 === str2;
     }
+}
+
+function createInlineArray(str: string | string[]): string {
+    if (typeof str === "string") return str;
+    return str.join(",");
 }

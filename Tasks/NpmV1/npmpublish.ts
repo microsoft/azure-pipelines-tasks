@@ -1,4 +1,4 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import { NpmTaskInput, RegistryLocation } from './constants';
 import { INpmRegistry, NpmRegistry } from 'packaging-common/npm/npmregistry';
@@ -36,6 +36,7 @@ export async function getPublishRegistry(packagingLocation: PackagingLocation): 
             npmRegistry = await NpmRegistry.FromFeedId(
                 packagingLocation.DefaultPackagingUri,
                 feedId,
+                null, /* project */
                 false /* authOnly */,
                 true /* useSession */);
             break;
