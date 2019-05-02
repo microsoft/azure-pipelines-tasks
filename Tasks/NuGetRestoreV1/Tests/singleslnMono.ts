@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import util = require('./NugetMockHelper');
 
@@ -56,7 +56,7 @@ tmr.registerMock('packaging-common/nuget/Utility', {
         return '~/myagent/_work/_tasks/NuGet/CredentialProvider';
     },
     setConsoleCodePage: function() {
-        var tlm = require('vsts-task-lib/mock-task');
+        var tlm = require('azure-pipelines-task-lib/mock-task');
         tlm.debug(`setting console code page`);
     }
 } );
