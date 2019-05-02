@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 151,
-        "Patch": 2
+        "Minor": 152,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.102.0",
@@ -42,6 +42,14 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`"
+        },
+        {
+            "name": "pathToSources",
+            "type": "string",
+            "label": "Path to Source files",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path to source files in case reporting xml doesn't contain absolute path to source files. For example: Java specific reporting `$(System.DefaultWorkingDirectory)/MyApp/**/src/main/java/`, and Javascript specifc reporters `$(System.DefaultWorkingDirectory)/MyApp/`"
         },
         {
             "name": "reportDirectory",

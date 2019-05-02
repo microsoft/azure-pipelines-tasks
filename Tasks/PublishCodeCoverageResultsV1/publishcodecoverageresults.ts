@@ -17,6 +17,7 @@ async function run() {
         const additionalFiles = tl.getInput('additionalCodeCoverageFiles');
         const failIfCoverageIsEmpty: boolean = tl.getBoolInput('failIfCoverageEmpty');
         const workingDirectory: string = tl.getVariable('System.DefaultWorkingDirectory');
+        const pathToSources: string = tl.getVariable('pathToSources');
 
         let autogenerateHtmlReport: boolean = codeCoverageTool.toLowerCase() === 'cobertura';
         let tempFolder = undefined;
@@ -45,7 +46,7 @@ async function run() {
                 tempFolder = path.join(getTempFolder(), 'cchtml');
                 tl.debug('Generating Html Report using ReportGenerator: ' + tempFolder);
 
-                const result = await generateHtmlReport(summaryFileLocation, tempFolder);
+                const result = await generateHtmlReport(summaryFileLocation, tempFolder, pathToSources);
                 tl.debug('Result: ' + result);
 
                 if (!result) {
@@ -157,7 +158,7 @@ function getTempFolder(): string {
     }
 }
 
-async function generateHtmlReport(summaryFile: string, targetDir: string): Promise<boolean> {
+async function generateHtmlReport(summaryFile: string, targetDir: string, pathToSources: string): Promise<boolean> {
     const osvar = process.platform;
     let dotnet: tr.ToolRunner;
 
@@ -178,6 +179,10 @@ async function generateHtmlReport(summaryFile: string, targetDir: string): Promi
     dotnet.arg('-reports:' + summaryFile);
     dotnet.arg('-targetdir:' + targetDir);
     dotnet.arg('-reporttypes:HtmlInline_AzurePipelines');
+
+    if (pathToSources) {
+        dotnet.arg('-sourcedirs:' + pathToSources);
+    }
 
     try {
         const result = await dotnet.exec(<tr.IExecOptions>{
