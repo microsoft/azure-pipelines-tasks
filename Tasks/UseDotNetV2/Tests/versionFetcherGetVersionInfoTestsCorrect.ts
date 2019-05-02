@@ -1,3 +1,4 @@
+"use strict";
 import * as tl from 'azure-pipelines-task-lib/task';
 import { HttpClientResponse } from "./mocks/mockedModels"
 var mockery = require('mockery');
