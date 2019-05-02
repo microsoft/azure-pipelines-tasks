@@ -19,11 +19,12 @@ async function run() {
         const workingDirectory: string = tl.getVariable('System.DefaultWorkingDirectory');
         const pathToSources: string = tl.getVariable('pathToSources');
 
-        let autogenerateHtmlReport: boolean = codeCoverageTool.toLowerCase() === 'cobertura';
+        let autogenerateHtmlReport: boolean = true;
         let tempFolder = undefined;
-        const disableAutoGenerate = tl.getVariable('disable.coverage.autogenerate');
+        const disableAutoGenerate = tl.getVariable('disable.coverage.autogenerate')
+            || (codeCoverageTool.toLowerCase() === 'jacoco' && isNullOrWhitespace(pathToSources));
 
-        if (disableAutoGenerate || !autogenerateHtmlReport) {
+        if (disableAutoGenerate) {
             tl.debug('disabling auto generation');
             autogenerateHtmlReport = false;
             tempFolder = resolvePathToSingleItem(workingDirectory, reportDirectory, true);
