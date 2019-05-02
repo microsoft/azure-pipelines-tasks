@@ -10,7 +10,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs
 tr.setInput("packageType", "nuget");
-tr.setInput("feed", "/feedId");
+tr.setInput("feed", "projectId/feedId");
 tr.setInput("view", "viewId");
 tr.setInput("definition", "packageId");
 tr.setInput("version", "versionId");

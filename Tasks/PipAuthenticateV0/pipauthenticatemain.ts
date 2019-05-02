@@ -43,7 +43,8 @@ async function main(): Promise<void> {
                 const feedUri = await pkgLocationUtils.getFeedRegistryUrl(
                     packagingLocation, 
                     pkgLocationUtils.RegistryType.PyPiSimple, 
-                    feedId, 
+                    feedId,
+                    null,
                     localAccessToken);
                 const pipUri = utils.formPipCompatibleUri("build", localAccessToken, feedUri);
                 pipEnvVar = pipEnvVar + " " + pipUri;
