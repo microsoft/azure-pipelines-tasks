@@ -22,7 +22,7 @@ async function run() {
         let tempFolder = undefined;
         const disableAutoGenerate = tl.getVariable('disable.coverage.autogenerate');
 
-        if (disableAutoGenerate) {
+        if (disableAutoGenerate || !autogenerateHtmlReport) {
             tl.debug('disabling auto generation');
             autogenerateHtmlReport = false;
             tempFolder = resolvePathToSingleItem(workingDirectory, reportDirectory, true);

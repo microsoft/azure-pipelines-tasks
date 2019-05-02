@@ -1,4 +1,0 @@
-{
-  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "Указан недопустимый URL-адрес конечной точки AzureRM: \"{0}\".",
-  "loc.messages.FailedToFetchAzureStackDependencyData": "Не удалось получить данные о зависимостях Azure Stack. Код ошибки: %s"
-}

@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 151,
-        "Patch": 0
+        "Minor": 152,
+        "Patch": 1
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
@@ -300,7 +300,7 @@
             "required": true,
             "defaultValue": "false",
             "groupName": "advanced",
-            "helpMarkDown": "Automatically authenticate built-in Maven feeds from the Azure Artifacts/TFS [Package Management](https://marketplace.visualstudio.com/items?itemName=ms.feed) extension. If built-in Maven feeds are not in use, deselect this option for faster builds."
+            "helpMarkDown": "Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds."
         },
         {
             "name": "sqAnalysisEnabled",
@@ -408,6 +408,7 @@
         "EffectivePomInvalid": "Could not parse the effective POM.",
         "AuthenticationNotNecessary": "No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.",
         "UsingAuthFeed": "Using built-in feed: ",
-        "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
+        "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
+        "OldStyleUrlsInPomFile": "Your POM file uses the old style of Azure DevOps organization URLs (i.e. https://*.visualstudio.com). Update your POM file to use the new URL style (https://dev.azure.com/*). Using credentials for the old URL style: %s"
     }
 }
