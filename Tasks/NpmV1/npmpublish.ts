@@ -36,6 +36,7 @@ export async function getPublishRegistry(packagingLocation: PackagingLocation): 
             npmRegistry = await NpmRegistry.FromFeedId(
                 packagingLocation.DefaultPackagingUri,
                 feedId,
+                null, /* project */
                 false /* authOnly */,
                 true /* useSession */);
             break;

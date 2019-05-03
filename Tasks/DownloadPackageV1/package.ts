@@ -50,6 +50,7 @@ export abstract class Package {
 
     protected abstract async getDownloadUrls(
         feedId: string,
+        project: string,
         packageId: string,
         packageVersion: string
     ): Promise<Map<string, PackageFileResult>>;
@@ -106,13 +107,14 @@ export abstract class Package {
 
     public async download(
         feedId: string,
+        project: string,
         packageId: string,
         packageVersion: string,
         downloadPath: string,
         extract: boolean
     ): Promise<PackageFile[]> {
         return new Promise<PackageFile[]>(async (resolve, reject) => {
-            return this.getDownloadUrls(feedId, packageId, packageVersion)
+            return this.getDownloadUrls(feedId, project, packageId, packageVersion)
                 .then(async downloadUrls => {
                     if (!tl.exist(downloadPath)) {
                         tl.mkdirP(downloadPath);
