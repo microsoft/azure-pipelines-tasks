@@ -263,7 +263,7 @@ Tasks/PowerShellOnTargetMachinesV3/*    @kmkumaran
 
 Tasks/PublishBuildArtifactsV1/*     @madhurig
 
-Tasks/PublishCodeCoverageResultsV1/*    @madhurig
+Tasks/PublishCodeCoverageResultsV1/*    @cltshivash    @nigurr 
 
 Tasks/PublishPipelineArtifactV0/*       @mihaif
 
