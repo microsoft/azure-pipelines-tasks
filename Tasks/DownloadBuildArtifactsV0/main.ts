@@ -3,10 +3,10 @@ var url = require('url');
 var fs = require('fs');
 
 import * as tl from 'vsts-task-lib/task';
-import { IBuildApi } from './vso-node-api/BuildApi';
-import { IRequestHandler } from './vso-node-api/interfaces/common/VsoBaseInterfaces';
-import { WebApi, getHandlerFromToken } from './vso-node-api/WebApi';
-import { BuildStatus, BuildResult, BuildQueryOrder, Build, BuildDefinitionReference } from './vso-node-api/interfaces/BuildInterfaces';
+import { IBuildApi } from 'azure-devops-node-api/BuildApi';
+import { IRequestHandler } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
+import { WebApi, getHandlerFromToken } from 'azure-devops-node-api/WebApi';
+import { BuildStatus, BuildResult, BuildQueryOrder, Build, BuildDefinitionReference } from 'azure-devops-node-api/interfaces/BuildInterfaces';
 
 import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
@@ -88,7 +88,7 @@ async function main(): Promise<void> {
         var retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : 4;
 
         var templatePath: string = path.join(__dirname, 'vsts.handlebars.txt');
-        var buildApi: IBuildApi = webApi.getBuildApi();
+        var buildApi: IBuildApi = await webApi.getBuildApi();
         var artifacts = [];
         var itemPattern: string = tl.getInput("itemPattern", false) || '**';
 
