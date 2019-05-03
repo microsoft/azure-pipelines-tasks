@@ -47,6 +47,7 @@ export class ProvenanceHelper {
 
     public static async GetSessionId(
         feedId: string,
+        project: string,
         protocol: string,
         baseUrl: string,
         handlers: VsoBaseInterfaces.IRequestHandler[],
@@ -63,7 +64,7 @@ export class ProvenanceHelper {
             const prov = new ProvenanceApi(baseUrl, handlers, options);
             const sessionRequest = ProvenanceHelper.CreateSessionRequest(feedId);
             try {
-                const session = await prov.createSession(sessionRequest, protocol);
+                const session = await prov.createSession(sessionRequest, protocol, project);
                 return session.sessionId;
             } catch (error) {
                 tl.warning(tl.loc("Warning_SessionCreationFailed", JSON.stringify(error)));
@@ -131,13 +132,15 @@ class ProvenanceApi extends vstsClientBases.ClientApiBase {
      */
     public async createSession(
         sessionRequest: SessionRequest,
-        protocol: string
+        protocol: string,
+        project: string
         ): Promise<SessionResponse> {
 
         return new Promise<SessionResponse>(async (resolve, reject) => {
 
             let routeValues: any = {
-                protocol: protocol
+                protocol: protocol,
+                project: project
             };
 
             try {
