@@ -24,7 +24,8 @@ class HelmRenderEngine {
     public static async bake() {
         let helmPath = await helmutility.getHelm();
         let helmCommand = new Helm(helmPath, tl.getInput("namespace"));
-        var result = helmCommand.template(tl.getPathInput("helmChart", true), tl.getDelimitedInput("overrideFiles", "\n"), this.getOverrideValues());
+        let helmReleaseName = tl.getInput("releaseName", false);
+        var result = helmCommand.template(helmReleaseName, tl.getPathInput("helmChart", true), tl.getDelimitedInput("overrideFiles", "\n"), this.getOverrideValues());
         if (result.stderr) {
             tl.setResult(tl.TaskResult.Failed, result.stderr);
             return;
