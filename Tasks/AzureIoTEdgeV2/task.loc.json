@@ -187,6 +187,19 @@
       "helpMarkDown": "ms-resource:loc.input.help.defaultPlatform"
     },
     {
+      "name": "fillRegistryCredential",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.fillRegistryCredential",
+      "defaultValue": "true",
+      "required": true,
+      "visibleRule": "action = Push module images",
+      "options": {
+        "true": "true",
+        "false": "false"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.fillRegistryCredential"
+    },
+    {
       "name": "bypassModules",
       "type": "string",
       "label": "ms-resource:loc.input.label.bypassModules",

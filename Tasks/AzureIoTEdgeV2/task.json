@@ -42,6 +42,7 @@
       "options": {
         "Build module images": "Build module images",
         "Push module images": "Push module images",
+        "Generate deployment manifest": "Generate deployment manifest",
         "Deploy to IoT Edge devices": "Deploy to IoT Edge devices"
       },
       "helpMarkDown": "Select an Azure IoT Edge action.\n **Build module images** will only build modules (You can use it to check compilation error).\n **Push module images** will push modules to container registry.\n **Deploy to IoT Edge devices** will deploy the generated deployment file to IoT Hub. (We recommend to put **Deploy** task in release pipeline)."
@@ -165,7 +166,7 @@
       "type": "filePath",
       "label": ".template.json file",
       "defaultValue": "deployment.template.json",
-      "visibleRule": "action = Build module images || action = Push module images",
+      "visibleRule": "action = Build module images || action = Push module images || action = Generate deployment manifest",
       "required": true,
       "helpMarkDown": "The path of Azure IoT Edge solution **.template.json**. This file defines the modules and routes in Azure IoT Edge solution, file name must end with **.template.json**"
     },
@@ -175,7 +176,7 @@
       "label": "Default platform",
       "defaultValue": "amd64",
       "required": true,
-      "visibleRule": "action = Build module images || action = Push module images",
+      "visibleRule": "action = Build module images || action = Push module images || action = Generate deployment manifest",
       "options": {
         "amd64": "amd64",
         "windows-amd64": "windows-amd64",
@@ -185,6 +186,19 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "In your **.template.json**, you can leave the modules platform unspecified. For these modules, the **default platform** will be used."
+    },
+    {
+      "name": "fillRegistryCredential",
+      "type": "pickList",
+      "label": "Add registry credential to deployment manifest",
+      "defaultValue": "true",
+      "required": true,
+      "visibleRule": "action = Push module images",
+      "options": {
+        "true": "true",
+        "false": "false"
+      },
+      "helpMarkDown": "Add registry credential used to push docker images to deployment manifest"
     },
     {
       "name": "bypassModules",

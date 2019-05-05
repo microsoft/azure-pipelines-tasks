@@ -35,6 +35,8 @@
   "loc.input.help.templateFilePath": "The path of Azure IoT Edge solution **.template.json**. This file defines the modules and routes in Azure IoT Edge solution, file name must end with **.template.json**",
   "loc.input.label.defaultPlatform": "Default platform",
   "loc.input.help.defaultPlatform": "In your **.template.json**, you can leave the modules platform unspecified. For these modules, the **default platform** will be used.",
+  "loc.input.label.fillRegistryCredential": "Add registry credential to deployment manifest",
+  "loc.input.help.fillRegistryCredential": "Add registry credential used to push docker images to deployment manifest",
   "loc.input.label.bypassModules": "Bypass module(s)",
   "loc.input.help.bypassModules": "Select the module(s) that you **DO NOT** need to build(or push) in the .template.json, specify module names and separate with comma.\n Example: if you have 2 modules **SampleModule1,SampleModule2** in your .template.json, you want to just build or push **SampleModule1**, then you set the bypass modules as **SampleModule2**. Leave empty if you would like to build all the modules in .template.json.",
   "loc.messages.BuildingModules": "Building module images...",

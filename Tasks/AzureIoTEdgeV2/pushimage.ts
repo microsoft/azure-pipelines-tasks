@@ -85,35 +85,38 @@ export async function run() {
     tl.execSync(`docker`, `logout`, Constants.execSyncSilentOption);
     util.createOrAppendDockerCredentials(registryAuthenticationToken);
 
-    let dockerCredentials = util.readDockerCredentials();
-    tl.debug(`Number of docker cred passed: ${dockerCredentials.length}`);
+    let fillRegistryCredential = tl.getBoolInput('fillRegistryCredential', true);
+    if (fillRegistryCredential) {
+      let dockerCredentials = util.readDockerCredentials();
+      tl.debug(`Number of docker cred passed: ${dockerCredentials.length}`);
 
-    let outputDeploymentJsonPath = tl.getVariable('_' + Constants.outputVariableDeploymentPathKey);
-    if (!fs.existsSync(outputDeploymentJsonPath)) {
-      tl.debug(`The generated deployment file can't be found in the path: ${outputDeploymentJsonPath}`);
-    }else {
-      console.log(tl.loc('DeploymentFilePath', outputDeploymentJsonPath));
-      let deploymentJson = JSON.parse(fs.readFileSync(outputDeploymentJsonPath, Constants.UTF8));
-      // Expand docker credentials
-      // Will replace the registryCredentials if the server match
-      if (dockerCredentials != undefined && util.getModulesContent(deploymentJson)['$edgeAgent']['properties.desired'].runtime.settings.registryCredentials != undefined) {
-        console.log(tl.loc('ExpandingRegistryCredentials'));
-        let credentials = util.getModulesContent(deploymentJson)['$edgeAgent']['properties.desired'].runtime.settings.registryCredentials;
-        for (let key of Object.keys(credentials)) {
-          if (credentials[key].username && (credentials[key].username.startsWith("$") || credentials[key].password.startsWith("$"))) {
-            tl.debug(`Going to replace the cred in deployment.json with address: ${credentials[key].address}`);
-            for (let dockerCredential of dockerCredentials) {
-              if (util.isDockerServerMatch(credentials[key].address, dockerCredential.address)) {
-                console.log(tl.loc('ReplaceCredential', dockerCredential.address));
-                credentials[key] = dockerCredential;
-                break;
+      let outputDeploymentJsonPath = tl.getVariable('_' + Constants.outputVariableDeploymentPathKey);
+      if (!fs.existsSync(outputDeploymentJsonPath)) {
+        tl.debug(`The generated deployment file can't be found in the path: ${outputDeploymentJsonPath}`);
+      } else {
+        console.log(tl.loc('DeploymentFilePath', outputDeploymentJsonPath));
+        let deploymentJson = JSON.parse(fs.readFileSync(outputDeploymentJsonPath, Constants.UTF8));
+        // Expand docker credentials
+        // Will replace the registryCredentials if the server match
+        if (dockerCredentials != undefined && util.getModulesContent(deploymentJson)['$edgeAgent']['properties.desired'].runtime.settings.registryCredentials != undefined) {
+          console.log(tl.loc('ExpandingRegistryCredentials'));
+          let credentials = util.getModulesContent(deploymentJson)['$edgeAgent']['properties.desired'].runtime.settings.registryCredentials;
+          for (let key of Object.keys(credentials)) {
+            if (credentials[key].username && (credentials[key].username.startsWith("$") || credentials[key].password.startsWith("$"))) {
+              tl.debug(`Going to replace the cred in deployment.json with address: ${credentials[key].address}`);
+              for (let dockerCredential of dockerCredentials) {
+                if (util.isDockerServerMatch(credentials[key].address, dockerCredential.address)) {
+                  console.log(tl.loc('ReplaceCredential', dockerCredential.address));
+                  credentials[key] = dockerCredential;
+                  break;
+                }
               }
             }
           }
         }
+
+        fs.writeFileSync(outputDeploymentJsonPath, JSON.stringify(deploymentJson, null, 2));
       }
-  
-      fs.writeFileSync(outputDeploymentJsonPath, JSON.stringify(deploymentJson, null, 2));
     }
   } catch (e) {
     tl.execSync(`docker`, `logout`, Constants.execSyncSilentOption);
