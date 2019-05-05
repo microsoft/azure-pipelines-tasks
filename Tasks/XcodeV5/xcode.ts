@@ -214,11 +214,11 @@ async function run() {
         }
         else if (signingOption === 'auto') {
             xcode_codeSignStyle = 'CODE_SIGN_STYLE=Automatic';
+        }
 
-            let teamId: string = tl.getInput('teamId');
-            if (teamId) {
-                xcode_devTeam = 'DEVELOPMENT_TEAM=' + teamId;
-            }
+        let teamId: string = tl.getInput('teamId');
+        if (teamId) {
+            xcode_devTeam = 'DEVELOPMENT_TEAM=' + teamId;
         }
 
         xcb.argIf(xcode_codeSigningAllowed, xcode_codeSigningAllowed);
