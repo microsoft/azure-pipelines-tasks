@@ -20,7 +20,7 @@
         {
             "name": "key",
             "type": "multiLine",
-            "label": "The name of key.",
+            "label": "The name of the key.",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The name of the key."
@@ -38,7 +38,7 @@
             "type": "string",
             "label": "Variable to set if there is a cache hit",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "helpMarkDown": "This will set the following variable (PipelineCache.<variable-value>) to 'True'."
         }
     ],
