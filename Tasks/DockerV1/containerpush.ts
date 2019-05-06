@@ -40,7 +40,10 @@ function dockerPush(connection: ContainerConnection, image: string, imageDigestF
 
 export function run(connection: ContainerConnection): any {
     let command = tl.getInput("command", true);
-    var commandArguments = tl.getInput("arguments", false); 
+    var commandArguments = tl.getInput("arguments", false);
+    if (commandArguments) {
+        commandArguments = commandArguments.replace(/\n/g, " ");
+    }
 
     let imageNames;
     let useMultiImageMode = tl.getBoolInput("pushMultipleImages");

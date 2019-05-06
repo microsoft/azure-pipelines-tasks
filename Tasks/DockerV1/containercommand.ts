@@ -12,7 +12,11 @@ export function run(connection: ContainerConnection,  outputUpdate: (data: strin
     var dockerCommand = tl.getInput("command", true);
     command.arg(dockerCommand);
     
-    var commandArguments = tl.getInput("arguments", false); 
+    var commandArguments = tl.getInput("arguments", false);
+    if (commandArguments) {
+        commandArguments = commandArguments.replace(/\n/g, " ");
+    }
+
     command.line(commandArguments);
     return connection.execCommand(command);
 }

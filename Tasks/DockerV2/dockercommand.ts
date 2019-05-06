@@ -9,6 +9,9 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     let output = "";
     var dockerCommand = tl.getInput("command", true);    
     var commandArguments = tl.getInput("arguments", false);
+    if (commandArguments) {
+        commandArguments = commandArguments.replace(/\n/g, " ");
+    }
 
     return dockerCommandUtils.command(connection, dockerCommand, commandArguments, (data) => output += data).then(() => {
         let taskOutputPath = utils.writeTaskOutput(dockerCommand, output);

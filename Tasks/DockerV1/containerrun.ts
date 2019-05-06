@@ -15,7 +15,11 @@ export function run(connection: ContainerConnection): any {
         command.arg("-d");
     }
 
-    var commandArguments = tl.getInput("arguments", false); 
+    var commandArguments = tl.getInput("arguments", false);
+    if (commandArguments) {
+        commandArguments = commandArguments.replace(/\n/g, " ");
+    }
+
     command.line(commandArguments);
 
     var entrypointOverride = tl.getInput("entrypointOverride");
