@@ -70,8 +70,8 @@ async function run() {
         await fs.writeFile(
             filePath,
             '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
-            { encoding: 'utf8' });            // Since UTF8 encoding is specified, node will
-        //                                    // encode the BOM into its UTF8 binary sequence.
+            { encoding: 'utf8' },             // Since UTF8 encoding is specified, node will
+            (err) => {if (err) throw err;});  // encode the BOM into its UTF8 binary sequence.
 
         // Run the script.
         //

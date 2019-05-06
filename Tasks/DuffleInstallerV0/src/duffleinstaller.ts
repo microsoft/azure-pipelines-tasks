@@ -39,7 +39,7 @@ async function downloadDuffle(version: string): Promise<string> {
     }
 
     const dufflePath = path.join(cachedToolPath, DuffleToolName + getExecutableExtension());
-    fs.chmod(dufflePath, '777');
+    fs.chmod(dufflePath, '777', (err) => {if (err) throw err;});
     return dufflePath;
 }
 
