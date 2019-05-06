@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -472,14 +472,14 @@
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "feedPublish",
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {
