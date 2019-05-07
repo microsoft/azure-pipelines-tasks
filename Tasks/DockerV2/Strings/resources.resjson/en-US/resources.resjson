@@ -21,6 +21,7 @@
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Docker command options. Ex:<br> For build command,<br>--build-arg HTTP_PROXY=http://10.20.30.2:1234 --quiet",
   "loc.messages.AddingNewAuthToExistingConfig": "Adding auth data for registry to Docker config file. Registry: %s.",
+  "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect with the Docker host: %s",
   "loc.messages.ContainerPatternFound": "Pattern found in Docker filepath parameter",
   "loc.messages.ContainerPatternNotFound": "No pattern found in Docker filepath parameter",
   "loc.messages.ContainerDockerFileNotFound": "No Dockerfile matching  %s  was found.",

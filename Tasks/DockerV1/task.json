@@ -366,6 +366,7 @@
         }
     },
     "messages": {
+        "ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect with the Docker host: %s",
         "ContainerPatternFound": "Pattern found in Docker filepath parameter",
         "ContainerPatternNotFound": "No pattern found in Docker filepath parameter",
         "ContainerDockerFileNotFound": "No Dockerfile matching  %s  was found.",

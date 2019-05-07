@@ -39,7 +39,12 @@ export default class ContainerConnection {
     }
 
     public execCommand(command: tr.ToolRunner, options?: tr.IExecOptions) {
-        var errlines = [];
+        let errlines = [];
+        let dockerHostVar = tl.getVariable("DOCKER_HOST");
+        if (dockerHostVar) {
+            tl.debug(tl.loc('ConnectingToDockerHost', dockerHostVar));
+        }
+
         command.on("errline", line => {
             errlines.push(line);
         });

@@ -126,6 +126,7 @@
   },
   "messages": {
     "AddingNewAuthToExistingConfig": "ms-resource:loc.messages.AddingNewAuthToExistingConfig",
+    "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",

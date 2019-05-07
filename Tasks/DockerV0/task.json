@@ -337,6 +337,7 @@
         "ContainerPatternFound": "Pattern found in docker filepath parameter",
         "ContainerPatternNotFound": "No pattern found in docker filepath parameter",
         "ContainerDockerFileNotFound": "No Docker file matching  %s  was found.",
+        "ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect with the Docker host: %s",
         "NoImagesInImageNamesFile": "At least one image name is expected in file '%s'.",
         "CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
         "NoDataWrittenOnFile": "No data was written into the file %s",

@@ -69,6 +69,7 @@
   "loc.input.help.enforceDockerNamingConvention": "If enabled Docker image name will be modified to follow Docker naming convention. Converts upper case character to lower case and removes spaces in image name.",
   "loc.input.label.memoryLimit": "Memory limit",
   "loc.input.help.memoryLimit": "The maximum amount of memory available to the container as a integer with optional suffixes like '2GB'.",
+  "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect with the Docker host: %s",
   "loc.messages.ContainerPatternFound": "Pattern found in Docker filepath parameter",
   "loc.messages.ContainerPatternNotFound": "No pattern found in Docker filepath parameter",
   "loc.messages.ContainerDockerFileNotFound": "No Dockerfile matching  %s  was found.",
