@@ -109,8 +109,6 @@ Tasks/Common/codecoverage-tools/*     @nigurr   @lkillgore
 
 Tasks/Common/docker-common/*      @jikuma   @vithati
 
-Tasks/Common/find-files-legacy/*      @nigurr
-
 Tasks/Common/ios-signing-common/*     @madhurig   @hashtagchris
 
 Tasks/Common/java-common/*        @madhurig   @kelliejos
@@ -265,7 +263,7 @@ Tasks/PowerShellOnTargetMachinesV3/*    @kmkumaran
 
 Tasks/PublishBuildArtifactsV1/*     @madhurig
 
-Tasks/PublishCodeCoverageResultsV1/*    @madhurig
+Tasks/PublishCodeCoverageResultsV1/*    @cltshivash    @nigurr 
 
 Tasks/PublishPipelineArtifactV0/*       @mihaif
 
