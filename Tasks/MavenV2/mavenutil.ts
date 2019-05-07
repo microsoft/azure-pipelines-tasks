@@ -212,12 +212,9 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
     tl.debug('packageUrl=' + packageUrl);
     let collectionName:string = url.parse(collectionUrl).hostname.toLowerCase();
     let collectionPathName = url.parse(collectionUrl).pathname;
-    let oldCollectionName = ".pkgs.visualstudio.com";
     if(collectionPathName && collectionPathName.length > 1) {
         collectionName = collectionName + collectionPathName.toLowerCase();
-        oldCollectionName = collectionPathName.replace(/\//g, "").toLowerCase() + oldCollectionName;
         tl.debug('collectionName=' + collectionName);
-        tl.debug('oldCollectionName=' + oldCollectionName);
     }
     if (packageUrl) {
         url.parse(packageUrl).hostname.toLowerCase();
@@ -233,22 +230,14 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
                         repo = repo instanceof Array ? repo[0] : repo;
                         let url:string = repo.url instanceof Array ? repo.url[0] : repo.url;
                         if (url && (url.toLowerCase().includes(collectionName) ||
-                                    url.toLowerCase().includes(packageUrl))) {
+                                    url.toLowerCase().includes(packageUrl) ||
+                                    packagingLocation.PackagingUris.some(uri => url.toLowerCase().startsWith(uri.toLowerCase())))) {
                         tl.debug('using credentials for url: ' + url);
                         repos.push({
                             id: (repo.id && repo.id instanceof Array)
                                 ? repo.id[0]
                                 : repo.id
                             });
-                        continue;
-                        }
-                        if (url && url.toLowerCase().includes(oldCollectionName)) {
-                            tl.warning(tl.loc('OldStyleUrlsInPomFile', url));
-                            repos.push({
-                                id: (repo.id && repo.id instanceof Array)
-                                    ? repo.id[0]
-                                    : repo.id
-                                });
                         }
                     }
                 }
