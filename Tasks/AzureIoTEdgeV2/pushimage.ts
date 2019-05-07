@@ -86,6 +86,7 @@ export async function run() {
     util.createOrAppendDockerCredentials(registryAuthenticationToken);
 
     let fillRegistryCredential = tl.getBoolInput('fillRegistryCredential', true);
+    tl.debug(`fillRegistryCredential: ${fillRegistryCredential}`);
     if (fillRegistryCredential) {
       let dockerCredentials = util.readDockerCredentials();
       tl.debug(`Number of docker cred passed: ${dockerCredentials.length}`);
