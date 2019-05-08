@@ -20,7 +20,7 @@ export async function run() {
       };
     
       // Pass task variable to sub process
-      let tlVariables = tl.getVariables();
+      const tlVariables = tl.getVariables();
       for (let v of tlVariables) {
         // The variables in VSTS build contains dot, need to convert to underscore.
         let name = v.name.replace('.', '_').toUpperCase();

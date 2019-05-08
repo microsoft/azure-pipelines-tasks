@@ -198,7 +198,7 @@
         "true": "true",
         "false": "false"
       },
-      "helpMarkDown": "Add registry credential used to push docker images to deployment manifest"
+      "helpMarkDown": "Add registry credential for pushing docker images to deployment manifest"
     },
     {
       "name": "bypassModules",
