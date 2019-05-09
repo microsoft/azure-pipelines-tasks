@@ -1,9 +1,8 @@
-import Q = require('q');
 import path = require('path');
 import fs = require('fs');
 
-import tl = require('vsts-task-lib/task');
-import trm = require('vsts-task-lib/toolrunner');
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as trm from 'azure-pipelines-task-lib/toolRunner';
 
 // Apply arguments to enable SonarQube analysis.
 // Returns the changed toolRunner. Has no effect if SonarQube is not enabled.

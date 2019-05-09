@@ -6,11 +6,11 @@ import path = require('path');
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
-import {CodeAnalysisOrchestrator} from "codeanalysis-common/Common/CodeAnalysisOrchestrator";
-import {BuildOutput, BuildEngine} from 'codeanalysis-common/Common/BuildOutput';
-import {CheckstyleTool} from 'codeanalysis-common/Common/CheckstyleTool';
-import {PmdTool} from 'codeanalysis-common/Common/PmdTool';
-import {FindbugsTool} from 'codeanalysis-common/Common/FindbugsTool';
+import {CodeAnalysisOrchestrator} from "codeanalysis-common-old/Common/CodeAnalysisOrchestrator";
+import {BuildOutput, BuildEngine} from 'codeanalysis-common-old/Common/BuildOutput';
+import {CheckstyleTool} from 'codeanalysis-common-old/Common/CheckstyleTool';
+import {PmdTool} from 'codeanalysis-common-old/Common/PmdTool';
+import {FindbugsTool} from 'codeanalysis-common-old/Common/FindbugsTool';
 import javacommons = require('java-common/java-common');
 import util = require('./mavenutil');
 
