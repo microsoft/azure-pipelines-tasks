@@ -3,6 +3,7 @@ import tl = require('vsts-task-lib/task');
 import { PackageType } from './packageUtility';
 import zipUtility = require('./ziputility.js');
 import * as os from "os";
+import fs = require('fs');
 /**
  * Validates the input package and finds out input type
  * 
@@ -182,6 +183,12 @@ export async function generateTemporaryFolderForDeployment(isFolderBasedDeployme
     if(isFolderBasedDeployment || packageType === PackageType.jar) {
         tl.debug('Copying Web Packge: ' + webDeployPkg + ' to temporary location: ' + folderPath);
         copyDirectory(webDeployPkg, folderPath);
+        if(packageType === PackageType.jar) {
+            let src = path.join(folderPath, getFileNameFromPath(webDeployPkg));
+            let dest = path.join(folderPath, "app.jar")
+            tl.debug("Renaming " + src + " to " + dest);
+            fs.rename(src, dest);
+        }
         tl.debug('Copied Web Package: ' + webDeployPkg + ' to temporary location: ' + folderPath + ' successfully.');
     }
     else {

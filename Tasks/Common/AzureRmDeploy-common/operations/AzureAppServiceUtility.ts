@@ -4,6 +4,9 @@ import webClient = require('../azure-arm-rest/webClient');
 var parseString = require('xml2js').parseString;
 import Q = require('q');
 import { Kudu } from '../azure-arm-rest/azure-arm-app-service-kudu';
+import { Package, PackageType } from '../webdeployment-common/packageUtility';
+
+var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 
 export class AzureAppServiceUtility {
     private _appService: AzureAppService;
@@ -202,12 +205,16 @@ export class AzureAppServiceUtility {
         }
     }
 
-    public async updateStartupCommandAndRuntimeStack(runtimeStack: string, startupCommand?: string): Promise<void> {
+    public async updateStartupCommandAndRuntimeStack(runtimeStack: string, startupCommand?: string, appPackage?: Package): Promise<void> { 
         var configDetails = await this._appService.getConfiguration();
-        startupCommand = (!!startupCommand) ? startupCommand  : "";
-        var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
         var appCommandLine: string = configDetails.properties.appCommandLine;
+        startupCommand = (!!startupCommand) ? startupCommand  : appCommandLine;
+        var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
         runtimeStack = (!!runtimeStack) ? runtimeStack : linuxFxVersion;
+
+        if(!startupCommand) {
+            this.startupCommandRecommendation(runtimeStack);
+        }
 
         if (appCommandLine != startupCommand || runtimeStack != linuxFxVersion) {
             await this.updateConfigurationSettings({linuxFxVersion: runtimeStack, appCommandLine: startupCommand});
@@ -215,6 +222,10 @@ export class AzureAppServiceUtility {
         else {
             tl.debug(`Skipped updating the values. linuxFxVersion: ${linuxFxVersion} : appCommandLine: ${appCommandLine}`)
         }
+    }
+
+    private startupCommandRecommendation(runtimeStack: string) {
+        // Add startup command recommendations for different runime environments
     }
 
     private async _getPhysicalToVirtualPathMap(virtualApplication: string): Promise<any> {

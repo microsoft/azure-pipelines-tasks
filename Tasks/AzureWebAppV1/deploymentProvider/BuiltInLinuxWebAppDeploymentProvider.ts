@@ -1,7 +1,6 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
-import path = require('path');
 
 var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
@@ -33,20 +32,6 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
             case PackageType.jar:
                 tl.debug("Initiated deployment via kudu service for webapp jar package : "+ this.taskParams.Package.getPath());
                 var folderPath = await webCommonUtility.generateTemporaryFolderForDeployment(false, this.taskParams.Package.getPath(), PackageType.jar);
-                var jarName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".jar");
-                var destRootPath = "/home/site/wwwroot/";
-                var script = 'java -jar "' + destRootPath + jarName + '.jar' + '" --server.port=80';
-                var initScriptFileName = "startupscript_" + jarName + ".sh";
-                var initScriptFile = path.join(folderPath, initScriptFileName);
-                var destInitScriptPath = destRootPath + initScriptFileName;
-                if(!this.taskParams.AppSettings) {
-                    this.taskParams.AppSettings = "-INIT_SCRIPT " + destInitScriptPath;
-                }
-                if(this.taskParams.AppSettings.indexOf("-INIT_SCRIPT") < 0) {
-                    this.taskParams.AppSettings += " -INIT_SCRIPT " + destInitScriptPath;
-                }
-                this.taskParams.AppSettings = this.taskParams.AppSettings.trim();
-                tl.writeFile(initScriptFile, script, { encoding: 'utf8' });
                 var output = await webCommonUtility.archiveFolderForDeployment(false, folderPath);
                 var webPackage = output.webDeployPkg;
                 tl.debug("Initiated deployment via kudu service for webapp jar package : "+ webPackage);
@@ -64,7 +49,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
                 throw new Error(tl.loc('Invalidwebapppackageorfolderpathprovided', this.taskParams.Package.getPath()));
         }
 
-        await this.appServiceUtility.updateStartupCommandAndRuntimeStack(this.taskParams.RuntimeStack, this.taskParams.StartupCommand);
+        await this.appServiceUtility.updateStartupCommandAndRuntimeStack(this.taskParams.RuntimeStack, this.taskParams.StartupCommand, this.taskParams.Package);
 
         await this.PostDeploymentStep();
     }
