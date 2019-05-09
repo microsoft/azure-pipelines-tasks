@@ -1,0 +1,44 @@
+{
+  "id": "F2333FED-1017-4A2F-AAC6-02A185279E1E",
+  "name": "SaveCache",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "groups": [],
+  "demands": [],
+  "preview": true,
+  "minimumAgentVersion": "2.152.0",
+  "inputs": [
+    {
+      "name": "key",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.key",
+      "defaultValue": "key",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.key"
+    },
+    {
+      "name": "path",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.path",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.path"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "AgentPlugin": {
+      "target": "Agent.Plugins.PipelineCache.SavePipelineCacheV0, Agent.Plugins"
+    }
+  },
+  "messages": {}
+}
