@@ -10,13 +10,13 @@ export enum StringComparer {
     Ordinal, OrdinalIgnoreCase
 }
 
-export function getManifestFiles(manifestFilesPath: string | string[]): string[] {
-    if (!manifestFilesPath) {
+export function getManifestFiles(manifestFilePaths: string | string[]): string[] {
+    if (!manifestFilePaths) {
         tl.debug("file input is not present");
         return null;
     }
 
-    var files = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), manifestFilesPath);
+    var files = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), manifestFilePaths);
     return files;
 }
 
