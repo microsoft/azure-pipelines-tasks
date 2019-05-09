@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "npm",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613746)",
-  "loc.description": "npm パッケージをインストールして発行するか、npm コマンドを実行します。npmjs.com と、Package Management のような認証されたレジストリがサポートされます。",
+  "loc.description": "npm パッケージをインストールして発行するか、npm コマンドを実行します。npmjs.com と、Azure Artifacts のような認証されたレジストリがサポートされます。",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.group.displayName.customRegistries": "カスタム レジストリと認証",
   "loc.group.displayName.publishRegistries": "宛先レジストリと認証",
@@ -23,7 +23,7 @@
   "loc.input.label.publishRegistry": "レジストリの場所",
   "loc.input.help.publishRegistry": "コマンドのターゲットになるレジストリ。",
   "loc.input.label.publishFeed": "ターゲット レジストリ",
-  "loc.input.help.publishFeed": "このアカウントでホストされているレジストリを選択します。ここでレジストリを選択するには、Package Management をインストールしてライセンス認証しておく必要があります。",
+  "loc.input.help.publishFeed": "このアカウントでホストされているレジストリを選択します。ここでレジストリを選択するには、Azure Artifacts をインストールしてライセンス認証しておく必要があります。",
   "loc.input.label.publishEndpoint": "外部レジストリ",
   "loc.input.help.publishEndpoint": "外部レジストリへの発行用に使用する資格情報。",
   "loc.messages.FoundBuildCredentials": "ビルドの資格情報が見つかりました",

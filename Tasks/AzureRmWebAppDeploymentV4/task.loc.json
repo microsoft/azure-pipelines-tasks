@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 3,
-    "Patch": 26
+    "Patch": 28
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -79,7 +79,7 @@
       "label": "ms-resource:loc.input.label.PublishProfilePath",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.pubxml",
       "required": true,
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.PublishProfilePath",
       "visibleRule": "ConnectionType = PublishProfile"
     },
     {

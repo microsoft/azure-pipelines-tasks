@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('NuGetRestore Suite', function () {
     before(() => {
@@ -138,7 +138,7 @@ describe('NuGetRestore Suite', function () {
         done();
     });
 
-        it('restore select nuget.org source', (done: MochaDone) => {
+    it('restore select nuget.org source', (done: MochaDone) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'selectSourceNuGetOrg.js')

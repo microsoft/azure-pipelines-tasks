@@ -111,6 +111,13 @@ export class TestResultsPublisher {
         envVars = this.addToProcessEnvVars(envVars, 'builduri', tl.getVariable('Build.BuildUri'));
         envVars = this.addToProcessEnvVars(envVars, 'releaseuri', tl.getVariable('Release.ReleaseUri'));
         envVars = this.addToProcessEnvVars(envVars, 'releaseenvironmenturi', tl.getVariable('Release.EnvironmentUri'));
+        envVars = this.addToProcessEnvVars(envVars, 'phasename', tl.getVariable('System.PhaseName'));
+        envVars = this.addToProcessEnvVars(envVars, 'phaseattempt', tl.getVariable('System.PhaseAttempt'));
+        envVars = this.addToProcessEnvVars(envVars, 'stagename', tl.getVariable('System.StageName'));
+        envVars = this.addToProcessEnvVars(envVars, 'stageattempt', tl.getVariable('System.StageAttempt'));
+        envVars = this.addToProcessEnvVars(envVars, 'jobname', tl.getVariable('System.JobName'));
+        envVars = this.addToProcessEnvVars(envVars, 'jobattempt', tl.getVariable('System.JobAttempt'));
+        envVars = this.addToProcessEnvVars(envVars, 'jobidentifier', tl.getVariable('System.JobIdentifier'));
         return envVars;
     }
 
