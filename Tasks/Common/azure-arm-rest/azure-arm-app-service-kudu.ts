@@ -18,11 +18,11 @@ export class KuduServiceManagementClient {
         this._scmUri = scmUri;
     }
 
-    public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions, contentType?: string): Promise<webClient.WebResponse> {
+    public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions): Promise<webClient.WebResponse> {
         request.headers = request.headers || {};
         request.headers["Authorization"] = "Basic " + this._accesssToken;
         if(!request.headers['Content-Type']) {
-            request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
+            request.headers['Content-Type'] = 'application/json; charset=utf-8';
         }
         
         if(!!this._cookie) {
@@ -462,7 +462,7 @@ export class Kudu {
         };
 
         try {
-            let response = await this._client.beginRequest(httpRequest, null, 'application/octet-stream');
+            let response = await this._client.beginRequest(httpRequest);
             tl.debug(`ZIP Deploy response: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 tl.debug('Deployment passed');
@@ -498,7 +498,7 @@ export class Kudu {
         };
 
         try {
-            let response = await this._client.beginRequest(httpRequest, null, 'application/octet-stream');
+            let response = await this._client.beginRequest(httpRequest);
             tl.debug(`War Deploy response: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 tl.debug('Deployment passed');

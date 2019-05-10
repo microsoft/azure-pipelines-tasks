@@ -182,14 +182,7 @@ export async function generateTemporaryFolderForDeployment(isFolderBasedDeployme
     var folderPath = generateTemporaryFolderOrZipPath(folderName, true);
     if(isFolderBasedDeployment || packageType === PackageType.jar) {
         tl.debug('Copying Web Packge: ' + webDeployPkg + ' to temporary location: ' + folderPath);
-        copyDirectory(webDeployPkg, folderPath);
-        if(packageType === PackageType.jar) {
-            let src = path.join(folderPath, getFileNameFromPath(webDeployPkg));
-            let dest = path.join(folderPath, "app.jar")
-            tl.debug("Renaming " + src + " to " + dest);
-            fs.renameSync(src, dest);
-        }
-        
+        copyDirectory(webDeployPkg, folderPath);        
         tl.debug('Copied Web Package: ' + webDeployPkg + ' to temporary location: ' + folderPath + ' successfully.');
     }
     else {
