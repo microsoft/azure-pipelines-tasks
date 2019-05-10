@@ -105,18 +105,18 @@ export function getImageSize(layers: { [key: string]: string }[]): string {
     return imageSize.toString() + "B";
 }
 
-function extractSizeInBytes(size: string): number {
+export function extractSizeInBytes(size: string): number {
     const sizeStringValue = size.match(matchPatternForSize);
     if (sizeStringValue && sizeStringValue.length > 0) {
         const sizeIntValue = parseFloat(sizeStringValue[0]);
         const sizeUnit = size.substring(sizeIntValue.toString().length);
         switch (sizeUnit.toLowerCase()) {
             case "b": return sizeIntValue;
-            case "kb": return sizeIntValue * 1000;
-            case "mb": return sizeIntValue * 1000 * 1000;
-            case "gb": return sizeIntValue * 1000 * 1000 * 1000;
-            case "tb": return sizeIntValue * 1000 * 1000 * 1000 * 1000;
-            case "pb": return sizeIntValue * 1000 * 1000 * 1000 * 1000 * 1000;
+            case "kb": return sizeIntValue * 1024;
+            case "mb": return sizeIntValue * 1024 * 1024;
+            case "gb": return sizeIntValue * 1024 * 1024 * 1024;
+            case "tb": return sizeIntValue * 1024 * 1024 * 1024 * 1024;
+            case "pb": return sizeIntValue * 1024 * 1024 * 1024 * 1024 * 1024;
         }
     }
 
