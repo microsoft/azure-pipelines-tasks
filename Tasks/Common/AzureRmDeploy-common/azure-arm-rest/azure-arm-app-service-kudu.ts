@@ -455,7 +455,7 @@ export class Kudu {
         httpRequest.body = fs.createReadStream(webPackage);
 
         try {
-            let response = await this._client.beginRequest(httpRequest, null, 'application/octet-stream');
+            let response = await this._client.beginRequest(httpRequest, null, 'multipart/form-data');
             tl.debug(`ZIP Deploy response: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 tl.debug('Deployment passed');
@@ -488,7 +488,7 @@ export class Kudu {
         httpRequest.body = fs.createReadStream(webPackage);
 
         try {
-            let response = await this._client.beginRequest(httpRequest, null, 'application/octet-stream');
+            let response = await this._client.beginRequest(httpRequest, null, 'multipart/form-data');
             tl.debug(`War Deploy response: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 tl.debug('Deployment passed');
