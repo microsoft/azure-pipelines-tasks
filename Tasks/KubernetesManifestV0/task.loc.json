@@ -3,7 +3,7 @@
   "name": "KubernetesManifest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+  "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/kubernetes-manifest",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "preview": true,
@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 151,
-    "Patch": 6
+    "Patch": 7
   },
   "demands": [],
   "groups": [],

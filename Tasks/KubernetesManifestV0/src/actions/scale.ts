@@ -5,8 +5,8 @@ import { Kubectl } from "kubernetes-common/kubectl-object-model";
 import * as utils from "../utils/utilities";
 import * as constants from "../models/constants";
 
-export async function scale() {
-    let kubectl = new Kubectl(await utils.getKubectl(), tl.getInput("namespace", false));
+export async function scale(ignoreSslErrors?: boolean) {
+    let kubectl = new Kubectl(await utils.getKubectl(), tl.getInput("namespace", false), ignoreSslErrors);
     let kind = tl.getInput("kind", true).toLowerCase();
     let replicas = tl.getInput("replicas", true);
     let name = tl.getInput("name", true);

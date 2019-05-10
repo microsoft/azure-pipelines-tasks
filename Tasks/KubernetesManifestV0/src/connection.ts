@@ -5,7 +5,8 @@ import * as utils from "./utils/FileHelper";
 import kubectlutility = require("utility-common/kubectlutility");
 
 export class Connection {
-
+    public ignoreSSLErrors: boolean;
+    
     public open() {
         let kubeconfig: string, kubeconfigFile: string;
         let kubernetesServiceConnection = tl.getInput("kubernetesServiceConnection", true);
@@ -22,6 +23,7 @@ export class Connection {
         kubeconfigFile = path.join(utils.getNewUserDirPath(), "config");
         fs.writeFileSync(kubeconfigFile, kubeconfig);
         tl.setVariable("KUBECONFIG", kubeconfigFile);
+        this.ignoreSSLErrors = tl.getEndpointDataParameter(kubernetesServiceConnection, 'acceptUntrustedCerts', true) === "true";
     }
 
     public close() {
