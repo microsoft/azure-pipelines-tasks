@@ -183,7 +183,7 @@ export async function generateTemporaryFolderForDeployment(isFolderBasedDeployme
     if(isFolderBasedDeployment || packageType === PackageType.jar) {
         tl.debug('Copying Web Packge: ' + webDeployPkg + ' to temporary location: ' + folderPath);
         copyDirectory(webDeployPkg, folderPath);
-        if(packageType === PackageType.jar) {
+        if(packageType === PackageType.jar && this.getFileNameFromPath(webDeployPkg, ".jar") != "app") {
             let src = path.join(folderPath, getFileNameFromPath(webDeployPkg));
             let dest = path.join(folderPath, "app.jar")
             tl.debug("Renaming " + src + " to " + dest);

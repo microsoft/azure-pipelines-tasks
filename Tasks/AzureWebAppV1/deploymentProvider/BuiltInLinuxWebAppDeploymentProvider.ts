@@ -1,10 +1,13 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
+import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 
 var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
+
+const initScriptAppSetting: string = "-INIT_SCRIPT";
 
 export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {
     private zipDeploymentID: string;
@@ -31,16 +34,18 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
 
             case PackageType.jar:
                 tl.debug("Initiated deployment via kudu service for webapp jar package : "+ this.taskParams.Package.getPath());
-                var folderPath = await webCommonUtility.generateTemporaryFolderForDeployment(false, this.taskParams.Package.getPath(), PackageType.jar);
-                var output = await webCommonUtility.archiveFolderForDeployment(false, folderPath);
-                var webPackage = output.webDeployPkg;
+                let folderPath = await webCommonUtility.generateTemporaryFolderForDeployment(false, this.taskParams.Package.getPath(), PackageType.jar);
+                let output = await webCommonUtility.archiveFolderForDeployment(false, folderPath);
+                let webPackage = output.webDeployPkg;
+                let deleteCustomApplicationSetting = ParameterParser.parse(initScriptAppSetting);
+                await this.appServiceUtility.updateAndMonitorAppSettings(null, deleteCustomApplicationSetting);
                 tl.debug("Initiated deployment via kudu service for webapp jar package : "+ webPackage);
                 this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage);
             break;
 
             case PackageType.war:
                 tl.debug("Initiated deployment via kudu service for webapp war package : "+ this.taskParams.Package.getPath());
-                var warName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".war");
+                let warName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".war");
                 this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), 
                 { slotName: this.appService.getSlot() }, warName);
             break;
