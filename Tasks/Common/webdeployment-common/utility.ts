@@ -182,7 +182,7 @@ export async function generateTemporaryFolderForDeployment(isFolderBasedDeployme
     var folderPath = generateTemporaryFolderOrZipPath(folderName, true);
     if(isFolderBasedDeployment || packageType === PackageType.jar) {
         tl.debug('Copying Web Packge: ' + webDeployPkg + ' to temporary location: ' + folderPath);
-        copyDirectory(webDeployPkg, folderPath);        
+        copyDirectory(webDeployPkg, folderPath);
         tl.debug('Copied Web Package: ' + webDeployPkg + ' to temporary location: ' + folderPath + ' successfully.');
     }
     else {
