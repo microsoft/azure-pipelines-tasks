@@ -180,6 +180,5 @@
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
   "loc.messages.InvalidDockerImageName": "Invalid Docker hub image name provided.",
   "loc.messages.MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task.",
-  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
-  "loc.messages.JarPackageStartupCommandRecommendation": "A startup command is required to start your .jar application. Adding command: java -jar <jarPath> --server.port=80."
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }

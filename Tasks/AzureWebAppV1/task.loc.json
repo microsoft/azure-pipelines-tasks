@@ -379,7 +379,6 @@
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName",
     "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
-    "JarPackageStartupCommandRecommendation": "ms-resource:loc.messages.JarPackageStartupCommandRecommendation"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }
