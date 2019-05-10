@@ -4,9 +4,6 @@ import webClient = require('../azure-arm-rest/webClient');
 var parseString = require('xml2js').parseString;
 import Q = require('q');
 import { Kudu } from '../azure-arm-rest/azure-arm-app-service-kudu';
-import { Package, PackageType } from '../webdeployment-common/packageUtility';
-
-var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 
 export class AzureAppServiceUtility {
     private _appService: AzureAppService;
@@ -205,7 +202,7 @@ export class AzureAppServiceUtility {
         }
     }
 
-    public async updateStartupCommandAndRuntimeStack(runtimeStack: string, startupCommand?: string, appPackage?: Package): Promise<void> { 
+    public async updateStartupCommandAndRuntimeStack(runtimeStack: string, startupCommand?: string): Promise<void> { 
         var configDetails = await this._appService.getConfiguration();
         var appCommandLine: string = configDetails.properties.appCommandLine;
         startupCommand = (!!startupCommand) ? startupCommand  : appCommandLine;

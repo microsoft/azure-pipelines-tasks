@@ -187,8 +187,9 @@ export async function generateTemporaryFolderForDeployment(isFolderBasedDeployme
             let src = path.join(folderPath, getFileNameFromPath(webDeployPkg));
             let dest = path.join(folderPath, "app.jar")
             tl.debug("Renaming " + src + " to " + dest);
-            fs.rename(src, dest);
+            fs.renameSync(src, dest);
         }
+        
         tl.debug('Copied Web Package: ' + webDeployPkg + ' to temporary location: ' + folderPath + ' successfully.');
     }
     else {
