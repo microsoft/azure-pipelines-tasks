@@ -1,0 +1,44 @@
+{
+    "id": "F2333FED-1017-4A2F-AAC6-02A185279E1E",
+    "name": "SaveCache",
+    "friendlyName": "Save Cache",
+    "description": "Publish a local cache for the current pipeline.",
+    "helpUrl": "",
+    "helpMarkDown": "Publish a local cache for the current pipeline.",
+    "category": "Utility",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "groups": [],
+    "demands": [],
+    "preview": true,
+    "minimumAgentVersion": "2.152.0",
+    "inputs": [
+        {
+            "name": "key",
+            "type": "multiLine",
+            "label": "The name of the key.",
+            "defaultValue": "key",
+            "required": true,
+            "helpMarkDown": "The name of the key."
+        },
+        {
+            "name": "path",
+            "type": "filePath",
+            "label": "Path to publish",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
+        }
+    ],
+    "instanceNameFormat": "Save Cache",
+    "execution": {
+        "AgentPlugin": {
+            "target": "Agent.Plugins.PipelineCache.SavePipelineCacheV0, Agent.Plugins"
+        }
+    },
+    "messages": {}
+}

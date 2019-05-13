@@ -7,7 +7,7 @@ import * as TaskInputParameters from '../models/TaskInputParameters';
 import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
 import { getDockerRegistryEndpointAuthenticationToken } from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
 
-export async function createSecret() {
+export async function createSecret(ignoreSslErrors?: boolean) {
     let args = "";
     if (utils.isEqual(TaskInputParameters.secretType, "dockerRegistry", utils.StringComparer.OrdinalIgnoreCase)) {
         args = getDockerRegistrySecretArgs();
@@ -16,7 +16,7 @@ export async function createSecret() {
         args = getGenericSecretArgs();
     }
 
-    let kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace);
+    let kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace, ignoreSslErrors);
     var result = kubectl.createSecret(args, true, TaskInputParameters.secretName.trim());
     utils.checkForErrors([result]);
 }

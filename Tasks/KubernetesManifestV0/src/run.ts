@@ -46,8 +46,8 @@ function run(): Promise<void> {
             tl.setResult(tl.TaskResult.Failed, 'Not a supported action, choose from "bake", "deploy", "patch", "scale", "delete", "promote", "reject"');
             process.exit(1);
     }
-    connection.open()
-    return action_func()
+    connection.open();
+    return action_func(connection.ignoreSSLErrors)
         .then(() => connection.close())
         .catch((error) => {
             connection.close()
