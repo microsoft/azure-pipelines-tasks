@@ -14,7 +14,7 @@
     "version": {
         "Major": 3,
         "Minor": 1,
-        "Patch": 9
+        "Patch": 10
     },
     "preview": true,
     "demands": [
@@ -47,7 +47,10 @@
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Azure Resource Manager subscription to target for copying the files."
+            "helpMarkDown": "Azure Resource Manager subscription to target for copying the files.",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+            }
         },
         {
             "name": "Destination",

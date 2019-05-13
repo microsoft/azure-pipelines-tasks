@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 152,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "releaseNotes": "Simplified the task by:<br/>&nbsp;- Providing an option to simply select or type a command.<br/>&nbsp;- Retaining the useful input fields and providing an option to pass the rest as an argument to the command.",
@@ -65,7 +65,10 @@
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription",
             "groupName": "containerRegistry",
-            "visibleRule": "containerregistrytype = Azure Container Registry"
+            "visibleRule": "containerregistrytype = Azure Container Registry",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+            }
         },
         {
             "name": "azureContainerRegistry",

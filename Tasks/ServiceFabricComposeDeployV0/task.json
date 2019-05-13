@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 11
+        "Patch": 12
     },
     "demands": [
         "Cmd"
@@ -102,7 +102,10 @@
             "helpMarkDown": "Select an Azure subscription",
             "groupName": "registry",
             "visibleRule": "registryCredentials = AzureResourceManagerEndpoint",
-            "required": true
+            "required": true,
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+            }
         },
         {
             "name": "registryUserName",

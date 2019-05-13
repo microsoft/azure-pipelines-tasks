@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 151,
-        "Patch": 1
+        "Patch": 2
     },
     "groups": [
         {
@@ -182,7 +182,10 @@
             "required": true,
             "groupName": "propagatedArtifactsGroup",
             "visibleRule": "propagatedArtifacts == true",
-            "helpMarkDown": "Choose the Azure Resource Manager subscription for the artifacts."
+            "helpMarkDown": "Choose the Azure Resource Manager subscription for the artifacts.",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+            }
         },
         {
             "name": "storageAccountName",

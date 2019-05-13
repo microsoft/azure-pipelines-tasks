@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 147
+    "Patch": 153
   },
   "demands": [
     "azureps"
@@ -72,7 +72,10 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM",
+      "properties": {
+          "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+      }
     },
     {
       "name": "Destination",

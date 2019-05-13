@@ -65,7 +65,10 @@
       "label": "Azure subscription contains IoT Hub",
       "required": true,
       "visibleRule": "action == Deploy to IoT Edge devices",
-      "helpMarkDown": "Select an **Azure subscription** that contains IoT Hub"
+      "helpMarkDown": "Select an **Azure subscription** that contains IoT Hub",
+      "properties": {
+          "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+      }
     },
     {
       "name": "iothubname",
@@ -150,7 +153,10 @@
       "type": "connectedService:AzureRM",
       "label": "Azure subscription",
       "helpMarkDown": "Select an Azure subscription",
-      "visibleRule": "containerregistrytype = Azure Container Registry"
+      "visibleRule": "containerregistrytype = Azure Container Registry",
+      "properties": {
+          "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+      }
     },
     {
       "name": "azureContainerRegistry",

@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 14
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -41,7 +41,10 @@
             "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment.",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+            }
         },
         {
             "name": "appType",

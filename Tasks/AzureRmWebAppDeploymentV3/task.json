@@ -18,7 +18,7 @@
     "version": {
         "Major": 3,
         "Minor": 4,
-        "Patch": 27
+        "Patch": 28
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
@@ -63,7 +63,10 @@
             "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment.",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+            }
         },
         {
             "name": "WebAppKind",

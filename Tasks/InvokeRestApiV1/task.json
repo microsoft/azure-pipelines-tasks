@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 152,
-        "Patch": 0
+        "Patch": 1
     },
     "instanceNameFormat": "Invoke REST API: $(method)",
     "groups": [
@@ -68,7 +68,10 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select an Azure Resource Manager subscription to use for invoking a management API. 'ManagementPortalUrl' of the cloud is used as the baseURL",
-            "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM"
+            "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+            }
         },
         {
             "name": "method",

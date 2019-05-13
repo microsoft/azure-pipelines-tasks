@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 152,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "groups": [
@@ -68,7 +68,10 @@
             "visibleRule": "connectionType = Azure Resource Manager",
             "defaultValue": "",
             "required": true,
-            "groupName": "cluster"
+            "groupName": "cluster",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+            }
         },
         {
             "name": "azureResourceGroup",

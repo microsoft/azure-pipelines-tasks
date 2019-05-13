@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 152,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -65,7 +65,10 @@
       "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
       "groupName": "containerRegistry",
-      "visibleRule": "containerregistrytype = Azure Container Registry"
+      "visibleRule": "containerregistrytype = Azure Container Registry",
+      "properties": {
+          "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+      }
     },
     {
       "name": "azureContainerRegistry",

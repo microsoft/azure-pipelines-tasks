@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 30
+        "Patch": 31
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -54,7 +54,10 @@
             "defaultValue": "",
             "required": true,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the scale set."
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the scale set.",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+            }
         },
         {
             "name": "action",

@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 4,
-    "Patch": 27
+    "Patch": 28
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -63,7 +63,10 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "properties": {
+          "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+      }
     },
     {
       "name": "WebAppKind",

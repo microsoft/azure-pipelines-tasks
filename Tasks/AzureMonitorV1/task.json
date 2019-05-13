@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 151,
-        "Patch": 1
+        "Patch": 2
     },
     "instanceNameFormat": "Query Azure Monitor alerts",
     "groups": [
@@ -36,7 +36,10 @@
             "label": "Azure subscription",
             "defaultValue": "",
             "required": "true",
-            "helpMarkDown": "Select an Azure Resource Manager subscription to monitor."
+            "helpMarkDown": "Select an Azure Resource Manager subscription to monitor.",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+            }
         },
         {
             "name": "ResourceGroupName",

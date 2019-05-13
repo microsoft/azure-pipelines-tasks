@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 152,
-    "Patch": 0
+    "Patch": 1
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -68,7 +68,10 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM",
-      "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM"
+      "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM",
+      "properties": {
+          "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+      }
     },
     {
       "name": "method",

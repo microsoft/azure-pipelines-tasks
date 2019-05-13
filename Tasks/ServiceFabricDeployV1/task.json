@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 32
+        "Patch": 33
     },
     "demands": [
         "Cmd"
@@ -358,7 +358,10 @@
             "helpMarkDown": "Select an Azure subscription.<br/>Note: task will try to encrypt the registry secret before transmitting it to service fabric cluster. However, it needs cluster's server certiticate to be installed on agent machine in order to do so. If certificate is not present, secret will not be encrypted.",
             "visibleRule": "configureDockerSettings = true && registryCredentials = AzureResourceManagerEndpoint",
             "required": true,
-            "groupname": "docker"
+            "groupname": "docker",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+            }
         },
         {
             "name": "registryUserName",

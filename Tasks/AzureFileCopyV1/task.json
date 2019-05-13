@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 151
+        "Patch": 153
     },
     "demands": [
         "azureps"
@@ -73,7 +73,10 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Azure Resource Manager subscription to target for copying the files.",
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+            }
         },
         {
             "name": "Destination",

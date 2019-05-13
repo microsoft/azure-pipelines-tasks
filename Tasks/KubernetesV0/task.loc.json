@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 152,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "preview": "false",
@@ -179,7 +179,10 @@
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
       "visibleRule": "secretType = dockerRegistry && containerRegistryType = Azure Container Registry",
       "defaultValue": "",
-      "groupName": "secrets"
+      "groupName": "secrets",
+      "properties": {
+          "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+      }
     },
     {
       "name": "azureContainerRegistry",

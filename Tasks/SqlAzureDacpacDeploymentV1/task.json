@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 3,
-        "Patch": 18
+        "Patch": 19
     },
     "demands": [
         "sqlpackage"
@@ -78,7 +78,10 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Target Azure Resource Manager subscription for deploying SQL files",
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+            }
         },
         {
             "name": "AuthenticationType",

@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 14
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -41,7 +41,10 @@
       "label": "ms-resource:loc.input.label.azureSubscription",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.azureSubscription"
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscription",
+      "properties": {
+          "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+      }
     },
     {
       "name": "appType",

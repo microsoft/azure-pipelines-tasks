@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 152,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": "true",
   "inputs": [
@@ -28,7 +28,10 @@
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "properties": {
+          "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+      }
     },
     {
       "name": "ResourceGroupName",

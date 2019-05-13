@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 152,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -86,7 +86,10 @@
       "visibleRule": "connectionType = Azure Resource Manager",
       "defaultValue": "",
       "groupName": "kubernetesCluster",
-      "required": true
+      "required": true,
+      "properties": {
+          "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+      }
     },
     {
       "name": "azureResourceGroup",
@@ -274,7 +277,10 @@
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpointForSecrets",
       "visibleRule": "secretType = dockerRegistry && containerRegistryType = Azure Container Registry",
       "defaultValue": "",
-      "groupName": "secrets"
+      "groupName": "secrets",
+      "properties": {
+          "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+      }
     },
     {
       "name": "azureContainerRegistry",

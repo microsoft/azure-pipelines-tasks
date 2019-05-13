@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 151,
-    "Patch": 1
+    "Patch": 2
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -36,7 +36,10 @@
       "label": "ms-resource:loc.input.label.connectedServiceNameARM",
       "defaultValue": "",
       "required": "true",
-      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM"
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM",
+      "properties": {
+          "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+      }
     },
     {
       "name": "ResourceGroupName",
