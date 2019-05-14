@@ -15,10 +15,10 @@ import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import { Kubectl, Resource } from "kubernetes-common/kubectl-object-model";
 
 
-export function deploy(kubectl: Kubectl, manifestFilesPath: string, deploymentStrategy: string) {
+export function deploy(kubectl: Kubectl, manifestFilePaths: string[], deploymentStrategy: string) {
 
     // get manifest files
-    var inputManifestFiles: string[] = getManifestFiles(manifestFilesPath);
+    var inputManifestFiles: string[] = getManifestFiles(manifestFilePaths);
 
     // artifact substitution
     inputManifestFiles = updateContainerImagesInManifestFiles(inputManifestFiles, TaskInputParameters.containers);
@@ -37,8 +37,8 @@ export function deploy(kubectl: Kubectl, manifestFilesPath: string, deploymentSt
     annotateResources(deployedManifestFiles, kubectl, resourceTypes);
 }
 
-function getManifestFiles(manifestFilesPath: string): string[] {
-    var files: string[] = utils.getManifestFiles(manifestFilesPath);
+function getManifestFiles(manifestFilePaths: string[]): string[] {
+    var files: string[] = utils.getManifestFiles(manifestFilePaths);
 
     if (files == null || files.length == 0) {
         throw (tl.loc("ManifestFileNotFound"));

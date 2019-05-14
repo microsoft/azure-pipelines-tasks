@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Save Cache",
+  "loc.helpMarkDown": "Publish a local cache for the current pipeline.",
+  "loc.description": "Publish a local cache for the current pipeline.",
+  "loc.instanceNameFormat": "Save Cache",
+  "loc.input.label.key": "The name of the key.",
+  "loc.input.help.key": "The name of the key.",
+  "loc.input.label.path": "Path to publish.",
+  "loc.input.help.path": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
+}

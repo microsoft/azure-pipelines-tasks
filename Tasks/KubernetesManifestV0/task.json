@@ -3,7 +3,7 @@
     "name": "KubernetesManifest",
     "friendlyName": "Deploy Kubernetes manifests",
     "description": "Use Kubernetes manifest files to deploy to clusters or even bake the manifest files to be used for deployments using Helm charts",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/kubernetes-manifest?view=azure-devops",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
     "preview": true,
@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 151,
-        "Patch": 6
+        "Minor": 152,
+        "Patch": 0
     },
     "demands": [],
     "groups": [],
