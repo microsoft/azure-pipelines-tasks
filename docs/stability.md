@@ -12,7 +12,7 @@
 
   - Machine assignment piepline is more robust
   - More monitoring: orchestration failures, machine request failures, granular queue state
-  - More perf counters: throughput and faiures
+  - More perf counters: throughput and failures
   - More CSS Tool: Expose per SU hosted job queue for visibility.    
   - Parallel jobs for throughput and redundancy to job or agent hanging.
   - MMS is a separate service: Redirect to healthier machine pools (run away from azure re-image issues)

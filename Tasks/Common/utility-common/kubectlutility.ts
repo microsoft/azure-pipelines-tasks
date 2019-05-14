@@ -6,8 +6,9 @@ import * as downloadutility from "./downloadutility";
 import * as util from "util";
 import * as yaml from "js-yaml";
 const uuidV4 = require('uuid/v4');
-const kubectlToolName = "kubectl"
-export const stableKubectlVersion = "v1.8.9"
+const kubectlToolName = "kubectl";
+export const stableKubectlVersion = "v1.14.0";
+import { WebRequest, sendRequest } from "./restutilities";
 
 var fs = require('fs');
 
@@ -44,7 +45,7 @@ export async function downloadKubectl(version: string) : Promise<string> {
     }
     
     var kubectlPath = path.join(cachedToolpath, kubectlToolName + getExecutableExtention());
-    fs.chmod(kubectlPath, "777");
+    fs.chmodSync(kubectlPath, "777");
     return kubectlPath;
 }
 
@@ -103,4 +104,31 @@ function getExecutableExtention(): string {
     }
 
     return "";
+}
+
+export async function getAvailableKubectlVersions() {
+    var request = new WebRequest();
+    request.method = "GET";
+    let page_number = 0;
+    let versions = [];
+    const countPerPage = 100;
+    while (true) {
+        try {
+            request.uri = `https://api.github.com/repos/kubernetes/kubernetes/releases?page=${page_number}&per_page=${countPerPage}`;
+            var response = await sendRequest(request);
+            // break if no more items or items are less then asked
+            if (response.body.length === 0 || response.body.length < countPerPage) {
+                break;
+            }
+            response.body.forEach(release => {
+                if (release["tag_name"]) {
+                    versions.push(release["tag_name"]);
+                }
+            });
+            page_number++;
+        } catch (error) {
+            throw error;
+        }
+    }
+    return versions;
 }

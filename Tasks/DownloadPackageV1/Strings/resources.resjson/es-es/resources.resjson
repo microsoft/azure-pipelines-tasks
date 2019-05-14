@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Paquete de descarga",
+  "loc.helpMarkDown": "Necesita que la extensión Administración de paquetes esté instalada",
+  "loc.description": "Descarga un paquete de una fuente de Administración de paquetes en VSTS o TFS. \r\n Requiere la extensión Administración de paquetes.",
+  "loc.instanceNameFormat": "Paquete de descarga",
+  "loc.input.label.feed": "Fuente",
+  "loc.input.help.feed": "Seleccionar el origen del paquete",
+  "loc.input.label.definition": "Paquete",
+  "loc.input.help.definition": "Selecciona el paquete para descargar. Actualmente solo se admiten paquetes NuGet.",
+  "loc.input.label.version": "Versión",
+  "loc.input.help.version": "Versión del paquete",
+  "loc.input.label.downloadPath": "Directorio de destino",
+  "loc.input.help.downloadPath": "Ruta de acceso en la máquina del agente donde se descargará el paquete.",
+  "loc.messages.FailedToGetPackageMetadata": "No se pudieron obtener los metadatos del paquete con el error %s.",
+  "loc.messages.FailedToDownloadNugetPackage": "No se pudo descargar el paquete NuGet de %s, se obtuvo el error siguiente: %s",
+  "loc.messages.PackageDownloadSuccessful": "El paquete se descargó correctamente.",
+  "loc.messages.CredentialsNotFound": "No se pudieron determinar las credenciales para conectarse al servicio Administración de paquetes.",
+  "loc.messages.StartingDownloadOfPackage": "Iniciando la descarga del paquete NuGet %s en la ubicación %s",
+  "loc.messages.ExtractingNugetPackage": "Extrayendo el paquete NuGet %s en el directorio %s.",
+  "loc.messages.PackageTypeNotSupported": "Mediante esta tarea, solo se pueden descargar tipos de paquetes NuGet.",
+  "loc.messages.ExtractionFailed": "No se pudo extraer el paquete con el error %s."
+}

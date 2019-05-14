@@ -1,6 +1,6 @@
 import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner";
 import * as nutil from "packaging-common/nuget/Utility";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as path from "path";
 import * as auth from "packaging-common/nuget/Authentication";
 

@@ -15,6 +15,7 @@ export class EditAction2L0Tests {
         tr.setInput(Inputs.target, "master");
         tr.setInput(Inputs.tagSource, "manual");
         tr.setInput(Inputs.tag, "v1.0.0");
+        tr.setInput(Inputs.releaseNotesSource, "input");
         
         this.stub(tr);
         tr.run();

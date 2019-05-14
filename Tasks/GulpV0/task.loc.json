@@ -1,8 +1,9 @@
 {
   "id": "B82CFBE4-34F9-40F5-889E-C8842CA9DD9D",
-  "name": "Gulp",
+  "name": "gulp",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/gulp",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -15,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 130,
+    "Minor": 151,
     "Patch": 0
   },
   "demands": [

@@ -1,0 +1,175 @@
+{
+    "id": "6f8c69a5-b023-428e-a125-fccf4efcb929",
+    "name": "FtpUpload",
+    "friendlyName": "FTP upload",
+    "description": "Upload files using FTP",
+    "author": "Microsoft Corporation",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/ftp-upload",
+    "helpMarkDown": "Upload files to a remote machine using the File Transfer Protocol (FTP), or securely with FTPS.  [More Information](http://go.microsoft.com/fwlink/?LinkId=809084).",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "demands": [],
+    "version": {
+        "Major": 2,
+        "Minor": 151,
+        "Patch": 1 
+    },
+    "instanceNameFormat": "FTP Upload: $(rootFolder)",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "credsType",
+            "aliases": [
+                "credentialsOption"
+            ],
+            "type": "pickList",
+            "label": "Authentication Method",
+            "defaultValue": "serviceEndpoint",
+            "required": true,
+            "helpMarkDown": "Use FTP service connection or enter connection credentials.",
+            "options": {
+                "serviceEndpoint": "FTP service connection",
+                "inputs": "Enter credentials"
+            }
+        },
+        {
+            "name": "serverEndpoint",
+            "type": "connectedService:Generic",
+            "label": "FTP Service Connection",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the service connection for your FTP server.  To create one, click the Manage link and create a new Generic service connection, enter the FTP server URL for the server URL, e.g. <b>`ftp://server.example.com`</b>, and required credentials.<p>Secure connections will always be made regardless of the specified protocol (<b>`ftp://`</b> or <b>`ftps://`</b>) if the target server supports FTPS.  To allow only secure connections, use the <b>`ftps://`</b> protocol, e.g. <b>`ftps://server.example.com`</b>.  Connections to servers not supporting FTPS will fail if <b>`ftps://`</b> is specified.",
+            "visibleRule": "credsType = serviceEndpoint"
+        },
+        {
+            "name": "serverUrl",
+            "type": "string",
+            "label": "Server URL",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "credsType = inputs"
+        },
+        {
+            "name": "username",
+            "type": "string",
+            "label": "Username",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "credsType = inputs"
+        },
+        {
+            "name": "password",
+            "type": "string",
+            "label": "Password",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "credsType = inputs"
+        },
+        {
+            "name": "rootFolder",
+            "aliases": [
+                "rootDirectory"
+            ],
+            "type": "filePath",
+            "label": "Root folder",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The source folder to upload files from."
+        },
+        {
+            "name": "filePatterns",
+            "type": "multiLine",
+            "label": "File patterns",
+            "defaultValue": "**",
+            "required": true,
+            "helpMarkDown": "File paths or patterns of the files to upload.  Supports multiple lines of minimatch patterns.  [More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            }
+        },
+        {
+            "name": "remotePath",
+            "aliases": [
+                "remoteDirectory"
+            ],
+            "type": "string",
+            "label": "Remote directory",
+            "defaultValue": "/upload/$(Build.BuildId)/",
+            "required": true,
+            "helpMarkDown": "Upload files to this directory on the remote FTP server."
+        },
+        {
+            "name": "clean",
+            "type": "boolean",
+            "label": "Delete remote directory",
+            "defaultValue": "false",
+            "required": true,
+            "helpMarkDown": "Delete the remote directory including its contents before uploading.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "cleanContents",
+            "type": "boolean",
+            "label": "Clear remote directory contents",
+            "defaultValue": "false",
+            "required": true,
+            "helpMarkDown": "Recursively delete all contents of the remote directory before uploading.  The existing directory will not be deleted.  For better performance, consider using `Delete remote directory` instead.",
+            "groupName": "advanced",
+            "visibleRule": "clean = false"
+        },
+        {
+            "name": "preservePaths",
+            "type": "boolean",
+            "label": "Preserve file paths",
+            "defaultValue": "false",
+            "required": true,
+            "helpMarkDown": "If selected, the relative local directory structure is recreated under the remote directory where files are uploaded.  Otherwise, files are uploaded directly to the remote directory without creating additional subdirectories.<p>For example, suppose your source folder is: <b>`/home/user/source/`</b> and contains the file: <b>`foo/bar/foobar.txt`</b>, and your remote directory is: <b>`/uploads/`</b>.<br>If selected, the file is uploaded to: <b>`/uploads/foo/bar/foobar.txt`</b>.  Otherwise, to: <b>`/uploads/foobar.txt`</b>.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "trustSSL",
+            "type": "boolean",
+            "label": "Trust server certificate",
+            "defaultValue": "false",
+            "required": true,
+            "helpMarkDown": "Selecting this option results in the FTP server's SSL certificate being trusted with ftps://, even if it is self-signed or cannot be validated by a Certificate Authority (CA).",
+            "groupName": "advanced"
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "ftpuploadtask.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "CleanRemoteDir": "removing remote directory: %s",
+        "CleanRemoteDirContents": "removing remote directory contents: %s",
+        "CleanFileDeleteFail": "an error occurred while trying to remove file: %s",
+        "ConnectPort": "connecting to: %s:%s",
+        "Disconnected": "disconnected",
+        "DisconnectHost": "disconnecting from: %s",
+        "FTPConnected": "connected: %s",
+        "FTPNoHostSpecified": "The FTP server URL must include a host name",
+        "FTPNoProtocolSpecified": "The FTP server URL must begin with ftp:// or ftps://",
+        "NoFilesFound": "Could not find any files to upload",
+        "UploadRemoteDir": "uploading files to remote directory: %s",
+        "UploadSucceedMsg": "FTP upload successful %s",
+        "UploadSucceedRes": "FTP upload successful",
+        "UploadFailed": "Ftp Upload failed"
+    }
+}

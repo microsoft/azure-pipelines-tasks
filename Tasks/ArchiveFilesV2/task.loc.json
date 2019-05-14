@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/archive-files",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -17,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 127,
+    "Minor": 151,
     "Patch": 0
   },
   "groups": [
@@ -92,6 +93,24 @@
       "required": true,
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.replaceExistingArchive",
+      "groupName": "archive"
+    },
+    {
+      "name": "verbose",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.verbose",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.verbose",
+      "groupName": "archive"
+    },
+    {
+      "name": "quiet",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.quiet",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.quiet",
       "groupName": "archive"
     }
   ],

@@ -3,6 +3,8 @@
   "name": "DecryptFile",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/decrypt-file",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
     "Build",
@@ -15,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 142,
+    "Minor": 151,
     "Patch": 0
   },
   "groups": [
@@ -78,6 +80,5 @@
   "messages": {
     "OpenSSLReturnCode": "ms-resource:loc.messages.OpenSSLReturnCode",
     "OpenSSLFailed": "ms-resource:loc.messages.OpenSSLFailed"
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }

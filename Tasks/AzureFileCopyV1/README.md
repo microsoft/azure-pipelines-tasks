@@ -12,13 +12,13 @@ Please report a problem at [Developer Community Forum](https://developercommunit
 
 **Azure Subscription**
 
-To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Azure Pipelines using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab. 
+To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Azure Pipelines using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab.
 
- - For Azure Classic resources use 'Azure' endpoint type with Certificate or Credentials based authentication. If you are using credentials based auth, ensure that the credentials are for a [**work account**](https://azure.microsoft.com/en-in/pricing/member-offers/msdn-benefits-details/work-accounts-faq/) because Microsoft accounts like [**joe@live.com**](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup) or [**joe@hotmail.com**](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup) are not supported. 
+ - For Azure Classic resources use 'Azure' endpoint type with Certificate or Credentials based authentication. If you are using credentials based auth, ensure that the credentials are for a [**work account**](https://azure.microsoft.com/en-in/pricing/member-offers/msdn-benefits-details/work-accounts-faq/) because Microsoft accounts like [**joe@live.com**](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/DeployAzureResourceGroup) or [**joe@hotmail.com**](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/DeployAzureResourceGroup) are not supported.
 
  - For [ARM](https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/), use 'Azure Resource Manager' endpoint type, for more details follow the steps listed in the link [here](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
 
- - If you are using 'Azure' endpoint type with Certificate based authentication or 'Azure Resource Manager' endpoint type, the task automatically filters appropriate [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) storage account and the newer [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) storage accounts and other fields viz. Resource Group/Cloud Service & Virtual Machines. 
+ - If you are using 'Azure' endpoint type with Certificate based authentication or 'Azure Resource Manager' endpoint type, the task automatically filters appropriate [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) storage account and the newer [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) storage accounts and other fields viz. Resource Group/Cloud Service & Virtual Machines.
 
  - *Note*: If you use a Credentials-based 'Azure' endpoint we don't automatically populate the **Storage** & **Resource Group/Cloud Service** fields for you yet. You will need to manually enter values for now. With Certificate-based endpoints we query Azure and populate these dropdowns for you.
 
@@ -55,7 +55,7 @@ The task can copy files to the Azure Virtual Machines that are created either us
 | [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) | Azure Endpoint type with Certificate or credentials based authentication on work accounts | [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) Azure Virtual machines |
 When copying the files from the blob container to the Azure VMs, Windows Remote Management (WinRM) HTTPS protocol is used. This requires that the WinRM HTTPS service is properly setup on the VMs and a certificate is also installed on the VMs.
 
-To dynamically deploy Azure resource groups with virtual machines in them use the [Azure Resource Group Deployment](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) task. The task has a sample template that can setup the WinRM HTTPS protocol on the virtual machines, open the 5986 port in the Firewall, and install the test certificate. After this the virtual machines are ready for use in the deployment task.
+To dynamically deploy Azure resource groups with virtual machines in them use the [Azure Resource Group Deployment](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2) task. The task has a sample template that can setup the WinRM HTTPS protocol on the virtual machines, open the 5986 port in the Firewall, and install the test certificate. After this the virtual machines are ready for use in the deployment task.
 
 If the VMs have been created without opening the WinRM HTTPS ports then follow the steps below to setup the machine for WinRM HTTPS:
 
@@ -71,11 +71,11 @@ The parameters of the task are described in details, including examples, to show
 
 * **Azure Subscription**: The name of Azure subscription, where the Azure storage account is located. The storage account is accessed using the stored credentials of the Azure account in the Services tab.
 
-* **Source**: The source of the files. As described above using pre-defined system variables like $(Build.Repository.LocalPath) make it easy to specify the location of the build on the Build Automation Agent machine. The variables resolve to the working folder on the agent machine, when the task is run on it. Note that wild cards like *\.zip are not supported. 
+* **Source**: The source of the files. As described above using pre-defined system variables like $(Build.Repository.LocalPath) make it easy to specify the location of the build on the Build Automation Agent machine. The variables resolve to the working folder on the agent machine, when the task is run on it. Note that wild cards like *\.zip are not supported.
 
-* **Storage Account**: The name of an existing storage account in the Azure Subscription specified earlier. 
+* **Storage Account**: The name of an existing storage account in the Azure Subscription specified earlier.
 
-* **Destination**: The target for copying the files and is either an Azure blob or VMs. The section below details the parameters that need to be filled-out if the target is Azure VMs. 
+* **Destination**: The target for copying the files and is either an Azure blob or VMs. The section below details the parameters that need to be filled-out if the target is Azure VMs.
 
  * **Resource Group**: Name of the resource group that contains the Azure VMs.
 
@@ -87,28 +87,28 @@ The parameters of the task are described in details, including examples, to show
 
  * **Password**: Administrator Username password for all the Azure VMs in the Resource Group.
 
- * **Destination Folder**: The folder in the Azure VMs where the files will be copied to. Environment variables are also supported like $env:windir, $env:systemroot etc. An example of the destination folder is $env:windir\FabrikamFibre\Web or c:\FabrikamFibre. 
+ * **Destination Folder**: The folder in the Azure VMs where the files will be copied to. Environment variables are also supported like $env:windir, $env:systemroot etc. An example of the destination folder is $env:windir\FabrikamFibre\Web or c:\FabrikamFibre.
 
- * **Clean Target**: Selecting this option will clean the destination folder prior to copying the files to it. 
+ * **Clean Target**: Selecting this option will clean the destination folder prior to copying the files to it.
 
- * **Copy in Parallel**: Selecting this option will copy files to all the VMs in the Resource Group in-parallel, hence speeding up the process of copying. 
+ * **Copy in Parallel**: Selecting this option will copy files to all the VMs in the Resource Group in-parallel, hence speeding up the process of copying.
 
- * **Test Certificate**: This setting is required while copying the files from the blob containers to the Azure VMs. The copy operation is initiated over the WinRM HTTPS protocol and if the VM has a test certificate installed on it, then select this option to  to skip the validation that the server certificate is signed by a trusted certificate authority (CA).  
+ * **Test Certificate**: This setting is required while copying the files from the blob containers to the Azure VMs. The copy operation is initiated over the WinRM HTTPS protocol and if the VM has a test certificate installed on it, then select this option to  to skip the validation that the server certificate is signed by a trusted certificate authority (CA).
 
-* **Destination**: If the target is Azure blob then the following parameters need to be filled out. 
+* **Destination**: If the target is Azure blob then the following parameters need to be filled out.
 
- * **Container Name**: The name of the container where the files will be copied to. If the container does not exist then a new one will be created with the name provided in this parameter. 
+ * **Container Name**: The name of the container where the files will be copied to. If the container does not exist then a new one will be created with the name provided in this parameter.
 
  * **Blob Prefix**: A prefix for the Blobs that can be used to filter the blobs like appending the Build number to the blobs, so that all the blobs with the same build number can be downloaded from the Container.
 
 * **Additional Arguments**: Additional [AzCopy.exe](https://azure.microsoft.com/en-us/documentation/articles/storage-use-azcopy/) arguments that will be applied for uploading to blob and same will be applied for downloading while copy to VM.
 * **Blob Destination**: Supported additional arguments for copy to blob are /BlobType:, /Pattern:, /L, /Z, /XN, /A, /IA:, /XA:, /NC:, /DestType: and /SetContentType.
- 
+
  * **VM Destination**: Supported additional parameters for copy to VM are /Pattern:, /L, /NC: and /XN.
- 
+
 * **Output Parameters**
  * **Storage Container Uri**: When copying files to an Azure container, if you want the task to return the Uri of the container where the files were copied to, provide the name of the output variable you would like to use.
- 
+
  * **Storage Container SasToken**: When copying files to an Azure container, if you want the task to create and return a SasToken for the container, provide the name of the output variable you would like to use.  By default, this token expires after 4 hours.
 
 * **Enable Copy Prerequisites**: Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing copy operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs.
@@ -116,11 +116,11 @@ The parameters of the task are described in details, including examples, to show
 ### Known Limitations :
 
 * If resource group contains both [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) and [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) VMs, then based on connection type copy operation will be performed on either resource manager or classic VMs. For Cert-based connection and Cred-based connection copy operation will be performed only on classic VMs and for SPN-based connection copy operation will be performed only on resource manager VMs.
-* To use Premium storage account, which only support Azure page blobs, please pass /BlobType:Page as additional arguments. 
+* To use Premium storage account, which only support Azure page blobs, please pass /BlobType:Page as additional arguments.
 
 ### Earlier Versions
 
-If you want to work with earlier version of this task, please refer README.cmd present at https://github.com/Microsoft/vsts-tasks/tree/releases/m94/Tasks/AzureFileCopy/. 
+If you want to work with earlier version of this task, please refer README.cmd present at https://github.com/Microsoft/azure-pipelines-tasks/tree/releases/m94/Tasks/AzureFileCopy/.
 
 ### Supported Azure and AzureRM module versions:
 |  Azure Pipelines/TFS Release  |  Recommended Azure Version  |  Other Supported Versions |

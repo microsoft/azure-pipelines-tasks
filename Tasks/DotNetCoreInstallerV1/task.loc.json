@@ -1,0 +1,152 @@
+{
+  "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
+  "name": "DotNetCoreInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 2
+  },
+  "preview": "true",
+  "satisfies": [
+    "DotNetCore"
+  ],
+  "demands": [],
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "packageType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.packageType",
+      "defaultValue": "sdk",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packageType",
+      "options": {
+        "runtime": "Only Runtime",
+        "sdk": "SDK (contains runtime)"
+      }
+    },
+    {
+      "name": "version",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.version",
+      "defaultValue": "2.2.x",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.version"
+    },
+    {
+      "name": "includePreviewVersions",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.includePreviewVersions",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.includePreviewVersions"
+    },
+    {
+      "name": "installationPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.installationPath",
+      "defaultValue": "$(Agent.ToolsDirectory)/dotnet",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.installationPath"
+    },
+    {
+      "name": "performMultiLevelLookup",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.performMultiLevelLookup",
+      "groupName": "advanced",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.performMultiLevelLookup"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "dotnetcoreinstaller.js"
+    }
+  },
+  "messages": {
+    "ToolFailed": "ms-resource:loc.messages.ToolFailed",
+    "ImplicitVersionNotSupported": "ms-resource:loc.messages.ImplicitVersionNotSupported",
+    "getMachinePlatformFailed": "ms-resource:loc.messages.getMachinePlatformFailed",
+    "getDownloadUrlsFailed": "ms-resource:loc.messages.getDownloadUrlsFailed",
+    "UsingCachedTool": "ms-resource:loc.messages.UsingCachedTool",
+    "CheckingToolCache": "ms-resource:loc.messages.CheckingToolCache",
+    "InstallingAfresh": "ms-resource:loc.messages.InstallingAfresh",
+    "GettingDownloadUrl": "ms-resource:loc.messages.GettingDownloadUrl",
+    "CouldNotDetectPlatform": "ms-resource:loc.messages.CouldNotDetectPlatform",
+    "NullDownloadUrls": "ms-resource:loc.messages.NullDownloadUrls",
+    "DownloadingUrl": "ms-resource:loc.messages.DownloadingUrl",
+    "ExtractingPackage": "ms-resource:loc.messages.ExtractingPackage",
+    "CachingTool": "ms-resource:loc.messages.CachingTool",
+    "SuccessfullyInstalled": "ms-resource:loc.messages.SuccessfullyInstalled",
+    "ToolToInstall": "ms-resource:loc.messages.ToolToInstall",
+    "PrimaryPlatform": "ms-resource:loc.messages.PrimaryPlatform",
+    "LegacyPlatform": "ms-resource:loc.messages.LegacyPlatform",
+    "WarningVersionNotFound": "ms-resource:loc.messages.WarningVersionNotFound",
+    "CouldNotDownload": "ms-resource:loc.messages.CouldNotDownload",
+    "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
+    "PrependGlobalToolPath": "ms-resource:loc.messages.PrependGlobalToolPath",
+    "VersionsFileMalformed": "ms-resource:loc.messages.VersionsFileMalformed",
+    "MatchingVersionNotFound": "ms-resource:loc.messages.MatchingVersionNotFound",
+    "UnableToAccessPath": "ms-resource:loc.messages.UnableToAccessPath",
+    "VersionCanNotBeDownloadedFromUrl": "ms-resource:loc.messages.VersionCanNotBeDownloadedFromUrl",
+    "CopyingFoldersIntoPath": "ms-resource:loc.messages.CopyingFoldersIntoPath",
+    "CopyingFilesIntoPath": "ms-resource:loc.messages.CopyingFilesIntoPath",
+    "FailedToCopyTopLevelFiles": "ms-resource:loc.messages.FailedToCopyTopLevelFiles",
+    "FailedWhileInstallingVersionAtPath": "ms-resource:loc.messages.FailedWhileInstallingVersionAtPath",
+    "ExplicitVersionRequired": "ms-resource:loc.messages.ExplicitVersionRequired",
+    "VersionFoundInCache": "ms-resource:loc.messages.VersionFoundInCache",
+    "VersionNotFoundInCache": "ms-resource:loc.messages.VersionNotFoundInCache",
+    "CreatingInstallationCompeleteFile": "ms-resource:loc.messages.CreatingInstallationCompeleteFile",
+    "CannotFindRuntimeVersionForCompletingInstallation": "ms-resource:loc.messages.CannotFindRuntimeVersionForCompletingInstallation",
+    "PathNotFoundException": "ms-resource:loc.messages.PathNotFoundException",
+    "VersionIsLocalLatest": "ms-resource:loc.messages.VersionIsLocalLatest",
+    "VersionIsNotLocalLatest": "ms-resource:loc.messages.VersionIsNotLocalLatest",
+    "DownloadUrlForMatchingOsNotFound": "ms-resource:loc.messages.DownloadUrlForMatchingOsNotFound",
+    "ExceptionWhileDownloadOrReadReleasesIndex": "ms-resource:loc.messages.ExceptionWhileDownloadOrReadReleasesIndex",
+    "MatchingVersionForUserInputVersion": "ms-resource:loc.messages.MatchingVersionForUserInputVersion",
+    "UrlForReleaseChannelNotFound": "ms-resource:loc.messages.UrlForReleaseChannelNotFound",
+    "NoSuitableChannelWereFound": "ms-resource:loc.messages.NoSuitableChannelWereFound",
+    "DetectingPlatform": "ms-resource:loc.messages.DetectingPlatform",
+    "FailedInDetectingMachineArch": "ms-resource:loc.messages.FailedInDetectingMachineArch",
+    "runtimeVersionPropertyNotFound": "ms-resource:loc.messages.runtimeVersionPropertyNotFound",
+    "VersionNotFound": "ms-resource:loc.messages.VersionNotFound",
+    "VersionNotAllowed": "ms-resource:loc.messages.VersionNotAllowed",
+    "VersionsCanNotBeCompared": "ms-resource:loc.messages.VersionsCanNotBeCompared",
+    "FileNameNotCorrectCompleteFileName": "ms-resource:loc.messages.FileNameNotCorrectCompleteFileName",
+    "ChannelVersionsNotComparable": "ms-resource:loc.messages.ChannelVersionsNotComparable",
+    "LookingForVersionInChannel": "ms-resource:loc.messages.LookingForVersionInChannel",
+    "FallingBackToAdjacentChannels": "ms-resource:loc.messages.FallingBackToAdjacentChannels",
+    "ErrorWhileSettingDotNetToolPath": "ms-resource:loc.messages.ErrorWhileSettingDotNetToolPath",
+    "RequiredChannelVersionForSpec": "ms-resource:loc.messages.RequiredChannelVersionForSpec",
+    "ErrorWhileGettingVersionFromChannel": "ms-resource:loc.messages.ErrorWhileGettingVersionFromChannel",
+    "ComparingInstalledFolderVersions": "ms-resource:loc.messages.ComparingInstalledFolderVersions",
+    "ComparingInstalledFileVersions": "ms-resource:loc.messages.ComparingInstalledFileVersions",
+    "InvalidChannelObject": "ms-resource:loc.messages.InvalidChannelObject",
+    "ReleasesIndexBodyIncorrect": "ms-resource:loc.messages.ReleasesIndexBodyIncorrect",
+    "InvalidVersionObject": "ms-resource:loc.messages.InvalidVersionObject",
+    "FilesDataIsIncorrectInVersion": "ms-resource:loc.messages.FilesDataIsIncorrectInVersion",
+    "VersionFilesDataIncorrect": "ms-resource:loc.messages.VersionFilesDataIncorrect",
+    "VersionInformationNotComplete": "ms-resource:loc.messages.VersionInformationNotComplete",
+    "FailedWhileExtractingPacakge": "ms-resource:loc.messages.FailedWhileExtractingPacakge"
+  }
+}

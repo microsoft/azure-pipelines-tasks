@@ -5,38 +5,30 @@ import * as utils from "./utils/FileHelper";
 import kubectlutility = require("utility-common/kubectlutility");
 
 export class Connection {
-
-    constructor(skipAuth?: boolean) {
-        this._skipAuth = !!skipAuth;
-    }
-
+    public ignoreSSLErrors: boolean;
+    
     public open() {
-        let connectionType = tl.getInput("connectionType", true);
-        if (connectionType === "None" || this._skipAuth) {
-            return;
-        }
-
         let kubeconfig: string, kubeconfigFile: string;
-        let kubernetesServiceEndpoint = tl.getInput("kubernetesServiceEndpoint", true);
-        let authorizationType = tl.getEndpointDataParameter(kubernetesServiceEndpoint, 'authorizationType', true);
+        let kubernetesServiceConnection = tl.getInput("kubernetesServiceConnection", true);
+
+        let authorizationType = tl.getEndpointDataParameter(kubernetesServiceConnection, 'authorizationType', true);
 
         if (!authorizationType || authorizationType === "Kubeconfig") {
-            kubeconfig = kubectlutility.getKubeconfigForCluster(kubernetesServiceEndpoint);
+            kubeconfig = kubectlutility.getKubeconfigForCluster(kubernetesServiceConnection);
         }
-        else if (authorizationType === "ServiceAccount") {
-            kubeconfig = kubectlutility.createKubeconfig(kubernetesServiceEndpoint);
+        else if (authorizationType === "ServiceAccount" || authorizationType === "AzureSubscription") {
+            kubeconfig = kubectlutility.createKubeconfig(kubernetesServiceConnection);
         }
 
         kubeconfigFile = path.join(utils.getNewUserDirPath(), "config");
         fs.writeFileSync(kubeconfigFile, kubeconfig);
         tl.setVariable("KUBECONFIG", kubeconfigFile);
+        this.ignoreSSLErrors = tl.getEndpointDataParameter(kubernetesServiceConnection, 'acceptUntrustedCerts', true) === "true";
     }
 
     public close() {
-        if (!this._skipAuth && tl.getVariable("KUBECONFIG")) {
+        if (tl.getVariable("KUBECONFIG")) {
             tl.setVariable("KUBECONFIG", "");
         }
     }
-
-    private _skipAuth: boolean;
 }

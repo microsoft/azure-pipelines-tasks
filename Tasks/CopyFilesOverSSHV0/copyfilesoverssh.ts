@@ -6,7 +6,7 @@ import { SshHelper } from './sshhelper';
 // This method will find the list of matching files for the specified contents
 // This logic is the same as the one used by CopyFiles task except for allowing dot folders to be copied
 // This will be useful to put in the task-lib
-function getFilesToCopy(sourceFolder, contents: string[]): string[] {
+function getFilesToCopy(sourceFolder: string, contents: string[]): string[] {
     // include filter
     const includeContents: string[] = [];
     // exclude filter

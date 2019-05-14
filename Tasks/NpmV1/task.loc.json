@@ -3,13 +3,14 @@
   "name": "Npm",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 147,
-    "Patch": 2
+    "Minor": 152,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",

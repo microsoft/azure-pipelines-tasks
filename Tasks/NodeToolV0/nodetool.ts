@@ -138,7 +138,7 @@ async function acquireNode(version: string): Promise<string> {
     catch (err)
     {
         if (err['httpStatusCode'] && 
-            err['httpStatusCode'] === '404')
+            err['httpStatusCode'] == 404)
         {
             return await acquireNodeFromFallbackLocation(version);
         }
@@ -199,7 +199,7 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
     }
     catch (err) {
         if (err['httpStatusCode'] && 
-            err['httpStatusCode'] === '404')
+            err['httpStatusCode'] == 404)
         {
             exeUrl = `https://nodejs.org/dist/v${version}/node.exe`;
             libUrl = `https://nodejs.org/dist/v${version}/node.lib`;

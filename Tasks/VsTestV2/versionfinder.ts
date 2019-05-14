@@ -1,7 +1,6 @@
-import * as tl from 'vsts-task-lib/task';
-import tr = require('vsts-task-lib/toolrunner');
+import * as tl from 'azure-pipelines-task-lib/task';
+import tr = require('azure-pipelines-task-lib/toolrunner');
 import * as path from 'path';
-import * as Q from 'q';
 import * as models from './models';
 import * as version from './vstestversion';
 import * as utils from './helpers';
@@ -11,6 +10,13 @@ const regedit = require('regedit');
 
 export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
     const vstestexeLocation = locateVSTestConsole(testConfig);
+
+    // Temporary hack for 16.0. All this code will be removed once we migrate to the Hydra flow
+    if (testConfig.vsTestVersion === '16.0') {
+        testConfig.vsTestVersionDetails = new version.VSTestVersion(vstestexeLocation, 16, 0, 0);
+        return;
+    }
+
     const vstestLocationEscaped = vstestexeLocation.replace(/\\/g, '\\\\');
     const wmicTool = tl.tool('wmic');
     const wmicArgs = ['datafile', 'where', 'name=\''.concat(vstestLocationEscaped, '\''), 'get', 'Version', '/Value'];
@@ -84,10 +90,17 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
     if (testConfig.vsTestVersion.toLowerCase() === 'latest') {
         // latest
         tl.debug('Searching for latest Visual Studio');
-        const vstestconsole15Path = getVSTestConsole15Path();
-        if (vstestconsole15Path) {
+
+        let vstestconsolePath = getVSTestConsolePath('16.0', '17.0');
+        if (vstestconsolePath) {
+            testConfig.vsTestVersion = "16.0";
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
+        }
+
+        vstestconsolePath = getVSTestConsolePath('15.0', '16.0');
+        if (vstestconsolePath) {
             testConfig.vsTestVersion = "15.0";
-            return vstestconsole15Path;
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow');
         }
 
         // fallback
@@ -99,10 +112,18 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
 
     const vsVersion: number = parseFloat(testConfig.vsTestVersion);
 
+    if (vsVersion === 16.0) {
+        const vstestconsolePath = getVSTestConsolePath('16.0', '17.0');
+        if (vstestconsolePath) {
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
+        }
+        throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
+    }
+
     if (vsVersion === 15.0) {
-        const vstestconsole15Path = getVSTestConsole15Path();
-        if (vstestconsole15Path) {
-            return vstestconsole15Path;
+        const vstestconsolePath = getVSTestConsolePath('15.0', '16.0');
+        if (vstestconsolePath) {
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow');
         }
         throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
     }
@@ -111,15 +132,29 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
     return getVSTestLocation(vsVersion);
 }
 
-export function getVSTestConsole15Path(): string {
-    const vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
-    vswhereTool.line('-version [15.0,16.0) -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath');
+export function getVSTestConsolePath(versionLowerLimit : string, versionUpperLimit : string): string {
+    let vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
+
+    console.log(tl.loc('LookingForVsInstalltion'));
+    vswhereTool.line(`-version [${versionLowerLimit},${versionUpperLimit}) -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath`);
     let vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
     vsPath = utils.Helper.trimString(vsPath);
-    tl.debug('Visual Studio 15.0 or higher installed path: ' + vsPath);
     if (!utils.Helper.isNullOrWhitespace(vsPath)) {
-        return path.join(vsPath, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow');
+        tl.debug('Visual Studio 15.0 or higher installed path: ' + vsPath);
+        return vsPath;
     }
+
+    // look for build tool installation if full VS not present
+    console.log(tl.loc('LookingForBuildToolsInstalltion'));
+    vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
+    vswhereTool.line(`-version [${versionLowerLimit},${versionUpperLimit}) -latest -products * -requires Microsoft.VisualStudio.Component.TestTools.BuildTools -property installationPath`);
+    vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+    vsPath = utils.Helper.trimString(vsPath);
+    if (!utils.Helper.isNullOrWhitespace(vsPath)) {
+        tl.debug('Build tools installed path: ' + vsPath);
+        return vsPath;
+    }
+
     return null;
 }
 

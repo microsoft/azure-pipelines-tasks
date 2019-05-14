@@ -32,5 +32,6 @@
   "loc.messages.PS_FormattedCommand": "Formatierter Befehl: {0}",
   "loc.messages.PS_InvalidErrorActionPreference": "ErrorActionPreference \"{0}\" ungültig. Der Wert muss \"Stop\", \"Continue\" oder \"SilentlyContinue\" sein.",
   "loc.messages.PS_InvalidFilePath": "Ungültiger Dateipfad \"{0}\". Ein Pfad zu einer PS1-Datei ist erforderlich.",
-  "loc.messages.PS_UnableToDetermineExitCode": "Unerwartete Ausnahme. Der Exitcode von PowerShell konnte nicht bestimmt werden."
+  "loc.messages.PS_UnableToDetermineExitCode": "Unerwartete Ausnahme. Der Exitcode von PowerShell konnte nicht bestimmt werden.",
+  "loc.messages.PS_InvalidTargetType": "TargetType \"{0}\" ungültig. Der Wert muss \"filePath\" oder \"inline\" sein.",
 }

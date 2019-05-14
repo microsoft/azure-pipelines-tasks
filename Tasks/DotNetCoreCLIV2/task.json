@@ -2,9 +2,9 @@
     "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
     "name": "DotNetCoreCLI",
     "friendlyName": ".NET Core",
-    "description": "Build, test, package, or publish a dotnet application, or run a custom dotnet command. For package commands, supports NuGet.org and authenticated feeds like Package Management and MyGet.",
+    "description": "Build, test, package, or publish a dotnet application, or run a custom dotnet command",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=832194",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/dotnet-core-cli",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=832194)",
     "category": "Build",
     "visibility": [
@@ -17,7 +17,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 147,
+        "Minor": 152,
         "Patch": 1
     },
     "minimumAgentVersion": "2.115.0",
@@ -131,7 +131,16 @@
             "defaultValue": "true",
             "visibleRule": "command = test",
             "required": false,
-            "helpMarkDown": "Enabling this option will generate a test results TRX file in `$(Agent.TempDirectory)` and results will be published to the server. <br>This option appends `--logger trx --results-directory $(Agent.TempDirectory)` to the command line arguments. <br><br>Code coverage can be collected by adding `--collect “Code coverage”` option to the command line arguments. This is currently only available on the Windows platform."
+            "helpMarkDown": "Enabling this option will generate a test results TRX file in `$(Agent.TempDirectory)` and results will be published to the server. <br>This option appends `--logger trx --results-directory $(Agent.TempDirectory)` to the command line arguments. <br><br>Code coverage can be collected by adding `--collect \"Code coverage\"` option to the command line arguments. This is currently only available on the Windows platform."
+        },
+        {
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test run title",
+            "defaultValue": "",
+            "visibleRule": "command = test",
+            "required": false,
+            "helpMarkDown": "Provide a name for the test run."
         },
         {
             "name": "zipAfterPublish",
@@ -173,9 +182,9 @@
                 "vstsFeed"
             ],
             "type": "pickList",
-            "label": "Use packages from this Azure Artifacts/TFS feed",
+            "label": "Use packages from this Azure Artifacts feed",
             "defaultValue": "",
-            "helpMarkDown": "Include the selected feed in the generated NuGet.config. You must have Package Management installed and licensed to select a feed here.",
+            "helpMarkDown": "Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.",
             "required": "false",
             "groupName": "restoreAuth",
             "visibleRule": "selectOrConfig = select",
@@ -290,7 +299,7 @@
             "label": "Target feed",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select a feed hosted in this organization. You must have Package Management installed and licensed to select a feed here.",
+            "helpMarkDown": "Select a feed hosted in this organization. You must have Azure Artifacts installed and licensed to select a feed here.",
             "visibleRule": "command = push && nuGetFeedType = internal"
         },
         {
@@ -355,6 +364,24 @@
             "label": "Do not build",
             "defaultValue": "false",
             "helpMarkDown": "Don't build the project before packing. Corresponds to the --no-build command line parameter.",
+            "required": false,
+            "visibleRule": "command = pack"
+        },
+        {
+            "name": "includesymbols",
+            "type": "boolean",
+            "label": "Include Symbols",
+            "defaultValue": "false",
+            "helpMarkDown": "Additionally creates symbol NuGet packages. Corresponds to the --include-symbols command line parameter.",
+            "required": false,
+            "visibleRule": "command = pack"
+        },
+        {
+            "name": "includesource",
+            "type": "boolean",
+            "label": "Include Source",
+            "defaultValue": "false",
+            "helpMarkDown": "Includes source code in the package. Corresponds to the --include-source command line parameter.",
             "required": false,
             "visibleRule": "command = pack"
         },
@@ -463,14 +490,14 @@
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "feedPublish",
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {

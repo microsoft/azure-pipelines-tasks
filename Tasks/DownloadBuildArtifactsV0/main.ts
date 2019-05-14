@@ -3,15 +3,17 @@ var url = require('url');
 var fs = require('fs');
 
 import * as tl from 'vsts-task-lib/task';
-import { IBuildApi } from './vso-node-api/BuildApi';
-import { IRequestHandler } from './vso-node-api/interfaces/common/VsoBaseInterfaces';
-import { WebApi, getHandlerFromToken } from './vso-node-api/WebApi';
-import { BuildStatus, BuildResult, BuildQueryOrder, Build, BuildDefinitionReference } from './vso-node-api/interfaces/BuildInterfaces';
+import { IBuildApi } from 'azure-devops-node-api/BuildApi';
+import { IRequestHandler } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
+import { WebApi, getHandlerFromToken } from 'azure-devops-node-api/WebApi';
+import { BuildStatus, BuildResult, BuildQueryOrder, Build, BuildDefinitionReference } from 'azure-devops-node-api/interfaces/BuildInterfaces';
 
 import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
 import * as providers from 'artifact-engine/Providers';
 import * as webHandlers from 'artifact-engine/Providers/typed-rest-client/Handlers';
+
+var DecompressZip = require('decompress-zip');
 
 var taskJson = require('./task.json');
 
@@ -82,15 +84,11 @@ async function main(): Promise<void> {
         var accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'AccessToken', false);
         var credentialHandler: IRequestHandler = getHandlerFromToken(accessToken);
         var webApi: WebApi = new WebApi(endpointUrl, credentialHandler);
-        var debugMode: string = tl.getVariable('System.Debug');
-        var isVerbose: boolean = debugMode ? debugMode.toLowerCase() != 'false' : false;
-        var parallelLimit: number = +tl.getInput("parallelizationLimit", false);
         var retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : 4;
 
         var templatePath: string = path.join(__dirname, 'vsts.handlebars.txt');
-        var buildApi: IBuildApi = webApi.getBuildApi();
+        var buildApi: IBuildApi = await webApi.getBuildApi();
         var artifacts = [];
-        var itemPattern: string = tl.getInput("itemPattern", false) || '**';
 
         if (isCurrentBuild) {
             projectId = tl.getVariable("System.TeamProjectId");
@@ -167,7 +165,7 @@ async function main(): Promise<void> {
         // verify that buildId belongs to the definition selected
         if (definitionId) {
             var build: Build;
-            if (buildVersionToDownload != "specific") {
+            if (buildVersionToDownload != "specific" && !triggeringBuildFound) {
                 var resultFilter = BuildResult.Succeeded;
                 if (allowPartiallySucceededBuilds) {
                     resultFilter |= BuildResult.PartiallySucceeded;
@@ -248,44 +246,62 @@ async function main(): Promise<void> {
         if (artifacts) {
             var downloadPromises: Array<Promise<any>> = [];
             artifacts.forEach(async function (artifact, index, artifacts) {
-                let downloaderOptions = new engine.ArtifactEngineOptions();
-                downloaderOptions.itemPattern = itemPattern;
-                downloaderOptions.verbose = isVerbose;
-
-                if (parallelLimit) {
-                    downloaderOptions.parallelProcessingLimit = parallelLimit;
-                }
+                let downloaderOptions = configureDownloaderOptions();
 
                 if (artifact.resource.type.toLowerCase() === "container") {
-                    let downloader = new engine.ArtifactEngine();
-
-                    console.log(tl.loc("DownloadingContainerResource", artifact.resource.data));
-                    var containerParts = artifact.resource.data.split('/');
-
-                    if (containerParts.length < 3) {
-                        throw new Error(tl.loc("FileContainerInvalidArtifactData"));
-                    }
-                    
-                    var containerId = parseInt(containerParts[1]);
-                    var containerPath = containerParts.slice(2,containerParts.length).join('/');
-
-                    if (containerPath == "/") {
-                        //container REST api oddity. Passing '/' as itemPath downloads the first file instead of returning the meta data about the all the files in the root level. 
-                        //This happens only if the first item is a file.
-                        containerPath = ""
-                    }
-
-                    var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + encodeURIComponent(containerPath) + "&isShallow=true&api-version=4.1-preview.4";
-                    console.log(tl.loc("DownloadArtifacts", artifact.name, itemsUrl));
-
-                    var variables = {};
                     var handler = new webHandlers.PersonalAccessTokenCredentialHandler(accessToken);
-                    var webProvider = new providers.WebProvider(itemsUrl, templatePath, variables, handler);
-                    var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
+                    var isPullRequestFork = tl.getVariable("SYSTEM.PULLREQUEST.ISFORK");
+                    var isPullRequestForkBool = isPullRequestFork ? isPullRequestFork.toLowerCase() == 'true' : false;
 
-                    downloadPromises.push(downloader.processItems(webProvider, fileSystemProvider, downloaderOptions).catch((reason) => {
-                        reject(reason);
-                    }));
+                    if (isPullRequestForkBool) {
+                        const archiveUrl: string =  endpointUrl + "/" + projectId + "/_apis/build/builds/" + buildId + "/artifacts?artifactName=" + artifact.name + "&$format=zip";
+                        console.log(tl.loc("DownloadArtifacts", artifact.name, archiveUrl));
+
+                        var zipLocation = path.join(downloadPath, artifact.name + ".zip");
+                        await getZipFromUrl(archiveUrl, zipLocation, handler, downloaderOptions);
+
+                        var unzipPromise = unzip(zipLocation, downloadPath);
+                        unzipPromise.catch((error) => {
+                            throw error;
+                        });
+
+                        downloadPromises.push(unzipPromise);
+                        await unzipPromise;
+
+                        if (tl.exist(zipLocation)) {
+                            tl.rmRF(zipLocation);
+                        }
+                    }
+                    else {
+                        let downloader = new engine.ArtifactEngine();
+
+                        console.log(tl.loc("DownloadingContainerResource", artifact.resource.data));
+                        var containerParts = artifact.resource.data.split('/');
+    
+                        if (containerParts.length < 3) {
+                            throw new Error(tl.loc("FileContainerInvalidArtifactData"));
+                        }
+                        
+                        var containerId = parseInt(containerParts[1]);
+                        var containerPath = containerParts.slice(2,containerParts.length).join('/');
+    
+                        if (containerPath == "/") {
+                            //container REST api oddity. Passing '/' as itemPath downloads the first file instead of returning the meta data about the all the files in the root level. 
+                            //This happens only if the first item is a file.
+                            containerPath = ""
+                        }
+    
+                        var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + encodeURIComponent(containerPath) + "&isShallow=true&api-version=4.1-preview.4";
+                        console.log(tl.loc("DownloadArtifacts", artifact.name, itemsUrl));
+    
+                        var variables = {};
+                        var webProvider = new providers.WebProvider(itemsUrl, templatePath, variables, handler);
+                        var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
+    
+                        downloadPromises.push(downloader.processItems(webProvider, fileSystemProvider, downloaderOptions).catch((reason) => {
+                            reject(reason);
+                        }));
+                    }
                 }
                 else if (artifact.resource.type.toLowerCase() === "filepath") {
                     let downloader = new engine.ArtifactEngine();
@@ -342,6 +358,42 @@ function executeWithRetriesImplementation(operationName: string, operation: () =
             currentRetryCount = currentRetryCount - 1;
             setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject), 4 * 1000);
         }
+    });
+}
+
+async function getZipFromUrl(artifactArchiveUrl: string, localPathRoot: string, handler: webHandlers.PersonalAccessTokenCredentialHandler, downloaderOptions: engine.ArtifactEngineOptions) {
+    var downloader = new engine.ArtifactEngine();
+    var zipProvider = new providers.ZipProvider(artifactArchiveUrl, handler);
+    var filesystemProvider = new providers.FilesystemProvider(localPathRoot);
+
+    await downloader.processItems(zipProvider, filesystemProvider, downloaderOptions)
+}
+
+function configureDownloaderOptions(): engine.ArtifactEngineOptions {
+    var downloaderOptions = new engine.ArtifactEngineOptions();
+    downloaderOptions.itemPattern = tl.getInput('itemPattern', false) || "**";
+    downloaderOptions.parallelProcessingLimit = +tl.getVariable("release.artifact.download.parallellimit") || 8;
+    var debugMode = tl.getVariable('System.Debug');
+    downloaderOptions.verbose = debugMode ? debugMode.toLowerCase() != 'false' : false;
+
+    return downloaderOptions;
+}
+
+export async function unzip(zipLocation: string, unzipLocation: string): Promise<void> {
+    await new Promise<void>(function (resolve, reject) {
+        tl.debug('Extracting ' + zipLocation + ' to ' + unzipLocation);
+
+        var unzipper = new DecompressZip(zipLocation);
+        unzipper.on('error', err => {
+            return reject(tl.loc("ExtractionFailed", err))
+        });
+        unzipper.on('extract', log => {
+            tl.debug('Extracted ' + zipLocation + ' to ' + unzipLocation + ' successfully');
+            return resolve();
+        });
+        unzipper.extract({
+            path: unzipLocation
+        });
     });
 }
 

@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "下载包",
+  "loc.helpMarkDown": "需要安装包管理扩展",
+  "loc.description": "从 Azure Artifacts 或 TFS 中的包管理源下载包。\r\n需要包管理扩展。",
+  "loc.instanceNameFormat": "下载包",
+  "loc.input.label.feed": "源",
+  "loc.input.help.feed": "选择包源",
+  "loc.input.label.definition": "包",
+  "loc.input.help.definition": "选择要下载的包，当前仅支持 NuGet 包.",
+  "loc.input.label.version": "版本",
+  "loc.input.help.version": "包版本",
+  "loc.input.label.downloadPath": "目标目录",
+  "loc.input.help.downloadPath": "代理计算机上用于下载包的路径",
+  "loc.messages.FailedToGetPackageMetadata": "未能获取包元数据，出现错误: %s",
+  "loc.messages.FailedToDownloadNugetPackage": "未能从 %s 下载 NuGet 包，出现如下错误: %s",
+  "loc.messages.PackageDownloadSuccessful": "包下载成功",
+  "loc.messages.CredentialsNotFound": "无法确定要连接至包管理服务的凭据。",
+  "loc.messages.StartingDownloadOfPackage": "开始将 NuGet 包 %s 下载到位置 %s",
+  "loc.messages.ExtractingNugetPackage": "将 NuGet 包 %s 提取至目录 %s",
+  "loc.messages.PackageTypeNotSupported": "使用此任务仅可下载 NuGet 包类型。",
+  "loc.messages.ExtractionFailed": "未能提取包，出现错误: %s"
+}

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "File Transform",
+  "loc.friendlyName": "File transform",
   "loc.helpMarkDown": "File transformation and variable substitution task: Update tokens in your XML based configuration files and then replaces those tokens with variable values. <br/>Currently only XML, JSON file formats are supported for variable substitution.",
-  "loc.description": "File Transform",
+  "loc.description": "Replace tokens with variable values in XML or JSON configuration files",
   "loc.instanceNameFormat": "File Transform: $(Package)",
   "loc.group.displayName.VariableSubstitution": "Variable Substitution",
   "loc.input.label.folderPath": "Package or folder",
@@ -9,7 +9,7 @@
   "loc.input.label.enableXmlTransform": "XML transformation",
   "loc.input.help.enableXmlTransform": "Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform.",
   "loc.input.label.xmlTransformationRules": "Transformation rules",
-  "loc.input.help.xmlTransformationRules": "Provide new line separated list of transformation file rules using the syntax: <br/>-transform <path to the transform file>  -xml <path to the source configuration file>",
+  "loc.input.help.xmlTransformationRules": "Provide new line separated list of transformation file rules using the syntax: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>",
   "loc.input.label.fileType": "File format",
   "loc.input.help.fileType": "Provide file format on which substitution has to be perfformed<br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. Variable Substitution is run after config transforms.<br/>To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build or release pipeline (or release pipeline's environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables.",
   "loc.input.label.targetFiles": "Target files",

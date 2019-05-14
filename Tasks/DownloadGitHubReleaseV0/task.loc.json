@@ -1,0 +1,110 @@
+{
+  "id": "263abc27-4582-4174-8789-af599697778e",
+  "name": "DownloadGitHubRelease",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-github-release",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "demands": [],
+  "version": {
+    "Major": 0,
+    "Minor": 151,
+    "Patch": 2
+  },
+  "minimumAgentVersion": "1.99.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "preview": true,
+  "inputs": [
+    {
+      "name": "connection",
+      "type": "connectedService:github:OAuth,PersonalAccessToken",
+      "label": "ms-resource:loc.input.label.connection",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connection"
+    },
+    {
+      "name": "userRepository",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.userRepository",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.userRepository"
+    },
+    {
+      "name": "defaultVersionType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.defaultVersionType",
+      "defaultValue": "latest",
+      "required": true,
+      "options": {
+        "latest": "Latest Release",
+        "specificVersion": "Specific Version",
+        "specificTag": "Specific Tag"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.defaultVersionType"
+    },
+    {
+      "name": "version",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.version",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "defaultVersionType != latest",
+      "helpMarkDown": "ms-resource:loc.input.help.version"
+    },
+    {
+      "name": "itemPattern",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.itemPattern",
+      "defaultValue": "**",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
+    },
+    {
+      "name": "downloadPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.downloadPath",
+      "defaultValue": "$(System.ArtifactsDirectory)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.downloadPath"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "userRepository",
+      "endpointId": "$(connection)",
+      "dataSourceName": "UserRepositories",
+      "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }"
+    },
+    {
+      "target": "version",
+      "endpointId": "$(connection)",
+      "dataSourceName": "Releases",
+      "resultTemplate": "{ \"Value\" : \"{{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{id}}{{/equals}}\", \"DisplayValue\" : \" {{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{#if name}}{{name}}{{else}}{{tag_name}}{{/if}}{{/equals}}{{#if prerelease}} (Pre-release){{/if}}\" }",
+      "parameters": {
+        "repositoryName": "$(userRepository)",
+        "releaseByTagName": "$(defaultVersionType)"
+      }
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "DownloadArtifacts": "ms-resource:loc.messages.DownloadArtifacts",
+    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
+    "InvalidRelease": "ms-resource:loc.messages.InvalidRelease"
+  }
+}

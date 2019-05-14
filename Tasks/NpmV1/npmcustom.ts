@@ -1,4 +1,4 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import { NpmTaskInput, RegistryLocation } from './constants';
 import { INpmRegistry, NpmRegistry } from 'packaging-common/npm/npmregistry';
@@ -40,7 +40,7 @@ export async function getCustomRegistries(packagingLocation: PackagingLocation):
         case RegistryLocation.Feed:
             tl.debug(tl.loc('UseFeed'));
             const feedId = tl.getInput(NpmTaskInput.CustomFeed, true);
-            npmRegistries.push(await NpmRegistry.FromFeedId(packagingLocation.DefaultPackagingUri, feedId));
+            npmRegistries.push(await NpmRegistry.FromFeedId(packagingLocation.DefaultPackagingUri, feedId, null));
             break;
         case RegistryLocation.Npmrc:
             tl.debug(tl.loc('UseNpmrc'));

@@ -3,12 +3,13 @@
   "name": "npmAuthenticate",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm-authenticate",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 147,
+    "Minor": 152,
     "Patch": 0
   },
   "runsOn": [

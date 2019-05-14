@@ -3,6 +3,7 @@
   "name": "Chef",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/chef",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -17,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 20
+    "Patch": 21
   },
   "deprecated": true,
   "demands": [

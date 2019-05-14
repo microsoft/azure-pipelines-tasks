@@ -3,6 +3,7 @@
   "name": "PublishSymbols",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/index-sources-publish-symbols",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -13,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 15
   },
   "minimumAgentVersion": "1.95.0",
   "groups": [

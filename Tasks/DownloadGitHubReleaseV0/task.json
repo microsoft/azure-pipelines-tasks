@@ -1,0 +1,110 @@
+{
+  "id": "263abc27-4582-4174-8789-af599697778e",
+  "name": "DownloadGitHubRelease",
+  "friendlyName": "Download GitHub Release",
+  "description": "Downloads a GitHub Release from a repository",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-github-release",
+  "helpMarkDown": "[More Information](https://aka.ms/AA3x715)",
+  "category": "Utility",
+  "demands": [],
+  "version": {
+    "Major": 0,
+    "Minor": 151,
+    "Patch": 2
+  },
+  "minimumAgentVersion": "1.99.0",
+  "instanceNameFormat": "Download GitHub Release",
+  "preview": true,
+  "inputs": [
+    {
+      "name": "connection",
+      "type": "connectedService:github:OAuth,PersonalAccessToken",
+      "label": "GitHub Connection",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "GitHub service connection"
+    },
+    {
+      "name": "userRepository",
+      "type": "pickList",
+      "label": "Repository",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "GitHub repository full name"
+    },
+    {
+      "name": "defaultVersionType",
+      "type": "pickList",
+      "label": "Default version",
+      "defaultValue": "latest",
+      "required": true,
+      "options": {
+        "latest": "Latest Release",
+        "specificVersion": "Specific Version",
+        "specificTag": "Specific Tag"
+      },
+      "helpMarkDown": "Download assets from latest release or specific release version/tag"
+    },
+    {
+      "name": "version",
+      "type": "pickList",
+      "label": "Release",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "defaultVersionType != latest",
+      "helpMarkDown": "Release version/tag to download"
+    },
+    {
+      "name": "itemPattern",
+      "type": "string",
+      "label": "Item Pattern",
+      "defaultValue": "**",
+      "required": false,
+      "helpMarkDown": "Minimatch pattern to filter files to be downloaded. To download all files within release use **"
+    },
+    {
+      "name": "downloadPath",
+      "type": "string",
+      "label": "Destination directory",
+      "defaultValue": "$(System.ArtifactsDirectory)",
+      "required": true,
+      "helpMarkDown": "Path on the agent machine where the release assets will be downloaded"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "userRepository",
+      "endpointId": "$(connection)",
+      "dataSourceName": "UserRepositories",
+      "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }"
+    },
+    {
+      "target": "version",
+      "endpointId": "$(connection)",
+      "dataSourceName": "Releases",
+      "resultTemplate": "{ \"Value\" : \"{{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{id}}{{/equals}}\", \"DisplayValue\" : \" {{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{#if name}}{{name}}{{else}}{{tag_name}}{{/if}}{{/equals}}{{#if prerelease}} (Pre-release){{/if}}\" }",
+      "parameters": {
+        "repositoryName": "$(userRepository)",
+        "releaseByTagName": "$(defaultVersionType)"
+      }
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "DownloadArtifacts": "Downloading assets of release '%s' from: %s",
+    "ArtifactsSuccessfullyDownloaded": "Successfully downloaded release assets to '%s'",
+    "InvalidRelease": "The release version/tag input '%s' is not valid"
+  }
+}

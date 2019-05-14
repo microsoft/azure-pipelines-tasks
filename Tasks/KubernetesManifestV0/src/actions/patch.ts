@@ -1,12 +1,12 @@
 "use strict";
 
 import tl = require('vsts-task-lib/task');
-import { Kubectl } from "utility-common/kubectl-object-model";
+import { Kubectl } from "kubernetes-common/kubectl-object-model";
 import * as utils from "../utils/utilities";
 import * as constants from "../models/constants";
 
-export async function patch() {
-    let kubectl = new Kubectl(await utils.getKubectl(), tl.getInput("namespace", false));
+export async function patch(ignoreSslErrors?: boolean) {
+    let kubectl = new Kubectl(await utils.getKubectl(), tl.getInput("namespace", false), ignoreSslErrors);
     let kind = tl.getInput("kind", false).toLowerCase();
     let name = tl.getInput("name", false);
     let filePath = tl.getInput("resourceFileToPatch", false);

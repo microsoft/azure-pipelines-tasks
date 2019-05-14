@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 import { publishEvent } from './cieventlogger';
+import * as ci from './cieventlogger';
 let uuid = require('uuid');
 
 export class TestResultsPublisher {
@@ -67,9 +68,8 @@ export class TestResultsPublisher {
             fs.writeFileSync(responseFilePath, fileContent);
         } catch (ex) {
             // Log telemetry and return null path
-            publishEvent({
-                "exception": ex
-            });
+            ci.addToConsolidatedCi('exception', ex);
+            
             tl.warning("Exception while writing to response file: " + ex);
             return null;
         }
@@ -105,11 +105,19 @@ export class TestResultsPublisher {
         envVars = this.addToProcessEnvVars(envVars, 'testruntitle', this.testRunTitle);
         envVars = this.addToProcessEnvVars(envVars, 'testrunsystem', this.testRunSystem);
         envVars = this.addToProcessEnvVars(envVars, 'projectname', tl.getVariable('System.TeamProject'));
+        envVars = this.addToProcessEnvVars(envVars, 'pullrequesttargetbranch', tl.getVariable('System.PullRequest.TargetBranch'));
         envVars = this.addToProcessEnvVars(envVars, 'owner', tl.getVariable('Build.RequestedFor'));
         envVars = this.addToProcessEnvVars(envVars, 'buildid', tl.getVariable('Build.BuildId'));
         envVars = this.addToProcessEnvVars(envVars, 'builduri', tl.getVariable('Build.BuildUri'));
         envVars = this.addToProcessEnvVars(envVars, 'releaseuri', tl.getVariable('Release.ReleaseUri'));
         envVars = this.addToProcessEnvVars(envVars, 'releaseenvironmenturi', tl.getVariable('Release.EnvironmentUri'));
+        envVars = this.addToProcessEnvVars(envVars, 'phasename', tl.getVariable('System.PhaseName'));
+        envVars = this.addToProcessEnvVars(envVars, 'phaseattempt', tl.getVariable('System.PhaseAttempt'));
+        envVars = this.addToProcessEnvVars(envVars, 'stagename', tl.getVariable('System.StageName'));
+        envVars = this.addToProcessEnvVars(envVars, 'stageattempt', tl.getVariable('System.StageAttempt'));
+        envVars = this.addToProcessEnvVars(envVars, 'jobname', tl.getVariable('System.JobName'));
+        envVars = this.addToProcessEnvVars(envVars, 'jobattempt', tl.getVariable('System.JobAttempt'));
+        envVars = this.addToProcessEnvVars(envVars, 'jobidentifier', tl.getVariable('System.JobIdentifier'));
         return envVars;
     }
 

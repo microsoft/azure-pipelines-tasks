@@ -1,0 +1,15 @@
+{
+    "common": [
+        {
+            "module": "../Common/packaging-common",
+            "type": "node",
+            "compile": true
+        }
+    ],
+    "cp": [
+        {
+            "source": "externals",
+            "options": "-R"
+        }
+    ]
+} 

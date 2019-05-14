@@ -1,12 +1,12 @@
 import * as auth from "packaging-common/nuget/Authentication";
 import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner2";
 import * as nutil from "packaging-common/nuget/Utility";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 import peParser = require("packaging-common/pe-parser/index");
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as telemetry from "utility-common/telemetry";
-import {IExecSyncResult} from "vsts-task-lib/toolrunner";
+import {IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
 
 class NuGetExecutionOptions {
     constructor(

@@ -2,8 +2,8 @@
   "id": "80F3F6A0-82A6-4A22-BA7A-E5B8C541B9B8",
   "name": "AzureIoTEdge",
   "friendlyName": "Azure IoT Edge",
-  "description": "Azure IoT Edge pipelines tasks for continuous integration(build and push docker image) and continuous deployment(create Edge deployment on Azure)",
-  "helpUrl": "https://aka.ms/azure-iot-edge-ci-cd-docs",
+  "description": "Build and deploy an Azure IoT Edge image",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/azure-iot-edge",
   "helpMarkDown": "Visit the [documentation](https://aka.ms/azure-iot-edge-ci-cd-docs) for help",
   "category": "Build",
   "visibility": [
@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 1,
+    "Patch": 0
   },
   "preview": true,
   "instanceNameFormat": "Azure IoT Edge - $(action)",
@@ -42,6 +42,7 @@
       "options": {
         "Build module images": "Build module images",
         "Push module images": "Push module images",
+        "Generate deployment manifest": "Generate deployment manifest",
         "Deploy to IoT Edge devices": "Deploy to IoT Edge devices"
       },
       "helpMarkDown": "Select an Azure IoT Edge action.\n **Build module images** will only build modules (You can use it to check compilation error).\n **Push module images** will push modules to container registry.\n **Deploy to IoT Edge devices** will deploy the generated deployment file to IoT Hub. (We recommend to put **Deploy** task in release pipeline)."
@@ -165,7 +166,7 @@
       "type": "filePath",
       "label": ".template.json file",
       "defaultValue": "deployment.template.json",
-      "visibleRule": "action = Build module images || action = Push module images",
+      "visibleRule": "action = Build module images || action = Push module images || action = Generate deployment manifest",
       "required": true,
       "helpMarkDown": "The path of Azure IoT Edge solution **.template.json**. This file defines the modules and routes in Azure IoT Edge solution, file name must end with **.template.json**"
     },
@@ -175,7 +176,7 @@
       "label": "Default platform",
       "defaultValue": "amd64",
       "required": true,
-      "visibleRule": "action = Build module images || action = Push module images",
+      "visibleRule": "action = Build module images || action = Push module images || action = Generate deployment manifest",
       "options": {
         "amd64": "amd64",
         "windows-amd64": "windows-amd64",
@@ -185,6 +186,19 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "In your **.template.json**, you can leave the modules platform unspecified. For these modules, the **default platform** will be used."
+    },
+    {
+      "name": "fillRegistryCredential",
+      "type": "pickList",
+      "label": "Add registry credential to deployment manifest",
+      "defaultValue": "true",
+      "required": true,
+      "visibleRule": "action = Push module images",
+      "options": {
+        "true": "true",
+        "false": "false"
+      },
+      "helpMarkDown": "Add registry credential for pushing docker images to deployment manifest"
     },
     {
       "name": "bypassModules",
@@ -237,7 +251,12 @@
     "DeploymentFileNotFound": "Deployment file can't be found. Please ensure Path of deployment file is correctly set in the task.",
     "ValidDeploymentFileNotFound": "Cannot find a valid deployment file. Please ensure Path of deployment file is correctly set in the task.",
     "AzureSdkNotFound": "Azure SDK not found",
-    "RootPathNotExist": "The Root path %s does not exist"
+    "RootPathNotExist": "The Root path %s does not exist",
+    "SkipModuleImageValidation": "SKIP_MODULE_IMAGE_VALIDATION set to true, skipping module image validation.",
+    "InvalidRegistryCredentialWarning": "Failed to login %s with given credential. %s",
+    "CheckModuleImageExistenceError": "%s does not exist or the credential is not set correctly. Error: %s",
+    "StartGenerateDeploymentManifest": "Start generating deployment manifest...",
+    "FinishGenerateDeploymentManifest": "Finished generating deployment manifest."
   },
   "OutputVariables": [{
     "name" : "DEPLOYMENT_FILE_PATH",

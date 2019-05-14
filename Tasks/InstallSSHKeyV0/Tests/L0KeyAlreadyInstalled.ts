@@ -1,7 +1,6 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import * as ma from 'azure-pipelines-task-lib/mock-answer';
+import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import path = require('path');
-import fs = require('fs');
 
 let taskPath = path.join(__dirname, '..', 'preinstallsshkey.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -12,7 +11,6 @@ tr.setInput('sshPublicKey', sshPublicKey);
 tr.setInput('hostName', 'host name entry');
 
 process.env['AGENT_VERSION'] = '2.117.0';
-process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
 process.env['AGENT_HOMEDIRECTORY'] = '';
 
 let secureFileHelperMock = require('securefiles-common/securefiles-common-mock');

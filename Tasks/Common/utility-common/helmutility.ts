@@ -19,7 +19,7 @@ export async function getHelm(version?: string) {
     }
 }
 
-async function downloadHelm(version?: string): Promise<string> {
+export async function downloadHelm(version?: string): Promise<string> {
     if (!version) version = await getStableHelmVersion();
     var cachedToolpath = toolLib.findLocalTool(helmToolName, version);
     if (!cachedToolpath) {

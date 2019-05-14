@@ -3,6 +3,7 @@
   "name": "CMake",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/cmake",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -14,7 +15,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 130,
+    "Minor": 151,
     "Patch": 0
   },
   "minimumAgentVersion": "1.91.0",

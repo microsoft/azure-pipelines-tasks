@@ -43,7 +43,8 @@ export class ChangeLog {
                 let latestReleaseTag: string = latestReleaseResponse.body[GitHubAttributes.tagName];
                 tl.debug("latest release tag: " + latestReleaseTag);
                 
-                console.log(tl.loc("FetchLatestPublishReleaseSuccess"));
+                let latestReleaseUrl: string = latestReleaseResponse.body[GitHubAttributes.htmlUrl];
+                console.log(tl.loc("FetchLatestPublishReleaseSuccess", latestReleaseUrl));
                 startCommitSha = await this._getCommitForTag(githubEndpointToken, repositoryName, latestReleaseTag);
             }
             else {

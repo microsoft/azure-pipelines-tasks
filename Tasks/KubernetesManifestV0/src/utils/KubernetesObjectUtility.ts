@@ -2,10 +2,20 @@
 import fs = require("fs");
 import tl = require('vsts-task-lib/task');
 import yaml = require('js-yaml');
-import { Resource } from "utility-common/kubectl-object-model";
-import { KubernetesWorkload } from "../models/constants"
+import { Resource } from "kubernetes-common/kubectl-object-model";
+import { KubernetesWorkload, recognizedWorkloadTypes } from "../models/constants";
 import * as utils from "../utils/utilities"
 import { StringComparer } from "../utils/utilities"
+
+export function isDeploymentEntity(kind: string): boolean {
+    if (!kind) {
+        throw (tl.loc("ResourceKindNotDefined"));
+    }
+
+    return recognizedWorkloadTypes.some(function (elem) {
+        return utils.isEqual(elem, kind, utils.StringComparer.OrdinalIgnoreCase);
+    });
+}
 
 export function getReplicaCount(inputObject: any): any {
     if (!inputObject) {
@@ -82,6 +92,44 @@ export function updateObjectAnnotations(inputObject: any, newAnnotations: Map<st
     }
 }
 
+export function updateImagePullSecrets(inputObject: any, newImagePullSecrets: string[], override: boolean) {
+    if (!inputObject) {
+        return;
+    }
+
+    if (!inputObject.spec) {
+        return;
+    }
+
+    if (!newImagePullSecrets) {
+        return;
+    }
+
+    var newImagePullSecretsObjects = [];
+
+    newImagePullSecrets.forEach(imagePullSecret => {
+        var newImagePullSecretsObject = {
+            "name": imagePullSecret
+        };
+
+        newImagePullSecretsObjects.push(newImagePullSecretsObject);
+    });
+
+    var existingImagePullSecretObjects: any = getImagePullSecrets(inputObject);
+
+    if (override) {
+        existingImagePullSecretObjects = newImagePullSecretsObjects;
+    } else {
+        if (!existingImagePullSecretObjects) {
+            existingImagePullSecretObjects = new Array();
+        }
+
+        existingImagePullSecretObjects = existingImagePullSecretObjects.concat(newImagePullSecretsObjects);
+    }
+
+    setImagePullSecrets(inputObject, existingImagePullSecretObjects);
+}
+
 export function updateSpecLabels(inputObject: any, newLabels: Map<string, string>, override: boolean) {
     if (!inputObject) {
         throw (tl.loc("NullInputObject"));
@@ -95,8 +143,7 @@ export function updateSpecLabels(inputObject: any, newLabels: Map<string, string
         return;
     }
 
-    var existingLabels = utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase) ?
-        inputObject.metadata.labels : getSpecLabels(inputObject);
+    var existingLabels = getSpecLabels(inputObject);
 
     if (override) {
         existingLabels = newLabels;
@@ -148,7 +195,6 @@ export function updateSelectorLabels(inputObject: any, newLabels: Map<string, st
 }
 
 export function getResources(filePaths: string[], filterResourceTypes: string[]): Resource[] {
-
     if (!filePaths) {
         return [];
     }
@@ -158,8 +204,8 @@ export function getResources(filePaths: string[], filterResourceTypes: string[])
     filePaths.forEach((filePath: string) => {
         var fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
-
-            if (filterResourceTypes.filter(type => utils.isEqual(inputObject.kind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
+            let inputObjectKind = inputObject ? inputObject.kind : "";
+            if (filterResourceTypes.filter(type => utils.isEqual(inputObjectKind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
                 var resource = {
                     type: inputObject.kind,
                     name: inputObject.metadata.name
@@ -173,16 +219,58 @@ export function getResources(filePaths: string[], filterResourceTypes: string[])
 
 function getSpecLabels(inputObject: any) {
 
-    if (!!inputObject && !!inputObject.spec && !!inputObject.spec.template && !!inputObject.spec.template.metadata) {
+    if (!inputObject) {
+        return null;
+    }
+
+    if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
+        return inputObject.metadata.labels
+    }
+    if (!!inputObject.spec && !!inputObject.spec.template && !!inputObject.spec.template.metadata) {
         return inputObject.spec.template.metadata.labels;
     }
 
     return null;
 }
 
+function getImagePullSecrets(inputObject: any) {
+
+    if (!inputObject || !inputObject.spec) {
+        return null;
+    }
+
+    if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
+        return inputObject.spec.imagePullSecrets
+    }
+
+    if (!!inputObject.spec.template && !!inputObject.spec.template.spec) {
+        return inputObject.spec.template.spec.imagePullSecrets;
+    }
+
+    return null;
+}
+
+function setImagePullSecrets(inputObject: any, newImagePullSecrets: any) {
+    if (!inputObject || !inputObject.spec || !newImagePullSecrets) {
+        return;
+    }
+
+    if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
+        inputObject.spec.imagePullSecrets = newImagePullSecrets;
+        return;
+    }
+
+    if (!!inputObject.spec.template && !!inputObject.spec.template.spec) {
+        inputObject.spec.template.spec.imagePullSecrets = newImagePullSecrets;
+        return;
+    }
+
+    return;
+}
+
 function setSpecLabels(inputObject: any, newLabels: any) {
     var specLabels = getSpecLabels(inputObject);
-    if (!!specLabels) {
+    if (!!newLabels) {
         specLabels = newLabels;
     }
 }

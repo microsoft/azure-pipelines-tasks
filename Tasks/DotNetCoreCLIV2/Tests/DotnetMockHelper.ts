@@ -1,4 +1,4 @@
-import tmrm = require('vsts-task-lib/mock-run');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import VersionInfoVersion from 'packaging-common/pe-parser/VersionInfoVersion'
 import {VersionInfo} from 'packaging-common/pe-parser/VersionResource'
 
@@ -80,9 +80,13 @@ export class DotnetMockHelper {
             getNuGetFeedRegistryUrl(
                 packagingCollectionUrl: string,
                 feedId: string,
+                project: string,
                 nuGetVersion: VersionInfo,
                 accessToken?: string,
                 useSession?: boolean) {
+                if (project) {
+                    console.log("Using project scope " + project);
+                }
                 if (useSession) {
                     console.log("Using session registry url");
                 }
@@ -122,8 +126,8 @@ export class DotnetMockHelper {
     }
 
     public registerToolRunnerMock() {
-        var mtt = require('vsts-task-lib/mock-toolrunner');
-        this.tmr.registerMock('vsts-task-lib/toolrunner', mtt);
+        var mtt = require('azure-pipelines-task-lib/mock-toolrunner');
+        this.tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtt);
     }
 
     public RegisterLocationServiceMocks() {

@@ -1,4 +1,4 @@
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 export class NuGetConfigHelper2 {
     tempNugetConfigPath = NuGetConfigHelper2.getTempNuGetConfigBasePath() + "\\NuGet\\tempNuGet_.config";

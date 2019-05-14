@@ -1,0 +1,200 @@
+{
+  "id": "B832BEC5-8C27-4FEF-9FB8-6BEC8524AD8A",
+  "name": "AppCenterDistribute",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/app-center-distribute",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 151,
+    "Patch": 0
+  },
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "groups": [
+    {
+      "name": "symbols",
+      "displayName": "ms-resource:loc.group.displayName.symbols",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "serverEndpoint",
+      "type": "connectedService:vsmobilecenter",
+      "label": "ms-resource:loc.input.label.serverEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serverEndpoint"
+    },
+    {
+      "name": "appSlug",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.appSlug",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.appSlug"
+    },
+    {
+      "name": "app",
+      "aliases": [
+        "appFile"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.app",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.app"
+    },
+    {
+      "name": "symbolsType",
+      "aliases": [
+        "symbolsOption"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.symbolsType",
+      "required": false,
+      "defaultValue": "Apple",
+      "groupName": "symbols",
+      "options": {
+        "Apple": "Apple"
+      }
+    },
+    {
+      "name": "symbolsPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.symbolsPath",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.symbolsPath",
+      "visibleRule": "symbolsType == AndroidNative || symbolsType = Windows"
+    },
+    {
+      "name": "pdbPath",
+      "aliases": [
+        "symbolsPdbFiles"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.pdbPath",
+      "defaultValue": "**/*.pdb",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pdbPath",
+      "visibleRule": "symbolsType = UWP"
+    },
+    {
+      "name": "dsymPath",
+      "aliases": [
+        "symbolsDsymFiles"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.dsymPath",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.dsymPath",
+      "visibleRule": "symbolsType = Apple"
+    },
+    {
+      "name": "mappingTxtPath",
+      "aliases": [
+        "symbolsMappingTxtFile"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.mappingTxtPath",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.mappingTxtPath",
+      "visibleRule": "symbolsType = AndroidJava"
+    },
+    {
+      "name": "packParentFolder",
+      "aliases": [
+        "symbolsIncludeParentDirectory"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.packParentFolder",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.packParentFolder"
+    },
+    {
+      "name": "releaseNotesSelection",
+      "aliases": [
+        "releaseNotesOption"
+      ],
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.releaseNotesSelection",
+      "required": true,
+      "defaultValue": "input",
+      "options": {
+        "input": "Enter Release Notes",
+        "file": "Select Release Notes File"
+      }
+    },
+    {
+      "name": "releaseNotesInput",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.releaseNotesInput",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesInput",
+      "visibleRule": "releaseNotesSelection = input",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"
+      }
+    },
+    {
+      "name": "releaseNotesFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.releaseNotesFile",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesFile",
+      "visibleRule": "releaseNotesSelection = file"
+    },
+    {
+      "name": "isMandatory",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isMandatory",
+      "defaultValue": "false",
+      "required": false
+    },
+    {
+      "name": "destinationIds",
+      "aliases": [
+        "distributionGroupId",
+        "destinationId"
+      ],
+      "type": "string",
+      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.destinationIds",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationIds",
+      "required": false
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "appcenterdistribute.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "CannotDecodeEndpoint": "ms-resource:loc.messages.CannotDecodeEndpoint",
+    "NoResponseFromServer": "ms-resource:loc.messages.NoResponseFromServer",
+    "FailedToUploadFile": "ms-resource:loc.messages.FailedToUploadFile",
+    "NoApiTokenFound": "ms-resource:loc.messages.NoApiTokenFound",
+    "InvalidDestinationInput": "ms-resource:loc.messages.InvalidDestinationInput",
+    "Succeeded": "ms-resource:loc.messages.Succeeded",
+    "CannotFindAnyFile": "ms-resource:loc.messages.CannotFindAnyFile",
+    "FoundMultipleFiles": "ms-resource:loc.messages.FoundMultipleFiles",
+    "FailedToCreateFile": "ms-resource:loc.messages.FailedToCreateFile",
+    "FailedToFindFile": "ms-resource:loc.messages.FailedToFindFile"
+  }
+}

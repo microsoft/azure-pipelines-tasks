@@ -4,14 +4,14 @@
   "description": "Common Library to download blobs from azure storage",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
-  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "q": "1.4.1",
     "artifact-engine": "0.1.14",
