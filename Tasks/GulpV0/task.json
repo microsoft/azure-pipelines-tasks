@@ -16,11 +16,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 151,
+        "Minor": 152,
         "Patch": 0
     },
     "demands": [
-        "node.js"
+        "Node"
     ],
     "minimumAgentVersion": "1.91.0",
     "groups": [
