@@ -41,7 +41,7 @@
             "required": true,
             "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell",
             "properties": {
-                "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
             }
         },
         {
