@@ -14,7 +14,7 @@ function addLabelArgs(command: ToolRunner, labels: string[]) {
 function addLabel(hostName: string, labelName: string, variableName: string, labels: string[]): void {
     let labelValue = tl.getVariable(variableName);
     if (labelValue) {
-        let label = util.format("%s.image.%s=%s", hostName, labelName, labelValue);
+        let label = util.format("%s.image.%s=\"%s\"", hostName, labelName, labelValue);
         labels.push(label);
     }
 }
