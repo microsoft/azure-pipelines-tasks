@@ -16,10 +16,10 @@ const CANARY_SUFFIX = "-canary";
 const CANARY_LABEL_VALUE = "canary";
 const CANARY_VERSION_LABEL = "azure-pipelines/version";
 
-export function deleteCanaryDeployment(kubectl: Kubectl, manifestFilesPath: string) {
+export function deleteCanaryDeployment(kubectl: Kubectl, manifestFilePaths: string[]) {
 
     // get manifest files
-    var inputManifestFiles: string[] = utils.getManifestFiles(manifestFilesPath);
+    var inputManifestFiles: string[] = utils.getManifestFiles(manifestFilePaths);
 
     if (inputManifestFiles == null || inputManifestFiles.length == 0) {
         throw (tl.loc("ManifestFileNotFound"));
