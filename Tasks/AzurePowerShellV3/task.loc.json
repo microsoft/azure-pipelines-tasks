@@ -72,7 +72,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM",
       "properties": {
-        "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
+        "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
       }
     },
     {
