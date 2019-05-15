@@ -14,7 +14,7 @@
   "groups": [],
   "demands": [],
   "preview": true,
-  "minimumAgentVersion": "2.152.0",
+  "minimumAgentVersion": "2.150.0",
   "inputs": [
     {
       "name": "buildType",
@@ -145,7 +145,7 @@
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.downloadPath",
-      "defaultValue": "$(System.ArtifactsDirectory)",
+      "defaultValue": "$(Pipeline.Workspace)",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.downloadPath"
     }
