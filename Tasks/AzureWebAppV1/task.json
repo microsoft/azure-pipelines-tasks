@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 14
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -217,7 +217,7 @@
             "parameters": {
                 "osTypeSelected": "Linux"
             },
-            "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}}\"}"
+            "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}} ({{{ runtimeVersion }}})\"}"
         }
     ],
     "instanceNameFormat": "Azure Web App Deploy: $(appName)",
