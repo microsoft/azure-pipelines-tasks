@@ -29,6 +29,7 @@ export default class TaskParameters {
     public packagePath: string;
     public deployScriptPath: string;
     public deployScriptArguments: string;
+    public packerVersionString: string;
 
     public additionalBuilderParameters: {};
     public customTemplateParameters: {};
@@ -82,8 +83,12 @@ export default class TaskParameters {
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
 
                 this.graphCredentials = this._getAzureADGraphCredentials(this.serviceEndpoint);
+                
             }
-
+            
+            console.log("ResolvingPackerVersionInput")
+            this.packerVersionString = tl.getInput(constants.PackerVersionInputName);
+            tl.debug("ResolvingPackerVersionInput" + this.packerVersionString);
             console.log(tl.loc("ParsingAdditionalBuilderParameters"));
             this.additionalBuilderParameters = JSON.parse(tl.getInput("additionalBuilderParameters"));
             this.skipTempFileCleanupDuringVMDeprovision = tl.getBoolInput("skipTempFileCleanupDuringVMDeprovision", false);
