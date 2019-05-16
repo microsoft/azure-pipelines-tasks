@@ -69,8 +69,7 @@ function Format-Splat {
         if ($value -is [bool]) { "-$($key):" } else { "-$key" }
         $value
     }
-
-    $OFS = " "
+    
     "$parameters" # String join the array.
 }
 
