@@ -217,7 +217,7 @@
       "parameters": {
         "osTypeSelected": "Linux"
       },
-      "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}}\"}"
+      "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}} ({{{ runtimeVersion }}})\"}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
