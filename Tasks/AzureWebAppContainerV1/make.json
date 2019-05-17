@@ -19,7 +19,7 @@
     "rm": [
         {
             "items": [
-                "node_modules/azurermdeploycommon/node_modules/vsts-task-lib"
+                "node_modules/azurermdeploycommon/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }
