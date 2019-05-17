@@ -1,4 +1,4 @@
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import path = require("path");
 import glob = require('glob');
 import fs = require('fs');
