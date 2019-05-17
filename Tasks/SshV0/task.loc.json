@@ -3,7 +3,7 @@
   "name": "SSH",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "http://go.microsoft.com/fwlink/?LinkId=821892",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/ssh",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 148,
+    "Minor": 151,
     "Patch": 0
   },
   "demands": [],

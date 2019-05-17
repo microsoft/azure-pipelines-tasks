@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Package and deploy Helm charts",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running helm commands.",
+  "loc.description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
   "loc.instanceNameFormat": "helm $(command)",
   "loc.group.displayName.cluster": "Kubernetes Cluster",
   "loc.group.displayName.commands": "Commands",

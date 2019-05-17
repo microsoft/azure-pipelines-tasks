@@ -80,9 +80,13 @@ export class DotnetMockHelper {
             getNuGetFeedRegistryUrl(
                 packagingCollectionUrl: string,
                 feedId: string,
+                project: string,
                 nuGetVersion: VersionInfo,
                 accessToken?: string,
                 useSession?: boolean) {
+                if (project) {
+                    console.log("Using project scope " + project);
+                }
                 if (useSession) {
                     console.log("Using session registry url");
                 }

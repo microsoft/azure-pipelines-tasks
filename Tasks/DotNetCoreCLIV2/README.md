@@ -28,13 +28,15 @@ Options specific to **dotnet publish** command
 Options specific to **dotnet nuget push** command
 * **Path to NuGet package(s) to publish\*:** The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: **\*.nupkg;-:**\*.Tests.nupkg
 * **Target feed location\*:** You can choose from a feed in your Azure Pipelines account or an external NuGet server.
-* **Target feed\*:** Select a feed hosted in this account. You must have Package Management installed and licensed to select a feed here.
+* **Target feed\*:** Select a feed hosted in this account. You must have Azure Artifacts installed and licensed to select a feed here.
 
 Options specific to **dotnet pack** command
 * **Path to csproj or nuspec file(s) to pack\*:** Pattern to search for csproj or nuspec files to pack. You can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: **\*.csproj;-:**\*.Tests.csproj
 * **Configuration to Package\*:** When using a csproj file this specifies the configuration to package.
 * **Package Folder\*:** Folder where packages will be created. If empty, packages will be created alongside the csproj file.
 * **Do not build\*:** Don't build the project before packing. Corresponds to the --no-build command line parameter.
+* **Include Symbols\*:** Additionally creates symbol NuGet packages. Corresponds to the --include-symbols command line parameter.
+* **Include Source\*:** Includes source code in the package. Corresponds to the --include-source command line parameter.
 * **Automatic package versioning\*:** Cannot be used with include referenced projects. If you choose 'Use the date and time', this will generate a SemVer -compliant version formatted as X.Y.Z-ci-datetime where you choose X, Y, and Z.
 If you choose 'Use an environment variable', you must select an environment variable and ensure it contains the version number you want to use.
 If you choose 'Use the build number', this will use the build number to version your package. Note: Under Options set the build number format to be '$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
@@ -43,7 +45,7 @@ If you choose 'Use the build number', this will use the build number to version 
 
 Options specific to **dotnet restore** command
 * **Feeds to use\*:** You can either select a feed from Azure Artifacts and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.
-* **Use packages from this Azure Artifacts/TFS feed\*:** Include the selected feed in the generated NuGet.config. You must have Package Management installed and licensed to select a feed here.
+* **Use packages from this Azure Artifacts/TFS feed\*:** Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.
 * **Use packages from NuGet.org\*:** Include NuGet.org in the generated NuGet.config.
 * **Disable local cache\*:** Prevents NuGet from using packages from local machine caches.
 * **Destination directory\*:** Specifies the folder in which packages are installed. If no folder is specified, packages are restored into the default NuGet package cache.

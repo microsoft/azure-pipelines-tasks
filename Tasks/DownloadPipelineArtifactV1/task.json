@@ -1,20 +1,20 @@
 {
     "id": "61F2A582-95AE-4948-B34D-A1B3C4F6A737",
     "name": "DownloadPipelineArtifact",
-    "friendlyName": "Download Pipeline Artifact",
-    "description": "Download Pipeline Artifact",
-    "helpMarkDown": "Download named artifact from a pipeline to a local path.",
+    "friendlyName": "Download pipeline artifact",
+    "description": "Download a named artifact from a pipeline to a local path",
+    "helpMarkDown": "Download a named artifact from a pipeline to a local path",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 3
     },
     "groups": [],
     "demands": [],
     "preview": true,
-    "minimumAgentVersion": "2.147.0",
+    "minimumAgentVersion": "2.150.3",
     "inputs": [
         {
             "name": "buildType",
@@ -91,6 +91,9 @@
         },
         {
             "name": "buildId",
+            "aliases": [
+                "pipelineId"
+            ],
             "type": "pickList",
             "label": "Build",
             "defaultValue": "",
@@ -137,6 +140,9 @@
         },
         {
             "name": "downloadPath",
+            "aliases": [
+                "targetPath"
+            ],
             "type": "string",
             "label": "Destination directory",
             "defaultValue": "$(System.ArtifactsDirectory)",
@@ -195,7 +201,7 @@
     "instanceNameFormat": "Download Pipeline Artifact",
     "execution": {
         "AgentPlugin": {
-            "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV1_1_0, Agent.Plugins"
+            "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV1_1_3, Agent.Plugins"
         }
     },
     "messages": {}

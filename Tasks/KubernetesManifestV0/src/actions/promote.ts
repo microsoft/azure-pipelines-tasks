@@ -6,9 +6,9 @@ import { Kubectl } from "kubernetes-common/kubectl-object-model";
 import * as utils from "../utils/utilities";
 import * as TaskInputParameters from '../models/TaskInputParameters';
 
-export async function promote() {
+export async function promote(ignoreSslErrors?: boolean) {
 
-    let kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace);
+    let kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace, ignoreSslErrors);
 
     if (canaryDeploymentHelper.isCanaryDeploymentStrategy()) {
         // Deploy input manifests

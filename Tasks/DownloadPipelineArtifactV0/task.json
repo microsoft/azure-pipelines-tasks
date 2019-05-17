@@ -1,9 +1,9 @@
 {
     "id": "61F2A582-95AE-4948-B34D-A1B3C4F6A737",
     "name": "DownloadPipelineArtifact",
-    "friendlyName": "Download Pipeline Artifact",
-    "description": "Downloads an artifact associated with a pipeline.",
-    "helpUrl": "",
+    "friendlyName": "Download pipeline artifact",
+    "description": "Downloads an artifact associated with a pipeline",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-pipeline-artifact",
     "helpMarkDown": "Download named artifact from a pipeline to a local path.",
     "category": "Utility",
     "author": "Microsoft Corporation",
