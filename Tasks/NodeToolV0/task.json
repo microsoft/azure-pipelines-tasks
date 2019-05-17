@@ -18,7 +18,8 @@
     },
     "satisfies": [
         "Node",
-        "npm"
+        "npm",
+        "node.js"
     ],
     "demands": [],
     "instanceNameFormat": "Use Node $(versionSpec)",
