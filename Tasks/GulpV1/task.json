@@ -17,11 +17,11 @@
     "preview": true,
     "version": {
         "Major": 1,
-        "Minor": 152,
-        "Patch": 0
+        "Minor": 0,
+        "Patch": 1
     },
     "demands": [
-        "Node"
+        "node.js"
     ],
     "minimumAgentVersion": "1.91.0",
     "groups": [
