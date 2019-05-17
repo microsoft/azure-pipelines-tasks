@@ -5,14 +5,14 @@ import { Kubectl } from "kubernetes-common/kubectl-object-model";
 import * as utils from "../utils/utilities";
 import * as TaskInputParameters from '../models/TaskInputParameters';
 
-export async function deleteResources() {
+export async function deleteResources(ignoreSslErrors?: boolean) {
     let args = TaskInputParameters.args;
 
     if (args == null || args.length == 0) {
         throw (tl.loc("ArgumentsInputNotSupplied"));
     }
 
-    let kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace);
+    let kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace, ignoreSslErrors);
     var result = kubectl.delete(args);
     utils.checkForErrors([result]);
 }
