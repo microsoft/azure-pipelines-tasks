@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 152,
-    "Patch": 1
+    "Minor": 153,
+    "Patch": 0
   },
   "demands": [],
   "preview": "false",
@@ -338,6 +338,7 @@
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
     "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
+    "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning",
     "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",

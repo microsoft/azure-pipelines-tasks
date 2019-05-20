@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 152,
-    "Patch": 1
+    "Minor": 153,
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -132,6 +132,7 @@
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "CouldNotFindDockerConfig": "ms-resource:loc.messages.CouldNotFindDockerConfig",
+    "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning",
     "DeletingDockerConfigDirectory": "ms-resource:loc.messages.DeletingDockerConfigDirectory",
     "DeletingAuthDataFromDockerConfig": "ms-resource:loc.messages.DeletingAuthDataFromDockerConfig",
     "DockerRegistryNotFound": "ms-resource:loc.messages.DockerRegistryNotFound",
