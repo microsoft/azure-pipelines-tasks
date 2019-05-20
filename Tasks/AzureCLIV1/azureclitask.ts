@@ -66,28 +66,15 @@ export class azureclitask {
 
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
 
-            var resourceGroupName: string = tl.getEndpointDataParameter(connectedService, "ResourceGroupName", true);
-            var mlWorkspaceName: string = tl.getEndpointDataParameter(connectedService, "MLWorkspaceName", true);
-
             var addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
             if (!!addSpnToEnvironment && tl.getEndpointAuthorizationScheme(connectedService, true) == "ServicePrincipal") {
                 await tool.exec({
                     failOnStdErr: failOnStdErr,
-                    env: {
-                        ...process.env, ...{
-                            servicePrincipalId: this.servicePrincipalId,
-                            servicePrincipalKey: this.servicePrincipalKey,
-                            resourceGroupName: resourceGroupName,
-                            mlWorkspaceName: mlWorkspaceName
-                        }
-                    }
+                    env: { ...process.env, ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey } }
                 });
             }
             else {
-                await tool.exec({
-                    failOnStdErr: failOnStdErr,
-                    env: { ...process.env, ...{ resourceGroupName: resourceGroupName, mlWorkspaceName: mlWorkspaceName } }
-                });
+                await tool.exec({ failOnStdErr: failOnStdErr });
             }
 
         }
@@ -117,7 +104,7 @@ export class azureclitask {
             else {
                 tl.setResult(tl.TaskResult.Succeeded, tl.loc("ScriptReturnCode", 0));
             }
-
+            
             //Logout of Azure if logged in
             if (this.isLoggedIn) {
                 this.logoutAzure();
@@ -134,7 +121,7 @@ export class azureclitask {
         var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
-        if (authScheme.toLowerCase() == "serviceprincipal") {
+        if(authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
             let cliPassword: string = null;
             var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
@@ -158,11 +145,11 @@ export class azureclitask {
             //login using svn
             this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
         }
-        else if (authScheme.toLowerCase() == "managedserviceidentity") {
+        else if(authScheme.toLowerCase() == "managedserviceidentity") {
             //login using msi
             this.throwIfError(tl.execSync("az", "login --identity"), tl.loc("MSILoginFailed"));
         }
-        else {
+        else{
             throw tl.loc('AuthSchemeNotSupported', authScheme);
         }
 
@@ -188,7 +175,7 @@ export class azureclitask {
     private static setAzureCloudBasedOnServiceEndpoint(): void {
         var connectedService: string = tl.getInput("connectedServiceNameARM", true);
         var environment = tl.getEndpointDataParameter(connectedService, 'environment', true);
-        if (!!environment) {
+        if(!!environment) {
             console.log(tl.loc('SettingAzureCloud', environment));
             this.throwIfError(tl.execSync("az", "cloud set -n " + environment));
         }
