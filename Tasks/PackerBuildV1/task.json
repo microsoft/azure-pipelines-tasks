@@ -15,7 +15,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 13
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -35,8 +35,7 @@
         {
             "name": "Advanced",
             "displayName": "Advanced",
-            "isExpanded": false,
-            "visibleRule": "templateType = builtin"
+            "isExpanded": false
         },
         {
             "name": "Output",
@@ -76,14 +75,6 @@
             "properties": {
                 "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
             }
-        },
-        {
-            "name": "packerVersion",
-            "type": "string",
-            "label": "Packer Version",
-            "required": false,
-            "defaultValue": "",
-            "helpMarkDown": "Specify the version of Packer to install."
         },
         {
             "name": "ConnectedServiceName",
@@ -232,6 +223,7 @@
             "required": false,
             "defaultValue": "{\"vm_size\":\"Standard_D3_v2\"}",
             "groupName": "Advanced",
+            "visibleRule": "templateType = builtin",
             "helpMarkDown": "In auto generated Packer template mode the task creates a Packer template with an Azure builder. This builder is used to generate a machine image. You can add keys to the Azure builder to customize the generated Packer template. For example setting ssh_tty=true in case you are using a CentOS base image and you need to have a tty to run sudo.<br/>To view/edit the additional parameters in a grid, click on “…” next to text box.",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
@@ -243,7 +235,17 @@
             "label": "Skip temporary file cleanup during deprovision",
             "defaultValue": true,
             "groupName": "Advanced",
+            "visibleRule": "templateType = builtin",
             "helpMarkDown": "During deprovisioning of VM, skip clean-up of temporary files uploaded to VM. Refer [here](https://www.packer.io/docs/builders/azure.html#skip_clean)"
+        },
+        {
+            "name": "packerVersion",
+            "type": "string",
+            "label": "Packer Version",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "Advanced",
+            "helpMarkDown": "Specify the version of Packer to install."
         },
         {
             "name": "imageUri",
@@ -343,6 +345,8 @@
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
         "CreateManagedImageNotSupportedForVHDSource": "Creating managed image from a source VHD is not supported. You must set 'Base image source' input value to 'Gallery'.",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "ResolvedPackerVersion": "Resolved packer build version: %s",
+        "ResolvingPackerVersionInput": "Resolving packer build version"
     }
 }

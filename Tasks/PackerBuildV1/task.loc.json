@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 13
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -35,8 +35,7 @@
     {
       "name": "Advanced",
       "displayName": "ms-resource:loc.group.displayName.Advanced",
-      "isExpanded": false,
-      "visibleRule": "templateType = builtin"
+      "isExpanded": false
     },
     {
       "name": "Output",
@@ -76,14 +75,6 @@
       "properties": {
         "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
       }
-    },
-    {
-      "name": "packerVersion",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.packerVersion",
-      "required": false,
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.packerVersion"
     },
     {
       "name": "ConnectedServiceName",
@@ -232,6 +223,7 @@
       "required": false,
       "defaultValue": "{\"vm_size\":\"Standard_D3_v2\"}",
       "groupName": "Advanced",
+      "visibleRule": "templateType = builtin",
       "helpMarkDown": "ms-resource:loc.input.help.additionalBuilderParameters",
       "properties": {
         "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
@@ -243,7 +235,17 @@
       "label": "ms-resource:loc.input.label.skipTempFileCleanupDuringVMDeprovision",
       "defaultValue": true,
       "groupName": "Advanced",
+      "visibleRule": "templateType = builtin",
       "helpMarkDown": "ms-resource:loc.input.help.skipTempFileCleanupDuringVMDeprovision"
+    },
+    {
+      "name": "packerVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packerVersion",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.packerVersion"
     },
     {
       "name": "imageUri",
@@ -343,6 +345,8 @@
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
     "CreateManagedImageNotSupportedForVHDSource": "ms-resource:loc.messages.CreateManagedImageNotSupportedForVHDSource",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "ResolvedPackerVersion": "ms-resource:loc.messages.ResolvedPackerVersion",
+    "ResolvingPackerVersionInput": "ms-resource:loc.messages.ResolvingPackerVersionInput"
   }
 }

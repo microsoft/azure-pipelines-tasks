@@ -101,10 +101,9 @@ export default class PackerHost implements definitions.IPackerHost {
         var installedPackerPath = tl.which("packer", false);
         var installedPackerVersion = this._getPackerVersion(installedPackerPath);
         console.log(tl.loc("InstalledPackerVersion", installedPackerVersion));
+        
         var packerVersionString = this._taskParameters.packerVersionString ? this._taskParameters.packerVersionString : constants.CurrentSupportedPackerVersionString;
-        if(utils.isGreaterVersion(utils.PackerVersion.convertFromString(constants.CurrentSupportedPackerVersionString), utils.PackerVersion.convertFromString(packerVersionString))){
-            packerVersionString = constants.CurrentSupportedPackerVersionString;
-        }
+        
         if(!installedPackerVersion || 
             utils.isGreaterVersion(utils.PackerVersion.convertFromString(packerVersionString), utils.PackerVersion.convertFromString(installedPackerVersion))) {
 

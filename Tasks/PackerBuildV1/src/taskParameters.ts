@@ -86,9 +86,10 @@ export default class TaskParameters {
                 
             }
             
-            console.log("ResolvingPackerVersionInput")
+            console.log(tl.loc("ResolvingPackerVersionInput"))
             this.packerVersionString = tl.getInput(constants.PackerVersionInputName);
-            tl.debug("ResolvingPackerVersionInput" + this.packerVersionString);
+            console.log(tl.loc("ResolvedPackerVersion", this.packerVersionString));
+            
             console.log(tl.loc("ParsingAdditionalBuilderParameters"));
             this.additionalBuilderParameters = JSON.parse(tl.getInput("additionalBuilderParameters"));
             this.skipTempFileCleanupDuringVMDeprovision = tl.getBoolInput("skipTempFileCleanupDuringVMDeprovision", false);
