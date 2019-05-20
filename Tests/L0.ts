@@ -201,6 +201,81 @@ describe('General Suite', function () {
         done();
     })
 
+    it('Find unsupported satisfied capabilities', (done) => {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        var supportedCapabilities: string[] = ['AndroidSDK',
+            'ant',
+            'AzurePS',
+            'Chef',
+            'DotNetFramework',
+            'java',
+            'JDK',
+            'maven',
+            'MSBuild',
+            'MSBuild_x64',
+            'npm',
+            // This entry exists for back-compat with formerly malformed capabilities in NodeToolV0 and UseNodeV1
+            'Node',
+            'node.js',
+            'PowerShell',
+            'SqlPackage',
+            'VisualStudio',
+            'VisualStudio_IDE',
+            'VSTest',
+            'WindowsKit',
+            'WindowsSdk',
+            'cmake',
+            'cocoapods',
+            'curl',
+            'Cmd',
+            'SCVMMAdminConsole',
+            'sh',
+            'KnifeReporting',
+            'Xamarin.Android',
+            'Xamarin.iOS',
+            'xcode'];
+
+        supportedCapabilities.forEach(capability => {
+            if (supportedCapabilities.indexOf(capability.toLocaleLowerCase()) < 0) {
+                supportedCapabilities.push(capability.toLocaleLowerCase());
+            }
+        });
+
+        // Path to the _build/Tasks folder.
+        var tasksRootFolder = path.resolve(__dirname, '../Tasks');
+
+        var taskFolders: string[] = [];
+        fs.readdirSync(tasksRootFolder).forEach(folderName => {
+            if (folderName != 'Common' && fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) {
+                taskFolders.push(path.join(tasksRootFolder, folderName));
+            }
+        })
+
+        var unsupportedCapabilities: string[] = [];
+        for (var i = 0; i < taskFolders.length; i++) {
+            var taskFolder = taskFolders[i];
+            var taskjson = path.join(taskFolder, 'task.json');
+
+            var task = JSON.parse(fs.readFileSync(taskjson).toString());
+            if (task.hasOwnProperty('satisfies')) {
+                task['satisfies'].forEach(capability => {
+                    if (supportedCapabilities.indexOf(capability.toLocaleLowerCase()) < 0) {
+                        console.warn('found unsupported capability: "' + capability + '" in ' + taskjson);
+                        console.warn('fix the unit test if the new capability is added on purpose.');
+                        unsupportedCapabilities.push(capability);
+                    }
+                });
+            }
+        }
+
+        if (unsupportedCapabilities.length > 0) {
+            assert(false, 'found unsupported capabiliites, please take necessary operation to fix this. unsupported capabilities count: ' + unsupportedCapabilities.length);
+        }
+
+        done();
+    })
+
     it('Find unsupported runsOn', (done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
         var supportedRunsOn: string[] = ['Agent', 'DeploymentGroup', 'Server', 'ServerGate'];
