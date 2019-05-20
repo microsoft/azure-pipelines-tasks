@@ -1,4 +1,4 @@
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import * as telemetry from "utility-common/telemetry";
 import { Utility, GitHubAttributes, AzureDevOpsVariables, ActionType} from "./Utility";
 import { Inputs } from "./Constants";
