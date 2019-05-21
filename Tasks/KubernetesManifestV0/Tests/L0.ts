@@ -32,7 +32,6 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.imagePullSecrets] = "test-key1\ntest-key2";
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
-        console.log(tr.stdout);
         done();
     });
     it('Run successfully for deploy canary', (done: MochaDone) => {
