@@ -19,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 151,
+    "Minor": 152,
     "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
@@ -41,7 +41,10 @@
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.connectedServiceNameARM",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM"
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+      }
     },
     {
       "name": "scriptLocation",
