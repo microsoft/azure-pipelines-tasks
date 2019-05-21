@@ -101,6 +101,8 @@ Tasks/Common/VstsAzureRestHelpers_/*  @Ajay-MS  @rajatagrawal-dev
 
 Tasks/Common/azure-arm-rest/*   @vincentdass    @Ajay-MS
 
+Tasks/Common/azure-arm-rest-v2/*    @kmkumaran      @SumiranAgg     @vincentdass
+
 Tasks/Common/azure-blobstorage-artifactProvider/*   @omeshp   @hiyadav
 
 Tasks/Common/codeanalysis-common/*    @lkillgore
@@ -108,8 +110,6 @@ Tasks/Common/codeanalysis-common/*    @lkillgore
 Tasks/Common/codecoverage-tools/*     @nigurr   @lkillgore
 
 Tasks/Common/docker-common/*      @jikuma   @vithati
-
-Tasks/Common/find-files-legacy/*      @nigurr
 
 Tasks/Common/ios-signing-common/*     @madhurig   @hashtagchris
 
@@ -265,7 +265,7 @@ Tasks/PowerShellOnTargetMachinesV3/*    @kmkumaran
 
 Tasks/PublishBuildArtifactsV1/*     @madhurig
 
-Tasks/PublishCodeCoverageResultsV1/*    @madhurig
+Tasks/PublishCodeCoverageResultsV1/*    @cltshivash    @nigurr 
 
 Tasks/PublishPipelineArtifactV0/*       @mihaif
 
