@@ -127,4 +127,28 @@ describe('Kubernetes Manifests Suite', function () {
         assert(tr.failed, 'task should have failed');
         done();
     });
+    it('Run should succeed with helm bake', (done: MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.helmChart] = "helmChart";
+        process.env[shared.TestEnvVars.renderType] = "helm2";
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("set manifestsBundle") > -1, 'task should have set manifestsBundle output variable');
+        done();
+    });
+    it('Run should succeed with helm bake overriding release name', (done: MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.helmChart] = "helmChart";
+        process.env[shared.TestEnvVars.renderType] = "helm2";
+        process.env[shared.TestEnvVars.releaseName] = "newReleaseName";
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("set manifestsBundle") > -1, 'task should have set manifestsBundle output variable');
+        assert(tr.stdout.indexOf("--name newReleaseName") > -1, 'bake should have overriden release name');
+        done();
+    });
 });
