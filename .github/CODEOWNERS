@@ -101,8 +101,6 @@ Tasks/Common/VstsAzureRestHelpers_/*  @Ajay-MS  @rajatagrawal-dev
 
 Tasks/Common/azure-arm-rest/*   @vincentdass    @Ajay-MS
 
-Tasks/Common/azure-arm-rest-v2/*    @kmkumaran      @SumiranAgg     @vincentdass
-
 Tasks/Common/azure-blobstorage-artifactProvider/*   @omeshp   @hiyadav
 
 Tasks/Common/codeanalysis-common/*    @lkillgore
@@ -126,6 +124,12 @@ Tasks/Common/securefiles-common/*   @madhurig   @hashtagchris
 Tasks/Common/utility-common/*       @nishubansal    @ds-ms
 
 Tasks/Common/webdeployment-common/*   @SumiranAgg   @vincentdass
+
+Tasks/CommonV2/azure-arm-rest-v2/*    @kmkumaran      @SumiranAgg     @vincentdass
+
+Tasks/CommonV2/utility-common-v2/*       @nishubansal    @ds-ms
+
+Tasks/CommonV2/webdeployment-common-v2/*   @SumiranAgg   @vincentdass
 
 Tasks/CondaEnvironmentV0/*      @madhurig
 
