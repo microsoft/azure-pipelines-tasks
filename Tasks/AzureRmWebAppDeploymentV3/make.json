@@ -32,14 +32,5 @@
             "source": "postDeploymentScript",
             "options": "-R"
         }
-    ],
-    "rm": [
-        {
-            "items": [
-                "node_modules/azure-arm-rest/node_modules/vsts-task-lib",
-                "node_modules/webdeployment-common/node_modules/vsts-task-lib"
-            ],
-            "options": "-Rf"
-        }
     ]
 }
