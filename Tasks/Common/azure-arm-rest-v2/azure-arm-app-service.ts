@@ -242,7 +242,7 @@ export class AzureAppService {
             {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
-            }, null, '2016-08-01');
+            }, null, '2018-02-01');
             
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
@@ -266,7 +266,7 @@ export class AzureAppService {
             {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
-            }, null, '2016-08-01');
+            }, null, '2018-02-01');
             
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
