@@ -28,6 +28,7 @@ tr.setInput('containers', process.env[shared.TestEnvVars.containers] || '');
 tr.setInput('imagePullSecrets', process.env[shared.TestEnvVars.imagePullSecrets] || '');
 tr.setInput('renderType', process.env[shared.TestEnvVars.renderType] || '');
 tr.setInput('helmChart', process.env[shared.TestEnvVars.helmChart] || '');
+tr.setInput('releaseName', process.env[shared.TestEnvVars.releaseName] || '');
 tr.setInput('overrideFiles', process.env[shared.TestEnvVars.overrideFiles] || '');
 tr.setInput('overrides', process.env[shared.TestEnvVars.overrides] || '');
 tr.setInput('resourceToPatch', process.env[shared.TestEnvVars.resourceToPatch] || '');
@@ -57,11 +58,30 @@ process.env["ENDPOINT_DATA_kubernetesConnection_AUTHORIZATIONTYPE"] = process.en
 process.env["ENDPOINT_AUTH_PARAMETER_kubernetesConnection_KUBECONFIG"] = "{\"apiVersion\":\"v1\", \"clusters\": [{\"cluster\": {\"insecure-skip-tls-verify\":\"true\", \"server\":\"https://5.6.7.8\", \"name\" : \"scratch\"}}], \"contexts\": [{\"context\" : {\"cluster\": \"scratch\", \"namespace\" : \"default\", \"user\": \"experimenter\", \"name\" : \"exp-scratch\"}], \"current-context\" : \"exp-scratch\", \"kind\": \"Config\", \"users\" : [{\"user\": {\"password\": \"regpassword\", \"username\" : \"test\"}]}";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "checkPath": {},
-    "exec": {},
+    "checkPath": {
+        "helm": true
+    },
+    "exec": {
+    },
     "findMatch": {},
-    "which": {}
+    "which": {
+        "helm": "helm"
+    }
 };
+
+if (process.env[shared.TestEnvVars.action] === "bake") {
+    const command = `helm template ${process.env[shared.TestEnvVars.helmChart]} --namespace ${process.env[shared.TestEnvVars.namespace] || 'default'}`;
+    const commandWithReleaseNameOverride = `helm template ${process.env[shared.TestEnvVars.helmChart]} --name ${process.env[shared.TestEnvVars.releaseName]} --namespace ${process.env[shared.TestEnvVars.namespace] || 'default'}`;
+    
+    a.exec[command] = {
+        "code": 0,
+        stdout: "some yaml"
+    };
+    a.exec[commandWithReleaseNameOverride] = {
+        "code": 0,
+        stdout: "some yaml"
+    };
+}
 
 if (process.env[shared.TestEnvVars.isKubectlPresentOnMachine] && JSON.parse(process.env[shared.TestEnvVars.isKubectlPresentOnMachine])) {
     a.which["kubectl"] = KubectlPath;
