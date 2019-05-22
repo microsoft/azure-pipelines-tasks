@@ -1,19 +1,19 @@
 {
     "common": [
         {
-            "module": "../Common/azure-arm-rest",
+            "module": "../CommonV2/azure-arm-rest",
             "type": "node",
             "dest": "./",
             "compile": true
         },
         {
-            "module": "../Common/utility-common",
+            "module": "../CommonV2/utility-common",
             "type": "node",
             "dest": "./",
             "compile": true
         },
         {
-            "module": "../Common/webdeployment-common",
+            "module": "../CommonV2/webdeployment-common",
             "type": "node",
             "dest": "./",
             "compile" : true
@@ -22,9 +22,9 @@
     "rm": [
         {
             "items": [
-                "node_modules/azure-arm-rest/node_modules/vsts-task-lib",
+                "node_modules/azure-arm-rest/node_modules/azure-pipelines-task-lib",
                 "node_modules/webdeployment-common/node_modules/vsts-task-lib",
-                "node_modules/utility-common/node_modules/vsts-task-lib"
+                "node_modules/utility-common/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

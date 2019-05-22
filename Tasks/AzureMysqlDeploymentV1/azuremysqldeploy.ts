@@ -1,7 +1,6 @@
-import task = require('vsts-task-lib/task');
+import task = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import path = require('path');
-import { FirewallRule, FirewallAddressRange } from './models/Firewall';
 import { MysqlServer } from './models/MysqlServer';
 import { AzureMysqlTaskParameter } from './models/AzureMysqlTaskParameter';
 import { FirewallOperations } from './operations/FirewallOperations';
@@ -11,7 +10,6 @@ import { ISqlClient } from './sql/ISqlClient';
 import { MysqlClient } from './sql/MysqlClient';
 import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
 import { AzureEndpoint } from 'azure-arm-rest/azureModels';
-import { ApplicationTokenCredentials } from 'azure-arm-rest/azure-arm-common';
 
 async function run() {
     let azureMysqlTaskParameter: AzureMysqlTaskParameter;
