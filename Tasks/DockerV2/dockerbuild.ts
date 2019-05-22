@@ -42,8 +42,9 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName);
     }
 
+    const hidePII = tl.getBoolInput("hidePII");
     // get label arguments
-    let labelArguments = pipelineUtils.getDefaultLabels();
+    let labelArguments = pipelineUtils.getDefaultLabels(hidePII);
 
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");

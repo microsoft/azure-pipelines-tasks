@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 152,
+        "Minor": 153,
         "Patch": 1
     },
     "demands": [],
@@ -108,6 +108,14 @@
             "label": "Arguments",
             "groupName": "commands",
             "helpMarkDown": "Docker command options. Ex:<br> For build command,<br>--build-arg HTTP_PROXY=http://10.20.30.2:1234 --quiet"
+        },
+        {
+            "name": "hidePII",
+            "type": "boolean",
+            "label": "Hide identifiable information from image metadata",
+            "groupName": "commands",
+            "defaultValue": false,
+            "helpMarkDown": "Prevent publishing identifiable information to image metadata store"
         }
     ],
     "dataSourceBindings": [],

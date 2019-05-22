@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 152,
+    "Minor": 153,
     "Patch": 1
   },
   "demands": [],
@@ -108,6 +108,14 @@
       "label": "ms-resource:loc.input.label.arguments",
       "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    },
+    {
+      "name": "hidePII",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.hidePII",
+      "groupName": "commands",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.hidePII"
     }
   ],
   "dataSourceBindings": [],

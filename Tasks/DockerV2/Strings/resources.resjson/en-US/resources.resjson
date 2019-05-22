@@ -20,6 +20,8 @@
   "loc.input.help.tags": "A list of tags in separate lines. These tags are used in build, push and buildAndPush commands. Ex:<br><br>beta1.1<br>latest",
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Docker command options. Ex:<br> For build command,<br>--build-arg HTTP_PROXY=http://10.20.30.2:1234 --quiet",
+  "loc.input.label.hidePII": "Hide identifiable information from image metadata",
+  "loc.input.help.hidePII": "Prevent publishing identifiable information to image metadata store",
   "loc.messages.AddingNewAuthToExistingConfig": "Adding auth data for registry to Docker config file. Registry: %s.",
   "loc.messages.ContainerPatternFound": "Pattern found in Docker filepath parameter",
   "loc.messages.ContainerPatternNotFound": "No pattern found in Docker filepath parameter",

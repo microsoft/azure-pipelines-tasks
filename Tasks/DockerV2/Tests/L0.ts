@@ -1,6 +1,7 @@
 import * as assert from "assert";
 import * as tl from "vsts-task-lib/task";
 import * as dockerCommandUtils from "docker-common/dockercommandutils";
+import * as pipelineutils from "docker-common/pipelineutils";
 
 describe("DockerV2 Suite", function () {
     this.timeout(10000);
@@ -11,6 +12,21 @@ describe("DockerV2 Suite", function () {
 
     before((done) => {
         done();
+    });
+
+    after(() => {
+        delete process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'];
+        delete process.env['BUILD_SOURCEVERSION'];
+        delete process.env['RELEASE_RELEASEID'];
+        delete process.env['BUILD_REPOSITORY_URI'];
+        delete process.env['BUILD_SOURCEBRANCHNAME'];
+        delete process.env['BUILD_DEFINITIONNAME'];
+        delete process.env['BUILD_BUILDNUMBER'];
+        delete process.env['BUILD_BUILDURI'];
+        delete process.env['SYSTEM_TEAMPROJECT'];
+        delete process.env['BUILD_REPOSITORY_NAME'];
+        delete process.env['RELEASE_DEFINITIONNAME'];
+        delete process.env['RELEASE_RELEASEWEBURL'];
     });
 
     it("extractSizeInBytes should return correctly", (done: MochaDone) => {
@@ -62,4 +78,49 @@ describe("DockerV2 Suite", function () {
         assert.equal(actualImageSize.length, expectedSizeString.length, "getImageSize should return correctly for given layers");
         done();
     });
+
+    it("getDefaultLabels returns all labels when hidePII is false", (done: MochaDone) => {
+        console.log("TestCaseName: getDefaultLabels returns all labels when hidePII is false");
+        console.log("\n");
+
+        setEnvironmentVariables();
+        process.env['SYSTEM_HOSTTYPE'] = 'build';
+        const labels = pipelineutils.getDefaultLabels();
+
+        // update the label count in assert when newer labels are added
+        assert.equal(labels.length, 9, "All labels are returned by default");
+
+        delete process.env['SYSTEM_HOSTTYPE'];
+        done();
+    });
+
+    it("getDefaultLabels returns selected labels when hidePII is true", (done: MochaDone) => {
+        console.log("TestCaseName: getDefaultLabels returns selected labels when hidePII is true");
+        console.log("\n");
+
+        setEnvironmentVariables();
+        process.env['SYSTEM_HOSTTYPE'] = 'build';
+        const labels = pipelineutils.getDefaultLabels(true); // hidePII is set to true
+
+        // update the label count in assert when newer labels are added
+        assert.equal(labels.length, 2, "Only selected labels are returned when hidePII is true");
+
+        delete process.env['SYSTEM_HOSTTYPE'];
+        done();
+    });
+
+    function setEnvironmentVariables() : void {
+        process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = 'https://mock.ms/mock/';
+        process.env['BUILD_SOURCEVERSION'] = 'buildId';
+        process.env['RELEASE_RELEASEID'] = 'realeaseId';
+        process.env['BUILD_REPOSITORY_URI'] = 'https://mock.ms/mock/';
+        process.env['BUILD_SOURCEBRANCHNAME'] = "some string";
+        process.env['BUILD_DEFINITIONNAME'] = "some string";
+        process.env['BUILD_BUILDNUMBER'] = "some string";
+        process.env['BUILD_BUILDURI'] = 'https://mock.ms/mock/';
+        process.env['SYSTEM_TEAMPROJECT'] = "some string";
+        process.env['BUILD_REPOSITORY_NAME'] = "some string";
+        process.env['RELEASE_DEFINITIONNAME'] = "some string";
+        process.env['RELEASE_RELEASEWEBURL'] = 'https://mock.ms/mock/';
+    }
 });
