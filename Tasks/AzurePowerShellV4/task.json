@@ -17,7 +17,7 @@
     "version": {
         "Major": 4,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 11
     },
     "preview": true,
     "releaseNotes": "Added support for Az Module and cross platform agents.",
@@ -139,11 +139,7 @@
             "required": true,
             "visibleRule": "TargetAzurePs = OtherVersion",
             "groupName": "AzurePowerShellVersionOptions",
-            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0",
-            "validation": {
-                "expression": "isMatch(value, '^[0-9]+\\.[0-9]+\\.[0-9]+$','Multiline')",
-                "message": "Enter valid Azure PowerShell Version"
-            }
+            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0"
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
