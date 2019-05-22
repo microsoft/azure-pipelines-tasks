@@ -13,6 +13,7 @@ export let TestEnvVars = {
     containers: "__containers__",
     imagePullSecrets: "__imagePullSecrets__",
     renderType: "__renderType__",
+    releaseName: "__releaseName__",
     helmChart: "__helmChart__",
     secretName: "__secretName__",
     overrideFiles: "__overrideFiles__",
