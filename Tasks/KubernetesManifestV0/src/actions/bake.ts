@@ -5,7 +5,7 @@ import path = require('path');
 import fs = require('fs');
 import { getTempDirectory } from "../utils/FileHelper";
 import helmutility = require("utility-common/helmutility");
-import { Helm, NameValuePair } from "utility-common/helm-object-model";
+import { Helm, NameValuePair } from "kubernetes-common/helm-object-model";
 
 const uuidV4 = require('uuid/v4');
 
