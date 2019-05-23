@@ -462,7 +462,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'net.saliman:gradle-cobertura-plugin:2.2.7'
+        classpath 'net.saliman:gradle-cobertura-plugin:2.6.0'
     }
 }
 `;
