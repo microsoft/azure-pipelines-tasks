@@ -1,0 +1,17 @@
+{
+    "cp": [
+        {
+            "source": "WebConfigTemplates",
+            "options": "-R"
+        }
+    ],
+    "externals": {
+        "archivePackages": [
+            {
+                "archiveName": "MSDeploy.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/M142/MSDeploy.zip",
+                "dest": "./"
+            }
+        ]
+    }
+}
