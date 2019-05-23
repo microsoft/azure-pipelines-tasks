@@ -22,6 +22,8 @@
   "loc.input.help.renderType": "Tool to generate manifest",
   "loc.input.label.helmChart": "Helm Chart",
   "loc.input.help.helmChart": "Helm chart path to bake",
+  "loc.input.label.releaseName": "Helm Release Name",
+  "loc.input.help.releaseName": "Helm release name to use",
   "loc.input.label.overrideFiles": "Override Files",
   "loc.input.help.overrideFiles": "Override files to set",
   "loc.input.label.overrides": "Overrides",
