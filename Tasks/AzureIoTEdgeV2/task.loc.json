@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 6
+    "Minor": 1,
+    "Patch": 1
   },
   "preview": true,
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -42,6 +42,7 @@
       "options": {
         "Build module images": "Build module images",
         "Push module images": "Push module images",
+        "Generate deployment manifest": "Generate deployment manifest",
         "Deploy to IoT Edge devices": "Deploy to IoT Edge devices"
       },
       "helpMarkDown": "ms-resource:loc.input.help.action"
@@ -165,7 +166,7 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.templateFilePath",
       "defaultValue": "deployment.template.json",
-      "visibleRule": "action = Build module images || action = Push module images",
+      "visibleRule": "action = Build module images || action = Push module images || action = Generate deployment manifest",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.templateFilePath"
     },
@@ -175,7 +176,7 @@
       "label": "ms-resource:loc.input.label.defaultPlatform",
       "defaultValue": "amd64",
       "required": true,
-      "visibleRule": "action = Build module images || action = Push module images",
+      "visibleRule": "action = Build module images || action = Push module images || action = Generate deployment manifest",
       "options": {
         "amd64": "amd64",
         "windows-amd64": "windows-amd64",
@@ -185,6 +186,19 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.defaultPlatform"
+    },
+    {
+      "name": "fillRegistryCredential",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.fillRegistryCredential",
+      "defaultValue": "true",
+      "required": true,
+      "visibleRule": "action = Push module images",
+      "options": {
+        "true": "true",
+        "false": "false"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.fillRegistryCredential"
     },
     {
       "name": "bypassModules",
@@ -240,7 +254,9 @@
     "RootPathNotExist": "ms-resource:loc.messages.RootPathNotExist",
     "SkipModuleImageValidation": "ms-resource:loc.messages.SkipModuleImageValidation",
     "InvalidRegistryCredentialWarning": "ms-resource:loc.messages.InvalidRegistryCredentialWarning",
-    "CheckModuleImageExistenceError": "ms-resource:loc.messages.CheckModuleImageExistenceError"
+    "CheckModuleImageExistenceError": "ms-resource:loc.messages.CheckModuleImageExistenceError",
+    "StartGenerateDeploymentManifest": "ms-resource:loc.messages.StartGenerateDeploymentManifest",
+    "FinishGenerateDeploymentManifest": "ms-resource:loc.messages.FinishGenerateDeploymentManifest"
   },
   "OutputVariables": [
     {

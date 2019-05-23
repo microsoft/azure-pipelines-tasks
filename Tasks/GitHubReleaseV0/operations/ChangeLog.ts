@@ -1,4 +1,4 @@
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import util = require("util");
 import {Utility, GitHubAttributes, IRepositoryIssueId, Delimiters, AzureDevOpsVariables} from "./Utility";
 import { Release } from "./Release";
