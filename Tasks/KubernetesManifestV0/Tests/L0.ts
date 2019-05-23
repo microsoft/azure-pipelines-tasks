@@ -166,7 +166,7 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with create secret', (done: MochaDone) => {
+    it('Run should successfully create secret', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.createSecret;
@@ -177,6 +177,32 @@ describe('Kubernetes Manifests Suite', function () {
         assert(tr.stdout.indexOf('delete secret') > -1, 'task should have deleted secret');
         assert(tr.stdout.indexOf('create secret') > -1, 'task should have created secret');
         assert(tr.stdout.indexOf('create secret') > tr.stdout.indexOf('delete secret'), 'delete secret should have been called before created secret');
+        done();
+    });
+
+    it('Run should scale', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.scale;
+        process.env[shared.TestEnvVars.kind] = 'replicaset';
+        process.env[shared.TestEnvVars.replicas] = '1';
+        process.env[shared.TestEnvVars.name] = 'r1';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('scale replicaset/r1') > -1 , 'task should have run scale command');
+        done();
+    });
+
+    it('Run should succeessfully patch', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.patch;
+        process.env[shared.TestEnvVars.kind] = 'replicaset';
+        process.env[shared.TestEnvVars.mergeStrategy] = 'merge';
+        process.env[shared.TestEnvVars.name] = 'r1';
+        process.env[shared.TestEnvVars.patch] = 'somePatch';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
         done();
     });
 });
