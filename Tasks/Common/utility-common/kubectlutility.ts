@@ -34,9 +34,10 @@ export async function getStableKubectlVersion() : Promise<string> {
 
 export async function downloadKubectl(version: string) : Promise<string> {
     var cachedToolpath = toolLib.findLocalTool(kubectlToolName, version);
+    var KubectlDownloadPath = "";
     if(!cachedToolpath) {
         try {
-                var KubectlDownloadPath = await toolLib.downloadTool(getkubectlDownloadURL(version)); 
+                 KubectlDownloadPath = await toolLib.downloadTool(getkubectlDownloadURL(version)); 
         } catch(exception) {
             throw new Error(tl.loc("DownloadKubectlFailedFromLocation", getkubectlDownloadURL(version), exception));
         }
@@ -45,7 +46,22 @@ export async function downloadKubectl(version: string) : Promise<string> {
     }
     
     var kubectlPath = path.join(cachedToolpath, kubectlToolName + getExecutableExtention());
+    
+    if (!cachedToolpath || !fs.existsSync(kubectlPath))
+    {
+        var kubectlPathTmp = path.join(getTempDirectory(), kubectlToolName + getExecutableExtention());
+        tl.cp(KubectlDownloadPath, kubectlPathTmp, "-f");
+        fs.chmodSync(kubectlPathTmp, "777");
+        return kubectlPathTmp;
+    }
+
     fs.chmodSync(kubectlPath, "777");
+    
+    // prepend the tools path. instructs the agent to prepend for future tasks. Do this only if caching is successful
+    if(!process.env['PATH'].toLowerCase().startsWith(path.dirname(kubectlPath.toLowerCase()))) {
+        toolLib.prependPath(path.dirname(kubectlPath));
+    }
+
     return kubectlPath;
 }
 
