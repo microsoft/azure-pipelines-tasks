@@ -9,7 +9,7 @@ var archiver = require('archiver');
 export async function unzip(zipLocation, unzipLocation) {
     var defer = Q.defer();
     if(tl.exist(unzipLocation)) {
-      tl.rmRF(unzipLocation, false);
+      tl.rmRF(unzipLocation);
     }
     var unzipper = new DecompressZip(zipLocation);
     tl.debug('extracting ' + zipLocation + ' to ' + unzipLocation);

@@ -1,12 +1,12 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import fs = require('fs');
-import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
-import { AzureEndpoint } from 'azure-arm-rest/azureModels';
+import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
 import { AzureResourceFilterUtility } from './operations/AzureResourceFilterUtility';
 import { KuduServiceUtility } from './operations/KuduServiceUtility';
-import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
-import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
+import { AzureAppService } from 'azure-arm-rest-v2/azure-arm-app-service';
+import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { AzureAppServiceUtility } from './operations/AzureAppServiceUtility';
 import { ContainerBasedDeploymentUtility } from './operations/ContainerBasedDeploymentUtility';
 import { TaskParameters, TaskParametersUtility } from './operations/TaskParameters';
@@ -15,11 +15,11 @@ import * as ParameterParser from './parameterparser'
 import { addReleaseAnnotation } from './operations/ReleaseAnnotationUtility';
 import { DeployWar } from './operations/WarDeploymentUtilities';
 
-var packageUtility = require('webdeployment-common/packageUtility.js');
+var packageUtility = require('webdeployment-common-v2/packageUtility.js');
 
-var zipUtility = require('webdeployment-common/ziputility.js');
-var deployUtility = require('webdeployment-common/utility.js');
-var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
+var zipUtility = require('webdeployment-common-v2/ziputility.js');
+var deployUtility = require('webdeployment-common-v2/utility.js');
+var msDeploy = require('webdeployment-common-v2/deployusingmsdeploy.js');
 
 async function main() {
     let zipDeploymentID: string;
@@ -28,6 +28,8 @@ async function main() {
 
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
+        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-arm-rest-v2/module.json'));
+        tl.setResourcePath(path.join( __dirname, 'node_modules/webdeployment-common-v2/module.json'));
         var taskParams: TaskParameters = TaskParametersUtility.getParameters();
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(taskParams.connectedServiceName).getEndpoint();
         var virtualApplicationPath: string;

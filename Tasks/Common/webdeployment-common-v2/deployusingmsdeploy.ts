@@ -74,7 +74,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     finally {
         process.env.PATH = pathVar;
         if(setParametersFile != null) {
-            tl.rmRF(setParametersFile, true);
+            tl.rmRF(setParametersFile);
         }
     }
 }
