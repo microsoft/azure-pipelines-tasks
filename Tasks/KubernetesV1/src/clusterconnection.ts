@@ -40,7 +40,11 @@ export default class ClusterConnection {
 
     private async initialize(): Promise<void> {
         return this.getKubectl().then((kubectlpath)=> {
-            this.kubectlPath = kubectlpath; 
+            this.kubectlPath = kubectlpath;
+            // prepend the tools path. instructs the agent to prepend for future tasks
+            if(!process.env['PATH'].toLowerCase().startsWith(path.dirname(this.kubectlPath.toLowerCase()))) {
+                toolLib.prependPath(path.dirname(this.kubectlPath));
+            }     
         });
     }
 

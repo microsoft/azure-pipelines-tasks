@@ -56,12 +56,6 @@ export async function downloadKubectl(version: string) : Promise<string> {
     }
 
     fs.chmodSync(kubectlPath, "777");
-    
-    // prepend the tools path. instructs the agent to prepend for future tasks. Do this only if caching is successful
-    if(!process.env['PATH'].toLowerCase().startsWith(path.dirname(kubectlPath.toLowerCase()))) {
-        toolLib.prependPath(path.dirname(kubectlPath));
-    }
-
     return kubectlPath;
 }
 
