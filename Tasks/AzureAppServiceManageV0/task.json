@@ -2,7 +2,7 @@
     "id": "f045e430-8704-11e6-968f-e717e6411619",
     "name": "AzureAppServiceManage",
     "friendlyName": "Azure App Service manage",
-    "description": "Start, stop, restart, slot swap, install site extensions or enable continuous monitoring for an Azure App Service",
+    "description": "Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-manage",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
@@ -19,7 +19,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 52
+        "Patch": 55
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -55,6 +55,7 @@
                 "Start Azure App Service": "Start App Service",
                 "Stop Azure App Service": "Stop App Service",
                 "Restart Azure App Service": "Restart App Service",
+                "Delete Slot": "Delete Slot",
                 "Install Extensions": "Install Extensions",
                 "Enable Continuous Monitoring": "Enable Continuous Monitoring",
                 "Start all continuous webjobs": "Start All Continuous Webjobs",

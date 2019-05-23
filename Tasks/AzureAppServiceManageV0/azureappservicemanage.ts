@@ -65,6 +65,10 @@ async function run() {
                 await azureAppServiceUtils.pingApplication();
                 break;
             }
+            case "Delete Slot": {
+                await appService.delete();
+                break;
+            }
             case "Swap Slots": {
                 targetSlot = (swapWithProduction) ? "production" : targetSlot;
                 var appServiceSourceSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, sourceSlot);
