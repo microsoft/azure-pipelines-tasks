@@ -51,10 +51,7 @@ function pushMultipleImages(connection: ContainerConnection, imageNames: string[
 }
 
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, ignoreArguments?: boolean): any {
-    let commandArguments = ignoreArguments ? "" : tl.getInput("arguments");
-    if (commandArguments) {
-        commandArguments = commandArguments.replace(/\n/g, " ");
-    }
+    let commandArguments = ignoreArguments ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");

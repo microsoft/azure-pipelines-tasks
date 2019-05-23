@@ -3,6 +3,7 @@
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import ContainerConnection from "docker-common/containerconnection";
+import * as dockerCommandUtils from "docker-common/dockercommandutils";
 import * as utils from "./utils";
 import * as imageUtils from "docker-common/containerimageutils";
 
@@ -14,11 +15,8 @@ export function run(connection: ContainerConnection): any {
     if (runInBackground) {
         command.arg("-d");
     }
-
-    var commandArguments = tl.getInput("arguments", false);
-    if (commandArguments) {
-        commandArguments = commandArguments.replace(/\n/g, " ");
-    }
+    
+    var commandArguments = dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
     command.line(commandArguments);
 
