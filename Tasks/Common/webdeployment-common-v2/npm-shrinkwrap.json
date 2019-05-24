@@ -258,7 +258,7 @@
     "azure-pipelines-task-lib": {
       "version": "2.8.0",
       "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-2.8.0.tgz",
-      "integrity": "sha1-rfx4BRaPtJLVcD7eZIXOt4G2SrQ=",
+      "integrity": "sha512-PR8oap9z2j+o455W3PwAfB4SX1p4GdJc9OHQaQV0V+iQS1IBY6dVgcNSQMkHAXb0V1bbuLOFBLanXPe5eSgGTQ==",
       "requires": {
         "minimatch": "3.0.4",
         "mockery": "1.7.0",
