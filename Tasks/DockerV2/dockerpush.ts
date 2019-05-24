@@ -51,13 +51,17 @@ function pushMultipleImages(connection: ContainerConnection, imageNames: string[
 }
 
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, ignoreArguments?: boolean): any {
-    let commandArguments = ignoreArguments ? "" : tl.getInput("arguments");
+    let commandArguments = ignoreArguments ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");
 
     // get qualified image name from the containerRegistry input
     let repositoryName = tl.getInput("repository");
+    if (!repositoryName) {
+        tl.warning("No repository is specified. Nothing will be pushed.");
+    }
+
     let imageNames: string[] = [];
     // if container registry is provided, use that
     // else, use the currently logged in registries

@@ -2,6 +2,7 @@
 
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
+import * as dockerCommandUtils from "docker-common/dockercommandutils";
 import * as fileUtils from "docker-common/fileutils";
 import * as pipelineUtils from "docker-common/pipelineutils";
 import ContainerConnection from "docker-common/containerconnection";
@@ -30,7 +31,8 @@ export function run(connection: ContainerConnection): any {
         pipelineUtils.addDefaultLabelArgs(command);
     }
 
-    var commandArguments = tl.getInput("arguments", false); 
+    var commandArguments = dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
+
     command.line(commandArguments);
     
     var imageName = utils.getImageName(); 
