@@ -175,6 +175,8 @@ Tasks/DuffleInstallerV0/*   @bansalaseem     @vithati
 
 Tasks/ExtractFilesV1/*      @bryanmacfarlane
 
+Tasks/FileTransformV1/*     @kmkumaran      @SumiranAgg     @vincentdass
+
 Tasks/FtpUploadV1/*     @madhurig
 
 Tasks/GithubReleaseV0/*     @prativen   @mdmdakbar
