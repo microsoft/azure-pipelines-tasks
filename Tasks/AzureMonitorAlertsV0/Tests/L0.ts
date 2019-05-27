@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as assert from "assert";
-import { MockTestRunner } from "vsts-task-lib/mock-test";
+import { MockTestRunner } from "azure-pipelines-task-lib/mock-test";
 
 describe("AzureMonitorAlerts Suite", () => {
     it("successfully creates alert rules when alert rules are not already present in resource group", (done: MochaDone) => {
