@@ -6,8 +6,6 @@ import * as util from 'util';
 import * as uuidV4 from 'uuid/v4';
 import * as tl from 'vsts-task-lib/task';
 
-import { WebRequest, sendRequest } from './restutilities';
-
 const helmToolName = 'helm';
 const helmLatestReleaseUrl = 'https://api.github.com/repos/helm/helm/releases/latest';
 const stableHelmVersion = 'v2.9.1';
@@ -67,12 +65,9 @@ function getHelmDownloadURL(version: string): string {
 }
 
 export async function getStableHelmVersion(): Promise<string> {
-    const request = new WebRequest();
-    request.uri = 'https://api.github.com/repos/helm/helm/releases/latest';
-    request.method = 'GET';
-
     try {
-        const response = await sendRequest(request);
+        const downloadPath = await toolLib.downloadTool('https://api.github.com/repos/helm/helm/releases/latest');
+        const response = JSON.parse(fs.readFileSync(downloadPath, 'utf8').toString().trim());
         return response.body.tag_name;
     } catch (error) {
         tl.warning(tl.loc('HelmLatestNotKnown', helmLatestReleaseUrl, error, stableHelmVersion));

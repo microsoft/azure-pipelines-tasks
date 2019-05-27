@@ -4,7 +4,6 @@ import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as tl from 'vsts-task-lib/task';
 import * as util from 'util';
 import * as yaml from 'js-yaml';
-import { WebRequest, sendRequest } from './restutilities';
 import * as fs from 'fs';
 
 const kubectlToolName = 'kubectl';
@@ -104,31 +103,4 @@ function getExecutableExtention(): string {
     }
 
     return '';
-}
-
-export async function getAvailableKubectlVersions() {
-    const request = new WebRequest();
-    request.method = 'GET';
-    let pageNumber = 0;
-    const versions = [];
-    const countPerPage = 100;
-    while (true) {
-        try {
-            request.uri = `https://api.github.com/repos/kubernetes/kubernetes/releases?page=${pageNumber}&per_page=${countPerPage}`;
-            const response = await sendRequest(request);
-            // break if no more items or items are less then asked
-            if (response.body.length === 0 || response.body.length < countPerPage) {
-                break;
-            }
-            response.body.forEach(release => {
-                if (release.tag_name) {
-                    versions.push(release.tag_name);
-                }
-            });
-            pageNumber++;
-        } catch (error) {
-            throw error;
-        }
-    }
-    return versions;
 }
