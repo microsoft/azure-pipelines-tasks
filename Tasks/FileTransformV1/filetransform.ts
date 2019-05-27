@@ -1,9 +1,9 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import { Package } from 'webdeployment-common/packageUtility';
-var deployUtility = require('webdeployment-common/utility.js');
-var zipUtility = require('webdeployment-common/ziputility.js');
-var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
+import { Package } from 'webdeployment-common-v2/packageUtility';
+var deployUtility = require('webdeployment-common-v2/utility.js');
+var zipUtility = require('webdeployment-common-v2/ziputility.js');
+var fileTransformationsUtility = require('webdeployment-common-v2/fileTransformationsUtility.js');
 
 async function main() {
     tl.setResourcePath(path.join( __dirname, 'task.json'));
