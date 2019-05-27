@@ -8,6 +8,7 @@ import { AzureMonitorAlertsUtility } from './operations/AzureMonitorAlertsUtilit
 async function run() {
 	try {
 		tl.setResourcePath(path.join(__dirname, "task.json"));
+		tl.setResourcePath(path.join( __dirname, 'node_modules/azure-arm-rest-v2/module.json'));
 
 		let connectedServiceName: string = tl.getInput("ConnectedServiceName", true);
 		let resourceGroupName: string = tl.getInput("ResourceGroupName", true);
