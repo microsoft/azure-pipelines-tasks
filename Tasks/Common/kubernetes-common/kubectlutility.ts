@@ -12,24 +12,18 @@ export const stableKubectlVersion = 'v1.14.0';
 
 // get a stable version from the url https://storage.googleapis.com/kubernetes-release/release/stable.txt
 export async function getStableKubectlVersion(): Promise<string> {
-    const request = new WebRequest();
-    request.method = 'GET';
-    request.uri = 'https://storage.googleapis.com/kubernetes-release/release/stable.txt';
-
-    return new Promise<string>((resolve, reject) => {
-        const resolveWithStableVersion = () => {
-            tl.warning(tl.loc('DownloadStableVersionFailed', request.uri, stableKubectlVersion));
-            resolve(stableKubectlVersion);
+    let version;
+    const stableVersionUrl = 'https://storage.googleapis.com/kubernetes-release/release/stable.txt';
+    return toolLib.downloadTool(stableVersionUrl).then((downloadPath) => {
+        version = fs.readFileSync(downloadPath, 'utf8').toString().trim();
+        if (!version) {
+            version = stableKubectlVersion;
         }
-        try {
-            sendRequest(request).then((response) => {
-                resolve(response.body);
-            }).catch((ex) => {
-                resolveWithStableVersion();
-            });
-        } catch (ex) {
-            resolveWithStableVersion();
-        }
+        return version;
+    }, (reject) => {
+        tl.debug(reject);
+        tl.warning(tl.loc('DownloadStableVersionFailed', stableVersionUrl, stableKubectlVersion));
+        return stableKubectlVersion;
     });
 }
 
