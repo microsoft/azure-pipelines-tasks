@@ -1,0 +1,3 @@
+{
+  "loc.messages.TokenUnavailable": "Die Tokenanmeldeinformationen für TFS-/Azure Pipelines-Pakete konnten nicht abgerufen werden."
+}

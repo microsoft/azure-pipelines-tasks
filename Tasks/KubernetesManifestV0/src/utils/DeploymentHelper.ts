@@ -1,24 +1,23 @@
-"use strict";
+'use strict';
 
-import fs = require("fs");
-import path = require('path');
-import tl = require('vsts-task-lib/task');
-import yaml = require('js-yaml');
+import * as fs from 'fs';
+import * as path from 'path';
+import * as tl from 'vsts-task-lib/task';
+import * as yaml from 'js-yaml';
 import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
 import * as KubernetesObjectUtility from '../utils/KubernetesObjectUtility';
 import * as constants from '../models/constants';
 import * as TaskInputParameters from '../models/TaskInputParameters';
 import * as models from '../models/constants';
-import * as fileHelper from "../utils/FileHelper";
-import * as utils from "../utils/utilities";
+import * as fileHelper from '../utils/FileHelper';
+import * as utils from '../utils/utilities';
 import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
-import { Kubectl, Resource } from "kubernetes-common/kubectl-object-model";
-
+import { Kubectl, Resource } from 'kubernetes-common/kubectl-object-model';
 
 export function deploy(kubectl: Kubectl, manifestFilePaths: string[], deploymentStrategy: string) {
 
     // get manifest files
-    var inputManifestFiles: string[] = getManifestFiles(manifestFilePaths);
+    let inputManifestFiles: string[] = getManifestFiles(manifestFilePaths);
 
     // artifact substitution
     inputManifestFiles = updateContainerImagesInManifestFiles(inputManifestFiles, TaskInputParameters.containers);
@@ -27,10 +26,10 @@ export function deploy(kubectl: Kubectl, manifestFilePaths: string[], deployment
     inputManifestFiles = updateImagePullSecretsInManifestFiles(inputManifestFiles, TaskInputParameters.imagePullSecrets);
 
     // deployment
-    var deployedManifestFiles = deployManifests(inputManifestFiles, kubectl, isCanaryDeploymentStrategy(deploymentStrategy));
+    const deployedManifestFiles = deployManifests(inputManifestFiles, kubectl, isCanaryDeploymentStrategy(deploymentStrategy));
 
     // check manifest stability
-    let resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.recognizedWorkloadTypes);
+    const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.recognizedWorkloadTypes);
     checkManifestStability(kubectl, resourceTypes);
 
     // annotate resources
@@ -38,10 +37,10 @@ export function deploy(kubectl: Kubectl, manifestFilePaths: string[], deployment
 }
 
 function getManifestFiles(manifestFilePaths: string[]): string[] {
-    var files: string[] = utils.getManifestFiles(manifestFilePaths);
+    const files: string[] = utils.getManifestFiles(manifestFilePaths);
 
-    if (files == null || files.length == 0) {
-        throw (tl.loc("ManifestFileNotFound"));
+    if (files == null || files.length === 0) {
+        throw (tl.loc('ManifestFileNotFound'));
     }
 
     return files;
@@ -50,7 +49,7 @@ function getManifestFiles(manifestFilePaths: string[]): string[] {
 function deployManifests(files: string[], kubectl: Kubectl, isCanaryDeploymentStrategy: boolean): string[] {
     let result;
     if (isCanaryDeploymentStrategy) {
-        var canaryDeploymentOutput = canaryDeploymentHelper.deployCanary(kubectl, files);
+        const canaryDeploymentOutput = canaryDeploymentHelper.deployCanary(kubectl, files);
         result = canaryDeploymentOutput.result;
         files = canaryDeploymentOutput.newFilePaths;
     } else {
@@ -61,7 +60,7 @@ function deployManifests(files: string[], kubectl: Kubectl, isCanaryDeploymentSt
 }
 
 function checkManifestStability(kubectl: Kubectl, resourceTypes: Resource[]) {
-    let rolloutStatusResults = [];
+    const rolloutStatusResults = [];
     resourceTypes.forEach(resource => {
         if (models.recognizedWorkloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
             rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
@@ -71,8 +70,8 @@ function checkManifestStability(kubectl: Kubectl, resourceTypes: Resource[]) {
 }
 
 function annotateResources(files: string[], kubectl: Kubectl, resourceTypes: Resource[]) {
-    let annotateResults: IExecSyncResult[] = [];
-    var allPods = JSON.parse((kubectl.getAllPods()).stdout);
+    const annotateResults: IExecSyncResult[] = [];
+    const allPods = JSON.parse((kubectl.getAllPods()).stdout);
     annotateResults.push(kubectl.annotateFiles(files, constants.pipelineAnnotations, true));
     resourceTypes.forEach(resource => {
         if (resource.type.toUpperCase() != models.KubernetesWorkload.Pod.toUpperCase()) {
@@ -85,25 +84,25 @@ function annotateResources(files: string[], kubectl: Kubectl, resourceTypes: Res
 
 function updateContainerImagesInManifestFiles(filePaths: string[], containers: string[]): string[] {
     if (!!containers && containers.length > 0) {
-        let newFilePaths = [];
+        const newFilePaths = [];
         const tempDirectory = fileHelper.getTempDirectory();
         filePaths.forEach((filePath: string) => {
-            var contents = fs.readFileSync(filePath).toString();
+            let contents = fs.readFileSync(filePath).toString();
             containers.forEach((container: string) => {
-                let imageName = container.split(":")[0];
-                if (imageName.indexOf("@") > 0)
-                    imageName = imageName.split("@")[0];
+                let imageName = container.split(':')[0];
+                if (imageName.indexOf('@') > 0) {
+                    imageName = imageName.split('@')[0];
+                }
                 if (contents.indexOf(imageName) > 0) {
                     contents = utils.substituteImageNameInSpecFile(contents, imageName, container);
                 }
             });
 
-            let fileName = path.join(tempDirectory, path.basename(filePath));
+            const fileName = path.join(tempDirectory, path.basename(filePath));
             fs.writeFileSync(
                 path.join(fileName),
                 contents
             );
-
             newFilePaths.push(fileName);
         });
 
@@ -115,12 +114,12 @@ function updateContainerImagesInManifestFiles(filePaths: string[], containers: s
 
 function updateImagePullSecretsInManifestFiles(filePaths: string[], imagePullSecrets: string[]): string[] {
     if (!!imagePullSecrets && imagePullSecrets.length > 0) {
-        var newObjectsList = [];
+        const newObjectsList = [];
         filePaths.forEach((filePath: string) => {
-            var fileContents = fs.readFileSync(filePath);
-            yaml.safeLoadAll(fileContents, function (inputObject) {
+            const fileContents = fs.readFileSync(filePath).toString();
+            yaml.safeLoadAll(fileContents, function (inputObject: any) {
                 if (!!inputObject && !!inputObject.kind) {
-                    var kind = inputObject.kind;
+                    const kind = inputObject.kind;
                     if (KubernetesObjectUtility.isDeploymentEntity(kind)) {
                         KubernetesObjectUtility.updateImagePullSecrets(inputObject, imagePullSecrets, false);
                     }
@@ -128,8 +127,8 @@ function updateImagePullSecretsInManifestFiles(filePaths: string[], imagePullSec
                 }
             });
         });
-        tl.debug("New K8s objects after addin imagePullSecrets are :"+JSON.stringify(newObjectsList));
-        var newFilePaths = fileHelper.writeObjectsToFile(newObjectsList);
+        tl.debug('New K8s objects after addin imagePullSecrets are :' + JSON.stringify(newObjectsList));
+        const newFilePaths = fileHelper.writeObjectsToFile(newObjectsList);
         return newFilePaths;
     }
     return filePaths;

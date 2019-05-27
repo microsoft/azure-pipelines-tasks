@@ -16,6 +16,7 @@ export let TestEnvVars = {
     releaseName: "__releaseName__",
     helmChart: "__helmChart__",
     secretName: "__secretName__",
+    secretType: "__secretType__",
     overrideFiles: "__overrideFiles__",
     overrides: "__overrides__",
     resourceToPatch: "__resourceToPatch__",
@@ -47,6 +48,7 @@ export let AuthorizationType = {
 
 export let Actions = {
     bake: "bake",
+    createSecret: "createSecret",
     deploy: "deploy",
     patch: "patch",
     scale: "scale",
