@@ -5,7 +5,7 @@ import path = require('path');
 import fs = require('fs');
 import * as toolLib from 'vsts-task-tool-lib/tool';
 
-import kubectlutility = require("utility-common/kubectlutility");
+import kubectlutility = require("kubectl-common/kubectlutility");
 import * as utils from './utils';
 
 
