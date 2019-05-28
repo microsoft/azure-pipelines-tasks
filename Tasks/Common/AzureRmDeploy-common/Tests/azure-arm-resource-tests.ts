@@ -1,5 +1,5 @@
 import { getMockEndpoint, mockAzureARMResourcesTests } from './mock_utils';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { Resources } from '../azure-arm-rest/azure-arm-resource';
 var endpoint = getMockEndpoint();
 

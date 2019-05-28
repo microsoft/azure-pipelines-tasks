@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import url = require('url');
 import util = require('util');
 import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';

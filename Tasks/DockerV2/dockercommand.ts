@@ -7,8 +7,8 @@ import * as utils from "./utils";
 
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any): any {
     let output = "";
-    var dockerCommand = tl.getInput("command", true);    
-    var commandArguments = tl.getInput("arguments", false);
+    let dockerCommand = tl.getInput("command", true);    
+    let commandArguments = dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
     return dockerCommandUtils.command(connection, dockerCommand, commandArguments, (data) => output += data).then(() => {
         let taskOutputPath = utils.writeTaskOutput(dockerCommand, output);
