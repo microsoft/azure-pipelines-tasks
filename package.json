@@ -10,7 +10,8 @@
     "build": "node make.js build",
     "test": "node make.js test",
     "testLegacy": "node make.js testLegacy",
-    "package": "node make.js package"
+    "package": "node make.js package",
+    "bump": "node make.js bump"
   },
   "repository": {
     "type": "git",
