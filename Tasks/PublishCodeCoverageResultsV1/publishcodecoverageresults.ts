@@ -44,7 +44,11 @@ async function run() {
         } else {
 
             if (autogenerateHtmlReport) {
-                tempFolder = path.join(getTempFolder(), 'cchtml');
+                if (reportDirectory) {
+                    tempFolder = path.join(getTempFolder(), reportDirectory);
+                } else {
+                    tempFolder = path.join(getTempFolder(), 'cchtml');
+                }
                 tl.debug('Generating Html Report using ReportGenerator: ' + tempFolder);
 
                 const result = await generateHtmlReport(summaryFileLocation, tempFolder, pathToSources);
