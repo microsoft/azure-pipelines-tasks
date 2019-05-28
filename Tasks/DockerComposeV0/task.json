@@ -328,6 +328,7 @@
         "DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
         "NoDataWrittenOnFile": "No data was written into the file %s",
         "FileContentSynced": "Synced the file content to the disk. The content is %s.",
+        "FoundMultipleDockerFiles": "Found multiple Dockerfiles in the repo, while expected only one.",
         "ImageNameWithoutTag": "Image name not specified with tag, pushing all tags of the image specified.",
         "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
     }

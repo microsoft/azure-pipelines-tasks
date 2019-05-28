@@ -15,7 +15,7 @@ function useDefaultBuildContext(buildContext: string): boolean {
     return buildContext === defaultPath;
 }
 
-export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, ignoreArguments?: boolean): any {
+export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
     // find dockerfile path
     let dockerfilepath = tl.getInput("Dockerfile", true);
     let dockerFile = fileUtils.findDockerFile(dockerfilepath);
@@ -25,7 +25,8 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     }
 
     // get command arguments
-    let commandArguments = ignoreArguments ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
+    // ignore the arguments input if the command is buildAndPush, as it is ambiguous
+    let commandArguments = isBuildAndPushCommand ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
     
     // get qualified image names by combining container registry(s) and repository
     let repositoryName = tl.getInput("repository");
@@ -33,13 +34,13 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     // if container registry is provided, use that
     // else, use the currently logged in registries
     if (tl.getInput("containerRegistry")) {
-        let imageName = connection.getQualifiedImageName(repositoryName);
+        let imageName = connection.getQualifiedImageName(repositoryName, true);
         if (imageName) {
             imageNames.push(imageName);
         }
     }
     else {
-        imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName);
+        imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName, true);
     }
 
     // get label arguments

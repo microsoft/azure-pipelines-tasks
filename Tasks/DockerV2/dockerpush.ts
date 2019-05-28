@@ -50,13 +50,14 @@ function pushMultipleImages(connection: ContainerConnection, imageNames: string[
     return promise;
 }
 
-export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, ignoreArguments?: boolean): any {
-    let commandArguments = ignoreArguments ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
+export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
+    // ignore the arguments input if the command is buildAndPush, as it is ambiguous
+    let commandArguments = isBuildAndPushCommand ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");
 
-    // get qualified image name from the containerRegistry input
+    // get repository input
     let repositoryName = tl.getInput("repository");
     if (!repositoryName) {
         tl.warning("No repository is specified. Nothing will be pushed.");
@@ -66,19 +67,31 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     // if container registry is provided, use that
     // else, use the currently logged in registries
     if (tl.getInput("containerRegistry")) {
-        let imageName = connection.getQualifiedImageName(repositoryName);
+        let imageName = connection.getQualifiedImageName(repositoryName, true);
         if (imageName) {
             imageNames.push(imageName);
         }
     }
     else {
-        imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName);
+        imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName, true);
     }
 
     const dockerfilepath = tl.getInput("dockerFile", true);
-    const dockerFile = findDockerFile(dockerfilepath);
-    if (!tl.exist(dockerFile)) {
-        throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
+    let dockerFile = "";
+    try {
+        // If it is only push command, we will use the Dockerfile to get the base image name,
+        // only if it is inambiguous, i.e., there is only one Dockerfile in the repo.
+        // For buildAndPush command, we can use the Dockerfile returned by findDockerfile as
+        // we are sure that this is the one used for building as well.
+        const ensureUniqueDockerfile = !isBuildAndPushCommand;
+        dockerFile = findDockerFile(dockerfilepath, ensureUniqueDockerfile);
+        if (!tl.exist(dockerFile)) {
+            throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
+        }
+    }
+    catch (error) {
+        dockerFile = "";
+        tl.debug("Ignoring the error in finding the Dockerfile, as it is not mandatory for push command. Error: " + error);
     }
 
     // push all tags
@@ -115,7 +128,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
 async function publishToImageMetadataStore(connection: ContainerConnection, imageName: string, tags: string[], digest: string, dockerFilePath: string): Promise<any> {
     // Getting imageDetails
     const imageUri = getResourceName(imageName, digest);
-    const baseImageName = getBaseImageNameFromDockerFile(dockerFilePath);
+    const baseImageName = dockerFilePath ? getBaseImageNameFromDockerFile(dockerFilePath) : "";
     const layers = await dockerCommandUtils.getLayers(connection, imageName);
     const imageSize = dockerCommandUtils.getImageSize(layers);
 
@@ -129,25 +142,28 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
     const jobName = tl.getVariable("System.PhaseDisplayName");
 
     const requestUrl = tl.getVariable("System.TeamFoundationCollectionUri") + tl.getVariable("System.TeamProject") + "/_apis/deployment/imagedetails?api-version=5.0-preview.1";
-    const requestBody: string = JSON.stringify(
-        {
-            "imageName": imageUri,
-            "imageUri": imageUri,
-            "hash": digest,
-            "baseImageName": baseImageName,
-            "distance": 0,
-            "imageType": "",
-            "mediaType": "",
-            "tags": tags,
-            "layerInfo": layers,
-            "runId": runId,
-            "pipelineVersion": pipelineVersion,
-            "pipelineName": pipelineName,
-            "pipelineId": pipelineId,
-            "jobName": jobName,
-            "imageSize": imageSize
-        }
-    );
+    let requestBodyJson: any = {
+        "imageName": imageUri,
+        "imageUri": imageUri,
+        "hash": digest,
+        "distance": 0,
+        "imageType": "",
+        "mediaType": "",
+        "tags": tags,
+        "layerInfo": layers,
+        "runId": runId,
+        "pipelineVersion": pipelineVersion,
+        "pipelineName": pipelineName,
+        "pipelineId": pipelineId,
+        "jobName": jobName,
+        "imageSize": imageSize
+    };
+
+    if (baseImageName) {
+        requestBodyJson["baseImageName"] = baseImageName;
+    }
+
+    const requestBody: string = JSON.stringify(requestBodyJson);
 
     return sendRequestToImageStore(requestBody, requestUrl);
 }

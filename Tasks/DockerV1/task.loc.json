@@ -375,6 +375,7 @@
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "FoundMultipleDockerFiles": "ms-resource:loc.messages.FoundMultipleDockerFiles",
     "DockerRegistryNotFound": "ms-resource:loc.messages.DockerRegistryNotFound",
     "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"

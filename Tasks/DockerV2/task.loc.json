@@ -140,6 +140,7 @@
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
     "FoundDockerConfigStoredInTempPath": "ms-resource:loc.messages.FoundDockerConfigStoredInTempPath",
     "FoundLoginsForOtherRegistries": "ms-resource:loc.messages.FoundLoginsForOtherRegistries",
+    "FoundMultipleDockerFiles": "ms-resource:loc.messages.FoundMultipleDockerFiles",
     "IgnoringArgumentsInput": "ms-resource:loc.messages.IgnoringArgumentsInput",
     "LoggingOutFromRegistry": "ms-resource:loc.messages.LoggingOutFromRegistry",
     "LoggingOutWithNoRegistrySpecified": "ms-resource:loc.messages.LoggingOutWithNoRegistrySpecified",

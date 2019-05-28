@@ -328,6 +328,7 @@
     "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "FoundMultipleDockerFiles": "ms-resource:loc.messages.FoundMultipleDockerFiles",
     "ImageNameWithoutTag": "ms-resource:loc.messages.ImageNameWithoutTag",
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   }

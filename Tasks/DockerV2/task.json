@@ -140,6 +140,7 @@
         "FileContentSynced": "Synced the file content to the disk. The content is %s.",
         "FoundDockerConfigStoredInTempPath": "Found the Docker Config stored in the temp path. Docker config path: %s, Docker config: %s",
         "FoundLoginsForOtherRegistries": "Found login info for other registry(s). Trying to remove auth from the Docker config for the registry: %s",
+        "FoundMultipleDockerFiles": "Found multiple Dockerfiles in the repo, while expected only one.",
         "IgnoringArgumentsInput": "The arguments input is not supported when the command is buildAndPush. Ignoring the input.",
         "LoggingOutFromRegistry": "Trying to logout from registry: %s",
         "LoggingOutWithNoRegistrySpecified": "Logging out. Removing all auth data from temp docker config, since no registry is specified.",
