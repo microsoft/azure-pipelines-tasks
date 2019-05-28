@@ -1,0 +1,44 @@
+{
+  "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
+  "name": "PublishPipelineArtifact",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-pipeline-artifact",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "groups": [],
+  "demands": [],
+  "preview": true,
+  "minimumAgentVersion": "2.140.1",
+  "inputs": [
+    {
+      "name": "artifactName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.artifactName",
+      "defaultValue": "drop",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.artifactName"
+    },
+    {
+      "name": "targetPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.targetPath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.targetPath"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "AgentPlugin": {
+      "target": "Agent.Plugins.PipelineArtifact.PublishPipelineArtifactTaskV1, Agent.Plugins"
+    }
+  },
+  "messages": {}
+}
