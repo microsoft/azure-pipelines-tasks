@@ -128,10 +128,8 @@ describe('General Suite', function () {
         done();
     })
 
-    it('Find unsupported demands', (done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-
-        var supportedDemands: string[] = ['AndroidSDK',
+    var supportedDemands: string[] = [
+            'AndroidSDK',
             'ant',
             'AzurePS',
             'Chef',
@@ -160,6 +158,9 @@ describe('General Suite', function () {
             'Xamarin.Android',
             'Xamarin.iOS',
             'xcode'];
+
+    it('Find unsupported demands', (done) => {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         supportedDemands.forEach(demand => {
             if (supportedDemands.indexOf(demand.toLocaleLowerCase()) < 0) {
@@ -204,37 +205,8 @@ describe('General Suite', function () {
     it('Find unsupported satisfied capabilities', (done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
-        var supportedCapabilities: string[] = ['AndroidSDK',
-            'ant',
-            'AzurePS',
-            'Chef',
-            'DotNetFramework',
-            'java',
-            'JDK',
-            'maven',
-            'MSBuild',
-            'MSBuild_x64',
-            'npm',
-            // This entry exists for back-compat with formerly malformed capabilities in NodeToolV0 and UseNodeV1
-            'Node',
-            'node.js',
-            'PowerShell',
-            'SqlPackage',
-            'VisualStudio',
-            'VisualStudio_IDE',
-            'VSTest',
-            'WindowsKit',
-            'WindowsSdk',
-            'cmake',
-            'cocoapods',
-            'curl',
-            'Cmd',
-            'SCVMMAdminConsole',
-            'sh',
-            'KnifeReporting',
-            'Xamarin.Android',
-            'Xamarin.iOS',
-            'xcode'];
+        // 'Node' is added for back-compat with formerly malformed capabilities in NodeToolV0 and UseNodeV1
+        var supportedCapabilities: string[] = (supportedDemands.concat('Node'));
 
         supportedCapabilities.forEach(capability => {
             if (supportedCapabilities.indexOf(capability.toLocaleLowerCase()) < 0) {
