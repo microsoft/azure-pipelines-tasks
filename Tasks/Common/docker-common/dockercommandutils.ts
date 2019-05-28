@@ -76,6 +76,10 @@ export function push(connection: ContainerConnection, image: string, commandArgu
     });
 }
 
+export function getCommandArguments(args: string): string {
+    return args ? args.replace(/\n/g, " ") : "";
+}
+
 export async function getLayers(connection: ContainerConnection, imageId: string): Promise<any> {
     var layers = [];
     var history = await getHistory(connection, imageId);

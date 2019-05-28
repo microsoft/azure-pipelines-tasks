@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Python-Version verwenden",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=871498)",
-  "loc.description": "Hiermit wird die angegebene Version von Python aus dem Toolcache abgerufen. Fügen Sie sie optional zu PATH hinzu.",
+  "loc.description": "Hiermit wird die angegebene Version von Python aus dem Toolcache abgerufen und optional zu PATH hinzugefügt.",
   "loc.instanceNameFormat": "Python $(versionSpec) verwenden",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.versionSpec": "Versionsangabe",
@@ -10,10 +10,11 @@
   "loc.input.help.addToPath": "Gibt an, ob die abgerufene Python-Version der PATH-Umgebungsvariable vorangestellt wird, um sie in nachfolgenden Aufgaben oder Skripts zur Verfügung zu stellen, ohne die Ausgabevariable zu verwenden.",
   "loc.input.label.architecture": "Architektur",
   "loc.input.help.architecture": "Die Zielarchitektur für den Python-Interpreter (x86, x64).",
-  "loc.messages.ListAvailableVersions": "Versions in %s:",
+  "loc.messages.ListAvailableVersions": "Versionen in %s:",
   "loc.messages.PlatformNotRecognized": "Plattform nicht erkannt.",
   "loc.messages.PrependPath": "Der PATH-Umgebungsvariable wird das Verzeichnis \"%s\" vorangestellt.",
-  "loc.messages.ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
-  "loc.messages.ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
-  "loc.messages.VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory."
+  "loc.messages.PyPyNotFound": "In Agent.ToolsDirectory wurde keine Installation von PyPy%d gefunden.",
+  "loc.messages.ToolNotFoundMicrosoftHosted": "Wenn es sich um einen von Microsoft gehosteten Agent handelt, überprüfen Sie unter %s, ob dieses Image parallele Versionen von %s unterstützt.",
+  "loc.messages.ToolNotFoundSelfHosted": "Wenn es sich um einen selbstgehosteten Agent handelt, finden Sie unter %s Informationen zum Konfigurieren paralleler Versionen von %s.",
+  "loc.messages.VersionNotFound": "Die Versionsangabe %s für die Architektur \"%s\" entsprach keiner Version in \"Agent.ToolsDirectory\"."
 }

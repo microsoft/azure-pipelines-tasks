@@ -14,11 +14,11 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 7
     },
     "demands": [],
     "groups": [],
-    "inputs": [       
+    "inputs": [
         {
             "name": "version",
             "type": "string",

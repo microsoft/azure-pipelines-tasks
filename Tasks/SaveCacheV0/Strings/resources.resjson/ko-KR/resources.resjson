@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "캐시 저장",
+  "loc.helpMarkDown": "현재 파이프라인에 대해 로컬 캐시를 게시합니다.",
+  "loc.description": "현재 파이프라인에 대해 로컬 캐시를 게시합니다.",
+  "loc.instanceNameFormat": "캐시 저장",
+  "loc.input.label.key": "키의 이름입니다.",
+  "loc.input.help.key": "키의 이름입니다.",
+  "loc.input.label.path": "게시할 경로",
+  "loc.input.help.path": "게시할 폴더 또는 파일 경로입니다. 정규화된 경로 또는 리포지토리 루트의 상대 경로일 수 있습니다. 와일드카드는 지원되지 않습니다. [변수](https://go.microsoft.com/fwlink/?LinkID=550988)가 지원됩니다."
+}

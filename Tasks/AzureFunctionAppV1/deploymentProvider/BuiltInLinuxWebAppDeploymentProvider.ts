@@ -1,5 +1,5 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import path = require('path');
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'

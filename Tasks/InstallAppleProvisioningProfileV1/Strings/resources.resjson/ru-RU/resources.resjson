@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Установить профиль подготовки Apple",
   "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkID=862068)",
-  "loc.description": "Установите профиль подготовки Apple, необходимый для выполнения сборки в агенте macOS.",
+  "loc.description": "Установить профиль подготовки Apple, необходимый для сборки, на компьютер агента macOS",
   "loc.instanceNameFormat": "Установка профиля подготовки Apple",
   "loc.input.label.provisioningProfileLocation": "Расположение профиля подготовки",
   "loc.input.help.provisioningProfileLocation": "Выберите расположение для установки профиля подготовки. Профиль подготовки можно отправить в раздел \"Безопасные файлы\" или сохранить в исходном репозитории либо в локальном каталоге на агенте.",

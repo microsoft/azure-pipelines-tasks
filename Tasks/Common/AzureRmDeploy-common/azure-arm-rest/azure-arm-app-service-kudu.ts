@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import util = require('util');
 import webClient = require('./webClient');
@@ -455,7 +455,7 @@ export class Kudu {
         httpRequest.body = fs.createReadStream(webPackage);
 
         try {
-            let response = await this._client.beginRequest(httpRequest, null, 'multipart/form-data');
+            let response = await this._client.beginRequest(httpRequest, null, 'application/octet-stream');
             tl.debug(`ZIP Deploy response: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 tl.debug('Deployment passed');

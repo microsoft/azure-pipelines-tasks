@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Esegui query su elementi di lavoro",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=870238)",
-  "loc.description": "Esegue una query elemento di lavoro e verifica il numero di elementi restituiti.",
+  "loc.description": "Esegue una query elemento di lavoro e verifica il numero di elementi restituiti",
   "loc.instanceNameFormat": "Esegui query su elementi di lavoro",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.queryId": "Query",

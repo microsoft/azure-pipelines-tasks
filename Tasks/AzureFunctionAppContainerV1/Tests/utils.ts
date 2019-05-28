@@ -1,4 +1,4 @@
-import ma = require('vsts-task-lib/mock-answer');
+import ma = require('azure-pipelines-task-lib/mock-answer');
 
 export function extendObject(output, target) {
     output = output || {};
@@ -31,7 +31,7 @@ export function setAgentsData() {
     process.env["AZURE_HTTP_USER_AGENT"] = "TFS_useragent";
     process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
     process.env["AGENT_NAME"] = "author";
-    process.env["AGENT_TEMPDIRECTORY"] = 'Agent.TempDirectory';
+    process.env["AGENT_TEMPDIRECTORY"] = process.cwd();
     process.env["BUILD_BUILDID"] = 'Build.BuildId';
 }
 

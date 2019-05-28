@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Interfaccia della riga di comando di Azure",
   "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=827160)",
-  "loc.description": "Esegue uno script shell o batch con comandi dell'interfaccia della riga di comando di Azure su una sottoscrizione di Azure",
+  "loc.description": "Consente di eseguire i comandi dell'interfaccia della riga di comando di Azure su una sottoscrizione di Azure in uno script della shell quando viene eseguito in un agente Linux oppure in uno script batch quando viene eseguito in un agente Windows.",
   "loc.instanceNameFormat": "Interfaccia della riga di comando di Azure $(scriptPath)",
   "loc.releaseNotes": "Novità della versione 1.0:\n- Supporta la nuova interfaccia della riga di comando di Azure 2.0 che è basata su Python\n- È compatibile con agenti multipiattaforma (Linux, macOS o Windows)\n- Per l'uso con l'interfaccia della riga di comando di Azure 1.0 (basata su node.js), passare alla versione 0.0 dell'attività\n- Limitazioni:\n - Non prevede il supporto per le sottoscrizioni di Azure classico. L'interfaccia della riga di comando di Azure 2.0 supporta solo le sottoscrizioni Azure Resource Manager (ARM)",
   "loc.group.displayName.advanced": "Avanzate",
@@ -10,11 +10,15 @@
   "loc.input.label.scriptLocation": "Percorso script",
   "loc.input.help.scriptLocation": "Tipo dello script: Percorso file o Script inline",
   "loc.input.label.scriptPath": "Percorso script",
-  "loc.input.help.scriptPath": "Percorso completo dello script oppure percorso relativo alla directory di lavoro predefinita",
+  "loc.input.help.scriptPath": "Percorso completo dello script (con estensione .bat o .cmd quando si usa l'agente basato su Windows ed estensione .sh quando si usa l'agente basato su Linux) oppure un percorso relativo alla directory di lavoro predefinita",
   "loc.input.label.inlineScript": "Script inline",
-  "loc.input.help.inlineScript": "È possibile scrivere qui gli script inline. Per i file batch usare il prefisso \"call\" prima di ogni comando di Azure. È anche possibile passare a questo script variabili predefinite e personalizzate usando gli argomenti \n\n Esempio per shell: azure --version || azure account show \n\n Esempio per batch: call azure --version || call azure account show",
+  "loc.input.help.inlineScript": "È possibile scrivere qui gli script inline. Con l'agente Windows, usare script batch, mentre con gli agenti basati su Linux, usare script della shell. Per i file batch usare il prefisso \"call\" prima di ogni comando di Azure. È anche possibile passare a questo script variabili predefinite e personalizzate usando gli argomenti \n\n Esempio per shell: azure --version || azure account show \n\n Esempio per batch: call azure --version || call azure account show",
   "loc.input.label.args": "Argomenti",
   "loc.input.help.args": "Argomenti passati allo script",
+  "loc.input.label.addSpnToEnvironment": "Accedi ai dettagli dell'entità servizio nello script",
+  "loc.input.help.addSpnToEnvironment": "Aggiunge l'ID entità servizio e la chiave dell'endpoint di Azure scelto all'ambiente di esecuzione dello script. Nello script è possibile usare le variabili `$servicePrincipalId` e `$servicePrincipalKey`.\n\nQuesta opzione è consentita solo quando nell'endpoint di Azure è presente lo schema di autenticazione dell'entità servizio.",
+  "loc.input.label.useGlobalConfig": "Usa la configurazione globale dell'interfaccia della riga di comando di Azure",
+  "loc.input.help.useGlobalConfig": "Se è false, questa attività userà una [directory di configurazione dell'interfaccia della riga di comando di Azure](https://docs.microsoft.com/it-it/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file) separata. Può essere usato per eseguire attività dell'interfaccia della riga di comando di Azure in versioni *parallele*",
   "loc.input.label.cwd": "Directory di lavoro",
   "loc.input.help.cwd": "Directory di lavoro corrente in cui viene eseguito lo script. Se non si specifica un valore, corrisponde alla radice del repository (compilazione) o degli artefatti (versione), ovvero $(System.DefaultWorkingDirectory)",
   "loc.input.label.failOnStandardError": "Interrompi in caso di errore standard",
@@ -25,5 +29,10 @@
   "loc.messages.AzureSDKNotFound": "In questo computer non è installata la versione 2.x dell'interfaccia della riga di comando di Azure.",
   "loc.messages.FailedToLogout": "Durante la disconnessione si è verificato l'errore seguente: %s",
   "loc.messages.LoginFailed": "L'accesso ad Azure non è riuscito",
-  "loc.messages.ErrorInSettingUpSubscription": "Si è verificato un errore durante la configurazione della sottoscrizione"
+  "loc.messages.MSILoginFailed": "L'accesso di Azure con l'identità del servizio gestita non è riuscito",
+  "loc.messages.AuthSchemeNotSupported": "Lo schema di autenticazione %s non è supportato",
+  "loc.messages.ErrorInSettingUpSubscription": "Si è verificato un errore durante la configurazione della sottoscrizione",
+  "loc.messages.SettingAzureConfigDir": "Impostazione della variabile di ambiente AZURE_CONFIG_DIR su: %s",
+  "loc.messages.SettingAzureCloud": "Impostazione del cloud attivo su: %s",
+  "loc.messages.GlobalCliConfigAgentVersionWarning": "Se la versione dell'agente è inferiore a quella 2.115.0, è possibile usare solo la configurazione globale dell'interfaccia della riga di comando di Azure"
 }

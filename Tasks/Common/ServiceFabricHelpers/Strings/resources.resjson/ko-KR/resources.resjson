@@ -1,8 +1,8 @@
 {
   "loc.messages.AadAuthority": "AAD 기관: {0}",
-  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
-  "loc.messages.ClientAppId": "클라이언트 응용 프로그램 ID: {0}",
-  "loc.messages.ClusterAppId": "클러스터 응용 프로그램 ID: {0}",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "지문이 {0}인 인증서가 로컬 인증서 저장소에 없습니다. 이로 인해 오류가 발생할 수 있습니다. 릴리스/빌드에 실패하는 경우 다시 시도하거나, 동일한 머신에서 여러 에이전트가 동일한 서비스 엔드포인트를 사용하여 빌드/릴리스를 동시에 실행하고 있지 않은지 확인하세요.",
+  "loc.messages.ClientAppId": "클라이언트 애플리케이션 ID: {0}",
+  "loc.messages.ClusterAppId": "클러스터 애플리케이션 ID: {0}",
   "loc.messages.ConnectedToCluster": "클러스터에 연결했습니다.",
   "loc.messages.DefaultPortWarning": "연결 엔드포인트에서 지정한 '{0}' 포트가 기본 ClientConnectionEndpoint '19000'과 일치하지 않습니다. 이로 인해 클러스터 통신 오류가 발생했을 수 있습니다.",
   "loc.messages.ErrorOnAcquireToken": "Azure Active Directory 토큰을 가져오는 동안 오류가 발생했습니다. 서비스 엔드포인트가 유효한 자격 증명으로 제대로 구성되어 있는지 확인하세요. 오류 메시지: {0}",
@@ -14,5 +14,6 @@
   "loc.messages.RetryingClusterConnection": "클러스터에 연결을 다시 시도하는 중..",
   "loc.messages.WarningOnRemoveCertificate": "클라이언트 인증서를 제거하는 동안 오류가 발생했습니다. 오류 메시지: {0}",
   "loc.messages.TelemetryWarning": "원격 분석 데이터를 푸시할 수 없습니다. 오류: {0}.",
-  "loc.messages.SfSdkVersion": "Service Fabric SDK 버전: {0}."
+  "loc.messages.SfSdkVersion": "Service Fabric SDK 버전: {0}.",
+  "loc.messages.TaskNotRunningOnx64Agent": "에이전트가 x64 에이전트가 아닙니다. 이 작업은 x64 에이전트에서만 지원됩니다."
 }

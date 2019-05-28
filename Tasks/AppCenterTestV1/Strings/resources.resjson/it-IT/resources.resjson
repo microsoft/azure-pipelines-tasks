@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Test App Center",
   "loc.helpMarkDown": "Per informazioni su questa attività, visitare il [sito del supporto](https://aka.ms/appcentersupport) di Visual Studio App Center.",
-  "loc.description": "Consente di eseguire il test di pacchetti dell'app con Visual Studio App Center.",
+  "loc.description": "Consente di eseguire il test di pacchetti dell'app con Visual Studio App Center",
   "loc.instanceNameFormat": "Esegui test con Visual Studio App Center",
   "loc.group.displayName.prepare": "Prepara test",
   "loc.group.displayName.run": "Esegui test",
