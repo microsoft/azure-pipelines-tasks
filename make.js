@@ -567,13 +567,13 @@ target.bump = function() {
         taskLocJson.version.Patch = taskLocJson.version.Patch + 1;
 
         fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 4));
-        fs.writeFileSync(taskJsonPath, JSON.stringify(taskLocJson, null, 2));
+        fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
 
         // Check that task.loc and task.loc.json versions match
         if ((taskJson.version.Major !== taskLocJson.version.Major) || 
-            (taskJson.version.Major !== taskLocJson.version.Major) || 
-            (taskJson.version.Major !== taskLocJson.version.Major)) {
-            console.log(`versions dont match, task json: ${JSON.stringify(taskJson.version)} task loc json: ${JSON.stringify(taskLocJson.version)}`);
+            (taskJson.version.Minor !== taskLocJson.version.Minor) || 
+            (taskJson.version.Patch !== taskLocJson.version.Patch)) {
+            console.log(`versions dont match for task '${taskName}', task json: ${JSON.stringify(taskJson.version)} task loc json: ${JSON.stringify(taskLocJson.version)}`);
         }
     });
 }
