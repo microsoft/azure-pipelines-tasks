@@ -11,6 +11,7 @@ async function run()
 	try
 	{
 		tl.setResourcePath(path.join( __dirname, 'task.json'));
+		tl.setResourcePath(path.join( __dirname, 'node_modules/webdeployment-common-v2/module.json'));
 		var webSiteName: string = tl.getInput('WebSiteName', true);
 		var virtualApplication: string = tl.getInput('VirtualApplication', false);
 		var webDeployPkg: string = tl.getPathInput('Package', true);
