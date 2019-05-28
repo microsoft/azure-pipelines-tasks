@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Python-Skript",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=2006181)",
-  "loc.description": "Hiermit wird ein Python-Skript ausgeführt.",
+  "loc.description": "Python-Datei oder Inlineskript ausführen",
   "loc.instanceNameFormat": "Python-Skript ausführen",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.scriptSource": "Skriptquelle",
@@ -15,6 +15,7 @@
   "loc.input.label.pythonInterpreter": "Python-Interpreter",
   "loc.input.help.pythonInterpreter": "Absoluter Pfad zum Python-Interpreter, der verwendet werden soll. Sofern nicht angegeben, verwendet die Aufgabe den Interpreter in PATH. <br /> Führen Sie die Aufgabe [Python-Version verwenden](https://go.microsoft.com/fwlink/?linkid=871498) aus, um eine Python-Version zu PATH hinzuzufügen.",
   "loc.input.label.workingDirectory": "Arbeitsverzeichnis",
+  "loc.input.help.workingDirectory": "Das Arbeitsverzeichnis, in dem das Skript ausgeführt wird. Sofern nicht angegeben, wird der Wert von \"System.DefaultWorkingDirectory\" verwendet. Für Builds ist diese Variable standardmäßig der Stamm des Repositorys. Für Releases wird standardmäßig der Stamm des Artefaktverzeichnisses verwendet.",
   "loc.input.label.failOnStderr": "Fehler bei Standardfehler",
   "loc.input.help.failOnStderr": "Bei Festlegung auf TRUE wird für diese Aufgabe ein Fehler ausgelöst, wenn Text in den stderr-Stream geschrieben wird.",
   "loc.messages.NotAFile": "Der angegebene Pfad verweist nicht auf eine Datei: \"%s\".",

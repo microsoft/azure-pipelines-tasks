@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Scarica l'artefatto della pipeline",
+  "loc.friendlyName": "Scarica artefatto della pipeline",
   "loc.helpMarkDown": "Scarica l'artefatto denominato da una pipeline a un percorso locale.",
-  "loc.description": "Scarica l'artefatto della pipeline",
+  "loc.description": "Scarica un artefatto associato a una pipeline",
   "loc.instanceNameFormat": "Scarica l'artefatto della pipeline",
   "loc.input.label.pipelineId": "Pipeline specifica da cui eseguire il download",
   "loc.input.help.pipelineId": "Pipeline da cui eseguire il download. Se viene lasciato vuoto, come destinazione viene usata la pipeline corrente.",

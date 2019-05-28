@@ -73,5 +73,6 @@
   "loc.messages.FailedToApplyTransformationReason2": "2. Убедитесь, что файлы конфигурации и преобразования находятся в одной и той же папке в пакете.",
   "loc.messages.AutoParameterizationMessage": "Атрибуты ConnectionString в Web.config параметризованы по умолчанию. Обратите внимание, что преобразование не влияет на атрибуты connectionString, так как значение переопределяется во время развертывания файлом \"Parameters.xml\" или \"SetParameters.xml\". Вы можете отключить автоматическую параметризацию, задав /p:AutoParameterizationWebConfigConnectionStrings=False во время создания пакета MSBuild.",
   "loc.messages.PackageDeploymentFailed": "Не удалось развернуть веб-пакет на веб-сайте IIS.",
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Компьютер должен использовать протокол TLS 1.2 или более поздней версии. Дополнительные сведения о том, как включить TLS на вашем компьютере: https://aka.ms/enableTlsv2."
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Компьютер должен использовать протокол TLS 1.2 или более поздней версии. Дополнительные сведения о том, как включить TLS на вашем компьютере: https://aka.ms/enableTlsv2.",
+  "loc.messages.RetryToDeploy": "Повторная попытка развертывания пакета."
 }

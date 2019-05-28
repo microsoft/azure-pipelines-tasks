@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Копировать файлы",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=708389)",
-  "loc.description": "Копирование файлов из исходной папки в целевую с помощью шаблонов сопоставления, в которых на соответствие проверяются только пути к файлам, а не пути к папкам",
+  "loc.description": "Копировать файлы из исходной папки в целевую с использованием шаблонов, соответствующих путям файлов (не путям к папкам)",
   "loc.instanceNameFormat": "Копировать файлы в: $(TargetFolder)",
   "loc.releaseNotes": "Согласованность шаблонов соответствия.",
   "loc.group.displayName.advanced": "Дополнительно",
@@ -17,6 +17,8 @@
   "loc.input.help.OverWrite": "Заменить существующий файл в целевой папке",
   "loc.input.label.flattenFolders": "Выполнить сведение папок",
   "loc.input.help.flattenFolders": "Выполнение сведения структуры папок и копирование всех файлов в указанную целевую папку.",
+  "loc.input.label.preserveTimestamp": "Сохранить целевую метку времени",
+  "loc.input.help.preserveTimestamp": "Используя оригинальный исходный файл, сохраните метку времени целевого файла.",
   "loc.messages.FoundNFiles": "найдено файлов: %d",
   "loc.messages.CleaningTargetFolder": "Очистка целевого каталога: %s",
   "loc.messages.FileAlreadyExistAt": "Файл \"%s\" уже существует в \"%s\"",

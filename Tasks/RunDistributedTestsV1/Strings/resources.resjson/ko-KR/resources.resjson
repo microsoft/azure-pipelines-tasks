@@ -38,6 +38,6 @@
   "loc.input.help.configuration": "테스트를 보고해야 하는 구성입니다. 빌드 작업에서 구성에 사용할 변수를 정의한 경우, 여기에서 해당 변수를 사용하세요.",
   "loc.input.label.testConfigurations": "테스트 구성",
   "loc.input.help.testConfigurations": "필요한 경우 테스트 구성 ID를 기준으로 테스트 사례 필터를 연결합니다. 구문: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. 예: `FullyQualifiedName~Chrome:12`",
-  "loc.input.label.autMachineGroup": "테스트 중인 응용 프로그램 컴퓨터",
+  "loc.input.label.autMachineGroup": "테스트 중인 애플리케이션 컴퓨터",
   "loc.input.help.autMachineGroup": "W3WP.exe와 같은 서버 프로세스가 실행 중인 컴퓨터, 출력 변수 또는 컴퓨터 그룹 이름의 쉼표로 구분된 목록입니다."
 }

@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "保存缓存",
+  "loc.helpMarkDown": "发布当前管道的本地缓存。",
+  "loc.description": "发布当前管道的本地缓存。",
+  "loc.instanceNameFormat": "保存缓存",
+  "loc.input.label.key": "键的名称。",
+  "loc.input.help.key": "键的名称。",
+  "loc.input.label.path": "要发布的路径。",
+  "loc.input.help.path": "要发布的文件夹或文件路径。这可以是完全限定的路径或相对于存储库根路径的路径。不支持通配符。支持 [变量](https://go.microsoft.com/fwlink/?LinkID=550988)。"
+}

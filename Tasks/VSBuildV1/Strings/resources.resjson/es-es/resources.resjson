@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Compilación de Visual Studio",
+  "loc.friendlyName": "Compilación de Visual Studio",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "Compila con MSBuild y establece la propiedad version de Visual Studio.",
+  "loc.description": "Compilar con MSBuild y establecer la propiedad version de Visual Studio",
   "loc.instanceNameFormat": "Compilar solución $(solution)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.solution": "Solución",
@@ -26,6 +26,8 @@
   "loc.input.help.logProjectEvents": "Se registra, de manera opcional, los detalles de la escala de tiempo de cada proyecto.",
   "loc.input.label.createLogFile": "Crear archivo de registro",
   "loc.input.help.createLogFile": "Si quiere, puede crear un archivo de registro (solo en Windows).",
+  "loc.input.label.logFileVerbosity": "Nivel de detalle del archivo de registro",
+  "loc.input.help.logFileVerbosity": "Nivel de detalle del archivo de registro opcional.",
   "loc.messages.MSBuildLocationDeprecated0": "El parámetro de ubicación MSBuild está en desuso. Se omitirá el valor '{0}'",
   "loc.messages.MSBuildVersionDeprecated0": "El parámetro de versión de MSBuild está en desuso. Se omitirá el valor '{0}'.",
   "loc.messages.UnexpectedVSVersion0": "Versión inesperada de Visual Studio '{0}'.",

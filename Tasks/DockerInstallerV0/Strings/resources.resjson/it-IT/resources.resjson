@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Programma di installazione dell'interfaccia della riga di comando di Docker",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "Installa l'interfaccia della riga di comando di Docker nel computer agente.",
+  "loc.instanceNameFormat": "Installa Docker $(dockerVersion)",
+  "loc.input.label.dockerVersion": "Versione Docker",
+  "loc.input.help.dockerVersion": "Specificare la versione dell'interfaccia della riga di comando di Docker da installare",
+  "loc.input.label.releaseType": "Tipo di versione",
+  "loc.input.help.releaseType": "Selezionare il tipo di versione da installare. La versione Nightly non è supportata in Windows",
+  "loc.messages.DownloadDockerFailedFromLocation": "Non è stato possibile scaricare Docker dal percorso %s. Errore: %s",
+  "loc.messages.DockerNotFoundInFolder": "L'eseguibile di Docker non è stato trovato nel percorso %s",
+  "loc.messages.DockerDownloadFailed": "Non è stato possibile scaricare Docker dal percorso %s. Errore: %s",
+  "loc.messages.VerifyDockerInstallation": "Verifica dell'installazione di Docker..."
+}

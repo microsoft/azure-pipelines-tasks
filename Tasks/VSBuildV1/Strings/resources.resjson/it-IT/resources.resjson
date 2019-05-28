@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Compilazione Visual Studio",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "Consente di compilare con MSBuild e di impostare la proprietà della versione di Visual Studio.",
+  "loc.description": "Consente di compilare con MSBuild e di impostare la proprietà della versione di Visual Studio",
   "loc.instanceNameFormat": "Compila la soluzione $(solution)",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.solution": "Soluzione",
@@ -26,6 +26,8 @@
   "loc.input.help.logProjectEvents": "Registra facoltativamente i dettagli della sequenza temporale per ogni progetto.",
   "loc.input.label.createLogFile": "Crea file di log",
   "loc.input.help.createLogFile": "Consente facoltativamente di creare un file di log (solo Windows).",
+  "loc.input.label.logFileVerbosity": "Livello di dettaglio file di log",
+  "loc.input.help.logFileVerbosity": "Livello di dettaglio facoltativo del file di log.",
   "loc.messages.MSBuildLocationDeprecated0": "Il parametro Percorso MSBuild è stato deprecato. Il valore '{0}' verrà ignorato.",
   "loc.messages.MSBuildVersionDeprecated0": "Il parametro Versione MSBuild è stato deprecato. Il valore '{0}' verrà ignorato.",
   "loc.messages.UnexpectedVSVersion0": "Versione di Visual Studio imprevista: '{0}'.",

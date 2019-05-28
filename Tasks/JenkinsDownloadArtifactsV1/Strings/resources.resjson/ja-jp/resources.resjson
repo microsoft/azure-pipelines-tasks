@@ -127,5 +127,8 @@
   "loc.messages.GetArtifactItemsNotSupported": "成果物項目の取得はサポートされていません。無効なコード パスです",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。仮想マシンのマネージド サービス ID (MSI) を構成してください 'https://aka.ms/azure-msi-docs'。状態コード: %s、ステータス メッセージ: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。状態コード: %s、ステータス メッセージ: %s",
-  "loc.messages.NoAssociatedArtifacts": "関連付けられた成果物は見つかりません"
+  "loc.messages.NoAssociatedArtifacts": "関連付けられた成果物は見つかりません",
+  "loc.messages.OperationFailed": "%s でエラー %s のために失敗しました",
+  "loc.messages.RetryingOperation": "%s でエラーが発生したため、操作を再試行します。=> 保留中の再試行回数: %s",
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
 }
