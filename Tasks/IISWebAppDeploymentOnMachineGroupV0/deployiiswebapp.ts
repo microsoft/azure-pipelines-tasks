@@ -1,10 +1,10 @@
-﻿import tl = require('vsts-task-lib/task');
+﻿import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 
-var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
-var utility = require('webdeployment-common/utility.js');
-var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
+var msDeploy = require('webdeployment-common-v2/deployusingmsdeploy.js');
+var utility = require('webdeployment-common-v2/utility.js');
+var fileTransformationsUtility = require('webdeployment-common-v2/fileTransformationsUtility.js');
 
 async function run()
 {
