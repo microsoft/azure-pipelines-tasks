@@ -1,18 +1,20 @@
 {
   "loc.friendlyName": "Publicar resultados de la prueba",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Publicar resultados de pruebas en Azure Pipelines/TFS",
+  "loc.description": "Publicar resultados de pruebas en Azure Pipelines",
   "loc.instanceNameFormat": "Publicar resultados de pruebas $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>Compatibilidad con NUnit3</li><li>Compatibilidad con patrones de archivos de minimatch</li></ul>",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.testRunner": "Formato del resultado de las pruebas",
-  "loc.input.help.testRunner": "Formato de los archivos de resultados de pruebas generados por el ejecutor de pruebas de su elección; por ejemplo, JUnit, VSTest, XUnit V2 y NUnit.",
+  "loc.input.help.testRunner": "Formato de los archivos de resultados de pruebas generados por el ejecutor de pruebas de su elección; por ejemplo, JUnit, VSTest, XUnit V2, NUnit y CTest.",
   "loc.input.label.testResultsFiles": "Archivos de resultados de pruebas",
   "loc.input.help.testResultsFiles": "Ruta de acceso de los archivos de resultados de pruebas. Admite varias líneas de patrones de minimatch. [Más información](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.input.label.searchFolder": "Carpeta de búsqueda",
   "loc.input.help.searchFolder": "Carpeta para buscar los archivos de resultados de pruebas. El valor predeterminado es $(System.DefaultWorkingDirectory).",
   "loc.input.label.mergeTestResults": "Fusionar mediante combinación los resultados de las pruebas",
   "loc.input.help.mergeTestResults": "Se crea una serie de pruebas para cada archivo de resultados. Active esta opción para fusionar los resultados en una sola serie de pruebas. Para optimizar el rendimiento, los resultados se fusionarán en una sola serie si hay más de 100 archivos de resultados, independientemente de esta opción.",
+  "loc.input.label.failTaskOnFailedTests": "Interrumpir si hay errores en las pruebas",
+  "loc.input.help.failTaskOnFailedTests": "Interrumpa la tarea si hay errores en las pruebas. Seleccione esta opción para interrumpir la tarea si se detectan errores de las pruebas en los archivos de resultados.",
   "loc.input.label.testRunTitle": "Título de la serie de pruebas",
   "loc.input.help.testRunTitle": "Proporcione un nombre para la serie de pruebas.",
   "loc.input.label.platform": "Plataforma de compilación",
@@ -22,5 +24,6 @@
   "loc.input.label.publishRunAttachments": "Cargar archivos de resultados de pruebas",
   "loc.input.help.publishRunAttachments": "Cargue los registros y otros archivos que contienen información de diagnóstico recopilada cuando se ejecutaron las pruebas.",
   "loc.messages.NoMatchingFilesFound": "No se encontró ningún archivo de resultados de pruebas que coincida con \"%s\".",
-  "loc.messages.ErrorTestResultsPublisher": "Error al ejecutar TestResultsPublisher: %s."
+  "loc.messages.ErrorTestResultsPublisher": "Error al ejecutar TestResultsPublisher: %s.",
+  "loc.messages.ErrorFailTaskOnFailedTests": "Se han detectado uno o varios errores de prueba en los archivos de resultados. En la pestaña Pruebas puede ver un resumen detallado de los resultados de pruebas publicados."
 }

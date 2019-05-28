@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "CocoaPods",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613745)",
-  "loc.description": "CocoaPod 是 Swift 和 Objective-C Cocoa 项目的依赖项管理器。此任务将运行“pod 安装”。",
+  "loc.description": "安装 Swift 和 Objective-C Cocoa 项目的 CocoaPod 依赖项",
   "loc.instanceNameFormat": "pod 安装",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.cwd": "工作目录",

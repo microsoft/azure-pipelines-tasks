@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "MySQL Database bereitstellen",
   "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/mysql-deployment-on-machine-group)",
-  "loc.description": "Dies ist eine frühe Vorschau. Führen Sie Skripts aus, und nehmen Sie Änderungen an Ihrer MySQL Database-Instanz vor.",
+  "loc.description": "Hiermit werden Skripts ausgeführt und Änderungen an einer MySQL Database-Instanz vorgenommen.",
   "loc.instanceNameFormat": "Bereitstellen mit: $(TaskNameSelector)",
   "loc.input.label.TaskNameSelector": "MySQL bereitstellen mit",
   "loc.input.help.TaskNameSelector": "Wählen Sie eine der Optionen zwischen Skriptdatei und Inlineskript aus.",

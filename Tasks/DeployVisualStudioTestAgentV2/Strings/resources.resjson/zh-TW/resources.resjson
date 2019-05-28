@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Visual Studio Test Agent 部署",
+  "loc.friendlyName": "Visual Studio 測試代理程式部署",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkId=838890)",
-  "loc.description": "已淘汰: 此工作及其隨附工作 (執行功能測試) 已淘汰。請改用 ' Visual Studio Test' 工作。VSTest 工作可以執行單元及功能測試。使用多代理程式作業設定可在一或多個代理程式上執行測試。使用 [Visual Studio 測試平台] 工作，不需 Visual Studio 就可在代理程式上執行測試。VSTest 工作也推出了新功能，例如自動重新執行失敗的測試。",
+  "loc.description": "已淘汰: 請改用 'Visual Studio Test' 工作來執行單元和功能測試",
   "loc.instanceNameFormat": "在 $(testMachineGroup) 部署測試代理程式",
   "loc.releaseNotes": "<ul><li>Visual Studio Test Agent 2017 的支援: 您現在可以使用多種版本的 Visual Studio Test Agent 來部署及執行測試。支援 2015 及 2017 版本。</li><li>不再支援從測試中樞建立的電腦群組。您可以繼續使用電腦清單或 Azure 資源群組。</li></ul>",
   "loc.group.displayName.testMachineGroups": "測試電腦",

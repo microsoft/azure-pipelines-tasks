@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "preview": "true",
     "satisfies": [
@@ -112,7 +112,7 @@
         "CopyingFoldersIntoPath": "Copying all root folders into installation path: %s",
         "CopyingFilesIntoPath": "Copying root files (such as dotnet.exe) into installation path: %s",
         "FailedToCopyTopLevelFiles": "Failed to copy root files into installation path: %s. Error: %s",
-        "FailedWhileInstallingVersionAtPath" : "Failed while installing version: %s at path: %s with error: %s",
+        "FailedWhileInstallingVersionAtPath": "Failed while installing version: %s at path: %s with error: %s",
         "ExplicitVersionRequired": "Version: %s is not allowed. Versions to be installed should be of format: major.minor.patchversion. For example: 2.2.1",
         "VersionFoundInCache": "Version: %s was found in cache.",
         "VersionNotFoundInCache": "Version %s was not found in cache.",

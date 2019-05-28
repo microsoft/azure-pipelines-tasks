@@ -1,7 +1,8 @@
 {
-  "loc.friendlyName": "安全性及合規性評定",
-  "loc.description": "依據 Azure 原則對屬於資源群組與 Azure 訂用帳戶的資源進行的安全性與合規性評定",
-  "loc.instanceNameFormat": "$(ResourceGroupName) 的 Azure 原則合規性評估",
+  "loc.friendlyName": "檢查 Azure 原則合規性",
+  "loc.helpMarkDown": "",
+  "loc.description": "Azure 原則的安全性與合規性評定",
+  "loc.instanceNameFormat": "檢查原則合規性",
   "loc.input.label.ConnectedServiceName": "Azure 訂用帳戶",
   "loc.input.help.ConnectedServiceName": "請選取您要強制執行原則的 Azure Resource Manager 訂用帳戶。",
   "loc.input.label.ResourceGroupName": "資源群組",
