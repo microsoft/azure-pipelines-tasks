@@ -5,6 +5,7 @@ import * as os from 'os';
 import * as util from 'util';
 import * as uuidV4 from 'uuid/v4';
 import * as tl from 'vsts-task-lib/task';
+import { getExecutableExtension } from './utility';
 
 const helmToolName = 'helm';
 const helmLatestReleaseUrl = 'https://api.github.com/repos/helm/helm/releases/latest';
@@ -42,7 +43,7 @@ export async function downloadHelm(version?: string): Promise<string> {
 }
 
 function findHelm(rootFolder: string) {
-    const helmPath = path.join(rootFolder, '*', helmToolName + getExecutableExtention());
+    const helmPath = path.join(rootFolder, '*', helmToolName + getExecutableExtension());
     const allPaths = tl.find(rootFolder);
     const matchingResultsFiles = tl.match(allPaths, helmPath, rootFolder);
     return matchingResultsFiles[0];
@@ -74,11 +75,4 @@ export async function getStableHelmVersion(): Promise<string> {
     }
 
     return stableHelmVersion;
-}
-
-function getExecutableExtention(): string {
-    if (os.type().match(/^Win/)) {
-        return '.exe';
-    }
-    return '';
 }

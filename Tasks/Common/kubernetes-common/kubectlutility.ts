@@ -5,6 +5,7 @@ import * as tl from 'vsts-task-lib/task';
 import * as util from 'util';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
+import { getExecutableExtension } from './utility';
 
 const kubectlToolName = 'kubectl';
 export const stableKubectlVersion = 'v1.14.0';
@@ -36,13 +37,13 @@ export async function downloadKubectl(version: string): Promise<string> {
             throw new Error(tl.loc('DownloadKubectlFailedFromLocation', getkubectlDownloadURL(version), exception));
         }
 
-        cachedToolpath = await toolLib.cacheFile(kubectlDownloadPath, kubectlToolName + getExecutableExtention(), kubectlToolName, version);
+        cachedToolpath = await toolLib.cacheFile(kubectlDownloadPath, kubectlToolName + getExecutableExtension(), kubectlToolName, version);
     }
 
-    const kubectlPath = path.join(cachedToolpath, kubectlToolName + getExecutableExtention());
+    const kubectlPath = path.join(cachedToolpath, kubectlToolName + getExecutableExtension());
 
     if (!cachedToolpath || !fs.existsSync(kubectlPath)) {
-        const kubectlPathTmp = path.join(getTempDirectory(), kubectlToolName + getExecutableExtention());
+        const kubectlPathTmp = path.join(getTempDirectory(), kubectlToolName + getExecutableExtension());
         tl.cp(kubectlDownloadPath, kubectlPathTmp, '-f');
         fs.chmodSync(kubectlPathTmp, '777');
         return kubectlPathTmp;
@@ -97,10 +98,3 @@ export function getKubeconfigForCluster(kubernetesServiceEndpoint: string): stri
     return modifiedKubeConfig.toString();
 }
 
-function getExecutableExtention(): string {
-    if (os.type().match(/^Win/)) {
-        return '.exe';
-    }
-
-    return '';
-}
