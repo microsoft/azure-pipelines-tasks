@@ -16,12 +16,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 153,
-        "Patch": 0
+        "Minor": 0,
+        "Patch": 4
     },
     "satisfies": [
-        "Node",
-        "node.js"
+        "Node"
     ],
     "demands": [],
     "instanceNameFormat": "Use Node $(versionSpec)",
