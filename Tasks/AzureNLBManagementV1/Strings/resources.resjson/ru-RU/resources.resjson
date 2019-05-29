@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Балансировщик сетевой нагрузки Azure",
   "loc.helpMarkDown": "[Дополнительная информация](https://go.microsoft.com/fwlink/?linkid=837723)",
-  "loc.description": "Подключение сетевого интерфейса виртуальной машины Azure к серверному пулу адресов балансировщика нагрузки или отключение от него",
+  "loc.description": "Подключение или отключение сетевого интерфейса виртуальной машины Azure для серверного пула адресов Load Balancer",
   "loc.instanceNameFormat": "Балансировщик сетевой нагрузки Azure: $(LoadBalancer) — $(Action)",
   "loc.input.label.ConnectedServiceName": "Подписка Azure",
   "loc.input.help.ConnectedServiceName": "Выберите подписку на Azure Resource Manager для развертывания.",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Dateien extrahieren",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "loc.description": "Extrahiert eine Vielzahl von Archiv- und Komprimierungsdateien, z. B. 7z, RAR, TAR.GZ und ZIP.",
+  "loc.description": "Hiermit werden verschiedene Archiv- und Komprimierungsdateien extrahiert, z. B. 7z, RAR, TAR.GZ und ZIP.",
   "loc.instanceNameFormat": "Dateien extrahieren $(message)",
   "loc.input.label.archiveFilePatterns": "Archivdateimuster",
   "loc.input.help.archiveFilePatterns": "Dateipfade oder Muster der zu extrahierenden Archivdateien. Unterstützt mehrere Zeilen von Minimatchmustern. [Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=800269)",

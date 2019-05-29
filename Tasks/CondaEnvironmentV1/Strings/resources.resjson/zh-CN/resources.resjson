@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Conda 环境",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=873466)",
-  "loc.description": "创建并激活 Conda 环境。",
+  "loc.helpMarkDown": "[更多信息](https://aka.ms/pipelines-anaconda-guide)<br>[任务文档](https://go.microsoft.com/fwlink/?linkid=873466)",
+  "loc.description": "此任务已弃用。在脚本中直接使用 `conda` 来处理 Anaconda 环境。",
   "loc.instanceNameFormat": "Conda 环境 $(environmentName)",
   "loc.input.label.createCustomEnvironment": "创建自定义环境",
   "loc.input.help.createCustomEnvironment": "创建或重新激活 Conda 环境，而不是使用 \"base\" 环境(推荐用于自托管代理)。",

@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 4
+        "Patch": 6
     },
     "instanceNameFormat": "File Transform: $(Package)",
     "groups": [
@@ -90,7 +90,7 @@
     },
     "messages": {
         "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
-        "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",        
+        "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
         "XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",
         "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
         "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",

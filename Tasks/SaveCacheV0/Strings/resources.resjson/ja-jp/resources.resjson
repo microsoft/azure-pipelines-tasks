@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "キャッシュの保存",
+  "loc.helpMarkDown": "現在のパイプラインのローカル キャッシュを公開します。",
+  "loc.description": "現在のパイプラインのローカル キャッシュを公開します。",
+  "loc.instanceNameFormat": "キャッシュの保存",
+  "loc.input.label.key": "キーの名前。",
+  "loc.input.help.key": "キーの名前。",
+  "loc.input.label.path": "発行するためのパス。",
+  "loc.input.help.path": "発行するフォルダーまたはファイルのパスです。これは、完全修飾パスまたはリポジトリのルートからの相対パスです。ワイルドカードはサポートされていません。[変数](https://go.microsoft.com/fwlink/?LinkID=550988) はサポートされています。"
+}

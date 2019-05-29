@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "下載管線成品",
   "loc.helpMarkDown": "從管線將具名成品下載至本機路徑。",
-  "loc.description": "下載管線成品",
+  "loc.description": "下載與管線建立關聯的成品",
   "loc.instanceNameFormat": "下載管線成品",
   "loc.input.label.pipelineId": "要從中下載的特定管線",
   "loc.input.help.pipelineId": "要從中下載的管線。若留空，則會將目前的管線設為目標。",
