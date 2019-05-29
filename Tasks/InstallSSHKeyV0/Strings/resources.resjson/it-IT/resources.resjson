@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Installa chiave SSH",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=875267)",
-  "loc.description": "Installa una chiave SSH prima di una compilazione o una versione",
+  "loc.description": "Installa una chiave SSH prima di una compilazione o una distribuzione",
   "loc.instanceNameFormat": "Installa una chiave SSH",
   "loc.input.label.hostName": "Voce known_hosts",
   "loc.input.help.hostName": "Voce di questa chiave SSH per il file known_hosts.",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "删除文件",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=722333)",
-  "loc.description": "删除文件或文件夹。(最小匹配模式将仅匹配文件路径，而不匹配文件夹路径)",
+  "loc.description": "删除文件夹或与模式匹配的文件",
   "loc.instanceNameFormat": "从 $(SourceFolder) 中删除文件",
   "loc.input.label.SourceFolder": "源文件夹",
   "loc.input.help.SourceFolder": "将在其中运行删除的源文件夹。为空表示存储库的根。如果存储库中没有文件，请使用[变量](https://go.microsoft.com/fwlink/?LinkID=550988)。示例: $(agent.builddirectory)",

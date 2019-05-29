@@ -42,5 +42,7 @@
   "loc.messages.CouldNotMaskSecret": "Значение %s содержит регулярные выражения, поэтому полная маска невозможна",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Не удалось получить маркер доступа для Azure. Код состояния: %s, сообщение о состоянии: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Настройте управляемое удостоверение службы (MSI) для виртуальной машины \"https://aka.ms/azure-msi-docs\". Код состояния: %s; сообщения о состоянии: %s.",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Код состояния: %s, сообщение о состоянии: %s."
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Код состояния: %s, сообщение о состоянии: %s.",
+  "loc.messages.RetryingWithVaultResourceIdFromResponse": "Повторная попытка с идентификатором ресурса хранилища, полученным из ответа: %s",
+  "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек."
 }

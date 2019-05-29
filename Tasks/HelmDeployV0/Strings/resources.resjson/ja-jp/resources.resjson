@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Helm Charts のパッケージ化と配置",
   "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "helm コマンドを実行して、Azure Container Service で Kubernetes クラスターを配置、構成、更新します。",
+  "loc.description": "helm コマンドを実行して、Azure Container Service で Kubernetes クラスターをデプロイ、構成、更新します",
   "loc.instanceNameFormat": "helm $(command)",
   "loc.group.displayName.cluster": "Kubernetes クラスター",
   "loc.group.displayName.commands": "コマンド",
@@ -84,5 +84,6 @@
   "loc.messages.SkipDeleteSecureFiles": "タスクで TLS が有効になっていません。証明書の削除をスキップしています。",
   "loc.messages.SkipDownloadSecureFiles": "タスクで TLS が有効になっていません。証明書のダウンロードをスキップしています。",
   "loc.messages.FileNotFound": "%s でファイルが見つかりませんでした",
-  "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes サービス接続の詳細が見つかりませんでした。"
+  "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes サービス接続の詳細が見つかりませんでした。",
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
 }

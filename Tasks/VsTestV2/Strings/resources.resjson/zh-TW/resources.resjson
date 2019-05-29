@@ -48,7 +48,7 @@
   "loc.input.label.codeCoverageEnabled": "程式碼涵蓋範圍已啟用",
   "loc.input.help.codeCoverageEnabled": "從測試回合收集程式碼涵蓋範圍資訊。",
   "loc.input.label.otherConsoleOptions": "其他主控台選項",
-  "loc.input.help.otherConsoleOptions": "可傳遞至 vstest.console.exe 的其他主控台選項，如<a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">這裡</a>所述。<p>這些選項不受支援，而且會在使用代理程式作業的 [多重代理程式] 平行設定執行測試時，或使用 [測試計劃] 選項執行測試時予以忽略。可改用設定檔案指定這些選項。</p>",
+  "loc.input.help.otherConsoleOptions": "可傳遞至 vstest.console.exe 的其他主控台選項，如<a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">這裡</a>所述。<p>這些選項不受支援，而且會在使用代理程式作業的 [多重代理程式] 平行設定執行測試時，或於自訂批次選項受到選取時使用 [測試計劃]/[測試回合] 選項執行測試時予以忽略。可改用設定檔案指定這些選項。</p>",
   "loc.input.label.distributionBatchType": "批次測試",
   "loc.input.help.distributionBatchType": "批次是一組測試。測試批次會同時執行其測試，然後為該批次發行結果。若工作執行所在的作業設定為使用多個代理程式，每個代理程式會挑選任何可用測試批次來平行執行。<br><br><b>依測試和代理程式的數目分批:</b> 簡易批次，依參與測試回合的測試和代理程式數目分批。<br><br><b>依過去的測試執行時間分批:</b> 這會考量過去的執行時間來建立測試批次，使每個批次的執行時間都大概相等。<br><br><b>依測試組件分批:</b> 來自同一個組件的測試分在同一批。",
   "loc.input.label.batchingBasedOnAgentsOption": "批次選項",
@@ -59,7 +59,7 @@
   "loc.input.help.batchingBasedOnExecutionTimeOption": "此批次會考量過去的執行時間來建立測試批次，如此一來，每個批次就會有幾乎相等的執行時間。快速執行的測試會放在同一批次，而執行時間較長的測試可能另屬不同批次。搭配多重代理程式作業設定使用此選項時，會將測試時間總計降到最低。",
   "loc.input.label.customRunTimePerBatchValue": "各批次的執行時間 (秒)",
   "loc.input.help.customRunTimePerBatchValue": "指定各批次執行時間 (秒)",
-  "loc.input.label.dontDistribute": "在作業中使用多代理程式時不散發測試，而改為複寫",
+  "loc.input.label.dontDistribute": "在作業中使用多代理程式時複寫測試，而不散發",
   "loc.input.help.dontDistribute": "選擇此選項不會在工作正於多代理程式作業中執行時，在代理程式間散發測試。<br>選取的每個測試都會在每個代理程式上重複執行。<br>當代理程式作業已設定為不使用平行處理或多組態選項執行時，不適用此選項。",
   "loc.input.label.testRunTitle": "測試回合標題",
   "loc.input.help.testRunTitle": "提供測試回合的名稱。",
@@ -119,7 +119,7 @@
   "loc.messages.testSettingPropertiesNotSupported": "在 testsettings 檔案中指定的屬性可以透過使用 Visual Studio 2017 Update 4 更高版本的 TestContext 存取",
   "loc.messages.vstestVersionInvalid": "不支援指定的測試平台版本 %s。",
   "loc.messages.configureDtaAgentFailed": "嘗試了 %d 次之後，為伺服器設定測試代理程式仍然失敗。錯誤: %s",
-  "loc.messages.otherConsoleOptionsNotSupported": "使用多重代理程式作業設定時，不支援其他主控台選項。系統會忽略此選項。",
+  "loc.messages.otherConsoleOptionsNotSupported": "這項工作設定不支援其他主控台選項。將會忽略此選項。",
   "loc.messages.distributedTestWorkflow": "在分散式測試流程中",
   "loc.messages.nonDistributedTestWorkflow": "正在使用 vstest.console.exe 執行器執行測試。",
   "loc.messages.dtaNumberOfAgents": "分散式測試執行，作業中的代理程式數目: %s",
@@ -178,5 +178,7 @@
   "loc.messages.UserProvidedSourceFilter": "來源篩選: %s",
   "loc.messages.UnableToGetFeatureFlag": "無法取得功能旗標: %s",
   "loc.messages.diagnosticsInput": "已啟用診斷: %s",
-  "loc.messages.UncPathNotSupported": "測試來源搜尋資料夾的路徑不能是 UNC 路徑。請提供根路徑或 $(System.DefaultWorkingDirectory) 的相對路徑。"
+  "loc.messages.UncPathNotSupported": "測試來源搜尋資料夾的路徑不能是 UNC 路徑。請提供根路徑或 $(System.DefaultWorkingDirectory) 的相對路徑。",
+  "loc.messages.LookingForBuildToolsInstalltion": "正在嘗試從 Visual Studio 建置工具安裝尋找 vstest.console。",
+  "loc.messages.LookingForVsInstalltion": "正在嘗試從 Visual Studio 安裝尋找 vstest.console。"
 }

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "대상 컴퓨터의 PowerShell",
+  "loc.friendlyName": "대상 머신의 PowerShell",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=873465)",
-  "loc.description": "원격 머신에서 PowerShell 스크립트를 실행합니다. 이 버전의 작업에서는 원격 처리를 위해 PSSession 및 Invoke-Command를 사용합니다.",
+  "loc.description": "원격 처리를 위해 PSSession 및 Invoke-Command를 사용하여 원격 머신에서 PowerShell 스크립트를 실행합니다.",
   "loc.instanceNameFormat": "대상 머신에서 PowerShell 실행",
   "loc.releaseNotes": "PSSession 및 invoke-command를 사용하여 대상 머신에서 원격 처리를 수행할 수 있습니다.<br/><br/>* 인라인 스크립트 실행에 대한 지원이 추가되었습니다.<br/><br/>* 기본 및 Credssp 인증이 지원됩니다.<br/><br/>* 오류 처리 옵션(ErrorActionPreference, ignoreLASTEXITCODE 및 표준 오류 시 실패)이 추가되었습니다.",
   "loc.group.displayName.ScriptOptions": "스크립트 옵션",
