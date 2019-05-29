@@ -11,15 +11,14 @@
         "Build",
         "Release"
     ],
-    "preview": "true",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 6
+        "Minor": 153,
+        "Patch": 0
     },
     "instanceNameFormat": "File Transform: $(Package)",
     "groups": [

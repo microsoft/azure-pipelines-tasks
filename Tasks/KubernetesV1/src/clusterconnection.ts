@@ -57,7 +57,7 @@ export default class ClusterConnection {
     public async open() {
         var connectionType = tl.getInput("connectionType", true);
         if (connectionType === "None") {
-            return;
+            return this.initialize();
         }
         var kubeconfig;
         if (!this.kubeconfigFile) {

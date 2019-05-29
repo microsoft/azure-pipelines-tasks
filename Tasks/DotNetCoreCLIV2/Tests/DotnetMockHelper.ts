@@ -131,7 +131,7 @@ export class DotnetMockHelper {
     }
 
     public RegisterLocationServiceMocks() {
-        this.tmr.registerMock('vso-node-api/WebApi', {
+        this.tmr.registerMock('azure-devops-node-api/WebApi', {
             getBearerHandler: function(token){
                 return {};
             },
