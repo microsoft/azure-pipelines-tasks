@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Monitor 경고 쿼리",
+  "loc.friendlyName": "클래식 Azure Monitor 경고 쿼리",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=870240)",
-  "loc.description": "활성 경고에 대해 구성된 Azure Monitor 규칙을 확인합니다.",
+  "loc.description": "활성 경고에 대해 구성된 클래식 Azure Monitor 규칙을 살펴봅니다.",
   "loc.instanceNameFormat": "Azure Monitor 경고 쿼리",
   "loc.input.label.connectedServiceNameARM": "Azure 구독",
   "loc.input.help.connectedServiceNameARM": "모니터링할 Azure Resource Manager 구독을 선택합니다.",

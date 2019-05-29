@@ -137,5 +137,7 @@
   "loc.messages.ASE_SSLIssueRecommendation": "App Service で証明書を使用するには、証明書が信頼された証明機関によって署名されている必要があります。Web アプリで証明書の検証エラーが出る場合は、自己署名証明書を使用している可能性があり、それを解決するには、VSTS_ARM_REST_IGNORE_SSL_ERRORS という名前の変数の値をビルド定義またはリリース定義で true に設定する必要があります。",
   "loc.messages.FailedToGetAzureMetricAlerts": "Azure のメトリック アラートを取得できませんでした: %s。エラー: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Azure のメトリック アラート ルール '%s' リソースを更新できませんでした。エラー: %s",
-  "loc.messages.ResponseNotValid": "応答が無効な形式です"
+  "loc.messages.ResponseNotValid": "応答が無効な形式です",
+  "loc.messages.NotAbleToCreateFirewallRule": "ファイアウォール規則を Azure MySql サーバーに追加する際にエラーが発生しました。エラー: %s",
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
 }

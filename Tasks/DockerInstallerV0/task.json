@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "satisfies": [
@@ -37,13 +37,13 @@
             "defaultValue": "stable",
             "required": false,
             "options": {
-              "stable": "stable",
-              "edge": "edge",
-              "test": "test",
-              "nightly": "nightly"
+                "stable": "stable",
+                "edge": "edge",
+                "test": "test",
+                "nightly": "nightly"
             },
             "helpMarkDown": "Pick the release type to install. Nightly is not supported on Windows"
-          }
+        }
     ],
     "instanceNameFormat": "Install Docker $(dockerVersion)",
     "execution": {

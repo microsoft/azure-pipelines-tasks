@@ -14,8 +14,8 @@
   "loc.input.help.cwd": "在其中執行 Gradle 組建的工作目錄。未指定時，會使用存放庫根路徑。",
   "loc.input.label.options": "選項",
   "loc.input.label.tasks": "工作",
-  "loc.input.label.publishJUnitResults": "發行至 Azure Pipelines/TFS",
-  "loc.input.help.publishJUnitResults": "選取此選項會將 Gradle 組建所產生的 JUnit 測試結果發佈至 Azure Pipelines/TFS。每個與 `Test Results Files` 相符的測試結果檔案都將作為測試回合於 Azure Pipelines/TFS 中發佈。",
+  "loc.input.label.publishJUnitResults": "發佈至 Azure Pipelines",
+  "loc.input.help.publishJUnitResults": "選取此選項會將 Gradle 組建所產生的 JUnit 測試結果發佈至 Azure Pipelines。每個與 `Test Results Files` 相符的測試結果檔案都將作為測試回合於 Azure Pipelines中發佈。",
   "loc.input.label.testResultsFiles": "測試結果檔案",
   "loc.input.help.testResultsFiles": "測試結果檔案路徑。可使用萬用字元 ([詳細資訊](https://go.microsoft.com/fwlink/?linkid=856077))。例如 `**/TEST-*.xml` 表示名稱開頭為 TEST- 的所有 XML 檔案。",
   "loc.input.label.testRunTitle": "測試回合標題",
@@ -79,7 +79,11 @@
   "loc.messages.codeAnalysisArtifactSummaryTitle": "程式碼分析結果",
   "loc.messages.codeAnalysisDisabled": "已停用於組建環境外進行程式碼分析。找不到 %s 的值",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "為 Java %s %s 找出 JAVA_HOME 的位置",
-  "loc.messages.UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
+  "loc.messages.UnsupportedJdkWarning": "JDK 9 與 JDK 10 已失去支援。請在您的專案和管線中切換至較新版本。正在嘗試以 JDK 11 進行建置...",
   "loc.messages.FailedToLocateSpecifiedJVM": "找不到指定的 JDK 版本。請確認指定的 JDK 版本已安裝在代理程式上，且環境變數 '%s' 存在並已設定為對應 JDK 的位置，或者使用 [Java 工具安裝程式](https://go.microsoft.com/fwlink/?linkid=875287) 工作安裝所需的 JDK。",
-  "loc.messages.NoCodeCoverage": "找不到要發行的程式碼涵蓋範圍結果。"
+  "loc.messages.NoCodeCoverage": "找不到要發行的程式碼涵蓋範圍結果。",
+  "loc.messages.InvalidBuildFile": "組建檔案無效或不受支援",
+  "loc.messages.FileNotFound": "檔案或資料夾不存在: %s",
+  "loc.messages.FailedToAppendCC": "無法附加程式碼涵蓋範圍資料: %s",
+  "loc.messages.NoTestResults": "找不到任何符合 %s 的測試結果，因此跳過發行 JUnit 測試結果。"
 }

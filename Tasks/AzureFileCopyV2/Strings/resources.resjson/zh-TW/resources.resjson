@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure 檔案複製",
   "loc.helpMarkDown": "[詳細資訊](https://aka.ms/azurefilecopyreadme)",
-  "loc.description": "將檔案複製到 Azure Blob 或 VM",
+  "loc.description": "將檔案複製到 Azure Blob 儲存體或虛擬機器",
   "loc.instanceNameFormat": "$(Destination) 檔案複製",
   "loc.releaseNotes": "2.0 版的新功能: <br/>&nbsp;&nbsp; 使用更新版本的 AzCopy。",
   "loc.group.displayName.output": "輸出",
@@ -96,5 +96,6 @@
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "重新導向回應位置標頭為 null。",
   "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "將檔案上傳至 Blob 儲存體時 AzCopy.exe 已結束，結束代碼不為零。",
   "loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey": "無法擷取儲存體帳戶金鑰。錯誤: '{0}'",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment."
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "請手動將 WinRM 自訂指令碼解除安裝，並重試部署。",
+  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。"
 }

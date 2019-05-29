@@ -9,7 +9,7 @@
   "loc.input.label.connectedServiceName": "汎用サービス接続",
   "loc.input.help.connectedServiceName": "URL を取得して HTTP 要求用の Authorization ヘッダーを作成するために使う汎用サービス接続を選択します。",
   "loc.input.label.connectedServiceNameARM": "Azure サブスクリプション",
-  "loc.input.help.connectedServiceNameARM": "URL を取得して HTTP 要求用の Authorization ヘッダーを作成するために使う必要のある Azure Resource Manager サブスクリプションを選択します。",
+  "loc.input.help.connectedServiceNameARM": "管理 API の呼び出しに使用する Azure Resource Manager サブスクリプションを選択します。クラウドの 'ManagementPortalUrl' が baseURL として使用されます",
   "loc.input.label.method": "メソッド",
   "loc.input.help.method": "API を呼び出すときに使う HTTP メソッドを選択します。",
   "loc.input.label.headers": "ヘッダー",

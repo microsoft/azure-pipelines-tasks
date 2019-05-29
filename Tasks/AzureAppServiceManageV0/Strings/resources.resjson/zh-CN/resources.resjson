@@ -170,5 +170,6 @@
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "无法提取 Azure 的访问令牌。状态代码: %s，状态消息: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "无法提取托管服务主体的访问令牌。请为虚拟机配置托管服务标识(MSI)(https://aka.ms/azure-msi-docs)。状态代码: %s，状态消息: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "无法提取托管服务主体的访问令牌。状态代码: %s，状态消息: %s",
-  "loc.messages.ASE_SSLIssueRecommendation": "要在应用服务中使用某个证书，该证书必须由受信任的证书颁发机构签名。如果 Web 应用显示证书验证错误，则使用的可能是自签名证书，要解决验证问题，需要在生成或发布管道中，将名为 \"VSTS_ARM_REST_IGNORE_SSL_ERRORS\" 的变量设置为 \"true\" 值。"
+  "loc.messages.ASE_SSLIssueRecommendation": "要在应用服务中使用某个证书，该证书必须由受信任的证书颁发机构签名。如果 Web 应用显示证书验证错误，则使用的可能是自签名证书，要解决验证问题，需要在生成或发布管道中，将名为 \"VSTS_ARM_REST_IGNORE_SSL_ERRORS\" 的变量设置为 \"true\" 值。",
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
 }

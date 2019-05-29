@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 45
+        "Patch": 46
     },
     "minimumAgentVersion": "1.104.0",
     "groups": [
