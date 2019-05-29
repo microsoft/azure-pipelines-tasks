@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Kubernetes に展開する",
   "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "kubectl コマンドを実行して、Azure Container Service で Kubernetes クラスターを展開、構成、更新します。",
+  "loc.description": "kubectl コマンドを実行して、Azure Container Service で Kubernetes クラスターをデプロイ、構成、更新します",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.group.displayName.commands": "コマンド",
   "loc.group.displayName.secrets": "シークレット",
@@ -49,7 +49,7 @@
   "loc.input.label.versionOrLocation": "Kubectl",
   "loc.input.help.versionOrLocation": "kubectl は、Kubernetes クラスターに対してコマンドを実行するためのコマンド ライン インターフェイスです。",
   "loc.input.label.versionSpec": "バージョンの仕様",
-  "loc.input.help.versionSpec": "取得するバージョンのバージョン仕様。例: 1.7.0、1.x.0、4.x.0、6.10.0、>=6.10.0",
+  "loc.input.help.versionSpec": "取得するバージョンのバージョン仕様。例: 1.7.0、1. x .0、4 .x .0、6.10.0",
   "loc.input.label.checkLatest": "最新バージョンのチェック",
   "loc.input.help.checkLatest": "バージョン仕様を満たす利用可能な最新バージョン (stable.txt) を常にオンラインで確認します。これは false にするのが一般的ですが、常に最新版を取得する特定のシナリオの場合は例外です。これにより、実際には必要でない場合にもダウンロードのコストが発生することになります (ホストされたビルド プールの場合は特にそう言えます)。",
   "loc.input.label.specifyLocation": "Kubectl へのパス",
@@ -62,6 +62,7 @@
   "loc.input.help.kubectlOutput": "コマンドの出力の保存先の変数名。",
   "loc.messages.DownloadingClient": "kubernetes クライアントをダウンロードしています。",
   "loc.messages.CreatingSecret": "%s シークレットの作成を実行しています。",
+  "loc.messages.CallToolRunnerExec": "kubectl コマンドの実行と返された Promise オブジェクトの保管を行うため、Toolrunner exec() メソッドを非同期で呼び出しています。",
   "loc.messages.DeleteSecret": "%s シークレットの削除を実行しています",
   "loc.messages.CreatingConfigMap": "%s configmap の作成を実行しています。",
   "loc.messages.DeleteConfigMap": "%s configmap の削除を実行しています",
@@ -73,6 +74,11 @@
   "loc.messages.DownloadPathForStableTxt": "stable.txt のダウンロード パス: %s",
   "loc.messages.DownloadKubeCtlFailed": "kubectl クライアント バージョン %s をダウンロードすることができません。適切なバージョンかどうか、https://github.com/kubernetes/kubernetes/releases で確認します",
   "loc.messages.DownloadStableVersionFailed": "%s から安定バージョンの Kubernetes ファイルをダウンロードすることができません。%s にフォールバックしています",
+  "loc.messages.ReturningToolRunnerExecPromise": "Toolrunner exec() メソッドが非同期で呼び出されました。Promise を返しています。",
+  "loc.messages.ToolRunnerExecCallFailed": "Toolrunner exec() メソッドによって kubectl コマンドにエラーが返されました。エラー: %s。",
+  "loc.messages.ToolRunnerExecCallSucceeded": "Toolrunner exec() メソッドが kubectl コマンドに対して正常に戻されました。",
   "loc.messages.UsingLatestStableVersion": "バージョンの仕様の入力に無効なバージョン 1.7 が指定されました。代わりに最新の安定したバージョンが使用されます。正しいバージョンを https://github.com/kubernetes/kubernetes/releases でご確認ください",
-  "loc.messages.ConfigurationFileNotFound": "%s に一致する構成ファイルは見つかりませんでした。"
+  "loc.messages.ConfigurationFileNotFound": "%s に一致する構成ファイルは見つかりませんでした。",
+  "loc.messages.OutputVariableDataSizeExceeded": "kubectl コマンドの出力がサポートされている最大長を超えたため、出力変数が設定されませんでした。出力の長さ: %s、サポートされている最大長: %s",
+  "loc.messages.WritingDockerConfigToTempFile": "Docker 構成を一時ファイルに書き込んでいます。ファイル パス: %s、Docker 構成: %s"
 }

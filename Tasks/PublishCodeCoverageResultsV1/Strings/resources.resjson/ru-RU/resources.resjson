@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Опубликовать результаты оценки объемов протестированного кода",
+  "loc.friendlyName": "Опубликовать результаты оценки объема протестированного кода",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "loc.description": "Опубликовать результаты оценки объема протестированного кода Cobertura или JaCoCo для сборки",
   "loc.instanceNameFormat": "Опубликовать объем протестированного кода из $(summaryFileLocation)",
@@ -7,6 +7,8 @@
   "loc.input.help.codeCoverageTool": "Средство, с помощью которого создаются результаты объема протестированного кода.",
   "loc.input.label.summaryFileLocation": "Файл сводки",
   "loc.input.help.summaryFileLocation": "Путь к файлу сводки, который содержит статистику объема протестированного кода, например для строк, методов и классов. Значение может содержать шаблоны minimatch. Пример: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml\"",
+  "loc.input.label.pathToSources": "Путь к исходным файлам",
+  "loc.input.help.pathToSources": "Путь к исходным файлам обязателен, если XML-отчеты об объеме протестированного кода не содержат абсолютный путь к исходным файлам. Например, в отчетах JaCoCo не используются абсолютные пути, и при публикации объема протестированного кода JaCoCo для приложений Java этот шаблон будет похож на \"$(System.DefaultWorkingDirectory)/MyApp/src/main/java/\".<br />Эти входные данные также необходимы, если тесты выполняются в контейнере Docker. Эти входные данные должны указывать на абсолютный путь к исходным файлам на узле. Например, \"$(System.DefaultWorkingDirectory)/MyApp/\"",
   "loc.input.label.reportDirectory": "Каталог отчета",
   "loc.input.help.reportDirectory": "Путь к каталогу отчетов HTML об объеме протестированного кода. Каталог отчетов опубликован для более позднего просмотра как артефакт сборки. Значение может содержать шаблоны minimatch. Пример: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura\"",
   "loc.input.label.additionalCodeCoverageFiles": "Дополнительные файлы",
@@ -15,5 +17,10 @@
   "loc.input.help.failIfCoverageEmpty": "Происходит сбой задачи, если объем протестированного кода не создает результаты для публикации.",
   "loc.messages.FoundNMatchesForPattern": "Найдены результаты (%s), соответствующие шаблону: %s",
   "loc.messages.MultipleSummaryFilesFound": "Найдены совпадения в нескольких файлах или каталогах. Используется первое совпадение: %s",
-  "loc.messages.NoCodeCoverage": "Результаты по объему протестированного кода для публикации не найдены."
+  "loc.messages.NoCodeCoverage": "Результаты по объему протестированного кода для публикации не найдены.",
+  "loc.messages.InstallDotNetCoreForHtmlReport": "Установите dotnet core, чтобы включить автоматическое создание HTML-отчета.",
+  "loc.messages.FailedToGenerateHtmlReport": "Не удалось создать HTML-отчет. Ошибка: %s",
+  "loc.messages.IgnoringReportDirectory": "Пропускается каталог отчетов об объеме протестированного кода с HTML-содержимым, так как HTML-содержимое создается автоматически",
+  "loc.messages.UpgradeAgentMessage": "Обновите версию агента. https://github.com/Microsoft/vsts-agent/releases",
+  "loc.messages.GeneratedHtmlReport": "Создан HTML-отчет об объеме протестированного кода: %s"
 }

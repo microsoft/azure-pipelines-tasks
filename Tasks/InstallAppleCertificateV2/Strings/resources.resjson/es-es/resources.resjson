@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Instalar certificado de Apple",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=862067)",
-  "loc.description": "Instala un certificado de Apple necesario para compilar en un agente de macOS.",
+  "loc.description": "Instala un certificado de Apple necesario para compilar en una máquina de agente de macOS.",
   "loc.instanceNameFormat": "Instalar un certificado de Apple",
-  "loc.releaseNotes": "Corrige los bloqueos de la firma de código en un agente autohospedado. La contraseña de cadena de claves debe utilizar ahora \"Default Keychain\" o \"Custom Keychain\". Las compilaciones hospedadas por Microsoft deben usar \"Temporary Keychain\".",
+  "loc.releaseNotes": "Corrige los bloqueos de la firma de código en un agente autohospedado. Una contraseña de cadena de claves debe utilizar ahora \"Default Keychain\" o \"Custom Keychain\". Las compilaciones hospedadas por Microsoft deben usar \"Temporary Keychain\".",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.certSecureFile": "Certificado (P12)",
   "loc.input.help.certSecureFile": "Seleccione el certificado (.p12) que se cargó en \"Archivos seguros\" para instalarlo en el agente de macOS.",
@@ -26,5 +26,7 @@
   "loc.messages.P12PrivateKeyNameNotFound": "No se pudo identificar el nombre de la clave privada: %s",
   "loc.messages.SetKeyPartitionListCommandNotFound": "Se omite la asignación de ACL partition_id de cadena de claves innecesaria en este sistema operativo anterior. El comando de seguridad \"set-key-partition-list\" se introdujo en macOS Sierra (10.12).",
   "loc.messages.SetKeyPartitionListCommandFailed": "Error al establecer la lista ACL partition_id para la clave privada. Compruebe que la \"Contraseña de cadena de claves\" es correcta o use un valor de \"Temporary Keychain\" en su lugar.",
-  "loc.messages.InstallRequiresMac": "Para instalar un certificado de Apple, se requiere un agente de macOS. Apple no admite la instalación de certificados de Apple en Linux o Windows."
+  "loc.messages.InstallRequiresMac": "Para instalar un certificado de Apple, se requiere un agente de macOS. Apple no admite la instalación de certificados de Apple en Linux o Windows.",
+  "loc.messages.CertNotValidYetError": "El certificado \"%s\" (huella digital %s) no es válido hasta el %s.",
+  "loc.messages.CertExpiredError": "El certificado \"%s\" (huella digital %s) expiró el %s."
 }

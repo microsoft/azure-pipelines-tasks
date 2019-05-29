@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure-Dateikopiervorgang",
   "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/azurefilecopyreadme)",
-  "loc.description": "Dateien in Azure-Blobs oder VMs kopieren",
+  "loc.description": "Hiermit werden Dateien in Azure Blob Storage oder VMs kopiert.",
   "loc.instanceNameFormat": "$(Destination)-Dateikopiervorgang",
   "loc.releaseNotes": "Neuigkeiten in Version 2.0: <br/>&nbsp;&nbsp; Eine neuere Version von AzCopy wird verwendet.",
   "loc.group.displayName.output": "Ausgabe",
@@ -96,5 +96,6 @@
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Der Adressheader der Umleitungsantwort ist NULL.",
   "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "\"AzCopy.exe\" wurde mit einem Exitcode ungleich null beendet, während Dateien in den Blobspeicher hochgeladen wurden.",
   "loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey": "Der Speicherkontoschlüssel konnte nicht abgerufen werden. Fehler: {0}",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment."
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Deinstallieren Sie das benutzerdefinierte WinRM-Skript manuell, und wiederholen Sie die Bereitstellung.",
+  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist."
 }

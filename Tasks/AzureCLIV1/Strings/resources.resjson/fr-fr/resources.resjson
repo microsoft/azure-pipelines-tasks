@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure CLI",
   "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=827160)",
-  "loc.description": "Exécuter un script d'interpréteur de commandes ou un script de commandes par lot avec des commandes Azure CLI pour un abonnement Azure",
+  "loc.description": "Exécutez des commandes Azure CLI sur un abonnement Azure via un script d'interpréteur de commandes sur un agent Linux, ou un script de commandes par lot sur un agent Windows.",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
   "loc.releaseNotes": "Nouveautés de la version 1.0 :\n- Prend en charge la nouvelle interface Azure CLI 2.0 basée sur Python\n- Fonctionne avec les agents multiplateformes (Linux, macOS ou Windows)\n- Pour utiliser l'interface Azure CLI 1.0 (basée sur node.js), passez à la tâche version 0.0\n- Limitations :\n - Aucune prise en charge pour les abonnements Azure Classic. Azure CLI 2.0 prend en charge uniquement les abonnements ARM (Azure Resource Manager).",
   "loc.group.displayName.advanced": "Avancé",
@@ -10,11 +10,15 @@
   "loc.input.label.scriptLocation": "Emplacement du script",
   "loc.input.help.scriptLocation": "Type de script : chemin de fichier ou script inline",
   "loc.input.label.scriptPath": "Chemin d'accès du script",
-  "loc.input.help.scriptPath": "Chemin complet du script ou chemin relatif au répertoire de travail par défaut",
+  "loc.input.help.scriptPath": "Chemin complet du script (.bat ou .cmd pour un agent Windows et .sh pour un agent Linux) ou chemin relatif au répertoire de travail par défaut",
   "loc.input.label.inlineScript": "Script Inline",
-  "loc.input.help.inlineScript": "Vous pouvez écrire vos scripts inline ici. Pour les fichiers de commandes, utilisez le préfixe \"call\" avant chaque commande Azure. Vous pouvez également passer des variables prédéfinies et personnalisées à ce script à l'aide d'arguments \n\n exemple pour l'interpréteur de commandes : az --version || az account show \n\n exemple pour les fichiers de commandes : call  az --version || call az account show",
+  "loc.input.help.inlineScript": "Vous pouvez écrire vos scripts inline ici. Pour les agents Windows, utilisez un script de commandes par lot. Pour les agents Linux, utilisez un script d'interpréteur de commandes. Pour les fichiers de commandes, utilisez le préfixe \"call\" avant chaque commande Azure. Vous pouvez également passer des variables prédéfinies et personnalisées à ce script à l'aide d'arguments \n\n exemple pour l'interpréteur de commandes : az --version || az account show \n\n exemple pour les fichiers de commandes : call az --version || call az account show",
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Arguments passés au script",
+  "loc.input.label.addSpnToEnvironment": "Accéder aux détails du principal de service dans le script",
+  "loc.input.help.addSpnToEnvironment": "Ajoute l'ID et la clé de principal de service du point de terminaison Azure choisi à l'environnement d'exécution du script. Vous pouvez utiliser les variables suivantes : '$servicePrincipalId' et '$servicePrincipalKey' dans votre script.\n\nCeci est valable uniquement quand le point de terminaison Azure a un schéma d'authentification du principal de service.",
+  "loc.input.label.useGlobalConfig": "Utiliser la configuration Azure CLI globale",
+  "loc.input.help.useGlobalConfig": "Si la valeur est false, cette tâche utilise son propre [répertoire de configuration Azure CLI](https://docs.microsoft.com/fr-fr/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file) distinct. Permet d'exécuter des tâches Azure CLI dans des mises en production *parallèles*",
   "loc.input.label.cwd": "Répertoire de travail",
   "loc.input.help.cwd": "Répertoire de travail actif dans lequel le script est exécuté. Une valeur vide représente la racine du dépôt (build) ou des artefacts (mise en production), à savoir $(System.DefaultWorkingDirectory)",
   "loc.input.label.failOnStandardError": "Échec sur une erreur standard",
@@ -25,5 +29,10 @@
   "loc.messages.AzureSDKNotFound": "Azure CLI 2.x n'est pas installé sur cette machine.",
   "loc.messages.FailedToLogout": "L'erreur suivante s'est produite durant la déconnexion : %s",
   "loc.messages.LoginFailed": "Échec de la connexion Azure",
-  "loc.messages.ErrorInSettingUpSubscription": "Erreur durant la configuration de l'abonnement"
+  "loc.messages.MSILoginFailed": "Échec de la connexion Azure via Managed Service Identity",
+  "loc.messages.AuthSchemeNotSupported": "Le schéma d'authentification %s n'est pas pris en charge",
+  "loc.messages.ErrorInSettingUpSubscription": "Erreur durant la configuration de l'abonnement",
+  "loc.messages.SettingAzureConfigDir": "Affectation de %s à la variable d'environnement AZURE_CONFIG_DIR",
+  "loc.messages.SettingAzureCloud": "Affectation de %s au cloud actif",
+  "loc.messages.GlobalCliConfigAgentVersionWarning": "Pour une version d'agent < 2.115.0, seule la configuration Azure CLI globale peut être utilisée"
 }

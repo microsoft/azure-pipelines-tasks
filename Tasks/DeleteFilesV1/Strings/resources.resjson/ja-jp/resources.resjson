@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "ファイルの削除",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=722333)",
-  "loc.description": "ファイルまたはフォルダーを削除します。(minimatch パターンは、フォルダー パスではなく、ファイル パスのみと一致します)",
+  "loc.description": "パターンに一致するフォルダーまたはファイルを削除します",
   "loc.instanceNameFormat": "ファイルを $(SourceFolder) から削除する",
   "loc.input.label.SourceFolder": "ソース フォルダー",
   "loc.input.help.SourceFolder": "削除の実行元のソース フォルダー。空白はリポジトリのルートです。ファイルがリポジトリにない場合は、[変数] (https://go.microsoft.com/fwlink/?LinkID=550988) を使用します。例: $(agent.builddirectory)",

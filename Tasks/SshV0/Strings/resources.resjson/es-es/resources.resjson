@@ -18,12 +18,13 @@
   "loc.input.help.args": "Argumentos que se pasan al script de shell.",
   "loc.input.label.failOnStdErr": "Error en STDERR",
   "loc.input.help.failOnStdErr": "Si se selecciona esta opción, la compilación dará error cuando el script o los comandos remotos escriban en STDERR.",
-  "loc.messages.UseDefaultPort": "Usando el puerto 22, que es el predeterminado para SSH, porque no se especificó ningún puerto.",
-  "loc.messages.SettingUpSshConnection": "Intentando establecer una conexión SSH con %s@%s: %s",
-  "loc.messages.SshConnectionSuccessful": "Conectado correctamente.",
   "loc.messages.ConnectionFailed": "No se pudo conectar a la máquina remota. Compruebe los detalles de la conexión de servicio SSH. Error: %s.",
-  "loc.messages.RemoteCopyFailed": "No se pudo copiar el script en la máquina remota. Error: %s.",
+  "loc.messages.FailedToWriteScript": "No se pudo escribir el script en el disco: %s",
   "loc.messages.RemoteCmdExecutionErr": "No se pudo ejecutar el comando debido a errores en la máquina remota.",
   "loc.messages.RemoteCmdNonZeroExitCode": "El comando %s finalizó con el código %s.",
-  "loc.messages.RemoteScriptFileCleanUpFailed": "No se pudo eliminar el archivo de script copiado en la máquina remota. Error = %s."
+  "loc.messages.RemoteCopyFailed": "No se pudo copiar el script en la máquina remota. Error: %s.",
+  "loc.messages.RemoteScriptFileCleanUpFailed": "No se pudo eliminar el archivo de script copiado en la máquina remota. Error = %s.",
+  "loc.messages.SettingUpSshConnection": "Intentando establecer una conexión SSH con %s@%s: %s",
+  "loc.messages.SshConnectionSuccessful": "Conectado correctamente.",
+  "loc.messages.UseDefaultPort": "Usando el puerto 22, que es el predeterminado para SSH, porque no se especificó ningún puerto."
 }

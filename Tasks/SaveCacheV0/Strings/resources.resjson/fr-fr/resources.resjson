@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Enregistrer le cache",
+  "loc.helpMarkDown": "Publiez un cache local pour le pipeline actuel.",
+  "loc.description": "Publiez un cache local pour le pipeline actuel.",
+  "loc.instanceNameFormat": "Enregistrer le cache",
+  "loc.input.label.key": "Nom de la clé.",
+  "loc.input.help.key": "Nom de la clé.",
+  "loc.input.label.path": "Chemin de publication.",
+  "loc.input.help.path": "Chemin de dossier ou de fichier à publier. Il peut s'agir d'un chemin complet ou d'un chemin relatif à la racine du dépôt. Les caractères génériques ne sont pas pris en charge. Les [variables](https://go.microsoft.com/fwlink/?LinkID=550988) sont prises en charge."
+}
