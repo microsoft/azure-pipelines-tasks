@@ -28,8 +28,7 @@ export class BearerHandlerForPresignedUrls extends BearerCredentialHandler {
     }
 }
 
-export function getConnection(areaId: string, collectionUrl: string): Promise<WebApi> {
-    var accessToken = locationUtility.getSystemAccessToken();
+export function getConnection(areaId: string, collectionUrl: string, accessToken: string): Promise<WebApi> {
     return locationUtility
         .getServiceUriFromAreaId(collectionUrl, accessToken, areaId)
         .then(url => {
