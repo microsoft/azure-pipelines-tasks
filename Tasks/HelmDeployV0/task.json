@@ -173,7 +173,7 @@
             "name": "chartPath",
             "label": "Chart Path",
             "type": "filePath",
-            "helpMarkDown": "Path to the chart to install. This can be a path to a packaged chart or a path to an unpacked chart directory. For example, if './redis' is specified the task will run 'helm install ./redis'.",
+            "helpMarkDown": "Path to the chart to install. This can be a path to a packaged chart or a path to an unpacked chart directory. For example, if './redis' is specified the task will run 'helm install ./redis'. If you are consuming a chart which is published as an artifact then the path will be $(System.DefaultWorkingDirectory)/ARTIFACT-NAME/Charts/CHART-NAME",
             "defaultValue": "",
             "visibleRule": "chartType == FilePath || command == package",
             "required": "true",
