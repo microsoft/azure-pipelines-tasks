@@ -17,7 +17,7 @@
     },
     "demands": [],
     "groups": [],
-    "inputs": [       
+    "inputs": [
         {
             "name": "version",
             "type": "string",

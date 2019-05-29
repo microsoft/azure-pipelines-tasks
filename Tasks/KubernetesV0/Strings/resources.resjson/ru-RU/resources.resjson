@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "Развертывание в Kubernetes",
   "loc.helpMarkDown": "[Подробнее](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Развертывание, настройка и обновление кластера Kubernetes в службе контейнеров Azure с помощью команд kubectl.",
+  "loc.description": "Развертывание, настройка и обновление кластера Kubernetes в Службе контейнеров Azure с помощью команд kubectl",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.group.displayName.commands": "Команды",
   "loc.group.displayName.secrets": "Секреты",
-  "loc.group.displayName.configMaps": "Объекты ConfigMap",
+  "loc.group.displayName.configMaps": "ConfigMap",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.group.displayName.output": "Выход",
   "loc.input.label.kubernetesServiceEndpoint": "Подключение к службе Kubernetes",
@@ -49,7 +49,7 @@
   "loc.input.label.versionOrLocation": "Kubectl",
   "loc.input.help.versionOrLocation": "kubectl — это интерфейс командной строки для выполнения команд применительно к кластерам Kubernetes.",
   "loc.input.label.versionSpec": "Спецификатор версии",
-  "loc.input.help.versionSpec": "Спецификатор версии, которую необходимо получить. Примеры: 1.7.0, 1.x.0, 4.x.0, 6.10.0, >=6.10.0",
+  "loc.input.help.versionSpec": "Спецификация версии для получаемой версии. Примеры: 1.7.0, 1.x.0, 4.x.0, 6.10.0",
   "loc.input.label.checkLatest": "Проверить наличие последней версии",
   "loc.input.help.checkLatest": "Всегда проверяет наличие в Интернете последней доступной версии (stable.txt), соответствующей спецификатору версии. Обычно этот параметр имеет значение \"false\", кроме случаев, когда необходимо всегда получать последнюю доступную версию. Это может привести к излишним затратам за скачивание, особенно в случае размещенного пула сборок.",
   "loc.input.label.specifyLocation": "Путь к Kubectl",
@@ -62,6 +62,7 @@
   "loc.input.help.kubectlOutput": "Имя переменной, в которой следует сохранить выходные данные команды.",
   "loc.messages.DownloadingClient": "Скачивается клиент kubernetes.",
   "loc.messages.CreatingSecret": "Выполняется команда create %s secret.",
+  "loc.messages.CallToolRunnerExec": "Асинхронный вызов метода Toolrunner exec() для выполнения команды kubectl и сохранения возвращенного объекта promise.",
   "loc.messages.DeleteSecret": "Выполняется команда delete %s secret",
   "loc.messages.CreatingConfigMap": "Выполняется команда create %s configmap.",
   "loc.messages.DeleteConfigMap": "Выполняется команда delete %s configmap",
@@ -73,6 +74,11 @@
   "loc.messages.DownloadPathForStableTxt": "Путь для скачивания stable.txt: %s",
   "loc.messages.DownloadKubeCtlFailed": "Не удается скачать клиент kubectl версии %s. Проверьте, верна ли версия: https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.DownloadStableVersionFailed": "Не удается скачать файл стабильной версии kubernetes с %s. Возврат к %s",
+  "loc.messages.ReturningToolRunnerExecPromise": "Выполнен асинхронный вызов метода Toolrunner exec(). Возврат обещания.",
+  "loc.messages.ToolRunnerExecCallFailed": "Метод Toolrunner exec() возвратил ошибку для команды kubectl. Ошибка: %s.",
+  "loc.messages.ToolRunnerExecCallSucceeded": "Метод Toolrunner exec() возвратил сведения об успешном выполнении для команды kubectl.",
   "loc.messages.UsingLatestStableVersion": "В спецификации версии указана недопустимая версия 1.7. Вместо нее будет использована последняя стабильная версия. Проверьте правильность версий на странице https://github.com/kubernetes/kubernetes/releases",
-  "loc.messages.ConfigurationFileNotFound": "Файл конфигурации, соответствующий %s, не найден."
+  "loc.messages.ConfigurationFileNotFound": "Файл конфигурации, соответствующий %s, не найден.",
+  "loc.messages.OutputVariableDataSizeExceeded": "Выходная переменная не задана, так как для выходных данных команды kubectl превышена максимально поддерживаемая длина. Длина выходных данных: %s, максимально поддерживаемая длина: %s",
+  "loc.messages.WritingDockerConfigToTempFile": "Запись конфигурации Docker во временный файл. Путь к файлу: %s, конфигурация Docker: %s"
 }

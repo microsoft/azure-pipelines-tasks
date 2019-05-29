@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure CLI",
   "loc.helpMarkDown": "[Дополнительная информация](http://go.microsoft.com/fwlink/?LinkID=827160)",
-  "loc.description": "Запустить сценарий оболочки или пакетный сценарий с командами Azure CLI для подписки Azure",
+  "loc.description": "Выполнение команд Azure CLI для подписки Azure в скрипте оболочки при использовании агента Linux или пакетном скрипте при использовании агента Windows.",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
   "loc.releaseNotes": "Новые возможности в версии 1.0:\n- поддержка нового Azure CLI 2.0 на основе Python;\n- поддержка кроссплатформенных агентов (Linux, macOS или Windows);\n- для работы с Azure CLI 1.0 (на основе Node.js) вернитесь к версии задачи 0.0.\n- Ограничения:\n- классические подписки Azure не поддерживаются. Azure CLI 2.0 поддерживает только подписки Azure Resource Manager (ARM).",
   "loc.group.displayName.advanced": "Дополнительно",
@@ -10,11 +10,15 @@
   "loc.input.label.scriptLocation": "Расположение сценария",
   "loc.input.help.scriptLocation": "Тип сценария: путь к файлу или встроенный сценарий",
   "loc.input.label.scriptPath": "Путь к скрипту",
-  "loc.input.help.scriptPath": "Полный путь к сценарию или путь относительно рабочего каталога по умолчанию",
+  "loc.input.help.scriptPath": "Полный путь для скрипта (BAT или CMD при использовании агента на основе Windows и SH при использовании агента на основе Linux) или путь относительно рабочего каталога по умолчанию",
   "loc.input.label.inlineScript": "Встроенный скрипт",
-  "loc.input.help.inlineScript": "Здесь вы можете писать собственные встроенные сценарии. Для пакетных файлов используйте префикс \"call\" перед каждой командой Azure. Вы также можете передать в сценарий определенные заранее и пользовательские переменные с помощью аргументов. \n\n Пример для оболочки: az --version || az account show \n\n Пример для пакетных файлов: call  az --version || call az account show",
+  "loc.input.help.inlineScript": "Здесь можно создать встроенные скрипты. При работе с агентом Windows используйте пакетные скрипты, а при работе с агентами на основе Linux — скрипты оболочки. Для пакетных файлов используйте префикс \"call\" перед каждой командой Azure. Вы также можете передать в этот скрипт предопределенные и пользовательские переменные с помощью аргументов \n\n Пример для скриптов оболочки: az --version || az account show \n\n Пример для пакетных скриптов: call  az --version || call az account show",
   "loc.input.label.args": "Аргументы",
   "loc.input.help.args": "Аргументы, переданные в сценарий",
+  "loc.input.label.addSpnToEnvironment": "Доступ к сведениям о субъекте-службе в скрипте",
+  "loc.input.help.addSpnToEnvironment": "Добавляет идентификатор субъекта-службы и ключ выбранной конечной точки Azure в среду выполнения скрипта. В скрипте можно использовать следующие переменные: \"$servicePrincipalId\" и \"$servicePrincipalKey\".\n\nЭто учитывается, только если конечная точка Azure имеет схему проверки подлинности \"Субъект-служба\".",
+  "loc.input.label.useGlobalConfig": "Использовать глобальную конфигурацию Azure CLI",
+  "loc.input.help.useGlobalConfig": "Если задано значение false, задача будет использовать собственный отдельный [каталог конфигурации Azure CLI](https://docs.microsoft.com/en-us/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file). Это можно использовать для выполнения задач Azure CLI в *параллельных* выпусках",
   "loc.input.label.cwd": "Рабочий каталог",
   "loc.input.help.cwd": "Текущий рабочий каталог, в котором выполняется сценарий. Если значение пустое, используется корень репозитория (сборки) или артефакты (выпуска): $(System.DefaultWorkingDirectory).",
   "loc.input.label.failOnStandardError": "Сбой со стандартной ошибкой",
@@ -25,5 +29,10 @@
   "loc.messages.AzureSDKNotFound": "На этом компьютере не установлен Azure CLI 2.x.",
   "loc.messages.FailedToLogout": "Во время выхода из системы произошла следующая ошибка: %s",
   "loc.messages.LoginFailed": "Не удалось войти в Azure",
-  "loc.messages.ErrorInSettingUpSubscription": "Ошибка при настройке подписки"
+  "loc.messages.MSILoginFailed": "Сбой входа Azure с использованием Управляемого удостоверения службы",
+  "loc.messages.AuthSchemeNotSupported": "Схема проверки подлинности %s не поддерживается",
+  "loc.messages.ErrorInSettingUpSubscription": "Ошибка при настройке подписки",
+  "loc.messages.SettingAzureConfigDir": "Задание переменной среды AZURE_CONFIG_DIR: %s",
+  "loc.messages.SettingAzureCloud": "Задание активного облака: %s",
+  "loc.messages.GlobalCliConfigAgentVersionWarning": "Для агента версии ниже 2.115.0 можно использовать только глобальную конфигурацию Azure CLI"
 }

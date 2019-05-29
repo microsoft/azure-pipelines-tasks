@@ -12,8 +12,8 @@
   "loc.input.help.options": "Geben Sie die Optionen an, die an die Ant-Befehlszeile übergeben werden sollen. Sie können Ihre eigenen Eigenschaften angeben (z. B. \"***-DmyProperty=meinEigenschaftenWert***\") und auch integrierte Variablen verwenden (z. B. \"***-DcollectionId=$(system.collectionId)***\"). Alternativ werden die integrierten Variablen bereits als Umgebungsvariablen während des Builds festgelegt und können direkt übergeben werden (z. B. \"***-DcollectionIdAsEnvVar=%SYSTEM_COLLECTIONID%***\").",
   "loc.input.label.targets": "Ziel(e)",
   "loc.input.help.targets": "Eine optionale, durch Leerzeichen getrennte Liste der zu erstellenden Ziele. Wenn keine Angabe erfolgt, wird das \"Standardziel\" verwendet. Wenn kein \"Standardziel\" definiert ist, wird Ant 1.6.0 verwendet, und alle Tasks auf oberster Ebene werden später erstellt.",
-  "loc.input.label.publishJUnitResults": "In Azure Pipelines/TFS veröffentlichen",
-  "loc.input.help.publishJUnitResults": "Wählen Sie diese Option aus, um vom Ant-Build generierte JUnit-Testergebnisse in Azure Pipelines/TFS zu veröffentlichen. Jede Testergebnisdatei, die mit \"Testergebnisdateien\" übereinstimmt, wird als Testlauf in Azure Pipelines/TFS veröffentlicht.",
+  "loc.input.label.publishJUnitResults": "In Azure Pipelines veröffentlichen",
+  "loc.input.help.publishJUnitResults": "Wählen Sie diese Option aus, um vom Ant-Build generierte JUnit-Testergebnisse in Azure Pipelines zu veröffentlichen. Jede Testergebnisdatei, die mit \"Testergebnisdateien\" übereinstimmt, wird als Testlauf in Azure Pipelines veröffentlicht.",
   "loc.input.label.testResultsFiles": "Testergebnisdateien",
   "loc.input.help.testResultsFiles": "Pfad der Testergebnisdateien. Platzhalter können verwendet werden ([weitere Informationen](https://go.microsoft.com/fwlink/?linkid=856077)). Beispiel: \"**/TEST-*.xml\" für alle XML-Dateien, deren Name mit \"TEST-\" beginnt.",
   "loc.input.label.testRunTitle": "Testlauftitel",
@@ -39,8 +39,9 @@
   "loc.input.label.jdkArchitecture": "JDK-Architektur",
   "loc.input.help.jdkArchitecture": "Geben Sie optional die JDK-Architektur an (x86, x64).",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "JAVA_HOME für Java %s %s finden",
-  "loc.messages.UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
+  "loc.messages.UnsupportedJdkWarning": "JDK 9 und JDK 10 werden nicht unterstützt. Wechseln Sie in Ihrem Projekt und Ihrer Pipeline zu einer neueren Version. Es wird versucht, die Erstellung mit JDK 11 durchzuführen...",
   "loc.messages.FailedToLocateSpecifiedJVM": "Die angegebene JDK-Version wurde nicht gefunden. Stellen Sie sicher, dass die angegebene JDK-Version auf dem Agent installiert und die Umgebungsvariable \"%s\" vorhanden und auf den Speicherort eines entsprechenden JDK festgelegt ist. Sie können auch die Aufgabe [Installer für Java-Tools](https://go.microsoft.com/fwlink/?linkid=875287) verwenden, um das gewünschte JDK zu installieren.",
   "loc.messages.DiscontinueAntCodeCoverage": "Die Unterstützung der automatisierten Code Coverage-Berichterstellung für Ant-Projekte wird eingestellt. Weitere Informationen erhalten Sie unter https://go.microsoft.com/fwlink/?linkid=875306.",
-  "loc.messages.NoCodeCoverage": "Keine Code Coverage-Ergebnisse zum Veröffentlichen gefunden."
+  "loc.messages.NoCodeCoverage": "Keine Code Coverage-Ergebnisse zum Veröffentlichen gefunden.",
+  "loc.messages.NoTestResults": "Es wurden keine Testergebnisdateien gefunden, die mit %s übereinstimmen. Das Veröffentlichen von JUnit-Testergebnissen wird daher übersprungen."
 }

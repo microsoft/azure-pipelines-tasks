@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "更新 Service Fabric 清单",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=820529)",
-  "loc.description": "自动更新打包的 Service Fabric 应用程序中的部分应用程序和服务清单。",
+  "loc.description": "自动更新打包的 Azure Service Fabric 应用程序中的应用程序和服务清单的各部分",
   "loc.instanceNameFormat": "更新 Service Fabric 清单($(updateType))",
   "loc.input.label.updateType": "更新类型",
   "loc.input.help.updateType": "指定应对清单文件进行的更新的类型。为了使用两种更新类型，请将此任务的实例添加到要执行的每种更新类型的生成管道中。",

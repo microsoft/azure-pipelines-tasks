@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Тестирование в Центре приложений",
   "loc.helpMarkDown": "Чтобы получить помощь в выполнении этой задачи, посетите [сайт службы поддержки](https://aka.ms/appcentersupport) Центра приложений Visual Studio.",
-  "loc.description": "Тестирование пакетов приложений в Центре приложений Visual Studio.",
+  "loc.description": "Тестирование пакетов приложений в Центре приложений Visual Studio",
   "loc.instanceNameFormat": "Тестировать в Центре приложений Visual Studio",
   "loc.group.displayName.prepare": "Подготовить тесты",
   "loc.group.displayName.run": "Запуск тестов",

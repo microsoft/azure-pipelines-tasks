@@ -84,5 +84,6 @@
   "loc.messages.SkipDeleteSecureFiles": "작업에서 TLS를 사용할 수 없습니다. 인증서 삭제를 건너뜁니다.",
   "loc.messages.SkipDownloadSecureFiles": "작업에서 TLS를 사용할 수 없습니다. 인증서 다운로드를 건너뜁니다.",
   "loc.messages.FileNotFound": "%s에 파일에 없습니다.",
-  "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes 서비스 연결 정보를 찾을 수 없습니다."
+  "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes 서비스 연결 정보를 찾을 수 없습니다.",
+  "loc.messages.ExpiredServicePrincipal": "Azure의 액세스 토큰을 페치할 수 없습니다. 사용한 서비스 주체가 유효하고 만료되지 않았는지 확인하세요."
 }

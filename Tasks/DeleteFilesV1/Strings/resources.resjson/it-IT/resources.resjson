@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Elimina file",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=722333)",
-  "loc.description": "Consente di eliminare file o cartelle usando criteri di corrispondenza minima che prendono in considerazione solo i percorsi dei file e non i percorsi delle cartelle.",
+  "loc.description": "Elimina cartelle o file corrispondenti a un criterio",
   "loc.instanceNameFormat": "Elimina file da $(SourceFolder)",
   "loc.input.label.SourceFolder": "Cartella di origine",
   "loc.input.help.SourceFolder": "Cartella di origine da cui verranno eseguite le eliminazioni. Il valore vuoto corrisponde alla radice del repository. Usare [variabili](https://go.microsoft.com/fwlink/?LinkID=550988) se i file non sono presenti nel repository. Esempio: $(agent.builddirectory)",

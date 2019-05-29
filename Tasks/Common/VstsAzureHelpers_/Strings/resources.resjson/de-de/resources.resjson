@@ -9,7 +9,7 @@
   "loc.messages.AZ_UnsupportedAuthScheme0": "Nicht unterstütztes Authentifizierungsschema \"{0}\" für den Azure-Endpunkt.",
   "loc.messages.AZ_AvailableModules": "Die Liste verfügbarer {0}-Module:",
   "loc.messages.AZ_InvalidARMEndpoint": "Der angegebene AzureRM-Endpunkt ist ungültig.",
-  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Could not fetch access token for Managed Identity. Please configure Managed Identity for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '{0}', Error message: {1}",
-  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Identity. Status code: '{0}', Error message: {1}",
-  "loc.messages.AZ_MsiFailure": "Could not fetch access token for Managed Identity. {0}"
+  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Für die verwaltete Identität konnte kein Zugriffstoken abgerufen werden. Konfigurieren Sie die verwaltete Identität für die VM, siehe https://aka.ms/azure-msi-docs. Statuscode: {0}, Fehlermeldung: {1}",
+  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Für die verwaltete Identität konnte kein Zugriffstoken abgerufen werden. Statuscode: {0}, Fehlermeldung: {1}",
+  "loc.messages.AZ_MsiFailure": "Für die verwaltete Identität konnte kein Zugriffstoken abgerufen werden. {0}"
 }

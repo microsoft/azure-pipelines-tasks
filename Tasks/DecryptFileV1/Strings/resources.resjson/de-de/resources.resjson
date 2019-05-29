@@ -1,6 +1,7 @@
 {
   "loc.friendlyName": "Datei entschlüsseln (OpenSSL)",
-  "loc.description": "Ein Thin Utility-Task für die Dateientschlüsselung mithilfe von OpenSSL.",
+  "loc.helpMarkDown": "",
+  "loc.description": "Hiermit wird eine Datei mit OpenSSL entschlüsselt.",
   "loc.instanceNameFormat": "Entschlüsseln $(inFile)",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.cipher": "Verschlüsselungsverfahren",
