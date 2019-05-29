@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613729)",
-  "loc.description": "Générez une application iOS avec Xamarin sur macOS.",
+  "loc.description": "Générer une application iOS avec Xamarin sur macOS",
   "loc.instanceNameFormat": "Générer la solution Xamarin.iOS $(solution)",
   "loc.releaseNotes": "La configuration de la signature iOS a été supprimée de la tâche. Utilisez Fichiers sécurisés avec les tâches de prise en charge Installer le certificat Apple et Installer le profil d'approvisionnement Apple pour configurer la signature. Mise à jour des options pour une meilleure utilisation avec Visual Studio pour Mac.",
   "loc.group.displayName.sign": "Signature et configuration",

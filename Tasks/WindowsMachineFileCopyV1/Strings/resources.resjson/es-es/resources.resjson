@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Copia de archivo en equipo Windows",
+  "loc.friendlyName": "Copia de archivos en máquina de Windows",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=627415)",
-  "loc.description": "Copiar archivos en máquinas remotas",
+  "loc.description": "Copia archivos en máquinas remotas de Windows.",
   "loc.instanceNameFormat": "Copiar archivos desde $(SourcePath)",
   "loc.group.displayName.advanced": "Opciones avanzadas",
   "loc.input.label.SourcePath": "Origen",
@@ -11,7 +11,7 @@
   "loc.input.label.AdminUserName": "Inicio de sesión del administrador",
   "loc.input.help.AdminUserName": "Inicio de sesión del administrador para los equipos de destino.",
   "loc.input.label.AdminPassword": "Contraseña",
-  "loc.input.help.AdminPassword": "Contraseña de inicio de sesión del administrador para las máquinas de destino. <br>Admite la variable declarada en las definiciones de compilación o versión como \"$(passwordVariable)\". <br>Para proteger la variable, puede marcar el tipo como \"secret\". ",
+  "loc.input.help.AdminPassword": "Contraseña de inicio de sesión del administrador para las máquinas de destino. <br>Admite la variable definida en las canalizaciones de compilación o de versión como \"$(passwordVariable)\". <br>Para proteger la variable, puede marcarla como \"secret\". ",
   "loc.input.label.TargetPath": "Carpeta de destino",
   "loc.input.help.TargetPath": "Ruta de acceso local en los equipos de destino o una ruta de acceso UNC accesible donde copiar los archivos desde el origen, como d:\\fabrikam o \\\\\\\\fabrikam\\Web.",
   "loc.input.label.CleanTargetBeforeCopy": "Limpiar destino",

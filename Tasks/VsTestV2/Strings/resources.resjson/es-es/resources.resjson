@@ -48,7 +48,7 @@
   "loc.input.label.codeCoverageEnabled": "Cobertura de código habilitada",
   "loc.input.help.codeCoverageEnabled": "Recopilar información de cobertura de código de la serie de pruebas.",
   "loc.input.label.otherConsoleOptions": "Otras opciones de la consola",
-  "loc.input.help.otherConsoleOptions": "Otras opciones de consola que se pueden pasar a vstest.console.exe, tal y como se documenta <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">aquí</a>. <p>Estas opciones no se admiten y se ignorarán al ejecutar pruebas con la configuración paralela \"Multiagente\" de un trabajo de agente o al ejecutarlas con la opción \"Plan de pruebas\". Para especificar las opciones, se puede usar un archivo de configuración en su lugar.</p>",
+  "loc.input.help.otherConsoleOptions": "Otras opciones de consola que se pueden pasar a vstest.console.exe, tal y como se documenta <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">aquí</a>. <p>Estas opciones no se admiten y se ignorarán al ejecutar pruebas con la configuración paralela \"Multiagente\" de un trabajo de agente o al ejecutarlas con la opción \"Plan de pruebas\" o \"Serie de pruebas\" cuando se seleccione una opción de procesamiento por lotes personalizado. Para especificar las opciones, se puede usar un archivo de configuración en su lugar.</p>",
   "loc.input.label.distributionBatchType": "Pruebas en lote",
   "loc.input.help.distributionBatchType": "Un lote es un grupo de pruebas. Un lote de pruebas se ejecuta de una vez y los resultados se publican para ese lote. Si el trabajo en el que se ejecuta la tarea está establecido para usar varios agentes, cada agente selecciona los lotes de pruebas que haya disponibles para ejecutarlos en paralelo.<br><br><b>En función del número de pruebas y de agentes:</b> procesamiento por lotes sencillo basado en el número de pruebas y de agentes que participan en la serie de pruebas.<br><br><b>En función del tiempo de ejecución transcurrido de las pruebas:</b> este procesamiento por lotes considera el tiempo de ejecución transcurrido para crear lotes de pruebas de modo que cada lote tenga, aproximadamente, el mismo tiempo de ejecución.<br><br><b>En función de los ensamblados de prueba:</b> las pruebas de un ensamblado se procesan juntas en un lote.",
   "loc.input.label.batchingBasedOnAgentsOption": "Opciones de lote",
@@ -59,7 +59,7 @@
   "loc.input.help.batchingBasedOnExecutionTimeOption": "Este procesamiento por lotes considera el tiempo de ejecución transcurrido para crear lotes de pruebas de modo que cada lote tenga, aproximadamente, el mismo tiempo de ejecución. Las pruebas de ejecución rápida se procesarán juntas en un lote, mientras que las de ejecución prolongada pueden pertenecer a lotes diferentes. Cuando esta opción se usa en un trabajo multiagente, el tiempo total de las pruebas se reduce al mínimo.",
   "loc.input.label.customRunTimePerBatchValue": "Tiempo de ejecución por lote (en segundos)",
   "loc.input.help.customRunTimePerBatchValue": "Especifique el tiempo de ejecución por lote (en segundos)",
-  "loc.input.label.dontDistribute": "No distribuir pruebas, sino replicarlas, cuando se usen varios agentes en el trabajo",
+  "loc.input.label.dontDistribute": "Replicar pruebas en lugar de distribuirlas cuando se usen varios agentes en el trabajo",
   "loc.input.help.dontDistribute": "Si elige esta opción, no se distribuirán pruebas entre agentes cuando la tarea se ejecute en un trabajo multiagente.<br>Cada una de las pruebas seleccionadas se repetirá en cada agente.<br>La opción no es aplicable cuando el trabajo de agente está configurado para ejecutarse sin paralelismo o con la opción de varias configuraciones.",
   "loc.input.label.testRunTitle": "Título de la serie de pruebas",
   "loc.input.help.testRunTitle": "Asigne un nombre a la serie de pruebas.",
@@ -119,7 +119,7 @@
   "loc.messages.testSettingPropertiesNotSupported": "Se puede acceder a las propiedades especificadas en el archivo testsettings a través de TestContext mdiante Visual Studio 2017 Update 4 o superior",
   "loc.messages.vstestVersionInvalid": "La versión de la plataforma de prueba determinada %s no existe.",
   "loc.messages.configureDtaAgentFailed": "No se pudo configurar el agente de pruebas con el servidor, incluso después de %d reintentos. Error: %s",
-  "loc.messages.otherConsoleOptionsNotSupported": "No se admiten otras opciones de la consola al usar la configuración del trabajo multiagente. Esta opción se ignorará.",
+  "loc.messages.otherConsoleOptionsNotSupported": "No se admiten otras opciones de la consola para esta configuración de tarea. Esta opción se ignorará.",
   "loc.messages.distributedTestWorkflow": "En flujo de pruebas distribuido",
   "loc.messages.nonDistributedTestWorkflow": "Ejecutando pruebas con el ejecutor de vstest.console.exe.",
   "loc.messages.dtaNumberOfAgents": "Ejecución de pruebas distribuidas, número de agentes en el trabajo: %s",
@@ -178,5 +178,7 @@
   "loc.messages.UserProvidedSourceFilter": "Filtro de origen: %s",
   "loc.messages.UnableToGetFeatureFlag": "No se puede obtener la marca de característica: %s",
   "loc.messages.diagnosticsInput": "Diagnósticos habilitados: %s",
-  "loc.messages.UncPathNotSupported": "La ruta de acceso a la carpeta de búsqueda de orígenes de prueba no puede ser una ruta UNC. Proporcione una ruta de acceso raíz o una ruta de acceso relativa a $(System.DefaultWorkingDirectory)."
+  "loc.messages.UncPathNotSupported": "La ruta de acceso a la carpeta de búsqueda de orígenes de prueba no puede ser una ruta UNC. Proporcione una ruta de acceso raíz o una ruta de acceso relativa a $(System.DefaultWorkingDirectory).",
+  "loc.messages.LookingForBuildToolsInstalltion": "Se está intentando encontrar vstest.console desde una instalación de herramientas de compilación de Visual Studio.",
+  "loc.messages.LookingForVsInstalltion": "Se está intentando encontrar vstest.console desde una instalación de Visual Studio."
 }

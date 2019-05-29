@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Riga di comando",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613735)",
-  "loc.description": "Consente di eseguire uno script da riga di comando con cmd.exe in Windows e usare bash in macOS e Linux.",
+  "loc.description": "Consente di eseguire uno script da riga di comando usando Bash in Linux in macOS e cmd.exe in Windows",
   "loc.instanceNameFormat": "Script da riga di comando",
   "loc.releaseNotes": "Coerenza delle attività per gli script. Aggiunta del supporto per più righe.",
   "loc.group.displayName.advanced": "Avanzate",

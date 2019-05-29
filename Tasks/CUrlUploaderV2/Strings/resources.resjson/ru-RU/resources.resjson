@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Отправка файлов с помощью cURL",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=627418)",
-  "loc.description": "Use cURL to upload files.",
+  "loc.description": "Использовать поддерживаемые протоколы cURL для отправки файлов",
   "loc.instanceNameFormat": "Отправить $(files) с помощью cURL",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.files": "Файлы",

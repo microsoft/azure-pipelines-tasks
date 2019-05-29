@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Python バージョンを使用する",
+  "loc.friendlyName": "Python バージョンの使用",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=871498)",
-  "loc.description": "ツール キャッシュから Python の指定されたバージョンを取得します。必要に応じて PATH に追加します。",
+  "loc.description": "ツール キャッシュから Python の指定されたバージョンを使用し、必要に応じて PATH に追加します",
   "loc.instanceNameFormat": "Python $(versionSpec) を使用する",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.versionSpec": "バージョンの仕様",
@@ -10,10 +10,11 @@
   "loc.input.help.addToPath": "取得した Python バージョンを PATH 環境変数の先頭に追加して、後続のタスクまたはスクリプトで出力変数を使うことなく利用できるようにするかどうか。",
   "loc.input.label.architecture": "アーキテクチャ",
   "loc.input.help.architecture": "Python インタープリターのターゲット アーキテクチャ (x86、x64) です。",
-  "loc.messages.ListAvailableVersions": "Versions in %s:",
+  "loc.messages.ListAvailableVersions": "%s のバージョン:",
   "loc.messages.PlatformNotRecognized": "プラットフォームが認識されません",
   "loc.messages.PrependPath": "ディレクトリ %s を PATH 環境変数の前に追加しています",
-  "loc.messages.ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
-  "loc.messages.ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
-  "loc.messages.VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory."
+  "loc.messages.PyPyNotFound": "Agent.ToolsDirectory に PyPy%d のインストールが見つかりませんでした。",
+  "loc.messages.ToolNotFoundMicrosoftHosted": "これが Microsoft によってホストされているエージェントの場合、このイメージが %s の side-by-side バージョンを %s でサポートしているかをご確認ください。",
+  "loc.messages.ToolNotFoundSelfHosted": "これがセルフホストテッド エージェントの場合、side-by-side の %s バージョンを %s で構成する方法をご確認ください。",
+  "loc.messages.VersionNotFound": "バージョン仕様 %s (アーキテクチャ %s) が Agent.ToolsDirectory 内のどのバージョンにも一致しませんでした。"
 }

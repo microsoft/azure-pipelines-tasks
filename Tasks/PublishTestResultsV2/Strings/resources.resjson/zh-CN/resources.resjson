@@ -1,18 +1,20 @@
 {
   "loc.friendlyName": "发布测试结果",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "将测试结果发布到 Azure Pipelines/TFS",
+  "loc.description": "将测试结果发布到 Azure Pipelines",
   "loc.instanceNameFormat": "发布测试结果 $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>NUnit3 支持</li><li>Minimatch 文件模式支持</li></ul>",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.testRunner": "测试结果格式",
-  "loc.input.help.testRunner": "所选测试运行程序(例如 JUnit、VSTest、XUnit V2 和 NUnit)生成的测试结果文件的格式。",
+  "loc.input.help.testRunner": "所选测试运行程序(例如 JUnit、VSTest、XUnit V2、NUnit 和 CTest)生成的测试结果文件的格式。",
   "loc.input.label.testResultsFiles": "测试结果文件",
   "loc.input.help.testResultsFiles": "测试结果文件路径。支持多行 minimatch 模式。[详细信息](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.input.label.searchFolder": "搜索文件夹",
   "loc.input.help.searchFolder": "在其中搜索测试结果文件的文件夹。默认为 $(System.DefaultWorkingDirectory)。",
   "loc.input.label.mergeTestResults": "合并测试结果",
   "loc.input.help.mergeTestResults": "为每个结果文件创建测试运行。选中此选项可将结果合并到单个测试运行中。为了进行优化以提高性能，如果存在超过 100 个结果文件，结果将合并到单个运行中，而不无论此选项如何。",
+  "loc.input.label.failTaskOnFailedTests": "如果存在测试问题，则会失败",
+  "loc.input.help.failTaskOnFailedTests": "如果存在任何测试问题，任务将失败。如果在结果文件中检测到测试问题，请选中此选项以使任务失败。",
   "loc.input.label.testRunTitle": "测试运行标题",
   "loc.input.help.testRunTitle": "提供测试运行的名称。",
   "loc.input.label.platform": "生成平台",
@@ -22,5 +24,6 @@
   "loc.input.label.publishRunAttachments": "上传测试结果文件",
   "loc.input.help.publishRunAttachments": "运行测试时，上传日志和包含收集的诊断信息的其他文件。",
   "loc.messages.NoMatchingFilesFound": "未找到与“%s”匹配的测试结果文件。",
-  "loc.messages.ErrorTestResultsPublisher": "执行 TestResultsPublisher 时出错: %s。"
+  "loc.messages.ErrorTestResultsPublisher": "执行 TestResultsPublisher 时出错: %s。",
+  "loc.messages.ErrorFailTaskOnFailedTests": "在结果文件中检测到一个或多个测试失败。可以在“测试”选项卡中查看已发布测试结果的详细摘要。"
 }

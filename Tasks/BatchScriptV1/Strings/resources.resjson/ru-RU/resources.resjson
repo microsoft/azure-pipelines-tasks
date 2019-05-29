@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Пакетный сценарий",
+  "loc.friendlyName": "Пакетный скрипт",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613733)",
-  "loc.description": "Выполнение скрипта bat или cmd Windows и при необходимости предоставление разрешения на изменение среды",
+  "loc.description": "Выполнение пакетного скрипта или команды Windows и при необходимости предоставление разрешения на изменение среды",
   "loc.instanceNameFormat": "Выполнить сценарий $(filename)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.filename": "Путь",
