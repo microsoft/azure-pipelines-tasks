@@ -128,10 +128,8 @@ describe('General Suite', function () {
         done();
     })
 
-    it('Find unsupported demands', (done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-
-        var supportedDemands: string[] = ['AndroidSDK',
+    var supportedDemands: string[] = [
+            'AndroidSDK',
             'ant',
             'AzurePS',
             'Chef',
@@ -160,6 +158,9 @@ describe('General Suite', function () {
             'Xamarin.Android',
             'Xamarin.iOS',
             'xcode'];
+
+    it('Find unsupported demands', (done) => {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         supportedDemands.forEach(demand => {
             if (supportedDemands.indexOf(demand.toLocaleLowerCase()) < 0) {
@@ -196,6 +197,52 @@ describe('General Suite', function () {
 
         if (unsupportedDemands.length > 0) {
             assert(false, 'find unsupported demands, please take necessary operation to fix this. unsupported demands count: ' + unsupportedDemands.length);
+        }
+
+        done();
+    })
+
+    it('Find unsupported satisfied capabilities', (done) => {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        // 'Node' is added for back-compat with formerly malformed capabilities in NodeToolV0 and UseNodeV1
+        var supportedCapabilities: string[] = (supportedDemands.concat('Node'));
+
+        supportedCapabilities.forEach(capability => {
+            if (supportedCapabilities.indexOf(capability.toLocaleLowerCase()) < 0) {
+                supportedCapabilities.push(capability.toLocaleLowerCase());
+            }
+        });
+
+        // Path to the _build/Tasks folder.
+        var tasksRootFolder = path.resolve(__dirname, '../Tasks');
+
+        var taskFolders: string[] = [];
+        fs.readdirSync(tasksRootFolder).forEach(folderName => {
+            if (folderName != 'Common' && fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) {
+                taskFolders.push(path.join(tasksRootFolder, folderName));
+            }
+        })
+
+        var unsupportedCapabilities: string[] = [];
+        for (var i = 0; i < taskFolders.length; i++) {
+            var taskFolder = taskFolders[i];
+            var taskjson = path.join(taskFolder, 'task.json');
+
+            var task = JSON.parse(fs.readFileSync(taskjson).toString());
+            if (task.hasOwnProperty('satisfies')) {
+                task['satisfies'].forEach(capability => {
+                    if (supportedCapabilities.indexOf(capability.toLocaleLowerCase()) < 0) {
+                        console.warn('found unsupported capability: "' + capability + '" in ' + taskjson);
+                        console.warn('fix the unit test if the new capability is added on purpose.');
+                        unsupportedCapabilities.push(capability);
+                    }
+                });
+            }
+        }
+
+        if (unsupportedCapabilities.length > 0) {
+            assert(false, 'found unsupported capabiliites, please take necessary operation to fix this. unsupported capabilities count: ' + unsupportedCapabilities.length);
         }
 
         done();
