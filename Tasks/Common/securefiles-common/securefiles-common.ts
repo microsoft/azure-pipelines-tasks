@@ -19,7 +19,7 @@ export class SecureFileHelpers {
         };
 
         if (proxy) {
-            options = {...options, proxy, ignoreSslError: true }
+            options = { ...options, proxy, ignoreSslError: true };
         };
 
         this.serverConnection = new WebApi(serverUrl, authHandler, options);
