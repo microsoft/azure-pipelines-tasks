@@ -6,7 +6,6 @@
   "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/kubernetes-manifest",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
-  "preview": true,
   "visibility": [
     "Build",
     "Release"
@@ -15,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 153,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
