@@ -2,7 +2,7 @@
 
 import tl = require("azure-pipelines-task-lib/task");
 import toolLib = require("azure-pipelines-tool-lib/tool");
-import kubectlutility = require("utility-common/kubectlutility");
+import kubectlutility = require("kubernetes-common/kubectlutility");
 
 export async function getKuberctlVersion(): Promise<string> {
     let kubectlVersion = tl.getInput("kubectlVersion");

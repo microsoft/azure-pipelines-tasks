@@ -1,11 +1,6 @@
 "use strict";
-import * as del from "del";
-import * as fs from "fs";
-import * as tr from "vsts-task-lib/toolrunner";
 import trm = require('vsts-task-lib/toolrunner');
-import * as path from "path";
 import * as tl from "vsts-task-lib/task";
-import * as utils from "./utilities";
 import ClusterConnection from "./clusterconnection";
 
 export function run(connection: ClusterConnection, kubecommand: string, outputUpdate: (data: string) => any): any {
