@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Visual Studio Test Agent の配置",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkId=838890)",
-  "loc.description": "非推奨: このタスクとコンパニオン タスク (機能テストの実行) は非推奨です。代わりに、'Visual Studio Test' タスクをご使用ください。VSTest タスクでは単体テストと機能テストを実行できます。複数エージェント ジョブ設定を使用して 1 つ以上のエージェントでテストを実行します。'Visual Studio テスト プラットフォーム ' タスクを使用して、エージェント上で Visual Studio なしでテストを実行できます。VSTest タスクには、失敗したテストの自動再実行などの新機能も導入されています。",
+  "loc.description": "非推奨: 代わりに、'Visual Studio Test' タスクを使用して単体テストと機能テストを実行します",
   "loc.instanceNameFormat": "TestAgent を $(testMachineGroup) に展開",
   "loc.releaseNotes": "<ul><li>Visual Studio Test Agent 2017 のためのサポート: Visual Studio Test Agent の複数のバージョンを使用して、配置およびテストを実行できるようになりました。バージョン 2015 と 2017 がサポートされています。</li><li>テスト ハブから作成されたマシン グループはサポートされなくなりました。マシン一覧または Azure リソース グループ一覧については、引き続き使用できます。</li></ul>",
   "loc.group.displayName.testMachineGroups": "テスト コンピューター",

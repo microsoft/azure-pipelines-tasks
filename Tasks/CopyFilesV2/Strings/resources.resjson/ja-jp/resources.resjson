@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "ファイルのコピー",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=708389)",
-  "loc.description": "一致パターンを使用して、ソース フォルダーのファイルをターゲット フォルダーにコピーする (一致パターンではフォルダー パスではなく、ファイル パスにのみに一致する)",
+  "loc.description": "パターン マッチングのファイル パス (フォルダー パスではない) を使用して、ソース フォルダーからターゲット フォルダーにファイルをコピーします",
   "loc.instanceNameFormat": "ファイルのコピー先: $(TargetFolder)",
   "loc.releaseNotes": "パターンの整合性を一致させます。",
   "loc.group.displayName.advanced": "詳細設定",
@@ -17,6 +17,8 @@
   "loc.input.help.OverWrite": "ターゲット フォルダー内の既存のファイルを置き換える",
   "loc.input.label.flattenFolders": "フォルダーのフラット化",
   "loc.input.help.flattenFolders": "フォルダー構造をフラットにして、すべてのファイルを指定のターゲット フォルダーにコピーします。",
+  "loc.input.label.preserveTimestamp": "ターゲットのタイムスタンプの保持",
+  "loc.input.help.preserveTimestamp": "元のソース ファイルを使用して、ターゲット ファイルのタイムスタンプを保持します。",
   "loc.messages.FoundNFiles": "%d 件のファイルが見つかりました",
   "loc.messages.CleaningTargetFolder": "ターゲット フォルダーをクリーンアップ中: %s",
   "loc.messages.FileAlreadyExistAt": "ファイル %s は %s に既に存在しています",

@@ -3,6 +3,7 @@
 import * as fs from "fs";
 import * as tl from "vsts-task-lib/task";
 import ContainerConnection from "docker-common/containerconnection";
+import * as dockerCommandUtils from "docker-common/dockercommandutils";
 import * as sourceUtils from "docker-common/sourceutils";
 import * as imageUtils from "docker-common/containerimageutils";
 import * as utils from "./utils";
@@ -39,8 +40,8 @@ function dockerPush(connection: ContainerConnection, image: string, imageDigestF
 }
 
 export function run(connection: ContainerConnection): any {
-    let command = tl.getInput("command", true);
-    var commandArguments = tl.getInput("arguments", false); 
+    let command = tl.getInput("command", true);    
+    var commandArguments = dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
     let imageNames;
     let useMultiImageMode = tl.getBoolInput("pushMultipleImages");

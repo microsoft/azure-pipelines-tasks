@@ -9,7 +9,7 @@
     "author": "ms-vscs-rm",
     "version": {
         "Major": 0,
-        "Minor": 152,
+        "Minor": 153,
         "Patch": 0
     },
     "demands": [],
@@ -71,7 +71,7 @@
             "parameters": {
                 "feed": "$(feed)"
             },
-            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+\/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*\/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false",
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false",
             "resultSelector": "jsonpath:$.value[?(@.protocolType=='NuGet')]",
             "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
@@ -82,7 +82,7 @@
                 "feed": "$(feed)",
                 "definition": "$(definition)"
             },
-            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]*\/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*\/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false&protocolType={{{packageType}}}",
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]*/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false&protocolType={{{packageType}}}",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
         }
@@ -103,7 +103,7 @@
         "ExtractingNugetPackage": "Extracting NuGet package %s to directory %s",
         "PackageTypeNotSupported": "Only NuGet packages types can be downloaded using this task.",
         "ExtractionFailed": "Failed to extract package with error %s",
-        "RetryingOperation" : "Error: in %s, so retrying => retries pending: %s",
+        "RetryingOperation": "Error: in %s, so retrying => retries pending: %s",
         "OperationFailed": "Failed in %s with error: %s",
         "UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"Download Package\" task. Please use version 1 or higher."
     }

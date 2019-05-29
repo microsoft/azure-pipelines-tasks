@@ -1,0 +1,52 @@
+{
+    "id": "D53CCAB4-555E-4494-9D06-11DB043FB4A9",
+    "name": "RestoreCache",
+    "friendlyName": "Restore Cache",
+    "description": "Downloads an associated cache.",
+    "helpUrl": "",
+    "helpMarkDown": "Downloads an associated cache to a local path.",
+    "category": "Utility",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "groups": [],
+    "demands": [],
+    "preview": true,
+    "minimumAgentVersion": "2.152.0",
+    "inputs": [
+        {
+            "name": "key",
+            "type": "multiLine",
+            "label": "The name of the key.",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The name of the key."
+        },
+        {
+            "name": "path",
+            "type": "filePath",
+            "label": "Path to download to",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The folder path to download the cache to. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported. If the folder doesn't exist it will be created."
+        },
+        {
+            "name": "cacheHitVar",
+            "type": "string",
+            "label": "Variable to set if there is a cache hit",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "This will set the following variable (PipelineCache.<variable-value>) to 'True'."
+        }
+    ],
+    "instanceNameFormat": "Restore Cache",
+    "execution": {
+        "AgentPlugin": {
+            "target": "Agent.Plugins.PipelineCache.RestorePipelineCacheV0, Agent.Plugins"
+        }
+    },
+    "messages": {}
+}

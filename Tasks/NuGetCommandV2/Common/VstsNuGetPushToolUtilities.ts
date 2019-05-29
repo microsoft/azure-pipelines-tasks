@@ -3,7 +3,7 @@ import * as path from "path";
 import * as commandHelper from "packaging-common/nuget/CommandHelper";
 
 export function getBundledVstsNuGetPushLocation(): string {
-    const vstsNuGetPushPaths: string[] = ["VstsNuGetPush/0.18.0/tools"];
+    const vstsNuGetPushPaths: string[] = ["VstsNuGetPush/0.17.0/tools"];
 
     const toolPath = commandHelper.locateTool("VstsNuGetPush",
     <commandHelper.LocateOptions>{

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": ".NET Core Tool インストーラー",
+  "loc.friendlyName": ".NET Core SDK/ランタイム インストーラー",
   "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?linkid=853651)",
-  "loc.description": "特定のバージョンの .NET Core をインターネットまたはツール キャッシュから取得し、PATH に追加します。このタスクを使うと、後続のタスクで使用される .NET Core のバージョンを変更できます。",
+  "loc.description": "インターネットまたはローカル キャッシュから .NET Core SDK の特定のバージョンを取得し、PATH に追加します",
   "loc.instanceNameFormat": ".NET Core $(packageType) $(version) の使用",
   "loc.input.label.packageType": "インストールするパッケージ",
   "loc.input.help.packageType": "ランタイムのみをインストールするか、SDK 全体をインストールするかを選択してください。",
@@ -27,5 +27,6 @@
   "loc.messages.WarningVersionNotFound": "バージョン %s のダウンロード情報を取得できませんでした。指定されたバージョンが正しいことをご確認ください。サポートされているバージョンを確認するには次のリンクを参照します。https://github.com/dotnet/core/blob/master/release-notes/releases.json。規則に基づく URL の作成にフォールバックします。",
   "loc.messages.CouldNotDownload": "次の URL からインストール パッケージをダウンロードできませんでした: %s。エラー: %s",
   "loc.messages.FailedToDownloadPackage": "インストール用のパッケージをダウンロードできませんでした",
-  "loc.messages.PrependGlobalToolPath": "グローバル ツール パスを作成し、パスの先頭に追加します。"
+  "loc.messages.PrependGlobalToolPath": "グローバル ツール パスを作成し、パスの先頭に追加します。",
+  "loc.messages.VersionsFileMalformed": "指定されたバージョンのダウンロード リンクが、サポートされているバージョンのドキュメントの正しい形式ではありません => %s/ "
 }

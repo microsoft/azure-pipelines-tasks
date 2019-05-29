@@ -17,7 +17,7 @@ async function run() {
         const additionalFiles = tl.getInput('additionalCodeCoverageFiles');
         const failIfCoverageIsEmpty: boolean = tl.getBoolInput('failIfCoverageEmpty');
         const workingDirectory: string = tl.getVariable('System.DefaultWorkingDirectory');
-        const pathToSources: string = tl.getVariable('pathToSources');
+        const pathToSources: string = tl.getInput('pathToSources');
 
         let autogenerateHtmlReport: boolean = true;
         let tempFolder = undefined;
