@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Ruby 버전 사용",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=2005989)",
-  "loc.description": "도구 캐시에서 지정된 버전의 Ruby를 검색하고, 선택적으로 PATH에 추가합니다.",
+  "loc.description": "도구 캐시에서 지정된 버전의 Ruby를 사용하고, 필요한 경우 PATH에 추가합니다.",
   "loc.instanceNameFormat": "Ruby $(versionSpec) 사용",
   "loc.input.label.versionSpec": "버전 사양",
   "loc.input.help.versionSpec": "사용할 Ruby 버전의 버전 범위 또는 정확한 버전입니다.",
@@ -9,7 +9,7 @@
   "loc.input.help.addToPath": "검색된 Ruby 버전을 PATH 환경 변수 앞에 추가하여 출력 변수를 사용하지 않고 후속 작업 또는 스크립트에서 사용할 수 있도록 합니다.",
   "loc.messages.ListAvailableVersions": "사용 가능한 버전:",
   "loc.messages.PlatformNotRecognized": "플랫폼을 인식할 수 없습니다.",
-  "loc.messages.ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
-  "loc.messages.ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
-  "loc.messages.VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory."
+  "loc.messages.ToolNotFoundMicrosoftHosted": "Microsoft 호스팅 에이전트인 경우 이 이미지가 병렬 %s 버전을 %s에서 지원하는지 확인하세요.",
+  "loc.messages.ToolNotFoundSelfHosted": "자체 호스팅 에이전트인 경우 병렬 %s 버전을 %s에서 구성하는 방법을 참조하세요.",
+  "loc.messages.VersionNotFound": "버전 사양 %s(%s 아키텍처)과(와) 일치하는 버전이 Agent.ToolsDirectory에 없습니다."
 }

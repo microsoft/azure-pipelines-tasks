@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Implementación de servicios en la nube de Azure",
+  "loc.friendlyName": "Implementación de servicio en la nube de Azure",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "Implemente un servicio en la nube de Azure",
   "loc.instanceNameFormat": "Implementación de Azure: $(CsPkg)",

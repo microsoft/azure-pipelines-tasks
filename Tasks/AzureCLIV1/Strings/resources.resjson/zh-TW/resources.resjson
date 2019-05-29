@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure CLI",
   "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=827160)",
-  "loc.description": "對 Azure 訂閱執行使用 Azure CLI 命令的 Shell 或 Batch 指令碼",
+  "loc.description": "當於 Linux 代理程式上執行，在 Shell 指令碼內對 Azure 訂用帳戶執行 Azure CLI 命令 (若在 Windows 代理程式上執行，則為 Batch 指令碼)。",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
   "loc.releaseNotes": "1.0 版的新功能:\n- 支援以 Python 為基礎的新版 Azure CLI 2.0\n- 適用於跨平台代理程式 (Linux、macOS 或 Windows)\n- 為搭配 Azure CLI 1.0 (以 node.js 為基礎) 運作，會切換為工作版本 0.0\n- 限制:\n - 不支援 Azure 傳統訂用帳戶。Azure CLI 2.0 只支援 Azure Resource Manager (ARM) 訂用帳戶。",
   "loc.group.displayName.advanced": "進階",
@@ -10,11 +10,15 @@
   "loc.input.label.scriptLocation": "指令碼位置",
   "loc.input.help.scriptLocation": "指令碼類型: 檔案路徑或內嵌指令碼",
   "loc.input.label.scriptPath": "指令碼路徑",
-  "loc.input.help.scriptPath": "指令碼的完整路徑，或相對於預設工作目錄的路徑",
+  "loc.input.help.scriptPath": "指令碼的完整路徑 (使用 Windows 式代理程式時為 .bat 或 .cmd，使用 Linux 式代理程式時為 .sh)，或預設工作目錄的相對路徑",
   "loc.input.label.inlineScript": "內嵌指令碼",
-  "loc.input.help.inlineScript": "您可在此寫下您要內嵌的指令碼。若為批次檔，請在每個 Azure 命令前加上前置詞 \"call\"。您也可以使用引數，將預先定義及自訂的變數傳遞給此指令碼\n\n殼層範例: az --version || az account show\n\n批次範例: call  az --version || call az account show",
+  "loc.input.help.inlineScript": "您可於此處寫入您的指令碼內嵌。使用 Windows 代理程式時請使用批次指令碼，若為使用 Linux 式代理程式，請使用殼層指令碼，若為批次檔，請在每個 Azure 命令前面使用前置詞 \"call\"。您也可以使用引數，將預先定義及自訂的變數傳遞至此指令碼\n\n 殼層範例: az --version || az account show \n\n 批次範例: call  az --version || call az account show",
   "loc.input.label.args": "引數",
   "loc.input.help.args": "傳遞給指令碼的引數",
+  "loc.input.label.addSpnToEnvironment": "存取指令碼中的服務主體詳細資料",
+  "loc.input.help.addSpnToEnvironment": "將服務主體識別碼和您所選 Azure 端點的金鑰新增至指令碼的執行環境。您可以在指令碼中使用以下變數: `$servicePrincipalId` 和 `$servicePrincipalKey`。\n\n僅在 Azure 端點具有服務主體驗證配置時才接受此項目。",
+  "loc.input.label.useGlobalConfig": "使用全域 Azure CLI 設定",
+  "loc.input.help.useGlobalConfig": "如果此項目為 false，則此工作會使用其獨立的 [Azure CLI 設定目錄](https://docs.microsoft.com/zh-tw/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file)。這個項目可在 *平行* 版本中用於執行 Azure CLI 工作",
   "loc.input.label.cwd": "工作目錄",
   "loc.input.help.cwd": "指令碼執行所在的現行工作目錄。Empty 是存放庫 (組建) 或成品 (發行) 的根目錄，即 $(System.DefaultWorkingDirectory)",
   "loc.input.label.failOnStandardError": "發生標準錯誤的失敗",
@@ -25,5 +29,10 @@
   "loc.messages.AzureSDKNotFound": "此電腦上未安裝 Azure CLI 2.x。",
   "loc.messages.FailedToLogout": "登出時發生下列錯誤: %s",
   "loc.messages.LoginFailed": "Azure 登入失敗",
-  "loc.messages.ErrorInSettingUpSubscription": "設定訂用帳戶時發生錯誤"
+  "loc.messages.MSILoginFailed": "使用受控服務識別登入 Azure 失敗",
+  "loc.messages.AuthSchemeNotSupported": "不支援驗證結構描述 %s",
+  "loc.messages.ErrorInSettingUpSubscription": "設定訂用帳戶時發生錯誤",
+  "loc.messages.SettingAzureConfigDir": "正在將 AZURE_CONFIG_DIR 環境變數設定為: %s",
+  "loc.messages.SettingAzureCloud": "正在將作用中雲端設定為: %s",
+  "loc.messages.GlobalCliConfigAgentVersionWarning": "2.115.0 以下的代理程式版本只能使用全域 Azure CLI 設定"
 }

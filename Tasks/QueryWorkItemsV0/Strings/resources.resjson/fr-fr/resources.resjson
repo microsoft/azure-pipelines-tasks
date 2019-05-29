@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Interroger les éléments de travail",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=870238)",
-  "loc.description": "Exécute une requête d'élément de travail et détermine le nombre d'éléments retournés.",
+  "loc.description": "Exécuter une requête d'élément de travail et déterminer le nombre d'éléments retournés",
   "loc.instanceNameFormat": "Interroger les éléments de travail",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.queryId": "Requête",

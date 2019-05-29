@@ -66,12 +66,15 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "追加の Docker Compose ファイルが存在しない場合に、エラーを生成します。これは、ファイルが存在しない場合にそのファイルを無視するという既定の動作をオーバーライドします。",
   "loc.input.label.cwd": "作業ディレクトリ",
   "loc.input.help.cwd": "Docker Compose コマンドの作業ディレクトリです。",
+  "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
   "loc.messages.ContainerPatternFound": "docker compose filepath パラメーターにパターンが見つかりました",
   "loc.messages.ContainerPatternNotFound": "docker compose filepath パラメーターにパターンが見つかりませんでした ",
   "loc.messages.ContainerDockerFileNotFound": "%s に一致する Docker ファイルは見つかりませんでした。",
   "loc.messages.AdditionalDockerComposeFileDoesNotExists": "追加の Docker Compose ファイル %s は存在しません。",
   "loc.messages.CantWriteDataToFile": "ファイル %s にデータを書き込めません。エラー: %s",
+  "loc.messages.DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
   "loc.messages.NoDataWrittenOnFile": "ファイル %s にデータが書き込まれませんでした",
   "loc.messages.FileContentSynced": "ファイルの内容がディスクに同期されました。内容は %s です。",
-  "loc.messages.ImageNameWithoutTag": "イメージ名がタグに指定されていません。指定されたイメージのすべてのタグをプッシュしています。"
+  "loc.messages.ImageNameWithoutTag": "イメージ名がタグに指定されていません。指定されたイメージのすべてのタグをプッシュしています。",
+  "loc.messages.WritingDockerConfigToTempFile": "Docker 構成を一時ファイルに書き込んでいます。ファイル パス: %s、Docker 構成: %s"
 }

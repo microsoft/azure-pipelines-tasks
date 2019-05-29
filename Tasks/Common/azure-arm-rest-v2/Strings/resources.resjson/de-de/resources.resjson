@@ -74,7 +74,7 @@
   "loc.messages.SwappedAppServiceSlotWithProduction": "Slots für App Service \"%s\" getauscht: \"production\" und \"%s\"",
   "loc.messages.SwappedAppServiceSlotSlots": "Slots für App Service \"%s\" getauscht: \"%s\" und \"%s\"'",
   "loc.messages.FailedToGetAppServicePublishingCredentials": "Fehler beim Abrufen der Anmeldeinformationen für die Veröffentlichung für App Service \"%s\". Fehler: %s",
-  "loc.messages.WarmingUpSlots": "Slots werden aufgewärmt",
+  "loc.messages.WarmingUpSlots": "Slots werden aufgewärmt.",
   "loc.messages.DeploymentIDCannotBeNull": "Die Bereitstellungs-ID darf nicht NULL oder leer sein.",
   "loc.messages.DeploymentDataEntityCannotBeNull": "Die Datenentität für die Bereitstellung darf nicht NULL oder undefiniert sein.",
   "loc.messages.SiteExtensionInstalled": "Die Websiteerweiterung \"%s\" wurde installiert.",
@@ -137,5 +137,6 @@
   "loc.messages.ASE_SSLIssueRecommendation": "Um ein Zertifikat in App Service zu verwenden, muss das Zertifikat von einer vertrauenswürdigen Zertifizierungsstelle signiert sein. Werden von Ihrer Web-App Zertifikatüberprüfungsfehler zurückgegeben, verwenden Sie wahrscheinlich ein selbstsigniertes Zertifikat. Um den Fehler zu beheben, müssen Sie in der Build- oder Releasedefinition eine Variable mit dem Namen VSTS_ARM_REST_IGNORE_SSL_ERRORS auf den Wert TRUE festlegen.",
   "loc.messages.FailedToGetAzureMetricAlerts": "Fehler beim Abrufen von Azure-Metrikwarnungen: %s. Fehler: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Fehler beim Aktualisieren der Ressource \"%s\" der Azure-Metrikwarnungsregel. Fehler: %s",
-  "loc.messages.ResponseNotValid": "Das Format der Antwort ist ungültig."
+  "loc.messages.ResponseNotValid": "Das Format der Antwort ist ungültig.",
+  "loc.messages.NotAbleToCreateFirewallRule": "Fehler beim Hinzufügen der Firewallregel zum Azure MySQL-Server. Fehler: %s"
 }

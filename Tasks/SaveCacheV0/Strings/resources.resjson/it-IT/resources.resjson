@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Salva cache",
+  "loc.helpMarkDown": "Consente di pubblicare una cache locale per la pipeline corrente.",
+  "loc.description": "Consente di pubblicare una cache locale per la pipeline corrente.",
+  "loc.instanceNameFormat": "Salva cache",
+  "loc.input.label.key": "Nome della chiave.",
+  "loc.input.help.key": "Nome della chiave.",
+  "loc.input.label.path": "Percorso per la pubblicazione.",
+  "loc.input.help.path": "Percorso del file o della cartella da pubblicare. Può essere un percorso completo o relativo alla radice del repository. I caratteri jolly non sono supportati. Le [variabili](https://go.microsoft.com/fwlink/?LinkID=550988) sono supportate."
+}
