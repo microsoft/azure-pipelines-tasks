@@ -1,7 +1,7 @@
 "use strict";
 
 import tl = require('vsts-task-lib/task');
-import kubectlutility = require("utility-common/kubectlutility");
+import kubectlutility = require("kubernetes-common/kubectlutility");
 
 export async function getKubeConfig(): Promise<string> {
     var kubernetesServiceEndpoint = tl.getInput("kubernetesServiceEndpoint", true);
