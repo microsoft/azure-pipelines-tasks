@@ -3,10 +3,9 @@
     "name": "KubernetesManifest",
     "friendlyName": "Deploy Kubernetes manifests",
     "description": "Use Kubernetes manifest files to deploy to clusters or even bake the manifest files to be used for deployments using Helm charts",
-    "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/kubernetes-manifest?view=azure-devops",
+    "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/kubernetes-manifest",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
-    "preview": true,
     "visibility": [
         "Build",
         "Release"
@@ -14,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 152,
-        "Patch": 0
+        "Minor": 153,
+        "Patch": 2
     },
     "demands": [],
     "groups": [],
@@ -127,6 +126,15 @@
             "required": true,
             "defaultValue": "",
             "helpMarkDown": "Helm chart path to bake",
+            "visibleRule": "action = bake && renderType = helm2"
+        },
+        {
+            "name": "releaseName",
+            "type": "string",
+            "label": "Helm Release Name",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Helm release name to use",
             "visibleRule": "action = bake && renderType = helm2"
         },
         {

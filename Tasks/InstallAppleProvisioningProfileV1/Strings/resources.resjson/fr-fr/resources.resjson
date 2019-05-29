@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Installer le profil d'approvisionnement Apple",
+  "loc.friendlyName": "Installer le profil de provisionnement Apple",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=862068)",
-  "loc.description": "Installer le profil d'approvisionnement Apple nécessaire pour effectuer une build sur un agent macOS",
+  "loc.description": "Installer le profil de provisionnement Apple nécessaire pour effectuer une build sur une machine d'agent macOS",
   "loc.instanceNameFormat": "Installer un profil d'approvisionnement Apple",
   "loc.input.label.provisioningProfileLocation": "Emplacement du profil de provisionnement",
   "loc.input.help.provisioningProfileLocation": "Sélectionnez l'emplacement du profil de provisionnement à installer. Vous pouvez charger le profil de provisionnement sur 'Fichiers sécurisés', ou le stocker dans votre dépôt source ou un chemin local sur l'agent.",

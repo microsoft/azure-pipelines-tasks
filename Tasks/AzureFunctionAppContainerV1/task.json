@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 17
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -48,7 +48,6 @@
             },
             "helpMarkDown": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed."
         },
-        
         {
             "name": "deployToSlotOrASE",
             "type": "boolean",
@@ -77,7 +76,7 @@
             "required": true,
             "properties": {
                 "EditableOptions": "True"
-            },            
+            },
             "helpMarkDown": "Enter or Select an existing Slot other than the Production slot.",
             "visibleRule": "deployToSlotOrASE = true"
         },
@@ -136,7 +135,7 @@
             "parameters": {
                 "WebAppKind": "functionAppContainer"
             }
-        },        
+        },
         {
             "target": "resourceGroupName",
             "endpointId": "$(azureSubscription)",

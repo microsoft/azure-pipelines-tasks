@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Cache speichern",
+  "loc.helpMarkDown": "Hiermit wird ein lokaler Cache für die aktuelle Pipeline veröffentlicht.",
+  "loc.description": "Hiermit wird ein lokaler Cache für die aktuelle Pipeline veröffentlicht.",
+  "loc.instanceNameFormat": "Cache speichern",
+  "loc.input.label.key": "Der Name des Schlüssels.",
+  "loc.input.help.key": "Der Name des Schlüssels.",
+  "loc.input.label.path": "Pfad für die Veröffentlichung.",
+  "loc.input.help.path": "Der Ordner- oder Dateipfad für die Veröffentlichung. Es kann sich um einen vollqualifizierten Pfad oder um einen Pfad relativ zum Stamm des Repositorys handeln. Platzhalter werden nicht unterstützt, [Variablen](https://go.microsoft.com/fwlink/?LinkID=550988) werden unterstützt."
+}

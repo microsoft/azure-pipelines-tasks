@@ -6,7 +6,6 @@
   "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/kubernetes-manifest",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
-  "preview": true,
   "visibility": [
     "Build",
     "Release"
@@ -14,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 152,
-    "Patch": 0
+    "Minor": 153,
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
@@ -127,6 +126,15 @@
       "required": true,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.helmChart",
+      "visibleRule": "action = bake && renderType = helm2"
+    },
+    {
+      "name": "releaseName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.releaseName",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseName",
       "visibleRule": "action = bake && renderType = helm2"
     },
     {

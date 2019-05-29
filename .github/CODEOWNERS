@@ -55,6 +55,8 @@ Tasks/AzurePowerShellV2/*   @kmkumaran
 
 Tasks/AzurePowerShellV3/*   @kmkumaran
 
+Tasks/AzurePowershellV4/*   @kmkumaran
+
 Tasks/AzureResourceGroupDeploymentV2/*      @sachinma
 
 Tasks/AzureRmWebAppDeploymentV3/*   @kmkumaran    @SumiranAgg     @vincentdass
@@ -174,6 +176,8 @@ Tasks/DownloadSecureFileV1/*    @madhurig
 Tasks/DuffleInstallerV0/*   @bansalaseem     @vithati
 
 Tasks/ExtractFilesV1/*      @bryanmacfarlane
+
+Tasks/FileTransformV1/*     @kmkumaran      @SumiranAgg     @vincentdass
 
 Tasks/FtpUploadV1/*     @madhurig
 

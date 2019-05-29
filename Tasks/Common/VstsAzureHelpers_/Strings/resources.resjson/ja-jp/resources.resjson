@@ -9,7 +9,7 @@
   "loc.messages.AZ_UnsupportedAuthScheme0": "'{0}' は Azure エンドポイントではサポートされていない認証スキームです。",
   "loc.messages.AZ_AvailableModules": "利用可能な {0} モジュールの一覧:",
   "loc.messages.AZ_InvalidARMEndpoint": "指定した AzureRM エンドポイントは無効です。",
-  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Could not fetch access token for Managed Identity. Please configure Managed Identity for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '{0}', Error message: {1}",
-  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Identity. Status code: '{0}', Error message: {1}",
-  "loc.messages.AZ_MsiFailure": "Could not fetch access token for Managed Identity. {0}"
+  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "マネージド ID のアクセス トークンをフェッチできませんでした。仮想マシンのマネージド ID を構成してください 'https://aka.ms/azure-msi-docs'。状態コード: '{0}'、エラー メッセージ: {1}",
+  "loc.messages.AZ_MsiAccessTokenFetchFailure": "マネージド ID のアクセス トークンをフェッチできませんでした。状態コード: '{0}'、エラー メッセージ: {1}",
+  "loc.messages.AZ_MsiFailure": "マネージド ID のアクセス トークンをフェッチできませんでした。{0}"
 }
