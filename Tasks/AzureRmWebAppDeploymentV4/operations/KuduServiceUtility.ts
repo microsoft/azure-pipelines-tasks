@@ -1,12 +1,12 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import path = require('path');
-import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
-import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-arm-rest/constants';
-import webClient = require('azure-arm-rest/webClient');
+import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
+import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-arm-rest-v2/constants';
+import webClient = require('azure-arm-rest-v2/webClient');
 import { TaskParameters, DeploymentType } from './TaskParameters';
-var deployUtility = require('webdeployment-common/utility.js');
-var zipUtility = require('webdeployment-common/ziputility.js');
+var deployUtility = require('webdeployment-common-v2/utility.js');
+var zipUtility = require('webdeployment-common-v2/ziputility.js');
 const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
 const manifestFileName: string = 'manifest';
