@@ -16,11 +16,11 @@ export class SecureFileHelpers {
         let options: IRequestOptions = {
             allowRetries: true,
             maxRetries: 5
-        }
+        };
 
         if (proxy) {
             options = {...options, proxy, ignoreSslError: true }
-        }
+        };
 
         this.serverConnection = new WebApi(serverUrl, authHandler, options);
     }
