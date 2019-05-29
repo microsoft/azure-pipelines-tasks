@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "ファイルの抽出",
   "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "loc.description": ".7z、.rar、.tar.gz、.zip などのさまざまなアーカイブ ファイルと圧縮ファイルを抽出します。",
+  "loc.description": ".7z、.rar、.tar.gz、.zip などのさまざまなアーカイブ ファイルと圧縮ファイルを抽出します",
   "loc.instanceNameFormat": "ファイルの抽出 $(message)",
   "loc.input.label.archiveFilePatterns": "アーカイブ ファイルのパターン",
   "loc.input.help.archiveFilePatterns": "抽出するアーカイブ ファイルのファイル パスまたはパターン。複数行の minimatch パターンをサポートします。[詳細情報](https://go.microsoft.com/fwlink/?LinkId=800269)",

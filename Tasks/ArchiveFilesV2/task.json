@@ -2,7 +2,7 @@
     "id": "d8b84976-e99a-4b86-b885-4849694435b0",
     "name": "ArchiveFiles",
     "friendlyName": "Archive files",
-    "description": "Archive files using compression formats such as .7z, .rar, .tar.gz, and .zip",
+    "description": "Compress files into .7z, .tar.gz, or .zip",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/archive-files",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=809083)",
@@ -19,7 +19,7 @@
     "version": {
         "Major": 2,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 2
     },
     "groups": [
         {

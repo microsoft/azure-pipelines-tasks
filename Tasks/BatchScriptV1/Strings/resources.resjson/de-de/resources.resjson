@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Batchskript",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613733)",
-  "loc.description": "Windows-CMD- oder BAT-Skript ausführen und optional zulassen, dass es die Umgebung ändert",
+  "loc.description": "Hiermit wird ein Windows-Befehl oder ein Batchskript ausgeführt und optional eine Änderung der Umgebung zugelassen.",
   "loc.instanceNameFormat": "Skript $(filename) ausführen",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.filename": "Pfad",

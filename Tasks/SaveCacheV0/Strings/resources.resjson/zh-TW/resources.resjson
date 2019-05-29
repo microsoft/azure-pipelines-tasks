@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "儲存快取",
+  "loc.helpMarkDown": "針對目前的管線發佈本機快取。",
+  "loc.description": "針對目前的管線發佈本機快取。",
+  "loc.instanceNameFormat": "儲存快取",
+  "loc.input.label.key": "索引鍵的名稱。",
+  "loc.input.help.key": "索引鍵的名稱。",
+  "loc.input.label.path": "用來發佈的路徑。",
+  "loc.input.help.path": "要發佈的資料夾或檔案路徑。此項目可為完整路徑，或與存放庫根相對的路徑。不支援萬用字元。支援[變數](https://go.microsoft.com/fwlink/?LinkID=550988)。"
+}

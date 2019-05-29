@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as Q  from "q";
-import * as tl from "vsts-task-lib/task";
-import {IExecOptions} from "vsts-task-lib/toolrunner";
+import * as tl from "azure-pipelines-task-lib/task";
+import {IExecOptions} from "azure-pipelines-task-lib/toolrunner";
 
 import * as auth from "packaging-common/nuget/Authentication";
 import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions";
@@ -12,6 +12,7 @@ import * as nutil from "packaging-common/nuget/Utility";
 import peParser = require('packaging-common/pe-parser/index');
 import {VersionInfo} from "packaging-common/pe-parser/VersionResource";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
+import { getProjectAndFeedIdFromInputParam } from "packaging-common/util"
 
 const NUGET_ORG_V2_URL: string = "https://www.nuget.org/api/v2/";
 const NUGET_ORG_V3_URL: string = "https://api.nuget.org/v3/index.json";
@@ -135,14 +136,19 @@ async function main(): Promise<void> {
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === "select" ) {
             let sources: Array<IPackageSource> = new Array<IPackageSource>();
-            let feed = tl.getInput("feed");
-            if (feed) {
-                let feedUrl:string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed, nuGetVersion, accessToken);
-                sources.push(<IPackageSource>
-                {
-                    feedName: feed,
-                    feedUri: feedUrl
-                })
+            let feed = getProjectAndFeedIdFromInputParam("feed");
+            
+            if (feed.feedId) {
+                if(feed.projectId) {
+                    throw new Error(tl.loc("UnsupportedProjectScopedFeeds"));
+                } else {
+                    let feedUrl:string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed.feedId, null, nuGetVersion, accessToken);
+                    sources.push(<IPackageSource>
+                    {
+                        feedName: feed.feedId,
+                        feedUri: feedUrl
+                    })
+                }
             }
 
             let includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);

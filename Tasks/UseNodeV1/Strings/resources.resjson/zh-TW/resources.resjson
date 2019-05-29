@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "使用 Node.js 生態系統",
+  "loc.helpMarkDown": "",
+  "loc.description": "設定 Node.js 環境，並將它新增到 PATH，另提供 Proxy 支援",
+  "loc.instanceNameFormat": "使用 Node $(versionSpec)",
+  "loc.input.label.version": "版本",
+  "loc.input.help.version": "所要使用版本的版本規格。例如: 10.x、10.15.1、>= 10.15.0",
+  "loc.input.label.checkLatest": "檢查最新版本",
+  "loc.input.help.checkLatest": "一律檢查網路上有無最新的版本符合版本規格。除非特定的情況必須取得最新版本，否則不建議執行此動作。若非必要，這可能會衍生下載費用，特別是對託管的組建集區。",
+  "loc.messages.ToolFailed": "Node 安裝失敗: %s"
+}

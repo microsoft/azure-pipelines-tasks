@@ -3,7 +3,7 @@
     "name": "KubernetesManifest",
     "friendlyName": "Deploy Kubernetes manifests",
     "description": "Use Kubernetes manifest files to deploy to clusters or even bake the manifest files to be used for deployments using Helm charts",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/kubernetes-manifest",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
     "preview": true,
@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 151,
-        "Patch": 5
+        "Minor": 153,
+        "Patch": 1
     },
     "demands": [],
     "groups": [],
@@ -130,6 +130,15 @@
             "visibleRule": "action = bake && renderType = helm2"
         },
         {
+            "name": "releaseName",
+            "type": "string",
+            "label": "Helm Release Name",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Helm release name to use",
+            "visibleRule": "action = bake && renderType = helm2"
+        },
+        {
             "name": "overrideFiles",
             "type": "multiLine",
             "label": "Override Files",
@@ -171,10 +180,15 @@
         },
         {
             "name": "kind",
-            "type": "string",
+            "type": "pickList",
             "label": "Kind",
             "required": true,
             "defaultValue": "",
+            "options": {
+                "deployment": "deployment",
+                "replicaset": "replicaset",
+                "statefulset": "statefulset"
+            },
             "helpMarkDown": "Kind of K8s object; deployment, replicaSet etc.",
             "visibleRule": "action = scale || resourceToPatch = name"
         },

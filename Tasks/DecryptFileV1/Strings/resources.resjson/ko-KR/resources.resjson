@@ -1,6 +1,7 @@
 {
   "loc.friendlyName": "파일 암호 해독(OpenSSL)",
-  "loc.description": "OpenSSL을 사용한 파일 암호 해독에 대한 씬 유틸리티 작업입니다.",
+  "loc.helpMarkDown": "",
+  "loc.description": "OpenSSL을 사용하여 파일 암호를 해독합니다.",
   "loc.instanceNameFormat": "$(inFile) 암호 해독",
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.cipher": "암호",

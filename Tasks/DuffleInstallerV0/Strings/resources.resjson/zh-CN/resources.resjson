@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Duffle 工具安装程序",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "安装用于安装和管理 CNAB 捆绑包的指定版本的 Duffle",
+  "loc.instanceNameFormat": "安装 Duffle $(version)",
+  "loc.input.label.version": "版本",
+  "loc.input.help.version": "指定要安装的 Duffle 版本。",
+  "loc.input.label.checkLatestVersion": "检查是否有最新版本",
+  "loc.input.help.checkLatestVersion": "始终联机检查是否有满足版本规范的最新可用版本(stable.txt)。这通常无法实现，除非有特定的解决方案可以始终获取最新版本。这样会在可能没有必要的情况下，特别是在使用托管生成池时产生下载费用。",
+  "loc.messages.DownloadDuffleFailed": "无法下载 %s 版本的 Duffle 客户端。请检查版本是否正确 https://github.com/deislabs/duffle/releases",
+  "loc.messages.DownloadStableVersionFailed": "无法从 %s 下载 Duffle 稳定版本文件。回退到 %s"
+}

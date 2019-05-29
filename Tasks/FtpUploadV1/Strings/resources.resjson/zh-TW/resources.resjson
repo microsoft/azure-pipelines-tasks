@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "FTP 上傳",
   "loc.helpMarkDown": "使用檔案傳輸通訊協定 (FTP) 或更安全的 FTPS，將檔案上傳到遠端電腦。[詳細資訊](http://go.microsoft.com/fwlink/?LinkId=809084)。",
-  "loc.description": "FTP 上傳",
+  "loc.description": "使用 FTP 上傳檔案",
   "loc.instanceNameFormat": "FTP 上傳: $(rootFolder)",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.credsType": "驗證方法",

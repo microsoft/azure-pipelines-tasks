@@ -17,7 +17,7 @@
     "version": {
         "Major": 4,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 12
     },
     "preview": true,
     "releaseNotes": "Added support for Az Module and cross platform agents.",
@@ -41,7 +41,7 @@
             "required": true,
             "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell",
             "properties": {
-                "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
             }
         },
         {

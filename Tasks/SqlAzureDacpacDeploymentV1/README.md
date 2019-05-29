@@ -117,10 +117,10 @@ The parameters of the task are described in details, including examples, to show
 
 ### Supported Azure and AzureRM module versions:
 Recommended:
-[Azure PowerShell Installer v1.3.0] (https://github.com/Azure/azure-powershell/releases/tag/v1.3.0-March2016)
+[Azure PowerShell Installer v1.3.0](https://github.com/Azure/azure-powershell/releases/tag/v1.3.0-March2016)
 
 Other supported versions:
-[Azure PowerShell Installer v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)
+[Azure PowerShell Installer v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)
 
 #1 https://msdn.microsoft.com/en-us/library/hh550080\(v=vs.103\).aspx
 

@@ -25,7 +25,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     }
 
     // get command arguments
-    let commandArguments = ignoreArguments ? "" : tl.getInput("arguments", false);
+    let commandArguments = ignoreArguments ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
     
     // get qualified image names by combining container registry(s) and repository
     let repositoryName = tl.getInput("repository");
