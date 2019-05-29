@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Go 工具安裝程式",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=867581)",
-  "loc.description": "在工具快取中尋找或下載特定的 Go 版本，然後將其新增至 PATH。使用此工作可設定在後續工作中使用的 Go 版本。",
+  "loc.description": "在快取中尋找，或下載特定版本的 Go 並將其新增至 PATH",
   "loc.instanceNameFormat": "使用 Go $(version)",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.version": "版本",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "[已弃用] IIS Web 应用部署",
   "loc.helpMarkDown": "[详细信息](https://aka.ms/iiswebappdeploydeprecatedreadme)",
-  "loc.description": "通过 MSDeploy 进行部署，创建/更新网站和应用池",
+  "loc.description": "使用 MSDeploy 进行部署，然后创建/更新网站和应用池",
   "loc.instanceNameFormat": "[已弃用]部署 IIS App: $(WebDeployPackage)",
   "loc.group.displayName.deployment": "部署",
   "loc.group.displayName.website": "网站",

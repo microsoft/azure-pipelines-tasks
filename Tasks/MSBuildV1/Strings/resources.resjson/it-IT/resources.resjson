@@ -27,6 +27,8 @@
   "loc.input.help.logProjectEvents": "Registra facoltativamente i dettagli della sequenza temporale per ogni progetto (solo Windows).",
   "loc.input.label.createLogFile": "Crea file di log",
   "loc.input.help.createLogFile": "Consente facoltativamente di creare un file di log (solo Windows).",
+  "loc.input.label.logFileVerbosity": "Livello di dettaglio file di log",
+  "loc.input.help.logFileVerbosity": "Livello di dettaglio facoltativo del file di log.",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "L'opzione `Registra dettagli progetto` è supportata solo in Windows.",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "L'opzione `Crea file di log` è supportata solo in Windows.",
   "loc.messages.MSB_BuildToolNotFound": "MSBuild o xbuild (Mono) non è stato trovato nell'agente MacOS o Linux."

@@ -9,16 +9,15 @@
         "Build",
         "Release"
     ],
-    "preview": true,
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 0,
-        "Patch": 5
+        "Minor": 153,
+        "Patch": 0
     },
     "demands": [],
     "groups": [],
-    "inputs": [       
+    "inputs": [
         {
             "name": "version",
             "type": "string",

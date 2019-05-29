@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Editor de PyPI",
+  "loc.friendlyName": "Publicador de PyPI",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=875289)",
   "loc.description": "Crea y carga un paquete sdist o wheel en un índice compatible con PyPI mediante Twine.",
   "loc.instanceNameFormat": "Empaquetar y publicar en PyPI",

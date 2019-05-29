@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Test di carico di Apache JMeter basato sul cloud",
   "loc.helpMarkDown": "È possibile usare questa attività per attivare un test di carico di Apache JMeter nel cloud usando Azure Pipelines. [Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=784929)",
-  "loc.description": "Esegue il test di carico di Apache JMeter nel cloud",
+  "loc.description": "Consente di eseguire un test di carico di Apache JMeter nel cloud",
   "loc.instanceNameFormat": "Test di Apache JMeter $(LoadTest)",
   "loc.input.label.connectedServiceName": "Connessione ad Azure Pipelines",
   "loc.input.help.connectedServiceName": "Consente di selezionare una connessione al servizio registrata in precedenza per comunicare con il servizio del test di carico basato sul cloud. Scegliere 'Gestisci' per registrare una nuova connessione al servizio.",

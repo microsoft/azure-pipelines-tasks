@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "[사용되지 않음] SQL Server 데이터베이스 배포",
   "loc.helpMarkDown": "[자세한 정보](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
-  "loc.description": "DACPAC를 사용하여 SQL Server 데이터베이스 배포",
+  "loc.description": "DACPAC를 사용하여 SQL Server 데이터베이스를 배포합니다.",
   "loc.instanceNameFormat": "[사용되지 않음] SQL DACPAC 배포: $(DacpacFile)",
   "loc.group.displayName.deployment": "배포",
   "loc.group.displayName.target": "대상",

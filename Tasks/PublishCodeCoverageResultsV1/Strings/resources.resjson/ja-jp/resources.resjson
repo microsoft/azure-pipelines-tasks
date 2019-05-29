@@ -7,6 +7,8 @@
   "loc.input.help.codeCoverageTool": "コード カバレッジ結果が生成されるツール。",
   "loc.input.label.summaryFileLocation": "概要ファイル",
   "loc.input.help.summaryFileLocation": "行、メソッド、クラス カバレッジなどのコード カバレッジ統計を含む概要ファイルのパス。この値には minimatch パターンを指定できます。たとえば、`$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml` と指定します",
+  "loc.input.label.pathToSources": "ソース ファイルへのパス",
+  "loc.input.help.pathToSources": "カバレッジ XML レポートにソース ファイルへの絶対パスが含まれていない場合は、ソース ファイルへのパスが必要です。例: JaCoCo レポートでは絶対パスは使用されず、Java アプリの JaCoCo カバレッジを発行する場合、パターンは `$(System.DefaultWorkingDirectory)/MyApp/src/main/java/` のようになります。<br />この入力は、テストが Docker コンテナーで実行されている場合にも必要です。この入力は、ホスト上のソース ファイルへの絶対パスを指している必要があります。例: `$(System.DefaultWorkingDirectory)/MyApp/`",
   "loc.input.label.reportDirectory": "レポート ディレクトリ",
   "loc.input.help.reportDirectory": "コード カバレッジ HTML レポート ディレクトリのパス。レポート ディレクトリは後で表示できるようにビルドの成果物として発行されます。この値には minimatch パターンを指定できます。たとえば、`$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura` と指定します",
   "loc.input.label.additionalCodeCoverageFiles": "追加ファイル",
@@ -15,5 +17,10 @@
   "loc.input.help.failIfCoverageEmpty": "コード カバレッジが発行する結果を生成しないと、タスクは失敗します。",
   "loc.messages.FoundNMatchesForPattern": "%s 件の結果がパターン %s に一致するものとして見つかりました",
   "loc.messages.MultipleSummaryFilesFound": "ファイルまたはディレクトリの一致が複数見つかりました。最初の一致 %s を使用しています",
-  "loc.messages.NoCodeCoverage": "発行するコード カバレッジの結果が見つかりませんでした。"
+  "loc.messages.NoCodeCoverage": "発行するコード カバレッジの結果が見つかりませんでした。",
+  "loc.messages.InstallDotNetCoreForHtmlReport": "HTML レポートの自動生成を有効にするには、dotnet core をインストールしてください。",
+  "loc.messages.FailedToGenerateHtmlReport": "HTML レポートを生成できませんでした。エラー: %s",
+  "loc.messages.IgnoringReportDirectory": "HTML コンテンツが自動的に生成されているため、HTML コンテンツを含むカバレッジ レポート ディレクトリが無視されています",
+  "loc.messages.UpgradeAgentMessage": "エージェントのバージョンをアップグレードしてください。https://github.com/Microsoft/vsts-agent/releases",
+  "loc.messages.GeneratedHtmlReport": "生成されたコード カバレッジ HTML レポート: %s"
 }

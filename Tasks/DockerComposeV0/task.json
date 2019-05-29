@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 152,
-        "Patch": 0
+        "Minor": 153,
+        "Patch": 1
     },
     "demands": [],
     "preview": "false",
@@ -319,11 +319,13 @@
         }
     },
     "messages": {
+        "ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
         "ContainerPatternFound": "Pattern found in docker compose filepath parameter",
         "ContainerPatternNotFound": "No pattern found in docker compose filepath parameter",
         "ContainerDockerFileNotFound": "No Docker file matching  %s  was found.",
         "AdditionalDockerComposeFileDoesNotExists": "Additional Docker Compose File %s does not exists.",
         "CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
+        "DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
         "NoDataWrittenOnFile": "No data was written into the file %s",
         "FileContentSynced": "Synced the file content to the disk. The content is %s.",
         "ImageNameWithoutTag": "Image name not specified with tag, pushing all tags of the image specified.",

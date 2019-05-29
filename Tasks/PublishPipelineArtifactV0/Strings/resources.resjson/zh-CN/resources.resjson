@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "发布管道项目",
   "loc.helpMarkDown": "将本地目录或文件作为当前管道的命名项目进行发布。",
-  "loc.description": "发布管道项目",
+  "loc.description": "将本地目录或文件作为当前管道的已命名项目进行发布",
   "loc.instanceNameFormat": "发布管道项目",
   "loc.input.label.artifactName": "此项目的名称",
   "loc.input.help.artifactName": "此项目的名称。",

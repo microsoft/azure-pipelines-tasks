@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Prueba de App Center",
   "loc.helpMarkDown": "Para obtener ayuda con esta tarea, visite el [sitio de soporte técnico](https://aka.ms/appcentersupport) de Visual Studio App Center.",
-  "loc.description": "Prueba paquetes de aplicaciones con Visual Studio App Center.",
+  "loc.description": "Prueba paquetes de aplicaciones con Visual Studio App Center.",
   "loc.instanceNameFormat": "Probar con Visual Studio App Center",
   "loc.group.displayName.prepare": "Preparar pruebas",
   "loc.group.displayName.run": "Ejecutar pruebas",
