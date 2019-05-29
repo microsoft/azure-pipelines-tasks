@@ -7,6 +7,7 @@ var fileTransformationsUtility = require('webdeployment-common-v2/fileTransforma
 
 async function main() {
     tl.setResourcePath(path.join( __dirname, 'task.json'));
+    tl.setResourcePath(path.join( __dirname, 'node_modules/webdeployment-common-v2/module.json'));
     let webPackage = new Package(tl.getPathInput('folderPath', true));
     let packagePath = webPackage.getPath();
     let fileType = tl.getInput("fileType", false);
