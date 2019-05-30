@@ -9,6 +9,7 @@ import { AzureBlobUploadHelper } from './azure-blob-upload-helper';
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 import utils = require('./utils');
+import { inspect } from 'util';
 
 class UploadInfo {
     upload_id: string;
@@ -285,8 +286,7 @@ async function uploadSymbols(uploadUrl: string, file: string): Promise<void> {
         const azureBlobUploadHelper = new AzureBlobUploadHelper(tl.debug);
         await azureBlobUploadHelper.upload(uploadUrl, file);
     } catch (e) {
-        process.stdout.write(require('util').inspect(e));
-        
+        tl.error(inspect(e));
 
         throw e;
     }
