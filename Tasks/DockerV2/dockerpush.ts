@@ -50,13 +50,14 @@ function pushMultipleImages(connection: ContainerConnection, imageNames: string[
     return promise;
 }
 
-export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, ignoreArguments?: boolean): any {
-    let commandArguments = ignoreArguments ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
+export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
+    // ignore the arguments input if the command is buildAndPush, as it is ambiguous
+    let commandArguments = isBuildAndPushCommand ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");
 
-    // get qualified image name from the containerRegistry input
+    // get repository input
     let repositoryName = tl.getInput("repository");
     if (!repositoryName) {
         tl.warning("No repository is specified. Nothing will be pushed.");
@@ -66,19 +67,25 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     // if container registry is provided, use that
     // else, use the currently logged in registries
     if (tl.getInput("containerRegistry")) {
-        let imageName = connection.getQualifiedImageName(repositoryName);
+        let imageName = connection.getQualifiedImageName(repositoryName, true);
         if (imageName) {
             imageNames.push(imageName);
         }
     }
     else {
-        imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName);
+        imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName, true);
     }
 
     const dockerfilepath = tl.getInput("dockerFile", true);
-    const dockerFile = findDockerFile(dockerfilepath);
-    if (!tl.exist(dockerFile)) {
-        throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
+    let dockerFile = "";
+    if (isBuildAndPushCommand) {
+        // For buildAndPush command, to find out the base image name, we can use the
+        // Dockerfile returned by findDockerfile as we are sure that this is used
+        // for building.
+        dockerFile = findDockerFile(dockerfilepath);
+        if (!tl.exist(dockerFile)) {
+            throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
+        }
     }
 
     // push all tags
@@ -92,7 +99,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         let digest = extractDigestFromOutput(commandOutput, matchPatternForDigestAndSize);
         tl.debug("outputImageName: " + outputImageName + "\n" + "commandOutput: " + commandOutput + "\n" + "digest:" + digest + "imageSize:" + imageSize);
         publishToImageMetadataStore(connection, outputImageName, tags, digest, dockerFile).then((result) => {
-            tl.debug("ImageDetailsApiResponse: " + result);
+            tl.debug("ImageDetailsApiResponse: " + JSON.stringify(result));
         }, (error) => {
             tl.warning("publishToImageMetadataStore failed with error: " + error);
         });
@@ -115,7 +122,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
 async function publishToImageMetadataStore(connection: ContainerConnection, imageName: string, tags: string[], digest: string, dockerFilePath: string): Promise<any> {
     // Getting imageDetails
     const imageUri = getResourceName(imageName, digest);
-    const baseImageName = getBaseImageNameFromDockerFile(dockerFilePath);
+    const baseImageName = dockerFilePath ? getBaseImageNameFromDockerFile(dockerFilePath) : "NA";
     const layers = await dockerCommandUtils.getLayers(connection, imageName);
     if (!layers) {
         return null;

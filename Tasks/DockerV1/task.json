@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 153,
-        "Patch": 4
+        "Patch": 5
     },
     "demands": [],
     "releaseNotes": "Simplified the task by:<br/>&nbsp;- Providing an option to simply select or type a command.<br/>&nbsp;- Retaining the useful input fields and providing an option to pass the rest as an argument to the command.",
