@@ -77,7 +77,7 @@ nock('https://example.test')
     })
     .reply(201, {
         symbol_upload_id: 100,
-        upload_url: 'https://example.upload.test/bogus-container/bogus-blob',
+        upload_url: 'https://example.upload.test/symbol_uploads',
         expiration_date: 1234567
     });
 
