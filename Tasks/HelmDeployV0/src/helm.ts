@@ -1,6 +1,6 @@
 "use strict";
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import { AzureAksService } from 'azure-arm-rest/azure-arm-aks-service';
 import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
