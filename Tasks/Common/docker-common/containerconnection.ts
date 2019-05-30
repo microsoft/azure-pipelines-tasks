@@ -87,7 +87,11 @@ export default class ContainerConnection {
             if (regUrls && regUrls.length > 0) {
                 regUrls.forEach(regUrl => {
                     let imageName = this.prefixRegistryIfRequired(regUrl, repository);
-                    imageNames.push(enforceDockerNamingConvention ? imageUtils.generateValidImageName(imageName) : imageName);
+                    if (enforceDockerNamingConvention) {
+                        imageName = imageUtils.generateValidImageName(imageName);
+                    }
+                    
+                    imageNames.push(imageName);
                 });
             }
         }
