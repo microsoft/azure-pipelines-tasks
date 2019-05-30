@@ -78,20 +78,14 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
 
     const dockerfilepath = tl.getInput("dockerFile", true);
     let dockerFile = "";
-    try {
-        // If it is only push command, we will use the Dockerfile to get the base image name,
-        // only if it is inambiguous, i.e., there is only one Dockerfile in the repo.
-        // For buildAndPush command, we can use the Dockerfile returned by findDockerfile as
-        // we are sure that this is the one used for building as well.
-        const ensureUniqueDockerfile = !isBuildAndPushCommand;
-        dockerFile = findDockerFile(dockerfilepath, ensureUniqueDockerfile);
+    if (isBuildAndPushCommand) {
+        // For buildAndPush command, to find out the base image name, we can use the
+        // Dockerfile returned by findDockerfile as we are sure that this is used
+        // for building.
+        dockerFile = findDockerFile(dockerfilepath);
         if (!tl.exist(dockerFile)) {
             throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
         }
-    }
-    catch (error) {
-        dockerFile = "";
-        tl.debug("Ignoring the error in finding the Dockerfile, as it is not mandatory for push command. Error: " + error);
     }
 
     // push all tags
@@ -105,7 +99,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         let digest = extractDigestFromOutput(commandOutput, matchPatternForDigestAndSize);
         tl.debug("outputImageName: " + outputImageName + "\n" + "commandOutput: " + commandOutput + "\n" + "digest:" + digest + "imageSize:" + imageSize);
         publishToImageMetadataStore(connection, outputImageName, tags, digest, dockerFile).then((result) => {
-            tl.debug("ImageDetailsApiResponse: " + result);
+            tl.debug("ImageDetailsApiResponse: " + JSON.stringify(result));
         }, (error) => {
             tl.warning("publishToImageMetadataStore failed with error: " + error);
         });
@@ -128,7 +122,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
 async function publishToImageMetadataStore(connection: ContainerConnection, imageName: string, tags: string[], digest: string, dockerFilePath: string): Promise<any> {
     // Getting imageDetails
     const imageUri = getResourceName(imageName, digest);
-    const baseImageName = dockerFilePath ? getBaseImageNameFromDockerFile(dockerFilePath) : "";
+    const baseImageName = dockerFilePath ? getBaseImageNameFromDockerFile(dockerFilePath) : "NA";
     const layers = await dockerCommandUtils.getLayers(connection, imageName);
     const imageSize = dockerCommandUtils.getImageSize(layers);
 
@@ -142,28 +136,25 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
     const jobName = tl.getVariable("System.PhaseDisplayName");
 
     const requestUrl = tl.getVariable("System.TeamFoundationCollectionUri") + tl.getVariable("System.TeamProject") + "/_apis/deployment/imagedetails?api-version=5.0-preview.1";
-    let requestBodyJson: any = {
-        "imageName": imageUri,
-        "imageUri": imageUri,
-        "hash": digest,
-        "distance": 0,
-        "imageType": "",
-        "mediaType": "",
-        "tags": tags,
-        "layerInfo": layers,
-        "runId": runId,
-        "pipelineVersion": pipelineVersion,
-        "pipelineName": pipelineName,
-        "pipelineId": pipelineId,
-        "jobName": jobName,
-        "imageSize": imageSize
-    };
-
-    if (baseImageName) {
-        requestBodyJson["baseImageName"] = baseImageName;
-    }
-
-    const requestBody: string = JSON.stringify(requestBodyJson);
+    const requestBody: string = JSON.stringify(
+        {
+            "imageName": imageUri,
+            "imageUri": imageUri,
+            "hash": digest,
+            "baseImageName": baseImageName,
+            "distance": 0,
+            "imageType": "",
+            "mediaType": "",
+            "tags": tags,
+            "layerInfo": layers,
+            "runId": runId,
+            "pipelineVersion": pipelineVersion,
+            "pipelineName": pipelineName,
+            "pipelineId": pipelineId,
+            "jobName": jobName,
+            "imageSize": imageSize
+        }
+    );
 
     return sendRequestToImageStore(requestBody, requestUrl);
 }

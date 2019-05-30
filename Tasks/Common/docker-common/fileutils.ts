@@ -24,7 +24,7 @@ export function writeFileSync(filePath: string, data: string): number {
     }
 }
 
-export function findDockerFile(dockerfilepath: string, ensureUnique?: boolean) : string {
+export function findDockerFile(dockerfilepath: string) : string {
     if (dockerfilepath.indexOf('*') >= 0 || dockerfilepath.indexOf('?') >= 0) {
         tl.debug(tl.loc('ContainerPatternFound'));
         let workingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
@@ -33,10 +33,6 @@ export function findDockerFile(dockerfilepath: string, ensureUnique?: boolean) :
 
         if (!matchingResultsFiles || matchingResultsFiles.length == 0) {
             throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
-        }
-
-        if (ensureUnique && !(matchingResultsFiles.length == 1)) {
-            throw new Error(tl.loc('FoundMultipleDockerFiles', dockerfilepath));
         }
 
         return matchingResultsFiles[0];

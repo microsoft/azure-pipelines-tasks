@@ -375,7 +375,6 @@
         "CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
         "NoDataWrittenOnFile": "No data was written into the file %s",
         "FileContentSynced": "Synced the file content to the disk. The content is %s.",
-        "FoundMultipleDockerFiles": "Found multiple Dockerfiles in the repo, while expected only one.",
         "DockerRegistryNotFound": "Docker registry service connection not specified.",
         "OutputVariableDataSizeExceeded": "Output variable not set as Docker command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
         "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
