@@ -186,7 +186,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: publish mandatory update)', function () {
+    it('Positive path: publish mandatory update', function () {
         this.timeout(4000);
 
         let tp = path.join(__dirname, 'L0PublishMandatoryUpdate.js');
