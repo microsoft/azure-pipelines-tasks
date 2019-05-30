@@ -3,7 +3,7 @@
 import * as tl from 'vsts-task-lib/task';
 import * as  path from 'path';
 import * as fs from 'fs';
-import * as  helmutility from 'utility-common/helmutility';
+import * as  helmutility from 'kubernetes-common/helmutility';
 import * as uuidV4 from 'uuid/v4';
 
 import { getTempDirectory } from '../utils/FileHelper';

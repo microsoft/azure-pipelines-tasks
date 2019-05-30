@@ -106,6 +106,7 @@
     },
     "docker-common": {
       "version": "file:../../_build/Tasks/Common/docker-common-1.0.0.tgz",
+      "integrity": "sha512-rVFPruZmdQ5bJCj0+EIIbZG2sXE4i8YK3pbrHQkxq08/p20ilnVk6mVZvTQ9JcPKKYExQ8rP32gycI50oMofvA==",
       "requires": {
         "del": "2.2.0",
         "q": "1.4.1",
@@ -190,6 +191,35 @@
       "requires": {
         "argparse": "^1.0.7",
         "esprima": "^2.6.0"
+      }
+    },
+    "kubernetes-common": {
+      "version": "file:../../_build/Tasks/Common/kubernetes-common-1.0.0.tgz",
+      "integrity": "sha512-c2xG83/qDVEPDsie1R+Zfdh8v1bWCEzv1OcmTCMlbWV8Ggq5xikU0DK2wiSZSCJRiTzCBTtv1423DVGfjwul8A==",
+      "requires": {
+        "js-yaml": "3.6.1",
+        "vsts-task-lib": "2.6.0",
+        "vsts-task-tool-lib": "0.4.0"
+      },
+      "dependencies": {
+        "uuid": {
+          "version": "3.3.2",
+          "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.3.2.tgz",
+          "integrity": "sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA=="
+        },
+        "vsts-task-lib": {
+          "version": "2.6.0",
+          "resolved": "https://registry.npmjs.org/vsts-task-lib/-/vsts-task-lib-2.6.0.tgz",
+          "integrity": "sha512-ja2qX4BIUvswcNbGtIoGo1SM5mRVc3Yaf7oM4oY64bNHs04chKfvH6f3cDDG0pd44OrZIGQE9LgECzeau6z2wA==",
+          "requires": {
+            "minimatch": "3.0.4",
+            "mockery": "^1.7.0",
+            "q": "^1.1.2",
+            "semver": "^5.1.0",
+            "shelljs": "^0.3.0",
+            "uuid": "^3.0.1"
+          }
+        }
       }
     },
     "minimatch": {
@@ -320,6 +350,7 @@
     },
     "utility-common": {
       "version": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
+      "integrity": "sha512-+LSl4ZiVLTR7ycYatVlMx8/ymQki31Ir5dWnFMXDFR9/Cfzs498t9WnUPp97DDz6U+7A+kllldPYOtWtKHevKg==",
       "requires": {
         "js-yaml": "3.6.1",
         "semver": "^5.4.1",

@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as Q from 'q';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { getPersonalAccessTokenHandler, WebApi } from 'azure-devops-node-api';
+import { IRequestOptions } from "azure-devops-node-api/interfaces/common/VsoBaseInterfaces";
 
 export class SecureFileHelpers {
     serverConnection: WebApi;
@@ -12,7 +13,14 @@ export class SecureFileHelpers {
         const authHandler = getPersonalAccessTokenHandler(serverCreds);
 
         const proxy = tl.getHttpProxyConfiguration();
-        const options = proxy ? { proxy, ignoreSslError: true } : undefined;
+        let options: IRequestOptions = {
+            allowRetries: true,
+            maxRetries: 5
+        };
+
+        if (proxy) {
+            options = { ...options, proxy, ignoreSslError: true };
+        };
 
         this.serverConnection = new WebApi(serverUrl, authHandler, options);
     }
