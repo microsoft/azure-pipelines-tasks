@@ -1,14 +1,14 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
-import * as ParameterParser from 'webdeployment-common/ParameterParserUtility';
+import * as ParameterParser from 'webdeployment-common-v2/ParameterParserUtility';
 import * as Constant from '../operations/Constants';
 import { WebDeployUtility } from '../operations/WebDeployUtility';
-import { Package } from 'webdeployment-common/packageUtility';
+import { Package } from 'webdeployment-common-v2/packageUtility';
 
 const deleteOldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
 const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 0';
-var deployUtility = require('webdeployment-common/utility.js');
+var deployUtility = require('webdeployment-common-v2/utility.js');
 
 export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvider{
  
