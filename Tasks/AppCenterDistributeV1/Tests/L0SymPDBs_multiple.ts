@@ -76,7 +76,7 @@ nock('https://example.test')
     })
     .reply(201, {
         symbol_upload_id: 100,
-        upload_url: 'https://example.upload.test/symbol_uploads',
+        upload_url: 'https://example.upload.test/symbol_upload',
         expiration_date: 1234567
     });
 
