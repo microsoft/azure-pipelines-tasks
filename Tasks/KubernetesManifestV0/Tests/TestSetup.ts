@@ -1,5 +1,5 @@
-import * as ma from 'vsts-task-lib/mock-answer';
-import * as tmrm from 'vsts-task-lib/mock-run';
+import * as ma from 'azure-pipelines-task-lib/mock-answer';
+import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import * as path from 'path';
 
 import * as shared from './TestShared';
@@ -240,7 +240,7 @@ if (process.env[shared.TestEnvVars.arguments]) {
 }
 
 tr.setAnswers(<any>a);
-tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
+tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
 
 // Create mock for fs module
 import * as fs from 'fs';

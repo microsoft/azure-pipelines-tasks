@@ -1,6 +1,6 @@
 'use strict';
 
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 export const namespace: string = tl.getInput('namespace', false);
 export const containers: string[] = tl.getDelimitedInput('containers', '\n');

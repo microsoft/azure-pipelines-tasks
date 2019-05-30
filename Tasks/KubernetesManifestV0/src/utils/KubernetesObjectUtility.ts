@@ -1,6 +1,6 @@
 'use strict';
 import * as fs from 'fs';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as yaml from 'js-yaml';
 import { Resource } from 'kubernetes-common/kubectl-object-model';
 import { KubernetesWorkload, recognizedWorkloadTypes } from '../models/constants';

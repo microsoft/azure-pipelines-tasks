@@ -1,7 +1,7 @@
 'use strict';
 
-import * as tl from 'vsts-task-lib/task';
-import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import * as kubectlutility from 'kubernetes-common/kubectlutility';
 import { Kubectl } from 'kubernetes-common/kubectl-object-model';
 import { pipelineAnnotations } from '../models/constants';

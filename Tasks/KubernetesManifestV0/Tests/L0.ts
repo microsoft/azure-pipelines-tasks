@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
-import * as tl from 'vsts-task-lib';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import * as tl from 'azure-pipelines-task-lib';
 import * as shared from './TestShared';
 
 describe('Kubernetes Manifests Suite', function () {

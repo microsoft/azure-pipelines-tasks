@@ -2,7 +2,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as yaml from 'js-yaml';
 import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
 import * as KubernetesObjectUtility from '../utils/KubernetesObjectUtility';
@@ -11,7 +11,7 @@ import * as TaskInputParameters from '../models/TaskInputParameters';
 import * as models from '../models/constants';
 import * as fileHelper from '../utils/FileHelper';
 import * as utils from '../utils/utilities';
-import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { Kubectl, Resource } from 'kubernetes-common/kubectl-object-model';
 
 export function deploy(kubectl: Kubectl, manifestFilePaths: string[], deploymentStrategy: string) {

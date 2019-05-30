@@ -1,5 +1,5 @@
 'use strict';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
 import { Kubectl } from 'kubernetes-common/kubectl-object-model';
 import * as utils from '../utils/utilities';
