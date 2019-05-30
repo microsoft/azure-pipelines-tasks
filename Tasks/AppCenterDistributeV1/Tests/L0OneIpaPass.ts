@@ -65,13 +65,6 @@ nock('https://example.test')
         expiration_date: 1234567
     });
 
-//upload symbols
-nock('https://example.upload.test')
-    .put('/bogus-container')
-    .reply(201, {
-        status: 'success'
-    });
-
 //finishing symbol upload, commit the symbol 
 nock('https://example.test')
     .patch("/v0.1/apps/testuser/testapp/symbol_uploads/100", {
