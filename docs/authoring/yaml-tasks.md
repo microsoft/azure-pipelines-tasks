@@ -73,10 +73,10 @@ It includes the extension publisher, extension ID, task contribution ID, and tas
 (_TODO: we probably don't need ALL of those._)
 If your task is unlikely to collide with any other task a customer is likely to install, your users can drop all the leading segments and refer just to the task name.
 For example: `publisher-id.extension-id.task-contribution-id.printHelloWorld` can also be written as just `printHelloWorld`.
-  - If you're doing the kind of "one-time setup as a dev might do on their machine", consider using the `ecosystem` feature.
-  `ecosystem` tells the YAML parser that your task will set the machine's PATH to point to a tool at a specific version, optionally that it knows how download versions of a tool, and that it will set the tool's proxy settings to match the agent's.
+  - ~~If you're doing the kind of "one-time setup as a dev might do on their machine", consider using the `ecosystem` feature.~~ (This feature is currently paused.)
+<!--  `ecosystem` tells the YAML parser that your task will set the machine's PATH to point to a tool at a specific version, optionally that it knows how download versions of a tool, and that it will set the tool's proxy settings to match the agent's.
   (In the future, `use` will also map authentication settings and install problem matchers.)
-  Instead of referring to `- task: UseNodeVersion@0`, the end user simply writes `- use: node`.
+  Instead of referring to `- task: UseNodeVersion@0`, the end user simply writes `- use: node`. -->
   - We're actively soliciting other classes of syntactic sugar we can add over top of raw `- task` usage.\
   If you have ideas, please open an issue in https://github.com/Microsoft/azure-pipelines-yaml to discuss.
 - You can change your task name when you do a major version.
