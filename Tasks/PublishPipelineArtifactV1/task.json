@@ -29,7 +29,7 @@
             "name": "Artifact name",
             "type": "string",
             "label": "The name of this artifact",
-            "defaultValue": "drop",
+            "defaultValue": "",
             "required": false,
             "helpMarkDown": "Name of the artifact to publish."
         }
