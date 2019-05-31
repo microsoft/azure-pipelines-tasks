@@ -24,7 +24,7 @@ export function writeFileSync(filePath: string, data: string): number {
     }
 }
 
-export function findDockerFile(dockerfilepath : string) : string {
+export function findDockerFile(dockerfilepath: string) : string {
     if (dockerfilepath.indexOf('*') >= 0 || dockerfilepath.indexOf('?') >= 0) {
         tl.debug(tl.loc('ContainerPatternFound'));
         let workingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
