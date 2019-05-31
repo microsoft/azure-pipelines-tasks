@@ -1,15 +1,15 @@
-"use strict";
-import fs = require("fs");
-import tl = require('vsts-task-lib/task');
-import yaml = require('js-yaml');
-import { Resource } from "kubernetes-common/kubectl-object-model";
-import { KubernetesWorkload, recognizedWorkloadTypes } from "../models/constants";
-import * as utils from "../utils/utilities"
-import { StringComparer } from "../utils/utilities"
+'use strict';
+import * as fs from 'fs';
+import * as tl from 'vsts-task-lib/task';
+import * as yaml from 'js-yaml';
+import { Resource } from 'kubernetes-common/kubectl-object-model';
+import { KubernetesWorkload, recognizedWorkloadTypes } from '../models/constants';
+import * as utils from '../utils/utilities';
+import { StringComparer } from '../utils/utilities';
 
 export function isDeploymentEntity(kind: string): boolean {
     if (!kind) {
-        throw (tl.loc("ResourceKindNotDefined"));
+        throw (tl.loc('ResourceKindNotDefined'));
     }
 
     return recognizedWorkloadTypes.some(function (elem) {
@@ -19,14 +19,14 @@ export function isDeploymentEntity(kind: string): boolean {
 
 export function getReplicaCount(inputObject: any): any {
     if (!inputObject) {
-        throw (tl.loc("NullInputObject"));
+        throw (tl.loc('NullInputObject'));
     }
 
     if (!inputObject.kind) {
-        throw (tl.loc("ResourceKindNotDefined"));
+        throw (tl.loc('ResourceKindNotDefined'));
     }
 
-    var kind = inputObject.kind;
+    const kind = inputObject.kind;
     if (!utils.isEqual(kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase) && !utils.isEqual(kind, KubernetesWorkload.DaemonSet, StringComparer.OrdinalIgnoreCase)) {
         return inputObject.spec.replicas;
     }
@@ -50,11 +50,11 @@ export function getRunUriAnnotation(inputObject: any): any {
 export function updateObjectLabels(inputObject: any, newLabels: Map<string, string>, override: boolean) {
 
     if (!inputObject) {
-        throw (tl.loc("NullInputObject"));
+        throw (tl.loc('NullInputObject'));
     }
 
     if (!inputObject.metadata) {
-        throw (tl.loc("NullInputObjectMetadata"));
+        throw (tl.loc('NullInputObjectMetadata'));
     }
 
     if (!newLabels) {
@@ -64,7 +64,7 @@ export function updateObjectLabels(inputObject: any, newLabels: Map<string, stri
     if (override) {
         inputObject.metadata.labels = newLabels;
     } else {
-        var existingLabels = inputObject.metadata.labels;
+        let existingLabels = inputObject.metadata.labels;
         if (!existingLabels) {
             existingLabels = new Map<string, string>();
         }
@@ -79,11 +79,11 @@ export function updateObjectLabels(inputObject: any, newLabels: Map<string, stri
 
 export function updateObjectAnnotations(inputObject: any, newAnnotations: Map<string, string>, override: boolean) {
     if (!inputObject) {
-        throw (tl.loc("NullInputObject"));
+        throw (tl.loc('NullInputObject'));
     }
 
     if (!inputObject.metadata) {
-        throw (tl.loc("NullInputObjectMetadata"));
+        throw (tl.loc('NullInputObjectMetadata'));
     }
 
     if (!newAnnotations) {
@@ -92,7 +92,7 @@ export function updateObjectAnnotations(inputObject: any, newAnnotations: Map<st
     if (override) {
         inputObject.metadata.annotations = newAnnotations;
     } else {
-        var existingAnnotations = inputObject.metadata.annotations;
+        let existingAnnotations = inputObject.metadata.annotations;
         if (!existingAnnotations) {
             existingAnnotations = new Map<string, string>();
         }
@@ -118,17 +118,17 @@ export function updateImagePullSecrets(inputObject: any, newImagePullSecrets: st
         return;
     }
 
-    var newImagePullSecretsObjects = [];
+    const newImagePullSecretsObjects = [];
 
     newImagePullSecrets.forEach(imagePullSecret => {
-        var newImagePullSecretsObject = {
-            "name": imagePullSecret
+        const newImagePullSecretsObject = {
+            'name': imagePullSecret
         };
 
         newImagePullSecretsObjects.push(newImagePullSecretsObject);
     });
 
-    var existingImagePullSecretObjects: any = getImagePullSecrets(inputObject);
+    let existingImagePullSecretObjects: any = getImagePullSecrets(inputObject);
 
     if (override) {
         existingImagePullSecretObjects = newImagePullSecretsObjects;
@@ -145,18 +145,18 @@ export function updateImagePullSecrets(inputObject: any, newImagePullSecrets: st
 
 export function updateSpecLabels(inputObject: any, newLabels: Map<string, string>, override: boolean) {
     if (!inputObject) {
-        throw (tl.loc("NullInputObject"));
+        throw (tl.loc('NullInputObject'));
     }
 
     if (!inputObject.kind) {
-        throw (tl.loc("ResourceKindNotDefined"));
+        throw (tl.loc('ResourceKindNotDefined'));
     }
 
     if (!newLabels) {
         return;
     }
 
-    var existingLabels = getSpecLabels(inputObject);
+    let existingLabels = getSpecLabels(inputObject);
 
     if (override) {
         existingLabels = newLabels;
@@ -175,11 +175,11 @@ export function updateSpecLabels(inputObject: any, newLabels: Map<string, string
 
 export function updateSelectorLabels(inputObject: any, newLabels: Map<string, string>, override: boolean) {
     if (!inputObject) {
-        throw (tl.loc("NullInputObject"));
+        throw (tl.loc('NullInputObject'));
     }
 
     if (!inputObject.kind) {
-        throw (tl.loc("ResourceKindNotDefined"));
+        throw (tl.loc('ResourceKindNotDefined'));
     }
 
     if (!newLabels) {
@@ -190,7 +190,7 @@ export function updateSelectorLabels(inputObject: any, newLabels: Map<string, st
         return;
     }
 
-    var existingLabels = getSpecSelectorLabels(inputObject);
+    let existingLabels = getSpecSelectorLabels(inputObject);
 
     if (override) {
         existingLabels = newLabels;
@@ -212,19 +212,19 @@ export function getResources(filePaths: string[], filterResourceTypes: string[])
         return [];
     }
 
-    let resources: Resource[] = [];
+    const resources: Resource[] = [];
 
     filePaths.forEach((filePath: string) => {
-        var fileContents = fs.readFileSync(filePath);
+        const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
-            let inputObjectKind = inputObject ? inputObject.kind : "";
+            const inputObjectKind = inputObject ? inputObject.kind : '';
             if (filterResourceTypes.filter(type => utils.isEqual(inputObjectKind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
-                var resource = {
+                const resource = {
                     type: inputObject.kind,
                     name: inputObject.metadata.name
                 };
                 resources.push(resource);
-            };
+            }
         });
     });
     return resources;
@@ -237,7 +237,7 @@ function getSpecLabels(inputObject: any) {
     }
 
     if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
-        return inputObject.metadata.labels
+        return inputObject.metadata.labels;
     }
     if (!!inputObject.spec && !!inputObject.spec.template && !!inputObject.spec.template.metadata) {
         return inputObject.spec.template.metadata.labels;
@@ -253,7 +253,7 @@ function getImagePullSecrets(inputObject: any) {
     }
 
     if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
-        return inputObject.spec.imagePullSecrets
+        return inputObject.spec.imagePullSecrets;
     }
 
     if (!!inputObject.spec.template && !!inputObject.spec.template.spec) {
@@ -282,7 +282,7 @@ function setImagePullSecrets(inputObject: any, newImagePullSecrets: any) {
 }
 
 function setSpecLabels(inputObject: any, newLabels: any) {
-    var specLabels = getSpecLabels(inputObject);
+    let specLabels = getSpecLabels(inputObject);
     if (!!newLabels) {
         specLabels = newLabels;
     }
@@ -299,7 +299,7 @@ function getSpecSelectorLabels(inputObject: any) {
 
 function setSpecSelectorLabels(inputObject: any, newLabels: any) {
 
-    var selectorLabels = getSpecSelectorLabels(inputObject);
+    let selectorLabels = getSpecSelectorLabels(inputObject);
     if (!!selectorLabels) {
         selectorLabels = newLabels;
     }

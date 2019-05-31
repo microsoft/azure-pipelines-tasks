@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Programma di installazione strumento Java",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=875287)",
-  "loc.description": "Acquisisce una versione specifica di Java da un BLOB di Azure specificato dall'utente o dalla cache degli strumenti e imposta JAVA_HOME. Usare questa attività per modificare la versione di Java usata in attività Java.",
+  "loc.description": "Acquisisce una versione specifica di Java da un BLOB di Azure specificato dall'utente o dalla cache degli strumenti e imposta JAVA_HOME",
   "loc.instanceNameFormat": "Usa Java $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "Scarica Java da un BLOB di Azure",
   "loc.input.label.versionSpec": "Versione del JDK",
@@ -48,5 +48,6 @@
   "loc.messages.UnsupportedFileExtension": "Per il file di origine del JDK specificato non esiste alcuna estensione di file supportata.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Non è stato possibile recuperare il token di accesso per Azure. Codice di stato: %s. Messaggio di stato: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Non è stato possibile recuperare il token di accesso per l'entità servizio gestita. Configurare l'identità del servizio gestita per la macchina virtuale 'https://aka.ms/azure-msi-docs'. Codice di stato: %s. Messaggio di stato: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Non è stato possibile recuperare il token di accesso per l'entità servizio gestita. Codice di stato: %s. Messaggio di stato: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Non è stato possibile recuperare il token di accesso per l'entità servizio gestita. Codice di stato: %s. Messaggio di stato: %s",
+  "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta."
 }

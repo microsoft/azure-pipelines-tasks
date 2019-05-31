@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "App Center Distribute",
+  "loc.friendlyName": "App Center distribute",
   "loc.helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport/).",
   "loc.description": "Distribute app builds to testers and users via App Center",
   "loc.instanceNameFormat": "Deploy $(app) to Visual Studio App Center",

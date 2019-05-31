@@ -27,5 +27,6 @@
   "loc.messages.InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
   "loc.messages.InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1",
   "loc.messages.JS_ExitCode": "PowerShell exited with code '%s'.",
-  "loc.messages.JS_Stderr": "PowerShell wrote one or more lines to the standard error stream."
+  "loc.messages.JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }

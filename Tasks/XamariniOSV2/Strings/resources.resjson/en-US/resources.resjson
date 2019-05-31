@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613729)",
-  "loc.description": "Build an iOS app with Xamarin on macOS.",
+  "loc.description": "Build an iOS app with Xamarin on macOS",
   "loc.instanceNameFormat": "Build Xamarin.iOS solution $(solution)",
   "loc.releaseNotes": "iOS signing set up has been removed from the task. Use `Secure Files` with supporting tasks `Install Apple Certificate` and `Install Apple Provisioning Profile` to setup signing. Updated options to work better with `Visual Studio for Mac`.",
   "loc.group.displayName.sign": "Signing & Provisioning",

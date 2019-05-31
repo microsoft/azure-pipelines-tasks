@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "PowerShell on Target Machines",
+  "loc.friendlyName": "PowerShell on target machines",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=873465)",
-  "loc.description": "Execute PowerShell scripts on remote machine(s). This version of the task uses PSSession and Invoke-Command for remoting.",
+  "loc.description": "Execute PowerShell scripts on remote machines using PSSession and Invoke-Command for remoting",
   "loc.instanceNameFormat": "Run PowerShell on Target Machines",
   "loc.releaseNotes": "Use PSSession and invoke-command to perform remoting on target machines.<br/><br/>* Added support for inline script execution.<br/><br/>* Default and Credssp authentication are supported.<br/><br/>* Added options for error handling: ErrorActionPreference, ignoreLASTEXITCODE and Fail on Standard Error.",
   "loc.group.displayName.ScriptOptions": "Script options",

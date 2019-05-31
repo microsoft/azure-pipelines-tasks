@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/ftp-upload",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 142,
-    "Patch": 2
+    "Minor": 151,
+    "Patch": 1
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [

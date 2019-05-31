@@ -3,7 +3,7 @@
   "name": "IISWebAppDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/iiswebappdeploydeprecatedreadme",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 26
+    "Patch": 28
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",

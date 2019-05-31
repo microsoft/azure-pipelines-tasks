@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "category": "Utility",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870237",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-to-azure-service-bus",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "visibility": [
     "Build",
@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 15
   },
   "groups": [
     {

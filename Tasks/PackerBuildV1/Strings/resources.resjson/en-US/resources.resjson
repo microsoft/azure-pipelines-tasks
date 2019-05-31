@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Build Machine Image",
+  "loc.friendlyName": "Build machine image",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=845329)",
-  "loc.description": "Build machine image using Packer. This image can be used for Azure Virtual machine scale set deployment",
+  "loc.description": "Build a machine image using Packer, which may be used for Azure Virtual machine scale set deployment",
   "loc.instanceNameFormat": "Build immutable image",
   "loc.releaseNotes": "This task now supports managed disk images.",
   "loc.group.displayName.AzureDetails": "Azure Details",
@@ -92,5 +92,6 @@
   "loc.messages.GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-  "loc.messages.CreateManagedImageNotSupportedForVHDSource": "Creating managed image from a source VHD is not supported. You must set 'Base image source' input value to 'Gallery'."
+  "loc.messages.CreateManagedImageNotSupportedForVHDSource": "Creating managed image from a source VHD is not supported. You must set 'Base image source' input value to 'Gallery'.",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }

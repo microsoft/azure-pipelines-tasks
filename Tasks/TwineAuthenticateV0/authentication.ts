@@ -1,5 +1,5 @@
-import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as tl from "azure-pipelines-task-lib/task";
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
 
 export interface IPackageSource {
     feedUri: string;
@@ -62,6 +62,7 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<AuthIn
             packagingLocation,
             pkgLocationUtils.RegistryType.PyPiUpload,
             feedName,
+            null,
             localAccessToken,
             true /* useSession */);
         return new AuthInfo({

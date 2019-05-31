@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Chargement FTP",
   "loc.helpMarkDown": "Chargez les fichiers vers une machine distante par FTP (File Transfer Protocol), ou de manière sécurisée par FTPS. [Plus d'informations](http://go.microsoft.com/fwlink/?LinkId=809084).",
-  "loc.description": "Chargement FTP",
+  "loc.description": "Charger des fichiers via FTP",
   "loc.instanceNameFormat": "Chargement FTP : $(rootFolder)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.credsType": "Méthode d'authentification",
@@ -21,8 +21,6 @@
   "loc.input.help.clean": "Supprimez le répertoire distant, notamment son contenu, avant le chargement.",
   "loc.input.label.cleanContents": "Effacer le contenu du répertoire distant",
   "loc.input.help.cleanContents": "Supprimez de manière récursive la totalité du contenu du répertoire distant avant le chargement. Le répertoire existant ne sera pas supprimé. Pour un meilleur niveau de performance, pensez à utiliser 'Supprimer le répertoire distant' à la place.",
-  "loc.input.label.overwrite": "Remplacer",
-  "loc.input.help.overwrite": "Remplacez les fichiers existants dans le répertoire distant.",
   "loc.input.label.preservePaths": "Conserver les chemins de fichiers",
   "loc.input.help.preservePaths": "Si l'option est sélectionnée, la structure de répertoire locale relative est recréée sous le répertoire distant où les fichiers sont chargés. Sinon, les fichiers sont chargés directement sur le répertoire distant sans création de sous-répertoires supplémentaires.<p>Par exemple, votre dossier source est <b>'/home/user/source/'</b>, il contient le fichier <b>'foo/bar/foobar.txt'</b>, et votre répertoire distant est <b>'/uploads/'</b>.<br>Si l'option est sélectionnée, le fichier est chargé vers <b>'/uploads/foo/bar/foobar.txt'</b>. Sinon, il est chargé vers <b>'/uploads/foobar.txt'</b>.",
   "loc.input.label.trustSSL": "Faire confiance au certificat de serveur",
@@ -36,7 +34,9 @@
   "loc.messages.FTPConnected": "connecté : %s",
   "loc.messages.FTPNoHostSpecified": "L'URL du serveur FTP doit inclure un nom d'hôte",
   "loc.messages.FTPNoProtocolSpecified": "L'URL du serveur FTP doit commencer par ftp:// ou ftps://",
+  "loc.messages.NoFilesFound": "Fichiers à charger introuvables",
   "loc.messages.UploadRemoteDir": "téléchargement de fichiers sur le répertoire distant : %s",
   "loc.messages.UploadSucceedMsg": "Téléchargement FTP réussi %s",
-  "loc.messages.UploadSucceedRes": "Téléchargement FTP réussi"
+  "loc.messages.UploadSucceedRes": "Téléchargement FTP réussi",
+  "loc.messages.UploadFailed": "Échec du chargement FTP"
 }
