@@ -1,10 +1,10 @@
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 import { DeploymentFactory } from '../deploymentProvider/DeploymentFactory';
 import { BuiltInLinuxWebAppDeploymentProvider } from '../deploymentProvider/BuiltInLinuxWebAppDeploymentProvider'
 import { IWebAppDeploymentProvider } from '../deploymentProvider/IWebAppDeploymentProvider';
 import { TaskParametersUtility, TaskParameters, DeploymentType } from '../operations/TaskParameters';
 import { stringify } from 'querystring';
-import { PackageType } from 'webdeployment-common/packageUtility';
+import { PackageType } from 'webdeployment-common-v2/packageUtility';
 
 export class DeploymentFactoryL0Tests  {
 

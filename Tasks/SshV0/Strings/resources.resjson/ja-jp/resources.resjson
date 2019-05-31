@@ -18,12 +18,13 @@
   "loc.input.help.args": "シェル スクリプトに渡す引数。",
   "loc.input.label.failOnStdErr": "STDERR でのエラー",
   "loc.input.help.failOnStdErr": "このオプションを選択すると、リモート コマンドまたはスクリプトが STDERR に書き込みを行う場合、ビルドは失敗します。",
-  "loc.messages.UseDefaultPort": "ポートが指定されなかったため、SSH で既定のポート 22 を使用しています。",
-  "loc.messages.SettingUpSshConnection": "%s@%s:%s への SSH 接続を確立しようとしています",
-  "loc.messages.SshConnectionSuccessful": "正常に接続しました。",
   "loc.messages.ConnectionFailed": "リモート マシンへの接続に失敗しました。SSH サービス接続の詳細を確認してください。エラー: %s。",
-  "loc.messages.RemoteCopyFailed": "リモート コンピューターへのスクリプトのコピーに失敗しました。エラー: %s。",
+  "loc.messages.FailedToWriteScript": "スクリプトをディスクに書き込めませんでした: %s",
   "loc.messages.RemoteCmdExecutionErr": "リモート コンピューター上のエラーにより、コマンドの実行に失敗しました。",
   "loc.messages.RemoteCmdNonZeroExitCode": "コマンド %s がコード %s で終了しました。",
-  "loc.messages.RemoteScriptFileCleanUpFailed": "リモート コンピューターにコピーされたスクリプト ファイルの削除に失敗しました。エラー = %s。"
+  "loc.messages.RemoteCopyFailed": "リモート コンピューターへのスクリプトのコピーに失敗しました。エラー: %s。",
+  "loc.messages.RemoteScriptFileCleanUpFailed": "リモート コンピューターにコピーされたスクリプト ファイルの削除に失敗しました。エラー = %s。",
+  "loc.messages.SettingUpSshConnection": "%s@%s:%s への SSH 接続を確立しようとしています",
+  "loc.messages.SshConnectionSuccessful": "正常に接続しました。",
+  "loc.messages.UseDefaultPort": "ポートが指定されなかったため、SSH で既定のポート 22 を使用しています。"
 }

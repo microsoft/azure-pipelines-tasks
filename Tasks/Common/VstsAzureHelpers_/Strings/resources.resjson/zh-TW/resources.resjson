@@ -9,7 +9,7 @@
   "loc.messages.AZ_UnsupportedAuthScheme0": "Azure 端點不支援驗證配置 '{0}'。",
   "loc.messages.AZ_AvailableModules": "可用的 {0} 模組清單:",
   "loc.messages.AZ_InvalidARMEndpoint": "指定的 AzureRM 端點無效。",
-  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Could not fetch access token for Managed Identity. Please configure Managed Identity for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '{0}', Error message: {1}",
-  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Identity. Status code: '{0}', Error message: {1}",
-  "loc.messages.AZ_MsiFailure": "Could not fetch access token for Managed Identity. {0}"
+  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "無法擷取受控識別的存取權杖。請設定虛擬機器的受控識別 'https://aka.ms/azure-msi-docs'。狀態碼: '{0}'，錯誤訊息: {1}",
+  "loc.messages.AZ_MsiAccessTokenFetchFailure": "無法擷取受控識別的存取權杖。狀態碼: '{0}'，錯誤訊息: {1}",
+  "loc.messages.AZ_MsiFailure": "無法擷取受控識別的存取權杖。{0}"
 }

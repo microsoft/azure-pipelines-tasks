@@ -7,6 +7,8 @@
   "loc.input.help.codeCoverageTool": "코드 검사 결과를 생성하는 데 사용하는 도구입니다.",
   "loc.input.label.summaryFileLocation": "요약 파일",
   "loc.input.help.summaryFileLocation": "줄, 메서드, 클래스 검사 등의 코드 검사 통계가 포함된 요약 파일의 경로입니다. 값에는 minimatch 패턴이 포함될 수 있습니다. 예: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`",
+  "loc.input.label.pathToSources": "소스 파일의 경로",
+  "loc.input.help.pathToSources": "검사 XML 보고서에 소스 파일의 절대 경로가 없는 경우 소스 파일의 경로가 필요합니다. 예를 들어 JaCoCo 보고서에서는 절대 경로를 사용하지 않으므로, Java 앱에 대한 JaCoCo 검사를 게시할 때의 패턴은 '$(System.DefaultWorkingDirectory)/MyApp/src/main/java/'와 비슷합니다.<br />Docker 컨테이너에서 테스트를 실행하는 경우에도 이러한 입력이 필요합니다. 이 입력은 호스트에 있는 소스 파일의 절대 경로를 가리켜야 합니다. 예: '$(System.DefaultWorkingDirectory)/MyApp/'",
   "loc.input.label.reportDirectory": "보고서 디렉터리",
   "loc.input.help.reportDirectory": "코드 검사 HTML 보고서 디렉터리의 경로입니다. 보고서 디렉터리는 나중에 빌드의 아티팩트로 보기 위해 게시됩니다. 값에는 minimatch 패턴이 포함될 수 있습니다. 예: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`",
   "loc.input.label.additionalCodeCoverageFiles": "추가 파일",
@@ -15,5 +17,10 @@
   "loc.input.help.failIfCoverageEmpty": "코드 검사에서 게시할 결과를 생성하지 않은 경우 작업에 실패합니다.",
   "loc.messages.FoundNMatchesForPattern": "%s개의 결과가 패턴 %s과(와) 일치합니다.",
   "loc.messages.MultipleSummaryFilesFound": "여러 개의 파일 또는 디렉터리가 일치합니다. 처음 일치 %s을(를) 사용하는 중입니다.",
-  "loc.messages.NoCodeCoverage": "게시할 코드 검사 결과가 없습니다."
+  "loc.messages.NoCodeCoverage": "게시할 코드 검사 결과가 없습니다.",
+  "loc.messages.InstallDotNetCoreForHtmlReport": "HTML 보고서를 자동 생성하려면 dotnet core를 설치하세요.",
+  "loc.messages.FailedToGenerateHtmlReport": "HTML 보고서를 생성하지 못했습니다. 오류: %s",
+  "loc.messages.IgnoringReportDirectory": "HTML 콘텐츠가 포함되는 검사 보고서 디렉터리를 무시하고 HTML 콘텐츠를 자동 생성하는 중",
+  "loc.messages.UpgradeAgentMessage": "에이전트 버전을 업그레이드하세요. https://github.com/Microsoft/vsts-agent/releases",
+  "loc.messages.GeneratedHtmlReport": "생성된 코드 검사 HTML 보고서: %s"
 }

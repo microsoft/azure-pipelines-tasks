@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Apple プロビジョニング プロファイルのインストール",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=862068)",
-  "loc.description": "macOS エージェントでのビルドに必要な Apple プロビジョニング プロファイルのインストール",
+  "loc.description": "macOS エージェント マシン上でビルドを行うために必要な Apple プロビジョニング プロファイルをインストールします",
   "loc.instanceNameFormat": "Apple プロビジョニング プロファイルのインストール",
   "loc.input.label.provisioningProfileLocation": "プロビジョニング プロファイルの場所",
   "loc.input.help.provisioningProfileLocation": "インストールするプロビジョニング プロファイルの場所を選択します。プロビジョニング プロファイルは、[セキュア ファイル] にアップロードすることもできますし、ソース リポジトリやエージェントのローカル パスに保管することもできます。",

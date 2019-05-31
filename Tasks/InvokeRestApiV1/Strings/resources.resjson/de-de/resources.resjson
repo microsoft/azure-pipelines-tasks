@@ -9,7 +9,7 @@
   "loc.input.label.connectedServiceName": "Generische Dienstverbindung",
   "loc.input.help.connectedServiceName": "Wählen Sie eine generischen Dienstverbindung aus, die zum Auswählen der URL und zum Erstellen des Autorisierungsheaders für die HTTP-Anforderung verwendet werden soll.",
   "loc.input.label.connectedServiceNameARM": "Azure-Abonnement",
-  "loc.input.help.connectedServiceNameARM": "Wählen Sie ein Azure Resource Manager-Abonnement aus, das zum Auswählen der URL und Erstellen des Autorisierungsheaders für die HTTP-Anforderung verwendet werden soll.",
+  "loc.input.help.connectedServiceNameARM": "Wählen Sie ein Azure Resource Manager-Abonnement aus, das zum Aufrufen einer Verwaltungs-API verwendet werden soll. Als baseURL wird \"ManagementPortalUrl\" der Cloud verwendet.",
   "loc.input.label.method": "Methode",
   "loc.input.help.method": "Wählen Sie die HTTP-Methode aus, mit der die API aufgerufen werden soll.",
   "loc.input.label.headers": "Header",

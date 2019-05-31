@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "SSH-Schlüssel installieren",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=875267)",
-  "loc.description": "Installieren Sie einen SSH-Schlüssel vor einem Build oder Release.",
+  "loc.description": "Hiermit wird vor einem Build oder einer Bereitstellung ein SSH-Schlüssel installiert.",
   "loc.instanceNameFormat": "SSH-Schlüssel installieren",
   "loc.input.label.hostName": "Eintrag in bekannten Hosts",
   "loc.input.help.hostName": "Der Eintrag für diesen SSH-Schlüssel für die Datei \"known_hosts\".",

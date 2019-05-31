@@ -2,15 +2,15 @@
     "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
     "name": "NuGetCommand",
     "friendlyName": "NuGet",
-    "description": "Restore, pack, or push NuGet packages, or run a NuGet command. Supports NuGet.org and authenticated feeds like Package Management and MyGet. Uses NuGet.exe and works with .NET Framework apps. For .NET Core and .NET Standard apps, use the .NET Core task.",
+    "description": "Restore, pack, or push NuGet packages, or run a NuGet command. Supports NuGet.org and authenticated feeds like Azure Artifacts and MyGet. Uses NuGet.exe and works with .NET Framework apps. For .NET Core and .NET Standard apps, use the .NET Core task.",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613747)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 151,
-        "Patch": 1
+        "Minor": 153,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -104,7 +104,7 @@
             "type": "pickList",
             "label": "Use packages from this Azure Artifacts/TFS feed",
             "defaultValue": "",
-            "helpMarkDown": "Include the selected feed in the generated NuGet.config. You must have Package Management installed and licensed to select a feed here.",
+            "helpMarkDown": "Include the selected feed in the generated NuGet.config. You must have Azure Artifacts installed and licensed to select a feed here.",
             "required": "false",
             "groupName": "restoreAuth",
             "visibleRule": "selectOrConfig = select",
@@ -225,7 +225,7 @@
             "label": "Target feed",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select a feed hosted in this account. You must have Package Management installed and licensed to select a feed here.",
+            "helpMarkDown": "Select a feed hosted in this account. You must have Azure Artifacts installed and licensed to select a feed here.",
             "visibleRule": "command = push && nuGetFeedType = internal"
         },
         {
@@ -458,14 +458,14 @@
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "feedPublish",
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {

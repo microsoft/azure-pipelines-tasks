@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 151,
-        "Patch": 1
+        "Minor": 153,
+        "Patch": 0
     },
     "releaseNotes": "This version of the task uses apksigner instead of jarsigner to sign APKs.",
     "demands": [

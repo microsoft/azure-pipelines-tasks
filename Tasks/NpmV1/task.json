@@ -2,15 +2,15 @@
     "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
     "name": "Npm",
     "friendlyName": "npm",
-    "description": "Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Package Management.",
+    "description": "Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Azure Artifacts.",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 151,
-        "Patch": 1
+        "Minor": 153,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -124,7 +124,7 @@
             "groupName": "publishRegistries",
             "name": "publishFeed",
             "label": "Target registry",
-            "helpMarkDown": "Select a registry hosted in this account. You must have Package Management installed and licensed to select a registry here.",
+            "helpMarkDown": "Select a registry hosted in this account. You must have Azure Artifacts installed and licensed to select a registry here.",
             "type": "pickList",
             "visibleRule": "publishRegistry = useFeed",
             "required": true

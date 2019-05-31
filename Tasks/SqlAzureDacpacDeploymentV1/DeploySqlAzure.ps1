@@ -59,9 +59,8 @@ try {
     # Telemetry for endpoint id
     $encodedServerName = GetSHA256String($serverName)
     $encodedDatabaseName = GetSHA256String($databaseName)
-    $encodedSubscriptionId = GetSHA256String($subscriptionId)
     $telemetryJsonContent = -join("{`"endpointId`":`"$connectedServiceName`",", 
-                                  "`"subscriptionId`":`"$encodedSubscriptionId`",",
+                                  "`"subscriptionId`":`"$subscriptionId`",",
                                   "`"serverName`": `"$encodedServerName`",",
                                   "`"databaseName`": `"$encodedDatabaseName`"}")
     Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=SqlAzureDacpacDeployment]$telemetryJsonContent"

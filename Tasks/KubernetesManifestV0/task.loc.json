@@ -3,10 +3,9 @@
   "name": "KubernetesManifest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+  "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/kubernetes-manifest",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
-  "preview": true,
   "visibility": [
     "Build",
     "Release"
@@ -14,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 151,
-    "Patch": 5
+    "Minor": 153,
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
@@ -130,6 +129,15 @@
       "visibleRule": "action = bake && renderType = helm2"
     },
     {
+      "name": "releaseName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.releaseName",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseName",
+      "visibleRule": "action = bake && renderType = helm2"
+    },
+    {
       "name": "overrideFiles",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.overrideFiles",
@@ -171,10 +179,15 @@
     },
     {
       "name": "kind",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.kind",
       "required": true,
       "defaultValue": "",
+      "options": {
+        "deployment": "deployment",
+        "replicaset": "replicaset",
+        "statefulset": "statefulset"
+      },
       "helpMarkDown": "ms-resource:loc.input.help.kind",
       "visibleRule": "action = scale || resourceToPatch = name"
     },

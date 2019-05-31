@@ -1,9 +1,9 @@
-import tl = require('vsts-task-lib/task');
-import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
-import webClient = require('azure-arm-rest/webClient');
+import tl = require('azure-pipelines-task-lib/task');
+import { AzureAppService } from 'azure-arm-rest-v2/azure-arm-app-service';
+import webClient = require('azure-arm-rest-v2/webClient');
 var parseString = require('xml2js').parseString;
 import Q = require('q');
-import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
+import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
 
 export class AzureAppServiceUtility {
     private _appService: AzureAppService;
@@ -204,9 +204,9 @@ export class AzureAppServiceUtility {
 
     public async updateStartupCommandAndRuntimeStack(runtimeStack: string, startupCommand?: string): Promise<void> {
         var configDetails = await this._appService.getConfiguration();
-        startupCommand = (!!startupCommand) ? startupCommand  : "";
-        var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
         var appCommandLine: string = configDetails.properties.appCommandLine;
+        startupCommand = (!!startupCommand) ? startupCommand  : appCommandLine;
+        var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
         runtimeStack = (!!runtimeStack) ? runtimeStack : linuxFxVersion;
 
         if (appCommandLine != startupCommand || runtimeStack != linuxFxVersion) {

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "파이프라인 아티팩트 다운로드",
   "loc.helpMarkDown": "파이프라인의 명명된 아티팩트를 로컬 경로에 다운로드합니다.",
-  "loc.description": "파이프라인 아티팩트 다운로드",
+  "loc.description": "파이프라인에 연결된 아티팩트를 다운로드합니다.",
   "loc.instanceNameFormat": "파이프라인 아티팩트 다운로드",
   "loc.input.label.pipelineId": "다운로드할 특정 파이프라인",
   "loc.input.help.pipelineId": "다운로드할 파이프라인입니다. 비어 있는 경우 현재 파이프라인을 대상으로 합니다.",

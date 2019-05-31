@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 19
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -123,7 +123,8 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "appType = webAppLinux"
+            "visibleRule": "appType = webAppLinux",
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
         },
         {
             "name": "customWebConfig",
@@ -217,7 +218,7 @@
             "parameters": {
                 "osTypeSelected": "Linux"
             },
-            "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}}\"}"
+            "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}} ({{{ runtimeVersion }}})\"}"
         }
     ],
     "instanceNameFormat": "Azure Web App Deploy: $(appName)",
@@ -350,7 +351,7 @@
         "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
         "UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
-        "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
+        "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Adding: %s. Deleting : %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
