@@ -52,8 +52,8 @@ export function deployCanary(kubectl: Kubectl, filePaths: string[]) {
             var kind = inputObject.kind;
             if (helper.isDeploymentEntity(kind)) {
                 var existing_canary_object = fetchCanaryResource(kubectl, kind, name);
-
-                if (!!existing_canary_object) {
+                var isSameDeployment = isSamePipelineDeployment(existing_canary_object);
+                if (!!existing_canary_object && !isSameDeployment) {
                     throw (tl.loc("CanaryDeploymentAlreadyExistErrorMessage"));
                 }
 
@@ -223,4 +223,30 @@ function createCanaryObjectsArgumentString(files: string[]) {
 
     var args = utils.createKubectlArgs(kindList, nameList);
     return args;
+}
+
+function isSamePipelineDeployment(foundObject: any)
+{
+    if (!foundObject)
+    {
+        return false;
+    }
+
+    var foundRunUri = helper.getRunUriAnnotation(foundObject);
+    const isRelease = utils.isEqual(tl.getVariable('SYSTEM_HOSTTYPE'), 'release', utils.StringComparer.OrdinalIgnoreCase);
+    var currentRunUri;
+
+    const orgUrl = tl.getVariable('System.TeamFoundationCollectionUri');
+    if (isRelease) {
+        currentRunUri = `${orgUrl}${tl.getVariable('System.TeamProject')}/_releaseProgress?releaseId=${tl.getVariable('Release.ReleaseId')}`;
+    }
+    else {
+        currentRunUri = `${orgUrl}${tl.getVariable('System.TeamProject')}/_build/results?buildId=${tl.getVariable('Build.BuildId')}`;
+    }
+
+    tl.debug("Current Run Uri is "+currentRunUri);
+    tl.debug("Found Run Uri is "+foundRunUri);
+
+    var result = utils.isEqual(currentRunUri, foundRunUri, utils.StringComparer.OrdinalIgnoreCase);
+    return result;
 }

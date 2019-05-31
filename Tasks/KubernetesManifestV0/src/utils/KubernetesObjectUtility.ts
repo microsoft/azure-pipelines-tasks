@@ -34,6 +34,19 @@ export function getReplicaCount(inputObject: any): any {
     return 0;
 }
 
+export function getRunUriAnnotation(inputObject: any): any {
+    if (!inputObject) {
+        throw (tl.loc("NullInputObject"));
+    }
+
+    if (!inputObject.metadata) {
+        throw (tl.loc("NullInputObjectMetadata"));
+    }
+
+    var annotations =  inputObject.metadata.annotations;
+    return annotations["azure-pipelines/runuri"];
+
+}
 export function updateObjectLabels(inputObject: any, newLabels: Map<string, string>, override: boolean) {
 
     if (!inputObject) {
