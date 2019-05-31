@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "PowerShell",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613736)",
-  "loc.description": "Windows、macOS、Linux 上で PowerShell スクリプトを実行します。",
+  "loc.description": "Linux、macOS、Windows で PowerShell スクリプトを実行します",
   "loc.instanceNameFormat": "PowerShell スクリプト",
   "loc.releaseNotes": "スクリプト タスクの一貫性。macOS と Linux のサポートが追加されました。",
   "loc.group.displayName.advanced": "詳細設定",

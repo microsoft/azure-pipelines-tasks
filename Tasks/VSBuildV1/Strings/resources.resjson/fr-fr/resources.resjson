@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Build Visual Studio",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "Générez à l'aide de MSBuild et définissez la propriété de version Visual Studio.",
+  "loc.description": "Générer avec MSBuild et définir la propriété de version Visual Studio",
   "loc.instanceNameFormat": "Générer la solution $(solution)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.solution": "Solution",
@@ -26,6 +26,8 @@
   "loc.input.help.logProjectEvents": "Enregistrez éventuellement les détails de la chronologie de chaque projet.",
   "loc.input.label.createLogFile": "Créer le fichier journal",
   "loc.input.help.createLogFile": "Créez éventuellement un fichier journal (Windows uniquement).",
+  "loc.input.label.logFileVerbosity": "Détails du fichier journal",
+  "loc.input.help.logFileVerbosity": "Détails optionnels du fichier journal.",
   "loc.messages.MSBuildLocationDeprecated0": "Le paramètre d'emplacement de MSBuild est déconseillé. Valeur '{0}' ignorée",
   "loc.messages.MSBuildVersionDeprecated0": "Le paramètre de version de MSBuild est déconseillé. Valeur '{0}' ignorée.",
   "loc.messages.UnexpectedVSVersion0": "Version inattendue de Visual Studio : '{0}'.",

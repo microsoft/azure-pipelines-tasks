@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "http://go.microsoft.com/fwlink/?LinkId=809083",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/archive-files",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 145,
-    "Patch": 1
+    "Minor": 151,
+    "Patch": 2
   },
   "groups": [
     {

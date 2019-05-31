@@ -1,7 +1,8 @@
 {
-  "loc.friendlyName": "セキュリティとコンプライアンスの評価",
-  "loc.description": "リソース グループと Azure サブスクリプションに属するリソースでの、Azure ポリシーによるセキュリティとコンプライアンスの評価です",
-  "loc.instanceNameFormat": "$(ResourceGroupName) の Azure Policy コンプライアンス評価",
+  "loc.friendlyName": "Azure Policy コンプライアンスの確認",
+  "loc.helpMarkDown": "",
+  "loc.description": "Azure Policy のセキュリティとコンプライアンスの評価",
+  "loc.instanceNameFormat": "ポリシー コンプライアンスの確認",
   "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
   "loc.input.help.ConnectedServiceName": "ポリシーを適用する Azure Resource Manager のサブスクリプションを選択します。",
   "loc.input.label.ResourceGroupName": "リソース グループ",

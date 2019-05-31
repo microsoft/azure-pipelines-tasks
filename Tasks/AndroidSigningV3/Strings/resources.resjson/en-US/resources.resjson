@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Android Signing",
+  "loc.friendlyName": "Android signing",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613717)",
   "loc.description": "Sign and align Android APK files",
   "loc.instanceNameFormat": "Signing and aligning APK file(s) $(files)",

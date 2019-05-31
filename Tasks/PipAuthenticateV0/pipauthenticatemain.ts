@@ -1,7 +1,7 @@
 import * as path from "path";
+import * as tl from "azure-pipelines-task-lib";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as telemetry from "utility-common/telemetry";
-import * as tl from "azure-pipelines-task-lib";
 import * as auth from "./authentication";
 import * as utils from "./utilities";
 
@@ -43,7 +43,8 @@ async function main(): Promise<void> {
                 const feedUri = await pkgLocationUtils.getFeedRegistryUrl(
                     packagingLocation, 
                     pkgLocationUtils.RegistryType.PyPiSimple, 
-                    feedId, 
+                    feedId,
+                    null,
                     localAccessToken);
                 const pipUri = utils.formPipCompatibleUri("build", localAccessToken, feedUri);
                 pipEnvVar = pipEnvVar + " " + pipUri;

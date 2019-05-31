@@ -2,8 +2,8 @@
     "id": "18BDE28A-8172-45CB-B204-5CEF1393DBB1",
     "name": "AzureWebApp",
     "friendlyName": "Azure Web App",
-    "description": "Update Azure App Services on Windows, Web App on Linux with built-in images, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Mobile Apps, API applications",
-    "helpUrl": "https://aka.ms/azurewebappdeployreadme",
+    "description": "Deploy an Azure Web App for Linux or Windows",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[More information](https://aka.ms/azurewebappdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 19
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -123,7 +123,8 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "appType = webAppLinux"
+            "visibleRule": "appType = webAppLinux",
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
         },
         {
             "name": "customWebConfig",
@@ -217,7 +218,7 @@
             "parameters": {
                 "osTypeSelected": "Linux"
             },
-            "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}}\"}"
+            "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}} ({{{ runtimeVersion }}})\"}"
         }
     ],
     "instanceNameFormat": "Azure Web App Deploy: $(appName)",
@@ -350,7 +351,7 @@
         "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
         "UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
-        "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
+        "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Adding: %s. Deleting : %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",

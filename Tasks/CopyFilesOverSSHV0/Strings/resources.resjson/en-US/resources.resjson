@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Copy Files Over SSH",
+  "loc.friendlyName": "Copy files Over SSH",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=821894)",
   "loc.description": "Copy files or build artifacts to a remote machine over SSH",
   "loc.instanceNameFormat": "Securely copy files to the remote machine",

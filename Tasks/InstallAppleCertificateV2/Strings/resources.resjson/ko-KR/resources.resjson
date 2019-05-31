@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Apple 인증서 설치",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=862067)",
-  "loc.description": "macOS 에이전트에서 빌드하는 데 필요한 Apple 인증서를 설치합니다.",
+  "loc.description": "빌드에 필요한 Apple 인증서를 macOS 에이전트 머신에 설치합니다.",
   "loc.instanceNameFormat": "Apple 인증서 설치",
-  "loc.releaseNotes": "자체 호스트된 에이전트에서 codesign 중단을 수정합니다. '기본 키 집합' 또는 '사용자 지정 키 집합'을 사용하려면 지금 키 집합 암호가 필요합니다. Microsoft에 호스트된 빌드는 '임시 키 집합'을 사용해야 합니다.",
+  "loc.releaseNotes": "자체 호스팅 에이전트의 codesign 중단을 수정합니다. 이제 '기본 키 집합' 또는 '사용자 지정 키 집합'을 사용하려면 키 집합 암호가 필요합니다. Microsoft 호스팅 빌드는 '임시 키 집합'을 사용해야 합니다.",
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.certSecureFile": "인증서(P12)",
   "loc.input.help.certSecureFile": "macOS 에이전트에 설치할 '보안 파일'에 업로드된 인증서(.p12)를 선택합니다.",
@@ -26,5 +26,7 @@
   "loc.messages.P12PrivateKeyNameNotFound": "개인 키 이름을 확인하지 못했습니다. %s",
   "loc.messages.SetKeyPartitionListCommandNotFound": "이 이전 OS에 있는 불필요한 키 집합 partition_id ACL 할당을 건너뜁니다. 보안 명령 'set-key-partition-list'는 macOS Sierra(10.12)에서 도입되었습니다.",
   "loc.messages.SetKeyPartitionListCommandFailed": "개인 키의 partition_id ACL을 설정하는 중 오류가 발생했습니다. '키 집합 암호'가 올바른지 확인하거나, '임시 키 집합'을 대신 사용하세요.",
-  "loc.messages.InstallRequiresMac": "Apple 인증서를 설치하려면 macOS 에이전트가 필요합니다. Linux 또는 Windows에는 Apple 인증서를 설치할 수 없습니다."
+  "loc.messages.InstallRequiresMac": "Apple 인증서를 설치하려면 macOS 에이전트가 필요합니다. Linux 또는 Windows에는 Apple 인증서를 설치할 수 없습니다.",
+  "loc.messages.CertNotValidYetError": "\"%s\" 인증서(지문: %s)는 %s까지 유효하지 않습니다.",
+  "loc.messages.CertExpiredError": "\"%s\" 인증서(지문: %s)가 %s에 만료되었습니다."
 }

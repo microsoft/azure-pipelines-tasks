@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Archive Files",
+  "loc.friendlyName": "Archive files",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=809083)",
-  "loc.description": "Archive files using compression formats such as .7z, .rar, .tar.gz, and .zip.",
+  "loc.description": "Compress files into .7z, .tar.gz, or .zip",
   "loc.instanceNameFormat": "Archive $(rootFolderOrFile)",
   "loc.group.displayName.archive": "Archive",
   "loc.input.label.rootFolderOrFile": "Root folder or file to archive",

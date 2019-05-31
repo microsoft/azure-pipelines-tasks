@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Programma di installazione strumento Helm",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "Installa Helm in un computer agente",
+  "loc.instanceNameFormat": "Installa Helm $(helmVersionToInstall)",
+  "loc.input.label.helmVersionToInstall": "Identificatore di versione di Helm",
+  "loc.input.help.helmVersionToInstall": "Specificare la versione di Helm da installare.",
+  "loc.messages.NotAValidSemverVersion": "Il formato usato per la specifica della versione non è corretto, ad esempio 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+  "loc.messages.VerifyHelmInstallation": "Verifica dell'installazione di Helm..."
+}

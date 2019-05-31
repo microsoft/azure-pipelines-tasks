@@ -42,5 +42,7 @@
   "loc.messages.CouldNotMaskSecret": "因而無法完全遮罩 %s 值的規則運算式",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "無法擷取 Azure 的存取權杖。狀態碼: %s，狀態訊息: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "無法擷取受控服務主體的存取權杖。請設定虛擬機器的受控服務識別 (MSI) (https://aka.ms/azure-msi-docs)。狀態碼: %s，狀態訊息: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "無法擷取受控服務主體的存取權杖。狀態碼: %s，狀態訊息: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "無法擷取受控服務主體的存取權杖。狀態碼: %s，狀態訊息: %s",
+  "loc.messages.RetryingWithVaultResourceIdFromResponse": "正在以從回應擷取的保存庫資源識別碼重試 : %s",
+  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。"
 }
