@@ -274,7 +274,7 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
     return defer.promise;
 }
 
-async function uploadSymbols(uploadUrl: string, file: string, userAgent: string): Promise<void> {
+async function uploadSymbols(uploadUrl: string, file: string): Promise<void> {
     tl.debug("-- Uploading symbols...");
     tl.debug(`---- url: ${uploadUrl}`);
 
@@ -472,7 +472,7 @@ async function run() {
             let symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolsType, apiToken, userAgent);
 
             // upload symbols
-            await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile, userAgent);
+            await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile);
 
             // Commit the symbols upload
             await commitSymbols(effectiveApiServer, effectiveApiVersion, appSlug, symbolsUploadInfo.symbol_upload_id, apiToken, userAgent);
