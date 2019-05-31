@@ -274,7 +274,7 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
     return defer.promise;
 }
 
-async function uploadSymbols(uploadUrl: string, file: string, userAgent: string): Promise<Q.Promise<void>> {
+async function uploadSymbols(uploadUrl: string, file: string, userAgent: string): Promise<void> {
     tl.debug("-- Uploading symbols...");
     tl.debug(`---- url: ${uploadUrl}`);
 
