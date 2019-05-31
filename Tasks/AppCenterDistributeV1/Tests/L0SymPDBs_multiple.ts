@@ -191,6 +191,7 @@ azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
 }
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
+tmr.registerMock('fs', fs);
 
 tmr.run();
 
