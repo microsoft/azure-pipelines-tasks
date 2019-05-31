@@ -142,6 +142,7 @@ function getMSDeployLatestRegKey(registryKey: string): Q.Promise<string> {
     regKey.keys(function(err, subRegKeys) {
         if(err) {
             defer.reject(tl.loc("UnabletofindthelocationofMSDeployfromregistryonmachineError", err));
+            return;
         }
         var latestKeyVersion = 0 ;
         var latestSubKey;
@@ -158,8 +159,9 @@ function getMSDeployLatestRegKey(registryKey: string): Q.Promise<string> {
         }
         if(latestKeyVersion < 3) {
             defer.reject(tl.loc("UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove", latestKeyVersion));
+            return;
         }
-         defer.resolve(latestSubKey);
+        defer.resolve(latestSubKey);
     });
     return defer.promise;
 }
@@ -175,6 +177,7 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
     regKey.get("InstallPath", function(err,item) {
         if(err) {
             defer.reject(tl.loc("UnabletofindthelocationofMSDeployfromregistryonmachineError", err));
+            return;
         }
         defer.resolve(item.value);
     });
