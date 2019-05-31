@@ -2,9 +2,9 @@
     "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
     "name": "PublishPipelineArtifact",
     "friendlyName": "Publish pipeline artifact",
-    "description": "Publish a local directory or file as a named artifact for the current pipeline",
+    "description": "Publish (upload) a file or directory as a named artifact for the current run",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-pipeline-artifact",
-    "helpMarkDown": "Publish a local directory or file as a named artifact for the current pipeline.",
+    "helpMarkDown": "Publish (upload) a file or directory as a named artifact for the current run. Published artifacts can be downloaded in other jobs, stages, or pipelines using the \"Download pipeline artifact\" task.",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
@@ -18,20 +18,20 @@
     "minimumAgentVersion": "2.140.1",
     "inputs": [
         {
-            "name": "artifactName",
+            "name": "targetPath",
+            "type": "filePath",
+            "label": "File or directory path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The path of the file or directory to publish. Can be absolute or relative to the default working directory. Can include [variables](https://go.microsoft.com/fwlink/?LinkID=550988), but wildcards are not supported."
+        },
+        {
+            "name": "Artifact name",
             "type": "string",
             "label": "The name of this artifact",
             "defaultValue": "drop",
-            "required": true,
-            "helpMarkDown": "The name of this artifact."
-        },
-        {
-            "name": "targetPath",
-            "type": "filePath",
-            "label": "Path to publish",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
+            "required": false,
+            "helpMarkDown": "Name of the artifact to publish."
         }
     ],
     "instanceNameFormat": "Publish Pipeline Artifact",
