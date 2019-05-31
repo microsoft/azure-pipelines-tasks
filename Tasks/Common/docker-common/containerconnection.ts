@@ -71,22 +71,26 @@ export default class ContainerConnection {
         return imageName;
     }
 
-    public getQualifiedImageName(repository: string): string {
+    public getQualifiedImageName(repository: string, enforceDockerNamingConvention?: boolean): string {
         let imageName = repository ? repository : "";
         if (repository && this.registryAuth) {
             imageName = this.prefixRegistryIfRequired(this.registryAuth["registry"], repository);
         }
 
-        return imageName;
+        return enforceDockerNamingConvention ? imageUtils.generateValidImageName(imageName) : imageName;
     }
 
-    public getQualifiedImageNamesFromConfig(repository: string) {
+    public getQualifiedImageNamesFromConfig(repository: string, enforceDockerNamingConvention?: boolean) {
         let imageNames: string[] = [];
         if (repository) {
             let regUrls = this.getRegistryUrlsFromDockerConfig();
             if (regUrls && regUrls.length > 0) {
                 regUrls.forEach(regUrl => {
                     let imageName = this.prefixRegistryIfRequired(regUrl, repository);
+                    if (enforceDockerNamingConvention) {
+                        imageName = imageUtils.generateValidImageName(imageName);
+                    }
+                    
                     imageNames.push(imageName);
                 });
             }

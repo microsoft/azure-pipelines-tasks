@@ -11,7 +11,7 @@
   "dependencies": {
     "q": "1.4.1",
     "vso-node-api": "6.0.1-preview",
-    "vsts-task-lib": "0.9.20",
+    "azure-pipelines-task-lib": "2.8.0",
     "@types/mocha": "2.2.48",
     "@types/node": "6.0.68",
     "@types/q": "1.0.7"
