@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 153,
-        "Patch": 7
+        "Patch": 8
     },
     "demands": [
         "vstest"
@@ -411,7 +411,7 @@
             "name": "diagnosticsEnabled",
             "type": "boolean",
             "label": "Collect advanced diagnostics in case of catastrophic failures",
-            "defaultValue": "True",
+            "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Collect advanced diagnostics in case of catastrophic failures.",
             "groupName": "executionOptions"
