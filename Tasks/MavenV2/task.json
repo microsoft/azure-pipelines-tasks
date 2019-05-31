@@ -4,7 +4,7 @@
     "friendlyName": "Maven",
     "description": "Build, test, and deploy with Apache Maven",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/maven",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613723)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613723)",
     "category": "Build",
     "visibility": [
         "Build",
