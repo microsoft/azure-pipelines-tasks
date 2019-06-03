@@ -33,6 +33,11 @@ const DestinationTypeParameter = {
     [DestinationType.Store]: "stores"
 }
 
+interface Release {
+    version: string;
+    short_version: string;
+}
+
 function getEndpointDetails(endpointInputFieldName) {
     var errorMessage = tl.loc("CannotDecodeEndpoint");
     var endpoint = tl.getInput(endpointInputFieldName, true);
@@ -248,6 +253,27 @@ function updateRelease(apiServer: string, apiVersion: string, appSlug: string, r
     return defer.promise;
 }
 
+function getRelease(apiServer: string, apiVersion: string, appSlug: string, releaseId: string, token: string, userAgent: string): Q.Promise<Release> {
+    tl.debug("-- Getting release.");
+    let defer = Q.defer<Release>();
+    let getReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/releases/${releaseId}`;
+    tl.debug(`---- url: ${getReleaseUrl}`);
+
+    let headers = {
+        "X-API-Token": token,
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
+    };
+
+    request.get({ url: getReleaseUrl, headers: headers }, (err, res, body) => {
+        responseHandler(defer, err, res, body, () => {
+            defer.resolve();
+        });
+    })
+
+    return defer.promise;
+}
+
 function getBranchName(ref: string): string {
     const gitRefsHeadsPrefix = 'refs/heads/';
     if (ref) {
@@ -289,7 +315,7 @@ function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> {
     return defer.promise;
 }
 
-function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: string, token: string, userAgent: string): Q.Promise<SymbolsUploadInfo> {
+function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: string, token: string, userAgent: string, version?: string, build?: string): Q.Promise<SymbolsUploadInfo> {
     tl.debug("-- Begin symbols upload")
     let defer = Q.defer<SymbolsUploadInfo>();
 
@@ -303,6 +329,12 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
     };
 
     let symbolsUploadBody = { "symbol_type": symbol_type };
+
+    if (symbol_type === "AndroidProguard") {
+        symbolsUploadBody["file_name"] = "mapping.txt";
+        symbolsUploadBody["version"] = version;
+        symbolsUploadBody["build"] = build;
+    }
 
     request.post({ url: beginSymbolUploadUrl, headers: headers, json: symbolsUploadBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
@@ -439,7 +471,6 @@ async function run() {
         let appFilePattern: string = tl.getInput('app', true);
 
         /* The task has support for different symbol types but App Center server only support Apple currently, add back these types in the task.json when support is available in App Center.
-        "AndroidJava": "Android (Java)",
         "AndroidNative": "Android (native C/C++)",
         "Windows": "Windows 8.1",
         "UWP": "Universal Windows Platform (UWP)"
@@ -450,7 +481,7 @@ async function run() {
             case "Apple":
                 symbolVariableName = "dsymPath";
                 break;
-            case "AndroidJava":
+            case "AndroidProguard":
                 symbolVariableName = "mappingTxtPath";
                 break;
             case "UWP":
@@ -526,7 +557,19 @@ async function run() {
 
         if (symbolsFile) {
             // Begin preparing upload symbols
-            let symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolsType, apiToken, userAgent);
+            let version: string;
+            let build: string;
+            if (symbolsType === "AndroidProguard") {
+                version = tl.getInput('versionName', false);
+                build = tl.getInput('versionCode', false);
+                
+                if (!version || !build) {
+                    const release = await getRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, apiToken, userAgent);
+                    version = release.short_version;
+                    build = release.version;
+                }
+            }
+            let symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolsType, apiToken, userAgent, version, build);
 
             // upload symbols
             await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile);
