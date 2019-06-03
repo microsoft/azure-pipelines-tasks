@@ -2,8 +2,9 @@
     "id": "61F2A582-95AE-4948-B34D-A1B3C4F6A737",
     "name": "DownloadPipelineArtifact",
     "friendlyName": "Download pipeline artifact",
-    "description": "Download a named artifact from a pipeline to a local path",
-    "helpMarkDown": "Download a named artifact from a pipeline to a local path",
+    "description": "Download build and pipeline artifacts",
+    "helpMarkDown": "Download one or more published build or pipeline artifacts.",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-pipeline-artifact",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
@@ -23,7 +24,7 @@
             "defaultValue": "current",
             "required": true,
             "options": {
-                "current": "Current build",
+                "current": "Current run",
                 "specific": "Specific build"
             },
             "helpMarkDown": "Download artifacts produced by the current build, or from a specific build."
@@ -92,7 +93,8 @@
         {
             "name": "buildId",
             "aliases": [
-                "pipelineId"
+                "pipelineId",
+                "runId"
             ],
             "type": "pickList",
             "label": "Build",
@@ -129,25 +131,26 @@
         {
             "name": "itemPattern",
             "type": "multiLine",
-            "label": "Matching pattern",
+            "label": "Matching patterns",
             "defaultValue": "**",
             "required": false,
             "properties": {
                 "rows": "3",
                 "resizable": "true"
             },
-            "helpMarkDown": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples).</p>"
+            "helpMarkDown": "One or more file matching patterns (new line delimited) that limit which files get downloaded."
         },
         {
             "name": "downloadPath",
             "aliases": [
-                "targetPath"
+                "targetPath",
+                "path"
             ],
             "type": "string",
             "label": "Destination directory",
             "defaultValue": "$(Pipeline.Workspace)",
             "required": true,
-            "helpMarkDown": "Path on the agent machine where the artifacts will be downloaded."
+            "helpMarkDown": "Directory to download the artifact files to. Can be relative to the pipeline workspace directory or absolute. If more than one artifact is selected for download, a sub-directory will be created for each."
         }
     ],
     "dataSourceBindings": [

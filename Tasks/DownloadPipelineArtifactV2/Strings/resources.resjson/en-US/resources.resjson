@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Download pipeline artifact",
-  "loc.helpMarkDown": "Download a named artifact from a pipeline to a local path",
-  "loc.description": "Download a named artifact from a pipeline to a local path",
+  "loc.helpMarkDown": "Download one or more published build or pipeline artifacts.",
+  "loc.description": "Download build and pipeline artifacts",
   "loc.instanceNameFormat": "Download Pipeline Artifact",
   "loc.input.label.buildType": "Download artifacts produced by",
   "loc.input.help.buildType": "Download artifacts produced by the current build, or from a specific build.",
@@ -20,8 +20,8 @@
   "loc.input.help.tags": "A comma-delimited list of tags. Only builds with these tags will be returned.",
   "loc.input.label.artifactName": "Artifact name",
   "loc.input.help.artifactName": "The name of the artifact to download.",
-  "loc.input.label.itemPattern": "Matching pattern",
-  "loc.input.help.itemPattern": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples).</p>",
+  "loc.input.label.itemPattern": "Matching patterns",
+  "loc.input.help.itemPattern": "One or more file matching patterns (new line delimited) that limit which files get downloaded.",
   "loc.input.label.downloadPath": "Destination directory",
-  "loc.input.help.downloadPath": "Path on the agent machine where the artifacts will be downloaded."
+  "loc.input.help.downloadPath": "Directory to download the artifact files to. Can be relative to the pipeline workspace directory or absolute. If more than one artifact is selected for download, a sub-directory will be created for each."
 }

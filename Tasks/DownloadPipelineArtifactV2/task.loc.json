@@ -4,6 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-pipeline-artifact",
   "category": "Utility",
   "author": "Microsoft Corporation",
   "version": {
@@ -23,7 +24,7 @@
       "defaultValue": "current",
       "required": true,
       "options": {
-        "current": "Current build",
+        "current": "Current run",
         "specific": "Specific build"
       },
       "helpMarkDown": "ms-resource:loc.input.help.buildType"
@@ -92,7 +93,8 @@
     {
       "name": "buildId",
       "aliases": [
-        "pipelineId"
+        "pipelineId",
+        "runId"
       ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.buildId",
@@ -141,7 +143,8 @@
     {
       "name": "downloadPath",
       "aliases": [
-        "targetPath"
+        "targetPath",
+        "path"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.downloadPath",
