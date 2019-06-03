@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 151,
+        "Minor": 152,
         "Patch": 1
     },
     "releaseNotes": "Added support for multiple destinations.",
