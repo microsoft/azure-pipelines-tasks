@@ -14,18 +14,33 @@ export async function run() {
       util.setTaskRootPath(path.dirname(templateFilePath));
     
       util.setupIotedgedev();
-    
-      let envList = {
-        [Constants.iotedgedevEnv.deploymentFileOutputFolder]: tl.getVariable(Constants.outputFileFolder),
-      };
-    
+
+      let outputPath = tl.getInput('deploymentManifestOutputPath', true);
+      let outputFileFolder = path.dirname(outputPath);
+      let outputFileName = path.basename(outputPath);
+      
+      let envList = process.env;
+      if (!envList[Constants.iotedgedevEnv.deploymentFileOutputFolder]) {
+        envList[Constants.iotedgedevEnv.deploymentFileOutputFolder] = outputFileFolder;
+        tl.debug(`Setting deployment manifest output folder to ${outputFileFolder}`);
+      }
+      if (!envList[Constants.iotedgedevEnv.deploymentFileOutputName]) {
+        envList[Constants.iotedgedevEnv.deploymentFileOutputName] = outputFileName;
+        tl.debug(`Setting deployment manifest output file name to ${outputFileName}`)
+      }
+      
       // Pass task variable to sub process
       let tlVariables = tl.getVariables();
       for (let v of tlVariables) {
         // The variables in VSTS build contains dot, need to convert to underscore.
-        let name = v.name.replace('.', '_').toUpperCase();
-        if (!envList[name]) {
-          envList[name] = v.value;
+        if (v.secret){
+          let envName = v.name.replace('.', '_').toUpperCase();
+          tl.debug(`Setting environment varialbe ${envName} to the value of secret: ${v.name}`);
+          if (!envList[envName]) {
+            envList[envName] = v.value;
+          } else {
+            tl.warning(`Environment variable ${envName} already exist. Skip setting environment varialbe for secret: ${v.name}.`);
+          }
         }
       }
 
@@ -38,4 +53,7 @@ export async function run() {
       command += ` --file "${templateFilePath}"`;
       command += ` --platform "${defaultPlatform}"`;
       await tl.exec(`${Constants.iotedgedev}`, command, execOptions);
+
+      tl.setVariable(Constants.outputVariableDeploymentPathKey, outputPath);
+      tl.debug(`Set ${Constants.outputVariableDeploymentPathKey} to ${outputPath}`);
 }

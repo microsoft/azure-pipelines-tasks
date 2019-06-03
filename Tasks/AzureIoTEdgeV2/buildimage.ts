@@ -30,8 +30,8 @@ export async function run() {
       envList[name] = v.value;
     }
   }
-
-  tl.debug(`Following variables will be passed to the iotedgedev command: ${JSON.stringify(envList)}`);
+  
+  tl.debug(`Following variables will be passed to the iotedgedev command: ${Object.keys(envList).join(", ")}`);
 
   let outputStream: EchoStream = new EchoStream();
 

@@ -51,7 +51,7 @@
             "name": "deploymentFilePath",
             "type": "filePath",
             "label": "Deployment file",
-            "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.json",
+            "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
             "required": true,
             "visibleRule": "action == Deploy to IoT Edge devices",
             "helpMarkDown": "Select the deployment json file.\n If this task is in **release pipeline**, you need to set the location of deployment file in artifact.(The default value works for most conditions).\n If this task is in **build pipeline**, you need to set it to the path of **Path of output deployment file**."
@@ -201,6 +201,15 @@
             "helpMarkDown": "Add registry credential for pushing docker images to deployment manifest"
         },
         {
+          "name": "deploymentManifestOutputPath",
+          "type": "filePath",
+          "label": "Output path",
+          "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
+          "visibleRule": "action == Generate deployment manifest",
+          "required": true,
+          "helpMarkDown": "The output path of generated deployment manifest"
+        },
+        {
             "name": "bypassModules",
             "type": "string",
             "label": "Bypass module(s)",
@@ -256,7 +265,8 @@
         "InvalidRegistryCredentialWarning": "Failed to login %s with given credential. %s",
         "CheckModuleImageExistenceError": "%s does not exist or the credential is not set correctly. Error: %s",
         "StartGenerateDeploymentManifest": "Start generating deployment manifest...",
-        "FinishGenerateDeploymentManifest": "Finished generating deployment manifest."
+        "FinishGenerateDeploymentManifest": "Finished generating deployment manifest.",
+        "LoginRegistrySucess": "Successfully logged in to registry $s"
     },
     "OutputVariables": [
         {
