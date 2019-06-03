@@ -63,7 +63,8 @@
       "defaultValue": "Apple",
       "groupName": "symbols",
       "options": {
-        "Apple": "Apple"
+        "Apple": "Apple",
+        "AndroidProguard": "Android"
       }
     },
     {
@@ -110,7 +111,25 @@
       "groupName": "symbols",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.mappingTxtPath",
-      "visibleRule": "symbolsType = AndroidJava"
+      "visibleRule": "symbolsType = AndroidProguard"
+    },
+    {
+      "name": "versionName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionName",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.versionName",
+      "visibleRule": "symbolsType = AndroidProguard"
+    },
+    {
+      "name": "versionCode",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.versionCode",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.versionCode",
+      "visibleRule": "symbolsType = AndroidProguard"
     },
     {
       "name": "packParentFolder",
@@ -121,7 +140,8 @@
       "label": "ms-resource:loc.input.label.packParentFolder",
       "groupName": "symbols",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.packParentFolder"
+      "helpMarkDown": "ms-resource:loc.input.help.packParentFolder",
+      "visibleRule": "symbolsType = Apple"
     },
     {
       "name": "releaseNotesSelection",
