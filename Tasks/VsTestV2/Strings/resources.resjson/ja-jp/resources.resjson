@@ -48,7 +48,7 @@
   "loc.input.label.codeCoverageEnabled": "コード カバレッジ有効",
   "loc.input.help.codeCoverageEnabled": "テストの実行でコード カバレッジ情報を収集します。",
   "loc.input.label.otherConsoleOptions": "その他のコンソールのオプション",
-  "loc.input.help.otherConsoleOptions": "vstest.console.exe に渡すことのできるその他のコンソール オプションの説明については、<a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">こちら</a>をご覧ください。<p>エージェント ジョブの '複数エージェント' 並列設定を使ってテストを実行している場合、または [テスト計画] オプションを使ってテストを実行している場合は、これらのオプションはサポートされず、無視されます。代わりに、これらのオプションは設定ファイルを使って指定することができます。</p>",
+  "loc.input.help.otherConsoleOptions": "vstest.console.exe に渡すことのできるその他のコンソール オプションの説明については、<a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">こちら</a>をご覧ください。<p>エージェント ジョブの '複数エージェント' 並列設定を使ってテストを実行している場合、[テスト計画] または [テストの実行] オプションを使ってテストを実行している場合、カスタム バッチ処理オプションが選択されている場合は、これらのオプションはサポートされず、無視されます。代わりに、これらのオプションは設定ファイルを使って指定することができます。</p>",
   "loc.input.label.distributionBatchType": "バッチ テスト",
   "loc.input.help.distributionBatchType": "バッチはテストのグループです。テストのバッチによってそのテストが同時に実行され、バッチの結果が発行されます。タスクを実行するジョブが複数のエージェントを使用するように設定されている場合、各エージェントにより、並列で実行される利用可能なテストのバッチが選択されます。<br><br><b>テストとエージェントの数に基づく:</b> テストの実行に参加するテストとエージェントの数に基づき、単純にバッチにまとめます。<br><br><b>テストの過去の実行時間に基づく:</b> このバッチ処理では、テストのバッチを作成するために要した過去の実行時間を考慮に入れて、各バッチの実行時間がほぼ等しくなるようにします。<br><br><b>テスト アセンブリに基づく:</b> 1 つのアセンブリからのテストが一緒にバッチにまとめられます。",
   "loc.input.label.batchingBasedOnAgentsOption": "バッチ オプション",
@@ -119,7 +119,7 @@
   "loc.messages.testSettingPropertiesNotSupported": "testsettings ファイルに指定されたプロパティには、Visual Studio 2017 Update 4 以降で TestContext を使用してアクセスできます",
   "loc.messages.vstestVersionInvalid": "指定されたテスト プラットフォームのバージョン %s はサポートされていません。",
   "loc.messages.configureDtaAgentFailed": "サーバーでのテスト エージェントの構成を %d 回試行しましたが、エラー %s で失敗しました",
-  "loc.messages.otherConsoleOptionsNotSupported": "複数エージェントのジョブ設定を使う場合、その他のコンソール オプションはサポートされません。このオプションは無視されます。",
+  "loc.messages.otherConsoleOptionsNotSupported": "このタスク構成では、他のコンソール オプションはサポートされていません。このオプションは無視されます。",
   "loc.messages.distributedTestWorkflow": "配布されたテスト フローで",
   "loc.messages.nonDistributedTestWorkflow": "vstest.console.exe ランナーを使用してテストを実行しています。",
   "loc.messages.dtaNumberOfAgents": "配布されたテスト実行で、ジョブ内のエージェントの数: %s",
@@ -178,5 +178,7 @@
   "loc.messages.UserProvidedSourceFilter": "ソース フィルター: %s",
   "loc.messages.UnableToGetFeatureFlag": "次のフィーチャー フラグを取得できません。 %s",
   "loc.messages.diagnosticsInput": "診断が有効: %s",
-  "loc.messages.UncPathNotSupported": "テスト ソースの検索フォルダーへのパスを UNC パスにすることはできません。ルートからのパスまたは $(System.DefaultWorkingDirectory) からの相対パスを指定してください。"
+  "loc.messages.UncPathNotSupported": "テスト ソースの検索フォルダーへのパスを UNC パスにすることはできません。ルートからのパスまたは $(System.DefaultWorkingDirectory) からの相対パスを指定してください。",
+  "loc.messages.LookingForBuildToolsInstalltion": "Visual Studio Build Tools のインストールからの vstest.console の検索を試行しています。",
+  "loc.messages.LookingForVsInstalltion": "Visual Studio のインストールからの vstest.console の検索を試行しています。"
 }

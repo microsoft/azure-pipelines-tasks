@@ -2,7 +2,7 @@
     "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
     "name": "AzureCLI",
     "friendlyName": "Azure CLI",
-    "description": "Run Azure CLI commands against an Azure subscription in a Shell script when runnning on Linux agent or Batch script when running on Windows agent.",
+    "description": "Run Azure CLI commands against an Azure subscription in a Shell script when running on Linux agent or Batch script when running on Windows agent.",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=827160)",
@@ -19,8 +19,8 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 151,
-        "Patch": 0
+        "Minor": 152,
+        "Patch": 1
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -41,7 +41,10 @@
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "required": true,
-            "helpMarkDown": "Select an Azure resource manager subscription for the deployment"
+            "helpMarkDown": "Select an Azure resource manager subscription for the deployment",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+            }
         },
         {
             "name": "scriptLocation",

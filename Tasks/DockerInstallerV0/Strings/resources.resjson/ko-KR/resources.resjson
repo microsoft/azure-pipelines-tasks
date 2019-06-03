@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Docker CLI 설치 관리자",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "에이전트 머신에 Docker CLI를 설치합니다.",
+  "loc.instanceNameFormat": "Docker $(dockerVersion) 설치",
+  "loc.input.label.dockerVersion": "Docker 버전",
+  "loc.input.help.dockerVersion": "설치할 Docker CLI 버전을 지정합니다.",
+  "loc.input.label.releaseType": "릴리스 종류",
+  "loc.input.help.releaseType": "설치할 릴리스 종류를 선택합니다. 야간은 Windows에서 지원되지 않습니다.",
+  "loc.messages.DownloadDockerFailedFromLocation": "%s 위치에서 Docker를 다운로드하지 못했습니다. 오류 %s",
+  "loc.messages.DockerNotFoundInFolder": "Docker 실행 파일이 %s 경로에 없습니다.",
+  "loc.messages.DockerDownloadFailed": "%s 위치에서 Docker를 다운로드하지 못했습니다. 오류 %s",
+  "loc.messages.VerifyDockerInstallation": "Docker 설치를 확인하는 중..."
+}

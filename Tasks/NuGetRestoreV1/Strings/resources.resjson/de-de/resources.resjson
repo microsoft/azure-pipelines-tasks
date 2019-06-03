@@ -51,5 +51,6 @@
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "Keine Version gefunden, die mit der Eingabe %s übereinstimmt",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "Keine Download-URL für %s gefunden",
   "loc.messages.Error_NuGetToolInstallerFailer": "Fehler bei der Toolinstallation: %s.",
-  "loc.messages.Warning_UpdatingNuGetVersion": "Die Version von \"NuGet.exe\" wird auf %s aktualisiert (von %s). Änderungen im Verhalten oder Fehler verursachende Änderungen können bei NuGet-Aktualisierungen auf eine neue Version auftreten. Wenn dies nicht gewünscht ist, deaktivieren Sie die Option \"Check for Latest Version\" (Auf aktuelle Version überprüfen) in der Aufgabe."
+  "loc.messages.Warning_UpdatingNuGetVersion": "Die Version von \"NuGet.exe\" wird auf %s aktualisiert (von %s). Änderungen im Verhalten oder Fehler verursachende Änderungen können bei NuGet-Aktualisierungen auf eine neue Version auftreten. Wenn dies nicht gewünscht ist, deaktivieren Sie die Option \"Check for Latest Version\" (Auf aktuelle Version überprüfen) in der Aufgabe.",
+  "loc.messages.UnsupportedProjectScopedFeeds": "Projektbezogene Feeds werden von dieser Version der Aufgabe \"NuGet-Wiederherstellung\" nicht unterstützt. Verwenden Sie die Aufgabe \"NuGet\", Version 2 oder höher."
 }

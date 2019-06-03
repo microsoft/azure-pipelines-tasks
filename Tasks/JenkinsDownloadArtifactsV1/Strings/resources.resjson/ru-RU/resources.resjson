@@ -32,7 +32,7 @@
   "loc.input.label.ConnectedServiceNameARM": "Подписка Azure",
   "loc.input.help.ConnectedServiceNameARM": "Выберите подписку Azure Resource Manager для артефактов.",
   "loc.input.label.storageAccountName": "Имя учетной записи хранения",
-  "loc.input.help.storageAccountName": "В списке указаны классические учетные записи хранения Azure и учетные записи хранения Resource Manager. Выберите учетную запись хранения, куда распространяются артефакты.",
+  "loc.input.help.storageAccountName": "В списке указаны классические учетные записи хранения Azure и учетные записи хранения Azure Resource Manager. Выберите учетную запись хранения, куда распространяются артефакты.",
   "loc.input.label.containerName": "Имя контейнера",
   "loc.input.help.containerName": "Имя контейнера в учетной записи хранения, куда отправляются артефакты.",
   "loc.input.label.commonVirtualPath": "Общий виртуальный путь",
@@ -127,5 +127,8 @@
   "loc.messages.GetArtifactItemsNotSupported": "Получение элементов артефактов не поддерживается; недопустимый путь к коду",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Настройте управляемое удостоверение службы (MSI) для виртуальной машины \"https://aka.ms/azure-msi-docs\". Код состояния: %s; сообщения о состоянии: %s.",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Код состояния: %s, сообщение о состоянии: %s.",
-  "loc.messages.NoAssociatedArtifacts": "Связанные артефакты не найдены"
+  "loc.messages.NoAssociatedArtifacts": "Связанные артефакты не найдены",
+  "loc.messages.OperationFailed": "Сбой в %s с ошибкой: %s",
+  "loc.messages.RetryingOperation": "Ошибка в %s, повторная попытка выполнения операции => осталось повторных попыток: %s",
+  "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек."
 }

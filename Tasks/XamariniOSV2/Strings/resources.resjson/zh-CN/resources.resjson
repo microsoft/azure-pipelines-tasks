@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613729)",
-  "loc.description": "在 macOS 上使用 Xamarin 生成 iOS 应用。",
+  "loc.description": "在 macOS 上使用 Xamarin 生成 iOS 应用",
   "loc.instanceNameFormat": "生成 Xamarin.iOS 解决方案 $(solution)",
   "loc.releaseNotes": "iOS 签名设置已从任务中删除。使用带有“安装 Apple 证书”和“安装 Apple 预配配置文件”支持任务的“安全文件”。更新的选项更适合 \"Visual Studio for Mac\"。",
   "loc.group.displayName.sign": "签名和预配",

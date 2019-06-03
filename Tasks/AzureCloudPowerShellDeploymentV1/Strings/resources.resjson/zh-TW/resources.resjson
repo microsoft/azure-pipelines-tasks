@@ -53,6 +53,6 @@
   "loc.messages.RetryAzureCloudServiceStatusCheck": "Azure 雲端服務 '{0}' 驗證失敗。將於 '{1}' 秒後重試。",
   "loc.messages.AzureCloudServiceIsReady": "Azure 雲端服務 '{0}' 已就緒。",
   "loc.messages.AzureCloudServiceIsNotReady": "Azure 雲端服務 '{0}' 尚未就緒。這可能是一或多個 RoleInstances 未處於 'ReadyRole' 狀態所致。如需詳細資料，請查看記錄檔。",
-  "loc.messages.AllRoleInstancesAreReady": "Azure 雲端服務 '{0}' 的所有角色執行個體 (計數: '{1}') 處於 'ReadyRole' 狀態。",
+  "loc.messages.AllRoleInstancesAreReady": "Azure 雲端服務 '{0}' 的所有角色執行個體 (計數: '{1}') 均處於 'ReadyRole' 狀態。",
   "loc.messages.AzureCloudServiceNotFound": "找不到 Azure 雲端服務: '{0}'。"
 }

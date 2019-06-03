@@ -39,11 +39,20 @@ export default class ContainerConnection {
     }
 
     public execCommand(command: tr.ToolRunner, options?: tr.IExecOptions) {
-        var errlines = [];
+        let errlines = [];
+        let dockerHostVar = tl.getVariable("DOCKER_HOST");
+        if (dockerHostVar) {
+            tl.debug(tl.loc('ConnectingToDockerHost', dockerHostVar));
+        }
+
         command.on("errline", line => {
             errlines.push(line);
         });
-        return command.exec(options).fail(error => {
+        return command.exec(options).fail(error => {            
+            if (dockerHostVar) {
+                tl.warning(tl.loc('DockerHostVariableWarning', dockerHostVar));
+            }
+
             errlines.forEach(line => tl.error(line));
             throw error;
         });
@@ -62,22 +71,26 @@ export default class ContainerConnection {
         return imageName;
     }
 
-    public getQualifiedImageName(repository: string): string {
+    public getQualifiedImageName(repository: string, enforceDockerNamingConvention?: boolean): string {
         let imageName = repository ? repository : "";
         if (repository && this.registryAuth) {
             imageName = this.prefixRegistryIfRequired(this.registryAuth["registry"], repository);
         }
 
-        return imageName;
+        return enforceDockerNamingConvention ? imageUtils.generateValidImageName(imageName) : imageName;
     }
 
-    public getQualifiedImageNamesFromConfig(repository: string) {
+    public getQualifiedImageNamesFromConfig(repository: string, enforceDockerNamingConvention?: boolean) {
         let imageNames: string[] = [];
         if (repository) {
             let regUrls = this.getRegistryUrlsFromDockerConfig();
             if (regUrls && regUrls.length > 0) {
                 regUrls.forEach(regUrl => {
                     let imageName = this.prefixRegistryIfRequired(regUrl, repository);
+                    if (enforceDockerNamingConvention) {
+                        imageName = imageUtils.generateValidImageName(imageName);
+                    }
+                    
                     imageNames.push(imageName);
                 });
             }

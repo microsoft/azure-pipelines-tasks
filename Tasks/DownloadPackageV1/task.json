@@ -9,8 +9,8 @@
     "author": "ms-vscs-rm",
     "version": {
         "Major": 1,
-        "Minor": 152,
-        "Patch": 1
+        "Minor": 153,
+        "Patch": 0
     },
     "demands": [],
     "releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",
@@ -129,7 +129,7 @@
             "parameters": {
                 "feed": "$(feed)"
             },
-            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+\/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex [a-fA-F0-9\\-]*\/([a-fA-F0-9\\-]+) feed }}/views",
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}/views",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
@@ -141,7 +141,7 @@
                 "view": "$(view)",
                 "packageType": "$(packageType)"
             },
-            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+\/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*\/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false&protocolType={{{packageType}}}",
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false&protocolType={{{packageType}}}",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
@@ -154,7 +154,7 @@
                 "definition": "$(definition)",
                 "packageType": "$(packageType)"
             },
-            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+\/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*\/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false&protocolType={{{packageType}}}",
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false&protocolType={{{packageType}}}",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{{normalizedVersion}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
         }

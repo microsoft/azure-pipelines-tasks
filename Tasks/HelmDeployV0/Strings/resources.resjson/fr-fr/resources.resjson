@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Créer des packages de charts Helm et les déployer",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Déployez, configurez et mettez à jour votre cluster Kubernetes dans Azure Container Service en exécutant des commandes helm.",
+  "loc.description": "Déployer, configurer et mettre à jour un cluster Kubernetes dans Azure Container Service en exécutant des commandes Helm",
   "loc.instanceNameFormat": "helm $(commande)",
   "loc.group.displayName.cluster": "Cluster Kubernetes",
   "loc.group.displayName.commands": "Commandes",
@@ -84,5 +84,6 @@
   "loc.messages.SkipDeleteSecureFiles": "TLS non activé dans la tâche. Suppression des certificats ignorée.",
   "loc.messages.SkipDownloadSecureFiles": "TLS non activé dans la tâche. Téléchargement des certificats ignoré.",
   "loc.messages.FileNotFound": "Fichier introuvable sur %s",
-  "loc.messages.KubernetesServiceConnectionNotFound": "Les détails de la connexion de service Kubernetes sont introuvables."
+  "loc.messages.KubernetesServiceConnectionNotFound": "Les détails de la connexion de service Kubernetes sont introuvables.",
+  "loc.messages.ExpiredServicePrincipal": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Vérifiez si le principal de service utilisé est valide et s'il n'a pas expiré."
 }

@@ -73,5 +73,6 @@
   "loc.messages.FailedToApplyTransformationReason2": "2. 確認組態檔與轉換檔皆位於套件內的同一個資料夾中。",
   "loc.messages.AutoParameterizationMessage": "根據預設，Web.config 中的 ConnectionString 屬性已經過參數化。請注意，轉換對 connectionString 屬性無效，因為 'Parameters.xml' 或 'SetParameters.xml' 檔案已於部署期間覆寫該值。您可在產生 MSBuild 套件期間設定 /p:AutoParameterizationWebConfigConnectionStrings=False，停用自動參數化。",
   "loc.messages.PackageDeploymentFailed": "無法將網頁套件部署到 IIS 網站。",
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "請確定電腦目前使用 TLS 1.2 通訊協定或更高的版本。請查看 https://aka.ms/enableTlsv2，以取得如何於您的電腦上啟用 TLS 的詳細資訊。"
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "請確定電腦目前使用 TLS 1.2 通訊協定或更高的版本。請查看 https://aka.ms/enableTlsv2，以取得如何於您的電腦上啟用 TLS 的詳細資訊。",
+  "loc.messages.RetryToDeploy": "正在重試部署套件。"
 }
