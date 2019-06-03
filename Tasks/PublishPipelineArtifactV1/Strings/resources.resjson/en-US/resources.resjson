@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "Publish pipeline artifact",
-  "loc.helpMarkDown": "Publish a local directory or file as a named artifact for the current pipeline.",
-  "loc.description": "Publish a local directory or file as a named artifact for the current pipeline",
+  "loc.helpMarkDown": "Publish (upload) a file or directory as a named artifact for the current run. Published artifacts can be downloaded in other jobs, stages, or pipelines using the \"Download pipeline artifact\" task.",
+  "loc.description": "Publish (upload) a file or directory as a named artifact for the current run",
   "loc.instanceNameFormat": "Publish Pipeline Artifact",
-  "loc.input.label.artifactName": "The name of this artifact",
-  "loc.input.help.artifactName": "The name of this artifact.",
-  "loc.input.label.targetPath": "Path to publish",
-  "loc.input.help.targetPath": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
+  "loc.input.label.targetPath": "File or directory path",
+  "loc.input.help.targetPath": "The path of the file or directory to publish. Can be absolute or relative to the default working directory. Can include [variables](https://go.microsoft.com/fwlink/?LinkID=550988), but wildcards are not supported.",
+  "loc.input.label.Artifact name": "The name of this artifact",
+  "loc.input.help.Artifact name": "Name of the artifact to publish."
 }

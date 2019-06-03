@@ -19,9 +19,12 @@
     "inputs": [
         {
             "name": "targetPath",
+            "aliases": [
+                "path"
+            ],
             "type": "filePath",
             "label": "File or directory path",
-            "defaultValue": "",
+            "defaultValue": "$(Pipeline.Workspace)",
             "required": true,
             "helpMarkDown": "The path of the file or directory to publish. Can be absolute or relative to the default working directory. Can include [variables](https://go.microsoft.com/fwlink/?LinkID=550988), but wildcards are not supported."
         },

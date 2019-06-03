@@ -18,20 +18,23 @@
   "minimumAgentVersion": "2.140.1",
   "inputs": [
     {
-      "name": "artifactName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.artifactName",
-      "defaultValue": "drop",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.artifactName"
-    },
-    {
       "name": "targetPath",
+      "aliases": [
+        "path"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.targetPath",
-      "defaultValue": "",
+      "defaultValue": "$(Pipeline.Workspace)",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.targetPath"
+    },
+    {
+      "name": "Artifact name",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Artifact name",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.Artifact name"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
