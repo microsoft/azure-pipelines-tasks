@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Installer für Kubectl-Tool",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "Kubectl auf Agentcomputer installieren",
+  "loc.instanceNameFormat": "Kubectl $(kubectlVersion) installieren",
+  "loc.input.label.kubectlVersion": "Kubectl-Versionsangabe",
+  "loc.input.help.kubectlVersion": "Geben Sie die zu installierende Kubectl-Version an.",
+  "loc.messages.NotAValidSemverVersion": "Version nicht im richtigen Format angegeben. Beispiel: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+  "loc.messages.VerifyKubectlInstallation": "Die kubectl-Installation wird überprüft..."
+}

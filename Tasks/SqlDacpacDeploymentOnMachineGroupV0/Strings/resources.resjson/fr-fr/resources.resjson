@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Déploiement de base de données SQL Server",
   "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/sqldacpacmachinegroupreadme)",
-  "loc.description": "Déployer sur la base de données SQL Server à l'aide de DACPAC ou de scripts SQL",
+  "loc.description": "Déployer une base de données SQL Server à l'aide de DACPAC ou de scripts SQL",
   "loc.instanceNameFormat": "Déployer à l'aide de : $(TaskType)",
   "loc.input.label.TaskType": "Déployer SQL à l'aide de",
   "loc.input.help.TaskType": "Spécifiez la façon dont vous voulez déployer la base de données : à l'aide de Dacpac ou d'un script SQL.",
@@ -24,7 +24,7 @@
   "loc.input.label.DatabaseName": "Nom de la base de données",
   "loc.input.help.DatabaseName": "Spécifiez le nom de la base de données SQL Server.",
   "loc.input.label.AuthScheme": "Authentification",
-  "loc.input.help.AuthScheme": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the account used to configure deployment agent, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below.",
+  "loc.input.help.AuthScheme": "Sélectionnez le mode d'authentification pour la connexion à SQL Server. En mode d'authentification Windows, le compte utilisé pour configurer Deployment Agent permet de se connecter au serveur SQL Server. En mode d'authentification SQL Server, vous devez fournir la connexion et le mot de passe SQL dans les paramètres ci-dessous.",
   "loc.input.label.SqlUsername": "Nom d'utilisateur SQL",
   "loc.input.help.SqlUsername": "Fournissez la connexion SQL pour la connexion à SQL Server. L'option est disponible uniquement si le mode d'authentification SQL Server a été sélectionné.",
   "loc.input.label.SqlPassword": "Mot de passe SQL",

@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Installer für Docker CLI",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "Hiermit wird die Docker CLI auf dem Agentcomputer installiert.",
+  "loc.instanceNameFormat": "Docker $(dockerVersion) installieren",
+  "loc.input.label.dockerVersion": "Docker-Version",
+  "loc.input.help.dockerVersion": "Geben Sie die zu installierende Docker CLI-Version an.",
+  "loc.input.label.releaseType": "Releasetyp",
+  "loc.input.help.releaseType": "Wählen Sie den zu installierenden Releasetyp aus. Nightly wird unter Windows nicht unterstützt.",
+  "loc.messages.DownloadDockerFailedFromLocation": "Fehler beim Herunterladen von Docker aus Speicherort \"%s\". Fehler: %s",
+  "loc.messages.DockerNotFoundInFolder": "Die ausführbare Docker-Datei wurde nicht im Pfad \"%s\" gefunden.",
+  "loc.messages.DockerDownloadFailed": "Fehler beim Herunterladen von Docker aus Speicherort \"%s\". Fehler: %s",
+  "loc.messages.VerifyDockerInstallation": "Die Docker-Installation wird überprüft..."
+}

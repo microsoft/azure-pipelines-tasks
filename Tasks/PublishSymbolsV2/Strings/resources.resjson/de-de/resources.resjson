@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Quellen indizieren und Symbole veröffentlichen",
-  "loc.helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task.",
-  "loc.description": "Index your source code and publish symbols to a file share or Azure Artifacts Symbol Server",
+  "loc.helpMarkDown": "Weitere Informationen zur Verwendung dieser Aufgabe finden Sie [hier](https://go.microsoft.com/fwlink/?LinkID=613722).",
+  "loc.description": "Hiermit wird Ihr Quellcode indiziert, und Symbole werden in einer Dateifreigabe oder auf einem Azure Artifacts-Symbolserver veröffentlicht.",
   "loc.instanceNameFormat": "Pfad für Symbolveröffentlichung",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.SymbolsFolder": "Pfad zum Symbolordner",
@@ -13,7 +13,7 @@
   "loc.input.label.PublishSymbols": "Symbole veröffentlichen",
   "loc.input.help.PublishSymbols": "Gibt an, ob die Symboldateien veröffentlicht werden sollen.",
   "loc.input.label.SymbolServerType": "Symbolservertyp",
-  "loc.input.help.SymbolServerType": "Choose where to publish symbols. Symbols published to the Azure Artifacts Symbol Server are accessible by any user with access to the organization/collection. Azure DevOps Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in Azure Artifacts.",
+  "loc.input.help.SymbolServerType": "Wählen Sie den Ort für die Veröffentlichung von Symbolen aus. Auf dem Azure Artifacts-Symbolserver veröffentlichte Symbole sind für alle Benutzer mit Zugriff auf die Organisation/Sammlung zugänglich. Azure DevOps Server unterstützt nur die Option \"Dateifreigabe\". Befolgen Sie [diese Anweisungen](https://go.microsoft.com/fwlink/?linkid=846265), um Symbolserver in Azure Artifacts zu verwenden.",
   "loc.input.label.SymbolsPath": "Pfad zum Veröffentlichen von Symbolen",
   "loc.input.help.SymbolsPath": "Die Dateifreigabe, in der Ihre Symbole gehostet werden. Dieser Wert wird im Aufruf von \"symstore.exe add\" als Parameter \"/s\" verwendet.",
   "loc.input.label.CompressSymbols": "Symbole komprimieren",

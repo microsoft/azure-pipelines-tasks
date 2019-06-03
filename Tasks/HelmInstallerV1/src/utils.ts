@@ -2,7 +2,7 @@
 
 import tl = require('vsts-task-lib/task');
 import * as toolLib from 'vsts-task-tool-lib/tool';
-import helmutility = require("utility-common/helmutility");
+import helmutility = require("kubernetes-common/helmutility");
 
 export async function getHelmVersion(): Promise<string> {
     let helmVersion = tl.getInput("helmVersionToInstall");

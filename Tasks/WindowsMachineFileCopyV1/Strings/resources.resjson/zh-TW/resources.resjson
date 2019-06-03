@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Windows 電腦檔案複製",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=627415)",
-  "loc.description": "將檔案複製到遠端電腦",
+  "loc.description": "將檔案複製到遠端 Windows 機器",
   "loc.instanceNameFormat": "複製 $(SourcePath) 中的檔案",
   "loc.group.displayName.advanced": "進階選項",
   "loc.input.label.SourcePath": "來源",
@@ -11,7 +11,7 @@
   "loc.input.label.AdminUserName": "系統管理員登入",
   "loc.input.help.AdminUserName": "目標電腦的系統管理員登入。",
   "loc.input.label.AdminPassword": "密碼",
-  "loc.input.help.AdminPassword": "目標電腦的系統管理員登入密碼。<br>其可接受組建/發行定義中 '$(passwordVariable)' 這類形式的變數。<br>您可以將變數類型標示為 'secret' 加以保護。",
+  "loc.input.help.AdminPassword": "目標電腦的系統管理員登入密碼。<br>其可接受組建/發行管線中定義的 '$(passwordVariable)' 這類變數。<br>您可以將變數標示為 'secret' 加以保護。 ",
   "loc.input.label.TargetPath": "目的資料夾",
   "loc.input.help.TargetPath": "可用於從來源複製檔案之目標電腦上的本機路徑或可存取的 UNC 路徑，例如: d:\\fabrikam 或 \\\\\\\\fabrikam\\Web。",
   "loc.input.label.CleanTargetBeforeCopy": "清除目標",

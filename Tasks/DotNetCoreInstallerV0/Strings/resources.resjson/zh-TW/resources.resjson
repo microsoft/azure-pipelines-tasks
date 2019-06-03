@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": ".NET Core 工具安裝程式",
+  "loc.friendlyName": ".NET Core SDK/執行階段安裝程式",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=853651)",
-  "loc.description": "從網際網路或工具快取取得特定 .NET Core 版本，然後將其新增至 PATH。使用此工作可變更後續工作中使用的 .NET Core 版本。",
+  "loc.description": "從網際網路或本機快取取得特定版本的 .NET Core SDK，並將其新增至 PATH",
   "loc.instanceNameFormat": "使用 .NET Core $(packageType) $(version)",
   "loc.input.label.packageType": "要安裝的套件",
   "loc.input.help.packageType": "請選取只要安裝執行階段或要安裝完整 SDK。",
@@ -27,5 +27,6 @@
   "loc.messages.WarningVersionNotFound": "無法擷取版本 %s 的下載資訊。請檢查指定的版本是否正確。您可以參閱連結了解支援的版本 => https://github.com/dotnet/core/blob/master/release-notes/releases.json。將返回建立以慣例為基礎的 URL。",
   "loc.messages.CouldNotDownload": "無法從此 URL %s 下載安裝套件，錯誤: %s",
   "loc.messages.FailedToDownloadPackage": "無法下載套件以進行安裝",
-  "loc.messages.PrependGlobalToolPath": "正在建立全域工具路徑並加到 PATH 前面。"
+  "loc.messages.PrependGlobalToolPath": "正在建立全域工具路徑並加到 PATH 前面。",
+  "loc.messages.VersionsFileMalformed": "指定版本的下載連結，在支援的版本文件中語式錯誤 => %s/"
 }

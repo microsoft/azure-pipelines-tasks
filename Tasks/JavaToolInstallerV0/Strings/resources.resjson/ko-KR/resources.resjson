@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Java Tool 설치 관리자",
+  "loc.friendlyName": "Java 도구 설치 관리자",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=875287)",
-  "loc.description": "사용자가 제공한 Azure Blob 또는 도구 캐시에서 특정 버전의 Java를 가져오고 JAVA_HOME을 설정합니다. 이 작업을 사용하여 Java 작업에 사용되는 Java 버전을 변경할 수 있습니다.",
+  "loc.description": "사용자 제공 Azure Blob 또는 도구 캐시에서 특정 버전의 Java를 가져오고 JAVA_HOME을 설정합니다.",
   "loc.instanceNameFormat": "Java $(versionSpec) 사용",
   "loc.group.displayName.JavaInAzureGroup": "Azure Blob에서 Java 다운로드",
   "loc.input.label.versionSpec": "JDK 버전",
@@ -14,10 +14,10 @@
   "loc.input.help.jdkFile": "압축된 JDK가 있는 위치의 경로입니다. 이 경로는 소스 리포지토리나 에이전트의 로컬 경로에 있을 수 있습니다.",
   "loc.input.label.azureResourceManagerEndpoint": "Azure 구독",
   "loc.input.help.azureResourceManagerEndpoint": "JDK에 대한 Azure Resource Manager 구독을 선택합니다.",
-  "loc.input.label.azureStorageAccountName": "저장소 계정 이름",
-  "loc.input.help.azureStorageAccountName": "Azure Classic 및 Resource Manager 저장소 계정이 나열됩니다. JDK가 있는 저장소 계정 이름을 선택합니다.",
+  "loc.input.label.azureStorageAccountName": "스토리지 계정 이름",
+  "loc.input.help.azureStorageAccountName": "Azure Classic 및 Resource Manager 스토리지 계정이 나열됩니다. JDK가 있는 스토리지 계정 이름을 선택합니다.",
   "loc.input.label.azureContainerName": "컨테이너 이름",
-  "loc.input.help.azureContainerName": "JDK가 있는 저장소 계정에 있는 컨테이너 이름입니다.",
+  "loc.input.help.azureContainerName": "JDK가 있는 스토리지 계정에 있는 컨테이너 이름입니다.",
   "loc.input.label.azureCommonVirtualFile": "공통 가상 경로",
   "loc.input.help.azureCommonVirtualFile": "Azure Storage 컨테이너 내에 있는 JDK의 경로입니다.",
   "loc.input.label.jdkDestinationDirectory": "대상 디렉터리",
@@ -48,5 +48,6 @@
   "loc.messages.UnsupportedFileExtension": "지정한 JDK 소스 파일의 파일 확장명이 지원되지 않습니다.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Azure에 대한 액세스 토큰을 페치할 수 없습니다. 상태 코드: %s, 상태 메시지: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "관리 서비스 주체에 대한 액세스 토큰을 페치할 수 없습니다. 가상 머신에 대한 MSI(관리 서비스 ID)를 구성하세요('https://aka.ms/azure-msi-docs'). 상태 코드: %s, 상태 메시지: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "관리 서비스 주체에 대한 액세스 토큰을 페치할 수 없습니다. 상태 코드: %s, 상태 메시지: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "관리 서비스 주체에 대한 액세스 토큰을 페치할 수 없습니다. 상태 코드: %s, 상태 메시지: %s",
+  "loc.messages.ExpiredServicePrincipal": "Azure의 액세스 토큰을 페치할 수 없습니다. 사용한 서비스 주체가 유효하고 만료되지 않았는지 확인하세요."
 }

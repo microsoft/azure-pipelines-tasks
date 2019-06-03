@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Cloudbasierter Webleistungstest",
   "loc.helpMarkDown": "Löst einen cloudbasierten Auslastungstest mithilfe von Azure Pipelines aus. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=613203).",
-  "loc.description": "Führt einen schnellen Webleistungstest in der Cloud mit Azure Pipelines aus.",
+  "loc.description": "Hiermit wird mit Azure Pipelines ein Schnelltest zur Webleistung in der Cloud ausgeführt.",
   "loc.instanceNameFormat": "Schneller Webleistungstest $(testName)",
   "loc.input.label.connectedServiceName": "Azure Pipelines-Verbindung",
   "loc.input.help.connectedServiceName": "Wählen Sie eine zuvor registrierte Dienstverbindung aus, um mit dem cloudbasierten Auslastungstestdienst zu kommunizieren. Wählen Sie \"Verwalten\" aus, um eine neue Dienstverbindung zu registrieren.",
