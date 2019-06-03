@@ -36,6 +36,8 @@ interface Release {
     short_version: string;
 }
 
+type SymbolType = "Apple" | "AndroidProguard" | "UWP";
+
 function getEndpointDetails(endpointInputFieldName) {
     var errorMessage = tl.loc("CannotDecodeEndpoint");
     var endpoint = tl.getInput(endpointInputFieldName, true);
@@ -313,7 +315,7 @@ function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> {
     return defer.promise;
 }
 
-function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: string, token: string, userAgent: string, version?: string, build?: string): Q.Promise<SymbolsUploadInfo> {
+function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: SymbolType, token: string, userAgent: string, version?: string, build?: string): Q.Promise<SymbolsUploadInfo> {
     tl.debug("-- Begin symbols upload")
     let defer = Q.defer<SymbolsUploadInfo>();
 
@@ -480,7 +482,7 @@ async function run() {
         "Windows": "Windows 8.1",
         "UWP": "Universal Windows Platform (UWP)"
         */
-        let symbolsType: string = tl.getInput('symbolsType', false);
+        const symbolsType = tl.getInput('symbolsType', false) as SymbolType;
         let symbolVariableName = null;
         switch (symbolsType) {
             case "Apple":
