@@ -12,8 +12,6 @@ import * as commandHelper from 'packaging-common/nuget/CommandHelper';
 import * as pkgLocationUtils from 'packaging-common/locationUtilities';
 import { getProjectAndFeedIdFromInputParam } from 'packaging-common/util';
 
-const nugetFileName: string = 'nuget.config';
-
 export async function run(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
@@ -129,11 +127,7 @@ export async function run(): Promise<void> {
 
         const configFile = nuGetConfigHelper.tempNugetConfigPath;
 
-        // TODO: Remove this once NuGet issue https://github.com/NuGet/Home/issues/7855 is fixed.
-        const nuGetFiles = fs.readdirSync('.').filter((file) => file.toLowerCase() === nugetFileName);
-        const temporaryRootNugetName = (nugetFile: string) => `tempRename_${tl.getVariable('build.buildId')}_${nugetFile}`;
-        nuGetFiles.forEach((file) => fs.renameSync(file, temporaryRootNugetName(file)));
-        fs.writeFileSync(nugetFileName, fs.readFileSync(configFile));
+        nuGetConfigHelper.backupExistingNuGetFiles();
 
         const dotnetPath = tl.which('dotnet', true);
 
@@ -144,9 +138,7 @@ export async function run(): Promise<void> {
         } finally {
             credCleanup();
 
-            // TODO: Remove this once NuGet issue https://github.com/NuGet/Home/issues/7855 is fixed.
-            fs.unlinkSync(nugetFileName);
-            nuGetFiles.forEach((file) => fs.renameSync(temporaryRootNugetName(file), file));
+            nuGetConfigHelper.restoreBackupNuGetFiles();
         }
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('PackagesInstalledSuccessfully'));

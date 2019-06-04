@@ -14,9 +14,12 @@ import * as ngutil from "./Utility";
 // NuGetConfigHelper2 handles authenticated scenarios where the user selects a source from the UI or from a service connection.
 // It is used by the NuGetCommand >= v2.0.0 and DotNetCoreCLI >= v2.0.0
 
+const nugetFileName: string = 'nuget.config';
+
 export class NuGetConfigHelper2 {
     public tempNugetConfigPath = undefined;
     private nugetXmlHelper: INuGetXmlHelper;
+    private nuGetFiles: Array<string>;
 
     constructor(
         private nugetPath: string,
@@ -158,6 +161,19 @@ export class NuGetConfigHelper2 {
         return packageSources.map((source) => this.convertToIPackageSource(source));
     }
 
+    // TODO: Remove this once NuGet issue https://github.com/NuGet/Home/issues/7855 is fixed.
+    public backupExistingNuGetFiles(): void {
+        this.nuGetFiles = fs.readdirSync('.').filter((file) => file.toLowerCase() === nugetFileName);
+        this.nuGetFiles.forEach((file) => fs.renameSync(file, this.temporaryRootNugetName(file)));
+        fs.writeFileSync(nugetFileName, fs.readFileSync(this.tempNugetConfigPath));
+    }
+
+    // TODO: Remove this once NuGet issue https://github.com/NuGet/Home/issues/7855 is fixed.
+    public restoreBackupNuGetFiles(): void {
+        fs.unlinkSync(nugetFileName);
+        this.nuGetFiles.forEach((file) => fs.renameSync(this.temporaryRootNugetName(file), file));
+    }
+
     private removeSourceFromTempNugetConfig(packageSource: IPackageSource) {
         this.nugetXmlHelper.RemoveSourceFromNuGetConfig(packageSource.feedName);
     }
@@ -187,5 +203,10 @@ export class NuGetConfigHelper2 {
             feedUri: source.feedUri,
             isInternal
         };
+    }
+
+    // TODO: Remove this once NuGet issue https://github.com/NuGet/Home/issues/7855 is fixed.
+    private temporaryRootNugetName(nugetFile: string) {
+        return `tempRename_${tl.getVariable('build.buildId')}_${nugetFile}`;
     }
 }
