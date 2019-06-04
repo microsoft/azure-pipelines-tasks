@@ -5,6 +5,6 @@
   "loc.instanceNameFormat": "Publish Pipeline Artifact",
   "loc.input.label.targetPath": "File or directory path",
   "loc.input.help.targetPath": "The path of the file or directory to publish. Can be absolute or relative to the default working directory. Can include [variables](https://go.microsoft.com/fwlink/?LinkID=550988), but wildcards are not supported.",
-  "loc.input.label.Artifact name": "The name of this artifact",
-  "loc.input.help.Artifact name": "Name of the artifact to publish."
+  "loc.input.label.artifactName": "The name of this artifact",
+  "loc.input.help.artifactName": "Name of the artifact to publish."
 }

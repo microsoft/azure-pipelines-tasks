@@ -29,12 +29,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.targetPath"
     },
     {
-      "name": "Artifact name",
+      "name": "artifactName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.Artifact name",
+      "label": "ms-resource:loc.input.label.artifactName",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.Artifact name"
+      "helpMarkDown": "ms-resource:loc.input.help.artifactName"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
