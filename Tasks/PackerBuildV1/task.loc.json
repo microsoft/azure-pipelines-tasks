@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 12
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -327,6 +327,7 @@
     "ResolvedDeployPackgePath": "ms-resource:loc.messages.ResolvedDeployPackgePath",
     "ResolvedDeployScriptPath": "ms-resource:loc.messages.ResolvedDeployScriptPath",
     "OSNotSupportedForRunningPacker": "ms-resource:loc.messages.OSNotSupportedForRunningPacker",
+    "InstallExplicitPackerVersion": "ms-resource:loc.messages.InstallExplicitPackerVersion",
     "DownloadingPackerRequired": "ms-resource:loc.messages.DownloadingPackerRequired",
     "DownloadingPackerCompleted": "ms-resource:loc.messages.DownloadingPackerCompleted",
     "ExtractingPackerCompleted": "ms-resource:loc.messages.ExtractingPackerCompleted",
