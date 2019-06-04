@@ -562,16 +562,11 @@ async function run() {
             let version: string;
             let build: string;
             if (symbolsType === "AndroidProguard") {
-                version = tl.getInput('versionName', false);
-                build = tl.getInput('versionCode', false);
-                
-                if (!version || !build) {
-                    const release = await getRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, apiToken, userAgent);
-                    version = release.short_version;
-                    build = release.version;
-                }
+                const release = await getRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, apiToken, userAgent);
+                version = release.short_version;
+                build = release.version;
             }
-            let symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolsType, apiToken, userAgent, version, build);
+            const symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolsType, apiToken, userAgent, version, build);
 
             // upload symbols
             await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile);

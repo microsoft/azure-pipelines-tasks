@@ -13,10 +13,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 152,
-        "Patch": 1
+        "Minor": 153,
+        "Patch": 0
     },
-    "releaseNotes": "Added support for multiple destinations.",
+    "releaseNotes": "Added support for forwarding Android mapping to App Center Diagnostics.",
     "groups": [
         {
             "name": "symbols",
@@ -111,24 +111,6 @@
             "groupName": "symbols",
             "required": false,
             "helpMarkDown": "Relative path from the repo root to Android's mapping.txt file.",
-            "visibleRule": "symbolsType = AndroidProguard"
-        },
-        {
-            "name": "versionName",
-            "type": "string",
-            "label": "Version Name",
-            "groupName": "symbols",
-            "required": false,
-            "helpMarkDown": "A string used as the version number shown to users.",
-            "visibleRule": "symbolsType = AndroidProguard"
-        },
-        {
-            "name": "versionCode",
-            "type": "int",
-            "label": "Version Code",
-            "groupName": "symbols",
-            "required": false,
-            "helpMarkDown": "A positive integer used as an internal version number.",
             "visibleRule": "symbolsType = AndroidProguard"
         },
         {

@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 152,
-    "Patch": 1
+    "Minor": 153,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -111,24 +111,6 @@
       "groupName": "symbols",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.mappingTxtPath",
-      "visibleRule": "symbolsType = AndroidProguard"
-    },
-    {
-      "name": "versionName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.versionName",
-      "groupName": "symbols",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.versionName",
-      "visibleRule": "symbolsType = AndroidProguard"
-    },
-    {
-      "name": "versionCode",
-      "type": "int",
-      "label": "ms-resource:loc.input.label.versionCode",
-      "groupName": "symbols",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.versionCode",
       "visibleRule": "symbolsType = AndroidProguard"
     },
     {
