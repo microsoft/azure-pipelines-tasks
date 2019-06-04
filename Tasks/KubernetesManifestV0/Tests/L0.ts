@@ -22,6 +22,7 @@ describe('Kubernetes Manifests Suite', function () {
         delete process.env[shared.TestEnvVars.isCanaryDeploymentPresent];
         delete process.env[shared.TestEnvVars.isBaselineDeploymentPresent];
         delete process.env[shared.TestEnvVars.arguments];
+        delete process.env[shared.TestEnvVars.namespace];
     });
 
     after((done) => {
@@ -140,10 +141,11 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm bake', (done: MochaDone) => {
+    it('Run should succeed with helm bake and honor namespace field', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.namespace] = 'default';
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
         process.env[shared.TestEnvVars.renderType] = 'helm2';
         tr.run();
@@ -152,10 +154,11 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm bake overriding release name', (done: MochaDone) => {
+    it('Run should succeed with helm bake overriding release name and honor namespace field', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.namespace] = 'default';
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
         process.env[shared.TestEnvVars.renderType] = 'helm2';
         process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
