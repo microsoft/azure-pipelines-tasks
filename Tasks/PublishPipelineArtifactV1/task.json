@@ -29,7 +29,7 @@
             "helpMarkDown": "The path of the file or directory to publish. Can be absolute or relative to the default working directory. Can include [variables](https://go.microsoft.com/fwlink/?LinkID=550988), but wildcards are not supported."
         },
         {
-            "name": "Artifact name",
+            "name": "artifactName",
             "type": "string",
             "label": "The name of this artifact",
             "defaultValue": "",
