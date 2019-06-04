@@ -3,6 +3,8 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
+import azureBlobUploadHelper = require('../azure-blob-upload-helper');
+
 var Readable = require('stream').Readable
 var Stats = require('fs').Stats
 
@@ -63,13 +65,6 @@ nock('https://example.test')
         expiration_date: 1234567
     });
 
-//upload symbols
-nock('https://example.upload.test')
-    .put('/symbol_upload')
-    .reply(201, {
-        status: 'success'
-    });
-
 //finishing symbol upload, commit the symbol 
 nock('https://example.test')
     .patch("/v0.1/apps/testuser/testapp/symbol_uploads/100", {
@@ -115,6 +110,12 @@ fs.statSync = (s: string) => {
 
     return stat;
 }
+
+azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
+    return Promise.resolve();
+}
+
+tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
 tmr.registerMock('fs', fs);
 
 tmr.run();
