@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure CLI",
   "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=827160)",
-  "loc.description": "Führt eine Shell oder ein Batchskript mit Azure CLI-Befehlen für ein Azure-Abonnement aus.",
+  "loc.description": "Hiermit werden Azure CLI-Befehle für ein Azure-Abonnement in einem Shell-Skript (bei Ausführung für einen Linux-Agent) oder einem Batchskript (bei Ausführung für einen Windows-Agent) ausgeführt.",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
   "loc.releaseNotes": "Neuigkeiten in Version 1.0:\n– Unterstützung der neuen Python-basierten Azure CLI 2.0\n– Funktioniert mit plattformübergreifenden Agents (Linux, macOS oder Windows)\n– Die Verwendung mit Azure CLI 1.0 (node.js-basiert) erfordert einen Wechsel zu Aufgabenversion 0.0\n– Einschränkungen:\n– Keine Unterstützung für klassische Azure-Abonnements. Azure CLI 2.0 unterstützt nur Azure Resource Manager-Abonnements (ARM).",
   "loc.group.displayName.advanced": "Erweitert",
@@ -10,11 +10,15 @@
   "loc.input.label.scriptLocation": "Skriptspeicherort",
   "loc.input.help.scriptLocation": "Skripttyp: Dateipfad oder Inlineskript",
   "loc.input.label.scriptPath": "Skriptpfad",
-  "loc.input.help.scriptPath": "Vollqualifizierter Pfad des Skripts oder ein Pfad relativ zum Standardarbeitsverzeichnis",
+  "loc.input.help.scriptPath": "Vollqualifizierter Pfad des Skripts (BAT oder CMD bei Verwendung des Windows-basierten Agents, SH bei Verwendung eines Linux-basierten Agents) oder ein Pfad relativ zum Standardarbeitsverzeichnis",
   "loc.input.label.inlineScript": "Inlineskript",
-  "loc.input.help.inlineScript": "Sie können hier Ihre Skripts inline einfügen. Verwenden Sie für Batchdateien das Präfix \"call\" vor jedem azure-Befehl. Sie können auch mithilfe von Argumenten vordefinierte und benutzerdefinierte Variablen an das Skript übergeben. \n\n Beispiel für Shell: az --version || az account show \n\n Beispiel für Batch: call  az --version || call az account show",
+  "loc.input.help.inlineScript": "Sie können Ihre Skripts hier inline einfügen. Bei Verwendung eines Windows-Agents verwenden Sie ein Batchskript, bei Verwendung eines Linux-basierten Agents ein Shell-Skript. Verwenden Sie für Batchdateien das Präfix \"call\" vor jedem azure-Befehl. Sie können auch mithilfe von Argumenten vordefinierte und benutzerdefinierte Variablen an das Skript übergeben. \n\n Beispiel für Shell: az --version || az account show \n\n Beispiel für Batch: call  az --version || call az account show",
   "loc.input.label.args": "Argumente",
   "loc.input.help.args": "An das Skript übergebenen Argumente",
+  "loc.input.label.addSpnToEnvironment": "Auf Dienstprinzipaldetails im Skript zugreifen",
+  "loc.input.help.addSpnToEnvironment": "Hiermit werden Dienstprinzipal-ID und -schlüssel des ausgewählten Azure-Endpunkts zur Ausführungsumgebung des Skripts hinzugefügt. Sie können diese Variablen in Ihrem Skript verwenden: \"$servicePrincipalId\" und \"$servicePrincipalKey\".\n\nEine Berücksichtigung erfolgt nur, wenn der Azure-Endpunkt das Dienstprinzipal-Authentifizierungsschema aufweist.",
+  "loc.input.label.useGlobalConfig": "Globale Azure CLI-Konfiguration verwenden",
+  "loc.input.help.useGlobalConfig": "Bei Festlegung auf FALSE verwendet diese Aufgabe ein eigenes, separates [Azure CLI-Konfigurationsverzeichnis](https://docs.microsoft.com/de-de/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file). Dieses Verzeichnis kann zum Ausführen von Azure CLI-Aufgaben in *parallelen* Releases verwendet werden.",
   "loc.input.label.cwd": "Arbeitsverzeichnis",
   "loc.input.help.cwd": "Das aktuelle Arbeitsverzeichnis, in dem das Skript ausgeführt wird. Wenn keine Angabe erfolgt, wird der Stamm des Repositorys (Build) oder der Artefakte (Release) verwendet, das \"$(System.DefaultWorkingDirectory)\" lautet.",
   "loc.input.label.failOnStandardError": "Fehler bei Standardfehler.",
@@ -25,5 +29,10 @@
   "loc.messages.AzureSDKNotFound": "Azure CLI 2.x ist nicht auf diesem Computer installiert.",
   "loc.messages.FailedToLogout": "Beim Abmelden ist der folgende Fehler aufgetreten: %s",
   "loc.messages.LoginFailed": "Fehler bei der Azure-Anmeldung.",
-  "loc.messages.ErrorInSettingUpSubscription": "Fehler beim Festlegen des Abonnements."
+  "loc.messages.MSILoginFailed": "Fehler bei der Azure-Anmeldung mit einer verwalteten Dienstidentität.",
+  "loc.messages.AuthSchemeNotSupported": "Das Authentifizierungsschema \"%s\" wird nicht unterstützt.",
+  "loc.messages.ErrorInSettingUpSubscription": "Fehler beim Festlegen des Abonnements.",
+  "loc.messages.SettingAzureConfigDir": "AZURE_CONFIG_DIR-Umgebungsvariable wird festgelegt auf: %s",
+  "loc.messages.SettingAzureCloud": "Aktive Cloud wird festgelegt auf: %s",
+  "loc.messages.GlobalCliConfigAgentVersionWarning": "Für Agent-Versionen vor 2.115.0 kann nur die globale Azure CLI-Konfiguration verwendet werden."
 }

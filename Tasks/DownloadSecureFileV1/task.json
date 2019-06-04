@@ -4,7 +4,7 @@
     "friendlyName": "Download secure file",
     "description": "Download a secure file to a temporary location on the agent machine",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862069)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862069)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 151,
-        "Patch": 1
+        "Minor": 153,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",

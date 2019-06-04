@@ -1,45 +1,46 @@
-"use strict";
-import tl = require('vsts-task-lib/task');
-import path = require('path');
-import { deploy } from "./actions/deploy";
-import { bake } from "./actions/bake";
-import { scale } from "./actions/scale";
-import { patch } from "./actions/patch";
+'use strict';
+import * as tl from 'vsts-task-lib/task';
+import * as path from 'path';
+
+import { deploy } from './actions/deploy';
+import { bake } from './actions/bake';
+import { scale } from './actions/scale';
+import { patch } from './actions/patch';
 import { deleteResources } from './actions/delete';
 import { promote } from './actions/promote';
 import { reject } from './actions/reject';
 import { createSecret } from './actions/createSecret';
-import { Connection } from "./connection";
+import { Connection } from './connection';
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
 function run(): Promise<void> {
-    let action = tl.getInput("action");
-    if (action === "bake") {
+    const action = tl.getInput('action');
+    if (action === 'bake') {
         return bake();
     }
-    let connection = new Connection();
+    const connection = new Connection();
     let action_func = null;
     switch (action) {
-        case "deploy":
+        case 'deploy':
             action_func = deploy;
             break;
-        case "scale":
+        case 'scale':
             action_func = scale;
             break;
-        case "patch":
+        case 'patch':
             action_func = patch;
             break;
-        case "delete":
+        case 'delete':
             action_func = deleteResources;
             break;
-        case "promote":
+        case 'promote':
             action_func = promote;
             break;
-        case "reject":
+        case 'reject':
             action_func = reject;
             break;
-        case "createSecret":
+        case 'createSecret':
             action_func = createSecret;
             break;
         default:
@@ -50,7 +51,7 @@ function run(): Promise<void> {
     return action_func(connection.ignoreSSLErrors)
         .then(() => connection.close())
         .catch((error) => {
-            connection.close()
+            connection.close();
             throw error;
         });
 }

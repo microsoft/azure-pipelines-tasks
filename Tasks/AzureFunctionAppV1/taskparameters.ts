@@ -1,5 +1,5 @@
 import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { Package, PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';

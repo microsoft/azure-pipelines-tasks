@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "보안 파일 다운로드",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "보안 파일을 빌드 또는 릴리스 에이전트의 임시 위치로 다운로드합니다.",
+  "loc.description": "에이전트 머신의 임시 위치에 보안 파일을 다운로드합니다.",
   "loc.instanceNameFormat": "보안 파일 다운로드",
   "loc.input.label.secureFile": "보안 파일",
-  "loc.input.help.secureFile": "에이전트의 임시 위치로 다운로드할 보안 파일을 선택합니다. 이 파일은 빌드 또는 릴리스 후 정리됩니다."
+  "loc.input.help.secureFile": "에이전트의 임시 위치에 다운로드할 보안 파일을 선택합니다. 이 파일은 파이프라인을 실행한 후 정리됩니다."
 }

@@ -1,12 +1,12 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import tl = require('vsts-task-lib/task');
-import { PackageType } from 'webdeployment-common/packageUtility';
+import tl = require('azure-pipelines-task-lib/task');
+import { PackageType } from 'webdeployment-common-v2/packageUtility';
 import path = require('path');
-import * as ParameterParser from 'webdeployment-common/ParameterParserUtility';
+import * as ParameterParser from 'webdeployment-common-v2/ParameterParserUtility';
 
-var webCommonUtility = require('webdeployment-common/utility.js');
-var deployUtility = require('webdeployment-common/utility.js');
-var zipUtility = require('webdeployment-common/ziputility.js');
+var webCommonUtility = require('webdeployment-common-v2/utility.js');
+var deployUtility = require('webdeployment-common-v2/utility.js');
+var zipUtility = require('webdeployment-common-v2/ziputility.js');
 
 const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE true';
 const linuxFunctionRuntimeSettingName: string = '-FUNCTIONS_WORKER_RUNTIME ';

@@ -1,6 +1,7 @@
 {
   "loc.friendlyName": "NuGet コマンド",
-  "loc.description": "非推奨です。代わりに \"NuGet\" タスクをご利用ください。新しい Tool インストーラー フレームワークで機能するため、タスクの更新を待たずに新しいバージョンの NuGet を簡単に利用できます。このアカウント/コレクション外の認証されたフィードのサポートが強化され、既定で NuGet 4 を使用できます。",
+  "loc.helpMarkDown": "",
+  "loc.description": "非推奨です。代わりに \"NuGet\" タスクをご利用ください。新しい Tool インストーラー フレームワークで機能するため、タスクの更新を待たずに新しいバージョンの NuGet を簡単に利用できます。この組織/コレクション外の認証されたフィードのサポートが強化され、既定で NuGet 4 を使用できます。",
   "loc.instanceNameFormat": "NuGet $(command)",
   "loc.input.label.command": "コマンド",
   "loc.input.help.command": "実行する NuGet コマンド。\n\n例: restore、pack",

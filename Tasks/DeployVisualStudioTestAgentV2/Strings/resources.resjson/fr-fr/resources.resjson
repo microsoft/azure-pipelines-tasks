@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Déploiement de l'agent de test Visual Studio",
+  "loc.friendlyName": "Déploiement de Visual Studio Test Agent",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=838890)",
-  "loc.description": "Déprécié : cette tâche et la tâche qui l'accompagne (Exécuter les tests fonctionnels) sont dépréciées. Utilisez la tâche 'Visual Studio Test' à la place. La tâche VSTest peut exécuter des tests unitaires et des tests fonctionnels. Exécutez les tests sur un ou plusieurs agents à l'aide du paramètre de travail multiagent. Utilisez la tâche 'Visual Studio Test Platform' pour exécuter les tests sans avoir besoin de Visual Studio sur l'agent. La tâche VSTest apporte également de nouvelles fonctionnalités telles que la réexécution automatique des tests non réussis.",
+  "loc.description": "Déprécié : utilisez plutôt la tâche 'Visual Studio Test' pour exécuter des tests unitaires et des tests fonctionnels",
   "loc.instanceNameFormat": "Déployer TestAgent sur $(testMachineGroup)",
   "loc.releaseNotes": "<ul><li>Prise en charge de Visual Studio Test Agent 2017 : vous pouvez désormais déployer et exécuter des tests à l'aide de plusieurs versions de Visual Studio Test Agent. Les versions 2015 et 2017 sont prises en charge.</li><li>Les groupes de machines créés à partir du hub de test ne sont plus pris en charge. Vous pouvez continuer à utiliser une liste de machines ou de groupes de ressources Azure.</li></ul>",
   "loc.group.displayName.testMachineGroups": "Machines de test",

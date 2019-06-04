@@ -73,8 +73,8 @@
   "loc.messages.AFC_MachineNameFromIdErrorAllResources": "ResourceGroup '{1}' のすべてのリソースに対して {0} を取得できません",
   "loc.messages.AFC_MachineNameFromIdError": "ResourceGroup '{2}' の '{1}' 個のリソースに対して {0} を取得できません",
   "loc.messages.AFC_ResourceGroupNotFoundForSelectedConnection": "選択されたサービス接続 '{0}' を使用して、リソース '{1}' を見つけることができません。選択されたサービス接続 '{0}' は、従来のリソース (Service Management モデル) のみをサポートします。",
-  "loc.messages.AFC_NoClassicVMResources": "リソース グループ '{0}' の下にコピー対象のマシンは存在しません。選択したサービス接続 '{1}' は Azure クラシック タイプの Virtual Machines のみをサポートします。",
-  "loc.messages.AFC_NoARMVMResources": "リソース グループ '{0}' の下にコピー対象のマシンは存在しません。選択したサービス接続 '{1}' は Azure Resource Manager タイプの Virtual Machines のみをサポートします。",
+  "loc.messages.AFC_NoClassicVMResources": "リソース グループ '{0}' の下にコピー対象のマシンは存在しません。選択したサービス接続 '{1}' は Azure クラシック タイプの仮想マシンのみをサポートします。",
+  "loc.messages.AFC_NoARMVMResources": "リソース グループ '{0}' の下にコピー対象のマシンは存在しません。選択したサービス接続 '{1}' は Azure Resource Manager タイプの仮想マシンのみをサポートします。",
   "loc.messages.AFC_NoGenericVMResources": "リソース グループ '{0}' の下にコピー対象のコンピューターは存在しません。",
   "loc.messages.AFC_FilteringNoVMResources": "次の {1} '{2}' を持つリソース グループ '{0}' の下にコンピューターは存在しません。",
   "loc.messages.AFC_CopyStarted": "コンピューター '{0}' について、コピーを開始しました",
@@ -91,5 +91,5 @@
   "loc.messages.AFC_RootContainerAndDirectory": "$root コンテナーには、'/S' オプションは無効です。",
   "loc.messages.AFC_RedirectResponseInvalidStatusCode": "HTTP 応答コード: '{0}' は無効なリダイレクト状態コードです",
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "リダイレクト応答の場所ヘッダーが null です。",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment."
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "WinRM カスタム スクリプトを手動でアンインストールしてから、配置を再試行してください。"
 }

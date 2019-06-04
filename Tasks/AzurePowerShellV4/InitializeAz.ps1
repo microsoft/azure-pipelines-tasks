@@ -48,6 +48,31 @@ $null = Clear-AzContext -Scope Process
 Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
 $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue 
 
+$scopeLevel = "Subscription"
+    
+If ($endpoint.PSObject.Properties['Data'])
+{
+    If ($endpoint.Data.PSObject.Properties['scopeLevel'])
+    {
+        $scopeLevel = $endpoint.Data.scopeLevel
+    }
+}
+
+function Format-Splat {
+    [CmdletBinding()]
+    param([Parameter(Mandatory = $true)][hashtable]$Hashtable)
+
+    # Collect the parameters (names and values) in an array.
+    $parameters = foreach ($key in $Hashtable.Keys) {
+        $value = $Hashtable[$key]
+        # If the value is a bool, format the parameter as a switch (ending with ':').
+        if ($value -is [bool]) { "-$($key):" } else { "-$key" }
+        $value
+    }
+    
+    "$parameters" # String join the array.
+}
+
 if ($endpointObject.scheme -eq 'ServicePrincipal') {
     try {
         if ($endpointObject.authenticationType -ieq 'SPNKey') {
@@ -68,6 +93,16 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
         # Provide an additional, custom, credentials-related error message. Will handle localization later
         throw (New-Object System.Exception("There was an error with the service principal used for the deployment.", $_.Exception))
        
+    }
+
+    if($scopeLevel -eq "Subscription")
+    {
+        $SubscriptionId = $endpointObject.subscriptionId
+        $TenantId = $endpointObject.tenantId
+        $additional = @{ TenantId = $TenantId }
+
+        Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
     }
 }
 else {

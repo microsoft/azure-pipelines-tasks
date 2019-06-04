@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure CLI",
   "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=827160)",
-  "loc.description": "通过 Azure CLI 命令对Azure 订阅运行 Shell 或批处理脚本",
+  "loc.description": "在 Linux 代理上运行时，在 Shell 脚本中针对 Azure 订阅运行 Azure CLI 命令；在 Windows 代理上运行时，则在 Batch 脚本中针对 Azure 订阅运行 Azure CLI 命令。",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
   "loc.releaseNotes": "版本 1.0 中的新增功能:\n- 支持基于 Python 的新 Azure CLI 2.0\n- 适用于跨平台代理(Linux、macOS 或 Windows)\n- 若要使用 Azure CLI 1.0 (基于 node.js)，请切换到任务版本 0.0\n- 局限:\n - 不支持 Azure 经典订阅。Azure CLI 2.0 仅支持 Azure 资源管理器(ARM)订阅。",
   "loc.group.displayName.advanced": "高级",
@@ -10,11 +10,15 @@
   "loc.input.label.scriptLocation": "脚本位置",
   "loc.input.help.scriptLocation": "脚本类型: 文件路径或内联脚本",
   "loc.input.label.scriptPath": "脚本路径",
-  "loc.input.help.scriptPath": "完全限定的脚本路径或与默认工作目录有关的路径",
+  "loc.input.help.scriptPath": "脚本(在使用基于 Windows 的代理时为 .bat 或 .cmd，在使用基于 linux 的代理时为 .sh)的完全限定的路径，或相对于默认工作目录的路径",
   "loc.input.label.inlineScript": "内联脚本",
-  "loc.input.help.inlineScript": "在此处可以编写内联脚本。对于批处理文件，请在每条 Azure 命令前使用前缀 \"call\"。还可使用参数将预定义和自定义变量传递到此脚本\n\n shell 示例: az --version || az account show \n\n 批处理示例: call  az --version || call az account show",
+  "loc.input.help.inlineScript": "可在此处编写内联脚本。使用 Windows 代理时，请使用批处理脚本，而在使用基于 Linux 的代理时，请使用 shell 脚本。对于批处理文件，请在每条 Azure 命令前使用前缀 \"call\"。还可使用参数将预定义和自定义变量传递到此脚本\n\n shell 示例: az --version || az account show \n\n 批处理示例: call  az --version || call az account show",
   "loc.input.label.args": "参数",
   "loc.input.help.args": "传递给脚本的参数",
+  "loc.input.label.addSpnToEnvironment": "在脚本中访问服务主体详细信息",
+  "loc.input.help.addSpnToEnvironment": "将选择的 Azure 终结点的服务主体 ID 和密钥添加到脚本的执行环境中。可以在脚本中使用这些变量: \"$servicePrincipalId\" 和 \"$servicePrincipalKey\"。\n\n这仅当 Azure 终结点具有服务主体身份验证方案时才有效。",
+  "loc.input.label.useGlobalConfig": "使用全局 Azure CLI 配置",
+  "loc.input.help.useGlobalConfig": "如果为 false，此任务将使用其自己的独立 [Azure CLI 配置目录](https://docs.microsoft.com/zh-cn/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file)。这可用于在*并行*发布中运行 Azure CLI 任务",
   "loc.input.label.cwd": "工作目录",
   "loc.input.help.cwd": "脚本运行于的当前工作目录。存储库(内部版本)或项目(发行版本)的根路径  $(System.DefaultWorkingDirectory) 为空",
   "loc.input.label.failOnStandardError": "因标准错误失败",
@@ -25,5 +29,10 @@
   "loc.messages.AzureSDKNotFound": "此计算机上未安装 Azure CLI 2.x。",
   "loc.messages.FailedToLogout": "注销时出现以下错误: %s",
   "loc.messages.LoginFailed": "Azure 登录失败",
-  "loc.messages.ErrorInSettingUpSubscription": "设置订阅时出错"
+  "loc.messages.MSILoginFailed": "使用托管服务标识进行 Azure 登录失败",
+  "loc.messages.AuthSchemeNotSupported": "不支持身份验证方案 %s",
+  "loc.messages.ErrorInSettingUpSubscription": "设置订阅时出错",
+  "loc.messages.SettingAzureConfigDir": "将 AZURE_CONFIG_DIR 环境变量设置为 %s",
+  "loc.messages.SettingAzureCloud": "将活动云设置为 %s",
+  "loc.messages.GlobalCliConfigAgentVersionWarning": "对于低于 2.115.0 的代理版本，只能使用全局 Azure CLI 配置"
 }

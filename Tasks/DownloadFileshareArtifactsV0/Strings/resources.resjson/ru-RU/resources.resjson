@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Скачать артефакты из общей папки",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.filesharePath": "Путь к общей папке",
-  "loc.input.help.filesharePath": "Путь к общей папке, например \\\\server\\folder",
+  "loc.input.help.filesharePath": "Путь к общей папке, например \\\\сервер\\папка",
   "loc.input.label.artifactName": "Имя артефакта",
   "loc.input.help.artifactName": "Имя артефакта для скачивания, например drop",
   "loc.input.label.itemPattern": "Шаблон соответствия",

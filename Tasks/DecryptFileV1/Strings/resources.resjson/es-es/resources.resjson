@@ -1,6 +1,7 @@
 {
-  "loc.friendlyName": "Descrifrar archivo (OpenSSL)",
-  "loc.description": "Una tarea de utilidad fina para el descifrado de archivo mediante OpenSSL.",
+  "loc.friendlyName": "Descifrar archivo (OpenSSL)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Descifra un archivo con OpenSSL.",
   "loc.instanceNameFormat": "Descifrar $(inFile)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.cipher": "Cifrado",

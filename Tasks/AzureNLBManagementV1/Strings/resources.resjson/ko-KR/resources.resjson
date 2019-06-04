@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure 네트워크 부하 분산 장치",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=837723)",
-  "loc.description": "Azure 가상 머신의 네트워크 인터페이스를 부하 분산 장치 백 엔드 주소 풀에 연결/연결 끊기",
+  "loc.description": "Azure 가상 머신의 네트워크 인터페이스를 Load Balancer의 백 엔드 주소 풀에 연결하거나 연결을 끊습니다.",
   "loc.instanceNameFormat": "Azure 네트워크 부하 분산 장치: $(LoadBalancer) - $(Action)",
   "loc.input.label.ConnectedServiceName": "Azure 구독",
   "loc.input.help.ConnectedServiceName": "배포에 대한 Azure Resource Manager 구독을 선택합니다.",
