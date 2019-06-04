@@ -327,7 +327,7 @@
         "ResolvedDeployPackgePath": "Resolved deploy package path: %s.",
         "ResolvedDeployScriptPath": "Resolved deploy script path: %s.",
         "OSNotSupportedForRunningPacker": "OS is not supported for running packer.",
-        "InstallExplicitPackerVersion": "Version %s will be downloaded and installed for running task.",
+        "InstallExplicitPackerVersion": "Packer version %s will be downloaded and installed for running task.",
         "DownloadingPackerRequired": "Either packer is not installed or its version is less than %s. Version %s will be downloaded and installed for running task.",
         "DownloadingPackerCompleted": "Packer installer downloaded successfully at path: %s.",
         "ExtractingPackerCompleted": "Packer extracted successfully at path: %s.",

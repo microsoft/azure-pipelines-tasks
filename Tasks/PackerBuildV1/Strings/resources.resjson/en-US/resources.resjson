@@ -76,7 +76,7 @@
   "loc.messages.ResolvedDeployPackgePath": "Resolved deploy package path: %s.",
   "loc.messages.ResolvedDeployScriptPath": "Resolved deploy script path: %s.",
   "loc.messages.OSNotSupportedForRunningPacker": "OS is not supported for running packer.",
-  "loc.messages.InstallExplicitPackerVersion": "Version %s will be downloaded and installed for running task.",
+  "loc.messages.InstallExplicitPackerVersion": "Packer version %s will be downloaded and installed for running task.",
   "loc.messages.DownloadingPackerRequired": "Either packer is not installed or its version is less than %s. Version %s will be downloaded and installed for running task.",
   "loc.messages.DownloadingPackerCompleted": "Packer installer downloaded successfully at path: %s.",
   "loc.messages.ExtractingPackerCompleted": "Packer extracted successfully at path: %s.",
