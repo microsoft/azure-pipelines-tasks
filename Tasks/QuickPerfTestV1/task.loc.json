@@ -14,8 +14,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 38
+    "Patch": 39
   },
+  "deprecated": true,
   "demands": [
     "msbuild",
     "azureps"
