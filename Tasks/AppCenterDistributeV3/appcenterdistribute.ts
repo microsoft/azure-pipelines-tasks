@@ -267,7 +267,7 @@ function getRelease(apiServer: string, apiVersion: string, appSlug: string, rele
 
     request.get({ url: getReleaseUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
-            defer.resolve(body);
+            defer.resolve(JSON.parse(body));
         });
     })
 
@@ -328,7 +328,7 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
         "internal-request-source": "VSTS"
     };
 
-    let symbolsUploadBody = { "symbol_type": symbol_type };
+    const symbolsUploadBody = { "symbol_type": symbol_type };
 
     if (symbol_type === "AndroidProguard") {
         symbolsUploadBody["file_name"] = "mapping.txt";
