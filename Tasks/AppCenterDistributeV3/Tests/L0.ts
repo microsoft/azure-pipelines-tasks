@@ -261,4 +261,14 @@ describe('AppCenterDistribute L0 Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
     });
+
+    it('Positive path: upload Android mapping txt to diagnostics', function () {
+        this.timeout(4000);
+
+        let tp = path.join(__dirname, 'L0AndroidMappingTxtProvided.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+    });
 });
