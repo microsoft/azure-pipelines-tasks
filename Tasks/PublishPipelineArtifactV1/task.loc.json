@@ -18,15 +18,15 @@
   "minimumAgentVersion": "2.140.1",
   "inputs": [
     {
-      "name": "targetPath",
+      "name": "path",
       "aliases": [
-        "path"
+        "targetPath"
       ],
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.targetPath",
+      "label": "ms-resource:loc.input.label.path",
       "defaultValue": "$(Pipeline.Workspace)",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.targetPath"
+      "helpMarkDown": "ms-resource:loc.input.help.path"
     },
     {
       "name": "artifactName",

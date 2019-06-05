@@ -18,9 +18,9 @@
     "minimumAgentVersion": "2.140.1",
     "inputs": [
         {
-            "name": "targetPath",
+            "name": "path",
             "aliases": [
-                "path"
+                "targetPath"
             ],
             "type": "filePath",
             "label": "File or directory path",
