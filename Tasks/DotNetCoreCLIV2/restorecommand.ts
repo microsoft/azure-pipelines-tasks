@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as Q from 'q';
 import * as utility from './Common/utility';
