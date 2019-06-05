@@ -43,9 +43,9 @@
             "helpMarkDown": "The project from which to download the pipeline artifacts."
         },
         {
-            "name": "definition",
+            "name": "pipeline",
             "aliases": [
-                "pipeline"
+                "definition"
             ],
             "type": "pickList",
             "label": "Build pipeline",
@@ -91,10 +91,10 @@
             "helpMarkDown": "Specify to filter on branch/ref name, for example: ```refs/heads/develop```."
         },
         {
-            "name": "buildId",
+            "name": "runId",
             "aliases": [
                 "pipelineId",
-                "runId"
+                "buildId"
             ],
             "type": "pickList",
             "label": "Build",
@@ -141,10 +141,10 @@
             "helpMarkDown": "One or more file matching patterns (new line delimited) that limit which files get downloaded."
         },
         {
-            "name": "downloadPath",
+            "name": "path",
             "aliases": [
                 "targetPath",
-                "path"
+                "downloadPath"
             ],
             "type": "string",
             "label": "Destination directory",

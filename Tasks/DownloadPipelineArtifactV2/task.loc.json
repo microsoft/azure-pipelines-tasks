@@ -43,12 +43,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.project"
     },
     {
-      "name": "definition",
+      "name": "pipeline",
       "aliases": [
-        "pipeline"
+        "definition"
       ],
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.definition",
+      "label": "ms-resource:loc.input.label.pipeline",
       "defaultValue": "",
       "required": true,
       "visibleRule": "buildType == specific",
@@ -57,7 +57,7 @@
         "DisableManageLink": "True",
         "IsSearchable": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.definition"
+      "helpMarkDown": "ms-resource:loc.input.help.pipeline"
     },
     {
       "name": "specificBuildWithTriggering",
@@ -91,13 +91,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.branchName"
     },
     {
-      "name": "buildId",
+      "name": "runId",
       "aliases": [
         "pipelineId",
-        "runId"
+        "buildId"
       ],
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.buildId",
+      "label": "ms-resource:loc.input.label.runId",
       "defaultValue": "",
       "required": true,
       "visibleRule": "buildType == specific && buildVersionToDownload == specific",
@@ -105,7 +105,7 @@
         "EditableOptions": "True",
         "DisableManageLink": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.buildId"
+      "helpMarkDown": "ms-resource:loc.input.help.runId"
     },
     {
       "name": "tags",
@@ -141,16 +141,16 @@
       "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
     },
     {
-      "name": "downloadPath",
+      "name": "path",
       "aliases": [
         "targetPath",
-        "path"
+        "downloadPath"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.downloadPath",
+      "label": "ms-resource:loc.input.label.path",
       "defaultValue": "$(Pipeline.Workspace)",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.downloadPath"
+      "helpMarkDown": "ms-resource:loc.input.help.path"
     }
   ],
   "dataSourceBindings": [
