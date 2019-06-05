@@ -64,7 +64,7 @@
       "groupName": "symbols",
       "options": {
         "Apple": "Apple",
-        "AndroidProguard": "Android"
+        "Android": "Android"
       }
     },
     {
@@ -111,7 +111,7 @@
       "groupName": "symbols",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.mappingTxtPath",
-      "visibleRule": "symbolsType = AndroidProguard"
+      "visibleRule": "symbolsType = Android"
     },
     {
       "name": "packParentFolder",
