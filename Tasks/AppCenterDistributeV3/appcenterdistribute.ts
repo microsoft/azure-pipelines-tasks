@@ -267,7 +267,7 @@ function getRelease(apiServer: string, apiVersion: string, appSlug: string, rele
 
     request.get({ url: getReleaseUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
-            defer.resolve();
+            defer.resolve(body);
         });
     })
 
