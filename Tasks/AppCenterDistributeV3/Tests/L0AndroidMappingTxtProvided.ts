@@ -19,7 +19,7 @@ tmr.setInput('appSlug', 'testuser/testapp');
 tmr.setInput('app', '/test/path/to/my.apk');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
-tmr.setInput('symbolsType', 'AndroidProguard');
+tmr.setInput('symbolsType', 'Android');
 tmr.setInput('mappingTxtPath', 'a/**/mapping.txt');
 
 /*

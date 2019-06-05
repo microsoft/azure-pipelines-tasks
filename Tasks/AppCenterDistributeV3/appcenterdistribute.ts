@@ -477,7 +477,8 @@ async function run() {
         "Windows": "Windows 8.1",
         "UWP": "Universal Windows Platform (UWP)"
         */
-        const symbolsType = tl.getInput('symbolsType', false) as SymbolType;
+        const taskSymbolsType: string = tl.getInput('symbolsType', false);
+        const symbolsType = (taskSymbolsType === 'Android' ? 'AndroidProguard' : taskSymbolsType) as SymbolType;
         let symbolVariableName = null;
         switch (symbolsType) {
             case "Apple":
