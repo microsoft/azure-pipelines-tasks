@@ -4,7 +4,7 @@
     "friendlyName": "Deploy to Kubernetes",
     "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running kubectl commands",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/kubernetes",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 153,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",

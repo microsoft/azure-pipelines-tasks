@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006) or [see the Docker Compose documentation](https://docs.docker.com/)",
   "loc.description": "Build, push or run multi-container Docker applications. Task can be used with Docker or Azure Container registry.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Advanced Options",
