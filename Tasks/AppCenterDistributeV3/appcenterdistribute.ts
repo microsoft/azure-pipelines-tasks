@@ -306,7 +306,7 @@ function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> {
 
         utils.createZipFile(zipStream, zipPath).
             then(() => {
-                tl.debug(`---- symbols arechive file: ${zipPath}`)
+                tl.debug(`---- symbols archive file: ${zipPath}`)
                 defer.resolve(zipPath);
             });
     } else {
