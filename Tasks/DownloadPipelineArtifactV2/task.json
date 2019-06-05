@@ -166,7 +166,7 @@
         },
         {
             "endpointId": "tfs:teamfoundation",
-            "target": "definition",
+            "target": "pipeline",
             "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?api-version=3.0-preview&$top=500&continuationToken={{{continuationToken}}}&name=*{{name}}*&queryOrder=2",
             "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
             "parameters": {
@@ -180,7 +180,7 @@
         },
         {
             "endpointId": "tfs:teamfoundation",
-            "target": "buildId",
+            "target": "runId",
             "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds?definitions={{definition}}&resultFilter=succeeded,partiallySucceeded&$top=200",
             "resultSelector": "jsonpath:$.value[*]",
             "parameters": {
@@ -196,7 +196,7 @@
             "resultSelector": "jsonpath:$.value[*]",
             "parameters": {
                 "project": "$(project)",
-                "buildId": "$(buildId)"
+                "buildId": "$(runId)"
             },
             "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
