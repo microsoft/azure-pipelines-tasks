@@ -83,7 +83,6 @@
         "FailedToGetPackagingUri": "Unable to get packaging uri, using default collection uri.",
         "FailedToAddAuthentication": "Failed to add authentication.",
         "FeedTokenUnavailable": "Failed to get the access token for this organization.",
-        "Warn_TooManyFeedEntries": "Too many feed entries for auth. Please reduce the number of repositories in the task.",
-        "Error_PythonInternalFeedsNotSupportedOnprem": "Authentication for internal feeds is not supported in this version of Azure DevOps Server."
+        "Warn_TooManyFeedEntries": "Too many feed entries for auth. Please reduce the number of repositories in the task."
     }
 }
