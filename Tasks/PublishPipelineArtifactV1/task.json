@@ -31,7 +31,7 @@
         {
             "name": "artifactName",
             "type": "string",
-            "label": "The name of this artifact",
+            "label": "Artifact name",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Name of the artifact to publish."
