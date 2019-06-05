@@ -181,22 +181,22 @@
         {
             "endpointId": "tfs:teamfoundation",
             "target": "runId",
-            "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds?definitions={{definition}}&resultFilter=succeeded,partiallySucceeded&$top=200",
+            "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds?definitions={{pipeline}}&resultFilter=succeeded,partiallySucceeded&$top=200",
             "resultSelector": "jsonpath:$.value[*]",
             "parameters": {
                 "project": "$(project)",
-                "definition": "$(definition)"
+                "pipeline": "$(pipeline)"
             },
             "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{buildNumber}}}\" }"
         },
         {
             "endpointId": "tfs:teamfoundation",
             "target": "artifactName",
-            "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds/{{buildId}}/artifacts",
+            "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds/{{runId}}/artifacts",
             "resultSelector": "jsonpath:$.value[*]",
             "parameters": {
                 "project": "$(project)",
-                "buildId": "$(runId)"
+                "runId": "$(runId)"
             },
             "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
