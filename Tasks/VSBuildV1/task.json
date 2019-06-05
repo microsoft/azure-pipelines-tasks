@@ -4,7 +4,7 @@
     "friendlyName": "Visual Studio build",
     "description": "Build with MSBuild and set the Visual Studio version property",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/visual-studio-build",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613727)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613727)",
     "category": "Build",
     "visibility": [
         "Build"

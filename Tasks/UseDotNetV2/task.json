@@ -6,7 +6,7 @@
     "category": "Tool",
     "preview": true,
     "helpUrl": "https://aka.ms/AA4xgy0",
-    "helpMarkDown": "[More Information](https://aka.ms/AA4xgy0)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/AA4xgy0)",
     "runsOn": [
         "Agent",
         "DeploymentGroup"

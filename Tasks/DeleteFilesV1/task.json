@@ -4,7 +4,7 @@
     "friendlyName": "Delete files",
     "description": "Delete folders, or files matching a pattern",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/delete-files",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=722333)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=722333)",
     "category": "Utility",
     "visibility": [
         "Build"
