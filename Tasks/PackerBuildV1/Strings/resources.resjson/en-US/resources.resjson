@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Build machine image",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=845329)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=845329) or [see the Packer documentation](https://www.packer.io/docs/index.html)",
   "loc.description": "Build a machine image using Packer, which may be used for Azure Virtual machine scale set deployment",
   "loc.instanceNameFormat": "Build immutable image",
   "loc.releaseNotes": "This task now supports managed disk images.",
