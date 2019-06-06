@@ -186,7 +186,7 @@ async function getHistory(connection: ContainerConnection, image: string): Promi
         // such as --format flag not supported in old docker cli versions
         output = null;
         defer.resolve();
-        tl.warning(e);
+        tl.warning("Not publishing to image meta data store as get history failed with error " + e);
     }
 
     await defer.promise;
