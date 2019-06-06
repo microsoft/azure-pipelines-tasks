@@ -13,10 +13,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 152,
-        "Patch": 1
+        "Minor": 154,
+        "Patch": 0
     },
-    "releaseNotes": "Added support for multiple destinations.",
+    "releaseNotes": "Added support for forwarding Android mapping to App Center Diagnostics.",
     "groups": [
         {
             "name": "symbols",
@@ -63,7 +63,8 @@
             "defaultValue": "Apple",
             "groupName": "symbols",
             "options": {
-                "Apple": "Apple"
+                "Apple": "Apple",
+                "Android": "Android"
             }
         },
         {
@@ -110,7 +111,7 @@
             "groupName": "symbols",
             "required": false,
             "helpMarkDown": "Relative path from the repo root to Android's mapping.txt file.",
-            "visibleRule": "symbolsType = AndroidJava"
+            "visibleRule": "symbolsType = Android"
         },
         {
             "name": "packParentFolder",
@@ -121,7 +122,8 @@
             "label": "Include all items in parent folder",
             "groupName": "symbols",
             "required": false,
-            "helpMarkDown": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps."
+            "helpMarkDown": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps.",
+            "visibleRule": "symbolsType = Apple"
         },
         {
             "name": "releaseNotesSelection",
