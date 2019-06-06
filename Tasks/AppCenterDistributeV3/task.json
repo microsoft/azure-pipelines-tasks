@@ -13,10 +13,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 151,
-        "Patch": 0
+        "Minor": 154,
+        "Patch": 1
     },
-    "releaseNotes": "Added support for multiple destinations.",
+    "releaseNotes": "Added support for forwarding Android mapping to App Center Diagnostics. Added missing descriptions.",
     "groups": [
         {
             "name": "symbols",
@@ -59,11 +59,13 @@
             ],
             "type": "pickList",
             "label": "Symbols type",
+            "helpMarkDown": "Include symbol files to receive symbolicated stack traces in App Center Diagnostics.",
             "required": false,
             "defaultValue": "Apple",
             "groupName": "symbols",
             "options": {
-                "Apple": "Apple"
+                "Apple": "Apple",
+                "Android": "Android"
             }
         },
         {
@@ -110,7 +112,7 @@
             "groupName": "symbols",
             "required": false,
             "helpMarkDown": "Relative path from the repo root to Android's mapping.txt file.",
-            "visibleRule": "symbolsType = AndroidJava"
+            "visibleRule": "symbolsType = Android"
         },
         {
             "name": "packParentFolder",
@@ -121,7 +123,8 @@
             "label": "Include all items in parent folder",
             "groupName": "symbols",
             "required": false,
-            "helpMarkDown": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps."
+            "helpMarkDown": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps.",
+            "visibleRule": "symbolsType = Apple"
         },
         {
             "name": "releaseNotesSelection",
@@ -131,6 +134,7 @@
             "type": "radio",
             "label": "Create release notes",
             "required": true,
+            "helpMarkDown": "Release notes will be attached to the release and shown to testers on the installation page.",
             "defaultValue": "input",
             "options": {
                 "input": "Enter Release Notes",
@@ -162,6 +166,7 @@
             "name": "isMandatory",
             "type": "boolean",
             "label": "Require users to update to this release",
+            "helpMarkDown": "App Center Distribute SDK required to mandate update. Testers will automatically be prompted to update.",
             "defaultValue": "false",
             "required": false
         },
@@ -169,6 +174,7 @@
             "name": "destinationType",
             "type": "radio",
             "label": "Release destination",
+            "helpMarkDown": "Each release will be distributed to either groups or a store.",
             "required": true,
             "defaultValue": "groups",
             "options": {
@@ -200,6 +206,7 @@
             "name": "isSilent",
             "type": "boolean",
             "label": "Do not notify testers. Release will still be available to install.",
+            "helpMarkDown": "Testers will not receive an email for new releases.",
             "required": false,
             "visibleRule": "destinationType = groups"
         }
