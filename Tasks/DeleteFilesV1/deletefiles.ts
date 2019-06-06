@@ -9,6 +9,8 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
 
     let sourceFolder: string = tl.getPathInput('SourceFolder', true, false);
 
+    const removeSourceFolder: boolean = tl.getBoolInput('RemoveSourceFolder', false);
+
     // Input that is used for backward compatibility with pre-sprint 95 symbol store artifacts.
     // Pre-95 symbol store artifacts were simply file path artifacts, so we need to make sure
     // not to delete the artifact share if it's a symbol store.
@@ -87,7 +89,7 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
 
     // if there wasn't an error, check if there's anything in the folder tree other than folders
     // if not, delete the root as well
-    if (!errorHappened) {
+    if (removeSourceFolder && !errorHappened) {
         foundPaths = tl.find(sourceFolder);
 
         if (foundPaths.every(x => tl.stats(x).isDirectory())) {

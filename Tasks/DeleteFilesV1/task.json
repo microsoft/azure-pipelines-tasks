@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 9
+        "Minor": 154,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "1.92.0",
@@ -28,7 +28,7 @@
             "label": "Source Folder",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The source folder that the deletion(s) will be run from.  Empty is the root of the repo.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
+            "helpMarkDown": "The source folder that the deletion(s) will be run from. Empty is the root of the repo. Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
         },
         {
             "name": "Contents",
@@ -37,6 +37,15 @@
             "defaultValue": "myFileShare",
             "required": true,
             "helpMarkDown": "File/folder paths to delete. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=722333)"
+        },
+        {
+            "name": "RemoveSourceFolder",
+            "type": "boolean",
+            "label": "Remove SourceFolder",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Attempt to remove the source folder as well."
+
         }
     ],
     "instanceNameFormat": "Delete files from $(SourceFolder)",
