@@ -6,6 +6,7 @@ import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 
 var Readable = require('stream').Readable
+var Writable = require('stream').Writable
 var Stats = require('fs').Stats
 
 var nock = require('nock');
@@ -15,15 +16,17 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
-tmr.setInput('app', '/test/path/to/my.ipa');
+tmr.setInput('app', '/test/path/to/my.apk');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
-tmr.setInput('symbolsType', 'AndroidJava');
-tmr.setInput('mappingTxtPath', '/test/path/to/mappings.txt');
+tmr.setInput('symbolsType', 'Android');
+tmr.setInput('mappingTxtPath', 'a/**/mapping.txt');
 
-process.env['BUILD_BUILDID'] = '2';
-process.env['BUILD_SOURCEBRANCH'] = '$/teamproject/main';
-process.env['BUILD_SOURCEVERSION'] = 'commitsha';
+/*
+  Mapping folder structure:
+  a
+    mapping.txt
+*/
 
 //prepare upload
 nock('https://example.test')
@@ -42,7 +45,7 @@ nock('https://example.upload.test')
 
 //finishing upload, commit the package
 nock('https://example.test')
-    .patch("/v0.1/apps/testuser/testapp/release_uploads/1", {
+    .patch('/v0.1/apps/testuser/testapp/release_uploads/1', {
         status: 'committed'
     })
     .reply(200, {
@@ -51,29 +54,34 @@ nock('https://example.test')
     });
 
 //make it available
-//JSON.stringify to verify exact match of request body: https://github.com/node-nock/nock/issues/571
 nock('https://example.test')
-    .post("/v0.1/apps/testuser/testapp/releases/1/groups", JSON.stringify({
-        id: "00000000-0000-0000-0000-000000000000",
-        mandatory_update: false
+    .post('/v0.1/apps/testuser/testapp/releases/1/groups', {
+        id: "00000000-0000-0000-0000-000000000000"
+    })
+    .reply(200);
+
+
+
+nock('https://example.test')
+    .put('/v0.1/apps/testuser/testapp/releases/1', JSON.stringify({
+        release_notes: 'my release notes'
     }))
     .reply(200);
 
 nock('https://example.test')
-    .put('/v0.1/apps/testuser/testapp/releases/1', JSON.stringify({
-        release_notes: 'my release notes',
-        build: {
-            id: '2',
-            branch: '$/teamproject/main',
-            commit_hash: 'commitsha'
-        }
-    }))
-    .reply(200);
+    .get('/v0.1/apps/testuser/testapp/releases/1')
+    .reply(200, {
+        short_version: "1.0",
+        version: "1"
+    });
 
 //begin symbol upload
 nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/symbol_uploads', {
-        symbol_type: "AndroidJava"
+        symbol_type: "AndroidProguard",
+        file_name: "mapping.txt",
+        version: "1.0",
+        build: "1"
     })
     .reply(201, {
         symbol_upload_id: 100,
@@ -83,23 +91,24 @@ nock('https://example.test')
 
 //finishing symbol upload, commit the symbol 
 nock('https://example.test')
-    .patch("/v0.1/apps/testuser/testapp/symbol_uploads/100", {
+    .patch('/v0.1/apps/testuser/testapp/symbol_uploads/100', {
         status: 'committed'
     })
     .reply(200);
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "checkPath": {
-        "/test/path/to/my.ipa": true,
-        "/test/path/to/mappings.txt": true
+    'checkPath' : {
+        '/test/path/to/my.apk': true,
+        'a': true,
+        'a/mapping.txt': true
     },
-    "findMatch": {
-        "/test/path/to/mappings.txt": [
-            "/test/path/to/mappings.txt"
+    'findMatch' : {
+        'a/**/mapping.txt': [
+            'a/mapping.txt'
         ],
-        "/test/path/to/my.ipa": [
-            "/test/path/to/my.ipa"
+        '/test/path/to/my.apk': [
+            '/test/path/to/my.apk'
         ]
     }
 };
@@ -113,15 +122,37 @@ fs.createReadStream = (s: string) => {
     return stream;
 };
 
+fs.createWriteStream = (s: string) => {
+    let stream = new Writable;
+
+    stream.write = () => {};
+
+    return stream;
+};
+
+fs.readdirSync = (folder: string) => {
+    let files: string[] = [];
+
+    if (folder === 'a') {
+        files = [
+            'mapping.txt'
+        ]
+    }
+
+    return files;
+};
+
 fs.statSync = (s: string) => {
-    let stat = new Stats;
+    const stat = new Stats;
 
     stat.isFile = () => {
-        return !s.toLowerCase().endsWith(".dsym");
+        return s.endsWith('.txt');
     }
+
     stat.isDirectory = () => {
-        return s.toLowerCase().endsWith(".dsym");
+        return !s.endsWith('.txt');
     }
+
     stat.size = 100;
 
     return stat;
