@@ -28,7 +28,7 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
     }
 
     // find all files
-    let foundPaths = tl.find(sourceFolder);
+    let foundPaths: string[] = tl.find(sourceFolder);
 
     // short-circuit if not exists
     if (!foundPaths.length) {
@@ -82,6 +82,22 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
         catch (err) {
             tl.error(err);
             errorHappened = true;
+        }
+    }
+
+    // if there wasn't an error, check if there's anything in the folder tree other than folders
+    // if not, delete the root as well
+    if (!errorHappened) {
+        foundPaths = tl.find(sourceFolder);
+
+        if (foundPaths.every(x => tl.stats(x).isDirectory())) {
+            try {
+                tl.rmRF(sourceFolder);
+            }
+            catch (err) {
+                tl.error(err);
+                errorHappened = true;
+            }
         }
     }
 
