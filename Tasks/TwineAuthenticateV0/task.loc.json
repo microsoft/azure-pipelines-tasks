@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 152,
+    "Minor": 154,
     "Patch": 0
   },
   "runsOn": [
@@ -101,8 +101,7 @@
     "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable",
     "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
     "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
-    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile",
-    "Error_PythonInternalFeedsNotSupportedOnprem": "ms-resource:loc.messages.Error_PythonInternalFeedsNotSupportedOnprem"
+    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile"
   },
   "postjobexecution": {
     "Node": {

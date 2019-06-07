@@ -1,11 +1,13 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
+import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
-import path = require('path');
 
 var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
+
+const initScriptAppSetting: string = "-INIT_SCRIPT";
 
 export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {
     private zipDeploymentID: string;
@@ -32,30 +34,18 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
 
             case PackageType.jar:
                 tl.debug("Initiated deployment via kudu service for webapp jar package : "+ this.taskParams.Package.getPath());
-                var folderPath = await webCommonUtility.generateTemporaryFolderForDeployment(false, this.taskParams.Package.getPath(), PackageType.jar);
-                var jarName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".jar");
-                var destRootPath = "/home/site/wwwroot/";
-                var script = 'java -jar "' + destRootPath + jarName + '.jar' + '" --server.port=80';
-                var initScriptFileName = "startupscript_" + jarName + ".sh";
-                var initScriptFile = path.join(folderPath, initScriptFileName);
-                var destInitScriptPath = destRootPath + initScriptFileName;
-                if(!this.taskParams.AppSettings) {
-                    this.taskParams.AppSettings = "-INIT_SCRIPT " + destInitScriptPath;
-                }
-                if(this.taskParams.AppSettings.indexOf("-INIT_SCRIPT") < 0) {
-                    this.taskParams.AppSettings += " -INIT_SCRIPT " + destInitScriptPath;
-                }
-                this.taskParams.AppSettings = this.taskParams.AppSettings.trim();
-                tl.writeFile(initScriptFile, script, { encoding: 'utf8' });
-                var output = await webCommonUtility.archiveFolderForDeployment(false, folderPath);
-                var webPackage = output.webDeployPkg;
+                let folderPath = await webCommonUtility.generateTemporaryFolderForDeployment(false, this.taskParams.Package.getPath(), PackageType.jar);
+                let output = await webCommonUtility.archiveFolderForDeployment(false, folderPath);
+                let webPackage = output.webDeployPkg;
+                let deleteCustomApplicationSetting = ParameterParser.parse(initScriptAppSetting);
+                await this.appServiceUtility.updateAndMonitorAppSettings(null, deleteCustomApplicationSetting);
                 tl.debug("Initiated deployment via kudu service for webapp jar package : "+ webPackage);
                 this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage);
             break;
 
             case PackageType.war:
                 tl.debug("Initiated deployment via kudu service for webapp war package : "+ this.taskParams.Package.getPath());
-                var warName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".war");
+                let warName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".war");
                 this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), 
                 { slotName: this.appService.getSlot() }, warName);
             break;

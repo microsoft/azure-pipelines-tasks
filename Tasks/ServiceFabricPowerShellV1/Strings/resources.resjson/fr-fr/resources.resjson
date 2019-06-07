@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "PowerShell Service Fabric",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=841538)",
-  "loc.description": "Exécutez un script PowerShell dans le contexte d'une connexion de cluster Azure Service Fabric.",
+  "loc.description": "Exécuter un script PowerShell dans le contexte d'une connexion de cluster Azure Service Fabric",
   "loc.instanceNameFormat": "Script PowerShell Service Fabric : $(ScriptType)",
   "loc.input.label.serviceConnectionName": "Connexion de service de cluster",
   "loc.input.help.serviceConnectionName": "Cluster Azure Service Fabric avec établissement d'une connexion de service au moment de l'exécution du script PowerShell spécifié.",
@@ -13,7 +13,7 @@
   "loc.input.help.Inline": "Entrez le script à exécuter.",
   "loc.input.label.ScriptArguments": "Arguments de script",
   "loc.input.help.ScriptArguments": "Paramètres supplémentaires à passer à PowerShell.  Peuvent être des paramètres ordinaux ou nommés.",
-  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "Le certificat avec l'empreinte numérique {0} n'est pas présent dans le magasin de certificats local. Cela peut entraîner des erreurs. En cas d'échec de la mise en production/build, réessayez l'opération, ou vérifiez que plusieurs agents n'exécutent pas de builds/mises en production simultanément à l'aide du même point de terminaison de service sur la même machine.",
   "loc.messages.InvalidScriptArguments0": "Arguments de script '{0}' non valides. Les sauts de ligne ne sont pas autorisés.",
   "loc.messages.InvalidScriptPath0": "Chemin de script '{0}' non valide. Caractères non valides spécifiés dans le chemin."
 }

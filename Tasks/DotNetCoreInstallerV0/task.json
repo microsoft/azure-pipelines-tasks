@@ -4,7 +4,7 @@
     "friendlyName": ".NET Core SDK/runtime installer",
     "description": "Acquire a specific version of the .NET Core SDK from the internet or local cache and add it to the PATH",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=853651)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=853651)",
     "category": "Tool",
     "runsOn": [
         "Agent",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 3
+        "Patch": 4
     },
     "satisfies": [
         "DotNetCore"

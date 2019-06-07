@@ -48,6 +48,7 @@ export default class TaskParameters {
                 this.customTemplateLocation = tl.getPathInput(constants.CustomTemplateLocationInputType, true, true);
                 console.log(tl.loc("ParsingCustomTemplateParameters"));
                 this.customTemplateParameters = JSON.parse(tl.getInput("customTemplateParameters"));
+                this.packerVersionString = tl.getInput(constants.PackerVersionInputName);
             } else {
                 this.serviceEndpoint = tl.getInput(constants.ConnectedServiceInputName, true);
                 this.resourceGroup = tl.getInput(constants.ResourceGroupInputName, true);
@@ -83,12 +84,8 @@ export default class TaskParameters {
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
 
                 this.graphCredentials = this._getAzureADGraphCredentials(this.serviceEndpoint);
-                
             }
             
-            console.log("ResolvingPackerVersionInput")
-            this.packerVersionString = tl.getInput(constants.PackerVersionInputName);
-            tl.debug("ResolvingPackerVersionInput" + this.packerVersionString);
             console.log(tl.loc("ParsingAdditionalBuilderParameters"));
             this.additionalBuilderParameters = JSON.parse(tl.getInput("additionalBuilderParameters"));
             this.skipTempFileCleanupDuringVMDeprovision = tl.getBoolInput("skipTempFileCleanupDuringVMDeprovision", false);

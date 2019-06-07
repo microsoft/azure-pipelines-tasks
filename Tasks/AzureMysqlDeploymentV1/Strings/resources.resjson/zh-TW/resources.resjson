@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "適用於 MySQL 的 Azure 資料庫部署",
   "loc.helpMarkDown": "[詳細資訊](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "執行您的指令碼，並對適用於 MySQL 的 Azure 資料庫進行變更。",
+  "loc.description": "執行您的指令碼，並對適用於 MySQL 的 Azure 資料庫進行變更",
   "loc.instanceNameFormat": "執行 Azure MySQL: $(TaskNameSelector)",
   "loc.group.displayName.target": "DB 詳細資料",
   "loc.group.displayName.taskDetails": "部署套件",
@@ -60,6 +60,8 @@
   "loc.messages.WindowMysqlClientMissingError": "Windows 代理程式機器上缺少 MySQL 用戶端。請在代理程式機器上執行 MySQL 用戶端安裝程式 'https://aka.ms/window-mysqlcli-installer' 指令檔來加以安裝。",
   "loc.messages.LinuxMysqlClientMissingError": "Linux 代理程式機器上缺少 MySQL 用戶端。請執行 'sudo apt-get install mysql-client' 加以安裝。",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "無法擷取 Azure 的存取權杖。狀態碼: %s。狀態訊息: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "無法擷取受控服務主體的存取權杖。請設定虛擬機器的受控服務識別 (MSI)。請參閱 'https://aka.ms/azure-msi-docs'。狀態碼: %s。狀態訊息: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "無法擷取受控服務主體的存取權杖。狀態碼: %s。狀態訊息: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "無法擷取受控服務主體的存取權杖。請設定虛擬機器的受控服務識別 (MSI)。請參閱 'https://aka.ms/azure-msi-docs'。將角色指派至建立的 MSI 身分識別。請參閱 'https://aka.ms/assign-role-msi'。狀態碼: %s。狀態訊息: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "無法擷取受控服務主體的存取權杖。狀態碼: %s。狀態訊息: %s",
+  "loc.messages.NotAbleToCreateFirewallRule": "將防火牆規則新增至 Azure mysql 伺服器時得到錯誤。錯誤: %s",
+  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。"
 }

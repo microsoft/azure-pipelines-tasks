@@ -4,7 +4,7 @@
     "friendlyName": "Azure Function",
     "description": "Deploy an Azure Function for Linux or Windows",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
-    "helpMarkDown": "[More information](https://aka.ms/azurefunctiondeployreadme)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiondeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 20
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [

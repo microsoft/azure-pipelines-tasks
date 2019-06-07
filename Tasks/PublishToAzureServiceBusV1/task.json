@@ -5,7 +5,7 @@
     "description": "Sends a message to Azure Service Bus using a service connection (no agent is required)",
     "category": "Utility",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-to-azure-service-bus",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870237)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870237)",
     "visibility": [
         "Build",
         "Release"
@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 15
     },
     "groups": [
         {

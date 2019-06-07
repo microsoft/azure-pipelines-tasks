@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';
 import webClient = require('../azure-arm-rest/webClient');
 var parseString = require('xml2js').parseString;
@@ -133,14 +133,14 @@ export class AzureAppServiceUtility {
         console.log(tl.loc('UpdatedAppServiceConfigurationSettings'));
     }
 
-    public async updateAndMonitorAppSettings(addProperties: any, deleteProperties?: any): Promise<boolean> {
+    public async updateAndMonitorAppSettings(addProperties?: any, deleteProperties?: any): Promise<boolean> {
         for(var property in addProperties) {
             if(!!addProperties[property] && addProperties[property].value !== undefined) {
                 addProperties[property] = addProperties[property].value;
             }
         }
         
-        console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(addProperties)));
+        console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(addProperties), JSON.stringify(deleteProperties)));
         var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
 
         if(!isNewValueUpdated) {
@@ -202,14 +202,14 @@ export class AzureAppServiceUtility {
         }
     }
 
-    public async updateStartupCommandAndRuntimeStack(runtimeStack: string, startupCommand?: string): Promise<void> {
+    public async updateStartupCommandAndRuntimeStack(runtimeStack: string, startupCommand?: string): Promise<void> { 
         var configDetails = await this._appService.getConfiguration();
-        startupCommand = (!!startupCommand) ? startupCommand  : "";
-        var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
         var appCommandLine: string = configDetails.properties.appCommandLine;
+        startupCommand = (!!startupCommand) ? startupCommand : appCommandLine;
+        var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
         runtimeStack = (!!runtimeStack) ? runtimeStack : linuxFxVersion;
 
-        if (appCommandLine != startupCommand || runtimeStack != linuxFxVersion) {
+        if (startupCommand != appCommandLine || runtimeStack != linuxFxVersion) {
             await this.updateConfigurationSettings({linuxFxVersion: runtimeStack, appCommandLine: startupCommand});
         }
         else {

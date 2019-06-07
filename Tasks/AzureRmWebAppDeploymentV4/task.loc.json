@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 3,
-    "Patch": 28
+    "Patch": 34
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -477,7 +477,7 @@
       "parameters": {
         "osTypeSelected": "Linux"
       },
-      "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}}\"}"
+      "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}} ({{{ runtimeVersion }}})\"}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

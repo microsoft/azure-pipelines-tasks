@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Richiama funzione di Azure",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=870235)",
-  "loc.description": "Richiama una funzione di Azure come parte della pipeline.",
+  "loc.description": "Richiama una funzione di Azure",
   "loc.instanceNameFormat": "Funzione di Azure: $(function)",
   "loc.group.displayName.completionOptions": "Avanzate",
   "loc.input.label.function": "URL della funzione di Azure",

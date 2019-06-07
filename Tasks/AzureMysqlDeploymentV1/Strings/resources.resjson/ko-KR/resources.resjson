@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure Database for MySQL 배포",
   "loc.helpMarkDown": "[자세한 정보](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "스크립트를 실행하고 Azure Database for MySQL를 변경합니다.",
+  "loc.description": "스크립트를 실행하고 Azure Database for MySQL을 변경합니다.",
   "loc.instanceNameFormat": "Azure MySQL 실행: $(TaskNameSelector)",
   "loc.group.displayName.target": "DB 정보",
   "loc.group.displayName.taskDetails": "배포 패키지",
@@ -23,7 +23,7 @@
   "loc.input.label.SqlInline": "인라인 MySQL 스크립트",
   "loc.input.help.SqlInline": "위에서 선택한 데이터베이스에 대해 실행할 MySQL 스크립트를 입력합니다.",
   "loc.input.label.SqlAdditionalArguments": "MySQL 추가 인수",
-  "loc.input.help.SqlAdditionalArguments": "MySQL 단순 SQL 셸에서 지원하는 추가 옵션입니다. 이러한 옵션은 Azure Database for MySQL에서 지정된 파일을 실행할 때 적용됩니다. <br>예: 탭으로 구분된 기본 출력 형식을 HTML 또는 XML 형식으로 변경할 수 있습니다. 또는 큰 결과 집합에 사용할 메모리가 부족하여 문제가 발생하는 경우 --quick 옵션을 사용합니다.",
+  "loc.input.help.SqlAdditionalArguments": "MySQL 단순 SQL 셸에서 지원하는 추가 옵션입니다. 이러한 옵션은 Azure Database for MySQL에서 지정된 파일을 실행할 때 적용됩니다. <br>예: 탭으로 구분된 기본 출력 형식을 HTML 또는 XML 형식으로 변경할 수 있습니다. 또는 대량의 결과 집합에 사용할 메모리가 부족하여 문제가 발생하는 경우 --quick 옵션을 사용합니다.",
   "loc.input.label.IpDetectionMethod": "방화벽 규칙 지정 방법",
   "loc.input.help.IpDetectionMethod": "작업을 성공적으로 실행하려면 관리자가 자동화 에이전트의 IP 주소에서 Azure Database for MySQL 서버에 액세스할 수 있도록 설정해야 합니다.<br>자동 검색을 선택하면 자동화 에이전트의 가능한 IP 주소 범위에 적용할 방화벽 예외를 자동으로 추가할 수 있으며, 선택하지 않을 경우 범위를 명시적으로 지정할 수 있습니다.",
   "loc.input.label.StartIpAddress": "시작 IP 주소",
@@ -60,6 +60,8 @@
   "loc.messages.WindowMysqlClientMissingError": "MySQL 클라이언트가 Windows 에이전트 머신에 없습니다. 에이전트 머신에서 MySQL 클라이언트 설치 관리자 'https://aka.ms/window-mysqlcli-installer' 스크립트 파일을 실행하여 설치하세요.",
   "loc.messages.LinuxMysqlClientMissingError": "MySQL 클라이언트가 Linux 에이전트 머신에 없습니다. 'sudo apt-get install mysql-client'를 실행하여 설치하세요.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Azure의 액세스 토큰을 검색할 수 없습니다. 상태 코드: %s. 상태 메시지: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "관리 서비스 주체의 액세스 토큰을 검색할 수 없습니다. 가상 머신의 MSI(관리 서비스 ID)를 구성하세요. 'https://aka.ms/azure-msi-docs'를 참조하세요. 상태 코드: %s. 상태 메시지: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "관리 서비스 주체의 액세스 토큰을 검색할 수 없습니다. 상태 코드: %s. 상태 메시지: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "관리 서비스 주체의 액세스 토큰을 검색할 수 없습니다. 가상 머신의 MSI(관리 서비스 ID)를 구성하세요. 'https://aka.ms/azure-msi-docs'를 참조하세요. 만든 MSI ID에 역할을 할당하세요. 'https://aka.ms/assign-role-msi'를 참조하세요. 상태 코드: %s. 상태 메시지: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "관리 서비스 주체의 액세스 토큰을 검색할 수 없습니다. 상태 코드: %s. 상태 메시지: %s",
+  "loc.messages.NotAbleToCreateFirewallRule": "Azure MySQL 서버에 방화벽 규칙을 추가하는 중 오류가 발생했습니다. 오류: %s",
+  "loc.messages.ExpiredServicePrincipal": "Azure의 액세스 토큰을 페치할 수 없습니다. 사용한 서비스 주체가 유효하고 만료되지 않았는지 확인하세요."
 }

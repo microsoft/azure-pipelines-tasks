@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Implementación de Visual Studio Test Agent",
+  "loc.friendlyName": "Implementación del agente de pruebas de Visual Studio",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkId=838890)",
-  "loc.description": "En desuso: Esta tarea y la que la acompaña (Ejecutar pruebas funcionales) están en desuso. Use la tarea \"Prueba de Visual Studio\" en su lugar. Esta tarea puede ejecutar tanto pruebas unitarias como funcionales. Ejecute pruebas en uno o más agentes con la configuración del trabajo multiagente. Use la tarea \"Plataforma de prueba de Visual Studio\" para ejecutar pruebas sin necesidad de tener Visual Studio en el agente. La tarea Prueba de Visual Studio también aporta capacidades nuevas, como volver a ejecutar automáticamente las pruebas con errores.",
+  "loc.description": "En desuso: Use la tarea \"Visual Studio Test\" para ejecutar pruebas unitarias y funcionales.",
   "loc.instanceNameFormat": "Implementar TestAgent en $(testMachineGroup)",
   "loc.releaseNotes": "<ul><li>Compatibilidad con Visual Studio Test Agent 2017: Ahora puede implementar y ejecutar pruebas con varias versiones de Visual Studio Test Agent. Se admiten las versiones 2015 y 2017.</li><li>Ya no se admiten los grupos de máquinas creados desde la central de prueba. Puede seguir usando una lista de máquinas o grupos de recursos de Azure.</li></ul>",
   "loc.group.displayName.testMachineGroups": "Máquinas de prueba",

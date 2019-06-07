@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Guardar caché",
+  "loc.helpMarkDown": "Publica una memoria caché local para la canalización actual.",
+  "loc.description": "Publica una memoria caché local para la canalización actual.",
+  "loc.instanceNameFormat": "Guardar caché",
+  "loc.input.label.key": "Nombre de la clave.",
+  "loc.input.help.key": "Nombre de la clave.",
+  "loc.input.label.path": "Ruta de acceso para publicar.",
+  "loc.input.help.path": "La ruta de acceso del archivo o la carpeta para publicar. Puede ser una ruta de acceso completa o relativa a la raíz del repositorio. No se admiten caracteres comodín. Se admiten [variables](https://go.microsoft.com/fwlink/?LinkID=550988)."
+}

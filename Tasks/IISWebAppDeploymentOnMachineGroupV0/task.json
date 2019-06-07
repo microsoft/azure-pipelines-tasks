@@ -4,19 +4,20 @@
     "friendlyName": "IIS web app deploy",
     "description": "Deploy a website or web application using Web Deploy",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/iis-web-app-deployment-on-machine-group",
-    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=866789)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=866789)",
     "category": "Deploy",
     "visibility": [
         "Release"
     ],
     "runsOn": [
+        "Agent",
         "DeploymentGroup"
     ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 53
+        "Patch": 58
     },
     "demands": [],
     "minimumAgentVersion": "2.104.1",
