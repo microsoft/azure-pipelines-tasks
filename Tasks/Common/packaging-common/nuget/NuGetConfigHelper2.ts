@@ -19,7 +19,7 @@ const nugetFileName: string = 'nuget.config';
 export class NuGetConfigHelper2 {
     public tempNugetConfigPath = undefined;
     private nugetXmlHelper: INuGetXmlHelper;
-    private nuGetFiles: Array<string>;
+    private rootNuGetFiles: Array<string>;
 
     constructor(
         private nugetPath: string,
@@ -161,17 +161,19 @@ export class NuGetConfigHelper2 {
         return packageSources.map((source) => this.convertToIPackageSource(source));
     }
 
-    // TODO: Remove this once NuGet issue https://github.com/NuGet/Home/issues/7855 is fixed.
-    public backupExistingNuGetFiles(): void {
-        this.nuGetFiles = fs.readdirSync('.').filter((file) => file.toLowerCase() === nugetFileName);
-        this.nuGetFiles.forEach((file) => fs.renameSync(file, this.temporaryRootNugetName(file)));
-        fs.writeFileSync(nugetFileName, fs.readFileSync(this.tempNugetConfigPath));
+    // TODO: Remove these two methods once NuGet issue https://github.com/NuGet/Home/issues/7855 is fixed.
+    public backupExistingRootNuGetFiles(): void {
+        this.rootNuGetFiles = fs.readdirSync('.').filter((file) => file.toLowerCase() === nugetFileName);
+        if (this.shouldWriteRootNuGetFiles()) {
+            this.rootNuGetFiles.forEach((file) => fs.renameSync(file, this.temporaryRootNuGetName(file)));
+            fs.writeFileSync(nugetFileName, fs.readFileSync(this.tempNugetConfigPath));
+        }
     }
-
-    // TODO: Remove this once NuGet issue https://github.com/NuGet/Home/issues/7855 is fixed.
-    public restoreBackupNuGetFiles(): void {
-        fs.unlinkSync(nugetFileName);
-        this.nuGetFiles.forEach((file) => fs.renameSync(this.temporaryRootNugetName(file), file));
+    public restoreBackupRootNuGetFiles(): void {
+        if (this.shouldWriteRootNuGetFiles()) {
+            fs.unlinkSync(nugetFileName);
+            this.rootNuGetFiles.forEach((file) => fs.renameSync(this.temporaryRootNuGetName(file), file));
+        }
     }
 
     private removeSourceFromTempNugetConfig(packageSource: IPackageSource) {
@@ -205,8 +207,11 @@ export class NuGetConfigHelper2 {
         };
     }
 
-    // TODO: Remove this once NuGet issue https://github.com/NuGet/Home/issues/7855 is fixed.
-    private temporaryRootNugetName(nugetFile: string) {
+    // TODO: Remove these two methods once NuGet issue https://github.com/NuGet/Home/issues/7855 is fixed.
+    private temporaryRootNuGetName(nugetFile: string): string {
         return `tempRename_${tl.getVariable('build.buildId')}_${nugetFile}`;
+    }
+    private shouldWriteRootNuGetFiles(): boolean {
+        return this.nugetConfigPath.toLocaleLowerCase() == nugetFileName || this.rootNuGetFiles.length == 0;
     }
 }

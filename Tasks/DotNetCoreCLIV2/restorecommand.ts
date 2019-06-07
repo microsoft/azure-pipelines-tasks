@@ -126,7 +126,7 @@ export async function run(): Promise<void> {
 
         const configFile = nuGetConfigHelper.tempNugetConfigPath;
 
-        nuGetConfigHelper.backupExistingNuGetFiles();
+        nuGetConfigHelper.backupExistingRootNuGetFiles();
 
         const dotnetPath = tl.which('dotnet', true);
 
@@ -137,7 +137,7 @@ export async function run(): Promise<void> {
         } finally {
             credCleanup();
 
-            nuGetConfigHelper.restoreBackupNuGetFiles();
+            nuGetConfigHelper.restoreBackupRootNuGetFiles();
         }
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('PackagesInstalledSuccessfully'));
