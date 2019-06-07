@@ -246,7 +246,7 @@
             "defaultValue": "",
             "groupName": "Advanced",
             "visibleRule": "templateType = custom",
-            "helpMarkDown": "Specify the version of Packer to install."
+            "helpMarkDown": "Specify the version of Packer to install. This will work only with custom templates."
         },
         {
             "name": "imageUri",

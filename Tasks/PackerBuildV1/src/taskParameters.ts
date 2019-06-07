@@ -84,7 +84,6 @@ export default class TaskParameters {
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
 
                 this.graphCredentials = this._getAzureADGraphCredentials(this.serviceEndpoint);
-                
             }
             
             console.log(tl.loc("ParsingAdditionalBuilderParameters"));

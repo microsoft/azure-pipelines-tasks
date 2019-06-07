@@ -104,7 +104,7 @@ export default class PackerHost implements definitions.IPackerHost {
         var packerVersionString = constants.CurrentSupportedPackerVersionString;
         var explicitPackerVersion : boolean= false ;
 
-        if(this._taskParameters.templateType == constants.TemplateTypeCustom && this._taskParameters.packerVersionString) {
+        if(this._taskParameters.templateType == constants.TemplateTypeCustom && this._taskParameters.packerVersionString && installedPackerVersion != this._taskParameters.packerVersionString) {
             packerVersionString = this._taskParameters.packerVersionString;
             explicitPackerVersion = true;
         }
