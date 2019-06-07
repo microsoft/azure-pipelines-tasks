@@ -8,15 +8,21 @@ import { getDockerRegistryEndpointAuthenticationToken } from 'docker-common/regi
 
 const getDockerRegistrySecretArgs = () => {
     const authProvider: AuthenticationToken = getDockerRegistryEndpointAuthenticationToken(TaskInputParameters.dockerRegistryEndpoint);
-    return `docker-registry ${TaskInputParameters.secretName.trim()} --docker-username=${authProvider.getUsername()} --docker-password=${authProvider.getPassword()} --docker-server=${authProvider.getLoginServerUrl()} --docker-email=${authProvider.getEmail()}`;
+    return ['docker-registry', TaskInputParameters.secretName.trim(),
+        '--docker-username', authProvider.getUsername(),
+        '--docker-password', authProvider.getPassword(),
+        '--docker-server', authProvider.getLoginServerUrl(),
+        '--docker-email', authProvider.getEmail()];
 };
 
 const getGenericSecretArgs = () => {
-    return `generic ${TaskInputParameters.secretName.trim()} ${TaskInputParameters.secretArguments}`;
+    return ['generic',
+        TaskInputParameters.secretName.trim(),
+        TaskInputParameters.secretArguments.trim()];
 };
 
 export async function createSecret(ignoreSslErrors?: boolean) {
-    let args = '';
+    let args = [];
     if (utils.isEqual(TaskInputParameters.secretType, 'dockerRegistry', utils.StringComparer.OrdinalIgnoreCase)) {
         args = getDockerRegistrySecretArgs();
     } else {
