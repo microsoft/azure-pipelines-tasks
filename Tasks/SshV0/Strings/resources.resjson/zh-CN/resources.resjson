@@ -18,12 +18,13 @@
   "loc.input.help.args": "要传递给 shell 脚本的参数。",
   "loc.input.label.failOnStdErr": "STDERR 故障",
   "loc.input.help.failOnStdErr": "如果选择此选项，则 STDERR 中写入远程命令或脚本时，生成将失败。",
-  "loc.messages.UseDefaultPort": "由于未指定端口，将使用SSH 的默认端口 22。",
-  "loc.messages.SettingUpSshConnection": "正在尝试建立与 %s@%s:%s 的 SSH 连接",
-  "loc.messages.SshConnectionSuccessful": "已成功连接。",
   "loc.messages.ConnectionFailed": "无法连接到远程计算机。请验证 SSH 服务连接详细信息。错误: %s。",
-  "loc.messages.RemoteCopyFailed": "无法将脚本复制到远程计算机。错误: %s。",
+  "loc.messages.FailedToWriteScript": "未能将脚本写入磁盘: %s",
   "loc.messages.RemoteCmdExecutionErr": "命令因远程计算机上的错误而失败。",
   "loc.messages.RemoteCmdNonZeroExitCode": "命令 %s 已退出，代码为 %s。",
-  "loc.messages.RemoteScriptFileCleanUpFailed": "无法删除复制到远程计算机上的脚本文件。错误 = %s。"
+  "loc.messages.RemoteCopyFailed": "无法将脚本复制到远程计算机。错误: %s。",
+  "loc.messages.RemoteScriptFileCleanUpFailed": "无法删除复制到远程计算机上的脚本文件。错误 = %s。",
+  "loc.messages.SettingUpSshConnection": "正在尝试建立与 %s@%s:%s 的 SSH 连接",
+  "loc.messages.SshConnectionSuccessful": "已成功连接。",
+  "loc.messages.UseDefaultPort": "由于未指定端口，将使用SSH 的默认端口 22。"
 }

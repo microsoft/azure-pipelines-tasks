@@ -4,7 +4,7 @@
     "friendlyName": "Azure Web App",
     "description": "Deploy an Azure Web App for Linux or Windows",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
-    "helpMarkDown": "[More information](https://aka.ms/azurewebappdeployreadme)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebappdeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 17
+        "Patch": 19
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [

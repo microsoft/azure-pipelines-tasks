@@ -1,6 +1,7 @@
 {
   "loc.friendlyName": "Comando NuGet",
-  "loc.description": "Deprecata: usare l'attività \"NuGet\". Funziona con il nuovo framework del Programma di installazione strumento in modo da poter usare facilmente le nuove versioni di NuGet senza aspettare un aggiornamento dell'attività, offre un supporto migliore per i feed autenticati all'esterno di questo account/raccolta e usa NuGet 4 per impostazione predefinita.",
+  "loc.helpMarkDown": "",
+  "loc.description": "Deprecata: usare l'attività \"NuGet\". Funziona con il nuovo framework del Programma di installazione strumento in modo da poter usare facilmente le nuove versioni di NuGet senza aspettare un aggiornamento dell'attività, offre un supporto migliore per i feed autenticati all'esterno di questa organizzazione/raccolta e usa NuGet 4 per impostazione predefinita.",
   "loc.instanceNameFormat": "NuGet $(command)",
   "loc.input.label.command": "Comando",
   "loc.input.help.command": "Comando NuGet da eseguire.\n\nEsempi: restore, pack",

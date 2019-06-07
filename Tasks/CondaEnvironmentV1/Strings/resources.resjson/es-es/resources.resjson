@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Entorno de Conda",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=873466)",
-  "loc.description": "Cree y active un entorno de Conda.",
+  "loc.friendlyName": "Entorno de conda",
+  "loc.helpMarkDown": "[Más información](https://aka.ms/pipelines-anaconda-guide)<br>[Documentación de las tareas](https://go.microsoft.com/fwlink/?linkid=873466)",
+  "loc.description": "Esta tarea está en desuso. Use \"conda\" directamente en el script para trabajar con entornos de Anaconda.",
   "loc.instanceNameFormat": "Entorno de Conda $(environmentName)",
   "loc.input.label.createCustomEnvironment": "Crear un entorno personalizado",
   "loc.input.help.createCustomEnvironment": "Cree o reactive un entorno de Conda en lugar de usar el entorno \"base\" (recomendado para agentes autohospedados).",

@@ -4,7 +4,7 @@
     "friendlyName": "Azure App Service deploy",
     "description": "Deploy to Azure App Service a web, mobile, or API app using Docker, Java, .NET, .NET Core, Node.js, PHP, Python, or Ruby",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-web-app-deployment",
-    "helpMarkDown": "[More information](https://aka.ms/azurermwebdeployreadme)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 3,
         "Minor": 4,
-        "Patch": 27
+        "Patch": 30
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",

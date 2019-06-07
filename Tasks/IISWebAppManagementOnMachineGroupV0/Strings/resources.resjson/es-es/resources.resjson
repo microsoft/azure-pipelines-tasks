@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Administrar aplicación web de IIS",
   "loc.helpMarkDown": "[Más información](https://aka.ms/iis-webapp-management-readme)",
-  "loc.description": "Cree o actualice un sitio web, una aplicación web, directorios virtuales y un grupo de aplicaciones",
+  "loc.description": "Crea o actualiza sitios web, aplicaciones web, directorios virtuales o grupos de aplicaciones.",
   "loc.instanceNameFormat": "Administrar $(IISDeploymentType)",
   "loc.group.displayName.Website": "Sitio web de IIS",
   "loc.group.displayName.IISBindings": "Enlaces de IIS",

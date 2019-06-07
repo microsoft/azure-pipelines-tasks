@@ -66,12 +66,15 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "不存在其他 Docker Compose 文件时发生错误。这会替代如果文件不存在则忽略该文件的默认行为。",
   "loc.input.label.cwd": "工作目录",
   "loc.input.help.cwd": "Docker Compose 命令的工作目录。",
+  "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
   "loc.messages.ContainerPatternFound": "Docker Compose 文件路径参数中找到的模式",
   "loc.messages.ContainerPatternNotFound": "Docker Compose 文件路径参数中未找到任何模式",
   "loc.messages.ContainerDockerFileNotFound": "找不到匹配 %s 的任何 Docker 文件。",
   "loc.messages.AdditionalDockerComposeFileDoesNotExists": "不存在其他 Docker Compose 文件 %s。",
   "loc.messages.CantWriteDataToFile": "无法将数据写入文件 %s。错误: %s",
+  "loc.messages.DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
   "loc.messages.NoDataWrittenOnFile": "没有任何数据写入到文件 %s",
   "loc.messages.FileContentSynced": "文件内容已同步到磁盘。内容为 %s。",
-  "loc.messages.ImageNameWithoutTag": "未使用标记指定映像名，推送指定映像的所有标记。"
+  "loc.messages.ImageNameWithoutTag": "未使用标记指定映像名，推送指定映像的所有标记。",
+  "loc.messages.WritingDockerConfigToTempFile": "正在将 Docker 配置写入临时文件。文件路径: %s，Docker 配置: %s"
 }

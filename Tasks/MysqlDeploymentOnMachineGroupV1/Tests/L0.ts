@@ -1,7 +1,7 @@
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
-import tmrm = require('vsts-task-lib/mock-run');
-import tl = require('vsts-task-lib');
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import tmrm = require('azure-pipelines-task-lib/mock-run');
+import tl = require('azure-pipelines-task-lib');
 import * as path from 'path';
 import { MysqlClient } from '../sql/MysqlClient';
 

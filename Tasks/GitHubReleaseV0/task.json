@@ -4,7 +4,7 @@
     "friendlyName": "GitHub Release",
     "description": "Create, edit, or delete a GitHub release",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/github-release",
-    "helpMarkDown": "[More Information](https://aka.ms/AA3aeiw)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/AA3aeiw)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -14,8 +14,8 @@
     "preview": true,
     "version": {
         "Major": 0,
-        "Minor": 151,
-        "Patch": 3
+        "Minor": 153,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",

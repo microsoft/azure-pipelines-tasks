@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "JAVA 工具安裝程式",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=875287)",
-  "loc.description": "從使用者提供的 Azure blob 或工具快取取得特定 Java 版本，並設定 JAVA_HOME。請使用此工作變更 Java 工作中使用的 Java 版本。",
+  "loc.description": "從使用者提供的 Azure Blob 或工具快取取得特定版本的 Java，並設定 JAVA_HOME",
   "loc.instanceNameFormat": "使用 JAVA $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "從 Azure Blob 下載 JAVA",
   "loc.input.label.versionSpec": "JDK 版本",
@@ -48,5 +48,6 @@
   "loc.messages.UnsupportedFileExtension": "指定的 JDK 原始程式檔沒有支援的副檔名。",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "無法擷取 Azure 的存取權杖。狀態碼: %s，狀態訊息: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "無法擷取受控服務主體的存取權杖。請設定虛擬機器的受控服務識別 (MSI) (https://aka.ms/azure-msi-docs)。狀態碼: %s，狀態訊息: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "無法擷取受控服務主體的存取權杖。狀態碼: %s，狀態訊息: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "無法擷取受控服務主體的存取權杖。狀態碼: %s，狀態訊息: %s",
+  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。"
 }

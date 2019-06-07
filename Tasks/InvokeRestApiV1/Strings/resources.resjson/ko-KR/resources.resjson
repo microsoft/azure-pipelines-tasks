@@ -9,7 +9,7 @@
   "loc.input.label.connectedServiceName": "일반 서비스 연결",
   "loc.input.help.connectedServiceName": "URL을 선택하고 HTTP 요청에 대한 인증 헤더를 생성하는 데 사용할 일반 서비스 연결을 선택합니다.",
   "loc.input.label.connectedServiceNameARM": "Azure 구독",
-  "loc.input.help.connectedServiceNameARM": "URL을 선택하고 HTTP 요청에 대한 인증 헤더를 생성하는 데 사용할 Azure Resource Manager 구독을 선택합니다.",
+  "loc.input.help.connectedServiceNameARM": "관리 API를 호출하는 데 사용할 Azure Resource Manager 구독을 선택합니다. 클라우드의 'ManagementPortalUrl'이 baseURL로 사용됩니다.",
   "loc.input.label.method": "메서드",
   "loc.input.help.method": "API를 호출하는 데 사용할 HTTP 메서드를 선택합니다.",
   "loc.input.label.headers": "머리글",

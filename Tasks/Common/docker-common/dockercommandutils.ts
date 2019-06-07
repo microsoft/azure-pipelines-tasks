@@ -76,9 +76,17 @@ export function push(connection: ContainerConnection, image: string, commandArgu
     });
 }
 
+export function getCommandArguments(args: string): string {
+    return args ? args.replace(/\n/g, " ") : "";
+}
+
 export async function getLayers(connection: ContainerConnection, imageId: string): Promise<any> {
     var layers = [];
     var history = await getHistory(connection, imageId);
+    if (!history) {
+        return null;
+    }
+    
     var lines = history.split(/[\r?\n]/);
 
     lines.forEach(line => {
@@ -174,8 +182,11 @@ async function getHistory(connection: ContainerConnection, image: string): Promi
         });
     }
     catch (e) {
-        defer.reject(e);
-        console.log(e);
+        // Swallow any exceptions encountered in executing command
+        // such as --format flag not supported in old docker cli versions
+        output = null;
+        defer.resolve();
+        tl.warning("Not publishing to image meta data store as get history failed with error " + e);
     }
 
     await defer.promise;

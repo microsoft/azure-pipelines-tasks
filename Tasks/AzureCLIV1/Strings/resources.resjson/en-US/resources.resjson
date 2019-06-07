@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure CLI",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=827160)",
-  "loc.description": "Run Azure CLI commands against an Azure subscription in a Shell script when runnning on Linux agent or Batch script when running on Windows agent.",
+  "loc.helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkID=827160) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
+  "loc.description": "Run Azure CLI commands against an Azure subscription in a Shell script when running on Linux agent or Batch script when running on Windows agent.",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
   "loc.releaseNotes": "What's new in Version 1.0:\n- Supports the new Azure CLI 2.0 which is Python based\n- Works with cross-platform agents (Linux, macOS, or Windows)\n- For working with Azure CLI 1.0 (node.js-based), switch to task version 0.0\n- Limitations:\n - No support for Azure Classic subscriptions. Azure CLI 2.0 supports only Azure Resource Manager (ARM) subscriptions.",
   "loc.group.displayName.advanced": "Advanced",

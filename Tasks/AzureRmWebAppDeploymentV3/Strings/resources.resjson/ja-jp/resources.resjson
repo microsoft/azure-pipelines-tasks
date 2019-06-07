@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure App Service 配置",
+  "loc.friendlyName": "Azure App Service デプロイ",
   "loc.helpMarkDown": "[詳細情報](https://aka.ms/azurermwebdeployreadme)",
-  "loc.description": "Windows 上の Azure App Services、組み込みのイメージや Docker コンテナーを伴う Linux 上の Web アプリ、ASP.NET、.NET Core、PHP、Python、または Node.js ベースの Web アプリケーション、Function App、モバイル アプリ、API アプリケーション、Web Deploy/ Kudu REST API を使用した Web ジョブを更新します",
+  "loc.description": "Docker、Java、.NET、.NET Core、Node.js、PHP、Python、Ruby を使用して、Web、モバイル、API アプリを Azure App Service にデプロイします",
   "loc.instanceNameFormat": "Azure App Service の配置: $(WebAppName)",
   "loc.releaseNotes": "バージョン 3.0 の新機能: <br/>&nbsp;&nbsp;ファイル変換 (XDT) をサポート<br/>&nbsp;&nbsp; 変数置換 (XML、JSON) をサポート<br/>詳細については、[ここ](https://aka.ms/azurermwebdeployreadme) をクリックしてください。",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "ファイルの変換と変数の置換のオプション",
@@ -22,7 +22,7 @@
   "loc.input.label.SlotName": "スロット",
   "loc.input.help.SlotName": "運用スロット以外の既存のスロットを入力または選択してください。",
   "loc.input.label.ImageSource": "イメージ ソース",
-  "loc.input.help.ImageSource": "Linux 上の App Service には、アプリケーションを発行するための 2 つの異なるオプションが備わっています。<br/>カスタム イメージの配置と、組み込みのプラットフォーム イメージを使ったアプリの配置です。[詳細](https://go.microsoft.com/fwlink/?linkid=862490)",
+  "loc.input.help.ImageSource": "App Service on Linux には、アプリケーションを発行するための 2 つの異なるオプションが備わっています。<br/>カスタム イメージの配置と、組み込みのプラットフォーム イメージを使ったアプリの配置です。[詳細](https://go.microsoft.com/fwlink/?linkid=862490)",
   "loc.input.label.AzureContainerRegistry": "レジストリ",
   "loc.input.help.AzureContainerRegistry": "特定のレジストリをグローバルに識別する一意の最上位ドメイン名です。<br/> メモ: 完全修飾イメージ名の形式は '<b>`<レジストリ`></b>/`<リポジトリ`>:`<タグ`>' です。例: '<b>myregistry.azurecr.io</b>/nginx:latest'。",
   "loc.input.label.AzureContainerRegistryLoginServer": "レジストリ ログイン サーバー名",
@@ -222,5 +222,6 @@
   "loc.messages.ASE_SSLIssueRecommendation": "App Service で証明書を使用するには、証明書が信頼された証明機関によって署名されている必要があります。Web アプリで証明書の検証エラーが出る場合は、自己署名証明書を使用している可能性があり、それを解決するには、VSTS_ARM_REST_IGNORE_SSL_ERRORS という名前の変数の値をビルド定義またはリリース パイプラインで true に設定する必要があります。",
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "App Service で証明書を使用するには、証明書が信頼された証明機関によって署名されている必要があります。Web アプリで証明書の検証エラーが出る場合は、自己署名証明書を使用している可能性があります。これを解決するには、Web 配置オプションの追加引数に -allowUntrusted を渡す必要があります。",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Application Insights '%s' リソースを更新できませんでした。エラー: %s",
-  "loc.messages.JarNotSupported": "Jar 配置はこのバージョンではサポートされていません。タスク バージョンをプレビュー モードの '4.*' に変更します"
+  "loc.messages.JarNotSupported": "Jar 配置はこのバージョンではサポートされていません。タスク バージョンをプレビュー モードの '4.*' に変更します",
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
 }

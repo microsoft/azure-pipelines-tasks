@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Für Kubernetes bereitstellen",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Führen Sie zum Bereitstellen, Konfigurieren oder Aktualisieren Ihrer Kubernetes-Cluster in Azure Container Service \"kubectl\"-Befehle aus.",
+  "loc.description": "Hiermit wird ein Kubernetes-Cluster in Azure Container Service durch das Ausführen von kubectl-Befehlen bereitgestellt, konfiguriert oder aktualisiert.",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.group.displayName.commands": "Befehle",
   "loc.group.displayName.secrets": "Geheimnisse",
@@ -49,7 +49,7 @@
   "loc.input.label.versionOrLocation": "Kubectl",
   "loc.input.help.versionOrLocation": "Kubectl ist eine Befehlszeilenschnittstelle zum Ausführen von Befehlen für Kubernetes-Cluster.",
   "loc.input.label.versionSpec": "Versionsangabe",
-  "loc.input.help.versionSpec": "Versionsbezeichnung der abzurufenden Version. Beispiele: 1.7.0, 1.x.0, 4.x.0, 6.10.0, >=6.10.0",
+  "loc.input.help.versionSpec": "Versionsangabe der abzurufenden Version.  Beispiele: 1.7.0, 1.x.0, 4.x.0, 6.10.0",
   "loc.input.label.checkLatest": "Auf aktuelle Version überprüfen",
   "loc.input.help.checkLatest": "Hiermit wird online immer nach der letzten verfügbaren Version (stable.txt) gesucht, die der Versionsbezeichnung entspricht. Diese Option ist typischerweise auf FALSE festgelegt, sofern Sie nicht über ein spezifisches Szenario verfügen, bei dem Sie immer die aktuelle Version abrufen. Hierdurch entstehen möglicherweise unnötig Downloadkosten, insbesondere beim gehosteten Buildpool.",
   "loc.input.label.specifyLocation": "Pfad zu Kubectl",
@@ -62,6 +62,7 @@
   "loc.input.help.kubectlOutput": "Name der Variable, in der die Ausgabe des Befehls gespeichert werden soll.",
   "loc.messages.DownloadingClient": "Kubernetes-Client wird heruntergeladen.",
   "loc.messages.CreatingSecret": "Geheimnis \"%s\" wird erstellt.",
+  "loc.messages.CallToolRunnerExec": "Die Toolrunner-Methode exec() wird asynchron aufgerufen, um den kubectl-Befehl auszuführen und das zurückgegebene Promise-Objekt zu speichern.",
   "loc.messages.DeleteSecret": "Geheimnis \"%s\" wird gelöscht.",
   "loc.messages.CreatingConfigMap": "ConfigMap \"%s\" wird erstellt.",
   "loc.messages.DeleteConfigMap": "ConfigMap \"%s\" wird gelöscht.",
@@ -73,6 +74,11 @@
   "loc.messages.DownloadPathForStableTxt": "Downloadpfad für \"stable.txt\": %s",
   "loc.messages.DownloadKubeCtlFailed": "Der Kubernetes-Client von Version \"%s\" kann nicht heruntergeladen werden. Überprüfen Sie, ob die Version korrekt ist: https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.DownloadStableVersionFailed": "Die stabile Kubernetes-Version kann nicht aus \"%s\" heruntergeladen werden. Es wird ein Fallback auf \"%s\" durchgeführt.",
+  "loc.messages.ReturningToolRunnerExecPromise": "Die Toolrunner-Methode exec() wurde asynchron aufgerufen. Promise wird zurückgegeben.",
+  "loc.messages.ToolRunnerExecCallFailed": "Die Toolrunner-Methode exec() hat einen Fehler für den kubectl-Befehl zurückgegeben. Fehler: %s.",
+  "loc.messages.ToolRunnerExecCallSucceeded": "Die Toolrunner-Methode exec() wurde für den kubectl-Befehl erfolgreich zurückgegeben.",
   "loc.messages.UsingLatestStableVersion": "Ungültige Version 1.7 in der Eingabe für den Versionsbezeichner angegeben. Verwenden Sie stattdessen die letzte stabile Version. Informationen zu korrekten Versionen finden Sie unter https://github.com/kubernetes/kubernetes/releases.",
-  "loc.messages.ConfigurationFileNotFound": "Es wurde keine Konfigurationsdatei gefunden, die \"%s\" entspricht."
+  "loc.messages.ConfigurationFileNotFound": "Es wurde keine Konfigurationsdatei gefunden, die \"%s\" entspricht.",
+  "loc.messages.OutputVariableDataSizeExceeded": "Die Ausgabevariable wurde nicht festgelegt, weil die kubectl-Befehlsausgabe die maximal unterstützte Länge überschritten hat. Ausgabelänge: %s, maximal unterstützte Länge: %s",
+  "loc.messages.WritingDockerConfigToTempFile": "Die Docker-Konfiguration wird in eine temporäre Datei geschrieben. Dateipfad: %s, Docker-Konfiguration: %s"
 }
