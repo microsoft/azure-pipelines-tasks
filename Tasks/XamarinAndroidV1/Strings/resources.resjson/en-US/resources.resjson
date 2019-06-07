@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.Android",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613728)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613728) or [see the Xamarin Android documentation](https://docs.microsoft.com/xamarin/android/)",
   "loc.description": "Build an Android app with Xamarin",
   "loc.instanceNameFormat": "Build Xamarin.Android project $(project)",
   "loc.group.displayName.msbuildOptions": "MSBuild Options",
