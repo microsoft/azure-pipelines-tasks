@@ -16,7 +16,8 @@
     "Minor": 2,
     "Patch": 0
   },
-  "preview": true,
+  "preview": false,
+  "showEnvironmentVariables": true,
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
