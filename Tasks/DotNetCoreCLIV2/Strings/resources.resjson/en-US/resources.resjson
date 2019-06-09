@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": ".NET Core",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=832194)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=832194) or [see the .NET Core documentation](https://docs.microsoft.com/dotnet/core/)",
   "loc.description": "Build, test, package, or publish a dotnet application, or run a custom dotnet command",
   "loc.instanceNameFormat": "dotnet $(command)",
   "loc.group.displayName.restoreAuth": "Feeds and authentication",

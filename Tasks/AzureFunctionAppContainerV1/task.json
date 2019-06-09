@@ -4,7 +4,7 @@
     "friendlyName": "Azure Function for container",
     "description": "Update Function Apps with Docker containers",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-functionapp-containers",
-    "helpMarkDown": "[More information](https://aka.ms/azurefunctiononcontainerdeployreadme)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiononcontainerdeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",

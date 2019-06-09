@@ -3,7 +3,7 @@
     "name": "AzurePowerShell",
     "friendlyName": "Azure PowerShell",
     "description": "Run a PowerShell script within an Azure environment",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613749)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 0,
-        "Patch": 12
+        "Minor": 154,
+        "Patch": 0
     },
     "preview": true,
     "releaseNotes": "Added support for Az Module and cross platform agents.",
