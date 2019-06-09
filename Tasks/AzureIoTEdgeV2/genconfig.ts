@@ -20,14 +20,10 @@ export async function run() {
       let outputFileName = path.basename(outputPath);
       
       let envList = process.env;
-      if (!envList[Constants.iotedgedevEnv.deploymentFileOutputFolder]) {
-        envList[Constants.iotedgedevEnv.deploymentFileOutputFolder] = outputFileFolder;
-        tl.debug(`Setting deployment manifest output folder to ${outputFileFolder}`);
-      }
-      if (!envList[Constants.iotedgedevEnv.deploymentFileOutputName]) {
-        envList[Constants.iotedgedevEnv.deploymentFileOutputName] = outputFileName;
-        tl.debug(`Setting deployment manifest output file name to ${outputFileName}`)
-      }
+      tl.debug(`Setting deployment manifest output folder to ${outputFileFolder}`);
+      util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputFolder, outputFileFolder);
+      tl.debug(`Setting deployment manifest output file name to ${outputFileName}`)
+      util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputName, outputFileName)
       
       // Pass task variable to sub process
       let tlVariables = tl.getVariables();

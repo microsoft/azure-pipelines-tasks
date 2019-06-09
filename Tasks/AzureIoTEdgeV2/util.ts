@@ -89,7 +89,8 @@ export default class Util {
       cmds = [
         { path: `sudo`, arg: `apt-get update`, execOption: Constants.execSyncSilentOption },
         { path: `sudo`, arg: `apt-get install -y python-setuptools`, execOption: Constants.execSyncSilentOption },
-        { path: `pip`, arg: `install ${Constants.iotedgedev}~=${version}`, execOption: Constants.execSyncSilentOption },
+        { path: `sudo`, arg: `pip install --upgrade cryptography`, execOption: Constants.execSyncSilentOption},
+        { path: `sudo`, arg: `pip install ${Constants.iotedgedev}~=${version}`, execOption: Constants.execSyncSilentOption },
       ]
     } else if (tl.osType() === Constants.osTypeWindows) {
       cmds = [
@@ -207,7 +208,7 @@ export default class Util {
   }
 
   public static normalizeDeploymentId(id: string): string {
-    if(id.length > 128) {
+    if (id.length > 128) {
       id = id.substring(0, 128);
     }
     id = id.toLowerCase();
@@ -223,5 +224,20 @@ export default class Util {
       return false;
     }
     return true;
+  }
+
+  public static setEnvrionmentVarialbe(envList: NodeJS.ProcessEnv, envName: string, envValue: string, overrideExisting: boolean = false): void {
+    if (envList[envName]) {
+      if (overrideExisting) {
+        tl.warning(`The environment variable ${envName} already exists and will be overrided with the new value.`);
+        envList[envName] = envValue;
+        return;
+      } else {
+        tl.warning(`The environment variable ${envName} already exists so will no been overrided.`)
+        return;
+      }
+    }
+    tl.debug(`Setting the valud of environment variable ${envName}`);
+    envList[envName] = envValue;
   }
 }
