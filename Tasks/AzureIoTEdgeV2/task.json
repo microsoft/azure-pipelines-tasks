@@ -1,8 +1,8 @@
 {
-    "id": "e4c41a58-1cf2-44af-832a-7dc05c8d1394",
+    "id": "80F3F6A0-82A6-4A22-BA7A-E5B8C541B9B8",
     "name": "AzureIoTEdge",
     "friendlyName": "Azure IoT Edge",
-    "description": "[Internal Test] Build and deploy an Azure IoT Edge image",
+    "description": "Build and deploy an Azure IoT Edge image",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/azure-iot-edge",
     "helpMarkDown": "Visit the [documentation](https://aka.ms/azure-iot-edge-ci-cd-docs) for help",
     "category": "Build",
