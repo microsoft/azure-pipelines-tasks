@@ -14,11 +14,17 @@ export async function run() {
       util.setTaskRootPath(path.dirname(templateFilePath));
     
       util.setupIotedgedev();
-    
-      let envList = {
-        [Constants.iotedgedevEnv.deploymentFileOutputFolder]: tl.getVariable(Constants.outputFileFolder),
-      };
-    
+
+      let outputPath = tl.getInput('deploymentManifestOutputPath', true);
+      let outputFileFolder = path.dirname(outputPath);
+      let outputFileName = path.basename(outputPath);
+      
+      let envList = process.env;
+      tl.debug(`Setting deployment manifest output folder to ${outputFileFolder}`);
+      util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputFolder, outputFileFolder);
+      tl.debug(`Setting deployment manifest output file name to ${outputFileName}`)
+      util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputName, outputFileName)
+      
       // Pass task variable to sub process
       let tlVariables = tl.getVariables();
       for (let v of tlVariables) {

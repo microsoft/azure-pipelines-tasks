@@ -20,7 +20,11 @@ function getRegistryAuthenticationToken(): RegistryCredential {
   }
 
   if (token == null || token.username == null || token.password == null || token.serverUrl == null) {
-    throw Error(tl.loc('ContainerRegistryInvalid', JSON.stringify(token)));
+    let username = "";
+    if (token != null && token.username != null) {
+      username = token.username;
+    }
+    throw Error(tl.loc('ContainerRegistryInvalid', username));
   }
   return token;
 }
@@ -52,24 +56,24 @@ export async function run() {
    */
   tl.execSync(`docker`, `login -u "${registryAuthenticationToken.username}" -p "${registryAuthenticationToken.password}" ${registryAuthenticationToken.serverUrl}`, Constants.execSyncSilentOption)
 
-  let envList = {
-    [Constants.iotedgedevEnv.bypassModules]: bypassModules,
-    [Constants.iotedgedevEnv.registryServer]: registryAuthenticationToken.serverUrl,
-    [Constants.iotedgedevEnv.registryUsername]: registryAuthenticationToken.username,
-    [Constants.iotedgedevEnv.registryPassword]: registryAuthenticationToken.password,
-  };
+  let envList = process.env;
+  util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.bypassModules, bypassModules);
+  util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.registryServer, registryAuthenticationToken.serverUrl);
+  util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.registryUsername, registryAuthenticationToken.username);
+  util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.registryPassword, registryAuthenticationToken.password);
 
   // Pass task variable to sub process
   let tlVariables = tl.getVariables();
   for (let v of tlVariables) {
     // The variables in VSTS build contains dot, need to convert to underscore.
-    let name = v.name.replace('.', '_').toUpperCase();
-    if (!envList[name]) {
-      envList[name] = v.value;
+    if (v.secret) {
+      let envName = v.name.replace('.', '_').toUpperCase();
+      tl.debug(`Setting environment varialbe ${envName} to the value of secret: ${v.name}`);
+      util.setEnvrionmentVarialbe(envList, envName, v.value);
     }
   }
 
-  tl.debug(`Following variables will be passed to the iotedgedev command: ${JSON.stringify(envList)}`);
+  tl.debug(`Following variables will be passed to the iotedgedev command: ${Object.keys(envList).join(", ")}`);
 
   try {
     let execOptions: IExecOptions = {

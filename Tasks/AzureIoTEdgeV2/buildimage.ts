@@ -17,21 +17,21 @@ export async function run() {
 
   util.setupIotedgedev();
 
-  let envList = {
-    [Constants.iotedgedevEnv.deploymentFileOutputFolder]: tl.getVariable(Constants.outputFileFolder),
-  };
+  let envList = process.env;
+  util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputFolder, tl.getVariable(Constants.outputFileFolder));
 
   // Pass task variable to sub process
   let tlVariables = tl.getVariables();
   for (let v of tlVariables) {
     // The variables in VSTS build contains dot, need to convert to underscore.
-    let name = v.name.replace('.', '_').toUpperCase();
-    if (!envList[name]) {
-      envList[name] = v.value;
+    if (v.secret) {
+      let envName = v.name.replace('.', '_').toUpperCase();
+      tl.debug(`Setting environment varialbe ${envName} to the value of secret: ${v.name}`);
+      util.setEnvrionmentVarialbe(envList, envName, v.value);
     }
   }
 
-  tl.debug(`Following variables will be passed to the iotedgedev command: ${JSON.stringify(envList)}`);
+  tl.debug(`Following variables will be passed to the iotedgedev command: ${Object.keys(envList).join(", ")}`);
 
   let outputStream: EchoStream = new EchoStream();
 
@@ -49,7 +49,7 @@ export async function run() {
   let outLog: string = outputStream.content;
   let filterReg: RegExp = /Expanding '[^']*' to '([^']*)'/g;
   let matches: RegExpMatchArray = filterReg.exec(outLog);
-  if(matches && matches[1]) {
+  if (matches && matches[1]) {
     tl.setVariable(Constants.outputVariableDeploymentPathKey, matches[1]);
     tl.setVariable('_' + Constants.outputVariableDeploymentPathKey, matches[1]);
     tl.debug(`Set ${Constants.outputVariableDeploymentPathKey} to ${matches[1]}`);

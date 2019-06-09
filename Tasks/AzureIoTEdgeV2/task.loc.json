@@ -1,5 +1,5 @@
 {
-  "id": "80F3F6A0-82A6-4A22-BA7A-E5B8C541B9B8",
+  "id": "e4c41a58-1cf2-44af-832a-7dc05c8d1394",
   "name": "AzureIoTEdge",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 1,
-    "Patch": 5
+    "Minor": 2,
+    "Patch": 0
   },
   "preview": true,
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -51,7 +51,7 @@
       "name": "deploymentFilePath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.deploymentFilePath",
-      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.json",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
       "required": true,
       "visibleRule": "action == Deploy to IoT Edge devices",
       "helpMarkDown": "ms-resource:loc.input.help.deploymentFilePath"
@@ -201,6 +201,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.fillRegistryCredential"
     },
     {
+      "name": "deploymentManifestOutputPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.deploymentManifestOutputPath",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
+      "visibleRule": "action == Generate deployment manifest",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentManifestOutputPath"
+    },
+    {
       "name": "bypassModules",
       "type": "string",
       "label": "ms-resource:loc.input.label.bypassModules",
@@ -256,7 +265,8 @@
     "InvalidRegistryCredentialWarning": "ms-resource:loc.messages.InvalidRegistryCredentialWarning",
     "CheckModuleImageExistenceError": "ms-resource:loc.messages.CheckModuleImageExistenceError",
     "StartGenerateDeploymentManifest": "ms-resource:loc.messages.StartGenerateDeploymentManifest",
-    "FinishGenerateDeploymentManifest": "ms-resource:loc.messages.FinishGenerateDeploymentManifest"
+    "FinishGenerateDeploymentManifest": "ms-resource:loc.messages.FinishGenerateDeploymentManifest",
+    "LoginRegistrySucess": "ms-resource:loc.messages.LoginRegistrySucess"
   },
   "OutputVariables": [
     {
