@@ -5,7 +5,7 @@
     "description": "Downloads a GitHub Release from a repository",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-github-release",
-    "helpMarkDown": "[More Information](https://aka.ms/AA3x715)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/AA3x715)",
     "category": "Utility",
     "demands": [],
     "version": {

@@ -124,6 +124,10 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
     const imageUri = getResourceName(imageName, digest);
     const baseImageName = dockerFilePath ? getBaseImageNameFromDockerFile(dockerFilePath) : "NA";
     const layers = await dockerCommandUtils.getLayers(connection, imageName);
+    if (!layers) {
+        return null;
+    }
+    
     const imageSize = dockerCommandUtils.getImageSize(layers);
 
     // Getting pipeline variables
