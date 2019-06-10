@@ -267,7 +267,10 @@
     "CheckModuleImageExistenceError": "ms-resource:loc.messages.CheckModuleImageExistenceError",
     "StartGenerateDeploymentManifest": "ms-resource:loc.messages.StartGenerateDeploymentManifest",
     "FinishGenerateDeploymentManifest": "ms-resource:loc.messages.FinishGenerateDeploymentManifest",
-    "LoginRegistrySucess": "ms-resource:loc.messages.LoginRegistrySucess"
+    "LoginRegistrySucess": "ms-resource:loc.messages.LoginRegistrySucess",
+    "SkipSettingEnvironmentVariable": "ms-resource:loc.messages.SkipSettingEnvironmentVariable",
+    "SkipSettingEnvironmentVariableForSecret": "ms-resource:loc.messages.SkipSettingEnvironmentVariableForSecret",
+    "OverrideDeploymentManifestOutputPath": "ms-resource:loc.messages.OverrideDeploymentManifestOutputPath"
   },
   "OutputVariables": [
     {

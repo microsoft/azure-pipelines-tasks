@@ -223,18 +223,28 @@ export default class Util {
     return true;
   }
 
-  public static setEnvrionmentVarialbe(envList: NodeJS.ProcessEnv, envName: string, envValue: string, overrideExisting: boolean = false): void {
+  public static setEnvrionmentVarialbe(envList: NodeJS.ProcessEnv, envName: string, envValue: string): void {
     if (envList[envName]) {
-      if (overrideExisting) {
-        tl.warning(`The environment variable ${envName} already exists and will be overrided with the new value.`);
-        envList[envName] = envValue;
+        tl.loc("SkipSettingEnvironmentVariable", envName);
         return;
-      } else {
-        tl.warning(`The environment variable ${envName} already exists so will no been overrided.`)
-        return;
+    }
+    tl.debug(`Setting the value of environment variable ${envName}`);
+    envList[envName] = envValue;
+  }
+
+  public static populateSecretToEnvironmentVariable(envList: NodeJS.ProcessEnv){
+    let tlVariables = tl.getVariables();
+    for (let v of tlVariables) {
+      // The variables in VSTS build contains dot, need to convert to underscore.
+      if (v.secret){
+        let envName = v.name.replace('.', '_').toUpperCase();
+        tl.debug(`Setting environment varialbe ${envName} to the value of secret: ${v.name}`);
+        if (!envList[envName]) {
+          envList[envName] = v.value;
+        } else {
+          tl.loc("SkipSettingEnvironmentVariableForSecret", envName, v.name);
+        }
       }
     }
-    tl.debug(`Setting the valud of environment variable ${envName}`);
-    envList[envName] = envValue;
   }
 }

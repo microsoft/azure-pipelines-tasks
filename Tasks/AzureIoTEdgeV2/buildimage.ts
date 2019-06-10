@@ -21,15 +21,7 @@ export async function run() {
   util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputFolder, tl.getVariable(Constants.outputFileFolder));
 
   // Pass task variable to sub process
-  let tlVariables = tl.getVariables();
-  for (let v of tlVariables) {
-    // The variables in VSTS build contains dot, need to convert to underscore.
-    if (v.secret) {
-      let envName = v.name.replace('.', '_').toUpperCase();
-      tl.debug(`Setting environment varialbe ${envName} to the value of secret: ${v.name}`);
-      util.setEnvrionmentVarialbe(envList, envName, v.value);
-    }
-  }
+  util.populateSecretToEnvironmentVariable(envList);
 
   tl.debug(`Following variables will be passed to the iotedgedev command: ${Object.keys(envList).join(", ")}`);
 

@@ -20,20 +20,19 @@ export async function run() {
       let outputFileName = path.basename(outputPath);
       
       let envList = process.env;
+      if (envList[Constants.iotedgedevEnv.deploymentFileOutputFolder]) {
+        tl.loc("OverrideDeploymentManifestOutputPath", Constants.iotedgedevEnv.deploymentFileOutputFolder);
+      }
       tl.debug(`Setting deployment manifest output folder to ${outputFileFolder}`);
       util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputFolder, outputFileFolder);
+      if (envList[Constants.iotedgedevEnv.deploymentFileOutputName]) {
+        tl.loc("OverrideDeploymentManifestOutputPath", Constants.iotedgedevEnv.deploymentFileOutputName);
+      }
       tl.debug(`Setting deployment manifest output file name to ${outputFileName}`)
       util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputName, outputFileName)
       
       // Pass task variable to sub process
-      let tlVariables = tl.getVariables();
-      for (let v of tlVariables) {
-        // The variables in VSTS build contains dot, need to convert to underscore.
-        let name = v.name.replace('.', '_').toUpperCase();
-        if (!envList[name]) {
-          envList[name] = v.value;
-        }
-      }
+      util.populateSecretToEnvironmentVariable(envList);
 
       let execOptions: IExecOptions = {
         cwd: tl.cwd(),
