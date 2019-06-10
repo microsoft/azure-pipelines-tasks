@@ -20,18 +20,25 @@ export async function run() {
       let outputFileName = path.basename(outputPath);
       
       let envList = process.env;
+      //Set output path of iotedgedev genconfig command
+      let envOverriden = false;
       if (envList[Constants.iotedgedevEnv.deploymentFileOutputFolder]) {
-        tl.loc("OverrideDeploymentManifestOutputPath", Constants.iotedgedevEnv.deploymentFileOutputFolder);
+        tl.debug(`The ${Constants.iotedgedevEnv.deploymentFileOutputFolder} environment varialbe already exists. Will override this environment variable.`);
+        envOverriden = true;
       }
       tl.debug(`Setting deployment manifest output folder to ${outputFileFolder}`);
       util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputFolder, outputFileFolder);
       if (envList[Constants.iotedgedevEnv.deploymentFileOutputName]) {
-        tl.loc("OverrideDeploymentManifestOutputPath", Constants.iotedgedevEnv.deploymentFileOutputName);
+        tl.debug(`The ${Constants.iotedgedevEnv.deploymentFileOutputName} environment varialbe already exists. Will override this environment variable.`);
+        envOverriden = true;
       }
       tl.debug(`Setting deployment manifest output file name to ${outputFileName}`)
       util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputName, outputFileName)
-      
-      // Pass task variable to sub process
+      if (envOverriden) {
+        tl.loc("DeploymentManifestOutputPathOverridden");
+      }
+
+      // Pass secrets to sub process
       util.populateSecretToEnvironmentVariable(envList);
 
       let execOptions: IExecOptions = {

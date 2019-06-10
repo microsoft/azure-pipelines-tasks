@@ -57,12 +57,14 @@ export async function run() {
   tl.execSync(`docker`, `login -u "${registryAuthenticationToken.username}" -p "${registryAuthenticationToken.password}" ${registryAuthenticationToken.serverUrl}`, Constants.execSyncSilentOption)
 
   let envList = process.env;
+  // Set bypass modules
   util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.bypassModules, bypassModules);
+  // Set registry credentials
   util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.registryServer, registryAuthenticationToken.serverUrl);
   util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.registryUsername, registryAuthenticationToken.username);
   util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.registryPassword, registryAuthenticationToken.password);
 
-  // Pass task variable to sub process
+  // Pass secrets to sub process
   util.populateSecretToEnvironmentVariable(envList);
 
   tl.debug(`Following variables will be passed to the iotedgedev command: ${Object.keys(envList).join(", ")}`);
