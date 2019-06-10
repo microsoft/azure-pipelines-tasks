@@ -267,7 +267,10 @@
         "CheckModuleImageExistenceError": "%s does not exist or the credential is not set correctly. Error: %s",
         "StartGenerateDeploymentManifest": "Start generating deployment manifest...",
         "FinishGenerateDeploymentManifest": "Finished generating deployment manifest.",
-        "LoginRegistrySucess": "Successfully logged in to registry $s"
+        "LoginRegistrySucess": "Successfully logged in to registry %s",
+        "SkipSettingEnvironmentVariable": "The environment variable %s already exists. Skip setting this environment variable.",
+        "SkipSettingEnvironmentVariableForSecret": "Environment variable %s already exist. Skip setting environment varialbe for secret: %s.",
+        "OverrideDeploymentManifestOutputPath": "The %s environment variable will be overriden by the output path parameter."
     },
     "OutputVariables": [
         {
