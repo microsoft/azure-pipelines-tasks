@@ -46,19 +46,37 @@ export class Kubectl {
         return this.execute(command);
     }
 
-    public createSecret(args: string[], force?: boolean, secretName?: string): IExecSyncResult {
+    public createDockerSecret(secretName: string, registryServer: string, userName: string, password: string, email: string, force?: boolean): IExecSyncResult {
         if (!!force && !!secretName) {
-            const command = tl.tool(this.kubectlPath);
-            command.arg('delete');
-            command.arg('secret');
-            command.arg(secretName);
-            this.execute(command);
+            this.deleteSecret(secretName);
         }
 
         const command = tl.tool(this.kubectlPath);
         command.arg('create');
         command.arg('secret');
-        command.arg(args);
+        command.arg('docker-registry');
+        command.arg(secretName);
+        command.arg(['--docker-username', userName]);
+        command.arg(['--docker-password', password]);
+        command.arg(['--docker-server', registryServer]);
+        command.arg(['--docker-email', email]);
+        return this.execute(command);
+    }
+
+    public createGenericSecret(secretName: string, args: string, force?: boolean): IExecSyncResult {
+        if (!!force && !!secretName) {
+            this.deleteSecret(secretName);
+        }
+
+        const command = tl.tool(this.kubectlPath);
+        command.arg('create');
+        command.arg('secret');
+        command.arg('generic');
+        command.arg(secretName);
+        if (args) {
+            command.line(args);
+        }
+        
         return this.execute(command);
     }
 
@@ -162,5 +180,13 @@ export class Kubectl {
     private createInlineArray(str: string | string[]): string {
         if (typeof str === 'string') { return str; }
         return str.join(',');
+    }
+
+    private deleteSecret(secretName: string): void {
+        const command = tl.tool(this.kubectlPath);
+        command.arg('delete');
+        command.arg('secret');
+        command.arg(secretName);
+        this.execute(command);
     }
 }
