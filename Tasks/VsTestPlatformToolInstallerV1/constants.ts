@@ -14,6 +14,7 @@ export const defaultPackageSource = 'https://api.nuget.org/v3/index.json';
 
 // nuget exe parameters
 export const list = 'list';
+export const basic = 'basic';
 export const install = 'install';
 export const sources = 'sources';
 export const add = 'Add';
@@ -28,6 +29,7 @@ export const configFile = '-ConfigFile';
 export const preRelease = '-PreRelease';
 export const directDownload = '-DirectDownload';
 export const outputDirectory = '-OutputDirectory';
+export const validAuthenticationTypes = '-ValidAuthenticationTypes';
 
 // input fields
 export const netShare = 'netShare';

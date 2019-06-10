@@ -1,0 +1,33 @@
+{
+	"common": [
+    {
+		"module": "../Common/utility-common",
+		"type": "node",
+		"dest" : "./",
+		"compile" : true
+    },
+    {
+		"module": "../Common/kubernetes-common",
+		"type": "node",
+		"dest" : "./",
+		"compile" : true
+	},
+	{
+		"module": "../Common/docker-common",
+		"type": "node",
+		"dest" : "./",
+		"compile" : true
+	}
+],
+	"rm": [
+        {
+            "items": [
+				"node_modules/kubernetes-common/node_modules/vsts-task-lib",
+				"node_modules/docker-common/node_modules/vsts-task-lib",
+                "node_modules/utility-common/node_modules/vsts-task-lib",
+				"node_modules/vsts-task-tool-lib/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
+}

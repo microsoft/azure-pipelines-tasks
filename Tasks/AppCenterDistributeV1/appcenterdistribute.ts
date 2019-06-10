@@ -5,9 +5,11 @@ import Q = require('q');
 import fs = require('fs');
 import os = require('os');
 
+import { AzureBlobUploadHelper } from './azure-blob-upload-helper';
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 import utils = require('./utils');
+import { inspect } from 'util';
 
 class UploadInfo {
     upload_id: string;
@@ -145,7 +147,7 @@ function commitRelease(apiServer: string, apiVersion: string, appSlug: string, u
     return defer.promise;
 }
 
-function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: string, destinationId: string, token: string, userAgent: string) {
+function publishRelease(apiServer: string, releaseUrl: string, isMandatory: boolean, releaseNotes: string, destinationId: string, token: string, userAgent: string) {
     tl.debug("-- Mark package available.");
     let defer = Q.defer<void>();
     let publishReleaseUrl: string = `${apiServer}/${releaseUrl}`;
@@ -160,6 +162,7 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
     let publishBody = {
         "status": "available",
         "release_notes": releaseNotes,
+        "mandatory_update": isMandatory,
         "destinations": [
             {
                 "id": destinationId
@@ -167,7 +170,8 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
         ]
     };
 
-    const branchName = process.env['BUILD_SOURCEBRANCHNAME'];
+    let branchName = process.env['BUILD_SOURCEBRANCH'];
+    branchName = getBranchName(branchName);
     const sourceVersion = process.env['BUILD_SOURCEVERSION'];
     const buildId = process.env['BUILD_BUILDID'];
 
@@ -201,6 +205,13 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
     })
 
     return defer.promise;
+}
+
+function getBranchName(ref: string): string {
+    const gitRefsHeadsPrefix = 'refs/heads/';
+    if (ref) {
+        return ref.indexOf(gitRefsHeadsPrefix) === 0 ? ref.substr(gitRefsHeadsPrefix.length) : ref;
+    }
 }
 
 /**
@@ -267,27 +278,20 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
     return defer.promise;
 }
 
-function uploadSymbols(uploadUrl: string, file: string, userAgent: string): Q.Promise<void> {
+async function uploadSymbols(uploadUrl: string, file: string): Promise<void> {
     tl.debug("-- Uploading symbols...");
-    let defer = Q.defer<void>();
     tl.debug(`---- url: ${uploadUrl}`);
 
-    let stat = fs.statSync(file);
-    let headers = {
-        "x-ms-blob-type": "BlockBlob",
-        "Content-Length": stat.size,
-        "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
-    };
+    try {
+        const azureBlobUploadHelper = new AzureBlobUploadHelper(tl.debug);
+        await azureBlobUploadHelper.upload(uploadUrl, file);
+    } catch (e) {
+        tl.error(inspect(e));
 
-    fs.createReadStream(file).pipe(request.put({ url: uploadUrl, headers: headers }, (err, res, body) => {
-        responseHandler(defer, err, res, body, () => {
-            tl.debug('-- Symbol uploaded.');
-            defer.resolve();
-        });
-    }));
+        throw e;
+    }
 
-    return defer.promise;
+    tl.debug('-- Symbol uploaded.');
 }
 
 function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, symbol_upload_id: string, token: string, userAgent: string): Q.Promise<void> {
@@ -426,6 +430,8 @@ async function run() {
             releaseNotes = tl.getInput('releaseNotesInput', true);
         }
 
+        let isMandatory: boolean = tl.getBoolInput('isMandatory', false);
+
         let destinationId = tl.getInput('destinationId', false) || '00000000-0000-0000-0000-000000000000';
         tl.debug(`Effective destinationId: ${destinationId}`);
 
@@ -459,14 +465,14 @@ async function run() {
         let packageUrl = await commitRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken, userAgent);
 
         // Publish
-        await publishRelease(effectiveApiServer, packageUrl, releaseNotes, destinationId, apiToken, userAgent);
+        await publishRelease(effectiveApiServer, packageUrl, isMandatory, releaseNotes, destinationId, apiToken, userAgent);
 
         if (symbolsFile) {
             // Begin preparing upload symbols
             let symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolsType, apiToken, userAgent);
 
             // upload symbols 
-            await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile, userAgent);
+            await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile);
 
             // Commit the symbols upload
             await commitSymbols(effectiveApiServer, effectiveApiVersion, appSlug, symbolsUploadInfo.symbol_upload_id, apiToken, userAgent);

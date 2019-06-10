@@ -1,6 +1,6 @@
 import * as vsts from 'azure-devops-node-api';
 import * as interfaces from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import { IRequestOptions } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
 
 import * as provenance from "./provenance";
@@ -93,27 +93,24 @@ export async function getPackagingUris(protocolType: ProtocolType): Promise<Pack
     const locationApi = await webApi.getLocationsApi();
 
     tl.debug('Acquiring Packaging endpoints from ' + serviceUri);
-    return locationApi.getConnectionData(interfaces.ConnectOptions.IncludeServices).then((connectionData) => {
-        tl.debug('Successfully acquired the connection data');
-        const defaultAccessPoint: string = connectionData.locationServiceData.accessMappings.find((mapping) =>
-            mapping.moniker === connectionData.locationServiceData.defaultAccessMappingMoniker
-        ).accessPoint;
 
-        pkgLocation.DefaultPackagingUri = defaultAccessPoint;
-        pkgLocation.PackagingUris.push(defaultAccessPoint);
-        pkgLocation.PackagingUris = pkgLocation.PackagingUris.concat(
-            connectionData.locationServiceData.accessMappings.map((mapping) => {
-                return mapping.accessPoint;
-            }));
+    const connectionData = await locationApi.getConnectionData(interfaces.ConnectOptions.IncludeServices);
 
-        tl.debug('Acquired location');
-        tl.debug(JSON.stringify(pkgLocation));
-        return pkgLocation;
-    }).catch((error) => {
-        tl.debug('An error occurred while acquiring the connection data');
-        tl.debug(JSON.stringify(error));
-        return pkgLocation;
-    });
+    tl.debug('Successfully acquired the connection data');
+    const defaultAccessPoint: string = connectionData.locationServiceData.accessMappings.find((mapping) =>
+        mapping.moniker === connectionData.locationServiceData.defaultAccessMappingMoniker
+    ).accessPoint;
+
+    pkgLocation.DefaultPackagingUri = defaultAccessPoint;
+    pkgLocation.PackagingUris.push(defaultAccessPoint);
+    pkgLocation.PackagingUris = pkgLocation.PackagingUris.concat(
+        connectionData.locationServiceData.accessMappings.map((mapping) => {
+            return mapping.accessPoint;
+        }));
+
+    tl.debug('Acquired location');
+    tl.debug(JSON.stringify(pkgLocation));
+    return pkgLocation;
 }
 
 export function getSystemAccessToken(): string {
@@ -146,7 +143,9 @@ export function getWebApiWithProxy(serviceUri: string, accessToken?: string): vs
 
     const credentialHandler = vsts.getBasicHandler('vsts', accessToken);
     const options: IRequestOptions = {
-        proxy: tl.getHttpProxyConfiguration(serviceUri)
+        proxy: tl.getHttpProxyConfiguration(serviceUri),
+        allowRetries: true,
+        maxRetries: 5
     };
     return new vsts.WebApi(serviceUri, credentialHandler, options);
 }
@@ -161,6 +160,7 @@ export async function getFeedRegistryUrl(
     packagingUrl: string, 
     registryType: RegistryType, 
     feedId: string,
+    project: string,
     accessToken?: string,
     useSession?: boolean): Promise<string> {
     let loc : RegistryLocation;
@@ -211,39 +211,15 @@ export async function getFeedRegistryUrl(
     if (useSession) {
         sessionId = await provenance.ProvenanceHelper.GetSessionId(
             feedId,
+            project,
             loc.area /* protocol */,
             vssConnection.serverUrl,
             [vssConnection.authHandler],
             vssConnection.options);
     }
 
-    const data = await Retry(async () => {
-        return await vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: sessionId });
-    }, 4, 100);
+    const data = await vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: sessionId, project: project });
 
     tl.debug("Feed registry url: " + data.requestUrl);
     return data.requestUrl;
 }
-
-// This should be replaced when retry is implemented in vso client.
-async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: number) : Promise<T> {
-    try {
-        return await cb();
-    } catch(exception) {
-        tl.debug(JSON.stringify(exception));
-        if(max_retry > 0)
-        {
-            tl.debug("Waiting " + retry_delay + "ms...");
-            await delay(retry_delay);
-            tl.debug("Retrying...");
-            return await Retry<T>(cb, max_retry-1, retry_delay*2);
-        } else {
-            throw new Error(exception);
-        }
-    }
-}
-function delay(delayMs:number) {
-    return new Promise(function(resolve) { 
-        setTimeout(resolve, delayMs);
-    });
- }

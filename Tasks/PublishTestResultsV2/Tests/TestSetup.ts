@@ -17,6 +17,7 @@ tr.setInput('configuration', process.env[constants.configuration]);
 tr.setInput('testRunTitle', process.env[constants.testRunTitle]);
 tr.setInput('publishRunAttachments', process.env[constants.publishRunAttachments]);
 tr.setInput('searchFolder', process.env[constants.searchFolder]);
+tr.setInput('failTaskOnFailedTests', process.env[constants.failTaskOnFailedTests]);
 
 const PublishExeToolPath = path.join(__dirname, '../modules', 'TestResultsPublisher.exe');
 const newUuid = "1e1faf9e-d9e5-4054-b351-398ac75b62f5";

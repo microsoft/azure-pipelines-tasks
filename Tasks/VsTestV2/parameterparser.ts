@@ -1,5 +1,5 @@
-import tl = require('vsts-task-lib/task');
-// resusing from https://github.com/Microsoft/vsts-tasks/tree/04293a25f9ecc7d91cecd2c4f130904bdbf3544d/Tasks/AzureResourceGroupDeployment 
+import tl = require('azure-pipelines-task-lib/task');
+// resusing from https://github.com/Microsoft/azure-pipelines-tasks/tree/04293a25f9ecc7d91cecd2c4f130904bdbf3544d/Tasks/AzureResourceGroupDeployment
 
 export function parse(input: string) {
     var result = {};

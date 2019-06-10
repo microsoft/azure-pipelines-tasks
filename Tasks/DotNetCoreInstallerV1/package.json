@@ -1,0 +1,33 @@
+{
+  "name": "dotnetcoreinstaller",
+  "version": "1.0.0",
+  "description": ".Net Core Installer",
+  "main": "dotnetcoreinstaller.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "keywords": [
+    "Azure",
+    "Pipelines",
+    "Tasks",
+    "DotNetCore"
+  ],
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.5.0",
+    "vsts-task-lib": "2.0.6",
+    "vsts-task-tool-lib": "0.4.1",
+    "typed-rest-client": "0.11.0",
+    "semver": "5.6.0"
+  }
+}

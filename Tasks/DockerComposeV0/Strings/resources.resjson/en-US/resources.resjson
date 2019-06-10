@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006) or [see the Docker Compose documentation](https://docs.docker.com/)",
   "loc.description": "Build, push or run multi-container Docker applications. Task can be used with Docker or Azure Container registry.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Advanced Options",
@@ -66,12 +66,15 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "Produces an error if the additional Docker Compose files do not exist. This overrides the default behavior which is to ignore a file if it does not exist.",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Working directory for the Docker Compose command.",
+  "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
   "loc.messages.ContainerPatternFound": "Pattern found in docker compose filepath parameter",
   "loc.messages.ContainerPatternNotFound": "No pattern found in docker compose filepath parameter",
   "loc.messages.ContainerDockerFileNotFound": "No Docker file matching  %s  was found.",
   "loc.messages.AdditionalDockerComposeFileDoesNotExists": "Additional Docker Compose File %s does not exists.",
   "loc.messages.CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
+  "loc.messages.DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
   "loc.messages.NoDataWrittenOnFile": "No data was written into the file %s",
   "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s.",
-  "loc.messages.ImageNameWithoutTag": "Image name not specified with tag, pushing all tags of the image specified."
+  "loc.messages.ImageNameWithoutTag": "Image name not specified with tag, pushing all tags of the image specified.",
+  "loc.messages.WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
 }

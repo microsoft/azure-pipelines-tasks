@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "安裝 Apple 佈建設定檔",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=862068)",
-  "loc.description": "在 macOS 代理程式上執行建置作業必須安裝 Apple 佈建設定檔",
+  "loc.description": "在 macOS 代理程式電腦上執行建置作業必須安裝 Apple 佈建設定檔",
   "loc.instanceNameFormat": "安裝 Apple 佈建設定檔",
   "loc.input.label.provisioningProfileLocation": "佈建設定檔位置",
   "loc.input.help.provisioningProfileLocation": "選取佈建設定檔的安裝位置。您可將佈建設定檔上傳至 `Secure Files`，或儲存在來源存放庫/代理程式上的本機路徑。",

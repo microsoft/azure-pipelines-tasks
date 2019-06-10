@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import * as ma from 'azure-pipelines-task-lib/mock-answer';
+import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import path = require('path');
 import fs = require('fs');
 import os = require('os');
@@ -13,10 +13,6 @@ tr.setInput('certPwd', 'mycertPwd');
 tr.setInput('keychain', 'default');
 tr.setInput('keychainPassword', 'mykeychainPwd');
 
-process.env['AGENT_VERSION'] = '2.116.0';
-process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
-process.env['HOME'] = '/users/test';
-
 let secureFileHelperMock = require('securefiles-common/securefiles-common-mock');
 tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
 
@@ -24,6 +20,10 @@ tr.registerMock('fs', {
     writeFileSync: function (filePath, contents) {
     }
 });
+
+process.env['AGENT_VERSION'] = '2.116.0';
+process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
+process.env['HOME'] = '/users/test';
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -42,13 +42,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/usr/lib/login.keychain": true
     },
     "exec": {
-        "/usr/bin/openssl pkcs12 -in /build/temp/mySecureFileId.filename -nokeys -passin pass:mycertPwd | /usr/bin/openssl x509 -noout -subject": {
+        "/usr/bin/openssl pkcs12 -in /build/temp/mySecureFileId.filename -nokeys -passin pass:mycertPwd | /usr/bin/openssl x509 -noout -fingerprint -subject -dates": {
             "code": 0,
-            "stdout": "MAC verified OK\nsubject= /UID=ZD34QB2EFN/CN=iPhone Developer: Madhuri Gummalla (HE432Y3E2Q)/OU=A9M46DL4GH/O=Madhuri Gummalla/C=US"
-        },
-        "/usr/bin/openssl pkcs12 -in /build/temp/mySecureFileId.filename -nokeys -passin pass:mycertPwd | /usr/bin/openssl x509 -noout -fingerprint": {
-            "code": 0,
-            "stdout": "MAC verified OK\nSHA1 Fingerprint=BB:26:83:C6:AA:88:35:DE:36:94:F2:CF:37:0A:D4:60:BB:AE:87:0C"
+            "stdout": "MAC verified OK\nSHA1 Fingerprint=BB:26:83:C6:AA:88:35:DE:36:94:F2:CF:37:0A:D4:60:BB:AE:87:0C\nsubject= /UID=ZD34QB2EFN/CN=iPhone Developer: Madhuri Gummalla (HE432Y3E2Q)/OU=A9M46DL4GH/O=Madhuri Gummalla/C=US\nnotBefore=Nov 13 03:37:42 2018 GMT\nnotAfter=Nov 13 03:37:42 2099 GMT\n"
         },
         "/usr/bin/openssl pkcs12 -in /build/temp/mySecureFileId.filename -nocerts -passin pass:mycertPwd -passout pass:mycertPwd | /usr/bin/grep friendlyName": {
             "code": 0,

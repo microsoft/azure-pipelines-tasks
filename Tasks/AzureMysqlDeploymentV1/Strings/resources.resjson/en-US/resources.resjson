@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Database for MySQL Deployment",
+  "loc.friendlyName": "Azure Database for MySQL deployment",
   "loc.helpMarkDown": "[More Information](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "Run your scripts and make changes to your Azure Database for MySQL.",
+  "loc.description": "Run your scripts and make changes to your Azure Database for MySQL",
   "loc.instanceNameFormat": "Execute Azure MySQL : $(TaskNameSelector)",
   "loc.group.displayName.target": "DB Details",
   "loc.group.displayName.taskDetails": "Deployment Package",
@@ -60,6 +60,8 @@
   "loc.messages.WindowMysqlClientMissingError": "MySQL client is missing on the Windows agent machine. Please install it by running the MySQL client installer 'https://aka.ms/window-mysqlcli-installer' script file on the agent machine.",
   "loc.messages.LinuxMysqlClientMissingError": "MySQL client is missing on the Linux agent machine. Please install it by running 'sudo apt-get install mysql-client'.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not retrieve an access token for Azure. Status code: %s. Status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not retrieve an access token for the managed service principal. Please configure Managed Service Identity (MSI) for the virtual machine. See 'https://aka.ms/azure-msi-docs'. Status code: %s. Status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not retrieve an access token for the managed service principal. Status code: %s. Status message: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not retrieve an access token for the managed service principal. Please configure Managed Service Identity (MSI) for the virtual machine. See 'https://aka.ms/azure-msi-docs'.Assign role to created MSI Identity. See 'https://aka.ms/assign-role-msi'. Status code: %s. Status message: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not retrieve an access token for the managed service principal. Status code: %s. Status message: %s",
+  "loc.messages.NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }

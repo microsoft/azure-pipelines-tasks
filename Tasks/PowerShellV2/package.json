@@ -5,7 +5,7 @@
   "main": "powershell.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Microsoft/vsts-tasks.git"
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",

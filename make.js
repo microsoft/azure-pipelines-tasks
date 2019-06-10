@@ -171,7 +171,7 @@ target.build = function() {
             createResjson(taskDef, taskPath);
 
             // determine the type of task
-            shouldBuildNode = shouldBuildNode || taskDef.execution.hasOwnProperty('Node');
+            shouldBuildNode = shouldBuildNode || taskDef.execution.hasOwnProperty('Node') || taskDef.execution.hasOwnProperty('Node10');
         }
         else {
             outDir = path.join(buildPath, path.basename(taskPath));
@@ -547,8 +547,12 @@ var agentPluginTasks = ['DownloadPipelineArtifact', 'PublishPipelineArtifact'];
 // used to bump the patch version in task.json files
 target.bump = function() {
     taskList.forEach(function (taskName) {
+        // load files
         var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
         var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
+
+        var taskLocJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.loc.json');
+        var taskLocJson = JSON.parse(fs.readFileSync(taskLocJsonPath));
 
         // skip agent plugin tasks
         if(agentPluginTasks.indexOf(taskJson.name) > -1) {
@@ -560,6 +564,16 @@ target.bump = function() {
         }
 
         taskJson.version.Patch = taskJson.version.Patch + 1;
+        taskLocJson.version.Patch = taskLocJson.version.Patch + 1;
+
         fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 4));
+        fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
+
+        // Check that task.loc and task.loc.json versions match
+        if ((taskJson.version.Major !== taskLocJson.version.Major) || 
+            (taskJson.version.Minor !== taskLocJson.version.Minor) || 
+            (taskJson.version.Patch !== taskLocJson.version.Patch)) {
+            console.log(`versions dont match for task '${taskName}', task json: ${JSON.stringify(taskJson.version)} task loc json: ${JSON.stringify(taskLocJson.version)}`);
+        }
     });
 }

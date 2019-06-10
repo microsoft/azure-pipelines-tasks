@@ -158,7 +158,7 @@ function Add-MachinePathItem
     return Set-MachinePath -NewPath $newPath
 }
 
-$command = Get-Command -Name 'mysql' 
+$command = Get-Command -Name 'mysql' -ErrorAction SilentlyContinue
 if($command)
 {
     return 0;

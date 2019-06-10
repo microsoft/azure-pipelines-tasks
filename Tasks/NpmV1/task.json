@@ -2,14 +2,15 @@
     "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
     "name": "Npm",
     "friendlyName": "npm",
-    "description": "Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Package Management.",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
+    "description": "Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Azure Artifacts.",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746) or [see the npm documentation](https://docs.npmjs.com/)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 0
+        "Minor": 153,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -18,7 +19,7 @@
     "demands": [
         "npm"
     ],
-    "minimumAgentVersion": "1.91.0",
+    "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "npm $(command)",
     "groups": [
         {
@@ -99,8 +100,8 @@
         {
             "groupName": "customRegistries",
             "name": "customEndpoint",
-            "label": "Credentials for registries outside this account/collection",
-            "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this account/collection, leave this blank; the build’s credentials are used automatically.",
+            "label": "Credentials for registries outside this organization/collection",
+            "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this organization/collection, leave this blank; the build’s credentials are used automatically.",
             "type": "connectedService:externalnpmregistry",
             "visibleRule": "customRegistry = useNpmrc",
             "properties": {
@@ -123,7 +124,7 @@
             "groupName": "publishRegistries",
             "name": "publishFeed",
             "label": "Target registry",
-            "helpMarkDown": "Select a registry hosted in this account. You must have Package Management installed and licensed to select a registry here.",
+            "helpMarkDown": "Select a registry hosted in this account. You must have Azure Artifacts installed and licensed to select a registry here.",
             "type": "pickList",
             "visibleRule": "publishRegistry = useFeed",
             "required": true
@@ -184,7 +185,7 @@
         "PublishRegistry": "Publishing to registry: %s",
         "UsingRegistry": "Using registry: %s",
         "AddingAuthRegistry": "Adding auth for registry: %s",
-        "FoundLocalRegistries": "Found %d registries in this account/collection",
+        "FoundLocalRegistries": "Found %d registries in this organization/collection",
         "ForcePackagingUrl": "Packaging collection URL forced to: %s",
         "DebugLogNotFound": "Couldn't find a debug log in the cache or working directory",
         "NpmFailed": "Npm failed with return code: %s",

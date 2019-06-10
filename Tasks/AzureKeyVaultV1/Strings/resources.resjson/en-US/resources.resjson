@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure Key Vault",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848891)",
-  "loc.description": "Download Azure Key Vault Secrets",
+  "loc.description": "Download Azure Key Vault secrets",
   "loc.instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
   "loc.releaseNotes": "Works with cross-platform agents (Linux, macOS, or Windows)",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
@@ -42,5 +42,7 @@
   "loc.messages.CouldNotMaskSecret": "%s value has regular expressions hence could not mask completely",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+  "loc.messages.RetryingWithVaultResourceIdFromResponse": "Retrying with vault resource Id reterieved from response : %s",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }

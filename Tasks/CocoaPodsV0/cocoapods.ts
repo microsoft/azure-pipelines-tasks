@@ -1,6 +1,6 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
-import trm = require('vsts-task-lib/toolrunner');
+import tl = require('azure-pipelines-task-lib/task');
+import trm = require('azure-pipelines-task-lib/toolrunner');
 
 // The CocoaPods install command is documented here:
 // https://guides.cocoapods.org/terminal/commands.html#pod_install
@@ -23,7 +23,12 @@ async function run() {
             throw new Error(tl.loc('CocoaPodsNotFound'));
         }
 
-        // Prepare to run 'pod install'
+        // Run `pod --version` to make diagnosing build breaks easier.
+        var podv: trm.ToolRunner = tl.tool(podPath);
+        podv.arg('--version');
+        await podv.exec();
+
+        // Prepare to run `pod install`
         var pod: trm.ToolRunner = tl.tool(podPath);
         pod.arg('install');
 
@@ -40,7 +45,7 @@ async function run() {
 
         // Execute
         var returnCode: number = await pod.exec();
-        
+
         // Get the result code and set the task result accordingly
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('PodReturnCode', returnCode));
     }

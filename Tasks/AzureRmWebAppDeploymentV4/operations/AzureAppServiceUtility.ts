@@ -1,9 +1,9 @@
-import tl = require('vsts-task-lib/task');
-import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
-import webClient = require('azure-arm-rest/webClient');
+import tl = require('azure-pipelines-task-lib/task');
+import { AzureAppService } from 'azure-arm-rest-v2/azure-arm-app-service';
+import webClient = require('azure-arm-rest-v2/webClient');
 var parseString = require('xml2js').parseString;
 import Q = require('q');
-import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
+import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
 
 export class AzureAppServiceUtility {
     private _appService: AzureAppService;
@@ -204,9 +204,9 @@ export class AzureAppServiceUtility {
 
     public async updateStartupCommandAndRuntimeStack(runtimeStack: string, startupCommand?: string): Promise<void> {
         var configDetails = await this._appService.getConfiguration();
-        startupCommand = (!!startupCommand) ? startupCommand  : "";
-        var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
         var appCommandLine: string = configDetails.properties.appCommandLine;
+        startupCommand = (!!startupCommand) ? startupCommand  : appCommandLine;
+        var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
         runtimeStack = (!!runtimeStack) ? runtimeStack : linuxFxVersion;
 
         if (appCommandLine != startupCommand || runtimeStack != linuxFxVersion) {
@@ -242,16 +242,28 @@ export class AzureAppServiceUtility {
     private _getNewMetadata(): any {
         var collectionUri = tl.getVariable("system.teamfoundationCollectionUri");
         var projectId = tl.getVariable("system.teamprojectId");
-        var buildDefintionId = tl.getVariable("build.definitionId")
         var releaseDefinitionId = tl.getVariable("release.definitionId");
+
+        // Log metadata properties based on whether task is running in build OR release.
     
         let newProperties = {
-            VSTSRM_BuildDefinitionId: buildDefintionId,
-            VSTSRM_ReleaseDefinitionId: releaseDefinitionId,
             VSTSRM_ProjectId: projectId,
-            VSTSRM_AccountId: tl.getVariable("system.collectionId"),
-            VSTSRM_BuildDefinitionWebAccessUrl: collectionUri + projectId + "/_build?_a=simple-process&definitionId=" + buildDefintionId,
-            VSTSRM_ConfiguredCDEndPoint: collectionUri + projectId + "/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?definitionId=" + releaseDefinitionId
+            VSTSRM_AccountId: tl.getVariable("system.collectionId")
+        }
+
+        if(!!releaseDefinitionId) {
+            // Task is running in Release
+            let buildDefintionId = tl.getVariable("build.definitionId");
+            newProperties["VSTSRM_BuildDefinitionId"] = buildDefintionId;
+            newProperties["VSTSRM_ReleaseDefinitionId"] = releaseDefinitionId;
+            newProperties["VSTSRM_BuildDefinitionWebAccessUrl"] = collectionUri + projectId + "/_build?_a=simple-process&definitionId=" + buildDefintionId;
+            newProperties["VSTSRM_ConfiguredCDEndPoint"] = collectionUri + projectId + "/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?definitionId=" + releaseDefinitionId;
+        }
+        else {
+            // Task is running in Build
+            let buildDefintionId = tl.getVariable("system.definitionId");
+            newProperties["VSTSRM_BuildDefinitionId"] = buildDefintionId;
+            newProperties["VSTSRM_ConfiguredCDEndPoint"] = collectionUri + projectId + "/_build?_a=simple-process&definitionId=" + buildDefintionId;
         }
 
         return newProperties;

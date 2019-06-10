@@ -1,8 +1,9 @@
-import * as tl from "vsts-task-lib/task";
-
-export interface IPackageSource {
+export interface IPackageSourceBase {
     feedName: string;
     feedUri: string;
+}
+
+export interface IPackageSource extends IPackageSourceBase {
     isInternal: boolean;
 }
 

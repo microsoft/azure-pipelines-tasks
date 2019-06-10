@@ -1,10 +1,11 @@
 {
     "id": "d8b84976-e99a-4b86-b885-4849694435b0",
     "name": "ArchiveFiles",
-    "friendlyName": "Archive Files",
-    "description": "Archive files using compression formats such as .7z, .rar, .tar.gz, and .zip.",
+    "friendlyName": "Archive files",
+    "description": "Compress files into .7z, .tar.gz, or .zip",
     "author": "Microsoft Corporation",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=809083)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/archive-files",
+    "helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=809083)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -17,7 +18,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 127,
+        "Minor": 151,
         "Patch": 2
     },
     "groups": [
@@ -92,6 +93,24 @@
             "required": true,
             "defaultValue": "true",
             "helpMarkDown": "If an existing archive exists, specify whether to overwrite it.  Otherwise, files will be added to it.",
+            "groupName": "archive"
+        },
+        {
+            "name": "verbose",
+            "type": "boolean",
+            "label": "Force verbose output",
+            "required": false,
+            "defaultValue": false,
+            "helpMarkDown": "If set to true, forces tools to use verbose output. Overrides 'quiet'",
+            "groupName": "archive"
+        },
+        {
+            "name": "quiet",
+            "type": "boolean",
+            "label": "Force quiet output",
+            "required": false,
+            "defaultValue": false,
+            "helpMarkDown": "If set to true, forces tools to use quiet output. Can be overridden by 'verbose'",
             "groupName": "archive"
         }
     ],

@@ -1,7 +1,7 @@
 import * as path from "path";
+import * as tl from "azure-pipelines-task-lib";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as telemetry from "utility-common/telemetry";
-import * as tl from "vsts-task-lib";
 import * as auth from "./authentication";
 import * as utils from "./utilities";
 
@@ -17,14 +17,10 @@ async function main(): Promise<void> {
         }
 
         const feedIds  = tl.getDelimitedInput("feedList", ",");
-        const serverType = tl.getVariable("System.ServerType");
 
         // Local feeds
         if (feedIds)
         {
-            if (!serverType || serverType.toLowerCase() !== "hosted"){
-                throw new Error(tl.loc("Error_PythonInternalFeedsNotSupportedOnprem"));
-            }
             tl.debug(tl.loc("Info_AddingInternalFeeds", feedIds.length));
             const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
             const localAccessToken = pkgLocationUtils.getSystemAccessToken();
@@ -43,7 +39,8 @@ async function main(): Promise<void> {
                 const feedUri = await pkgLocationUtils.getFeedRegistryUrl(
                     packagingLocation, 
                     pkgLocationUtils.RegistryType.PyPiSimple, 
-                    feedId, 
+                    feedId,
+                    null,
                     localAccessToken);
                 const pipUri = utils.formPipCompatibleUri("build", localAccessToken, feedUri);
                 pipEnvVar = pipEnvVar + " " + pipUri;

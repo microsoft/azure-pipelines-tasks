@@ -1,14 +1,14 @@
-# Visual Studio Services VS Hosted Pools  
+# Visual Studio Services VS Hosted Pools
 
 This document is focused on the problems around the common case of building with Visual Studio although it is relevant for other development environments as well.  Mac XCode pools could have the same class of issues.
 
-Small sample of issues:  
+Small sample of issues:
 
-https://github.com/Microsoft/vsts-tasks/issues/4361  
+https://github.com/Microsoft/azure-pipelines-tasks/issues/4361
 
-https://github.com/Microsoft/vsts-tasks/issues/3787#issuecomment-299835958  
+https://github.com/Microsoft/azure-pipelines-tasks/issues/3787#issuecomment-299835958
 
-https://github.com/Microsoft/vsts-tasks/issues/4403#issuecomment-304463270  
+https://github.com/Microsoft/azure-pipelines-tasks/issues/4403#issuecomment-304463270
 
 ## Hosted Pool Approach
 
@@ -20,7 +20,7 @@ In the model where the VM image had all versions of VS stacked on the machine, i
 
 We originally had the task default to "Latest" but in that model of all VS versions present, it cause a problem where a new VS was stacked on the image and everyone's builds broke.  So when VS2015 was released we made the decision for the task default to be latest released (VS2015) and it would stick at definition creation until you changed it (ideally when you converted your projects).
 
-Problems:  
+Problems:
 
   - Stacking all versions of VS is hitting walls.  They all don't fit on the disk, they are taking longer and  longer to copy around (10s of hours to get a simple patch and push images around)
   - Side by Side Issues: Even though SxS is tested, many issues weren't caught and subtle difference in order of install with updates and patches would find bugs leading to instability
@@ -45,9 +45,9 @@ That unblocked 2017 usage but we didn't account for alignment problems.  Specifi
 
 The solutions are in order of implementation and priority.
 
-## Phase One  
+## Phase One
 
-**Default task to Latest**  
+**Default task to Latest**
 
 In a scheme of image per VS era, Use "Latest" makes sense.  Regardless of the queue you pick it just works.
 
@@ -55,9 +55,9 @@ Once "Latest" is resolved, we can optionally have the task peek into the solutio
 
 This just changes the default and doesn't introduce compat issues.
 
-VSBuild, msbuild and vstest tasks will be changed to use latest 
+VSBuild, msbuild and vstest tasks will be changed to use latest
 
-**Queue Selection: More obvious and explicit**  
+**Queue Selection: More obvious and explicit**
 
 Offer pools:
 
@@ -65,7 +65,7 @@ Offer pools:
   - Hosted VS2015
   - Hosted Deprecated (was Hosted Pool)
 
-On create definition, there will be no default.  You must select the queue as an up front decision.  We can possibly default again if we implement Auto (see below).  Even if we convince ourselves VS2017 is the proper choice, it should still be more up front.  It's not obvious for users to go to the options tab 
+On create definition, there will be no default.  You must select the queue as an up front decision.  We can possibly default again if we implement Auto (see below).  Even if we convince ourselves VS2017 is the proper choice, it should still be more up front.  It's not obvious for users to go to the options tab
 
 Queue selection will move to the up front process section of the definition (defauult view after create).  The user will have to choose before saving.
 
@@ -79,7 +79,7 @@ Pick VS environment and everything downstream (including tasks and ad-hoc script
 
 We would expose a process level parameter to pick the version of VS.  *That will contribute to a demand for that version of VS*
 
-**Hosted VS (Auto)**  
+**Hosted VS (Auto)**
 
 Introduce a virtual hosted pool.  Based on the demand, we would route to the appropriate Hosted VSxxxx pool.
 
@@ -89,7 +89,7 @@ This leverages and follows concepts introduced with tools.  In general, it's a p
 
 https://www.youtube.com/watch?v=Ie8EuvqJ0Hg
 
-Once in place, the templates would be updated to include the environment up front to run dev cmd prompt to set up the "tools" or "tool sets". 
+Once in place, the templates would be updated to include the environment up front to run dev cmd prompt to set up the "tools" or "tool sets".
 
 All tasks, cmd line tasks and scripts downstream will just work and use a consistent VS.
 

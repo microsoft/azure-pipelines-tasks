@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import util = require('util');
 import webClient = require('./webClient');
@@ -8,6 +8,7 @@ import { KUDU_DEPLOYMENT_CONSTANTS } from './constants';
 export class KuduServiceManagementClient {
     private _scmUri;
     private _accesssToken: string;
+    private _cookie: string[];
 
     constructor(scmUri: string, accessToken: string) {
         this._accesssToken = accessToken;
@@ -19,11 +20,21 @@ export class KuduServiceManagementClient {
         request.headers["Authorization"] = "Basic " + this._accesssToken;
         request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
         
+        if(!!this._cookie) {
+            tl.debug(`setting affinity cookie ${JSON.stringify(this._cookie)}`);
+            request.headers['Cookie'] = this._cookie;
+        }
+
         let retryCount = reqOptions && util.isNumber(reqOptions.retryCount) ? reqOptions.retryCount : 5;
 
         while(retryCount >= 0) {
             try {
                 let httpResponse = await webClient.sendRequest(request, reqOptions);
+                if(httpResponse.headers['set-cookie'] && !this._cookie) {
+                    this._cookie = httpResponse.headers['set-cookie'];
+                    tl.debug(`loaded affinity cookie ${JSON.stringify(this._cookie)}`);
+                }
+                
                 return httpResponse;
             }
             catch(exception) {
@@ -76,7 +87,7 @@ export class Kudu {
         httpRequest.uri = this._client.getRequestUri(`/api/deployments/${requestBody.id}`);
 
         try {
-            let webRequestOptions: webClient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true};
+            let webRequestOptions: webClient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: null, retryCount: 5, retryIntervalInSeconds: 5, retryRequestTimedout: true};
             var response = await this._client.beginRequest(httpRequest, webRequestOptions);
             tl.debug(`updateDeployment. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
@@ -477,7 +488,7 @@ export class Kudu {
         httpRequest.body = fs.createReadStream(webPackage);
 
         try {
-            let response = await this._client.beginRequest(httpRequest);
+            let response = await this._client.beginRequest(httpRequest, null, 'multipart/form-data');
             tl.debug(`War Deploy response: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 tl.debug('Deployment passed');
@@ -594,12 +605,13 @@ export class Kudu {
         let httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = pollURL;
+        httpRequest.headers = {};
 
         while(true) {
             let response = await this._client.beginRequest(httpRequest);
             if(response.statusCode == 200 || response.statusCode == 202) {
                 var result = response.body;
-                tl.debug(`POLL URL RESULT: ${JSON.stringify(result)}`);
+                tl.debug(`POLL URL RESULT: ${JSON.stringify(response)}`);
                 if(result.status == KUDU_DEPLOYMENT_CONSTANTS.SUCCESS || result.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {
                     return result;
                 }

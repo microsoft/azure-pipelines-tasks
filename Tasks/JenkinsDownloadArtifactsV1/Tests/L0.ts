@@ -161,6 +161,25 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         }
     });
     
+    it('Validate bitbucket commit url', (done) => {
+
+        const tp: string = path.join(__dirname, 'L0ValidateBitBucketCommitUrl.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            assert(tr.stdout.indexOf('Translated url http://bitbucket.org/commits/3cbfc14e3f482a25e5122323f3273b89677d9875 after fixing the query path based on the provider') !== -1, tr.stdout);
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
     it('Validate http commit url', (done) => {
 
         const tp: string = path.join(__dirname, 'L0ValidateHttpCommitUrl.js');
@@ -506,6 +525,25 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
             let buildIndexApi: string = "http://url/job/folder1/job/folder2/job/testmultibranchproject//job/master/20/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]";
             assert(tr.stdout.indexOf(buildIndexApi) != -1, "Url for folder job should be correct");
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('Should retry if JenkinsClient encounters an error', (done) => {
+        const tp: string = path.join(__dirname, 'L0ShouldRetryCorrectlyWhenErrorHappens.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            let expectedMessage: string = "RetryingOperation DownloadJsonContent 1";
+            assert(tr.stdout.indexOf(expectedMessage) != -1, tr.stdout);
 
             done();
         } catch(err) {

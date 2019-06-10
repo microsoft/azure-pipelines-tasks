@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Cloud-based Load Test",
+  "loc.friendlyName": "Cloud-based load test",
   "loc.helpMarkDown": "This task triggers a cloud-based load test using Azure Pipelines. [Learn more](https://go.microsoft.com/fwlink/?linkid=546976)",
-  "loc.description": "Runs the load test in the cloud with Azure Pipelines",
+  "loc.description": "Run a load test in the cloud with Azure Pipelines",
   "loc.instanceNameFormat": "Cloud Load Test $(LoadTest)",
   "loc.input.label.connectedServiceName": "Azure Pipelines Connection",
   "loc.input.help.connectedServiceName": "Select a previously registered service connection to talk to the cloud-based load test service. Choose 'Manage' to register a new service connection.",

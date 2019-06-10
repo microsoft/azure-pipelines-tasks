@@ -4,11 +4,12 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 2,
+    "Minor": 154,
     "Patch": 0
   },
   "runsOn": [
@@ -100,8 +101,7 @@
     "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable",
     "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
     "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
-    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile",
-    "Error_PythonInternalFeedsNotSupportedOnprem": "ms-resource:loc.messages.Error_PythonInternalFeedsNotSupportedOnprem"
+    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile"
   },
   "postjobexecution": {
     "Node": {

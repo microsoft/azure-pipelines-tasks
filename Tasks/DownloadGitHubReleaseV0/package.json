@@ -1,0 +1,22 @@
+{
+  "name": "downloadgithubrelease",
+  "description": "Azure Pipelines GitHub Release Download Task",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/azure-pipelines-tasks.git"
+  },
+  "main": "main.js",
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "artifact-engine": "0.1.26",
+    "vso-node-api": "^6.2.8-preview",
+    "vsts-task-lib": "2.2.1",
+    "@types/node": "^6.0.101",
+    "typed-rest-client": "^1.0.11"
+  }
+}

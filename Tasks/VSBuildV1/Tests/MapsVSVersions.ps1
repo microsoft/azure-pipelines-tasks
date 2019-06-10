@@ -3,11 +3,13 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+Register-Mock Get-VstsTaskVariable { $false } -- -Name System.Debug -AsBool
 Register-Mock Get-SolutionFiles
 Register-Mock Format-MSBuildArguments
 Register-Mock Invoke-BuildTools
 $mappings = @(
     @{ VSVersion = '' ; MSBuildVersion = '14.0' }
+    @{ VSVersion = '16.0' ; MSBuildVersion = '16.0' }
     @{ VSVersion = '15.0' ; MSBuildVersion = '15.0' }
     @{ VSVersion = '14.0' ; MSBuildVersion = '14.0' }
     @{ VSVersion = '12.0' ; MSBuildVersion = '12.0' }

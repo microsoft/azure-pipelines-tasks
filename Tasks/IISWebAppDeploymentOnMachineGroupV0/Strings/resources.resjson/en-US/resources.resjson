@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "IIS Web App Deploy",
+  "loc.friendlyName": "IIS web app deploy",
   "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=866789)",
   "loc.description": "Deploy a website or web application using Web Deploy",
   "loc.instanceNameFormat": "Deploy IIS Website/App: $(WebDeployPackage)",
@@ -73,5 +73,6 @@
   "loc.messages.FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
   "loc.messages.AutoParameterizationMessage": "ConnectionString attributes in Web.config is parameterized by default. Note that the transformation has no effect on connectionString attributes as the value is overridden during deployment by 'Parameters.xml or 'SetParameters.xml' files. You can disable the auto-parameterization by setting /p:AutoParameterizationWebConfigConnectionStrings=False during MSBuild package generation.",
   "loc.messages.PackageDeploymentFailed": "Failed to deploy web package to IIS website.",
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine."
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
+  "loc.messages.RetryToDeploy": "Retrying to deploy the package."
 }

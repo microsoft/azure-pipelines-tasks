@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "App Center テスト",
   "loc.helpMarkDown": "このタスクに関するヘルプは、Visual Studio App Center [サポート サイト](https://aka.ms/appcentersupport) をご覧ください。",
-  "loc.description": "Visual Studio App Center でアプリ パッケージをテストします。",
+  "loc.description": "Visual Studio App Center でアプリ パッケージをテストします",
   "loc.instanceNameFormat": "Visual Studio App Center でテスト",
   "loc.group.displayName.prepare": "テストの準備",
   "loc.group.displayName.run": "テストの実行",
@@ -28,7 +28,7 @@
   "loc.input.help.calabashSkipConfigCheck": "Cucumber プロファイルを使用しないで強制実行します。",
   "loc.input.label.uitestBuildDir": "ビルド ディレクトリ",
   "loc.input.help.uitestBuildDir": "ビルド済みテスト アセンブリがあるディレクトリへのパス。",
-  "loc.input.label.uitestStoreFile": "ファイルの保存",
+  "loc.input.label.uitestStorePath": "ファイルの保存",
   "loc.input.label.uitestStorePass": "パスワードの保存",
   "loc.input.label.uitestKeyAlias": "キーのエイリアス",
   "loc.input.label.uitestKeyPass": "キー パスワード",

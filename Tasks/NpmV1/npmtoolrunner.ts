@@ -3,11 +3,12 @@ import * as path from 'path';
 import { format, parse, Url } from 'url';
 import * as Q from 'q';
 
-import * as tl from 'vsts-task-lib/task';
-import * as tr from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import {NpmTaskInput} from './constants';
 
 import * as util from 'packaging-common/util';
+import * as npmutil from 'packaging-common/npm/npmutil';
 import * as telemetry from 'utility-common/telemetry';
 
 export class NpmToolRunner extends tr.ToolRunner {
@@ -104,10 +105,78 @@ export class NpmToolRunner extends tr.ToolRunner {
             tl.debug(`Using proxy "${proxy}" for npm`);
             options.env['NPM_CONFIG_PROXY'] = proxy;
             options.env['NPM_CONFIG_HTTPS-PROXY'] = proxy;
+
+            let proxybypass = this._getProxyBypass();
+            if (proxybypass != null) {
+                
+                // check if there are any existing NOPROXY values
+                let existingNoProxy = process.env["NO_PROXY"];
+                if (existingNoProxy) {
+                    existingNoProxy = existingNoProxy.trimRight();
+                    // trim trailing comma
+                    existingNoProxy = existingNoProxy.endsWith(',') ? existingNoProxy.slice(0,-1) : existingNoProxy;
+                    // append our bypass list
+                    proxybypass = existingNoProxy + ',' + proxybypass;
+                }
+
+                tl.debug(`Setting NO_PROXY for npm: "${proxybypass}"`);
+                options.env['NO_PROXY'] = proxybypass;
+            }
         }
 
         let config = tl.execSync('npm', `config list ${this.dbg ? '-l' : ''}`, options);
         return options;
+    }
+
+    private _getProxyBypass(): string {    
+        // check if there are any proxy bypass hosts
+        const proxyBypassHosts: string[] = JSON.parse(tl.getVariable('Agent.ProxyBypassList') || '[]'); 
+        if (proxyBypassHosts == null || proxyBypassHosts.length == 0) {
+            return undefined;
+        }
+
+        // get the potential package sources
+        let registries: string[] = npmutil.getAllNpmRegistries(this.projectNpmrc());
+
+        // convert to urls
+        let registryUris = registries.reduce(function(result: Url[], currentRegistry: string): Url[] {
+            try {
+                const uri = parse(currentRegistry);
+                if (uri.hostname != null) {
+                    result.push(uri);
+                }
+            }
+            finally {
+                return result;
+            }
+        }, []);
+
+        const bypassDomainSet = new Set<string>(); 
+
+        proxyBypassHosts.forEach((bypassHost => {
+            // if there are no more registries, stop processing regexes 
+            if (registryUris == null || registryUris.length == 0) {
+                return;    
+            }
+   
+            let regex = new RegExp(bypassHost, 'i');
+
+            // filter out the registries that match the current regex
+            registryUris = registryUris.filter(registryUri => {    
+                if (regex.test(registryUri.href)) {
+                    bypassDomainSet.add(registryUri.hostname);
+                    return false;
+                }
+                return true;
+            });
+        }));
+    
+        // return a comma separated list of the bypass domains
+        if (bypassDomainSet.size > 0) {
+            const bypassDomainArray = Array.from(bypassDomainSet);
+            return bypassDomainArray.join(',');
+        }
+        return undefined;
     }
 
     private _getDebugLogPath(options?: tr.IExecSyncOptions): string {

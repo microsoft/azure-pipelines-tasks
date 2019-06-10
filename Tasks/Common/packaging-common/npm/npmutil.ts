@@ -3,7 +3,7 @@ import * as url from 'url';
 
 import * as util from '../util';
 
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import { INpmRegistry, NpmRegistry } from './npmregistry';
 import * as NpmrcParser from './npmrcparser';
@@ -23,7 +23,7 @@ export async function getLocalRegistries(packagingUrls: string[], npmrc: string)
         return undefined;
     });
 
-    const registries = NpmrcParser.GetRegistries(npmrc);
+    const registries = NpmrcParser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true);
 
     const localRegistries = registries.filter(registry => {
         const registryHost = url.parse(registry).host;
@@ -42,6 +42,14 @@ export function getFeedIdFromRegistry(registry: string) {
     const endingIndex = registryPathname.indexOf('/npm/registry');
 
     return registryUrl.pathname.substring(startingIndex + startingToken.length, endingIndex);
+}
+
+export function getAllNpmRegistries(npmrcPath: string): string[] {
+    if (tl.exist(npmrcPath)) {
+        return NpmrcParser.GetRegistries(npmrcPath, /* saveNormalizedRegistries */ false);
+    }
+
+    return [];
 }
 
 export async function getLocalNpmRegistries(workingDir: string, packagingUrls: string[]): Promise<INpmRegistry[]> {

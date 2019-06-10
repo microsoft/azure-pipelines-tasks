@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import utility = require('./utility');
 import zipUtility = require('./ziputility.js');
 
@@ -36,19 +36,9 @@ export class Package {
 
     public async isMSBuildPackage(): Promise<boolean> {
         if(this._isMSBuildPackage == undefined) {
-            this._isMSBuildPackage = false;
-            if(this.getPackageType() != PackageType.folder) {
-                var pacakgeComponent = await zipUtility.getArchivedEntries(this._path);
-                if (((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) && 
-                    ((pacakgeComponent["entries"].indexOf("systemInfo.xml") > -1) || (pacakgeComponent["entries"].indexOf("systeminfo.xml") > -1)
-                    || (pacakgeComponent["entries"].indexOf("SystemInfo.xml") > -1))) {
-                    this._isMSBuildPackage = true;
-                }
-            }
-            
+            this._isMSBuildPackage = this.getPackageType() != PackageType.folder && await zipUtility.checkIfFilesExistsInZip(this._path, ["parameters.xml", "systeminfo.xml"]);
             tl.debug("Is the package an msdeploy package : " + this._isMSBuildPackage);
         }
-
         return this._isMSBuildPackage;
     }
 

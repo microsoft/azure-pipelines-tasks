@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import webClient = require('./webClient');
 import {
     AzureEndpoint,
@@ -9,9 +9,7 @@ import {
     ServiceClient,
     ToError
 } from './AzureServiceClient';
-import { Kudu } from './azure-arm-app-service-kudu';
 import constants = require('./constants');
-var parseString = require('xml2js').parseString;
 
 export class AzureAppService {
     private _resourceGroup: string;
@@ -209,7 +207,7 @@ export class AzureAppService {
         var isNewValueUpdated: boolean = false;
         for(var key in addProperties) {
             if(applicationSettings.properties[key] != addProperties[key]) {
-                tl.debug(`old value : ${applicationSettings.properties[key]}. new value: ${addProperties[key]}`);
+                tl.debug(`Value of ${key} has been changed to ${addProperties[key]}`);
                 isNewValueUpdated = true;
             }
 
@@ -230,6 +228,46 @@ export class AzureAppService {
         return isNewValueUpdated;
     }
     
+    public async syncFunctionTriggers(): Promise<any> {
+        try {
+            let i = 0;
+            let retryCount = 5;
+            let retryIntervalInSeconds = 2;
+            let timeToWait: number = retryIntervalInSeconds;
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'POST';
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/syncfunctiontriggers`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+            
+            while(true) {
+                var response = await this._client.beginRequest(httpRequest);
+                if(response.statusCode == 200) {
+                    return response.body;
+                }
+                else if(response.statusCode == 400) {
+                    if (++i < retryCount) {
+                        await webClient.sleepFor(timeToWait);
+                        timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
+                        continue;
+                    }
+                    else {
+                        throw ToError(response);
+                    }
+                }
+                else {
+                    throw ToError(response);
+                }
+            }
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToSyncTriggers', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+    }
+
     public async getConfiguration(): Promise<AzureAppServiceConfigurationDetails> {
         try {
             var httpRequest = new webClient.WebRequest();

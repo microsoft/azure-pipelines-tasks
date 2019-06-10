@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Manueller Eingriff",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=870234)",
-  "loc.description": "Bereitstellung anhalten und auf Eingriff warten",
+  "loc.description": "Hiermit wird die Bereitstellung angehalten und auf einen manuellen Eingriff gewartet.",
   "loc.instanceNameFormat": "Manueller Eingriff",
   "loc.input.label.instructions": "Anweisungen",
   "loc.input.help.instructions": "Diese Anweisungen werden dem Benutzer angezeigt, damit dieser den manuellen Eingriff fortsetzen oder ablehnen kann. Basierend auf diesen Anweisungen kann der Benutzer eine fundierte Entscheidung zu diesem manuellen Eingriff treffen.",

@@ -63,6 +63,7 @@ export class AzureRGTaskParameters {
     public outputVariable: string;
     public subscriptionId: string;
     public endpointPortalUrl: string;
+    public deploymentName: string;
     public deploymentMode: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
     public deploymentGroupProjectName = "";
@@ -70,6 +71,8 @@ export class AzureRGTaskParameters {
     public deploymentOutputs: string;
     public agentServiceUserCredentials: AgentServiceUserCredentials;
     public runAgentServiceAsUser: boolean;
+    public addSpnToEnvironment: boolean;
+    public connectedService: string;
 
     private getVSTSPatToken(deploymentGroupEndpointName: string): TokenCredentials {
         var endpointAuth = tl.getEndpointAuthorization(deploymentGroupEndpointName, true);
@@ -101,11 +104,11 @@ export class AzureRGTaskParameters {
     public async getAzureRGTaskParameters() : Promise<AzureRGTaskParameters> 
     {
         try {
-            var connectedService = tl.getInput("ConnectedServiceName", true);
-            var endpointTelemetry = '{"endpointId":"' + connectedService + '"}';
+            this.connectedService = tl.getInput("ConnectedServiceName", true);
+            var endpointTelemetry = '{"endpointId":"' + this.connectedService + '"}';
             console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureResourceGroupDeployment]" + endpointTelemetry);
-            this.subscriptionId = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
-            this.endpointPortalUrl = tl.getEndpointDataParameter(connectedService, "armManagementPortalUrl", true);
+            this.subscriptionId = tl.getEndpointDataParameter(this.connectedService, "SubscriptionId", true);
+            this.endpointPortalUrl = tl.getEndpointDataParameter(this.connectedService, "armManagementPortalUrl", true);
             this.resourceGroupName = tl.getInput("resourceGroupName", true);
             this.action = tl.getInput("action");
             this.location = tl.getInput("location");
@@ -134,10 +137,12 @@ export class AzureRGTaskParameters {
             this.agentServiceUserCredentials = new AgentServiceUserCredentials(userName, password);
             
             this.outputVariable = tl.getInput("outputVariable");
+            this.deploymentName = tl.getInput("deploymentName");
             this.deploymentMode = tl.getInput("deploymentMode");
-            this.credentials = await this.getARMCredentials(connectedService);
+            this.credentials = await this.getARMCredentials(this.connectedService);
             this.deploymentGroupProjectName = tl.getInput("project");
             this.deploymentOutputs = tl.getInput("deploymentOutputs");
+            this.addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
             return this;
         } catch (error) {
             throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));

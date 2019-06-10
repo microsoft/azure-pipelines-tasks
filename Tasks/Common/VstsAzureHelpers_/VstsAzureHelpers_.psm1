@@ -11,12 +11,16 @@ if ($global:DebugPreference -eq 'Continue') {
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 
+[System.Net.WebRequest]::DefaultWebProxy = Get-VstsWebProxy
+
 Import-Module $PSScriptRoot/../TlsHelper_
 Add-Tls12InSession
 
 # Dot source the private functions.
 . $PSScriptRoot/InitializeFunctions.ps1
 . $PSScriptRoot/ImportFunctions.ps1
+. $PSScriptRoot/InitializeAzureRMFunctions.ps1
+. $PSScriptRoot/InitializeAzModuleFunctions.ps1
 
 # This is the only public function.
 function Initialize-Azure {
@@ -66,3 +70,6 @@ function Initialize-Azure {
 Export-ModuleMember -Function Initialize-Azure
 Export-ModuleMember -Function CmdletHasMember
 Export-ModuleMember -Function Remove-EndpointSecrets
+Export-ModuleMember -Function Initialize-AzureRMModule
+Export-ModuleMember -Function Initialize-AzModule
+Export-ModuleMember -Function Disconnect-AzureAndClearContext

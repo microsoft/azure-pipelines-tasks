@@ -9,3 +9,4 @@ export const searchFolder = 'searchFolder';
 export const listPackagesReturnCode = 'listPackagesReturnCode';
 export const osType = 'osType';
 export const agentTempDirectory = 'Agent.TempDirectory';
+export const failTaskOnFailedTests = 'failTaskOnFailedTests';

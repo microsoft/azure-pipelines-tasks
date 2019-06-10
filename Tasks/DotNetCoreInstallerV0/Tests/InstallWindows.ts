@@ -22,6 +22,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "C:\\somedir\\powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & 'C:\\currDir\\externals\\install-dotnet.ps1' -Version 1.0.4 -DryRun -SharedRuntime": {
             "code": 0,
             "stdout": "dotnet-install: Payload URLs:" + os.EOL + "dotnet-install: Primary - https://primary-runtime-url" + os.EOL + "dotnet-install: Legacy - https://legacy-runtime-url" + os.EOL + "dotnet-install: Repeatable invocation: .\install-dotnet.ps1 -Version 1.1.2 -Channel 1.1 -Architecture x64 -InstallDir <auto>"
+        },
+        "C:\\somedir\\powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & 'C:\\currDir\\externals\\get-os-platform.ps1'": {
+            "code": 0,
+            "stdout": "Primary: win-x64" + os.EOL,
         }
     },
     "osType": {
@@ -37,7 +41,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 
 var ut = require('../utilities');
 tr.registerMock('./utilities', {
-    getCurrentDir : function() {
+    getCurrentDir: function () {
         return "C:\\currDir";
     },
     setFileAttribute: ut.setFileAttribute

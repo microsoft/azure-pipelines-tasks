@@ -2,13 +2,11 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import * as url from "url";
 import * as tl from "vsts-task-lib/task";
 import * as tr from "vsts-task-lib/toolrunner";
-import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
 import * as utils from "./utilities";
 import * as os from "os";
-import kubectlutility = require("utility-common/kubectlutility");
+import kubectlutility = require("kubernetes-common/kubectlutility");
 
 export default class ClusterConnection {
     private kubectlPath: string;
@@ -47,7 +45,7 @@ export default class ClusterConnection {
                      kubeconfig = kubectlutility.getKubeconfigForCluster(kubernetesEndpoint);
                 } 
             }
-            else if (authorizationType === "ServiceAccount")
+            else if (authorizationType === "ServiceAccount" || authorizationType === "AzureSubscription")
             {
                 kubeconfig = kubectlutility.createKubeconfig(kubernetesEndpoint);
             }
@@ -68,10 +66,21 @@ export default class ClusterConnection {
         command.on("errline", line => {
             errlines.push(line);
         });
-        return command.exec(options).fail(error => {
+
+        tl.debug(tl.loc('CallToolRunnerExec'));
+
+        let promise = command.exec(options)
+        .fail(error => {
+            tl.debug(tl.loc('ToolRunnerExecCallFailed', error));
             errlines.forEach(line => tl.error(line));
             throw error;
+        })
+        .then(() => {
+            tl.debug(tl.loc('ToolRunnerExecCallSucceeded'));
         });
+
+        tl.debug(tl.loc('ReturningToolRunnerExecPromise'));
+        return promise;
     }
 
     private getExecutableExtention(): string {

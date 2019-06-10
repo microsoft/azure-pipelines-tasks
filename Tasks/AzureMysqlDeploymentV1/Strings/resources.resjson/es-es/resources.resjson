@@ -60,6 +60,8 @@
   "loc.messages.WindowMysqlClientMissingError": "Falta el cliente de MySQL en el equipo del agente de Windows. Instálelo ejecutando el archivo de script \"https://aka.ms/window-mysqlcli-installer\" del instalador del cliente MySQL en la máquina del agente.",
   "loc.messages.LinuxMysqlClientMissingError": "Falta el cliente de MySQL en el equipo del agente de Linux. Instálelo ejecutando \"sudo apt-get install mysql-client\".",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "No se pudo recuperar un token de acceso para Azure. Código de estado: %s. Mensaje de estado: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "No se pudo recuperar un token de acceso para la entidad de servicio administrado. Configure la identidad de servicio administrado (MSI) para la máquina virtual. Consulte \"https://aka.ms/azure-msi-docs\". Código de estado: %s. Mensaje de estado: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "No se pudo recuperar un token de acceso para la entidad de servicio administrado. Código de estado: %s. Mensaje de estado: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "No se pudo recuperar un token de acceso para la entidad de servicio administrado. Configure Managed Service Identity (MSI) para la máquina virtual. Consulte \"https://aka.ms/azure-msi-docs\". Asigne un rol a la identidad MSI que se ha creado. Consulte \"https://aka.ms/assign-role-msi\". Código de estado: %s. Mensaje de estado: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "No se pudo recuperar un token de acceso para la entidad de servicio administrado. Código de estado: %s. Mensaje de estado: %s",
+  "loc.messages.NotAbleToCreateFirewallRule": "Error al agregar la regla de firewall al servidor MySQL de Azure: %s",
+  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado."
 }

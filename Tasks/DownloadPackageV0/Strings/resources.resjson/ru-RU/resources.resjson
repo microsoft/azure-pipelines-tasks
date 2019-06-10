@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Скачать пакет",
-  "loc.helpMarkDown": "Должно быть установлено расширение управления пакетами",
-  "loc.description": "Скачать пакет из веб-канала управления пакетами в Azure Artifacts или TFS. \r\n Требуется расширение управления пакетами.",
+  "loc.friendlyName": "Загрузить пакет",
+  "loc.helpMarkDown": "Требует установку расширения Azure Artifacts",
+  "loc.description": "Скачать пакет из веб-канала управления пакетами в Azure Artifacts",
   "loc.instanceNameFormat": "Скачать пакет",
   "loc.input.label.feed": "Веб-канал",
   "loc.input.help.feed": "Выбор источника пакетов",
@@ -14,9 +14,12 @@
   "loc.messages.FailedToGetPackageMetadata": "Не удалось получить метаданные пакета. Ошибка: %s",
   "loc.messages.FailedToDownloadNugetPackage": "Не удалось скачать пакет NuGet из расположения %s. Ошибка: %s",
   "loc.messages.PackageDownloadSuccessful": "Пакет успешно скачан.",
-  "loc.messages.CredentialsNotFound": "Не удается определить учетные данные для подключения к службе управления пакетами.",
+  "loc.messages.CredentialsNotFound": "Не удалось определить учетные данные для подключения к службе Azure Artifacts.",
   "loc.messages.StartingDownloadOfPackage": "Начинается скачивание пакета NuGet %s в расположение %s.",
   "loc.messages.ExtractingNugetPackage": "Извлечение пакета NuGet %s в каталог %s",
   "loc.messages.PackageTypeNotSupported": "С помощью этой задачи можно скачивать только пакеты типа NuGet.",
-  "loc.messages.ExtractionFailed": "Не удалось распаковать пакет. Ошибка: %s"
+  "loc.messages.ExtractionFailed": "Не удалось распаковать пакет. Ошибка: %s",
+  "loc.messages.RetryingOperation": "Ошибка в %s, выполняется повторная попытка => осталось повторных попыток: %s",
+  "loc.messages.OperationFailed": "Сбой в %s с ошибкой: %s",
+  "loc.messages.UnsupportedProjectScopedFeeds": "Веб-каналы, областью действия которых является проект, не поддерживаются в этой версии задачи \"Скачать пакет\". Используйте версию 1 или более позднюю."
 }

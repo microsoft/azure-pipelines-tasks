@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Visual Studio Build",
+  "loc.friendlyName": "Visual Studio build",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "Build with MSBuild and set the Visual Studio version property.",
+  "loc.description": "Build with MSBuild and set the Visual Studio version property",
   "loc.instanceNameFormat": "Build solution $(solution)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.solution": "Solution",
@@ -26,6 +26,8 @@
   "loc.input.help.logProjectEvents": "Optionally record timeline details for each project.",
   "loc.input.label.createLogFile": "Create Log File",
   "loc.input.help.createLogFile": "Optionally create a log file (Windows only).",
+  "loc.input.label.logFileVerbosity": "Log File Verbosity",
+  "loc.input.help.logFileVerbosity": "Optional log file verbosity.",
   "loc.messages.MSBuildLocationDeprecated0": "The MSBuild location parameter has been deprecated. Ignoring value '{0}'",
   "loc.messages.MSBuildVersionDeprecated0": "The MSBuild version parameter has been deprecated. Ignoring value '{0}'.",
   "loc.messages.UnexpectedVSVersion0": "Unexpected Visual Studio version '{0}'.",

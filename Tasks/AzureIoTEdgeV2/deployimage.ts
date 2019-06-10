@@ -128,8 +128,16 @@ class azureclitask {
     var servicePrincipalKey = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
     var tenantId = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
     var subscriptionName = tl.getEndpointDataParameter(connectedService, "SubscriptionName", true);
+    var environment = tl.getEndpointDataParameter(connectedService, "environment", true);
     // Work around for build agent az command will exit with non-zero code since configuration files are missing.
     tl.debug(tl.execSync("az", "--version", Constants.execSyncSilentOption).stdout);
+
+    // Set environment if it is not AzureCloud (global Azure)
+    if (environment && environment !== 'AzureCloud') {
+      let result = tl.execSync("az", `cloud set --name ${environment}`, Constants.execSyncSilentOption);
+      tl.debug(JSON.stringify(result));
+    }
+
     //login using svn
     let result = tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + servicePrincipalKey + "\" --tenant \"" + tenantId + "\"", Constants.execSyncSilentOption);
     tl.debug(JSON.stringify(result));
@@ -181,6 +189,85 @@ class azureclitask {
   }
 }
 
+class imagevalidationtask {
+  static async runMain(deploymentJson) {
+    let skipValidation = tl.getVariable("SKIP_MODULE_IMAGE_VALIDATION");
+    if (skipValidation && skipValidation.toLowerCase() === "true") {
+      console.log(tl.loc("SkipModuleImageValidation"));
+      return;
+    }
+
+    var executionError = null;
+    try {
+      let modules = deploymentJson.modulesContent.$edgeAgent["properties.desired"].modules;
+      if (modules) {
+        tl.debug("Logging out all registries.");
+        Object.keys(modules).forEach((key: string) => {
+          let module = modules[key];
+          let image = module.settings.image as string;
+          let hostNameString = this.getDomainName(image);
+          let result = tl.execSync("docker", `logout ${hostNameString}`, Constants.execSyncSilentOption);
+          tl.debug(JSON.stringify(result));
+        });
+      } else {
+        tl.debug("No custom modules found in deployment.json");
+        return; // There is no custom module so do not need to validate
+      }
+
+      let credentials = deploymentJson.modulesContent.$edgeAgent["properties.desired"].runtime.settings.registryCredentials;
+      if (credentials) {
+        Object.keys(credentials).forEach((key: string) => {
+          let credential = credentials[key];
+          let loginResult = tl.execSync("docker", `login ${credential.address} -u ${credential.username} -p ${credential.password}`, Constants.execSyncSilentOption);
+          tl.debug(JSON.stringify(loginResult));
+          if (loginResult.code != 0) {
+            tl.warning(tl.loc("InvalidRegistryCredentialWarning", credential.address, loginResult.stderr));
+          }
+        });
+      }
+
+      tl.setVariable("DOCKER_CLI_EXPERIMENTAL", "enabled");
+      tl.debug(`Checking DOCKER_CLI_EXPERIMENTAL value: ${tl.getVariable("DOCKER_CLI_EXPERIMENTAL")}`);
+      let validationErr = "";
+      Object.keys(modules).forEach((key: string) => {
+        let module = modules[key];
+        let image = module.settings.image;
+        let manifestResult = tl.execSync("docker", `manifest inspect ${image}`, Constants.execSyncSilentOption);
+        tl.debug(JSON.stringify(manifestResult));
+        if (manifestResult.code != 0) {
+          validationErr += tl.loc("CheckModuleImageExistenceError", image, manifestResult.stderr) + "\n";
+        }
+      });
+      if (validationErr) {
+        throw new Error(validationErr);
+      }
+    }
+    catch (err) {
+      if (err.stderr) {
+        executionError = err.stderr;
+      }
+      else {
+        executionError = err;
+      }
+    }
+    finally {
+      //set the task result to either succeeded or failed based on error was thrown or not
+      if (executionError) {
+        throw new Error(executionError);
+      }
+    }
+  }
+
+  static getDomainName(name: string) {
+    let i = name.indexOf('/');
+    if (i == -1 || (!name.substr(0, i).match(/\.|:/))) { // The image is in docker hub
+      return "";
+    } else {
+      return name.substr(0, i);
+    }
+  }
+}
+
 export async function run(telemetryEvent: TelemetryEvent) {
   let inBuildPipeline: boolean = util.checkSelfInBuildPipeline();
   console.log(tl.loc('DeployTaskRunningInBuild', inBuildPipeline));
@@ -217,5 +304,6 @@ export async function run(telemetryEvent: TelemetryEvent) {
   if (!azureclitask.checkIfAzurePythonSdkIsInstalled()) {
     throw new Error(tl.loc('AzureSdkNotFound'));
   }
+  await imagevalidationtask.runMain(deploymentJson);
   await azureclitask.runMain(deploymentJson, telemetryEvent);
 }

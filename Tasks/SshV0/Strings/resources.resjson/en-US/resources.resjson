@@ -18,12 +18,13 @@
   "loc.input.help.args": "Arguments to pass to the shell script.",
   "loc.input.label.failOnStdErr": "Fail on STDERR",
   "loc.input.help.failOnStdErr": "If this option is selected, the build will fail when the remote commands or script write to STDERR.",
-  "loc.messages.UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
-  "loc.messages.SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
-  "loc.messages.SshConnectionSuccessful": "Successfully connected.",
   "loc.messages.ConnectionFailed": "Failed to connect to remote machine. Verify the SSH service connection details. Error: %s.",
-  "loc.messages.RemoteCopyFailed": "Failed to copy script to remote machine. Error: %s.",
+  "loc.messages.FailedToWriteScript": "Failed to write the script to disk: %s",
   "loc.messages.RemoteCmdExecutionErr": "Command failed with errors on remote machine.",
   "loc.messages.RemoteCmdNonZeroExitCode": "Command %s exited with code %s.",
-  "loc.messages.RemoteScriptFileCleanUpFailed": "Failed to delete the script file copied to the remote machine. Error = %s."
+  "loc.messages.RemoteCopyFailed": "Failed to copy script to remote machine. Error: %s.",
+  "loc.messages.RemoteScriptFileCleanUpFailed": "Failed to delete the script file copied to the remote machine. Error = %s.",
+  "loc.messages.SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
+  "loc.messages.SshConnectionSuccessful": "Successfully connected.",
+  "loc.messages.UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified."
 }

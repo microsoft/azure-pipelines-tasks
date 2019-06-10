@@ -8,7 +8,6 @@
   * [Build a specific task (recommended):](#build-a-specific-task-recommended)
   * [Run Tests](#run-tests)
   * [Legacy Tests](#legacy-tests)
-- [Package](#package)
 
 # Contributing
 
@@ -25,7 +24,7 @@ We welcome contributions to the project!  To help us get your PR through the rev
     "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
     "name": "NuGetCommand",
     "friendlyName": "NuGet",
-    "description": "Restore, pack, or push NuGet packages, or run a NuGet command. Supports NuGet.org and authenticated feeds like Package Management and MyGet. Uses NuGet.exe and works with .NET Framework apps. For .NET Core and .NET Standard apps, use the .NET Core task.",
+    "description": "Restore, pack, or push NuGet packages, or run a NuGet command. Supports NuGet.org and authenticated feeds like Azure Artifacts and MyGet. Uses NuGet.exe and works with .NET Framework apps. For .NET Core and .NET Standard apps, use the .NET Core task.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613747)",
     "category": "Package",
     "author": "Microsoft Corporation",

@@ -42,19 +42,43 @@ function getCommandOutputFormat(kubecommand: string) : string[] {
     return args;
 }
 
-function getCommandConfigurationFile() : string[] {
-    var args: string[] =[];
-    var useConfigurationFile : boolean  =  tl.getBoolInput("useConfigurationFile", false);
-    if(useConfigurationFile) {
-        var configurationPath = tl.getInput("configuration", true);
-        if(configurationPath && tl.exist(configurationPath))
-        {
-            args[0] = "-f";
-            args[1] = configurationPath;
+function getCommandConfigurationFile(): string[] {
+    var args: string[] = [];
+    var useConfigurationFile: boolean = tl.getBoolInput("useConfigurationFile", false);
+    if (useConfigurationFile) {
+        let configurationPath = tl.getPathInput("configuration", false);
+        var inlineConfiguration = tl.getInput("inline", false);
+    
+        if (!tl.filePathSupplied("configuration")) {
+            configurationPath = null;
         }
-        else
-        {
-           throw new Error(tl.loc('ConfigurationFileNotFound', configurationPath));       
+    
+        if (configurationPath != null && inlineConfiguration != null) {
+            let type = tl.getInput("configurationType", false);
+            if (type == "inline") configurationPath = null;
+            else inlineConfiguration = null;
+        }
+        
+        if (configurationPath == null && inlineConfiguration == null) {
+            throw new Error(tl.loc('InvalidConfiguration'));
+        }
+        else if (configurationPath) {
+            if (tl.exist(configurationPath)) {
+                args[0] = "-f";
+                args[1] = configurationPath;
+            }
+            else {
+                throw new Error(tl.loc('ConfigurationFileNotFound', configurationPath));
+            }
+        }
+        else if (inlineConfiguration) {
+            var tempInlineFile = utils.writeInlineConfigInTempPath(inlineConfiguration);
+            if (tl.exist(tempInlineFile)) {
+                args[0] = "-f";
+                args[1] = tempInlineFile;
+            } else {
+                throw new Error(tl.loc('ConfigurationFileNotFound', tempInlineFile));
+            }
         }
     }
 
@@ -67,16 +91,16 @@ function getCommandArguments(): string {
 
 function isJsonOrYamlOutputFormatSupported(kubecommand) : boolean
 {
-   switch (kubecommand) {
-       case "delete":
-          return false;
-       case "exec":
-          return false;
-       case "logs":
-          return false;
-       default: 
-          return true;
-   }
+    var commandsThatDontSupportYamlAndJson: string[] = ["explain", "delete", "cluster-info", "top", "cordon", "uncordon", "drain", "describe", "logs", "attach", "exec", "port-forward", "proxy", "cp", "auth", "completion", "api-versions", "config", "help", "plugin", "rollout"];    
+    
+    if (commandsThatDontSupportYamlAndJson.findIndex(command => command === kubecommand) > -1)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 export function getNameSpace(): string[] {

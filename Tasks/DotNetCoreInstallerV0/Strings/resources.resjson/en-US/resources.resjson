@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": ".NET Core SDK Installer",
+  "loc.friendlyName": ".NET Core SDK/runtime installer",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=853651)",
-  "loc.description": "Acquires a specific version of the .NET Core SDK from internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks.",
+  "loc.description": "Acquire a specific version of the .NET Core SDK from the internet or local cache and add it to the PATH",
   "loc.instanceNameFormat": "Use .NET Core $(packageType) $(version)",
   "loc.input.label.packageType": "Package to install",
   "loc.input.help.packageType": "Please select whether to install only runtime or full SDK.",
@@ -27,5 +27,6 @@
   "loc.messages.WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/dotnet/core/blob/master/release-notes/releases.json. Falling back to creating convention based URL.",
   "loc.messages.CouldNotDownload": "Could not download installation package from this URL: %s Error: %s",
   "loc.messages.FailedToDownloadPackage": "Failed to download package for installation",
-  "loc.messages.PrependGlobalToolPath": "Creating global tool path and pre-prending to PATH."
+  "loc.messages.PrependGlobalToolPath": "Creating global tool path and pre-prending to PATH.",
+  "loc.messages.VersionsFileMalformed": "The specified version's download links are not correctly formed in the supported versions document => %s/"
 }

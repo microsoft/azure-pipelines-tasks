@@ -1,5 +1,5 @@
-import tl = require("vsts-task-lib/task");
-import tr = require("vsts-task-lib/toolrunner");
+import tl = require("azure-pipelines-task-lib/task");
+import tr = require("azure-pipelines-task-lib/toolrunner");
 import path = require("path");
 import fs = require("fs");
 var archiver = require('archiver');
@@ -114,11 +114,13 @@ export class dotNetExe {
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
         if (enablePublishTestResults && enablePublishTestResults === true) {
-            this.arguments = this.arguments.concat(` --logger trx --results-directory "${resultsDirectory}"`);
+            this.arguments = ` --logger trx --results-directory "${resultsDirectory}" `.concat(this.arguments);
         }
 
         // Remove old trx files
-        this.removeOldTestResultFiles(resultsDirectory);
+        if (enablePublishTestResults && enablePublishTestResults === true) {
+            this.removeOldTestResultFiles(resultsDirectory);
+        }
 
         // Use empty string when no project file is specified to operate on the current directory
         const projectFiles = this.getProjectFiles();
@@ -154,12 +156,13 @@ export class dotNetExe {
     private publishTestResults(resultsDir: string): void {
         const buildConfig = tl.getVariable('BuildConfiguration');
         const buildPlaform = tl.getVariable('BuildPlatform');
+        const testRunTitle = tl.getInput("testRunTitle", false) || "";
         const matchingTestResultsFiles: string[] = tl.findMatch(resultsDir, '**/*.trx');
         if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
             tl.warning('No test result files were found.');
         } else {
             const tp: tl.TestPublisher = new tl.TestPublisher('VSTest');
-            tp.publish(matchingTestResultsFiles, 'false', buildPlaform, buildConfig, '', 'true', this.testRunSystem);
+            tp.publish(matchingTestResultsFiles, 'false', buildPlaform, buildConfig, testRunTitle, 'true', this.testRunSystem);
             //refer https://github.com/Microsoft/vsts-task-lib/blob/master/node/task.ts#L1620
         }
     }

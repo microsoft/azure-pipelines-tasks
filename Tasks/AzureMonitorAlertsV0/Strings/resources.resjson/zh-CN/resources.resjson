@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure 监视器警报",
+  "loc.friendlyName": "Azure Monitor 警报",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=859947)",
   "loc.description": "在 Azure 资源的可用指标上配置警报",
   "loc.instanceNameFormat": "配置 Azure 警报: $(ResourceName)",
@@ -28,5 +28,6 @@
   "loc.messages.Couldnotfetchaccesstoken": "无法提取 Azure 的访问令牌。状态代码: %s (%s) %s。",
   "loc.messages.SPNExpiredCheck": "检查 SPN 是否有效且未过期。",
   "loc.messages.FailedToGetAzureMetricAlerts": "无法获取 Application Insights 预警规则: %s。错误: %s",
-  "loc.messages.FailedToUpdateAzureMetricAlerts": "未能更新 Azure 指标预警规则“%s”资源。错误: %s"
+  "loc.messages.FailedToUpdateAzureMetricAlerts": "未能更新 Azure 指标预警规则“%s”资源。错误: %s",
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
 }

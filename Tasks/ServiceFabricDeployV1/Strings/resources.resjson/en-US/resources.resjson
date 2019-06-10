@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Service Fabric Application Deployment",
+  "loc.friendlyName": "Service Fabric application deployment",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820528)",
-  "loc.description": "Deploy a Service Fabric application to a cluster.",
+  "loc.description": "Deploy an Azure Service Fabric application to a cluster",
   "loc.instanceNameFormat": "Deploy Service Fabric Application",
   "loc.group.displayName.advanced": "Advanced Settings",
   "loc.group.displayName.upgrade": "Upgrade Settings",
@@ -23,7 +23,7 @@
   "loc.input.label.registerPackageTimeoutSec": "RegisterPackageTimeoutSec",
   "loc.input.help.registerPackageTimeoutSec": "Timeout in seconds for registering or un-registering application package.",
   "loc.input.label.overwriteBehavior": "Overwrite Behavior",
-  "loc.input.help.overwriteBehavior": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured.",
+  "loc.input.help.overwriteBehavior": "Overwrite Behavior: when upgrade is not configured and an Application with same name already exists in the cluster, then following actions are available => Never, Always, SameAppTypeAndVersion.\n    Never will not remove the existing Application. This is the default behavior.\n    Always will remove the existing Application even if its Application type and Version is different from the Application being created.\n    SameAppTypeAndVersion will remove the existing Application only if its Application type and Version is same as the Application being created.",
   "loc.input.label.skipUpgradeSameTypeAndVersion": "Skip upgrade for same Type and Version",
   "loc.input.help.skipUpgradeSameTypeAndVersion": "Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation. If enabled, re-deployments are idempotent.",
   "loc.input.label.skipPackageValidation": "Skip package validation",

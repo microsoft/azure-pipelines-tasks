@@ -142,7 +142,7 @@ mockery.registerMock('typed-rest-client/RestClient', {
     }
 });
 
-mockery.registerMock('vsts-task-lib/task', {
+mockery.registerMock('azure-pipelines-task-lib/task', {
     exist: function() {
         return true;
     },

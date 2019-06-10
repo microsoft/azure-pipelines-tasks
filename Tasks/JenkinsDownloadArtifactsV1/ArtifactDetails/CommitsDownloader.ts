@@ -3,6 +3,8 @@ import * as os from 'os';
 import * as path from 'path';
 import * as  tl from 'vsts-task-lib/task';
 
+import url = require('url');
+
 import {ArtifactDetailsDownloaderBase} from "./ArtifactDetailsDownloaderBase"
 import {JenkinsRestClient, JenkinsJobDetails} from "./JenkinsRestClient"
 
@@ -174,7 +176,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
 
                 commitMessages.forEach((commit) => {
                     tl.debug('Normalizing url' + commit.DisplayUri);
-                    commit.DisplayUri = this.ConvertGitProtocolUrlToHttpProtocol(commit.DisplayUri);
+                    commit.DisplayUri = this.TransformCommitUrl(commit.DisplayUri);
                 });
 
                 return JSON.stringify(commitMessages);
@@ -187,6 +189,21 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
                 
         return '';
     };
+
+    private TransformCommitUrl(commitUrl: string): string {
+        commitUrl = this.ConvertGitProtocolUrlToHttpProtocol(commitUrl);
+
+        try {
+            if (url.parse(commitUrl).hostname.toUpperCase() == this.BitBucketHostName.toUpperCase()) {
+                commitUrl = commitUrl.replace('/commit/', '/commits/')
+            }
+        } catch (error) {
+            tl.debug(`Error while parsing the commit url ${commitUrl}`);
+        }
+
+        tl.debug(`Translated url ${commitUrl} after fixing the query path based on the provider`);
+        return commitUrl;
+    }
 
     private ConvertGitProtocolUrlToHttpProtocol(commitUrl: string): string {
         var result: string = '';
@@ -210,4 +227,6 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         tl.debug(`Translated url ${commitUrl} to ${result}`);
         return result;
     }
+
+    private BitBucketHostName: string = "bitbucket.org";
 }
