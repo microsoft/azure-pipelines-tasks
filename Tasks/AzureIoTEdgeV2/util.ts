@@ -225,8 +225,7 @@ export default class Util {
 
   public static setEnvrionmentVarialbe(envList: NodeJS.ProcessEnv, envName: string, envValue: string): void {
     if (envList[envName]) {
-        tl.loc("SkipSettingEnvironmentVariable", envName);
-        return;
+        tl.debug(`The environment variable ${envName} already exists. Will override this environment variable.`)
     }
     tl.debug(`Setting the value of environment variable ${envName}`);
     envList[envName] = envValue;

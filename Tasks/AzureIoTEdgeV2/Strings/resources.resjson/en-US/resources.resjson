@@ -70,7 +70,6 @@
   "loc.messages.StartGenerateDeploymentManifest": "Start generating deployment manifest...",
   "loc.messages.FinishGenerateDeploymentManifest": "Finished generating deployment manifest.",
   "loc.messages.LoginRegistrySucess": "Successfully logged in to registry %s",
-  "loc.messages.SkipSettingEnvironmentVariable": "The environment variable %s already exists. Skip setting this environment variable.",
   "loc.messages.SkipSettingEnvironmentVariableForSecret": "Environment variable %s already exist. Skip setting environment varialbe for secret: %s.",
-  "loc.messages.OverrideDeploymentManifestOutputPath": "The %s environment variable will be overriden by the output path parameter."
+  "loc.messages.DeploymentManifestOutputPathOverridden": "The deployment manifest output path set through variables was overridden by the output path parameter."
 }

@@ -20,7 +20,7 @@ export async function run() {
   let envList = process.env;
   util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputFolder, tl.getVariable(Constants.outputFileFolder));
 
-  // Pass task variable to sub process
+  // Pass secrets to sub process
   util.populateSecretToEnvironmentVariable(envList);
 
   tl.debug(`Following variables will be passed to the iotedgedev command: ${Object.keys(envList).join(", ")}`);
