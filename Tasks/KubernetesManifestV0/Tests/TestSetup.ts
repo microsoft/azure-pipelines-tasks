@@ -62,6 +62,10 @@ process.env.ENDPOINT_AUTH_PARAMETER_kubernetesConnection_KUBECONFIG = '{"apiVers
 
 process.env.ENDPOINT_DATA_kubernetesConnection_NAMESPACE = 'testnamespace';
 
+if (process.env.RemoveNamespaceFromEndpoint) {
+    process.env.ENDPOINT_DATA_kubernetesConnection_NAMESPACE = '';
+}
+
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'checkPath': {
         'helm': true
@@ -75,8 +79,12 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 
 if (process.env[shared.TestEnvVars.action] === 'bake') {
-    const command = `helm template ${process.env[shared.TestEnvVars.helmChart]} --namespace ${process.env[shared.TestEnvVars.namespace] || 'testnamespace'}`;
-    const commandWithReleaseNameOverride = `helm template ${process.env[shared.TestEnvVars.helmChart]} --name ${process.env[shared.TestEnvVars.releaseName]} --namespace ${process.env[shared.TestEnvVars.namespace] || 'testnamespace'}`;
+    let namespace = process.env[shared.TestEnvVars.namespace] || 'testnamespace';
+    if (process.env.RemoveNamespaceFromEndpoint) {
+        namespace = 'default';
+    }
+    const command = `helm template ${process.env[shared.TestEnvVars.helmChart]} --namespace ${namespace}`;
+    const commandWithReleaseNameOverride = `helm template ${process.env[shared.TestEnvVars.helmChart]} --name ${process.env[shared.TestEnvVars.releaseName]} --namespace ${namespace}`;
 
     a.exec[command] = {
         'code': 0,

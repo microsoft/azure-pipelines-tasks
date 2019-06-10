@@ -18,3 +18,8 @@ if (!namespace) {
     const kubConnection = tl.getInput('kubernetesServiceConnection', true);
     namespace = tl.getEndpointDataParameter(kubConnection, 'namespace', true);
 }
+
+if (!namespace) {
+    tl.debug('Namespace was not supplied nor present in the endpoint; using "default" namespace instead.');
+    namespace = 'default';
+}
