@@ -1,5 +1,5 @@
-import tl = require('vsts-task-lib/task');
-import { IExecOptions, IExecSyncResult, IExecSyncOptions, ToolRunner } from 'vsts-task-lib/toolrunner';
+import * as tl from 'vsts-task-lib/task';
+import { IExecOptions, IExecSyncResult, ToolRunner } from 'vsts-task-lib/toolrunner';
 
 export interface Resource {
     name: string;
@@ -17,66 +17,84 @@ export class Kubectl {
         if (!!namespace) {
             this.namespace = namespace;
         } else {
-            this.namespace = "default";
+            this.namespace = 'default';
         }
     }
 
     public apply(configurationPaths: string | string[]): IExecSyncResult {
         const command = tl.tool(this.kubectlPath);
-        command.arg("apply");
-        command.arg(["-f", this.createInlineArray(configurationPaths)]);
+        command.arg('apply');
+        command.arg(['-f', this.createInlineArray(configurationPaths)]);
         return this.execute(command);
     }
 
     public annotate(resourceType: string, resourceName: string, annotations: string[], overwrite?: boolean): IExecSyncResult {
         const command = tl.tool(this.kubectlPath);
-        command.arg("annotate");
+        command.arg('annotate');
         command.arg([resourceType, resourceName]);
         command.arg(annotations);
-        if (!!overwrite) command.arg(`--overwrite`)
+        if (!!overwrite) { command.arg(`--overwrite`); }
         return this.execute(command);
     }
 
     public annotateFiles(files: string | string[], annotations: string[], overwrite?: boolean): IExecSyncResult {
         const command = tl.tool(this.kubectlPath);
-        command.arg("annotate");
-        command.arg(["-f", this.createInlineArray(files)]);
+        command.arg('annotate');
+        command.arg(['-f', this.createInlineArray(files)]);
         command.arg(annotations);
-        if (!!overwrite) command.arg(`--overwrite`)
+        if (!!overwrite) { command.arg(`--overwrite`); }
         return this.execute(command);
     }
 
-    public createSecret(args: string, force?: boolean, secretName?: string): IExecSyncResult {
+    public createDockerSecret(secretName: string, registryServer: string, userName: string, password: string, email: string, force?: boolean): IExecSyncResult {
         if (!!force && !!secretName) {
-            const command = tl.tool(this.kubectlPath);
-            command.arg("delete");
-            command.arg("secret");
-            command.arg(secretName);
-            this.execute(command);
+            this.deleteSecret(secretName);
         }
 
         const command = tl.tool(this.kubectlPath);
-        command.arg("create");
-        command.arg("secret");
-        command.line(args);
+        command.arg('create');
+        command.arg('secret');
+        command.arg('docker-registry');
+        command.arg(secretName);
+        command.arg(['--docker-username', userName]);
+        command.arg(['--docker-password', password]);
+        command.arg(['--docker-server', registryServer]);
+        command.arg(['--docker-email', email]);
         return this.execute(command);
     }
 
-    public describe(resourceType, resourceName, silent?: boolean): IExecSyncResult {
+    public createGenericSecret(secretName: string, args: string, force?: boolean): IExecSyncResult {
+        if (!!force && !!secretName) {
+            this.deleteSecret(secretName);
+        }
+
         const command = tl.tool(this.kubectlPath);
-        command.arg("describe");
+        command.arg('create');
+        command.arg('secret');
+        command.arg('generic');
+        command.arg(secretName);
+        if (args) {
+            command.line(args);
+        }
+        
+        return this.execute(command);
+    }
+
+    public describe(resourceType: string, resourceName: string, silent?: boolean): IExecSyncResult {
+        const command = tl.tool(this.kubectlPath);
+        command.arg('describe');
         command.arg([resourceType, resourceName]);
         return this.execute(command, silent);
     }
 
-    public getNewReplicaSet(deployment): string {
-        let newReplicaSet = "";
-        const result = this.describe("deployment", deployment, true);
+    public getNewReplicaSet(deployment: string): string {
+        let newReplicaSet = '';
+        const result = this.describe('deployment', deployment, true);
         if (result != null && result.stdout != null) {
-            let stdout = result.stdout.split("\n");
+            const stdout = result.stdout.split('\n');
             stdout.forEach((line: string) => {
-                if (!!line && line.toLowerCase().indexOf("newreplicaset") > -1) {
-                    newReplicaSet = line.substr(14).trim().split(" ")[0];
+                if (!!line && line.toLowerCase().indexOf('newreplicaset') > -1) {
+                    newReplicaSet = line.substr(14).trim().split(' ')[0];
                 }
             });
         }
@@ -86,34 +104,35 @@ export class Kubectl {
 
     public getAllPods(): IExecSyncResult {
         const command = tl.tool(this.kubectlPath);
-        command.arg("get");
-        command.arg("pods");
-        command.arg(["-o", "json"])
-        return this.execute(command, true)
+        command.arg('get');
+        command.arg('pods');
+        command.arg(['-o', 'json']);
+        return this.execute(command, true);
     }
 
-    public checkRolloutStatus(resourceType, name): IExecSyncResult {
+    public checkRolloutStatus(resourceType: string, name: string): IExecSyncResult {
         const command = tl.tool(this.kubectlPath);
-        command.arg(["rollout", "status"]);
-        command.arg(resourceType + "/" + name);
+        command.arg(['rollout', 'status']);
+        command.arg(resourceType + '/' + name);
         return this.execute(command);
     }
 
     public getResource(resourceType: string, name: string): IExecSyncResult {
         const command = tl.tool(this.kubectlPath);
-        command.arg("get");
-        command.arg(resourceType + "/" + name);
-        command.arg(["-o", "json"])
+        command.arg('get');
+        command.arg(resourceType + '/' + name);
+        command.arg(['-o', 'json']);
         return this.execute(command);
     }
 
     public getResources(applyOutput: string, filterResourceTypes: string[]): Resource[] {
-        let outputLines = applyOutput.split("\n");
-        let results = [];
+        const outputLines = applyOutput.split('\n');
+        const results = [];
         outputLines.forEach(line => {
-            let words = line.split(" ");
+            const words = line.split(' ');
             if (words.length > 2) {
-                let resourceType = words[0].trim(), resourceName = JSON.parse(words[1].trim());
+                const resourceType = words[0].trim();
+                const resourceName = JSON.parse(words[1].trim());
                 if (filterResourceTypes.filter(type => !!type && resourceType.toLowerCase().startsWith(type.toLowerCase())).length > 0) {
                     results.push({
                         type: resourceType,
@@ -126,40 +145,48 @@ export class Kubectl {
         return results;
     }
 
-    public scale(resourceType, resourceName, replicas) {
+    public scale(resourceType: string, resourceName: string, replicas: any) {
         const command = tl.tool(this.kubectlPath);
-        command.arg("scale");
-        command.arg(resourceType + "/" + resourceName);
+        command.arg('scale');
+        command.arg(resourceType + '/' + resourceName);
         command.arg(`--replicas=${replicas}`);
         return this.execute(command);
     }
 
-    public patch(resourceType, resourceName, patch, strategy) {
+    public patch(resourceType: string, resourceName: string, patch: string, strategy: any) {
         const command = tl.tool(this.kubectlPath);
-        command.arg("patch");
+        command.arg('patch');
         command.arg([resourceType, resourceName]);
         command.arg(`--type=${strategy}`);
         command.arg([`-p`, patch]);
         return this.execute(command);
     }
 
-    public delete(args) {
+    public delete(args: string) {
         const command = tl.tool(this.kubectlPath);
-        command.arg("delete");
+        command.arg('delete');
         command.line(args);
         return this.execute(command);
     }
 
     private execute(command: ToolRunner, silent?: boolean) {
         if (this.ignoreSSLErrors) {
-            command.arg("--insecure-skip-tls-verify");
+            command.arg('--insecure-skip-tls-verify');
         }
-        command.arg(["--namespace", this.namespace]);
+        command.arg(['--namespace', this.namespace]);
         return command.execSync({ silent: !!silent } as IExecOptions);
     }
 
     private createInlineArray(str: string | string[]): string {
-        if (typeof str === "string") return str;
-        return str.join(",");
+        if (typeof str === 'string') { return str; }
+        return str.join(',');
+    }
+
+    private deleteSecret(secretName: string): void {
+        const command = tl.tool(this.kubectlPath);
+        command.arg('delete');
+        command.arg('secret');
+        command.arg(secretName);
+        this.execute(command);
     }
 }
