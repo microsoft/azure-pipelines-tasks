@@ -36,7 +36,7 @@ Param(
     $taskLocContent | Set-Content $taskLocLocation
 }
 
-# Just bump the patch version for these
+# Just bump the patch version for these.
 "UseDotNetV2" | % {
     $taskLocation = Join-Path "$taskRoot/$_" "task.json"
     $taskContent = Get-Content $taskLocation 
