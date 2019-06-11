@@ -248,7 +248,7 @@
         "DependencyInstallSuccess": "%s installed with version: %s",
         "DependencyInstallFail": "%s installation failed, see detailed error in debug mode",
         "TemplateFileInvalid": "The path of template file is not valid: %s",
-        "ContainerRegistryInvalid": "Failed to fetch container registry authentication token, please check you container registry setting in build task. The username for container registry is %s",
+        "InvalidContainerRegistry": "Failed to fetch container registry authentication token, please check you container registry setting in build task. The username for container registry is %s",
         "DeploymentFileNotFound": "Deployment file can't be found. Please ensure Path of deployment file is correctly set in the task.",
         "ValidDeploymentFileNotFound": "Cannot find a valid deployment file. Please ensure Path of deployment file is correctly set in the task.",
         "AzureSdkNotFound": "Azure SDK not found",

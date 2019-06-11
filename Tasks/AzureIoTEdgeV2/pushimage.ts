@@ -24,7 +24,7 @@ function getRegistryAuthenticationToken(): RegistryCredential {
     if (token != null && token.username != null) {
       username = token.username;
     }
-    throw Error(tl.loc('ContainerRegistryInvalid', username));
+    throw Error(tl.loc('InvalidContainerRegistry', username));
   }
   return token;
 }
