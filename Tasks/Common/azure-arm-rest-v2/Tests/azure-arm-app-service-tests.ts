@@ -41,8 +41,6 @@ class AzureAppServiceTests {
         }).catch((error) => {
             console.log(error);
         });
-
-        
     }
 
     public static async restart() {
@@ -60,6 +58,14 @@ class AzureAppServiceTests {
         });
     }
 
+    public static async delete() {       
+        var appSerivce: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME", "MOCK_SLOT_NAME");
+        
+        appSerivce.delete().catch((error) => {
+            tl.setResult(tl.TaskResult.Failed, 'AzureAppServiceTests.delete() should have passed but failed');
+        });
+    }
+
     public static async swap() {
         var appSerivce: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME");
         
@@ -74,7 +80,6 @@ class AzureAppServiceTests {
         }).catch((error) => {
             console.log(error);
         });
-        
     }
 
     public static async get() {
@@ -327,6 +332,7 @@ async function RUNTESTS() {
     await AzureAppServiceTests.start();
     await AzureAppServiceTests.stop();
     await AzureAppServiceTests.restart();
+    await AzureAppServiceTests.delete();
     await AzureAppServiceTests.swap();
     await AzureAppServiceTests.get();
     await AzureAppServiceTests.getPublishingProfileWithSecrets();
