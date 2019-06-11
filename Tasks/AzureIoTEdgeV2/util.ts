@@ -223,11 +223,11 @@ export default class Util {
     return true;
   }
 
-  public static setEnvrionmentVarialbe(envList: NodeJS.ProcessEnv, envName: string, envValue: string): void {
+  public static setCliVarialbe(envList: NodeJS.ProcessEnv, envName: string, envValue: string): void {
     if (envList[envName]) {
-        tl.debug(`The environment variable ${envName} already exists. Will override this environment variable.`)
+        tl.debug(`Use parameters from task config and ignore existing variable ${envName}.`)
     }
-    tl.debug(`Setting the value of environment variable ${envName}`);
+    tl.debug(`Setting the value of CLI variable ${envName}`);
     envList[envName] = envValue;
   }
 
