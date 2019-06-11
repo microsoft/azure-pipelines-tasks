@@ -8,6 +8,7 @@ import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
 import * as utility from './Common/utility';
+import * as ltxdomutility from 'webdeployment-common/LtxDomUtility';
 
 export class dotNetExe {
     private command: string;
@@ -250,7 +251,7 @@ export class dotNetExe {
     }
 
     private extractOutputArgument(): void {
-        if (!this.arguments || !this.arguments.trim()) {    
+        if (!this.arguments || !this.arguments.trim()) {
             return;
         }
 
@@ -318,27 +319,60 @@ export class dotNetExe {
     }
 
     private getProjectFiles(): string[] {
-        var projectPattern = this.projects;
-        var searchWebProjects = this.isPublishCommand() && this.publishWebProjects;
+        let projectPattern = this.projects;
+        const searchWebProjects: boolean = this.isPublishCommand() && this.publishWebProjects;
         if (searchWebProjects) {
-            projectPattern = ["**/*.csproj", "**/*.vbproj", "**/*.fsproj"];
+            projectPattern = ['**/*.csproj', '**/*.vbproj', '**/*.fsproj'];
         }
 
-        var projectFiles = utility.getProjectFiles(projectPattern);
+        const projectFiles = utility.getProjectFiles(projectPattern);
+        let resolvedProjectFiles: string[] = [];
 
         if (searchWebProjects) {
-            projectFiles = projectFiles.filter(function (file, index, files): boolean {
-                var directory = path.dirname(file);
-                return tl.exist(path.join(directory, "web.config"))
-                    || tl.exist(path.join(directory, "wwwroot"));
+            resolvedProjectFiles = projectFiles.filter(function (file, index, files): boolean {
+                const directory = path.dirname(file);
+                return tl.exist(path.join(directory, 'web.config'))
+                    || tl.exist(path.join(directory, 'wwwroot'));
             });
 
-            if (!projectFiles.length) {
-                tl.error(tl.loc("noWebProjctFound"));
+            if (!resolvedProjectFiles.length) {
+                projectFiles.forEach((projectFile) => {
+                    if (isWebSdkUsed(projectFile)) {
+                        resolvedProjectFiles = projectFile;
+                    }
+                });
+                tl.error(tl.loc('noWebProjctFound'));
             }
         }
 
         return projectFiles;
+    }
+
+    private isWebSdkUsed(projectfile: string) {
+        var fileBuffer: Buffer = fs.readFileSync(projectfile);
+        var fileEncodeType = fileEncoding.detectFileEncoding(projectfile, fileBuffer);
+        var webConfigContent: string = fileBuffer.toString(fileEncodeType[0]);
+        if(fileEncodeType[1]) {
+            webConfigContent = webConfigContent.slice(1);
+        }
+        var xmlDocument;
+        var paramFileReplacableValues = {};
+        try {
+            var ltxDomUtiltiyInstance = new ltxdomutility.LtxDomUtility(webConfigContent);
+            xmlDocument = ltxDomUtiltiyInstance.getXmlDom();
+            for(var xmlChildNode of xmlDocument.children) {
+                if(!varUtility.isObject(xmlChildNode)) {
+                    continue;
+                }
+                if(xmlChildNode.name == "project" && !!xmlChildNode.attrs['sdk']) {
+                    if (xmlChildNode.attrs['sdk'] == ""
+                }
+            }
+        }
+        catch(error) {
+            tl.debug("Unable to parse parameter file : " + parameterFilePath + ' Error: ' + error);
+            return;
+        }
     }
 
     private isPublishCommand(): boolean {
