@@ -22,7 +22,7 @@ async function run() {
         var webAppName: string = tl.getInput('WebAppName', true);
         var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
         var specifySlotFlag: boolean = tl.getBoolInput('SpecifySlot', false);
-        var slotName: string = specifySlotFlag ? tl.getInput('Slot', false) : null;
+        var slotName: string = specifySlotFlag || action == "Delete Slot" ? tl.getInput('Slot', false) : null;
         var appInsightsResourceGroupName: string = tl.getInput('AppInsightsResourceGroupName', false);
         var appInsightsResourceName: string = tl.getInput('ApplicationInsightsResourceName', false);
         var sourceSlot: string = tl.getInput('SourceSlot', false);
@@ -63,6 +63,10 @@ async function run() {
             case "Restart Azure App Service": {
                 await appService.restart();
                 await azureAppServiceUtils.pingApplication();
+                break;
+            }
+            case "Delete Slot": {
+                await appService.delete();
                 break;
             }
             case "Swap Slots": {
