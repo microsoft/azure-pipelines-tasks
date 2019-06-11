@@ -268,8 +268,7 @@
         "StartGenerateDeploymentManifest": "Start generating deployment manifest...",
         "FinishGenerateDeploymentManifest": "Finished generating deployment manifest.",
         "LoginRegistrySucess": "Successfully logged in to registry %s",
-        "SkipSettingEnvironmentVariableForSecret": "Environment variable %s already exist. Skip setting environment varialbe for secret: %s.",
-        "DeploymentManifestOutputPathOverridden": "The deployment manifest output path set through variables was overridden by the output path parameter."
+        "SkipSettingEnvironmentVariableForSecret": "Environment variable %s already exist. Skip setting environment varialbe for secret: %s."
     },
     "OutputVariables": [
         {

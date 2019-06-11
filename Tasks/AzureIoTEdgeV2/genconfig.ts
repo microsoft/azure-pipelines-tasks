@@ -21,22 +21,10 @@ export async function run() {
       
       let envList = process.env;
       //Set output path of iotedgedev genconfig command
-      let envOverriden = false;
-      if (envList[Constants.iotedgedevEnv.deploymentFileOutputFolder]) {
-        tl.debug(`The ${Constants.iotedgedevEnv.deploymentFileOutputFolder} environment varialbe already exists. Will override this environment variable.`);
-        envOverriden = true;
-      }
       tl.debug(`Setting deployment manifest output folder to ${outputFileFolder}`);
-      util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputFolder, outputFileFolder);
-      if (envList[Constants.iotedgedevEnv.deploymentFileOutputName]) {
-        tl.debug(`The ${Constants.iotedgedevEnv.deploymentFileOutputName} environment varialbe already exists. Will override this environment variable.`);
-        envOverriden = true;
-      }
+      util.setCliVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputFolder, outputFileFolder);
       tl.debug(`Setting deployment manifest output file name to ${outputFileName}`)
-      util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputName, outputFileName)
-      if (envOverriden) {
-        tl.loc("DeploymentManifestOutputPathOverridden");
-      }
+      util.setCliVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputName, outputFileName)
 
       // Pass secrets to sub process
       util.populateSecretToEnvironmentVariable(envList);

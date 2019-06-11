@@ -18,7 +18,7 @@ export async function run() {
   util.setupIotedgedev();
 
   let envList = process.env;
-  util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputFolder, tl.getVariable(Constants.outputFileFolder));
+  util.setCliVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputFolder, tl.getVariable(Constants.outputFileFolder));
 
   // Pass secrets to sub process
   util.populateSecretToEnvironmentVariable(envList);

@@ -268,8 +268,7 @@
     "StartGenerateDeploymentManifest": "ms-resource:loc.messages.StartGenerateDeploymentManifest",
     "FinishGenerateDeploymentManifest": "ms-resource:loc.messages.FinishGenerateDeploymentManifest",
     "LoginRegistrySucess": "ms-resource:loc.messages.LoginRegistrySucess",
-    "SkipSettingEnvironmentVariableForSecret": "ms-resource:loc.messages.SkipSettingEnvironmentVariableForSecret",
-    "DeploymentManifestOutputPathOverridden": "ms-resource:loc.messages.DeploymentManifestOutputPathOverridden"
+    "SkipSettingEnvironmentVariableForSecret": "ms-resource:loc.messages.SkipSettingEnvironmentVariableForSecret"
   },
   "OutputVariables": [
     {

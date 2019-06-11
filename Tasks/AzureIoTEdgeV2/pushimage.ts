@@ -58,11 +58,11 @@ export async function run() {
 
   let envList = process.env;
   // Set bypass modules
-  util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.bypassModules, bypassModules);
+  util.setCliVarialbe(envList, Constants.iotedgedevEnv.bypassModules, bypassModules);
   // Set registry credentials
-  util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.registryServer, registryAuthenticationToken.serverUrl);
-  util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.registryUsername, registryAuthenticationToken.username);
-  util.setEnvrionmentVarialbe(envList, Constants.iotedgedevEnv.registryPassword, registryAuthenticationToken.password);
+  util.setCliVarialbe(envList, Constants.iotedgedevEnv.registryServer, registryAuthenticationToken.serverUrl);
+  util.setCliVarialbe(envList, Constants.iotedgedevEnv.registryUsername, registryAuthenticationToken.username);
+  util.setCliVarialbe(envList, Constants.iotedgedevEnv.registryPassword, registryAuthenticationToken.password);
 
   // Pass secrets to sub process
   util.populateSecretToEnvironmentVariable(envList);
