@@ -257,7 +257,7 @@
     "DependencyInstallSuccess": "ms-resource:loc.messages.DependencyInstallSuccess",
     "DependencyInstallFail": "ms-resource:loc.messages.DependencyInstallFail",
     "TemplateFileInvalid": "ms-resource:loc.messages.TemplateFileInvalid",
-    "ContainerRegistryInvalid": "ms-resource:loc.messages.ContainerRegistryInvalid",
+    "InvalidContainerRegistry": "ms-resource:loc.messages.InvalidContainerRegistry",
     "DeploymentFileNotFound": "ms-resource:loc.messages.DeploymentFileNotFound",
     "ValidDeploymentFileNotFound": "ms-resource:loc.messages.ValidDeploymentFileNotFound",
     "AzureSdkNotFound": "ms-resource:loc.messages.AzureSdkNotFound",
