@@ -28,7 +28,7 @@ console.log("Inputs have been set");
 
 process.env["RELEASE_RELEASENAME"] = "Release-1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
-process.env["SYSTEM_HOSTTYPE"] = process.env[shared.TestEnvVars.hostType] || "build";
+process.env["SYSTEM_HOSTTYPE"] = process.env[shared.TestEnvVars.hostType] || shared.HostTypes.build;
 process.env["SYSTEM_SERVERTYPE"] = "hosted";
 process.env["ENDPOINT_AUTH_dockerhubendpoint"] = "{\"parameters\":{\"username\":\"testuser\", \"password\":\"regpassword\", \"email\":\"testuser1@microsoft.com\",\"registry\":\"https://index.docker.io/v1/\"},\"scheme\":\"UsernamePassword\"}";
 process.env["ENDPOINT_AUTH_acrendpoint"] = "{\"parameters\":{\"username\":\"testacr\", \"password\":\"acrpassword\",\"registry\":\"https://testacr.azurecr.io/\"},\"scheme\":\"UsernamePassword\"}";
@@ -38,7 +38,7 @@ process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = shared.SharedValues.SYSTEM_T
 process.env["SYSTEM_TEAMPROJECT"] = shared.SharedValues.SYSTEM_TEAMPROJECT;
 
 // Set variables used for build labels
-process.env["BUILD_REPOSITORY_NAME"] = shared.SharedValues.BUILD_REPOSITORY_NAME;
+process.env["BUILD_REPOSITORY_NAME"] = process.env["SYSTEM_HOSTTYPE"] == shared.HostTypes.build ? shared.SharedValues.BUILD_REPOSITORY_NAME : "";
 process.env["BUILD_REPOSITORY_URI"] = shared.SharedValues.BUILD_REPOSITORY_URI;
 process.env["BUILD_SOURCEBRANCHNAME"] = shared.SharedValues.BUILD_SOURCEBRANCHNAME;
 process.env["BUILD_SOURCEVERSION"] = shared.SharedValues.BUILD_SOURCEVERSION;
@@ -92,6 +92,11 @@ a.find[`${DefaultWorkingDirectory}`] = [
 ]
 
 a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabels} -t testuser/testrepo:11 ${BuildContextPath}`] = {
+    "code": 0,
+    "stdout": "successfully built image and tagged testuser/testrepo:11."
+};
+
+a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.ReleaseLabels} -t testuser/testrepo:11 ${BuildContextPath}`] = {
     "code": 0,
     "stdout": "successfully built image and tagged testuser/testrepo:11."
 };
@@ -208,7 +213,7 @@ a.exec[`docker images --all --digests`] = {
 
 tr.setAnswers(<any>a);
 
-// Create mock for fs module
+// Create mock for fs module. Required to make the base image name extraction (push command) work.
 let fs = require('fs');
 let fsClone = Object.assign({}, fs);
 fsClone.readFileSync = function(filePath, options) {

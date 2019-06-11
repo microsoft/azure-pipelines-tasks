@@ -15,6 +15,11 @@ export let OperatingSystems = {
     Other: "Other"
 };
 
+export let HostTypes ={
+    build: "build",
+    release: "release"
+}
+
 export let CommandTypes = {
     buildAndPush: "buildAndPush",
     build: "build",
