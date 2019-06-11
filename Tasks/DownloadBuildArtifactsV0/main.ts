@@ -252,8 +252,11 @@ async function main(): Promise<void> {
                     var handler = new webHandlers.PersonalAccessTokenCredentialHandler(accessToken);
                     var isPullRequestFork = tl.getVariable("SYSTEM.PULLREQUEST.ISFORK");
                     var isPullRequestForkBool = isPullRequestFork ? isPullRequestFork.toLowerCase() == 'true' : false;
+                    var isWin = process.platform === "win32";
+                    var isZipDownloadDisabled = tl.getVariable("SYSTEM.DisableZipDownload");
+                    var isZipDownloadDisabledBool = isZipDownloadDisabled ? isZipDownloadDisabled.toLowerCase() != 'false' : false
 
-                    if (isPullRequestForkBool) {
+                    if (!isZipDownloadDisabledBool && isWin && isPullRequestForkBool) {
                         const archiveUrl: string =  endpointUrl + "/" + projectId + "/_apis/build/builds/" + buildId + "/artifacts?artifactName=" + artifact.name + "&$format=zip";
                         console.log(tl.loc("DownloadArtifacts", artifact.name, archiveUrl));
 
