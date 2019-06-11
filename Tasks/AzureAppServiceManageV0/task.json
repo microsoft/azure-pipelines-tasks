@@ -82,7 +82,7 @@
             "label": "Specify Slot or App Service Environment",
             "defaultValue": "false",
             "required": false,
-            "visibleRule": "Action != Swap Slots"
+            "visibleRule": "Action != Swap Slots && Action != Delete Slot"
         },
         {
             "name": "ResourceGroupName",
