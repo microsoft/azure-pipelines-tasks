@@ -230,8 +230,12 @@ class imagevalidationtask {
           tl.debug(JSON.stringify(loginResult));
           if (loginResult.code != 0) {
             tl.warning(tl.loc("InvalidRegistryCredentialWarning", credential.address, loginResult.stderr));
+          } else {
+            tl.loc("LoginRegistrySucess", credential.address);
           }
         });
+      } else {
+        tl.debug("No registry credentials found in deployment manifest.")
       }
 
       tl.setVariable("DOCKER_CLI_EXPERIMENTAL", "enabled");

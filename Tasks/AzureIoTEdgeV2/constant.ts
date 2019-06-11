@@ -15,7 +15,7 @@ export default class Constants {
     registryUsername: "CONTAINER_REGISTRY_USERNAME",
     registryPassword: "CONTAINER_REGISTRY_PASSWORD",
     bypassModules: "BYPASS_MODULES",
-    deploymentFileOutputPath: "DEPLOYMENT_CONFIG_FILE",
+    deploymentFileOutputName: "DEPLOYMENT_CONFIG_FILE",
     deploymentFileOutputFolder: "CONFIG_OUTPUT_DIR",
   };
   public static outputFileFolder = "Build.ArtifactStagingDirectory";
@@ -25,6 +25,7 @@ export default class Constants {
   public static defaultDockerHubHostname = "docker.io";
   public static variableKeyDisableTelemetry = "DISABLE_TELEMETRY";
   public static execSyncSilentOption = { silent: true } as IExecSyncOptions;
+  public static defaultExecOption = {} as IExecSyncOptions;
   public static UTF8 = "utf8";
   public static outputVariableDeploymentPathKey = "DEPLOYMENT_FILE_PATH";
 }

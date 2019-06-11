@@ -101,6 +101,7 @@ export default class Util {
     try {
       for (let cmd of cmds) {
         let result = tl.execSync(cmd.path, cmd.arg, cmd.execOption);
+        tl.debug(result.stdout);
         if (result.code !== 0) {
           tl.debug(result.stderr);
         }
@@ -111,9 +112,11 @@ export default class Util {
     }
 
     let result = tl.execSync(`${Constants.iotedgedev}`, `--version`, Constants.execSyncSilentOption);
+    tl.debug(result.stdout);
     if (result.code === 0) {
       console.log(tl.loc('DependencyInstallSuccess', Constants.iotedgedev, result.stdout.substring(result.stdout.indexOf("version"))));
     } else {
+      tl.error(result.stderr);
       throw Error(tl.loc('DependencyInstallFail', Constants.iotedgedev));
     }
   }

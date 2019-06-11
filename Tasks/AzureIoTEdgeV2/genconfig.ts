@@ -38,4 +38,7 @@ export async function run() {
       command += ` --file "${templateFilePath}"`;
       command += ` --platform "${defaultPlatform}"`;
       await tl.exec(`${Constants.iotedgedev}`, command, execOptions);
+
+      tl.setVariable(Constants.outputVariableDeploymentPathKey, outputPath);
+      tl.debug(`Set ${Constants.outputVariableDeploymentPathKey} to ${outputPath}`);
 }
