@@ -29,11 +29,11 @@ Param(
     
     $taskLocLocation = Join-Path "$taskRoot/$_" "task.loc.json"
     $taskLocContent = Get-Content $taskLocLocation 
-    $versionMatch = $taskContent | Select-String '"version":'
+    $versionMatch = $taskLocContent | Select-String '"version":'
     $versionLine = $versionMatch.LineNumber
-    $taskContent[$versionLine+1] = $taskContent[$versionLine+1].Replace(" $($v.Minor),", " $currentSprint,")
-    $taskContent[$versionLine+2] = $taskContent[$versionLine+2].Replace(" $($v.Patch)", " $newPatch")
-    $taskContent | Set-Content $taskLocation
+    $taskLocContent[$versionLine+1] = $taskLocContent[$versionLine+1].Replace(" $($v.Minor),", " $currentSprint,")
+    $taskLocContent[$versionLine+2] = $taskLocContent[$versionLine+2].Replace(" $($v.Patch)", " $newPatch")
+    $taskLocContent | Set-Content $taskLocLocation
 }
 
 # Just bump the patch version for these
