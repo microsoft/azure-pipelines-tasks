@@ -4,9 +4,10 @@ import * as tl from 'vsts-task-lib/task';
 import { Kubectl } from 'kubernetes-common/kubectl-object-model';
 import * as utils from '../utils/utilities';
 import * as constants from '../models/constants';
+import * as TaskParameters from '../models/TaskInputParameters';
 
 export async function patch(ignoreSslErrors?: boolean) {
-    const kubectl = new Kubectl(await utils.getKubectl(), tl.getInput('namespace', false), ignoreSslErrors);
+    const kubectl = new Kubectl(await utils.getKubectl(), TaskParameters.namespace, ignoreSslErrors);
     let kind = tl.getInput('kind', false).toLowerCase();
     let name = tl.getInput('name', false);
     const filePath = tl.getInput('resourceFileToPatch', false);
