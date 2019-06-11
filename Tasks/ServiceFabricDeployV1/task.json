@@ -5,7 +5,7 @@
     "description": "Deploy an Azure Service Fabric application to a cluster",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/service-fabric-deploy",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820528)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820528)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 32
+        "Patch": 33
     },
     "demands": [
         "Cmd"

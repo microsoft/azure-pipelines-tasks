@@ -7,11 +7,11 @@ Tasks/AndroidSigningV3/*    @madhurig
 
 Tasks/ANTV1/*   @madhurig
 
-Tasks/AppCenterDistributeV1/*   @DennisPan    @keerthanakumar
+Tasks/AppCenterDistributeV1/*   @DennisPan    @turanuk
 
-Tasks/AppCenterDistributeV2/*   @DennisPan    @keerthanakumar
+Tasks/AppCenterDistributeV2/*   @DennisPan    @turanuk
 
-Tasks/AppCenterDistributeV3/*   @DennisPan    @keerthanakumar
+Tasks/AppCenterDistributeV3/*   @DennisPan    @turanuk
 
 Tasks/AppCenterTestV1/*   @owenniblock
 
@@ -54,6 +54,8 @@ Tasks/AzurePolicyV0/*   @bansalaseem
 Tasks/AzurePowerShellV2/*   @kmkumaran
 
 Tasks/AzurePowerShellV3/*   @kmkumaran
+
+Tasks/AzurePowershellV4/*   @kmkumaran
 
 Tasks/AzureResourceGroupDeploymentV2/*      @sachinma
 
@@ -100,6 +102,8 @@ Tasks/Common/VstsAzureHelpers_/*  @rajatagrawal-dev   @vincentdass
 Tasks/Common/VstsAzureRestHelpers_/*  @Ajay-MS  @rajatagrawal-dev
 
 Tasks/Common/azure-arm-rest/*   @vincentdass    @Ajay-MS
+
+Tasks/Common/azure-arm-rest-v2/*    @kmkumaran      @SumiranAgg     @vincentdass
 
 Tasks/Common/azure-blobstorage-artifactProvider/*   @omeshp   @hiyadav
 
@@ -172,6 +176,8 @@ Tasks/DownloadSecureFileV1/*    @madhurig
 Tasks/DuffleInstallerV0/*   @bansalaseem     @vithati
 
 Tasks/ExtractFilesV1/*      @bryanmacfarlane
+
+Tasks/FileTransformV1/*     @kmkumaran      @SumiranAgg     @vincentdass
 
 Tasks/FtpUploadV1/*     @madhurig
 

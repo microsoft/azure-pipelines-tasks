@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "使用 Ruby 版本",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=2005989)",
-  "loc.description": "從工具快取擷取指定的 Ruby 版本。選擇性將其新增至 PATH。",
+  "loc.description": "從工具快取使用指定的 Ruby 版本，可將其新增至 PATH。",
   "loc.instanceNameFormat": "使用 Ruby $(versionSpec)",
   "loc.input.label.versionSpec": "版本規格",
   "loc.input.help.versionSpec": "所要使用的 Ruby 版本之版本範圍或確切版本。",
@@ -9,7 +9,7 @@
   "loc.input.help.addToPath": "在 PATH 環境變數前面加上擷取的 Ruby 版本，如此一來，不必使用輸出變數即可在後續工作或指令碼中加以使用。",
   "loc.messages.ListAvailableVersions": "可用版本:",
   "loc.messages.PlatformNotRecognized": "無法辨識平台",
-  "loc.messages.ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
-  "loc.messages.ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
-  "loc.messages.VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory."
+  "loc.messages.ToolNotFoundMicrosoftHosted": "如果這是 Microsoft 裝載的代理程式，請確認此映像支援並存版本 %s (位於 %s)。",
+  "loc.messages.ToolNotFoundSelfHosted": "如果這是自我裝載的代理程式，請於以下位置了解如何設定並存 %s 版本: %s。",
+  "loc.messages.VersionNotFound": "架構 %s 的版本規格 %s 不符合 Agent.ToolsDirectory 中的任何版本。"
 }

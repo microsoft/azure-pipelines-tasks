@@ -1,6 +1,6 @@
 import { AzureApplicationInsights } from '../azure-arm-rest/azure-arm-appinsights';
 import { getMockEndpoint, nock, mockAzureApplicationInsightsTests } from './mock_utils';
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 var endpoint = getMockEndpoint();
 
 mockAzureApplicationInsightsTests();

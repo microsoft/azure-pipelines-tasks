@@ -10,8 +10,8 @@
     "helpMarkDown": "",
     "version": {
         "Major": 0,
-        "Minor": 152,
-        "Patch": 0
+        "Minor": 154,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",

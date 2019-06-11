@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": ".NET Core-Toolinstaller",
+  "loc.friendlyName": ".NET Core SDK/Runtime-Installer",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=853651)",
-  "loc.description": "Ruft eine bestimmte .NET Core-Version aus dem Internet oder dem Toolcache ab und fügt sie dem PATH hinzu. Verwenden Sie diese Aufgabe, um die in nachfolgenden Aufgaben verwendete .NET Core-Version zu ändern.",
+  "loc.description": "Hiermit wird eine bestimmte Version des .NET Core SDK aus dem Internet oder aus dem lokalen Cache abgerufen und zu PATH hinzugefügt.",
   "loc.instanceNameFormat": "Verwenden Sie .NET Core $(packageType) $(version).",
   "loc.input.label.packageType": "Zu installierendes Paket",
   "loc.input.help.packageType": "Wählen Sie aus, ob nur die Runtime oder das vollständige SDK installiert werden soll.",
@@ -27,5 +27,6 @@
   "loc.messages.WarningVersionNotFound": "Downloadinformationen für Version %s konnten nicht abgerufen werden. Überprüfen Sie, ob die angegebene Version richtig ist. Weitere Informationen finden Sie unter dem Link für unterstützte Versionen: https://github.com/dotnet/core/blob/master/release-notes/releases.json. Es wird ein Fallback zum Erstellen einer konventionsbasierten URL durchgeführt.",
   "loc.messages.CouldNotDownload": "Das Installationspaket konnte nicht von dieser URL heruntergeladen werden: %s. Fehler: %s",
   "loc.messages.FailedToDownloadPackage": "Fehler beim Herunterladen des Pakets für die Installation.",
-  "loc.messages.PrependGlobalToolPath": "Globaler Toolpfad wird erstellt und PATH vorangestellt."
+  "loc.messages.PrependGlobalToolPath": "Globaler Toolpfad wird erstellt und PATH vorangestellt.",
+  "loc.messages.VersionsFileMalformed": "Die Downloadlinks für die angegebene Version sind im Dokument für die unterstützten Versionen nicht ordnungsgemäß formatiert: => %s/"
 }

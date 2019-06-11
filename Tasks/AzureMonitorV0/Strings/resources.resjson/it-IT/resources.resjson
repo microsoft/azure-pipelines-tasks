@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Esegui query su avvisi di Monitoraggio di Azure",
+  "loc.friendlyName": "Esegui query su avvisi di Monitoraggio di Azure classico",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=870240)",
-  "loc.description": "Consente di osservare le regole di Monitoraggio di Azure configurate per gli avvisi attivi.",
+  "loc.description": "Consente di osservare le regole di Monitoraggio di Azure classico configurate per gli avvisi attivi",
   "loc.instanceNameFormat": "Esegui query su avvisi di Monitoraggio di Azure",
   "loc.input.label.connectedServiceNameARM": "Sottoscrizione di Azure",
   "loc.input.help.connectedServiceNameARM": "Consente di selezionare una sottoscrizione di Azure Resource Manager di cui eseguire il monitoraggio.",

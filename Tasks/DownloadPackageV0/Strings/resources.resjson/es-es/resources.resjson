@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Paquete de descarga",
-  "loc.helpMarkDown": "Necesita que la extensión Administración de paquetes esté instalada",
-  "loc.description": "Descarga un paquete de una fuente de Administración de paquetes en VSTS o TFS. \r\n Requiere la extensión Administración de paquetes.",
+  "loc.friendlyName": "Descargar paquete",
+  "loc.helpMarkDown": "Requiere que la extensión de Azure Artifacts esté instalada.",
+  "loc.description": "Descarga un paquete de una fuente de administración de paquetes en Azure Artifacts.",
   "loc.instanceNameFormat": "Paquete de descarga",
   "loc.input.label.feed": "Fuente",
   "loc.input.help.feed": "Seleccionar el origen del paquete",
@@ -14,9 +14,12 @@
   "loc.messages.FailedToGetPackageMetadata": "No se pudieron obtener los metadatos del paquete con el error %s.",
   "loc.messages.FailedToDownloadNugetPackage": "No se pudo descargar el paquete NuGet de %s, se obtuvo el error siguiente: %s",
   "loc.messages.PackageDownloadSuccessful": "El paquete se descargó correctamente.",
-  "loc.messages.CredentialsNotFound": "No se pudieron determinar las credenciales para conectarse al servicio Administración de paquetes.",
+  "loc.messages.CredentialsNotFound": "No se pudieron determinar las credenciales para conectarse al servicio Azure Artifacts.",
   "loc.messages.StartingDownloadOfPackage": "Iniciando la descarga del paquete NuGet %s en la ubicación %s",
   "loc.messages.ExtractingNugetPackage": "Extrayendo el paquete NuGet %s en el directorio %s.",
   "loc.messages.PackageTypeNotSupported": "Mediante esta tarea, solo se pueden descargar tipos de paquetes NuGet.",
-  "loc.messages.ExtractionFailed": "No se pudo extraer el paquete con el error %s."
+  "loc.messages.ExtractionFailed": "No se pudo extraer el paquete con el error %s.",
+  "loc.messages.RetryingOperation": "Error en %s, se está reintentando => reintentos pendientes: %s",
+  "loc.messages.OperationFailed": "Error en %s: %s",
+  "loc.messages.UnsupportedProjectScopedFeeds": "Esta versión de la tarea \"Descargar paquete\" no admite las fuentes con ámbito de proyecto. Use la versión 1 o una posterior."
 }

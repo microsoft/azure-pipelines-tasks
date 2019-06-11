@@ -3,7 +3,7 @@
     "name": "AzurePowerShell",
     "friendlyName": "Azure PowerShell",
     "description": "Run a PowerShell script within an Azure environment",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613749)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 0,
-        "Patch": 7
+        "Minor": 154,
+        "Patch": 2
     },
     "preview": true,
     "releaseNotes": "Added support for Az Module and cross platform agents.",
@@ -41,7 +41,7 @@
             "required": true,
             "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell",
             "properties": {
-                "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
             }
         },
         {
@@ -139,11 +139,7 @@
             "required": true,
             "visibleRule": "TargetAzurePs = OtherVersion",
             "groupName": "AzurePowerShellVersionOptions",
-            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0",
-            "validation": {
-                "expression": "isMatch(value, '^[0-9]+\\.[0-9]+\\.[0-9]+$','Multiline')",
-                "message": "Enter valid Azure PowerShell Version"
-            }
+            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0"
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",

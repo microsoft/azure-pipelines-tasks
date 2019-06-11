@@ -27,6 +27,8 @@
   "loc.input.help.logProjectEvents": "Optional Zeitachsendetails für jedes Projekt aufzeichnen (nur Windows).",
   "loc.input.label.createLogFile": "Protokolldatei erstellen",
   "loc.input.help.createLogFile": "Erstellen Sie optional eine Protokolldatei (nur Windows).",
+  "loc.input.label.logFileVerbosity": "Ausführlichkeit der Protokolldatei",
+  "loc.input.help.logFileVerbosity": "Optionaler Ausführlichkeitsgrad der Protokolldatei.",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "\"Projektdetails aufzeichnen\" wird nur für Windows unterstützt.",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "\"Protokolldatei erstellen\" wird nur für Windows unterstützt.",
   "loc.messages.MSB_BuildToolNotFound": "MSBuild oder Xbuild (Mono) wurden auf dem MacOS oder Linux-Agent nicht gefunden."

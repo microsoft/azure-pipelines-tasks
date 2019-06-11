@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 19
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -218,7 +218,7 @@
       "parameters": {
         "osTypeSelected": "Linux"
       },
-      "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}}\"}"
+      "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}} ({{{ runtimeVersion }}})\"}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

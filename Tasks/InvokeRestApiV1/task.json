@@ -5,7 +5,7 @@
     "description": "Invoke a REST API as a part of your pipeline.",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/http-rest-api",
-    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=870236)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870236)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 152,
-        "Patch": 0
+        "Patch": 1
     },
     "instanceNameFormat": "Invoke REST API: $(method)",
     "groups": [

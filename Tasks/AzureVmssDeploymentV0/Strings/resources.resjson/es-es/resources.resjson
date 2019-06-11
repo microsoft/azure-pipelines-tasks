@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Implementación de conjuntos de escalado de máquinas virtuales de Azure",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=852117)",
-  "loc.description": "Implementar imagen de conjunto de escalado de máquinas virtuales",
+  "loc.description": "Implementa una imagen de conjunto de escalado de máquinas virtuales.",
   "loc.instanceNameFormat": "VMSS $(vmssName) de Azure: $(action)",
   "loc.releaseNotes": "- Actualiza el conjunto de escalado de máquinas virtuales de Azure con una imagen de máquina personalizada.",
   "loc.group.displayName.AzureDetails": "Detalles de Azure",
@@ -75,5 +75,6 @@
   "loc.messages.UploadingItem": "Cargando %s.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "No se pudo capturar el token de acceso para Azure. Código de estado: %s. Mensaje de estado: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Configure Managed Service Identity (MSI) para la máquina virtual \"https://aka.ms/azure-msi-docs\". Código de estado: %s. Mensaje de estado: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Código de estado: %s. Mensaje de estado: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Código de estado: %s. Mensaje de estado: %s",
+  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado."
 }

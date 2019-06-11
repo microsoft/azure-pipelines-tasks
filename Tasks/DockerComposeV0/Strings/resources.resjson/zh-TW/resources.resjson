@@ -66,12 +66,15 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "若無其他 Docker Compose 檔案，即產生錯誤。這會覆寫預設行為 (亦即當檔案不存在時予以忽略)。",
   "loc.input.label.cwd": "工作目錄",
   "loc.input.help.cwd": "Docker Compose 命令的工作目錄。",
+  "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
   "loc.messages.ContainerPatternFound": "在 docker compose filepath 參數中找到的模式",
   "loc.messages.ContainerPatternNotFound": "在 docker compose filepath 參數中找不到任何模式",
   "loc.messages.ContainerDockerFileNotFound": "找不到任何的 Docker 檔案符合 %s。",
   "loc.messages.AdditionalDockerComposeFileDoesNotExists": "其他 Docker Compose 檔案 %s 不存在。",
   "loc.messages.CantWriteDataToFile": "無法將資料寫入檔案 %s。錯誤: %s",
+  "loc.messages.DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
   "loc.messages.NoDataWrittenOnFile": "沒有任何資料寫入檔案 %s",
   "loc.messages.FileContentSynced": "檔案內容已同步到磁碟。內容為 %s。",
-  "loc.messages.ImageNameWithoutTag": "未使用標籤指定映像名稱，因此會推送指定映像的所有標籤。"
+  "loc.messages.ImageNameWithoutTag": "未使用標籤指定映像名稱，因此會推送指定映像的所有標籤。",
+  "loc.messages.WritingDockerConfigToTempFile": "正在將 Docker 設定寫入暫存檔案。檔案路徑: %s，Docker 設定: %s"
 }

@@ -3,7 +3,7 @@ import { AzureEndpoint } from './azureModels';
 import msRestAzure = require('./azure-arm-common');
 import azureServiceClient = require('./AzureServiceClient');
 import webClient = require('./webClient');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 
 export class ResourceManagementClient extends azureServiceClient.ServiceClient {

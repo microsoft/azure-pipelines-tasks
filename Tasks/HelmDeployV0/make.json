@@ -16,12 +16,19 @@
 		"type": "node",
 		"dest" : "./",
 		"compile" : true
+    },
+    {
+		"module": "../Common/kubernetes-common",
+		"type": "node",
+		"dest" : "./",
+		"compile" : true
 	}
 ],
 	"rm": [
         {
             "items": [
                 "node_modules/utility-common/node_modules/vsts-task-lib",
+                "node_modules/kubernetes-common/node_modules/vsts-task-lib",
                 "node_modules/azure-arm-rest/node_modules/vsts-task-lib",
                 "node_modules/securefiles-common/node_modules/vsts-task-lib"
             ],
