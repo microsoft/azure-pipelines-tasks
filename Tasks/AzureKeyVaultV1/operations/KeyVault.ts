@@ -192,14 +192,19 @@ export class KeyVault {
             return;
         }
 
+        // Support multiple stages using different key vaults with the same secret name but with different version identifiers
+        let secretNameWithoutVersion = secretName.split("/")[0];
+
         let doNotMaskMultilineSecrets = tl.getVariable("SYSTEM_DONOTMASKMULTILINESECRETS");
         if (doNotMaskMultilineSecrets && doNotMaskMultilineSecrets.toUpperCase() === "TRUE") {
+            tl.setVariable(secretNameWithoutVersion, secretValue, true);
             tl.setVariable(secretName, secretValue, true);
             return;
         }
 
         if (secretValue.indexOf('\n') < 0) {
             // single-line case
+            tl.setVariable(secretNameWithoutVersion, secretValue, true);
             tl.setVariable(secretName, secretValue, true);
         }
         else {
@@ -207,13 +212,15 @@ export class KeyVault {
             let strVal = this.tryFlattenJson(secretValue);
             if (strVal) {
                 console.log(util.format("Value of secret %s has been converted to single line.", secretName));
-                tl.setVariable(secretName, strVal, true);
+                tl.setVariable(secretNameWithoutVersion, strVal, true);
+                tl.setVariable(secretName, secretValue, true);
             }
             else {
                 let lines = secretValue.split('\n');
                 lines.forEach((line: string, index: number) => {
                     this.trySetSecret(secretName, line);
                 });
+                tl.setVariable(secretNameWithoutVersion, secretValue, true);
                 tl.setVariable(secretName, secretValue, true);
             }
         }
