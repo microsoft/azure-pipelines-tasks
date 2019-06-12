@@ -118,7 +118,7 @@ export function substituteImageNameInSpecFile(currentString: string, imageName: 
             const [currentImageName, currentImageTag] = line
                 .substring(imageKeyword[0].length) // consume the line from keyword onwards
                 .trim()
-                .replace(/[',"]/g, '') // reaplace allowed quotes with nothing
+                .replace(/[',"]/g, '') // replace allowed quotes with nothing
                 .split(':');
 
             if (currentImageName === imageName) {

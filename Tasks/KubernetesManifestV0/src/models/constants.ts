@@ -14,7 +14,6 @@ export class KubernetesWorkload {
 export const recognizedWorkloadTypes: string[] = ['deployment', 'replicaset', 'daemonset', 'pod', 'statefulset'];
 export const recognizedWorkloadTypesWithRolloutStatus: string[] = ['deployment', 'daemonset', 'statefulset'];
 
-debugger;
 const isRelease = isEqual(tl.getVariable('SYSTEM_HOSTTYPE'), 'release', StringComparer.OrdinalIgnoreCase);
 const orgUrl = tl.getVariable('System.TeamFoundationCollectionUri');
 

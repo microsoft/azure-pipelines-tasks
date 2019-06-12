@@ -26,7 +26,6 @@ describe('Kubernetes Manifests Suite', function () {
         delete process.env[shared.TestEnvVars.isBaselineDeploymentPresent];
         delete process.env[shared.TestEnvVars.arguments];
         delete process.env[shared.TestEnvVars.namespace];
-        delete process.env[shared.TestEnvVars.containers];
         delete process.env.RemoveNamespaceFromEndpoint;
     });
 
@@ -54,7 +53,6 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.isStableDeploymentPresent] = 'true';
         process.env[shared.TestEnvVars.isCanaryDeploymentPresent] = 'false';
         process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'false';
-        process.env[shared.TestEnvVars.containers] = "nginx:1.2"
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stderr.indexOf('"nginx-deployment-canary" not found') != -1, 'Canary deployment is not present');
