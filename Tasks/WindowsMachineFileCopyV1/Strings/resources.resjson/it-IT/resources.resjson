@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Copia dei file del computer Windows",
+  "loc.friendlyName": "Copia file in computer Windows",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=627415)",
-  "loc.description": "Consente di copiare file nei computer remoti",
+  "loc.description": "Copia i file in computer Windows remoti",
   "loc.instanceNameFormat": "Copia file da $(SourcePath)",
   "loc.group.displayName.advanced": "Opzioni avanzate",
   "loc.input.label.SourcePath": "Origine",
@@ -11,7 +11,7 @@
   "loc.input.label.AdminUserName": "Account di accesso amministratore",
   "loc.input.help.AdminUserName": "Account di accesso dell'amministratore per i computer di destinazione.",
   "loc.input.label.AdminPassword": "Password",
-  "loc.input.help.AdminPassword": "Password dell'account di accesso dell'amministratore per i computer di destinazione. <br>Accetta la variabile definita nelle definizioni di compilazione/versione come '$(passwordVariable)'. <br>Per proteggerla, è possibile contrassegnare il tipo di variabile come 'secret'. ",
+  "loc.input.help.AdminPassword": "Password dell'account di accesso dell'amministratore per i computer di destinazione. <br>Può accettare una variabile definita nelle pipeline di compilazione o versione come '$(passwordVariable)'. <br>Per proteggere la variabile, è possibile contrassegnarla come 'secret'. ",
   "loc.input.label.TargetPath": "Cartella di destinazione",
   "loc.input.help.TargetPath": "Percorso locale nei computer di destinazione oppure percorso UNC accessibile per la copia dei file dall'origine, ad esempio u:\\fabrikam o \\\\\\\\fabrikam\\Web.",
   "loc.input.label.CleanTargetBeforeCopy": "Pulisci destinazione",

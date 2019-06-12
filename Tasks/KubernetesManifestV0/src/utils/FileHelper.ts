@@ -1,16 +1,16 @@
-"use strict";
+'use strict';
 
-var fs = require('fs');
-import * as path from "path";
-import * as tl from "vsts-task-lib/task";
-import * as os from "os";
+import * as fs from 'fs';
+import * as path from 'path';
+import * as tl from 'vsts-task-lib/task';
+import * as os from 'os';
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
 }
 
 export function getNewUserDirPath(): string {
-    var userDir = path.join(getTempDirectory(), "kubectlTask");
+    let userDir = path.join(getTempDirectory(), 'kubectlTask');
     ensureDirExists(userDir);
 
     userDir = path.join(userDir, getCurrentTime().toString());
@@ -33,24 +33,21 @@ export function assertFileExists(path: string) {
 }
 
 export function writeObjectsToFile(inputObjects: any[]): string[] {
-    let newFilePaths = [];
+    const newFilePaths = [];
 
     if (!!inputObjects) {
         inputObjects.forEach((inputObject: any) => {
             try {
-                var inputObjectString = JSON.stringify(inputObject);
-
+                const inputObjectString = JSON.stringify(inputObject);
                 if (!!inputObject.kind && !!inputObject.metadata && !!inputObject.metadata.name) {
-                    let fileName = getManifestFileName(inputObject.kind, inputObject.metadata.name);
+                    const fileName = getManifestFileName(inputObject.kind, inputObject.metadata.name);
                     fs.writeFileSync(path.join(fileName), inputObjectString);
                     newFilePaths.push(fileName);
-                }
-                else
-                {
-                    tl.debug("Input object is not proper K8s resource object. Object: "+inputObjectString);
+                } else {
+                    tl.debug('Input object is not proper K8s resource object. Object: ' + inputObjectString);
                 }
             } catch (ex) {
-                tl.debug("Exception occurred while wrting object to file : " + inputObject + " . Exception: " + ex);
+                tl.debug('Exception occurred while wrting object to file : ' + inputObject + ' . Exception: ' + ex);
             }
         });
     }
@@ -59,14 +56,13 @@ export function writeObjectsToFile(inputObjects: any[]): string[] {
 }
 
 function getManifestFileName(kind: string, name: string) {
-    var filePath = kind + "_" + name + "_" + getCurrentTime().toString();
+    const filePath = kind + '_' + name + '_' + getCurrentTime().toString();
     const tempDirectory = getTempDirectory();
-    var fileName = path.join(tempDirectory, path.basename(filePath));
+    const fileName = path.join(tempDirectory, path.basename(filePath));
     return fileName;
 }
 
 function getCurrentTime(): number {
     return new Date().getTime();
 }
-
 

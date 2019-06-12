@@ -1,10 +1,10 @@
 {
     "id": "0B0F01ED-7DDE-43FF-9CBB-E48954DAF9B1",
     "name": "PublishTestResults",
-    "friendlyName": "Publish Test Results",
-    "description": "Publish Test Results to VSTS/TFS",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613742",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613742)",
+    "friendlyName": "Publish test results",
+    "description": "Publish test results to Azure Pipelines",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
     "category": "Test",
     "visibility": [
         "Build",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 39
+        "Patch": 42
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",
@@ -54,7 +54,7 @@
             "label": "Merge Test Results",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "To merge results from all test results files to one test run in VSTS/TFS, check this option. To create a test run for each test results file, uncheck this option."
+            "helpMarkDown": "To merge results from all test results files to one test run in Azure Pipelines, check this option. To create a test run for each test results file, uncheck this option."
         },
         {
             "name": "testRunTitle",

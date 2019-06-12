@@ -1,10 +1,10 @@
 {
     "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
     "name": "AzureFileCopy",
-    "friendlyName": "Azure File Copy",
-    "description": "Copy files to Azure blob or VM(s)",
-    "helpUrl": "https://aka.ms/azurefilecopyreadme",
-    "helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
+    "friendlyName": "Azure file copy",
+    "description": "Copy files to Azure Blob Storage or virtual machines",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-file-copy",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 147
+        "Minor": 153,
+        "Patch": 0
     },
     "demands": [
         "azureps"

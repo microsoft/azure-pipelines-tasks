@@ -1,9 +1,9 @@
 {
     "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
     "name": "PublishPipelineArtifact",
-    "friendlyName": "Publish Pipeline Artifact",
-    "description": "Publish a local directory or file as a named artifact for the current pipeline.",
-    "helpUrl": "",
+    "friendlyName": "Publish pipeline artifact",
+    "description": "Publish a local directory or file as a named artifact for the current pipeline",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-pipeline-artifact",
     "helpMarkDown": "Publish a local directory or file as a named artifact for the current pipeline.",
     "category": "Utility",
     "author": "Microsoft Corporation",

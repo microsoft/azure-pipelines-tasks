@@ -1,11 +1,11 @@
 {
     "id": "97EF6E59-B8CC-48AA-9937-1A01E35E7584",
     "name": "ServiceFabricUpdateManifests",
-    "friendlyName": "Update Service Fabric Manifests",
-    "description": "Automatically updates portions of the application and service manifests within a packaged Service Fabric application.",
+    "friendlyName": "Update Service Fabric manifests",
+    "description": "Automatically update portions of application and service manifests in a packaged Azure Service Fabric application",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=820529",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820529)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/service-fabric-versioning",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820529)",
     "category": "Utility",
     "visibility": [
         "Build"
@@ -20,7 +20,7 @@
     "version": {
         "Major": 2,
         "Minor": 4,
-        "Patch": 2
+        "Patch": 4
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Update Service Fabric Manifests ($(updateType))",

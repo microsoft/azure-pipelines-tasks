@@ -2,9 +2,9 @@
     "id": "B82CFBE4-34F9-40F5-889E-C8842CA9DD9D",
     "name": "gulp",
     "friendlyName": "gulp",
-    "description": "Run the Node.js streaming task-based build system.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613721",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613721)",
+    "description": "Run the gulp Node.js streaming task-based build system",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/gulp",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613721)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 2
     },
     "demands": [
         "node.js"
@@ -46,7 +46,7 @@
         {
             "name": "gulpFile",
             "type": "filePath",
-            "label": "Gulp File Path",
+            "label": "gulp File Path",
             "defaultValue": "gulpfile.js",
             "required": true,
             "helpMarkDown": "Relative path from repo root of the gulp file script file to run."
@@ -54,7 +54,7 @@
         {
             "name": "targets",
             "type": "string",
-            "label": "Gulp Task(s)",
+            "label": "gulp Task(s)",
             "defaultValue": "",
             "helpMarkDown": "Optional.  Space delimited list of tasks to run.  If not specified, the default task will run.",
             "required": false
@@ -91,10 +91,10 @@
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish to Azure Pipelines/TFS",
+            "label": "Publish to Azure Pipelines",
             "defaultValue": "false",
             "groupName": "junitTestResults",
-            "helpMarkDown": "Select this option to publish JUnit test results produced by the Gulp build to Azure Pipelines/TFS."
+            "helpMarkDown": "Select this option to publish JUnit test results produced by the gulp build to Azure Pipelines."
         },
         {
             "name": "testResultsFiles",
@@ -167,9 +167,9 @@
         }
     },
     "messages": {
-        "GulpNotInstalled": "Gulp is not installed globally (or is not in the path of the user the agent is running as) and it is not in the local working folder: %s",
-        "GulpReturnCode": "Gulp exited with return code: %d",
-        "GulpFailed": "Gulp failed with error: %s",
+        "GulpNotInstalled": "gulp is not installed globally (or is not in the path of the user the agent is running as) and it is not in the local working folder: %s",
+        "GulpReturnCode": "gulp exited with return code: %d",
+        "GulpFailed": "gulp failed with error: %s",
         "NpmFailed": "Npm failed with error: %s",
         "IstanbulFailed": "Istanbul failed with error: %s"
     }

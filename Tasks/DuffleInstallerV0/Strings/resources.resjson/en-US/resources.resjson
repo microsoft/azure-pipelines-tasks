@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Duffle tool installer",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Duffle is a command line tool that allows you to install and manage CNAB bundles",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "Install a specified version of Duffle for installing and managing CNAB bundles",
   "loc.instanceNameFormat": "Install Duffle $(version)",
   "loc.input.label.version": "Version",
   "loc.input.help.version": "Specify the version of Duffle to install.",

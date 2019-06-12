@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Elementos de trabajo de la consulta",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=870238)",
-  "loc.description": "Ejecuta una consulta de elementos de trabajo y comprueba el número de elementos devueltos.",
+  "loc.description": "Ejecute una consulta de elementos de trabajo y compruebe el número de elementos devueltos.",
   "loc.instanceNameFormat": "Elementos de trabajo de la consulta",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.queryId": "Consulta",

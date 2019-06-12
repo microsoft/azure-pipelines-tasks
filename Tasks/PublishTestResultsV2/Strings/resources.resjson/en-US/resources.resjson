@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Publish Test Results",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Publish Test Results to Azure Pipelines/TFS",
+  "loc.description": "Publish test results to Azure Pipelines",
   "loc.instanceNameFormat": "Publish Test Results $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
   "loc.group.displayName.advanced": "Advanced",

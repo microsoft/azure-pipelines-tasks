@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Carga por FTP",
   "loc.helpMarkDown": "Carga los archivos en una máquina remota usando el protocolo de transferencia de archivos (FTP) o de forma segura con FTPS. [Más información](http://go.microsoft.com/fwlink/?LinkId=809084).",
-  "loc.description": "Carga por FTP",
+  "loc.description": "Cargar archivos con FTP",
   "loc.instanceNameFormat": "Carga por FTP: $(rootFolder)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.credsType": "Método de autenticación",

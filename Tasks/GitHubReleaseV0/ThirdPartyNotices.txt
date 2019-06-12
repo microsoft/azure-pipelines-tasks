@@ -25,7 +25,7 @@ GitHub Release Task incorporates third party material from the projects listed b
 19. underscore.js (http://underscorejs.org/; https://github.com/jashkenas/underscore)
 20. uuid (git+https://github.com/kelektiv/node-uuid.git)
 21. vso-node-api (https://github.com/Microsoft/vsts-node-api)
-22. VSTS-task-lib (https://github.com/Microsoft/vsts-task-lib)
+22. azure-pipelines-task-lib (https://github.com/Microsoft/azure-pipelines-task-lib)
 23. vsts-task-tool-lib (git+https://github.com/microsoft/vsts-task-installer-lib.git)
 24. wrappy (https://github.com/npm/wrappy)
 25. @types/node (https://www.github.com/DefinitelyTyped/DefinitelyTyped.git)
@@ -543,7 +543,7 @@ NO LICENSE FOUND
 =========================================
 END OF vso-node-api NOTICES, INFORMATION, AND LICENSE
 
-%% vsts-task-lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% azure-pipelines-task-lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 The MIT License (MIT)
 
@@ -567,7 +567,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 =========================================
-END OF vsts-task-lib NOTICES, INFORMATION, AND LICENSE
+END OF azure-pipelines-task-lib NOTICES, INFORMATION, AND LICENSE
 
 %% vsts-task-tool-lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================

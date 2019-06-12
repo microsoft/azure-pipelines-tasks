@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=848006)",
-  "loc.description": "Générez, étiquetez, envoyez (push) ou exécutez des images Docker, ou bien exécutez une commande Docker. La tâche peut être utilisée avec le registre de conteneurs Docker ou Azure Container Registry.",
+  "loc.description": "Générer, étiqueter, envoyer (push) ou exécuter des images Docker, ou bien exécuter une commande Docker",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Options avancées",
   "loc.input.label.containerregistrytype": "Type de registre de conteneurs",
@@ -69,8 +69,12 @@
   "loc.messages.ContainerPatternFound": "Modèle trouvé dans le paramètre filepath Docker",
   "loc.messages.ContainerPatternNotFound": "Modèle introuvable dans le paramètre filepath Docker",
   "loc.messages.ContainerDockerFileNotFound": "Le fichier Docker correspondant à %s est introuvable.",
+  "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
+  "loc.messages.DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
   "loc.messages.NoImagesInImageNamesFile": "Au moins un nom d'image est attendu dans le fichier '%s'.",
   "loc.messages.CantWriteDataToFile": "Impossible d'écrire des données dans le fichier %s. Erreur : %s",
   "loc.messages.NoDataWrittenOnFile": "Aucune donnée n'a été écrite dans le fichier %s",
-  "loc.messages.FileContentSynced": "Synchronisation effectuée du contenu du fichier sur le disque. Le contenu est %s."
+  "loc.messages.FileContentSynced": "Synchronisation effectuée du contenu du fichier sur le disque. Le contenu est %s.",
+  "loc.messages.OutputVariableDataSizeExceeded": "La variable de sortie non définie en tant que sortie de la commande Docker a dépassé la longueur maximale prise en charge. Longueur de sortie : %s. Longueur maximale prise en charge : %s",
+  "loc.messages.WritingDockerConfigToTempFile": "Écriture de la configuration Docker dans le fichier temporaire. Chemin de fichier : %s. Configuration Docker : %s"
 }

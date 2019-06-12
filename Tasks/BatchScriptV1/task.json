@@ -1,10 +1,10 @@
 {
     "id": "BFC8BF76-E7AC-4A8C-9A55-A944A9F632FD",
     "name": "BatchScript",
-    "friendlyName": "Batch Script",
-    "description": "Run a windows cmd or bat script and optionally allow it to change the environment",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613733",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613733)",
+    "friendlyName": "Batch script",
+    "description": "Run a Windows command or batch script and optionally allow it to change the environment",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/batch-script",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613733)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 5
+        "Patch": 7
     },
     "demands": [
         "Cmd"

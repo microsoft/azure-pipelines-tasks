@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "npm",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
-  "loc.description": "Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Package Management.",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746) or [see the npm documentation](https://docs.npmjs.com/)",
+  "loc.description": "Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Azure Artifacts.",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.group.displayName.customRegistries": "Custom registries and authentication",
   "loc.group.displayName.publishRegistries": "Destination registry and authentication",
@@ -23,7 +23,7 @@
   "loc.input.label.publishRegistry": "Registry location",
   "loc.input.help.publishRegistry": "Registry the command will target.",
   "loc.input.label.publishFeed": "Target registry",
-  "loc.input.help.publishFeed": "Select a registry hosted in this account. You must have Package Management installed and licensed to select a registry here.",
+  "loc.input.help.publishFeed": "Select a registry hosted in this account. You must have Azure Artifacts installed and licensed to select a registry here.",
   "loc.input.label.publishPackageMetadata": "Publish pipeline metadata",
   "loc.input.help.publishPackageMetadata": "Associate this build/release pipeline’s metadata (run #, source code information) with the package",
   "loc.input.label.publishEndpoint": "External Registry",

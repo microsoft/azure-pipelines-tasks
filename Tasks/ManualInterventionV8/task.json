@@ -1,10 +1,10 @@
 {
     "id": "BCB64569-D51A-4AF0-9C01-EA5D05B3B622",
     "name": "ManualIntervention",
-    "friendlyName": "Manual Intervention",
-    "description": "Pause deployment and wait for intervention",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870234",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870234)",
+    "friendlyName": "Manual intervention",
+    "description": "Pause deployment and wait for manual intervention",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/manual-intervention",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870234)",
     "category": "Deploy",
     "visibility": [
         "Release"
@@ -16,7 +16,7 @@
     "version": {
         "Major": 8,
         "Minor": 2,
-        "Patch": 6
+        "Patch": 8
     },
     "inputs": [
         {

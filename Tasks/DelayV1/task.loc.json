@@ -3,7 +3,7 @@
   "name": "Delay",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870239",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/delay",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 6
+    "Patch": 8
   },
   "inputs": [
     {

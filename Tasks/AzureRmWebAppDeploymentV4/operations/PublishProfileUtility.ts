@@ -1,11 +1,11 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { TaskParameters } from './TaskParameters';
 import fs = require('fs');
 import * as Constant from './Constants';
 import path = require('path');
 import Q = require('q');
 
-var packageUtility = require('webdeployment-common/packageUtility.js');
+var packageUtility = require('webdeployment-common-v2/packageUtility.js');
 var parseString = require('xml2js').parseString;
 const ERROR_FILE_NAME = "error.txt";
 

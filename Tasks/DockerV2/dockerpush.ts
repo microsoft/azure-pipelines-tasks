@@ -50,31 +50,42 @@ function pushMultipleImages(connection: ContainerConnection, imageNames: string[
     return promise;
 }
 
-export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, ignoreArguments?: boolean): any {
-    let commandArguments = ignoreArguments ? "" : tl.getInput("arguments");
+export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
+    // ignore the arguments input if the command is buildAndPush, as it is ambiguous
+    let commandArguments = isBuildAndPushCommand ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");
 
-    // get qualified image name from the containerRegistry input
+    // get repository input
     let repositoryName = tl.getInput("repository");
+    if (!repositoryName) {
+        tl.warning("No repository is specified. Nothing will be pushed.");
+    }
+
     let imageNames: string[] = [];
     // if container registry is provided, use that
     // else, use the currently logged in registries
     if (tl.getInput("containerRegistry")) {
-        let imageName = connection.getQualifiedImageName(repositoryName);
+        let imageName = connection.getQualifiedImageName(repositoryName, true);
         if (imageName) {
             imageNames.push(imageName);
         }
     }
     else {
-        imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName);
+        imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName, true);
     }
 
     const dockerfilepath = tl.getInput("dockerFile", true);
-    const dockerFile = findDockerFile(dockerfilepath);
-    if (!tl.exist(dockerFile)) {
-        throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
+    let dockerFile = "";
+    if (isBuildAndPushCommand) {
+        // For buildAndPush command, to find out the base image name, we can use the
+        // Dockerfile returned by findDockerfile as we are sure that this is used
+        // for building.
+        dockerFile = findDockerFile(dockerfilepath);
+        if (!tl.exist(dockerFile)) {
+            throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
+        }
     }
 
     // push all tags
@@ -85,12 +96,10 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     let promise = pushMultipleImages(connection, imageNames, tags, commandArguments, (image, commandOutput) => {
         output += commandOutput;
         outputImageName = image;
-        let extractedResult = extractDigestAndSizeFromOutput(commandOutput, matchPatternForDigestAndSize);
-        digest = extractedResult[0];
-        imageSize = extractedResult[1];
+        let digest = extractDigestFromOutput(commandOutput, matchPatternForDigestAndSize);
         tl.debug("outputImageName: " + outputImageName + "\n" + "commandOutput: " + commandOutput + "\n" + "digest:" + digest + "imageSize:" + imageSize);
-        publishToImageMetadataStore(connection, outputImageName, tags, digest, dockerFile, imageSize).then((result) => {
-            tl.debug("ImageDetailsApiResponse: " + result);
+        publishToImageMetadataStore(connection, outputImageName, tags, digest, dockerFile).then((result) => {
+            tl.debug("ImageDetailsApiResponse: " + JSON.stringify(result));
         }, (error) => {
             tl.warning("publishToImageMetadataStore failed with error: " + error);
         });
@@ -110,11 +119,16 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     return promise;
 }
 
-async function publishToImageMetadataStore(connection: ContainerConnection, imageName: string, tags: string[], digest: string, dockerFilePath: string, imageSize: string): Promise<any> {
+async function publishToImageMetadataStore(connection: ContainerConnection, imageName: string, tags: string[], digest: string, dockerFilePath: string): Promise<any> {
     // Getting imageDetails
     const imageUri = getResourceName(imageName, digest);
-    const baseImageName = getBaseImageNameFromDockerFile(dockerFilePath);
+    const baseImageName = dockerFilePath ? getBaseImageNameFromDockerFile(dockerFilePath) : "NA";
     const layers = await dockerCommandUtils.getLayers(connection, imageName);
+    if (!layers) {
+        return null;
+    }
+    
+    const imageSize = dockerCommandUtils.getImageSize(layers);
 
     // Getting pipeline variables
     const build = "build";
@@ -149,7 +163,7 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
     return sendRequestToImageStore(requestBody, requestUrl);
 }
 
-function extractDigestAndSizeFromOutput(dockerPushCommandOutput: string, matchPattern: RegExp): string[] {
+function extractDigestFromOutput(dockerPushCommandOutput: string, matchPattern: RegExp): string {
     // SampleCommandOutput : The push refers to repository [xyz.azurecr.io/acr-helloworld]
     // 3b7670606102: Pushed 
     // e2af85e4b310: Pushed ce8609e9fdad: Layer already exists
@@ -159,17 +173,11 @@ function extractDigestAndSizeFromOutput(dockerPushCommandOutput: string, matchPa
     // Below regex will extract part after sha256, so expected return value will be 5e3c9cf1692e129744fe7db8315f05485c6bb2f3b9f6c5096ebaae5d5bfbbe60
     const imageMatch = dockerPushCommandOutput.match(matchPattern);
     let digest = "";
-    let size = "";
-    if (imageMatch) {
-        if (imageMatch.length >= 1) {
-            digest = imageMatch[1];
-        }
-        if (imageMatch.length >= 3) {
-            size = imageMatch[3];
-        }
+    if (imageMatch && imageMatch.length >= 1) {
+        digest = imageMatch[1];
     }
 
-    return [digest, size];
+    return digest;
 }
 
 async function sendRequestToImageStore(requestBody: string, requestUrl: string): Promise<any> {

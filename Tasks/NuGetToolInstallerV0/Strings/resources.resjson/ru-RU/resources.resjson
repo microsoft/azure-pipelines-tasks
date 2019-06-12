@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Программа установки средства NuGet",
+  "loc.friendlyName": "Установщик средств NuGet",
   "loc.helpMarkDown": "[Подробнее](https://go.microsoft.com/fwlink/?linkid=852538)",
   "loc.description": "Скачивает указанную версию NuGet из Интернета или кэша и добавляет ее в переменную PATH. Используйте эту задачу, чтобы изменить версию NuGet, которая используется в задачах NuGet.",
   "loc.instanceNameFormat": "Использовать NuGet $(versionSpec)",

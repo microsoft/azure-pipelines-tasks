@@ -403,9 +403,9 @@
       "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.1.tgz",
       "integrity": "sha512-kKvNJn6Mm93gAczWVJg7wH+wGYWNrDHdWvpUmHyEsgCtIwwo3bqPtV4tR5tuPaUhTOo/kvhVwd8XwwOllGYkbg=="
     },
-    "vsts-task-lib": {
-      "version": "2.0.1-preview",
-      "resolved": "https://registry.npmjs.org/vsts-task-lib/-/vsts-task-lib-2.0.1-preview.tgz",
+    "azure-pipelines-task-lib": {
+      "version": "2.8.0",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-2.8.0.tgz",
       "integrity": "sha1-rfx4BRaPtJLVcD7eZIXOt4G2SrQ=",
       "requires": {
         "minimatch": "3.0.4",

@@ -3,7 +3,7 @@
   "name": "Bash",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613738",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/bash",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 148,
+    "Minor": 151,
     "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",

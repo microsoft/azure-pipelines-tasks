@@ -1,10 +1,10 @@
 {
     "id": "2FF763A7-CE83-4E1F-BC89-0AE63477CEBE",
     "name": "PublishBuildArtifacts",
-    "friendlyName": "Publish Build Artifacts",
-    "description": "Publish build artifacts to Azure Pipelines/TFS or a file share",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=708390",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=708390)",
+    "friendlyName": "Publish build artifacts",
+    "description": "Publish build artifacts to Azure Pipelines or a Windows file share",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-build-artifacts",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=708390)",
     "category": "Utility",
     "visibility": [
         "Build"
@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 142,
-        "Patch": 2
+        "Minor": 151,
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "1.91.0",
@@ -43,9 +43,9 @@
             "label": "Artifact publish location",
             "defaultValue": "Container",
             "required": true,
-            "helpMarkDown": "Choose whether to store the artifact in Azure Pipelines/TFS, or to copy it to a file share that must be accessible from the build agent.",
+            "helpMarkDown": "Choose whether to store the artifact in Azure Pipelines, or to copy it to a file share that must be accessible from the build agent.",
             "options": {
-                "Container": "Azure Pipelines/TFS",
+                "Container": "Azure Pipelines",
                 "FilePath": "A file share"
             }
         },
@@ -85,8 +85,8 @@
         }
     },
     "messages": {
-        "ErrorFileShareLinux": "Publishing artifacts from a Linux or macOS agent to a file share is not supported. Change the artifact type to `Azure Pipelines/TFS` or use a Windows agent.",
-        "ErrorHostTypeNotSupported": "This task must run in a build to publish artifacts to Azure Pipelines/TFS.",
+        "ErrorFileShareLinux": "Publishing artifacts from a Linux or macOS agent to a file share is not supported. Change the artifact type to `Azure Pipelines` or use a Windows agent.",
+        "ErrorHostTypeNotSupported": "This task must run in a build to publish artifacts to Azure Pipelines.",
         "PublishBuildArtifactsFailed": "Publishing build artifacts failed with an error: %s",
         "UnexpectedParallelCount": "Unsupported parallel count '%s'. Enter a number between 1 and 128."
     }

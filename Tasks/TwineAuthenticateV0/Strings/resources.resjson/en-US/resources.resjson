@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Python Twine Upload Authenticate",
-  "loc.helpMarkDown": "[More Information](https://pypi.org/project/twine/)",
-  "loc.description": "Authentication for uploading Python distributions using twine. Please add '-r FeedName/EndpointName --config-file $(PYPIRC_PATH)' to your twine upload command. For feeds present in this organization, use the feed name as the repository (-r). Otherwise, use the endpoint name defined in the service connection.",
+  "loc.friendlyName": "Python twine upload authenticate",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate) or [see the Twine documentation](https://twine.readthedocs.io/)",
+  "loc.description": "Authenticate for uploading Python distributions using twine. Add '-r FeedName/EndpointName --config-file $(PYPIRC_PATH)' to your twine upload command. For feeds present in this organization, use the feed name as the repository (-r). Otherwise, use the endpoint name defined in the service connection.",
   "loc.instanceNameFormat": "Twine Authenticate $(message)",
   "loc.group.displayName.feedAuthentication": "Feeds and Authentication",
   "loc.group.displayName.advanced": "Advanced",
@@ -25,6 +25,5 @@
   "loc.messages.FeedTokenUnavailable": "Failed to get the access token for this organization.",
   "loc.messages.NoPypircFile": "No .pypirc file to clean up.",
   "loc.messages.VariableSetForPypirc": "Environment variable for .pypirc at %s is set.",
-  "loc.messages.Info_RemovingPypircFile": "Removing .pypirc file from %s",
-  "loc.messages.Error_PythonInternalFeedsNotSupportedOnprem": "Authentication for internal feeds is not supported in this version of Azure DevOps Server."
+  "loc.messages.Info_RemovingPypircFile": "Removing .pypirc file from %s"
 }

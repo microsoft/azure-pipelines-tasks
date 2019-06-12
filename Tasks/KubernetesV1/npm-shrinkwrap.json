@@ -138,6 +138,11 @@
         "vsts-task-lib": "2.0.1-preview"
       },
       "dependencies": {
+        "node-uuid": {
+          "version": "1.4.8",
+          "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.8.tgz",
+          "integrity": "sha1-sEDrCSOWivq/jTL7HxfxFn/auQc="
+        },
         "vsts-task-lib": {
           "version": "2.0.1-preview",
           "resolved": "http://registry.npmjs.org/vsts-task-lib/-/vsts-task-lib-2.0.1-preview.tgz",
@@ -154,9 +159,9 @@
       }
     },
     "ecdsa-sig-formatter": {
-      "version": "1.0.10",
-      "resolved": "https://registry.npmjs.org/ecdsa-sig-formatter/-/ecdsa-sig-formatter-1.0.10.tgz",
-      "integrity": "sha1-HFlQAPBKiJffuFAAiSoPTDOvhsM=",
+      "version": "1.0.11",
+      "resolved": "https://registry.npmjs.org/ecdsa-sig-formatter/-/ecdsa-sig-formatter-1.0.11.tgz",
+      "integrity": "sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==",
       "requires": {
         "safe-buffer": "5.1.2"
       }
@@ -267,29 +272,52 @@
       "integrity": "sha1-hRGNanDj/M3xQ4n056HD+cip+7o=",
       "requires": {
         "joi": "6.10.1",
-        "jws": "3.1.5",
+        "jws": "3.2.2",
         "lodash.once": "4.1.1",
         "ms": "0.7.3",
         "xtend": "4.0.1"
       }
     },
     "jwa": {
-      "version": "1.1.6",
-      "resolved": "https://registry.npmjs.org/jwa/-/jwa-1.1.6.tgz",
-      "integrity": "sha512-tBO/cf++BUsJkYql/kBbJroKOgHWEigTKBAjjBEmrMGYd1QMBC74Hr4Wo2zCZw6ZrVhlJPvoMrkcOnlWR/DJfw==",
+      "version": "1.4.1",
+      "resolved": "https://registry.npmjs.org/jwa/-/jwa-1.4.1.tgz",
+      "integrity": "sha512-qiLX/xhEEFKUAJ6FiBMbes3w9ATzyk5W7Hvzpa/SLYdxNtng+gcurvrI7TbACjIXlsJyr05/S1oUhZrc63evQA==",
       "requires": {
         "buffer-equal-constant-time": "1.0.1",
-        "ecdsa-sig-formatter": "1.0.10",
+        "ecdsa-sig-formatter": "1.0.11",
         "safe-buffer": "5.1.2"
       }
     },
     "jws": {
-      "version": "3.1.5",
-      "resolved": "https://registry.npmjs.org/jws/-/jws-3.1.5.tgz",
-      "integrity": "sha512-GsCSexFADNQUr8T5HPJvayTjvPIfoyJPtLQBwn5a4WZQchcrPMPMAWcC1AzJVRDKyD6ZPROPAxgv6rfHViO4uQ==",
+      "version": "3.2.2",
+      "resolved": "https://registry.npmjs.org/jws/-/jws-3.2.2.tgz",
+      "integrity": "sha512-YHlZCB6lMTllWDtSPHz/ZXTsi8S00usEV6v1tjq8tOUZzw7DpSDWVXjXDre6ed1w/pd495ODpHZYSdkRTsa0HA==",
       "requires": {
-        "jwa": "1.1.6",
+        "jwa": "1.4.1",
         "safe-buffer": "5.1.2"
+      }
+    },
+    "kubernetes-common": {
+      "version": "file:../../_build/Tasks/Common/kubernetes-common-1.0.0.tgz",
+      "requires": {
+        "js-yaml": "3.6.1",
+        "vsts-task-lib": "2.6.0",
+        "vsts-task-tool-lib": "0.4.0"
+      },
+      "dependencies": {
+        "vsts-task-lib": {
+          "version": "2.6.0",
+          "resolved": "https://registry.npmjs.org/vsts-task-lib/-/vsts-task-lib-2.6.0.tgz",
+          "integrity": "sha512-ja2qX4BIUvswcNbGtIoGo1SM5mRVc3Yaf7oM4oY64bNHs04chKfvH6f3cDDG0pd44OrZIGQE9LgECzeau6z2wA==",
+          "requires": {
+            "minimatch": "3.0.4",
+            "mockery": "1.7.0",
+            "q": "1.4.1",
+            "semver": "5.4.1",
+            "shelljs": "0.3.0",
+            "uuid": "3.2.1"
+          }
+        }
       }
     },
     "lodash.once": {
@@ -319,11 +347,6 @@
       "version": "0.7.3",
       "resolved": "https://registry.npmjs.org/ms/-/ms-0.7.3.tgz",
       "integrity": "sha1-cIFVpeROM/X9D8U+gdDUCpG+H/8="
-    },
-    "node-uuid": {
-      "version": "1.4.8",
-      "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.8.tgz",
-      "integrity": "sha1-sEDrCSOWivq/jTL7HxfxFn/auQc="
     },
     "object-assign": {
       "version": "4.1.1",

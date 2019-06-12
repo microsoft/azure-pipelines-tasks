@@ -80,9 +80,13 @@ export class DotnetMockHelper {
             getNuGetFeedRegistryUrl(
                 packagingCollectionUrl: string,
                 feedId: string,
+                project: string,
                 nuGetVersion: VersionInfo,
                 accessToken?: string,
                 useSession?: boolean) {
+                if (project) {
+                    console.log("Using project scope " + project);
+                }
                 if (useSession) {
                     console.log("Using session registry url");
                 }
@@ -127,7 +131,7 @@ export class DotnetMockHelper {
     }
 
     public RegisterLocationServiceMocks() {
-        this.tmr.registerMock('vso-node-api/WebApi', {
+        this.tmr.registerMock('azure-devops-node-api/WebApi', {
             getBearerHandler: function(token){
                 return {};
             },

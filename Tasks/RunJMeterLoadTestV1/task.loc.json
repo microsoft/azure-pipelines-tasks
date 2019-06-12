@@ -3,7 +3,7 @@
   "name": "ApacheJMeterLoadTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=784929",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/run-jmeter-load-test",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
@@ -14,8 +14,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 28
+    "Patch": 31
   },
+  "deprecated": true,
   "demands": [
     "azureps"
   ],
