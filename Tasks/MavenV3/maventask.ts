@@ -30,7 +30,7 @@ var publishJUnitResults: string = tl.getInput('publishJUnitResults');
 var testResultsFiles: string = tl.getInput('testResultsFiles', true);
 var ccTool = tl.getInput('codeCoverageTool');
 var authenticateFeed = tl.getBoolInput('mavenFeedAuthenticate', true);
-var skipEffectivePomGeneration = tl.getBoolInput("skipEffectivePom", true);
+var skipEffectivePomGeneration = tl.getBoolInput("skipEffectivePom", false);
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty');
 var codeCoverageFailed: boolean = false;
