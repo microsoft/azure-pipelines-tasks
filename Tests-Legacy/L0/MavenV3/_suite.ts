@@ -635,7 +635,6 @@ describe('Maven Suite', function () {
     })
 
     it('run maven without authenticated feed and skip effectivePom', (done) => {
-
         setResponseFile('response.json');
 
         var tr = new trm.TaskRunner('MavenV3', true);
@@ -647,7 +646,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
-        tr.setInput('mavenFeedAuthenticate', 'true');
+        tr.setInput('mavenFeedAuthenticate', 'false');
         tr.setInput('skipEffectivePom', 'true');
 
         tr.run()
@@ -656,7 +655,7 @@ describe('Maven Suite', function () {
                 assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.stderr.length == 0, 'should not have written to stderr:'+tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 done();
             })
