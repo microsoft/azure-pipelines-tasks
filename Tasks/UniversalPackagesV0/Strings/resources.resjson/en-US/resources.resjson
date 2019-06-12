@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Universal packages",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/universalpackagesannounce)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/universalpackagesannounce)",
   "loc.description": "Download or publish Universal Packages",
   "loc.instanceNameFormat": "Universal $(command)",
   "loc.group.displayName.packageDownloadDetails": "Feed & package details",
@@ -81,6 +81,7 @@
   "loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",
   "loc.messages.FailedToGetLatestPackageVersion": "Failed to get package versions",
   "loc.messages.Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages",
+  "loc.messages.Warning_SessionCreationFailed": "Could not create provenance session: %s",
   "loc.messages.Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server.",
   "loc.messages.Error_ProcessorArchitectureNotSupported": "Universal Packages require an x64 agent."
 }
