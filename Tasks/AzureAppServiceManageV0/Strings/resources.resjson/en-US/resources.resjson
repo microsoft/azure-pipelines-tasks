@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure App Service manage",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "loc.description": "Start, stop, restart, slot swap, install site extensions or enable continuous monitoring for an Azure App Service",
+  "loc.description": "Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service",
   "loc.instanceNameFormat": "$(Action): $(WebAppName)",
   "loc.group.displayName.AdvancedSettings": "Advanced Settings",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
