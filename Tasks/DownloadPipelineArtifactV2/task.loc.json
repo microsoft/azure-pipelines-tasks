@@ -18,16 +18,19 @@
   "minimumAgentVersion": "2.153.0",
   "inputs": [
     {
-      "name": "buildType",
+      "name": "source",
+      "aliases": [
+        "buildType"
+      ],
       "type": "radio",
-      "label": "ms-resource:loc.input.label.buildType",
+      "label": "ms-resource:loc.input.label.source",
       "defaultValue": "current",
       "required": true,
       "options": {
         "current": "Current run",
         "specific": "Specific build"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.buildType"
+      "helpMarkDown": "ms-resource:loc.input.help.source"
     },
     {
       "name": "project",
@@ -35,7 +38,7 @@
       "label": "ms-resource:loc.input.label.project",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "buildType == specific",
+      "visibleRule": "source == specific",
       "properties": {
         "EditableOptions": "True",
         "DisableManageLink": "True"
@@ -51,7 +54,7 @@
       "label": "ms-resource:loc.input.label.pipeline",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "buildType == specific",
+      "visibleRule": "source == specific",
       "properties": {
         "EditableOptions": "True",
         "DisableManageLink": "True",
@@ -60,20 +63,26 @@
       "helpMarkDown": "ms-resource:loc.input.help.pipeline"
     },
     {
-      "name": "specificBuildWithTriggering",
+      "name": "preferTriggeringPipeline",
+      "aliases": [
+        "specificBuildWithTriggering"
+      ],
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.specificBuildWithTriggering",
+      "label": "ms-resource:loc.input.label.preferTriggeringPipeline",
       "defaultValue": "false",
       "required": false,
-      "visibleRule": "buildType == specific",
-      "helpMarkDown": "ms-resource:loc.input.help.specificBuildWithTriggering"
+      "visibleRule": "source == specific",
+      "helpMarkDown": "ms-resource:loc.input.help.preferTriggeringPipeline"
     },
     {
-      "name": "buildVersionToDownload",
+      "name": "runVersion",
+      "aliases": [
+        "buildVersionToDownload"
+      ],
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.buildVersionToDownload",
+      "label": "ms-resource:loc.input.label.runVersion",
       "defaultValue": "latest",
-      "visibleRule": "buildType == specific",
+      "visibleRule": "source == specific",
       "required": true,
       "options": {
         "latest": "Latest",
@@ -82,13 +91,16 @@
       }
     },
     {
-      "name": "branchName",
+      "name": "runBranch",
+      "aliases": [
+        "branchName"
+      ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.branchName",
+      "label": "ms-resource:loc.input.label.runBranch",
       "defaultValue": "refs/heads/master",
-      "visibleRule": "buildType == specific && buildVersionToDownload == latestFromBranch",
+      "visibleRule": "source == specific && runVersion == latestFromBranch",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.branchName"
+      "helpMarkDown": "ms-resource:loc.input.help.runBranch"
     },
     {
       "name": "runId",
@@ -100,7 +112,7 @@
       "label": "ms-resource:loc.input.label.runId",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "buildType == specific && buildVersionToDownload == specific",
+      "visibleRule": "source == specific && runVersion == specific",
       "properties": {
         "EditableOptions": "True",
         "DisableManageLink": "True"
@@ -112,33 +124,39 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.tags",
       "defaultValue": "",
-      "visibleRule": "buildType == specific && buildVersionToDownload != specific",
+      "visibleRule": "source == specific && runVersion != specific",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.tags"
     },
     {
-      "name": "artifactName",
+      "name": "artifact",
+      "aliases": [
+        "artifactName"
+      ],
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.artifactName",
+      "label": "ms-resource:loc.input.label.artifact",
       "defaultValue": "",
       "required": false,
       "properties": {
         "EditableOptions": "True",
         "DisableManageLink": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.artifactName"
+      "helpMarkDown": "ms-resource:loc.input.help.artifact"
     },
     {
-      "name": "itemPattern",
+      "name": "patterns",
+      "aliases": [
+        "itemPattern"
+      ],
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.itemPattern",
+      "label": "ms-resource:loc.input.label.patterns",
       "defaultValue": "**",
       "required": false,
       "properties": {
         "rows": "3",
         "resizable": "true"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
+      "helpMarkDown": "ms-resource:loc.input.help.patterns"
     },
     {
       "name": "path",
@@ -191,7 +209,7 @@
     },
     {
       "endpointId": "tfs:teamfoundation",
-      "target": "artifactName",
+      "target": "artifact",
       "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds/{{runId}}/artifacts",
       "resultSelector": "jsonpath:$.value[*]",
       "parameters": {

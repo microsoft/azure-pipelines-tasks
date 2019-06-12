@@ -18,7 +18,10 @@
     "minimumAgentVersion": "2.153.0",
     "inputs": [
         {
-            "name": "buildType",
+            "name": "source",
+            "aliases": [
+                "buildType"
+            ],
             "type": "radio",
             "label": "Download artifacts produced by",
             "defaultValue": "current",
@@ -35,7 +38,7 @@
             "label": "Project",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "buildType == specific",
+            "visibleRule": "source == specific",
             "properties": {
                 "EditableOptions": "True",
                 "DisableManageLink": "True"
@@ -51,7 +54,7 @@
             "label": "Build pipeline",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "buildType == specific",
+            "visibleRule": "source == specific",
             "properties": {
                 "EditableOptions": "True",
                 "DisableManageLink": "True",
@@ -60,20 +63,26 @@
             "helpMarkDown": "Select the build pipeline name."
         },
         {
-            "name": "specificBuildWithTriggering",
+            "name": "preferTriggeringPipeline",
+            "aliases": [
+                "specificBuildWithTriggering"
+            ],
             "type": "boolean",
             "label": "When appropriate, download artifacts from the triggering build.",
             "defaultValue": "false",
             "required": false,
-            "visibleRule": "buildType == specific",
+            "visibleRule": "source == specific",
             "helpMarkDown": "If checked, this build task will try to download artifacts from the triggering build. If there is no triggering build from the specified pipeline, it will download artifacts from the build specified in the options below."
         },
         {
-            "name": "buildVersionToDownload",
+            "name": "runVersion",
+            "aliases": [
+                "buildVersionToDownload"
+            ],
             "type": "pickList",
             "label": "Build version to download",
             "defaultValue": "latest",
-            "visibleRule": "buildType == specific",
+            "visibleRule": "source == specific",
             "required": true,
             "options": {
                 "latest": "Latest",
@@ -82,11 +91,14 @@
             }
         },
         {
-            "name": "branchName",
+            "name": "runBranch",
+            "aliases": [
+                "branchName"
+            ],
             "type": "string",
             "label": "Branch name",
             "defaultValue": "refs/heads/master",
-            "visibleRule": "buildType == specific && buildVersionToDownload == latestFromBranch",
+            "visibleRule": "source == specific && runVersion == latestFromBranch",
             "required": true,
             "helpMarkDown": "Specify to filter on branch/ref name, for example: ```refs/heads/develop```."
         },
@@ -100,7 +112,7 @@
             "label": "Build",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "buildType == specific && buildVersionToDownload == specific",
+            "visibleRule": "source == specific && runVersion == specific",
             "properties": {
                 "EditableOptions": "True",
                 "DisableManageLink": "True"
@@ -112,12 +124,15 @@
             "type": "string",
             "label": "Build Tags",
             "defaultValue": "",
-            "visibleRule": "buildType == specific && buildVersionToDownload != specific",
+            "visibleRule": "source == specific && runVersion != specific",
             "required": false,
             "helpMarkDown": "A comma-delimited list of tags. Only builds with these tags will be returned."
         },
         {
-            "name": "artifactName",
+            "name": "artifact",
+            "aliases": [
+                "artifactName"
+            ],
             "type": "pickList",
             "label": "Artifact name",
             "defaultValue": "",
@@ -129,7 +144,10 @@
             "helpMarkDown": "The name of the artifact to download."
         },
         {
-            "name": "itemPattern",
+            "name": "patterns",
+            "aliases": [
+                "itemPattern"
+            ],
             "type": "multiLine",
             "label": "Matching patterns",
             "defaultValue": "**",
@@ -191,7 +209,7 @@
         },
         {
             "endpointId": "tfs:teamfoundation",
-            "target": "artifactName",
+            "target": "artifact",
             "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds/{{runId}}/artifacts",
             "resultSelector": "jsonpath:$.value[*]",
             "parameters": {
