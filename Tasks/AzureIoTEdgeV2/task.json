@@ -13,10 +13,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 1,
-        "Patch": 4
+        "Minor": 2,
+        "Patch": 0
     },
-    "preview": true,
+    "preview": false,
+    "showEnvironmentVariables": true,
     "instanceNameFormat": "Azure IoT Edge - $(action)",
     "groups": [
         {
@@ -51,7 +52,7 @@
             "name": "deploymentFilePath",
             "type": "filePath",
             "label": "Deployment file",
-            "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.json",
+            "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
             "required": true,
             "visibleRule": "action == Deploy to IoT Edge devices",
             "helpMarkDown": "Select the deployment json file.\n If this task is in **release pipeline**, you need to set the location of deployment file in artifact.(The default value works for most conditions).\n If this task is in **build pipeline**, you need to set it to the path of **Path of output deployment file**."
@@ -201,6 +202,15 @@
             "helpMarkDown": "Add registry credential for pushing docker images to deployment manifest"
         },
         {
+          "name": "deploymentManifestOutputPath",
+          "type": "filePath",
+          "label": "Output path",
+          "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
+          "visibleRule": "action == Generate deployment manifest",
+          "required": true,
+          "helpMarkDown": "The output path of generated deployment manifest"
+        },
+        {
             "name": "bypassModules",
             "type": "string",
             "label": "Bypass module(s)",
@@ -247,7 +257,7 @@
         "DependencyInstallSuccess": "%s installed with version: %s",
         "DependencyInstallFail": "%s installation failed, see detailed error in debug mode",
         "TemplateFileInvalid": "The path of template file is not valid: %s",
-        "ContainerRegistryInvalid": "Failed to fetch container registry authentication token, please check you container registry setting in build task. The token is %s",
+        "InvalidContainerRegistry": "Failed to fetch container registry authentication token, please check you container registry setting in build task. The username for container registry is %s",
         "DeploymentFileNotFound": "Deployment file can't be found. Please ensure Path of deployment file is correctly set in the task.",
         "ValidDeploymentFileNotFound": "Cannot find a valid deployment file. Please ensure Path of deployment file is correctly set in the task.",
         "AzureSdkNotFound": "Azure SDK not found",
@@ -256,7 +266,9 @@
         "InvalidRegistryCredentialWarning": "Failed to login %s with given credential. %s",
         "CheckModuleImageExistenceError": "%s does not exist or the credential is not set correctly. Error: %s",
         "StartGenerateDeploymentManifest": "Start generating deployment manifest...",
-        "FinishGenerateDeploymentManifest": "Finished generating deployment manifest."
+        "FinishGenerateDeploymentManifest": "Finished generating deployment manifest.",
+        "LoginRegistrySucess": "Successfully logged in to registry %s",
+        "SkipSettingEnvironmentVariableForSecret": "Environment variable %s already exist. Skip setting environment varialbe for secret: %s."
     },
     "OutputVariables": [
         {

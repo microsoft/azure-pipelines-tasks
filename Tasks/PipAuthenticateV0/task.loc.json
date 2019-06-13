@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 153,
-    "Patch": 0
+    "Minor": 154,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -83,7 +83,6 @@
     "FailedToGetPackagingUri": "ms-resource:loc.messages.FailedToGetPackagingUri",
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
     "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable",
-    "Warn_TooManyFeedEntries": "ms-resource:loc.messages.Warn_TooManyFeedEntries",
-    "Error_PythonInternalFeedsNotSupportedOnprem": "ms-resource:loc.messages.Error_PythonInternalFeedsNotSupportedOnprem"
+    "Warn_TooManyFeedEntries": "ms-resource:loc.messages.Warn_TooManyFeedEntries"
   }
 }

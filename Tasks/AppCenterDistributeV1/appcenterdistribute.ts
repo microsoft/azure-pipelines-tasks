@@ -5,9 +5,11 @@ import Q = require('q');
 import fs = require('fs');
 import os = require('os');
 
+import { AzureBlobUploadHelper } from './azure-blob-upload-helper';
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 import utils = require('./utils');
+import { inspect } from 'util';
 
 class UploadInfo {
     upload_id: string;
@@ -276,27 +278,20 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
     return defer.promise;
 }
 
-function uploadSymbols(uploadUrl: string, file: string, userAgent: string): Q.Promise<void> {
+async function uploadSymbols(uploadUrl: string, file: string): Promise<void> {
     tl.debug("-- Uploading symbols...");
-    let defer = Q.defer<void>();
     tl.debug(`---- url: ${uploadUrl}`);
 
-    let stat = fs.statSync(file);
-    let headers = {
-        "x-ms-blob-type": "BlockBlob",
-        "Content-Length": stat.size,
-        "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
-    };
+    try {
+        const azureBlobUploadHelper = new AzureBlobUploadHelper(tl.debug);
+        await azureBlobUploadHelper.upload(uploadUrl, file);
+    } catch (e) {
+        tl.error(inspect(e));
 
-    fs.createReadStream(file).pipe(request.put({ url: uploadUrl, headers: headers }, (err, res, body) => {
-        responseHandler(defer, err, res, body, () => {
-            tl.debug('-- Symbol uploaded.');
-            defer.resolve();
-        });
-    }));
+        throw e;
+    }
 
-    return defer.promise;
+    tl.debug('-- Symbol uploaded.');
 }
 
 function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, symbol_upload_id: string, token: string, userAgent: string): Q.Promise<void> {
@@ -477,7 +472,7 @@ async function run() {
             let symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolsType, apiToken, userAgent);
 
             // upload symbols 
-            await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile, userAgent);
+            await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile);
 
             // Commit the symbols upload
             await commitSymbols(effectiveApiServer, effectiveApiVersion, appSlug, symbolsUploadInfo.symbol_upload_id, apiToken, userAgent);

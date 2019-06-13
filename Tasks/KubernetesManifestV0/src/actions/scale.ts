@@ -1,14 +1,15 @@
 'use strict';
 
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import * as utils from '../utils/utilities';
 import * as constants from '../models/constants';
+import * as TaskInputParameters from '../models/TaskInputParameters';
 
-import { Kubectl } from 'kubernetes-common/kubectl-object-model';
+import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
 
 export async function scale(ignoreSslErrors?: boolean) {
-    const kubectl = new Kubectl(await utils.getKubectl(), tl.getInput('namespace', false), ignoreSslErrors);
+    const kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace, ignoreSslErrors);
     const kind = tl.getInput('kind', true).toLowerCase();
     const replicas = tl.getInput('replicas', true);
     const name = tl.getInput('name', true);

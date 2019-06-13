@@ -1,6 +1,7 @@
-import  * as ma from 'vsts-task-lib/mock-answer';
-import * as tmrm from 'vsts-task-lib/mock-run';
+import  * as ma from 'azure-pipelines-task-lib/mock-answer';
+import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import * as path from 'path';
+import taskinternal = require('azure-pipelines-task-lib/internal');
 
 let taskPath = path.join(__dirname, '..', 'nlbtask.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -18,7 +19,7 @@ process.env["AZURE_HTTP_USER_AGENT"] = "TFS_useragent";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
 process.env["COMPUTERNAME"] = "test-vm";
 
-var tl = require('vsts-task-lib/mock-task');
+var tl = require('azure-pipelines-task-lib/mock-task');
 tmr.registerMock('./nlbazureutility', {
 	getNetworkInterfacesInRG: function(SPN, endpointUrl, resourceGroupName) {
 		return [
@@ -102,7 +103,7 @@ tmr.registerMock('./nlbazureutility', {
 		];
 	},
 	setNetworkInterface: function(SPN, endpointUrl, nic, resourceGroupName) {
-		tl._writeLine(tl.loc("SettingTheNetworkInterface"));
+		taskinternal._writeLine(tl.loc("SettingTheNetworkInterface"));
 		return "setNICStatusSuccess";
 	},
 	getLoadBalancer: function(SPN, endpointUrl, name, resourceGroupName) {
