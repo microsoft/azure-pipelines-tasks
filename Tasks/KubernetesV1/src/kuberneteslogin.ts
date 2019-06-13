@@ -1,7 +1,7 @@
 "use strict";
 
 import Q = require('q');
-import trm = require('vsts-task-lib/toolrunner');
+import trm = require('azure-pipelines-task-lib/toolrunner');
 import ClusterConnection from "./clusterconnection";
 
 export function run(connection: ClusterConnection, kubecommand: string, outputUpdate: (data: string) => any): any {
