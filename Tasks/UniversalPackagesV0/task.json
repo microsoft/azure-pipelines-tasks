@@ -5,12 +5,12 @@
     "description": "Download or publish Universal Packages",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
-    "helpMarkDown": "[More Information](https://aka.ms/universalpackagesannounce)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/universalpackagesannounce)",
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 153,
-        "Patch": 0
+        "Minor": 154,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",

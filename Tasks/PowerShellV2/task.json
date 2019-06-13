@@ -4,7 +4,7 @@
     "friendlyName": "PowerShell",
     "description": "Run a PowerShell script on Linux, macOS, or Windows",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/powershell",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613736)",
     "category": "Utility",
     "visibility": [
         "Build",

@@ -125,6 +125,9 @@ export async function run(): Promise<void> {
         nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
 
         const configFile = nuGetConfigHelper.tempNugetConfigPath;
+
+        nuGetConfigHelper.backupExistingRootNuGetFiles();
+
         const dotnetPath = tl.which('dotnet', true);
 
         try {
@@ -133,6 +136,8 @@ export async function run(): Promise<void> {
             }
         } finally {
             credCleanup();
+
+            nuGetConfigHelper.restoreBackupRootNuGetFiles();
         }
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('PackagesInstalledSuccessfully'));
