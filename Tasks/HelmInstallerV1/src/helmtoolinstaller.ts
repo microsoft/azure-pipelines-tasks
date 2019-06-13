@@ -1,6 +1,6 @@
 "use strict";
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import * as toolLib from 'vsts-task-tool-lib/tool';
 import utils = require("./utils");

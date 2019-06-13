@@ -1,13 +1,13 @@
 'use strict';
 
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as  path from 'path';
 import * as fs from 'fs';
-import * as  helmutility from 'kubernetes-common/helmutility';
+import * as  helmutility from 'kubernetes-common-v2/helmutility';
 import * as uuidV4 from 'uuid/v4';
 
 import { getTempDirectory } from '../utils/FileHelper';
-import { Helm, NameValuePair } from 'kubernetes-common/helm-object-model';
+import { Helm, NameValuePair } from 'kubernetes-common-v2/helm-object-model';
 import * as TaskParameters from '../models/TaskInputParameters';
 
 class HelmRenderEngine {
