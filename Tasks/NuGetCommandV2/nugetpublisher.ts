@@ -397,5 +397,10 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
         return false;
     }
 
-    return true;
+    // Use VstsNugetPush only if conflictsAllowed is checked. Otherwise use Nuget as default.
+    if (conflictsAllowed){
+        return true;
+    }
+
+    return false;
 }
