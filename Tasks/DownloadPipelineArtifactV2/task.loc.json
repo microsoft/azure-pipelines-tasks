@@ -28,7 +28,7 @@
       "required": true,
       "options": {
         "current": "Current run",
-        "specific": "Specific build"
+        "specific": "Specific run"
       },
       "helpMarkDown": "ms-resource:loc.input.help.source"
     },
