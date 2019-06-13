@@ -30,6 +30,9 @@
     },
     {
       "name": "artifactName",
+      "aliases": [
+        "artifact"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.artifactName",
       "defaultValue": "",
