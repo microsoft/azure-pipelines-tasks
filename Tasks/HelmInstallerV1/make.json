@@ -10,7 +10,6 @@
     "rm": [
         {
             "items": [
-                "node_modules/kubernetes-common/node_modules/vsts-task-lib",
                 "node_modules/kubernetes-common-v2/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
