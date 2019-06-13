@@ -30,6 +30,9 @@
         },
         {
             "name": "artifactName",
+            "aliases": [
+                "artifact"
+            ],
             "type": "string",
             "label": "Artifact name",
             "defaultValue": "",
