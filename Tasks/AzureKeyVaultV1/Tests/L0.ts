@@ -1,9 +1,8 @@
-/// <reference path="../../../definitions/mocha.d.ts"/>
 'use strict';
 
-const assert = require('assert');
-const ttm = require('vsts-task-lib/mock-test');
-const path = require('path');
+import * as assert from 'assert';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import * as path from 'path';
 
 describe('Azure Key Vault', function () {
     this.timeout(30000);

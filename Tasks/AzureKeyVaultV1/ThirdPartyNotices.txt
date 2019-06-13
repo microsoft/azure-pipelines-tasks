@@ -36,7 +36,7 @@ Microsoft Azure Key Vault incorporates third party material from the projects li
 27. underscore.js (http://underscorejs.org/; https://github.com/jashkenas/underscore)
 28. uuid (https://github.com/kelektiv/node-uuid)
 29. vso-node-api (https://github.com/Microsoft/vsts-node-api)
-30. VSTS-task-lib  (https://github.com/Microsoft/vsts-task-lib)
+30. Azure-Pipelines-Task-Lib  (https://github.com/Microsoft/azure-pipelines-task-lib)
 31. Xml2JS  (https://github.com/Leonidas-from-XIV/node-xml2js)
 32. Xmlbuilder (https://github.com/oozcitak/xmlbuilder-js)
 33. xtend (https://github.com/Raynos/xtend)
@@ -987,7 +987,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF vso-node-api NOTICES, INFORMATION, AND LICENSE
 
-%% VSTS-task-lib  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% Azure-Pipelines-Task-Lib  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 The MIT License (MIT)
 
@@ -1011,7 +1011,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 =========================================
-END OF VSTS-task-lib  NOTICES, INFORMATION, AND LICENSE
+END OF Azure-Pipelines-Task-Lib  NOTICES, INFORMATION, AND LICENSE
 
 %% Xml2JS  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
