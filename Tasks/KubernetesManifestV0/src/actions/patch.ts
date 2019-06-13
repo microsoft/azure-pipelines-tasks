@@ -1,7 +1,7 @@
 'use strict';
 
-import * as tl from 'vsts-task-lib/task';
-import { Kubectl } from 'kubernetes-common/kubectl-object-model';
+import * as tl from 'azure-pipelines-task-lib/task';
+import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
 import * as utils from '../utils/utilities';
 import * as constants from '../models/constants';
 import * as TaskParameters from '../models/TaskInputParameters';

@@ -3,8 +3,8 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as url from "url";
-import * as tl from "vsts-task-lib/task";
-import * as tr from "vsts-task-lib/toolrunner";
+import * as tl from "azure-pipelines-task-lib/task";
+import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as utils from "./utilities";
 import * as os from "os";
 import * as toolLib from 'vsts-task-tool-lib/tool';
