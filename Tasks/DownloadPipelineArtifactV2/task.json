@@ -168,7 +168,7 @@
             "label": "Destination directory",
             "defaultValue": "$(Pipeline.Workspace)",
             "required": true,
-            "helpMarkDown": "Directory to download the artifact files to. Can be relative to the pipeline workspace directory or absolute. If multi-download option is applied (by lefting an empty artifact name), a sub-directory will be created for each."
+            "helpMarkDown": "Directory to download the artifact files to. Can be relative to the pipeline workspace directory or absolute. If multi-download option is applied (by leaving an empty artifact name), a sub-directory will be created for each."
         }
     ],
     "dataSourceBindings": [
