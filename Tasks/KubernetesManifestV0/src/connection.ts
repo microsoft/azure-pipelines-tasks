@@ -1,8 +1,8 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as utils from './utils/FileHelper';
-import * as kubectlutility from 'kubernetes-common/kubectlutility';
+import * as kubectlutility from 'kubernetes-common-v2/kubectlutility';
 
 export class Connection {
     public ignoreSSLErrors: boolean;
