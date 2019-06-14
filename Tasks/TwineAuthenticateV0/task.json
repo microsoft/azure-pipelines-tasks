@@ -10,7 +10,7 @@
     "version": {
         "Major": 0,
         "Minor": 154,
-        "Patch": 2
+        "Patch": 3
     },
     "runsOn": [
         "Agent",
@@ -101,7 +101,8 @@
         "FeedTokenUnavailable": "Failed to get the access token for this organization.",
         "NoPypircFile": "No .pypirc file to clean up.",
         "VariableSetForPypirc": "Environment variable for .pypirc at %s is set.",
-        "Info_RemovingPypircFile": "Removing .pypirc file from %s"
+        "Info_RemovingPypircFile": "Removing .pypirc file from %s",
+        "Warning_SessionCreationFailed": "Could not create provenance session: %s"
     },
     "postjobexecution": {
         "Node": {
