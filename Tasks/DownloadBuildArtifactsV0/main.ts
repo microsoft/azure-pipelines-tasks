@@ -71,7 +71,7 @@ async function main(): Promise<void> {
         var buildId: number = null;
         var buildVersionToDownload: string = tl.getInput("buildVersionToDownload", false);
         var allowPartiallySucceededBuilds: boolean = tl.getBoolInput("allowPartiallySucceededBuilds", false);
-        var branchName: string =  tl.getInput("branchName", false);;
+        var branchName: string = tl.getInput("branchName", false);;
         var downloadPath: string = tl.getInput("downloadPath", true);
         var downloadType: string = tl.getInput("downloadType", true);
         var tagFiltersInput: string = tl.getInput("tags", false);
@@ -139,7 +139,7 @@ async function main(): Promise<void> {
                 definitionId = definitionIdSpecified;
                 buildId = parseInt(tl.getInput("buildId", buildVersionToDownload == "specific"));
             }
-            
+
             // if the definition name includes a variable then definitionIdSpecified is a name vs a number
             if (!!definitionIdSpecified && Number.isNaN(parseInt(definitionIdSpecified))) {
                 var definitions: BuildDefinitionReference[] = await executeWithRetries("getBuildDefinitions", () => buildApi.getDefinitions(projectId, definitionIdSpecified), retryLimit).catch((reason) => {
@@ -254,10 +254,15 @@ async function main(): Promise<void> {
                     var isPullRequestForkBool = isPullRequestFork ? isPullRequestFork.toLowerCase() == 'true' : false;
                     var isWin = process.platform === "win32";
                     var isZipDownloadDisabled = tl.getVariable("SYSTEM.DisableZipDownload");
-                    var isZipDownloadDisabledBool = isZipDownloadDisabled ? isZipDownloadDisabled.toLowerCase() != 'false' : false
+                    var isZipDownloadDisabledBool = isZipDownloadDisabled ? isZipDownloadDisabled.toLowerCase() != 'false' : false;
+
+                    // Disable zip download if selective itemPattern provided
+                    if (downloaderOptions.itemPattern !== "**") {
+                        isZipDownloadDisabledBool = true;
+                    }
 
                     if (!isZipDownloadDisabledBool && isWin && isPullRequestForkBool) {
-                        const archiveUrl: string =  endpointUrl + "/" + projectId + "/_apis/build/builds/" + buildId + "/artifacts?artifactName=" + artifact.name + "&$format=zip";
+                        const archiveUrl: string = endpointUrl + "/" + projectId + "/_apis/build/builds/" + buildId + "/artifacts?artifactName=" + artifact.name + "&$format=zip";
                         console.log(tl.loc("DownloadArtifacts", artifact.name, archiveUrl));
 
                         var zipLocation = path.join(downloadPath, artifact.name + ".zip");
@@ -280,27 +285,27 @@ async function main(): Promise<void> {
 
                         console.log(tl.loc("DownloadingContainerResource", artifact.resource.data));
                         var containerParts = artifact.resource.data.split('/');
-    
+
                         if (containerParts.length < 3) {
                             throw new Error(tl.loc("FileContainerInvalidArtifactData"));
                         }
-                        
+
                         var containerId = parseInt(containerParts[1]);
-                        var containerPath = containerParts.slice(2,containerParts.length).join('/');
-    
+                        var containerPath = containerParts.slice(2, containerParts.length).join('/');
+
                         if (containerPath == "/") {
                             //container REST api oddity. Passing '/' as itemPath downloads the first file instead of returning the meta data about the all the files in the root level. 
                             //This happens only if the first item is a file.
                             containerPath = ""
                         }
-    
+
                         var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + encodeURIComponent(containerPath) + "&isShallow=true&api-version=4.1-preview.4";
                         console.log(tl.loc("DownloadArtifacts", artifact.name, itemsUrl));
-    
+
                         var variables = {};
                         var webProvider = new providers.WebProvider(itemsUrl, templatePath, variables, handler);
                         var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
-    
+
                         downloadPromises.push(downloader.processItems(webProvider, fileSystemProvider, downloaderOptions).catch((reason) => {
                             reject(reason);
                         }));
@@ -384,6 +389,10 @@ function configureDownloaderOptions(): engine.ArtifactEngineOptions {
 
 export async function unzip(zipLocation: string, unzipLocation: string): Promise<void> {
     await new Promise<void>(function (resolve, reject) {
+        if (!tl.exist(zipLocation)) {
+            return resolve();
+        }
+
         tl.debug('Extracting ' + zipLocation + ' to ' + unzipLocation);
 
         var unzipper = new DecompressZip(zipLocation);
