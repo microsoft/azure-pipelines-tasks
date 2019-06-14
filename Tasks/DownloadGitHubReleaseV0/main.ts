@@ -1,6 +1,6 @@
 var path = require('path')
 
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as engine from 'artifact-engine/Engine';
 import * as providers from 'artifact-engine/Providers';
 import * as httpc from 'typed-rest-client/HttpClient';

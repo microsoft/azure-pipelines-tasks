@@ -103,6 +103,29 @@ export class AzureAppService {
         }
     }
 
+    public async delete(): Promise<void> {
+        try {
+            var webRequest = new webClient.WebRequest();
+            webRequest.method = 'DELETE';
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            webRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}`, {
+                '{ResourceGroupName}': this._resourceGroup,
+                '{name}': this._name
+            }, null, '2016-08-01');
+
+            console.log(tl.loc('DeletingAppServiceSlot', this._getFormattedName()));
+            var response = await this._client.beginRequest(webRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            console.log(tl.loc('DeletedAppServiceSlot', this._getFormattedName()));
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToDeleteAppServiceSlot', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+    }
+    
     public async swap(slotName: string, preserveVNet?: boolean): Promise<void> {
         try {
             var webRequest = new webClient.WebRequest();

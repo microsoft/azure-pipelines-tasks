@@ -6,6 +6,9 @@ import util from "./util";
 import Constants from "./constant";
 import { IExecSyncOptions } from 'azure-pipelines-task-lib/toolrunner';
 import { TelemetryEvent } from './telemetry';
+import * as stream from "stream";
+import EchoStream from './echostream';
+import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 
 class azureclitask {
   private static isLoggedIn = false;
@@ -87,10 +90,15 @@ class azureclitask {
         // If error when get iot hub information, ignore.
       }
 
+      let outputStream: EchoStream = new EchoStream();
+      let execOptions: IExecOptions = {
+        errStream: outputStream as stream.Writable
+      } as IExecOptions;
+
       let result1 = tl.execSync('az', script1, Constants.execSyncSilentOption);
-      let result2 = await tl.exec('az', script2);
+      let result2 = await tl.exec('az', script2, execOptions);
       if (result2 !== 0) {
-        throw new Error(`Error for deployment`);
+        throw new Error(`Failed to create deployment. Error: ${outputStream.content}`);
       }
     }
     catch (err) {
@@ -222,8 +230,12 @@ class imagevalidationtask {
           tl.debug(JSON.stringify(loginResult));
           if (loginResult.code != 0) {
             tl.warning(tl.loc("InvalidRegistryCredentialWarning", credential.address, loginResult.stderr));
+          } else {
+            tl.loc("LoginRegistrySucess", credential.address);
           }
         });
+      } else {
+        tl.debug("No registry credentials found in deployment manifest.")
       }
 
       tl.setVariable("DOCKER_CLI_EXPERIMENTAL", "enabled");
