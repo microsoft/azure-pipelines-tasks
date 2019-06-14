@@ -261,8 +261,16 @@ async function run() {
         tl.warning(tl.loc("NoFilesFound"));
         return;
     }
-    
-    let ftpClient = await getFtpClient(ftpOptions);
+   
+    let ftpClient: ftp.Client;
+    try {
+        ftpClient = await getFtpClient(ftpOptions);
+    } catch (err) {
+        tl.error(err);
+        tl.setResult(tl.TaskResult.Failed, tl.loc("UploadFailed"));
+
+        return;
+    }
 
     let sleep = (milliseconds: number) => {
         return new Promise(resolve => setTimeout(resolve, milliseconds));

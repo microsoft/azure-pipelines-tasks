@@ -1,29 +1,27 @@
 'use strict';
 
-import { Kubectl } from 'kubernetes-common/kubectl-object-model';
+import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
 import * as utils from '../utils/utilities';
 import * as TaskInputParameters from '../models/TaskInputParameters';
-import AuthenticationToken from 'docker-common/registryauthenticationprovider/registryauthenticationtoken';
-import { getDockerRegistryEndpointAuthenticationToken } from 'docker-common/registryauthenticationprovider/registryauthenticationtoken';
-
-const getDockerRegistrySecretArgs = () => {
-    const authProvider: AuthenticationToken = getDockerRegistryEndpointAuthenticationToken(TaskInputParameters.dockerRegistryEndpoint);
-    return `docker-registry ${TaskInputParameters.secretName.trim()} --docker-username=${authProvider.getUsername()} --docker-password=${authProvider.getPassword()} --docker-server=${authProvider.getLoginServerUrl()} --docker-email=${authProvider.getEmail()}`;
-};
-
-const getGenericSecretArgs = () => {
-    return `generic ${TaskInputParameters.secretName.trim()} ${TaskInputParameters.secretArguments}`;
-};
+import AuthenticationToken from 'docker-common-v2/registryauthenticationprovider/registryauthenticationtoken';
+import { getDockerRegistryEndpointAuthenticationToken } from 'docker-common-v2/registryauthenticationprovider/registryauthenticationtoken';
 
 export async function createSecret(ignoreSslErrors?: boolean) {
-    let args = '';
+    const kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace, ignoreSslErrors);
+    let result;
     if (utils.isEqual(TaskInputParameters.secretType, 'dockerRegistry', utils.StringComparer.OrdinalIgnoreCase)) {
-        args = getDockerRegistrySecretArgs();
+        const authProvider: AuthenticationToken = getDockerRegistryEndpointAuthenticationToken(TaskInputParameters.dockerRegistryEndpoint);
+        result = kubectl.createDockerSecret(TaskInputParameters.secretName.trim(),
+            authProvider.getLoginServerUrl(),
+            authProvider.getUsername(),
+            authProvider.getPassword(),
+            authProvider.getEmail(),
+            true);
     } else {
-        args = getGenericSecretArgs();
+        result = kubectl.createGenericSecret(TaskInputParameters.secretName.trim(),
+            TaskInputParameters.secretArguments.trim(),
+            true);
     }
 
-    const kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace, ignoreSslErrors);
-    const result = kubectl.createSecret(args, true, TaskInputParameters.secretName.trim());
     utils.checkForErrors([result]);
 }
