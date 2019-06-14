@@ -21,7 +21,7 @@ function Update-DockerSettings
                 $connectedServiceEndpoint = Get-VstsEndpoint -Name $azureSubscriptionEndpoint -Require
                 if ($connectedServiceEndpoint.Auth.Scheme -ne "ServicePrincipal")
                 {
-                    throw (Get-VstsLocString -Key UnsupportedDockerRegistryAuthScheme -ArgumentList $connectedServiceEndpoint.Auth.Scheme)
+                    throw (Get-VstsLocString -Key UnsupportedARMAuthScheme -ArgumentList $connectedServiceEndpoint.Auth.Scheme)
                 }
 
                 $userName = $connectedServiceEndpoint.Auth.Parameters.ServicePrincipalId
@@ -32,9 +32,22 @@ function Update-DockerSettings
             {
                 $dockerRegistryInput = Get-VstsInput -Name dockerRegistryEndpoint -Require
                 $dockerRegistryEndpoint = Get-VstsEndpoint -Name $dockerRegistryInput -Require
-                $userName = $dockerRegistryEndpoint.Auth.Parameters.UserName
-                $password = $dockerRegistryEndpoint.Auth.Parameters.Password
-                $isPasswordEncrypted = $false
+
+                if ($dockerRegistryEndpoint.Data.registrytype -eq "ACR")
+                {
+                    if ($dockerRegistryEndpoint.Auth.Scheme -ne "ServicePrincipal")
+                    {
+                        throw (Get-VstsLocString -Key UnsupportedContainerRegistryAuthScheme -ArgumentList $dockerRegistryEndpoint.Auth.Scheme)
+                    }
+                    $userName = $dockerRegistryEndpoint.Auth.Parameters.ServicePrincipalId
+                    $password = $dockerRegistryEndpoint.Auth.Parameters.ServicePrincipalKey
+                    $isPasswordEncrypted = $false
+                }
+                else {
+                    $userName = $dockerRegistryEndpoint.Auth.Parameters.UserName
+                    $password = $dockerRegistryEndpoint.Auth.Parameters.Password
+                    $isPasswordEncrypted = $false
+                }
             }
             "UsernamePassword"
             {
