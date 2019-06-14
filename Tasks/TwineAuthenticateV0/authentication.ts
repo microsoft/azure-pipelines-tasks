@@ -1,5 +1,6 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
+import { getProjectAndFeedIdFromInput } from 'packaging-common/util';
 
 export interface IPackageSource {
     feedUri: string;
@@ -53,12 +54,13 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<AuthIn
         packagingLocation = serviceUri;
     }
 
-    internalAuthArray = await Promise.all(feedList.map(async (feedName: string) => {
+    internalAuthArray = await Promise.all(feedList.map(async (feedName:string) => {
+        const feed = getProjectAndFeedIdFromInput(feedName)
         const feedUri = await pkgLocationUtils.getFeedRegistryUrl(
             packagingLocation,
             pkgLocationUtils.RegistryType.PyPiUpload,
-            feedName,
-            null,
+            feed.feedId,
+            feed.projectId,
             localAccessToken,
             true /* useSession */);
         return new AuthInfo({
