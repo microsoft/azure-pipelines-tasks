@@ -1,0 +1,189 @@
+{
+    "id": "FE504ACC-6115-40CB-89FF-191386B5E7BF",
+    "name": "TerraformCustomTask",
+    "friendlyName": "Custom Terraform Task",
+    "description": "Execute terraform cli commands",
+    "author": "Akash Chakrabarti",
+    "helpMarkDown": "",
+    "category": "Deploy",
+    "visibility": [
+        "Release"
+    ],
+    "demands": [],
+    "version": {
+        "Major": "0",
+        "Minor": "0",
+        "Patch": "7"
+    },
+    "instanceNameFormat": "$(provider) - terraform $(command)",
+    "execution": {
+        "Node": {
+            "target": "src\\terraform.js"
+        }
+    },
+    "groups": [{
+            "name": "backendAzureRm",
+            "displayName": "AzureRM Backend Configuration",
+            "isExpanded": false,
+            "visibleRule": "provider = azurerm && command = init && backendTypeAzureRM = azurerm"
+        },
+        {
+            "name": "backendAWS",
+            "displayName": "AWS Backend Configuration",
+            "isExpanded": false,
+            "visibleRule": "provider = aws && command = init && backendTypeAWS = aws"
+        },
+        {
+            "name": "backendGCP",
+            "displayName": "GCP Backend Configuration",
+            "isExpanded": false,
+            "visibleRule": "provider = gcp && command = init && backendTypeGCP = gcp"
+        }
+    ],
+    "inputs": [{
+            "name": "provider",
+            "type": "picklist",
+            "label": "Provider",
+            "defaultValue": "azurerm",
+            "required": true,
+            "helpMarkDown": "The name of the provider used in the terraform configuration files.<br>Only one provider must be specified.",
+            "options": {
+                "azurerm": "azurerm",
+                "aws": "aws",
+                "gcp": "gcp"
+            },
+            "properties": {
+                "EditableOptions": "False"
+            }
+        },
+        {
+            "name": "command",
+            "type": "pickList",
+            "label": "Command",
+            "defaultValue": "init",
+            "required": true,
+            "helpMarkDown": "The terraform command to execute.",
+            "options": {
+                "init": "init",
+                "validate": "validate",
+                "plan": "plan",
+                "apply": "apply",
+                "destroy": "destroy"
+            },
+            "properties": {
+                "EditableOptions": "False"
+            }
+        },
+        {
+            "name": "workingDirectory",
+            "type": "filePath",
+            "label": "Configuration Directory",
+            "defaultValue": "$(System.DefaultWorkingDirectory)",
+            "helpMarkDown": "Terraform configuration directory. If empty, the root of the repository (build) or artifacts (release) is used, which is $(System.DefaultWorkingDirectory)",
+            "required": "false"
+        },
+        {
+            "name": "environmentServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "Environment Azure Subscription",
+            "required": false,
+            "visibleRule": "provider = azurerm",
+            "helpMarkDown": "Select an Azure resource manager subscription for the deployment"
+        },
+        {
+            "name": "commandOptions",
+            "type": "string",
+            "label": "Command Options",
+            "helpMarkDown": "Any additional arguments for the selected command such as '-option=value'. Multiple options can also be provided delimited by spaces.",
+            "required": false
+        },
+        {
+            "name": "backendTypeAzureRM",
+            "type": "pickList",
+            "label": "Backend Type",
+            "defaultValue": "local",
+            "required": true,
+            "helpMarkDown": "The teraform backend type for AzureRM to use for maintaining the state.",
+            "options": {
+                "local": "local",
+                "azurerm": "azurerm"
+            },
+            "properties": {
+                "EditableOptions": "False"
+            },
+            "visibleRule": "command = init && provider = azurerm"
+        },
+        {
+            "name": "backendTypeAWS",
+            "type": "pickList",
+            "label": "Backend Type",
+            "defaultValue": "local",
+            "required": true,
+            "helpMarkDown": "The teraform backend type for AWS to use for maintaining the state.",
+            "options": {
+                "local": "local",
+                "aws": "aws"
+            },
+            "properties": {
+                "EditableOptions": "False"
+            },
+            "visibleRule": "command = init && provider = aws"
+        },
+        {
+            "name": "backendTypeGCP",
+            "type": "pickList",
+            "label": "Backend Type",
+            "defaultValue": "local",
+            "required": true,
+            "helpMarkDown": "The teraform backend type for GCP to use for maintaining the state.",
+            "options": {
+                "local": "local",
+                "gcp": "gcp"
+            },
+            "properties": {
+                "EditableOptions": "False"
+            },
+            "visibleRule": "command = init && provider = gcp"
+        },
+        {
+            "name": "backendServiceArm",
+            "type": "connectedService:AzureRM",
+            "label": "Backend Azure Subscription",
+            "required": true,
+            "helpMarkDown": "Azure resource manager subscription for the terraform backend configuration",
+            "groupName": "backendAzureRm"
+        },
+        {
+            "name": "backendAzureRmResourceGroupName",
+            "type": "string",
+            "label": "Resource Group Name",
+            "required": true,
+            "helpMarkDown": "The resource group which contains the storage account.",
+            "groupName": "backendAzureRm"
+        },
+        {
+            "name": "backendAzureRmStorageAccountName",
+            "type": "string",
+            "label": "Storage Account Name",
+            "required": true,
+            "helpMarkDown": "The name of the storage account.",
+            "groupName": "backendAzureRm"
+        },
+        {
+            "name": "backendAzureRmContainerName",
+            "type": "string",
+            "label": "Container Name",
+            "required": true,
+            "helpMarkDown": "The name of the container to use within the storage account.",
+            "groupName": "backendAzureRm"
+        },
+        {
+            "name": "backendAzureRmKey",
+            "type": "string",
+            "label": "Key",
+            "required": true,
+            "helpMarkDown": "The key where to place/look for state file inside the container",
+            "groupName": "backendAzureRm"
+        }
+    ]
+}

@@ -1,0 +1,191 @@
+{
+  "id": "FE504ACC-6115-40CB-89FF-191386B5E7BF",
+  "name": "TerraformCustomTask",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Akash Chakrabarti",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "0",
+    "Minor": "0",
+    "Patch": "7"
+  },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "src\\terraform.js"
+    }
+  },
+  "groups": [
+    {
+      "name": "backendAzureRm",
+      "displayName": "ms-resource:loc.group.displayName.backendAzureRm",
+      "isExpanded": false,
+      "visibleRule": "provider = azurerm && command = init && backendTypeAzureRM = azurerm"
+    },
+    {
+      "name": "backendAWS",
+      "displayName": "ms-resource:loc.group.displayName.backendAWS",
+      "isExpanded": false,
+      "visibleRule": "provider = aws && command = init && backendTypeAWS = aws"
+    },
+    {
+      "name": "backendGCP",
+      "displayName": "ms-resource:loc.group.displayName.backendGCP",
+      "isExpanded": false,
+      "visibleRule": "provider = gcp && command = init && backendTypeGCP = gcp"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "provider",
+      "type": "picklist",
+      "label": "ms-resource:loc.input.label.provider",
+      "defaultValue": "azurerm",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.provider",
+      "options": {
+        "azurerm": "azurerm",
+        "aws": "aws",
+        "gcp": "gcp"
+      },
+      "properties": {
+        "EditableOptions": "False"
+      }
+    },
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "init",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.command",
+      "options": {
+        "init": "init",
+        "validate": "validate",
+        "plan": "plan",
+        "apply": "apply",
+        "destroy": "destroy"
+      },
+      "properties": {
+        "EditableOptions": "False"
+      }
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
+      "required": "false"
+    },
+    {
+      "name": "environmentServiceName",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.environmentServiceName",
+      "required": false,
+      "visibleRule": "provider = azurerm",
+      "helpMarkDown": "ms-resource:loc.input.help.environmentServiceName"
+    },
+    {
+      "name": "commandOptions",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.commandOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.commandOptions",
+      "required": false
+    },
+    {
+      "name": "backendTypeAzureRM",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.backendTypeAzureRM",
+      "defaultValue": "local",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.backendTypeAzureRM",
+      "options": {
+        "local": "local",
+        "azurerm": "azurerm"
+      },
+      "properties": {
+        "EditableOptions": "False"
+      },
+      "visibleRule": "command = init && provider = azurerm"
+    },
+    {
+      "name": "backendTypeAWS",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.backendTypeAWS",
+      "defaultValue": "local",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.backendTypeAWS",
+      "options": {
+        "local": "local",
+        "aws": "aws"
+      },
+      "properties": {
+        "EditableOptions": "False"
+      },
+      "visibleRule": "command = init && provider = aws"
+    },
+    {
+      "name": "backendTypeGCP",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.backendTypeGCP",
+      "defaultValue": "local",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.backendTypeGCP",
+      "options": {
+        "local": "local",
+        "gcp": "gcp"
+      },
+      "properties": {
+        "EditableOptions": "False"
+      },
+      "visibleRule": "command = init && provider = gcp"
+    },
+    {
+      "name": "backendServiceArm",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.backendServiceArm",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.backendServiceArm",
+      "groupName": "backendAzureRm"
+    },
+    {
+      "name": "backendAzureRmResourceGroupName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.backendAzureRmResourceGroupName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.backendAzureRmResourceGroupName",
+      "groupName": "backendAzureRm"
+    },
+    {
+      "name": "backendAzureRmStorageAccountName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.backendAzureRmStorageAccountName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.backendAzureRmStorageAccountName",
+      "groupName": "backendAzureRm"
+    },
+    {
+      "name": "backendAzureRmContainerName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.backendAzureRmContainerName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.backendAzureRmContainerName",
+      "groupName": "backendAzureRm"
+    },
+    {
+      "name": "backendAzureRmKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.backendAzureRmKey",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.backendAzureRmKey",
+      "groupName": "backendAzureRm"
+    }
+  ]
+}
