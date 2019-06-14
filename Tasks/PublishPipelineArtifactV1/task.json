@@ -1,0 +1,50 @@
+{
+    "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
+    "name": "PublishPipelineArtifact",
+    "friendlyName": "Publish pipeline artifact",
+    "description": "Publish (upload) a file or directory as a named artifact for the current run",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-pipeline-artifact",
+    "helpMarkDown": "Publish (upload) a file or directory as a named artifact for the current run. Published artifacts can be downloaded in other jobs, stages, or pipelines using the \"Download pipeline artifact\" task.",
+    "category": "Utility",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "groups": [],
+    "demands": [],
+    "preview": true,
+    "minimumAgentVersion": "2.153.1",
+    "inputs": [
+        {
+            "name": "path",
+            "aliases": [
+                "targetPath"
+            ],
+            "type": "filePath",
+            "label": "File or directory path",
+            "defaultValue": "$(Pipeline.Workspace)",
+            "required": true,
+            "helpMarkDown": "The path of the file or directory to publish. Can be absolute or relative to the default working directory. Can include [variables](https://go.microsoft.com/fwlink/?LinkID=550988), but wildcards are not supported."
+        },
+        {
+            "name": "artifactName",
+            "aliases": [
+                "artifact"
+            ],
+            "type": "string",
+            "label": "Artifact name",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Name of the artifact to publish. If not set, defaults to a unique ID scoped to the job."
+        }
+    ],
+    "instanceNameFormat": "Publish Pipeline Artifact",
+    "execution": {
+        "AgentPlugin": {
+            "target": "Agent.Plugins.PipelineArtifact.PublishPipelineArtifactTaskV1, Agent.Plugins"
+        }
+    },
+    "messages": {}
+}
