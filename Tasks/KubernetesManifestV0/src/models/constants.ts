@@ -1,7 +1,7 @@
 'use strict';
 
 import * as tl from 'azure-pipelines-task-lib/task';
-import {StringComparer, isEqual} from '../utils/StringComparison';
+import { StringComparer, isEqual } from '../utils/StringComparison';
 
 export class KubernetesWorkload {
     public static Pod: string = 'Pod';

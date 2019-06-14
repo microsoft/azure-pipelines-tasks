@@ -4,7 +4,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as yaml from 'js-yaml';
 import { Resource } from 'kubernetes-common-v2/kubectl-object-model';
 import { KubernetesWorkload, recognizedWorkloadTypes } from '../models/constants';
-import {StringComparer, isEqual} from '../utils/StringComparison';
+import { StringComparer, isEqual } from '../utils/StringComparison';
 import * as utils from '../utils/utilities';
 
 export function isDeploymentEntity(kind: string): boolean {
