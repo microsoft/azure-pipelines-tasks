@@ -1,6 +1,6 @@
 import * as ma from 'azure-pipelines-task-lib/mock-answer';
 import * as tmrm from 'azure-pipelines-task-lib/mock-run';
-import * as tl from 'azure-pipelines-task-lib/mock-task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import * as os from 'os';
 
