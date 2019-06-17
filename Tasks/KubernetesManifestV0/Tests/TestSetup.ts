@@ -1,5 +1,6 @@
 import * as ma from 'azure-pipelines-task-lib/mock-answer';
 import * as tmrm from 'azure-pipelines-task-lib/mock-run';
+import * as tl from 'azure-pipelines-task-lib/mock-task';
 import * as path from 'path';
 import * as os from 'os';
 
@@ -100,7 +101,7 @@ if (process.env[shared.TestEnvVars.action] === 'bake') {
         stdout: 'some yaml'
     };
 
-    const komposeCommand = `kompose convert -f ${process.env[shared.TestEnvVars.dockerComposeFile]} -o ${path.join(os.tmpdir(), 'baked-template-random.yaml')}`;
+    const komposeCommand = `kompose convert -f ${process.env[shared.TestEnvVars.dockerComposeFile]} -o ${path.join(tl.getVariable('agent.tempdirectory') || os.tmpdir(), 'baked-template-random.yaml')}`;
     a.exec[komposeCommand] = {
         'code': 0,
         stdout: 'Kubernetes files created'
