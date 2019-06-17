@@ -23,6 +23,7 @@ describe('Kubernetes Manifests Suite', function () {
         delete process.env[shared.TestEnvVars.isBaselineDeploymentPresent];
         delete process.env[shared.TestEnvVars.arguments];
         delete process.env[shared.TestEnvVars.namespace];
+        delete process.env[shared.TestEnvVars.dockerComposeFile];
         delete process.env.RemoveNamespaceFromEndpoint;
     });
 
@@ -224,6 +225,31 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.patch] = 'somePatch';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('Run should bake docker-compose files using kompose', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kompose';
+        process.env[shared.TestEnvVars.dockerComposeFile] = 'dockerComposeFilePath';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('Kubernetes files created') > 0, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        done();
+    });
+
+    it('Run should fail when docker-compose file path is not supplied', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kompose';
+        process.env[shared.TestEnvVars.dockerComposeFile] = '';
+        tr.run();
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdout.indexOf('Input required: dockerComposeFile') > 0, 'proper error message should have been thrown');
         done();
     });
 });
