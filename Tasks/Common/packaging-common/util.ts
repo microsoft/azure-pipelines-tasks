@@ -78,6 +78,10 @@ export function toNerfDart(uri: string): string {
 
 export function getProjectAndFeedIdFromInputParam(inputParam: string): any {
     const feedProject = tl.getInput(inputParam);
+    return getProjectAndFeedIdFromInput(feedProject);
+}
+
+export function getProjectAndFeedIdFromInput(feedProject: string): any {
     var projectId = null;
     var feedId = feedProject;
     if(feedProject && feedProject.includes("/")) {
