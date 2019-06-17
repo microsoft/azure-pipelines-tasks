@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 154,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [],
     "groups": [],
@@ -115,9 +115,19 @@
             "defaultValue": "helm2",
             "visibleRule": "action = bake",
             "options": {
-                "helm2": "Helm 2"
+                "helm2": "Helm 2",
+                "kompose": "Kompose"
             },
-            "helpMarkDown": "Tool to generate manifest"
+            "helpMarkDown": "Tool to use for generating manifest"
+        },
+        {
+            "name": "dockerComposeFile",
+            "type": "filePath",
+            "label": "Path to docker compose file",
+            "required": true,
+            "defaultValue": "",
+            "visibleRule": "action = bake && renderType = kompose",
+            "helpMarkDown": "docker-compose file path"
         },
         {
             "name": "helmChart",
