@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 153,
-        "Patch": 4
+        "Patch": 5
     },
     "demands": [],
     "releaseNotes": "Simplified the task YAML by:<br/>&nbsp;- Removing the Container registry type input<br/>&nbsp;- Removing complex inputs as they can be passed as arguments to the command.",
