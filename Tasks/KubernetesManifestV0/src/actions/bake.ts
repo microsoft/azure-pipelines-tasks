@@ -9,9 +9,17 @@ import * as uuidV4 from 'uuid/v4';
 import { getTempDirectory } from '../utils/FileHelper';
 import { Helm, NameValuePair } from 'kubernetes-common-v2/helm-object-model';
 import * as TaskParameters from '../models/TaskInputParameters';
+import { KomposeInstaller } from '../utils/installers';
 
-class HelmRenderEngine {
-    public static async bake() {
+abstract class RenderEngine {
+    public bake: () => Promise<any>;
+    protected getTemplatePath = () => {
+        return path.join(getTempDirectory(), 'baked-template-' + uuidV4() + '.yaml');
+    }
+}
+
+class HelmRenderEngine extends RenderEngine {
+    public bake = async (): Promise<any> => {
         const helmPath = await helmutility.getHelm();
         const helmCommand = new Helm(helmPath, TaskParameters.namespace);
         const helmReleaseName = tl.getInput('releaseName', false);
@@ -20,18 +28,12 @@ class HelmRenderEngine {
             tl.setResult(tl.TaskResult.Failed, result.stderr);
             return;
         }
-
-        const pathToBakedManifest = this.getTemplatePath(result.stdout);
+        const pathToBakedManifest = this.getTemplatePath();
+        fs.writeFileSync(pathToBakedManifest, result.stdout);
         tl.setVariable('manifestsBundle', pathToBakedManifest);
     }
 
-    private static getTemplatePath(data: string) {
-        const paths = path.join(getTempDirectory(), 'baked-template-' + uuidV4() + '.yaml');
-        fs.writeFileSync(paths, data);
-        return paths;
-    }
-
-    private static getOverrideValues() {
+    private getOverrideValues() {
         const overridesInput = tl.getDelimitedInput('overrides', '\n');
         const overrideValues = [];
         overridesInput.forEach(arg => {
@@ -46,13 +48,41 @@ class HelmRenderEngine {
     }
 }
 
+class KomposeRenderEngine extends RenderEngine {
+    public bake = async (): Promise<any> => {
+        if (!tl.filePathSupplied('dockerComposeFile')) {
+            throw new Error('docker compose file path not supplied');
+        }
+
+        const dockerComposeFilePath = tl.getPathInput('dockerComposeFile', true, true);
+        const installer = new KomposeInstaller();
+        let path = installer.checkIfExists();
+        if (!path) {
+            path = await installer.install();
+        }
+        const tool = tl.tool(path);
+        const pathToBakedManifest = this.getTemplatePath();
+        tool.arg(['convert', '-f', dockerComposeFilePath, '-o', pathToBakedManifest]);
+        const result = tool.execSync();
+        if (result.code !== 0 || result.error) {
+            throw result.error;
+        }
+        tl.setVariable('manifestsBundle', pathToBakedManifest);
+    }
+}
+
 export async function bake(ignoreSslErrors?: boolean) {
     const renderType = tl.getInput('renderType', true);
+    let renderEngine: RenderEngine;
     switch (renderType) {
         case 'helm2':
-            await HelmRenderEngine.bake();
+            renderEngine = new HelmRenderEngine();
+            break;
+        case 'kompose':
+            renderEngine = new KomposeRenderEngine();
             break;
         default:
             throw Error(tl.loc('UnknownRenderType'));
     }
+    await renderEngine.bake();
 }
