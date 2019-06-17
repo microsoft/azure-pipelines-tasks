@@ -238,6 +238,10 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.renderType] = 'kompose';
         process.env[shared.TestEnvVars.dockerComposeFile] = 'dockerComposeFilePath';
         tr.run();
+        if (tr.failed) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+        }
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('Kubernetes files created') > 0, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
@@ -251,11 +255,15 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.renderType] = 'kompose';
         process.env[shared.TestEnvVars.dockerComposeFile] = '';
         tr.run();
+        if (tr.failed) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+        }
         assert(tr.failed, 'task should have failed');
         assert(tr.stdout.indexOf('Input required: dockerComposeFile') > 0, 'proper error message should have been thrown');
         done();
     });
-    
+
     it('Run should successfully add container image tags', (done: MochaDone) => {
         const testFile = path.join(__dirname, './manifests/', 'deployment-image-substitution.yaml');
         const deploymentFile = fs.readFileSync(testFile).toString();
