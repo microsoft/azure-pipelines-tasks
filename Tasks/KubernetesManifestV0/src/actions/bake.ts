@@ -51,7 +51,7 @@ class HelmRenderEngine extends RenderEngine {
 class KomposeRenderEngine extends RenderEngine {
     public bake = async (): Promise<any> => {
         if (!tl.filePathSupplied('dockerComposeFile')) {
-            throw new Error('docker compose file path not supplied');
+            throw new Error(tl.loc('DockerComposeFilePathNotSupplied'));
         }
 
         const dockerComposeFilePath = tl.getPathInput('dockerComposeFile', true, true);
