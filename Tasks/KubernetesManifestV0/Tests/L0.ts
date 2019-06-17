@@ -1,8 +1,11 @@
+import * as fs from 'fs';
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as tl from 'azure-pipelines-task-lib';
 import * as shared from './TestShared';
+import * as utils from '../src/utils/utilities';
+import * as yaml from 'js-yaml';
 
 describe('Kubernetes Manifests Suite', function () {
     this.timeout(30000);
@@ -224,6 +227,27 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.patch] = 'somePatch';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('Run should successfully add container image tags', (done: MochaDone) => {
+        const testFile = path.join(__dirname, './manifests/', 'deployment-image-substitution.yaml');
+        const deploymentFile = fs.readFileSync(testFile).toString();
+
+        const bigNameEditFirst = utils.substituteImageNameInSpecFile(deploymentFile, 'nginx-init', 'nginx-init:42.1');
+        const smallNameEditSecond = utils.substituteImageNameInSpecFile(bigNameEditFirst, 'nginx', 'nginx:42');
+        const smallSecondYaml = yaml.load(smallNameEditSecond);
+
+        assert(smallSecondYaml.spec.template.spec.containers[0].image === 'nginx:42', 'nginx image not tagged correctly');
+        assert(smallSecondYaml.spec.template.spec.initContainers[0].image === 'nginx-init:42.1', 'nginx-init image not tagged correctly');
+
+        const smallNameEditFirst = utils.substituteImageNameInSpecFile(deploymentFile, 'nginx', 'nginx:42');
+        const bigNameEditSecond = utils.substituteImageNameInSpecFile(smallNameEditFirst, 'nginx-init', 'nginx-init:42.1');
+        const bigSecondYaml = yaml.load(bigNameEditSecond);
+
+        assert(bigSecondYaml.spec.template.spec.containers[0].image === 'nginx:42', 'nginx image not tagged correctly');
+        assert(bigSecondYaml.spec.template.spec.initContainers[0].image === 'nginx-init:42.1', 'nginx-init image not tagged correctly');
+
         done();
     });
 });
