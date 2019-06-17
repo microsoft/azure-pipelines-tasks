@@ -255,10 +255,6 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.renderType] = 'kompose';
         process.env[shared.TestEnvVars.dockerComposeFile] = '';
         tr.run();
-        if (tr.failed) {
-            console.log(tr.stdout);
-            console.log(tr.stderr);
-        }
         assert(tr.failed, 'task should have failed');
         assert(tr.stdout.indexOf('Input required: dockerComposeFile') > 0, 'proper error message should have been thrown');
         done();
