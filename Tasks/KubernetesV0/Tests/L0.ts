@@ -90,7 +90,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.stdout.indexOf(`Could not chmod ${process.env[shared.TestEnvVars.specifyLocation]}`) != -1, "Kubectl path should be set to the correct location");
+        assert(tr.stdout.indexOf(`Could not chmod ${process.env[shared.TestEnvVars.specifyLocation]}`) != -1, "chmod should have failed");
         assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
