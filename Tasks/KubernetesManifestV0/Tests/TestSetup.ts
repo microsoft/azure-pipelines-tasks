@@ -1,6 +1,5 @@
 import * as ma from 'azure-pipelines-task-lib/mock-answer';
 import * as tmrm from 'azure-pipelines-task-lib/mock-run';
-import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import * as os from 'os';
 
@@ -101,7 +100,7 @@ if (process.env[shared.TestEnvVars.action] === 'bake') {
         stdout: 'some yaml'
     };
 
-    const komposeCommand = `kompose convert -f ${process.env[shared.TestEnvVars.dockerComposeFile]} -o ${path.join(tl.getVariable('agent.tempdirectory') || os.tmpdir(), 'baked-template-random.yaml')}`;
+    const komposeCommand = `kompose convert -f ${process.env[shared.TestEnvVars.dockerComposeFile]} -o ${path.join('tempdirectory', 'baked-template-random.yaml')}`;
     a.exec[komposeCommand] = {
         'code': 0,
         stdout: 'Kubernetes files created'
@@ -280,6 +279,10 @@ fsClone.existsSync = function (filePath) {
     }
 };
 
+fsClone.writeFileSync = function(path, data) {
+    console.log(`wrote to ${path}`);
+};
+
 tr.registerMock('fs', fsClone);
 
 import * as fh from '../src/utils/FileHelper';
@@ -303,7 +306,9 @@ tr.registerMock('../utils/FileHelper', {
         }
         return newFilePaths;
     },
-    getTempDirectory: fh.getTempDirectory,
+    getTempDirectory: function() {
+        return 'tempdirectory';
+    },
     getNewUserDirPath: fh.getNewUserDirPath,
     ensureDirExists: fh.ensureDirExists,
     assertFileExists: fh.assertFileExists
