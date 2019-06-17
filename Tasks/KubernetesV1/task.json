@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 153,
-        "Patch": 4
+        "Patch": 5
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
