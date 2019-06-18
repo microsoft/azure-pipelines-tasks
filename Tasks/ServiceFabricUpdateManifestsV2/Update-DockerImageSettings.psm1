@@ -97,11 +97,9 @@ function Update-DockerImageSettings
                         }
                     }
 
-                    Write-Output "**************---&---************ " $imageName
                     $digest = $imageNameToDigestMapping[$imageName]
                     if ($digest)
                     {
-                        Write-Output "**************---&&---************ " $digest
                         $codePackage.EntryPoint.ContainerHost.ImageName = $digest
                         $hasUpdates = $true
                     }
