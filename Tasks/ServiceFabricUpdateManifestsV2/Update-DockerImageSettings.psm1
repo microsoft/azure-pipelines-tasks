@@ -43,6 +43,7 @@ function Update-DockerImageSettings
             {
                 throw (Get-VstsLocString -Key InvalidImageDigestValue -ArgumentList @($imageDigestValue, $imageDigestsPath))
             }
+            $imageDigestName = $imageDigestValue.Substring(0, $hashSeparatorIndex)
             $imageDigestRepoName = $imageDigestValue.Substring($slashIndex + 1, $hashSeparatorIndex - $slashIndex - 1)
 
             if ($imageNames -ne $null)
@@ -61,7 +62,7 @@ function Update-DockerImageSettings
             }
             else
             {
-                $imageName = $imageDigestRepoName
+                $imageName = $imageDigestName
 
                 if ($imageNameToDigestMapping.ContainsKey($imageName))
                 {
@@ -96,9 +97,11 @@ function Update-DockerImageSettings
                         }
                     }
 
+                    Write-Output "**************---&---************ " $imageName
                     $digest = $imageNameToDigestMapping[$imageName]
                     if ($digest)
                     {
+                        Write-Output "**************---&&---************ " $digest
                         $codePackage.EntryPoint.ContainerHost.ImageName = $digest
                         $hasUpdates = $true
                     }
