@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 154,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [],
     "groups": [],
@@ -310,6 +310,7 @@
         "NullInputObjectMetadata": "Input object metadata is null.",
         "CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
         "InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
-        "InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary"
+        "InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
+        "AllContainersNotInReadyState": "All the containers are not in a ready state"
     }
 }

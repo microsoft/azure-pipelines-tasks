@@ -66,5 +66,6 @@
   "loc.messages.NullInputObjectMetadata": "Input object metadata is null.",
   "loc.messages.CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
   "loc.messages.InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
-  "loc.messages.InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary"
+  "loc.messages.InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
+  "loc.messages.AllContainersNotInReadyState": "All the containers are not in a ready state"
 }

@@ -13,6 +13,7 @@ import * as fileHelper from '../utils/FileHelper';
 import * as utils from '../utils/utilities';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { Kubectl, Resource } from 'kubernetes-common-v2/kubectl-object-model';
+import { isEqual, StringComparer } from './StringComparison';
 
 export function deploy(kubectl: Kubectl, manifestFilePaths: string[], deploymentStrategy: string) {
 
@@ -64,6 +65,9 @@ function checkManifestStability(kubectl: Kubectl, resourceTypes: Resource[]) {
     resourceTypes.forEach(resource => {
         if (models.recognizedWorkloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
             rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
+        }
+        if (isEqual(resource.type, constants.KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
+            checkPodStatus(kubectl, resource.name);
         }
     });
     utils.checkForErrors(rolloutStatusResults);
@@ -136,4 +140,60 @@ function updateImagePullSecretsInManifestFiles(filePaths: string[], imagePullSec
 
 function isCanaryDeploymentStrategy(deploymentStrategy: string): boolean {
     return deploymentStrategy != null && deploymentStrategy.toUpperCase() == canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY.toUpperCase();
+}
+
+function checkPodStatus(kubectl: Kubectl, podName: string) {
+    const startTime = new Date();
+    const timeOut = 5 * 60 * 1000; // Timeout 5 min
+    let currentTime = new Date();
+    let podStatus;
+    while (currentTime.getTime() - startTime.getTime() < timeOut) {
+        tl.debug('Polling for pod status');
+        podStatus = getPodStatus(kubectl, podName);
+        if (podStatus.status && podStatus.phase) {
+            if (podStatus.phase !== 'Pending') {
+                break;
+            }
+        }
+        currentTime = new Date();
+    }
+    podStatus = getPodStatus(kubectl, podName);
+    switch (podStatus.phase) {
+        case 'Succeeded':
+        case 'Running':
+            if (checkContainerStatuses(podStatus)) {
+                console.log(`pod/${podName} is successfully rolled out`);
+            }
+            break;
+        case 'Pending':
+            if (!checkContainerStatuses(podStatus)) {
+                tl.warning(`pod/${podName} rollout status check timedout`);
+            }
+            break;
+        case 'Failed':
+            tl.error(`pod/${podName} rollout failed`);
+            break;
+        default:
+            tl.warning(`pod/${podName} rollout status: ${podStatus.status.phase}`);
+    }
+}
+
+function getPodStatus(kubectl: Kubectl, podName: string): any {
+    const podResult = kubectl.getResource('pod', podName);
+    utils.checkForErrors([podResult]);
+    return JSON.parse(podResult.stdout).status;
+}
+
+function checkContainerStatuses(podStatus: any): boolean {
+    let allReady = true;
+    podStatus.containerStatuses.forEach(container => {
+        if (container.ready === false) {
+            console.log(`'${container.name}' status: ${JSON.stringify(container.state)}`);
+            allReady = false;
+        }
+    });
+    if (!allReady) {
+        tl.warning(tl.loc('AllContainersNotInReadyState'));
+    }
+    return allReady;
 }
