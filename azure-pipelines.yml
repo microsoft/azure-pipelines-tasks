@@ -1,6 +1,10 @@
-trigger:
-- master
-- releases/*
+# trigger:
+# - master
+# - releases/*
+
+# Disabling while it's being set up
+trigger: none
+pr: none
 
 jobs:
 
