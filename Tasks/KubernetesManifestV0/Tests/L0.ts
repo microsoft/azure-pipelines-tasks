@@ -170,7 +170,7 @@ describe('Kubernetes Manifests Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         assert(tr.stdout.indexOf('--name newReleaseName') > -1, 'bake should have overriden release name');
-        assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should not have printedt to stdout');
+        assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
         done();
     });
 
@@ -187,7 +187,7 @@ describe('Kubernetes Manifests Suite', function () {
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         assert(tr.stdout.indexOf('--name newReleaseName') > -1, 'bake should have overriden release name');
         assert(tr.stdout.indexOf('--namespace default') > -1, 'should have used default namespace');
-        assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should not have printedt to stdout');
+        assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
         assert(tr.stdout.indexOf('Namespace was not supplied nor present in the endpoint; using "default" namespace instead.') > -1, 'should have added a debug log');
         done();
     });
