@@ -1,17 +1,13 @@
-# trigger:
-# - master
-# - releases/*
-
-# Disabling while it's being set up
-trigger: none
-pr: none
+trigger:
+- master
+- releases/*
 
 jobs:
 
 # All tasks on Windows
 - job: build_all_windows
   displayName: Build all tasks (Windows)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
+  condition: and(succeeded(), not(variables.task), or(eq(variables.os, 'Windows_NT'), variables.buildAllPipelines))
   pool:
     vmImage: vs2017-win2016
   steps:
@@ -24,7 +20,7 @@ jobs:
   displayName: Publish
   dependsOn: 
   - build_all_windows
-  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
+  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), or(eq(variables.os, 'Windows_NT'), variables.buildAllPipelines))
   pool:
     vmImage: vs2017-win2016
   steps:
@@ -33,7 +29,7 @@ jobs:
 # All tasks on Linux
 - job: build_all_linux
   displayName: Build all tasks (Linux)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
+  condition: and(succeeded(), not(variables.task), or(eq(variables.os, 'Linux'), variables.buildAllPipelines))
   pool:
     vmImage: ubuntu-16.04
   steps:
@@ -44,7 +40,7 @@ jobs:
 # All tasks on macOS
 - job: build_all_darwin
   displayName: Build all tasks (macOS)
-  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
+  condition: and(succeeded(), not(variables.task), or(eq(variables.os, 'Darwin'), variables.buildAllPipelines))
   pool:
     vmImage: macos-10.13
   steps:
