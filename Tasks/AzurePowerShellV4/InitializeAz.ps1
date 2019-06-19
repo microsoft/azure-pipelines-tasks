@@ -48,15 +48,7 @@ $null = Clear-AzContext -Scope Process
 Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
 $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue 
 
-$scopeLevel = "Subscription"
-    
-If ($endpoint.PSObject.Properties['Data'])
-{
-    If ($endpoint.Data.PSObject.Properties['scopeLevel'])
-    {
-        $scopeLevel = $endpoint.Data.scopeLevel
-    }
-}
+$scopeLevel = $endpointObject.scopeLevel
 
 function Format-Splat {
     [CmdletBinding()]
