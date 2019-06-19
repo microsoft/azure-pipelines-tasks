@@ -23,6 +23,7 @@ tr.setInput('Dockerfile', process.env[shared.TestEnvVars.dockerFile] || DefaultD
 tr.setInput('buildContext', process.env[shared.TestEnvVars.buildContext] || DefaultBuildContext);
 tr.setInput('tags', process.env[shared.TestEnvVars.tags] || "11");
 tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || "");
+tr.setInput ('addPipelineData', process.env[shared.TestEnvVars.addPipelineData] || "true");
 
 console.log("Inputs have been set");
 

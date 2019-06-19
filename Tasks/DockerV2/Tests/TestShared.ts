@@ -7,7 +7,8 @@ export let TestEnvVars = {
     dockerFile: "__dockerFile__",
     buildContext: "__buildContext__",
     tags: "__tags__",
-    arguments: "__arguments__"
+    arguments: "__arguments__",
+    addPipelineData: "__addPipelineData__"
 };
 
 export let OperatingSystems = {
@@ -44,8 +45,8 @@ export let SharedValues = {
 }
 
 export let DockerCommandArgs = {
-    BuildLabels: `--label com.azure.dev.image.system.teamfoundationcollectionuri=${SharedValues.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI} --label com.azure.dev.image.system.teamproject=${SharedValues.SYSTEM_TEAMPROJECT} --label com.azure.dev.image.build.repository.name=${SharedValues.BUILD_REPOSITORY_NAME} --label com.azure.dev.image.build.repository.uri=${SharedValues.BUILD_REPOSITORY_URI} --label com.azure.dev.image.build.sourcebranchname=${SharedValues.BUILD_SOURCEBRANCHNAME} --label com.azure.dev.image.build.sourceversion=${SharedValues.BUILD_SOURCEVERSION} --label com.azure.dev.image.build.definitionname=${SharedValues.BUILD_DEFINITIONNAME} --label com.azure.dev.image.build.buildnumber=${SharedValues.BUILD_BUILDNUMBER} --label com.azure.dev.image.build.builduri=${SharedValues.BUILD_BUILDURI}`,
-    ReleaseLabels: `--label com.azure.dev.image.system.teamfoundationcollectionuri=${SharedValues.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI} --label com.azure.dev.image.system.teamproject=${SharedValues.SYSTEM_TEAMPROJECT} --label com.azure.dev.image.release.definitionname=${SharedValues.RELEASE_DEFINITIONNAME} --label com.azure.dev.image.release.releaseid=${SharedValues.RELEASE_RELEASEID} --label com.azure.dev.image.release.releaseweburl=${SharedValues.RELEASE_RELEASEWEBURL}`
+    BuildLabels: `--label com.azure.dev.image.system.teamfoundationcollectionuri=${SharedValues.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI} --label com.azure.dev.image.system.teamproject=${SharedValues.SYSTEM_TEAMPROJECT} --label com.azure.dev.image.build.repository.name=${SharedValues.BUILD_REPOSITORY_NAME} --label com.azure.dev.image.build.sourceversion=${SharedValues.BUILD_SOURCEVERSION} --label com.azure.dev.image.build.repository.uri=${SharedValues.BUILD_REPOSITORY_URI} --label com.azure.dev.image.build.sourcebranchname=${SharedValues.BUILD_SOURCEBRANCHNAME} --label com.azure.dev.image.build.definitionname=${SharedValues.BUILD_DEFINITIONNAME} --label com.azure.dev.image.build.buildnumber=${SharedValues.BUILD_BUILDNUMBER} --label com.azure.dev.image.build.builduri=${SharedValues.BUILD_BUILDURI}`,
+    ReleaseLabels: `--label com.azure.dev.image.system.teamfoundationcollectionuri=${SharedValues.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI} --label com.azure.dev.image.system.teamproject=${SharedValues.SYSTEM_TEAMPROJECT} --label com.azure.dev.image.release.releaseid=${SharedValues.RELEASE_RELEASEID} --label com.azure.dev.image.release.definitionname=${SharedValues.RELEASE_DEFINITIONNAME} --label com.azure.dev.image.release.releaseweburl=${SharedValues.RELEASE_RELEASEWEBURL}`
 }
 
 /**
