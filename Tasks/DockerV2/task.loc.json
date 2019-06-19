@@ -110,12 +110,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.arguments"
     },
     {
-      "name": "hidePII",
+      "name": "addPipelineData",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.hidePII",
+      "label": "ms-resource:loc.input.label.addPipelineData",
       "groupName": "commands",
-      "defaultValue": false,
-      "helpMarkDown": "ms-resource:loc.input.help.hidePII"
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.addPipelineData"
     }
   ],
   "dataSourceBindings": [],

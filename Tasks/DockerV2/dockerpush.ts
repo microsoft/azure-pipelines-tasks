@@ -130,16 +130,16 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
     
     const imageSize = dockerCommandUtils.getImageSize(layers);
 
-    const hidePII = tl.getBoolInput("hidePII");
+    const addPipelineData = tl.getBoolInput("addPipelineData");
 
     // Getting pipeline variables
     const build = "build";
     const hostType = tl.getVariable("System.HostType").toLowerCase();
     const runId = hostType === build ? parseInt(tl.getVariable("Build.BuildId")) : parseInt(tl.getVariable("Release.ReleaseId"));
-    const pipelineVersion = hidePII ? '' : hostType === build ? tl.getVariable("Build.BuildNumber") : tl.getVariable("Release.ReleaseName");
-    const pipelineName = hidePII ? '' : tl.getVariable("System.DefinitionName");
-    const pipelineId = hidePII ? '' : tl.getVariable("System.DefinitionId");
-    const jobName = hidePII ? '' : tl.getVariable("System.PhaseDisplayName");
+    const pipelineVersion = addPipelineData ? hostType === build ? tl.getVariable("Build.BuildNumber") : tl.getVariable("Release.ReleaseName") : '';
+    const pipelineName = addPipelineData ? tl.getVariable("System.DefinitionName") : '';
+    const pipelineId = addPipelineData ? tl.getVariable("System.DefinitionId") : '';
+    const jobName = addPipelineData ? tl.getVariable("System.PhaseDisplayName") : '';
 
     const requestUrl = tl.getVariable("System.TeamFoundationCollectionUri") + tl.getVariable("System.TeamProject") + "/_apis/deployment/imagedetails?api-version=5.0-preview.1";
     const requestBody: string = JSON.stringify(

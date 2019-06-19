@@ -19,17 +19,17 @@ function addLabel(hostName: string, labelName: string, variableName: string, lab
     }
 }
 
-function addCommonLabels(hostName: string, labels: string[], hidePII?: boolean): void {
+function addCommonLabels(hostName: string, labels: string[], addPipelineData?: boolean): void {
     addLabel(hostName, "system.teamfoundationcollectionuri", "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI", labels);
-    if (!hidePII) {
+    if (addPipelineData) {
         addLabel(hostName, "system.teamproject", "SYSTEM_TEAMPROJECT", labels);
         addLabel(hostName, "build.repository.name", "BUILD_REPOSITORY_NAME", labels);
     }
 }
 
-function addBuildLabels(hostName: string, labels: string[], hidePII?: boolean): void {
+function addBuildLabels(hostName: string, labels: string[], addPipelineData?: boolean): void {
     addLabel(hostName, "build.sourceversion", "BUILD_SOURCEVERSION", labels);
-    if (!hidePII) {
+    if (addPipelineData) {
         addLabel(hostName, "build.repository.uri", "BUILD_REPOSITORY_URI", labels);
         addLabel(hostName, "build.sourcebranchname", "BUILD_SOURCEBRANCHNAME", labels);
         addLabel(hostName, "build.definitionname", "BUILD_DEFINITIONNAME", labels);
@@ -38,9 +38,9 @@ function addBuildLabels(hostName: string, labels: string[], hidePII?: boolean): 
     }
 }
 
-function addReleaseLabels(hostName: string, labels: string[], hidePII?: boolean): void {    
+function addReleaseLabels(hostName: string, labels: string[], addPipelineData?: boolean): void {    
     addLabel(hostName, "release.releaseid", "RELEASE_RELEASEID", labels);
-    if (!hidePII) {
+    if (addPipelineData) {
         addLabel(hostName, "release.definitionname", "RELEASE_DEFINITIONNAME", labels);
         addLabel(hostName, "release.releaseweburl", "RELEASE_RELEASEWEBURL", labels);
     }
@@ -67,17 +67,17 @@ export function addDefaultLabelArgs(command: ToolRunner): void {
     addLabelArgs(command, labels);
 }
 
-export function getDefaultLabels(hidePII?: boolean): string[] {
+export function getDefaultLabels(addPipelineData?: boolean): string[] {
     let labels: string[] = [];
     let hostName = getReverseDNSName();
     if (hostName) {
-        addCommonLabels(hostName, labels, hidePII);
+        addCommonLabels(hostName, labels, addPipelineData);
         let hostType = tl.getVariable("SYSTEM_HOSTTYPE");
         if (hostType.toLowerCase() === "build") {
-            addBuildLabels(hostName, labels, hidePII);
+            addBuildLabels(hostName, labels, addPipelineData);
         }
         else {
-            addReleaseLabels(hostName, labels, hidePII);
+            addReleaseLabels(hostName, labels, addPipelineData);
         }
     }
 

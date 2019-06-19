@@ -110,12 +110,12 @@
             "helpMarkDown": "Docker command options. Ex:<br> For build command,<br>--build-arg HTTP_PROXY=http://10.20.30.2:1234 --quiet"
         },
         {
-            "name": "hidePII",
+            "name": "addPipelineData",
             "type": "boolean",
-            "label": "Hide identifiable information from image metadata",
+            "label": "Add Pipeline metadata to image(s)",
             "groupName": "commands",
-            "defaultValue": false,
-            "helpMarkDown": "Prevent publishing identifiable information to image metadata store"
+            "defaultValue": true,
+            "helpMarkDown": "By default pipeline data like source branch name, build id are added which helps with trace-ability. For example you can inspect an image to find out which pipeline built the image. You can opt out of this default behavior by using this input."
         }
     ],
     "dataSourceBindings": [],

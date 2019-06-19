@@ -30,6 +30,18 @@ describe("DockerV2 Suite", function () {
     });
     
     after(function () {
+        delete process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'];
+        delete process.env['BUILD_SOURCEVERSION'];
+        delete process.env['RELEASE_RELEASEID'];
+        delete process.env['BUILD_REPOSITORY_URI'];
+        delete process.env['BUILD_SOURCEBRANCHNAME'];
+        delete process.env['BUILD_DEFINITIONNAME'];
+        delete process.env['BUILD_BUILDNUMBER'];
+        delete process.env['BUILD_BUILDURI'];
+        delete process.env['SYSTEM_TEAMPROJECT'];
+        delete process.env['BUILD_REPOSITORY_NAME'];
+        delete process.env['RELEASE_DEFINITIONNAME'];
+        delete process.env['RELEASE_RELEASEWEBURL'];
     });
 
     // Docker build tests begin
@@ -473,21 +485,6 @@ describe("DockerV2 Suite", function () {
     });
     // Docker general command tests end
 
-    after(() => {
-        delete process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'];
-        delete process.env['BUILD_SOURCEVERSION'];
-        delete process.env['RELEASE_RELEASEID'];
-        delete process.env['BUILD_REPOSITORY_URI'];
-        delete process.env['BUILD_SOURCEBRANCHNAME'];
-        delete process.env['BUILD_DEFINITIONNAME'];
-        delete process.env['BUILD_BUILDNUMBER'];
-        delete process.env['BUILD_BUILDURI'];
-        delete process.env['SYSTEM_TEAMPROJECT'];
-        delete process.env['BUILD_REPOSITORY_NAME'];
-        delete process.env['RELEASE_DEFINITIONNAME'];
-        delete process.env['RELEASE_RELEASEWEBURL'];
-    });
-
     // Other tests
     it("extractSizeInBytes should return correctly", (done: MochaDone) => {
         console.log("TestCaseName: extractSizeInBytes should return correctly");
@@ -539,13 +536,13 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it("getDefaultLabels returns all labels when hidePII is false", (done: MochaDone) => {
-        console.log("TestCaseName: getDefaultLabels returns all labels when hidePII is false");
+    it("getDefaultLabels returns all labels when addPipelineData is true", (done: MochaDone) => {
+        console.log("TestCaseName: getDefaultLabels returns all labels when addPipelineData is true");
         console.log("\n");
 
         setEnvironmentVariables();
         process.env['SYSTEM_HOSTTYPE'] = 'build';
-        const labels = pipelineutils.getDefaultLabels();
+        const labels = pipelineutils.getDefaultLabels(true);
 
         // update the label count in assert when newer labels are added
         assert.equal(labels.length, 9, "All labels are returned by default");
@@ -554,16 +551,16 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it("getDefaultLabels returns selected labels when hidePII is true", (done: MochaDone) => {
-        console.log("TestCaseName: getDefaultLabels returns selected labels when hidePII is true");
+    it("getDefaultLabels returns selected labels when addPipelineData is false", (done: MochaDone) => {
+        console.log("TestCaseName: getDefaultLabels returns selected labels when addPipelineData is false");
         console.log("\n");
 
         setEnvironmentVariables();
         process.env['SYSTEM_HOSTTYPE'] = 'build';
-        const labels = pipelineutils.getDefaultLabels(true); // hidePII is set to true
+        const labels = pipelineutils.getDefaultLabels(false); // addPipelineData is set to false
 
         // update the label count in assert when newer labels are added
-        assert.equal(labels.length, 2, "Only selected labels are returned when hidePII is true");
+        assert.equal(labels.length, 2, "Only selected labels are returned when addPipelineData is false");
 
         delete process.env['SYSTEM_HOSTTYPE'];
         done();
