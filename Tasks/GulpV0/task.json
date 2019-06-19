@@ -4,7 +4,7 @@
     "friendlyName": "gulp",
     "description": "Run the gulp Node.js streaming task-based build system",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/gulp",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613721)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613721)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [
         "node.js"

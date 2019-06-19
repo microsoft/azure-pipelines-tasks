@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/AzureResourceFilterUtility';
 import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
 import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';

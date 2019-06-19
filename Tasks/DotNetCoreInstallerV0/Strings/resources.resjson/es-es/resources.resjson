@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Instalador de herramientas de .NET Core",
+  "loc.friendlyName": "Instalador del runtime o SDK de .NET Core",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=853651)",
-  "loc.description": "Adquiere una versión específica de .NET Core de Internet o de la memoria caché de herramientas y la agrega a PATH. Utilice esta tarea para cambiar la versión de .NET Core que se usa en las tareas siguientes.",
+  "loc.description": "Adquiera una versión específica del SDK de .NET Core de Internet o de la memoria caché local y agréguela a PATH.",
   "loc.instanceNameFormat": "Usar $(packageType) $(version) de .NET Core",
   "loc.input.label.packageType": "Paquete para instalar",
   "loc.input.help.packageType": "Seleccione si debe instalarse solo el entorno de ejecución o el SDK completo.",
@@ -27,5 +27,6 @@
   "loc.messages.WarningVersionNotFound": "No se pudo recuperar la información de descarga de la versión %s. Compruebe si la versión especificada es correcta. Puede consultar el vínculo para versiones admitidas => https://github.com/dotnet/core/blob/master/release-notes/releases.json. Revirtiendo para crear la dirección URL basada en la convención.",
   "loc.messages.CouldNotDownload": "No se pudo descargar el paquete de instalación desde esta dirección URL: %s Error: %s",
   "loc.messages.FailedToDownloadPackage": "No se pudo descargar el paquete de instalación",
-  "loc.messages.PrependGlobalToolPath": "Creando la ruta de acceso de herramientas global y anexándola como prefijo a PATH."
+  "loc.messages.PrependGlobalToolPath": "Creando la ruta de acceso de herramientas global y anexándola como prefijo a PATH.",
+  "loc.messages.VersionsFileMalformed": "Los vínculos de descarga de la versión especificada no tienen un formato correcto en el documento de versiones admitidas => %s/"
 }

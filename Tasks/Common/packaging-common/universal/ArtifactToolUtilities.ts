@@ -69,10 +69,7 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
 
     const blobstoreConnection = pkgLocationUtils.getWebApiWithProxy(serviceUri, accessToken);
 
-    const artifactToolGetUrl = await pkgLocationUtils.Retry(async () => {
-        return await blobstoreConnection.vsoClient.getVersioningData(ApiVersion,
-        blobstoreAreaName, blobstoreAreaId, { toolName }, {osName, arch});
-    }, 4, 100);
+    const artifactToolGetUrl = await blobstoreConnection.vsoClient.getVersioningData(ApiVersion, blobstoreAreaName, blobstoreAreaId, { toolName }, {osName, arch});
 
     const artifactToolUri =  await blobstoreConnection.rest.get(artifactToolGetUrl.requestUrl);
 

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Installer für Go-Tool",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=867581)",
-  "loc.description": "Hiermit wird eine bestimmte Go-Version im Toolcache ermittelt oder heruntergeladen und zu PATH hinzugefügt. Verwenden Sie diese Aufgabe, um die in nachfolgenden Aufgaben verwendete Go-Version zu ändern.",
+  "loc.description": "Hiermit wird eine bestimmte Go-Version heruntergeladen oder im Cache gesucht und zu PATH hinzugefügt.",
   "loc.instanceNameFormat": "Go $(version) verwenden",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.version": "Version",

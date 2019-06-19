@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Docker CLI 安裝程式",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "在代理程式機器上安裝 Docker CLI。",
+  "loc.instanceNameFormat": "安裝 Docker $(dockerVersion)",
+  "loc.input.label.dockerVersion": "Docker 版本",
+  "loc.input.help.dockerVersion": "請指定要安裝的 Docker CLI 版本",
+  "loc.input.label.releaseType": "版本類型",
+  "loc.input.help.releaseType": "挑選要安裝的版本類型。Windows 不支援 Nightly",
+  "loc.messages.DownloadDockerFailedFromLocation": "無法從位置 %s 下載 Docker。錯誤 %s",
+  "loc.messages.DockerNotFoundInFolder": "在路徑 %s 中找不到 Docker 可執行檔",
+  "loc.messages.DockerDownloadFailed": "無法從位置 %s 下載 Docker。錯誤 %s",
+  "loc.messages.VerifyDockerInstallation": "正在驗證 Docker 安裝..."
+}

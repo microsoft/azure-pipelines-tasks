@@ -1,4 +1,4 @@
-import task = require('vsts-task-lib/task');
+import task = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import path = require('path');
 import { FirewallRule, FirewallAddressRange } from './models/Firewall';
@@ -9,9 +9,9 @@ import { MysqlServerOperations } from './operations/MysqlServerOperations';
 import { ToolPathOperations } from './operations/ToolPathOperations';
 import { ISqlClient } from './sql/ISqlClient';
 import { MysqlClient } from './sql/MysqlClient';
-import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
-import { AzureEndpoint } from 'azure-arm-rest/azureModels';
-import { ApplicationTokenCredentials } from 'azure-arm-rest/azure-arm-common';
+import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
+import { ApplicationTokenCredentials } from 'azure-arm-rest-v2/azure-arm-common';
 
 async function run() {
     let azureMysqlTaskParameter: AzureMysqlTaskParameter;
@@ -21,6 +21,8 @@ async function run() {
     try {
         task.debug('Task execution started');
         task.setResourcePath(path.join( __dirname, 'task.json'));
+        task.setResourcePath(path.join( __dirname, 'node_modules/webdeployment-common-v2/module.json'));
+        task.setResourcePath(path.join( __dirname, 'node_modules/azure-arm-rest-v2/module.json'));
         // Get all task input parameters
         azureMysqlTaskParameter = new AzureMysqlTaskParameter();
         task.debug('parsed task inputs');

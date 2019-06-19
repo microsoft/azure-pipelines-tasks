@@ -4,7 +4,7 @@
     "friendlyName": "Azure Web App for Containers",
     "description": "Deploy containers to Azure App Service",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-web-app-containers",
-    "helpMarkDown": "[More information](https://aka.ms/azurewebapponcontainerdeployreadme)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebapponcontainerdeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 18
+        "Patch": 20
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [

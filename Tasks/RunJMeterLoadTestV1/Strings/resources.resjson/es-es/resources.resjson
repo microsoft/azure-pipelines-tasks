@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Prueba de carga de Apache JMeter basada en la nube",
   "loc.helpMarkDown": "Esta tarea se puede usar para desencadenar una prueba de carga de Apache JMeter en la nube con Azure Pipelines. [Más información](https://go.microsoft.com/fwlink/?LinkId=784929).",
-  "loc.description": "Ejecuta la prueba de carga de Apache JMeter en la nube",
+  "loc.description": "Ejecuta una prueba de carga de Apache JMeter en la nube.",
   "loc.instanceNameFormat": "Prueba de Apache JMeter $(LoadTest)",
   "loc.input.label.connectedServiceName": "Conexión de Azure Pipelines",
   "loc.input.help.connectedServiceName": "Seleccione una conexión de servicio ya registrada para comunicarse con el servicio de prueba de carga basada en la nube. Elija \"Administrar\" para registrar una conexión de servicio nueva.",

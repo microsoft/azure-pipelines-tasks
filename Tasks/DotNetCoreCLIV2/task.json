@@ -5,7 +5,7 @@
     "description": "Build, test, package, or publish a dotnet application, or run a custom dotnet command",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/dotnet-core-cli",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=832194)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=832194) or [see the .NET Core documentation](https://docs.microsoft.com/dotnet/core/)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -17,8 +17,8 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 152,
-        "Patch": 1
+        "Minor": 154,
+        "Patch": 3
     },
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -556,6 +556,7 @@
         "NGCommon_SpsNotFound": "Unable to find the '%s' [%s] area. There may be a problem with your Team Foundation Server installation.",
         "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
         "NGCommon_UnableToFindTool": "Unable to find tool %s",
+        "Warning_SessionCreationFailed": "Could not create provenance session: %s",
         "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task."
     }
 }

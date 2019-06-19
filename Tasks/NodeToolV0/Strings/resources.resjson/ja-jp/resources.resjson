@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Node Tool インストーラー",
+  "loc.friendlyName": "Node.js ツール インストーラー",
   "loc.helpMarkDown": "",
-  "loc.description": "指定されたバージョン仕様の Node を検索またはダウンロードし、それをキャッシュしてから PATH に追加します。",
+  "loc.description": "Node.js の指定されたバージョン仕様を検索またはダウンロードしてキャッシュし、それを PATH に追加します",
   "loc.instanceNameFormat": "Node $(versionSpec) の使用",
   "loc.input.label.versionSpec": "バージョンの仕様",
   "loc.input.help.versionSpec": "取得するバージョンのバージョン仕様。例: 6.x、4.x、6.10.0、6.10.0 以上",

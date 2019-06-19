@@ -1,5 +1,5 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { PackageType } from './packageUtility';
 import zipUtility = require('./ziputility.js');
 import * as os from "os";

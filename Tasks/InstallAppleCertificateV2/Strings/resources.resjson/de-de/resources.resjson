@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Apple-Zertifikat installieren",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=862067)",
-  "loc.description": "Das Installieren eines Apple-Zertifikats ist zum Erstellen auf einem macOS-Agent erforderlich.",
+  "loc.description": "Hiermit wird ein Apple-Zertifikat installiert, das für den Buildvorgang auf einem macOS-Agent-Computer erforderlich ist.",
   "loc.instanceNameFormat": "Apple-Zertifikat installieren",
   "loc.releaseNotes": "Hiermit werden Codesignaturblockaden auf einem selbstgehosteten Agent behoben. Das Kennwort für den Schlüsselbund ist jetzt erforderlich, um \"Standardschlüsselbund\" oder \"Benutzerdefinierter Schlüsselbund\" zu verwenden. Für gehostete Microsoft-Builds muss \"Temporärer Schlüsselbund\" verwendet werden.",
   "loc.group.displayName.advanced": "Erweitert",
@@ -10,7 +10,7 @@
   "loc.input.label.certPwd": "Zertifikatkennwort (P12)",
   "loc.input.help.certPwd": "Kennwort für das Apple-Zertifikat (P12). Verwenden Sie eine neue Buildvariable, deren Sperre auf der Registerkarte \"Variablen\" aktiviert ist, um diesen Wert zu verschlüsseln.",
   "loc.input.label.keychain": "Keychain",
-  "loc.input.help.keychain": "Wählen Sie den Schlüsselbund aus, in dem das Apple-Zertifikat installiert werden soll. Für gehostete Microsoft-Builds verwenden Sie \"Temporärer Schlüsselbund\" aus. Ein temporärer Schlüsselbund wird nach Build- oder Releaseabschluss immer gelöscht.",
+  "loc.input.help.keychain": "Wählen Sie die Keychain (die bei Apple \"Schlüsselbund\" genannt wird) aus, in der das Apple-Zertifikat installiert werden soll. Für gehostete Microsoft-Builds verwenden Sie \"Temporärer Schlüsselbund\" aus. Ein temporärer Schlüsselbund wird nach Build- oder Releaseabschluss immer gelöscht.",
   "loc.input.label.keychainPassword": "Keychain-Kennwort",
   "loc.input.help.keychainPassword": "Kennwort zum Entsperren des Schlüsselbunds. Verwenden Sie eine neue Buildvariable, deren Sperre auf der Registerkarte \"Variablen\" aktiviert ist, um diesen Wert zu verschlüsseln.",
   "loc.input.label.customKeychainPath": "Pfad zur benutzerdefinierten Keychain",
@@ -26,5 +26,7 @@
   "loc.messages.P12PrivateKeyNameNotFound": "Fehler beim Identifizieren des Namens für den privaten Schlüssel: %s ",
   "loc.messages.SetKeyPartitionListCommandNotFound": "Nicht benötigte partition_id-ACL-Schlüsselbundzuweisung wird auf diesem älteren Betriebssystem übersprungen. Der Sicherheitsbefehl \"set-key-partition-list\" wurde in macOS Sierra (10.12) eingeführt.",
   "loc.messages.SetKeyPartitionListCommandFailed": "Fehler beim Festlegen der partition_id-ACL für den privaten Schlüssel. Überprüfen Sie, ob \"Kennwort für Schlüsselbund\" richtig ist, oder verwenden Sie stattdessen \"Temporärer Schlüsselbund\".",
-  "loc.messages.InstallRequiresMac": "Für die Installation eines Apple-Zertifikats wird ein macOS-Agent benötigt. Das Installieren von Apple-Zertifikaten auf Linux oder Windows wird von Apple nicht unterstützt."
+  "loc.messages.InstallRequiresMac": "Für die Installation eines Apple-Zertifikats wird ein macOS-Agent benötigt. Das Installieren von Apple-Zertifikaten auf Linux oder Windows wird von Apple nicht unterstützt.",
+  "loc.messages.CertNotValidYetError": "Das Zertifikat \"%s\" (Fingerabdruck: \"%s\") ist erst ab dem %s gültig.",
+  "loc.messages.CertExpiredError": "Das Zertifikat \"%s\" (Fingerabdruck: \"%s\") ist am %s abgelaufen."
 }

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Windows 컴퓨터 파일 복사",
+  "loc.friendlyName": "Windows 머신 파일 복사",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=627415)",
-  "loc.description": "파일을 원격 컴퓨터에 복사",
+  "loc.description": "원격 Windows 머신에 파일을 복사합니다.",
   "loc.instanceNameFormat": "$(SourcePath)에서 파일 복사",
   "loc.group.displayName.advanced": "고급 옵션",
   "loc.input.label.SourcePath": "소스",
@@ -11,7 +11,7 @@
   "loc.input.label.AdminUserName": "관리자 로그인",
   "loc.input.help.AdminUserName": "대상 컴퓨터의 관리자 암호입니다.",
   "loc.input.label.AdminPassword": "암호",
-  "loc.input.help.AdminPassword": "대상 컴퓨터에 대한 관리자 로그인의 암호입니다. <br>빌드/릴리스 정의에 '$(passwordVariable)'(으)로 정의된 변수를 사용할 수 있습니다. <br>보호하기 위해 변수 형식을 'secret'으로 표시할 수 있습니다.",
+  "loc.input.help.AdminPassword": "대상 머신의 관리자 로그인 암호입니다. <br>빌드 또는 릴리스 파이프라인에서 '$(passwordVariable)'(으)로 정의된 변수를 허용할 수 있습니다. <br>변수를 '비밀'로 표시하여 보호할 수도 있습니다. ",
   "loc.input.label.TargetPath": "대상 폴더",
   "loc.input.help.TargetPath": "소스에서 파일을 복사하기 위한 대상 컴퓨터 상의 로컬 경로 또는 액세스 가능한 UNC 경로입니다(예: d:\\fabrikam 또는 \\\\\\\\fabrikam\\Web).",
   "loc.input.label.CleanTargetBeforeCopy": "클린 대상",

@@ -1,0 +1,229 @@
+{
+  "id": "61F2A582-95AE-4948-B34D-A1B3C4F6A737",
+  "name": "DownloadPipelineArtifact",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-pipeline-artifact",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "groups": [],
+  "demands": [],
+  "preview": true,
+  "minimumAgentVersion": "2.153.1",
+  "inputs": [
+    {
+      "name": "source",
+      "aliases": [
+        "buildType"
+      ],
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.source",
+      "defaultValue": "current",
+      "required": true,
+      "options": {
+        "current": "Current run",
+        "specific": "Specific run"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.source"
+    },
+    {
+      "name": "project",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.project",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "source == specific",
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.project"
+    },
+    {
+      "name": "pipeline",
+      "aliases": [
+        "definition"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.pipeline",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "source == specific",
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True",
+        "IsSearchable": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.pipeline"
+    },
+    {
+      "name": "preferTriggeringPipeline",
+      "aliases": [
+        "specificBuildWithTriggering"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.preferTriggeringPipeline",
+      "defaultValue": "false",
+      "required": false,
+      "visibleRule": "source == specific",
+      "helpMarkDown": "ms-resource:loc.input.help.preferTriggeringPipeline"
+    },
+    {
+      "name": "runVersion",
+      "aliases": [
+        "buildVersionToDownload"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.runVersion",
+      "defaultValue": "latest",
+      "visibleRule": "source == specific",
+      "required": true,
+      "options": {
+        "latest": "Latest",
+        "latestFromBranch": "Latest from specific branch and specified Build Tags",
+        "specific": "Specific version"
+      }
+    },
+    {
+      "name": "runBranch",
+      "aliases": [
+        "branchName"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.runBranch",
+      "defaultValue": "refs/heads/master",
+      "visibleRule": "source == specific && runVersion == latestFromBranch",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.runBranch"
+    },
+    {
+      "name": "runId",
+      "aliases": [
+        "pipelineId",
+        "buildId"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.runId",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "source == specific && runVersion == specific",
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.runId"
+    },
+    {
+      "name": "tags",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.tags",
+      "defaultValue": "",
+      "visibleRule": "source == specific && runVersion != specific",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.tags"
+    },
+    {
+      "name": "artifact",
+      "aliases": [
+        "artifactName"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.artifact",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.artifact"
+    },
+    {
+      "name": "patterns",
+      "aliases": [
+        "itemPattern"
+      ],
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.patterns",
+      "defaultValue": "**",
+      "required": false,
+      "properties": {
+        "rows": "3",
+        "resizable": "true"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.patterns"
+    },
+    {
+      "name": "path",
+      "aliases": [
+        "targetPath",
+        "downloadPath"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.path",
+      "defaultValue": "$(Pipeline.Workspace)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.path"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "endpointId": "tfs:teamfoundation",
+      "target": "project",
+      "endpointUrl": "{{endpoint.url}}/_apis/projects?$skip={{skip}}&$top=1000",
+      "resultSelector": "jsonpath:$.value[?(@.state=='wellFormed')]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
+      "callbackContextTemplate": "{\"skip\": \"{{add skip 1000}}\"}",
+      "callbackRequiredTemplate": "{{isEqualNumber result.count 1000}}",
+      "initialContextTemplate": "{\"skip\": \"0\"}"
+    },
+    {
+      "endpointId": "tfs:teamfoundation",
+      "target": "pipeline",
+      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?api-version=3.0-preview&$top=500&continuationToken={{{continuationToken}}}&name=*{{name}}*&queryOrder=2",
+      "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
+      "parameters": {
+        "project": "$(project)",
+        "name": "$(name)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
+      "callbackContextTemplate": "{\"continuationToken\" : \"{{{headers.x-ms-continuationtoken}}}\"}",
+      "callbackRequiredTemplate": "{{{#headers.x-ms-continuationtoken}}}true{{{/headers.x-ms-continuationtoken}}}",
+      "initialContextTemplate": "{\"continuationToken\" : \"{{{system.utcNow}}}\"}"
+    },
+    {
+      "endpointId": "tfs:teamfoundation",
+      "target": "runId",
+      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds?definitions={{pipeline}}&resultFilter=succeeded,partiallySucceeded&$top=200",
+      "resultSelector": "jsonpath:$.value[*]",
+      "parameters": {
+        "project": "$(project)",
+        "pipeline": "$(pipeline)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{buildNumber}}}\" }"
+    },
+    {
+      "endpointId": "tfs:teamfoundation",
+      "target": "artifact",
+      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds/{{runId}}/artifacts",
+      "resultSelector": "jsonpath:$.value[*]",
+      "parameters": {
+        "project": "$(project)",
+        "runId": "$(runId)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "AgentPlugin": {
+      "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV2_0_0, Agent.Plugins"
+    }
+  },
+  "messages": {}
+}

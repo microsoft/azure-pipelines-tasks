@@ -91,8 +91,8 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
     }
     catch {
         # Provide an additional, custom, credentials-related error message. Will handle localization later
+        Write-Host "Exception is : $($_.Exception.Message)"
         throw (New-Object System.Exception("There was an error with the service principal used for the deployment.", $_.Exception))
-       
     }
 
     if($scopeLevel -eq "Subscription")

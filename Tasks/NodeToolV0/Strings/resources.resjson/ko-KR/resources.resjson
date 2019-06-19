@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "노드 도구 설치 관리자",
+  "loc.friendlyName": "Node.js 도구 설치 관리자",
   "loc.helpMarkDown": "",
-  "loc.description": "노드의 지정된 버전 사양을 찾거나 다운로드하여 캐시한 다음 PATH에 추가합니다.",
+  "loc.description": "지정된 버전 사양의 Node.js를 찾거나 다운로드하여 캐시하고 PATH에 추가합니다.",
   "loc.instanceNameFormat": "노드 $(versionSpec) 사용",
   "loc.input.label.versionSpec": "버전 사양",
   "loc.input.help.versionSpec": "다운로드할 버전의 버전 사양입니다. 예: 6.x, 4.x, 6.10.0, >=6.10.0",

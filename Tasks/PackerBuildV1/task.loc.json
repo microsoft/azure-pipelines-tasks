@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 13
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -35,8 +35,7 @@
     {
       "name": "Advanced",
       "displayName": "ms-resource:loc.group.displayName.Advanced",
-      "isExpanded": false,
-      "visibleRule": "templateType = builtin"
+      "isExpanded": false
     },
     {
       "name": "Output",
@@ -224,6 +223,7 @@
       "required": false,
       "defaultValue": "{\"vm_size\":\"Standard_D3_v2\"}",
       "groupName": "Advanced",
+      "visibleRule": "templateType = builtin",
       "helpMarkDown": "ms-resource:loc.input.help.additionalBuilderParameters",
       "properties": {
         "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
@@ -235,7 +235,18 @@
       "label": "ms-resource:loc.input.label.skipTempFileCleanupDuringVMDeprovision",
       "defaultValue": true,
       "groupName": "Advanced",
+      "visibleRule": "templateType = builtin",
       "helpMarkDown": "ms-resource:loc.input.help.skipTempFileCleanupDuringVMDeprovision"
+    },
+    {
+      "name": "packerVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packerVersion",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "Advanced",
+      "visibleRule": "templateType = custom",
+      "helpMarkDown": "ms-resource:loc.input.help.packerVersion"
     },
     {
       "name": "imageUri",
@@ -316,6 +327,7 @@
     "ResolvedDeployPackgePath": "ms-resource:loc.messages.ResolvedDeployPackgePath",
     "ResolvedDeployScriptPath": "ms-resource:loc.messages.ResolvedDeployScriptPath",
     "OSNotSupportedForRunningPacker": "ms-resource:loc.messages.OSNotSupportedForRunningPacker",
+    "InstallExplicitPackerVersion": "ms-resource:loc.messages.InstallExplicitPackerVersion",
     "DownloadingPackerRequired": "ms-resource:loc.messages.DownloadingPackerRequired",
     "DownloadingPackerCompleted": "ms-resource:loc.messages.DownloadingPackerCompleted",
     "ExtractingPackerCompleted": "ms-resource:loc.messages.ExtractingPackerCompleted",
