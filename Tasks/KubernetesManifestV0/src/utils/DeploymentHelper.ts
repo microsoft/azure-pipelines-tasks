@@ -161,12 +161,12 @@ function checkPodStatus(kubectl: Kubectl, podName: string) {
     switch (podStatus.phase) {
         case 'Succeeded':
         case 'Running':
-            if (checkContainerStatuses(podStatus)) {
+            if (checkIfAllContainersAreInReadyState(podStatus)) {
                 console.log(`pod/${podName} is successfully rolled out`);
             }
             break;
         case 'Pending':
-            if (!checkContainerStatuses(podStatus)) {
+            if (!checkIfAllContainersAreInReadyState(podStatus)) {
                 tl.warning(`pod/${podName} rollout status check timedout`);
             }
             break;
@@ -184,7 +184,7 @@ function getPodStatus(kubectl: Kubectl, podName: string): any {
     return JSON.parse(podResult.stdout).status;
 }
 
-function checkContainerStatuses(podStatus: any): boolean {
+function checkIfAllContainersAreInReadyState(podStatus: any): boolean {
     let allReady = true;
     podStatus.containerStatuses.forEach(container => {
         if (container.ready === false) {
