@@ -1,11 +1,11 @@
 'use strict';
 import * as fs from 'fs';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as yaml from 'js-yaml';
-import { Resource } from 'kubernetes-common/kubectl-object-model';
+import { Resource } from 'kubernetes-common-v2/kubectl-object-model';
 import { KubernetesWorkload, recognizedWorkloadTypes } from '../models/constants';
+import { StringComparer, isEqual } from '../utils/StringComparison';
 import * as utils from '../utils/utilities';
-import { StringComparer } from '../utils/utilities';
 
 export function isDeploymentEntity(kind: string): boolean {
     if (!kind) {
@@ -13,7 +13,7 @@ export function isDeploymentEntity(kind: string): boolean {
     }
 
     return recognizedWorkloadTypes.some(function (elem) {
-        return utils.isEqual(elem, kind, utils.StringComparer.OrdinalIgnoreCase);
+        return isEqual(elem, kind, StringComparer.OrdinalIgnoreCase);
     });
 }
 
@@ -27,7 +27,7 @@ export function getReplicaCount(inputObject: any): any {
     }
 
     const kind = inputObject.kind;
-    if (!utils.isEqual(kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase) && !utils.isEqual(kind, KubernetesWorkload.DaemonSet, StringComparer.OrdinalIgnoreCase)) {
+    if (!isEqual(kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase) && !isEqual(kind, KubernetesWorkload.DaemonSet, StringComparer.OrdinalIgnoreCase)) {
         return inputObject.spec.replicas;
     }
 
@@ -173,7 +173,7 @@ export function updateSelectorLabels(inputObject: any, newLabels: Map<string, st
         return;
     }
 
-    if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
+    if (isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
         return;
     }
 
@@ -205,7 +205,7 @@ export function getResources(filePaths: string[], filterResourceTypes: string[])
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
             const inputObjectKind = inputObject ? inputObject.kind : '';
-            if (filterResourceTypes.filter(type => utils.isEqual(inputObjectKind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
+            if (filterResourceTypes.filter(type => isEqual(inputObjectKind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
                 const resource = {
                     type: inputObject.kind,
                     name: inputObject.metadata.name
@@ -223,7 +223,7 @@ function getSpecLabels(inputObject: any) {
         return null;
     }
 
-    if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
+    if (isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
         return inputObject.metadata.labels;
     }
     if (!!inputObject.spec && !!inputObject.spec.template && !!inputObject.spec.template.metadata) {
@@ -239,7 +239,7 @@ function getImagePullSecrets(inputObject: any) {
         return null;
     }
 
-    if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
+    if (isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
         return inputObject.spec.imagePullSecrets;
     }
 
@@ -255,7 +255,7 @@ function setImagePullSecrets(inputObject: any, newImagePullSecrets: any) {
         return;
     }
 
-    if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
+    if (isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
         inputObject.spec.imagePullSecrets = newImagePullSecrets;
         return;
     }

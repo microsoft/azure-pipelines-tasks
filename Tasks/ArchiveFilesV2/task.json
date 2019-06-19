@@ -5,7 +5,7 @@
     "description": "Compress files into .7z, .tar.gz, or .zip",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/archive-files",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=809083)",
+    "helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=809083)",
     "category": "Utility",
     "visibility": [
         "Build",

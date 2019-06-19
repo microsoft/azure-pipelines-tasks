@@ -3,7 +3,7 @@
     "name": "DuffleInstaller",
     "friendlyName": "Duffle tool installer",
     "description": "Install a specified version of Duffle for installing and managing CNAB bundles",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Tool",
     "visibility": [
         "Build",
@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 153,
-        "Patch": 1
+        "Minor": 154,
+        "Patch": 0
     },
     "demands": [],
     "groups": [],

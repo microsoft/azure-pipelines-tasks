@@ -4,7 +4,7 @@
     "friendlyName": "Gradle",
     "description": "Build using a Gradle wrapper script",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/gradle",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613720)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613720) or [see the Gradle documentation](https://docs.gradle.org/current/userguide/userguide.html)",
     "category": "Build",
     "visibility": [
         "Build"

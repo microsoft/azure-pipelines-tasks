@@ -1,8 +1,11 @@
+import * as fs from 'fs';
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
-import * as tl from 'vsts-task-lib';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import * as tl from 'azure-pipelines-task-lib';
 import * as shared from './TestShared';
+import * as utils from '../src/utils/utilities';
+import * as yaml from 'js-yaml';
 
 describe('Kubernetes Manifests Suite', function () {
     this.timeout(30000);
@@ -22,6 +25,8 @@ describe('Kubernetes Manifests Suite', function () {
         delete process.env[shared.TestEnvVars.isCanaryDeploymentPresent];
         delete process.env[shared.TestEnvVars.isBaselineDeploymentPresent];
         delete process.env[shared.TestEnvVars.arguments];
+        delete process.env[shared.TestEnvVars.namespace];
+        delete process.env.RemoveNamespaceFromEndpoint;
     });
 
     after((done) => {
@@ -140,10 +145,11 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm bake', (done: MochaDone) => {
+    it('Run should succeed with helm bake and honor namespace field', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
         process.env[shared.TestEnvVars.renderType] = 'helm2';
         tr.run();
@@ -152,10 +158,11 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run should succeed with helm bake overriding release name', (done: MochaDone) => {
+    it('Run should succeed with helm bake overriding release name and honor namespace field', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.namespace] = 'namespacefrominput';
         process.env[shared.TestEnvVars.helmChart] = 'helmChart';
         process.env[shared.TestEnvVars.renderType] = 'helm2';
         process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
@@ -163,6 +170,23 @@ describe('Kubernetes Manifests Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         assert(tr.stdout.indexOf('--name newReleaseName') > -1, 'bake should have overriden release name');
+        done();
+    });
+
+    it('Run should succeed with helm bake overriding release name and use default namespace when not found in endpoint either', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.helmChart] = 'helmChart';
+        process.env[shared.TestEnvVars.renderType] = 'helm2';
+        process.env[shared.TestEnvVars.releaseName] = 'newReleaseName';
+        process.env.RemoveNamespaceFromEndpoint = 'true';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        assert(tr.stdout.indexOf('--name newReleaseName') > -1, 'bake should have overriden release name');
+        assert(tr.stdout.indexOf('--namespace default') > -1, 'should have used default namespace');
+        assert(tr.stdout.indexOf('Namespace was not supplied nor present in the endpoint; using "default" namespace instead.') > -1, 'should have added a debug log');
         done();
     });
 
@@ -203,6 +227,27 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.patch] = 'somePatch';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('Run should successfully add container image tags', (done: MochaDone) => {
+        const testFile = path.join(__dirname, './manifests/', 'deployment-image-substitution.yaml');
+        const deploymentFile = fs.readFileSync(testFile).toString();
+
+        const bigNameEditFirst = utils.substituteImageNameInSpecFile(deploymentFile, 'nginx-init', 'nginx-init:42.1');
+        const smallNameEditSecond = utils.substituteImageNameInSpecFile(bigNameEditFirst, 'nginx', 'nginx:42');
+        const smallSecondYaml = yaml.load(smallNameEditSecond);
+
+        assert(smallSecondYaml.spec.template.spec.containers[0].image === 'nginx:42', 'nginx image not tagged correctly');
+        assert(smallSecondYaml.spec.template.spec.initContainers[0].image === 'nginx-init:42.1', 'nginx-init image not tagged correctly');
+
+        const smallNameEditFirst = utils.substituteImageNameInSpecFile(deploymentFile, 'nginx', 'nginx:42');
+        const bigNameEditSecond = utils.substituteImageNameInSpecFile(smallNameEditFirst, 'nginx-init', 'nginx-init:42.1');
+        const bigSecondYaml = yaml.load(bigNameEditSecond);
+
+        assert(bigSecondYaml.spec.template.spec.containers[0].image === 'nginx:42', 'nginx image not tagged correctly');
+        assert(bigSecondYaml.spec.template.spec.initContainers[0].image === 'nginx-init:42.1', 'nginx-init image not tagged correctly');
+
         done();
     });
 });
