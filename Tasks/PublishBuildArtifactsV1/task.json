@@ -4,7 +4,7 @@
     "friendlyName": "Publish build artifacts",
     "description": "Publish build artifacts to Azure Pipelines or a Windows file share",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-build-artifacts",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=708390)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=708390)",
     "category": "Utility",
     "visibility": [
         "Build"
@@ -12,71 +12,83 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 151,
-        "Patch": 1
+        "Minor": 155,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "1.91.0",
-    "inputs": [
-        {
-            "name": "PathtoPublish",
-            "type": "filePath",
-            "label": "Path to publish",
-            "defaultValue": "$(Build.ArtifactStagingDirectory)",
-            "required": true,
-            "helpMarkDown": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported. Example: $(Build.ArtifactStagingDirectory)"
-        },
-        {
-            "name": "ArtifactName",
-            "type": "string",
-            "label": "Artifact name",
-            "defaultValue": "drop",
-            "required": true,
-            "helpMarkDown": "The name of the artifact to create in the publish location."
-        },
-        {
-            "name": "ArtifactType",
-            "aliases": [
-                "publishLocation"
-            ],
-            "type": "pickList",
-            "label": "Artifact publish location",
-            "defaultValue": "Container",
-            "required": true,
-            "helpMarkDown": "Choose whether to store the artifact in Azure Pipelines, or to copy it to a file share that must be accessible from the build agent.",
-            "options": {
-                "Container": "Azure Pipelines",
-                "FilePath": "A file share"
-            }
-        },
-        {
-            "name": "TargetPath",
-            "type": "string",
-            "label": "File share path",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "The file share to which the artifact files will be copied. This can include variables. Example: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). Publishing artifacts from a Linux or macOS agent to a file share is not supported.",
-            "visibleRule": "ArtifactType = FilePath"
-        },
-        {
-            "name": "Parallel",
-            "type": "boolean",
-            "label": "Parallel copy",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Select whether to copy files in parallel using multiple threads for greater potential throughput. If this setting is not enabled, one thread will be used.",
-            "visibleRule": "ArtifactType = FilePath"
-        },
-        {
-            "name": "ParallelCount",
-            "type": "int",
-            "label": "Parallel count",
-            "defaultValue": 8,
-            "required": false,
-            "helpMarkDown": "Enter the degree of parallelism, or number of threads used, to perform the copy. The value must be at least 1 and not greater than 128.",
-            "visibleRule": "ArtifactType = FilePath && Parallel = true"
-        }
-    ],
+  "inputs": [
+    {
+      "name": "PathtoPublish",
+      "type": "filePath",
+      "label": "Path to publish",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)",
+      "required": true,
+      "helpMarkDown": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported. Example: $(Build.ArtifactStagingDirectory)"
+    },
+    {
+      "name": "ArtifactName",
+      "type": "string",
+      "label": "Artifact name",
+      "defaultValue": "drop",
+      "required": true,
+      "helpMarkDown": "The name of the artifact to create in the publish location."
+    },
+    {
+      "name": "ArtifactType",
+      "aliases": [
+        "publishLocation"
+      ],
+      "type": "pickList",
+      "label": "Artifact publish location",
+      "defaultValue": "Container",
+      "required": true,
+      "helpMarkDown": "Choose whether to store the artifact in Azure Pipelines, or to copy it to a file share that must be accessible from the build agent.",
+      "options": {
+        "Container": "Azure Pipelines",
+        "FilePath": "A file share"
+      }
+    },
+    {
+      "name": "TargetPath",
+      "type": "string",
+      "label": "File share path",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The file share to which the artifact files will be copied. This can include variables. Example: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). Publishing artifacts from a Linux or macOS agent to a file share is not supported.",
+      "visibleRule": "ArtifactType = FilePath"
+    },
+    {
+      "name": "Parallel",
+      "type": "boolean",
+      "label": "Parallel copy",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Select whether to copy files in parallel using multiple threads for greater potential throughput. If this setting is not enabled, one thread will be used.",
+      "visibleRule": "ArtifactType = FilePath"
+    },
+    {
+      "name": "ParallelCount",
+      "type": "int",
+      "label": "Parallel count",
+      "defaultValue": 8,
+      "required": false,
+      "helpMarkDown": "Enter the degree of parallelism, or number of threads used, to perform the copy. The value must be at least 1 and not greater than 128.",
+      "visibleRule": "ArtifactType = FilePath && Parallel = true"
+    },
+    {
+      "name": "Verbosity",
+      "type": "pickList",
+      "label": "Configure verbosity of output",
+      "defaultValue": "Normal",
+      "required": true,
+      "helpMarkDown": "Control the verbosity of the publish output by choosing one of the available options.",
+      "options": {
+        "Normal" : "list directories and files",
+        "Silent": "No files or directories are listed"
+      }
+    }
+  ],
     "instanceNameFormat": "Publish Artifact: $(ArtifactName)",
     "execution": {
         "Node": {

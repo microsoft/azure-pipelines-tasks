@@ -9,6 +9,9 @@ param(
     [Parameter(Mandatory = $true)]
     [int]$ParallelCount,
 
+    [Parameter(Mandatory = $true)]
+    [string]$Verbosity,
+
     [Parameter(Mandatory = $false)]
     [string]$File)
 
@@ -74,26 +77,53 @@ $OutputEncoding = [System.Text.Encoding]::Default
 #
 # Note, the /MT parameter is only supported on 2008 R2 and higher.
 if ($ParallelCount -gt 1) {
-    & robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount $Source $Target $File 2>&1 |
+    if ($Verbosity -eq "Normal") {
+        & robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount $Source $Target $File 2>&1 |
         ForEach-Object {
-        if ($_ -is [System.Management.Automation.ErrorRecord]) {
-            [System.Console]::WriteLine($_.Exception.Message)
+            if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                [System.Console]::WriteLine($_.Exception.Message)
+            }
+            else {
+                [System.Console]::WriteLine($_)
+            }
         }
-        else {
-            [System.Console]::WriteLine($_)
+    }
+    else {
+        & robocopy.exe /E /COPY:DA /NP /NFL /NDL /R:3 /MT:$ParallelCount $Source $Target $File 2>&1 |
+        ForEach-Object {
+            if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                [System.Console]::WriteLine($_.Exception.Message)
+            }
+            else {
+                [System.Console]::WriteLine($_)
+            }
         }
     }
 }
 else {
-    & robocopy.exe /E /COPY:DA /NP /R:3 $Source $Target $File 2>&1 |
+    if ($Verbosity -eq "Normal") {
+        & robocopy.exe /E /COPY:DA /NP /R:3 $Source $Target $File 2>&1 |
         ForEach-Object {
-        if ($_ -is [System.Management.Automation.ErrorRecord]) {
-            [System.Console]::WriteLine($_.Exception.Message)
-        }
-        else {
-            [System.Console]::WriteLine($_)
+            if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                [System.Console]::WriteLine($_.Exception.Message)
+            }
+            else {
+                [System.Console]::WriteLine($_)
+            }
         }
     }
+    else {
+        & robocopy.exe /E /COPY:DA /NP /NFL /NDL /R:3 $Source $Target $File 2>&1 |
+        ForEach-Object {
+            if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                [System.Console]::WriteLine($_.Exception.Message)
+            }
+            else {
+                [System.Console]::WriteLine($_)
+            }
+        }
+    }
+	
 }
 
 [System.Console]::WriteLine("##[debug]robocopy exit code '$LASTEXITCODE'")
