@@ -48,7 +48,10 @@ $null = Clear-AzContext -Scope Process
 Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
 $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue 
 
-$scopeLevel = $endpointObject.scopeLevel
+$scopeLevel = "Subscription"
+if($endpointObject.scopeLevel) {
+    $scopeLevel = $endpointObject.scopeLevel
+}
 
 function Format-Splat {
     [CmdletBinding()]
