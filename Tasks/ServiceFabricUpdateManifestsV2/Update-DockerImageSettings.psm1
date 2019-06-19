@@ -63,6 +63,7 @@ function Update-DockerImageSettings
             else
             {
                 $imageName = $imageDigestName
+                $imageNameToDigestMapping[$imageDigestRepoName] = $imageDigestValue
 
                 if ($imageNameToDigestMapping.ContainsKey($imageName))
                 {
