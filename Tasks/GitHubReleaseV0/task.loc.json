@@ -14,7 +14,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 153,
+    "Minor": 154,
     "Patch": 0
   },
   "demands": [],
@@ -74,6 +74,14 @@
         "auto": "Git tag",
         "manual": "User specified tag"
       }
+    },
+    {
+      "name": "tagPattern",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.tagPattern",
+      "required": false,
+      "visibleRule": "tagSource = auto",
+      "helpMarkDown": "ms-resource:loc.input.help.tagPattern"
     },
     {
       "name": "tag",
@@ -261,6 +269,7 @@
     "TagRequiredCreateAction": "ms-resource:loc.messages.TagRequiredCreateAction",
     "NoFileFoundMatchingPattern": "ms-resource:loc.messages.NoFileFoundMatchingPattern",
     "PatternIsADirectory": "ms-resource:loc.messages.PatternIsADirectory",
-    "SearchingFileMatchingPattern": "ms-resource:loc.messages.SearchingFileMatchingPattern"
+    "SearchingFileMatchingPattern": "ms-resource:loc.messages.SearchingFileMatchingPattern",
+    "NoMatchingTagsFound": "ms-resource:loc.messages.NoMatchingTagsFound"
   }
 }

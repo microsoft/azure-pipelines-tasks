@@ -239,6 +239,11 @@ export class Utility {
         
     }
 
+    public static isTagMatches(tag: string, tagPattern: string): boolean {
+        let tagPatternRegex = new RegExp("^" + tagPattern + "$");
+        return tagPatternRegex.test(tag);
+    }
+
     private static readonly _onlyFirstLine = new RegExp("^.*$", "m");
     private static readonly _githubPaginatedLinkRegex = new RegExp("^<(.*)>$");
     private static readonly _githubPaginatedRelRegex = new RegExp('^rel="(.*)"$');
