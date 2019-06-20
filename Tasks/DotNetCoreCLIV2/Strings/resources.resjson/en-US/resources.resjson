@@ -103,7 +103,7 @@
   "loc.messages.dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
   "loc.messages.noProjectFilesFound": "Project file(s) matching the specified pattern were not found.",
   "loc.messages.noPublishFolderFoundToZip": "A publish folder could not be found to zip for project file: %s.",
-  "loc.messages.noWebProjectFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory. You can uncheck `Publish Web Projects` if your project doesn't follow the aforementioned web project criteria.",
+  "loc.messages.noWebProjectFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory. You can set Publish Web Projects property to false (publishWebProjects: false in yml) if your project doesn't follow this convention or if you want to publish projects other than web projects.",
   "loc.messages.zipFailed": "Zip failed with error: %s",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
   "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
