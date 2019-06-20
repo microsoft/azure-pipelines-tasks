@@ -1,13 +1,13 @@
 "use strict";
 
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as fs from 'fs';
-import ContainerConnection from "docker-common/containerconnection";
-import * as dockerCommandUtils from "docker-common/dockercommandutils";
+import ContainerConnection from "docker-common-v2/containerconnection";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 import * as utils from "./utils";
-import { findDockerFile } from "docker-common/fileutils";
-import { WebRequest, WebResponse, sendRequest } from 'utility-common/restutilities';
-import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "docker-common/containerimageutils";
+import { findDockerFile } from "docker-common-v2/fileutils";
+import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
+import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "docker-common-v2/containerimageutils";
 
 import Q = require('q');
 

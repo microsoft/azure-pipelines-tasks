@@ -41,6 +41,7 @@ export class AzureRMEndpoint {
                 activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true),
                 azureKeyVaultServiceEndpointResourceId: tl.getEndpointDataParameter(this._connectedServiceName, 'AzureKeyVaultServiceEndpointResourceId', true),
                 azureKeyVaultDnsSuffix: tl.getEndpointDataParameter(this._connectedServiceName, 'AzureKeyVaultDnsSuffix', true),
+                scopeLevel: tl.getEndpointDataParameter(this._connectedServiceName, 'ScopeLevel', true),
             } as AzureEndpoint;
 
             this.endpoint.authenticationType =  tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'authenticationType', true);
