@@ -82,7 +82,7 @@
                 "feed": "$(feed)",
                 "definition": "$(definition)"
             },
-            "endpointUrl": "{{endpoint.url}}/{{ #regex ^([a-fA-F0-9\\-]+\/)[a-fA-F0-9\\-]+$ feed }}_apis/Packaging/Feeds/{{ #regex ^[a-fA-F0-9\\-]*?\/?([a-fA-F0-9\\-]+)$ feed }}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false",
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ^([a-fA-F0-9\\-]+\/)[a-fA-F0-9\\-]+$ feed }}_apis/Packaging/Feeds/{{ #regex ^[a-fA-F0-9\\-]*?\/?([a-fA-F0-9\\-]+)$ feed }}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false&protocolType={{{packageType}}}",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
         }
