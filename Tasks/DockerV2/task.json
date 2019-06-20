@@ -114,7 +114,7 @@
             "type": "boolean",
             "label": "Add Pipeline metadata to image(s)",
             "groupName": "commands",
-            "defaultValue": true,
+            "defaultValue": "true",
             "helpMarkDown": "By default pipeline data like source branch name, build id are added which helps with trace-ability. For example you can inspect an image to find out which pipeline built the image. You can opt out of this default behavior by using this input."
         }
     ],
