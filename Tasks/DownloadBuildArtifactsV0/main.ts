@@ -2,7 +2,7 @@ var path = require('path');
 var url = require('url');
 var fs = require('fs');
 
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import { IBuildApi } from 'azure-devops-node-api/BuildApi';
 import { IRequestHandler } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
 import { WebApi, getHandlerFromToken } from 'azure-devops-node-api/WebApi';

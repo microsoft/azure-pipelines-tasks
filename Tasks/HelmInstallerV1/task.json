@@ -4,7 +4,7 @@
     "friendlyName": "Helm tool installer",
     "description": "Install Helm on an agent machine",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/helm-installer",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Tool",
     "visibility": [
         "Build",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 152,
-        "Patch": 1
+        "Minor": 154,
+        "Patch": 0
     },
     "preview": true,
     "demands": [],

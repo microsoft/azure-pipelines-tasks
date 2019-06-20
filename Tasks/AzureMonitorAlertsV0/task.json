@@ -5,7 +5,7 @@
     "description": "Configure alerts on available metrics for an Azure resource",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-monitor-alerts",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=859947)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=859947)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -13,8 +13,8 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 2,
-        "Patch": 10
+        "Minor": 3,
+        "Patch": 2
     },
     "minimumAgentVersion": "2.111.0",
     "instanceNameFormat": "Configure Azure Alerts : $(ResourceName)",

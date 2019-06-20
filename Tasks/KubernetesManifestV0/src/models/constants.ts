@@ -1,7 +1,7 @@
 'use strict';
 
-import * as tl from 'vsts-task-lib/task';
-import * as utils from '../utils/utilities';
+import * as tl from 'azure-pipelines-task-lib/task';
+import { StringComparer, isEqual } from '../utils/StringComparison';
 
 export class KubernetesWorkload {
     public static Pod: string = 'Pod';
@@ -14,7 +14,7 @@ export class KubernetesWorkload {
 export const recognizedWorkloadTypes: string[] = ['deployment', 'replicaset', 'daemonset', 'pod', 'statefulset'];
 export const recognizedWorkloadTypesWithRolloutStatus: string[] = ['deployment', 'daemonset', 'statefulset'];
 
-const isRelease = utils.isEqual(tl.getVariable('SYSTEM_HOSTTYPE'), 'release', utils.StringComparer.OrdinalIgnoreCase);
+const isRelease = isEqual(tl.getVariable('SYSTEM_HOSTTYPE'), 'release', StringComparer.OrdinalIgnoreCase);
 const orgUrl = tl.getVariable('System.TeamFoundationCollectionUri');
 
 export let pipelineAnnotations: string[] = [];

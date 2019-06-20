@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Publish pipeline artifact",
+  "loc.helpMarkDown": "Publish (upload) a file or directory as a named artifact for the current run. Published artifacts can be downloaded in other jobs, stages, or pipelines using the \"Download pipeline artifact\" task.",
+  "loc.description": "Publish (upload) a file or directory as a named artifact for the current run",
+  "loc.instanceNameFormat": "Publish Pipeline Artifact",
+  "loc.input.label.path": "File or directory path",
+  "loc.input.help.path": "The path of the file or directory to publish. Can be absolute or relative to the default working directory. Can include [variables](https://go.microsoft.com/fwlink/?LinkID=550988), but wildcards are not supported.",
+  "loc.input.label.artifactName": "Artifact name",
+  "loc.input.help.artifactName": "Name of the artifact to publish."
+}

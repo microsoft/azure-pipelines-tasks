@@ -1,7 +1,7 @@
 'use strict';
 
-import { Kubectl } from 'kubernetes-common/kubectl-object-model';
-import * as tl from 'vsts-task-lib/task';
+import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 
@@ -9,6 +9,7 @@ import * as TaskInputParameters from '../models/TaskInputParameters';
 import * as fileHelper from '../utils/FileHelper';
 import * as helper from './KubernetesObjectUtility';
 import { KubernetesWorkload } from '../models/constants';
+import { StringComparer, isEqual } from '../utils/StringComparison';
 import * as utils from './utilities';
 
 export const CANARY_DEPLOYMENT_STRATEGY = 'CANARY';
@@ -182,8 +183,8 @@ function getNewCanaryObject(inputObject: any, replicas: number, type: string): o
     addCanaryLabelsAndAnnotations(newObject, type);
 
     // Updating no. of replicas
-    if (!utils.isEqual(newObject.kind, KubernetesWorkload.Pod, utils.StringComparer.OrdinalIgnoreCase) &&
-        !utils.isEqual(newObject.kind, KubernetesWorkload.DaemonSet, utils.StringComparer.OrdinalIgnoreCase)) {
+    if (!isEqual(newObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase) &&
+        !isEqual(newObject.kind, KubernetesWorkload.DaemonSet, StringComparer.OrdinalIgnoreCase)) {
         newObject.spec.replicas = replicas;
     }
 

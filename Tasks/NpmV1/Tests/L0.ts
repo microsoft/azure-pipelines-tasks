@@ -130,6 +130,22 @@ describe('Npm Task', function () {
         done();
     });
 
+    it ('install using local project-scoped feed', (done: MochaDone) => {
+        this.timeout(1000);
+        let tp = path.join(__dirname, 'install-project-scoped-feed.js');
+        let tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert.equal(tr.invokedToolCount, 3, 'task should have run npm');
+        assert(tr.stdOutContained('npm install successful'), 'npm should have installed the package');
+        assert(tr.stdOutContained('OverridingProjectNpmrc'), 'install from feed shoud override project .npmrc');
+        assert(tr.stdOutContained('RestoringProjectNpmrc'), 'install from .npmrc shoud restore project .npmrc');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
     it ('install using npmrc', (done: MochaDone) => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'install-npmrc.js');
@@ -165,6 +181,22 @@ describe('Npm Task', function () {
     it ('publish using feed', (done: MochaDone) => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'publish-feed.js');
+        let tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert.equal(tr.invokedToolCount, 3, 'task should have run npm');
+        assert(tr.stdOutContained('npm publish successful'), 'npm should have published the package');
+        assert(tr.stdOutContained('OverridingProjectNpmrc'), 'publish should always ooverrideverride project .npmrc');
+        assert(tr.stdOutContained('RestoringProjectNpmrc'), 'publish should always restore project .npmrc');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
+    it ('publish using project-scoped feed', (done: MochaDone) => {
+        this.timeout(1000);
+        let tp = path.join(__dirname, 'publish-project-scoped-feed.js');
         let tr = new ttm.MockTestRunner(tp);
 
         tr.run();

@@ -1,7 +1,7 @@
 import * as Q from 'q';
 import * as os from 'os';
 import * as path from 'path';
-import * as  tl from 'vsts-task-lib/task';
+import * as  tl from 'azure-pipelines-task-lib/task';
 
 import {ArtifactDetailsDownloaderBase} from "./ArtifactDetailsDownloaderBase"
 import {JenkinsRestClient, JenkinsJobDetails} from "./JenkinsRestClient"

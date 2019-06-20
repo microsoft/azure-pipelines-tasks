@@ -4,7 +4,7 @@
     "friendlyName": "Command line",
     "description": "Run a command line script using Bash on Linux and macOS and cmd.exe on Windows",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/command-line",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613735)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613735)",
     "category": "Utility",
     "visibility": [
         "Build",
