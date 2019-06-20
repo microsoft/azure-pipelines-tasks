@@ -227,6 +227,7 @@ export interface AzureEndpoint {
     scheme?: string;
     applicationTokenCredentials: ApplicationTokenCredentials;
     isADFSEnabled?: boolean;
+    scopeLevel?: string;
 }
 
 export interface AzureAppServiceConfigurationDetails {
