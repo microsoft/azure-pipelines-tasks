@@ -19,31 +19,25 @@ function addLabel(hostName: string, labelName: string, variableName: string, lab
     }
 }
 
-function addCommonLabels(hostName: string, labels: string[], addPipelineData?: boolean): void {
+function addCommonLabels(hostName: string, labels: string[]): void {
     addLabel(hostName, "system.teamfoundationcollectionuri", "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI", labels);
-    if (addPipelineData) {
-        addLabel(hostName, "system.teamproject", "SYSTEM_TEAMPROJECT", labels);
-        addLabel(hostName, "build.repository.name", "BUILD_REPOSITORY_NAME", labels);
-    }
+    addLabel(hostName, "system.teamproject", "SYSTEM_TEAMPROJECT", labels);
+    addLabel(hostName, "build.repository.name", "BUILD_REPOSITORY_NAME", labels);
 }
 
-function addBuildLabels(hostName: string, labels: string[], addPipelineData?: boolean): void {
+function addBuildLabels(hostName: string, labels: string[]): void {
+    addLabel(hostName, "build.repository.uri", "BUILD_REPOSITORY_URI", labels);
+    addLabel(hostName, "build.sourcebranchname", "BUILD_SOURCEBRANCHNAME", labels);
     addLabel(hostName, "build.sourceversion", "BUILD_SOURCEVERSION", labels);
-    if (addPipelineData) {
-        addLabel(hostName, "build.repository.uri", "BUILD_REPOSITORY_URI", labels);
-        addLabel(hostName, "build.sourcebranchname", "BUILD_SOURCEBRANCHNAME", labels);
-        addLabel(hostName, "build.definitionname", "BUILD_DEFINITIONNAME", labels);
-        addLabel(hostName, "build.buildnumber", "BUILD_BUILDNUMBER", labels);
-        addLabel(hostName, "build.builduri", "BUILD_BUILDURI", labels);
-    }
+    addLabel(hostName, "build.definitionname", "BUILD_DEFINITIONNAME", labels);
+    addLabel(hostName, "build.buildnumber", "BUILD_BUILDNUMBER", labels);
+    addLabel(hostName, "build.builduri", "BUILD_BUILDURI", labels);
 }
 
-function addReleaseLabels(hostName: string, labels: string[], addPipelineData?: boolean): void {    
+function addReleaseLabels(hostName: string, labels: string[]): void {    
+    addLabel(hostName, "release.definitionname", "RELEASE_DEFINITIONNAME", labels);
     addLabel(hostName, "release.releaseid", "RELEASE_RELEASEID", labels);
-    if (addPipelineData) {
-        addLabel(hostName, "release.definitionname", "RELEASE_DEFINITIONNAME", labels);
-        addLabel(hostName, "release.releaseweburl", "RELEASE_RELEASEWEBURL", labels);
-    }
+    addLabel(hostName, "release.releaseweburl", "RELEASE_RELEASEWEBURL", labels);
 }
 
 function getReverseDNSName(): string {
@@ -67,17 +61,17 @@ export function addDefaultLabelArgs(command: ToolRunner): void {
     addLabelArgs(command, labels);
 }
 
-export function getDefaultLabels(addPipelineData?: boolean): string[] {
+export function getDefaultLabels(): string[] {
     let labels: string[] = [];
     let hostName = getReverseDNSName();
     if (hostName) {
-        addCommonLabels(hostName, labels, addPipelineData);
+        addCommonLabels(hostName, labels);
         let hostType = tl.getVariable("SYSTEM_HOSTTYPE");
         if (hostType.toLowerCase() === "build") {
-            addBuildLabels(hostName, labels, addPipelineData);
+            addBuildLabels(hostName, labels);
         }
         else {
-            addReleaseLabels(hostName, labels, addPipelineData);
+            addReleaseLabels(hostName, labels);
         }
     }
 
