@@ -47,7 +47,7 @@
   "loc.input.label.mavenFeedAuthenticate": "Authenticate built-in Maven feeds",
   "loc.input.help.mavenFeedAuthenticate": "Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds.",
   "loc.input.label.skipEffectivePom": "Skip generating effective POM while authenticating built-in feeds",
-  "loc.input.help.skipEffectivePom": "Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/TFS [Package Management] feeds.",
+  "loc.input.help.skipEffectivePom": "Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/Azure DevOps Server [Package Management] feeds.",
   "loc.input.label.sqAnalysisEnabled": "Run SonarQube or SonarCloud analysis",
   "loc.input.help.sqAnalysisEnabled": "This option has changed from version 1 of the **Maven** task to use the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) and [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) marketplace extensions.  Enable this option to run [SonarQube or SonarCloud analysis](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) after executing goals in the **Goals** field. The **install** or **package** goal should run first. You must also add a **Prepare Analysis Configuration** task from one of the extensions to the build pipeline before this Maven task.",
   "loc.input.label.sqMavenPluginVersionChoice": "SonarQube scanner for Maven version",

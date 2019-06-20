@@ -312,7 +312,7 @@
             "required": true,
             "defaultValue": "false",
             "groupName": "advanced",
-            "helpMarkDown": "Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/TFS [Package Management] feeds."
+            "helpMarkDown": "Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/Azure DevOps Server [Package Management] feeds."
         },
         {
             "name": "sqAnalysisEnabled",
