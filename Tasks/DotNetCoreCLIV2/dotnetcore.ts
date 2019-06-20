@@ -9,6 +9,10 @@ import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
 import * as utility from './Common/utility';
 
+
+var ltxdomutility = require('webdeployment-common/ltxdomutility')
+var fileEncoding = require('webdeployment-common/fileencoding')
+
 export class dotNetExe {
     private command: string;
     private projects: string[];
@@ -325,20 +329,48 @@ export class dotNetExe {
         }
 
         var projectFiles = utility.getProjectFiles(projectPattern);
+        var resolvedProjectFiles: string[] = [];
 
         if (searchWebProjects) {
-            projectFiles = projectFiles.filter(function (file, index, files): boolean {
+            resolvedProjectFiles = projectFiles.filter(function (file, index, files): boolean {
                 var directory = path.dirname(file);
                 return tl.exist(path.join(directory, "web.config"))
                     || tl.exist(path.join(directory, "wwwroot"));
             });
 
-            if (!projectFiles.length) {
-                tl.error(tl.loc("noWebProjctFound"));
-            }
+            if (!resolvedProjectFiles.length) {
+                var projectFilesUsingWebSdk = projectFiles.filter(this.isWebSdkUsed)
+                if(!projectFilesUsingWebSdk.length) {
+                    tl.error(tl.loc("noWebProjectFound"));
+                }
+                return projectFilesUsingWebSdk;
+            } 
+            return resolvedProjectFiles;
         }
 
         return projectFiles;
+    }
+
+    private isWebSdkUsed(projectfile: string) {
+        var fileBuffer: Buffer = fs.readFileSync(projectfile);
+        var fileEncodeType = fileEncoding.detectFileEncoding(projectfile, fileBuffer);
+        var webConfigContent: string = fileBuffer.toString(fileEncodeType[0]);
+
+        if(fileEncodeType[1]) {
+            webConfigContent = webConfigContent.slice(1);
+        }
+
+        var ltxDom = new ltxdomutility.LtxDomUtility(webConfigContent);
+        var projectDomArray: Array<any> = ltxDom.getElementsByTagName("project");
+
+        for(var project of projectDomArray) {
+            if(project.attrs['Sdk'].toLowerCase() == "microsoft.net.sdk.web" || 
+                project.attrs['sdk'].toLowerCase() == "microsoft.net.sdk.web") {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private isPublishCommand(): boolean {

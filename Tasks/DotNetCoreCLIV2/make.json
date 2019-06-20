@@ -9,6 +9,12 @@
             "module": "../Common/packaging-common",
             "type": "node",
             "compile": true
+        },
+        {
+            "module": "../Common/webdeployment-common",
+            "type": "node",
+            "dest": "./",
+            "compile" : true
         }
     ],
     "rm": [
