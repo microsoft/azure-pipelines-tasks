@@ -529,7 +529,7 @@
     "dotnetCommandFailed": "ms-resource:loc.messages.dotnetCommandFailed",
     "noProjectFilesFound": "ms-resource:loc.messages.noProjectFilesFound",
     "noPublishFolderFoundToZip": "ms-resource:loc.messages.noPublishFolderFoundToZip",
-    "noWebProjctFound": "ms-resource:loc.messages.noWebProjctFound",
+    "noWebProjectFound": "ms-resource:loc.messages.noWebProjectFound",
     "zipFailed": "ms-resource:loc.messages.zipFailed",
     "Error_ApiKeyNotSupported": "ms-resource:loc.messages.Error_ApiKeyNotSupported",
     "Error_ExpectedConfigurationElement": "ms-resource:loc.messages.Error_ExpectedConfigurationElement",
