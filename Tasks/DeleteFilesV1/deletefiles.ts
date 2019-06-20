@@ -92,7 +92,7 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
     if (removeSourceFolder && !errorHappened) {
         foundPaths = tl.find(sourceFolder);
 
-        if (foundPaths.every(x => tl.stats(x).isDirectory())) {
+        if (foundPaths.length === 1) {
             try {
                 tl.rmRF(sourceFolder);
             }
