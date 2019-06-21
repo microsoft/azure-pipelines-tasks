@@ -347,13 +347,17 @@ export class dotNetExe {
         return projectFiles;
     }
 
-    private isWebSdkUsed(projectfile: string) {
-        var fileBuffer: Buffer = fs.readFileSync(projectfile);
-        var webConfigContent: string = fileBuffer.toString();
+    private isWebSdkUsed(projectfile: string): boolean {
+        try {
+            var fileBuffer: Buffer = fs.readFileSync(projectfile);
+            var webConfigContent: string = fileBuffer.toString();
 
-        var projectSdkUsed: string = ltx.parse(webConfigContent).getAttr("sdk") || ltx.parse(webConfigContent).getAttr("Sdk")
-        
-        return projectSdkUsed != undefined && projectSdkUsed.toLowerCase() == "microsoft.net.sdk.web"
+            var projectSdkUsed: string = ltx.parse(webConfigContent).getAttr("sdk") || ltx.parse(webConfigContent).getAttr("Sdk")
+            
+            return projectSdkUsed != undefined && projectSdkUsed.toLowerCase() == "microsoft.net.sdk.web"
+        } catch(error) {
+            tl.error(error)
+        }
     }
 
     private isPublishCommand(): boolean {
