@@ -563,7 +563,7 @@ describe("DockerV2 Suite", function () {
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        //assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabelsWithAddPipelineFalse} -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
         console.log(tr.stderr);
         done();

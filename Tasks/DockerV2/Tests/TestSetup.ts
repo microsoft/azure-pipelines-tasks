@@ -137,6 +137,11 @@ a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabels
     "stdout": "successfully built image and tagged testuser/testrepo:11."
 };
 
+a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabelsWithAddPipelineFalse} -t testuser/testrepo:11 ${BuildContextPath}`] = {
+    "code": 0,
+    "stdout": "successfully built image and tagged testuser/testrepo:11."
+};
+
 a.exec[`docker push testuser/testrepo:11`] = {
     "code": 0,
     "stdout": "successfully pushed testuser/testrepo:11."
