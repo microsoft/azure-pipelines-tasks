@@ -2,16 +2,13 @@ import tl = require("azure-pipelines-task-lib/task");
 import tr = require("azure-pipelines-task-lib/toolrunner");
 import path = require("path");
 import fs = require("fs");
+import ltx = require("ltx");
 var archiver = require('archiver');
 
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
 import * as utility from './Common/utility';
-
-
-var ltxdomutility = require('webdeployment-common/ltxdomutility')
-var fileEncoding = require('webdeployment-common/fileencoding')
 
 export class dotNetExe {
     private command: string;
@@ -254,7 +251,7 @@ export class dotNetExe {
     }
 
     private extractOutputArgument(): void {
-        if (!this.arguments || !this.arguments.trim()) {
+        if (!this.arguments || !this.arguments.trim()) {    
             return;
         }
 
@@ -347,30 +344,16 @@ export class dotNetExe {
             } 
             return resolvedProjectFiles;
         }
-
         return projectFiles;
     }
 
     private isWebSdkUsed(projectfile: string) {
         var fileBuffer: Buffer = fs.readFileSync(projectfile);
-        var fileEncodeType = fileEncoding.detectFileEncoding(projectfile, fileBuffer);
-        var webConfigContent: string = fileBuffer.toString(fileEncodeType[0]);
+        var webConfigContent: string = fileBuffer.toString();
 
-        if(fileEncodeType[1]) {
-            webConfigContent = webConfigContent.slice(1);
-        }
-
-        var ltxDom = new ltxdomutility.LtxDomUtility(webConfigContent);
-        var projectDomArray: Array<any> = ltxDom.getElementsByTagName("project");
-
-        for(var project of projectDomArray) {
-            if(project.attrs['Sdk'].toLowerCase() == "microsoft.net.sdk.web" || 
-                project.attrs['sdk'].toLowerCase() == "microsoft.net.sdk.web") {
-                return true;
-            }
-        }
-
-        return false;
+        var projectSdkUsed: string = ltx.parse(webConfigContent).getAttr("sdk") || ltx.parse(webConfigContent).getAttr("Sdk")
+        
+        return projectSdkUsed != undefined && projectSdkUsed.toLowerCase() == "microsoft.net.sdk.web"
     }
 
     private isPublishCommand(): boolean {
