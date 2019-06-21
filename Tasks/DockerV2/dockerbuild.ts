@@ -43,8 +43,9 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName, true);
     }
 
+    const addPipelineData = tl.getBoolInput("addPipelineData");
     // get label arguments
-    let labelArguments = pipelineUtils.getDefaultLabels();
+    let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
 
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");
