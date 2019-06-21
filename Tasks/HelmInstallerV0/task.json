@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 153,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "satisfies": [
@@ -35,7 +35,7 @@
             "type": "string",
             "required": true,
             "helpMarkDown": "Specify the version of Helm to install",
-            "defaultValue": "2.9.1"
+            "defaultValue": "2.14.1"
         },
         {
             "name": "checkLatestHelmVersion",
