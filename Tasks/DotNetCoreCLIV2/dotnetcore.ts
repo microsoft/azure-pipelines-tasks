@@ -352,7 +352,7 @@ export class dotNetExe {
             var fileBuffer: Buffer = fs.readFileSync(projectfile);
             var webConfigContent: string;
             
-            var fileEncodings = ['utf8', 'utf16le', 'ascii', 'base64', 'binary', 'hex']
+            var fileEncodings = ['utf8', 'utf16le']
 
             for(var i = 0; i < fileEncodings.length; i++) {
                 tl.debug("Trying to decode with " + fileEncodings[i])
