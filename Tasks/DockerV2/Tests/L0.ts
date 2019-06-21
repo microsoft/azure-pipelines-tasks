@@ -547,8 +547,6 @@ describe("DockerV2 Suite", function () {
 
         // update the label count in assert when newer labels are added
         assert.equal(labels.length, 9, "All labels are returned by default");
-
-        delete process.env['SYSTEM_HOSTTYPE'];
         done();
     });
 
@@ -565,7 +563,6 @@ describe("DockerV2 Suite", function () {
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabelsWithAddPipelineFalse} -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
-        console.log(tr.stderr);
         done();
     });
 
