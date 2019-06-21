@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import * as shared from './TestShared';
 
@@ -23,6 +23,7 @@ tr.setInput('Dockerfile', process.env[shared.TestEnvVars.dockerFile] || DefaultD
 tr.setInput('buildContext', process.env[shared.TestEnvVars.buildContext] || DefaultBuildContext);
 tr.setInput('tags', process.env[shared.TestEnvVars.tags] || "11");
 tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || "");
+tr.setInput ('addPipelineData', process.env[shared.TestEnvVars.addPipelineData] || "true");
 
 console.log("Inputs have been set");
 
@@ -132,6 +133,11 @@ a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabels
 };
 
 a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabels} --rm --queit -t testuser/testrepo:11 ${BuildContextPath}`] = {
+    "code": 0,
+    "stdout": "successfully built image and tagged testuser/testrepo:11."
+};
+
+a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabelsWithAddPipelineFalse} -t testuser/testrepo:11 ${BuildContextPath}`] = {
     "code": 0,
     "stdout": "successfully built image and tagged testuser/testrepo:11."
 };

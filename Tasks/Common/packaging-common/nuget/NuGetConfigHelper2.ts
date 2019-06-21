@@ -212,6 +212,6 @@ export class NuGetConfigHelper2 {
         return `tempRename_${tl.getVariable('build.buildId')}_${nugetFile}`;
     }
     private shouldWriteRootNuGetFiles(): boolean {
-        return path.relative('.', this.nugetConfigPath).toLocaleLowerCase() == nugetFileName || this.rootNuGetFiles.length == 0;
+        return (this.nugetConfigPath != null && path.relative('.', this.nugetConfigPath).toLocaleLowerCase() == nugetFileName) || this.rootNuGetFiles.length == 0;
     }
 }

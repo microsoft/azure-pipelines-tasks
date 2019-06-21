@@ -250,7 +250,7 @@ export class dotNetExe {
     }
 
     private extractOutputArgument(): void {
-        if (!this.arguments || !this.arguments.trim()) {    
+        if (!this.arguments || !this.arguments.trim()) {
             return;
         }
 
@@ -334,7 +334,7 @@ export class dotNetExe {
             });
 
             if (!projectFiles.length) {
-                tl.error(tl.loc("noWebProjctFound"));
+                tl.error(tl.loc("noWebProjectFound"));
             }
         }
 

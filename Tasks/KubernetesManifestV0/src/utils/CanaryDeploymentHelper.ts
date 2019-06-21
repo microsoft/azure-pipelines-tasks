@@ -9,6 +9,7 @@ import * as TaskInputParameters from '../models/TaskInputParameters';
 import * as fileHelper from '../utils/FileHelper';
 import * as helper from './KubernetesObjectUtility';
 import { KubernetesWorkload } from '../models/constants';
+import { StringComparer, isEqual } from '../utils/StringComparison';
 import * as utils from './utilities';
 
 export const CANARY_DEPLOYMENT_STRATEGY = 'CANARY';
@@ -182,8 +183,8 @@ function getNewCanaryObject(inputObject: any, replicas: number, type: string): o
     addCanaryLabelsAndAnnotations(newObject, type);
 
     // Updating no. of replicas
-    if (!utils.isEqual(newObject.kind, KubernetesWorkload.Pod, utils.StringComparer.OrdinalIgnoreCase) &&
-        !utils.isEqual(newObject.kind, KubernetesWorkload.DaemonSet, utils.StringComparer.OrdinalIgnoreCase)) {
+    if (!isEqual(newObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase) &&
+        !isEqual(newObject.kind, KubernetesWorkload.DaemonSet, StringComparer.OrdinalIgnoreCase)) {
         newObject.spec.replicas = replicas;
     }
 
