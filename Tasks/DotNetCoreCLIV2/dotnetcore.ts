@@ -351,10 +351,19 @@ export class dotNetExe {
         try {
             var fileBuffer: Buffer = fs.readFileSync(projectfile);
             var webConfigContent: string = fileBuffer.toString();
-
-            var projectSdkUsed: string = ltx.parse(webConfigContent).getAttr("sdk") || ltx.parse(webConfigContent).getAttr("Sdk")
             
-            return projectSdkUsed != undefined && projectSdkUsed.toLowerCase() == "microsoft.net.sdk.web"
+            var fileEncodings = ['utf8', 'utf16le', 'ascii', 'base64', 'binary', 'hex']
+
+            for(var i = 0; i < fileEncodings.length; i++) {
+                tl.debug("Trying to decode with " + fileEncodings[i])
+                webConfigContent = fileBuffer.toString(fileEncodings[i])
+                try {
+                    var projectSdkUsed: string = ltx.parse(webConfigContent).getAttr("sdk") || ltx.parse(webConfigContent).getAttr("Sdk")
+                    if(projectSdkUsed != undefined && projectSdkUsed.toLowerCase() == "microsoft.net.sdk.web") return true
+                } catch (error) {}
+            }
+
+            return false
         } catch(error) {
             tl.warning(error)
             return false
