@@ -356,7 +356,8 @@ export class dotNetExe {
             
             return projectSdkUsed != undefined && projectSdkUsed.toLowerCase() == "microsoft.net.sdk.web"
         } catch(error) {
-            tl.error(error)
+            tl.warning(error)
+            return false
         }
     }
 
