@@ -31,7 +31,18 @@ process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 process.env["SYSTEM_HOSTTYPE"] = process.env[shared.TestEnvVars.hostType] || shared.HostTypes.build;
 process.env["SYSTEM_SERVERTYPE"] = "hosted";
 process.env["ENDPOINT_AUTH_dockerhubendpoint"] = "{\"parameters\":{\"username\":\"testuser\", \"password\":\"regpassword\", \"email\":\"testuser1@microsoft.com\",\"registry\":\"https://index.docker.io/v1/\"},\"scheme\":\"UsernamePassword\"}";
-process.env["ENDPOINT_AUTH_acrendpoint"] = "{\"parameters\":{\"username\":\"testacr\", \"password\":\"acrpassword\",\"registry\":\"https://testacr.azurecr.io/\"},\"scheme\":\"UsernamePassword\"}";
+// Docker registry endpoint with ACR registrytype
+process.env["ENDPOINT_AUTH_PARAMETER_acrendpoint_serviceprincipalid"] = "testspn";
+process.env["ENDPOINT_AUTH_PARAMETER_acrendpoint_serviceprincipalkey"] = "acrspnkey";
+process.env["ENDPOINT_AUTH_PARAMETER_acrendpoint_loginServer"] = "https://testacr.azurecr.io";
+process.env["ENDPOINT_AUTH_PARAMETER_acrendpoint_scheme"] = "ServicePrincipal";
+process.env["ENDPOINT_DATA_acrendpoint_registryType"] = "ACR";
+// Docker registry endpoint with ACR registrytype containing uppercase characters in registry URL
+process.env["ENDPOINT_AUTH_PARAMETER_acrendpoint2_serviceprincipalid"] = "testspn2";
+process.env["ENDPOINT_AUTH_PARAMETER_acrendpoint2_serviceprincipalkey"] = "acrspnkey2";
+process.env["ENDPOINT_AUTH_PARAMETER_acrendpoint2_loginServer"] = "https://testAcr2.azurecr.io";
+process.env["ENDPOINT_AUTH_PARAMETER_acrendpoint2_scheme"] = "ServicePrincipal";
+process.env["ENDPOINT_DATA_acrendpoint2_registryType"] = "ACR";
 
 // Set variables used for common labels
 process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = shared.SharedValues.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI;
@@ -103,7 +114,12 @@ a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.ReleaseLabe
 
 a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabels} -t testacr.azurecr.io/testrepo:11 ${BuildContextPath}`] = {
     "code": 0,
-    "stdout": "successfully built image and tagged testuser/testrepo:11."
+    "stdout": "successfully built image and tagged testacr.azurecr.io/testuser/testrepo:11."
+};
+
+a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabels} -t testacr2.azurecr.io/testrepo:11 ${BuildContextPath}`] = {
+    "code": 0,
+    "stdout": "successfully built image and tagged testacr2.azurecr.io/testuser/testrepo:11."
 };
 
 a.exec[`docker build -f ${DockerfilePath} ${shared.DockerCommandArgs.BuildLabels} ${BuildContextPath}`] = {
