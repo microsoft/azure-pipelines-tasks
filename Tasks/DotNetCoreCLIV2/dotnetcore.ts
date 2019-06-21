@@ -350,7 +350,7 @@ export class dotNetExe {
     private isWebSdkUsed(projectfile: string): boolean {
         try {
             var fileBuffer: Buffer = fs.readFileSync(projectfile);
-            var webConfigContent: string = fileBuffer.toString();
+            var webConfigContent: string;
             
             var fileEncodings = ['utf8', 'utf16le', 'ascii', 'base64', 'binary', 'hex']
 
@@ -359,7 +359,7 @@ export class dotNetExe {
                 webConfigContent = fileBuffer.toString(fileEncodings[i])
                 try {
                     var projectSdkUsed: string = ltx.parse(webConfigContent).getAttr("sdk") || ltx.parse(webConfigContent).getAttr("Sdk")
-                    if(projectSdkUsed != undefined && projectSdkUsed.toLowerCase() == "microsoft.net.sdk.web") return true
+                    return projectSdkUsed && projectSdkUsed.toLowerCase() == "microsoft.net.sdk.web"
                 } catch (error) {}
             }
 
