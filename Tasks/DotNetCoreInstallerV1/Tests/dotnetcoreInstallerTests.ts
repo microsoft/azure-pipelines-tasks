@@ -2,6 +2,7 @@ import * as os from 'os';
 import * as tl from 'vsts-task-lib/task';
 import { Constants } from '../versionutilities';
 import { VersionInfo } from '../models';
+import { setFlagsFromString } from 'v8';
 
 let mockery = require('mockery');
 let osType = "win";
@@ -104,6 +105,15 @@ mockery.registerMock('vsts-task-lib/task', {
 
             return false;
         }
+    },
+    getPathInput: function (inputName: string, required: boolean): string {
+        if (inputName == "workingDirectory") {
+            if (required) {
+                throw "";
+            }
+            return "";
+        }
+        return "";
     },
     getHttpProxyConfiguration: function () { return ""; },
     setResourcePath: function (resourcePath) { return; },
