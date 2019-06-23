@@ -1,6 +1,7 @@
 import * as fileSystem from "fs";
 import { DotNetCoreVersionFetcher } from "./versionfetcher";
 import { VersionInfo } from "./models";
+import * as tl from 'vsts-task-lib/task';
 
 export class globalJsonFetcher {
 
