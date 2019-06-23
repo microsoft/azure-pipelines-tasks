@@ -17,11 +17,10 @@ async function run() {
     }
     let includePreviewVersions: boolean = tl.getBoolInput('includePreviewVersions', false) || false;
     let useGlobalJson: boolean = tl.getBoolInput('useGlobalJson', false) || false;
-    let workingDirectory = tl.getPathInput("workingDirectory", false);
-
+    let workingDirectory = tl.getPathInput("workingDirectory", false);    
     if (useGlobalJson) {
-        var globalJsonFetcher = new globalJsonFetcher(workingDirectory);
-        var versionsToInstall: VersionInfo[] = await globalJsonFetcher.Get(packageType);
+        var globalJsonFetcherInstance = new globalJsonFetcher(workingDirectory);
+        var versionsToInstall: VersionInfo[] = await globalJsonFetcherInstance.Get(packageType);
         let dotNetCoreInstaller = new VersionInstaller(packageType, installationPath);
         versionsToInstall = versionsToInstall.filter(d => !dotNetCoreInstaller.isVersionInstalled(d.getVersion()));
         dotNetCoreInstaller.downloadAndInstallVersions(versionsToInstall);
