@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 2
   },
   "preview": "true",
   "satisfies": [
@@ -44,12 +44,22 @@
       }
     },
     {
+      "name": "useGlobalJson",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useGlobalJson",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useGlobalJson",
+      "visibleRule": "packageType = sdk"
+    },
+    {
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
       "defaultValue": "2.2.x",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.version"
+      "helpMarkDown": "ms-resource:loc.input.help.version",
+      "visibleRule": "useGlobalJson = false || packageType = runtime"
     },
     {
       "name": "includePreviewVersions",
@@ -76,6 +86,15 @@
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.performMultiLevelLookup"
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
+      "required": "false",
+      "groupName": "generalAdvanced",
+      "visibleRule": "useGlobalJson = true"
     }
   ],
   "execution": {
@@ -147,6 +166,9 @@
     "FilesDataIsIncorrectInVersion": "ms-resource:loc.messages.FilesDataIsIncorrectInVersion",
     "VersionFilesDataIncorrect": "ms-resource:loc.messages.VersionFilesDataIncorrect",
     "VersionInformationNotComplete": "ms-resource:loc.messages.VersionInformationNotComplete",
-    "FailedWhileExtractingPacakge": "ms-resource:loc.messages.FailedWhileExtractingPacakge"
+    "FailedWhileExtractingPacakge": "ms-resource:loc.messages.FailedWhileExtractingPacakge",
+    "GlobalJsonFound": "ms-resource:loc.messages.GlobalJsonFound",
+    "FailedToReadGlobalJson": "ms-resource:loc.messages.FailedToReadGlobalJson",
+    "VersionNumberHasTheWrongFormat": "ms-resource:loc.messages.VersionNumberHasTheWrongFormat"
   }
 }
