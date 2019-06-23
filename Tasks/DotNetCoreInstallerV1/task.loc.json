@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 5
   },
   "preview": "true",
   "satisfies": [
@@ -53,6 +53,14 @@
       "visibleRule": "packageType = sdk"
     },
     {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
+      "required": "false",
+      "visibleRule": "useGlobalJson = true"
+    },
+    {
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
@@ -86,15 +94,6 @@
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.performMultiLevelLookup"
-    },
-    {
-      "name": "workingDirectory",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.workingDirectory",
-      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
-      "required": "false",
-      "groupName": "generalAdvanced",
-      "visibleRule": "useGlobalJson = true"
     }
   ],
   "execution": {
