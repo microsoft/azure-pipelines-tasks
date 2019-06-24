@@ -1,6 +1,7 @@
 import * as ma from 'azure-pipelines-task-lib/mock-answer';
 import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import * as path from 'path';
+import * as os from 'os';
 
 import * as shared from './TestShared';
 
@@ -42,6 +43,7 @@ tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || '');
 tr.setInput('patch', process.env[shared.TestEnvVars.patch] || '');
 tr.setInput('secretName', process.env[shared.TestEnvVars.secretName] || '');
 tr.setInput('secretType', process.env[shared.TestEnvVars.secretType] || '');
+tr.setInput('dockerComposeFile', process.env[shared.TestEnvVars.dockerComposeFile] || '');
 
 process.env.SYSTEM_DEFAULTWORKINGDIRECTORY = testnamespaceWorkingDirectory;
 process.env.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI = teamFoundationCollectionUri;
@@ -68,13 +70,16 @@ if (process.env.RemoveNamespaceFromEndpoint) {
 
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'checkPath': {
-        'helm': true
+        'helm': true,
+        'kompose': true,
+        'dockerComposeFilePath': true
     },
     'exec': {
     },
     'findMatch': {},
     'which': {
-        'helm': 'helm'
+        'helm': 'helm',
+        'kompose': 'kompose'
     }
 };
 
@@ -88,11 +93,17 @@ if (process.env[shared.TestEnvVars.action] === 'bake') {
 
     a.exec[command] = {
         'code': 0,
-        stdout: 'some yaml'
+        stdout: 'baked manifest from helm chart'
     };
     a.exec[commandWithReleaseNameOverride] = {
         'code': 0,
-        stdout: 'some yaml'
+        stdout: 'baked manifest from helm chart'
+    };
+
+    const komposeCommand = `kompose convert -f ${process.env[shared.TestEnvVars.dockerComposeFile]} -o ${path.join('tempdirectory', 'baked-template-random.yaml')}`;
+    a.exec[komposeCommand] = {
+        'code': 0,
+        stdout: 'Kubernetes files created'
     };
 }
 
@@ -268,6 +279,10 @@ fsClone.existsSync = function (filePath) {
     }
 };
 
+fsClone.writeFileSync = function(path, data) {
+    console.log(`wrote to ${path}`);
+};
+
 tr.registerMock('fs', fsClone);
 
 import * as fh from '../src/utils/FileHelper';
@@ -286,15 +301,21 @@ tr.registerMock('../utils/FileHelper', {
             }
         });
 
-        if (newFilePaths.length == 0) {
+        if (newFilePaths.length === 0) {
             newFilePaths.push(shared.ManifestFilesPath);
         }
         return newFilePaths;
     },
-    getTempDirectory: fh.getTempDirectory,
+    getTempDirectory: function() {
+        return 'tempdirectory';
+    },
     getNewUserDirPath: fh.getNewUserDirPath,
     ensureDirExists: fh.ensureDirExists,
     assertFileExists: fh.assertFileExists
+});
+
+tr.registerMock('uuid/v4', function() {
+    return 'random';
 });
 
 tr.run();
