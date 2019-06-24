@@ -1,5 +1,5 @@
-import tl = require('azure-pipelines-task-lib/task');
-import { IExecOptions, IExecSyncResult, IExecSyncOptions } from 'azure-pipelines-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import { IExecOptions, IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 
 export interface NameValuePair {
     name: string;
@@ -14,33 +14,39 @@ export class Helm {
         this.helmPath = kubectlPath;
         if (!!namespace) {
             this.namespace = namespace;
-        }
-        else {
-            this.namespace = "default";
+        } else {
+            this.namespace = 'default';
         }
     }
 
     public template(releaseName: string, chartPath: string, overrideFiles: string[], overrideValues: NameValuePair[]): IExecSyncResult {
-        var command = tl.tool(this.helmPath);
-        command.arg("template");
-        command.arg(chartPath);
+        const command = tl.tool(this.helmPath);
+        let args: string[] = [];
+        args.push('template');
+        args.push(chartPath);
         if (releaseName) {
-            command.arg(["--name", releaseName]);
+            args.push('--name');
+            args.push(releaseName);
         }
-        command.arg(["--namespace", this.namespace]);
+        args.push('--namespace');
+        args.push(this.namespace);
         if (overrideFiles.length > 0) {
             overrideFiles.forEach(file => {
-                command.arg(["-f", file]);
-            })
+                args.push('-f');
+                args.push(file);
+            });
         }
-        command.arg(this._buildSetArguments(overrideValues));
-        return command.execSync();
+        args = args.concat(this._buildSetArguments(overrideValues));
+        command.arg(args);
+        // Printing the command explicitly because it gets masked when silent is set to true
+        console.log(`[command] ${this.helmPath} ${args.join(' ') || ''}`);
+        return command.execSync({ silent: true } as IExecOptions);
     }
 
     private _buildSetArguments(overrideValues: NameValuePair[]): string[] {
-        var newArgs = [];
+        const newArgs = [];
         overrideValues.forEach(overrideValue => {
-            newArgs.push("--set")
+            newArgs.push('--set');
             newArgs.push(`${overrideValue.name}=${overrideValue.value}`);
         });
 

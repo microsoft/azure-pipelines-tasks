@@ -5,7 +5,9 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as tl from 'azure-pipelines-task-lib';
 import * as shared from './TestShared';
 import * as utils from '../src/utils/utilities';
+import { updateImagePullSecrets } from '../src/utils/KubernetesObjectUtility';
 import * as yaml from 'js-yaml';
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 
 describe('Kubernetes Manifests Suite', function () {
     this.timeout(30000);
@@ -171,6 +173,7 @@ describe('Kubernetes Manifests Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         assert(tr.stdout.indexOf('--name newReleaseName') > -1, 'bake should have overriden release name');
+        assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
         done();
     });
 
@@ -187,6 +190,7 @@ describe('Kubernetes Manifests Suite', function () {
         assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
         assert(tr.stdout.indexOf('--name newReleaseName') > -1, 'bake should have overriden release name');
         assert(tr.stdout.indexOf('--namespace default') > -1, 'should have used default namespace');
+        assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
         assert(tr.stdout.indexOf('Namespace was not supplied nor present in the endpoint; using "default" namespace instead.') > -1, 'should have added a debug log');
         done();
     });
@@ -228,6 +232,29 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.patch] = 'somePatch';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('Check if error validations', (done: MochaDone) => {
+        try {
+            const execResults = [{
+                code: 0,
+                stderr: 'Warning: your execution has some warnings'
+            } as IExecSyncResult];
+            utils.checkForErrors(execResults, false);
+        } catch (ex) {
+            assert(!ex, 'shouldnt have thrown any error');
+        }
+        try {
+            const execResults = [{
+                code: 1,
+                stderr: 'error: your execution has some errors'
+            } as IExecSyncResult];
+            utils.checkForErrors(execResults, false);
+        } catch (ex) {
+            assert(ex, 'shouldnt have thrown error');
+            assert(ex.message === 'error: your execution has some errors', 'The thrown error should have matched');
+        }
         done();
     });
 
@@ -273,6 +300,24 @@ describe('Kubernetes Manifests Suite', function () {
         tr.run();
         assert(tr.failed, 'task should have failed');
         assert(tr.stdout.indexOf('Input required: dockerComposeFile') > 0, 'proper error message should have been thrown');
+        done();
+    });
+
+    it('Run should successfully add image pull secrets to a cron job', (done: MochaDone) => {
+        const testFile = path.join(__dirname, './manifests/', 'cronjob.yaml');
+        const cronJobFile = fs.readFileSync(testFile).toString();
+        const cronJobObject = yaml.load(cronJobFile);
+        updateImagePullSecrets(cronJobObject, ['privaterepo-secret'], true);
+        assert(cronJobObject.spec.jobTemplate.spec.template.spec.imagePullSecrets[0].name === 'privaterepo-secret', 'should have updated the image pull secret correctly');
+        done();
+    });
+
+    it('Run should successfully add image pull secrets to a job', (done: MochaDone) => {
+        const testFile = path.join(__dirname, './manifests/', 'job.yaml');
+        const jobFile = fs.readFileSync(testFile).toString();
+        const jobObject = yaml.load(jobFile);
+        updateImagePullSecrets(jobObject, ['privaterepo-secret'], true);
+        assert(jobObject.spec.template.spec.imagePullSecrets[0].name === 'privaterepo-secret', 'should have updated the image pull secret correctly');
         done();
     });
 });

@@ -93,11 +93,11 @@ if (process.env[shared.TestEnvVars.action] === 'bake') {
 
     a.exec[command] = {
         'code': 0,
-        stdout: 'some yaml'
+        stdout: 'baked manifest from helm chart'
     };
     a.exec[commandWithReleaseNameOverride] = {
         'code': 0,
-        stdout: 'some yaml'
+        stdout: 'baked manifest from helm chart'
     };
 
     const komposeCommand = `kompose convert -f ${process.env[shared.TestEnvVars.dockerComposeFile]} -o ${path.join('tempdirectory', 'baked-template-random.yaml')}`;
