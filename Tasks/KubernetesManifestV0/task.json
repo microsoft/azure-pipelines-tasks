@@ -118,7 +118,7 @@
                 "helm2": "Helm 2",
                 "kompose": "Kompose"
             },
-            "helpMarkDown": "Tool to use for generating manifest"
+            "helpMarkDown": "Tool to use for generating manifest files."
         },
         {
             "name": "dockerComposeFile",

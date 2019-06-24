@@ -19,7 +19,7 @@
   "loc.input.label.imagePullSecrets": "ImagePullSecrets",
   "loc.input.help.imagePullSecrets": "ImagePullSecret to pull image from private registry",
   "loc.input.label.renderType": "Render Engine",
-  "loc.input.help.renderType": "Tool to use for generating manifest",
+  "loc.input.help.renderType": "Tool to use for generating manifest files.",
   "loc.input.label.dockerComposeFile": "Path to docker compose file",
   "loc.input.help.dockerComposeFile": "docker-compose file path",
   "loc.input.label.helmChart": "Helm Chart",
