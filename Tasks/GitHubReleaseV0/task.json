@@ -269,7 +269,6 @@
         "TagRequiredCreateAction": "Tag source is set to manual- please specify a tag for create action. For yaml syntax see: https://aka.ms/AA3m1bq",
         "NoFileFoundMatchingPattern": "No files found matching '%s'. Nothing to upload.",
         "PatternIsADirectory": "'%s' cannot be uploaded as it is a directory. Please specify a file.",
-        "SearchingFileMatchingPattern": "Searching for file(s) matching '%s'.",
-        "NoMatchingTagsFound": "No Matching tags found for given regex: %s  Unable to perform the action."
+        "SearchingFileMatchingPattern": "Searching for file(s) matching '%s'."
     }
 }

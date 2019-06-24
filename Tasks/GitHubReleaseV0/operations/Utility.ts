@@ -239,7 +239,7 @@ export class Utility {
         
     }
 
-    public static isTagMatches(tag: string, tagPattern: string): boolean {
+    public static isTagMatching(tag: string, tagPattern: string): boolean {
         let tagPatternRegex = new RegExp("^" + tagPattern + "$");
         return tagPatternRegex.test(tag);
     }

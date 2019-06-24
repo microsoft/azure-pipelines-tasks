@@ -57,9 +57,8 @@ export class Helper {
             // Else fetch tag from commit
             if (!!normalizedBranch) {
                 tag = normalizedBranch;
-                if (!!tagPattern && !Utility.isTagMatches(tag, tagPattern)) {
+                if (!!tagPattern && !Utility.isTagMatching(tag, tagPattern)) {
                     tag = null;
-                    tl.warning(tl.loc("NoMatchingTagsFound", tagPattern));
                 }
             }
             else {
@@ -254,19 +253,16 @@ export class Helper {
      */
     private async _getTagForCommit(githubEndpointToken: string, repositoryName: string, commit_sha: string, tagPattern: string = null): Promise<string> {
         let filteredTag: any;
-
-        if (!tagPattern) {
-            filteredTag = await this.filterTag(githubEndpointToken, repositoryName, commit_sha, this._filterTagsByCommitSha);
-        }
-        else {
-            let filterTagsbyCommitShaAndTagPattern = (tagsList: any[], commit_sha: string): any[] => {
-                tagsList = this._filterTagsByCommitSha(tagsList, commit_sha);
-                return tagsList.filter((tag: any) => Utility.isTagMatches(tag[GitHubAttributes.nameAttribute], tagPattern));
+        let filterTagsCallback = (tagsList: any[], commit_sha: string): any[] => {
+            tagsList = this._filterTagsByCommitSha(tagsList, commit_sha);
+            if (!tagPattern) {
+                return tagsList;
             }
-
-            filteredTag = await this.filterTag(githubEndpointToken, repositoryName, commit_sha, filterTagsbyCommitShaAndTagPattern);
+            return tagsList.filter((tag: any) => Utility.isTagMatching(tag[GitHubAttributes.nameAttribute], tagPattern));
         }
-        
+
+        filteredTag = await this.filterTag(githubEndpointToken, repositoryName, commit_sha, filterTagsCallback);
+
         return filteredTag && filteredTag[GitHubAttributes.nameAttribute];
     }
 
