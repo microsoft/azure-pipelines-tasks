@@ -263,10 +263,10 @@ describe('Kubernetes Manifests Suite', function () {
 
     it('Run should successfully add image pull secrets to a job', (done: MochaDone) => {
         const testFile = path.join(__dirname, './manifests/', 'job.yaml');
-        const cronJobFile = fs.readFileSync(testFile).toString();
-        const cronJobObject = yaml.load(cronJobFile);
-        updateImagePullSecrets(cronJobObject, ['privaterepo-secret'], true);
-        assert(cronJobObject.spec.template.spec.imagePullSecrets[0].name === 'privaterepo-secret', 'should have updated the image pull secret correctly');
+        const jobFile = fs.readFileSync(testFile).toString();
+        const jobObject = yaml.load(jobFile);
+        updateImagePullSecrets(jobObject, ['privaterepo-secret'], true);
+        assert(jobObject.spec.template.spec.imagePullSecrets[0].name === 'privaterepo-secret', 'should have updated the image pull secret correctly');
         done();
     });
 });

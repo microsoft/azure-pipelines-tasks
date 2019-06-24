@@ -232,7 +232,12 @@ function getImagePullSecrets(inputObject: any) {
     }
 
     if (isEqual(inputObject.kind, KubernetesWorkload.cronjob, StringComparer.OrdinalIgnoreCase)) {
-        return inputObject.spec.jobTemplate.spec.template.spec.imagePullSecrets;
+        try {
+            return inputObject.spec.jobTemplate.spec.template.spec.imagePullSecrets;
+        } catch (ex) {
+            tl.debug(`Fetching imagePullSecrets failed due to this error: ${JSON.stringify(ex)}`);
+            return null;
+        }
     }
 
     if (isEqual(inputObject.kind, KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase)) {
@@ -257,7 +262,12 @@ function setImagePullSecrets(inputObject: any, newImagePullSecrets: any) {
     }
 
     if (isEqual(inputObject.kind, KubernetesWorkload.cronjob, StringComparer.OrdinalIgnoreCase)) {
-        inputObject.spec.jobTemplate.spec.template.spec.imagePullSecrets = newImagePullSecrets;
+        try {
+            inputObject.spec.jobTemplate.spec.template.spec.imagePullSecrets = newImagePullSecrets;
+        } catch (ex) {
+            tl.debug(`Overriding imagePullSecrets failed due to this error: ${JSON.stringify(ex)}`);
+            //Do nothing
+        }
         return;
     }
 
