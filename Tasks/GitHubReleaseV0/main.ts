@@ -46,9 +46,12 @@ class Main {
                 const githubReleaseAssetInputPatterns = tl.getDelimitedInput(Inputs.assets, Delimiters.newLine);
 
                 if (action === ActionType.create) {
+                    //Get task inputs specific to create release
+                    const tagPattern = tl.getInput(Inputs.tagPattern) || undefined;
+
                     // Get tag to create release if tag source is gitTag/auto
                     if (Utility.isTagSourceAuto(tagSource)) {
-                        tag = await helper.getTagForCommitTarget(githubEndpointToken, repositoryName, target);
+                        tag = await helper.getTagForCommitTarget(githubEndpointToken, repositoryName, target, tagPattern);
                     }
 
                     if (!!tag) {
