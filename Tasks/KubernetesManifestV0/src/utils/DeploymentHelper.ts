@@ -66,7 +66,7 @@ function checkManifestStability(kubectl: Kubectl, resourceTypes: Resource[]) {
         if (models.workloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
             rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
         }
-        if (isEqual(resource.type, constants.KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
+        if (isEqual(resource.type, constants.KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase)) {
             try {
                 checkPodStatus(kubectl, resource.name);
             } catch (ex) {
