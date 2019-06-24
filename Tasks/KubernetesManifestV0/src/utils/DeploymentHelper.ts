@@ -30,7 +30,7 @@ export function deploy(kubectl: Kubectl, manifestFilePaths: string[], deployment
     const deployedManifestFiles = deployManifests(inputManifestFiles, kubectl, isCanaryDeploymentStrategy(deploymentStrategy));
 
     // check manifest stability
-    const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.recognizedWorkloadTypes);
+    const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.deploymentTypes);
     checkManifestStability(kubectl, resourceTypes);
 
     // annotate resources
@@ -63,10 +63,10 @@ function deployManifests(files: string[], kubectl: Kubectl, isCanaryDeploymentSt
 function checkManifestStability(kubectl: Kubectl, resourceTypes: Resource[]) {
     const rolloutStatusResults = [];
     resourceTypes.forEach(resource => {
-        if (models.recognizedWorkloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
+        if (models.workloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
             rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
         }
-        if (isEqual(resource.type, constants.KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
+        if (isEqual(resource.type, constants.KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase)) {
             try {
                 checkPodStatus(kubectl, resource.name);
             } catch (ex) {
@@ -82,7 +82,7 @@ function annotateResources(files: string[], kubectl: Kubectl, resourceTypes: Res
     const allPods = JSON.parse((kubectl.getAllPods()).stdout);
     annotateResults.push(kubectl.annotateFiles(files, constants.pipelineAnnotations, true));
     resourceTypes.forEach(resource => {
-        if (resource.type.toUpperCase() != models.KubernetesWorkload.Pod.toUpperCase()) {
+        if (resource.type.toUpperCase() !== models.KubernetesWorkload.pod.toUpperCase()) {
             utils.annotateChildPods(kubectl, resource.type, resource.name, allPods)
                 .forEach(execResult => annotateResults.push(execResult));
         }
@@ -128,7 +128,7 @@ function updateImagePullSecretsInManifestFiles(filePaths: string[], imagePullSec
             yaml.safeLoadAll(fileContents, function (inputObject: any) {
                 if (!!inputObject && !!inputObject.kind) {
                     const kind = inputObject.kind;
-                    if (KubernetesObjectUtility.isDeploymentEntity(kind)) {
+                    if (KubernetesObjectUtility.isWorkloadEntity(kind)) {
                         KubernetesObjectUtility.updateImagePullSecrets(inputObject, imagePullSecrets, false);
                     }
                     newObjectsList.push(inputObject);
