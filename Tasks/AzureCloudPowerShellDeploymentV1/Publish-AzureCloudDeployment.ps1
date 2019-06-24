@@ -80,12 +80,12 @@ try{
 
     if ($StorageAccount) 
     {
-        $dianosticExtensions = Get-DiagnosticsExtensions $StorageAccount $serviceConfigFile $storageAccountKeysMap
+        $diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $serviceConfigFile $storageAccountKeysMap
 
     }
     elseif ($ARMStorageAccount)
     {
-        $dianosticExtensions = Get-DiagnosticsExtensions $ARMStorageAccount $serviceConfigFile $storageAccountKeysMap -UseArmStorage
+        $diagnosticExtensions = Get-DiagnosticsExtensions $ARMStorageAccount $serviceConfigFile $storageAccountKeysMap -UseArmStorage
     }
     else 
     {
