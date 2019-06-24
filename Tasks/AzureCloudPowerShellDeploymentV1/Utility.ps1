@@ -87,7 +87,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
         Write-Host (Get-VstsLocString -Key "Applyinganyconfigureddiagnosticsextensions")
 
         Write-Verbose "Getting the primary AzureStorageKey..."
-        $primaryStorageKey = Get-StorageAccountPrimaryKey $StorageAccount $useArmStorage.IsPresent
+        $primaryStorageKey = Get-AzureStorageAccountPrimaryKey $StorageAccount $useArmStorage.IsPresent
 
         if ($primaryStorageKey)
         {
@@ -126,7 +126,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                             try
                             {
 
-                                $publicConfigStorageKey = Get-StorageAccountPrimaryKey $StorageAccount $useArmStorage.IsPresent
+                                $publicConfigStorageKey = Get-AzureStorageAccountPrimaryKey $StorageAccount $useArmStorage.IsPresent
 
                             }
                             catch
