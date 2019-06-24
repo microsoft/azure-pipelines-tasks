@@ -147,17 +147,16 @@ function isCanaryDeploymentStrategy(deploymentStrategy: string): boolean {
 }
 
 function checkPodStatus(kubectl: Kubectl, podName: string) {
-    const startTime = new Date();
-    const timeOut = 5 * 60 * 1000; // Timeout 5 min
-    let currentTime = new Date();
+    const sleepTimeout = 10 * 1000; // 10 seconds
+    const iterations = 60; // 60 * 10 seconds timeout = 10 minutes max timeout
     let podStatus;
-    while (currentTime.getTime() - startTime.getTime() < timeOut) {
+    for (let i = 0; i < iterations; i++) {
         tl.debug(`Polling for pod status: ${podName}`);
         podStatus = getPodStatus(kubectl, podName);
-        if (podStatus.phase && podStatus.phase !== 'Pending') {
-                break;
+        if (podStatus.phase && podStatus.phase !== 'Pending' && podStatus.phase !== 'Unknown') {
+            break;
         }
-        currentTime = new Date();
+        sleep(sleepTimeout);
     }
     podStatus = getPodStatus(kubectl, podName);
     switch (podStatus.phase) {
@@ -200,4 +199,13 @@ function isPodReady(podStatus: any): boolean {
         tl.warning(tl.loc('AllContainersNotInReadyState'));
     }
     return allContainersAreReady;
+}
+
+function sleep(timeout: number) {
+    const startTime = new Date();
+    let currentTime = new Date();
+    while (currentTime.getTime() - startTime.getTime() < timeout) {
+        // Wait
+        currentTime = new Date();
+    }
 }
