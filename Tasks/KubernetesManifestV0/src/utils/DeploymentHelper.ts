@@ -41,7 +41,7 @@ function getManifestFiles(manifestFilePaths: string[]): string[] {
     const files: string[] = utils.getManifestFiles(manifestFilePaths);
 
     if (files == null || files.length === 0) {
-        throw (tl.loc('ManifestFileNotFound'));
+        throw (tl.loc('ManifestFileNotFound', manifestFilePaths));
     }
 
     return files;
@@ -67,7 +67,11 @@ function checkManifestStability(kubectl: Kubectl, resourceTypes: Resource[]) {
             rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
         }
         if (isEqual(resource.type, constants.KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
-            checkPodStatus(kubectl, resource.name);
+            try {
+                checkPodStatus(kubectl, resource.name);
+            } catch (ex) {
+                tl.warning(tl.loc('CouldNotDeterminePodStatus', JSON.stringify(ex)));
+            }
         }
     });
     utils.checkForErrors(rolloutStatusResults);
@@ -148,12 +152,10 @@ function checkPodStatus(kubectl: Kubectl, podName: string) {
     let currentTime = new Date();
     let podStatus;
     while (currentTime.getTime() - startTime.getTime() < timeOut) {
-        tl.debug('Polling for pod status');
+        tl.debug(`Polling for pod status: ${podName}`);
         podStatus = getPodStatus(kubectl, podName);
-        if (podStatus.status && podStatus.phase) {
-            if (podStatus.phase !== 'Pending') {
+        if (podStatus.phase && podStatus.phase !== 'Pending') {
                 break;
-            }
         }
         currentTime = new Date();
     }
@@ -161,12 +163,12 @@ function checkPodStatus(kubectl: Kubectl, podName: string) {
     switch (podStatus.phase) {
         case 'Succeeded':
         case 'Running':
-            if (checkIfAllContainersAreInReadyState(podStatus)) {
+            if (isPodReady(podStatus)) {
                 console.log(`pod/${podName} is successfully rolled out`);
             }
             break;
         case 'Pending':
-            if (!checkIfAllContainersAreInReadyState(podStatus)) {
+            if (!isPodReady(podStatus)) {
                 tl.warning(`pod/${podName} rollout status check timedout`);
             }
             break;
@@ -174,26 +176,28 @@ function checkPodStatus(kubectl: Kubectl, podName: string) {
             tl.error(`pod/${podName} rollout failed`);
             break;
         default:
-            tl.warning(`pod/${podName} rollout status: ${podStatus.status.phase}`);
+            tl.warning(`pod/${podName} rollout status: ${podStatus.phase}`);
     }
 }
 
 function getPodStatus(kubectl: Kubectl, podName: string): any {
     const podResult = kubectl.getResource('pod', podName);
     utils.checkForErrors([podResult]);
-    return JSON.parse(podResult.stdout).status;
+    const podStatus = JSON.parse(podResult.stdout).status;
+    tl.debug(`Pod Status: ${JSON.stringify(podStatus)}`);
+    return podStatus;
 }
 
-function checkIfAllContainersAreInReadyState(podStatus: any): boolean {
-    let allReady = true;
+function isPodReady(podStatus: any): boolean {
+    let allContainersAreReady = true;
     podStatus.containerStatuses.forEach(container => {
         if (container.ready === false) {
             console.log(`'${container.name}' status: ${JSON.stringify(container.state)}`);
-            allReady = false;
+            allContainersAreReady = false;
         }
     });
-    if (!allReady) {
+    if (!allContainersAreReady) {
         tl.warning(tl.loc('AllContainersNotInReadyState'));
     }
-    return allReady;
+    return allContainersAreReady;
 }

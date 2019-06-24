@@ -67,5 +67,6 @@
   "loc.messages.CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
   "loc.messages.InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
   "loc.messages.InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
-  "loc.messages.AllContainersNotInReadyState": "All the containers are not in a ready state"
+  "loc.messages.AllContainersNotInReadyState": "All the containers are not in a ready state",
+  "loc.messages.CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s"
 }
