@@ -60,7 +60,11 @@ export function checkForErrors(execResults: IExecSyncResult[], warnIfError?: boo
         let stderr = '';
         execResults.forEach(result => {
             if (result.stderr) {
-                stderr += result.stderr + '\n';
+                if (result.code !== 0) {
+                    stderr += result.stderr + '\n';
+                } else {
+                    tl.warning(result.stderr);
+                }
             }
         });
         if (stderr.length > 0) {

@@ -183,8 +183,8 @@ function getNewCanaryObject(inputObject: any, replicas: number, type: string): o
     addCanaryLabelsAndAnnotations(newObject, type);
 
     // Updating no. of replicas
-    if (!isEqual(newObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase) &&
-        !isEqual(newObject.kind, KubernetesWorkload.DaemonSet, StringComparer.OrdinalIgnoreCase)) {
+    if (!isEqual(newObject.kind, KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase) &&
+        !isEqual(newObject.kind, KubernetesWorkload.daemonSet, StringComparer.OrdinalIgnoreCase)) {
         newObject.spec.replicas = replicas;
     }
 
