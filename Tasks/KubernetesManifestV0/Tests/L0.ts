@@ -5,6 +5,7 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as tl from 'azure-pipelines-task-lib';
 import * as shared from './TestShared';
 import * as utils from '../src/utils/utilities';
+import { updateImagePullSecrets } from '../src/utils/KubernetesObjectUtility';
 import * as yaml from 'js-yaml';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 
@@ -274,6 +275,24 @@ describe('Kubernetes Manifests Suite', function () {
         assert(bigSecondYaml.spec.template.spec.containers[0].image === 'nginx:42', 'nginx image not tagged correctly');
         assert(bigSecondYaml.spec.template.spec.initContainers[0].image === 'nginx-init:42.1', 'nginx-init image not tagged correctly');
 
+        done();
+    });
+
+    it('Run should successfully add image pull secrets to a cron job', (done: MochaDone) => {
+        const testFile = path.join(__dirname, './manifests/', 'cronjob.yaml');
+        const cronJobFile = fs.readFileSync(testFile).toString();
+        const cronJobObject = yaml.load(cronJobFile);
+        updateImagePullSecrets(cronJobObject, ['privaterepo-secret'], true);
+        assert(cronJobObject.spec.jobTemplate.spec.template.spec.imagePullSecrets[0].name === 'privaterepo-secret', 'should have updated the image pull secret correctly');
+        done();
+    });
+
+    it('Run should successfully add image pull secrets to a job', (done: MochaDone) => {
+        const testFile = path.join(__dirname, './manifests/', 'job.yaml');
+        const jobFile = fs.readFileSync(testFile).toString();
+        const jobObject = yaml.load(jobFile);
+        updateImagePullSecrets(jobObject, ['privaterepo-secret'], true);
+        assert(jobObject.spec.template.spec.imagePullSecrets[0].name === 'privaterepo-secret', 'should have updated the image pull secret correctly');
         done();
     });
 });
