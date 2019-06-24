@@ -7,6 +7,7 @@ import * as shared from './TestShared';
 import * as utils from '../src/utils/utilities';
 import { updateImagePullSecrets } from '../src/utils/KubernetesObjectUtility';
 import * as yaml from 'js-yaml';
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 
 describe('Kubernetes Manifests Suite', function () {
     this.timeout(30000);
@@ -214,7 +215,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.name] = 'r1';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf('scale replicaset/r1') > -1 , 'task should have run scale command');
+        assert(tr.stdout.indexOf('scale replicaset/r1') > -1, 'task should have run scale command');
         done();
     });
 
@@ -228,6 +229,29 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.patch] = 'somePatch';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('Check if error validations', (done: MochaDone) => {
+        try {
+            const execResults = [{
+                code: 0,
+                stderr: 'Warning: your execution has some warnings'
+            } as IExecSyncResult];
+            utils.checkForErrors(execResults, false);
+        } catch (ex) {
+            assert(!ex, 'shouldnt have thrown any error');
+        }
+        try {
+            const execResults = [{
+                code: 1,
+                stderr: 'error: your execution has some errors'
+            } as IExecSyncResult];
+            utils.checkForErrors(execResults, false);
+        } catch (ex) {
+            assert(ex, 'shouldnt have thrown error');
+            assert(ex.message === 'error: your execution has some errors', 'The thrown error should have matched');
+        }
         done();
     });
 
