@@ -25,6 +25,11 @@
   "minimumAgentVersion": "1.103.0",
   "groups": [
     {
+      "name": "advancedStorageOptions",
+      "displayName": "ms-resource:loc.group.displayName.advancedStorageOptions",
+      "isExpanded": false
+    },
+    {
       "name": "newServiceAdvancedOptions",
       "displayName": "ms-resource:loc.group.displayName.newServiceAdvancedOptions",
       "isExpanded": false
@@ -51,7 +56,8 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.StorageAccount"
+      "helpMarkDown": "ms-resource:loc.input.help.StorageAccount",
+      "visibleRule": "EnableAdvancedStorageOptions = false"
     },
     {
       "name": "ServiceName",
@@ -200,6 +206,37 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "EnableAdvancedStorageOptions",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.EnableAdvancedStorageOptions",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.EnableAdvancedStorageOptions",
+      "required": true
+    },
+    {
+      "name": "ARMConnectedServiceName",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ARMConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "advancedStorageOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.ARMConnectedServiceName",
+      "visibleRule": "EnableAdvancedStorageOptions = true"
+    },
+    {
+      "name": "ARMStorageAccount",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ARMStorageAccount",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "advancedStorageOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.ARMStorageAccount",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "EnableAdvancedStorageOptions = true"
     }
   ],
   "dataSourceBindings": [
@@ -222,6 +259,11 @@
       "target": "StorageAccount",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureStorageServiceNames"
+    },
+    {
+      "target": "ARMStorageAccount",
+      "endpointId": "$(ARMConnectedServiceName)",
+      "dataSourceName": "AzureStorageAccountRM"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

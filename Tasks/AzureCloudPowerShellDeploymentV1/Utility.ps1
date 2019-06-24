@@ -53,7 +53,23 @@ function Get-RoleName($extPath)
     return $roleName
 }
 
-function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAccountKeysMap)
+function Get-AzureStoragePrimaryKey($storageAccount, [bool]$isArm)
+{
+    if ($isArm)
+    {
+        $storageAccountResource = Get-AzureRmResource -Name $storageAccount -ResourceType "Microsoft.Storage/storageAccounts"
+        if (!$storageAccountResource)
+        {
+            Write-Error -Message "Could not find resource $storageAccount that has a type of Microsoft.Storage/storageAccounts"
+        }
+        $primaryStorageKey = (Get-AzureRmStorageAccountKey -ResourceGroupName $storageAccountResource.ResourceGroupName -Name $storageAccount)[0].value
+    } else 
+    {
+        $primaryStorageKey = (Get-AzureStorageKey -StorageAccountName "$storageAccount").Primary
+    }
+}
+
+function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAccountKeysMap, [switch]$useArmStorage)
 {
     $diagnosticsConfigurations = @()
     
@@ -71,7 +87,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
         Write-Host (Get-VstsLocString -Key "Applyinganyconfigureddiagnosticsextensions")
 
         Write-Verbose "Getting the primary AzureStorageKey..."
-        $primaryStorageKey = (Get-AzureStorageKey -StorageAccountName "$storageAccount").Primary
+        $primaryStorageKey = Get-StorageAccountPrimaryKey $StorageAccount $useArmStorage.IsPresent
 
         if ($primaryStorageKey)
         {
@@ -109,7 +125,9 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                         {
                             try
                             {
-                                $publicConfigStorageKey = Get-AzureStorageKey -StorageAccountName $publicConfigStorageAccountName
+
+                                $publicConfigStorageKey = Get-StorageAccountPrimaryKey $StorageAccount $useArmStorage.IsPresent
+
                             }
                             catch
                             {   
@@ -122,7 +140,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
 
                                 Write-Verbose "##$storageAccountName = $publicConfigStorageAccountName"
                                 $storageAccountName = $publicConfigStorageAccountName
-                                $storageAccountKey = $publicConfigStorageKey.Primary
+                                $storageAccountKey = $publicConfigStorageKey
                                 
                             }                    
                             else

@@ -25,6 +25,11 @@
     "minimumAgentVersion": "1.103.0",
     "groups": [
         {
+            "name": "advancedStorageOptions",
+            "displayName": "Advanced Options For Storage Configuration",
+            "isExpanded": false
+        },
+        {
             "name": "newServiceAdvancedOptions",
             "displayName": "Advanced Options For Creating New Service",
             "isExpanded": false
@@ -51,7 +56,9 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Storage account must exist prior to deployment."
+            "helpMarkDown": "Storage account must exist prior to deployment.",
+            "visibleRule": "EnableAdvancedStorageOptions = false"
+
         },
         {
             "name": "ServiceName",
@@ -200,6 +207,37 @@
             "properties": {
                 "EditableOptions": "True"
             }
+        },
+        {
+            "name": "EnableAdvancedStorageOptions",
+            "type": "boolean",
+            "label": "Enable Advanced Storage Options",
+            "defaultValue": "false",
+            "helpMarkDown": "Enable advanced storage options",
+            "required": true
+        },
+        {
+            "name": "ARMConnectedServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "AzureRM Service Connection",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "advancedStorageOptions",            
+            "helpMarkDown": "Azure Resource Manager subscription.",
+            "visibleRule": "EnableAdvancedStorageOptions = true"
+        },
+        {
+            "name": "ARMStorageAccount",
+            "type": "pickList",
+            "label": "AzureRM Storage Account",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "advancedStorageOptions",            
+            "helpMarkDown": "Choose a pre-existing ARM storage account.",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "EnableAdvancedStorageOptions = true"
         }
     ],
     "dataSourceBindings": [
@@ -222,6 +260,11 @@
             "target": "StorageAccount",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureStorageServiceNames"
+        },
+        {
+            "target": "ARMStorageAccount",
+            "endpointId": "$(ARMConnectedServiceName)",
+            "dataSourceName": "AzureStorageAccountRM"
         }
     ],
     "instanceNameFormat": "Azure Deployment: $(CsPkg)",
