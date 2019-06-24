@@ -21,7 +21,7 @@
         "DotNetCore"
     ],
     "demands": [],
-    "releaseNotes": "<li>Support for installing multiple versions side by side.</li><li>Support for patterns in version to fetch latest in minor/major version.</li><li>Restrict Multi-level lookup</li>",
+    "releaseNotes": "<li>Support for installing multiple versions side by side.</li><li>Support for patterns in version to fetch latest in minor/major version.</li><li>Restrict Multi-level lookup</li><li>Add support for installing versions from `global.json` file(s)</li>",
     "instanceNameFormat": "Install .NET Core $(packageType) $(version)",
     "groups": [
         {
@@ -56,7 +56,7 @@
             "name": "workingDirectory",
             "type": "filePath",
             "label": "Working Directory",
-            "helpMarkDown": "Current working directory where the script starts searching for files named 'global.json'.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
+            "helpMarkDown": "Current working directory where the script starts searching for files named 'global.json'.  Empty is the root of the repo (pipeline), which is $(System.DefaultWorkingDirectory)",
             "required": "false",
             "visibleRule": "useGlobalJson = true"
         },
