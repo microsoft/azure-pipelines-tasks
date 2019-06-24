@@ -336,7 +336,7 @@ export class dotNetExe {
             });
 
             if (!resolvedProjectFiles.length) {
-                var projectFilesUsingWebSdk = projectFiles.filter(this.isWebSdkUsed)
+                var projectFilesUsingWebSdk = projectFiles.filter(this.isWebSdkUsed);
                 if(!projectFilesUsingWebSdk.length) {
                     tl.error(tl.loc("noWebProjectFound"));
                 }
@@ -352,22 +352,20 @@ export class dotNetExe {
             var fileBuffer: Buffer = fs.readFileSync(projectfile);
             var webConfigContent: string;
             
-            var fileEncodings = ['utf8', 'utf16le']
+            var fileEncodings = ['utf8', 'utf16le'];
 
             for(var i = 0; i < fileEncodings.length; i++) {
-                tl.debug("Trying to decode with " + fileEncodings[i])
-                webConfigContent = fileBuffer.toString(fileEncodings[i])
+                tl.debug("Trying to decode with " + fileEncodings[i]);
+                webConfigContent = fileBuffer.toString(fileEncodings[i]);
                 try {
-                    var projectSdkUsed: string = ltx.parse(webConfigContent).getAttr("sdk") || ltx.parse(webConfigContent).getAttr("Sdk")
-                    return projectSdkUsed && projectSdkUsed.toLowerCase() == "microsoft.net.sdk.web"
+                    var projectSdkUsed: string = ltx.parse(webConfigContent).getAttr("sdk") || ltx.parse(webConfigContent).getAttr("Sdk");
+                    return projectSdkUsed && projectSdkUsed.toLowerCase() == "microsoft.net.sdk.web";
                 } catch (error) {}
             }
-
-            return false
         } catch(error) {
-            tl.warning(error)
-            return false
+            tl.warning(error);
         }
+        return false;
     }
 
     private isPublishCommand(): boolean {
