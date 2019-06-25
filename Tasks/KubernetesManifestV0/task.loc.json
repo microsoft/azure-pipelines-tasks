@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 154,
-    "Patch": 4
+    "Minor": 155,
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
@@ -115,9 +115,19 @@
       "defaultValue": "helm2",
       "visibleRule": "action = bake",
       "options": {
-        "helm2": "Helm 2"
+        "helm2": "Helm 2",
+        "kompose": "Kompose"
       },
       "helpMarkDown": "ms-resource:loc.input.help.renderType"
+    },
+    {
+      "name": "dockerComposeFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.dockerComposeFile",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "action = bake && renderType = kompose",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerComposeFile"
     },
     {
       "name": "helmChart",
@@ -299,6 +309,7 @@
     "DownloadPathForStableTxt": "ms-resource:loc.messages.DownloadPathForStableTxt",
     "DownloadKubeCtlFailed": "ms-resource:loc.messages.DownloadKubeCtlFailed",
     "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
+    "DockerComposeFilePathNotSupplied": "ms-resource:loc.messages.DockerComposeFilePathNotSupplied",
     "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion",
     "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
     "ManifestFileNotFound": "ms-resource:loc.messages.ManifestFileNotFound",
@@ -310,6 +321,8 @@
     "NullInputObjectMetadata": "ms-resource:loc.messages.NullInputObjectMetadata",
     "CanaryDeploymentAlreadyExistErrorMessage": "ms-resource:loc.messages.CanaryDeploymentAlreadyExistErrorMessage",
     "InvalidRejectActionDeploymentStrategy": "ms-resource:loc.messages.InvalidRejectActionDeploymentStrategy",
-    "InvalidPromotetActionDeploymentStrategy": "ms-resource:loc.messages.InvalidPromotetActionDeploymentStrategy"
+    "InvalidPromotetActionDeploymentStrategy": "ms-resource:loc.messages.InvalidPromotetActionDeploymentStrategy",
+    "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
+    "CouldNotDeterminePodStatus": "ms-resource:loc.messages.CouldNotDeterminePodStatus"
   }
 }
