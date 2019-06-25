@@ -19,7 +19,9 @@
   "loc.input.label.imagePullSecrets": "ImagePullSecrets",
   "loc.input.help.imagePullSecrets": "ImagePullSecret to pull image from private registry",
   "loc.input.label.renderType": "Render Engine",
-  "loc.input.help.renderType": "Tool to generate manifest",
+  "loc.input.help.renderType": "Tool to use for generating manifest files.",
+  "loc.input.label.dockerComposeFile": "Path to docker compose file",
+  "loc.input.help.dockerComposeFile": "docker-compose file path",
   "loc.input.label.helmChart": "Helm Chart",
   "loc.input.help.helmChart": "Helm chart path to bake",
   "loc.input.label.releaseName": "Helm Release Name",
@@ -55,6 +57,7 @@
   "loc.messages.DownloadPathForStableTxt": "Download path for stable.txt: %s",
   "loc.messages.DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
+  "loc.messages.DockerComposeFilePathNotSupplied": "docker-compose file path not supplied",
   "loc.messages.UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
   "loc.messages.ManifestFileNotFound": "No manifest file(s) matching %s was found.",
@@ -67,6 +70,6 @@
   "loc.messages.CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
   "loc.messages.InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
   "loc.messages.InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
-  "loc.messages.AllContainersNotInReadyState": "All the containers are not in a ready state",
+  "loc.messages.AllContainersNotInReadyState": "All the containers are not in a ready state.",
   "loc.messages.CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s"
 }
