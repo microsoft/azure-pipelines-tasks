@@ -43,6 +43,7 @@ function Update-DockerImageSettings
             {
                 throw (Get-VstsLocString -Key InvalidImageDigestValue -ArgumentList @($imageDigestValue, $imageDigestsPath))
             }
+            $imageDigestRepoNameWithRegistry = $imageDigestValue.Substring(0, $hashSeparatorIndex)
             $imageDigestRepoName = $imageDigestValue.Substring($slashIndex + 1, $hashSeparatorIndex - $slashIndex - 1)
 
             if ($imageNames -ne $null)
@@ -66,6 +67,10 @@ function Update-DockerImageSettings
                 if ($imageNameToDigestMapping.ContainsKey($imageName))
                 {
                     throw (Get-VstsLocString -Key AmbiguousImages -ArgumentList @($imageName))
+                }
+
+                if($imageDigestRepoNameWithRegistry -ne $imageDigestRepoName ){
+                    $imageNameToDigestMapping[$imageDigestRepoNameWithRegistry] = $imageDigestValue
                 }
             }
             $imageNameToDigestMapping[$imageName] = $imageDigestValue
