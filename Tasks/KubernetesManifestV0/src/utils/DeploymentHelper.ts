@@ -153,12 +153,12 @@ async function checkPodStatus(kubectl: Kubectl, podName: string): Promise<void> 
     const iterations = 60; // 60 * 10 seconds timeout = 10 minutes max timeout
     let podStatus;
     for (let i = 0; i < iterations; i++) {
+        await sleep(sleepTimeout);
         tl.debug(`Polling for pod status: ${podName}`);
         podStatus = getPodStatus(kubectl, podName);
         if (podStatus.phase && podStatus.phase !== 'Pending' && podStatus.phase !== 'Unknown') {
             break;
         }
-        await sleep(sleepTimeout);
     }
     podStatus = getPodStatus(kubectl, podName);
     switch (podStatus.phase) {
