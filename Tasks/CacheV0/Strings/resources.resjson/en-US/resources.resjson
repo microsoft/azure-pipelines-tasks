@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Cache",
+  "loc.helpMarkDown": "Improve build performance by caching files, like dependencies, between pipeline runs.",
+  "loc.description": "Cache files between runs",
+  "loc.instanceNameFormat": "Cache",
+  "loc.input.label.key": "Cache key",
+  "loc.input.help.key": "The key (unique identifier) for the cache. Newline-delimited list of strings or file paths. File paths can be absolute or relative to $(System.DefaultWorkingDirectory).",
+  "loc.input.label.path": "Path",
+  "loc.input.help.path": "The path to the folder to cache. This path can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported. If the folder doesn't exist it will be created.",
+  "loc.input.label.cacheHitVar": "Variable to set if there is a cache hit",
+  "loc.input.help.cacheHitVar": "This will set the following variable (PipelineCache.<variable-value>) to 'True'."
+}

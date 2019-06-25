@@ -1,0 +1,57 @@
+{
+    "id": "1B7B4CD4-D9AA-4165-8C00-1BBC91B196B5",
+    "name": "Cache",
+    "friendlyName": "Cache",
+    "description": "Cache files between runs",
+    "helpUrl": "",
+    "helpMarkDown": "Improve build performance by caching files, like dependencies, between pipeline runs.",
+    "category": "Utility",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "groups": [],
+    "demands": [],
+    "preview": true,
+    "minimumAgentVersion": "2.153.5",
+    "inputs": [
+        {
+            "name": "key",
+            "type": "multiLine",
+            "label": "Cache key",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The key (unique identifier) for the cache. Newline-delimited list of strings or file paths. File paths can be absolute or relative to $(System.DefaultWorkingDirectory)."
+        },
+        {
+            "name": "path",
+            "type": "filePath",
+            "label": "Path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The path to the folder to cache. This path can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported. If the folder doesn't exist it will be created."
+        },
+        {
+            "name": "cacheHitVar",
+            "type": "string",
+            "label": "Variable to set if there is a cache hit",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "This will set the following variable (PipelineCache.<variable-value>) to 'True'."
+        }
+    ],
+    "instanceNameFormat": "Cache",
+    "execution": {
+        "AgentPlugin": {
+            "target": "Agent.Plugins.PipelineCache.RestorePipelineCacheV0, Agent.Plugins"
+        }
+    },
+    "postjobexecution": {
+        "AgentPlugin": {
+            "target": "Agent.Plugins.PipelineCache.SavePipelineCacheV0, Agent.Plugins"
+        }
+    },
+    "messages": {}
+}

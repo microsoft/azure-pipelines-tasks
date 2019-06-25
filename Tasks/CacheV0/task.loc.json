@@ -1,6 +1,6 @@
 {
-  "id": "F2333FED-1017-4A2F-AAC6-02A185279E1E",
-  "name": "SaveCache",
+  "id": "1B7B4CD4-D9AA-4165-8C00-1BBC91B196B5",
+  "name": "Cache",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "",
@@ -15,13 +15,13 @@
   "groups": [],
   "demands": [],
   "preview": true,
-  "minimumAgentVersion": "2.152.0",
+  "minimumAgentVersion": "2.153.5",
   "inputs": [
     {
       "name": "key",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.key",
-      "defaultValue": "key",
+      "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.key"
     },
@@ -32,10 +32,23 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.path"
+    },
+    {
+      "name": "cacheHitVar",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.cacheHitVar",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cacheHitVar"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "AgentPlugin": {
+      "target": "Agent.Plugins.PipelineCache.RestorePipelineCacheV0, Agent.Plugins"
+    }
+  },
+  "postjobexecution": {
     "AgentPlugin": {
       "target": "Agent.Plugins.PipelineCache.SavePipelineCacheV0, Agent.Plugins"
     }
