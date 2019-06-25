@@ -322,7 +322,7 @@ export class dotNetExe {
         var projectPattern = this.projects;
         var searchWebProjects = this.isPublishCommand() && this.publishWebProjects;
         if (searchWebProjects) {
-            projectPattern = ["**/*.csproj", "**/*.fsproj"];
+            projectPattern = ["**/*.csproj", "**/*.vbproj", "**/*.fsproj"];
         }
 
         var projectFiles = utility.getProjectFiles(projectPattern);
@@ -348,6 +348,8 @@ export class dotNetExe {
     }
 
     private isWebSdkUsed(projectfile: string): boolean {
+        if (projectfile.endsWith('.vbproj')) return false
+
         try {
             var fileBuffer: Buffer = fs.readFileSync(projectfile);
             var webConfigContent: string;
