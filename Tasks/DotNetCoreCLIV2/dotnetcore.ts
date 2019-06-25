@@ -89,9 +89,13 @@ export class dotNetExe {
             var dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
             if (this.isRunCommand()) {
-                dotnet.arg("--project");
+                if (!!projectFile) {
+                    dotnet.arg("--project");
+                    dotnet.arg(projectFile);
+                }
+            } else {
+                dotnet.arg(projectFile);
             }
-            dotnet.arg(projectFile);
             var dotnetArguments = this.arguments;
             if (this.isPublishCommand() && this.outputArgument && tl.getBoolInput("modifyOutputPath")) {
                 var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
