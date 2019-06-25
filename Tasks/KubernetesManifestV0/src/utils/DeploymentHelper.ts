@@ -15,7 +15,7 @@ import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { Kubectl, Resource } from 'kubernetes-common-v2/kubectl-object-model';
 import { isEqual, StringComparer } from './StringComparison';
 
-export function deploy(kubectl: Kubectl, manifestFilePaths: string[], deploymentStrategy: string) {
+export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], deploymentStrategy: string) {
 
     // get manifest files
     let inputManifestFiles: string[] = getManifestFiles(manifestFilePaths);
@@ -31,7 +31,7 @@ export function deploy(kubectl: Kubectl, manifestFilePaths: string[], deployment
 
     // check manifest stability
     const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.deploymentTypes);
-    checkManifestStability(kubectl, resourceTypes);
+    await checkManifestStability(kubectl, resourceTypes);
 
     // annotate resources
     annotateResources(deployedManifestFiles, kubectl, resourceTypes);
@@ -60,20 +60,22 @@ function deployManifests(files: string[], kubectl: Kubectl, isCanaryDeploymentSt
     return files;
 }
 
-function checkManifestStability(kubectl: Kubectl, resourceTypes: Resource[]) {
+async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): Promise<void> {
     const rolloutStatusResults = [];
-    resourceTypes.forEach(resource => {
+    const numberOfResources = resources.length;
+    for (let i = 0; i< numberOfResources; i++) {
+        const resource = resources[i];
         if (models.workloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
             rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
         }
         if (isEqual(resource.type, constants.KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase)) {
             try {
-                checkPodStatus(kubectl, resource.name);
+                await checkPodStatus(kubectl, resource.name);
             } catch (ex) {
                 tl.warning(tl.loc('CouldNotDeterminePodStatus', JSON.stringify(ex)));
             }
         }
-    });
+    }
     utils.checkForErrors(rolloutStatusResults);
 }
 
@@ -143,10 +145,10 @@ function updateImagePullSecretsInManifestFiles(filePaths: string[], imagePullSec
 }
 
 function isCanaryDeploymentStrategy(deploymentStrategy: string): boolean {
-    return deploymentStrategy != null && deploymentStrategy.toUpperCase() == canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY.toUpperCase();
+    return deploymentStrategy != null && deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY.toUpperCase();
 }
 
-function checkPodStatus(kubectl: Kubectl, podName: string) {
+async function checkPodStatus(kubectl: Kubectl, podName: string): Promise<void> {
     const sleepTimeout = 10 * 1000; // 10 seconds
     const iterations = 60; // 60 * 10 seconds timeout = 10 minutes max timeout
     let podStatus;
@@ -156,7 +158,7 @@ function checkPodStatus(kubectl: Kubectl, podName: string) {
         if (podStatus.phase && podStatus.phase !== 'Pending' && podStatus.phase !== 'Unknown') {
             break;
         }
-        sleep(sleepTimeout);
+        await sleep(sleepTimeout);
     }
     podStatus = getPodStatus(kubectl, podName);
     switch (podStatus.phase) {
@@ -202,10 +204,5 @@ function isPodReady(podStatus: any): boolean {
 }
 
 function sleep(timeout: number) {
-    const startTime = new Date();
-    let currentTime = new Date();
-    while (currentTime.getTime() - startTime.getTime() < timeout) {
-        // Wait
-        currentTime = new Date();
-    }
+    return new Promise(resolve => setTimeout(resolve, timeout));
 }
