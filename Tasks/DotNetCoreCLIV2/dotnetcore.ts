@@ -322,7 +322,7 @@ export class dotNetExe {
         var projectPattern = this.projects;
         var searchWebProjects = this.isPublishCommand() && this.publishWebProjects;
         if (searchWebProjects) {
-            projectPattern = ["**/*.csproj", "**/*.vbproj", "**/*.fsproj"];
+            projectPattern = ["**/*.csproj", "**/*.fsproj"];
         }
 
         var projectFiles = utility.getProjectFiles(projectPattern);
