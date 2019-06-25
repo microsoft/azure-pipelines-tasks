@@ -29,9 +29,10 @@ try{
     Initialize-Azure
 
     # Initialize Azure RM connection if required
-    if ($EnableAdvancedStorageOptions) {
-        $Endpoint = Get-VstsEndpoint -Name $ARMConnectedServiceName -Require
-        Initialize-AzureRMModule -Endpoint $Endpoint
+    if ($EnableAdvancedStorageOptions)
+    {
+        $endpoint = Get-VstsEndpoint -Name $ARMConnectedServiceName -Require
+        Initialize-AzureRMModule -Endpoint $endpoint
     }
 
     # Load all dependent files for execution
@@ -81,7 +82,6 @@ try{
     if ($StorageAccount) 
     {
         $diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $serviceConfigFile $storageAccountKeysMap
-
     }
     elseif ($ARMStorageAccount)
     {
@@ -91,7 +91,6 @@ try{
     {
         Write-Error -Message "Could not determine storage account type from task input"
     }
-
 
     $label = $DeploymentLabel
 
