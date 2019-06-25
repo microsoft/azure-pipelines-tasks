@@ -2,7 +2,7 @@
 import * as semver from "semver";
 import * as url from "url";
 
-import * as tl from 'azure-pipelines-task-lib/task';
+import * as taskLib from 'azure-pipelines-task-lib/task';
 
 import * as utils from "./versionutilities";
 
@@ -14,7 +14,7 @@ export class VersionInfo {
 
     constructor(versionInfoObject: any, packageType: string) {
         if (!versionInfoObject.version || !versionInfoObject.files) {
-            throw tl.loc("InvalidVersionObject", packageType, versionInfoObject)
+            throw taskLib.loc("InvalidVersionObject", packageType, versionInfoObject)
         }
 
         this.version = versionInfoObject.version;
@@ -24,7 +24,7 @@ export class VersionInfo {
                 this.files.push(new VersionFilesData(fileData));
             }
             catch (ex) {
-                tl.debug(tl.loc("FilesDataIsIncorrectInVersion", this.packageType, this.version, ex));
+                taskLib.debug(taskLib.loc("FilesDataIsIncorrectInVersion", this.packageType, this.version, ex));
             }
         });
 
@@ -61,8 +61,8 @@ export class VersionFilesData {
     public hash?: string;
 
     constructor(versionFilesData: any) {
-        if(!versionFilesData || !versionFilesData.name || !versionFilesData.url || !versionFilesData.rid) {
-            throw tl.loc("VersionFilesDataIncorrect");
+        if (!versionFilesData || !versionFilesData.name || !versionFilesData.url || !versionFilesData.rid) {
+            throw taskLib.loc("VersionFilesDataIncorrect");
         }
 
         this.name = versionFilesData.name;
@@ -75,7 +75,7 @@ export class VersionFilesData {
 export class Channel {
     constructor(channelRelease: any) {
         if (!channelRelease || !channelRelease["channel-version"] || !channelRelease["releases.json"]) {
-            throw tl.loc("InvalidChannelObject");
+            throw taskLib.loc("InvalidChannelObject");
         }
 
         this.channelVersion = channelRelease["channel-version"];
@@ -88,10 +88,12 @@ export class Channel {
 
 export class VersionParts {
     constructor(version: string) {
-        VersionParts.ValidateVersionSpec(version);
-        let parts: string[] = version.split(".");
+        if (!VersionParts.ValidateVersionSpec(version)) {
+            throw taskLib.loc("VersionNotAllowed", version);
+        }
 
         this.versionSpec = version;
+        let parts: string[] = version.split(".");
         this.majorVersion = parts[0];
         this.minorVersion = parts[1];
         this.patchVersion = "";
@@ -104,20 +106,33 @@ export class VersionParts {
         try {
             let parts = version.split('.');
             // validate version
-            if (parts.length < 2 || parts.length > 3 || (parts[1] == "x" && parts.length > 2) || (parts[1] != "x" && parts.length <= 2) || !parts[0] || !parts[1] || (parts.length == 3 && !parts[2]) || Number.isNaN(Number.parseInt(parts[0])) || (Number.isNaN(Number.parseInt(parts[1])) && parts[1] != "x")) {
-                throw "";
+            if ((parts.length < 2 || parts.length > 3) || // check if the version has 2 or 3 parts
+                (parts[1] == "x" && parts.length > 2) ||  // a version number like `1.x` must have only major and minor version
+                (parts[1] != "x" && parts.length <= 2) ||  // a version number like `1.1` must have a patch version
+                !parts[0] || // The major version must always be set
+                !parts[1] || // The minor version must always be set
+                (parts.length == 3 && !parts[2]) || // a version number like `1.1.` is invalid because the path version is missing
+                Number.isNaN(Number.parseInt(parts[0])) || // the major version number must be a number
+                (Number.isNaN(Number.parseInt(parts[1])) &&  // the minor version number must be a number
+                    parts[1] != "x")) // the major version can't be `x`
+            {
+                // TODO: a validation method should return true or false not an error. This must do the caller.              
+                throw taskLib.loc("VersionNumberHasTheWrongFormat", version);
             }
-
             new semver.Range(version);
             return true;
         }
         catch (ex) {
-            throw tl.loc("VersionNotAllowed", version)
+            // TODO: a validation method should return true or false not an error. This must do the caller.
+            throw taskLib.loc("VersionNotAllowed", version)
         }
     }
 
     public majorVersion: string;
     public minorVersion: string;
     public patchVersion: string;
+    /**
+     * the version number entered by the user
+     */
     public versionSpec: string;
 }

@@ -15,7 +15,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 11
   },
   "satisfies": [
     "DotNetCore"
@@ -37,20 +37,38 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.packageType",
       "defaultValue": "sdk",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.packageType",
       "options": {
-        "runtime": "Runtime",
+        "runtime": "Only Runtime",
         "sdk": "SDK (contains runtime)"
       }
+    },
+    {
+      "name": "useGlobalJson",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useGlobalJson",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useGlobalJson",
+      "visibleRule": "packageType = sdk"
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
+      "required": "false",
+      "visibleRule": "useGlobalJson = true"
     },
     {
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.version"
+      "defaultValue": "2.2.x",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.version",
+      "visibleRule": "useGlobalJson = false || packageType = runtime"
     },
     {
       "name": "includePreviewVersions",
@@ -151,6 +169,9 @@
     "FailedWhileExtractingPacakge": "ms-resource:loc.messages.FailedWhileExtractingPacakge",
     "InstallingNuGetVersion": "ms-resource:loc.messages.InstallingNuGetVersion",
     "FailureWhileInstallingNuGetVersion": "ms-resource:loc.messages.FailureWhileInstallingNuGetVersion",
-    "SettingUpNugetProxySettings": "ms-resource:loc.messages.SettingUpNugetProxySettings"
+    "SettingUpNugetProxySettings": "ms-resource:loc.messages.SettingUpNugetProxySettings",
+    "GlobalJsonFound": "ms-resource:loc.messages.GlobalJsonFound",
+    "FailedToReadGlobalJson": "ms-resource:loc.messages.FailedToReadGlobalJson",
+    "VersionNumberHasTheWrongFormat": "ms-resource:loc.messages.VersionNumberHasTheWrongFormat"
   }
 }
