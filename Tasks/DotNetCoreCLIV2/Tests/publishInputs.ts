@@ -88,6 +88,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 1,
             "stdout": "not published",
             "stderr": ""
+        },
+        "dotnet publish havesdk/project.csproj": {
+            "code": 0,
+            "stdout": "published",
+            "stderr": ""
         }
     },
     "findMatch": {
@@ -98,6 +103,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "*fail*/project.json": [],
         "*customoutput/project.json": ["web3/project.json", "lib2/project.json"],
         "dummy/project.json": ["dummy/project.json"],
+        "havesdk*/*.csproj": ["havesdk/project.csproj"],
         "" : []
     }
 };
