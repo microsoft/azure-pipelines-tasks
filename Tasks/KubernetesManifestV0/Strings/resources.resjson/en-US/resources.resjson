@@ -30,6 +30,8 @@
   "loc.input.help.overrideFiles": "Override files to set",
   "loc.input.label.overrides": "Overrides",
   "loc.input.help.overrides": "Override values to set",
+  "loc.input.label.kustomizationPath": "Kustomization Path",
+  "loc.input.help.kustomizationPath": "The argument must be the path to the directory containing the file, or a git repository URL with a path suffix specifying same with respect to the repository root.",
   "loc.input.label.resourceToPatch": "Resource to patch",
   "loc.input.help.resourceToPatch": "to identify the resource",
   "loc.input.label.resourceFileToPatch": "File path",
@@ -71,5 +73,6 @@
   "loc.messages.InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
   "loc.messages.InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
   "loc.messages.AllContainersNotInReadyState": "All the containers are not in a ready state.",
-  "loc.messages.CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s"
+  "loc.messages.CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
+  "loc.messages.KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features."
 }
