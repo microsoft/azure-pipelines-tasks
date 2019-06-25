@@ -32,12 +32,11 @@ export async function downloadHelm(version?: string): Promise<string> {
         const unzipedHelmPath = await toolLib.extractZip(helmDownloadPath);
         cachedToolpath = await toolLib.cacheDir(unzipedHelmPath, helmToolName, version);
     }
-
     const helmpath = findHelm(cachedToolpath);
     if (!helmpath) {
         throw new Error(tl.loc('HelmNotFoundInFolder', cachedToolpath));
     }
-
+    
     fs.chmodSync(helmpath, '777');
     return helmpath;
 }
@@ -69,7 +68,12 @@ export async function getStableHelmVersion(): Promise<string> {
     try {
         const downloadPath = await toolLib.downloadTool('https://api.github.com/repos/helm/helm/releases/latest');
         const response = JSON.parse(fs.readFileSync(downloadPath, 'utf8').toString().trim());
-        return response.body.tag_name;
+        if (!response.tag_name)
+        {
+            return stableHelmVersion;
+        }
+        
+        return response.tag_name;
     } catch (error) {
         tl.warning(tl.loc('HelmLatestNotKnown', helmLatestReleaseUrl, error, stableHelmVersion));
     }
