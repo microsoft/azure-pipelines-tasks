@@ -87,7 +87,10 @@ async function main(): Promise<void> {
         var retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : 4;
 
         var templatePath: string = path.join(__dirname, 'vsts.handlebars.txt');
-        var buildApi: IBuildApi = await webApi.getBuildApi();
+        var buildApi: IBuildApi = await executeWithRetries("getBuildApi", () => webApi.getBuildApi(), retryLimit).catch((reason) => {
+            reject(reason);
+            return;
+        });
         var artifacts = [];
 
         if (isCurrentBuild) {
