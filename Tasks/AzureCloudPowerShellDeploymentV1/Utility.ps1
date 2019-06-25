@@ -62,11 +62,19 @@ function Get-AzureStoragePrimaryKey($storageAccount, [bool]$isArm)
         {
             Write-Error -Message "Could not find resource $storageAccount that has a type of Microsoft.Storage/storageAccounts"
         }
-        $primaryStorageKey = (Get-AzureRmStorageAccountKey -ResourceGroupName $storageAccountResource.ResourceGroupName -Name $storageAccount)[0].value
-    } else 
+        $storageAccountKeys = Get-AzureRmStorageAccountKey -ResourceGroupName $storageAccountResource.ResourceGroupName -Name $storageAccount
+        if(!$storageAccountKeys)
+        {
+            Write-Error -Message "Could not retrieve storage account keys from storage account resource $Storage"
+        }
+        $primaryStorageKey = $storageAccountKeys[0].value
+    } 
+    else 
     {
         $primaryStorageKey = (Get-AzureStorageKey -StorageAccountName "$storageAccount").Primary
     }
+
+    return $primaryStorageKey
 }
 
 function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAccountKeysMap, [switch]$useArmStorage)
@@ -125,9 +133,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                         {
                             try
                             {
-
                                 $publicConfigStorageKey = Get-AzureStoragePrimaryKey $StorageAccount $useArmStorage.IsPresent
-
                             }
                             catch
                             {   
@@ -140,8 +146,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
 
                                 Write-Verbose "##$storageAccountName = $publicConfigStorageAccountName"
                                 $storageAccountName = $publicConfigStorageAccountName
-                                $storageAccountKey = $publicConfigStorageKey
-                                
+                                $storageAccountKey = $publicConfigStorageKey                                
                             }                    
                             else
                             {
