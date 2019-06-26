@@ -65,7 +65,7 @@ export function getDockerRegistryEndpointAuthenticationToken(endpointId: string)
     let authToken: RegistryServerAuthenticationToken;
 
     if (registryType === "ACR") {
-        const loginServer = tl.getEndpointAuthorizationParameter(endpointId, "loginServer", false);
+        const loginServer = tl.getEndpointAuthorizationParameter(endpointId, "loginServer", false).toLowerCase();;
         authToken = new ACRAuthenticationTokenProvider(endpointId, loginServer).getAuthenticationToken();
     }
     else {

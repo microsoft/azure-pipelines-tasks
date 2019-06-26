@@ -1,20 +1,23 @@
 'use strict';
 
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as utils from '../utils/utilities';
+import { StringComparer, isEqual } from '../utils/StringComparison';
 
 export class KubernetesWorkload {
-    public static Pod: string = 'Pod';
-    public static Replicaset: string = 'Replicaset';
-    public static Deployment: string = 'Deployment';
-    public static StatefulSet: string = 'StatefulSet';
-    public static DaemonSet: string = 'DaemonSet';
+    public static pod: string = 'Pod';
+    public static replicaset: string = 'Replicaset';
+    public static deployment: string = 'Deployment';
+    public static statefulSet: string = 'StatefulSet';
+    public static daemonSet: string = 'DaemonSet';
+    public static job: string = 'job';
+    public static cronjob: string = 'cronjob';
 }
 
-export const recognizedWorkloadTypes: string[] = ['deployment', 'replicaset', 'daemonset', 'pod', 'statefulset'];
-export const recognizedWorkloadTypesWithRolloutStatus: string[] = ['deployment', 'daemonset', 'statefulset'];
+export const deploymentTypes: string[] = ['deployment', 'replicaset', 'daemonset', 'pod', 'statefulset'];
+export const workloadTypes: string[] = ['deployment', 'replicaset', 'daemonset', 'pod', 'statefulset', 'job', 'cronjob'];
+export const workloadTypesWithRolloutStatus: string[] = ['deployment', 'daemonset', 'statefulset'];
 
-const isRelease = utils.isEqual(tl.getVariable('SYSTEM_HOSTTYPE'), 'release', utils.StringComparer.OrdinalIgnoreCase);
+const isRelease = isEqual(tl.getVariable('SYSTEM_HOSTTYPE'), 'release', StringComparer.OrdinalIgnoreCase);
 const orgUrl = tl.getVariable('System.TeamFoundationCollectionUri');
 
 export let pipelineAnnotations: string[] = [];
