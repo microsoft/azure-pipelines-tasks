@@ -2,12 +2,12 @@ import { AnalysisResult } from './AnalysisResult';
 import { IAnalysisTool } from './IAnalysisTool';
 import { BuildOutput } from './BuildOutput';
 import { ModuleOutput } from './ModuleOutput';
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 import path = require('path');
 import glob = require('glob');
 
-import tl = require('vsts-task-lib/task');
+import * as tl from 'azure-pipelines-task-lib/task';
 
 /**
  * An abstract class that is the base for both configuring a build to use an analysis tool and 
