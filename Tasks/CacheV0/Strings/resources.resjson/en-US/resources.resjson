@@ -8,5 +8,5 @@
   "loc.input.label.path": "Path",
   "loc.input.help.path": "The path to the folder to cache. This path can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported. If the folder doesn't exist it will be created.",
   "loc.input.label.cacheHitVar": "Variable to set if there is a cache hit",
-  "loc.input.help.cacheHitVar": "This will set the following variable (PipelineCache.<variable-value>) to 'True'."
+  "loc.input.help.cacheHitVar": "This will set the following variable (<variable-value>) to 'True'."
 }
