@@ -8,5 +8,5 @@
   "loc.input.label.path": "下載的目標路徑",
   "loc.input.help.path": "要接收所下載快取的資料夾路徑，可以是完整路徑，也可以是相對於存放庫根目錄的路徑。不支援萬用字元。支援 [變數](https://go.microsoft.com/fwlink/?LinkID=550988)。若資料夾不存在，會建立資料夾。",
   "loc.input.label.cacheHitVar": "用來設定是否有快取命中的變數",
-  "loc.input.help.cacheHitVar": "這會將下列變數 (PipelineCache0<variable-value>) 設定為 'True'。"
+  "loc.input.help.cacheHitVar": "這會將下列變數 (<variable-value>) 設定為 'True'。"
 }
