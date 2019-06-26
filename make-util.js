@@ -9,7 +9,6 @@ var process = require('process');
 var semver = require('semver');
 var shell = require('shelljs');
 var request = require('request-promise-native');
-var url = require("url");
 
 // extend array with asyncForEach
 Array.prototype.asyncForEach = async function(callback) {
