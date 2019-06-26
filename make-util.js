@@ -8,7 +8,15 @@ var path = require('path');
 var process = require('process');
 var semver = require('semver');
 var shell = require('shelljs');
-var syncRequest = require('sync-request');
+var request = require('request-promise-native');
+var url = require("url");
+
+// extend array with asyncForEach
+Array.prototype.asyncForEach = async function(callback) {
+    for (let index = 0; index < this.length; index++) {
+      await callback(this[index], index, this);
+    }
+}
 
 // global paths
 var downloadPath = path.join(__dirname, '_download');
@@ -308,7 +316,7 @@ var ensureTool = function (name, versionArgs, validate) {
 }
 exports.ensureTool = ensureTool;
 
-var installNode = function (nodeVersion) {
+var installNode = async function (nodeVersion) {
     switch (nodeVersion || '') {
         case '':
         case '6':
@@ -335,19 +343,19 @@ var installNode = function (nodeVersion) {
     var nodeUrl = 'https://nodejs.org/dist';
     switch (platform) {
         case 'darwin':
-            var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-darwin-x64.tar.gz');
+            var nodeArchivePath = await downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-darwin-x64.tar.gz');
             addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-darwin-x64', 'bin'));
             break;
         case 'linux':
-            var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-linux-x64.tar.gz');
+            var nodeArchivePath = await downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-linux-x64.tar.gz');
             addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-linux-x64', 'bin'));
             break;
         case 'win32':
             var nodeDirectory = path.join(downloadPath, `node-${nodeVersion}`);
             var marker = nodeDirectory + '.completed';
             if (!test('-f', marker)) {
-                var nodeExePath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.exe');
-                var nodeLibPath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.lib');
+                let nodeExePath = await downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.exe');
+                let nodeLibPath = await downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.lib');
                 rm('-Rf', nodeDirectory);
                 mkdir('-p', nodeDirectory);
                 cp(nodeExePath, path.join(nodeDirectory, 'node.exe'));
@@ -381,18 +389,28 @@ var downloadFile = function (url) {
 
         // download the file
         mkdir('-p', path.join(downloadPath, 'file'));
-        var result = syncRequest('GET', url);
-        fs.writeFileSync(targetPath, result.getBody());
-
-        // write the completed marker
-        fs.writeFileSync(marker, '');
+        let options = {
+            url: url,
+            encoding: null,
+            strictSSL: false
+        }
+        return request(options)
+            .then(result => {            
+                fs.writeFileSync(targetPath, result);    
+                // write the complete marker
+                fs.writeFileSync(marker, '');
+                return targetPath;
+            })
+            .catch((err) => {
+                throw err;
+            });
     }
 
-    return targetPath;
+    return Promise.resolve(targetPath);
 }
 exports.downloadFile = downloadFile;
 
-var downloadArchive = function (url, omitExtensionCheck) {
+var downloadArchive = async function (url, omitExtensionCheck) {
     // validate parameters
     if (!url) {
         throw new Error('Parameter "url" must be set.');
@@ -421,7 +439,7 @@ var downloadArchive = function (url, omitExtensionCheck) {
     var marker = targetPath + '.completed';
     if (!test('-f', marker)) {
         // download the archive
-        var archivePath = downloadFile(url);
+        let archivePath = await downloadFile(url);
         console.log('Extracting archive: ' + url);
 
         // delete any previously attempted extraction directory
@@ -602,19 +620,19 @@ var addPath = function (directory) {
 }
 exports.addPath = addPath;
 
-var getExternals = function (externals, destRoot) {
+var getExternals = async function (externals, destRoot) {
     assert(externals, 'externals');
     assert(destRoot, 'destRoot');
 
     // .zip files
     if (externals.hasOwnProperty('archivePackages')) {
         var archivePackages = externals.archivePackages;
-        archivePackages.forEach(function (archive) {
+        await archivePackages.asyncForEach(async function (archive) {
             assert(archive.url, 'archive.url');
             assert(archive.dest, 'archive.dest');
 
             // download and extract the archive package
-            var archiveSource = downloadArchive(archive.url);
+            var archiveSource = await downloadArchive(archive.url);
 
             // copy the files
             var archiveDest = path.join(destRoot, archive.dest);
@@ -626,7 +644,7 @@ var getExternals = function (externals, destRoot) {
     // external NuGet V2 packages
     if (externals.hasOwnProperty('nugetv2')) {
         var nugetPackages = externals.nugetv2;
-        nugetPackages.forEach(function (package) {
+        await nugetPackages.asyncForEach(async function (package) {
             // validate the structure of the data
             assert(package.name, 'package.name');
             assert(package.version, 'package.version');
@@ -636,7 +654,7 @@ var getExternals = function (externals, destRoot) {
 
             // download and extract the NuGet V2 package
             var url = package.repository.replace(/\/$/, '') + '/package/' + package.name + '/' + package.version;
-            var packageSource = downloadArchive(url, /*omitExtensionCheck*/true);
+            let packageSource = await downloadArchive(url, /*omitExtensionCheck*/true);
 
             // copy specific files
             copyGroups(package.cp, packageSource, destRoot);
@@ -646,12 +664,12 @@ var getExternals = function (externals, destRoot) {
     // for any file type that has to be shipped with task
     if (externals.hasOwnProperty('files')) {
         var files = externals.files;
-        files.forEach(function (file) {
+        await files.asyncForEach(async function (file) {
             assert(file.url, 'file.url');
             assert(file.dest, 'file.dest');
 
             // download the file from url
-            var fileSource = downloadFile(file.url);
+            let fileSource = await downloadFile(file.url);
             // copy the files
             var fileDest = path.join(destRoot, file.dest);
             mkdir('-p', path.dirname(fileDest));

@@ -141,7 +141,7 @@ target.gendocs = function() {
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
 //
-target.build = function() {
+target.build = async function() {
     target.clean();
 
     ensureTool('tsc', '--version', 'Version 2.3.4');
@@ -151,7 +151,7 @@ target.build = function() {
         }
     });
 
-    taskList.forEach(function(taskName) {
+    await taskList.asyncForEach(async function(taskName) {
         banner('Building: ' + taskName);
         var taskPath = path.join(__dirname, 'Tasks', taskName);
         ensureExists(taskPath);
@@ -186,7 +186,7 @@ target.build = function() {
         if (taskMake.hasOwnProperty('externals')) {
             console.log('');
             console.log('> getting task externals');
-            getExternals(taskMake.externals, outDir);
+            await getExternals(taskMake.externals, outDir);
         }
 
         //--------------------------------
