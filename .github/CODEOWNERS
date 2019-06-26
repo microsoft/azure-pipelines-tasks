@@ -259,6 +259,8 @@ Tasks/PackerBuildV0/*   @sachinma
 
 Tasks/PackerBuildV1/*   @sachinma
 
+Tasks/PipAuthenticateV0/*     @zjrunner @shubham90
+
 Tasks/PowerShellV2/*    @bryanmacfarlane
 
 Tasks/PowerShellOnTargetMachinesV1/*    @kmkumaran
