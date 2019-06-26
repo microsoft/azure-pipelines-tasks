@@ -21,7 +21,7 @@ try{
     $NewServiceCustomCertificates = Get-VstsInput -Name NewServiceCustomCertificates
 
     $EnableAdvancedStorageOptions = Get-VstsInput -Name EnableAdvancedStorageOptions -AsBool
-    $ARMConnectedServiceName = Get-VstsInput-Name ARMConnectedServiceName
+    $ARMConnectedServiceName = Get-VstsInput -Name ARMConnectedServiceName
     $ARMStorageAccount = Get-VstsInput -Name ARMStorageAccount
 
     # Initialize Azure.
