@@ -1,6 +1,6 @@
 import tl = require("azure-pipelines-task-lib/task");
 import util = require("util");
-import { Utility, GitHubAttributes, IRepositoryIssueId, Delimiters, AzureDevOpsVariables, ChangeLogStartCommit } from './Utility';
+import { Utility, GitHubAttributes, IRepositoryIssueId, Delimiters, AzureDevOpsVariables, ChangeLogStartCommit } from "./Utility";
 import { Release } from "./Release";
 import { Helper } from "./Helper";
 

@@ -1,6 +1,6 @@
 import { ChangeLog } from "../operations/ChangeLog";
 import { TestString } from "./TestStrings";
-import { ChangeLogStartCommit } from '../operations/Utility';
+import { ChangeLogStartCommit } from "../operations/Utility";
 
 export class ChangeLogL0Tests {
     public static async startTests() {
