@@ -14,7 +14,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 153,
+    "Minor": 155,
     "Patch": 0
   },
   "demands": [],
@@ -74,6 +74,14 @@
         "auto": "Git tag",
         "manual": "User specified tag"
       }
+    },
+    {
+      "name": "tagPattern",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.tagPattern",
+      "required": false,
+      "visibleRule": "tagSource = auto",
+      "helpMarkDown": "ms-resource:loc.input.help.tagPattern"
     },
     {
       "name": "tag",

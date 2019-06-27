@@ -3,6 +3,7 @@ import * as assert from "assert";
 import * as ttm from "azure-pipelines-task-lib/mock-test";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
+import * as pipelineutils from "docker-common-v2/pipelineutils";
 import * as shared from "./TestShared";
 
 describe("DockerV2 Suite", function () {
@@ -26,9 +27,22 @@ describe("DockerV2 Suite", function () {
         delete process.env[shared.TestEnvVars.buildContext];
         delete process.env[shared.TestEnvVars.tags];
         delete process.env[shared.TestEnvVars.arguments];
+        delete process.env[shared.TestEnvVars.addPipelineData];
     });
     
     after(function () {
+        delete process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'];
+        delete process.env['BUILD_SOURCEVERSION'];
+        delete process.env['RELEASE_RELEASEID'];
+        delete process.env['BUILD_REPOSITORY_URI'];
+        delete process.env['BUILD_SOURCEBRANCHNAME'];
+        delete process.env['BUILD_DEFINITIONNAME'];
+        delete process.env['BUILD_BUILDNUMBER'];
+        delete process.env['BUILD_BUILDURI'];
+        delete process.env['SYSTEM_TEAMPROJECT'];
+        delete process.env['BUILD_REPOSITORY_NAME'];
+        delete process.env['RELEASE_DEFINITIONNAME'];
+        delete process.env['RELEASE_RELEASEWEBURL'];
     });
 
     // Docker build tests begin
@@ -77,6 +91,22 @@ describe("DockerV2 Suite", function () {
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testacr.azurecr.io/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
+        console.log(tr.stderr);
+        done();
+    });
+    
+    it('Runs successfully for docker build when registry type is ACR and registry URL contains uppercase characters', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.containerRegistry] = "acrendpoint2";
+        process.env[shared.TestEnvVars.repository] = "testrepo";
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testacr2.azurecr.io/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
         console.log(tr.stderr);
         done();
     });
@@ -522,4 +552,48 @@ describe("DockerV2 Suite", function () {
         assert.equal(actualImageSize.length, expectedSizeString.length, "getImageSize should return correctly for given layers");
         done();
     });
+
+    it("getDefaultLabels returns all labels when addPipelineData is true", (done: MochaDone) => {
+        console.log("TestCaseName: getDefaultLabels returns all labels when addPipelineData is true");
+        console.log("\n");
+
+        setEnvironmentVariables();
+        process.env['SYSTEM_HOSTTYPE'] = 'build';
+        const labels = pipelineutils.getDefaultLabels(true);
+
+        // update the label count in assert when newer labels are added
+        assert.equal(labels.length, 9, "All labels are returned by default");
+        done();
+    });
+
+    it("Runs successfully for docker build selected labels when addPipelineData is false", (done: MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
+        process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
+        process.env[shared.TestEnvVars.addPipelineData] = "false";
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabelsWithAddPipelineFalse} -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
+        done();
+    });
+
+    function setEnvironmentVariables() : void {
+        process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = 'https://mock.ms/mock/';
+        process.env['BUILD_SOURCEVERSION'] = 'buildId';
+        process.env['RELEASE_RELEASEID'] = 'realeaseId';
+        process.env['BUILD_REPOSITORY_URI'] = 'https://mock.ms/mock/';
+        process.env['BUILD_SOURCEBRANCHNAME'] = "some string";
+        process.env['BUILD_DEFINITIONNAME'] = "some string";
+        process.env['BUILD_BUILDNUMBER'] = "some string";
+        process.env['BUILD_BUILDURI'] = 'https://mock.ms/mock/';
+        process.env['SYSTEM_TEAMPROJECT'] = "some string";
+        process.env['BUILD_REPOSITORY_NAME'] = "some string";
+        process.env['RELEASE_DEFINITIONNAME'] = "some string";
+        process.env['RELEASE_RELEASEWEBURL'] = 'https://mock.ms/mock/';
+    }
 });
