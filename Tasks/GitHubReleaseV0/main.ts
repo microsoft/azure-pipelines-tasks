@@ -1,7 +1,7 @@
 import tl = require("azure-pipelines-task-lib/task");
 import path = require("path");
 import { Action } from "./operations/Action";
-import { Utility, ActionType, Delimiters, ChangeLogStartCommit } from './operations/Utility';
+import { Utility, ActionType, Delimiters, ChangeLogStartCommit } from "./operations/Utility";
 import { Inputs} from "./operations/Constants";
 import { ChangeLog } from "./operations/ChangeLog";
 import { Helper } from "./operations/Helper";

@@ -191,7 +191,7 @@
         {
             "name": "compareWith",
             "type": "radio",
-            "label": "Compare With",
+            "label": "Compare with",
             "required": true,
             "defaultValue": "lastFullRelease",
             "visibleRule": "addChangeLog = true",

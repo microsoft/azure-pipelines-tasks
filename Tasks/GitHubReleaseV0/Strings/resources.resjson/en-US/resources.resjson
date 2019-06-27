@@ -35,7 +35,7 @@
   "loc.input.help.isPreRelease": "Indicate whether the release should be marked as a pre-release.",
   "loc.input.label.addChangeLog": "Add changelog",
   "loc.input.help.addChangeLog": "If set to `true`, a list of changes (commits and issues) between this and the last published release will be generated and appended to the release notes.",
-  "loc.input.label.compareWith": "Compare With",
+  "loc.input.label.compareWith": "Compare with",
   "loc.input.help.compareWith": "Indicate which release we should compare with to generate the changelog.",
   "loc.input.label.releaseTag": "Release Tag",
   "loc.input.help.releaseTag": "Specify the regex for tag for the release we should compare with to generate the changelog.",

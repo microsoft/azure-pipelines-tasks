@@ -153,7 +153,7 @@ export class ChangeLog {
         else {
             //Latest release with the given tag or matching the given regex.
             console.log(tl.loc("FetchLastReleaseByTag"));
-            comparer = release => Utility.isTagMatching(release[GitHubAttributes.tagName], releaseTag);
+            comparer = release => !release[GitHubAttributes.draft] && Utility.isTagMatching(release[GitHubAttributes.tagName], releaseTag);
 
         }
 
