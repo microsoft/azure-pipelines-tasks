@@ -14,7 +14,7 @@ export async function promote(ignoreSslErrors?: boolean) {
 
     if (canaryDeploymentHelper.isCanaryDeploymentStrategy()) {
         tl.debug('Deploying input manifests');
-        deploymentHelper.deploy(kubectl, TaskInputParameters.manifests, 'None');
+        await deploymentHelper.deploy(kubectl, TaskInputParameters.manifests, 'None');
         tl.debug('Deployment strategy selected is Canary. Deleting canary and baseline workloads.');
         try {
             canaryDeploymentHelper.deleteCanaryDeployment(kubectl, TaskInputParameters.manifests);

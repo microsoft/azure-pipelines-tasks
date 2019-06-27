@@ -1,7 +1,6 @@
 import * as ma from 'azure-pipelines-task-lib/mock-answer';
 import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import * as path from 'path';
-import * as os from 'os';
 
 import * as shared from './TestShared';
 
@@ -44,6 +43,7 @@ tr.setInput('patch', process.env[shared.TestEnvVars.patch] || '');
 tr.setInput('secretName', process.env[shared.TestEnvVars.secretName] || '');
 tr.setInput('secretType', process.env[shared.TestEnvVars.secretType] || '');
 tr.setInput('dockerComposeFile', process.env[shared.TestEnvVars.dockerComposeFile] || '');
+tr.setInput('kustomizationPath', process.env[shared.TestEnvVars.kustomizationPath] || '');
 
 process.env.SYSTEM_DEFAULTWORKINGDIRECTORY = testnamespaceWorkingDirectory;
 process.env.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI = teamFoundationCollectionUri;
@@ -98,6 +98,24 @@ if (process.env[shared.TestEnvVars.action] === 'bake') {
     a.exec[commandWithReleaseNameOverride] = {
         'code': 0,
         stdout: 'baked manifest from helm chart'
+    };
+
+    const kubectlVersion = `${kubectlPath} version --client=true -o json`;
+    a.exec[kubectlVersion] = {
+        'code': 0,
+        stdout: `{
+            "clientVersion": {
+              "major": "1",
+              "minor": ${process.env.KubectlMinorVersion},
+              "gitVersion": "v1.13.0"
+            }
+          }`
+    };
+
+    const kustomizeCommand = `${kubectlPath} kustomize ${process.env[shared.TestEnvVars.kustomizationPath]}`;
+    a.exec[kustomizeCommand] = {
+        'code': 0,
+        stdout: 'Kustomization files created'
     };
 
     const komposeCommand = `kompose convert -f ${process.env[shared.TestEnvVars.dockerComposeFile]} -o ${path.join('tempdirectory', 'baked-template-random.yaml')}`;
@@ -279,7 +297,7 @@ fsClone.existsSync = function (filePath) {
     }
 };
 
-fsClone.writeFileSync = function(path, data) {
+fsClone.writeFileSync = function (path, data) {
     console.log(`wrote to ${path}`);
 };
 
@@ -306,7 +324,7 @@ tr.registerMock('../utils/FileHelper', {
         }
         return newFilePaths;
     },
-    getTempDirectory: function() {
+    getTempDirectory: function () {
         return 'tempdirectory';
     },
     getNewUserDirPath: fh.getNewUserDirPath,
@@ -314,7 +332,7 @@ tr.registerMock('../utils/FileHelper', {
     assertFileExists: fh.assertFileExists
 });
 
-tr.registerMock('uuid/v4', function() {
+tr.registerMock('uuid/v4', function () {
     return 'random';
 });
 

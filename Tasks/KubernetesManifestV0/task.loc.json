@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 155,
-    "Patch": 1
+    "Patch": 4
   },
   "demands": [],
   "groups": [],
@@ -116,7 +116,8 @@
       "visibleRule": "action = bake",
       "options": {
         "helm2": "Helm 2",
-        "kompose": "Kompose"
+        "kompose": "Kompose",
+        "kustomize": "Kustomize"
       },
       "helpMarkDown": "ms-resource:loc.input.help.renderType"
     },
@@ -164,6 +165,15 @@
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.overrides",
       "visibleRule": "action = bake && renderType = helm2"
+    },
+    {
+      "name": "kustomizationPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.kustomizationPath",
+      "required": false,
+      "visibleRule": "action = bake && renderType = kustomize",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.kustomizationPath"
     },
     {
       "name": "resourceToPatch",
@@ -323,6 +333,7 @@
     "InvalidRejectActionDeploymentStrategy": "ms-resource:loc.messages.InvalidRejectActionDeploymentStrategy",
     "InvalidPromotetActionDeploymentStrategy": "ms-resource:loc.messages.InvalidPromotetActionDeploymentStrategy",
     "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
-    "CouldNotDeterminePodStatus": "ms-resource:loc.messages.CouldNotDeterminePodStatus"
+    "CouldNotDeterminePodStatus": "ms-resource:loc.messages.CouldNotDeterminePodStatus",
+    "KubectlShouldBeUpgraded": "ms-resource:loc.messages.KubectlShouldBeUpgraded"
   }
 }
