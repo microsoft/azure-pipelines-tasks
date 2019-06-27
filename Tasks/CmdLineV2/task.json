@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 151,
-        "Patch": 1
+        "Patch": 2
     },
     "releaseNotes": "Script task consistency. Added support for multiple lines.",
     "showEnvironmentVariables": true,
@@ -35,7 +35,7 @@
             "type": "multiLine",
             "label": "Script",
             "required": true,
-            "defaultValue": "echo Write your commands here\n\necho Use the environment variables input below to pass secret variables to this script",
+            "defaultValue": "echo Write your commands here\n\necho Hello world\n",
             "properties": {
                 "resizable": "true",
                 "rows": "10",
