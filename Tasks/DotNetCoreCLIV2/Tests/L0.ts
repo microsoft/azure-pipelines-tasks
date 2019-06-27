@@ -4,7 +4,6 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 import os = require('os');
 import fs = require('fs');
-import { TLSSocket } from 'tls';
 
 describe('DotNetCoreExe Suite', function () {
     before(() => {
