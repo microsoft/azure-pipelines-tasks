@@ -87,7 +87,14 @@ export class dotNetExe {
             var projectFile = projectFiles[fileIndex];
             var dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
-            dotnet.arg(projectFile);
+            if (this.isRunCommand()) {
+                if (!!projectFile) {
+                    dotnet.arg("--project");
+                    dotnet.arg(projectFile);
+                }
+            } else {
+                dotnet.arg(projectFile);
+            }
             var dotnetArguments = this.arguments;
             if (this.isPublishCommand() && this.outputArgument && tl.getBoolInput("modifyOutputPath")) {
                 var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
@@ -343,6 +350,10 @@ export class dotNetExe {
 
     private isPublishCommand(): boolean {
         return this.command === "publish";
+    }
+
+    private isRunCommand(): boolean {
+        return this.command === "run";
     }
 
     private static getModifiedOutputForProjectFile(outputBase: string, projectFile: string): string {
