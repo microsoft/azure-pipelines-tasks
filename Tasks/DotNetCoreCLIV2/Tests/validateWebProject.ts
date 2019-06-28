@@ -15,7 +15,7 @@ tmr.setInput('workingDirectory', process.env["workingDirectory"] ? process.env["
 
 process.env['TASK_TEST_TRACE'] = "true";
 
-var projectFile = path.join(__dirname, 'validateWebProject.csproj');
+var projectFile = path.join(__dirname, process.env["__projects__"]);
 var execCommand = "dotnet publish " + projectFile
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
