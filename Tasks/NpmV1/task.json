@@ -22,12 +22,12 @@
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "npm $(command)",
     "groups": [
-      {
-        "displayName": "Custom registries and authentication",
-        "name": "customRegistries",
-        "isExpanded": false,
-        "visibleRule": "command = install || command = ci || command = custom"
-      },
+        {
+          "displayName": "Custom registries and authentication",
+          "name": "customRegistries",
+          "isExpanded": false,
+          "visibleRule": "command = install || command = ci || command = custom"
+        },
         {
             "name": "publishRegistries",
             "displayName": "Destination registry and authentication",
