@@ -25,6 +25,30 @@ function Update-PSModulePathForHostedAgent {
         else {
             $hostedAgentAzModulePath = Get-LatestModule -patternToMatch "^az_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"
         }
+        
+        $azureRMModulePath = "C:\Modules\azurerm_2.1.0"
+        $azureModulePath = "C:\Modules\azure_2.1.0"
+
+        if ($env:PSModulePath.split(";") -contains $azureRMModulePath) {
+            $NewValue = (($env:PSModulePath).Split(";") | ? { $_ -ne $azureRMModulePath }) -join ";"
+            [Environment]::SetEnvironmentVariable("PSModulePath", $NewValue, "Machine")
+            $env:PSModulePath = [System.Environment]::GetEnvironmentVariable("PSModulePath","Machine")
+            write-verbose "$azureRMModulePath removed. Restart the prompt for the changes to take effect."
+        }
+        else {
+            write-verbose "$azureRMModulePath is not present in $env:psModulePath"
+        }
+
+        if ($env:PSModulePath.split(";") -contains $azureModulePath) {
+            $NewValue = (($env:PSModulePath).Split(";") | ? { $_ -ne $azureModulePath }) -join ";"
+            [Environment]::SetEnvironmentVariable("PSModulePath", $NewValue, "Machine")
+            $env:PSModulePath = [System.Environment]::GetEnvironmentVariable("PSModulePath","Machine")
+            write-verbose "$azureModulePath removed. Restart the prompt for the changes to take effect."
+        }
+        else {
+            write-verbose "$azureModulePath is not present in $env:psModulePath"
+        }
+
         $env:PSModulePath = $hostedAgentAzModulePath + ";" + $env:PSModulePath
         $env:PSModulePath = $env:PSModulePath.TrimStart(';') 
     } finally {
