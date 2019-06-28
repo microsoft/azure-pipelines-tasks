@@ -10,7 +10,7 @@
     "version": {
         "Major": 1,
         "Minor": 154,
-        "Patch": 4
+        "Patch": 5
     },
     "runsOn": [
         "Agent",
@@ -22,12 +22,12 @@
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "npm $(command)",
     "groups": [
-        {
-            "displayName": "Custom registries and authentication",
-            "name": "customRegistries",
-            "isExpanded": false,
-            "visibleRule": "command = install || command = custom"
-        },
+      {
+        "displayName": "Custom registries and authentication",
+        "name": "customRegistries",
+        "isExpanded": false,
+        "visibleRule": "command = install || command = ci || command = custom"
+      },
         {
             "name": "publishRegistries",
             "displayName": "Destination registry and authentication",
@@ -38,7 +38,7 @@
             "displayName": "Advanced",
             "name": "advanced",
             "isExpanded": false,
-            "visibleRule": "command = install || command = publish"
+            "visibleRule": "command = install || command = ci || command = publish"
         }
     ],
     "inputs": [
@@ -49,11 +49,12 @@
             "type": "pickList",
             "required": true,
             "options": {
+                "ci": "ci",
                 "install": "install",
                 "publish": "publish",
                 "custom": "custom"
             },
-            "defaultValue": "install"
+            "defaultValue": "ci"
         },
         {
             "name": "workingDir",
