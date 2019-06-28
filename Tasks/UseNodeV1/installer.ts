@@ -1,6 +1,7 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as restm from 'typed-rest-client/RestClient';
+import { IRequestOptions } from "typed-rest-client/Interfaces";
 import * as os from 'os';
 import * as path from 'path';
 
@@ -56,7 +57,7 @@ export async function getNode(versionSpec: string, checkLatest: boolean) {
             }
 
             // check cache
-            toolPath = toolLib.findLocalTool('node', version)
+            toolPath = toolLib.findLocalTool('node', version);
         }
 
         if (!toolPath) {
@@ -66,7 +67,7 @@ export async function getNode(versionSpec: string, checkLatest: boolean) {
     }
 
     //
-    // a tool installer initimately knows details about the layout of that tool
+    // a tool installer intimately knows details about the layout of that tool
     // for example, node binary is in the bin folder after the extract on Mac/Linux.
     // layouts could change by version, by platform etc... but that's the tool installers job
     //
@@ -92,7 +93,9 @@ async function queryLatestMatch(versionSpec: string): Promise<string> {
 
     let versions: string[] = [];
     let dataUrl = "https://nodejs.org/dist/index.json";
-    let rest: restm.RestClient = new restm.RestClient('vsts-node-tool');
+
+    let rest: restm.RestClient = getRestClient();
+
     let nodeVersions: INodeVersion[] = (await rest.get<INodeVersion[]>(dataUrl)).result;
     nodeVersions.forEach((nodeVersion:INodeVersion) => {
         // ensure this version supports your os and platform
@@ -104,6 +107,21 @@ async function queryLatestMatch(versionSpec: string): Promise<string> {
     // get the latest version that matches the version spec
     let version: string = toolLib.evaluateVersions(versions, versionSpec);
     return version;
+
+    function getRestClient() {
+        const proxy = taskLib.getHttpProxyConfiguration();
+        const cert = taskLib.getHttpCertConfiguration();
+        const ignoreSslError: boolean = !!taskLib.getVariable('Agent.SkipCertValidation');
+        const requestOptions: IRequestOptions = { ignoreSslError: ignoreSslError };
+        if (proxy) {
+            requestOptions.proxy = proxy;
+        }
+        if (cert) {
+            requestOptions.cert = cert;
+        }
+        let rest: restm.RestClient = new restm.RestClient('vsts-node-tool', null, null, requestOptions);
+        return rest;
+    }
 }
 
 async function acquireNode(version: string): Promise<string> {
@@ -112,21 +130,21 @@ async function acquireNode(version: string): Promise<string> {
     //
     version = toolLib.cleanVersion(version);
     let fileName: string = osPlat == 'win32'? 'node-v' + version + '-win-' + os.arch() :
-                                                'node-v' + version + '-' + osPlat + '-' + os.arch();  
+                                                'node-v' + version + '-' + osPlat + '-' + os.arch();
     let urlFileName: string = osPlat == 'win32'? fileName + '.7z':
-                                                    fileName + '.tar.gz';  
+                                                    fileName + '.tar.gz';
 
     let downloadUrl = 'https://nodejs.org/dist/v' + version + '/' + urlFileName;
 
     let downloadPath: string;
 
-    try 
+    try
     {
         downloadPath = await toolLib.downloadTool(downloadUrl);
-    } 
+    }
     catch (err)
     {
-        if (err['httpStatusCode'] && 
+        if (err['httpStatusCode'] &&
             err['httpStatusCode'] === '404')
         {
             return await acquireNodeFromFallbackLocation(version);
@@ -134,7 +152,7 @@ async function acquireNode(version: string): Promise<string> {
 
         throw err;
     }
-    
+
     //
     // Extract
     //
@@ -186,7 +204,7 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
         await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));
     }
     catch (err) {
-        if (err['httpStatusCode'] && 
+        if (err['httpStatusCode'] &&
             err['httpStatusCode'] === '404')
         {
             exeUrl = `https://nodejs.org/dist/v${version}/node.exe`;

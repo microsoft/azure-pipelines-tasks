@@ -1,5 +1,5 @@
 //
-// UseNode: 
+// UseNode:
 //     Optionally install version at runtime, setup proxy and setup auth
 //     This allows for natural cmd line steps in yaml after "using" that eco-system
 //     since proxy vars and auth is setup for the rest of the job
@@ -22,7 +22,6 @@ async function run() {
         if (version) {
             const checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
 
-            // TODO: installer doesn't support proxy
             await installer.getNode(version, checkLatest);
         }
 
