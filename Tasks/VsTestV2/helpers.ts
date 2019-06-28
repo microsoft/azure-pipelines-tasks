@@ -35,15 +35,19 @@ export class Helper {
         }
     }
 
-    public static isNullEmptyOrUndefined(obj) {
+    public static isNotNullEmptyOrUndefined(obj: any) {
+        return !this.isNullEmptyOrUndefined(obj);
+    }
+
+    public static isNullEmptyOrUndefined(obj: any) {
         return obj === null || obj === '' || obj === undefined;
     }
 
-    public static isNullOrUndefined(obj) {
+    public static isNullOrUndefined(obj: any) {
         return obj === null || obj === '' || obj === undefined;
     }
 
-    public static isNullOrWhitespace(input) {
+    public static isNullOrWhitespace(input: any) {
         if (typeof input === 'undefined' || input === null) {
             return true;
         }

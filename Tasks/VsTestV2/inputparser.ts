@@ -79,13 +79,29 @@ function getTestSelectionInputs(inputDataContract : idc.InputDataContract) : idc
             inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings = <idc.TestPlanTestSuiteSettings>{};
             console.log(tl.loc('testSelectorInput', tl.loc('testPlanSelector')));
 
-            inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.Testplan = parseInt(tl.getInput('testPlan'));
+            let testPlanId;
+            let testSuiteStrings;
+            let testConfigId;
+
+            if (utils.Helper.isNotNullEmptyOrUndefined(tl.getVariable('TestPlanId'))) {
+                console.log(tl.loc('UsingTestPlanTestSuiteInputsFromBuildVariables'));
+                testPlanId = tl.getVariable('VsTest.TestPlanId');
+                testSuiteStrings = tl.getVariable('VsTest.TestSuiteId').split(',').map(function(testSuiteString: string) {
+                    return testSuiteString.trim();
+                });
+                testConfigId = tl.getVariable('VsTest.TestConfigurationId');
+            } else {
+                testPlanId = tl.getInput('testPlan');
+                testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
+                testConfigId = tl.getInput('testConfiguration');
+            }
+
+            inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.Testplan = parseInt(testPlanId);
             console.log(tl.loc('testPlanInput', inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.Testplan));
 
-            inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.TestPlanConfigId = parseInt(tl.getInput('testConfiguration'));
+            inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.TestPlanConfigId = parseInt(testConfigId);
             console.log(tl.loc('testplanConfigInput', inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.TestPlanConfigId));
 
-            const testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
             inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.TestSuites = new Array<number>();
             testSuiteStrings.forEach(element => {
                 const testSuiteId = parseInt(element);

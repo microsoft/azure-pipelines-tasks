@@ -84,7 +84,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.testPlan",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.testPlan",
       "groupName": "testSelection",
       "properties": {
@@ -98,7 +98,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.testSuite",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.testSuite",
       "groupName": "testSelection",
       "properties": {
@@ -113,7 +113,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.testConfiguration",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.testConfiguration",
       "groupName": "testSelection",
       "properties": {

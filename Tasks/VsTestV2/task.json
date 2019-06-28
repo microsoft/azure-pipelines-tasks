@@ -84,7 +84,7 @@
             "type": "pickList",
             "label": "Test plan",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Select a test plan containing test suites with automated test cases.",
             "groupName": "testSelection",
             "properties": {
@@ -98,7 +98,7 @@
             "type": "pickList",
             "label": "Test suite",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Select one or more test suites containing automated test cases. Test case work items must be associated with an automated test method. [Learn more.](https://go.microsoft.com/fwlink/?linkid=847773",
             "groupName": "testSelection",
             "properties": {
@@ -113,7 +113,7 @@
             "type": "pickList",
             "label": "Test configuration",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Select Test Configuration.",
             "groupName": "testSelection",
             "properties": {
@@ -620,6 +620,7 @@
         "diagnosticsInput": "Diagnostics enabled : %s",
         "UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory).",
         "LookingForBuildToolsInstalltion": "Attempting to find vstest.console from a visual studio build tools installation.",
-        "LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation."
+        "LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation.",
+        "UsingTestPlanTestSuiteInputsFromBuildVariables": "Using test plan test suite inputs from build variables."
     }
 }
