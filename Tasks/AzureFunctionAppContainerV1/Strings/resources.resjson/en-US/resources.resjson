@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Function for container",
-  "loc.helpMarkDown": "[More information](https://aka.ms/azurefunctiononcontainerdeployreadme)",
-  "loc.description": "Update Function Apps with Docker containers",
+  "loc.friendlyName": "Azure Functions for container",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiononcontainerdeployreadme)",
+  "loc.description": "Update a function app with a Docker container",
   "loc.instanceNameFormat": "Azure Function App on Container Deploy: $(appName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
   "loc.input.label.azureSubscription": "Azure subscription",
