@@ -9,7 +9,7 @@ import { getExecutableExtension } from './utility';
 
 const helmToolName = 'helm';
 const helmLatestReleaseUrl = 'https://api.github.com/repos/helm/helm/releases/latest';
-const stableHelmVersion = 'v2.9.1';
+const stableHelmVersion = 'v2.14.1';
 
 export async function getHelm(version?: string) {
     try {
@@ -32,12 +32,11 @@ export async function downloadHelm(version?: string): Promise<string> {
         const unzipedHelmPath = await toolLib.extractZip(helmDownloadPath);
         cachedToolpath = await toolLib.cacheDir(unzipedHelmPath, helmToolName, version);
     }
-
     const helmpath = findHelm(cachedToolpath);
     if (!helmpath) {
         throw new Error(tl.loc('HelmNotFoundInFolder', cachedToolpath));
     }
-
+    
     fs.chmodSync(helmpath, '777');
     return helmpath;
 }
@@ -52,13 +51,13 @@ function findHelm(rootFolder: string) {
 function getHelmDownloadURL(version: string): string {
     switch (os.type()) {
         case 'Linux':
-            return util.format('https://storage.googleapis.com/kubernetes-helm/helm-%s-linux-amd64.zip', version);
+            return util.format('https://get.helm.sh/helm-%s-linux-amd64.zip', version);
 
         case 'Darwin':
-            return util.format('https://storage.googleapis.com/kubernetes-helm/helm-%s-darwin-amd64.zip', version);
+            return util.format('https://get.helm.sh/helm-%s-darwin-amd64.zip', version);
 
         case 'Windows_NT':
-            return util.format('https://storage.googleapis.com/kubernetes-helm/helm-%s-windows-amd64.zip', version);
+            return util.format('https://get.helm.sh/helm-%s-windows-amd64.zip', version);
 
         default:
             throw Error('Unknown OS type');
@@ -67,9 +66,14 @@ function getHelmDownloadURL(version: string): string {
 
 export async function getStableHelmVersion(): Promise<string> {
     try {
-        const downloadPath = await toolLib.downloadTool('https://api.github.com/repos/helm/helm/releases/latest');
+        const downloadPath = await toolLib.downloadTool(helmLatestReleaseUrl);
         const response = JSON.parse(fs.readFileSync(downloadPath, 'utf8').toString().trim());
-        return response.body.tag_name;
+        if (!response.tag_name)
+        {
+            return stableHelmVersion;
+        }
+        
+        return response.tag_name;
     } catch (error) {
         tl.warning(tl.loc('HelmLatestNotKnown', helmLatestReleaseUrl, error, stableHelmVersion));
     }

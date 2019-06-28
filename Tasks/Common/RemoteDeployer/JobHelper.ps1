@@ -181,7 +181,7 @@ function Get-JobResults {
             if($($remoteExecutionStatusByLocation.Values | ? { $_ -eq "Unknown" }).Count -eq 0) {
                 break;
             }
-            Start-Sleep -Seconds 30
+            Start-Sleep -Seconds 5
         }
         return $jobResults
     } finally {
