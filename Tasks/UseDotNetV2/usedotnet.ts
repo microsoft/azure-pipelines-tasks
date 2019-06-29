@@ -21,7 +21,7 @@ async function run() {
         let includePreviewVersions: boolean = tl.getBoolInput('includePreviewVersions');
         let workingDirectory: string | null = tl.getPathInput("workingDirectory", false) || null;
         let performMultiLevelLookup = tl.getBoolInput("performMultiLevelLookup", false);
-        installDotNet(installationPath, packageType, versionSpec, useGlobalJson, workingDirectory, includePreviewVersions, performMultiLevelLookup);
+        await installDotNet(installationPath, packageType, versionSpec, useGlobalJson, workingDirectory, includePreviewVersions, performMultiLevelLookup);
     }
     // Install NuGet version specified by user or 4.4.1 in case none is specified
     // Also sets up the proxy configuration settings.    
