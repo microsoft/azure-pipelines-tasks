@@ -1,7 +1,7 @@
 "use strict";
 import * as path from 'path';
 
-import * as taskLib from 'azure-pipelines-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import { DotNetCoreVersionFetcher } from "./versionfetcher";
 import { globalJsonFetcher } from "./globaljsonfetcher";
 import { VersionInstaller } from "./versioninstaller";
@@ -10,17 +10,17 @@ import { VersionInfo, VersionParts } from "./models"
 import { NuGetInstaller } from "./nugetinstaller";
 
 async function run() {
-    let useGlobalJson: boolean = taskLib.getBoolInput('useGlobalJson');
-    let versionSpec = taskLib.getInput('version');
-    const nugetVersion = taskLib.getInput('nugetVersion') || '4.4.1';
+    let useGlobalJson: boolean = tl.getBoolInput('useGlobalJson');
+    let versionSpec = tl.getInput('version');
+    const nugetVersion = tl.getInput('nugetVersion') || '4.4.1';
 
     // Check if we want install dotnet
     if (versionSpec || useGlobalJson) {
-        let packageType = taskLib.getInput('packageType') || "sdk";
-        let installationPath = taskLib.getInput('installationPath');
-        let includePreviewVersions: boolean = taskLib.getBoolInput('includePreviewVersions');
-        let workingDirectory: string | null = taskLib.getPathInput("workingDirectory", false) || null;
-        let performMultiLevelLookup = taskLib.getBoolInput("performMultiLevelLookup", false);
+        let packageType = tl.getInput('packageType') || "sdk";
+        let installationPath = tl.getInput('installationPath');
+        let includePreviewVersions: boolean = tl.getBoolInput('includePreviewVersions');
+        let workingDirectory: string | null = tl.getPathInput("workingDirectory", false) || null;
+        let performMultiLevelLookup = tl.getBoolInput("performMultiLevelLookup", false);
         installDotNet(installationPath, packageType, versionSpec, useGlobalJson, workingDirectory, includePreviewVersions, performMultiLevelLookup);
     }
     // Install NuGet version specified by user or 4.4.1 in case none is specified
@@ -48,7 +48,7 @@ async function installDotNet(
     performMultiLevelLookup: boolean) {
 
     if (!installationPath && installationPath.length == 0) {
-        installationPath = path.join(taskLib.getVariable('Agent.ToolsDirectory'), "dotnet");
+        installationPath = path.join(tl.getVariable('Agent.ToolsDirectory'), "dotnet");
     }
     let versionFetcher = new DotNetCoreVersionFetcher();
     let dotNetCoreInstaller = new VersionInstaller(packageType, installationPath);
@@ -62,24 +62,24 @@ async function installDotNet(
             await dotNetCoreInstaller.downloadAndInstall(version, url);            
         }
     } else if (versionSpec) {
-        console.log(taskLib.loc("ToolToInstall", packageType, versionSpec));
+        console.log(tl.loc("ToolToInstall", packageType, versionSpec));
         let versionSpecParts = new VersionParts(versionSpec);        
         let versionInfo: VersionInfo = await versionFetcher.getVersionInfo(versionSpecParts.versionSpec, packageType, includePreviewVersions);
         if (!versionInfo) {
-            throw taskLib.loc("MatchingVersionNotFound", versionSpecParts.versionSpec);
+            throw tl.loc("MatchingVersionNotFound", versionSpecParts.versionSpec);
         }
         if (!dotNetCoreInstaller.isVersionInstalled(versionInfo.getVersion())) {
             await dotNetCoreInstaller.downloadAndInstall(versionInfo, versionFetcher.getDownloadUrl(versionInfo));
         }
     }else{
-        throw taskLib.loc("installDotNetCalledWithWrongParameters")
+        throw tl.loc("installDotNetCalledWithWrongParameters")
     }
 
-    taskLib.prependPath(installationPath);
+    tl.prependPath(installationPath);
     // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
-    taskLib.setVariable('DOTNET_ROOT', installationPath);
+    tl.setVariable('DOTNET_ROOT', installationPath);
     // By default disable Multi Level Lookup unless user wants it enabled.
-    taskLib.setVariable("DOTNET_MULTILEVEL_LOOKUP", !performMultiLevelLookup ? "0" : "1");
+    tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", !performMultiLevelLookup ? "0" : "1");
     // Add dot net tools path to "PATH" environment variables, so that tools can be used directly.
     addDotNetCoreToolPath();
 }
@@ -87,25 +87,25 @@ async function installDotNet(
 function addDotNetCoreToolPath() {
     try {
         let globalToolPath: string = "";
-        if (taskLib.osType().match(/^Win/)) {
+        if (tl.osType().match(/^Win/)) {
             globalToolPath = path.join(process.env.USERPROFILE, Constants.relativeGlobalToolPath);
         } else {
             globalToolPath = path.join(process.env.HOME, Constants.relativeGlobalToolPath);
         }
 
-        console.log(taskLib.loc("PrependGlobalToolPath"));
-        taskLib.mkdirP(globalToolPath);
-        taskLib.prependPath(globalToolPath);
+        console.log(tl.loc("PrependGlobalToolPath"));
+        tl.mkdirP(globalToolPath);
+        tl.prependPath(globalToolPath);
     } catch (error) {
         //nop
-        console.log(taskLib.loc("ErrorWhileSettingDotNetToolPath", JSON.stringify(error)));
+        console.log(tl.loc("ErrorWhileSettingDotNetToolPath", JSON.stringify(error)));
     }
 }
 
 var taskManifestPath = path.join(__dirname, "task.json");
-taskLib.debug("Setting resource path to " + taskManifestPath);
-taskLib.setResourcePath(taskManifestPath);
+tl.debug("Setting resource path to " + taskManifestPath);
+tl.setResourcePath(taskManifestPath);
 
 run()
-    .then(() => taskLib.setResult(taskLib.TaskResult.Succeeded, ""))
-    .catch((error) => taskLib.setResult(taskLib.TaskResult.Failed, !!error.message ? error.message : error));
+    .then(() => tl.setResult(tl.TaskResult.Succeeded, ""))
+    .catch((error) => tl.setResult(tl.TaskResult.Failed, !!error.message ? error.message : error));
