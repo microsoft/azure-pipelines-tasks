@@ -1,5 +1,5 @@
 import * as fileSystem from "fs";
-import * as taskLib from 'azure-pipelines-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import { DotNetCoreVersionFetcher } from "./versionfetcher";
 import { VersionInfo } from "./models";
 
@@ -32,9 +32,9 @@ export class globalJsonFetcher {
     }
 
     private getVersionStrings(): string[]{
-        let filePathsToGlobalJson = taskLib.findMatch(this.workingDirectory, "**/*global.json");
+        let filePathsToGlobalJson = tl.findMatch(this.workingDirectory, "**/*global.json");
         if (filePathsToGlobalJson == null || filePathsToGlobalJson.length == 0) {
-            throw taskLib.loc("FailedToFindGlobalJson");
+            throw tl.loc("FailedToFindGlobalJson");
         }
         return filePathsToGlobalJson.map(path => {
             return this.readGlobalJson(path).sdk.version;
@@ -43,14 +43,14 @@ export class globalJsonFetcher {
 
     private readGlobalJson(path: string): GlobalJson {
         let globalJson: GlobalJson | null = null;
-        console.log(taskLib.loc("GlobalJsonFound", path));
+        console.log(tl.loc("GlobalJsonFound", path));
         try {
             globalJson = (JSON.parse(fileSystem.readFileSync(path).toString())) as { sdk: { version: string } };
         } catch (error) {
-            throw taskLib.loc("FailedToReadGlobalJson", path);
+            throw tl.loc("FailedToReadGlobalJson", path);
         }
         if (globalJson == null || globalJson.sdk == null || globalJson.sdk.version == null) {
-            throw taskLib.loc("FailedToReadGlobalJson", path);
+            throw tl.loc("FailedToReadGlobalJson", path);
         }
         return globalJson;        
     }
