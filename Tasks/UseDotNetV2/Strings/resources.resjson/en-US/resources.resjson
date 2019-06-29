@@ -88,5 +88,6 @@
   "loc.messages.SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet.",
   "loc.messages.GlobalJsonFound": "Find a global.json at path: %s",
   "loc.messages.FailedToReadGlobalJson": "The global.json at path: '%s' has the wrong format. For information about global.json, visit here: https://docs.microsoft.com/en-us/dotnet/core/tools/global-json",
-  "loc.messages.VersionNumberHasTheWrongFormat": "The version number: %s doesn't have the correct format.. Valid options are: major.minor.patch || major.minor.patch-previewChannel"
+  "loc.messages.VersionNumberHasTheWrongFormat": "The version number: %s doesn't have the correct format.. Valid options are: major.minor.patch || major.minor.patch-previewChannel",
+  "loc.messages.installDotNetCalledWithWrongParameters": "Hey developer you have called the method `` without a `versionSpec` or without `useGlobalJson`. that is impossible."
 }
