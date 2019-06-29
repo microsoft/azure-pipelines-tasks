@@ -40,7 +40,7 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.packageType",
       "options": {
-        "runtime": "Only Runtime",
+        "runtime": "Runtime",
         "sdk": "SDK (contains runtime)"
       }
     },
@@ -65,7 +65,7 @@
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
-      "defaultValue": "2.2.x",
+      "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.version",
       "visibleRule": "useGlobalJson = false || packageType = runtime"
