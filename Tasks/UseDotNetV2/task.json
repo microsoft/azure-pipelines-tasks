@@ -57,7 +57,7 @@
             "name": "workingDirectory",
             "type": "filePath",
             "label": "Working Directory",
-            "helpMarkDown": "Current working directory where the script starts searching for files named 'global.json'.  Empty is the root of the repo (pipeline), which is $(System.DefaultWorkingDirectory)",
+            "helpMarkDown": "Select this option to install all SDKs from global.json files. These files are searched from system.DefaultWorkingDirectory. You can change the search root path by setting working directory input.",
             "required": "false",
             "visibleRule": "useGlobalJson = true"
         },
