@@ -113,8 +113,11 @@ export class VersionParts {
                 !parts[1] || // The minor version must always be set
                 (parts.length == 3 && !parts[2]) || // a version number like `1.1.` is invalid because the path version is missing
                 Number.isNaN(Number.parseInt(parts[0])) || // the major version number must be a number
-                (Number.isNaN(Number.parseInt(parts[1])) &&  // the minor version number must be a number
-                    parts[1] != "x")) // the major version can't be `x`
+                ( // The next lines check the minor version
+                    Number.isNaN(Number.parseInt(parts[1])) &&  // the minor version number must be a number
+                    parts[1] != "x" // the minor version can't be `x`
+                )
+            ) 
             {
                 // TODO: a validation method should return true or false not an error. This must do the caller.              
                 throw taskLib.loc("VersionNumberHasTheWrongFormat", version);
