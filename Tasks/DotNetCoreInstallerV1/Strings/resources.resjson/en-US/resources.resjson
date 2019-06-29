@@ -7,10 +7,6 @@
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.packageType": "Package to install",
   "loc.input.help.packageType": "Please select whether to install only runtime or SDK.",
-  "loc.input.label.useGlobalJson": "Use global json",
-  "loc.input.help.useGlobalJson": "Select this option if you want install all SDKs from your global JSONs. You can change the search root with the working directory setting.",
-  "loc.input.label.workingDirectory": "Working Directory",
-  "loc.input.help.workingDirectory": "Current working directory where the script starts searching for files named 'global.json'.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
   "loc.input.label.version": "Version",
   "loc.input.help.version": "Specify version of .NET Core SDK or runtime to install.<br/>Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json",
   "loc.input.label.includePreviewVersions": "Include Preview Versions",
@@ -82,8 +78,5 @@
   "loc.messages.FilesDataIsIncorrectInVersion": "In release %s for version %s, File data is incorrect (might have missing required fields, such as name, rid and url): %s",
   "loc.messages.VersionFilesDataIncorrect": "Version's files data is missing or has missing required fields.",
   "loc.messages.VersionInformationNotComplete": "Version: %s required information is not complete in releases.json file. Error: %s",
-  "loc.messages.FailedWhileExtractingPacakge": "Failed while extracting downloaded package with error: %s",
-  "loc.messages.GlobalJsonFound": "Find a global.json here: %s",
-  "loc.messages.FailedToReadGlobalJson": "The global.json in the path %s has the wrong format.",
-  "loc.messages.VersionNumberHasTheWrongFormat": "The version number %s hasn't the correct format. Valid options are: major.minor.patch || major.minor.patch-previewChannel"
+  "loc.messages.FailedWhileExtractingPacakge": "Failed while extracting downloaded package with error: %s"
 }

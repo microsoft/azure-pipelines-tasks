@@ -48,4 +48,5 @@ Examples:
     <br/>C:\\Program Files (x86)\\dotnet (32-bit process)
 
     You can read more about it [**HERE**](https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/multilevel-sharedfx-lookup.md).<br/>
-* **Use global json**: This checkbox indicates that all versions from all `global.json` files will be used to install the sdk versions. You can set the search root path with `Working Directory`.
+
+

@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 4
   },
   "preview": "true",
   "satisfies": [
@@ -44,30 +44,12 @@
       }
     },
     {
-      "name": "useGlobalJson",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.useGlobalJson",
-      "defaultValue": false,
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.useGlobalJson",
-      "visibleRule": "packageType = sdk"
-    },
-    {
-      "name": "workingDirectory",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.workingDirectory",
-      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
-      "required": "false",
-      "visibleRule": "useGlobalJson = true"
-    },
-    {
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
       "defaultValue": "2.2.x",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.version",
-      "visibleRule": "useGlobalJson = false || packageType = runtime"
+      "helpMarkDown": "ms-resource:loc.input.help.version"
     },
     {
       "name": "includePreviewVersions",
@@ -165,9 +147,6 @@
     "FilesDataIsIncorrectInVersion": "ms-resource:loc.messages.FilesDataIsIncorrectInVersion",
     "VersionFilesDataIncorrect": "ms-resource:loc.messages.VersionFilesDataIncorrect",
     "VersionInformationNotComplete": "ms-resource:loc.messages.VersionInformationNotComplete",
-    "FailedWhileExtractingPacakge": "ms-resource:loc.messages.FailedWhileExtractingPacakge",
-    "GlobalJsonFound": "ms-resource:loc.messages.GlobalJsonFound",
-    "FailedToReadGlobalJson": "ms-resource:loc.messages.FailedToReadGlobalJson",
-    "VersionNumberHasTheWrongFormat": "ms-resource:loc.messages.VersionNumberHasTheWrongFormat"
+    "FailedWhileExtractingPacakge": "ms-resource:loc.messages.FailedWhileExtractingPacakge"
   }
 }

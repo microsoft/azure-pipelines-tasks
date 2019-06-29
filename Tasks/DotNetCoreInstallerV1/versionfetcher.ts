@@ -28,7 +28,7 @@ export class DotNetCoreVersionFetcher {
     }
 
     public async getVersionInfo(versionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
-        var requiredVersionInfo: VersionInfo | null = null;
+        var requiredVersionInfo: VersionInfo = null;
         if (!this.channels || this.channels.length < 1) {
             await this.setReleasesIndex();
         }
