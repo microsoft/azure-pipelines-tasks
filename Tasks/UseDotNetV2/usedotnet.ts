@@ -50,25 +50,29 @@ async function installDotNet(
     if (!installationPath && installationPath.length == 0) {
         installationPath = path.join(taskLib.getVariable('Agent.ToolsDirectory'), "dotnet");
     }
+    let versionFetcher = new DotNetCoreVersionFetcher();
+    let dotNetCoreInstaller = new VersionInstaller(packageType, installationPath);
     if (useGlobalJson) {
         let globalJsonFetcherInstance = new globalJsonFetcher(workingDirectory);
-        let versionsToInstall: VersionInfo[] = await globalJsonFetcherInstance.Get(packageType);
-        let dotNetCoreInstaller = new VersionInstaller(packageType, installationPath);
+        let versionsToInstall: VersionInfo[] = await globalJsonFetcherInstance.Get(packageType);        
         versionsToInstall = versionsToInstall.filter(d => !dotNetCoreInstaller.isVersionInstalled(d.getVersion()));
-        dotNetCoreInstaller.downloadAndInstallVersions(versionsToInstall);
+        for (let index = 0; index < versionsToInstall.length; index++) {
+            const version = versionsToInstall[index];
+            let url = versionFetcher.getDownloadUrl(version);
+            await dotNetCoreInstaller.downloadAndInstall(version, url);            
+        }
     } else if (versionSpec) {
         console.log(taskLib.loc("ToolToInstall", packageType, versionSpec));
-        let versionSpecParts = new VersionParts(versionSpec);
-        let versionFetcher = new DotNetCoreVersionFetcher();
+        let versionSpecParts = new VersionParts(versionSpec);        
         let versionInfo: VersionInfo = await versionFetcher.getVersionInfo(versionSpecParts.versionSpec, packageType, includePreviewVersions);
         if (!versionInfo) {
             throw taskLib.loc("MatchingVersionNotFound", versionSpecParts.versionSpec);
         }
-
-        let dotNetCoreInstaller = new VersionInstaller(packageType, installationPath);
         if (!dotNetCoreInstaller.isVersionInstalled(versionInfo.getVersion())) {
             await dotNetCoreInstaller.downloadAndInstall(versionInfo, versionFetcher.getDownloadUrl(versionInfo));
         }
+    }else{
+        throw taskLib.loc("installDotNetCalledWithWrongParameters")
     }
 
     taskLib.prependPath(installationPath);

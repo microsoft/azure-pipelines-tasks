@@ -8,10 +8,8 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 import * as utils from "./versionutilities";
 import { VersionInfo } from "./models"
-import { DotNetCoreVersionFetcher } from './versionfetcher';
 
 export class VersionInstaller {
-    private versionFetcher: DotNetCoreVersionFetcher = new DotNetCoreVersionFetcher();
     constructor(packageType: string, installationPath: string) {
         try {
             taskLib.exist(installationPath) || taskLib.mkdirP(installationPath);
@@ -23,31 +21,15 @@ export class VersionInstaller {
         this.packageType = packageType;
         this.installationPath = installationPath;
     }
-
-    /**
-     * Install many versions at the same time
-     * @param versionInfos all versions you want to install.
-     */
-    public async downloadAndInstallVersions(versionInfos: VersionInfo[]){
-        for (let index = 0; index < versionInfos.length; index++) {
-            const version = versionInfos[index];
-            await this.downloadAndInstall(version);            
-        }
-    }
-
     /**
      * Install a single version from a versionInfo
      * @param versionInfo the versionInfo object with all information from the version
-     * @param downloadUrl optional a downloadUrl if you have your own custom download url of the sdk / runtime.
+     * @param downloadUrl The download url of the sdk / runtime.
      */
-    public async downloadAndInstall(versionInfo: VersionInfo, downloadUrl: string | null = null): Promise<void> {
-        if(downloadUrl == null){
-            downloadUrl = this.versionFetcher.getDownloadUrl(versionInfo);
-        }
+    public async downloadAndInstall(versionInfo: VersionInfo, downloadUrl: string): Promise<void> {
         if (!versionInfo || !versionInfo.getVersion() || !downloadUrl || !url.parse(downloadUrl)) {
             throw taskLib.loc("VersionCanNotBeDownloadedFromUrl", versionInfo, downloadUrl);
         }
-
         let version = versionInfo.getVersion();
 
         try {
