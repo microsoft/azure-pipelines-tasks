@@ -1,7 +1,7 @@
 import * as fileSystem from "fs";
+import * as taskLib from 'azure-pipelines-task-lib/task';
 import { DotNetCoreVersionFetcher } from "./versionfetcher";
 import { VersionInfo } from "./models";
-import * as taskLib from 'azure-pipelines-task-lib/task';
 
 export class globalJsonFetcher {
 
