@@ -23,7 +23,7 @@
     "demands": [],
     "ecosystem": "dotnet",
     "instanceNameFormat": "Use dotnet $(packageType) $(version)",
-    "releaseNotes": "<li>Support for installing multiple versions side by side.</li><li>Support for patterns in version to fetch latest in minor/major version.</li><li>Restrict Multi-level lookup</li><li>Installs NuGet and provides proxy support.</li><li>Add support for installing versions from `global.json` file(s)</li>",
+    "releaseNotes": "<li>Support for installing multiple versions side by side.</li><li>Support for patterns in version to fetch latest in minor/major version.</li><li>Restrict Multi-level lookup</li><li>Installs NuGet and provides proxy support.</li><li>Installs sdk versions from `global.json` file(s)</li>",
     "groups": [
         {
             "name": "advanced",
@@ -40,7 +40,7 @@
             "required": true,
             "helpMarkDown": "Please select whether to install only runtime or SDK.",
             "options": {
-                "runtime": "Only Runtime",
+                "runtime": "Runtime",
                 "sdk": "SDK (contains runtime)"
             }
         },
@@ -50,7 +50,7 @@
             "label": "Use global json",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Select this option if you want install all SDKs from your global JSONs. You can change the search root with the working directory setting.",
+            "helpMarkDown": "Select this option to install all SDKs from global.json files. These files are searched from system.DefaultWorkingDirectory. You can change the search root path by setting working directory input.",
             "visibleRule": "packageType = sdk"
         },
         {
@@ -65,7 +65,7 @@
             "name": "version",
             "type": "string",
             "label": "Version",
-            "defaultValue": "2.2.x",
+            "defaultValue": "",
             "required": true,
             "helpMarkDown": "Specify version of .NET Core SDK or runtime to install.<br/>Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json",
             "visibleRule": "useGlobalJson = false || packageType = runtime"
@@ -170,8 +170,8 @@
         "InstallingNuGetVersion": "Installing NuGet version %s",
         "FailureWhileInstallingNuGetVersion": "Failed while installing NuGet version. Error: %s",
         "SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet.",
-        "GlobalJsonFound": "Find a global.json here: %s",
-        "FailedToReadGlobalJson": "The global.json in the path %s has the wrong format.",
-        "VersionNumberHasTheWrongFormat": "The version number %s hasn't the correct format. Valid options are: major.minor.patch || major.minor.patch-previewChannel"
+        "GlobalJsonFound": "Find a global.json at path: %s",
+        "FailedToReadGlobalJson": "The global.json at path: '%s' has the wrong format. For information about global.json, visit here: https://docs.microsoft.com/en-us/dotnet/core/tools/global-json",
+        "VersionNumberHasTheWrongFormat": "The version number: %s doesn't have the correct format.. Valid options are: major.minor.patch || major.minor.patch-previewChannel"
     }
 }
