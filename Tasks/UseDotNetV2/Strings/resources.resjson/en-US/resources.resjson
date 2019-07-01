@@ -88,6 +88,5 @@
   "loc.messages.SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet.",
   "loc.messages.GlobalJsonFound": "Find a global.json at path: %s",
   "loc.messages.FailedToReadGlobalJson": "The global.json at path: '%s' has the wrong format. For information about global.json, visit here: https://docs.microsoft.com/en-us/dotnet/core/tools/global-json",
-  "loc.messages.VersionNumberHasTheWrongFormat": "The version number: %s doesn't have the correct format.. Valid options are: major.minor.patch || major.minor.patch-previewChannel",
-  "loc.messages.installDotNetCalledWithWrongParameters": "Hey developer you have called the method `` without a `versionSpec` or without `useGlobalJson`. that is impossible."
+  "loc.messages.VersionNumberHasTheWrongFormat": "The version number: %s doesn't have the correct format. Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json"
 }

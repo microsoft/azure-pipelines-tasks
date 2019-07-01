@@ -172,7 +172,6 @@
     "SettingUpNugetProxySettings": "ms-resource:loc.messages.SettingUpNugetProxySettings",
     "GlobalJsonFound": "ms-resource:loc.messages.GlobalJsonFound",
     "FailedToReadGlobalJson": "ms-resource:loc.messages.FailedToReadGlobalJson",
-    "VersionNumberHasTheWrongFormat": "ms-resource:loc.messages.VersionNumberHasTheWrongFormat",
-    "installDotNetCalledWithWrongParameters": "ms-resource:loc.messages.installDotNetCalledWithWrongParameters"
+    "VersionNumberHasTheWrongFormat": "ms-resource:loc.messages.VersionNumberHasTheWrongFormat"
   }
 }
