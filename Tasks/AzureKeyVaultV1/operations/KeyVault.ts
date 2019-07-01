@@ -1,7 +1,7 @@
 import keyVaultTaskParameters = require("../models/KeyVaultTaskParameters");
 import armKeyVault = require("./azure-arm-keyvault");
 import util = require("util");
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 
 import * as path from 'path';
 import * as fs from 'fs';
@@ -213,7 +213,7 @@ export class KeyVault {
             if (strVal) {
                 console.log(util.format("Value of secret %s has been converted to single line.", secretName));
                 tl.setVariable(secretNameWithoutVersion, strVal, true);
-                tl.setVariable(secretName, secretValue, true);
+                tl.setVariable(secretName, strVal, true);
             }
             else {
                 let lines = secretValue.split('\n');

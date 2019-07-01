@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Azure Function",
-  "loc.helpMarkDown": "[More information](https://aka.ms/azurefunctiondeployreadme)",
+  "loc.friendlyName": "Azure Functions",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiondeployreadme)",
   "loc.description": "Deploy an Azure Function for Linux or Windows",
   "loc.instanceNameFormat": "Azure Function App Deploy: $(appName)",
   "loc.group.displayName.AdditionalDeploymentOptions": "Additional Deployment Options",

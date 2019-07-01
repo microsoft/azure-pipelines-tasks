@@ -2,7 +2,7 @@
 
 import * as del from "del";
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
 import { createImageDigestComposeFile } from "./dockercomposedigests";
 import { run as runDockerComposeConfig } from "./dockercomposeconfig";

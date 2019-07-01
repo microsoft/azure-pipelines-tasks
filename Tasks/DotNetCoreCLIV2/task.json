@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 154,
-        "Patch": 4
+        "Patch": 6
     },
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -490,14 +490,14 @@
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "feedPublish",
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {
@@ -529,7 +529,7 @@
         "dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
         "noProjectFilesFound": "Project file(s) matching the specified pattern were not found.",
         "noPublishFolderFoundToZip": "A publish folder could not be found to zip for project file: %s.",
-        "noWebProjectFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory. You can set Publish Web Projects property to false (publishWebProjects: false in yml) if your project doesn't follow this convention or if you want to publish projects other than web projects.",
+        "noWebProjectFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file, wwwroot folder in the directory, or by the usage of Microsoft.Net.Web.Sdk in your project file. You can set Publish Web Projects property to false (publishWebProjects: false in yml) if your project doesn't follow this convention or if you want to publish projects other than web projects.",
         "zipFailed": "Zip failed with error: %s",
         "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
         "Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
