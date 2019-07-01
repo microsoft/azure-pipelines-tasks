@@ -56,7 +56,7 @@ async function installDotNet(
     // here we must check also the package type because if the user switch the packageType the useGlobalJson can be true, also if it will hidden.
     if (useGlobalJson && packageType == "sdk") {
         let globalJsonFetcherInstance = new globalJsonFetcher(workingDirectory);
-        let versionsToInstall: VersionInfo[] = await globalJsonFetcherInstance.GetVersions (packageType);
+        let versionsToInstall: VersionInfo[] = await globalJsonFetcherInstance.GetVersions(packageType);
         versionsToInstall = versionsToInstall.filter(d => !dotNetCoreInstaller.isVersionInstalled(d.getVersion()));
         for (let index = 0; index < versionsToInstall.length; index++) {
             const version = versionsToInstall[index];

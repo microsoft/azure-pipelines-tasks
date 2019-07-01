@@ -21,8 +21,9 @@ export class globalJsonFetcher {
      */
     public async GetVersions (packageType: string): Promise<VersionInfo[]>{
         var versionInformation: VersionInfo[] = new Array<VersionInfo>();
-        for (let index = 0; index < this.getVersionStrings().length; index++) {
-            const version = this.getVersionStrings()[index];
+        var versionStrings = this.getVersionStrings();
+        for (let index = 0; index < versionStrings.length; index++) {
+            const version = versionStrings[index];
             // TODO: find out if include preview versions do anything wrong here.
             var versionInfo = await this.versionFetcher.getVersionInfo(version, packageType, true); 
             versionInformation.push(versionInfo);
@@ -37,21 +38,28 @@ export class globalJsonFetcher {
             throw tl.loc("FailedToFindGlobalJson");
         }
         return filePathsToGlobalJson.map(path => {
-            return this.readGlobalJson(path).sdk.version;
-        });
+            var content = this.readGlobalJson(path);
+            if(content != null){
+                return content.sdk.version;
+            }
+            return null;            
+        })
+        .filter(d => d != null); // remove all global.json that can't read
     }
 
-    private readGlobalJson(path: string): GlobalJson {
+    private readGlobalJson(path: string): GlobalJson | null {
         let globalJson: GlobalJson | null = null;
         console.log(tl.loc("GlobalJsonFound", path));
         try {
             globalJson = (JSON.parse(fileSystem.readFileSync(path).toString())) as { sdk: { version: string } };
         } catch (error) {
             tl.debug(error);
-            throw tl.loc("FailedToReadGlobalJson", path);
+            tl.loc("FailedToReadGlobalJson", path); // We don't throw if a global.json is invalid. 
+            return null;            
         }
         if (globalJson == null || globalJson.sdk == null || globalJson.sdk.version == null) {
-            throw tl.loc("FailedToReadGlobalJson", path);
+            tl.loc("FailedToReadGlobalJson", path);
+            return null;
         }
         return globalJson;        
     }
