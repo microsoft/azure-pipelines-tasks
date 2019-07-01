@@ -69,7 +69,12 @@ export async function getStableHelmVersion(): Promise<string> {
     try {
         const downloadPath = await toolLib.downloadTool('https://api.github.com/repos/helm/helm/releases/latest');
         const response = JSON.parse(fs.readFileSync(downloadPath, 'utf8').toString().trim());
-        return response.body.tag_name;
+        if (!response.tag_name)
+        {
+            return stableHelmVersion;
+        }
+
+        return response.tag_name;
     } catch (error) {
         tl.warning(tl.loc('HelmLatestNotKnown', helmLatestReleaseUrl, error, stableHelmVersion));
     }
