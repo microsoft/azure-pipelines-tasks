@@ -84,7 +84,7 @@ export async function run(): Promise<void> {
             nuGetConfigPath,
             authInfo,
             { credProviderFolder: null, extensionsDisabled: true },
-            null /* tempConfigPath */,
+            getTempNuGetConfigPath(),
             false /* useNugetToModifyConfigFile */);
 
         let credCleanup = () => { return; };
@@ -181,4 +181,10 @@ function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDir
 
     const envWithProxy = ngRunner.setNuGetProxyEnvironment(process.env, configFile, null);
     return dotnet.exec({ cwd: path.dirname(projectFile), env: envWithProxy } as IExecOptions);
+}
+
+function getTempNuGetConfigPath(): string {
+    const tempNuGetConfigBaseDir = tl.getVariable("Agent.TempDirectory");
+    const tempNuGetConfigFileName = "tempNuGet_" + tl.getVariable("build.buildId") + ".config";
+    return path.join(tempNuGetConfigBaseDir, "Nuget", tempNuGetConfigFileName);
 }
