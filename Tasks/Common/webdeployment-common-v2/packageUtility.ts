@@ -32,7 +32,7 @@ export class Package {
         let workingDirectory = tl.getVariable("system.defaultworkingdirectory");
         try {
             if (workingDirectory && this._path.indexOf(workingDirectory) == 0) {
-                let relativePackagePath = packagePath.substring(workingDirectory.length);
+                let relativePackagePath = this._path.substring(workingDirectory.length);
                 if (relativePackagePath.indexOf(path.sep) == 0) {
                     relativePackagePath = relativePackagePath.substring(1);
                 }
@@ -46,7 +46,7 @@ export class Package {
             tl.debug("Artifact alias of package is: "+this._artifactAlias);
         }
         catch(error) {
-            tl.debug("Error in determining artifact alias of package.");
+            tl.debug(`Error in determining artifact alias of package. Error: ${error}`);
             this._artifactAlias = null;
         }
     }

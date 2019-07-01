@@ -36,12 +36,22 @@ export class AzureAppServiceUtility {
                 tl.debug('Updating metadata with latest pipeline details');
                 let newMetadataProperties = this._getNewMetadata(packageArtifactAlias);
                 let siteMetadata = await this._appService.getMetadata();
+                let skipUpdate = true;
                 for(let property in newMetadataProperties) {
-                    siteMetadata.properties[property] = newMetadataProperties[property];
+                    if(siteMetadata.properties[property] !== newMetadataProperties[property]) {
+                        siteMetadata.properties[property] = newMetadataProperties[property];
+                        skipUpdate = false;
+                    }
                 }
-                await this._appService.patchMetadata(siteMetadata.properties);
-                tl.debug('Updated metadata with latest pipeline details');
-                console.log(tl.loc("SuccessfullyUpdatedAzureRMWebAppConfigDetails"));
+
+                if(!skipUpdate) {
+                    await this._appService.patchMetadata(siteMetadata.properties);
+                    tl.debug('Updated metadata with latest pipeline details');
+                    console.log(tl.loc("SuccessfullyUpdatedAzureRMWebAppConfigDetails"));
+                }
+                else {
+                    tl.debug("No changes in metadata properties, skipping update.");
+                }
             }
         }
         catch(error) {
@@ -269,26 +279,29 @@ export class AzureAppServiceUtility {
         if(!!releaseDefinitionId) {
             // Task is running in Release
             tl.debug("Artifact Source Alias is: "+ artifactAlias);
-            let artifactType = tl.getVariable(`release.artifacts.${artifactAlias}.type`);
+            
             let buildDefinitionUrl = "";
             let buildDefintionId = "";
 
-            // Get build definition info only when artifact type is build.
-            if(artifactType && artifactType.toLowerCase() == "build") {
-                buildDefintionId = tl.getVariable("build.definitionId");
-                let buildProjectId = tl.getVariable("build.projectId") || projectId;
+            if (artifactAlias) {
+                let artifactType = tl.getVariable(`release.artifacts.${artifactAlias}.type`);
+                // Get build definition info only when artifact type is build.
+                if (artifactType && artifactType.toLowerCase() == "build") {
+                    buildDefintionId = tl.getVariable("build.definitionId");
+                    let buildProjectId = tl.getVariable("build.projectId") || projectId;
 
-                if(artifactAlias) {
-                    let artifactBuildDefinitionId = tl.getVariable("release.artifacts."+artifactAlias+".definitionId");
-                    let artifactBuildProjectId = tl.getVariable("release.artifacts."+artifactAlias+".projectId");
-                    if(artifactBuildDefinitionId && artifactBuildProjectId) {
-                        buildDefintionId = artifactBuildDefinitionId;
-                        buildProjectId = artifactBuildProjectId;
+                    if (artifactAlias) {
+                        let artifactBuildDefinitionId = tl.getVariable("release.artifacts." + artifactAlias + ".definitionId");
+                        let artifactBuildProjectId = tl.getVariable("release.artifacts." + artifactAlias + ".projectId");
+                        if (artifactBuildDefinitionId && artifactBuildProjectId) {
+                            buildDefintionId = artifactBuildDefinitionId;
+                            buildProjectId = artifactBuildProjectId;
+                        }
                     }
+                    buildDefinitionUrl = collectionUri + buildProjectId + "/_build?_a=simple-process&definitionId=" + buildDefintionId;
                 }
-                buildDefinitionUrl = collectionUri + buildProjectId + "/_build?_a=simple-process&definitionId=" + buildDefintionId;
             }
-
+            
             newProperties["VSTSRM_BuildDefinitionId"] = buildDefintionId;
             newProperties["VSTSRM_ReleaseDefinitionId"] = releaseDefinitionId;
             newProperties["VSTSRM_BuildDefinitionWebAccessUrl"] = buildDefinitionUrl;
