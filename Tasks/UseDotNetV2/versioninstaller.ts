@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as url from "url";
 
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as tol from 'azure-pipelines-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 import * as utils from "./versionutilities";
 import { VersionInfo } from "./models"
@@ -34,7 +34,7 @@ export class VersionInstaller {
 
         try {
             try {
-                var downloadPath = await tol.downloadTool(downloadUrl)
+                var downloadPath = await toolLib.downloadTool(downloadUrl)
             }
             catch (ex) {
                 throw tl.loc("CouldNotDownload", downloadUrl, ex);
@@ -43,7 +43,7 @@ export class VersionInstaller {
             // Extract
             console.log(tl.loc("ExtractingPackage", downloadPath));
             try {
-                var extPath = tl.osType().match(/^Win/) ? await tol.extractZip(downloadPath) : await tol.extractTar(downloadPath);
+                var extPath = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath) : await toolLib.extractTar(downloadPath);
             }
             catch (ex) {
                 throw tl.loc("FailedWhileExtractingPacakge", ex);
