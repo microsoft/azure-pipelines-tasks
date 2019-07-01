@@ -88,10 +88,7 @@ export class Channel {
 
 export class VersionParts {
     constructor(version: string) {
-        if (!VersionParts.ValidateVersionSpec(version)) {
-            throw taskLib.loc("VersionNotAllowed", version);
-        }
-
+        VersionParts.ValidateVersionSpec(version);
         this.versionSpec = version;
         let parts: string[] = version.split(".");
         this.majorVersion = parts[0];
@@ -102,7 +99,11 @@ export class VersionParts {
         }
     }
 
-    private static ValidateVersionSpec(version): boolean {
+    /**
+     * Validate the version. Returns an exception if the version number is wrong.
+     * @param version the input version number as string
+     */
+    private static ValidateVersionSpec(version: string): void {
         try {
             let parts = version.split('.');
             // validate version
@@ -117,16 +118,12 @@ export class VersionParts {
                     Number.isNaN(Number.parseInt(parts[1])) &&  // the minor version number must be a number
                     parts[1] != "x" // the minor version can't be `x`
                 )
-            ) 
-            {
-                // TODO: a validation method should return true or false not an error. This must do the caller.              
+            ) {
                 throw taskLib.loc("VersionNumberHasTheWrongFormat", version);
             }
             new semver.Range(version);
-            return true;
         }
         catch (ex) {
-            // TODO: a validation method should return true or false not an error. This must do the caller.
             throw taskLib.loc("VersionNotAllowed", version)
         }
     }
