@@ -87,7 +87,7 @@ export class VersionInstaller {
      * @param version An explicit version. Like 1.0.1
      */
     public isVersionInstalled(version: string): boolean {
-        if (!tol.isExplicitVersion(version)) {
+        if (!toolLib.isExplicitVersion(version)) {
             throw tl.loc("ExplicitVersionRequired", version);
         }
 
