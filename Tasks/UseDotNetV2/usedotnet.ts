@@ -8,6 +8,7 @@ import { VersionInstaller } from "./versioninstaller";
 import { Constants } from "./versionutilities";
 import { VersionInfo, VersionParts } from "./models"
 import { NuGetInstaller } from "./nugetinstaller";
+import { error } from 'util';
 
 async function run() {
     let useGlobalJson: boolean = tl.getBoolInput('useGlobalJson');
@@ -33,7 +34,7 @@ async function run() {
  * @param installationPath The installation path. If this is empty it would use {Agent.ToolsDirectory}/dotnet/
  * @param packageType The installation type for the installation. Only `sdk` and `runtime` are valid options
  * @param versionSpec The version the user want to install.
- * @param useGlobalJson A switch so we know if the user have `global.json` files and want use that.
+ * @param useGlobalJson A switch so we know if the user have `global.json` files and want use that. If this is true only SDK is possible!
  * @param workingDirectory This is only relevant if the `useGlobalJson` switch is `true`. It will set the root directory for the search of `global.json`
  * @param includePreviewVersions Define if the installer also search for preview version
  * @param performMultiLevelLookup Set the `DOTNET_MULTILEVEL_LOOKUP`environment variable
@@ -47,23 +48,26 @@ async function installDotNet(
     includePreviewVersions: boolean,
     performMultiLevelLookup: boolean) {
 
-    if (!installationPath && installationPath.length == 0) {
+    if (!installationPath || installationPath.length == 0) {
         installationPath = path.join(tl.getVariable('Agent.ToolsDirectory'), "dotnet");
     }
     let versionFetcher = new DotNetCoreVersionFetcher();
     let dotNetCoreInstaller = new VersionInstaller(packageType, installationPath);
-    if (useGlobalJson) {
+    // here we must check also the package type because if the user switch the packageType the useGlobalJson can be true, also if it will hidden.
+    if (useGlobalJson && packageType == "sdk") {
         let globalJsonFetcherInstance = new globalJsonFetcher(workingDirectory);
-        let versionsToInstall: VersionInfo[] = await globalJsonFetcherInstance.Get(packageType);        
+        let versionsToInstall: VersionInfo[] = await globalJsonFetcherInstance.GetVersions (packageType);
         versionsToInstall = versionsToInstall.filter(d => !dotNetCoreInstaller.isVersionInstalled(d.getVersion()));
         for (let index = 0; index < versionsToInstall.length; index++) {
             const version = versionsToInstall[index];
             let url = versionFetcher.getDownloadUrl(version);
-            await dotNetCoreInstaller.downloadAndInstall(version, url);            
+            if (!dotNetCoreInstaller.isVersionInstalled(version.getVersion())) {
+                await dotNetCoreInstaller.downloadAndInstall(version, url);
+            }
         }
     } else if (versionSpec) {
         console.log(tl.loc("ToolToInstall", packageType, versionSpec));
-        let versionSpecParts = new VersionParts(versionSpec);        
+        let versionSpecParts = new VersionParts(versionSpec);
         let versionInfo: VersionInfo = await versionFetcher.getVersionInfo(versionSpecParts.versionSpec, packageType, includePreviewVersions);
         if (!versionInfo) {
             throw tl.loc("MatchingVersionNotFound", versionSpecParts.versionSpec);
@@ -71,8 +75,8 @@ async function installDotNet(
         if (!dotNetCoreInstaller.isVersionInstalled(versionInfo.getVersion())) {
             await dotNetCoreInstaller.downloadAndInstall(versionInfo, versionFetcher.getDownloadUrl(versionInfo));
         }
-    }else{
-        throw tl.loc("installDotNetCalledWithWrongParameters")
+    } else {
+        throw new error("Hey developer you have called the method `installDotNet` without a `versionSpec` or without `useGlobalJson`. that is impossible.");
     }
 
     tl.prependPath(installationPath);
@@ -102,9 +106,11 @@ function addDotNetCoreToolPath() {
     }
 }
 
-var taskManifestPath = path.join(__dirname, "task.json");
+const taskManifestPath = path.join(__dirname, "task.json");
+const packagingCommonManifestPath = path.join(__dirname, "node_modules/packaging-common/module.json");
 tl.debug("Setting resource path to " + taskManifestPath);
 tl.setResourcePath(taskManifestPath);
+tl.setResourcePath(packagingCommonManifestPath);
 
 run()
     .then(() => tl.setResult(tl.TaskResult.Succeeded, ""))

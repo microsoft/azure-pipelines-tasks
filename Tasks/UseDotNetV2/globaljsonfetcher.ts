@@ -19,7 +19,7 @@ export class globalJsonFetcher {
      * Get all version information from all global.json starting from the working directory.
      * @param packageType define if you want install the sdk or the runtime.
      */
-    public async Get(packageType: string): Promise<VersionInfo[]>{
+    public async GetVersions (packageType: string): Promise<VersionInfo[]>{
         var versionInformation: VersionInfo[] = new Array<VersionInfo>();
         for (let index = 0; index < this.getVersionStrings().length; index++) {
             const version = this.getVersionStrings()[index];
@@ -33,7 +33,7 @@ export class globalJsonFetcher {
 
     private getVersionStrings(): string[]{
         let filePathsToGlobalJson = tl.findMatch(this.workingDirectory, "**/*global.json");
-        if (filePathsToGlobalJson == null || filePathsToGlobalJson.length == 0) {
+        if (filePathsToGlobalJson == null || filePathsToGlobalJson.length == 0) {            
             throw tl.loc("FailedToFindGlobalJson");
         }
         return filePathsToGlobalJson.map(path => {
@@ -47,6 +47,7 @@ export class globalJsonFetcher {
         try {
             globalJson = (JSON.parse(fileSystem.readFileSync(path).toString())) as { sdk: { version: string } };
         } catch (error) {
+            tl.debug(error);
             throw tl.loc("FailedToReadGlobalJson", path);
         }
         if (globalJson == null || globalJson.sdk == null || globalJson.sdk.version == null) {
