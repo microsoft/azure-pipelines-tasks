@@ -145,7 +145,11 @@ export class NuGetConfigHelper2 {
     private getTempNuGetConfigPath(): string {
         const tempNuGetConfigBaseDir = NuGetConfigHelper2.getTempNuGetConfigBasePath();
         const tempNuGetConfigFileName = "tempNuGet_" + tl.getVariable("build.buildId") + ".config";
-        return path.join(tempNuGetConfigBaseDir, "Nuget", tempNuGetConfigFileName);
+        var tempNugetConfigPath = path.join(tempNuGetConfigBaseDir, "Nuget", tempNuGetConfigFileName);
+        if (tl.exist(tempNugetConfigPath )) {
+            tl.rmRF(tempNugetConfigPath);
+        }
+        return tempNugetConfigPath;
     }
 
     public getSourcesFromTempNuGetConfig(): IPackageSource[] {
