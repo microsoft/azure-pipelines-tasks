@@ -37,7 +37,7 @@
             "type": "pickList",
             "label": "Package to install",
             "defaultValue": "sdk",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Please select whether to install only runtime or SDK.",
             "options": {
                 "runtime": "Runtime",
