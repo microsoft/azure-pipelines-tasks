@@ -39,7 +39,7 @@
             "label": "Variable to set if there is a cache hit",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "This will set the following variable (PipelineCache.<variable-value>) to 'True'."
+            "helpMarkDown": "This will set the following variable (<variable-value>) to 'True'."
         }
     ],
     "instanceNameFormat": "Cache",
