@@ -4,7 +4,6 @@ import webClient = require('azure-arm-rest-v2/webClient');
 var parseString = require('xml2js').parseString;
 import Q = require('q');
 import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
-import { Package } from 'webdeployment-common-v2/packageUtility';
 
 export class AzureAppServiceUtility {
     private _appService: AzureAppService;
@@ -12,8 +11,8 @@ export class AzureAppServiceUtility {
         this._appService = appService;
     }
 
-    public async updateScmTypeAndConfigurationDetails(packageArtifactAlias: string = null) : Promise<void>{
-            try {
+    public async updateScmTypeAndConfigurationDetails(packageArtifactAlias: string = null): Promise<void> {
+        try {
             var configDetails = await this._appService.getConfiguration();
             var scmType: string = configDetails.properties.scmType;
             let shouldUpdateMetadata = false;
@@ -24,27 +23,27 @@ export class AzureAppServiceUtility {
                 tl.debug('updated SCM Type to VSTS-RM');
                 shouldUpdateMetadata = true;
             }
-            else if(scmType && scmType.toLowerCase() == "vstsrm") {
+            else if (scmType && scmType.toLowerCase() == "vstsrm") {
                 tl.debug("SCM Type is VSTSRM");
                 shouldUpdateMetadata = true;
             }
             else {
                 tl.debug(`Skipped updating the SCM value. Value: ${scmType}`);
             }
-            
-            if(shouldUpdateMetadata) {
+
+            if (shouldUpdateMetadata) {
                 tl.debug('Updating metadata with latest pipeline details');
                 let newMetadataProperties = this._getNewMetadata(packageArtifactAlias);
                 let siteMetadata = await this._appService.getMetadata();
                 let skipUpdate = true;
-                for(let property in newMetadataProperties) {
-                    if(siteMetadata.properties[property] !== newMetadataProperties[property]) {
+                for (let property in newMetadataProperties) {
+                    if (siteMetadata.properties[property] !== newMetadataProperties[property]) {
                         siteMetadata.properties[property] = newMetadataProperties[property];
                         skipUpdate = false;
                     }
                 }
 
-                if(!skipUpdate) {
+                if (!skipUpdate) {
                     await this._appService.patchMetadata(siteMetadata.properties);
                     tl.debug('Updated metadata with latest pipeline details');
                     console.log(tl.loc("SuccessfullyUpdatedAzureRMWebAppConfigDetails"));
@@ -54,7 +53,7 @@ export class AzureAppServiceUtility {
                 }
             }
         }
-        catch(error) {
+        catch (error) {
             tl.warning(tl.loc("FailedToUpdateAzureRMWebAppConfigDetails", error));
         }
     }
@@ -287,17 +286,17 @@ export class AzureAppServiceUtility {
                 let artifactType = tl.getVariable(`release.artifacts.${artifactAlias}.type`);
                 // Get build definition info only when artifact type is build.
                 if (artifactType && artifactType.toLowerCase() == "build") {
+
                     buildDefintionId = tl.getVariable("build.definitionId");
                     let buildProjectId = tl.getVariable("build.projectId") || projectId;
+                    let artifactBuildDefinitionId = tl.getVariable("release.artifacts." + artifactAlias + ".definitionId");
+                    let artifactBuildProjectId = tl.getVariable("release.artifacts." + artifactAlias + ".projectId");
 
-                    if (artifactAlias) {
-                        let artifactBuildDefinitionId = tl.getVariable("release.artifacts." + artifactAlias + ".definitionId");
-                        let artifactBuildProjectId = tl.getVariable("release.artifacts." + artifactAlias + ".projectId");
-                        if (artifactBuildDefinitionId && artifactBuildProjectId) {
-                            buildDefintionId = artifactBuildDefinitionId;
-                            buildProjectId = artifactBuildProjectId;
-                        }
+                    if (artifactBuildDefinitionId && artifactBuildProjectId) {
+                        buildDefintionId = artifactBuildDefinitionId;
+                        buildProjectId = artifactBuildProjectId;
                     }
+
                     buildDefinitionUrl = collectionUri + buildProjectId + "/_build?_a=simple-process&definitionId=" + buildDefintionId;
                 }
             }
