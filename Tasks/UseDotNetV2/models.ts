@@ -2,7 +2,7 @@
 import * as semver from "semver";
 import * as url from "url";
 
-import * as taskLib from 'azure-pipelines-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import * as utils from "./versionutilities";
 
@@ -14,7 +14,7 @@ export class VersionInfo {
 
     constructor(versionInfoObject: any, packageType: string) {
         if (!versionInfoObject.version || !versionInfoObject.files) {
-            throw taskLib.loc("InvalidVersionObject", packageType, versionInfoObject)
+            throw tl.loc("InvalidVersionObject", packageType, versionInfoObject)
         }
 
         this.version = versionInfoObject.version;
@@ -24,7 +24,7 @@ export class VersionInfo {
                 this.files.push(new VersionFilesData(fileData));
             }
             catch (ex) {
-                taskLib.debug(taskLib.loc("FilesDataIsIncorrectInVersion", this.packageType, this.version, ex));
+                tl.debug(tl.loc("FilesDataIsIncorrectInVersion", this.packageType, this.version, ex));
             }
         });
 
@@ -62,7 +62,7 @@ export class VersionFilesData {
 
     constructor(versionFilesData: any) {
         if (!versionFilesData || !versionFilesData.name || !versionFilesData.url || !versionFilesData.rid) {
-            throw taskLib.loc("VersionFilesDataIncorrect");
+            throw tl.loc("VersionFilesDataIncorrect");
         }
 
         this.name = versionFilesData.name;
@@ -75,7 +75,7 @@ export class VersionFilesData {
 export class Channel {
     constructor(channelRelease: any) {
         if (!channelRelease || !channelRelease["channel-version"] || !channelRelease["releases.json"]) {
-            throw taskLib.loc("InvalidChannelObject");
+            throw tl.loc("InvalidChannelObject");
         }
 
         this.channelVersion = channelRelease["channel-version"];
@@ -119,12 +119,12 @@ export class VersionParts {
                     parts[1] != "x" // the minor version can't be `x`
                 )
             ) {
-                throw taskLib.loc("VersionNumberHasTheWrongFormat", version);
+                throw tl.loc("VersionNumberHasTheWrongFormat", version);
             }
             new semver.Range(version);
         }
         catch (ex) {
-            throw taskLib.loc("VersionNotAllowed", version)
+            throw tl.loc("VersionNotAllowed", version)
         }
     }
 
