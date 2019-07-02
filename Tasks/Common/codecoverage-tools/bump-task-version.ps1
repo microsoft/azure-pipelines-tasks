@@ -1,4 +1,4 @@
-# Bumps the version of all of the tasks that are technically modified when codeanalysis-common is changed.
+# Bumps the version of all of the tasks that are technically modified when codecoverage-common is changed.
 # Please validate the updated versions to confirm that nothing went horribly wrong.
 Param(
 [parameter(Mandatory=$true)]
