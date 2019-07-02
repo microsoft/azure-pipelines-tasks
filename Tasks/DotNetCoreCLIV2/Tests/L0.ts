@@ -312,6 +312,20 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
+
+    it('publish works with publishWebProjects option if .csproj have Microsoft.Net.Sdk.Web', (done: MochaDone) => {
+        process.env["__projects__"] = "validateWebProject.csproj";
+        process.env["workingDirectory"] = ".";
+        process.env["__publishWebProject__"] = "true";
+        let tp = path.join(__dirname, 'validateWebProject.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked been invoked once');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    })
+
     it('publish updates the output with the project name appended', (done: MochaDone) => {
         process.env["__projects__"] = "*customoutput/project.json";
         process.env["__publishWebProjects__"] = "false";
