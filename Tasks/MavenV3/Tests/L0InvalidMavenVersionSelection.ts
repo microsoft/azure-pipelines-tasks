@@ -14,7 +14,7 @@ initializeTest(taskRunner);
 
 // Set Inputs
 const inputs: MavenTaskInputs = {
-    mavenVersionSelection: "Default",
+    mavenVersionSelection: "garbage",
     mavenPOMFile: "pom.xml",
     options: "",
     goals: "package",
@@ -22,10 +22,6 @@ const inputs: MavenTaskInputs = {
     jdkVersion: "default",
     publishJUnitResults: true,
     testResultsFiles: "**/TEST-*.xml",
-    mavenOpts: "-Xmx2048m",
-    checkstyleAnalysisEnabled: false,
-    pmdAnalysisEnabled: false,
-    findbugsAnalysisEnabled: false,
     mavenFeedAuthenticate: true
 };
 setInputs(taskRunner, inputs);

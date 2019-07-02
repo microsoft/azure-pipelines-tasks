@@ -21,7 +21,7 @@ const inputs: MavenTaskInputs = {
     javaHomeSelection: "JDKVersion",
     jdkVersion: "default",
     publishJUnitResults: true,
-    testResultsFiles: "**/TEST-*.xml",
+    // testResultsFiles: "**/TEST-*.xml", Test Results Files not set
     mavenOpts: "-Xmx2048m",
     checkstyleAnalysisEnabled: false,
     pmdAnalysisEnabled: false,

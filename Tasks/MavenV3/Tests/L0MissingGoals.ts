@@ -17,7 +17,7 @@ const inputs: MavenTaskInputs = {
     mavenVersionSelection: "Default",
     mavenPOMFile: "pom.xml",
     options: "",
-    goals: "package",
+    // goals: "package", // Goals not set
     javaHomeSelection: "JDKVersion",
     jdkVersion: "default",
     publishJUnitResults: true,

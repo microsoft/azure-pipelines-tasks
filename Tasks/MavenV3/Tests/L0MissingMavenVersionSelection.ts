@@ -14,7 +14,7 @@ initializeTest(taskRunner);
 
 // Set Inputs
 const inputs: MavenTaskInputs = {
-    mavenVersionSelection: "Default",
+    // mavenVersionSelection not specified
     mavenPOMFile: "pom.xml",
     options: "",
     goals: "package",
@@ -22,17 +22,9 @@ const inputs: MavenTaskInputs = {
     jdkVersion: "default",
     publishJUnitResults: true,
     testResultsFiles: "**/TEST-*.xml",
-    mavenOpts: "-Xmx2048m",
-    checkstyleAnalysisEnabled: false,
-    pmdAnalysisEnabled: false,
-    findbugsAnalysisEnabled: false,
     mavenFeedAuthenticate: true
 };
 setInputs(taskRunner, inputs);
-
-// Set up environment variables (task-lib does not support mocking getVariable)
-// Env vars in the mock framework must replace '.' with '_'
-delete process.env['M2_HOME'] // Remove in case process running this test has it already set
 
 // Provide answers for task mock
 const answers: TaskLibAnswers = {
