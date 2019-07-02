@@ -6,7 +6,7 @@ import { VersionInfo } from "./models";
 export class globalJsonFetcher {
 
     private workingDirectory: string;
-    private versionFetcher: DotNetCoreVersionFetcher = new DotNetCoreVersionFetcher();
+    private versionFetcher: DotNetCoreVersionFetcher = new DotNetCoreVersionFetcher(true);
     /**
      * The global json fetcher provider functionality to extract the version information from all global json in the working directory.
      * @param workingDirectory 
@@ -16,16 +16,14 @@ export class globalJsonFetcher {
     }
 
     /**
-     * Get all version information from all global.json starting from the working directory.
-     * @param packageType define if you want install the sdk or the runtime.
+     * Get all version information from all global.json starting from the working directory.     
      */
-    public async GetVersions (packageType: string): Promise<VersionInfo[]>{
+    public async GetVersions (): Promise<VersionInfo[]>{
         var versionInformation: VersionInfo[] = new Array<VersionInfo>();
         var versionStrings = this.getVersionStrings();
         for (let index = 0; index < versionStrings.length; index++) {
-            const version = versionStrings[index];
-            // TODO: find out if include preview versions do anything wrong here.
-            var versionInfo = await this.versionFetcher.getVersionInfo(version, packageType, true); 
+            const version = versionStrings[index];            
+            var versionInfo = await this.versionFetcher.getVersionInfo(version, "sdk", false); 
             versionInformation.push(versionInfo);
         }
         return versionInformation
@@ -33,7 +31,7 @@ export class globalJsonFetcher {
     }
 
     private getVersionStrings(): string[]{
-        let filePathsToGlobalJson = tl.findMatch(this.workingDirectory, "**/*global.json");
+        let filePathsToGlobalJson = tl.findMatch(this.workingDirectory, "**/global.json");
         if (filePathsToGlobalJson == null || filePathsToGlobalJson.length == 0) {            
             throw tl.loc("FailedToFindGlobalJson");
         }
@@ -66,6 +64,6 @@ export class globalJsonFetcher {
 
 }
 
-export class GlobalJson {
+class GlobalJson {
     public sdk: { version: string };
 }
