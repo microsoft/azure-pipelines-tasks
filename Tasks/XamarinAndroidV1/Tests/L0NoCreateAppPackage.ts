@@ -5,14 +5,12 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'xamarinandroid.js');
 const taskRunner: TaskMockRunner = new TaskMockRunner(taskPath);
 
-taskRunner.setInput('project', '**/test*.csproj');
+taskRunner.setInput('project', '**/Single*.csproj');
 taskRunner.setInput('target', '');
 taskRunner.setInput('clean', 'false');
-taskRunner.setInput('createAppPackage', 'true');
+taskRunner.setInput('createAppPackage', 'false');
 taskRunner.setInput('outputDir', '');
 taskRunner.setInput('configuration', '');
-taskRunner.setInput('msbuildLocationMethod', 'version');
-taskRunner.setInput("msbuildVersion", "15.0");
 taskRunner.setInput('msbuildLocation', '');
 taskRunner.setInput('msbuildArguments', '');
 taskRunner.setInput('javaHomeSelection', 'JDKVersion');
@@ -23,21 +21,17 @@ process.env['HOME'] = '/user/home'; //replace with mock of getVariable when task
 
 const answers: TaskLibAnswers = {
     which: {
-        "msbuild": "/home/bin/msbuild"
+        "xbuild": "/home/bin/xbuild"  
     },
     exec: {
-        "/home/bin/msbuild /version /nologo": {
+        "/home/bin/xbuild /user/build/fun/project.csproj": {
             "code": 0,
-            "stdout": "15.1.0.0"
+            "stdout": "Xamarin android"
         },
-        "/home/bin/msbuild /user/build/fun/test.csproj /t:PackageForAndroid": {
-            "code": 0,
-            "stdout": "Xamarin android project"
-        }
     },
     findMatch: {
-        "**/test*.csproj": [
-            "/user/build/fun/test.csproj"
+        "**/Single*.csproj": [
+            "/user/build/fun/project.csproj"
         ]
     }
 };
