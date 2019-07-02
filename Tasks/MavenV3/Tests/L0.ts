@@ -8,13 +8,13 @@ import { cleanTemporaryFolders, createTemporaryFolders, getTempDir } from "./Tes
 describe("Maven L0 Suite", function () {
     before(() => {
         // Set up mock authorization
-        process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
-        process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
+        process.env["ENDPOINT_AUTH_SYSTEMVSSCONNECTION"] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
+        process.env["ENDPOINT_URL_SYSTEMVSSCONNECTION"] = "https://example.visualstudio.com/defaultcollection";
 
         // Mock temp paths
-        // process.env['MOCK_IGNORE_TEMP_PATH'] = 'true'; // This will remove the temp path from any outputs
-        process.env['MOCK_TEMP_PATH'] = path.join(__dirname, '..', '..');
-        process.env['MOCK_NORMALIZE_SLASHES'] = 'true';
+        // process.env["MOCK_IGNORE_TEMP_PATH"] = "true"; // This will remove the temp path from any outputs
+        process.env["MOCK_TEMP_PATH"] = path.join(__dirname, "..", "..");
+        process.env["MOCK_NORMALIZE_SLASHES"] = "true";
 
         createTemporaryFolders();
     });
@@ -30,16 +30,16 @@ describe("Maven L0 Suite", function () {
 
         testRunner.run();
 
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -f pom.xml help:effective-pom'), 'it should have generated effective pom');
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
-        assert(testRunner.invokedToolCount == 3, 'should have only run maven 3 times: ' + testRunner.invokedToolCount);
-        assert(testRunner.stderr.length == 0, 'should not have written to stderr=' + testRunner.stderr);
-        assert(testRunner.succeeded, 'task should have succeeded');
-        assert(testRunner.stdOutContained('MAVEN_OPTS is now set to -Xmx2048m'), 'it should have set MAVEN_OPTS');
+        assert(testRunner.ran("/home/bin/maven/bin/mvn -version"), "it should have run mvn -version");
+        assert(testRunner.ran("/home/bin/maven/bin/mvn -f pom.xml help:effective-pom"), "it should have generated effective pom");
+        assert(testRunner.ran("/home/bin/maven/bin/mvn -f pom.xml package"), "it should have run mvn -f pom.xml package");
+        assert(testRunner.invokedToolCount == 3, "should have only run maven 3 times: " + testRunner.invokedToolCount);
+        assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
+        assert(testRunner.succeeded, "task should have succeeded");
+        assert(testRunner.stdOutContained("MAVEN_OPTS is now set to -Xmx2048m"), "it should have set MAVEN_OPTS");
 
-        assert(!testRunner.stdOutContained('##vso[artifact.upload artifactname=Code Analysis Results;]'),
-            'should not have uploaded a Code Analysis Report build summary');
+        assert(!testRunner.stdOutContained("##vso[artifact.upload artifactname=Code Analysis Results;]"),
+            "should not have uploaded a Code Analysis Report build summary");
 
         done();
     });
@@ -53,12 +53,12 @@ describe("Maven L0 Suite", function () {
 
         const mavenHome = "/anotherHome/";
         const mavenBin = path.join(mavenHome, "bin", "mvn");
-        assert(testRunner.ran(`${mavenBin} -version`), 'it should have run mvn -version');
-        assert(testRunner.ran(`${mavenBin} -f pom.xml help:effective-pom`), 'it should have generated effective pom');
-        assert(testRunner.ran(`${mavenBin} -f pom.xml package`), 'it should have run mvn -f pom.xml package');
-        assert(testRunner.invokedToolCount == 3, 'should have only run maven 3 times: ' + testRunner.invokedToolCount);
-        assert(testRunner.stderr.length == 0, 'should not have written to stderr=' + testRunner.stderr);
-        assert(testRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.ran(`${mavenBin} -version`), "it should have run mvn -version");
+        assert(testRunner.ran(`${mavenBin} -f pom.xml help:effective-pom`), "it should have generated effective pom");
+        assert(testRunner.ran(`${mavenBin} -f pom.xml package`), "it should have run mvn -f pom.xml package");
+        assert(testRunner.invokedToolCount == 3, "should have only run maven 3 times: " + testRunner.invokedToolCount);
+        assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
+        assert(testRunner.succeeded, "task should have succeeded");
 
         done();
     });
@@ -70,9 +70,9 @@ describe("Maven L0 Suite", function () {
 
         testRunner.run();
 
-        assert(testRunner.invokedToolCount == 0, 'should not have run maven');
-        assert(testRunner.failed, 'task should have failed');
-        assert(testRunner.createdErrorIssue('Unhandled: Input required: mavenVersionSelection'), 'Did not create expected error issue, issues created: ' + testRunner.errorIssues);
+        assert(testRunner.invokedToolCount == 0, "should not have run maven");
+        assert(testRunner.failed, "task should have failed");
+        assert(testRunner.createdErrorIssue("Unhandled: Input required: mavenVersionSelection"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
 
         done();
     });
@@ -84,9 +84,9 @@ describe("Maven L0 Suite", function () {
 
         testRunner.run();
 
-        assert(testRunner.invokedToolCount == 0, 'should not have run maven');
-        assert(testRunner.failed, 'task should have failed');
-        assert(testRunner.createdErrorIssue('Unhandled: Input required: mavenFeedAuthenticate'), 'Did not create expected error issue, issues created: ' + testRunner.errorIssues);
+        assert(testRunner.invokedToolCount == 0, "should not have run maven");
+        assert(testRunner.failed, "task should have failed");
+        assert(testRunner.createdErrorIssue("Unhandled: Input required: mavenFeedAuthenticate"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
 
         done();
     });
@@ -98,12 +98,12 @@ describe("Maven L0 Suite", function () {
 
         testRunner.run();
 
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -f pom.xml help:effective-pom'), 'it should have generated effective pom');
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
-        assert(testRunner.invokedToolCount == 3, 'should have only run maven 3 times: ' + testRunner.invokedToolCount);
-        assert(testRunner.stderr.length == 0, 'should not have written to stderr=' + testRunner.stderr);
-        assert(testRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.ran("/home/bin/maven/bin/mvn -version"), "it should have run mvn -version");
+        assert(testRunner.ran("/home/bin/maven/bin/mvn -f pom.xml help:effective-pom"), "it should have generated effective pom");
+        assert(testRunner.ran("/home/bin/maven/bin/mvn -f pom.xml package"), "it should have run mvn -f pom.xml package");
+        assert(testRunner.invokedToolCount == 3, "should have only run maven 3 times: " + testRunner.invokedToolCount);
+        assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
+        assert(testRunner.succeeded, "task should have succeeded");
 
         done();
     });
@@ -117,12 +117,12 @@ describe("Maven L0 Suite", function () {
 
         const mavenHome = "/home/bin/maven2/";
         const mavenBin = path.join(mavenHome, "bin", "mvn");
-        assert(testRunner.ran(`${mavenBin} -version`), 'it should have run mvn -version');
-        assert(testRunner.ran(`${mavenBin} -f pom.xml help:effective-pom`), 'it should have generated effective pom');
-        assert(testRunner.ran(`${mavenBin} -f pom.xml package`), 'it should have run mvn -f pom.xml package');
-        assert(testRunner.invokedToolCount == 3, 'should have only run maven 3 times: ' + testRunner.invokedToolCount);
-        assert(testRunner.stderr.length == 0, 'should not have written to stderr=' + testRunner.stderr);
-        assert(testRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.ran(`${mavenBin} -version`), "it should have run mvn -version");
+        assert(testRunner.ran(`${mavenBin} -f pom.xml help:effective-pom`), "it should have generated effective pom");
+        assert(testRunner.ran(`${mavenBin} -f pom.xml package`), "it should have run mvn -f pom.xml package");
+        assert(testRunner.invokedToolCount == 3, "should have only run maven 3 times: " + testRunner.invokedToolCount);
+        assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
+        assert(testRunner.succeeded, "task should have succeeded");
 
         done();
     });
@@ -134,9 +134,9 @@ describe("Maven L0 Suite", function () {
 
         testRunner.run();
 
-        assert(testRunner.invokedToolCount == 0, 'should not have run maven');
-        assert(testRunner.failed, 'task should have failed');
-        assert(testRunner.createdErrorIssue('Unhandled: Input required: mavenPath'), 'Did not create expected error issue, issues created: ' + testRunner.errorIssues);
+        assert(testRunner.invokedToolCount == 0, "should not have run maven");
+        assert(testRunner.failed, "task should have failed");
+        assert(testRunner.createdErrorIssue("Unhandled: Input required: mavenPath"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
 
         done();
     });
@@ -148,9 +148,9 @@ describe("Maven L0 Suite", function () {
 
         testRunner.run();
 
-        assert(testRunner.invokedToolCount == 0, 'should not have run maven');
-        assert(testRunner.failed, 'task should have failed');
-        assert(testRunner.createdErrorIssue('Unhandled: Not found /not/a/valid/maven/path/'), 'Did not create expected error issue, issues created: ' + testRunner.errorIssues);
+        assert(testRunner.invokedToolCount == 0, "should not have run maven");
+        assert(testRunner.failed, "task should have failed");
+        assert(testRunner.createdErrorIssue("Unhandled: Not found /not/a/valid/maven/path/"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
 
         done();
     });
@@ -164,12 +164,12 @@ describe("Maven L0 Suite", function () {
 
         const mavenHome = "/home/bin/maven2/";
         const mavenBin = path.join(mavenHome, "bin", "mvn");
-        assert(testRunner.ran(`${mavenBin} -version`), 'it should have run mvn -version');
-        assert(testRunner.ran(`${mavenBin} -f pom.xml help:effective-pom`), 'it should have generated effective pom');
-        assert(testRunner.ran(`${mavenBin} -f pom.xml package`), 'it should have run mvn -f pom.xml package');
-        assert(testRunner.invokedToolCount == 3, 'should have only run maven 3 times: ' + testRunner.invokedToolCount);
-        assert(testRunner.stderr.length == 0, 'should not have written to stderr=' + testRunner.stderr);
-        assert(testRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.ran(`${mavenBin} -version`), "it should have run mvn -version");
+        assert(testRunner.ran(`${mavenBin} -f pom.xml help:effective-pom`), "it should have generated effective pom");
+        assert(testRunner.ran(`${mavenBin} -f pom.xml package`), "it should have run mvn -f pom.xml package");
+        assert(testRunner.invokedToolCount == 3, "should have only run maven 3 times: " + testRunner.invokedToolCount);
+        assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
+        assert(testRunner.succeeded, "task should have succeeded");
 
         done();
     });
@@ -183,13 +183,13 @@ describe("Maven L0 Suite", function () {
 
         const mavenHome = "/home/bin/maven2";
         const mavenBin = path.join(mavenHome, "bin", "mvn");
-        assert(testRunner.ran(`${mavenBin} -version`), 'it should have run mvn -version');
-        assert(testRunner.ran(`${mavenBin} -f pom.xml help:effective-pom`), 'it should have generated effective pom');
-        assert(testRunner.ran(`${mavenBin} -f pom.xml package`), 'it should have run mvn -f pom.xml package');
-        assert(testRunner.invokedToolCount == 3, 'should have only run maven 3 times: ' + testRunner.invokedToolCount);
-        assert(testRunner.stderr.length == 0, 'should not have written to stderr=' + testRunner.stderr);
+        assert(testRunner.ran(`${mavenBin} -version`), "it should have run mvn -version");
+        assert(testRunner.ran(`${mavenBin} -f pom.xml help:effective-pom`), "it should have generated effective pom");
+        assert(testRunner.ran(`${mavenBin} -f pom.xml package`), "it should have run mvn -f pom.xml package");
+        assert(testRunner.invokedToolCount == 3, "should have only run maven 3 times: " + testRunner.invokedToolCount);
+        assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
         assert(testRunner.stdOutContained(`set M2_HOME=${mavenHome}`), "M2_HOME not set");
-        assert(testRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.succeeded, "task should have succeeded");
 
         done();
     });
@@ -204,13 +204,13 @@ describe("Maven L0 Suite", function () {
         const tempDirectory = getTempDir();
         const settingsPath = path.join(tempDirectory, "settings.xml");
         const mavenInfoPath = path.join(tempDirectory, ".mavenInfo", "MavenInfo-");
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -f pom.xml help:effective-pom'), 'it should have generated effective pom');
+        assert(testRunner.ran("/home/bin/maven/bin/mvn -version"), "it should have run mvn -version");
+        assert(testRunner.ran("/home/bin/maven/bin/mvn -f pom.xml help:effective-pom"), "it should have generated effective pom");
         assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml -s ${settingsPath} package`), `it should have run mvn -f pom.xml -s ${settingsPath} package`);
-        assert(testRunner.invokedToolCount == 3, 'should have only run maven 3 times: ' + testRunner.invokedToolCount);
-        assert(testRunner.stderr.length == 0, 'should not have written to stderr=' + testRunner.stderr);
+        assert(testRunner.invokedToolCount == 3, "should have only run maven 3 times: " + testRunner.invokedToolCount);
+        assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
         assert(testRunner.stdOutContained(`##vso[task.debug][Maven] Uploading build maven info from ${mavenInfoPath}`), `MavenInfo not published at expected location: ${mavenInfoPath}`);
-        assert(testRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.succeeded, "task should have succeeded");
 
         done();
     });
@@ -222,12 +222,12 @@ describe("Maven L0 Suite", function () {
 
         testRunner.run();
 
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-        assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml package`), 'it should have run mvn -f pom.xml package');
-        assert(testRunner.invokedToolCount == 2, 'should have only run maven 2 times: ' + testRunner.invokedToolCount);
-        assert(testRunner.stderr.length == 0, 'should not have written to stderr=' + testRunner.stderr);
+        assert(testRunner.ran("/home/bin/maven/bin/mvn -version"), "it should have run mvn -version");
+        assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml package`), "it should have run mvn -f pom.xml package");
+        assert(testRunner.invokedToolCount == 2, "should have only run maven 2 times: " + testRunner.invokedToolCount);
+        assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
         assert(!testRunner.stdOutContained("##vso[task.debug][Maven] Uploading build maven info from"), "should not have uploaded a MavenInfo file");
-        assert(testRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.succeeded, "task should have succeeded");
 
         done();
     });
@@ -239,11 +239,11 @@ describe("Maven L0 Suite", function () {
 
         testRunner.run();
 
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-        assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml package`), 'it should have run mvn -f pom.xml package');
-        assert(testRunner.invokedToolCount == 2, 'should have only run maven 2 times: ' + testRunner.invokedToolCount);
-        assert(testRunner.stderr.length == 0, 'should not have written to stderr=' + testRunner.stderr);
-        assert(testRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.ran("/home/bin/maven/bin/mvn -version"), "it should have run mvn -version");
+        assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml package`), "it should have run mvn -f pom.xml package");
+        assert(testRunner.invokedToolCount == 2, "should have only run maven 2 times: " + testRunner.invokedToolCount);
+        assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
+        assert(testRunner.succeeded, "task should have succeeded");
 
         done();
     });
@@ -258,12 +258,12 @@ describe("Maven L0 Suite", function () {
         const settingsPath = path.join(getTempDir(), "settings.xml");
         const options = `-DoptWithEscaping={\"serverUri\": \"http://elasticsearch:9200\",\"username\": \"elastic\", \"password\": \"changeme\", \"connectionTimeout\": 30000}`;
 
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-        assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml help:effective-pom ${options}`), 'it should have generated effective pom');
+        assert(testRunner.ran("/home/bin/maven/bin/mvn -version"), "it should have run mvn -version");
+        assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml help:effective-pom ${options}`), "it should have generated effective pom");
         assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml -s ${settingsPath} ${options} package`), `it should have run mvn -f pom.xml -s ${settingsPath} ${options} package`);
-        assert(testRunner.invokedToolCount == 3, 'should have only run maven 3 times: ' + testRunner.invokedToolCount);
-        assert(testRunner.stderr.length == 0, 'should not have written to stderr=' + testRunner.stderr);
-        assert(testRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.invokedToolCount == 3, "should have only run maven 3 times: " + testRunner.invokedToolCount);
+        assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
+        assert(testRunner.succeeded, "task should have succeeded");
 
         done();
     });
@@ -280,12 +280,12 @@ describe("Maven L0 Suite", function () {
         const options = "/o -s settings.xml /p /t";
         const optionsWithoutSettings = "/o /p /t";
 
-        assert(testRunner.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-        assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml help:effective-pom ${options}`), 'it should have generated effective pom');
+        assert(testRunner.ran("/home/bin/maven/bin/mvn -version"), "it should have run mvn -version");
+        assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml help:effective-pom ${options}`), "it should have generated effective pom");
         assert(testRunner.ran(`/home/bin/maven/bin/mvn -f pom.xml -s ${settingsPath} ${optionsWithoutSettings} package`), `it should have run mvn -f pom.xml -s ${settingsPath} ${optionsWithoutSettings} package`);
-        assert(testRunner.invokedToolCount == 3, 'should have only run maven 3 times: ' + testRunner.invokedToolCount);
-        assert(testRunner.stderr.length == 0, 'should not have written to stderr=' + testRunner.stderr);
-        assert(testRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.invokedToolCount == 3, "should have only run maven 3 times: " + testRunner.invokedToolCount);
+        assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
+        assert(testRunner.succeeded, "task should have succeeded");
 
         done();
     });
@@ -297,9 +297,9 @@ describe("Maven L0 Suite", function () {
 
         testRunner.run();
 
-        assert(testRunner.invokedToolCount == 0, 'should not have run maven');
-        assert(testRunner.failed, 'task should have failed');
-        assert(testRunner.createdErrorIssue('Unhandled: Input required: goals'), 'Did not create expected error issue, issues created: ' + testRunner.errorIssues);
+        assert(testRunner.invokedToolCount == 0, "should not have run maven");
+        assert(testRunner.failed, "task should have failed");
+        assert(testRunner.createdErrorIssue("Unhandled: Input required: goals"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
 
         done();
     });
@@ -312,8 +312,8 @@ describe("Maven L0 Suite", function () {
         testRunner.run();
 
         assert(testRunner.stdOutContained("##vso[results.publish type=JUnit;mergeResults=true;publishRunAttachments=true;resultFiles=/user/build/fun/test-123.xml;]"), "it should have published test results");
-        assert(testRunner.stderr.length == 0, 'should not have written to stderr=' + testRunner.stderr);
-        assert(testRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
+        assert(testRunner.succeeded, "task should have succeeded");
 
         done();
     });
@@ -325,9 +325,9 @@ describe("Maven L0 Suite", function () {
 
         testRunner.run();
 
-        assert(testRunner.invokedToolCount == 0, 'should not have run maven');
-        assert(testRunner.failed, 'task should have failed');
-        assert(testRunner.createdErrorIssue('Unhandled: Input required: testResultsFiles'), 'Did not create expected error issue, issues created: ' + testRunner.errorIssues);
+        assert(testRunner.invokedToolCount == 0, "should not have run maven");
+        assert(testRunner.failed, "task should have failed");
+        assert(testRunner.createdErrorIssue("Unhandled: Input required: testResultsFiles"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
 
         done();
     });
@@ -339,9 +339,9 @@ describe("Maven L0 Suite", function () {
 
         testRunner.run();
 
-        assert(testRunner.invokedToolCount == 0, 'should not have run maven');
-        assert(testRunner.failed, 'task should have failed');
-        assert(testRunner.createdErrorIssue('Unhandled: Input required: javaHomeSelection'), 'Did not create expected error issue, issues created: ' + testRunner.errorIssues);
+        assert(testRunner.invokedToolCount == 0, "should not have run maven");
+        assert(testRunner.failed, "task should have failed");
+        assert(testRunner.createdErrorIssue("Unhandled: Input required: javaHomeSelection"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
 
         done();
     });
