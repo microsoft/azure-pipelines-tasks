@@ -87,8 +87,12 @@ export class Channel {
 }
 
 export class VersionParts {
-    constructor(version: string) {
-        VersionParts.ValidateVersionSpec(version);
+    constructor(version: string, explicitVersion: boolean = false) {
+        if(explicitVersion){
+            VersionParts.ValidateExplicitVersionNumber(version);
+        }else{
+            VersionParts.ValidateVersionSpec(version);
+        }        
         this.versionSpec = version;
         let parts: string[] = version.split(".");
         this.majorVersion = parts[0];
@@ -96,6 +100,32 @@ export class VersionParts {
         this.patchVersion = "";
         if (this.minorVersion != "x") {
             this.patchVersion = parts[2];
+        }
+    }
+
+    /**
+     * Validate the version if this string is a explicit version number. Returns an exception if the version number is not explicit.
+     * @param version the input version number as string
+     */
+    private static ValidateExplicitVersionNumber(version: string): void {
+        try {
+            let parts = version.split('.');
+            // validate version
+            if ((parts.length != 3) || // check if the version has 3 parts                
+                !parts[0] || // The major version must always be set
+                !parts[1] || // The minor version must always be set
+                !parts[2] || // The patch version must always be set                
+                Number.isNaN(Number.parseInt(parts[0])) || // the major version number must be a number
+                Number.isNaN(Number.parseInt(parts[1])) || // the minor version number must be a number
+                Number.isNaN(Number.parseInt(parts[2].split('-')[0])) // the patch version number must be a number. (the patch version can have a '-' because of version numbers like: 1.0.0-beta-50)                                   
+
+            ) {
+                throw tl.loc("VersionNumberHasTheWrongFormat", version);
+            }
+            new semver.Range(version);
+        }
+        catch (ex) {
+            throw tl.loc("VersionNotAllowed", version)
         }
     }
 
@@ -112,7 +142,7 @@ export class VersionParts {
                 (parts[1] != "x" && parts.length <= 2) ||  // a version number like `1.1` must have a patch version
                 !parts[0] || // The major version must always be set
                 !parts[1] || // The minor version must always be set
-                (parts.length == 3 && !parts[2]) || // a version number like `1.1.` is invalid because the path version is missing
+                (parts.length == 3 && !parts[2]) || // a version number like `1.1.` is invalid because the patch version is missing
                 Number.isNaN(Number.parseInt(parts[0])) || // the major version number must be a number
                 ( // The next lines check the minor version
                     Number.isNaN(Number.parseInt(parts[1])) &&  // the minor version number must be a number
