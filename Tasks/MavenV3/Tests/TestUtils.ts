@@ -73,14 +73,25 @@ export function createTemporaryFolders(): void {
 }
 
 export const initializeTest = (taskRunner: TaskMockRunner): void => {
-    process.env["System.DefaultWorkingDirectory"] = "/user/build/s",
+    
+    // The Maven Util file deals with variables differently
+    // On Linux, it will expect "." in the variable names instead of "_"
+    process.env["System.DefaultWorkingDirectory"] = "/user/build/s";
+    process.env["System_DefaultWorkingDirectory"] = "/user/build/s";
+
+    process.env["System.TeamFoundationCollectionUri"] = "https://xplatalm.visualstudio.com/";
     process.env["System_TeamFoundationCollectionUri"] = "https://xplatalm.visualstudio.com/";
 
     const tempDirectory = getTempDir();
+    process.env["Agent.TempDirectory"] = tempDirectory;
     process.env["Agent_TempDirectory"] = tempDirectory;
 
+    process.env['BUILD.SOURCESDIRECTORY'] = '/user/build';
     process.env['BUILD_SOURCESDIRECTORY'] = '/user/build';
+
+    process.env['SYSTEM.DEFAULTWORKINGDIRECTORY'] = "/user/build";
     process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "/user/build";
+
     process.env['HOME'] = '/users/test'; //replace with mock of setVariable when task-lib has the support
 
     // Set up mocks for common packages
