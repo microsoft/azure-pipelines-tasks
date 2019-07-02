@@ -15,15 +15,15 @@
     "groups": [],
     "demands": [],
     "preview": true,
-    "minimumAgentVersion": "2.153.5",
+    "minimumAgentVersion": "2.154.1",
     "inputs": [
         {
             "name": "key",
             "type": "multiLine",
-            "label": "Cache key",
+            "label": "Key",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The key (unique identifier) for the cache. Newline-delimited list of strings or file paths. File paths can be absolute or relative to $(System.DefaultWorkingDirectory)."
+            "helpMarkDown": "Key (unique identifier) for the cache. This should be a newline-delimited list of strings or file paths. File paths can be absolute or relative to $(System.DefaultWorkingDirectory)."
         },
         {
             "name": "path",
@@ -31,15 +31,15 @@
             "label": "Path",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The path to the folder to cache. This path can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported. If the folder doesn't exist it will be created."
+            "helpMarkDown": "Path of the folder to cache. Can be fully-qualified or relative to $(System.DefaultWorkingDirectory). Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
         },
         {
             "name": "cacheHitVar",
             "type": "string",
-            "label": "Variable to set if there is a cache hit",
+            "label": "Cache hit variable",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "This will set the following variable (<variable-value>) to 'True'."
+            "helpMarkDown": "Variable to set to 'true' when the cache is restored (i.e. a cache hit), otherwise set to 'false'."
         }
     ],
     "instanceNameFormat": "Cache",
