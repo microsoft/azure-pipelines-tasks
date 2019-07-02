@@ -74,7 +74,6 @@ const answers: TaskLibAnswers = {
     }
 };
 
-console.log(answers);
 taskRunner.setAnswers(answers);
 
 // Run task
