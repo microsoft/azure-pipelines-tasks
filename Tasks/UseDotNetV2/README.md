@@ -26,6 +26,8 @@ Please report a problem at [Developer Community Forum](https://developercommunit
 
 * **Use global json**: This checkbox indicates that all versions from all `global.json` files will be used to install the sdk versions. You can set the search root path with `Working Directory`.
 
+* **Working Directory**: This path can only be set if the option `Use global json` is selected. Specify path from where global.json files should be searched when using `Use global json`. If empty, `system.DefaultWorkingDirectory` will be considered as the root path.
+
 * **Version\*:** Specify version of .NET Core SDK or runtime to install. It also allows you to always get the latest version in a minor or major version. See below for examples
 Examples:
   - To install 2.2.104 SDK, use 2.2.104

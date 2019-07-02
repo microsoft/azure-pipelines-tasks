@@ -57,7 +57,7 @@
             "name": "workingDirectory",
             "type": "filePath",
             "label": "Working Directory",
-            "helpMarkDown": "Select this option to install all SDKs from global.json files. These files are searched from system.DefaultWorkingDirectory. You can change the search root path by setting working directory input.",
+            "helpMarkDown": "Specify path from where global.json files should be searched when using `Use global json`. If empty, `system.DefaultWorkingDirectory` will be considered as the root path.",
             "required": "false",
             "visibleRule": "useGlobalJson = true"
         },
