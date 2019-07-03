@@ -29,6 +29,7 @@ export class TaskParametersUtility {
             ScriptPath : tl.getPathInput('ScriptPath', false),
             DockerNamespace: tl.getInput('DockerNamespace', false),
             AppSettings: tl.getInput('AppSettings', false),
+            ConnectionStrings: tl.getInput('ConnectionStrings', false),
             StartupCommand: tl.getInput('StartupCommand', false),
             ConfigurationSettings: tl.getInput('ConfigurationSettings', false)
         }
@@ -173,6 +174,7 @@ export interface TaskParameters {
     ScriptPath ?: string;
     DockerNamespace?: string;
     AppSettings?: string;
+    ConnectionStrings?: string;
     StartupCommand?: string;
     RuntimeStack?: string;
     ConfigurationSettings?: string;

@@ -305,6 +305,18 @@
             }
         },
         {
+            "name": "ConnectionStrings",
+            "type": "multiLine",
+            "label": "Connection Strings",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "ApplicationAndConfigurationSettings",
+            "helpMarkDown": "Edit web app connection strings following the syntax -key:type value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Data:SQLServer \"Server=tcp:<ServerUrl>,1433;Database=<MyDatabase>;User ID=<ID>;Password=<Password>;\"",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
+            }
+        },
+        {
             "name": "ConfigurationSettings",
             "type": "multiLine",
             "label": "Configuration settings",
@@ -608,10 +620,14 @@
         "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
         "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
         "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
+        "FailedToGetAppServiceConnectionStrings": "Failed to get App service '%s' connection strings. Error: %s",
+        "FailedToUpdateAppServiceConnectionStrings": "Failed to update App service '%s' connection strings. Error: %s",
         "UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
         "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
+        "UpdatingAppServiceConnectionStrings": "Updating App Service Connection strings. Data: %s",
+        "UpdatedAppServiceConnectionStrings": "Updated App Service Connection strings.",
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
         "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",

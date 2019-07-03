@@ -133,6 +133,32 @@ export class AzureAppServiceUtility {
         console.log(tl.loc('UpdatedAppServiceConfigurationSettings'));
     }
 
+    public async updateConnectionStrings(addProperties: any, deleteProperties?: any): Promise<boolean>  {
+        for(var property in addProperties) {
+            if(!!addProperties[property] && addProperties[property].value !== undefined) {
+
+                // if no ":" in property name, then type is "Custom"
+                var typeSeparator: number = property.indexOf(':')
+                if(property.indexOf(':') > -1) {
+                    //split property name with ":" to get the type and the real name
+                    addProperties[property].type = property.substring(typeSeparator + 1)
+                    addProperties[property.substring(0, typeSeparator)] = addProperties[property]
+                    delete addProperties[property]
+                } else {
+                    addProperties[property].type = "Custom"
+                }
+            }
+        }
+
+        console.log(tl.loc('UpdatingAppServiceConnectionStrings', JSON.stringify(addProperties)));
+        var isNewValueUpdated: boolean = await this._appService.patchConnectionStrings(addProperties, deleteProperties);
+
+        if(!isNewValueUpdated) {
+            console.log(tl.loc('UpdatedAppServiceConnectionStrings'));
+            return isNewValueUpdated;
+        }
+    }
+
     public async updateAndMonitorAppSettings(addProperties: any, deleteProperties?: any): Promise<boolean> {
         for(var property in addProperties) {
             if(!!addProperties[property] && addProperties[property].value !== undefined) {
