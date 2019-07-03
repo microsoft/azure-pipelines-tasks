@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 3,
-    "Patch": 36
+    "Patch": 37
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -300,6 +300,18 @@
       "required": false,
       "groupName": "ApplicationAndConfigurationSettings",
       "helpMarkDown": "ms-resource:loc.input.help.AppSettings",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      }
+    },
+    {
+      "name": "ConnectionStrings",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.ConnectionStrings",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectionStrings",
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
@@ -608,10 +620,14 @@
     "FailedToGetAppServicePublishingCredentials": "ms-resource:loc.messages.FailedToGetAppServicePublishingCredentials",
     "FailedToGetAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettings",
     "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
+    "FailedToGetAppServiceConnectionStrings": "ms-resource:loc.messages.FailedToGetAppServiceConnectionStrings",
+    "FailedToUpdateAppServiceConnectionStrings": "ms-resource:loc.messages.FailedToUpdateAppServiceConnectionStrings",
     "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
     "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
+    "UpdatingAppServiceConnectionStrings": "ms-resource:loc.messages.UpdatingAppServiceConnectionStrings",
+    "UpdatedAppServiceConnectionStrings": "ms-resource:loc.messages.UpdatedAppServiceConnectionStrings",
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
     "PackageDeploymentInitiated": "ms-resource:loc.messages.PackageDeploymentInitiated",
