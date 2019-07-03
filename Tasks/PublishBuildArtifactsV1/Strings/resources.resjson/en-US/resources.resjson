@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Publish build artifacts",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=708390)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=708390)",
   "loc.description": "Publish build artifacts to Azure Pipelines or a Windows file share",
   "loc.instanceNameFormat": "Publish Artifact: $(ArtifactName)",
   "loc.input.label.PathtoPublish": "Path to publish",
@@ -15,6 +15,8 @@
   "loc.input.help.Parallel": "Select whether to copy files in parallel using multiple threads for greater potential throughput. If this setting is not enabled, one thread will be used.",
   "loc.input.label.ParallelCount": "Parallel count",
   "loc.input.help.ParallelCount": "Enter the degree of parallelism, or number of threads used, to perform the copy. The value must be at least 1 and not greater than 128.",
+  "loc.input.label.SilentCopy": "Silence file copy output",
+  "loc.input.help.SilentCopy": "Silence the output when copying the artifact files to a file share.",
   "loc.messages.ErrorFileShareLinux": "Publishing artifacts from a Linux or macOS agent to a file share is not supported. Change the artifact type to `Azure Pipelines` or use a Windows agent.",
   "loc.messages.ErrorHostTypeNotSupported": "This task must run in a build to publish artifacts to Azure Pipelines.",
   "loc.messages.PublishBuildArtifactsFailed": "Publishing build artifacts failed with an error: %s",

@@ -10,7 +10,10 @@ param(
     [int]$ParallelCount,
 
     [Parameter(Mandatory = $false)]
-    [string]$File)
+    [string]$File,
+
+    [Parameter(Mandatory = $false)]
+    [bool]$SilentCopy)
 
 # This script translates the output from robocopy into UTF8. Node has limited
 # built-in support for encodings.
@@ -43,8 +46,15 @@ if (!$File) {
 }
 
 # Print the ##command. The /MT parameter is only supported on 2008 R2 and higher.
-if ($ParallelCount -gt 1) {
+# Add /nfl and /ndl for $SilentCopy
+if ($ParallelCount -gt 1 -and $SilentCopy) {
+    [System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /NFL /NDL /R:3 /MT:$ParallelCount `"$Source`" `"$Target`" `"$File`"")
+}
+elseif ($ParallelCount -gt 1 -and -not $SilentCopy) {
     [System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount `"$Source`" `"$Target`" `"$File`"")
+}
+elseif ($SilentCopy) {
+    [System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /NFL /NDL /R:3 `"$Source`" `"$Target`" `"$File`"")
 }
 else {
     [System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 `"$Source`" `"$Target`" `"$File`"")
@@ -73,9 +83,13 @@ $OutputEncoding = [System.Text.Encoding]::Default
 # will launch the external command in such a way that it inherits the streams.
 #
 # Note, the /MT parameter is only supported on 2008 R2 and higher.
-if ($ParallelCount -gt 1) {
-    & robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount $Source $Target $File 2>&1 |
-        ForEach-Object {
+
+function Output-Result {
+    param(
+        [Parameter(ValueFromPipeline)]
+        $Result)
+
+    $Result | ForEach-Object {
         if ($_ -is [System.Management.Automation.ErrorRecord]) {
             [System.Console]::WriteLine($_.Exception.Message)
         }
@@ -84,16 +98,18 @@ if ($ParallelCount -gt 1) {
         }
     }
 }
+
+if ($ParallelCount -gt 1 -and $SilentCopy) {
+    & robocopy.exe /E /COPY:DA /NP /NFL /NDL /R:3 /MT:$ParallelCount $Source $Target $File 2>&1 | Output-Result
+}
+elseif ($ParallelCount -gt 1 -and -not $SilentCopy) {
+    & robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount $Source $Target $File 2>&1 | Output-Result
+}
+elseif ($SilentCopy) {
+    & robocopy.exe /E /COPY:DA /NP /NFL /NDL /R:3 $Source $Target $File 2>&1 | Output-Result
+}
 else {
-    & robocopy.exe /E /COPY:DA /NP /R:3 $Source $Target $File 2>&1 |
-        ForEach-Object {
-        if ($_ -is [System.Management.Automation.ErrorRecord]) {
-            [System.Console]::WriteLine($_.Exception.Message)
-        }
-        else {
-            [System.Console]::WriteLine($_)
-        }
-    }
+    & robocopy.exe /E /COPY:DA /NP /R:3 $Source $Target $File 2>&1 | Output-Result
 }
 
 [System.Console]::WriteLine("##[debug]robocopy exit code '$LASTEXITCODE'")

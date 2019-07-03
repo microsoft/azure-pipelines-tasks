@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 151,
-    "Patch": 1
+    "Minor": 155,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -75,6 +75,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.ParallelCount",
       "visibleRule": "ArtifactType = FilePath && Parallel = true"
+    },
+    {
+      "name": "SilentCopy",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.SilentCopy",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SilentCopy",
+      "visibleRule": "ArtifactType = FilePath"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
