@@ -16,7 +16,7 @@ export class globalJsonFetcher {
     }
 
     /**
-     * Get all version information from all global.json starting from the working directory.     
+     * Get all version information from all global.json starting from the working directory without duplicates.     
      */
     public async GetVersions (): Promise<VersionInfo[]>{
         var versionInformation: VersionInfo[] = new Array<VersionInfo>();
@@ -26,8 +26,8 @@ export class globalJsonFetcher {
             var versionInfo = await this.versionFetcher.getVersionInfo(version, "sdk", false); 
             versionInformation.push(versionInfo);
         }
-        return versionInformation
-            .sort((a,b) => a.getVersion().localeCompare(b.getVersion()));        
+        
+        return Array.from(new Set(versionInformation)); // this remove all not unique values.            
     }
 
     private getVersionStrings(): string[]{
