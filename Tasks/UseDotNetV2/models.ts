@@ -119,12 +119,13 @@ export class VersionParts {
                 Number.isNaN(Number.parseInt(parts[1])) || // the minor version number must be a number
                 Number.isNaN(Number.parseInt(parts[2].split('-')[0])) // the patch version number must be a number. (the patch version can have a '-' because of version numbers like: 1.0.0-beta-50)                                   
 
-            ) {
+            ) {                
                 throw tl.loc("VersionNumberHasTheWrongFormat", version);
             }
             new semver.Range(version);
         }
         catch (ex) {
+            console.log(ex);
             throw tl.loc("VersionNotAllowed", version)
         }
     }
@@ -154,6 +155,7 @@ export class VersionParts {
             new semver.Range(version);
         }
         catch (ex) {
+            console.log(ex);
             throw tl.loc("VersionNotAllowed", version)
         }
     }
