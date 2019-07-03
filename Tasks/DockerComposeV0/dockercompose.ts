@@ -1,12 +1,12 @@
 "use strict";
 
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as DockerComposeUtils from "./dockercomposeutils";
 
-import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
+import ACRAuthenticationTokenProvider from "docker-common-v2/registryauthenticationprovider/acrauthenticationtokenprovider"
 import DockerComposeConnection from "./dockercomposeconnection";
-import { getDockerRegistryEndpointAuthenticationToken } from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
+import { getDockerRegistryEndpointAuthenticationToken } from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
 
 import Q = require('q');
 
