@@ -1,7 +1,7 @@
 import tl = require("azure-pipelines-task-lib/task");
 import path = require("path");
 import { Action } from "./operations/Action";
-import { Utility, ActionType, Delimiters, TagSelectionMode} from "./operations/Utility";
+import { Utility, ActionType, Delimiters, ChangeLogStartCommit } from "./operations/Utility";
 import { Inputs} from "./operations/Constants";
 import { ChangeLog } from "./operations/ChangeLog";
 import { Helper } from "./operations/Helper";
@@ -102,9 +102,12 @@ class Main {
         const releaseNoteInput = tl.getInput(Inputs.releaseNotes);
         const showChangeLog: boolean = tl.getBoolInput(Inputs.addChangeLog);
 
+        const compareWithRelease = tl.getInput(Inputs.compareWith);
+        showChangeLog && Utility.validateStartCommitSpecification(compareWithRelease);
+        const releaseTag = tl.getInput(Inputs.releaseTag) || undefined;
         // Generate the change log 
         // Get change log for top 250 commits only
-        const changeLog: string = showChangeLog ? await new ChangeLog().getChangeLog(githubEndpointToken, repositoryName, target, 250) : "";
+        const changeLog: string = showChangeLog ? await new ChangeLog().getChangeLog(githubEndpointToken, repositoryName, target, 250, ChangeLogStartCommit[compareWithRelease], releaseTag) : "";
 
         // Append change log to release note
         const releaseNote: string = Utility.getReleaseNote(releaseNotesSource, releaseNotesFile, releaseNoteInput, changeLog) || undefined;
