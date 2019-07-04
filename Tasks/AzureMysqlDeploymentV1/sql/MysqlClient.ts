@@ -51,7 +51,7 @@ export class MysqlClient implements ISqlClient {
      * Get the connection argument for mysql
      */
     private _getArgumentString(): string{
-        let argumentString = "-h" + this._hostName + " -u" + this._azureMysqlTaskParameter.getSqlUserName() + " -p" + this._azureMysqlTaskParameter.getSqlPassword();
+        let argumentString = "-h " + this._hostName + " -u " + this._azureMysqlTaskParameter.getSqlUserName() + " -p " + this._azureMysqlTaskParameter.getSqlPassword();
         return argumentString;
     }
 
@@ -89,7 +89,7 @@ export class MysqlClient implements ISqlClient {
     }
 
     private _createDatabaseScriptIfItDoesnotExist() : string {
-        return " -e" + '"' + "CREATE DATABASE IF NOT EXISTS `" + this._azureMysqlTaskParameter.getDatabaseName() + "` ; "  + '"' ;
+        return " -e " + '"' + "CREATE DATABASE IF NOT EXISTS `" + this._azureMysqlTaskParameter.getDatabaseName() + "` ; "  + '"' ;
     } 
 
     private async _executeSqlScript(argument: string): Promise<number> {
@@ -122,10 +122,10 @@ export class MysqlClient implements ISqlClient {
     private _getFileSourceArgument() : string {
         let  fileSourceArgument ;
         if( this._azureMysqlTaskParameter.getTaskNameSelector() === 'InlineSqlTask' ) {
-            fileSourceArgument = " -e" + '"' + this._azureMysqlTaskParameter.getSqlInline() + '"';
+            fileSourceArgument = " -e " + '"' + this._azureMysqlTaskParameter.getSqlInline() + '"';
         }
         else {
-            fileSourceArgument = " -e" + '" source ' + packageUtility.PackageUtility.getPackagePath(this._azureMysqlTaskParameter.getSqlFile()) + '"';
+            fileSourceArgument = " -e " + '" source ' + packageUtility.PackageUtility.getPackagePath(this._azureMysqlTaskParameter.getSqlFile()) + '"';
         }
        
         return  fileSourceArgument;       
