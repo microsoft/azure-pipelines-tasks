@@ -7,7 +7,7 @@ import { AzureAppServiceUtility } from 'azurermdeploycommon/operations/AzureAppS
 import tl = require('azure-pipelines-task-lib/task');
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
-import { PackageUtility } from 'webdeployment-common-v2/packageUtility';
+import { PackageUtility } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 
 export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider {
     protected taskParams:TaskParameters;
