@@ -187,6 +187,28 @@
       "required": false,
       "visibleRule": "action = create || action = edit",
       "helpMarkDown": "ms-resource:loc.input.help.addChangeLog"
+    },
+    {
+      "name": "compareWith",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.compareWith",
+      "required": true,
+      "defaultValue": "lastFullRelease",
+      "visibleRule": "addChangeLog = true",
+      "helpMarkDown": "ms-resource:loc.input.help.compareWith",
+      "options": {
+        "lastFullRelease": "Last full release",
+        "lastRelease": "Last non-draft release",
+        "lastReleaseByTag": "Last non-draft release by tag"
+      }
+    },
+    {
+      "name": "releaseTag",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.releaseTag",
+      "required": true,
+      "visibleRule": "compareWith = lastReleaseByTag",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseTag"
     }
   ],
   "dataSourceBindings": [
@@ -250,9 +272,13 @@
     "CommitDiffBehind": "ms-resource:loc.messages.CommitDiffBehind",
     "CommitDiffEqual": "ms-resource:loc.messages.CommitDiffEqual",
     "FetchLatestPublishRelease": "ms-resource:loc.messages.FetchLatestPublishRelease",
+    "FetchLatestNonDraftRelease": "ms-resource:loc.messages.FetchLatestNonDraftRelease",
+    "FetchLastReleaseByTag": "ms-resource:loc.messages.FetchLastReleaseByTag",
     "FetchLatestPublishReleaseSuccess": "ms-resource:loc.messages.FetchLatestPublishReleaseSuccess",
+    "FetchMatchingReleaseSuccess": "ms-resource:loc.messages.FetchMatchingReleaseSuccess",
     "GetLatestReleaseError": "ms-resource:loc.messages.GetLatestReleaseError",
     "NoLatestPublishRelease": "ms-resource:loc.messages.NoLatestPublishRelease",
+    "NoMatchingReleases": "ms-resource:loc.messages.NoMatchingReleases",
     "FetchCommitDiff": "ms-resource:loc.messages.FetchCommitDiff",
     "FetchCommitDiffSuccess": "ms-resource:loc.messages.FetchCommitDiffSuccess",
     "FetchCommitDiffError": "ms-resource:loc.messages.FetchCommitDiffError",
@@ -264,6 +290,7 @@
     "InvalidActionSet": "ms-resource:loc.messages.InvalidActionSet",
     "InvalidTagSource": "ms-resource:loc.messages.InvalidTagSource",
     "InvalidReleaseNotesSource": "ms-resource:loc.messages.InvalidReleaseNotesSource",
+    "InvalidCompareWithAttribute": "ms-resource:loc.messages.InvalidCompareWithAttribute",
     "InvalidAssetUploadMode": "ms-resource:loc.messages.InvalidAssetUploadMode",
     "TagRequiredEditDeleteAction": "ms-resource:loc.messages.TagRequiredEditDeleteAction",
     "TagRequiredCreateAction": "ms-resource:loc.messages.TagRequiredCreateAction",
