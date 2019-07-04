@@ -104,7 +104,7 @@ class Main {
 
         const compareWithRelease = tl.getInput(Inputs.compareWith);
         showChangeLog && Utility.validateStartCommitSpecification(compareWithRelease);
-        const releaseTag = tl.getInput(Inputs.releaseTag);
+        const releaseTag = tl.getInput(Inputs.releaseTag) || undefined;
         // Generate the change log 
         // Get change log for top 250 commits only
         const changeLog: string = showChangeLog ? await new ChangeLog().getChangeLog(githubEndpointToken, repositoryName, target, 250, ChangeLogStartCommit[compareWithRelease], releaseTag) : "";

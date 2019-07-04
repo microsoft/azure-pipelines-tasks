@@ -222,8 +222,9 @@ export class Utility {
     }
 
     public static validateStartCommitSpecification(compareWith: string) {
-        if (compareWith !== startCommitSpecification.lastFullRelease && compareWith !== startCommitSpecification.lastRelease
-            && compareWith != startCommitSpecification.lastReleaseByTag) {
+        if (compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastFullRelease.toUpperCase() 
+            && compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastRelease.toUpperCase()
+            && compareWith.toUpperCase() != changeLogStartCommitSpecification.lastReleaseByTag.toUpperCase()) {
             throw new Error(tl.loc("InvalidCompareWithAttribute", compareWith));
         }
     }
@@ -268,7 +269,7 @@ export class AssetUploadMode {
     public static readonly replace = "replace";
 }
 
-export class startCommitSpecification {
+export class changeLogStartCommitSpecification {
     public static readonly lastFullRelease = "lastFullRelease";
     public static readonly lastRelease = "lastRelease";
     public static readonly lastReleaseByTag = "lastReleaseByTag";

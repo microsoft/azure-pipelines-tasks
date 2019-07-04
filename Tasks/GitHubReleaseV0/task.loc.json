@@ -278,6 +278,7 @@
     "FetchMatchingReleaseSuccess": "ms-resource:loc.messages.FetchMatchingReleaseSuccess",
     "GetLatestReleaseError": "ms-resource:loc.messages.GetLatestReleaseError",
     "NoLatestPublishRelease": "ms-resource:loc.messages.NoLatestPublishRelease",
+    "NoMatchingReleases": "ms-resource:loc.messages.NoMatchingReleases",
     "FetchCommitDiff": "ms-resource:loc.messages.FetchCommitDiff",
     "FetchCommitDiffSuccess": "ms-resource:loc.messages.FetchCommitDiffSuccess",
     "FetchCommitDiffError": "ms-resource:loc.messages.FetchCommitDiffError",

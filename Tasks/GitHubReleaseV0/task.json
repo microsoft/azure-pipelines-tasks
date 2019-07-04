@@ -278,6 +278,7 @@
         "FetchMatchingReleaseSuccess": "Found the latest release matching the given criteria.",
         "GetLatestReleaseError": "An unexpected error occurred while fetching the latest published release.",
         "NoLatestPublishRelease": "No releases are published yet in the repository.",
+        "NoMatchingReleases": "No releases found matching the given criteria",
         "FetchCommitDiff": "Fetching the list of commits since the last published release...",
         "FetchCommitDiffSuccess": "Found the list of changes.",
         "FetchCommitDiffError": "An unexpected error occurred while fetching the list of changes.",

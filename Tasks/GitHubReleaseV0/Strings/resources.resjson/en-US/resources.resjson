@@ -91,6 +91,7 @@
   "loc.messages.FetchMatchingReleaseSuccess": "Found the latest release matching the given criteria.",
   "loc.messages.GetLatestReleaseError": "An unexpected error occurred while fetching the latest published release.",
   "loc.messages.NoLatestPublishRelease": "No releases are published yet in the repository.",
+  "loc.messages.NoMatchingReleases": "No releases found matching the given criteria",
   "loc.messages.FetchCommitDiff": "Fetching the list of commits since the last published release...",
   "loc.messages.FetchCommitDiffSuccess": "Found the list of changes.",
   "loc.messages.FetchCommitDiffError": "An unexpected error occurred while fetching the list of changes.",
