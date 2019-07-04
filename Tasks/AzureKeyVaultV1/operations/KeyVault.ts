@@ -213,7 +213,7 @@ export class KeyVault {
             if (strVal) {
                 console.log(util.format("Value of secret %s has been converted to single line.", secretName));
                 tl.setVariable(secretNameWithoutVersion, strVal, true);
-                tl.setVariable(secretName, secretValue, true);
+                tl.setVariable(secretName, strVal, true);
             }
             else {
                 let lines = secretValue.split('\n');
