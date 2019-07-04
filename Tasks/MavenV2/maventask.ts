@@ -3,8 +3,8 @@ import Q = require('q');
 import os = require('os');
 import path = require('path');
 
-import tl = require('vsts-task-lib/task');
-import {ToolRunner} from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import {ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 import {CodeAnalysisOrchestrator} from "codeanalysis-common/Common/CodeAnalysisOrchestrator";
 import {BuildOutput, BuildEngine} from 'codeanalysis-common/Common/BuildOutput';
