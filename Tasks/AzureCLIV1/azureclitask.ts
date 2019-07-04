@@ -128,6 +128,9 @@ export class azureclitask {
             var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
             var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
 
+            this.servicePrincipalId = servicePrincipalId;
+            this.tenantId = tenantId;
+
             if (authType == "spnCertificate") {
                 tl.debug('certificate based endpoint');
                 let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
@@ -138,9 +141,7 @@ export class azureclitask {
             else {
                 tl.debug('key based endpoint');
                 cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
-                this.servicePrincipalId = servicePrincipalId;
                 this.servicePrincipalKey = cliPassword;
-                this.tenantId = tenantId;
             }
 
             //login using svn
