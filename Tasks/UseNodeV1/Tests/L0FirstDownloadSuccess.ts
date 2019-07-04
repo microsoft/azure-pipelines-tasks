@@ -1,6 +1,7 @@
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import taskLib = require('azure-pipelines-task-lib/task');
+import restm = require('typed-rest-client/RestClient');
 import fs = require('fs');
 import os = require('os');
 import path = require('path');
@@ -49,6 +50,8 @@ if (process.env["__proxy__"]) {
     }
 }
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
+
+tmr.registerMock('typed-rest-client/RestClient', restm);
 
 //Create tool-lib mock
 tmr.registerMock('vsts-task-tool-lib/tool', {
