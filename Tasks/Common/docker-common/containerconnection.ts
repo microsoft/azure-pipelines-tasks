@@ -117,7 +117,7 @@ export default class ContainerConnection {
     
     public setDockerConfigEnvVariable() {
         if (this.configurationDirPath && fs.existsSync(this.configurationDirPath)) {
-            tl.setVariable("DOCKER_CONFIG", this.configurationDirPath, true);
+            tl.setVariable("DOCKER_CONFIG", this.configurationDirPath);
         }
         else {
             tl.error(tl.loc('DockerRegistryNotFound'));
