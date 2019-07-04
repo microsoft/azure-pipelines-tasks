@@ -1,7 +1,6 @@
 import tl = require('vsts-task-lib/task');
 import utility = require('./utility');
 var zipUtility = require('webdeployment-common/ziputility.js');
-import path = require('path');
 
 export enum PackageType {
     war,
@@ -29,34 +28,10 @@ export class Package {
     constructor(packagePath: string) {
         this._path = PackageUtility.getPackagePath(packagePath);
         this._isMSBuildPackage = undefined;
-        let workingDirectory = tl.getVariable("system.defaultworkingdirectory");
-        try {
-            if (workingDirectory && this._path.indexOf(workingDirectory) == 0) {
-                let relativePackagePath = this._path.substring(workingDirectory.length);
-                if (relativePackagePath.indexOf(path.sep) == 0) {
-                    relativePackagePath = relativePackagePath.substring(1);
-                }
-                let endIndex = relativePackagePath.indexOf(path.sep);
-                endIndex = endIndex >= 0 ? endIndex : relativePackagePath.length;
-                this._artifactAlias = relativePackagePath.substring(0, endIndex);
-            }
-            else {
-                this._artifactAlias = null;
-            }
-            tl.debug("Artifact alias of package is: "+this._artifactAlias);
-        }
-        catch(error) {
-            tl.debug(`Error in determining artifact alias of package. Error: ${error}`);
-            this._artifactAlias = null;
-        }
     }
 
     public getPath(): string {
         return this._path;
-    }
-
-    public getArtifactAlias(): string {
-        return this._artifactAlias;
     }
 
     public async isMSBuildPackage(): Promise<boolean> {
@@ -118,5 +93,4 @@ export class Package {
     private _path: string;
     private _isMSBuildPackage?: boolean;
     private _packageType?: PackageType;
-    private _artifactAlias?: string;
 }
