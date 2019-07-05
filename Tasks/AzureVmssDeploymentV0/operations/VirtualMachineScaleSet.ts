@@ -154,6 +154,7 @@ export default class VirtualMachineScaleSet {
 
             let blobBaseUrl = util.format("%s%s/%s/out", storageDetails.primaryBlobUrl, "vststasks", blobsPrefixPath);
 
+            blobsPrefixPath = blobsPrefixPath + "/in";
             invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
             invokerCommand = `powershell ./${blobsPrefixPath}/customScriptInvoker.ps1 -blobUrl ${blobBaseUrl} -sasToken ?sv=2018-03-28&ss=bfqt&srt=sco&sp=rwdlacup&se=2019-07-06T18:29:01Z&st=2019-07-05T10:29:01Z&spr=https&sig=mzw%2FSkBvfmsL%2BPeWg6kYc08ed9nAE5AYOVd1xYf%2BjeA%3D -zipName '${archiveFile}' -script '${escapedScript}' -scriptArgs '${escapedArgs}' -prefixPath '${blobsPrefixPath}'`;
         } else {
@@ -184,7 +185,7 @@ export default class VirtualMachineScaleSet {
         return <CustomScriptsInfo>{
             localDirPath: packageDirectory,
             command: invokerCommand,
-            blobsPrefixPath: blobsPrefixPath + "/in",
+            blobsPrefixPath: blobsPrefixPath,
             storageAccount: storageDetails
         };
     }
