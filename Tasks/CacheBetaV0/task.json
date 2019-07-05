@@ -15,7 +15,7 @@
     "groups": [],
     "demands": [],
     "preview": true,
-    "minimumAgentVersion": "2.154.1",
+    "minimumAgentVersion": "2.154.2",
     "inputs": [
         {
             "name": "key",
@@ -40,6 +40,14 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Variable to set to 'true' when the cache is restored (i.e. a cache hit), otherwise set to 'false'."
+        },
+        {
+            "name": "restoreKeys",
+            "type": "multiLine",
+            "label": "Additional restore key prefixes",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "TODO"
         }
     ],
     "instanceNameFormat": "CacheBeta",

@@ -15,7 +15,7 @@
   "groups": [],
   "demands": [],
   "preview": true,
-  "minimumAgentVersion": "2.154.1",
+  "minimumAgentVersion": "2.154.2",
   "inputs": [
     {
       "name": "key",
@@ -40,6 +40,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cacheHitVar"
+    },
+    {
+      "name": "restoreKeys",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.restoreKeys",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.restoreKeys"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
