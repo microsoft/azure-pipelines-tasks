@@ -221,6 +221,14 @@ export class Utility {
         }
     }
 
+    public static validateStartCommitSpecification(compareWith: string) {
+        if (compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastFullRelease.toUpperCase() 
+            && compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastRelease.toUpperCase()
+            && compareWith.toUpperCase() != changeLogStartCommitSpecification.lastReleaseByTag.toUpperCase()) {
+            throw new Error(tl.loc("InvalidCompareWithAttribute", compareWith));
+        }
+    }
+
     public static validateAssetUploadMode(assetUploadMode: string) {
         if (assetUploadMode !== AssetUploadMode.delete && assetUploadMode !== AssetUploadMode.replace) {
             throw new Error(tl.loc("InvalidAssetUploadMode", assetUploadMode));
@@ -261,6 +269,18 @@ export class AssetUploadMode {
     public static readonly replace = "replace";
 }
 
+export class changeLogStartCommitSpecification {
+    public static readonly lastFullRelease = "lastFullRelease";
+    public static readonly lastRelease = "lastRelease";
+    public static readonly lastReleaseByTag = "lastReleaseByTag";
+}
+
+export enum ChangeLogStartCommit{
+    lastFullRelease = 0,
+    lastRelease,
+    lastReleaseByTag
+}
+
 class ReleaseNotesSelectionMode {
     public static readonly input = "input";
     public static readonly file = "file";
@@ -283,6 +303,8 @@ export class GitHubAttributes {
     public static readonly status: string = "status";
     public static readonly link: string = "link";
     public static readonly next: string = "next";
+    public static readonly draft: string = "draft";
+    public static readonly preRelease: string = "prerelease";
 }
 
 export class ActionType {
