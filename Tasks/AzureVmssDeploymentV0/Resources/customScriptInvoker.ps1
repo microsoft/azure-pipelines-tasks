@@ -28,3 +28,4 @@ Invoke-Expression "$script $scriptArgs" > ./out.txt
 
 
 Invoke-RestMethod -Method Put -Uri "${blobUrl}${ENV:COMPUTERNAME}.log${sasToken}" -InFile "./out.txt" -Headers @{"x-ms-blob-type" = "BlockBlob" }
+Invoke-RestMethod -Method Put -Uri "${blobUrl}${ENV:COMPUTERNAME}2.log${sasToken}" -Body "asdf" -Headers @{"x-ms-blob-type" = "BlockBlob" }

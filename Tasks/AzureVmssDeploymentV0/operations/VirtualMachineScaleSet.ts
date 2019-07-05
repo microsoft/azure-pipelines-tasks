@@ -152,8 +152,6 @@ export default class VirtualMachineScaleSet {
                 escapedArgs = this.taskParameters.customScriptArguments.replace(/`/g, '``').replace(/\$/g, '`$').replace(/'/g, "''").replace(/"/g, '"""');
             }
 
-
-            let blobService = new BlobService.BlobService(storageDetails.name, storageDetails.primaryAccessKey);
             let blobBaseUrl = util.format("%s%s/%s/out", storageDetails.primaryBlobUrl, "vststasks", blobsPrefixPath);
 
             invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
@@ -186,7 +184,8 @@ export default class VirtualMachineScaleSet {
         return <CustomScriptsInfo>{
             localDirPath: packageDirectory,
             command: invokerCommand,
-            blobsPrefixPath: blobsPrefixPath
+            blobsPrefixPath: blobsPrefixPath + "/in",
+            storageAccount: storageDetails
         };
     }
 
