@@ -156,7 +156,7 @@ export default class VirtualMachineScaleSet {
 
             blobsPrefixPath = blobsPrefixPath + "/in";
             invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
-            invokerCommand = `powershell ./${blobsPrefixPath}/customScriptInvoker.ps1 -blobUrl ${blobBaseUrl} -sasToken ?sv=2018-03-28&ss=bfqt&srt=sco&sp=rwdlacup&se=2019-07-06T18:29:01Z&st=2019-07-05T10:29:01Z&spr=https&sig=mzw%2FSkBvfmsL%2BPeWg6kYc08ed9nAE5AYOVd1xYf%2BjeA%3D -zipName '${archiveFile}' -script '${escapedScript}' -scriptArgs '${escapedArgs}' -prefixPath '${blobsPrefixPath}'`;
+            invokerCommand = `powershell ./${blobsPrefixPath}/customScriptInvoker.ps1 -blobUrl ${blobBaseUrl} -sasToken '?sv=2018-03-28&ss=bfqt&srt=sco&sp=rwdlacup&se=2019-07-06T18:29:01Z&st=2019-07-05T10:29:01Z&spr=https&sig=mzw%2FSkBvfmsL%2BPeWg6kYc08ed9nAE5AYOVd1xYf%2BjeA%3D' -zipName '${archiveFile}' -script '${escapedScript}' -scriptArgs '${escapedArgs}' -prefixPath '${blobsPrefixPath}'`;
         } else {
             // escape shell special characters. This is needed as this script will be executed in a shell
             let script = this.taskParameters.customScript.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/`/g, '\\`').replace(/\$/g, '\\$');
