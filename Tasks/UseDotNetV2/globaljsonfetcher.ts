@@ -1,3 +1,4 @@
+"use strict";
 import * as fileSystem from "fs";
 import * as tl from 'azure-pipelines-task-lib/task';
 import { DotNetCoreVersionFetcher } from "./versionfetcher";
@@ -47,7 +48,7 @@ export class globalJsonFetcher {
 
     private readGlobalJson(path: string): GlobalJson | null {
         let globalJson: GlobalJson | null = null;
-        console.log(tl.loc("GlobalJsonFound", path));
+        tl.loc("GlobalJsonFound", path);
         try {
             globalJson = (JSON.parse(fileSystem.readFileSync(path).toString())) as { sdk: { version: string } };
         } catch (error) {
@@ -64,6 +65,16 @@ export class globalJsonFetcher {
 
 }
 
-class GlobalJson {
-    public sdk: { version: string };
+export class GlobalJson {    
+    constructor(version: string | null = null) {        
+        if(version != null){
+            this.sdk = new sdk();
+            this.sdk.version = version;
+        }
+    }
+    public sdk: sdk;
+}
+
+class sdk{
+    public version: string;
 }

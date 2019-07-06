@@ -12,7 +12,7 @@ export class VersionInfo {
     private packageType: string;
     private runtimeVersion: string;
 
-    constructor(versionInfoObject: any, packageType: string) {
+    constructor(versionInfoObject: {version: string, files: {name: string, hash: string, url: string, rid: string}[], 'runtime-version': string}, packageType: string) {
         if (!versionInfoObject.version || !versionInfoObject.files) {
             throw tl.loc("InvalidVersionObject", packageType, versionInfoObject)
         }
