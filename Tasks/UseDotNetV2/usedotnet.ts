@@ -27,12 +27,12 @@ async function run() {
         let includePreviewVersions: boolean = tl.getBoolInput('includePreviewVersions');
         let workingDirectory: string | null = tl.getPathInput("workingDirectory", false) || null;        
         await installDotNet(installationPath, packageType, versionSpec, useGlobalJson, workingDirectory, includePreviewVersions);
-    }    
-    tl.prependPath(installationPath);    
-    // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
-    tl.setVariable('DOTNET_ROOT', installationPath);
-    // By default disable Multi Level Lookup unless user wants it enabled.
-    tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", !performMultiLevelLookup ? "0" : "1");    
+        tl.prependPath(installationPath);    
+        // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
+        tl.setVariable('DOTNET_ROOT', installationPath);
+        // By default disable Multi Level Lookup unless user wants it enabled.
+        tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", !performMultiLevelLookup ? "0" : "1");  
+    }      
     // Add dot net tools path to "PATH" environment variables, so that tools can be used directly.
     addDotNetCoreToolPath();    
     // Install NuGet version specified by user or 4.4.1 in case none is specified
