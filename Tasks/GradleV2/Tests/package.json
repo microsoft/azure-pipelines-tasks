@@ -9,6 +9,6 @@
   },
   "devDependencies": {
     "@types/mocha": "5.2.5",
-    "vsts-task-lib": "2.6.0"
+    "azure-pipelines-task-lib": "^2.8.0"
   }
 }
