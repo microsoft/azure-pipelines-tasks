@@ -8,7 +8,8 @@ Register-Mock Get-VstsInput { "FilePath" } -- -Name ScriptType -Require
 Register-Mock Get-VstsInput { "foobar.ps1" } -- -Name ScriptPath
 Register-Mock Get-VstsInput { "OtherVersion" } -- -Name TargetAzurePs
 Register-Mock Get-VstsInput { "x.y.z" } -- -Name CustomTargetAzurePs
-Register-Mock Get-VstsEndpoint
+Register-Mock Get-VstsTaskVariable
+Register-Mock Set-VstsTaskVariable
 
 # Act/Assert.
 Assert-Throws {
