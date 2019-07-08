@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Cache - Invite Only",
+  "loc.friendlyName": "Cache (Beta)",
   "loc.helpMarkDown": "Improve build performance by caching files, like dependencies, between pipeline runs.",
   "loc.description": "Cache files between runs",
   "loc.instanceNameFormat": "Cache",
