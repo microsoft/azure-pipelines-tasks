@@ -9,7 +9,7 @@ import path = require('path');
 import * as tl from 'azure-pipelines-task-lib/task';
 
 /**
- * Orcheestrates the processing and publishing of code analysis data and artifacts (PMD, FindBugs etc. but not SonarQube)
+ * Orchestrates the processing and publishing of code analysis data and artifacts (PMD, FindBugs etc. but not SonarQube)
  *
  * @export
  * @class CodeAnalysisOrchestrator
