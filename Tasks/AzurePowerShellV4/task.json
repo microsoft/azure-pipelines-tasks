@@ -143,6 +143,14 @@
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
+    "prejobexecution": {
+        "PowerShell3": {
+            "target": "PreJobExecutionAzurePowerShell.ps1",
+            "platforms": [
+                "windows"
+            ]
+        }
+    },
     "execution": {
         "PowerShell3": {
             "target": "azurepowershell.ps1",

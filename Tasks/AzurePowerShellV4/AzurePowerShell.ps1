@@ -8,8 +8,6 @@ $scriptInline = Get-VstsInput -Name Inline
 $scriptArguments = Get-VstsInput -Name ScriptArguments
 $__vsts_input_errorActionPreference = Get-VstsInput -Name errorActionPreference
 $__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError
-$targetAzurePs = Get-VstsInput -Name TargetAzurePs
-$customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
 
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
@@ -23,33 +21,11 @@ if ($scriptArguments -match '[\r\n]') {
     throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptArguments)
 }
 
-# string constants
-$otherVersion = "OtherVersion"
-$latestVersion = "LatestVersion"
-
-if ($targetAzurePs -eq $otherVersion) {
-    if ($customTargetAzurePs -eq $null) {
-        throw (Get-VstsLocString -Key InvalidAzurePsVersion $customTargetAzurePs)
-    } else {
-        $targetAzurePs = $customTargetAzurePs.Trim()        
-    }
-}
-
-$pattern = "^[0-9]+\.[0-9]+\.[0-9]+$"
-$regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
-
-if ($targetAzurePs -eq $latestVersion) {
-    $targetAzurePs = ""
-} elseif (-not($regex.IsMatch($targetAzurePs))) {
-    throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
-}
-
-. "$PSScriptRoot\Utility.ps1"
-
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $endpoint = Get-VstsEndpoint -Name $serviceName -Require
+$env:PSModulePath = Get-VstsTaskVariable -Name "AZ_PS_MODULE_PATH"
 
-Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
+. "$PSScriptRoot/PreJobExecutionAzurePowerShell.ps1"
 
 try 
 {
