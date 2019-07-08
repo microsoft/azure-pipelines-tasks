@@ -2,7 +2,7 @@
   "loc.friendlyName": "Cache (Beta)",
   "loc.helpMarkDown": "Improve build performance by caching files, like dependencies, between pipeline runs.",
   "loc.description": "Cache files between runs",
-  "loc.instanceNameFormat": "Cache",
+  "loc.instanceNameFormat": "CacheBeta",
   "loc.input.label.key": "Key",
   "loc.input.help.key": "Key (unique identifier) for the cache. This should be a newline-delimited list of strings or file paths. File paths can be absolute or relative to $(System.DefaultWorkingDirectory).",
   "loc.input.label.path": "Path",
