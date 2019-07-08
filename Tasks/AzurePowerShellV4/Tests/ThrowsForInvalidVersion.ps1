@@ -10,6 +10,7 @@ Register-Mock Get-VstsInput { "OtherVersion" } -- -Name TargetAzurePs
 Register-Mock Get-VstsInput { "x.y.z" } -- -Name CustomTargetAzurePs
 Register-Mock Get-VstsTaskVariable
 Register-Mock Set-VstsTaskVariable
+Register-Mock Get-VstsEndpoint
 
 # Act/Assert.
 Assert-Throws {
