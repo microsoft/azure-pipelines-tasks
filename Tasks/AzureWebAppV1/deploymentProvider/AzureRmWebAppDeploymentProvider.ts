@@ -18,11 +18,11 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     protected virtualApplicationPath: string = "";
     protected activeDeploymentID;
 
-    private _packageArtifactAlias: string;
+    protected packageArtifactAlias: string;
 
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;
-        this._packageArtifactAlias = PackageUtility.getArtifactAlias(this.taskParams.Package.getPath());
+        this.packageArtifactAlias = PackageUtility.getArtifactAlias(this.taskParams.Package.getPath());
     }
 
     public async PreDeploymentStep() {
@@ -39,7 +39,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         if(this.kuduServiceUtility) {
             await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
-            this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()}, this._packageArtifactAlias);
+            this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()}, this.packageArtifactAlias);
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }
         
@@ -59,6 +59,6 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             await this.appServiceUtility.updateConfigurationSettings(customApplicationSettings);
         }
 
-        await this.appServiceUtility.updateScmTypeAndConfigurationDetails(this._packageArtifactAlias);
+        await this.appServiceUtility.updateScmTypeAndConfigurationDetails(this.packageArtifactAlias);
     }
 }

@@ -26,22 +26,25 @@ export class PackageUtility {
 
     public static getArtifactAlias(packagePath: string): string {
         let artifactAlias = null;
-        let workingDirectory = tl.getVariable("system.defaultworkingdirectory");
-        try {
-            if (workingDirectory && packagePath.indexOf(workingDirectory) == 0) {
-                let relativePackagePath = packagePath.substring(workingDirectory.length);
-                if (relativePackagePath.indexOf(path.sep) == 0) {
-                    relativePackagePath = relativePackagePath.substring(1);
+        if (tl.getVariable('release.releaseId')) {
+            // Determine artifact alias from package path if task is running in release.
+            let workingDirectory = tl.getVariable("system.defaultworkingdirectory");
+            try {
+                if (workingDirectory && packagePath.indexOf(workingDirectory) == 0) {
+                    let relativePackagePath = packagePath.substring(workingDirectory.length);
+                    if (relativePackagePath.indexOf(path.sep) == 0) {
+                        relativePackagePath = relativePackagePath.substring(1);
+                    }
+                    let endIndex = relativePackagePath.indexOf(path.sep);
+                    endIndex = endIndex >= 0 ? endIndex : relativePackagePath.length;
+                    artifactAlias = relativePackagePath.substring(0, endIndex);
                 }
-                let endIndex = relativePackagePath.indexOf(path.sep);
-                endIndex = endIndex >= 0 ? endIndex : relativePackagePath.length;
-                artifactAlias = relativePackagePath.substring(0, endIndex);
             }
-            tl.debug("Artifact alias of package is: " + artifactAlias);
+            catch (error) {
+                tl.debug(`Error in determining artifact alias of package. Error: ${error}`);
+            }
         }
-        catch(error) {
-            tl.debug(`Error in determining artifact alias of package. Error: ${error}`);
-        }
+        tl.debug("Artifact alias of package is: " + artifactAlias);
         return artifactAlias;
     }
 }

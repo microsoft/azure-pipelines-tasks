@@ -29,7 +29,7 @@ export class KuduServiceUtility {
 
     public async updateDeploymentStatus(taskResult: boolean, DeploymentID: string, customMessage: any, packageArtifactAlias: string = null): Promise<string> {
         try {
-            let requestBody = this._getUpdateHistoryRequest(taskResult, DeploymentID, customMessage, packageArtifactAlias);
+            let requestBody = this._getUpdateHistoryRequest(taskResult, packageArtifactAlias, DeploymentID, customMessage);
             return await this._appServiceKuduService.updateDeployment(requestBody);
         }
         catch(error) {
@@ -115,7 +115,7 @@ export class KuduServiceUtility {
         }
     }
 
-    public async deployUsingRunFromZip(packagePath: string, customMessage?: any) : Promise<void> {
+    public async deployUsingRunFromZip(packagePath: string, packageArtifactAlias: string = null, customMessage?: any) : Promise<void> {
         try {
             console.log(tl.loc('PackageDeploymentInitiated'));
 
@@ -123,7 +123,7 @@ export class KuduServiceUtility {
                 'deployer=' +   VSTS_DEPLOY
             ];
 
-            var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
+            var deploymentMessage = this._getUpdateHistoryRequest(null, packageArtifactAlias, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
             await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
             console.log(tl.loc('PackageDeploymentSuccess'));
@@ -134,7 +134,7 @@ export class KuduServiceUtility {
         }
     }
 
-    public async deployUsingWarDeploy(packagePath: string, customMessage?: any, targetFolderName?: any): Promise<string> {
+    public async deployUsingWarDeploy(packagePath: string, packageArtifactAlias: string = null, customMessage?: any, targetFolderName?: any): Promise<string> {
         try {
             console.log(tl.loc('WarPackageDeploymentInitiated'));
 
@@ -146,7 +146,7 @@ export class KuduServiceUtility {
                 queryParameters.push('name=' + encodeURIComponent(targetFolderName));
             }
 
-            var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
+            var deploymentMessage = this._getUpdateHistoryRequest(null, packageArtifactAlias, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
             let deploymentDetails = await this._appServiceKuduService.warDeploy(packagePath, queryParameters);
             await this._processDeploymentResponse(deploymentDetails);
@@ -357,7 +357,7 @@ export class KuduServiceUtility {
         }
     }
 
-    private _getUpdateHistoryRequest(isDeploymentSuccess: boolean, deploymentID?: string, customMessage?: any, artifactAlias?: string): any {
+    private _getUpdateHistoryRequest(isDeploymentSuccess: boolean, artifactAlias: string = null, deploymentID?: string, customMessage?: any): any {
         
         var status = isDeploymentSuccess ? KUDU_DEPLOYMENT_CONSTANTS.SUCCESS : KUDU_DEPLOYMENT_CONSTANTS.FAILED;
         var releaseId = tl.getVariable('release.releaseId');
