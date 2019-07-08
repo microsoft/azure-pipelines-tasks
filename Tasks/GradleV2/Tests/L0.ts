@@ -4,7 +4,7 @@ import os = require('os');
 import process = require('process');
 import fs = require('fs');
 
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 import { BuildOutput, BuildEngine } from 'codeanalysis-common/Common/BuildOutput';
 import { PmdTool } from 'codeanalysis-common/Common/PmdTool';
