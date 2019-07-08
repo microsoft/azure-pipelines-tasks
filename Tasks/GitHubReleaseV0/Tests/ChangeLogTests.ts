@@ -26,7 +26,8 @@ export class ChangeLogTests {
                     getCommitShaFromTarget: function() {
                         return "abc";
                     },
-                    filterTag: function() {
+                    filterTag: function(x, y, z, w) {
+                        console.log("Tag Name: "+ z);
                         return { commit: { sha: "abc" } };
                     }
                 }
@@ -40,6 +41,23 @@ export class ChangeLogTests {
                         return {
                             statusCode: 200,
                             body: { "tag_name": "tagName" }
+                        }
+                    },
+                    getReleases: function() {
+                        return {
+                            statusCode: 200,
+                            body: [
+                                {
+                                    "tag_name": "pre_rel",
+                                    "prerelease": true,
+                                    "draft": false
+                                },
+                                {
+                                    "tag_name": "v1.2",
+                                    "prerelease": false,
+                                    "draft": false
+                                }
+                            ]
                         }
                     },
                     getCommitsList: function() {

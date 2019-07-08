@@ -21,4 +21,5 @@ export class TestString {
     public static readonly extractRepositoryOwnerAndNameKeyword: string = "extractRepositoryOwnerAndName method should work properly";
     public static readonly extractRepoAndIssueIdKeyword: string = "extractRepoAndIssueId method should work properly";
     public static readonly getFirstLineKeyword: string = "getFirstLine method should work properly";
+    public static readonly tagMatchingKeyword: string = "isTagMatching method should work properly";
 }

@@ -84,6 +84,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         assert(tr.stdout.search(TestString.getReleaseNoteKeyword) >= 0, 'should have printed: ' + TestString.getReleaseNoteKeyword);
         assert(tr.stdout.search(TestString.validBranchNameKeyword) >= 0, 'should have printed: ' + TestString.validBranchNameKeyword);
         assert(tr.stdout.search(TestString.invalidBranchNameKeyword) >= 0, 'should have printed: ' + TestString.invalidBranchNameKeyword);
+        assert(tr.stdout.search(TestString.tagMatchingKeyword) >= 0, 'should have printed: ' + TestString.tagMatchingKeyword);
         assert(tr.stdout.search(TestString.parseHTTPHeaderLinkKeyword) >= 0, 'should have printed: ' + TestString.parseHTTPHeaderLinkKeyword);
         assert(tr.stdout.search(TestString.extractRepositoryOwnerAndNameKeyword) >= 0, 'should have printed: ' + TestString.extractRepositoryOwnerAndNameKeyword);
         assert(tr.stdout.search(TestString.extractRepoAndIssueIdKeyword) >= 0, 'should have printed: ' + TestString.extractRepoAndIssueIdKeyword);
@@ -110,6 +111,9 @@ describe('GitHubReleaseTaskTests Suite', function() {
         tr.run();
 
         assert(tr.stdout.search(TestString.getChangeLogKeyword) >= 0, 'should have printed: ' + TestString.getChangeLogKeyword);
+        assert(tr.stdout.search("Tag Name: v1.2") >=0, 'should have printed: TagName: v1.2');
+        assert(tr.stdout.search("Tag Name: pre_rel") >=0, 'should have printed: TagName: pre_rel');
+        assert(tr.stdout.search("Tag Name: tagName") >=0, 'should have printed: TagName: tagName');
         
         done();
     });
