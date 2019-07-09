@@ -99,6 +99,7 @@ describe('GitHubReleaseTaskTests Suite', function() {
         tr.run();
 
         assert(tr.stdout.search(TestString.getTagForCreateActionKeyword) >= 0, 'should have printed: ' + TestString.getTagForCreateActionKeyword);
+        assert(tr.stdout.search(TestString.getTagForCreateActionWithTagPatternKeyword) >= 0, 'should have printed: ' + TestString.getTagForCreateActionWithTagPatternKeyword);
         assert(tr.stdout.search(TestString.getCommitShaFromTargetKeyword) >= 0, 'should have printed: ' + TestString.getCommitShaFromTargetKeyword);
         assert(tr.stdout.search(TestString.getReleaseIdForTagKeyword) >= 0, 'should have printed: ' + TestString.getReleaseIdForTagKeyword);
         

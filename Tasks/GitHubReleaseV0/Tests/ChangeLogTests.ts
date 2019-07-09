@@ -26,8 +26,8 @@ export class ChangeLogTests {
                     getCommitShaFromTarget: function() {
                         return "abc";
                     },
-                    filterTag: function(x, y, z, w) {
-                        console.log("Tag Name: "+ z);
+                    filterTag: function(githubEndpointToken: string, repositoryName: string, filterValue: string, filterTagsCallback: (tagsList: any[], filterValue: string) => any[]) {
+                        console.log("Tag Name: "+ filterValue);
                         return { commit: { sha: "abc" } };
                     }
                 }
