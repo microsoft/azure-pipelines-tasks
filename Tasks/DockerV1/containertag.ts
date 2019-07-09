@@ -12,6 +12,7 @@ function dockerTag(connection: ContainerConnection, sourceImage: string, targetI
     let command = connection.createCommand();
     command.arg("tag");
     if (qualifyImageName) {
+        sourceImage = connection.getQualifiedImageNameIfRequired(sourceImage);
         targetImage = connection.getQualifiedImageNameIfRequired(targetImage);
     }
     command.arg(sourceImage);
