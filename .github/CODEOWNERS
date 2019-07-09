@@ -119,8 +119,6 @@ Tasks/Common/java-common/*        @madhurig   @kelliejos
 
 Tasks/Common/kubernetes-common/*      @nishubansal    @ds-ms
 
-Tasks/Common/packaging-common-old/*   @jotaylo
-
 Tasks/Common/packaging-common/*     @jotaylo
 
 Tasks/Common/securefiles-common/*   @madhurig   @hashtagchris

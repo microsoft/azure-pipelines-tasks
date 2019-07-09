@@ -7,7 +7,7 @@
   "loc.group.displayName.publishRegistries": "Registro de destino y autenticación",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.command": "Comando",
-  "loc.input.help.command": "El comando y los argumentos que se pasarán a npm para su ejecución.\n\nSi los argumentos contienen comillas dobles (\"), aplíqueles una barra oblicua (\\) de escape y rodee la cadena de escape con comillas dobles (\").",
+  "loc.input.help.command": "El comando y los argumentos que se pasarán a npm para su ejecución.\n\nSi los argumentos contienen comillas dobles (\"), aplíqueles una barra oblicua (\\\\) de escape y rodee la cadena de escape con comillas dobles (\").",
   "loc.input.label.workingDir": "Carpeta de trabajo que contiene package.json",
   "loc.input.help.workingDir": "Ruta de acceso de la carpeta que contiene los archivos package.json y .npmrc de destino. Seleccione la carpeta, no el archivo; por ejemplo, \"/packages/mi_paquete\".",
   "loc.input.label.verbose": "Registro detallado",
