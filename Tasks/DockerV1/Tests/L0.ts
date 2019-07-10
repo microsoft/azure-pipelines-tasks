@@ -205,7 +205,7 @@ describe('Docker Suite', function() {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]docker tag ${shared.ImageNamesFileImageName} ajgtestacr1.azurecr.io/${shared.ImageNamesFileImageName}`) != -1, "docker tag should run");
+        assert(tr.stdout.indexOf(`[command]docker tag ajgtestacr1.azurecr.io/${shared.ImageNamesFileImageName} ajgtestacr1.azurecr.io/${shared.ImageNamesFileImageName}`) != -1, "docker tag should run");
         console.log(tr.stderr);
         done();
     });
@@ -215,13 +215,13 @@ describe('Docker Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.tagImages;
         process.env[shared.TestEnvVars.containerType] = shared.ContainerTypes.AzureContainerRegistry;
-        process.env[shared.TestEnvVars.qualifyImageName] = "true";
+        process.env[shared.TestEnvVars.qualifyImageName] = "false";
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]docker tag test/test:2 ajgtestacr1.azurecr.io/test/test:2`) != -1, "docker tag should run");
+        assert(tr.stdout.indexOf(`[command]docker tag test/test:2 test/test:2`) != -1, "docker tag should run");
         console.log(tr.stderr);
         done();
     });

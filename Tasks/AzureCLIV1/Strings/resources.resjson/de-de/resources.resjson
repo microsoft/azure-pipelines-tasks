@@ -16,7 +16,7 @@
   "loc.input.label.args": "Argumente",
   "loc.input.help.args": "An das Skript übergebenen Argumente",
   "loc.input.label.addSpnToEnvironment": "Auf Dienstprinzipaldetails im Skript zugreifen",
-  "loc.input.help.addSpnToEnvironment": "Hiermit werden Dienstprinzipal-ID und -schlüssel des ausgewählten Azure-Endpunkts zur Ausführungsumgebung des Skripts hinzugefügt. Sie können diese Variablen in Ihrem Skript verwenden: \"$servicePrincipalId\" und \"$servicePrincipalKey\".\n\nEine Berücksichtigung erfolgt nur, wenn der Azure-Endpunkt das Dienstprinzipal-Authentifizierungsschema aufweist.",
+  "loc.input.help.addSpnToEnvironment": "Hiermit werden Dienstprinzipal-ID und -schlüssel des ausgewählten Azure-Endpunkts zur Ausführungsumgebung des Skripts hinzugefügt. Sie können diese Variablen in Ihrem Skript verwenden: \"$servicePrincipalId\", \"$servicePrincipalKey\" und \"tenandId\"  .\n\nEine Berücksichtigung erfolgt nur, wenn der Azure-Endpunkt das Dienstprinzipal-Authentifizierungsschema aufweist.",
   "loc.input.label.useGlobalConfig": "Globale Azure CLI-Konfiguration verwenden",
   "loc.input.help.useGlobalConfig": "Bei Festlegung auf FALSE verwendet diese Aufgabe ein eigenes, separates [Azure CLI-Konfigurationsverzeichnis](https://docs.microsoft.com/de-de/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file). Dieses Verzeichnis kann zum Ausführen von Azure CLI-Aufgaben in *parallelen* Releases verwendet werden.",
   "loc.input.label.cwd": "Arbeitsverzeichnis",
