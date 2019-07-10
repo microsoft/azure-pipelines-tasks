@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 153,
-        "Patch": 1
+        "Patch": 2
     },
     "instanceNameFormat": "File Transform: $(Package)",
     "groups": [
@@ -49,7 +49,7 @@
             "name": "xmlTransformationRules",
             "type": "multiLine",
             "label": "Transformation rules",
-            "defaultValue": "-transform **\\*.Release.config -xml **\\*.config\n-transform **\\*.$(Release.EnvironmentName).config -xml **\\*.config",
+            "defaultValue": "-transform **\\*.Release.config -xml **\\*.config",
             "required": false,
             "helpMarkDown": "Provide new line separated list of transformation file rules using the syntax: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>",
             "visibleRule": "enableXmlTransform == true"
