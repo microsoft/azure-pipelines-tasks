@@ -1,9 +1,9 @@
 {
     "id": "D53CCAB4-555E-4494-9D06-11DB043FB4A9",
-    "name": "Cache",
-    "friendlyName": "Cache - Invite Only",
+    "name": "CacheBeta",
+    "friendlyName": "Cache (Beta)",
     "description": "Cache files between runs",
-    "helpUrl": "",
+    "helpUrl": "https://aka.ms/pipeline-caching-docs",
     "helpMarkDown": "Improve build performance by caching files, like dependencies, between pipeline runs.",
     "category": "Utility",
     "author": "Microsoft Corporation",
@@ -42,7 +42,7 @@
             "helpMarkDown": "Variable to set to 'true' when the cache is restored (i.e. a cache hit), otherwise set to 'false'."
         }
     ],
-    "instanceNameFormat": "Cache",
+    "instanceNameFormat": "CacheBeta",
     "execution": {
         "AgentPlugin": {
             "target": "Agent.Plugins.PipelineCache.RestorePipelineCacheV0, Agent.Plugins"
