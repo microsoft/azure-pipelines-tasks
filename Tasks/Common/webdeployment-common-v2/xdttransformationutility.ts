@@ -31,7 +31,8 @@ export function applyXdtTransformation(sourceFile: string, transformFile: string
         "i"
     ];
     
-    var debugModeEnabled = tl.getVariable('system.debug');
+    /* var debugModeEnabled = tl.getVariable('system.debug'); // To disable printing logs */
+    var debugModeEnabled = "true";
     if(debugModeEnabled && debugModeEnabled.toLowerCase() == 'true') {
         cttArgsArray.push("verbose");
         tl.debug('Enabled debug mode for ctt.exe');
@@ -77,7 +78,7 @@ export function basicXdtTransformation(rootFolder, transformConfigs): boolean {
 
 
 /**
-* Performs XDT transformations ousing ctt.exe
+* Performs XDT transformations using ctt.exe
 * 
 */
 export function specialXdtTransformation(rootFolder, transformConfig, sourceConfig, destinationConfig?: string): boolean {
@@ -121,7 +122,7 @@ export function specialXdtTransformation(rootFolder, transformConfig, sourceConf
         
         for(var transformXmlFile in transformXmlFiles) {                
             if(sourceXmlFiles[transformXmlFile.toLowerCase()] || tl.exist(transformXmlFile)) {
-                tl.debug('Applying XDT Transformation : ' + transformXmlFile + ' -> ' + sourceXmlFile);
+                console.log('Applying XDT Transformation : ' + transformXmlFile + ' -> ' + sourceXmlFile);
                 applyXdtTransformation(sourceXmlFile, transformXmlFile, destinationXmlFile);
                 isTransformationApplied = true;
             }
