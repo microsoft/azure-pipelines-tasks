@@ -96,6 +96,17 @@
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
         "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
         "FailedToApplyTransformation": "Unable to apply transformation for the given package.",
-        "MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs."
+        "MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.",
+        "SubstitutingValueonKey" : "Substituting value on key: ",
+        "SubstitutingWithNumberValue" : " with (number) value: ",
+        "SubstitutingWithBooleanValue" : " with (boolean) value: ",
+        "SubstitutingWithObjectValue" : " with (object) value: ",
+        "SubstitutingWithStringValue" : " with (string) value: ",
+        "JSONvariableSubstitution" : "Applying JSON variable substitution for ",
+        "ApplyingXDTtransformation" : "Applying XDT Transformation : ",
+        "SubstitutionForXmlNode" : "Processing substitution for xml node : ",
+        "UpdatingKeyValue" : "Updating value for key= ",
+        "UpdatingWithTokenValue" : " with token value: ",
+        "SubstitutingConnectionStringValue" : "Substituting connectionString value for name= "
     }
 }

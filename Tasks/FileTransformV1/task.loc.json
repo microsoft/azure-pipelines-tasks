@@ -49,7 +49,7 @@
       "name": "xmlTransformationRules",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.xmlTransformationRules",
-      "defaultValue": "-transform **\\*.Release.config -xml **\\*.config\n-transform **\\*.$(Release.EnvironmentName).config -xml **\\*.config",
+      "defaultValue": "-transform **\\*.Release.config -xml **\\*.config",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.xmlTransformationRules",
       "visibleRule": "enableXmlTransform == true"
@@ -96,6 +96,17 @@
     "JSONParseError": "ms-resource:loc.messages.JSONParseError",
     "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern",
     "FailedToApplyTransformation": "ms-resource:loc.messages.FailedToApplyTransformation",
-    "MissingArgumentsforXMLTransformation": "ms-resource:loc.messages.MissingArgumentsforXMLTransformation"
+    "MissingArgumentsforXMLTransformation": "ms-resource:loc.messages.MissingArgumentsforXMLTransformation",
+    "SubstitutingValueonKey": "ms-resource:loc.messages.SubstitutingValueonKey",
+    "SubstitutingWithNumberValue": "ms-resource:loc.messages.SubstitutingWithNumberValue",
+    "SubstitutingWithBooleanValue": "ms-resource:loc.messages.SubstitutingWithBooleanValue",
+    "SubstitutingWithObjectValue": "ms-resource:loc.messages.SubstitutingWithObjectValue",
+    "SubstitutingWithStringValue": "ms-resource:loc.messages.SubstitutingWithStringValue",
+    "JSONvariableSubstitution": "ms-resource:loc.messages.JSONvariableSubstitution",
+    "ApplyingXDTtransformation": "ms-resource:loc.messages.ApplyingXDTtransformation",
+    "SubstitutionForXmlNode": "ms-resource:loc.messages.SubstitutionForXmlNode",
+    "UpdatingKeyValue": "ms-resource:loc.messages.UpdatingKeyValue",
+    "UpdatingWithTokenValue": "ms-resource:loc.messages.UpdatingWithTokenValue",
+    "SubstitutingConnectionStringValue": "ms-resource:loc.messages.SubstitutingConnectionStringValue"
   }
 }
