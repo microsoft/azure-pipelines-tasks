@@ -66,30 +66,31 @@ try
         $scriptPath = $__vstsAzPSInlineScriptPath
     }
 
-    # Prepare the external command values.
-    #
-    # Note, use "-Command" instead of "-File". On PowerShell v4 and V3 when using "-File", terminating
-    # errors do not cause a non-zero exit code.
-    $input_pwsh = $true;
-    # First check if PowerShell Core is available
-    $powershellPath = Get-Command -Name pwsh.exe -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty Path
-    # If PowerShell Core is not available, fall back to other versions of PowerShell
-    if($null -eq $powershellPath) {
-        $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
-    }
-    Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
-    $arguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `". '$($scriptPath.Replace("'", "''"))'`""
-    $splat = @{
-        'FileName' = $powershellPath
-        'Arguments' = $arguments
-        'WorkingDirectory' = $input_workingDirectory
+    $scriptCommand = "& '$($scriptPath.Replace("'", "''"))' $scriptArguments"
+
+    # If PowerShell Core is present, use PowerShell Core. We need a input from the task
+    # to explicitly have the user request the script to be run in PowerShell Core. But
+    # since we do not have that input today, we can use PowerShell Core by default if it 
+    # is present and fallback to PowerShell if it is not present.
+    $isPowerShellCorePresent = Get-Command pwsh -ErrorAction SilentlyContinue;
+    if($null -ne $isPowerShellCorePresent) {
+        $scriptCommand = "pwsh -Command { " + $scriptCommand + " }";
     }
 
-    $scriptCommand = "& '$($scriptPath.Replace("'", "''"))' $scriptArguments"
     Remove-Variable -Name scriptType
     Remove-Variable -Name scriptPath
     Remove-Variable -Name scriptInline
     Remove-Variable -Name scriptArguments
+
+    # Remove all commands imported from VstsTaskSdk, other than Out-Default.
+    # Remove all commands imported from VstsAzureHelpers_.
+    Get-ChildItem -LiteralPath function: |
+        Where-Object {
+            ($_.ModuleName -eq 'VstsTaskSdk' -and $_.Name -ne 'Out-Default') -or
+            ($_.Name -eq 'Invoke-VstsTaskScript') -or
+            ($_.ModuleName -eq 'VstsAzureHelpers_' )
+        } |
+        Remove-Item
 
     # For compatibility with the legacy handler implementation, set the error action
     # preference to continue. An implication of changing the preference to Continue,
@@ -109,7 +110,12 @@ try
     # 2) The task result needs to be set to failed if an error record is encountered.
     #    As mentioned above, the requirement to handle this is an implication of changing
     #    the error action preference.
-    Invoke-VstsTool @splat 2>&1 | 
+    ([scriptblock]::Create($scriptCommand)) | 
+        ForEach-Object {
+            Remove-Variable -Name scriptCommand
+            Write-Host "##[command]$_"
+            . $_ 2>&1
+        } | 
         ForEach-Object {
             if($_ -is [System.Management.Automation.ErrorRecord]) {
                 if($_.FullyQualifiedErrorId -eq "NativeCommandError" -or $_.FullyQualifiedErrorId -eq "NativeCommandErrorMessage") {
