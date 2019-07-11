@@ -1,6 +1,6 @@
 import tl = require("azure-pipelines-task-lib/task");
 import util = require("util");
-import {Utility, GitHubAttributes, IRepositoryIssueId, Delimiters, AzureDevOpsVariables} from "./Utility";
+import { Utility, GitHubAttributes, IRepositoryIssueId, Delimiters, AzureDevOpsVariables, ChangeLogStartCommit } from "./Utility";
 import { Release } from "./Release";
 import { Helper } from "./Helper";
 
@@ -12,37 +12,125 @@ export class ChangeLog {
      * @param repositoryName 
      * @param target 
      * @param top 
-     * @param changeLogInput 
+     * @param compareWithRelease
+     * @param releaseTag
      */
-    public async getChangeLog(githubEndpointToken: string, repositoryName: string, target: string, top: number): Promise<string> {
+    public async getChangeLog(githubEndpointToken: string, repositoryName: string, target: string, top: number, compareWithRelease: ChangeLogStartCommit, releaseTag?: string): Promise<string> {
         console.log(tl.loc("ComputingChangeLog"));
 
         let release = new Release();
-
-        // Get the latest published release to compare the changes with.
-        console.log(tl.loc("FetchLatestPublishRelease"));
-        let latestReleaseResponse = await release.getLatestRelease(githubEndpointToken, repositoryName);
-        tl.debug("Get latest release response: " + JSON.stringify(latestReleaseResponse));
-
         // We will be fetching changes between startCommitSha...endCommitSha.
         // endCommitSha: It is the current commit
         // startCommitSha: It is the commit for which previous release was created
         // If no previous release found, then it will be the first commit.
-        let startCommitSha: string;
-        
-        // If repository has 0 releases, then latest release api returns 404.
-        if (latestReleaseResponse.statusCode === 200 || latestReleaseResponse.statusCode === 404) {
-            // Get the curent commit.
-            let endCommitSha: string = await new Helper().getCommitShaFromTarget(githubEndpointToken, repositoryName, target);
 
+        // Get the curent commit.
+        let endCommitSha: string = await new Helper().getCommitShaFromTarget(githubEndpointToken, repositoryName, target);
+        //Get the start commit.
+        let startCommitSha: string = await this.getStartCommitSha(githubEndpointToken, repositoryName, endCommitSha, top,compareWithRelease, releaseTag);
+        // Compare the diff between 2 commits.
+        tl.debug("start commit: "+ startCommitSha + "; end commit: "+ endCommitSha);
+        console.log(tl.loc("FetchCommitDiff"));
+        let commitsListResponse = await release.getCommitsList(githubEndpointToken, repositoryName, startCommitSha, endCommitSha);
+        tl.debug("Get commits list response: " + JSON.stringify(commitsListResponse));
+
+        if (commitsListResponse.statusCode === 200) {
+            // If end commit is older than start commit i.e. Rollback scenario, we will not show any change log.
+            if (commitsListResponse.body[GitHubAttributes.status] === GitHubAttributes.behind) {
+                tl.warning(tl.loc("CommitDiffBehind"));
+                return "";
+            }
+            else {
+                let commits: any[] = commitsListResponse.body[GitHubAttributes.commits] || [];
+
+                // If endCommit and startCommit are same then also we will not show any change log.
+                if (commits.length === 0) {
+                    console.log(tl.loc("CommitDiffEqual"));
+                    return "";
+                }
+
+                console.log(tl.loc("FetchCommitDiffSuccess"));
+                // Reversing commits as commits retrieved are in oldest first order
+                commits = commits.reverse(); 
+
+                // Only show changeLog for top X commits, where X = top
+                // Form the commitId to issues dictionary
+                let commitIdToMessageDictionary: { [key: string]: string } = this._getCommitIdToMessageDictionary(commits.length > top ? commits.slice(0, top) : commits);
+                tl.debug("commitIdToMessageDictionary: " + JSON.stringify(commitIdToMessageDictionary));
+
+                let commitIdToRepoIssueIdsDictionary: { [key: string]: Set<string> } = this._getCommitIdToRepoIssueIdsDictionary(commitIdToMessageDictionary, repositoryName);
+                tl.debug("commitIdToRepoIssueIdsDictionary: " + JSON.stringify(commitIdToRepoIssueIdsDictionary));
+                
+                let changeLog: string = "";
+                let topXChangeLog: string = ""; // where 'X' is the this._changeLogVisibleLimit.
+                let seeMoreChangeLog: string = "";
+
+                // Evaluate change log
+                Object.keys(commitIdToRepoIssueIdsDictionary).forEach((commitId: string, index: number) => {
+                    let changeLogPerCommit: string = this._getChangeLogPerCommit(commitId, commitIdToMessageDictionary[commitId], commitIdToRepoIssueIdsDictionary[commitId], repositoryName);
+
+                    // If changes are more than 10, then we will show See more button which will be collapsible.
+                    // And under that seeMoreChangeLog will be shown
+                    // topXChangeLog will be visible to user.
+                    if (index >= this._changeLogVisibleLimit) {
+                        seeMoreChangeLog = seeMoreChangeLog + changeLogPerCommit + Delimiters.newLine;
+                    }
+                    else {
+                        topXChangeLog = topXChangeLog + changeLogPerCommit + Delimiters.newLine;
+                    }
+                });
+
+                if (topXChangeLog) {
+                    changeLog = this._ChangeLogTitle + topXChangeLog;
+
+                    if(!seeMoreChangeLog) {
+                        changeLog = changeLog + Delimiters.newLine + this._getAutoGeneratedText();
+                    }
+                    else {
+                        changeLog = changeLog + util.format(this._seeMoreChangeLogFormat, this._seeMoreText, seeMoreChangeLog, this._getAutoGeneratedText());
+                    }
+                }
+
+                console.log(tl.loc("ComputingChangeLogSuccess"));
+                return changeLog;
+            }
+        }
+        else{
+            tl.error(tl.loc("FetchCommitDiffError"));
+            throw new Error(commitsListResponse.body[GitHubAttributes.message]);
+        }
+    }
+
+    /**
+     * Returns the start commit needed to compute ChangeLog.
+     * @param githubEndpointToken 
+     * @param repositoryName 
+     * @param endCommitSha 
+     * @param top 
+     * @param compareWithRelease
+     * @param releaseTag
+     */
+
+    public async getStartCommitSha(githubEndpointToken: string, repositoryName: string, endCommitSha: string, top: number, compareWithRelease: ChangeLogStartCommit, releaseTag?: string): Promise<string> {
+        let release = new Release();
+        let startCommitSha: string;
+        if (compareWithRelease === ChangeLogStartCommit.lastFullRelease) {
+            // Get the latest published release to compare the changes with.
+            console.log(tl.loc("FetchLatestPublishRelease"));
+            let latestReleaseResponse = await release.getLatestRelease(githubEndpointToken, repositoryName);
+            tl.debug("Get latest release response: " + JSON.stringify(latestReleaseResponse));
             // Get the start commit.
             // Release has target_commitsh property but it can be branch name also.
             // Hence if a release is present, then get the tag and find its corresponding commit.
             // Else get the first commit.
-            if (latestReleaseResponse.statusCode !== 404 && latestReleaseResponse.body && !!latestReleaseResponse.body[GitHubAttributes.tagName]) {
+            if (latestReleaseResponse.statusCode !== 200 && latestReleaseResponse.statusCode !== 404) {
+                tl.error(tl.loc("GetLatestReleaseError"));
+                throw new Error(latestReleaseResponse.body[GitHubAttributes.message]);
+            }
+            else if (latestReleaseResponse.statusCode !== 404 && latestReleaseResponse.body && !!latestReleaseResponse.body[GitHubAttributes.tagName]) {
                 let latestReleaseTag: string = latestReleaseResponse.body[GitHubAttributes.tagName];
                 tl.debug("latest release tag: " + latestReleaseTag);
-                
+
                 let latestReleaseUrl: string = latestReleaseResponse.body[GitHubAttributes.htmlUrl];
                 console.log(tl.loc("FetchLatestPublishReleaseSuccess", latestReleaseUrl));
                 startCommitSha = await this._getCommitForTag(githubEndpointToken, repositoryName, latestReleaseTag);
@@ -53,84 +141,85 @@ export class ChangeLog {
                 startCommitSha = await this._getInitialCommit(githubEndpointToken, repositoryName, endCommitSha, top);
                 console.log(tl.loc("FetchInitialCommitSuccess", startCommitSha));
             }
-            
-            // Compare the diff between 2 commits.
-            console.log(tl.loc("FetchCommitDiff"));
-            let commitsListResponse = await release.getCommitsList(githubEndpointToken, repositoryName, startCommitSha, endCommitSha);
-            tl.debug("Get commits list response: " + JSON.stringify(commitsListResponse));
 
-            if (commitsListResponse.statusCode === 200) {
-                // If end commit is older than start commit i.e. Rollback scenario, we will not show any change log.
-                if (commitsListResponse.body[GitHubAttributes.status] === GitHubAttributes.behind) {
-                    tl.warning(tl.loc("CommitDiffBehind"));
-                    return "";
-                }
-                else {
-                    let commits: any[] = commitsListResponse.body[GitHubAttributes.commits] || [];
+            return startCommitSha;
+        }
 
-                    // If endCommit and startCommit are same then also we will not show any change log.
-                    if (commits.length === 0) {
-                        console.log(tl.loc("CommitDiffEqual"));
-                        return "";
-                    }
-
-                    console.log(tl.loc("FetchCommitDiffSuccess"));
-                    // Reversing commits as commits retrieved are in oldest first order
-                    commits = commits.reverse(); 
-
-                    // Only show changeLog for top X commits, where X = top
-                    // Form the commitId to issues dictionary
-                    let commitIdToMessageDictionary: { [key: string]: string } = this._getCommitIdToMessageDictionary(commits.length > top ? commits.slice(0, top) : commits);
-                    tl.debug("commitIdToMessageDictionary: " + JSON.stringify(commitIdToMessageDictionary));
-    
-                    let commitIdToRepoIssueIdsDictionary: { [key: string]: Set<string> } = this._getCommitIdToRepoIssueIdsDictionary(commitIdToMessageDictionary, repositoryName);
-                    tl.debug("commitIdToRepoIssueIdsDictionary: " + JSON.stringify(commitIdToRepoIssueIdsDictionary));
-                    
-                    let changeLog: string = "";
-                    let topXChangeLog: string = ""; // where 'X' is the this._changeLogVisibleLimit.
-                    let seeMoreChangeLog: string = "";
-    
-                    // Evaluate change log
-                    Object.keys(commitIdToRepoIssueIdsDictionary).forEach((commitId: string, index: number) => {
-                        let changeLogPerCommit: string = this._getChangeLogPerCommit(commitId, commitIdToMessageDictionary[commitId], commitIdToRepoIssueIdsDictionary[commitId], repositoryName);
-    
-                        // If changes are more than 10, then we will show See more button which will be collapsible.
-                        // And under that seeMoreChangeLog will be shown
-                        // topXChangeLog will be visible to user.
-                        if (index >= this._changeLogVisibleLimit) {
-                            seeMoreChangeLog = seeMoreChangeLog + changeLogPerCommit + Delimiters.newLine;
-                        }
-                        else {
-                            topXChangeLog = topXChangeLog + changeLogPerCommit + Delimiters.newLine;
-                        }
-                    });
-    
-                    if (topXChangeLog) {
-                        changeLog = this._ChangeLogTitle + topXChangeLog;
-
-                        if(!seeMoreChangeLog) {
-                            changeLog = changeLog + Delimiters.newLine + this._getAutoGeneratedText();
-                        }
-                        else {
-                            changeLog = changeLog + util.format(this._seeMoreChangeLogFormat, this._seeMoreText, seeMoreChangeLog, this._getAutoGeneratedText());
-                        }
-                    }
-
-                    console.log(tl.loc("ComputingChangeLogSuccess"));
-                    return changeLog;
-                }
-            }
-            else{
-                tl.error(tl.loc("FetchCommitDiffError"));
-                throw new Error(commitsListResponse.body[GitHubAttributes.message]);
-            }
+        let comparer;
+        if (compareWithRelease === ChangeLogStartCommit.lastRelease) {
+            //Latest non-draft Release
+            console.log(tl.loc("FetchLatestNonDraftRelease"));
+            comparer = release => !release[GitHubAttributes.draft];
         }
         else {
-            tl.error(tl.loc("GetLatestReleaseError"));
-            throw new Error(latestReleaseResponse.body[GitHubAttributes.message]);
+            //Latest release with the given tag or matching the given regex.
+            console.log(tl.loc("FetchLastReleaseByTag"));
+            comparer = release => !release[GitHubAttributes.draft] && Utility.isTagMatching(release[GitHubAttributes.tagName], releaseTag);
+
         }
+
+        let initialTag = await this.getLastReleaseTag(githubEndpointToken, repositoryName, comparer);
+
+        //If no such release exists, get the start commit
+        //else get the commit for that tag.
+        if (!initialTag) {
+            console.log(tl.loc("NoMatchingReleases"));
+            console.log(tl.loc("FetchInitialCommit"));
+            startCommitSha = await this._getInitialCommit(githubEndpointToken, repositoryName, endCommitSha, top);
+            console.log(tl.loc("FetchInitialCommitSuccess", startCommitSha));
+        }
+        else {
+            console.log(tl.loc("FetchMatchingReleaseSuccess"));
+            startCommitSha = await this._getCommitForTag(githubEndpointToken, repositoryName, initialTag);
+        }
+
+        return startCommitSha;
     }
 
+    /**
+     * Returns latest release satisfying the given comparer.
+     * @param githubEndpointToken 
+     * @param repositoryName 
+     * @param comparer 
+     */
+    public async getLastReleaseTag(githubEndpointToken: string, repositoryName: string, comparer:(release: any)=> boolean): Promise<string> {
+        let release = new Release();
+        
+        // Fetching all releases in the repository. Sorted in descending order according to 'created_at' attribute.
+        let releasesResponse = await release.getReleases(githubEndpointToken, repositoryName);
+        let links: { [key: string]: string } = {};
+
+        // Fetching releases api call may end up in paginated results.
+        // Traversing all the pages and filtering all the releases with given tag.
+        while (true) {
+            tl.debug("Get releases response: " + JSON.stringify(releasesResponse));
+
+            let startRelease: any;
+            //404 is returned when there are no releases.
+            if (releasesResponse.statusCode !== 200 && releasesResponse.statusCode !== 404){
+                tl.error(tl.loc("GetLatestReleaseError"));
+                throw new Error(releasesResponse.body[GitHubAttributes.message]);
+            }
+            else if (releasesResponse.statusCode === 200) {
+                // Filter the releases fetched
+                startRelease = (releasesResponse.body || []).find(comparer);
+                if (!!startRelease) {
+                    return startRelease[GitHubAttributes.tagName];
+                }
+
+                links = Utility.parseHTTPHeaderLink(releasesResponse.headers[GitHubAttributes.link]);
+
+                // Calling the next page if it exists
+                if (links && links[GitHubAttributes.next]) {
+                    let paginatedResponse = await release.getPaginatedResult(githubEndpointToken, links[GitHubAttributes.next]);
+                    releasesResponse = paginatedResponse;
+                    continue;
+                }
+            }
+            //If status code is 404 or there are no releases satisfying the constraints return null.
+            return null;
+        }
+    } 
 
     /**
      * Returns the commit for provided tag
@@ -332,7 +421,7 @@ export class ChangeLog {
     }
 
     private _getAutoGeneratedText(): string {
-        let autoGeneratedUrl: string = this._getAutoGeneratedUrl();
+        let autoGeneratedUrl: string = encodeURI(this._getAutoGeneratedUrl());
 
         if (!!autoGeneratedUrl) {
             return util.format(this._autoGeneratedTextFormat, autoGeneratedUrl);
