@@ -334,11 +334,7 @@ export class dotNetExe {
             projectPattern = ["**/*.csproj", "**/*.vbproj", "**/*.fsproj"];
         }
 
-        var _projectFiles = utility.getProjectFiles(projectPattern);
-        var projectFiles = []
-        for(var project of _projectFiles) {
-            projectFiles.push(project)
-        }
+        var projectFiles = utility.getProjectFiles(projectPattern);
         var resolvedProjectFiles: string[] = [];
 
         if (searchWebProjects) {
