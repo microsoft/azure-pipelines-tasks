@@ -31,12 +31,7 @@ export function applyXdtTransformation(sourceFile: string, transformFile: string
         "i"
     ];
     
-    /* var debugModeEnabled = tl.getVariable('system.debug'); // To disable printing logs */
-    var debugModeEnabled = "true";
-    if(debugModeEnabled && debugModeEnabled.toLowerCase() == 'true') {
-        cttArgsArray.push("verbose");
-        tl.debug('Enabled debug mode for ctt.exe');
-    }
+    cttArgsArray.push("verbose");
 
     tl.debug("Running command: " + cttPath + ' ' + cttArgsArray.join(' '));
     var cttExecutionResult = tl.execSync(cttPath, cttArgsArray);
