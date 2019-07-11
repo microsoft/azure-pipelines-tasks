@@ -96,7 +96,11 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
     if( !tl.stats(configFile).isFile()) {
         return;
     }
+<<<<<<< HEAD
     tl.debug("Initiated variable substitution in config file : " + configFile);
+=======
+    console.log(tl.loc('VariableSubstitutionInitiated' + configFile));
+>>>>>>> 9a8223cd9... Minor comments resolved
     var fileBuffer: Buffer = fs.readFileSync(configFile);
     var fileEncodeType = fileEncoding.detectFileEncoding(configFile, fileBuffer);
     var webConfigContent: string = fileBuffer.toString(fileEncodeType[0]);

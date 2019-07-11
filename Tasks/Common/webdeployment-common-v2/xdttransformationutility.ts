@@ -28,15 +28,19 @@ export function applyXdtTransformation(sourceFile: string, transformFile: string
         "t:" + transformFile,
         "d:" + (destinationFile ? destinationFile : sourceFile),
         "pw",
-        "i"
+        "i",
+        "verbose"
     ];
     
+<<<<<<< HEAD
     var debugModeEnabled = tl.getVariable('system.debug');
     if(debugModeEnabled && debugModeEnabled.toLowerCase() == 'true') {
         cttArgsArray.push("verbose");
         tl.debug('Enabled debug mode for ctt.exe');
     }
 
+=======
+>>>>>>> 9a8223cd9... Minor comments resolved
     tl.debug("Running command: " + cttPath + ' ' + cttArgsArray.join(' '));
     var cttExecutionResult = tl.execSync(cttPath, cttArgsArray);
     if(cttExecutionResult.stderr) {

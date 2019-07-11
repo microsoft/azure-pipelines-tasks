@@ -73,11 +73,19 @@ export function substituteJsonVariableV2(jsonObject, envObject) {
             if(resultNode.isEnd) {
                 switch(typeof(jsonObject[jsonChild])) {
                     case 'number':
+<<<<<<< HEAD
                     tl.debug('substituting value on key: ' + jsonChild + ' with (number) value: ' + resultNode.value);
                         jsonObject[jsonChild] = !isNaN(resultNode.value) ? Number(resultNode.value): resultNode.value;
                         break;
                     case 'boolean':
                         tl.debug('substituting value on key: ' + jsonChild + ' with (boolean) value: ' + resultNode.value);
+=======
+                        console.log(tl.loc('SubstitutingValueonKeyWithNumber' + jsonChild + resultNode.value));
+                        jsonObject[jsonChild] = !isNaN(resultNode.value) ? Number(resultNode.value): resultNode.value;
+                        break;
+                    case 'boolean':
+                        console.log(tl.loc('SubstitutingValueonKeyWithBoolean' + jsonChild + resultNode.value));
+>>>>>>> 9a8223cd9... Minor comments resolved
                         jsonObject[jsonChild] = (
                             resultNode.value == 'true' ? true : (resultNode.value == 'false' ? false : resultNode.value)
                         )
@@ -85,7 +93,11 @@ export function substituteJsonVariableV2(jsonObject, envObject) {
                     case 'object':
                     case null:
                         try {
+<<<<<<< HEAD
                             tl.debug('substituting value on key: ' + jsonChild + ' with (object) value: ' + resultNode.value);
+=======
+                            console.log(tl.loc('SubstitutingValueonKeyWithObject' + jsonChild + resultNode.value));
+>>>>>>> 9a8223cd9... Minor comments resolved
                             jsonObject[jsonChild] = JSON.parse(resultNode.value);
                         }
                         catch(exception) {
@@ -94,7 +106,11 @@ export function substituteJsonVariableV2(jsonObject, envObject) {
                         }
                         break;
                     case 'string':
+<<<<<<< HEAD
                         tl.debug('substituting value on key: ' + jsonChild + ' with (string) value: ' + resultNode.value);
+=======
+                        console.log(tl.loc('SubstitutingValueonKeyWithString' + jsonChild + resultNode.value));
+>>>>>>> 9a8223cd9... Minor comments resolved
                         jsonObject[jsonChild] = resultNode.value;
                 }
             }
