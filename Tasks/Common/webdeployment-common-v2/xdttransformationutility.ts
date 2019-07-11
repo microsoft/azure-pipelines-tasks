@@ -32,7 +32,7 @@ export function applyXdtTransformation(sourceFile: string, transformFile: string
     ];
     
     cttArgsArray.push("verbose");
-
+    tl.debug('Enabled debug mode for ctt.exe');
     tl.debug("Running command: " + cttPath + ' ' + cttArgsArray.join(' '));
     var cttExecutionResult = tl.execSync(cttPath, cttArgsArray);
     if(cttExecutionResult.stderr) {
@@ -117,7 +117,7 @@ export function specialXdtTransformation(rootFolder, transformConfig, sourceConf
         
         for(var transformXmlFile in transformXmlFiles) {                
             if(sourceXmlFiles[transformXmlFile.toLowerCase()] || tl.exist(transformXmlFile)) {
-                console.log('Applying XDT Transformation : ' + transformXmlFile + ' -> ' + sourceXmlFile);
+                console.log(tl.loc('ApplyingXDTtransformation' + transformXmlFile + ' -> ' + sourceXmlFile));
                 applyXdtTransformation(sourceXmlFile, transformXmlFile, destinationXmlFile);
                 isTransformationApplied = true;
             }

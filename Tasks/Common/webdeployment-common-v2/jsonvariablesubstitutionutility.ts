@@ -55,7 +55,7 @@ export function substituteJsonVariable(jsonObject, envObject) {
         var resultNode = checkEnvTreePath(jsonChildArray, 0, jsonChildArray.length, envObject);
         if(resultNode != undefined) {
             if(resultNode.isEnd && (jsonObject[jsonChild] == null || typeof jsonObject[jsonChild] !== "object")) {
-                console.log('substituting value on key: ' + jsonChild);
+                console.log(tl.loc('SubstitutingValueonKey' + jsonChild));
                 jsonObject[jsonChild] = resultNode.value;
             }
             else {
@@ -73,11 +73,11 @@ export function substituteJsonVariableV2(jsonObject, envObject) {
             if(resultNode.isEnd) {
                 switch(typeof(jsonObject[jsonChild])) {
                     case 'number':
-                        console.log('substituting value on key: ' + jsonChild + ' with (number) value: ' + resultNode.value);
+                        console.log(tl.loc('SubstitutingValueonKey' + jsonChild + 'SubstitutingWithNumberValue' + resultNode.value));
                         jsonObject[jsonChild] = !isNaN(resultNode.value) ? Number(resultNode.value): resultNode.value;
                         break;
                     case 'boolean':
-                        console.log('substituting value on key: ' + jsonChild + ' with (boolean) value: ' + resultNode.value);
+                        console.log(tl.loc('SubstitutingValueonKey' + jsonChild + 'SubstitutingWithBooleanValue' + resultNode.value));
                         jsonObject[jsonChild] = (
                             resultNode.value == 'true' ? true : (resultNode.value == 'false' ? false : resultNode.value)
                         )
@@ -85,7 +85,7 @@ export function substituteJsonVariableV2(jsonObject, envObject) {
                     case 'object':
                     case null:
                         try {
-                            console.log('substituting value on key: ' + jsonChild + ' with (object) value: ' + resultNode.value);
+                            console.log(tl.loc('SubstitutingValueonKey' + jsonChild + 'SubstitutingWithObjectValue' + resultNode.value));
                             jsonObject[jsonChild] = JSON.parse(resultNode.value);
                         }
                         catch(exception) {
@@ -94,7 +94,7 @@ export function substituteJsonVariableV2(jsonObject, envObject) {
                         }
                         break;
                     case 'string':
-                        console.log('substituting value on key: ' + jsonChild + ' with (string) value: ' + resultNode.value);
+                        console.log(tl.loc('SubstitutingValueonKey' + jsonChild + 'SubstitutingWithStringValue' + resultNode.value));
                         jsonObject[jsonChild] = resultNode.value;
                 }
             }
@@ -172,7 +172,7 @@ export function stripJsonComments(content) {
 export function jsonVariableSubstitution(absolutePath, jsonSubFiles, substituteAllTypes?: boolean) {
     var envVarObject = createEnvTree(tl.getVariables());
     for(let jsonSubFile of jsonSubFiles) {
-        console.log('JSON variable substitution for ' + jsonSubFile);
+        console.log(tl.loc('JSONvariableSubstitution' + jsonSubFile));
         var matchFiles = utility.findfiles(path.join(absolutePath, jsonSubFile));
         if(matchFiles.length === 0) {
             throw new Error(tl.loc('NOJSONfilematchedwithspecificpattern', jsonSubFile));
@@ -191,7 +191,7 @@ export function jsonVariableSubstitution(absolutePath, jsonSubFiles, substituteA
             catch(exception) {
                 throw Error(tl.loc('JSONParseError', file, exception));
             }
-            console.log('Applying JSON variable substitution for ' + file);
+            console.log(tl.loc('JSONvariableSubstitution' + file));
             if(substituteAllTypes) {
                 substituteJsonVariableV2(jsonObject, envVarObject);
             }
