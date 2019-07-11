@@ -103,8 +103,10 @@ export class dotNetExe {
             }
             dotnet.line(dotnetArguments);
             try {
+
+                var cwd = "\"" + this.workingDirectory + "\""
                 var result = await dotnet.exec(<tr.IExecOptions>{
-                    cwd: this.workingDirectory
+                    cwd: cwd
                 });
                 await this.zipAfterPublishIfRequired(projectFile);
             } catch (err) {
@@ -332,7 +334,11 @@ export class dotNetExe {
             projectPattern = ["**/*.csproj", "**/*.vbproj", "**/*.fsproj"];
         }
 
-        var projectFiles = utility.getProjectFiles(projectPattern);
+        var _projectFiles = utility.getProjectFiles(projectPattern);
+        var projectFiles = []
+        for(var project of _projectFiles) {
+            projectFiles.push(project)
+        }
         var resolvedProjectFiles: string[] = [];
 
         if (searchWebProjects) {
@@ -386,7 +392,7 @@ export class dotNetExe {
     }
 
     private static getModifiedOutputForProjectFile(outputBase: string, projectFile: string): string {
-        return path.join(outputBase, path.basename(path.dirname(projectFile)));
+        return  "\"" + path.join(outputBase, path.basename(path.dirname(projectFile))) + "\"";
     }
 }
 
