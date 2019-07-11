@@ -22,5 +22,17 @@
   "loc.messages.JSONParseError": "Unable to parse JSON file: %s. Error: %s",
   "loc.messages.NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
   "loc.messages.FailedToApplyTransformation": "Unable to apply transformation for the given package.",
-  "loc.messages.MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs."
+  "loc.messages.MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.",
+  "loc.messages.SubstitutingValueonKey": "Substituting value on key: ",
+  "loc.messages.SubstitutingValueonKeyWithNumber": "Substituting value on key with (number) value: ",
+  "loc.messages.SubstitutingValueonKeyWithBoolean": "Substituting value on key with (boolean) value: ",
+  "loc.messages.SubstitutingValueonKeyWithObject": "Substituting value on key with (object) value: ",
+  "loc.messages.SubstitutingValueonKeyWithString": "Substituting value on key with (string) value: ",
+  "loc.messages.JSONvariableSubstitution": "Applying JSON variable substitution for ",
+  "loc.messages.ApplyingXDTtransformation": "Applying XDT Transformation : ",
+  "loc.messages.SubstitutionForXmlNode": "Processing substitution for xml node : ",
+  "loc.messages.UpdatingKeyValue": "Updating value for key= ",
+  "loc.messages.UpdatingWithTokenValue": " with token value: ",
+  "loc.messages.SubstitutingConnectionStringValue": "Substituting connectionString value for name= ",
+  "loc.messages.VariableSubstitutionInitiated": "Initiated variable substitution in config file : "
 }

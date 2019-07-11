@@ -96,6 +96,18 @@
     "JSONParseError": "ms-resource:loc.messages.JSONParseError",
     "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern",
     "FailedToApplyTransformation": "ms-resource:loc.messages.FailedToApplyTransformation",
-    "MissingArgumentsforXMLTransformation": "ms-resource:loc.messages.MissingArgumentsforXMLTransformation"
+    "MissingArgumentsforXMLTransformation": "ms-resource:loc.messages.MissingArgumentsforXMLTransformation",
+    "SubstitutingValueonKey": "ms-resource:loc.messages.SubstitutingValueonKey",
+    "SubstitutingValueonKeyWithNumber": "ms-resource:loc.messages.SubstitutingValueonKeyWithNumber",
+    "SubstitutingValueonKeyWithBoolean": "ms-resource:loc.messages.SubstitutingValueonKeyWithBoolean",
+    "SubstitutingValueonKeyWithObject": "ms-resource:loc.messages.SubstitutingValueonKeyWithObject",
+    "SubstitutingValueonKeyWithString": "ms-resource:loc.messages.SubstitutingValueonKeyWithString",
+    "JSONvariableSubstitution": "ms-resource:loc.messages.JSONvariableSubstitution",
+    "ApplyingXDTtransformation": "ms-resource:loc.messages.ApplyingXDTtransformation",
+    "SubstitutionForXmlNode": "ms-resource:loc.messages.SubstitutionForXmlNode",
+    "UpdatingKeyValue": "ms-resource:loc.messages.UpdatingKeyValue",
+    "UpdatingWithTokenValue": "ms-resource:loc.messages.UpdatingWithTokenValue",
+    "SubstitutingConnectionStringValue": "ms-resource:loc.messages.SubstitutingConnectionStringValue",
+    "VariableSubstitutionInitiated": "ms-resource:loc.messages.VariableSubstitutionInitiated"
   }
 }
