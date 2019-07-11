@@ -32,7 +32,6 @@ export function applyXdtTransformation(sourceFile: string, transformFile: string
     ];
     
     cttArgsArray.push("verbose");
-    tl.debug('Enabled debug mode for ctt.exe');
     tl.debug("Running command: " + cttPath + ' ' + cttArgsArray.join(' '));
     var cttExecutionResult = tl.execSync(cttPath, cttArgsArray);
     if(cttExecutionResult.stderr) {
