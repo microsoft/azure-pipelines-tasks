@@ -146,8 +146,8 @@ target.build = function() {
 
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('npm', '--version', function (output) {
-        if (semver.lt(output, '5.6.0')) {
-            fail('Expected 5.6.0 or higher. To fix, run: npm install -g npm');
+        if (semver.lt(output, '6.9.0')) {
+            fail('Expected 6.9.0 or higher. To fix, run: npm install -g npm');
         }
     });
 
