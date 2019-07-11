@@ -94,7 +94,7 @@ export default class Util {
       ]
     } else if (tl.osType() === Constants.osTypeWindows) {
       cmds = [
-        { path: `pip`, arg: `install ${Constants.iotedgedev}==${version}`, execOption: Constants.execSyncSilentOption },
+        { path: `pip`, arg: `install ${Constants.iotedgedev}~=${version}`, execOption: Constants.execSyncSilentOption },
       ]
     }
 
