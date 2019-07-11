@@ -54,7 +54,7 @@ function substituteValueinParameterFile(parameterFilePath, parameterSubValue) {
             if(parameterSubValue[ xmlChildNode.attrs.name ]) {
                 var paramFileReplacableTokenName = paramFileReplacableToken + '(' + xmlChildNode.attrs.name + ')';
                 xmlChildNode.attrs.defaultValue = paramFileReplacableTokenName;
-                console.log('Parameters file - Replacing value for name: ' + xmlChildNode.attrs.name + ' with : ' + paramFileReplacableTokenName);
+                tl.debug('Parameters file - Replacing value for name: ' + xmlChildNode.attrs.name + ' with : ' + paramFileReplacableTokenName);
                 paramFileReplacableValues[paramFileReplacableTokenName] = parameterSubValue[ xmlChildNode.attrs.name ];
             }
         }
@@ -96,7 +96,7 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
     if( !tl.stats(configFile).isFile()) {
         return;
     }
-    console.log("Initiated variable substitution in config file : " + configFile);
+    console.log(tl.loc('VariableSubstitutionInitiated' + configFile));
     var fileBuffer: Buffer = fs.readFileSync(configFile);
     var fileEncodeType = fileEncoding.detectFileEncoding(configFile, fileBuffer);
     var webConfigContent: string = fileBuffer.toString(fileEncodeType[0]);

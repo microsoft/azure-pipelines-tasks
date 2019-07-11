@@ -28,10 +28,10 @@ export function applyXdtTransformation(sourceFile: string, transformFile: string
         "t:" + transformFile,
         "d:" + (destinationFile ? destinationFile : sourceFile),
         "pw",
-        "i"
+        "i",
+        "verbose"
     ];
     
-    cttArgsArray.push("verbose");
     tl.debug("Running command: " + cttPath + ' ' + cttArgsArray.join(' '));
     var cttExecutionResult = tl.execSync(cttPath, cttArgsArray);
     if(cttExecutionResult.stderr) {

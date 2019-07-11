@@ -73,11 +73,11 @@ export function substituteJsonVariableV2(jsonObject, envObject) {
             if(resultNode.isEnd) {
                 switch(typeof(jsonObject[jsonChild])) {
                     case 'number':
-                        console.log(tl.loc('SubstitutingValueonKey' + jsonChild + 'SubstitutingWithNumberValue' + resultNode.value));
+                        console.log(tl.loc('SubstitutingValueonKeyWithNumber' + jsonChild + resultNode.value));
                         jsonObject[jsonChild] = !isNaN(resultNode.value) ? Number(resultNode.value): resultNode.value;
                         break;
                     case 'boolean':
-                        console.log(tl.loc('SubstitutingValueonKey' + jsonChild + 'SubstitutingWithBooleanValue' + resultNode.value));
+                        console.log(tl.loc('SubstitutingValueonKeyWithBoolean' + jsonChild + resultNode.value));
                         jsonObject[jsonChild] = (
                             resultNode.value == 'true' ? true : (resultNode.value == 'false' ? false : resultNode.value)
                         )
@@ -85,7 +85,7 @@ export function substituteJsonVariableV2(jsonObject, envObject) {
                     case 'object':
                     case null:
                         try {
-                            console.log(tl.loc('SubstitutingValueonKey' + jsonChild + 'SubstitutingWithObjectValue' + resultNode.value));
+                            console.log(tl.loc('SubstitutingValueonKeyWithObject' + jsonChild + resultNode.value));
                             jsonObject[jsonChild] = JSON.parse(resultNode.value);
                         }
                         catch(exception) {
@@ -94,7 +94,7 @@ export function substituteJsonVariableV2(jsonObject, envObject) {
                         }
                         break;
                     case 'string':
-                        console.log(tl.loc('SubstitutingValueonKey' + jsonChild + 'SubstitutingWithStringValue' + resultNode.value));
+                        console.log(tl.loc('SubstitutingValueonKeyWithString' + jsonChild + resultNode.value));
                         jsonObject[jsonChild] = resultNode.value;
                 }
             }
