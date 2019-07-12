@@ -50,7 +50,7 @@ export class ContainerWebAppDeploymentProviderL0Tests  {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var containerWebAppDeploymentProvider : ContainerWebAppDeploymentProvider  = new ContainerWebAppDeploymentProvider(taskParameters);
             await containerWebAppDeploymentProvider.PreDeploymentStep();
-            await containerWebAppDeploymentProvider.UpdateDeploymentStatus(true);
+            await containerWebAppDeploymentProvider.UpdateDeploymentStatus();
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus for container web app steps should succeeded but failed with error');
         }

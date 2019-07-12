@@ -36,7 +36,7 @@ export class PublishProfileWebAppDeploymentProviderL0Tests  {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var publishProfileWebAppDeploymentProvider : PublishProfileWebAppDeploymentProvider  = new PublishProfileWebAppDeploymentProvider(taskParameters);
             await publishProfileWebAppDeploymentProvider.PreDeploymentStep();
-            await publishProfileWebAppDeploymentProvider.UpdateDeploymentStatus(true);
+            await publishProfileWebAppDeploymentProvider.UpdateDeploymentStatus();
             tl.setResult(tl.TaskResult.Succeeded, 'UpdateDeploymentStatus for publish profile steps should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus for publish profile steps failed with error');

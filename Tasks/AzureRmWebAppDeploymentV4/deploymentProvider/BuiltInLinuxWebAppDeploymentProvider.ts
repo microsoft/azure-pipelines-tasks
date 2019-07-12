@@ -80,10 +80,10 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
         await this.PostDeploymentStep();
     }
 
-    public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
+    public async UpdateDeploymentStatus() {
         if(this.kuduServiceUtility) {
-            await super.UpdateDeploymentStatus(isDeploymentSuccess);
-            if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
+            await super.UpdateDeploymentStatus();
+            if(this.zipDeploymentID && this.activeDeploymentID && this.isDeploymentSuccess) {
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
             }
         }

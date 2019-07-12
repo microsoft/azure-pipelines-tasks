@@ -52,7 +52,7 @@ export class WindowsWebAppWebDeployProviderL0Tests  {
             taskParameters.ScriptType = "Run Script";
             var windowsWebAppWebDeployProvider : WindowsWebAppWebDeployProvider  = new WindowsWebAppWebDeployProvider(taskParameters);
             await windowsWebAppWebDeployProvider.PreDeploymentStep();
-            await windowsWebAppWebDeployProvider.UpdateDeploymentStatus(true);
+            await windowsWebAppWebDeployProvider.UpdateDeploymentStatus();
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus for web deploy steps should succeeded but failed with error');
         }

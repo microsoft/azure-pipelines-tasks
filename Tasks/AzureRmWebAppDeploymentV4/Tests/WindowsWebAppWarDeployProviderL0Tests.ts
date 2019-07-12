@@ -56,7 +56,7 @@ export class WindowsWebAppWarDeployProviderL0Tests  {
             taskParameters.Package.getPath = () :string => { return "webAppPkg.war" };
             var windowsWebAppWarDeployProvider : WindowsWebAppWarDeployProvider  = new WindowsWebAppWarDeployProvider(taskParameters);
             await windowsWebAppWarDeployProvider.PreDeploymentStep();
-            await windowsWebAppWarDeployProvider.UpdateDeploymentStatus(true);
+            await windowsWebAppWarDeployProvider.UpdateDeploymentStatus();
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus for war deploy steps should succeeded but failed with error');
         }

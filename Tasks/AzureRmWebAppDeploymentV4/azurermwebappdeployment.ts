@@ -13,27 +13,41 @@ async function main() {
         tl.setResourcePath(path.join( __dirname, 'node_modules/webdeployment-common-v2/module.json'));
         var taskParams: TaskParameters = TaskParametersUtility.getParameters();
         var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParams);
-        var deploymentProvider = await deploymentFactory.GetDeploymentProvider();
+        var deploymentProviders = await deploymentFactory.GetDeploymentProviders();
 
-        tl.debug("Predeployment Step Started");
-        await deploymentProvider.PreDeploymentStep();
-
-        tl.debug("Deployment Step Started");
-        await deploymentProvider.DeployWebAppStep();
+        Promise.all(deploymentProviders.map(async deploymentProvider => {
+            try {
+                tl.debug("Predeployment Step Started");
+                await deploymentProvider.PreDeploymentStep();
+        
+                tl.debug("Deployment Step Started");
+                await deploymentProvider.DeployWebAppStep();
+            }
+            catch(error) {
+                tl.debug("Deployment Failed with Error: " + error);
+                deploymentProvider.isDeploymentSuccess = false;
+                isDeploymentSuccess = false;
+            }
+        }));
     }
     catch(error) {
-        tl.debug("Deployment Failed with Error: " + error);
+        tl.debug("Task Failed with Error: " + error);
         isDeploymentSuccess = false;
         tl.setResult(tl.TaskResult.Failed, error);
     }
     finally {
-        if(deploymentProvider != null) {
-            await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
+        if (deploymentProviders != null && deploymentProviders.length > 0) {
+            deploymentProviders.forEach(async deploymentProvider => {
+                await deploymentProvider.UpdateDeploymentStatus();
+            });
         }
         
+        if (!isDeploymentSuccess ) {
+            tl.setResult(tl.TaskResult.Failed, "One or more deployment operations failed");
+        }
+
         Endpoint.dispose();
         tl.debug(isDeploymentSuccess ? "Deployment Succeded" : "Deployment failed");
-
     }
 }
 

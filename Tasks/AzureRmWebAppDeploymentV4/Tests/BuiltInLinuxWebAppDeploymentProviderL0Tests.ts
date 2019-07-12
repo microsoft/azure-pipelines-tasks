@@ -53,7 +53,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
             await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
-            await builtInLinuxWebAppDeploymentProvider.UpdateDeploymentStatus(true);
+            await builtInLinuxWebAppDeploymentProvider.UpdateDeploymentStatus();
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus for built in linux web app steps should succeeded but failed with error');
         }

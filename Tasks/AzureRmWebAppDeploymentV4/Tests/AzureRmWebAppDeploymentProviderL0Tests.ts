@@ -62,7 +62,7 @@ export class AzureRmWebAppDeploymentProviderL0Tests  {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var azureRmWebAppDeploymentProvider : AzureRmWebAppDeploymentProvider  = new AzureRmWebAppDeploymentProvider(taskParameters);
             await azureRmWebAppDeploymentProvider.PreDeploymentStep();
-            await azureRmWebAppDeploymentProvider.UpdateDeploymentStatus(true);
+            await azureRmWebAppDeploymentProvider.UpdateDeploymentStatus();
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus steps should succeeded but failed with error');
         }

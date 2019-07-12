@@ -53,12 +53,12 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
         await this.PostDeploymentStep();
     }
     
-    public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
+    public async UpdateDeploymentStatus() {
         if(this.taskParams.ScriptType && this.kuduServiceUtility) {
-            await super.UpdateDeploymentStatus(isDeploymentSuccess);
+            await super.UpdateDeploymentStatus();
         }
         else {
-            await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
+            await addReleaseAnnotation(this.azureEndpoint, this.appService, this.isDeploymentSuccess);
             let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
                 ? this.taskParams.VirtualApplication : null);
             console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));

@@ -19,69 +19,77 @@ export class DeploymentFactory {
         this._taskParams = taskParams;
     }
 
-    public async GetDeploymentProvider(): Promise<IWebAppDeploymentProvider> {
-        switch(this._taskParams.ConnectionType) {
-            case Constant.ConnectionType.PublishProfile:
-                return new PublishProfileWebAppDeploymentProvider(this._taskParams);
-            case Constant.ConnectionType.AzureRM:
-                if(this._taskParams.isLinuxApp) {
-                    tl.debug("Deployment started for linux app service");
-                    return await this._getLinuxDeploymentProvider();
-                } else {
-                    tl.debug("Deployment started for windows app service");
-                    return await this._getWindowsDeploymentProvider()
-                }
-            default:
-                throw new Error(tl.loc('InvalidConnectionType'));
-        }
+    public async GetDeploymentProviders(): Promise<IWebAppDeploymentProvider[]> {
+        var appServiceNames = this._taskParams.WebAppNames.split(',');
+
+        var deploymentProviders = Promise.all(appServiceNames.map(async appServiceName => {
+            var params = this._taskParams;
+            params.WebAppNames = appServiceName;
+            
+            switch(params.ConnectionType) {
+                case Constant.ConnectionType.PublishProfile:
+                    return new PublishProfileWebAppDeploymentProvider(params);
+                case Constant.ConnectionType.AzureRM:
+                    if(params.isLinuxApp) {
+                        tl.debug("Deployment started for linux app service");
+                        return await this._getLinuxDeploymentProvider(params);
+                    } else {
+                        tl.debug("Deployment started for windows app service");
+                        return await this._getWindowsDeploymentProvider(params)
+                    }
+                default:
+                    throw new Error(tl.loc('InvalidConnectionType'));
+            }
+        }));
+
+        return deploymentProviders;
     }
 
-    private async _getLinuxDeploymentProvider(): Promise<IWebAppDeploymentProvider> {
-        if(this._taskParams.isBuiltinLinuxWebApp) {
-            return new BuiltInLinuxWebAppDeploymentProvider(this._taskParams);
-        } else if(this._taskParams.isContainerWebApp) {
-            return new ContainerWebAppDeploymentProvider(this._taskParams);
+    private async _getLinuxDeploymentProvider(taskParams: TaskParameters): Promise<IWebAppDeploymentProvider> {
+        if(taskParams.isBuiltinLinuxWebApp) {
+            return new BuiltInLinuxWebAppDeploymentProvider(taskParams);
+        } else if(taskParams.isContainerWebApp) {
+            return new ContainerWebAppDeploymentProvider(taskParams);
         } else {
             throw new Error(tl.loc('InvalidImageSourceType'));
         }
     }
 
-    private async _getWindowsDeploymentProvider(): Promise<IWebAppDeploymentProvider> {
-        tl.debug("Package type of deployment is: "+ this._taskParams.Package.getPackageType());
-        switch(this._taskParams.Package.getPackageType()){
+    private async _getWindowsDeploymentProvider(taskParams: TaskParameters): Promise<IWebAppDeploymentProvider> {
+        tl.debug("Package type of deployment is: "+ taskParams.Package.getPackageType());
+        switch(taskParams.Package.getPackageType()){
             case PackageType.war:
-                return new WindowsWebAppWarDeployProvider(this._taskParams);
+                return new WindowsWebAppWarDeployProvider(taskParams);
             case PackageType.jar:
-                return new WindowsWebAppZipDeployProvider(this._taskParams);
+                return new WindowsWebAppZipDeployProvider(taskParams);
             default:
-                return await this._getWindowsDeploymentProviderForZipAndFolderPackageType();
+                return await this._getWindowsDeploymentProviderForZipAndFolderPackageType(taskParams);
             }
     }
 
-    private async _getWindowsDeploymentProviderForZipAndFolderPackageType(): Promise<IWebAppDeploymentProvider> {
-        if(this._taskParams.UseWebDeploy) {
-            return await this._getUserSelectedDeploymentProviderForWindow();
+    private async _getWindowsDeploymentProviderForZipAndFolderPackageType(taskParams: TaskParameters): Promise<IWebAppDeploymentProvider> {
+        if(taskParams.UseWebDeploy) {
+            return await this._getUserSelectedDeploymentProviderForWindow(taskParams);
         } else {             
-            var _isMSBuildPackage = await this._taskParams.Package.isMSBuildPackage();           
-            if(_isMSBuildPackage || this._taskParams.VirtualApplication) {
-                return new WindowsWebAppWebDeployProvider(this._taskParams);
-            } else if(this._taskParams.ScriptType) {
-                return new WindowsWebAppZipDeployProvider(this._taskParams);
+            var _isMSBuildPackage = await taskParams.Package.isMSBuildPackage();           
+            if(_isMSBuildPackage || taskParams.VirtualApplication) {
+                return new WindowsWebAppWebDeployProvider(taskParams);
+            } else if(taskParams.ScriptType) {
+                return new WindowsWebAppZipDeployProvider(taskParams);
             } else {
-                return new WindowsWebAppRunFromZipProvider(this._taskParams);
+                return new WindowsWebAppRunFromZipProvider(taskParams);
             }
         }
     }
 
-    private async _getUserSelectedDeploymentProviderForWindow(): Promise<IWebAppDeploymentProvider> {
-        switch(this._taskParams.DeploymentType){
+    private async _getUserSelectedDeploymentProviderForWindow(taskParams: TaskParameters): Promise<IWebAppDeploymentProvider> {
+        switch(taskParams.DeploymentType){
             case DeploymentType.webDeploy:
-                return new WindowsWebAppWebDeployProvider(this._taskParams);
+                return new WindowsWebAppWebDeployProvider(taskParams);
             case DeploymentType.zipDeploy:
-                return new WindowsWebAppZipDeployProvider(this._taskParams);
+                return new WindowsWebAppZipDeployProvider(taskParams);
             case DeploymentType.runFromZip:
-                return new WindowsWebAppRunFromZipProvider(this._taskParams);
+                return new WindowsWebAppRunFromZipProvider(taskParams);
         }
     }
-
 }

@@ -23,8 +23,8 @@ export class DeploymentFactoryL0Tests  {
     public static async testForLinuxWebDeploymentProvider() {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
-            var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParameters);
-            var linuxWebAppDeploymentProvider: IWebAppDeploymentProvider = await new DeploymentFactory(taskParameters).GetDeploymentProvider();
+            var deploymentProviders = await new DeploymentFactory(taskParameters).GetDeploymentProviders();
+            var linuxWebAppDeploymentProvider: IWebAppDeploymentProvider = deploymentProviders[0];
             if(linuxWebAppDeploymentProvider.constructor.name === "BuiltInLinuxWebAppDeploymentProvider") {
                 tl.setResult(tl.TaskResult.Succeeded, 'LinuxWebAppDeploymentProvider should be excepted.');
             } else {
@@ -41,7 +41,8 @@ export class DeploymentFactoryL0Tests  {
             taskParameters.isLinuxApp = false;
             taskParameters.Package.isMSBuildPackage = () :Promise<boolean> => {return Promise.resolve(false)};
             var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParameters);
-            var windowsWebAppZipDeployProvider: IWebAppDeploymentProvider = await deploymentFactory.GetDeploymentProvider();
+            var deploymentProviders = await deploymentFactory.GetDeploymentProviders();
+            var windowsWebAppZipDeployProvider: IWebAppDeploymentProvider = deploymentProviders[0];
             if(windowsWebAppZipDeployProvider.constructor.name === "WindowsWebAppRunFromZipProvider"){
                 tl.setResult(tl.TaskResult.Succeeded, 'WindowsWebAppRunFromZipProvider should be excepted.');
             } else {
@@ -58,7 +59,8 @@ export class DeploymentFactoryL0Tests  {
             taskParameters.isLinuxApp = false;
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.war};
             var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParameters);
-            var windowsWebAppWarDeployProvider: IWebAppDeploymentProvider = await deploymentFactory.GetDeploymentProvider();
+            var deploymentProviders = await deploymentFactory.GetDeploymentProviders();
+            var windowsWebAppWarDeployProvider: IWebAppDeploymentProvider = deploymentProviders[0];
             if(windowsWebAppWarDeployProvider.constructor.name === "WindowsWebAppWarDeployProvider"){
                 tl.setResult(tl.TaskResult.Succeeded, 'WindowsWebAppWarDeployProvider should be excepted.');
             } else {
@@ -75,7 +77,8 @@ export class DeploymentFactoryL0Tests  {
             taskParameters.isLinuxApp = false;
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.jar};
             var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParameters);
-            var windowsWebAppZipDeployProvider: IWebAppDeploymentProvider = await deploymentFactory.GetDeploymentProvider();
+            var deploymentProviders = await deploymentFactory.GetDeploymentProviders();
+            var windowsWebAppZipDeployProvider: IWebAppDeploymentProvider = deploymentProviders[0];
             if(windowsWebAppZipDeployProvider.constructor.name === "WindowsWebAppZipDeployProvider"){
                 tl.setResult(tl.TaskResult.Succeeded, 'WindowsWebAppZipDeployProvider should be excepted.');
             } else {
@@ -93,7 +96,8 @@ export class DeploymentFactoryL0Tests  {
             taskParameters.UseWebDeploy = true;
             taskParameters.DeploymentType =  DeploymentType.webDeploy;
             var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParameters);
-            var windowsWebAppWebDeployProvider: IWebAppDeploymentProvider = await deploymentFactory.GetDeploymentProvider();
+            var deploymentProviders = await deploymentFactory.GetDeploymentProviders();
+            var windowsWebAppWebDeployProvider: IWebAppDeploymentProvider = deploymentProviders[0];
             if(windowsWebAppWebDeployProvider.constructor.name === "WindowsWebAppWebDeployProvider"){
                 tl.setResult(tl.TaskResult.Succeeded, 'WindowsWebAppWebDeployProvider for user selected should be excepted.');
             } else {
@@ -111,7 +115,8 @@ export class DeploymentFactoryL0Tests  {
             taskParameters.UseWebDeploy = true;
             taskParameters.DeploymentType =  DeploymentType.zipDeploy;
             var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParameters);
-            var windowsWebAppZipDeployProvider: IWebAppDeploymentProvider = await deploymentFactory.GetDeploymentProvider();
+            var deploymentProviders = await deploymentFactory.GetDeploymentProviders();
+            var windowsWebAppZipDeployProvider:IWebAppDeploymentProvider = deploymentProviders[0];
             if(windowsWebAppZipDeployProvider.constructor.name === "WindowsWebAppZipDeployProvider"){
                 tl.setResult(tl.TaskResult.Succeeded, 'WindowsWebAppZipDeployProvider for user selected should be excepted.');
             } else {
@@ -129,7 +134,8 @@ export class DeploymentFactoryL0Tests  {
             taskParameters.UseWebDeploy = true;
             taskParameters.DeploymentType =  DeploymentType.runFromZip;
             var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParameters);
-            var windowsWebAppRunFromZipProvider: IWebAppDeploymentProvider = await deploymentFactory.GetDeploymentProvider();
+            var deploymentProviders = await deploymentFactory.GetDeploymentProviders();
+            var windowsWebAppRunFromZipProvider: IWebAppDeploymentProvider = deploymentProviders[0];
             if(windowsWebAppRunFromZipProvider.constructor.name === "WindowsWebAppRunFromZipProvider"){
                 tl.setResult(tl.TaskResult.Succeeded, 'WindowsWebAppRunFromZipProvider for user selected should be excepted.');
             } else {
@@ -145,7 +151,8 @@ export class DeploymentFactoryL0Tests  {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             taskParameters.ConnectionType = "PublishProfile";
             var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParameters);
-            var publishProfileProvider : IWebAppDeploymentProvider = await deploymentFactory.GetDeploymentProvider();
+            var deploymentProviders = await deploymentFactory.GetDeploymentProviders();
+            var publishProfileProvider : IWebAppDeploymentProvider = deploymentProviders[0];
             if(publishProfileProvider.constructor.name === "PublishProfileWebAppDeploymentProvider") {
                 tl.setResult(tl.TaskResult.Succeeded, 'PublishProfileWebAppDeploymentProvider should be excepted.');
             } else {
@@ -163,7 +170,8 @@ export class DeploymentFactoryL0Tests  {
             taskParameters.isBuiltinLinuxWebApp = false;
             taskParameters.isContainerWebApp = true;
             var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParameters);
-            var containerWebAppDeploymentProvider : IWebAppDeploymentProvider = await deploymentFactory.GetDeploymentProvider();
+            var deploymentProviders = await deploymentFactory.GetDeploymentProviders();
+            var containerWebAppDeploymentProvider : IWebAppDeploymentProvider = deploymentProviders[0];
             if(containerWebAppDeploymentProvider.constructor.name === "ContainerWebAppDeploymentProvider") {
                 tl.setResult(tl.TaskResult.Succeeded, 'ContainerWebAppDeploymentProvider should be excepted.');
             } else {

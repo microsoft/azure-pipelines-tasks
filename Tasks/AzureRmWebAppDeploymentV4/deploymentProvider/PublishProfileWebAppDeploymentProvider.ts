@@ -21,6 +21,7 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
     private modWebPackage: string;
     private bakWebPackage: string;
     private origEnvPath: string;
+    public isDeploymentSuccess;
 
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;
@@ -90,7 +91,7 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
         }
     }
 
-    public async UpdateDeploymentStatus(isDeploymentSuccess: boolean){ }
+    public async UpdateDeploymentStatus(){ }
 
     private async SetMsdeployEnvPath() {
         var msDeployPath = await msDeployUtility.getMSDeployFullPath();

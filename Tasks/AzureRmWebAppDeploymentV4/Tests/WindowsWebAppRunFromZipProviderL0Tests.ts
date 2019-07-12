@@ -52,7 +52,7 @@ export class WindowsWebAppRunFromZipProviderL0Tests  {
             taskParameters.ScriptType = "Run Script";
             var windowsWebAppRunFromZipProvider : WindowsWebAppRunFromZipProvider  = new WindowsWebAppRunFromZipProvider(taskParameters);
             await windowsWebAppRunFromZipProvider.PreDeploymentStep();
-            await windowsWebAppRunFromZipProvider.UpdateDeploymentStatus(true);
+            await windowsWebAppRunFromZipProvider.UpdateDeploymentStatus();
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus for run from zip steps should succeeded but failed with error');
         }

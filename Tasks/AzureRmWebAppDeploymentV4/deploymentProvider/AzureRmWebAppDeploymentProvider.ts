@@ -20,6 +20,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     protected virtualApplicationPath: string = "";
     protected azureEndpoint: AzureEndpoint;
     protected activeDeploymentID;
+    public isDeploymentSuccess = true;
 
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;
@@ -27,12 +28,12 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
     public async PreDeploymentStep() {
         this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint();
-        console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppName));
+        console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppNames));
         if(!this.taskParams.DeployToSlotOrASEFlag) {
-            this.taskParams.ResourceGroupName = await AzureResourceFilterUtility.getResourceGroupName(this.azureEndpoint, this.taskParams.WebAppName);
+            this.taskParams.ResourceGroupName = await AzureResourceFilterUtility.getResourceGroupName(this.azureEndpoint, this.taskParams.WebAppNames);
         }
 
-        this.appService = new AzureAppService(this.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, 
+        this.appService = new AzureAppService(this.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppNames, 
             this.taskParams.SlotName, this.taskParams.WebAppKind);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
 
@@ -43,10 +44,10 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
     public async DeployWebAppStep() {}
 
-    public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
+    public async UpdateDeploymentStatus() {
         if(this.kuduServiceUtility) {
-            await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
-            this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
+            await addReleaseAnnotation(this.azureEndpoint, this.appService, this.isDeploymentSuccess);
+            this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(this.isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }
         
