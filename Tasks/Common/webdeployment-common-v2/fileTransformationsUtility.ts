@@ -17,12 +17,8 @@ export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles:
                 console.log(tl.loc('AutoParameterizationMessage'));
             }
         }
-        var environmentName = tl.getVariable('Release.EnvironmentName');
         if(tl.osType().match(/^Win/)) {
             var transformConfigs = ["Release.config"];
-            if(environmentName && environmentName.toLowerCase() != 'release') {
-                transformConfigs.push(environmentName + ".config");
-            }
             var isTransformationApplied: boolean = xdtTransformationUtility.basicXdtTransformation(folderPath, transformConfigs);
             
             if(isTransformationApplied)
@@ -55,29 +51,19 @@ export function advancedFileTransformations(isFolderBasedDeployment: boolean, ta
         }
         else {
             let isTransformationApplied: boolean = true;
-            if(transformationRules.length > 0) {                
-                transformationRules.forEach(function(rule) {
-                    var args = ParameterParser.parse(rule);
-                    if(Object.keys(args).length < 2 || !args["transform"] || !args["xml"]) {
-                       tl.error(tl.loc("MissingArgumentsforXMLTransformation"));
-                    }
-                    else if(Object.keys(args).length > 2) {
-                        isTransformationApplied = xdtTransformationUtility.specialXdtTransformation(folderPath, args["transform"].value, args["xml"].value, args["result"].value) && isTransformationApplied;
-                    }
-                    else {
-                        isTransformationApplied = xdtTransformationUtility.specialXdtTransformation(folderPath, args["transform"].value, args["xml"].value) && isTransformationApplied;
-                    }
-                });
-            }
-            else{   
-                var environmentName = tl.getVariable('Release.EnvironmentName');             
-                let transformConfigs = ["Release.config"];
-                if(environmentName && environmentName.toLowerCase() != 'release') {
-                    transformConfigs.push(environmentName + ".config");
+            transformationRules.forEach(function(rule) {
+                var args = ParameterParser.parse(rule);
+                if(Object.keys(args).length < 2 || !args["transform"] || !args["xml"]) {
+                    tl.error(tl.loc("MissingArgumentsforXMLTransformation"));
                 }
-                isTransformationApplied = xdtTransformationUtility.basicXdtTransformation(folderPath, transformConfigs);
-            }
-            
+                else if(Object.keys(args).length > 2) {
+                    isTransformationApplied = xdtTransformationUtility.specialXdtTransformation(folderPath, args["transform"].value, args["xml"].value, args["result"].value) && isTransformationApplied;
+                }
+                else {
+                    isTransformationApplied = xdtTransformationUtility.specialXdtTransformation(folderPath, args["transform"].value, args["xml"].value) && isTransformationApplied;
+                }
+            });
+        
             if(isTransformationApplied) {
                 console.log(tl.loc("XDTTransformationsappliedsuccessfully"));
             }
