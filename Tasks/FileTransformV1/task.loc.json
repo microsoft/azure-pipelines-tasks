@@ -17,7 +17,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 153,
+    "Minor": 154,
     "Patch": 1
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -61,6 +61,7 @@
       "defaultValue": "",
       "required": false,
       "options": {
+        "": "Select file format",
         "xml": "XML",
         "json": "JSON"
       },
@@ -89,13 +90,18 @@
   },
   "messages": {
     "JSONvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.JSONvariablesubstitutionappliedsuccessfully",
+    "FailedToApplyJSONvariablesubstitution": "ms-resource:loc.messages.FailedToApplyJSONvariablesubstitution",
     "XMLvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.XMLvariablesubstitutionappliedsuccessfully",
+    "FailedToApplyXMLvariablesubstitution": "ms-resource:loc.messages.FailedToApplyXMLvariablesubstitution",
     "XDTTransformationsappliedsuccessfully": "ms-resource:loc.messages.XDTTransformationsappliedsuccessfully",
     "CannotPerformXdtTransformationOnNonWindowsPlatform": "ms-resource:loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform",
     "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
     "JSONParseError": "ms-resource:loc.messages.JSONParseError",
     "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern",
+    "FailedToApplySpecialTransformation": "ms-resource:loc.messages.FailedToApplySpecialTransformation",
     "FailedToApplyTransformation": "ms-resource:loc.messages.FailedToApplyTransformation",
-    "MissingArgumentsforXMLTransformation": "ms-resource:loc.messages.MissingArgumentsforXMLTransformation"
+    "MissingArgumentsforXMLTransformation": "ms-resource:loc.messages.MissingArgumentsforXMLTransformation",
+    "FailedToApplyTransformationReason1": "ms-resource:loc.messages.FailedToApplyTransformationReason1",
+    "FailedToApplyTransformationReason2": "ms-resource:loc.messages.FailedToApplyTransformationReason2"
   }
 }

@@ -17,7 +17,7 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 153,
+        "Minor": 154,
         "Patch": 1
     },
     "instanceNameFormat": "File Transform: $(Package)",
@@ -61,6 +61,7 @@
             "defaultValue": "",
             "required": false,
             "options": {
+                "": "Select file format",
                 "xml": "XML",
                 "json": "JSON"
             },
@@ -89,13 +90,18 @@
     },
     "messages": {
         "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
+        "FailedToApplyJSONvariablesubstitution": "Failed to apply JSON variable substitution.",
         "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
+        "FailedToApplyXMLvariablesubstitution": "Failed to apply XML variable substitution.",
         "XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",
         "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
         "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
         "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
-        "FailedToApplyTransformation": "Unable to apply transformation for the given package.",
-        "MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs."
+        "FailedToApplySpecialTransformation": "Unable to apply transformation for the given package.",
+        "FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
+        "MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.",
+        "FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
+        "FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package."
     }
 }
