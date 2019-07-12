@@ -80,20 +80,29 @@ export function advancedFileTransformations(isFolderBasedDeployment: boolean, ta
             
             if(isTransformationApplied) {
                 console.log(tl.loc("XDTTransformationsappliedsuccessfully"));
+            }
+            else {
+                tl.error(tl.loc('FailedToApplySpecialTransformation'));
             }            
         }
     }
 
     if(variableSubstitutionFileFormat === "xml") {
+        let isSubstitutionApplied: boolean = true;
         if(targetFiles.length == 0) { 
-            xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath, isFolderBasedDeployment);
+            isSubstitutionApplied = xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath, isFolderBasedDeployment);
         }
         else {            
             targetFiles.forEach(function(fileName) { 
-                xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath, isFolderBasedDeployment, fileName);
+                isSubstitutionApplied = xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath, isFolderBasedDeployment, fileName) || isSubstitutionApplied;
             });
         }
-        console.log(tl.loc('XMLvariablesubstitutionappliedsuccessfully'));
+        if(isSubstitutionApplied) {
+            console.log(tl.loc('XMLvariablesubstitutionappliedsuccessfully')); 
+        } 
+        else { 
+            tl.error(tl.loc('FailedToApplyXMLvariablesubstitution')); 
+        }
     }
 
     if(variableSubstitutionFileFormat === "json") {
@@ -101,7 +110,12 @@ export function advancedFileTransformations(isFolderBasedDeployment: boolean, ta
         if(!targetFiles || targetFiles.length == 0) {
             targetFiles = ["**/*.json"];
         }
-        jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, targetFiles, true);
-        console.log(tl.loc('JSONvariablesubstitutionappliedsuccessfully'));
+        let isSubstitutionApplied = jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, targetFiles, true);
+        if(isSubstitutionApplied) {
+            console.log(tl.loc('XMLvariablesubstitutionappliedsuccessfully')); 
+        } 
+        else { 
+            tl.error(tl.loc('FailedToApplyXMLvariablesubstitution')); 
+        }
     }
 }
