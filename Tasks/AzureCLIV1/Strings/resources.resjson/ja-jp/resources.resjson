@@ -16,7 +16,7 @@
   "loc.input.label.args": "引数",
   "loc.input.help.args": "スクリプトに渡される引数",
   "loc.input.label.addSpnToEnvironment": "スクリプト内のサービス プリンシパルの詳細にアクセスする",
-  "loc.input.help.addSpnToEnvironment": "選択した Azure エンドポイントのサービス プリンシパル ID とキーを、スクリプトの実行環境に追加します。スクリプトでは、`$servicePrincipalId` と `$servicePrincipalKey` の変数を使用できます。\n\nこれは、Azure エンドポイントにサービス プリンシパルの認証スキームがある場合にのみ受け入れられます。",
+  "loc.input.help.addSpnToEnvironment": "選択した Azure エンドポイントのサービス プリンシパル ID とキーを、スクリプトの実行環境に追加します。スクリプトでは、`$servicePrincipalId`, `$servicePrincipalKey` と `$tenantId` の変数を使用できます。\n\nこれは、Azure エンドポイントにサービス プリンシパルの認証スキームがある場合にのみ受け入れられます。",
   "loc.input.label.useGlobalConfig": "グローバルの Azure CLI 構成を使用する",
   "loc.input.help.useGlobalConfig": "この値が false の場合、このタスクでは別個の [Azure CLI 構成ディレクトリ](https://docs.microsoft.com/ja-jp/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file)が使用されます。これは、*並列*リリースで Azure CLI タスクを実行するために使用できます",
   "loc.input.label.cwd": "作業ディレクトリ",

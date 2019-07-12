@@ -89,7 +89,7 @@ export class PublishProfileUtility {
         });
     }
     
-    public async RunCmd(cmdArgs) {
+    public async RunCmd(cmdTool: string, cmdArgs: string) {
         var deferred = Q.defer();
         var cmdError = null;
         var errorFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'), ERROR_FILE_NAME);
@@ -103,7 +103,7 @@ export class PublishProfileUtility {
         });
 
         try {
-           await tl.exec("cmd", cmdArgs, <any>{
+           await tl.exec(cmdTool, cmdArgs, <any>{
                errStream: errObj,
 			   outStream: process.stdout,
 			   failOnStdErr: true,

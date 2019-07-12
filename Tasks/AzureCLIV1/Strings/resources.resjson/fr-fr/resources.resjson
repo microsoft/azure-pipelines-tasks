@@ -16,7 +16,7 @@
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Arguments passés au script",
   "loc.input.label.addSpnToEnvironment": "Accéder aux détails du principal de service dans le script",
-  "loc.input.help.addSpnToEnvironment": "Ajoute l'ID et la clé de principal de service du point de terminaison Azure choisi à l'environnement d'exécution du script. Vous pouvez utiliser les variables suivantes : '$servicePrincipalId' et '$servicePrincipalKey' dans votre script.\n\nCeci est valable uniquement quand le point de terminaison Azure a un schéma d'authentification du principal de service.",
+  "loc.input.help.addSpnToEnvironment": "Ajoute l'ID et la clé de principal de service du point de terminaison Azure choisi à l'environnement d'exécution du script. Vous pouvez utiliser les variables suivantes : '$servicePrincipalId', '$servicePrincipalKey' et '$tenantId' dans votre script.\n\nCeci est valable uniquement quand le point de terminaison Azure a un schéma d'authentification du principal de service.",
   "loc.input.label.useGlobalConfig": "Utiliser la configuration Azure CLI globale",
   "loc.input.help.useGlobalConfig": "Si la valeur est false, cette tâche utilise son propre [répertoire de configuration Azure CLI](https://docs.microsoft.com/fr-fr/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file) distinct. Permet d'exécuter des tâches Azure CLI dans des mises en production *parallèles*",
   "loc.input.label.cwd": "Répertoire de travail",
