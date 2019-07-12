@@ -50,7 +50,7 @@
             "type": "multiLine",
             "label": "Transformation rules",
             "defaultValue": "-transform **\\*.Release.config -xml **\\*.config\n-transform **\\*.$(Release.EnvironmentName).config -xml **\\*.config",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Provide new line separated list of transformation file rules using the syntax: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>",
             "visibleRule": "enableXmlTransform == true"
         },
