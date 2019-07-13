@@ -54,7 +54,7 @@
   "loc.input.label.externalEndpoint": "NuGet server",
   "loc.input.help.externalEndpoint": "The NuGet service connection that contains the external NuGet server’s credentials.",
   "loc.input.label.searchPatternPack": "Path to csproj or nuspec file(s) to pack",
-  "loc.input.help.searchPatternPack": "Pattern to search for csproj or nuspec files to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**/*.csproj;-:**/*.Tests.csproj`",
+  "loc.input.help.searchPatternPack": "Pattern to search for csproj or nuspec files to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '!'. Example: `**/*.csproj;!**/*.Tests.csproj`",
   "loc.input.label.configurationToPack": "Configuration to Package",
   "loc.input.help.configurationToPack": "When using a csproj file this specifies the configuration to package",
   "loc.input.label.outputDir": "Package Folder",
