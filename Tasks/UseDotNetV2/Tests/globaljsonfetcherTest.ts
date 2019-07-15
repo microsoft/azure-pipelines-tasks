@@ -12,6 +12,8 @@ const rootVersionNumber = "2.2.2";
 const workingSubDir = workingDir + "testdir/";
 const validSubDirGlobalJson = workingSubDir + "global.json";
 const subDirVersionNumber = "3.0.0-pre285754637";
+const pathToEmptyGlobalJsonDir = workingDir + "empty/";
+const pathToEmptyGlobalJson = pathToEmptyGlobalJsonDir + "global.json";
 
 //setup mocks
 mockery.enable({
@@ -24,6 +26,9 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
     findMatch: function (path: string, searchPattern: string): string[] {
         if ((path == workingDir || path == workingSubDir) && searchPattern == "**/global.json") {
             return [validRootGlobalJson, validSubDirGlobalJson];
+        }
+        if(path == pathToEmptyGlobalJsonDir && searchPattern == "**/global.json"){
+            return [pathToEmptyGlobalJson];
         }
         return [];
     },
@@ -40,6 +45,9 @@ mockery.registerMock('fs', {
         if (path == validSubDirGlobalJson) {
             var globalJson = new GlobalJson(subDirVersionNumber);
             return Buffer.from(JSON.stringify(globalJson));
+        }
+        if(path == pathToEmptyGlobalJson){
+            return Buffer.from("");
         }
         return Buffer.from(null);
     }
@@ -91,5 +99,19 @@ if (process.env["__case__"] == "invalidDir") {
     }, err => {
         // here we are good because the getVersion throw an error.
         return;
+    });
+}
+
+if (process.env["__case__"] == "emptyGlobalJson") {
+    let fetcher = new globalJsonFetcher(pathToEmptyGlobalJsonDir);
+    fetcher.GetVersions().then(versionInfos => {
+        if(versionInfos == null){
+            console.log("GetVersions shouldn't return null if the global.json is empty.");        
+        }
+        if(versionInfos.length != 0){
+            console.log("GetVersions shouldn't return a arry with elements if global.json is empty.");        
+        }
+    }, err => {        
+        console.log(err);
     });
 }

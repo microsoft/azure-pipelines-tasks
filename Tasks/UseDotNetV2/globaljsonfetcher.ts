@@ -23,15 +23,16 @@ export class globalJsonFetcher {
         var versionInformation: VersionInfo[] = new Array<VersionInfo>();
         var versionStrings = this.getVersionStrings();
         for (let index = 0; index < versionStrings.length; index++) {
-            const version = versionStrings[index];            
-            var versionInfo = await this.versionFetcher.getVersionInfo(version, "sdk", false); 
-            versionInformation.push(versionInfo);
-        }
-        
+            const version = versionStrings[index];         
+            if(version != null){
+                var versionInfo = await this.versionFetcher.getVersionInfo(version, "sdk", false); 
+                versionInformation.push(versionInfo);
+            }               
+        }        
         return Array.from(new Set(versionInformation)); // this remove all not unique values.            
     }
 
-    private getVersionStrings(): string[]{
+    private getVersionStrings(): Array<string | null>{
         let filePathsToGlobalJson = tl.findMatch(this.workingDirectory, "**/global.json");
         if (filePathsToGlobalJson == null || filePathsToGlobalJson.length == 0) {            
             throw tl.loc("FailedToFindGlobalJson");

@@ -451,22 +451,14 @@ describe('UseDotNet', function () {
             assert(tr.stdout.indexOf("ErrorWhileSettingDotNetToolPath") > -1, "Should have printed this message as error must have been encountered while setting GlobalToolPath.");
         }, tr, done);
     });
-});
 
-describe('globaljsonfetcher', function () {
-    this.timeout(30000);
-    before((done) => {
-        done();
-    });
-    after(function () {
-    });
     it("[globaljsonfetcher] run should not fail if one global.json with a valid version was found.", (done) => {
         process.env["__case__"] = "subdirAsRoot";
         let tr = new ttm.MockTestRunner(path.join(__dirname, "globaljsonfetcherTest.js"))
         tr.run();
         runValidations(() => {
             assert(tr.succeeded == true, ("Should have passed."));
-            assert(tr.stdout.indexOf("GlobalJsonFound") > -1, "should found a global.json file");            
+            assert(tr.stdout.indexOf("GlobalJsonFound") > -1, "should found a global.json file");
         }, tr, done);
     });
     it("[globaljsonfetcher] run should not fail if two global.json with a valid version was found.", (done) => {
@@ -475,7 +467,7 @@ describe('globaljsonfetcher', function () {
         tr.run();
         runValidations(() => {
             assert(tr.succeeded == true, ("Should have passed."));
-            assert(tr.stdout.indexOf("GlobalJsonFound") > -1, "should found a global.json file");            
+            assert(tr.stdout.indexOf("GlobalJsonFound") > -1, "should found a global.json file");
         }, tr, done);
     });
     it("[globaljsonfetcher] run should fail if no global.json is found.", (done) => {
@@ -484,7 +476,17 @@ describe('globaljsonfetcher', function () {
         tr.run();
         runValidations(() => {
             assert(tr.succeeded == true, ("Should't have passed."));
-            assert(tr.stdout.indexOf("FailedToFindGlobalJson") > -1, "should throw an error that no file was found.");            
+            assert(tr.stdout.indexOf("FailedToFindGlobalJson") > -1, "should throw an error that no file was found.");
         }, tr, done);
     });
+    it("[globaljsonfetcher] run shouldn't fail if the global.json is empty.", (done) => {
+        process.env["__case__"] = "emptyGlobalJson";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "globaljsonfetcherTest.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should passed."));
+            assert(tr.stdout.indexOf("FailedToReadGlobalJson") > -1, "should throw an error that no file was found.");
+        }, tr, done);
+    })
 });
+
