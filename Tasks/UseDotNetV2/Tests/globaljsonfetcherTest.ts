@@ -24,10 +24,17 @@ mockery.enable({
 
 mockery.registerMock('azure-pipelines-task-lib/task', {
     findMatch: function (path: string, searchPattern: string): string[] {
-        if ((path == workingDir || path == workingSubDir) && searchPattern == "**/global.json") {
+        if(searchPattern != "**/global.json"){
+            return [];
+        }
+        if (path == workingDir) {
+            // If it's working dir subdir is included, because it is a child;
             return [validRootGlobalJson, validSubDirGlobalJson];
         }
-        if(path == pathToEmptyGlobalJsonDir && searchPattern == "**/global.json"){
+        if (path == workingSubDir) {
+            return [validSubDirGlobalJson];
+        }
+        if(path == pathToEmptyGlobalJsonDir){
             return [pathToEmptyGlobalJson];
         }
         return [];
@@ -106,12 +113,12 @@ if (process.env["__case__"] == "emptyGlobalJson") {
     let fetcher = new globalJsonFetcher(pathToEmptyGlobalJsonDir);
     fetcher.GetVersions().then(versionInfos => {
         if(versionInfos == null){
-            console.log("GetVersions shouldn't return null if the global.json is empty.");        
+            throw "GetVersions shouldn't return null if the global.json is empty.";        
         }
         if(versionInfos.length != 0){
-            console.log("GetVersions shouldn't return a arry with elements if global.json is empty.");        
+            throw "GetVersions shouldn't return a arry with 0 elements if global.json is empty.";        
         }
     }, err => {        
-        console.log(err);
+        throw "GetVersions shouldn't throw an error if global.json is empty.";
     });
 }
