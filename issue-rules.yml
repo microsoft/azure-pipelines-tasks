@@ -249,7 +249,7 @@ rules:
 # add likely teams to look at based on text searches
 nomatches:
 - contains: 'Xcode' 
-  addLabels: ['Area: Cross Platform']
+  addLabels: ['Area: CrossPlatform']
 - contains: 'Bash' 
   addLabels: ['Area: Core']
 - contains: 'Nuget' 
