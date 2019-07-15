@@ -43,6 +43,8 @@ async function main(): Promise<void> {
 
             // Adding new endpoints to already existing .pypirc file.
             for (const entry of newEndpointsToAdd){
+                console.log(tl.loc("Info_AddingAuthForRegistry", entry.packageSource.feedName));
+
                 if (entry.packageSource.feedName in fileContent){
                     // Hard fail if there is a name collision from service endpoint
                     throw new Error(tl.loc("Error_DuplicateEntryForExternalFeed",
@@ -96,6 +98,8 @@ function formPypircFormatFromData(authInfo: auth.AuthInfo[]): string{
     let header = util.format("[distutils]%sindex-servers=", os.EOL);
 
     for(let entry of authInfo) {
+        console.log(tl.loc("Info_AddingAuthForRegistry", entry.packageSource.feedName));
+
         if (entry.packageSource.feedName in ent){
             throw new Error(tl.loc("Error_DuplicateEntryForExternalFeed",
                     entry.packageSource.feedName));
