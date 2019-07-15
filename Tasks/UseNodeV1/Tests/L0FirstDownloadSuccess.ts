@@ -1,10 +1,15 @@
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import taskLib = require('azure-pipelines-task-lib/task');
-import restm = require('typed-rest-client/RestClient');
 import fs = require('fs');
 import os = require('os');
 import path = require('path');
+import { IRequestOptions } from 'typed-rest-client/Interfaces';
+import { IRestResponse } from 'typed-rest-client';
+
+const proxyUrl = 'http://url.com';
+const proxyUsername = 'username';
+const proxyPassword = 'password';
 
 let taskPath = path.join(__dirname, '..', 'usenode.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -46,12 +51,38 @@ tlClone.setVariable = function(key, val) {
 };
 if (process.env["__proxy__"]) {
     tlClone.getHttpProxyConfiguration = function(requestUrl?: string): taskLib.ProxyConfiguration | null {
-        return { proxyUrl: 'http://url.com', proxyUsername: 'username', proxyPassword: 'password', proxyBypassHosts: null};
-    }
+
+        const fakeProxyConfiguration: taskLib.ProxyConfiguration = {
+            proxyUrl: this.proxyUrl,
+            proxyUsername: this.proxyUsername,
+            proxyPassword: this.proxyPassword,
+            proxyBypassHosts: null
+        };
+
+        console.log(`Using fake proxy proxyUrl: ${fakeProxyConfiguration.proxyUrl}, proxyUsername: ${fakeProxyConfiguration.proxyUsername}, proxyPassword: ${fakeProxyConfiguration.proxyPassword}`);
+
+        return fakeProxyConfiguration;
+    };
 }
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
-tmr.registerMock('typed-rest-client/RestClient', restm);
+const restm = require('typed-rest-client/RestClient');
+const restmClone = Object.assign({}, restm);
+if (process.env["__proxy__"]) {
+
+    restmClone.get = function<T>(resource: string, options?: IRequestOptions): Promise<IRestResponse<T>>
+    {
+        validateResource(resource);
+        validateOptions(options);
+        try {
+            let response = restm.get(resource, options)
+            return response;
+        } catch (e) {
+            console.log(`Failed to get a resource ${resource}`, e);
+        }
+    }
+};
+tmr.registerMock('typed-rest-client/RestClient', restmClone);
 
 //Create tool-lib mock
 tmr.registerMock('vsts-task-tool-lib/tool', {
@@ -59,7 +90,7 @@ tmr.registerMock('vsts-task-tool-lib/tool', {
         return false;
     },
     findLocalTool: function(toolName, versionSpec) {
-        if (toolName != 'node') { 
+        if (toolName != 'node') {
             throw new Error('Searching for wrong tool');
         }
         return false;
@@ -116,3 +147,36 @@ fsClone.writeFileSync = function(path: string, data: any, options: fs.WriteFileO
 tmr.registerMock('fs', fsClone);
 
 tmr.run();
+
+function validateResource(resource: string) {
+    let dataUrl = "https://nodejs.org/dist/index.json";
+    if (resource != dataUrl) {
+        throw new Error(`unexpected resource value ${resource}`);
+    }
+}
+
+function validateOptions(options?: IRequestOptions) {
+
+    if (!options) {
+        return;
+    }
+
+    let errors: string[];
+
+    if (options.proxy.proxyUrl != this.proxyUrl) {
+        errors.push(`unexpected proxyUrl value ${options.proxy.proxyUrl}`);
+    }
+
+    if (options.proxy.proxyUsername != this.proxyUsername) {
+        errors.push(`unexpected proxyUsername value ${options.proxy.proxyUsername}`);
+    }
+
+    if (options.proxy.proxyUsername != this.proxyUsername) {
+        errors.push(`unexpected proxyUsername value ${options.proxy.proxyUsername}`);
+    }
+
+    if (errors.length > 0)
+    {
+        throw new Error(errors.join("\n"));
+    }
+}
