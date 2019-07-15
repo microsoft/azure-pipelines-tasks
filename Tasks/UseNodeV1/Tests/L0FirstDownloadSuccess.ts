@@ -161,7 +161,7 @@ function validateOptions(options?: IRequestOptions) {
         return;
     }
 
-    let errors: string[];
+    let errors: string[] = [];
 
     if (options.proxy.proxyUrl != this.proxyUrl) {
         errors.push(`unexpected proxyUrl value ${options.proxy.proxyUrl}`);
