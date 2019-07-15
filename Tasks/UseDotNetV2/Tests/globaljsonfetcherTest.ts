@@ -79,7 +79,7 @@ if (process.env["__case__"] == "subdirAsRoot") {
     let fetcher = new globalJsonFetcher(workingSubDir);
     fetcher.GetVersions().then(versionInfos => {
         if (versionInfos.length != 1) {
-            throw "GetVersions should return one result if on globals.json is found";
+            throw "GetVersions should return one result if one global.json is found.";
         }
         if(versionInfos[0].getVersion() != subDirVersionNumber){
             throw `GetVersions should return the version number that was inside the global.json. Expected: ${subDirVersionNumber} Actual: ${versionInfos[0].getVersion()}`;
@@ -94,7 +94,7 @@ if (process.env["__case__"] == "rootAsRoot") {
     let fetcher = new globalJsonFetcher(workingDir);
     fetcher.GetVersions().then(versionInfos => {
         if (versionInfos.length != 2) {
-            throw "GetVersions should return all global.json in a folder hierarchy result if on globals.json is found";
+            throw "GetVersions should return all global.json in a folder hierarchy result if multiple global.json are found.";
         }
     });
 }
