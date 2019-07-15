@@ -16,7 +16,7 @@
   "loc.input.label.args": "Аргументы",
   "loc.input.help.args": "Аргументы, переданные в сценарий",
   "loc.input.label.addSpnToEnvironment": "Доступ к сведениям о субъекте-службе в скрипте",
-  "loc.input.help.addSpnToEnvironment": "Добавляет идентификатор субъекта-службы и ключ выбранной конечной точки Azure в среду выполнения скрипта. В скрипте можно использовать следующие переменные: \"$servicePrincipalId\" и \"$servicePrincipalKey\".\n\nЭто учитывается, только если конечная точка Azure имеет схему проверки подлинности \"Субъект-служба\".",
+  "loc.input.help.addSpnToEnvironment": "Добавляет идентификатор субъекта-службы и ключ выбранной конечной точки Azure в среду выполнения скрипта. В скрипте можно использовать следующие переменные: \"$servicePrincipalId\", \"$servicePrincipalKey\" и \"$tenantId\".\n\nЭто учитывается, только если конечная точка Azure имеет схему проверки подлинности \"Субъект-служба\".",
   "loc.input.label.useGlobalConfig": "Использовать глобальную конфигурацию Azure CLI",
   "loc.input.help.useGlobalConfig": "Если задано значение false, задача будет использовать собственный отдельный [каталог конфигурации Azure CLI](https://docs.microsoft.com/en-us/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file). Это можно использовать для выполнения задач Azure CLI в *параллельных* выпусках",
   "loc.input.label.cwd": "Рабочий каталог",
