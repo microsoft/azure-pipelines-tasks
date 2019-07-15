@@ -18,19 +18,11 @@ export class ChangeLogL0Tests {
     }
 
     public static async validateGetChangeLog2() {
-        let changes = await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastRelease);
-        
-        if (changes === this.expectedChanges) {
-            console.log(TestString.getChangeLogKeyword);
-        }
+        await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastRelease);
     }
 
     public static async validateGetChangeLog3() {
-        let changes = await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastReleaseByTag, "v1.*");
-        
-        if (changes === this.expectedChanges) {
-            console.log(TestString.getChangeLogKeyword);
-        }
+        await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastReleaseByTag, "v1.*");
     }
 
     public static readonly expectedChanges = "\n\n## Changes:\n\n* xyz Fixing issue #56. [ #9 ]\n* abc Fixing issue #2 #3. [ #4, #5 ]\n\nThis list of changes was [auto generated](MOCK_RELEASE_URL).";
