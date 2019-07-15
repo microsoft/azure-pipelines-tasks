@@ -76,7 +76,8 @@
       "label": "ms-resource:loc.input.label.includePreviewVersions",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.includePreviewVersions"
+      "helpMarkDown": "ms-resource:loc.input.help.includePreviewVersions",
+      "visibleRule": "useGlobalJson = false"
     },
     {
       "name": "installationPath",
