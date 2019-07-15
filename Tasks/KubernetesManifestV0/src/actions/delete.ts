@@ -8,7 +8,7 @@ import * as TaskInputParameters from '../models/TaskInputParameters';
 export async function deleteResources(ignoreSslErrors?: boolean) {
     const args = TaskInputParameters.args;
 
-    if (args == null || args.length == 0) {
+    if (args == null || args.length === 0) {
         throw (tl.loc('ArgumentsInputNotSupplied'));
     }
 

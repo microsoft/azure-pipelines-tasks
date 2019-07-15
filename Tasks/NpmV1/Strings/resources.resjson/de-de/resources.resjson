@@ -7,7 +7,7 @@
   "loc.group.displayName.publishRegistries": "Zielregistrierung und Authentifizierung",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.command": "Befehl",
-  "loc.input.help.command": "Der Befehl und die Argumente, die zur Ausführung an npm übergeben werden.\n\nWenn Ihre Argumente doppelte Anführungszeichen (\") enthalten, verwenden Sie als Escapezeichen einen umgekehrten Schrägstrich (\\), und umschließen Sie die Escapezeichenfolge mit doppelten Anführungszeichen (\").",
+  "loc.input.help.command": "Der Befehl und die Argumente, die zur Ausführung an npm übergeben werden.\n\nWenn Ihre Argumente doppelte Anführungszeichen (\") enthalten, verwenden Sie als Escapezeichen einen umgekehrten Schrägstrich (\\\\), und umschließen Sie die Escapezeichenfolge mit doppelten Anführungszeichen (\").",
   "loc.input.label.workingDir": "Arbeitsordner, der \"package.json\" enthält.",
   "loc.input.help.workingDir": "Pfad zum Ordner, der die Zieldatei \"package.json\" und die NPMRC-Zieldateien enthält. Wählen Sie den Ordner und nicht die Datei aus, z. B. \"/packages/mypackage\".",
   "loc.input.label.verbose": "Ausführliche Protokollierung",

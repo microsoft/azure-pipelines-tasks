@@ -2,9 +2,9 @@ import Q = require('q');
 import os = require('os');
 import path = require('path');
 import fs = require('fs');
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
-import * as pkgLocationUtils from "packaging-common-old/locationUtilities";
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
 
 import * as url from "url";
 import * as xml2js from 'xml2js';

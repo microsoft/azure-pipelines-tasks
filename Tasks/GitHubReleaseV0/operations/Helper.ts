@@ -24,6 +24,7 @@ export class Helper {
     
     /**
      * Returns tag name to be used for creating a release.
+     * If tagPattern is specified, returns tag matching the given pattern
      * If user has specified tag, then use it 
      * else if $(Build.SourceBranch) is referencing to a tag, then parse tag name and use it
      * else fetch tag from the target specified by user
@@ -34,8 +35,9 @@ export class Helper {
      * @param repositoryName 
      * @param target 
      * @param tag 
+     * @param tagPattern
      */
-    public async getTagForCommitTarget(githubEndpointToken: string, repositoryName: string, target: string): Promise<string> {
+    public async getTagForCommitTarget(githubEndpointToken: string, repositoryName: string, target: string, tagPattern: string = null): Promise<string> {
         console.log(tl.loc("FetchTagForTarget", target));
         let tag = undefined; 
         
@@ -45,7 +47,7 @@ export class Helper {
 
         // If the buildSourceVersion and user specified target does not match, then prefer user specified target
         if (commit_sha !== buildSourceVersion) {
-            tag = await this._getTagForCommit(githubEndpointToken, repositoryName, commit_sha);
+            tag = await this._getTagForCommit(githubEndpointToken, repositoryName, commit_sha, tagPattern);
         }
         else {
             let buildSourceBranch = tl.getVariable(AzureDevOpsVariables.buildSourceBranch);
@@ -55,9 +57,12 @@ export class Helper {
             // Else fetch tag from commit
             if (!!normalizedBranch) {
                 tag = normalizedBranch;
+                if (!!tagPattern && !Utility.isTagMatching(tag, tagPattern)) {
+                    tag = null;
+                }
             }
             else {
-                tag = await this._getTagForCommit(githubEndpointToken, repositoryName, commit_sha);
+                tag = await this._getTagForCommit(githubEndpointToken, repositoryName, commit_sha, tagPattern);
             }
         }
 
@@ -238,6 +243,7 @@ export class Helper {
     
     /**
      * Returns tag name associated with the commit.
+     * If tagPattern is specified returns tag name
      * If 0 tag found return undefined
      * else if 1 tag found return tag name
      * else throw error
@@ -245,8 +251,17 @@ export class Helper {
      * @param repositoryName 
      * @param commit_sha 
      */
-    private async _getTagForCommit(githubEndpointToken: string, repositoryName: string, commit_sha: string): Promise<string> {
-        let filteredTag: any = await this.filterTag(githubEndpointToken, repositoryName, commit_sha, this._filterTagsByCommitSha);
+    private async _getTagForCommit(githubEndpointToken: string, repositoryName: string, commit_sha: string, tagPattern: string = null): Promise<string> {
+        let filteredTag: any;
+        let filterTagsCallback = (tagsList: any[], commit_sha: string): any[] => {
+            tagsList = this._filterTagsByCommitSha(tagsList, commit_sha);
+            if (!tagPattern) {
+                return tagsList;
+            }
+            return tagsList.filter((tag: any) => Utility.isTagMatching(tag[GitHubAttributes.nameAttribute], tagPattern));
+        }
+
+        filteredTag = await this.filterTag(githubEndpointToken, repositoryName, commit_sha, filterTagsCallback);
 
         return filteredTag && filteredTag[GitHubAttributes.nameAttribute];
     }
