@@ -16,7 +16,7 @@
   "loc.input.label.args": "引數",
   "loc.input.help.args": "傳遞給指令碼的引數",
   "loc.input.label.addSpnToEnvironment": "存取指令碼中的服務主體詳細資料",
-  "loc.input.help.addSpnToEnvironment": "將服務主體識別碼和您所選 Azure 端點的金鑰新增至指令碼的執行環境。您可以在指令碼中使用以下變數: `$servicePrincipalId` 和 `$servicePrincipalKey`。\n\n僅在 Azure 端點具有服務主體驗證配置時才接受此項目。",
+  "loc.input.help.addSpnToEnvironment": "將服務主體識別碼和您所選 Azure 端點的金鑰新增至指令碼的執行環境。您可以在指令碼中使用以下變數: `$servicePrincipalId`, `$servicePrincipalKey` 和 `$tenantId`。\n\n僅在 Azure 端點具有服務主體驗證配置時才接受此項目。",
   "loc.input.label.useGlobalConfig": "使用全域 Azure CLI 設定",
   "loc.input.help.useGlobalConfig": "如果此項目為 false，則此工作會使用其獨立的 [Azure CLI 設定目錄](https://docs.microsoft.com/zh-tw/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file)。這個項目可在 *平行* 版本中用於執行 Azure CLI 工作",
   "loc.input.label.cwd": "工作目錄",
