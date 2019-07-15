@@ -76,7 +76,8 @@
             "label": "Include Preview Versions",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Select if you want preview versions to be included while searching for latest versions, such as while searching 2.2.x. This setting is ignored if you specify an exact version, such as: 3.0.100-preview3-010431"
+            "helpMarkDown": "Select if you want preview versions to be included while searching for latest versions, such as while searching 2.2.x. This setting is ignored if you specify an exact version, such as: 3.0.100-preview3-010431",
+            "visibleRule": "useGlobalJson = false"
         },
         {
             "name": "installationPath",
