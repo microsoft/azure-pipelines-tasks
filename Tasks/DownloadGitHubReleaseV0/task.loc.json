@@ -10,7 +10,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 155,
+    "Minor": 156,
     "Patch": 0
   },
   "minimumAgentVersion": "1.99.0",
@@ -18,12 +18,12 @@
   "preview": true,
   "inputs": [
     {
-      "name": "gitHubConnection",
+      "name": "connection",
       "type": "connectedService:github:OAuth,PersonalAccessToken",
-      "label": "ms-resource:loc.input.label.gitHubConnection",
+      "label": "ms-resource:loc.input.label.connection",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.gitHubConnection"
+      "helpMarkDown": "ms-resource:loc.input.help.connection"
     },
     {
       "name": "userRepository",
