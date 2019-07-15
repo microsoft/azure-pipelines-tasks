@@ -5,6 +5,7 @@ import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-arm-rest-v2/constants';
 import webClient = require('azure-arm-rest-v2/webClient');
 import { TaskParameters, DeploymentType } from './TaskParameters';
+import { AzureDeployPackageArtifactAlias } from './Constants';
 var deployUtility = require('webdeployment-common-v2/utility.js');
 var zipUtility = require('webdeployment-common-v2/ziputility.js');
 const physicalRootPath: string = '/site/wwwroot';
@@ -28,9 +29,9 @@ export class KuduServiceUtility {
         }
     }
 
-    public async updateDeploymentStatus(taskResult: boolean, DeploymentID: string, customMessage: any, packageArtifactAlias: string = null): Promise<string> {
+    public async updateDeploymentStatus(taskResult: boolean, DeploymentID: string, customMessage: any): Promise<string> {
         try {
-            let requestBody = this._getUpdateHistoryRequest(taskResult, packageArtifactAlias, DeploymentID, customMessage);
+            let requestBody = this._getUpdateHistoryRequest(taskResult, DeploymentID, customMessage);
             return await this._appServiceKuduService.updateDeployment(requestBody);
         }
         catch(error) {
@@ -182,7 +183,7 @@ export class KuduServiceUtility {
         }
     }
 
-    public async deployUsingRunFromZip(packagePath: string, packageArtifactAlias: string = null, customMessage?: any) : Promise<void> {
+    public async deployUsingRunFromZip(packagePath: string, customMessage?: any) : Promise<void> {
         try {
             console.log(tl.loc('PackageDeploymentInitiated'));
 
@@ -190,7 +191,7 @@ export class KuduServiceUtility {
                 'deployer=' +   VSTS_DEPLOY
             ];
 
-            var deploymentMessage = this._getUpdateHistoryRequest(null, packageArtifactAlias, null, customMessage).message;
+            var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
             await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
             console.log(tl.loc('PackageDeploymentSuccess'));
@@ -201,7 +202,7 @@ export class KuduServiceUtility {
         }
     }
 
-    public async deployUsingWarDeploy(packagePath: string, packageArtifactAlias: string = null, customMessage?: any, targetFolderName?: any): Promise<string> {
+    public async deployUsingWarDeploy(packagePath: string, customMessage?: any, targetFolderName?: any): Promise<string> {
         try {
             console.log(tl.loc('WarPackageDeploymentInitiated'));
 
@@ -213,7 +214,7 @@ export class KuduServiceUtility {
                 queryParameters.push('name=' + encodeURIComponent(targetFolderName));
             }
 
-            var deploymentMessage = this._getUpdateHistoryRequest(null, packageArtifactAlias, null, customMessage).message;
+            var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
             let deploymentDetails = await this._appServiceKuduService.warDeploy(packagePath, queryParameters);
             await this._processDeploymentResponse(deploymentDetails);
@@ -423,15 +424,16 @@ export class KuduServiceUtility {
         }
     }
 
-    private _getUpdateHistoryRequest(isDeploymentSuccess: boolean, artifactAlias: string = null, deploymentID?: string, customMessage?: any): any {
+    private _getUpdateHistoryRequest(isDeploymentSuccess: boolean, deploymentID?: string, customMessage?: any): any {
         
+        var artifactAlias = tl.getVariable(AzureDeployPackageArtifactAlias);
         var status = isDeploymentSuccess ? KUDU_DEPLOYMENT_CONSTANTS.SUCCESS : KUDU_DEPLOYMENT_CONSTANTS.FAILED;
         var releaseId = tl.getVariable('release.releaseId');
         var releaseName = tl.getVariable('release.releaseName');
         var collectionUrl = tl.getVariable('system.TeamFoundationCollectionUri'); 
         var teamProject = tl.getVariable('system.teamProjectId');
         let buildId = '', buildNumber = '', buildProject = '', commitId = '', repoProvider = '', repoName = '', branch = '', repositoryUrl = '', author = '';
-
+        
         if (releaseId && artifactAlias) {
             // Task is running in release determine build information of selected artifact using artifactAlias
             author = tl.getVariable('release.requestedfor') || tl.getVariable('agent.name');

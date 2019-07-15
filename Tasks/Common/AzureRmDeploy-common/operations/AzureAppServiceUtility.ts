@@ -4,6 +4,7 @@ import webClient = require('../azure-arm-rest/webClient');
 var parseString = require('xml2js').parseString;
 import Q = require('q');
 import { Kudu } from '../azure-arm-rest/azure-arm-app-service-kudu';
+import { AzureDeployPackageArtifactAlias } from '../Constants';
 
 export class AzureAppServiceUtility {
     private _appService: AzureAppService;
@@ -11,7 +12,7 @@ export class AzureAppServiceUtility {
         this._appService = appService;
     }
 
-    public async updateScmTypeAndConfigurationDetails(packageArtifactAlias: string = null) : Promise<void>{
+    public async updateScmTypeAndConfigurationDetails() : Promise<void>{
         try {
             var configDetails = await this._appService.getConfiguration();
             var scmType: string = configDetails.properties.scmType;
@@ -33,7 +34,7 @@ export class AzureAppServiceUtility {
 
             if (shouldUpdateMetadata) {
                 tl.debug('Updating metadata with latest pipeline details');
-                let newMetadataProperties = this._getNewMetadata(packageArtifactAlias);
+                let newMetadataProperties = this._getNewMetadata();
                 let siteMetadata = await this._appService.getMetadata();
                 let skipUpdate = true;
                 for (let property in newMetadataProperties) {
@@ -263,7 +264,7 @@ export class AzureAppServiceUtility {
         }: null;
     }
 
-    private _getNewMetadata(artifactAlias: string = null): any {
+    private _getNewMetadata(): any {
         var collectionUri = tl.getVariable("system.teamfoundationCollectionUri");
         var projectId = tl.getVariable("system.teamprojectId");
         var releaseDefinitionId = tl.getVariable("release.definitionId");
@@ -277,6 +278,7 @@ export class AzureAppServiceUtility {
 
         if(!!releaseDefinitionId) {
             // Task is running in Release
+            var artifactAlias = tl.getVariable(AzureDeployPackageArtifactAlias);
             tl.debug("Artifact Source Alias is: "+ artifactAlias);
             
             let buildDefinitionUrl = "";

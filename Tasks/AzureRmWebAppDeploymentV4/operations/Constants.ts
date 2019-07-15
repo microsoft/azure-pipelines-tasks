@@ -15,3 +15,5 @@ export const PublishProfileXml = {
     MSDeploy: "MSDeploy",
     UserName: "UserName"
 }
+
+export const AzureDeployPackageArtifactAlias = "AzureDeploy_PackageArtifactAlias";

@@ -8,6 +8,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
 import { PackageUtility } from 'azurermdeploycommon/webdeployment-common/packageUtility';
+import { AzureDeployPackageArtifactAlias } from 'azurermdeploycommon/Constants';
 
 export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider {
     protected taskParams:TaskParameters;
@@ -18,11 +19,10 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     protected virtualApplicationPath: string = "";
     protected activeDeploymentID;
 
-    protected packageArtifactAlias: string;
-
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;
-        this.packageArtifactAlias = PackageUtility.getArtifactAlias(this.taskParams.Package.getPath());
+        let packageArtifactAlias = PackageUtility.getArtifactAlias(this.taskParams.Package.getPath());
+        tl.setVariable(AzureDeployPackageArtifactAlias, packageArtifactAlias);
     }
 
     public async PreDeploymentStep() {
@@ -39,7 +39,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         if(this.kuduServiceUtility) {
             await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
-            this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()}, this.packageArtifactAlias);
+            this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }
         
@@ -59,6 +59,6 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             await this.appServiceUtility.updateConfigurationSettings(customApplicationSettings);
         }
 
-        await this.appServiceUtility.updateScmTypeAndConfigurationDetails(this.packageArtifactAlias);
+        await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
     }
 }

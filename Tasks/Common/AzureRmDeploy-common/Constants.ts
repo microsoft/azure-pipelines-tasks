@@ -1,0 +1,1 @@
+export const AzureDeployPackageArtifactAlias = "AzureDeploy_PackageArtifactAlias";

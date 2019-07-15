@@ -11,6 +11,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import * as ParameterParser from 'webdeployment-common-v2/ParameterParserUtility';
 import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
 import { PackageUtility } from 'webdeployment-common-v2/packageUtility';
+import { AzureDeployPackageArtifactAlias } from '../operations/Constants';
 
 export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider{
     protected taskParams:TaskParameters;
@@ -22,11 +23,10 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     protected azureEndpoint: AzureEndpoint;
     protected activeDeploymentID;
 
-    protected packageArtifactAlias: string;
-
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;
-        this.packageArtifactAlias = PackageUtility.getArtifactAlias(this.taskParams.Package.getPath());
+        let packageArtifactAlias = PackageUtility.getArtifactAlias(this.taskParams.Package.getPath());
+        tl.setVariable(AzureDeployPackageArtifactAlias, packageArtifactAlias);
     }
 
     public async PreDeploymentStep() {
@@ -50,7 +50,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         if(this.kuduServiceUtility) {
             await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
-            this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()}, this.packageArtifactAlias);
+            this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }
         
@@ -75,6 +75,6 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             await this.kuduServiceUtility.runPostDeploymentScript(this.taskParams, this.virtualApplicationPath);
         }
 
-        await this.appServiceUtility.updateScmTypeAndConfigurationDetails(this.packageArtifactAlias);
+        await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
     }
 }
