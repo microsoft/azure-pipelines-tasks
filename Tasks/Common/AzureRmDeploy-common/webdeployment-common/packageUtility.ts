@@ -38,9 +38,15 @@ export class PackageUtility {
                     let endIndex = relativePackagePath.indexOf(path.sep);
                     endIndex = endIndex >= 0 ? endIndex : relativePackagePath.length;
                     artifactAlias = relativePackagePath.substring(0, endIndex);
+                    if(!tl.getVariable(`release.artifacts.${artifactAlias}.definitionId`)) {
+                        // Artifact alias determined is not correct, set it to null
+                        tl.debug(`Incorrect artifact alias ${artifactAlias} determined for package path ${packagePath}`);
+                        artifactAlias = null;
+                    }
                 }
             }
             catch (error) {
+                artifactAlias = null;
                 tl.debug(`Error in determining artifact alias of package. Error: ${error}`);
             }
         }
