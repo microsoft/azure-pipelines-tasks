@@ -61,5 +61,7 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
             }
         }
+
+        this.LogDeploymentResult();
     }
 }

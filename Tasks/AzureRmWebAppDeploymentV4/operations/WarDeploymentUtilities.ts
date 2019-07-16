@@ -31,7 +31,7 @@ export async function DeployWar(webPackage, taskParams: TaskParameters, msDeploy
 
     var retryCount = 3;
     while (retryCount > 0) {
-        await msDeploy.DeployUsingMSDeploy(webPackage, taskParams.WebAppNames, msDeployPublishingProfile, taskParams.RemoveAdditionalFilesFlag,
+        await msDeploy.DeployUsingMSDeploy(webPackage, taskParams.WebAppName, msDeployPublishingProfile, taskParams.RemoveAdditionalFilesFlag,
             taskParams.ExcludeFilesFromAppDataFlag, taskParams.TakeAppOfflineFlag, taskParams.VirtualApplication, taskParams.SetParametersFile,
             taskParams.AdditionalArguments, false, taskParams.UseWebDeploy);
 

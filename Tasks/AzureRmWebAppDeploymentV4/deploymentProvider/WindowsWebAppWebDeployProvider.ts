@@ -54,5 +54,6 @@ export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvi
         }        
 
         await this.PostDeploymentStep();
+        this.LogDeploymentResult();
     }
 }

@@ -64,5 +64,7 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
             console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
             tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
         }
+
+        this.LogDeploymentResult();
     }
 }

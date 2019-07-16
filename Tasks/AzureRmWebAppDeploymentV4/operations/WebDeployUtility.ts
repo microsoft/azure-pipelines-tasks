@@ -46,7 +46,7 @@ export class WebDeployUtility {
         let webDeployArguments: any = {};
         webDeployArguments.package = taskParameters.Package;
         webDeployArguments.additionalArguments = taskParameters.AdditionalArguments;
-        webDeployArguments.appName = taskParameters.WebAppNames;
+        webDeployArguments.appName = taskParameters.WebAppName;
         webDeployArguments.excludeFilesFromAppDataFlag = taskParameters.ExcludeFilesFromAppDataFlag;
         webDeployArguments.publishUrl = publishProfile.publishUrl;
         webDeployArguments.password = publishProfile.userPWD;

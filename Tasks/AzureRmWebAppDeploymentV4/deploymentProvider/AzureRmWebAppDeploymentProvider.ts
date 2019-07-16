@@ -28,12 +28,12 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
     public async PreDeploymentStep() {
         this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint();
-        console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppNames));
+        console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppName));
         if(!this.taskParams.DeployToSlotOrASEFlag) {
-            this.taskParams.ResourceGroupName = await AzureResourceFilterUtility.getResourceGroupName(this.azureEndpoint, this.taskParams.WebAppNames);
+            this.taskParams.ResourceGroupName = await AzureResourceFilterUtility.getResourceGroupName(this.azureEndpoint, this.taskParams.WebAppName);
         }
 
-        this.appService = new AzureAppService(this.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppNames, 
+        this.appService = new AzureAppService(this.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, 
             this.taskParams.SlotName, this.taskParams.WebAppKind);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
 
@@ -73,5 +73,14 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         }
 
         await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
+    }
+
+    protected LogDeploymentResult() {
+        if (this.isDeploymentSuccess) {
+            console.log("Deployment of " + this.taskParams.WebAppName + " was successful");
+        }
+        else {
+            console.log("Deployment of " + this.taskParams.WebAppName + " was not successful");
+        }
     }
 }

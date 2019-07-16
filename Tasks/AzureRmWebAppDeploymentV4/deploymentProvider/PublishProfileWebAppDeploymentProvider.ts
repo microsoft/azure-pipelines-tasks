@@ -21,7 +21,7 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
     private modWebPackage: string;
     private bakWebPackage: string;
     private origEnvPath: string;
-    public isDeploymentSuccess;
+    public isDeploymentSuccess: boolean = true;
 
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;

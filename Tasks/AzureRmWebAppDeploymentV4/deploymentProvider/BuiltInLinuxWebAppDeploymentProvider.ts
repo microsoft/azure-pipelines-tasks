@@ -87,5 +87,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
             }
         }
+
+        this.LogDeploymentResult();
     }
 }

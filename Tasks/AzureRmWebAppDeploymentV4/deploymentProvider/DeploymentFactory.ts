@@ -1,4 +1,4 @@
-import { TaskParameters, DeploymentType } from '../operations/TaskParameters';
+import { TaskParameters, DeploymentType, TaskParametersUtility } from '../operations/TaskParameters';
 import * as Constant from '../operations/Constants'
 import { PublishProfileWebAppDeploymentProvider } from './PublishProfileWebAppDeploymentProvider';
 import { BuiltInLinuxWebAppDeploymentProvider } from './BuiltInLinuxWebAppDeploymentProvider';
@@ -10,6 +10,7 @@ import { ContainerWebAppDeploymentProvider } from './ContainerWebAppDeploymentPr
 import tl = require('azure-pipelines-task-lib/task');
 import { PackageType } from 'webdeployment-common-v2/packageUtility';
 import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
+import clonedeep = require('lodash/cloneDeep');
 
 export class DeploymentFactory {
 
@@ -20,12 +21,12 @@ export class DeploymentFactory {
     }
 
     public async GetDeploymentProviders(): Promise<IWebAppDeploymentProvider[]> {
-        var appServiceNames = this._taskParams.WebAppNames.split(',');
+        var appServiceNames = this._taskParams.WebAppName.split(',');
 
-        var deploymentProviders = Promise.all(appServiceNames.map(async appServiceName => {
-            var params = this._taskParams;
-            params.WebAppNames = appServiceName;
-            
+        var deploymentProviders = await Promise.all(appServiceNames.map(async appServiceName => {
+            var params = clonedeep(this._taskParams);
+            params.WebAppName = appServiceName.trim();
+
             switch(params.ConnectionType) {
                 case Constant.ConnectionType.PublishProfile:
                     return new PublishProfileWebAppDeploymentProvider(params);

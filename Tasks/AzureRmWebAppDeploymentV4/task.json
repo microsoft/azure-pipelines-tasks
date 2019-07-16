@@ -121,7 +121,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed.",
+            "helpMarkDown": "A comma separated list of existing Azure App Services. App services based on selected app type will only be listed.",
             "visibleRule": "ConnectionType = AzureRM"
         },
         {

@@ -15,7 +15,7 @@ async function main() {
         var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParams);
         var deploymentProviders = await deploymentFactory.GetDeploymentProviders();
 
-        Promise.all(deploymentProviders.map(async deploymentProvider => {
+        await Promise.all(deploymentProviders.map(async deploymentProvider => {
             try {
                 tl.debug("Predeployment Step Started");
                 await deploymentProvider.PreDeploymentStep();
@@ -37,7 +37,7 @@ async function main() {
     }
     finally {
         if (deploymentProviders != null && deploymentProviders.length > 0) {
-            deploymentProviders.forEach(async deploymentProvider => {
+            await deploymentProviders.forEach(async deploymentProvider => {
                 await deploymentProvider.UpdateDeploymentStatus();
             });
         }
