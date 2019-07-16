@@ -1,6 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import utility = require('./utility');
 var zipUtility = require('webdeployment-common/ziputility.js');
+import path = require('path');
 
 export enum PackageType {
     war,
