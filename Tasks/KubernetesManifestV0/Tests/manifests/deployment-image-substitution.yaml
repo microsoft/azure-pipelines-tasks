@@ -21,6 +21,8 @@ spec:
         - containerPort: 80
       - name: edgecase
         image: nginx-image:1.7.9
+      - name: untagged
+        image: mysql 
       imagePullSecrets:
       - name: key1
       initContainers:
