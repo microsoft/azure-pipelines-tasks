@@ -42,7 +42,7 @@ class azureclitask {
       console.log(tl.loc('NomralizedDeployementId', configId));
 
       let script1 = `iot edge deployment delete --hub-name ${iothub} --config-id ${configId}`;
-      let script2 = `iot edge deployment create --config-id ${configId} --hub-name ${iothub} --content ${deploymentJsonPath} --target-condition ${targetCondition} --priority ${priority}`;
+      let script2 = `iot edge deployment create --config-id ${configId} --hub-name ${iothub} --content ${deploymentJsonPath} --target-condition ${targetCondition} --priority ${priority} --output none`;
 
       this.loginAzure();
 
