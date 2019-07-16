@@ -5,7 +5,7 @@ import fs = require('fs');
 import os = require('os');
 import path = require('path');
 import { IRequestOptions } from 'typed-rest-client/Interfaces';
-import { IRestResponse } from 'typed-rest-client';
+import { IRestResponse } from 'typed-rest-client/RestClient';
 
 const proxyUrl = 'http://url.com';
 const proxyUsername = 'username';
@@ -17,14 +17,15 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "assertAgent": {
         "2.115.1": true
-    }};
+    }
+};
 tmr.setAnswers(a);
 
 
 //Create assertAgent and getVariable mocks
 const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
-tlClone.getInput = function (inputName: string, required?: boolean) {
+tlClone.getInput = function(inputName: string, required?: boolean) {
     inputName = inputName.toLowerCase();
     if (inputName === 'version') {
         return '11.3.0';
@@ -43,19 +44,22 @@ tlClone.getVariable = function(variable: string) {
 tlClone.assertAgent = function(variable: string) {
     return;
 };
-tlClone.setSecret = function(password){
+tlClone.setSecret = function(password) {
     console.log('Setting secret', password);
 };
 tlClone.setVariable = function(key, val) {
     console.log('Setting', key, 'to', val);
 };
+
 if (process.env["__proxy__"]) {
     tlClone.getHttpProxyConfiguration = function(requestUrl?: string): taskLib.ProxyConfiguration | null {
 
+
+
         const fakeProxyConfiguration: taskLib.ProxyConfiguration = {
-            proxyUrl: this.proxyUrl,
-            proxyUsername: this.proxyUsername,
-            proxyPassword: this.proxyPassword,
+            proxyUrl: proxyUrl,
+            proxyUsername: proxyUsername,
+            proxyPassword: proxyPassword,
             proxyBypassHosts: null
         };
 
@@ -70,8 +74,7 @@ const restm = require('typed-rest-client/RestClient');
 const restmClone = Object.assign({}, restm);
 if (process.env["__proxy__"]) {
 
-    restmClone.get = function<T>(resource: string, options?: IRequestOptions): Promise<IRestResponse<T>>
-    {
+    restmClone.get = function <T>(resource: string, options?: IRequestOptions): Promise<IRestResponse<T>> {
         validateResource(resource);
         validateOptions(options);
         try {
@@ -163,19 +166,21 @@ function validateOptions(options?: IRequestOptions) {
 
     let errors: string[] = [];
 
-    if (options.proxy.proxyUrl != this.proxyUrl) {
+    if (options.proxy.proxyUrl != proxyUrl) {
         errors.push(`unexpected proxyUrl value ${options.proxy.proxyUrl}`);
     }
 
-    if (options.proxy.proxyUsername != this.proxyUsername) {
+    if (options.proxy.proxyUsername != proxyUsername) {
         errors.push(`unexpected proxyUsername value ${options.proxy.proxyUsername}`);
     }
 
-    if (options.proxy.proxyUsername != this.proxyUsername) {
+    if (options.proxy.proxyUsername != proxyUsername) {
         errors.push(`unexpected proxyUsername value ${options.proxy.proxyUsername}`);
     }
 
-    if (Array.isArray(errors) && errors.length > 0) {
-        throw new Error(errors.join("\n"));
+    if (!errors || !errors.length) {
+        if (errors.length > 0) {
+            throw new Error(errors.join("\n"));
+        }
     }
 }
