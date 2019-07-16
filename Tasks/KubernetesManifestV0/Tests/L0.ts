@@ -275,6 +275,11 @@ describe('Kubernetes Manifests Suite', function () {
 
         assert(bigSecondYaml.spec.template.spec.containers[0].image === 'nginx:42', 'nginx image not tagged correctly');
         assert(bigSecondYaml.spec.template.spec.initContainers[0].image === 'nginx-init:42.1', 'nginx-init image not tagged correctly');
+        
+        const untaggedImages = utils.substituteImageNameInSpecFile(deploymentFile, 'mysql', 'mysql:8.0');
+        const untaggedImagesYaml = yaml.load(smallNameEditSecond);
+        assert(untaggedImagesYaml.spec.template.spec.containers[0].image === 'mysql:8.0', 'untagged image not tagged correctly');
+        
         done();
     });
 
