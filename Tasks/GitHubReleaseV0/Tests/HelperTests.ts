@@ -29,14 +29,23 @@ export class HelperTests {
                                 { 
                                     "commit": { "sha": "abc" },
                                     "name": "tagName"
+                                },
+                                { 
+                                    "commit": { "sha": "bcd" },
+                                    "name": "test"
+                                },
+                                { 
+                                    "commit": { "sha": "bcd" },
+                                    "name": "v1.12"
                                 }
                             ]
                         }
                     },
-                    getBranch: function() {
+                    getBranch: function(githubEndpointToken: string, repositoryName: string, target: string) {
+
                         return {
                             statusCode: 200,
-                            body: { commit: { sha: "abc" } }
+                            body: { commit: { sha: target === "master"? "abc":target } }
                         }
                     },
                     getReleases: function() {
