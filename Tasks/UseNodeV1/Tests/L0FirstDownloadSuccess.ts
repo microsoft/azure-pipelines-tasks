@@ -175,8 +175,7 @@ function validateOptions(options?: IRequestOptions) {
         errors.push(`unexpected proxyUsername value ${options.proxy.proxyUsername}`);
     }
 
-    if (errors && errors.length > 0)
-    {
+    if (Array.isArray(errors) && errors.length > 0) {
         throw new Error(errors.join("\n"));
     }
 }
