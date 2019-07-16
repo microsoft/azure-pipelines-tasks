@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 154,
-    "Patch": 6
+    "Patch": 7
   },
   "demands": [],
   "groups": [],
@@ -50,7 +50,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.namespace",
       "required": true,
-      "defaultValue": "default",
+      "defaultValue": "",
       "visibleRule": "action != bake",
       "helpMarkDown": "ms-resource:loc.input.help.namespace"
     },
