@@ -4,7 +4,6 @@
     "friendlyName": "Use dotnet",
     "description": "Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks. Additionally provides proxy support.",
     "category": "Tool",
-    "preview": true,
     "helpUrl": "https://aka.ms/AA4xgy0",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/AA4xgy0)",
     "runsOn": [
@@ -15,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 11
     },
     "satisfies": [
         "DotNetCore"
