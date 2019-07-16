@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 155,
-        "Patch": 5
+        "Patch": 6
     },
     "demands": [],
     "groups": [],
@@ -50,7 +50,7 @@
             "type": "string",
             "label": "Namespace",
             "required": true,
-            "defaultValue": "default",
+            "defaultValue": "",
             "visibleRule": "action != bake",
             "helpMarkDown": "Sets the namespace for the commands by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
         },
