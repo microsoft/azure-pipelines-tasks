@@ -37,7 +37,7 @@ export async function getServiceUriFromAreaId(serviceUri: string, accessToken: s
 
     tl.debug(`Getting URI for area ID ${areaId} from ${serviceUri}`);
     try {
-        const serviceUriFromArea = await retryOnExceptionHelper(() => locationApi.getResourceArea(areaId), 5, 1000);
+        const serviceUriFromArea = await retryOnExceptionHelper(() => locationApi.getResourceArea(areaId), 3, 1000);
         return serviceUriFromArea.locationUrl;
     } catch (error) {
         throw new Error(error);
@@ -94,7 +94,7 @@ export async function getPackagingUris(protocolType: ProtocolType): Promise<Pack
 
     tl.debug('Acquiring Packaging endpoints from ' + serviceUri);
 
-    const connectionData = await retryOnExceptionHelper(() => locationApi.getConnectionData(interfaces.ConnectOptions.IncludeServices), 5, 1000);
+    const connectionData = await retryOnExceptionHelper(() => locationApi.getConnectionData(interfaces.ConnectOptions.IncludeServices), 3, 1000);
 
     tl.debug('Successfully acquired the connection data');
     const defaultAccessPoint: string = connectionData.locationServiceData.accessMappings.find((mapping) =>
@@ -156,11 +156,12 @@ async function retryOnExceptionHelper<T>(action: () => Promise<T>, maxRetries: n
         try {
             return await action();
         } catch (error) {
-            tl.debug(`Network call failed. Number of retries left: ${maxRetries}`);
             maxRetries--;
             if (maxRetries < 1) {
                 throw Error(error);
             }
+            tl.debug(`Network call failed. Number of retries left: ${maxRetries}`);
+            tl.debug(JSON.stringify(error));
             await delay(retryIntervalInMilliseconds);
         }
     }
