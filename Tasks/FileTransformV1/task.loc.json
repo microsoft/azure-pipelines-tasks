@@ -107,6 +107,8 @@
     "SubstitutionForXmlNode": "ms-resource:loc.messages.SubstitutionForXmlNode",
     "UpdatingKeyWithTokenValue": "ms-resource:loc.messages.UpdatingKeyWithTokenValue",
     "SubstitutingConnectionStringValue": "ms-resource:loc.messages.SubstitutingConnectionStringValue",
-    "VariableSubstitutionInitiated": "ms-resource:loc.messages.VariableSubstitutionInitiated"
+    "VariableSubstitutionInitiated": "ms-resource:loc.messages.VariableSubstitutionInitiated",
+    "ConfigFileUpdated": "ms-resource:loc.messages.ConfigFileUpdated",
+    "SkippedUpdatingFile": "ms-resource:loc.messages.SkippedUpdatingFile"
   }
 }

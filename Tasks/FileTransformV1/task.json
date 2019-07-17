@@ -107,6 +107,8 @@
         "SubstitutionForXmlNode" : "Processing substitution for xml node : %s",
         "UpdatingKeyWithTokenValue" : "Updating value for key= %s with token value: %s",
         "SubstitutingConnectionStringValue" : "Substituting connectionString value for connectionString = %s with token value: %s ",
-        "VariableSubstitutionInitiated" : "Initiated variable substitution in config file : %s"
+        "VariableSubstitutionInitiated" : "Initiated variable substitution in config file : %s",
+        "ConfigFileUpdated" : "Config file : %s updated.",
+        "SkippedUpdatingFile" : "Skipped Updating file: %s"
     }
 }
