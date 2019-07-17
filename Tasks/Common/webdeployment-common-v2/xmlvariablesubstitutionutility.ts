@@ -96,7 +96,7 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
     if( !tl.stats(configFile).isFile()) {
         return;
     }
-    console.log(tl.loc('VariableSubstitutionInitiated' + configFile));
+    console.log(tl.loc('VariableSubstitutionInitiated' , configFile));
     var fileBuffer: Buffer = fs.readFileSync(configFile);
     var fileEncodeType = fileEncoding.detectFileEncoding(configFile, fileBuffer);
     var webConfigContent: string = fileBuffer.toString(fileEncodeType[0]);
@@ -125,7 +125,7 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
         }
         for(var xmlNode of nodes) {
             if(varUtility.isObject(xmlNode)){
-                console.log(tl.loc('SubstitutionForXmlNode' + xmlNode.name));
+                console.log(tl.loc('SubstitutionForXmlNode' , xmlNode.name));
                 try {
                     if(xmlNode.name == "configSections") {
                         isSubstitutionApplied = updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replacableTokenValues, ltxDomUtiltiyInstance) || isSubstitutionApplied;
@@ -200,7 +200,7 @@ function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues):
             var ConfigFileAppSettingsTokenName = ConfigFileAppSettingsToken + '(' + attributeNameValue + ')';
             let isValueReplaced: boolean = false;
             if(xmlDomNode.getAttr(attributeName) != undefined) {
-                console.log(tl.loc('UpdatingKeyValue' + attributeNameValue + 'UpdatingWithTokenValue' + ConfigFileAppSettingsTokenName));
+                console.log(tl.loc('UpdatingKeyValue' , attributeNameValue , ConfigFileAppSettingsTokenName));
                 xmlDomNode.attr(attributeName, ConfigFileAppSettingsTokenName);
                 isValueReplaced = true;
             } else {
@@ -208,7 +208,7 @@ function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues):
                 for(var childNode of children) {
                     if(varUtility.isObject(childNode) && childNode.name == attributeName) {
                         if (childNode.children.length === 1) {
-                            console.log(tl.loc('UpdatingKeyValue' + attributeNameValue + 'UpdatingWithTokenValue' + ConfigFileAppSettingsTokenName));
+                            console.log(tl.loc('UpdatingKeyValue' , attributeNameValue , ConfigFileAppSettingsTokenName));
                             childNode.children[0] = ConfigFileAppSettingsTokenName;
                             isValueReplaced = true;
                         }
@@ -244,14 +244,14 @@ function updateXmlConnectionStringsNodeAttribute(xmlDomNode, variableMap, replac
     if(xmlDomNodeAttributes.hasOwnProperty("connectionString")) {
         if(xmlDomNodeAttributes.hasOwnProperty("name") && variableMap[xmlDomNodeAttributes.name]) {
             var ConfigFileConnStringTokenName = ConfigFileConnStringToken + '(' + xmlDomNodeAttributes.name + ')';
-            console.log(tl.loc('SubstitutingConnectionStringValue' + xmlDomNodeAttributes.name + 'UpdatingWithTokenValue' + ConfigFileConnStringTokenName));
+            console.log(tl.loc('SubstitutingConnectionStringValue' , xmlDomNodeAttributes.name , ConfigFileConnStringTokenName));
             xmlDomNode.attr("connectionString", ConfigFileConnStringTokenName);
             replacableTokenValues[ConfigFileConnStringTokenName] = variableMap[xmlDomNodeAttributes.name].replace(/"/g, "'");
             isSubstitutionApplied = true;
         }
         else if(variableMap["connectionString"] != undefined) {
             var ConfigFileConnStringTokenName = ConfigFileConnStringToken + '(connectionString)';
-            console.log(tl.loc('SubstitutingConnectionStringValue' + xmlDomNodeAttributes.name + 'UpdatingWithTokenValue' + ConfigFileConnStringTokenName));
+            console.log(tl.loc('SubstitutingConnectionStringValue' , xmlDomNodeAttributes.name , ConfigFileConnStringTokenName));
             xmlDomNode.attr("connectionString", ConfigFileConnStringTokenName);
             replacableTokenValues[ConfigFileConnStringTokenName] = variableMap["connectionString"].replace(/"/g, "'");
             isSubstitutionApplied = true

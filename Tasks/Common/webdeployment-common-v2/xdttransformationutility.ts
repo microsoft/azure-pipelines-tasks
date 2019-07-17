@@ -116,7 +116,7 @@ export function specialXdtTransformation(rootFolder, transformConfig, sourceConf
         
         for(var transformXmlFile in transformXmlFiles) {                
             if(sourceXmlFiles[transformXmlFile.toLowerCase()] || tl.exist(transformXmlFile)) {
-                console.log(tl.loc('ApplyingXDTtransformation' + transformXmlFile + ' -> ' + sourceXmlFile));
+                console.log(tl.loc('ApplyingXDTtransformation' , transformXmlFile , sourceXmlFile));
                 applyXdtTransformation(sourceXmlFile, transformXmlFile, destinationXmlFile);
                 isTransformationApplied = true;
             }
