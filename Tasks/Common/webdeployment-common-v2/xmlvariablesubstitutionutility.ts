@@ -156,10 +156,10 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
             domContent = domContent.split(replacableTokenValue).join(replacableTokenValues[replacableTokenValue]);
         }
         tl.writeFile(configFile, domContent, fileEncodeType[0]);
-        tl.debug("Config file " + configFile + " updated.");
+        console.log(tl.loc('ConfigFileUpdated' , configFile ));
     }
     else {
-        tl.debug('Skipped Updating file: ' + configFile);
+        console.log(tl.loc('SkippedUpdatingFile' , configFile));
     }
 }
 
