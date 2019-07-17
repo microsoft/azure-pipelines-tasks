@@ -100,9 +100,17 @@ export class NpmToolRunner extends tr.ToolRunner {
             options.env['NPM_CONFIG_USERCONFIG'] = this.npmrc;
         }
 
+        function sanitizeUrl(url: string): string {
+            const parsed = parse(url);
+            if(parsed.auth) {
+                parsed.auth = "***:***";
+            }
+            return format(parsed);
+        }
+
         let proxy = NpmToolRunner._getProxyFromEnvironment();
         if (proxy) {
-            tl.debug(`Using proxy "${proxy}" for npm`);
+            tl.debug(`Using proxy "${sanitizeUrl(proxy)}" for npm`);
             options.env['NPM_CONFIG_PROXY'] = proxy;
             options.env['NPM_CONFIG_HTTPS-PROXY'] = proxy;
 
