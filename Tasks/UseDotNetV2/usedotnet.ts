@@ -12,7 +12,7 @@ import { error } from 'util';
 
 async function run() {
     let useGlobalJson: boolean = tl.getBoolInput('useGlobalJson');
-    let packageType = tl.getInput('packageType') || "sdk";
+    let packageType = (tl.getInput('packageType') || "sdk").toLowerCase();;
     let versionSpec = tl.getInput('version');    
     const nugetVersion = tl.getInput('nugetVersion') || '4.4.1';
 
