@@ -105,8 +105,7 @@
     "JSONvariableSubstitution": "ms-resource:loc.messages.JSONvariableSubstitution",
     "ApplyingXDTtransformation": "ms-resource:loc.messages.ApplyingXDTtransformation",
     "SubstitutionForXmlNode": "ms-resource:loc.messages.SubstitutionForXmlNode",
-    "UpdatingKeyValue": "ms-resource:loc.messages.UpdatingKeyValue",
-    "UpdatingWithTokenValue": "ms-resource:loc.messages.UpdatingWithTokenValue",
+    "UpdatingKeyWithTokenValue": "ms-resource:loc.messages.UpdatingKeyWithTokenValue",
     "SubstitutingConnectionStringValue": "ms-resource:loc.messages.SubstitutingConnectionStringValue",
     "VariableSubstitutionInitiated": "ms-resource:loc.messages.VariableSubstitutionInitiated"
   }
