@@ -11,7 +11,8 @@ var envVarObject = jsonSubUtil.createEnvTree([
     { name: 'user.profile.name.first', value: 'firstName', secret: false},
     { name: 'user.profile', value: 'replace_all', secret: false},
     { name: 'constructor.name', value: 'newConstructorName', secret: false},
-    { name: 'constructor.valueOf', value: 'constructorNewValue', secret: false}
+    { name: 'constructor.valueOf', value: 'constructorNewValue', secret: false},
+    { name: 'systemsettings.appurl', value: 'https://dev.azure.com/helloworld', secret: false}
 ]);
 
 var jsonObject = {
@@ -34,6 +35,9 @@ var jsonObject = {
     'constructor': {
         'name': 'myconstructorname',
         'valueOf': 'myconstructorvalue'
+    },
+    'systemsettings': {
+        'appurl': 'https://helloworld.visualstudio.com'
     }
 }
 // Method to be checked for JSON variable substitution
@@ -42,7 +46,9 @@ jsonSubUtil.substituteJsonVariable(jsonObject, envVarObject);
 if(typeof jsonObject['user.profile'] === 'object') {
     console.log('JSON - eliminating object variables validated');
 }
-if(jsonObject['data']['ConnectionString'] === 'database_connection' && jsonObject['data']['userName'] === 'db_admin') {
+if(jsonObject['data']['ConnectionString'] === 'database_connection'
+    && jsonObject['data']['userName'] === 'db_admin'
+    && jsonObject['systemsettings']['appurl'] == 'https://dev.azure.com/helloworld') {
     console.log('JSON - simple string change validated');
 }
 if(jsonObject['system']['debug'] === 'no_change') {
