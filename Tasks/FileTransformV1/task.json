@@ -106,7 +106,7 @@
         "ApplyingXDTtransformation" : "Applying XDT Transformation from transformation file %s -> source file %s ",
         "SubstitutionForXmlNode" : "Processing substitution for xml node : %s",
         "UpdatingKeyWithTokenValue" : "Updating value for key= %s with token value: %s",
-        "SubstitutingConnectionStringValue" : "Substituting connectionString value for name= %s with token value: %s ",
+        "SubstitutingConnectionStringValue" : "Substituting connectionString value for connectionString = %s with token value: %s ",
         "VariableSubstitutionInitiated" : "Initiated variable substitution in config file : %s"
     }
 }
