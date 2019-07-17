@@ -10,7 +10,7 @@ import { VersionInfo, VersionParts } from "./models"
 import { NuGetInstaller } from "./nugetinstaller";
 
 async function run() {
-    let packageType = tl.getInput('packageType') || "sdk";
+    let packageType = (tl.getInput('packageType') || "sdk").toLowerCase();
     let versionSpec = tl.getInput('version');
     if (versionSpec) {
         console.log(tl.loc("ToolToInstall", packageType, versionSpec));
