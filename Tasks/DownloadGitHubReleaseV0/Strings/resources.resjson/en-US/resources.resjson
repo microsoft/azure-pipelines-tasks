@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Download GitHub Release",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/AA3x715)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/AA3x715)",
   "loc.description": "Downloads a GitHub Release from a repository",
   "loc.instanceNameFormat": "Download GitHub Release",
   "loc.input.label.connection": "GitHub Connection",
