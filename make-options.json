@@ -70,6 +70,7 @@
         "DuffleInstallerV0",
         "ExtractFilesV1",
         "FileTransformV1",
+        "FileTransformV2",
         "FtpUploadV1",
         "FtpUploadV2",
         "GitHubReleaseV0",
