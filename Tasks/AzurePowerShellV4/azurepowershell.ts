@@ -7,6 +7,7 @@ import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
 var uuidV4 = require('uuid/v4');
 
 async function run() {
+    let tempScriptFilePath;
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -78,10 +79,10 @@ async function run() {
         tl.assertAgent('2.115.0');
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
-        let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
+        let tempScriptFilePath = path.join(tempDirectory, uuidV4() + '.ps1');
 
         await fs.writeFile(
-            filePath,
+            tempScriptFilePath,
             '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
             { encoding: 'utf8' });           // Since UTF8 encoding is specified, node will
                                             // encode the BOM into its UTF8 binary sequence.
@@ -99,7 +100,7 @@ async function run() {
             .arg('-ExecutionPolicy')
             .arg('Unrestricted')
             .arg('-Command')
-            .arg(`. '${filePath.replace("'", "''")}'`);
+            .arg(`. '${tempScriptFilePath.replace("'", "''")}'`);
 
         let options = <tr.IExecOptions>{
             failOnStdErr: false,
@@ -132,6 +133,13 @@ async function run() {
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     }
+    finally {
+        if (typeof tempScriptFilePath !== 'undefined' && fs.existsSync(tempScriptFilePath)) {
+            // The file was actually created so we need to clean it up.
+            fs.unlinkSync(tempScriptFilePath);
+        }
+    }
+
 }
 
 run();
