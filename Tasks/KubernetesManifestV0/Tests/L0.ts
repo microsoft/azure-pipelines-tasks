@@ -282,6 +282,11 @@ describe('Kubernetes Manifests Suite', function () {
         
         const untaggedImagesWithRegistry = utils.substituteImageNameInSpecFile(deploymentFile, 'myacr.azurecr.io/myimage', 'myacr.azurecr.io/myimage:1');
         const untaggedImagesWithRegistryYaml = yaml.load(untaggedImagesWithRegistry);
+        
+        console.log(untaggedImagesWithRegistryYaml.spec.template.spec.containers[0]);
+        console.log(untaggedImagesWithRegistryYaml.spec.template.spec.containers[1]);
+        console.log(untaggedImagesWithRegistryYaml.spec.template.spec.containers[2]);
+        
         assert(untaggedImagesWithRegistryYaml.spec.template.spec.containers[0].image === 'myacr.azurecr.io/myimage:1', 'untagged image with registry not tagged correctly');
        
         done();
