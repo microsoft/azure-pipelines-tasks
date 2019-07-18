@@ -151,16 +151,16 @@ export function getWebApiWithProxy(serviceUri: string, accessToken?: string): vs
 }
 
 // This function is to apply retries generically for any unreliable network calls
-async function retryOnExceptionHelper<T>(action: () => Promise<T>, maxRetries: number, retryIntervalInMilliseconds: number): Promise<T> {
+async function retryOnExceptionHelper<T>(action: () => Promise<T>, maxTries: number, retryIntervalInMilliseconds: number): Promise<T> {
     while (true) {
         try {
             return await action();
         } catch (error) {
-            maxRetries--;
-            if (maxRetries < 1) {
+            maxTries--;
+            if (maxTries < 1) {
                 throw Error(error);
             }
-            tl.debug(`Network call failed. Number of retries left: ${maxRetries}`);
+            tl.debug(`Network call failed. Number of retries left: ${maxTries}`);
             tl.debug(JSON.stringify(error));
             await delay(retryIntervalInMilliseconds);
         }
