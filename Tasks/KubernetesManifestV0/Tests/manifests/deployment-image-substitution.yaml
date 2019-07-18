@@ -23,6 +23,8 @@ spec:
         image: nginx-image:1.7.9
       - name: untagged
         image: mysql 
+      - name: untaggedonacr
+        image: myacr.azurecr.io/myimage 
       imagePullSecrets:
       - name: key1
       initContainers:
