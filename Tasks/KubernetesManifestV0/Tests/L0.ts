@@ -278,16 +278,11 @@ describe('Kubernetes Manifests Suite', function () {
         
         const untaggedImages = utils.substituteImageNameInSpecFile(deploymentFile, 'mysql', 'mysql:8.0');
         const untaggedImagesYaml = yaml.load(untaggedImages);
-        assert(untaggedImagesYaml.spec.template.spec.containers[0].image === 'mysql:8.0', 'untagged image not tagged correctly');
+        assert(untaggedImagesYaml.spec.template.spec.containers[2].image === 'mysql:8.0', 'untagged image not tagged correctly');
         
         const untaggedImagesWithRegistry = utils.substituteImageNameInSpecFile(deploymentFile, 'myacr.azurecr.io/myimage', 'myacr.azurecr.io/myimage:1');
-        const untaggedImagesWithRegistryYaml = yaml.load(untaggedImagesWithRegistry);
-        
-        console.log(untaggedImagesWithRegistryYaml.spec.template.spec.containers[0]);
-        console.log(untaggedImagesWithRegistryYaml.spec.template.spec.containers[1]);
-        console.log(untaggedImagesWithRegistryYaml.spec.template.spec.containers[2]);
-        
-        assert(untaggedImagesWithRegistryYaml.spec.template.spec.containers[0].image === 'myacr.azurecr.io/myimage:1', 'untagged image with registry not tagged correctly');
+        const untaggedImagesWithRegistryYaml = yaml.load(untaggedImagesWithRegistry);        
+        assert(untaggedImagesWithRegistryYaml.spec.template.spec.containers[3].image === 'myacr.azurecr.io/myimage:1', 'untagged image with registry not tagged correctly');
        
         done();
     });
