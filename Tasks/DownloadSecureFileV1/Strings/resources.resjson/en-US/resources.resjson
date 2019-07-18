@@ -6,5 +6,5 @@
   "loc.input.label.secureFile": "Secure File",
   "loc.input.help.secureFile": "Select the secure file to download to a temporary location on the agent. The file will be cleaned up after the pipeline runs.",
   "loc.input.label.retryCount": "Retry Count",
-  "loc.input.help.retryCount": "Optional number of times to retry downloading a secure file if the download fails, defaults to five retries."
+  "loc.input.help.retryCount": "Optional number of times to retry downloading a secure file if the download fails."
 }

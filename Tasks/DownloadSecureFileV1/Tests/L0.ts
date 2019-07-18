@@ -10,7 +10,7 @@ describe('DownloadSecureFile Suite', function () {
     after(() => {
     });
 
-    it('Defaults: download secure file', (done: MochaDone) => {
+    it('Defaults: download secure file', function() {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp: string = path.join(__dirname, 'L0SecureFile.js');
@@ -21,11 +21,9 @@ describe('DownloadSecureFile Suite', function () {
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.stdOutContained('##vso[task.debug]Mock SecureFileHelpers retry count set to: 5'), 'task should have used default retry count of 5');
         assert(tr.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('Uses input retry count', (done: MochaDone) => {
+    it('Uses input retry count', function() {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp: string = path.join(__dirname, 'L0ValidRetryCount.js');
@@ -36,11 +34,9 @@ describe('DownloadSecureFile Suite', function () {
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.stdOutContained('##vso[task.debug]Mock SecureFileHelpers retry count set to: 7'), 'task should have used the input retry count of 7');
         assert(tr.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('Invalid retry count defaults to 5', (done: MochaDone) => {
+    it('Invalid retry count defaults to 5', function() {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp: string = path.join(__dirname, 'L0InvalidRetryCount.js');
@@ -51,11 +47,9 @@ describe('DownloadSecureFile Suite', function () {
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.stdOutContained('##vso[task.debug]Mock SecureFileHelpers retry count set to: 5'), 'task should have used default retry count of 5');
         assert(tr.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('Negative retry count defaults to 5', (done: MochaDone) => {
+    it('Negative retry count defaults to 5', function() {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp: string = path.join(__dirname, 'L0NegativeRetryCount.js');
@@ -66,7 +60,5 @@ describe('DownloadSecureFile Suite', function () {
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.stdOutContained('##vso[task.debug]Mock SecureFileHelpers retry count set to: 5'), 'task should have used default retry count of 5');
         assert(tr.succeeded, 'task should have succeeded');
-
-        done();
     });
 });

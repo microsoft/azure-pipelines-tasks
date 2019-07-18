@@ -17,7 +17,7 @@ export class SecureFileHelpers {
         const proxy = tl.getHttpProxyConfiguration();
         let options: IRequestOptions = {
             allowRetries: true,
-            maxRetries: maxRetries
+            maxRetries
         };
 
         if (proxy) {
