@@ -10,7 +10,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 154,
+    "Minor": 156,
     "Patch": 0
   },
   "minimumAgentVersion": "1.99.0",
@@ -27,7 +27,7 @@
     },
     {
       "name": "userRepository",
-      "type": "pickList",
+      "type": "githubRepositoryPicker",
       "label": "ms-resource:loc.input.label.userRepository",
       "defaultValue": "",
       "required": true,
