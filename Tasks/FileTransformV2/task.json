@@ -16,8 +16,8 @@
         "DeploymentGroup"
     ],
     "version": {
-        "Major": 1,
-        "Minor": 156,
+        "Major": 2,
+        "Minor": 0,
         "Patch": 0
     },
     "instanceNameFormat": "File Transform: $(Package)",
@@ -50,7 +50,7 @@
             "type": "multiLine",
             "label": "Transformation rules",
             "defaultValue": "-transform **\\*.Release.config -xml **\\*.config",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Provide new line separated list of transformation file rules using the syntax: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>",
             "visibleRule": "enableXmlTransform == true"
         },
@@ -61,6 +61,7 @@
             "defaultValue": "",
             "required": false,
             "options": {
+                "": "Select file format",
                 "xml": "XML",
                 "json": "JSON"
             },
@@ -95,7 +96,8 @@
         "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
         "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
-        "FailedToApplyTransformation": "Unable to apply transformation for the given package.",
+        "FailedToApplySpecialTransformation": "Unable to apply transformation for the given package.",
+        "FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
         "MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.",
         "SubstitutingValueonKey" : "Substituting value on key: %s",
         "SubstitutingValueonKeyWithNumber" : "Substituting value on key %s with (number) value: %s",
@@ -109,6 +111,8 @@
         "SubstitutingConnectionStringValue" : "Substituting connectionString value for connectionString = %s with token value: %s ",
         "VariableSubstitutionInitiated" : "Initiated variable substitution in config file : %s",
         "ConfigFileUpdated" : "Config file : %s updated.",
-        "SkippedUpdatingFile" : "Skipped Updating file: %s"
+        "SkippedUpdatingFile" : "Skipped Updating file: %s",
+        "FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
+        "FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package."
     }
 }

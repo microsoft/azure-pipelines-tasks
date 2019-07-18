@@ -124,7 +124,7 @@ export function specialXdtTransformation(rootFolder, transformConfig, sourceConf
     }
     
     if(!isTransformationApplied) {
-        tl.warning(tl.loc('FailedToApplyTransformation'));
+        tl.warning(tl.loc('FailedToApplySpecialTransformation'));
     }
 
     return isTransformationApplied;

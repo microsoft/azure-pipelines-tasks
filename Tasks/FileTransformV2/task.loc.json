@@ -16,8 +16,8 @@
     "DeploymentGroup"
   ],
   "version": {
-    "Major": 1,
-    "Minor": 156,
+    "Major": 2,
+    "Minor": 0,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -61,6 +61,7 @@
       "defaultValue": "",
       "required": false,
       "options": {
+        "": "Select file format",
         "xml": "XML",
         "json": "JSON"
       },
@@ -95,6 +96,7 @@
     "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
     "JSONParseError": "ms-resource:loc.messages.JSONParseError",
     "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern",
+    "FailedToApplySpecialTransformation": "ms-resource:loc.messages.FailedToApplySpecialTransformation",
     "FailedToApplyTransformation": "ms-resource:loc.messages.FailedToApplyTransformation",
     "MissingArgumentsforXMLTransformation": "ms-resource:loc.messages.MissingArgumentsforXMLTransformation",
     "SubstitutingValueonKey": "ms-resource:loc.messages.SubstitutingValueonKey",
@@ -109,6 +111,8 @@
     "SubstitutingConnectionStringValue": "ms-resource:loc.messages.SubstitutingConnectionStringValue",
     "VariableSubstitutionInitiated": "ms-resource:loc.messages.VariableSubstitutionInitiated",
     "ConfigFileUpdated": "ms-resource:loc.messages.ConfigFileUpdated",
-    "SkippedUpdatingFile": "ms-resource:loc.messages.SkippedUpdatingFile"
+    "SkippedUpdatingFile": "ms-resource:loc.messages.SkippedUpdatingFile",
+    "FailedToApplyTransformationReason1": "ms-resource:loc.messages.FailedToApplyTransformationReason1",
+    "FailedToApplyTransformationReason2": "ms-resource:loc.messages.FailedToApplyTransformationReason2"
   }
 }
