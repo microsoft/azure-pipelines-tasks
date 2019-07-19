@@ -115,11 +115,13 @@ async function queryLatestMatch(versionSpec: string): Promise<string> {
         const requestOptions: IRequestOptions = { ignoreSslError: ignoreSslError };
         if (proxy) {
             requestOptions.proxy = proxy;
+            console.log(`Using proxy proxyUrl: ${requestOptions.proxy.proxyUrl}`);
         }
         if (cert) {
             requestOptions.cert = cert;
         }
         let rest: restm.RestClient = new restm.RestClient('vsts-node-tool', null, null, requestOptions);
+
         return rest;
     }
 }

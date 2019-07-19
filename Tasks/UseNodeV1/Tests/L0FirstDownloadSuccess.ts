@@ -7,6 +7,14 @@ import path = require('path');
 import { IRequestOptions } from 'typed-rest-client/Interfaces';
 import { IRestResponse } from 'typed-rest-client/RestClient';
 
+export class MockResponse<T> implements IRestResponse<T> {
+    constructor(
+      public result: T | null,
+      public statusCode: number
+    ) {
+    }
+  }
+
 const proxyUrl = 'http://url.com';
 const proxyUsername = 'username';
 const proxyPassword = 'password';
@@ -54,8 +62,6 @@ tlClone.setVariable = function(key, val) {
 if (process.env["__proxy__"]) {
     tlClone.getHttpProxyConfiguration = function(requestUrl?: string): taskLib.ProxyConfiguration | null {
 
-
-
         const fakeProxyConfiguration: taskLib.ProxyConfiguration = {
             proxyUrl: proxyUrl,
             proxyUsername: proxyUsername,
@@ -78,7 +84,7 @@ if (process.env["__proxy__"]) {
         validateResource(resource);
         validateOptions(options);
         try {
-            let response = restm.get(resource, options)
+            let response = Promise.resolve(new MockResponse(null, 404));
             return response;
         } catch (e) {
             console.log(`Failed to get a resource ${resource}`, e);
