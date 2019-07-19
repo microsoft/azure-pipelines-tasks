@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 153,
+        "Minor": 156,
         "Patch": 0
     },
     "runsOn": [
@@ -31,6 +31,14 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the secure file to download to a temporary location on the agent. The file will be cleaned up after the pipeline runs."
+        },
+        {
+            "name": "retryCount",
+            "type": "string",
+            "label": "Retry Count",
+            "defaultValue": "5",
+            "required": "false",
+            "helpMarkDown": "Optional number of times to retry downloading a secure file if the download fails."
         }
     ],
     "outputVariables": [
