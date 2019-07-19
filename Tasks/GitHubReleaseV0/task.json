@@ -30,7 +30,7 @@
         },
         {
             "name": "repositoryName",
-            "type": "githubRepositoryPicker",
+            "type": "pickList",
             "label": "Repository",
             "defaultValue": "$(Build.Repository.Name)",
             "required": true,
