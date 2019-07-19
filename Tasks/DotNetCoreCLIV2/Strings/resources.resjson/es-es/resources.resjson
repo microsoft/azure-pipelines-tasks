@@ -54,7 +54,7 @@
   "loc.input.label.externalEndpoint": "Servidor de NuGet",
   "loc.input.help.externalEndpoint": "Conexión de servicio de NuGet que contiene las credenciales externas del servidor de NuGet.",
   "loc.input.label.searchPatternPack": "Ruta de acceso a los archivos csproj o nuspec que se van a empaquetar",
-  "loc.input.help.searchPatternPack": "Patrón para buscar los archivos csproj o nuspec que se van a empaquetar.\n\nPuede separar varios patrones con un punto y coma y puede hacer que un patrón sea negativo con el prefijo \"-:\". Ejemplo: \"**/*.csproj;-:**/*.Tests.csproj\".",
+  "loc.input.help.searchPatternPack": "Patrón para buscar los archivos csproj o nuspec que se van a empaquetar.\n\nPuede separar varios patrones con un punto y coma y puede hacer que un patrón sea negativo con el prefijo \"!\". Ejemplo: \"**/*.csproj;!**/*.Tests.csproj\".",
   "loc.input.label.configurationToPack": "Configuración para empaquetar",
   "loc.input.help.configurationToPack": "Cuando se usa un archivo csproj, este especifica la configuración en el paquete",
   "loc.input.label.outputDir": "Carpeta del paquete",

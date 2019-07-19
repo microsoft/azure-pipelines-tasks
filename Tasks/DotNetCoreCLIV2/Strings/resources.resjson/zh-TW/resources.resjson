@@ -54,7 +54,7 @@
   "loc.input.label.externalEndpoint": "NuGet 伺服器",
   "loc.input.help.externalEndpoint": "包含外部 NuGet 伺服器認證的 NuGet 服務連線。",
   "loc.input.label.searchPatternPack": "要壓縮之 csproj 或 nuspec 檔案的路徑",
-  "loc.input.help.searchPatternPack": "用於搜尋要壓縮之 csproj 或 nuspec 檔案的模式。\n\n您可以使用分號分隔多個模式，也可以在前面加上 '-:' 讓模式成為負值。範例: `**/*.csproj;-:**/*.Tests.csproj`",
+  "loc.input.help.searchPatternPack": "用於搜尋要壓縮之 csproj 或 nuspec 檔案的模式。\n\n您可以使用分號分隔多個模式，也可以在前面加上 '!' 讓模式成為負值。範例: `**/*.csproj;!**/*.Tests.csproj`",
   "loc.input.label.configurationToPack": "封裝組態",
   "loc.input.help.configurationToPack": "使用 csproj 檔時會指定封裝組態",
   "loc.input.label.outputDir": "封裝資料夾",
