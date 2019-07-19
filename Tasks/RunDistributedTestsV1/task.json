@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 155,
-        "Patch": 1
+        "Patch": 2
     },
     "deprecated": true,
     "runsOn": [
