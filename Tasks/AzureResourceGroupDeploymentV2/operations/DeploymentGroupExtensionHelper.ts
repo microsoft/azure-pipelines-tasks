@@ -1,5 +1,4 @@
 import computeManagementClient = require("azure-arm-rest/azure-arm-compute");
-import util = require("util");
 import tl = require("vsts-task-lib/task");
 import azure_utils = require("./AzureUtil");
 import deployAzureRG = require("../models/DeployAzureRG");
@@ -30,9 +29,15 @@ export class DeploymentGroupExtensionHelper {
         var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
         var extensionAddedOnVMsPromises: Promise<any>[] = [];
         for (var vm of listOfVms) {
-            extensionAddedOnVMsPromises.push(this.addExtensionOnSingleVM(vm));
+            extensionAddedOnVMsPromises.push(this.addExtensionOnSingleVM(vm).catch(err => err));
         }
-        await Promise.all(extensionAddedOnVMsPromises);
+
+        var extensionErrorForVMs: any[] = await Promise.all(extensionAddedOnVMsPromises);
+        var errorString: string = utils.buildErrorString(extensionErrorForVMs);
+        if (!!errorString) {
+            throw new Error(tl.loc("DeploymentGroupConfigurationNotSucceeded", errorString));
+        }
+
         if (listOfVms.length > 0) {
             console.log(tl.loc("DGAgentAddedOnAllVMs"));
         }
@@ -132,7 +137,7 @@ export class DeploymentGroupExtensionHelper {
                     }
                 }
                 console.log(tl.loc("VMStarted", vmName));
-                resolve(result);
+                resolve();
             });
         });
     }
@@ -161,7 +166,7 @@ export class DeploymentGroupExtensionHelper {
                     if (error) {
                         console.log(tl.loc("AddingExtensionFailed", extensionName, vmName, utils.getError(error)));
                         await this.tryDeleteFailedExtension(vm);
-                        return reject(tl.loc("DGAgentOperationOnAllVMsFailed", "addition", ""));
+                        return reject(tl.loc("DGAgentOperationOnVMFailed", extensionName, vmName, utils.getError(error)));
                     }
                     console.log(tl.loc("AddingExtensionSucceeded", extensionName, vmName));
                     resolve();
