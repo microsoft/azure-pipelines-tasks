@@ -19,9 +19,9 @@ class Utils {
         return JSON.stringify(error);
     }
 
-    public static buildErrorString(errors: any[]): string {
+    public static buildErrorString(errors: string[]): string {
         let index: number = 1;
-        return errors.map(error => !!error ? util.format("%s. %s \n", index++, Utils.getError(error)) : "").join("");
+        return errors.map(error => !!error ? util.format("%s. %s \n", index++, error) : "").join("");
     }
 }
 

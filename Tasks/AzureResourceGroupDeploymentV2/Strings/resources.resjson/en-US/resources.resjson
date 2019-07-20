@@ -143,7 +143,7 @@
   "loc.messages.AdditionFailed": "Addition of %s on vm %s failed. Error : %s",
   "loc.messages.DeletionFailed": "Deletion of %s on vm %s failed. Error : %s",
   "loc.messages.DeleteAgentManually": "After the task execution completes, if the deployment group agent corresponding to the virtual machine %s is present but not active in the deployment group %s, then please delete it manually from the deployment group.",
-  "loc.messages.DGAgentOperationOnVMFailed": "Deployment group agent %s did not succeed on VM '%s'. Error: %s",
+  "loc.messages.DGAgentOperationOnVMFailed": "Deployment group agent %s did not succeed on VM. Error: %s",
   "loc.messages.DGAgentAddedOnAllVMs": "Deployment group agent added on all virtual machines of the resource group",
   "loc.messages.DGAgentDeletedFromAllVMs": "Deployment group agent deleted from all virtual machines of the resource group",
   "loc.messages.DGAgentHandlerMajorVersion": "Deployment group extension handler major version is 1",
@@ -191,5 +191,6 @@
   "loc.messages.ResponseNotValid": "Response is not in a valid format",
   "loc.messages.LogDeploymentName": "Deployment name is %s",
   "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
-  "loc.messages.DeploymentGroupConfigurationNotSucceeded": "Deployment group configuration did not succeed on all Virtual Machines: %s"
+  "loc.messages.DeploymentGroupConfigurationNotSucceeded": "Deployment group configuration did not succeed on all Virtual Machines: %s",
+  "loc.messages.DeploymentGroupConfigurationFailedOnVM": "Failure for Virtual Machine '%s': %s"
 }

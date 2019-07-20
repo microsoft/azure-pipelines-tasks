@@ -480,6 +480,7 @@
     "ResponseNotValid": "ms-resource:loc.messages.ResponseNotValid",
     "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
-    "DeploymentGroupConfigurationNotSucceeded": "ms-resource:loc.messages.DeploymentGroupConfigurationNotSucceeded"
+    "DeploymentGroupConfigurationNotSucceeded": "ms-resource:loc.messages.DeploymentGroupConfigurationNotSucceeded",
+    "DeploymentGroupConfigurationFailedOnVM": "ms-resource:loc.messages.DeploymentGroupConfigurationFailedOnVM"
   }
 }

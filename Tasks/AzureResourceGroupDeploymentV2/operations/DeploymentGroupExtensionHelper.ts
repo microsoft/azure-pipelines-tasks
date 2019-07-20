@@ -27,12 +27,15 @@ export class DeploymentGroupExtensionHelper {
     public async addExtensionOnResourceGroup(): Promise<any> {
         console.log(tl.loc("AddingDGAgentOnVMs"));
         var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
-        var extensionAddedOnVMsPromises: Promise<any>[] = [];
+        var extensionAddedOnVMsPromises: Promise<string>[] = [];
         for (var vm of listOfVms) {
-            extensionAddedOnVMsPromises.push(this.addExtensionOnSingleVM(vm).catch(err => err));
+            extensionAddedOnVMsPromises.push(
+                this.addExtensionOnSingleVM(vm)
+                    .then(result => null) // suppress result as we are only interested in failures
+                    .catch(err => tl.loc("DeploymentGroupConfigurationFailedOnVM", vm.name, utils.getError(err))));
         }
 
-        var extensionErrorForVMs: any[] = await Promise.all(extensionAddedOnVMsPromises);
+        var extensionErrorForVMs: string[] = await Promise.all(extensionAddedOnVMsPromises);
         var errorString: string = utils.buildErrorString(extensionErrorForVMs);
         if (!!errorString) {
             throw new Error(tl.loc("DeploymentGroupConfigurationNotSucceeded", errorString));
@@ -166,7 +169,7 @@ export class DeploymentGroupExtensionHelper {
                     if (error) {
                         console.log(tl.loc("AddingExtensionFailed", extensionName, vmName, utils.getError(error)));
                         await this.tryDeleteFailedExtension(vm);
-                        return reject(tl.loc("DGAgentOperationOnVMFailed", extensionName, vmName, utils.getError(error)));
+                        return reject(tl.loc("DGAgentOperationOnVMFailed", extensionName, utils.getError(error)));
                     }
                     console.log(tl.loc("AddingExtensionSucceeded", extensionName, vmName));
                     resolve();
