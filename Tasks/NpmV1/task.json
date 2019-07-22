@@ -54,7 +54,7 @@
                 "publish": "publish",
                 "custom": "custom"
             },
-            "defaultValue": "ci"
+            "defaultValue": "install"
         },
         {
             "name": "workingDir",
