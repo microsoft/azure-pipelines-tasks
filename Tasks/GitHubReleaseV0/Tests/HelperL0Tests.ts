@@ -4,6 +4,7 @@ import { TestString } from "./TestStrings";
 export class HelperL0Tests {
     public static async startTests() {
         await this.validateGetTagForCreateAction();
+        await this.validateGetTagForCreateActionWithTagPattern();
         await this.validateGetCommitShaFromTarget();
         await this.validateGetReleaseIdForTag();
     }
@@ -13,6 +14,14 @@ export class HelperL0Tests {
 
         if (tag === "tagName") {
             console.log(TestString.getTagForCreateActionKeyword);
+        }
+    }
+
+    public static async validateGetTagForCreateActionWithTagPattern() {
+        let tag = await new Helper().getTagForCommitTarget("endpoint", "repo", "bcd", "v1.*");
+
+        if (tag === "v1.12") {
+            console.log(TestString.getTagForCreateActionWithTagPatternKeyword);
         }
     }
 

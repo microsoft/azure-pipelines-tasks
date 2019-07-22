@@ -16,7 +16,7 @@
   "loc.input.label.args": "Argomenti",
   "loc.input.help.args": "Argomenti passati allo script",
   "loc.input.label.addSpnToEnvironment": "Accedi ai dettagli dell'entità servizio nello script",
-  "loc.input.help.addSpnToEnvironment": "Aggiunge l'ID entità servizio e la chiave dell'endpoint di Azure scelto all'ambiente di esecuzione dello script. Nello script è possibile usare le variabili `$servicePrincipalId` e `$servicePrincipalKey`.\n\nQuesta opzione è consentita solo quando nell'endpoint di Azure è presente lo schema di autenticazione dell'entità servizio.",
+  "loc.input.help.addSpnToEnvironment": "Aggiunge l'ID entità servizio e la chiave dell'endpoint di Azure scelto all'ambiente di esecuzione dello script. Nello script è possibile usare le variabili `$servicePrincipalId`, `$servicePrincipalKey` e `$tenantId`.\n\nQuesta opzione è consentita solo quando nell'endpoint di Azure è presente lo schema di autenticazione dell'entità servizio.",
   "loc.input.label.useGlobalConfig": "Usa la configurazione globale dell'interfaccia della riga di comando di Azure",
   "loc.input.help.useGlobalConfig": "Se è false, questa attività userà una [directory di configurazione dell'interfaccia della riga di comando di Azure](https://docs.microsoft.com/it-it/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file) separata. Può essere usato per eseguire attività dell'interfaccia della riga di comando di Azure in versioni *parallele*",
   "loc.input.label.cwd": "Directory di lavoro",

@@ -6,6 +6,7 @@ export class UtilityL0Tests {
     public static startTests() {
         this.validateGetReleaseNote();
         this.validateNormalizeBranchName();
+        this.validateIsTagMatching();
         this.validateParseHTTPHeaderLink();
         this.validateExtractRepositoryOwnerAndName();
         this.validateExtractRepoAndIssueId();
@@ -33,6 +34,14 @@ export class UtilityL0Tests {
         normalizedBranchName = Utility.normalizeBranchName("refs/heads/tagName");
         if (!normalizedBranchName) {
             console.log(TestString.invalidBranchNameKeyword);
+        }
+    }
+
+    public static validateIsTagMatching() {
+        let tag = "v1.1";
+        let tagPattern = "v1.*";
+        if (Utility.isTagMatching(tag, tagPattern)) {
+            console.log(TestString.tagMatchingKeyword);
         }
     }
 

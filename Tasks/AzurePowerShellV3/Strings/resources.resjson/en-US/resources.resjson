@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure PowerShell",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Run a PowerShell script within an Azure environment",
   "loc.instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
   "loc.releaseNotes": "Added support for Fail on standard error and ErrorActionPreference",
