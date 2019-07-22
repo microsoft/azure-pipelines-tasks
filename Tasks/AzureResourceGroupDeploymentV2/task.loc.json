@@ -432,7 +432,6 @@
     "AdditionFailed": "ms-resource:loc.messages.AdditionFailed",
     "DeletionFailed": "ms-resource:loc.messages.DeletionFailed",
     "DeleteAgentManually": "ms-resource:loc.messages.DeleteAgentManually",
-    "DGAgentOperationOnVMFailed": "ms-resource:loc.messages.DGAgentOperationOnVMFailed",
     "DGAgentAddedOnAllVMs": "ms-resource:loc.messages.DGAgentAddedOnAllVMs",
     "DGAgentDeletedFromAllVMs": "ms-resource:loc.messages.DGAgentDeletedFromAllVMs",
     "DGAgentHandlerMajorVersion": "ms-resource:loc.messages.DGAgentHandlerMajorVersion",

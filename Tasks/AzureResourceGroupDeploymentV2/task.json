@@ -432,7 +432,6 @@
         "AdditionFailed": "Addition of %s on vm %s failed. Error : %s",
         "DeletionFailed": "Deletion of %s on vm %s failed. Error : %s",
         "DeleteAgentManually": "After the task execution completes, if the deployment group agent corresponding to the virtual machine %s is present but not active in the deployment group %s, then please delete it manually from the deployment group.",
-        "DGAgentOperationOnVMFailed": "Deployment group agent %s did not succeed on VM. Error: %s",
         "DGAgentAddedOnAllVMs": "Deployment group agent added on all virtual machines of the resource group",
         "DGAgentDeletedFromAllVMs": "Deployment group agent deleted from all virtual machines of the resource group",
         "DGAgentHandlerMajorVersion": "Deployment group extension handler major version is 1",
@@ -480,7 +479,7 @@
         "ResponseNotValid": "Response is not in a valid format",
         "LogDeploymentName": "Deployment name is %s",
         "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
-        "DeploymentGroupConfigurationNotSucceeded": "Deployment group configuration did not succeed on all Virtual Machines: %s",
+        "DeploymentGroupConfigurationNotSucceeded": "Deployment group configuration did not succeed on one or more Virtual Machine(s): %s",
         "DeploymentGroupConfigurationFailedOnVM": "Failure for Virtual Machine '%s': %s"
     }
 }

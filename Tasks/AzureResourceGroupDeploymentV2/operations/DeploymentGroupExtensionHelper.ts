@@ -169,7 +169,7 @@ export class DeploymentGroupExtensionHelper {
                     if (error) {
                         console.log(tl.loc("AddingExtensionFailed", extensionName, vmName, utils.getError(error)));
                         await this.tryDeleteFailedExtension(vm);
-                        return reject(tl.loc("DGAgentOperationOnVMFailed", extensionName, utils.getError(error)));
+                        return reject(error);
                     }
                     console.log(tl.loc("AddingExtensionSucceeded", extensionName, vmName));
                     resolve();
