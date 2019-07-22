@@ -74,7 +74,7 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.stdOutContained('dotnet output, no-cache'), "should have dotnet output");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
-        process.env["__nocache__"] = undefined;
+        delete process.env["__nocache__"];
         done();
     });
 
@@ -91,7 +91,7 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.stdOutContained('dotnet output, verbosity Detailed'), "should have dotnet output");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
-        process.env["__verbosity__"] = undefined;
+        delete process.env["__verbosity__"];
         done();
     });
 
@@ -108,7 +108,7 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
-        process.env["__verbosity__"] = undefined;
+        delete process.env["__verbosity__"];
         done();
     });
 
@@ -190,6 +190,21 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
+    it('restore with custom arguments', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './RestoreTests/singleProject.js');
+        process.env["__arguments__"] = "--runtime any";
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.ran('c:\\path\\dotnet.exe restore c:\\agent\\home\\directory\\single.csproj --configfile c:\\agent\\home\\directory\\NuGet\\tempNuGet_.config --runtime any'), 'it should have run dotnet with expected arguments');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        delete process.env["__arguments__"];
         done();
     });
 

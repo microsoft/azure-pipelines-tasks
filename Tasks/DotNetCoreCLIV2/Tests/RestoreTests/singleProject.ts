@@ -11,11 +11,14 @@ nmh.setNugetVersionInputDefault();
 tmr.setInput('command', 'restore');
 tmr.setInput('projects', 'single.csproj');
 tmr.setInput('selectOrConfig', 'select');
-if(process.env["__nocache__"]) {
+if (process.env["__nocache__"]) {
     tmr.setInput('noCache', process.env["__nocache__"]);
- }
-if(process.env["__verbosity__"]) {
+}
+if (process.env["__verbosity__"]) {
     tmr.setInput('verbosityRestore', process.env["__verbosity__"])
+}
+if (process.env["__arguments__"]) {
+    tmr.setInput('arguments', process.env["__arguments__"])
 }
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -36,6 +39,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "c:\\path\\dotnet.exe restore c:\\agent\\home\\directory\\single.csproj --configfile c:\\agent\\home\\directory\\NuGet\\tempNuGet_.config --no-cache": {
             "code": 0,
             "stdout": "dotnet output, no-cache",
+            "stderr": ""
+        },
+        "c:\\path\\dotnet.exe restore c:\\agent\\home\\directory\\single.csproj --configfile c:\\agent\\home\\directory\\NuGet\\tempNuGet_.config --runtime any": {
+            "code": 0,
+            "stdout": "dotnet output, runtime any",
             "stderr": ""
         },
         "c:\\path\\dotnet.exe restore c:\\agent\\home\\directory\\single.csproj --configfile c:\\agent\\home\\directory\\NuGet\\tempNuGet_.config --verbosity Detailed": {

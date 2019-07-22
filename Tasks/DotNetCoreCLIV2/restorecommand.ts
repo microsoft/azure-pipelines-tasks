@@ -40,6 +40,8 @@ export async function run(): Promise<void> {
         }
         const noCache = tl.getBoolInput('noCache');
         const verbosity = tl.getInput('verbosityRestore');
+        const args = tl.getInput('arguments', false) || '';
+
         let packagesDirectory = tl.getPathInput('packagesDirectory');
         if (!tl.filePathSupplied('packagesDirectory')) {
             packagesDirectory = null;
@@ -132,7 +134,7 @@ export async function run(): Promise<void> {
 
         try {
             for (const projectFile of projectFiles) {
-                await dotNetRestoreAsync(dotnetPath, projectFile, packagesDirectory, configFile, noCache, verbosity);
+                await dotNetRestoreAsync(dotnetPath, projectFile, packagesDirectory, configFile, noCache, verbosity, args);
             }
         } finally {
             credCleanup();
@@ -154,7 +156,7 @@ export async function run(): Promise<void> {
     }
 }
 
-function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDirectory: string, configFile: string, noCache: boolean, verbosity: string): Q.Promise<number> {
+function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDirectory: string, configFile: string, noCache: boolean, verbosity: string, args: string): Q.Promise<number> {
     const dotnet = tl.tool(dotnetPath);
     dotnet.arg('restore');
 
@@ -178,6 +180,8 @@ function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDir
         dotnet.arg('--verbosity');
         dotnet.arg(verbosity);
     }
+
+    dotnet.line(args);
 
     const envWithProxy = ngRunner.setNuGetProxyEnvironment(process.env, configFile, null);
     return dotnet.exec({ cwd: path.dirname(projectFile), env: envWithProxy } as IExecOptions);
