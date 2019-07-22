@@ -18,6 +18,7 @@ async function run() {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         tl.setResourcePath(path.join( __dirname, 'node_modules/azure-arm-rest-v2/module.json'));
         var connectedServiceName = tl.getInput('ConnectedServiceName', true);
+        var connectedServiceNameAppInsights = tl.getInput('ConnectedServiceNameAppInsights', true);
         var action = tl.getInput('Action', true);
         var webAppName: string = tl.getInput('WebAppName', true);
         var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
@@ -36,6 +37,7 @@ async function run() {
         var errorMessage: string = "";
         var updateDeploymentStatus: boolean = true;
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(connectedServiceName).getEndpoint();
+        var azureApplicationInsightsEndpoint: AzureEndpoint = await new AzureRMEndpoint(connectedServiceNameAppInsights).getEndpoint();
 
         var endpointTelemetry = '{"endpointId":"' + connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureAppServiceManage]" + endpointTelemetry);
@@ -112,8 +114,8 @@ async function run() {
                 break;
             }
             case "Enable Continuous Monitoring": {
-                var appInsights: AzureApplicationInsights = new AzureApplicationInsights(azureEndpoint, appInsightsResourceGroupName, appInsightsResourceName);
-                await enableContinuousMonitoring(azureEndpoint, appService, appInsights, appInsightsWebTestName);
+                var appInsights: AzureApplicationInsights = new AzureApplicationInsights(azureApplicationInsightsEndpoint, appInsightsResourceGroupName, appInsightsResourceName);
+                await enableContinuousMonitoring(azureApplicationInsightsEndpoint, appService, appInsights, appInsightsWebTestName);
                 break;
             }
             default: {

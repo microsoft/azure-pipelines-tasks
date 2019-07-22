@@ -19,7 +19,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 55
+        "Patch": 56
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -31,186 +31,197 @@
             "visibleRule": "Action == Enable Continuous Monitoring"
         }
     ],
-    "inputs": [
-        {
-            "name": "ConnectedServiceName",
-            "aliases": [
-                "azureSubscription"
-            ],
-            "type": "connectedService:AzureRM",
-            "label": "Azure subscription",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription"
-        },
-        {
-            "name": "Action",
-            "type": "pickList",
-            "label": "Action",
-            "required": false,
-            "helpMarkDown": "Action to be performed on the App Service. You can Start, Stop, Restart, Slot swap, Install site extensions or enable Continuous Monitoring for an Azure App Service",
-            "defaultValue": "Swap Slots",
-            "options": {
-                "Swap Slots": "Swap Slots",
-                "Start Azure App Service": "Start App Service",
-                "Stop Azure App Service": "Stop App Service",
-                "Restart Azure App Service": "Restart App Service",
-                "Delete Slot": "Delete Slot",
-                "Install Extensions": "Install Extensions",
-                "Enable Continuous Monitoring": "Enable Continuous Monitoring",
-                "Start all continuous webjobs": "Start All Continuous Webjobs",
-                "Stop all continuous webjobs": "Stop All Continuous Webjobs"
-            }
-        },
-        {
-            "name": "WebAppName",
-            "type": "pickList",
-            "label": "App Service name",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "Enter or select the name of an existing Azure App Service"
-        },
-        {
-            "name": "SpecifySlot",
-            "aliases": [
-                "SpecifySlotOrASE"
-            ],
-            "type": "boolean",
-            "label": "Specify Slot or App Service Environment",
-            "defaultValue": "false",
-            "required": false,
-            "visibleRule": "Action != Swap Slots && Action != Delete Slot"
-        },
-        {
-            "name": "ResourceGroupName",
-            "type": "pickList",
-            "label": "Resource group",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above",
-            "visibleRule": "Action = Swap Slots || Action = Delete Slot || SpecifySlot = true"
-        },
-        {
-            "name": "SourceSlot",
-            "type": "pickList",
-            "label": "Source Slot",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "The swap action directs destination slot's traffic to the source slot",
-            "visibleRule": "Action = Swap Slots"
-        },
-        {
-            "name": "SwapWithProduction",
-            "type": "boolean",
-            "label": "Swap with Production",
-            "defaultValue": "true",
-            "required": false,
-            "helpMarkDown": "Select the option to swap the traffic of source slot with production. If this option is not selected, then you will have to provide source and target slot names.",
-            "visibleRule": "Action = Swap Slots"
-        },
-        {
-            "name": "TargetSlot",
-            "type": "pickList",
-            "label": "Target Slot",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "The swap action directs destination slot's traffic to the source slot",
-            "visibleRule": "Action = Swap Slots && SwapWithProduction = false"
-        },
-        {
-            "name": "PreserveVnet",
-            "type": "boolean",
-            "label": "Preserve Vnet",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Preserve the Virtual network settings",
-            "visibleRule": "Action = Swap Slots"
-        },
-        {
-            "name": "Slot",
-            "type": "pickList",
-            "label": "Slot",
-            "defaultValue": "production",
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "required": true,
-            "visibleRule": "Action = Delete Slot || SpecifySlot = true"
-        },
-        {
-            "name": "ExtensionsList",
-            "type": "pickList",
-            "label": "Install Extensions",
-            "defaultValue": "",
-            "properties": {
-                "EditableOptions": "True",
-                "MultiSelectFlatList": "True"
-            },
-            "required": "True",
-            "visibleRule": "Action = Install Extensions",
-            "helpMarkDown": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect."
-        },
-        {
-            "name": "OutputVariable",
-            "type": "string",
-            "label": "Output variable",
-            "defaultValue": "",
-            "properties": {
-                "Disabled": "True"
-            },
-            "visibleRule": "Action = Install Extensions",
-            "helpMarkDown": "Provide the variable name for the local installation path for the selected extension.<br/>This field is now deprecated and would be removed. Use LocalPathsForInstalledExtensions variable from Output Variables section in subsequent tasks."
-        },
-        {
-            "name": "AppInsightsResourceGroupName",
-            "type": "pickList",
-            "label": "Resource Group name for Application Insights",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "visibleRule": "Action == Enable Continuous Monitoring",
-            "helpMarkDown": "Enter or Select resource group where your application insights resource is available"
-        },
-        {
-            "name": "ApplicationInsightsResourceName",
-            "type": "pickList",
-            "label": "Application Insights resource name",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True",
-                "EnableManage": "True",
-                "ManageLink": "https://ms.portal.azure.com/#create/Microsoft.AppInsights",
-                "ManageIcon": "Add",
-                "ManageButtonName": "New"
-            },
-            "visibleRule": "Action == Enable Continuous Monitoring",
-            "helpMarkDown": "Select Application Insights resource where continuous monitoring data will be recorded. <br/>If your application insights resource is not listed here and you want to create a new resource, click on [+New] button. Once the resource is created on Azure Portal, come back here and click on refresh button."
-        },
-        {
-            "name": "ApplicationInsightsWebTestName",
-            "type": "string",
-            "label": "Application Insights web test name",
-            "groupName": "AdvancedSettings",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Enter Application Insights Web Test name to be created or updated. <br/>If not provided, the default test name will be used."
-        }
-    ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure subscription",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select the Azure Resource Manager subscription"
+    },
+    {
+      "name": "ConnectedServiceNameAppInsights",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure subscription",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select the Azure Resource Manager subscription (Application Insights resource)"
+    },
+    {
+      "name": "Action",
+      "type": "pickList",
+      "label": "Action",
+      "required": false,
+      "helpMarkDown": "Action to be performed on the App Service. You can Start, Stop, Restart, Slot swap, Install site extensions or enable Continuous Monitoring for an Azure App Service",
+      "defaultValue": "Swap Slots",
+      "options": {
+        "Swap Slots": "Swap Slots",
+        "Start Azure App Service": "Start App Service",
+        "Stop Azure App Service": "Stop App Service",
+        "Restart Azure App Service": "Restart App Service",
+        "Delete Slot": "Delete Slot",
+        "Install Extensions": "Install Extensions",
+        "Enable Continuous Monitoring": "Enable Continuous Monitoring",
+        "Start all continuous webjobs": "Start All Continuous Webjobs",
+        "Stop all continuous webjobs": "Stop All Continuous Webjobs"
+      }
+    },
+    {
+      "name": "WebAppName",
+      "type": "pickList",
+      "label": "App Service name",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Enter or select the name of an existing Azure App Service"
+    },
+    {
+      "name": "SpecifySlot",
+      "aliases": [
+        "SpecifySlotOrASE"
+      ],
+      "type": "boolean",
+      "label": "Specify Slot or App Service Environment",
+      "defaultValue": "false",
+      "required": false,
+      "visibleRule": "Action != Swap Slots && Action != Delete Slot"
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "Resource group",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above",
+      "visibleRule": "Action = Swap Slots || Action = Delete Slot || SpecifySlot = true"
+    },
+    {
+      "name": "SourceSlot",
+      "type": "pickList",
+      "label": "Source Slot",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "The swap action directs destination slot's traffic to the source slot",
+      "visibleRule": "Action = Swap Slots"
+    },
+    {
+      "name": "SwapWithProduction",
+      "type": "boolean",
+      "label": "Swap with Production",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Select the option to swap the traffic of source slot with production. If this option is not selected, then you will have to provide source and target slot names.",
+      "visibleRule": "Action = Swap Slots"
+    },
+    {
+      "name": "TargetSlot",
+      "type": "pickList",
+      "label": "Target Slot",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "The swap action directs destination slot's traffic to the source slot",
+      "visibleRule": "Action = Swap Slots && SwapWithProduction = false"
+    },
+    {
+      "name": "PreserveVnet",
+      "type": "boolean",
+      "label": "Preserve Vnet",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Preserve the Virtual network settings",
+      "visibleRule": "Action = Swap Slots"
+    },
+    {
+      "name": "Slot",
+      "type": "pickList",
+      "label": "Slot",
+      "defaultValue": "production",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "required": true,
+      "visibleRule": "Action = Delete Slot || SpecifySlot = true"
+    },
+    {
+      "name": "ExtensionsList",
+      "type": "pickList",
+      "label": "Install Extensions",
+      "defaultValue": "",
+      "properties": {
+        "EditableOptions": "True",
+        "MultiSelectFlatList": "True"
+      },
+      "required": "True",
+      "visibleRule": "Action = Install Extensions",
+      "helpMarkDown": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect."
+    },
+    {
+      "name": "OutputVariable",
+      "type": "string",
+      "label": "Output variable",
+      "defaultValue": "",
+      "properties": {
+        "Disabled": "True"
+      },
+      "visibleRule": "Action = Install Extensions",
+      "helpMarkDown": "Provide the variable name for the local installation path for the selected extension.<br/>This field is now deprecated and would be removed. Use LocalPathsForInstalledExtensions variable from Output Variables section in subsequent tasks."
+    },
+    {
+      "name": "AppInsightsResourceGroupName",
+      "type": "pickList",
+      "label": "Resource Group name for Application Insights",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "Action == Enable Continuous Monitoring",
+      "helpMarkDown": "Enter or Select resource group where your application insights resource is available"
+    },
+    {
+      "name": "ApplicationInsightsResourceName",
+      "type": "pickList",
+      "label": "Application Insights resource name",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True",
+        "EnableManage": "True",
+        "ManageLink": "https://ms.portal.azure.com/#create/Microsoft.AppInsights",
+        "ManageIcon": "Add",
+        "ManageButtonName": "New"
+      },
+      "visibleRule": "Action == Enable Continuous Monitoring",
+      "helpMarkDown": "Select Application Insights resource where continuous monitoring data will be recorded. <br/>If your application insights resource is not listed here and you want to create a new resource, click on [+New] button. Once the resource is created on Azure Portal, come back here and click on refresh button."
+    },
+    {
+      "name": "ApplicationInsightsWebTestName",
+      "type": "string",
+      "label": "Application Insights web test name",
+      "groupName": "AdvancedSettings",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Enter Application Insights Web Test name to be created or updated. <br/>If not provided, the default test name will be used."
+    }
+  ],
     "outputVariables": [
         {
             "name": "LocalPathsForInstalledExtensions",
@@ -233,12 +244,12 @@
         },
         {
             "target": "AppInsightsResourceGroupName",
-            "endpointId": "$(ConnectedServiceName)",
+            "endpointId": "$(ConnectedServiceNameAppInsights)",
             "dataSourceName": "AzureResourceGroups"
         },
         {
             "target": "ApplicationInsightsResourceName",
-            "endpointId": "$(ConnectedServiceName)",
+            "endpointId": "$(ConnectedServiceNameAppInsights)",
             "dataSourceName": "AzureRMApplicationInsightsResources",
             "parameters": {
                 "AppInsightsResourceGroupName": "$(AppInsightsResourceGroupName)"

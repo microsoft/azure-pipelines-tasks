@@ -19,7 +19,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 55
+    "Patch": 56
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -42,6 +42,17 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "ConnectedServiceNameAppInsights",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameAppInsights",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameAppInsights"
     },
     {
       "name": "Action",
@@ -233,12 +244,12 @@
     },
     {
       "target": "AppInsightsResourceGroupName",
-      "endpointId": "$(ConnectedServiceName)",
+      "endpointId": "$(ConnectedServiceNameAppInsights)",
       "dataSourceName": "AzureResourceGroups"
     },
     {
       "target": "ApplicationInsightsResourceName",
-      "endpointId": "$(ConnectedServiceName)",
+      "endpointId": "$(ConnectedServiceNameAppInsights)",
       "dataSourceName": "AzureRMApplicationInsightsResources",
       "parameters": {
         "AppInsightsResourceGroupName": "$(AppInsightsResourceGroupName)"
