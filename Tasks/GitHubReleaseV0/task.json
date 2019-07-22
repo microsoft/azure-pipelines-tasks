@@ -14,7 +14,7 @@
     "preview": true,
     "version": {
         "Major": 0,
-        "Minor": 155,
+        "Minor": 156,
         "Patch": 0
     },
     "demands": [],
@@ -30,7 +30,7 @@
         },
         {
             "name": "repositoryName",
-            "type": "pickList",
+            "type": "githubRepositoryPicker",
             "label": "Repository",
             "defaultValue": "$(Build.Repository.Name)",
             "required": true,
