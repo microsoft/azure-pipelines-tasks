@@ -76,14 +76,6 @@
             }
         },
         {
-            "name": "tagPattern",
-            "type": "string",
-            "label": "Tag Pattern",
-            "required": false,
-            "visibleRule": "tagSource = auto",
-            "helpMarkDown": "Specify the regex for tag to be used for release creation."
-        },
-        {
             "name": "tag",
             "type": "string",
             "label": "Tag",

@@ -13,8 +13,6 @@
   "loc.input.help.target": "Specify the commit SHA for which the GitHub release will be created. E.g. `48b11d8d6e92a22e3e9563a3f643699c16fd6e27`. You can also use a variable here. E.g. `$(myCommitSHA)`.",
   "loc.input.label.tagSource": "Tag source",
   "loc.input.help.tagSource": "Specify the tag to be used for release creation. The 'Git tag' option automatically takes the tag which is associated with the Git commit. Use the 'User specified tag' option to manually provide a tag.",
-  "loc.input.label.tagPattern": "Tag Pattern",
-  "loc.input.help.tagPattern": "Specify the regex for tag to be used for release creation.",
   "loc.input.label.tag": "Tag",
   "loc.input.help.tag": "Specify the tag for which to create, edit, or delete a release. You can also use a variable here. E.g. `$(myTagName)`.",
   "loc.input.label.title": "Release title",

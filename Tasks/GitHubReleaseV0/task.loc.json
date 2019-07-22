@@ -76,14 +76,6 @@
       }
     },
     {
-      "name": "tagPattern",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.tagPattern",
-      "required": false,
-      "visibleRule": "tagSource = auto",
-      "helpMarkDown": "ms-resource:loc.input.help.tagPattern"
-    },
-    {
       "name": "tag",
       "type": "string",
       "label": "ms-resource:loc.input.label.tag",
