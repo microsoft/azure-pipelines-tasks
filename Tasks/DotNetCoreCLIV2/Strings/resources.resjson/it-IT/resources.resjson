@@ -54,7 +54,7 @@
   "loc.input.label.externalEndpoint": "Server NuGet",
   "loc.input.help.externalEndpoint": "Connessione al servizio NuGet che contiene le credenziali del server NuGet esterno.",
   "loc.input.label.searchPatternPack": "Percorso dei file csproj o nuspec da includere nel pacchetto",
-  "loc.input.help.searchPatternPack": "Criterio per la ricerca dei file csproj o nuspec da includere nel pacchetto.\n\nÈ possibile separare più criteri con un punto e virgola, nonché rendere un criterio negativo aggiungendo il prefisso '-:', ad esempio `**/*.csproj;-:**/*.Tests.csproj`",
+  "loc.input.help.searchPatternPack": "Criterio per la ricerca dei file csproj o nuspec da includere nel pacchetto.\n\nÈ possibile separare più criteri con un punto e virgola, nonché rendere un criterio negativo aggiungendo il prefisso '!', ad esempio `**/*.csproj;!**/*.Tests.csproj`",
   "loc.input.label.configurationToPack": "Configurazione per cui creare il pacchetto",
   "loc.input.help.configurationToPack": "Quando si usa un file csproj, consente di specificare la configurazione per il pacchetto",
   "loc.input.label.outputDir": "Cartella del pacchetto",
