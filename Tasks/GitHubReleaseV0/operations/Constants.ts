@@ -16,7 +16,4 @@ export class Inputs {
     public static readonly releaseNotes = "releaseNotes";
     public static readonly addChangeLog = "addChangeLog";
     public static readonly deleteExistingAssets = "deleteExistingAssets";
-    public static readonly tagPattern = "tagPattern";
-    public static readonly compareWith = "compareWith";
-    public static readonly releaseTag = "releaseTag";
 }
