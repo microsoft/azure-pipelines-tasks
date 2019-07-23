@@ -54,7 +54,7 @@
   "loc.input.label.externalEndpoint": "NuGet-Server",
   "loc.input.help.externalEndpoint": "Die NuGet-Dienstverbindung, die die Anmeldeinformationen des externen NuGet-Servers enthält.",
   "loc.input.label.searchPatternPack": "Der Pfad zu den zu packenden CSPROJ- oder NUSPEC-Dateien",
-  "loc.input.help.searchPatternPack": "Das Muster für die Suche nach NUSPEC- oder CSPROJ-Dateien, die paketiert werden sollen.\n\nSie können mehrere Muster durch Semikolons trennen, und Sie können ein Muster mit einem negativen Vorzeichen versehen, indem Sie ihm \"-:\" als Präfix voranstellen. Beispiel: \"**/*.csproj;-:**/*.Tests.csproj\".",
+  "loc.input.help.searchPatternPack": "Das Muster für die Suche nach NUSPEC- oder CSPROJ-Dateien, die paketiert werden sollen.\n\nSie können mehrere Muster durch Semikolons trennen, und Sie können ein Muster mit einem negativen Vorzeichen versehen, indem Sie ihm \"!\" als Präfix voranstellen. Beispiel: \"**/*.csproj;!**/*.Tests.csproj\".",
   "loc.input.label.configurationToPack": "Zu packende Konfiguration",
   "loc.input.help.configurationToPack": "Bei Verwendung einer CPROJ-Datei legt diese Option die zu packende Konfiguration fest.",
   "loc.input.label.outputDir": "Paketordner",

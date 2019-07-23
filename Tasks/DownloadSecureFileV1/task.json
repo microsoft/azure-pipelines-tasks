@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 155,
-        "Patch": 0
+        "Minor": 156,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -31,6 +31,14 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The file name or GUID of the secure file to download to the agent machine. The file will be deleted after the pipeline runs."
+        },
+        {
+            "name": "retryCount",
+            "type": "string",
+            "label": "Retry Count",
+            "defaultValue": "5",
+            "required": "false",
+            "helpMarkDown": "Optional number of times to retry downloading a secure file if the download fails."
         }
     ],
     "outputVariables": [
