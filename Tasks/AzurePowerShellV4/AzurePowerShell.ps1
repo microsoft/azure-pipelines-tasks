@@ -23,9 +23,10 @@ if ($scriptArguments -match '[\r\n]') {
 
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $endpoint = Get-VstsEndpoint -Name $serviceName -Require
-$env:PSModulePath = Get-VstsTaskVariable -Name "AZ_PS_MODULE_PATH"
 
 . "$PSScriptRoot/PreJobExecutionAzurePowerShell.ps1"
+
+$env:PSModulePath = Get-VstsTaskVariable -Name "AZ_PS_MODULE_PATH"
 
 try 
 {
