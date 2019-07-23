@@ -148,38 +148,38 @@ export class AzureAppServiceUtility {
             return isNewValueUpdated;
         }
 
-        var kuduService = await this.getKuduService();
-        var noOftimesToIterate: number = 12;
-        tl.debug('retrieving values from Kudu service to check if new values are updated');
-        while(noOftimesToIterate > 0) {
-            var kuduServiceAppSettings = await kuduService.getAppSettings();
-            var propertiesChanged: boolean = true;
-            for(var property in addProperties) {
-                if(kuduServiceAppSettings[property] != addProperties[property]) {
-                    tl.debug('New properties are not updated in Kudu service :(');
-                    propertiesChanged = false;
-                    break;
-                }
-            }
-            for(var property in deleteProperties) {
-                if(kuduServiceAppSettings[property]) {
-                    tl.debug('Deleted properties are not reflected in Kudu service :(');
-                    propertiesChanged = false;
-                    break;
-                }
-            }
+        var kuduService = await this.getKuduService();	
+        var noOftimesToIterate: number = 12;	
+        tl.debug('retrieving values from Kudu service to check if new values are updated');	
+        while(noOftimesToIterate > 0) {	
+            var kuduServiceAppSettings = await kuduService.getAppSettings();	
+            var propertiesChanged: boolean = true;	
+            for(var property in addProperties) {	
+                if(kuduServiceAppSettings[property] != addProperties[property]) {	
+                    tl.debug('New properties are not updated in Kudu service :(');	
+                    propertiesChanged = false;	
+                    break;	
+                }	
+            }	
+            for(var property in deleteProperties) {	
+                if(kuduServiceAppSettings[property]) {	
+                    tl.debug('Deleted properties are not reflected in Kudu service :(');	
+                    propertiesChanged = false;	
+                    break;	
+                }	
+            }	
 
-            if(propertiesChanged) {
-                tl.debug('New properties are updated in Kudu service.');
-                console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
-                return isNewValueUpdated;
-            }
+             if(propertiesChanged) {	
+                tl.debug('New properties are updated in Kudu service.');	
+                console.log(tl.loc('UpdatedAppServiceApplicationSettings'));	
+                return isNewValueUpdated;	
+            }	
 
-            noOftimesToIterate -= 1;
-            await webClient.sleepFor(5);
-        }
+             noOftimesToIterate -= 1;	
+            await webClient.sleepFor(5);	
+        }	
 
-        tl.debug('Timing out from app settings check');
+         tl.debug('Timing out from app settings check');
         return isNewValueUpdated;
     }
 
