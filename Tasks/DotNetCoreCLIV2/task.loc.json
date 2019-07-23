@@ -120,7 +120,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.arguments",
       "defaultValue": "",
-      "visibleRule": "command = build || command = publish || command = run || command = test || command = custom",
+      "visibleRule": "command = restore || command = build || command = publish || command = run || command = test || command = custom",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.arguments"
     },
@@ -557,6 +557,7 @@
     "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
-    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
+    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
+    "Warning_DuplicatedArgument": "ms-resource:loc.messages.Warning_DuplicatedArgument"
   }
 }

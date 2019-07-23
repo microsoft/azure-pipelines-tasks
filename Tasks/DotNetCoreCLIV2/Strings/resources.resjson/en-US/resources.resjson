@@ -131,5 +131,6 @@
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
   "loc.messages.NGCommon_UnableToFindTool": "Unable to find tool %s",
   "loc.messages.Warning_SessionCreationFailed": "Could not create provenance session: %s",
-  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task."
+  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task.",
+  "loc.messages.Warning_DuplicatedArgument": "Argument '%s' is duplicated"
 }

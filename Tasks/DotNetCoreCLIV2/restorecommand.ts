@@ -167,22 +167,39 @@ function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDir
     if (packagesDirectory) {
         dotnet.arg('--packages');
         dotnet.arg(packagesDirectory);
+
+        warnIfArgsContains(args, '--packages');
     }
 
     dotnet.arg('--configfile');
     dotnet.arg(configFile);
 
+    warnIfArgsContains(args, '--configfile');
+
     if (noCache) {
         dotnet.arg('--no-cache');
+
+        warnIfArgsContains(args, '--no-cache');
     }
 
     if (verbosity && verbosity !== '-') {
         dotnet.arg('--verbosity');
         dotnet.arg(verbosity);
+
+        warnIfArgsContains(args, '--verbosity', '-v');
     }
 
     dotnet.line(args);
 
     const envWithProxy = ngRunner.setNuGetProxyEnvironment(process.env, configFile, null);
     return dotnet.exec({ cwd: path.dirname(projectFile), env: envWithProxy } as IExecOptions);
+}
+
+function warnIfArgsContains(args: string, ...values: string[]) {
+    const argsArray = args.split(' ');
+    for (const v of values) {
+        if (argsArray.some(x => x === v)) {
+            tl.warning(tl.loc('Warning_DuplicatedArgument', v));
+        }
+    }
 }
