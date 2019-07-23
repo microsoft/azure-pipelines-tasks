@@ -35,12 +35,27 @@ class VsoClientMock {
         routeValues: any,
         queryParams?: any
     ): Promise<any> {
+        if(queryParams && "packageNameQuery" in queryParams) {
+            return Promise.resolve({ requestUrl: "packageNameResolverUrl" })
+        }
         return Promise.resolve({ requestUrl: this.packageUrlMap[locationId] });
     }
 }
 
 class RestMock {
     private metadataMap = {
+        packageNameResolverUrl: {
+            "count":2,
+            "value": [
+                {
+                    "name": "unknown"
+                },
+                {
+                    "name": "packageName",
+                    "id": "6f598cbe-a5e2-4f75-aa78-e0fd08301a15"
+                }
+            ]
+        },
         singlePackageMetadataUrl: {
             name: "singlePackageName"
         },
