@@ -1,0 +1,182 @@
+{
+  "id": "769D88CB-515B-4456-A045-D9A4E11C90E3",
+  "name": "ACRTaskV0",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": 0,
+    "Minor": 156,
+    "Patch": 0
+  },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "showEnvironmentVariables": true,
+  "groups": [
+    {
+      "name": "platform",
+      "displayName": "ms-resource:loc.group.displayName.platform",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "connectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+    },
+    {
+      "name": "azureContainerRegistry",
+      "label": "ms-resource:loc.input.label.azureContainerRegistry",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
+      "required": true,
+      "defaultValue": ""
+    },
+    {
+      "name": "dockerfileOrYaml",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.dockerfileOrYaml",
+      "defaultValue": "Dockerfile",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.dockerfileOrYaml"
+    },
+    {
+      "name": "imageNames",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.imageNames",
+      "defaultValue": "$(Build.Repository.Name):$(Build.BuildId)",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.imageNames"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    },
+    {
+      "name": "valuesFilePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.valuesFilePath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.valuesFilePath"
+    },
+    {
+      "name": "os",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.os",
+      "defaultValue": "linux",
+      "required": false,
+      "options": {
+        "linux": "Linux",
+        "windows": "Windows"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.os",
+      "groupName": "platform",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "architecture",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.architecture",
+      "defaultValue": "amd64",
+      "required": false,
+      "options": {
+        "amd64": "amd64",
+        "arm": "arm",
+        "x86": "x86"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.architecture",
+      "groupName": "platform",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "azureContainerRegistry",
+      "endpointId": "$(connectedServiceName)",
+      "dataSourceName": "AzureRMContainerRegistries",
+      "resultTemplate": "{\"DisplayValue\":\"{{{name}}}\", \"Value\":\"{\\\"id\\\":\\\"{{{id}}}\\\", \\\"name\\\" : \\\"{{{name}}}\\\", \\\"location\\\" : \\\"{{{location}}}\\\" }\"}"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "acrtask.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
+    "UnableToFindResourceGroupDueToNullId": "ms-resource:loc.messages.UnableToFindResourceGroupDueToNullId",
+    "UnableToFindResourceGroupDueToInvalidId": "ms-resource:loc.messages.UnableToFindResourceGroupDueToInvalidId",
+    "UnableToFindRegistryDueToNullId": "ms-resource:loc.messages.UnableToFindRegistryDueToNullId",
+    "UnableToFindRegistryDueToInvalidId": "ms-resource:loc.messages.UnableToFindRegistryDueToInvalidId",
+    "FailedToExtractFromResponse": "ms-resource:loc.messages.FailedToExtractFromResponse",
+    "FailedToCreateEncodedTaskStep": "ms-resource:loc.messages.FailedToCreateEncodedTaskStep",
+    "AcrRegNameCannotBeEmpty": "ms-resource:loc.messages.AcrRegNameCannotBeEmpty",
+    "AcrTaskNameCannotBeEmpty": "ms-resource:loc.messages.AcrTaskNameCannotBeEmpty",
+    "FetchAcrTask": "ms-resource:loc.messages.FetchAcrTask",
+    "CreateAcrTask": "ms-resource:loc.messages.CreateAcrTask",
+    "UpdateAcrTask": "ms-resource:loc.messages.UpdateAcrTask",
+    "FailedToFetchTask": "ms-resource:loc.messages.FailedToFetchTask",
+    "CreatedAcrTask": "ms-resource:loc.messages.CreatedAcrTask",
+    "UpdatedAcrTask": "ms-resource:loc.messages.UpdatedAcrTask",
+    "FailedToCreateOrUpdateTask": "ms-resource:loc.messages.FailedToCreateOrUpdateTask",
+    "RunAcrTask": "ms-resource:loc.messages.RunAcrTask",
+    "ScheduledAcrTaskRun": "ms-resource:loc.messages.ScheduledAcrTaskRun",
+    "FailedToScheduleTaskRun": "ms-resource:loc.messages.FailedToScheduleTaskRun",
+    "CancelAcrTaskRun": "ms-resource:loc.messages.CancelAcrTaskRun",
+    "CancelledAcrTaskRun": "ms-resource:loc.messages.CancelledAcrTaskRun",
+    "FailedToCancelRun": "ms-resource:loc.messages.FailedToCancelRun",
+    "GetLogLinkForRun": "ms-resource:loc.messages.GetLogLinkForRun",
+    "LogLinkForRun": "ms-resource:loc.messages.LogLinkForRun",
+    "FailedToGetLogLink": "ms-resource:loc.messages.FailedToGetLogLink",
+    "FailedToFetchRun": "ms-resource:loc.messages.FailedToFetchRun",
+    "TaskRunStatus": "ms-resource:loc.messages.TaskRunStatus",
+    "DownloadedRunLogs": "ms-resource:loc.messages.DownloadedRunLogs",
+    "TaskRunSucceeded": "ms-resource:loc.messages.TaskRunSucceeded",
+    "TaskRunCancelled": "ms-resource:loc.messages.TaskRunCancelled",
+    "TaskRunFailed": "ms-resource:loc.messages.TaskRunFailed"
+  }
+}

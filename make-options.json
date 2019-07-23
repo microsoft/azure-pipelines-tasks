@@ -1,5 +1,6 @@
 {
     "tasks": [
+        "ACRTaskV0",
         "AndroidSigningV2",
         "AndroidSigningV3",
         "ANTV1",

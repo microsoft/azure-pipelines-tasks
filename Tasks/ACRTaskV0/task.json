@@ -1,0 +1,183 @@
+{
+    "id": "769D88CB-515B-4456-A045-D9A4E11C90E3",
+    "name": "ACRTaskV0",
+    "friendlyName": "ACR Task",
+    "description": "Buid and run container images using ACR tasks",
+    "author": "Microsoft Corporation",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
+    "helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkID=827160) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
+    "category": "Build",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+
+    "demands": [],
+    "version": {
+        "Major": 0,
+        "Minor": 156,
+        "Patch": 0
+    },
+    "instanceNameFormat": "PleaseProvideTaskName",
+    "showEnvironmentVariables": true,
+    "groups": [
+        {
+            "name": "platform",
+            "displayName": "Platform",
+            "isExpanded": true
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "connectedServiceName",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "required": true,
+            "helpMarkDown": "Select an Azure resource manager subscription for the deployment"
+        },
+        {
+            "name": "azureContainerRegistry",
+            "label": "Azure container registry",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure Container Registry which will be used for pulling container images and deploying applications to the Kubernetes cluster. Required for commands that need to authenticate with a registry.",
+            "required": true,
+            "defaultValue": ""
+        },
+        {
+            "name": "dockerfileOrYaml",
+            "type": "string",
+            "label": "Dockerfile/Yaml",
+            "defaultValue": "Dockerfile",
+            "required": true,
+            "helpMarkDown": "Relative path to the Dockerfile or the yaml file"
+        },
+        {
+            "name": "imageNames",
+            "type": "multiLine",
+            "label": "Image names",
+            "defaultValue": "$(Build.Repository.Name):$(Build.BuildId)",
+            "properties": {
+                "resizable": "true",
+                "rows": "2"
+            },
+            "required": true,
+            "helpMarkDown": "A list of the names of the Docker images in separate lines to build, push, and run."
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The collection of build arguments to be used when executing a docker build. Format: --build-arg <arg1=value1> --build-arg <arg2=val2"
+        },
+        {
+            "name": "valuesFilePath",
+            "type": "string",
+            "label": "ValuesFilePath",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The task values/parameters file path relative to the source context. Valid for yaml files"
+        },
+        {
+            "name": "os",
+            "type": "pickList",
+            "label": "Operating System",
+            "defaultValue": "linux",
+            "required": false,
+            "options": {
+                "linux": "Linux",
+                "windows": "Windows"
+            },
+            "helpMarkDown": "Operating System",
+            "groupName": "platform",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "architecture",
+            "type": "pickList",
+            "label": "Architecture",
+            "defaultValue": "amd64",
+            "required": false,
+            "options": {
+                "amd64": "amd64",
+                "arm": "arm",
+                "x86": "x86"
+            },
+            "helpMarkDown": "Architecture",
+            "groupName": "platform",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "cwd",
+            "aliases": [
+                "workingDirectory"
+            ],
+            "type": "filePath",
+            "label": "Working Directory",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Current working directory where the script is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
+            "groupName": "advanced"
+        }
+    ],
+    "dataSourceBindings":[
+        {
+            "target": "azureContainerRegistry",
+            "endpointId": "$(connectedServiceName)",
+            "dataSourceName": "AzureRMContainerRegistries",
+            "resultTemplate": "{\"DisplayValue\":\"{{{name}}}\", \"Value\":\"{\\\"id\\\":\\\"{{{id}}}\\\", \\\"name\\\" : \\\"{{{name}}}\\\", \\\"location\\\" : \\\"{{{location}}}\\\" }\"}"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "acrtask.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "CallbackCannotBeNull": "The callback cannot be null.",
+        "UnableToFindResourceGroupDueToNullId": "Unable to find the resource group due to a null ID.",
+        "UnableToFindResourceGroupDueToInvalidId": "Unable to find the resource group due to an invalid ID.",
+        "UnableToFindRegistryDueToNullId": "Unable to find the registry name due to a null ID.",
+        "UnableToFindRegistryDueToInvalidId": "Unable to find the registry name due to an invalid ID.",
+        "FailedToExtractFromResponse": "Failed to extact %s from response",
+        "FailedToCreateEncodedTaskStep": "Failed to create a encoded task step. Error: %s",
+        "AcrRegNameCannotBeEmpty": "The Azure container registry name cannot be null.",
+        "AcrTaskNameCannotBeEmpty": "The ACR task name name cannot be null.",
+        "FetchAcrTask": "Fetching ACR task %s",
+        "CreateAcrTask": "Couldn't find %s task. Creating acr task with name %s ..",
+        "UpdateAcrTask": "Found task %s. Updating the task ..",
+        "FailedToFetchTask": "Failed to fetch task %s. Error: %s",
+        "CreatedAcrTask": "Created task %s successfully",
+        "UpdatedAcrTask": "Updated task %s successfully",
+        "FailedToCreateOrUpdateTask": "Failed to create or update acr task. Error: %s",
+        "RunAcrTask": "Running task %s",
+        "ScheduledAcrTaskRun": "Scheduled run for %s successfully. RunId: %s Status: %s",
+        "FailedToScheduleTaskRun": "Failed to schedule run for acr task. Error: %s",
+        "CancelAcrTaskRun": "Cancelling run with id %s for task %s",
+        "CancelledAcrTaskRun": "Cancelled run with id %s for task %s",
+        "FailedToCancelRun": "Failed to cancel run with id %s. Error: %s",
+        "GetLogLinkForRun": "Fetching the log link for run %s",
+        "LogLinkForRun": "Log link for run %s: %s",
+        "FailedToGetLogLink": "Failed to fetch log link for run %s. Error: %s",
+        "FailedToFetchRun": "Failed to get run %s. Error: %s",
+        "TaskRunStatus": "Run Id: %s is %s",
+        "DownloadedRunLogs": "Downloaded run logs",
+        "TaskRunSucceeded": "RunId:  %s has succeeded.",
+        "TaskRunCancelled": "RunId: %s has been cancelled",
+        "TaskRunFailed": "ACR task has failed. Check run logs for details"
+    }
+}
