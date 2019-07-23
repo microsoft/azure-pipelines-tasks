@@ -5,11 +5,13 @@ import * as  path from 'path';
 import * as fs from 'fs';
 import * as  helmutility from 'kubernetes-common-v2/helmutility';
 import * as uuidV4 from 'uuid/v4';
+import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 
 import { getTempDirectory } from '../utils/FileHelper';
 import { Helm, NameValuePair } from 'kubernetes-common-v2/helm-object-model';
 import * as TaskParameters from '../models/TaskInputParameters';
 import { KomposeInstaller } from '../utils/installers';
+import * as utils from '../utils/utilities';
 
 abstract class RenderEngine {
     public bake: () => Promise<any>;
@@ -71,6 +73,36 @@ class KomposeRenderEngine extends RenderEngine {
     }
 }
 
+class KustomizeRenderEngine extends RenderEngine {
+    public bake = async () => {
+        const kubectlPath = await utils.getKubectl();
+        this.validateKustomize(kubectlPath);
+        const command = tl.tool(kubectlPath);
+        console.log(`[command] ${kubectlPath} kustomize ${tl.getPathInput('kustomizationPath')}`);
+        command.arg(['kustomize', tl.getPathInput('kustomizationPath')]);
+
+        const result = command.execSync({ silent: true } as IExecOptions);
+        const pathToBakedManifest = this.getTemplatePath();
+        fs.writeFileSync(pathToBakedManifest, result.stdout);
+        tl.setVariable('manifestsBundle', pathToBakedManifest);
+    };
+
+    private validateKustomize(kubectlPath: string) {
+        const command = tl.tool(kubectlPath);
+        command.arg(['version', '--client=true', '-o', 'json']);
+        const result = command.execSync();
+        if (result.code !== 0) {
+            throw result.error;
+        }
+        const clientVersion = JSON.parse(result.stdout).clientVersion;
+        if (clientVersion && parseInt(clientVersion.major) >= 1 && parseInt(clientVersion.minor) >= 14) {
+            // Do nothing
+        } else {
+            throw new Error(tl.loc('KubectlShouldBeUpgraded'));
+        }
+    }
+}
+
 export async function bake(ignoreSslErrors?: boolean) {
     const renderType = tl.getInput('renderType', true);
     let renderEngine: RenderEngine;
@@ -80,6 +112,9 @@ export async function bake(ignoreSslErrors?: boolean) {
             break;
         case 'kompose':
             renderEngine = new KomposeRenderEngine();
+            break;
+        case 'kustomize':
+            renderEngine = new KustomizeRenderEngine();
             break;
         default:
             throw Error(tl.loc('UnknownRenderType'));

@@ -320,4 +320,30 @@ describe('Kubernetes Manifests Suite', function () {
         assert(jobObject.spec.template.spec.imagePullSecrets[0].name === 'privaterepo-secret', 'should have updated the image pull secret correctly');
         done();
     });
+
+    it('Kustomize bake should fail when kubectl version is lower than v1.14', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kustomize';
+        process.env[shared.TestEnvVars.kustomizationPath] = 'kustomizationPath';
+        process.env.KubectlMinorVersion = '13';
+        tr.run();
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdout.indexOf('KubectlShouldBeUpgraded') > 0, 'proper error message should have been thrown');
+        done();
+    });
+
+    it('Kustomize bake should pass when kubectl version is greater than or equal to v1.14', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kustomize';
+        process.env[shared.TestEnvVars.kustomizationPath] = 'kustomizationPath';
+        process.env.KubectlMinorVersion = '14';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdOutContained('kustomize kustomizationPath'), 'task should have invoked tool: kustomize');
+        done();
+    });
 });

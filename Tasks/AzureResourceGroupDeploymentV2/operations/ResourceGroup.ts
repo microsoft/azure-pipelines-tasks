@@ -13,6 +13,7 @@ import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
+import { sleepFor } from 'azure-arm-rest/webClient';
 
 var hm = require("typed-rest-client/HttpClient");
 var uuid = require("uuid");
@@ -515,7 +516,7 @@ export class ResourceGroup {
         });
     }
 
-    private async performAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment): Promise<void> {
+    private async performAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount = 0): Promise<void> {
         if (deployment.properties["mode"] === "Validation") {
             return this.validateDeployment(armClient, deployment);
         } else {
@@ -525,6 +526,9 @@ export class ResourceGroup {
                 console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
                 armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
                     if (error) {
+                        if(error.code == "ResourceGroupNotFound" && retryCount > 0){
+                            return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount);
+                        }
                         this.writeDeploymentErrors(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
@@ -540,6 +544,11 @@ export class ResourceGroup {
         }
     }
 
+    private async waitAndPerformAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount): Promise<void> {
+        await sleepFor(3);
+        return this.performAzureDeployment(armClient, deployment, retryCount - 1);
+    }
+
     private async createTemplateDeployment(armClient: armResource.ResourceManagementClient) {
         console.log(tl.loc("CreatingTemplateDeployment"));
         var deployment: Deployment;
@@ -550,7 +559,7 @@ export class ResourceGroup {
         } else {
             throw new Error(tl.loc("InvalidTemplateLocation"));
         }
-        await this.performAzureDeployment(armClient, deployment);
+        await this.performAzureDeployment(armClient, deployment, 3);
     }
 
     private enablePrereqDG = "ConfigureVMWithDGAgent";

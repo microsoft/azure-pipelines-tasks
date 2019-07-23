@@ -121,8 +121,6 @@ Tasks/Common/java-common/*        @madhurig   @kelliejos
 
 Tasks/Common/kubernetes-common/*      @nishubansal    @ds-ms
 
-Tasks/Common/packaging-common-old/*   @jotaylo
-
 Tasks/Common/packaging-common/*     @jotaylo
 
 Tasks/Common/securefiles-common/*   @madhurig   @hashtagchris
@@ -260,6 +258,8 @@ Tasks/NuGetToolInstallerV0/*    @zjrunner
 Tasks/PackerBuildV0/*   @sachinma
 
 Tasks/PackerBuildV1/*   @sachinma
+
+Tasks/PipAuthenticateV0/*     @zjrunner @shubham90
 
 Tasks/PowerShellV2/*    @bryanmacfarlane
 

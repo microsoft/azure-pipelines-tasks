@@ -11,6 +11,7 @@ export class TestString {
     public static readonly editAction2KeyWord: string = "L0Test: edit release action method should be called when a release is present for given tag";
     public static readonly editActionKeyWord: string = "L0Test: create release action method should be called when no release is present for given tag";
     public static readonly getTagForCreateActionKeyword: string = "getTagForCreateAction method should work properly";
+    public static readonly getTagForCreateActionWithTagPatternKeyword: string = "getTagForCreateAction method should work properly when tagPattern is specified";
     public static readonly getCommitShaFromTargetKeyword: string = "getCommitShaFromTarget method should work properly";
     public static readonly getReleaseIdForTagKeyword: string = "getReleaseIdForTag method should work properly";
     public static readonly InvalidActionKeyword: string = "Invalid action input";
@@ -21,4 +22,5 @@ export class TestString {
     public static readonly extractRepositoryOwnerAndNameKeyword: string = "extractRepositoryOwnerAndName method should work properly";
     public static readonly extractRepoAndIssueIdKeyword: string = "extractRepoAndIssueId method should work properly";
     public static readonly getFirstLineKeyword: string = "getFirstLine method should work properly";
+    public static readonly tagMatchingKeyword: string = "isTagMatching method should work properly";
 }
