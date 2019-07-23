@@ -2,7 +2,7 @@ import shell = require('shelljs');
 import path = require('path');
 import fs = require('fs');
 
-import tl = require('vsts-task-lib/task');
+import * as tl from 'azure-pipelines-task-lib/task';
 
 export class FileSystemInteractions {
 

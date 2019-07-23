@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 155,
-        "Patch": 2
+        "Patch": 5
     },
     "demands": [],
     "groups": [],
@@ -116,7 +116,8 @@
             "visibleRule": "action = bake",
             "options": {
                 "helm2": "Helm 2",
-                "kompose": "Kompose"
+                "kompose": "Kompose",
+                "kustomize": "Kustomize"
             },
             "helpMarkDown": "Tool to use for generating manifest files."
         },
@@ -164,6 +165,15 @@
             "defaultValue": "",
             "helpMarkDown": "Override values to set",
             "visibleRule": "action = bake && renderType = helm2"
+        },
+        {
+            "name": "kustomizationPath",
+            "type": "filePath",
+            "label": "Kustomization Path",
+            "required": false,
+            "visibleRule": "action = bake && renderType = kustomize",
+            "defaultValue": "",
+            "helpMarkDown": "The argument must be the path to the directory containing the file, or a git repository URL with a path suffix specifying same with respect to the repository root."
         },
         {
             "name": "resourceToPatch",
@@ -322,7 +332,8 @@
         "CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
         "InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
         "InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
-        "AllContainersNotInReadyState": "All the containers are not in a ready state",
-        "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s"
+        "AllContainersNotInReadyState": "All the containers are not in a ready state.",
+        "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
+        "KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features."
     }
 }

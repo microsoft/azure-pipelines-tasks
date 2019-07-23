@@ -16,7 +16,8 @@ var envVarObject = jsonSubUtil.createEnvTree([
     { name: 'profile.enabled', value: 'false', secret: false},
     { name: 'profile.version', value: '1173', secret: false},
     { name: 'profile.somefloat', value: '97.75', secret: false},
-    { name: 'profile.preimum_level', value: '{"suaggar": "V4", "rok": "V5", "asranja": { "type" : "V6"}}', secret: false}
+    { name: 'profile.preimum_level', value: '{"suaggar": "V4", "rok": "V5", "asranja": { "type" : "V6"}}', secret: false},
+    { name: 'systemsettings.appurl', value: 'https://dev.azure.com/helloworld', secret: false}
 ]);
 
 var jsonObject = {
@@ -52,13 +53,18 @@ var jsonObject = {
         "enabled": true,
         "version": 2,
         "somefloat": 2.3456
+    },
+    'systemsettings': {
+        'appurl': 'https://helloworld.visualstudio.com'
     }
 
 }
 // Method to be checked for JSON variable substitution
 jsonSubUtil.substituteJsonVariableV2(jsonObject, envVarObject);
 
-if(jsonObject['data']['ConnectionString'] === 'database_connection' && jsonObject['data']['userName'] === 'db_admin') {
+if(jsonObject['data']['ConnectionString'] === 'database_connection'
+    && jsonObject['data']['userName'] === 'db_admin'
+    && jsonObject['systemsettings']['appurl'] == 'https://dev.azure.com/helloworld') {
     console.log('JSON - simple string change validated');
 }
 if(jsonObject['system']['debug'] === 'no_change') {
