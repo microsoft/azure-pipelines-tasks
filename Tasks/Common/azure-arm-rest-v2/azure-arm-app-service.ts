@@ -250,6 +250,7 @@ export class AzureAppService {
         }
 
         if(isNewValueUpdated) {
+            applicationSettings.properties["WEBSITE_ENABLE_SYNC_UPDATE_SITE"] = 'true';
             await this.updateApplicationSettings(applicationSettings);
         }
 
