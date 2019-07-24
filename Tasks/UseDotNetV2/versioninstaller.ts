@@ -21,12 +21,15 @@ export class VersionInstaller {
         this.packageType = packageType;
         this.installationPath = installationPath;
     }
-
+    /**
+     * Install a single version from a versionInfo
+     * @param versionInfo the versionInfo object with all information from the version
+     * @param downloadUrl The download url of the sdk / runtime.
+     */
     public async downloadAndInstall(versionInfo: VersionInfo, downloadUrl: string): Promise<void> {
         if (!versionInfo || !versionInfo.getVersion() || !downloadUrl || !url.parse(downloadUrl)) {
             throw tl.loc("VersionCanNotBeDownloadedFromUrl", versionInfo, downloadUrl);
         }
-
         let version = versionInfo.getVersion();
 
         try {
@@ -78,6 +81,11 @@ export class VersionInstaller {
         }
     }
 
+    /**
+     * This checks if an explicit version is installed.
+     * This doesn't work with a search pattern like 1.0.x.
+     * @param version An explicit version. Like 1.0.1
+     */
     public isVersionInstalled(version: string): boolean {
         if (!toolLib.isExplicitVersion(version)) {
             throw tl.loc("ExplicitVersionRequired", version);
