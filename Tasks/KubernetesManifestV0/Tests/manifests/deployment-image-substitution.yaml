@@ -25,6 +25,8 @@ spec:
         image: mysql 
       - name: untaggedonacr
         image: myacr.azurecr.io/myimage 
+      - name: untaggedwithcomment
+        image: myimagewithcomment # this is a comment
       imagePullSecrets:
       - name: key1
       initContainers:
