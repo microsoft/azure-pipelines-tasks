@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 13
     },
    "satisfies": [
         "DotNetCore"
@@ -95,7 +95,7 @@
             "defaultValue": false,
             "required": false,
             "helpMarkDown": "This input is only applicable to Windows based agents. This configures the behavior of .Net host process for looking up a suitable shared framework.<li>unchecked: Only versions present in the folder specified in this task would be looked by the host process.</li><li>checked: The host will attempt to look in pre-defined global locations using multi-level lookup.<br/>The default global locations are: <br/><b>For Windows:</b><br/>C:\\Program Files\\dotnet (64-bit processes)<br/>C:\\Program Files (x86)\\dotnet (32-bit process)</li> You can read more about it [**HERE**](https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/multilevel-sharedfx-lookup.md).<br/>"
-        }        
+        }
     ],
     "execution": {
         "Node10": {
@@ -172,6 +172,6 @@
         "SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet.",
         "GlobalJsonFound": "Found a global.json at path: %s",
         "FailedToReadGlobalJson": "The global.json at path: '%s' has the wrong format. For information about global.json, visit here: https://docs.microsoft.com/en-us/dotnet/core/tools/global-json",
-        "VersionNumberHasTheWrongFormat": "The version number: %s doesn't have the correct format. Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json"        
+        "VersionNumberHasTheWrongFormat": "The version number: %s doesn't have the correct format. Versions can be given in the following formats<li>2.x   => Install latest in major version.</li><li>2.2.x => Install latest in major and minor version</li><li>2.2.104 => Install exact version</li><br/>Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json"
     }
 }
