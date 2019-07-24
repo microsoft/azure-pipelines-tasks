@@ -5,8 +5,8 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
 import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
 import Q = require('q');
-import {ACRRegistry, AcrTask, AcrTaskClient} from "./acrTaskClient";
-import { TaskRequestStepType } from "./acrTaskRequestBody";
+import {ACRRegistry, AcrTask, AcrTaskClient} from "./acrtaskclient";
+import { TaskRequestStepType } from "./acrtaskrequestbody";
 import * as utils from "./utils";
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -136,12 +136,18 @@ async function run() {
     {
         var connectedService: string = tl.getInput("connectedServiceName", true);
         const endpoint: AzureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint();
+
+        //get container registry details
         let azureContainerRegistry = tl.getInput("azureContainerRegistry", true);
-        let acrObject: ACRRegistry = JSON.parse(azureContainerRegistry);
+        let acrRegistry: ACRRegistry = await utils.getContainerRegistryDetails(endpoint, azureContainerRegistry);
+
+        //populate acr task inputs
         let acrTask = new AcrTask();
         acrTask.name = tl.getVariable('TASK.DISPLAYNAME');
-        acrTask.registry = acrObject;
+        acrTask.registry = acrRegistry;
         let dockerfileOrYaml = tl.getInput("dockerfileOrYaml", true);
+
+        // check whether dockerfile or yaml
         let path = dockerfileOrYaml.split("/");
         if(!path)
         {
@@ -149,14 +155,17 @@ async function run() {
         }
         else if (path[path.length -1].endsWith(".yaml"))
         {
+            // file task step for yaml
             setFileTaskAcrTaskInputs(acrTask, dockerfileOrYaml);
         }
         else
         {
+            // encoded task step for dockerfile
             setEncodedTaskInputs(acrTask, dockerfileOrYaml);
         }
 
         acrTask.context = utils.getContextPath();
+
         let acrTaskClient = new AcrTaskClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, acrTask);
         await getTask(acrTaskClient);
         var taskId = await createOrUpdateTask(acrTaskClient);
@@ -172,6 +181,7 @@ async function run() {
             throw new Error(tl.loc("FailedToExtractFromResponse", "runId"),)
         }
 
+        //cancel run on receiving pipeline cancel 
         process.on('SIGINT', () => {
             if(!!runId)
             {

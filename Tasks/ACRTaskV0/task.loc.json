@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
+  "helpUrl": "https://docs.microsoft.com/en-us/azure/container-registry/container-registry-tasks-overview",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -137,7 +137,7 @@
       "target": "azureContainerRegistry",
       "endpointId": "$(connectedServiceName)",
       "dataSourceName": "AzureRMContainerRegistries",
-      "resultTemplate": "{\"DisplayValue\":\"{{{name}}}\", \"Value\":\"{\\\"id\\\":\\\"{{{id}}}\\\", \\\"name\\\" : \\\"{{{name}}}\\\", \\\"location\\\" : \\\"{{{location}}}\\\" }\"}"
+      "resultTemplate": "{\"DisplayValue\":\"{{{name}}}\", \"Value\":\"{{{name}}}\"}"
     }
   ],
   "execution": {
@@ -150,8 +150,8 @@
     "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
     "UnableToFindResourceGroupDueToNullId": "ms-resource:loc.messages.UnableToFindResourceGroupDueToNullId",
     "UnableToFindResourceGroupDueToInvalidId": "ms-resource:loc.messages.UnableToFindResourceGroupDueToInvalidId",
-    "UnableToFindRegistryDueToNullId": "ms-resource:loc.messages.UnableToFindRegistryDueToNullId",
-    "UnableToFindRegistryDueToInvalidId": "ms-resource:loc.messages.UnableToFindRegistryDueToInvalidId",
+    "ResourceDoesntExist": "ms-resource:loc.messages.ResourceDoesntExist",
+    "MultipleResourceGroupFoundForContainerRegistry": "ms-resource:loc.messages.MultipleResourceGroupFoundForContainerRegistry",
     "FailedToExtractFromResponse": "ms-resource:loc.messages.FailedToExtractFromResponse",
     "FailedToCreateEncodedTaskStep": "ms-resource:loc.messages.FailedToCreateEncodedTaskStep",
     "AcrRegNameCannotBeEmpty": "ms-resource:loc.messages.AcrRegNameCannotBeEmpty",

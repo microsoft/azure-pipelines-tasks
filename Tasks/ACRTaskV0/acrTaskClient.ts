@@ -2,14 +2,14 @@ import msRestAzure = require('azure-arm-rest-v2/azure-arm-common');
 import { ApiResult, ApiCallback, ServiceClient, ToError } from "azure-arm-rest-v2/AzureServiceClient" ;
 import webClient = require("azure-arm-rest-v2/webClient");
 import tl = require("azure-pipelines-task-lib/task");
-import * as AcrTaskRequest from "./acrTaskRequestBody";
+import * as AcrTaskRequest from "./acrtaskrequestbody";
 import * as utils from "./utils";
 import * as yaml from "js-yaml";
 
-export interface ACRRegistry {
-    id: string;
+export class ACRRegistry {
     name: string;
     location: string;
+    resourceGroup: string;
 }
 
 export class AcrTask{
@@ -30,7 +30,6 @@ export class AcrTaskClient extends ServiceClient {
     public acrTask: AcrTask;
     public createTask : boolean = false;
     public updateTask :  boolean = false;
-    public resourceGroupName: string;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, 
         subscriptionId: string,
@@ -39,7 +38,6 @@ export class AcrTaskClient extends ServiceClient {
         super(credentials, subscriptionId);
 
         this.acrTask = acrTask;
-        this.resourceGroupName = utils.getResourceGroupNameFromUrl(this.acrTask.registry.id);
         this.apiVersion = '2019-06-01-preview';
     }
 
@@ -50,15 +48,16 @@ export class AcrTaskClient extends ServiceClient {
         }
 
         let acrRegName = this.acrTask.registry.name;
-        let acrTaskName = this.acrTask.name
-        
+        let acrTaskName = this.acrTask.name;
+        let resourceGroupName = this.acrTask.registry.resourceGroup;
+
         // Validate
-        this._validateAcrInputs(this.resourceGroupName, acrRegName, acrTaskName);
+        this._validateAcrInputs(resourceGroupName, acrRegName, acrTaskName);
         
         var requestUri = this.getRequestUri(
             acrTaskbaseUri,
             {
-                '{resourceGroupName}': this.resourceGroupName,
+                '{resourceGroupName}': resourceGroupName,
                 '{registryName}': acrRegName,
                 '{taskName}': acrTaskName
             });
@@ -96,14 +95,16 @@ export class AcrTaskClient extends ServiceClient {
         }
 
         let acrRegName = this.acrTask.registry.name;
-        let acrTaskName = this.acrTask.name
+        let acrTaskName = this.acrTask.name;
+        let resourceGroupName = this.acrTask.registry.resourceGroup;
+
         // Validate
-        this._validateAcrInputs(this.resourceGroupName, acrRegName, acrTaskName);
+        this._validateAcrInputs(resourceGroupName, acrRegName, acrTaskName);
 
         var requestUri = this.getRequestUri(
             acrTaskbaseUri,
             {
-                '{resourceGroupName}': this.resourceGroupName,
+                '{resourceGroupName}': resourceGroupName,
                 '{registryName}': acrRegName,
                 '{taskName}': acrTaskName
             });
@@ -150,15 +151,17 @@ export class AcrTaskClient extends ServiceClient {
         }
 
         let acrRegName = this.acrTask.registry.name;
-        let acrTaskName = this.acrTask.name
+        let acrTaskName = this.acrTask.name;
+        let resourceGroupName = this.acrTask.registry.resourceGroup;
+
         // Validate
-        this._validateAcrInputs(this.resourceGroupName, acrRegName, acrTaskName);
+        this._validateAcrInputs(resourceGroupName, acrRegName, acrTaskName);
         
         const requestMethod = "POST";
         var requestUri = this.getRequestUri(
             "//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/scheduleRun",
             {
-                '{resourceGroupName}': this.resourceGroupName,
+                '{resourceGroupName}': resourceGroupName,
                 '{registryName}': acrRegName
             });
 
@@ -208,15 +211,17 @@ export class AcrTaskClient extends ServiceClient {
         }
 
         let acrRegName = this.acrTask.registry.name;
-        let acrTaskName = this.acrTask.name
+        let acrTaskName = this.acrTask.name;
+        let resourceGroupName = this.acrTask.registry.resourceGroup;
+
         // Validate
-        this._validateAcrInputs(this.resourceGroupName, acrRegName, acrTaskName);
+        this._validateAcrInputs(resourceGroupName, acrRegName, acrTaskName);
         
         const requestMethod = "POST";
         var requestUri = this.getRequestUri(
             "//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/runs/{runId}/cancel",
             {
-                '{resourceGroupName}': this.resourceGroupName,
+                '{resourceGroupName}': resourceGroupName,
                 '{registryName}': acrRegName,
                 '{runId}': runId
             });
@@ -246,15 +251,17 @@ export class AcrTaskClient extends ServiceClient {
         }
 
         let acrRegName = this.acrTask.registry.name;
-        let acrTaskName = this.acrTask.name
+        let acrTaskName = this.acrTask.name;
+        let resourceGroupName = this.acrTask.registry.resourceGroup;
+
         // Validate
-        this._validateAcrInputs(this.resourceGroupName, acrRegName, acrTaskName);
+        this._validateAcrInputs(resourceGroupName, acrRegName, acrTaskName);
         
         const requestMethod = "POST";
         var requestUri = this.getRequestUri(
             "//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/runs/{runId}/listLogSasUrl",
             {
-                '{resourceGroupName}': this.resourceGroupName,
+                '{resourceGroupName}': resourceGroupName,
                 '{registryName}': acrRegName,
                 '{runId}': runId
             });
@@ -284,15 +291,17 @@ export class AcrTaskClient extends ServiceClient {
         }
 
         let acrRegName = this.acrTask.registry.name;
-        let acrTaskName = this.acrTask.name
+        let acrTaskName = this.acrTask.name;
+        let resourceGroupName = this.acrTask.registry.resourceGroup;
+
         // Validate
-        this._validateAcrInputs(this.resourceGroupName, acrRegName, acrTaskName);
+        this._validateAcrInputs(resourceGroupName, acrRegName, acrTaskName);
         
         const requestMethod = "GET";
         var requestUri = this.getRequestUri(
             "//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/runs/{runId}",
             {
-                '{resourceGroupName}': this.resourceGroupName,
+                '{resourceGroupName}': resourceGroupName,
                 '{registryName}': acrRegName,
                 '{runId}': runId
             });

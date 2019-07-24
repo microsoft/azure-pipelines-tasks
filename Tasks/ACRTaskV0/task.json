@@ -4,8 +4,8 @@
     "friendlyName": "ACR Task",
     "description": "Buid and run container images using ACR tasks",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
-    "helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkID=827160) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
+    "helpUrl": "https://docs.microsoft.com/en-us/azure/container-registry/container-registry-tasks-overview",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the ACR Task documentation](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-tasks-overview)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
         "Minor": 156,
         "Patch": 0
     },
-    "instanceNameFormat": "PleaseProvideTaskName",
+    "instanceNameFormat": "Please provide the name of the acr task",
     "showEnvironmentVariables": true,
     "groups": [
         {
@@ -138,7 +138,7 @@
             "target": "azureContainerRegistry",
             "endpointId": "$(connectedServiceName)",
             "dataSourceName": "AzureRMContainerRegistries",
-            "resultTemplate": "{\"DisplayValue\":\"{{{name}}}\", \"Value\":\"{\\\"id\\\":\\\"{{{id}}}\\\", \\\"name\\\" : \\\"{{{name}}}\\\", \\\"location\\\" : \\\"{{{location}}}\\\" }\"}"
+            "resultTemplate": "{\"DisplayValue\":\"{{{name}}}\", \"Value\":\"{{{name}}}\"}"
         }
     ],
     "execution": {
@@ -151,8 +151,8 @@
         "CallbackCannotBeNull": "The callback cannot be null.",
         "UnableToFindResourceGroupDueToNullId": "Unable to find the resource group due to a null ID.",
         "UnableToFindResourceGroupDueToInvalidId": "Unable to find the resource group due to an invalid ID.",
-        "UnableToFindRegistryDueToNullId": "Unable to find the registry name due to a null ID.",
-        "UnableToFindRegistryDueToInvalidId": "Unable to find the registry name due to an invalid ID.",
+        "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
+        "MultipleResourceGroupFoundForContainerRegistry": "Multiple resource groups found for container registry '%s'.",
         "FailedToExtractFromResponse": "Failed to extact %s from response",
         "FailedToCreateEncodedTaskStep": "Failed to create a encoded task step. Error: %s",
         "AcrRegNameCannotBeEmpty": "The Azure container registry name cannot be null.",
