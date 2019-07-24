@@ -19,6 +19,14 @@
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
+    "groups": [
+        {
+            "name": "changeLogConfiguration",
+            "displayName": "Changelog configuration",
+            "isExpanded": true,
+            "visibleRule": "addChangeLog = true"
+        }
+    ],
     "inputs": [
         {
             "name": "gitHubConnection",
@@ -189,26 +197,28 @@
             "helpMarkDown": "If set to `true`, a list of changes (commits and issues) between this and the last published release will be generated and appended to the release notes."
         },
         {
-            "name": "compareWith",
+            "name": "changeLogCompareToRelease",
             "type": "radio",
-            "label": "Compare with",
+            "label": "Compare to",
             "required": true,
             "defaultValue": "lastFullRelease",
+            "groupName": "changeLogConfiguration",
             "visibleRule": "addChangeLog = true",
             "helpMarkDown": "Indicate which release we should compare with to generate the changelog.",
             "options": {
                 "lastFullRelease": "Last full release",
-                "lastRelease": "Last non-draft release",
-                "lastReleaseByTag": "Last non-draft release by tag"
+                "lastNonDraftRelease": "Last non-draft release",
+                "lastNonDraftReleaseByTag": "Last non-draft release by tag"
             }
         },
         {
-            "name": "releaseTag",
+            "name": "changeLogCompareToReleaseTag",
             "type": "string",
             "label": "Release Tag",
             "required": true,
-            "visibleRule": "compareWith = lastReleaseByTag",
-            "helpMarkDown": "Specify the regex for tag for the release we should compare with to generate the changelog."
+            "groupName": "changeLogConfiguration",
+            "visibleRule": "changeLogCompareToRelease = lastNonDraftReleaseByTag",
+            "helpMarkDown": "Specify the regex for release tag. Release matching this tag will be used as base for changelog computation."
         }
     ],
     "dataSourceBindings": [
@@ -273,12 +283,14 @@
         "CommitDiffEqual": "No changes were found. The provided target commit is the same as the commit of the last published release.",
         "FetchLatestPublishRelease": "Fetching the latest published release...",
         "FetchLatestNonDraftRelease": "Fetching the latest non-draft release...",
-        "FetchLastReleaseByTag": "Fetching the latest release matching the given tag",
+        "FetchLastReleaseByTag": "Fetching the latest release matching the tag pattern: %s ",
         "FetchLatestPublishReleaseSuccess": "Found the latest published release: %s",
-        "FetchMatchingReleaseSuccess": "Found the latest release matching the given criteria.",
+        "FetchMatchingReleaseSuccess": "Found the latest non-draft release",
+        "FetchTagMatchingReleaseSuccess": "Found the latest release matching the tag pattern: %s",
         "GetLatestReleaseError": "An unexpected error occurred while fetching the latest published release.",
         "NoLatestPublishRelease": "No releases are published yet in the repository.",
-        "NoMatchingReleases": "No releases found matching the given criteria",
+        "NoMatchingReleases": "No non-draft releases found.",
+        "NoTagMatchingReleases": "No releases found matching the tag pattern: %s ",
         "FetchCommitDiff": "Fetching the list of commits since the last published release...",
         "FetchCommitDiffSuccess": "Found the list of changes.",
         "FetchCommitDiffError": "An unexpected error occurred while fetching the list of changes.",
@@ -290,7 +302,7 @@
         "InvalidActionSet": "Invalid action: %s. Only 'create', 'edit', or 'delete' actions are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
         "InvalidTagSource": "Invalid tag source: %s. Only 'auto', or 'manual' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
         "InvalidReleaseNotesSource": "Invalid release notes source: %s. Only 'file', or 'input' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
-        "InvalidCompareWithAttribute": "Invalid compareWith attribute: %s. Only 'lastFullRelease, 'lastRelease', or 'lastReleaseByTag' options are allowed. For yaml syntax see: https://aka.ms/AA3m1bq",
+        "InvalidCompareWithAttribute": "Invalid compareWith attribute: %s. Only 'lastFullRelease, 'lastNonDraftRelease', or 'lastNonDraftReleaseByTag' options are allowed. For yaml syntax see: https://aka.ms/AA3m1bq",
         "InvalidAssetUploadMode": "Invalid asset upload mode: %s. Only 'delete', or 'replace' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
         "TagRequiredEditDeleteAction": "For '%s' action, a tag is required. Please specify a tag in the step. For yaml syntax see: https://aka.ms/AA3m1bq",
         "TagRequiredCreateAction": "Tag source is set to manual- please specify a tag for create action. For yaml syntax see: https://aka.ms/AA3m1bq",
