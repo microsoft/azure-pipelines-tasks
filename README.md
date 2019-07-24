@@ -13,8 +13,8 @@ This provides open examples on how we write tasks which will help you write othe
 |![macOS](docs/res/apple_med.png) **macOS**|[![Build & Test][macOS-build-badge]][macOS-build]| 
 |![Linux](docs/res/linux_med.png) **Linux**|[![Build & Test][linux-build-badge]][linux-build]|
 
-[win-build-badge]: https://dev.azure.com/mseng/PipelineTools/_apis/build/status/azure-pipelines-tasks.ci-windows
-[win-build]: https://dev.azure.com/mseng/PipelineTools/_build/latest?definitionId=7634
+[win-build-badge]: https://repo-badge-python.azurewebsites.net/api/HttpTrigger?repo=azure-pipelines-tasks
+[win-build]: https://repo-badge-python.azurewebsites.net/api/HttpTrigger?repo=azure-pipelines-tasks
 
 [macOS-build-badge]: https://dev.azure.com/mseng/PipelineTools/_apis/build/status/azure-pipelines-tasks.ci-macos
 [macOS-build]: https://dev.azure.com/mseng/PipelineTools/_build/latest?definitionId=7635
