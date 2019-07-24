@@ -263,6 +263,28 @@ export class Helper {
         }
     }
 
+    public static uploadTranslationLayerDiagFileIfPresent(searchFolder: string, pattern: string): void {
+        const translationLayerDiagFiles = tl.findMatch(searchFolder, pattern);
+        try {
+            if (translationLayerDiagFiles.length > 0) {
+                translationLayerDiagFiles.forEach((translationLayerDiagFile) => {
+                    tl.uploadFile(translationLayerDiagFile);
+                });
+            }
+        } catch (err) {
+            tl.debug(err);
+        }
+        finally {
+            try {
+                translationLayerDiagFiles.forEach((translationLayerDiagFile) => {
+                    tl.rmRF(translationLayerDiagFile);
+                });
+            } catch (err) {
+                tl.debug(err);
+            }
+        }
+    }
+
     // Utility function used to remove empty or spurious nodes from the input json file
     public static removeEmptyNodes(obj: any) {
         if (obj === null || obj === undefined ) {

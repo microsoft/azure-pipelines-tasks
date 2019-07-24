@@ -34,6 +34,10 @@ export class NonDistributedTest {
             const exitCode = await this.startDtaExecutionHost();
             tl.debug('DtaExecutionHost finished');
 
+            // There is a bug in the translation layer that does not release the lock on the diag file evene when end session is called,
+            // hence uploading this from here.
+            utils.Helper.uploadTranslationLayerDiagFileIfPresent(this.inputDataContract.ExecutionSettings.TempFolder, 'TraceLogs-*.diag');
+
             if (exitCode !== 0 && !this.inputDataContract.ExecutionSettings.IgnoreTestFailures) {
                 tl.debug('Modules/DTAExecutionHost.exe process exited with code ' + exitCode);
                 tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailed'), true);

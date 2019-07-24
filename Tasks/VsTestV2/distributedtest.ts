@@ -75,9 +75,8 @@ export class DistributedTest {
 
         const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
         dtaExecutionHostTool.arg(['--inputFile', inputFilePath]);
-        const code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ ignoreReturnCode:this.inputDataContract.ExecutionSettings.IgnoreTestFailures, env: envVars });
+        const code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ ignoreReturnCode: this.inputDataContract.ExecutionSettings.IgnoreTestFailures, env: envVars });
 
-        //hydra: add consolidated ci for inputs in C# layer for now
         const consolidatedCiData = {
             agentFailure: false
         };
@@ -87,6 +86,11 @@ export class DistributedTest {
         } else {
             tl.debug('Modules/DTAExecutionHost.exe exited');
         }
+
+        // There is a bug in the translation layer that does not release the lock on the diag file evene when end session is called,
+        // hence uploading this from here.
+        utils.Helper.uploadTranslationLayerDiagFileIfPresent(this.inputDataContract.ExecutionSettings.TempFolder, 'TraceLogs-*.diag');
+
         ci.publishEvent(consolidatedCiData);
         return code;
     }
