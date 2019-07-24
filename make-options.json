@@ -113,6 +113,7 @@
         "PackerBuildV0",
         "PackerBuildV1",
         "PipAuthenticateV0",
+        "PipAuthenticateV1",
         "PowerShellV2",
         "PowerShellOnTargetMachinesV3",
         "PublishBuildArtifactsV1",
