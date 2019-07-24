@@ -1,8 +1,10 @@
 import tl = require("azure-pipelines-task-lib/task");
-import * as acrTaskRequest from "./acrTaskRequestBody";
+import * as acrTaskRequest from "./acrtaskrequestbody";
 import * as imageUtils from "docker-common-v2/containerimageutils";
 import * as pipelineUtils from "docker-common-v2/pipelineutils";
-import { AcrTask } from "./acrTaskClient";
+import { Resources } from 'azure-arm-rest-v2/azure-arm-resource';
+import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
+import { AcrTask, ACRRegistry } from "./acrtaskclient";
 
 export function getContextPath(): string
 {
@@ -21,17 +23,6 @@ export function getContextPath(): string
     return contextPath;
 }
 
-export function getRegistryNameFromUrl(id: string): string{
-    if(!id){
-        throw new Error(tl.loc("UnableToFindRegistryDueToNullId"));
-    }
-    const pathArray =id.split("/");
-    if(pathArray[7] != 'registries'){
-        throw new Error(tl.loc("UnableToFindRegistryDueToInvalidId"));
-    }
-    return pathArray[8];
-}
-
 export function getResourceGroupNameFromUrl(id: string): string{
     if(!id){
         throw new Error(tl.loc("UnableToFindResourceGroupDueToNullId"));
@@ -41,6 +32,25 @@ export function getResourceGroupNameFromUrl(id: string): string{
         throw new Error(tl.loc("UnableToFindResourceGroupDueToInvalidId"));
     }
     return pathArray[4];
+}
+
+export async function getContainerRegistryDetails(endpoint: AzureEndpoint, resourceName: string): Promise<ACRRegistry> {
+    var azureResources: Resources = new Resources(endpoint);
+    var filteredResources: Array<any> = await azureResources.getResources('Microsoft.ContainerRegistry/registries', resourceName);
+    if(!filteredResources || filteredResources.length == 0) {
+        throw new Error(tl.loc('ResourceDoesntExist', resourceName));
+    }
+    else if(filteredResources.length == 1) {
+        var acrRegistryObject = filteredResources[0];
+        let acrRegistry = new ACRRegistry();
+        acrRegistry.name = resourceName;
+        acrRegistry.location = acrRegistryObject.location;
+        acrRegistry.resourceGroup = getResourceGroupNameFromUrl(acrRegistryObject.id);
+        return acrRegistry;
+    }
+    else {
+        throw new Error(tl.loc('MultipleResourceGroupFoundForContainerRegistry', resourceName));
+    }
 }
 
 export function getListOfTagValuesForImageNames(acrTask: AcrTask): acrTaskRequest.Value[]
