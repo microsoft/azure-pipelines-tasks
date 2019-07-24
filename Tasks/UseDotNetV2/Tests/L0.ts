@@ -177,6 +177,15 @@ describe('UseDotNet', function () {
         }, tr, done);
     });
 
+    it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should be able to return versionInfo for sdk present in sdks property of a release object.", (done) => {
+        process.env["__versionspec__"] = "2.2.104";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoTestsCorrect.js"));
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have returned the correct version info."));
+        }, tr, done);
+    });
+
     it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should return correct version info for a version which exists in a different channel of the same major version", (done) => {
         process.env["__versionspec__"] = "2.1.104";
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoTestsCorrect.js"));
