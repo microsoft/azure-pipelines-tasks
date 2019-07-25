@@ -51,6 +51,10 @@
             "label": "Namespace",
             "required": true,
             "defaultValue": "",
+<<<<<<< HEAD
+=======
+            "visibleRule": "action != bake",
+>>>>>>> fa5bee21f... Setting defaultValue of namespace to empty string (#10974)
             "helpMarkDown": "Sets the namespace for the commands by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
         },
         {

@@ -51,6 +51,10 @@
       "label": "ms-resource:loc.input.label.namespace",
       "required": true,
       "defaultValue": "",
+<<<<<<< HEAD
+=======
+      "visibleRule": "action != bake",
+>>>>>>> fa5bee21f... Setting defaultValue of namespace to empty string (#10974)
       "helpMarkDown": "ms-resource:loc.input.help.namespace"
     },
     {
