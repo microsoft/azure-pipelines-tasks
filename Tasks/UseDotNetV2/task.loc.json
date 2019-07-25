@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 14
   },
   "satisfies": [
     "DotNetCore"
@@ -49,7 +49,8 @@
       "label": "ms-resource:loc.input.label.version",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.version"
+      "helpMarkDown": "ms-resource:loc.input.help.version",
+      "visibleRule": "useGlobalJson = false || packageType = runtime"
     },
     {
       "name": "includePreviewVersions",
@@ -150,6 +151,13 @@
     "FailedWhileExtractingPacakge": "ms-resource:loc.messages.FailedWhileExtractingPacakge",
     "InstallingNuGetVersion": "ms-resource:loc.messages.InstallingNuGetVersion",
     "FailureWhileInstallingNuGetVersion": "ms-resource:loc.messages.FailureWhileInstallingNuGetVersion",
-    "SettingUpNugetProxySettings": "ms-resource:loc.messages.SettingUpNugetProxySettings"
+    "SettingUpNugetProxySettings": "ms-resource:loc.messages.SettingUpNugetProxySettings",
+    "GlobalJsonFound": "ms-resource:loc.messages.GlobalJsonFound",
+    "GlobalJsonSdkVersion": "ms-resource:loc.messages.GlobalJsonSdkVersion",
+    "GlobalJsonIsEmpty": "ms-resource:loc.messages.GlobalJsonIsEmpty",
+    "FailedToFindGlobalJson": "ms-resource:loc.messages.FailedToFindGlobalJson",
+    "FailedToReadGlobalJson": "ms-resource:loc.messages.FailedToReadGlobalJson",
+    "VersionNumberHasTheWrongFormat": "ms-resource:loc.messages.VersionNumberHasTheWrongFormat",
+    "OnlyExplicitVersionAllowed": "ms-resource:loc.messages.OnlyExplicitVersionAllowed"
   }
 }

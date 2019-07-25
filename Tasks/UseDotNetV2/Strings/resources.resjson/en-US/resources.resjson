@@ -2,8 +2,8 @@
   "loc.friendlyName": "Use .NET Core",
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/AA4xgy0)",
   "loc.description": "Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks. Additionally provides proxy support.",
-  "loc.instanceNameFormat": "Use dotnet $(packageType) $(version)",
-  "loc.releaseNotes": "<li>Support for installing multiple versions side by side.</li><li>Support for patterns in version to fetch latest in minor/major version.</li><li>Restrict Multi-level lookup</li><li>Installs NuGet and provides proxy support.</li>",
+  "loc.instanceNameFormat": "Use .Net Core $(packageType) $(version)",
+  "loc.releaseNotes": "<li>Support for installing multiple versions side by side.</li><li>Support for patterns in version to fetch latest in minor/major version.</li><li>Restrict Multi-level lookup</li><li>Installs NuGet and provides proxy support.</li><li>Installs sdk versions from `global.json` file(s)</li>",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.packageType": "Package to install",
   "loc.input.help.packageType": "Please select whether to install only runtime or SDK.",
@@ -61,7 +61,7 @@
   "loc.messages.FailedInDetectingMachineArch": "Failed while detecting machine OS platform with error: %s",
   "loc.messages.runtimeVersionPropertyNotFound": "runtime-version property could not be found for .Net Core %s version %s.",
   "loc.messages.VersionNotFound": "%s version matching: %s could not be found",
-  "loc.messages.VersionNotAllowed": "Version %s is not allowed. Allowed version types are: majorVersion.x, majorVersion.minorVersion.x, majorVersion.minorVersion.patchVersion",
+  "loc.messages.VersionNotAllowed": "Version %s is not allowed. Allowed version types are: majorVersion.x, majorVersion.minorVersion.x, majorVersion.minorVersion.patchVersion. More details: %s",
   "loc.messages.VersionsCanNotBeCompared": "Versions %s and %s cannot be compared. Both versions should be explicit.",
   "loc.messages.FileNameNotCorrectCompleteFileName": "File name %s is not a correct '.complete' file.",
   "loc.messages.ChannelVersionsNotComparable": "Channel versions %s and %s can not be compared. They both must have numeric major and minor versions.",
@@ -81,5 +81,12 @@
   "loc.messages.FailedWhileExtractingPacakge": "Failed while extracting downloaded package with error: %s",
   "loc.messages.InstallingNuGetVersion": "Installing NuGet version %s",
   "loc.messages.FailureWhileInstallingNuGetVersion": "Failed while installing NuGet version. Error: %s",
-  "loc.messages.SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet."
+  "loc.messages.SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet.",
+  "loc.messages.GlobalJsonFound": "Found a global.json at path: %s",
+  "loc.messages.GlobalJsonSdkVersion": "SDK version: %s is specified by global.json at path: %s",
+  "loc.messages.GlobalJsonIsEmpty": "global.json at path: %s is empty. No version is specified.",
+  "loc.messages.FailedToFindGlobalJson": "Failed to find global.json at and inside path: %s",
+  "loc.messages.FailedToReadGlobalJson": "The global.json at path: '%s' has the wrong format. For information about global.json, visit here: https://docs.microsoft.com/en-us/dotnet/core/tools/global-json. Error while trying to read: %s",
+  "loc.messages.VersionNumberHasTheWrongFormat": "The version number: %s doesn't have the correct format. Versions can be given in the following formats: 2.x   => Install latest in major version. 2.2.x => Install latest in major and minor version. 2.2.104 => Install exact version. Find the value of `version` for installing SDK/Runtime, from the releases.json. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://github.com/dotnet/core/blob/master/release-notes/releases-index.json). Like link to releases.json for 2.2 version is https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/2.2/releases.json",
+  "loc.messages.OnlyExplicitVersionAllowed": "Only explicit versions and accepted, such as: 2.2.301. Version: %s is not valid."
 }
