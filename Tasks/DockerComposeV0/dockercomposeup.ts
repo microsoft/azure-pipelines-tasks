@@ -2,6 +2,7 @@
 
 import * as tl from "azure-pipelines-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 
 export function run(connection: DockerComposeConnection): any {
     var command = connection.createComposeCommand();
@@ -22,5 +23,6 @@ export function run(connection: DockerComposeConnection): any {
         command.arg("--abort-on-container-exit");
     }
 
+    command.line(dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false)));
     return connection.execCommand(command);
 }

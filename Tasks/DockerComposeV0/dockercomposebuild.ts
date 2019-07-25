@@ -4,6 +4,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as sourceUtils from "docker-common-v2/sourceutils";
 import * as imageUtils from "docker-common-v2/containerimageutils";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 
 function dockerTag(connection: DockerComposeConnection, source: string, target: string) {
     var command = connection.createCommand();
@@ -60,6 +61,7 @@ function addOtherTags(connection: DockerComposeConnection, imageName: string): a
 export function run(connection: DockerComposeConnection): any {
     var command = connection.createComposeCommand();
     command.arg("build");
+    command.line(dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false)));
     return connection.execCommand(command)
     .then(() => connection.getImages(true))
     .then(images => {
