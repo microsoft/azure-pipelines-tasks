@@ -50,12 +50,12 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
     protected async PostDeploymentStep() {
         if(this.taskParams.AppSettings) {
-            var customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
+            var customApplicationSettings = JSON.parse(this.taskParams.AppSettings);
             await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
         }
 
         if(this.taskParams.ConfigurationSettings) {
-            var customApplicationSettings = ParameterParser.parse(this.taskParams.ConfigurationSettings);
+            var customApplicationSettings = JSON.parse(this.taskParams.ConfigurationSettings);
             await this.appServiceUtility.updateConfigurationSettings(customApplicationSettings);
         }
 
