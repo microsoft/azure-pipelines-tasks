@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Download Package",
-  "loc.helpMarkDown": "Needs Package Management extension to be installed",
-  "loc.description": "Download a package from a Package Management feed in Azure Artifacts or TFS. \r\n Requires the Package Management extension.",
+  "loc.friendlyName": "Download package",
+  "loc.helpMarkDown": "Requires the Azure Artifacts extension to be installed",
+  "loc.description": "Download a package from a package management feed in Azure Artifacts",
   "loc.instanceNameFormat": "Download Package",
   "loc.input.label.feed": "Feed",
   "loc.input.help.feed": "Select the package source",
@@ -14,11 +14,12 @@
   "loc.messages.FailedToGetPackageMetadata": "Failed to get package metadata with error %s",
   "loc.messages.FailedToDownloadNugetPackage": "Failed to download NuGet package from %s got the following error: %s",
   "loc.messages.PackageDownloadSuccessful": "Package download successful",
-  "loc.messages.CredentialsNotFound": "Could not determine credentials to connect to Package Management service.",
+  "loc.messages.CredentialsNotFound": "Could not determine credentials to connect to Azure Artifacts service.",
   "loc.messages.StartingDownloadOfPackage": "Starting download of NuGet package %s to location %s",
   "loc.messages.ExtractingNugetPackage": "Extracting NuGet package %s to directory %s",
   "loc.messages.PackageTypeNotSupported": "Only NuGet packages types can be downloaded using this task.",
   "loc.messages.ExtractionFailed": "Failed to extract package with error %s",
   "loc.messages.RetryingOperation": "Error: in %s, so retrying => retries pending: %s",
-  "loc.messages.OperationFailed": "Failed in %s with error: %s"
+  "loc.messages.OperationFailed": "Failed in %s with error: %s",
+  "loc.messages.UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"Download Package\" task. Please use version 1 or higher."
 }

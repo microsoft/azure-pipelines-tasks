@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 import { ISqlClient } from '../sql/ISqlClient';
 import { MysqlClient } from '../sql/MysqlClient';
 import { MysqlTaskParameter } from '../models/MysqlTaskParameter';

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Déploiement de base de données MySQL",
   "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/mysql-deployment-on-machine-group)",
-  "loc.description": "Il s'agit d'une préversion. Exécutez vos scripts et apportez des changements à votre base de données MySQL.",
+  "loc.description": "Exécuter des scripts et apporter des changements à une base de données MySQL",
   "loc.instanceNameFormat": "Déployer avec : $(TaskNameSelector)",
   "loc.input.label.TaskNameSelector": "Déployer MySql avec",
   "loc.input.help.TaskNameSelector": "Sélectionnez l'une des options situées entre Fichier de script et Script inline.",

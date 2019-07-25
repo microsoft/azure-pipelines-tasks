@@ -127,5 +127,8 @@
   "loc.messages.GetArtifactItemsNotSupported": "Il recupero degli elementi di artefatto non è supportato. Il percorso del codice non è valido",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Non è stato possibile recuperare il token di accesso per l'entità servizio gestita. Configurare l'identità del servizio gestita per la macchina virtuale 'https://aka.ms/azure-msi-docs'. Codice di stato: %s. Messaggio di stato: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Non è stato possibile recuperare il token di accesso per l'entità servizio gestita. Codice di stato: %s. Messaggio di stato: %s",
-  "loc.messages.NoAssociatedArtifacts": "Non sono stati trovati artefatti associati"
+  "loc.messages.NoAssociatedArtifacts": "Non sono stati trovati artefatti associati",
+  "loc.messages.OperationFailed": "Operazione non riuscita in %s. Errore: %s",
+  "loc.messages.RetryingOperation": "Errore in %s. L'operazione verrà ripetuta => Tentativi in sospeso: %s",
+  "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta."
 }

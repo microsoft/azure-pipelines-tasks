@@ -285,63 +285,171 @@ describe('DotNetCoreInstaller', function () {
         }, tr, done);
     });
 
-    // it("[VersionFetcher.DotNetCoreVersionFetcher] getDownloadUrl should return correct download URL for matching OS", (done) => {
-    // });
+    it("[VersionFetcher.DotNetCoreVersionFetcher] getDownloadUrl should return correct download URL for matching OS", (done) => {
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetDownloadUrlPassTests.js"));
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed as download URL for all windows, linux and osx are available for correct rid."));
+            assert(tr.stdout.indexOf("CorrectDownloadUrlsSuccessfullyReturnedForAllOs") > 0, ("Should have printed success message on receiving correct urls for all os's."))
+        }, tr, done);
+    });
 
-    // it("[VersionInstaller] constructor should throw if installationPath doesn't exist and cannot be created", (done) => {
-    // });
+    it("[VersionInstaller] constructor should throw if installationPath doesn't exist and cannot be created", (done) => {
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionInstallerTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == false, ("Should have failed as the installation path doesn't exist and cannot be created or the process doesn't have permission over it."))
+        }, tr, done);
+    });
 
-    // it("[VersionInstaller] downloadAndInstall should throw if passed arguments are empty or doesn't contain version or downloadUrl is malformed", (done) => {
-    // });
+    it("[VersionInstaller] downloadAndInstall should throw if passed arguments are empty or doesn't contain version or downloadUrl is malformed", (done) => {
+        process.env["__case__"] = "urlerror";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionInstallerDownloadAndInstallTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == false, ("Should have failed as the arguments passed are not correct."));
+            assert(tr.stdout.indexOf("VersionCanNotBeDownloadedFromUrl") > -1, "Should have thrown this error: VersionCanNotBeDownloadedFromUrl");
+            assert(tr.stdout.lastIndexOf("VersionCanNotBeDownloadedFromUrl") > tr.stdout.indexOf("VersionCanNotBeDownloadedFromUrl"), "Should have thrown this error: VersionCanNotBeDownloadedFromUrl");
+        }, tr, done);
+    });
 
-    // it("[VersionInstaller] downloadAndInstall should throw if downloading version from URL fails", (done) => {
-    // });
+    it("[VersionInstaller] downloadAndInstall should throw if downloading version from URL fails", (done) => {
+        process.env["__case__"] = "downloaderror";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionInstallerDownloadAndInstallTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == false, ("Should have failed as downloading the package from url did not complete."));
+            assert(tr.stdout.indexOf("CouldNotDownload") > -1, "Should have thrown this error: CouldNotDownload");
+        }, tr, done);
+    });
 
-    // it("[VersionInstaller] downloadAndInstall should throw if extracting downloaded package or copying folders into installation path fails.", (done) => {
-    // });
+    it("[VersionInstaller] downloadAndInstall should throw if extracting downloaded package or copying folders into installation path fails.", (done) => {
+        process.env["__case__"] = "extracterror";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionInstallerDownloadAndInstallTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == false, ("Should have failed as extraction of package was not successfull."));
+            assert(tr.stdout.indexOf("FailedWhileExtractingPacakge") > -1, "Should have thrown this error: FailedWhileExtractingPacakge");
+        }, tr, done);
+    });
 
-    // it("[VersionInstaller] downloadAndInstall should not throw if copying root files from package into installationPath fails", (done) => {
-    // });
+    it("[VersionInstaller] downloadAndInstall should not throw if root folders were successfully copied but copying root files from package into installationPath failed", (done) => {
+        process.env["__case__"] = "filecopyerror";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionInstallerDownloadAndInstallTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("FailedToCopyTopLevelFiles") > -1, "Should not have caused function failure when root file's copying failed.");
+            assert(tr.stdout.indexOf("SuccessfullyInstalled") > -1, "Function should have completed successfully.");
+        }, tr, done);
+    });
 
-    // it("[VersionInstaller] downloadAndInstall should only copy files from root folder if version being installed in the path is greater than all other already present", (done) => {
-    // });
+    it("[VersionInstaller] downloadAndInstall should not copy files from root folder if version being installed in the path is not greater than all other already present or runtime is being installed", (done) => {
+        process.env["__case__"] = "conditionalfilecopy";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionInstallerDownloadAndInstallTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.lastIndexOf("CopyingFilesIntoPath [ 'installationPath' ]") == tr.stdout.indexOf("CopyingFilesIntoPath [ 'installationPath' ]"), "Should have copied root files in only one case where the version being installed is latest among already installed ones.");
+        }, tr, done);
+    });
 
-    // it("[VersionInstaller] downloadAndInstall should throw if creating version.complete file fails.", (done) => {
-    // });
+    it("[VersionInstaller] downloadAndInstall should throw if creating version.complete file fails.", (done) => {
+        process.env["__case__"] = "versioncompletefileerror";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionInstallerDownloadAndInstallTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == false, ("Should have failed as creating completion markup file failed for package."));
+            assert(tr.stdout.indexOf("CreatingInstallationCompeleteFile") > -1, "Should have tried creating the file.");
+            assert(tr.stdout.indexOf("FailedWhileInstallingVersionAtPath") > -1, "Should have thrown this error as the parent error.");
+        }, tr, done);
+    });
 
-    // it("[VersionInstaller] downloadAndInstall should complete successfully on complete installation and create complete file in both sdk and runtime when sdk is installed and in runtime when only runtime is installed.", (done) => {
-    // });
+    it("[VersionInstaller] downloadAndInstall should complete successfully on complete installation and create complete file in both sdk and runtime when sdk is installed and in runtime when only runtime is installed.", (done) => {
+        process.env["__case__"] = "successfullinstall";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionInstallerDownloadAndInstallTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("SuccessfullyInstalled") > -1, "Should have SuccessfullyInstalled.")
+        }, tr, done);
+    });
 
-    // it("[VersionInstaller] isVersionInstalled should throw if version being checked is not explicit.", (done) => {
-    // });
+    it("[VersionInstaller] isVersionInstalled should throw if version being checked is not explicit.", (done) => {
+        process.env["__case__"] = "nonexplicit";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionInstallerIsVersionInstalledTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == false, ("Should have failed."));
+            assert(tr.stdout.indexOf("ExplicitVersionRequired") > -1, "Should have printed ExplicitVersionRequired.")
+        }, tr, done);
+    });
 
-    // it("[VersionInstaller] isVersionInstalled should return false if either folder or file with name as version is not present inside sdk folder.", (done) => {
-    // });
+    it("[VersionInstaller] isVersionInstalled should return false if either folder or file with name as version is not present inside sdk/runtime folder.", (done) => {
+        process.env["__case__"] = "folderorfilemissing";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionInstallerIsVersionInstalledTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have returned false without failure."));
+            assert(tr.stdout.indexOf("VersionFoundInCache") <= -1, "Should not have found any version in cache as either file or folder for that version were missing");
+        }, tr, done);
+    });
 
-    // it("[VersionInstaller] isVersionInstalled should return false if either folder or file with name as version is not present inside runtime path.", (done) => {
-    // });
+    it("[VersionInstaller] isVersionInstalled should return true if both folder or file with name as version is present inside sdk/runtime path.", (done) => {
+        process.env["__case__"] = "success";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionInstallerIsVersionInstalledTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have returned false without failure."));
+            assert(tr.stdout.indexOf("VersionFoundInCache") > -1, "Should not have found any version in cache as either file or folder for that version were missing");
+        }, tr, done);
+    });
 
-    // it("[VersionInstaller] isVersionInstalled should return true if both folder or file with name as version is present inside sdk/runtime path.", (done) => {
-    // });
+    it("[dotnetcoreinstaller] run should throw if versionSpec is invalid.", (done) => {
+        process.env["__case__"] = "matchingversionnotfound";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "dotnetcoreInstallerTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == false, ("Should have failed."));
+            assert(tr.stdout.indexOf("MatchingVersionNotFound") > -1, "Should not have thrown this message as versionInfo for a matching version could not be found.");
+        }, tr, done);
+    });
 
-    // it("[dotnetcoreinstaller] run should default to use $(Agent.ToolsDirectory)/dotnet as installation path if installationPath input is empty.", (done) => {
-    // });
+    it("[dotnetcoreinstaller] run should skip installation if version found in cache but should prepend all the required paths and should also use $(Agent.ToolsDirectory)/dotnet as installation when input is missing.", (done) => {
+        process.env["__case__"] = "skipinstallation";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "dotnetcoreInstallerTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("PrependingInstallationPath") > -1, "Should have prepended installation path");
+            assert(tr.stdout.indexOf("PrependGlobalToolPath") > -1, "Should have printed this message as addDotNetCoreToolPath function should have been called.");
+            assert(tr.stdout.indexOf("PrependingGlobalToolPath") > -1, "Should have prepended global tool path");
+            assert(tr.stdout.indexOf("DownloadAndInstallCalled") == -1, "Should not have printed this message as DownloadAndInstall function should not have been called.");
+        }, tr, done);
+    });
 
-    // it("[dotnetcoreinstaller] run should throw if versionSpec is invalid.", (done) => {
-    // });
+    it("[dotnetcoreinstaller] run should install if version is not found in cache and prepend the required paths.", (done) => {
+        process.env["__case__"] = "installversion";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "dotnetcoreInstallerTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("PrependingInstallationPath") > -1, "Should have prepended installation path");
+            assert(tr.stdout.indexOf("PrependGlobalToolPath") > -1, "Should have printed this message as addDotNetCoreToolPath function should have been called.");
+            assert(tr.stdout.indexOf("PrependingGlobalToolPath") > -1, "Should have prepended global tool path");
+            assert(tr.stdout.indexOf("DownloadAndInstallCalled") > -1, "Should have printed this message as DownloadAndInstall function should have been called.");
+        }, tr, done);
+    });
 
-    // it("[dotnetcoreinstaller] run should throw if versionInfo for the version spec could not be found.", (done) => {
-    // });
-
-    // it("[dotnetcoreinstaller] run should skip installation if version found in cache.", (done) => {
-    // });
-
-    // it("[dotnetcoreinstaller] run should always prepend installationPath & dotnet_root to PATH environment variable.", (done) => {
-    // });
-
-    // it("[dotnetcoreinstaller] run should not fail if globalToolPath could not be created or set.", (done) => {
-    // });
-
-    // it("[dotnetcoreinstaller] run should always set multilevel lookup environment variable and by default restrict if input is not present.", (done) => {
-    // });
+    it("[dotnetcoreinstaller] run should not fail if globalToolPath could not be created or set.", (done) => {
+        process.env["__case__"] = "globaltoolpathfailure";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "dotnetcoreInstallerTests.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("PrependingInstallationPath") > -1, "Should have prepended installation path");
+            assert(tr.stdout.indexOf("PrependGlobalToolPath") > -1, "Should have printed this message as addDotNetCoreToolPath function should have been called.");
+            assert(tr.stdout.indexOf("ErrorWhileSettingDotNetToolPath") > -1, "Should have printed this message as error must have been encountered while setting GlobalToolPath.");
+        }, tr, done);
+    });
 });

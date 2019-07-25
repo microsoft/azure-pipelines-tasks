@@ -4,10 +4,9 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870240",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-monitor",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
-  "preview": true,
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "visibility": [
     "Build",
@@ -19,8 +18,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 4
+    "Minor": 151,
+    "Patch": 2
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [

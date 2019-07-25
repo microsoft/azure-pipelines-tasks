@@ -1,16 +1,15 @@
 {
     "id": "501DD25D-1785-43E4-B4E5-A5C78CCC0573",
     "name": "AzureFunctionApp",
-    "friendlyName": "Azure Function",
-    "description": "Update Azure Function on Windows, Function on Linux with built-in images, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications",
-    "helpUrl": "https://aka.ms/azurefunctiondeployreadme",
-    "helpMarkDown": "[More information](https://aka.ms/azurefunctiondeployreadme)",
+    "friendlyName": "Azure Functions",
+    "description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based web applications",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiondeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
         "Release"
     ],
-    "preview": "true",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
@@ -18,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 7
+        "Minor": 155,
+        "Patch": 0
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -128,7 +127,8 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "appType = functionAppLinux"
+            "visibleRule": "appType = functionAppLinux",
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
         },
         {
             "name": "customWebConfig",
@@ -379,6 +379,7 @@
         "FailedToSyncTriggers": "Failed to sync triggers for function app '%s'. Error: %s",
         "SyncingFunctionTriggers": "Syncing triggers for function app",
         "SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully",
-        "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s"
+        "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

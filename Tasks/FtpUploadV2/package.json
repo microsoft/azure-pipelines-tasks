@@ -1,0 +1,21 @@
+{
+  "name": "FTP",
+  "version": "2.0.0",
+  "description": "FTP Upload Task",
+  "main": "ftpuploadtask.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/node": "^8.0.0",
+    "azure-pipelines-task-lib": "^2.8.0",
+    "basic-ftp": "^3.4.3"
+  }
+}

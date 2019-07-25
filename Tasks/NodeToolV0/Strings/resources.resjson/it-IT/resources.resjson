@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Programma di installazione strumento Node",
+  "loc.friendlyName": "Programma di installazione strumento Node.js",
   "loc.helpMarkDown": "",
-  "loc.description": "Trova o scarica e memorizza nella cache l'identificatore di versione specificato di Node e lo aggiunge a PATH.",
+  "loc.description": "Trova o scarica e memorizza nella cache l'identificatore di versione specificato di Node.js lo aggiunge a PATH.",
   "loc.instanceNameFormat": "Usa Node $(versionSpec)",
   "loc.input.label.versionSpec": "Identificatore di versione",
   "loc.input.help.versionSpec": "Identificatore della versione da scaricare, ad esempio: 6.x, 4.x, 6.10.0, >=6.10.0",

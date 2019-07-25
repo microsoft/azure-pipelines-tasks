@@ -26,22 +26,15 @@ async function run() {
     }
 
     let dotNetCoreInstaller = new VersionInstaller(packageType, installationPath);
-    if (!dotNetCoreInstaller.isVersionInstalled(versionInfo.version)) {
-        await dotNetCoreInstaller.downloadAndInstall(versionInfo, versionFetcher.getDownloadUrl(versionInfo, packageType));
+    if (!dotNetCoreInstaller.isVersionInstalled(versionInfo.getVersion())) {
+        await dotNetCoreInstaller.downloadAndInstall(versionInfo, versionFetcher.getDownloadUrl(versionInfo));
     }
 
     toolLib.prependPath(installationPath);
 
     // By default disable Multi Level Lookup unless user wants it enabled.
-    let restrictMultiLevelLookup = true;
-    try {
-        restrictMultiLevelLookup = tl.getBoolInput("restrictMultiLevelLookup", true);
-    }
-    catch (ex) {
-        // no op, restrictMultiLevelLookup is defaulted to true
-    }
-
-    tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", restrictMultiLevelLookup ? "0" : "1");
+    let  performMultiLevelLookup = tl.getBoolInput("performMultiLevelLookup", false);
+    tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", !performMultiLevelLookup ? "0" : "1");
 
     // Add dot net tools path to "PATH" environment variables, so that tools can be used directly.
     addDotNetCoreToolPath();

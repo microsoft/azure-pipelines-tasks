@@ -1,10 +1,10 @@
 "use strict";
 import * as del from "del";
 import * as fs from "fs";
-import * as tr from "vsts-task-lib/toolrunner";
-import trm = require('vsts-task-lib/toolrunner');
+import * as tr from "azure-pipelines-task-lib/toolrunner";
+import trm = require('azure-pipelines-task-lib/toolrunner');
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as utils from "./utilities";
 import ClusterConnection from "./clusterconnection";
 
@@ -91,7 +91,7 @@ function getCommandArguments(): string {
 
 function isJsonOrYamlOutputFormatSupported(kubecommand) : boolean
 {
-    var commandsThatDontSupportYamlAndJson: string[] = ["explain", "cluster-info", "top", "cordon", "uncordon", "drain", "describe", "logs", "attach", "exec", "port-forward", "proxy", "cp", "auth", "completion", "api-versions", "config", "help", "plugin", "rollout"];    
+    var commandsThatDontSupportYamlAndJson: string[] = ["explain", "delete", "cluster-info", "top", "cordon", "uncordon", "drain", "describe", "logs", "attach", "exec", "port-forward", "proxy", "cp", "auth", "completion", "api-versions", "config", "help", "plugin", "rollout"];    
     
     if (commandsThatDontSupportYamlAndJson.findIndex(command => command === kubecommand) > -1)
     {

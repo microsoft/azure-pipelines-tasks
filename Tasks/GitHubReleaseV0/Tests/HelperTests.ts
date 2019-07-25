@@ -1,4 +1,4 @@
-import tmrm = require('vsts-task-lib/mock-run');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import * as path from 'path';
 import { Inputs } from '../operations/Constants';
 import * as sinon from 'sinon';
@@ -29,14 +29,23 @@ export class HelperTests {
                                 { 
                                     "commit": { "sha": "abc" },
                                     "name": "tagName"
+                                },
+                                { 
+                                    "commit": { "sha": "bcd" },
+                                    "name": "test"
+                                },
+                                { 
+                                    "commit": { "sha": "bcd" },
+                                    "name": "v1.12"
                                 }
                             ]
                         }
                     },
-                    getBranch: function() {
+                    getBranch: function(githubEndpointToken: string, repositoryName: string, target: string) {
+
                         return {
                             statusCode: 200,
-                            body: { commit: { sha: "abc" } }
+                            body: { commit: { sha: target === "master"? "abc":target } }
                         }
                     },
                     getReleases: function() {

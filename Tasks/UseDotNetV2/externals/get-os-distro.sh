@@ -113,7 +113,7 @@ get_current_os_name() {
 
     local uname=$(uname)
     if [ "$uname" = "Darwin" ]; then
-        echo "mac"
+        echo "osx"
         return 0
     elif [ "$uname" = "Linux" ]; then
         local linux_platform_name
@@ -139,7 +139,7 @@ get_legacy_os_name() {
 
     local uname=$(uname)
     if [ "$uname" = "Darwin" ]; then
-        echo "mac"
+        echo "osx"
         return 0
     else
         if [ -e /etc/os-release ]; then
@@ -182,7 +182,7 @@ legacyOsName=$(get_legacy_os_name || echo "")
 arch=$(get_machine_architecture || echo "")
 
 primaryName="$osName-$arch"
-legacyName="$legacyOsName"
+legacyName="$legacyOsName-$arch"
 
 echo "Primary:$primaryName"
 echo "Legacy:$legacyName"

@@ -3,7 +3,7 @@
   "name": "DockerCompose",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=848006",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker-compose",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 150,
-    "Patch": 3
+    "Minor": 155,
+    "Patch": 1
   },
   "demands": [],
   "preview": "false",
@@ -319,11 +319,13 @@
     }
   },
   "messages": {
+    "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
     "AdditionalDockerComposeFileDoesNotExists": "ms-resource:loc.messages.AdditionalDockerComposeFileDoesNotExists",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
+    "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
     "ImageNameWithoutTag": "ms-resource:loc.messages.ImageNameWithoutTag",

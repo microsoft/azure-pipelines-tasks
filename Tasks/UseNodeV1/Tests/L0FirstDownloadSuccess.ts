@@ -37,7 +37,12 @@ tlClone.getVariable = function(variable: string) {
 tlClone.assertAgent = function(variable: string) {
     return;
 };
-tlClone.setSecret = taskLib.setSecret;
+tlClone.setSecret = function(password){
+    console.log('Setting secret', password);
+};
+tlClone.setVariable = function(key, val) {
+    console.log('Setting', key, 'to', val);
+};
 if (process.env["__proxy__"]) {
     tlClone.getHttpProxyConfiguration = function(requestUrl?: string): taskLib.ProxyConfiguration | null {
         return { proxyUrl: 'http://url.com', proxyUsername: 'username', proxyPassword: 'password', proxyBypassHosts: null};

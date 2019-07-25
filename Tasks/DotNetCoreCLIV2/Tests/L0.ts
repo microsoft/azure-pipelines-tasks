@@ -153,6 +153,7 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.ran('c:\\path\\dotnet.exe restore c:\\agent\\home\\directory\\single.csproj --configfile c:\\agent\\home\\directory\\NuGet\\tempNuGet_.config'), 'it should have run dotnet');
         assert(tr.stdOutContained('adding package source uri: https://vsts/packagesource'), 'it should have added vsts source to config');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
+        assert(tr.stdOutContained('Using project scope 98320bea-3915-4ef2-9333-908d3290289c'), "should have used project scope");
         assert(tr.stdOutContained("Using feed registry url"), "should have used feed url, not session url");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
@@ -311,6 +312,20 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
+
+    it('publish works with publishWebProjects option if .csproj have Microsoft.Net.Sdk.Web', (done: MochaDone) => {
+        process.env["__projects__"] = "validateWebProject.csproj";
+        process.env["workingDirectory"] = ".";
+        process.env["__publishWebProject__"] = "true";
+        let tp = path.join(__dirname, 'validateWebProject.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked been invoked once');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    })
+
     it('publish updates the output with the project name appended', (done: MochaDone) => {
         process.env["__projects__"] = "*customoutput/project.json";
         process.env["__publishWebProjects__"] = "false";
@@ -411,6 +426,7 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe nuget push c:\\agent\\home\\directory\\foo.nupkg --source https://vsts/packagesource --api-key VSTS'), 'it should have run dotnet');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
+        assert(tr.stdOutContained("Using project scope ProjectId"), "should have used project scope");
         assert(tr.stdOutContained("Using session registry url"), "should have set up a session");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");

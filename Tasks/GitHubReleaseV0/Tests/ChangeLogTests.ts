@@ -1,4 +1,4 @@
-import tmrm = require('vsts-task-lib/mock-run');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import * as path from 'path';
 import { Inputs } from '../operations/Constants';
 import * as sinon from 'sinon';
@@ -26,7 +26,8 @@ export class ChangeLogTests {
                     getCommitShaFromTarget: function() {
                         return "abc";
                     },
-                    filterTag: function() {
+                    filterTag: function(githubEndpointToken: string, repositoryName: string, filterValue: string, filterTagsCallback: (tagsList: any[], filterValue: string) => any[]) {
+                        console.log("Tag Name: "+ filterValue);
                         return { commit: { sha: "abc" } };
                     }
                 }
@@ -40,6 +41,23 @@ export class ChangeLogTests {
                         return {
                             statusCode: 200,
                             body: { "tag_name": "tagName" }
+                        }
+                    },
+                    getReleases: function() {
+                        return {
+                            statusCode: 200,
+                            body: [
+                                {
+                                    "tag_name": "pre_rel",
+                                    "prerelease": true,
+                                    "draft": false
+                                },
+                                {
+                                    "tag_name": "v1.2",
+                                    "prerelease": false,
+                                    "draft": false
+                                }
+                            ]
                         }
                     },
                     getCommitsList: function() {

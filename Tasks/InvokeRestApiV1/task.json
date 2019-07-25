@@ -4,8 +4,8 @@
     "friendlyName": "Invoke REST API",
     "description": "Invoke a REST API as a part of your pipeline.",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870236",
-    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=870236)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/http-rest-api",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870236)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -17,8 +17,8 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 6
+        "Minor": 152,
+        "Patch": 1
     },
     "instanceNameFormat": "Invoke REST API: $(method)",
     "groups": [
@@ -47,7 +47,8 @@
         {
             "name": "connectedServiceName",
             "aliases": [
-                "serviceConnection"
+                "serviceConnection",
+                "genericService"
             ],
             "type": "connectedService:Generic",
             "label": "Generic service connection",
@@ -59,13 +60,14 @@
         {
             "name": "connectedServiceNameARM",
             "aliases": [
-                "azureServiceConnection"
+                "azureServiceConnection",
+                "azureSubscription"
             ],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select an Azure Resource Manager subscription that should be used to pick the url and construct authorization header for the http request.",
+            "helpMarkDown": "Select an Azure Resource Manager subscription to use for invoking a management API. 'ManagementPortalUrl' of the cloud is used as the baseURL",
             "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM"
         },
         {

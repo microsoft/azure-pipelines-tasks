@@ -1,10 +1,10 @@
 {
     "id": "334727F4-9495-4F9D-A391-FC621D671474",
     "name": "GoTool",
-    "friendlyName": "Go Tool Installer",
-    "description": "Finds or downloads a specific version of Go in the tools cache and adds it to the PATH. Use this to set the version of Go used in subsequent tasks.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=867581",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867581)",
+    "friendlyName": "Go tool installer",
+    "description": "Find in cache or download a specific version of Go and add it to the PATH",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/go-tool",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=867581) or [see the Go documentation](https://golang.org/doc/)",
     "category": "Tool",
     "runsOn": [
         "Agent",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 4
+        "Patch": 7
     },
     "satisfies": [
         "GO"

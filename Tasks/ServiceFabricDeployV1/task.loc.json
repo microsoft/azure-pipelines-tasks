@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=820528",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/service-fabric-deploy",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 7,
-    "Patch": 31
+    "Patch": 34
   },
   "demands": [
     "Cmd"
@@ -419,7 +419,8 @@
     "PublishProfileRequiredServerThumbprint": "ms-resource:loc.messages.PublishProfileRequiredServerThumbprint",
     "PublishProfileRequiredAppParams": "ms-resource:loc.messages.PublishProfileRequiredAppParams",
     "PublishProfileRequiredUpgrade": "ms-resource:loc.messages.PublishProfileRequiredUpgrade",
-    "UnsupportedDockerRegistryAuthScheme": "ms-resource:loc.messages.UnsupportedDockerRegistryAuthScheme",
+    "UnsupportedARMAuthScheme": "ms-resource:loc.messages.UnsupportedARMAuthScheme",
+    "UnsupportedContainerRegistryAuthScheme": "ms-resource:loc.messages.UnsupportedContainerRegistryAuthScheme",
     "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
     "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",
     "SFSDK_UnableToVerifyClusterConnection": "ms-resource:loc.messages.SFSDK_UnableToVerifyClusterConnection",

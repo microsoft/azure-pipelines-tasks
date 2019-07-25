@@ -1,7 +1,7 @@
-import msRestAzure = require('azure-arm-rest/azure-arm-common');
-import azureServiceClient = require("azure-arm-rest/AzureServiceClient");
-import tl = require('vsts-task-lib/task');
-import webClient = require("azure-arm-rest/webClient");
+import msRestAzure = require('azure-arm-rest-v2/azure-arm-common');
+import azureServiceClient = require("azure-arm-rest-v2/AzureServiceClient");
+import tl = require('azure-pipelines-task-lib/task');
+import webClient = require("azure-arm-rest-v2/webClient");
 
 export class AzureKeyVaultSecret {
     name: string;

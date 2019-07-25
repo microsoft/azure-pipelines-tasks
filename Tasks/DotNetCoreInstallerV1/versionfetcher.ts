@@ -47,18 +47,18 @@ export class DotNetCoreVersionFetcher {
             throw tl.loc("VersionNotFound", packageType, versionSpec);
         }
 
-        let dotNetSdkVersionTelemetry = `{"userVersion":"${versionSpec}", "resolvedVersion":"${requiredVersionInfo.version}"}`;
+        let dotNetSdkVersionTelemetry = `{"userVersion":"${versionSpec}", "resolvedVersion":"${requiredVersionInfo.getVersion()}"}`;
         console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=DotNetCoreInstallerV1]" + dotNetSdkVersionTelemetry);
         return requiredVersionInfo;
     }
 
-    public getDownloadUrl(versionInfo: VersionInfo, packageType: string): string {
-        console.log(tl.loc("GettingDownloadUrl", packageType, versionInfo.version));
+    public getDownloadUrl(versionInfo: VersionInfo): string {
+        console.log(tl.loc("GettingDownloadUrl", versionInfo.getPackageType(), versionInfo.getVersion()));
 
         let osSuffixes = this.detectMachineOS();
         let downloadPackageInfoObject: VersionFilesData = null;
         osSuffixes.find((osSuffix) => {
-            downloadPackageInfoObject = versionInfo.files.find((downloadPackageInfo: VersionFilesData) => {
+            downloadPackageInfoObject = versionInfo.getFiles().find((downloadPackageInfo: VersionFilesData) => {
                 if (downloadPackageInfo.rid && osSuffix && downloadPackageInfo.rid.toLowerCase() == osSuffix.toLowerCase()) {
                     if ((osSuffix.split("-")[0] == "win" && downloadPackageInfo.name.endsWith(".zip")) || (osSuffix.split("-")[0] != "win" && downloadPackageInfo.name.endsWith("tar.gz"))) {
                         return true;
@@ -76,7 +76,7 @@ export class DotNetCoreVersionFetcher {
             return downloadPackageInfoObject.url;
         }
 
-        throw tl.loc("DownloadUrlForMatchingOsNotFound", packageType, versionInfo.version, osSuffixes.toString());
+        throw tl.loc("DownloadUrlForMatchingOsNotFound", versionInfo.getPackageType(), versionInfo.getVersion(), osSuffixes.toString());
     }
 
     private setReleasesIndex(): Promise<void> {
@@ -149,12 +149,13 @@ export class DotNetCoreVersionFetcher {
                     let versionInfoList: VersionInfo[] = [];
                     channelReleases.forEach((release) => {
                         if (release && release[packageType] && release[packageType].version) {
-                            let versionInfo: VersionInfo = new VersionInfo(release[packageType]);
-                            if (release[packageType]["runtime-version"]) {
-                                versionInfo["runtime-version"] = release[packageType]["runtime-version"];
+                            try {
+                                let versionInfo: VersionInfo = new VersionInfo(release[packageType], packageType);
+                                versionInfoList.push(versionInfo);
                             }
-
-                            versionInfoList.push(versionInfo);
+                            catch (err) {
+                                tl.debug(tl.loc("VersionInformationNotComplete", release[packageType].version, err));
+                            }
                         }
                     });
 
@@ -164,7 +165,7 @@ export class DotNetCoreVersionFetcher {
                         return null;
                     }
 
-                    console.log(tl.loc("MatchingVersionForUserInputVersion", matchedVersionInfo.version, channelInformation.channelVersion, versionSpec))
+                    console.log(tl.loc("MatchingVersionForUserInputVersion", matchedVersionInfo.getVersion(), channelInformation.channelVersion, versionSpec))
                     return matchedVersionInfo;
                 })
                 .catch((ex) => {

@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "NuGet Packager",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627416)",
+  "loc.friendlyName": "NuGet packager",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627416) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
   "loc.description": "Deprecated: use the “NuGet” task instead. It works with the new Tool Installer framework so you can easily use new versions of NuGet without waiting for a task update, provides better support for authenticated feeds outside this organization/collection, and uses NuGet 4 by default.",
   "loc.instanceNameFormat": "NuGet Packager $(solution)",
   "loc.group.displayName.versioning": "Pack options",

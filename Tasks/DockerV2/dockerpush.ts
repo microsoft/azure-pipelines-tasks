@@ -1,15 +1,17 @@
 "use strict";
 
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as fs from 'fs';
-import ContainerConnection from "docker-common/containerconnection";
-import * as dockerCommandUtils from "docker-common/dockercommandutils";
+import ContainerConnection from "docker-common-v2/containerconnection";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 import * as utils from "./utils";
-import { findDockerFile } from "docker-common/fileutils";
-import { WebRequest, WebResponse, sendRequest } from 'utility-common/restutilities';
-import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "docker-common/containerimageutils";
+import { findDockerFile } from "docker-common-v2/fileutils";
+import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
+import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "docker-common-v2/containerimageutils";
 
 import Q = require('q');
+
+const matchPatternForDigestAndSize = new RegExp(/sha256\:([\w]+)(\s+)size\:\s([\w]+)/);
 
 function pushMultipleImages(connection: ContainerConnection, imageNames: string[], tags: string[], commandArguments: string, onCommandOut: (image, output) => any): any {
     let promise: Q.Promise<void>;
@@ -48,44 +50,58 @@ function pushMultipleImages(connection: ContainerConnection, imageNames: string[
     return promise;
 }
 
-export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, ignoreArguments?: boolean): any {
-    let commandArguments = ignoreArguments ? "" : tl.getInput("arguments");
+export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
+    // ignore the arguments input if the command is buildAndPush, as it is ambiguous
+    let commandArguments = isBuildAndPushCommand ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");
 
-    // get qualified image name from the containerRegistry input
+    // get repository input
     let repositoryName = tl.getInput("repository");
+    if (!repositoryName) {
+        tl.warning("No repository is specified. Nothing will be pushed.");
+    }
+
     let imageNames: string[] = [];
     // if container registry is provided, use that
     // else, use the currently logged in registries
     if (tl.getInput("containerRegistry")) {
-        let imageName = connection.getQualifiedImageName(repositoryName);
+        let imageName = connection.getQualifiedImageName(repositoryName, true);
         if (imageName) {
             imageNames.push(imageName);
         }
     }
     else {
-        imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName);
+        imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName, true);
     }
 
     const dockerfilepath = tl.getInput("dockerFile", true);
-    const dockerFile = findDockerFile(dockerfilepath);
-    if (!tl.exist(dockerFile)) {
-        throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
+    let dockerFile = "";
+    if (isBuildAndPushCommand) {
+        // For buildAndPush command, to find out the base image name, we can use the
+        // Dockerfile returned by findDockerfile as we are sure that this is used
+        // for building.
+        dockerFile = findDockerFile(dockerfilepath);
+        if (!tl.exist(dockerFile)) {
+            throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
+        }
     }
 
     // push all tags
     let output = "";
     let outputImageName = "";
     let digest = "";
+    let imageSize = "";
     let promise = pushMultipleImages(connection, imageNames, tags, commandArguments, (image, commandOutput) => {
         output += commandOutput;
         outputImageName = image;
-        digest = extractDigestFromOutput(commandOutput);
-        tl.debug("outputImageName: " + outputImageName + "\n" + "commandOutput: " + commandOutput + "\n" + "digest:" + digest);
+        let digest = extractDigestFromOutput(commandOutput, matchPatternForDigestAndSize);
+        tl.debug("outputImageName: " + outputImageName + "\n" + "commandOutput: " + commandOutput + "\n" + "digest:" + digest + "imageSize:" + imageSize);
         publishToImageMetadataStore(connection, outputImageName, tags, digest, dockerFile).then((result) => {
-            tl.debug("ImageDetailsApiResponse: " + result);
+            tl.debug("ImageDetailsApiResponse: " + JSON.stringify(result));
+        }, (error) => {
+            tl.warning("publishToImageMetadataStore failed with error: " + error);
         });
     });
 
@@ -106,14 +122,24 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
 async function publishToImageMetadataStore(connection: ContainerConnection, imageName: string, tags: string[], digest: string, dockerFilePath: string): Promise<any> {
     // Getting imageDetails
     const imageUri = getResourceName(imageName, digest);
-    const baseImageName = getBaseImageNameFromDockerFile(dockerFilePath);
-     const layers = await dockerCommandUtils.getLayers(connection, imageName);
+    const baseImageName = dockerFilePath ? getBaseImageNameFromDockerFile(dockerFilePath) : "NA";
+    const layers = await dockerCommandUtils.getLayers(connection, imageName);
+    if (!layers) {
+        return null;
+    }
+    
+    const imageSize = dockerCommandUtils.getImageSize(layers);
+
+    const addPipelineData = tl.getBoolInput("addPipelineData");
 
     // Getting pipeline variables
-    const buildId = parseInt(tl.getVariable("Build.BuildId"));
-    const buildDefinitionName = tl.getVariable("Build.DefinitionName");
-    const buildVersion = tl.getVariable("Build.BuildNumber");
-    const buildDefinitionId = tl.getVariable("System.DefinitionId");
+    const build = "build";
+    const hostType = tl.getVariable("System.HostType").toLowerCase();
+    const runId = hostType === build ? parseInt(tl.getVariable("Build.BuildId")) : parseInt(tl.getVariable("Release.ReleaseId"));
+    const pipelineVersion = addPipelineData ? hostType === build ? tl.getVariable("Build.BuildNumber") : tl.getVariable("Release.ReleaseName") : '';
+    const pipelineName = addPipelineData ? tl.getVariable("System.DefinitionName") : '';
+    const pipelineId = addPipelineData ? tl.getVariable("System.DefinitionId") : '';
+    const jobName = addPipelineData ? tl.getVariable("System.PhaseDisplayName") : '';
 
     const requestUrl = tl.getVariable("System.TeamFoundationCollectionUri") + tl.getVariable("System.TeamProject") + "/_apis/deployment/imagedetails?api-version=5.0-preview.1";
     const requestBody: string = JSON.stringify(
@@ -127,17 +153,19 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
             "mediaType": "",
             "tags": tags,
             "layerInfo": layers,
-            "buildId": buildId,
-            "buildVersion": buildVersion,
-            "buildDefinitionName": buildDefinitionName,
-            "buildDefinitionId": buildDefinitionId
+            "runId": runId,
+            "pipelineVersion": pipelineVersion,
+            "pipelineName": pipelineName,
+            "pipelineId": pipelineId,
+            "jobName": jobName,
+            "imageSize": imageSize
         }
     );
 
     return sendRequestToImageStore(requestBody, requestUrl);
 }
 
-function extractDigestFromOutput(dockerPushCommandOutput: string): string {
+function extractDigestFromOutput(dockerPushCommandOutput: string, matchPattern: RegExp): string {
     // SampleCommandOutput : The push refers to repository [xyz.azurecr.io/acr-helloworld]
     // 3b7670606102: Pushed 
     // e2af85e4b310: Pushed ce8609e9fdad: Layer already exists
@@ -145,13 +173,13 @@ function extractDigestFromOutput(dockerPushCommandOutput: string): string {
     // 62: digest: sha256:5e3c9cf1692e129744fe7db8315f05485c6bb2f3b9f6c5096ebaae5d5bfbbe60 size: 5718
 
     // Below regex will extract part after sha256, so expected return value will be 5e3c9cf1692e129744fe7db8315f05485c6bb2f3b9f6c5096ebaae5d5bfbbe60
-    const matchPatternForDigest = new RegExp(/sha256\:([\w]+)/);
-    const imageMatch = dockerPushCommandOutput.match(matchPatternForDigest);
+    const imageMatch = dockerPushCommandOutput.match(matchPattern);
+    let digest = "";
     if (imageMatch && imageMatch.length >= 1) {
-        return imageMatch[1];
+        digest = imageMatch[1];
     }
 
-    return "";
+    return digest;
 }
 
 async function sendRequestToImageStore(requestBody: string, requestUrl: string): Promise<any> {

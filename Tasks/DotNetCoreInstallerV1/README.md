@@ -38,9 +38,9 @@ Examples:
 * **Path To Install .Net Core**: Specify where .Net Core SDK/Runtime should be installed. In case there was already a differnt version on the specified path, that earlier version wont be deleted.
 
 
-* **Restrict Multi Level Lookup**: This input is only applicable to Windows based agents. This configures the behavior of .Net host process for looking up a suitable shared framework.
-  * *checked*: Only versions present in  the folder specified in this task would be looked by the host process.
-  * *unchecked*: The host will attempt to look in pre-defined global locations using multi-level lookup.
+* **Perform Multi Level Lookup**: This input is only applicable to Windows based agents. This configures the behavior of .Net host process for looking up a suitable shared framework.
+  * *unchecked*: Only versions present in  the folder specified in this task would be looked by the host process.
+  * *checked*: The host will attempt to look in pre-defined global locations using multi-level lookup.
 
     The default global locations are:
     - **For Windows**:

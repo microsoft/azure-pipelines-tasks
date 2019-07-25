@@ -1,16 +1,15 @@
 {
     "id": "13C22CE0-3B93-43F9-AEB7-71FBCE7BF5B2",
     "name": "AzureFunctionAppContainer",
-    "friendlyName": "Azure Function for Container",
-    "description": "Update Function Apps with Docker Containers",
-    "helpUrl": "https://aka.ms/azurefunctiononcontainerdeployreadme",
-    "helpMarkDown": "[More information](https://aka.ms/azurefunctiononcontainerdeployreadme)",
+    "friendlyName": "Azure Functions for container",
+    "description": "Update a function app with a Docker container",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-functionapp-containers",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiononcontainerdeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
         "Release"
     ],
-    "preview": "true",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
@@ -18,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 5
+        "Minor": 156,
+        "Patch": 0
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -49,7 +48,6 @@
             },
             "helpMarkDown": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed."
         },
-        
         {
             "name": "deployToSlotOrASE",
             "type": "boolean",
@@ -78,7 +76,7 @@
             "required": true,
             "properties": {
                 "EditableOptions": "True"
-            },            
+            },
             "helpMarkDown": "Enter or Select an existing Slot other than the Production slot.",
             "visibleRule": "deployToSlotOrASE = true"
         },
@@ -96,7 +94,7 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Enter the start up command."
+            "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet run<br/>dotnet filename.dll"
         },
         {
             "name": "appSettings",
@@ -137,7 +135,7 @@
             "parameters": {
                 "WebAppKind": "functionAppContainer"
             }
-        },        
+        },
         {
             "target": "resourceGroupName",
             "endpointId": "$(azureSubscription)",
@@ -317,6 +315,7 @@
         "RestartedAppService": "App Service '%s' restarted successfully.",
         "RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
         "FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
-        "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s"
+        "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

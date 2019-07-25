@@ -73,5 +73,6 @@
   "loc.messages.FailedToApplyTransformationReason2": "2. Assicurarsi che il file config e i file di trasformazione siano presenti nella stessa cartella all'interno del pacchetto.",
   "loc.messages.AutoParameterizationMessage": "Per impostazione predefinita, agli attributi di ConnectionString in Web.config sono associati parametri. Si noti che la trasformazione non ha effetto sugli attributi di ConnectionString perché durante la distribuzione il valore viene sostituito dai file 'Parameters.xml' o 'SetParameters.xml'. Per disabilitare l'aggiunta automatica di parametri, impostare /p:AutoParameterizationWebConfigConnectionStrings=False durante la generazione del pacchetto MSBuild.",
   "loc.messages.PackageDeploymentFailed": "Non è stato possibile distribuire il pacchetto Web nel sito Web IIS.",
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Assicurarsi che il computer usi il protocollo TLS 1.2 o superiore. Per altre informazioni su come abilitare TLS nel computer, vedere https://aka.ms/enableTlsv2."
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Assicurarsi che il computer usi il protocollo TLS 1.2 o superiore. Per altre informazioni su come abilitare TLS nel computer, vedere https://aka.ms/enableTlsv2.",
+  "loc.messages.RetryToDeploy": "Verrà effettuato un nuovo tentativo di distribuzione del pacchetto."
 }

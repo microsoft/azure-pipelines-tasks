@@ -70,7 +70,7 @@ General Public License.
 47. typed-rest-client  (https://github.com/Microsoft/typed-rest-client)
 48.	underscore (https://github.com/jashkenas/underscore)
 49. vso-node-api (https://github.com/Microsoft/vsts-node-api)
-50.	VSTS-Task-Lib (https://github.com/Microsoft/vsts-task-lib)
+50.	Azure-Pipelines-Task-Lib (https://github.com/Microsoft/azure-pipelines-task-lib)
 51. vsts-task-tool-lib (git+https://github.com/microsoft/vsts-task-installer-lib.git)
 51.	wrappy (https://github.com/npm/wrappy)
 53. xtend (https://github.com/Raynos/xtend)
@@ -1608,7 +1608,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF vso-node-api NOTICES, INFORMATION, AND LICENSE
 
-%% VSTS-Task-Lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% Azure-Pipelines-Task-Lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 The MIT License (MIT)
 
@@ -1633,7 +1633,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 =========================================
-END OF VSTS-Task-Lib NOTICES, INFORMATION, AND LICENSE
+END OF Azure-Pipelines-Task-Lib NOTICES, INFORMATION, AND LICENSE
 
 %% vsts-task-tool-lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================

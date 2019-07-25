@@ -1,10 +1,10 @@
 {
     "id": "6f8c69a5-b023-428e-a125-fccf4efcb929",
     "name": "FtpUpload",
-    "friendlyName": "FTP Upload",
-    "description": "FTP Upload",
+    "friendlyName": "FTP upload",
+    "description": "Upload files using FTP",
     "author": "Microsoft Corporation",
-    "helpUrl": "",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/ftp-upload",
     "helpMarkDown": "Upload files to a remote machine using the File Transfer Protocol (FTP), or securely with FTPS.  [More Information](http://go.microsoft.com/fwlink/?LinkId=809084).",
     "category": "Utility",
     "visibility": [
@@ -18,8 +18,8 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 142,
-        "Patch": 2
+        "Minor": 151,
+        "Patch": 1
     },
     "instanceNameFormat": "FTP Upload: $(rootFolder)",
     "groups": [

@@ -1,9 +1,9 @@
 {
     "id": "9648625C-1523-4EB5-B015-DFE7C685840C",
     "name": "QuickPerfTest",
-    "friendlyName": "Cloud-based Web Performance Test",
-    "description": "Runs a quick web performance test in the cloud with Azure Pipelines.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=613203",
+    "friendlyName": "Cloud-based web performance test",
+    "description": "Run a quick web performance test in the cloud with Azure Pipelines",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/cloud-based-web-performance-test",
     "helpMarkDown": "Triggers a cloud-based load test using Azure Pipelines. [Learn more](https://go.microsoft.com/fwlink/?linkid=613203)",
     "category": "Test",
     "visibility": [
@@ -14,8 +14,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 36
+        "Patch": 39
     },
+    "deprecated": true,
     "demands": [
         "msbuild",
         "azureps"

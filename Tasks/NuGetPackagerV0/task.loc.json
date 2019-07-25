@@ -3,14 +3,14 @@
   "name": "NuGetPackager",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=627416",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/prev-versions/nuget-packager-0",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Lawrence Gripper",
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 75
+    "Patch": 78
   },
   "demands": [
     "Cmd"

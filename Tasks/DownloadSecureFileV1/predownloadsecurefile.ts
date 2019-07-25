@@ -9,9 +9,13 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
+        let retryCount = parseInt(tl.getInput('retryCount'));
+        if (isNaN(retryCount) || retryCount < 0) {
+            retryCount = 5;
+        }
         // download decrypted contents
         secureFileId = tl.getInput('secureFile', true);
-        secureFileHelpers = new secureFilesCommon.SecureFileHelpers();
+        secureFileHelpers = new secureFilesCommon.SecureFileHelpers(retryCount);
         let secureFilePath: string = await secureFileHelpers.downloadSecureFile(secureFileId);
 
         if (tl.exist(secureFilePath)) {

@@ -9,12 +9,12 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 3
   },
   "groups": [],
   "demands": [],
   "preview": true,
-  "minimumAgentVersion": "2.147.0",
+  "minimumAgentVersion": "2.150.3",
   "inputs": [
     {
       "name": "buildType",
@@ -91,6 +91,9 @@
     },
     {
       "name": "buildId",
+      "aliases": [
+        "pipelineId"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.buildId",
       "defaultValue": "",
@@ -137,6 +140,9 @@
     },
     {
       "name": "downloadPath",
+      "aliases": [
+        "targetPath"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.downloadPath",
       "defaultValue": "$(System.ArtifactsDirectory)",
@@ -195,7 +201,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AgentPlugin": {
-      "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV1_1_0, Agent.Plugins"
+      "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV1_1_3, Agent.Plugins"
     }
   },
   "messages": {}

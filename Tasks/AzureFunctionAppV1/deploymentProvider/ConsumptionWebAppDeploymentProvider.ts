@@ -1,5 +1,5 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
 import { AzureAppServiceUtility } from 'azurermdeploycommon/operations/AzureAppServiceUtility';
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';

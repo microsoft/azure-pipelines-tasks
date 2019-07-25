@@ -3,7 +3,7 @@
   "name": "GoTool",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=867581",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/go-tool",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [
@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 4
+    "Patch": 7
   },
   "satisfies": [
     "GO"

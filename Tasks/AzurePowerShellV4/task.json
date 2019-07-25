@@ -3,7 +3,7 @@
     "name": "AzurePowerShell",
     "friendlyName": "Azure PowerShell",
     "description": "Run a PowerShell script within an Azure environment",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613749)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 0,
-        "Patch": 2
+        "Minor": 154,
+        "Patch": 4
     },
     "preview": true,
     "releaseNotes": "Added support for Az Module and cross platform agents.",
@@ -41,7 +41,7 @@
             "required": true,
             "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell",
             "properties": {
-                "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
             }
         },
         {
@@ -149,6 +149,10 @@
             "platforms": [
                 "windows"
             ]
+        },
+        "Node": {
+            "target": "azurepowershell.js",
+            "argumentFormat": ""
         }
     },
     "messages": {
@@ -156,6 +160,7 @@
         "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
         "InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1",
         "JS_ExitCode": "PowerShell exited with code '%s'.",
-        "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream."
+        "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

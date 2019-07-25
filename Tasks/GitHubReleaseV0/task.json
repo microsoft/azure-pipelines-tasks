@@ -2,9 +2,9 @@
     "id": "7B5A6198-ADF8-4B16-9939-7ADDF85708B2",
     "name": "GitHubRelease",
     "friendlyName": "GitHub Release",
-    "description": "Create, edit, or delete a GitHub release.",
-    "helpUrl": "https://aka.ms/AA3aeiw",
-    "helpMarkDown": "[More Information](https://aka.ms/AA3aeiw)",
+    "description": "Create, edit, or delete a GitHub release",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/github-release",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/AA3aeiw)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -14,8 +14,8 @@
     "preview": true,
     "version": {
         "Major": 0,
-        "Minor": 150,
-        "Patch": 2
+        "Minor": 156,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -30,15 +30,14 @@
         },
         {
             "name": "repositoryName",
-            "type": "pickList",
+            "type": "githubRepositoryPicker",
             "label": "Repository",
             "defaultValue": "$(Build.Repository.Name)",
             "required": true,
             "helpMarkDown": "Specify the name of the GitHub repository in which the GitHub release will be created, edited, or deleted.",
             "properties": {
                 "DisableManageLink": "True",
-                "EditableOptions": "True",
-                "SearchDataSourceName": "userRepositorySearch"
+                "EditableOptions": "True"
             }
         },
         {
@@ -75,6 +74,14 @@
                 "auto": "Git tag",
                 "manual": "User specified tag"
             }
+        },
+        {
+            "name": "tagPattern",
+            "type": "string",
+            "label": "Tag Pattern",
+            "required": false,
+            "visibleRule": "tagSource = auto",
+            "helpMarkDown": "Specify the regex for tag to be used for release creation."
         },
         {
             "name": "tag",
@@ -180,6 +187,28 @@
             "required": false,
             "visibleRule": "action = create || action = edit",
             "helpMarkDown": "If set to `true`, a list of changes (commits and issues) between this and the last published release will be generated and appended to the release notes."
+        },
+        {
+            "name": "compareWith",
+            "type": "radio",
+            "label": "Compare with",
+            "required": true,
+            "defaultValue": "lastFullRelease",
+            "visibleRule": "addChangeLog = true",
+            "helpMarkDown": "Indicate which release we should compare with to generate the changelog.",
+            "options": {
+                "lastFullRelease": "Last full release",
+                "lastRelease": "Last non-draft release",
+                "lastReleaseByTag": "Last non-draft release by tag"
+            }
+        },
+        {
+            "name": "releaseTag",
+            "type": "string",
+            "label": "Release Tag",
+            "required": true,
+            "visibleRule": "compareWith = lastReleaseByTag",
+            "helpMarkDown": "Specify the regex for tag for the release we should compare with to generate the changelog."
         }
     ],
     "dataSourceBindings": [
@@ -188,17 +217,7 @@
             "endpointId": "$(gitHubConnection)",
             "dataSourceName": "UserRepositories",
             "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }"
-          },
-          {
-            "target": "userRepositorySearch",
-            "endpointId": "$(gitHubConnection)",
-            "dataSourceName": "SearchRepositoriesByNameForTasks",
-            "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }",
-            "parameters": {
-              "searchText": "$(searchText)",
-              "name": "$(searchText)"
-            }
-          }
+        }
     ],
     "instanceNameFormat": "GitHub release ($(action))",
     "execution": {
@@ -253,9 +272,13 @@
         "CommitDiffBehind": "Cannot compute the changes as the provided target commit is older than the commit of the last published release.",
         "CommitDiffEqual": "No changes were found. The provided target commit is the same as the commit of the last published release.",
         "FetchLatestPublishRelease": "Fetching the latest published release...",
+        "FetchLatestNonDraftRelease": "Fetching the latest non-draft release...",
+        "FetchLastReleaseByTag": "Fetching the latest release matching the given tag",
         "FetchLatestPublishReleaseSuccess": "Found the latest published release: %s",
+        "FetchMatchingReleaseSuccess": "Found the latest release matching the given criteria.",
         "GetLatestReleaseError": "An unexpected error occurred while fetching the latest published release.",
         "NoLatestPublishRelease": "No releases are published yet in the repository.",
+        "NoMatchingReleases": "No releases found matching the given criteria",
         "FetchCommitDiff": "Fetching the list of commits since the last published release...",
         "FetchCommitDiffSuccess": "Found the list of changes.",
         "FetchCommitDiffError": "An unexpected error occurred while fetching the list of changes.",
@@ -267,6 +290,7 @@
         "InvalidActionSet": "Invalid action: %s. Only 'create', 'edit', or 'delete' actions are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
         "InvalidTagSource": "Invalid tag source: %s. Only 'auto', or 'manual' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
         "InvalidReleaseNotesSource": "Invalid release notes source: %s. Only 'file', or 'input' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
+        "InvalidCompareWithAttribute": "Invalid compareWith attribute: %s. Only 'lastFullRelease, 'lastRelease', or 'lastReleaseByTag' options are allowed. For yaml syntax see: https://aka.ms/AA3m1bq",
         "InvalidAssetUploadMode": "Invalid asset upload mode: %s. Only 'delete', or 'replace' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
         "TagRequiredEditDeleteAction": "For '%s' action, a tag is required. Please specify a tag in the step. For yaml syntax see: https://aka.ms/AA3m1bq",
         "TagRequiredCreateAction": "Tag source is set to manual- please specify a tag for create action. For yaml syntax see: https://aka.ms/AA3m1bq",

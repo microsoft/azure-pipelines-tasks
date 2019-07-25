@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import Q = require('q');
 import fs = require('fs');
@@ -75,7 +75,8 @@ export function checkIfFilesExistsInZip(archivedPackage: string, files: string[]
 
     const zip = new StreamZip({
         file: archivedPackage,
-        storeEntries: true
+        storeEntries: true,
+        skipEntryNameValidation: true
     });
 
     zip.on('ready', () => {

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure App Service 部署",
   "loc.helpMarkDown": "[詳細資訊](https://aka.ms/azurermwebdeployreadme)",
-  "loc.description": "使用 Web Deploy/Kudu REST API，來更新 Windows 上的 Azure 應用程式服務、Linux 上具內建映像或 Docker 容器的 Web 應用程式、ASP.NET、.NET Core、PHP、Python 或 Node.js 型 Web 應用程式、函數應用程式、行動應用程式、API 應用程式、WebJob",
+  "loc.description": "使用 Docker、Java、.NET、.NET Core、Node.js、PHP、Python 或 Ruby 對 Azure App Service 部署 Web、行動或 API 應用程式",
   "loc.instanceNameFormat": "Azure App Service 部署: $(WebAppName)",
   "loc.releaseNotes": "3.0 版的新功能: <br/>&nbsp;&nbsp;支援檔案轉換 (XDT) <br/>&nbsp;&nbsp;支援變數替代 (XML、JSON) <br/>如需詳細資訊，請按一下[這裡](https://aka.ms/azurermwebdeployreadme)。",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "檔案轉換及變數替代選項",
@@ -29,7 +29,7 @@
   "loc.input.help.AzureContainerRegistryLoginServer": "輸入或選取 Azure Container Registry 登入伺服器名稱。",
   "loc.input.label.AzureContainerRegistryImage": "映像",
   "loc.input.help.AzureContainerRegistryImage": "容器映像儲存所在的存放庫名稱。<br/> 注意: 完整映像名稱的格式為: '`<登錄>/<b>`<存放庫`></b>:`<標籤`>'。例如，'myregistry.azurecr.io/<b>nginx</b>:latest'。",
-  "loc.input.label.AzureContainerRegistryTag": "標記",
+  "loc.input.label.AzureContainerRegistryTag": "標籤",
   "loc.input.help.AzureContainerRegistryTag": "標籤為選擇性項目，這是登錄提供版本給 Docker 映像時使用的機制。<br/> 注意: 完整映像名稱的格式為: '`<registry`>/`<repository`>:<b>`<tag`></b>'。例如，'myregistry.azurecr.io/nginx:<b>latest</b>'。",
   "loc.input.label.DockerRepositoryAccess": "存放庫存取",
   "loc.input.help.DockerRepositoryAccess": "選取 Docker 存放庫存取。",
@@ -37,13 +37,13 @@
   "loc.input.help.RegistryConnectedServiceName": "選取登錄連線。",
   "loc.input.label.PrivateRegistryImage": "映像",
   "loc.input.help.PrivateRegistryImage": "容器映像儲存所在的存放庫名稱。<br/> 注意: 完整映像名稱的格式為: '`<登錄>/<b>`<存放庫`></b>:`<標籤`>'。例如，'myregistry.azurecr.io/<b>nginx</b>:latest'。",
-  "loc.input.label.PrivateRegistryTag": "標記",
+  "loc.input.label.PrivateRegistryTag": "標籤",
   "loc.input.help.PrivateRegistryTag": "標籤並非必要，其只是登錄為 Docker 映像提供版本時所使用的機制。<br/> 注意: 完整映像名稱的格式: '`<registry`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'.",
   "loc.input.label.DockerNamespace": "登錄或命名空間",
   "loc.input.help.DockerNamespace": "您的特定登錄或命名空間的全域唯一頂層網域名稱。<br/>注意: 完整映像名稱的格式為: '<b>`<登錄或命名空間`></b>/`<存放庫`>:`<標記`>。例如，'<b>myregistry.azurecr.io</b>/nginx:latest'。",
   "loc.input.label.DockerRepository": "映像",
   "loc.input.help.DockerRepository": "容器映像儲存所在的存放庫名稱。<br/>注意: 完整映像名稱的格式為: '`<登錄或命名空間`>/<b>`<存放庫`></b>:`<標記`>'。例如，'myregistry.azurecr.io/<b>nginx</b>:latest'。",
-  "loc.input.label.DockerImageTag": "標記",
+  "loc.input.label.DockerImageTag": "標籤",
   "loc.input.help.DockerImageTag": "標記是選擇項，這是登錄提供版本給 Docker 映像時所使用的機制。<br/>注意: 完整映像名稱的格式為: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'。例如，'myregistry.azurecr.io/nginx:<b>latest</b>'。",
   "loc.input.label.VirtualApplication": "虛擬應用程式",
   "loc.input.help.VirtualApplication": "指定在 Azure 入口網站中設定的虛擬應用程式名稱。若要部署到 App Service 的根目錄，則無須使用此選項。",
@@ -222,5 +222,6 @@
   "loc.messages.ASE_SSLIssueRecommendation": "若要在 App Service 中使用憑證，該憑證必須經過信任的憑證授權單位所簽署。若您的 Web 應用程式顯示憑證驗證錯誤，可能是您使用了自我簽署憑證。若要解決這些錯誤，您必須在建置或發行管線中將名為 VSTS_ARM_REST_IGNORE_SSL_ERRORS 的變數設為 true 值",
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "若要在 App Service 中使用憑證，該憑證必須經過信任的憑證授權單位所簽署。若您的 Web 應用程式顯示憑證驗證錯誤，可能是您使用了自我簽署憑證。若要解決這些錯誤，您必須在 Web 部署選項的其他引數中傳遞 -allowUntrusted。",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "無法更新 Application Insights '%s' 資源。錯誤: %s",
-  "loc.messages.JarNotSupported": "此版本不支援 jar 部署。請將工作版本變更為處於預覽模式的 '4.*'"
+  "loc.messages.JarNotSupported": "此版本不支援 jar 部署。請將工作版本變更為處於預覽模式的 '4.*'",
+  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。"
 }

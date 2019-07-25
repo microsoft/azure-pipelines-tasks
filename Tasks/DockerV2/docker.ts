@@ -1,28 +1,15 @@
 "use strict";
 
 import path = require('path');
-import * as tl from "vsts-task-lib/task";
-import AuthenticationTokenProvider  from "docker-common/registryauthenticationprovider/authenticationtokenprovider";
-import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
-import GenericAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/genericauthenticationtokenprovider";
-import RegistryAuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken";
-import ContainerConnection from 'docker-common/containerconnection';
+import * as tl from "azure-pipelines-task-lib/task";
+import RegistryAuthenticationToken from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
+import ContainerConnection from "docker-common-v2/containerconnection";
+import { getDockerRegistryEndpointAuthenticationToken } from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 let endpointId = tl.getInput("containerRegistry");
-let authenticationProvider: AuthenticationTokenProvider;
-
-const registryType: string = tl.getEndpointDataParameter(endpointId, "registrytype", true);
-if(registryType ==  "ACR"){
-    const loginServer = tl.getEndpointAuthorizationParameter(endpointId, "loginServer", false);
-    authenticationProvider = new ACRAuthenticationTokenProvider(endpointId, loginServer);
-}
-else {
-    authenticationProvider = new GenericAuthenticationTokenProvider(endpointId);
-}
-
-let registryAuthenticationToken: RegistryAuthenticationToken = authenticationProvider.getAuthenticationToken();
+let registryAuthenticationToken: RegistryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
 
 // Take the specified command
 let command = tl.getInput("command", true).toLowerCase();
@@ -41,7 +28,8 @@ let dockerCommandMap = {
 }
 
 let telemetry = {
-    command: command
+    command: command,
+    jobId: tl.getVariable('SYSTEM_JOBID')
 };
 
 console.log("##vso[telemetry.publish area=%s;feature=%s]%s",

@@ -1,6 +1,5 @@
-import * as tl from 'vsts-task-lib/task';
-import * as Q from 'q';
-import * as os from 'os';
+import * as tl from 'azure-pipelines-task-lib/task';
+import taskinternal = require('azure-pipelines-task-lib/internal');
 import * as path from 'path'
 
 var nlbUtility = require('./nlbazureutility');
@@ -30,17 +29,17 @@ async function run() {
 
 		var nicLbBackendPoolConfig = null;
 		if (action == "Connect") {
-			tl._writeLine(tl.loc("ConnectingVMtoLB", loadBalancerName));
+			taskinternal._writeLine(tl.loc("ConnectingVMtoLB", loadBalancerName));
 			var lb = await nlbUtility.getLoadBalancer(SPN, endpointUrl, loadBalancerName, resourceGroupName);
 			nicLbBackendPoolConfig = lb.properties.backendAddressPools;
 		}
 		else {
-			tl._writeLine(tl.loc("DisconnectingVMfromLB", loadBalancerName));
+			taskinternal._writeLine(tl.loc("DisconnectingVMfromLB", loadBalancerName));
 		}
 		nicVm.properties.ipConfigurations[0].properties['loadBalancerBackendAddressPools'] = nicLbBackendPoolConfig;
 		var setNIStatus = await nlbUtility.setNetworkInterface(SPN, endpointUrl, nicVm, resourceGroupName);
-		tl._writeLine(tl.loc(setNIStatus, nicVm.name));
-		tl._writeLine(tl.loc("ActionCompletedSuccefully", action, process.env.COMPUTERNAME, loadBalancerName));
+		taskinternal._writeLine(tl.loc(setNIStatus, nicVm.name));
+		taskinternal._writeLine(tl.loc("ActionCompletedSuccefully", action, process.env.COMPUTERNAME, loadBalancerName));
 	}
 	catch(error) {
 		tl.setResult(tl.TaskResult.Failed, error);

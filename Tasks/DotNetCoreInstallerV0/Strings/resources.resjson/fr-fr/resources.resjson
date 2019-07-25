@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Programme d'installation de .NET Core Tool",
+  "loc.friendlyName": "Programme d'installation du kit SDK/runtime .NET Core",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=853651)",
-  "loc.description": "Acquiert une version spécifique de .NET Core à partir d'Internet ou du cache d'outils, puis l'ajoute à PATH. Utilisez cette tâche pour changer la version de .NET Core utilisée dans les tâches suivantes.",
+  "loc.description": "Acquérir une version spécifique du kit SDK .NET Core à partir d'Internet ou du cache local, et l'ajouter à PATH",
   "loc.instanceNameFormat": "Utilisez .NET Core $(packageType) $(version)",
   "loc.input.label.packageType": "Package à installer",
   "loc.input.help.packageType": "Choisissez d'installer le runtime uniquement ou le kit SDK complet.",
@@ -27,5 +27,6 @@
   "loc.messages.WarningVersionNotFound": "Impossible de récupérer (fetch) les informations de téléchargement pour la version %s. Vérifiez si la version spécifiée est correcte. Pour connaître les versions prises en charge, consultez le lien => https://github.com/dotnet/core/blob/master/release-notes/releases.json. Retour à la création d'une URL basée sur une convention.",
   "loc.messages.CouldNotDownload": "Impossible de télécharger le package d'installation à partir de cette URL : %s. Erreur : %s",
   "loc.messages.FailedToDownloadPackage": "Échec du téléchargement du package pour l'installation",
-  "loc.messages.PrependGlobalToolPath": "Création d'un chemin d'outil global, et ajout de la valeur correspondante au début de PATH."
+  "loc.messages.PrependGlobalToolPath": "Création d'un chemin d'outil global, et ajout de la valeur correspondante au début de PATH.",
+  "loc.messages.VersionsFileMalformed": "Les liens de téléchargement de la version spécifiée ne sont pas correctement formés dans le document des versions prises en charge => %s/"
 }

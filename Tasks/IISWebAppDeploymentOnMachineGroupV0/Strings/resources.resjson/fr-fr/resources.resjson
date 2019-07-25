@@ -73,5 +73,6 @@
   "loc.messages.FailedToApplyTransformationReason2": "2. Vérifiez que le fichier config et les fichiers de transformation sont présents dans le même dossier à l'intérieur du package.",
   "loc.messages.AutoParameterizationMessage": "Les attributs de ConnectionString dans Web.config sont paramétrables par défaut. Notez que la transformation n'a aucun effet sur les attributs de connectionString, car la valeur est remplacée durant le déploiement par les fichiers 'Parameters.xml' ou 'SetParameters.xml'. Vous pouvez désactiver le paramétrage automatique en définissant /p:AutoParameterizationWebConfigConnectionStrings=False durant la génération du package MSBuild.",
   "loc.messages.PackageDeploymentFailed": "Échec de déploiement du package web sur le site web IIS.",
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Assurez-vous que l'ordinateur utilise le protocole TLS 1.2 ou ultérieur. Consultez https://aka.ms/enableTlsv2 pour plus d'informations sur l'activation de TLS sur votre ordinateur."
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Assurez-vous que l'ordinateur utilise le protocole TLS 1.2 ou ultérieur. Consultez https://aka.ms/enableTlsv2 pour plus d'informations sur l'activation de TLS sur votre ordinateur.",
+  "loc.messages.RetryToDeploy": "Nouvelle tentative de déploiement du package."
 }

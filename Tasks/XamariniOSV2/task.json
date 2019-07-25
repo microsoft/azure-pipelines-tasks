@@ -2,9 +2,9 @@
     "id": "0F077E3A-AF59-496D-81BC-AD971B7464E0",
     "name": "XamariniOS",
     "friendlyName": "Xamarin.iOS",
-    "description": "Build an iOS app with Xamarin on macOS.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613729",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613729)",
+    "description": "Build an iOS app with Xamarin on macOS",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/xamarin-ios",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613729) or [see the Xamarin iOS documentation](https://docs.microsoft.com/xamarin/ios/)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 142,
-        "Patch": 2
+        "Minor": 151,
+        "Patch": 3
     },
     "releaseNotes": "iOS signing set up has been removed from the task. Use `Secure Files` with supporting tasks `Install Apple Certificate` and `Install Apple Provisioning Profile` to setup signing. Updated options to work better with `Visual Studio for Mac`.",
     "demands": [

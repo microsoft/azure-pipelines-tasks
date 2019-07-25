@@ -1,11 +1,11 @@
 {
     "id": "f045e430-8704-11e6-968f-e717e6411619",
     "name": "AzureAppServiceManage",
-    "friendlyName": "Azure App Service Manage",
-    "description": "Start, Stop, Restart, Slot swap, Install site extensions or Enable Continuous Monitoring for an Azure App Service",
+    "friendlyName": "Azure App Service manage",
+    "description": "Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=831573",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-manage",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=831573)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -19,7 +19,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 49
+        "Patch": 55
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -55,6 +55,7 @@
                 "Start Azure App Service": "Start App Service",
                 "Stop Azure App Service": "Stop App Service",
                 "Restart Azure App Service": "Restart App Service",
+                "Delete Slot": "Delete Slot",
                 "Install Extensions": "Install Extensions",
                 "Enable Continuous Monitoring": "Enable Continuous Monitoring",
                 "Start all continuous webjobs": "Start All Continuous Webjobs",
@@ -81,7 +82,7 @@
             "label": "Specify Slot or App Service Environment",
             "defaultValue": "false",
             "required": false,
-            "visibleRule": "Action != Swap Slots"
+            "visibleRule": "Action != Swap Slots && Action != Delete Slot"
         },
         {
             "name": "ResourceGroupName",
@@ -93,7 +94,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above",
-            "visibleRule": "Action = Swap Slots || SpecifySlot = true"
+            "visibleRule": "Action = Swap Slots || Action = Delete Slot || SpecifySlot = true"
         },
         {
             "name": "SourceSlot",
@@ -146,7 +147,7 @@
                 "EditableOptions": "True"
             },
             "required": true,
-            "visibleRule": "Action != Swap Slots && SpecifySlot = true"
+            "visibleRule": "Action = Delete Slot || SpecifySlot = true"
         },
         {
             "name": "ExtensionsList",
@@ -424,6 +425,7 @@
         "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-        "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your Web App gives you certificate validation errors, you're probably using a self-signed certificate. To resolve such errors, you must set a variable named `VSTS_ARM_REST_IGNORE_SSL_ERRORS` to the value `true` in the build or release pipeline."
+        "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your Web App gives you certificate validation errors, you're probably using a self-signed certificate. To resolve such errors, you must set a variable named `VSTS_ARM_REST_IGNORE_SSL_ERRORS` to the value `true` in the build or release pipeline.",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

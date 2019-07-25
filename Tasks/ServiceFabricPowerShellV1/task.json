@@ -2,9 +2,9 @@
     "id": "816979F7-C273-4347-9A55-845B721D82CB",
     "name": "ServiceFabricPowerShell",
     "friendlyName": "Service Fabric PowerShell",
-    "description": "Run a PowerShell script within the context of an Azure Service Fabric cluster connection.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=841538",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=841538)",
+    "description": "Run a PowerShell script in the context of an Azure Service Fabric cluster connection",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/service-fabric-powershell",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=841538)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 21
+        "Patch": 23
     },
     "demands": [
         "Cmd"

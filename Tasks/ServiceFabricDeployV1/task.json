@@ -1,11 +1,11 @@
 {
     "id": "c6650aa0-185b-11e6-a47d-df93e7a34c64",
     "name": "ServiceFabricDeploy",
-    "friendlyName": "Service Fabric Application Deployment",
-    "description": "Deploy a Service Fabric application to a cluster.",
+    "friendlyName": "Service Fabric application deployment",
+    "description": "Deploy an Azure Service Fabric application to a cluster",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=820528",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820528)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/service-fabric-deploy",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820528)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 31
+        "Patch": 34
     },
     "demands": [
         "Cmd"
@@ -419,7 +419,8 @@
         "PublishProfileRequiredServerThumbprint": "A server certificate thumbprint must be defined on the service connection or a publish profile must be specified in the Azure Pipelines task.",
         "PublishProfileRequiredAppParams": "An application parameters file or a publish profile must be specified in the Azure Pipelines task.",
         "PublishProfileRequiredUpgrade": "Upgrade settings must be overridden or a publish profile must be specified in the Azure Pipelines task.",
-        "UnsupportedDockerRegistryAuthScheme": "Unsupported authentication scheme '{0}' for Azure container registry.",
+        "UnsupportedARMAuthScheme": "Unsupported authentication scheme '{0}' for ARM endpoint.",
+        "UnsupportedContainerRegistryAuthScheme": "Unsupported authentication scheme '{0}' for Azure container registry.",
         "SFSDK_InvalidSFPackage": "{0} is not a valid Service Fabric application package.",
         "SFSDK_PackageValidationFailed": "Validation failed for package: {0}",
         "SFSDK_UnableToVerifyClusterConnection": "Unable to verify service connection to the Service Fabric cluster.",

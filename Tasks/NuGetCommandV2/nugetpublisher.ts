@@ -13,6 +13,7 @@ import * as telemetry from "utility-common/telemetry";
 import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions2";
 import * as vstsNuGetPushToolRunner from "./Common/VstsNuGetPushToolRunner";
 import * as vstsNuGetPushToolUtilities from "./Common/VstsNuGetPushToolUtilities";
+import { getProjectAndFeedIdFromInputParam } from 'packaging-common/util';
 
 class PublishOptions implements INuGetCommandOptions {
     constructor(
@@ -138,12 +139,12 @@ export async function run(nuGetPath: string): Promise<void> {
         {
             authInfo = new auth.NuGetExtendedAuthInfo(internalAuthInfo);
             nuGetConfigHelper = new NuGetConfigHelper2(nuGetPath, null, authInfo, environmentSettings, null);
-
-            const internalFeedId = tl.getInput("feedPublish");
+            const feed = getProjectAndFeedIdFromInputParam('feedPublish');
             const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
             feedUri = await nutil.getNuGetFeedRegistryUrl(
                 packagingLocation.DefaultPackagingUri,
-                internalFeedId,
+                feed.feedId,
+                feed.projectId,
                 nuGetVersion,
                 accessToken,
                 true /* useSession */);
@@ -151,7 +152,7 @@ export async function run(nuGetPath: string): Promise<void> {
                 nuGetConfigHelper.addSourcesToTempNuGetConfig([
                     // tslint:disable-next-line:no-object-literal-type-assertion
                     {
-                        feedName: internalFeedId,
+                        feedName: feed.feedId,
                         feedUri,
                         isInternal: true,
                     } as auth.IPackageSource]);
@@ -396,5 +397,10 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
         return false;
     }
 
-    return true;
+    // Use VstsNugetPush only if conflictsAllowed is checked. Otherwise use Nuget as default.
+    if (conflictsAllowed){
+        return true;
+    }
+
+    return false;
 }
