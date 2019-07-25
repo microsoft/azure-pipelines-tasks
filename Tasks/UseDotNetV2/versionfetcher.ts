@@ -13,7 +13,9 @@ import { VersionInfo, Channel, VersionFilesData, VersionParts } from "./models"
 import * as utils from "./versionutilities";
 
 export class DotNetCoreVersionFetcher {
-    constructor() {
+    private explicitVersioning: boolean = false;
+    constructor(explicitVersioning: boolean = false) {
+        this.explicitVersioning = explicitVersioning;
         let proxyUrl: string = tl.getVariable("agent.proxyurl");
         var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
             proxy: {
@@ -109,7 +111,7 @@ export class DotNetCoreVersionFetcher {
     }
 
     private getVersionChannel(versionSpec: string): Channel {
-        let versionParts = new VersionParts(versionSpec);
+        let versionParts = new VersionParts(versionSpec, this.explicitVersioning);
 
         let requiredChannelVersion = `${versionParts.majorVersion}.${versionParts.minorVersion}`;
         if (versionParts.minorVersion == "x") {
@@ -149,7 +151,18 @@ export class DotNetCoreVersionFetcher {
 
                     let versionInfoList: VersionInfo[] = [];
                     channelReleases.forEach((release) => {
-                        if (release && release[packageType] && release[packageType].version) {
+                        if (release && packageType === 'sdk' && release.sdks) {
+                            try {
+                                release.sdks.forEach((sdk) => {
+                                    let versionInfo: VersionInfo = new VersionInfo(sdk, packageType);
+                                    versionInfoList.push(versionInfo);
+                                });
+                            }
+                            catch (err) {
+                                tl.debug(tl.loc("VersionInformationNotComplete", release[packageType].version, err));
+                            }
+                        }
+                        if (release && release[packageType] && release[packageType].version && !versionInfoList.find((versionInfo) => { return versionInfo.getVersion() === release[packageType].version }) ) {
                             try {
                                 let versionInfo: VersionInfo = new VersionInfo(release[packageType], packageType);
                                 versionInfoList.push(versionInfo);
@@ -199,7 +212,7 @@ export class DotNetCoreVersionFetcher {
     }
 
     private getChannelsForMajorVersion(version: string): Channel[] {
-        var versionParts = new VersionParts(version);
+        var versionParts = new VersionParts(version, this.explicitVersioning);
         let adjacentChannels: Channel[] = [];
         this.channels.forEach(channel => {
             if (channel.channelVersion.startsWith(`${versionParts.majorVersion}`)) {
