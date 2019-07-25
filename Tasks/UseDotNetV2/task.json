@@ -149,7 +149,7 @@
         "FailedInDetectingMachineArch": "Failed while detecting machine OS platform with error: %s",
         "runtimeVersionPropertyNotFound": "runtime-version property could not be found for .Net Core %s version %s.",
         "VersionNotFound": "%s version matching: %s could not be found",
-        "VersionNotAllowed": "Version %s is not allowed. Allowed version types are: majorVersion.x, majorVersion.minorVersion.x, majorVersion.minorVersion.patchVersion",
+        "VersionNotAllowed": "Version %s is not allowed. Allowed version types are: majorVersion.x, majorVersion.minorVersion.x, majorVersion.minorVersion.patchVersion. More details: %s",
         "VersionsCanNotBeCompared": "Versions %s and %s cannot be compared. Both versions should be explicit.",
         "FileNameNotCorrectCompleteFileName": "File name %s is not a correct '.complete' file.",
         "ChannelVersionsNotComparable": "Channel versions %s and %s can not be compared. They both must have numeric major and minor versions.",

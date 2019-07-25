@@ -121,10 +121,11 @@ export class VersionParts {
             ) {
                 throw tl.loc("OnlyExplicitVersionAllowed", version);
             }
+
             new semver.Range(version);
         }
         catch (ex) {
-            throw tl.loc("VersionNotAllowed", version) + "\nInnerException: " + ex;
+            throw tl.loc("VersionNotAllowed", version, ex);
         }
     }
 
@@ -150,10 +151,11 @@ export class VersionParts {
             ) {
                 throw tl.loc("VersionNumberHasTheWrongFormat", version);
             }
+
             new semver.Range(version);
         }
         catch (ex) {
-            throw tl.loc("VersionNotAllowed", version) + "\nInnerException: " + ex;
+            throw tl.loc("VersionNotAllowed", version, ex);
         }
     }
 
