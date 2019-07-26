@@ -17,7 +17,7 @@
   "version": {
     "Major": 4,
     "Minor": 154,
-    "Patch": 4
+    "Patch": 5
   },
   "preview": true,
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -156,6 +156,8 @@
     }
   },
   "messages": {
+    "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",
+    "JS_FormattedCommand": "ms-resource:loc.messages.JS_FormattedCommand",
     "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
     "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
     "InvalidAzurePsVersion": "ms-resource:loc.messages.InvalidAzurePsVersion",
