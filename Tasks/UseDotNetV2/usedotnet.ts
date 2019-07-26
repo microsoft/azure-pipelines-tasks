@@ -13,7 +13,7 @@ import { error } from 'util';
 async function run() {
     let useGlobalJson: boolean = tl.getBoolInput('useGlobalJson');
     let packageType = (tl.getInput('packageType') || "sdk").toLowerCase();;
-    let versionSpec = tl.getInput('version');    
+    let versionSpec = tl.getInput('version');
     const nugetVersion = tl.getInput('nugetVersion') || '4.4.1';
 
     let installationPath = tl.getInput('installationPath');
@@ -23,20 +23,20 @@ async function run() {
 
     let performMultiLevelLookup = tl.getBoolInput("performMultiLevelLookup", false);
     // Check if we want install dotnet
-    if (versionSpec || (useGlobalJson && packageType == "sdk")) {                
+    if (versionSpec || (useGlobalJson && packageType == "sdk")) {
         let includePreviewVersions: boolean = tl.getBoolInput('includePreviewVersions');
-        let workingDirectory: string | null = tl.getPathInput("workingDirectory", false) || null;        
+        let workingDirectory: string | null = tl.getPathInput("workingDirectory", false) || null;
         await installDotNet(installationPath, packageType, versionSpec, useGlobalJson, workingDirectory, includePreviewVersions);
-        tl.prependPath(installationPath);    
+        tl.prependPath(installationPath);
         // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
         tl.setVariable('DOTNET_ROOT', installationPath);
         // By default disable Multi Level Lookup unless user wants it enabled.
-        tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", !performMultiLevelLookup ? "0" : "1");  
-    }      
+        tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", !performMultiLevelLookup ? "0" : "1");
+    }
     // Add dot net tools path to "PATH" environment variables, so that tools can be used directly.
-    addDotNetCoreToolPath();    
+    addDotNetCoreToolPath();
     // Install NuGet version specified by user or 4.4.1 in case none is specified
-    // Also sets up the proxy configuration settings.    
+    // Also sets up the proxy configuration settings.
     await NuGetInstaller.installNuGet(nugetVersion);
 }
 
@@ -47,7 +47,7 @@ async function run() {
  * @param versionSpec The version the user want to install.
  * @param useGlobalJson A switch so we know if the user have `global.json` files and want use that. If this is true only SDK is possible!
  * @param workingDirectory This is only relevant if the `useGlobalJson` switch is `true`. It will set the root directory for the search of `global.json`
- * @param includePreviewVersions Define if the installer also search for preview version 
+ * @param includePreviewVersions Define if the installer also search for preview version
  */
 async function installDotNet(
     installationPath: string,
@@ -56,13 +56,13 @@ async function installDotNet(
     useGlobalJson: boolean,
     workingDirectory: string | null,
     includePreviewVersions: boolean) {
-    
+
     let versionFetcher = new DotNetCoreVersionFetcher();
     let dotNetCoreInstaller = new VersionInstaller(packageType, installationPath);
     // here we must check also the package type because if the user switch the packageType the useGlobalJson can be true, also if it will hidden.
     if (useGlobalJson && packageType == "sdk") {
         let globalJsonFetcherInstance = new globalJsonFetcher(workingDirectory);
-        let versionsToInstall: VersionInfo[] = await globalJsonFetcherInstance.GetVersions();        
+        let versionsToInstall: VersionInfo[] = await globalJsonFetcherInstance.GetVersions();
         for (let index = 0; index < versionsToInstall.length; index++) {
             const version = versionsToInstall[index];
             let url = versionFetcher.getDownloadUrl(version);
@@ -71,19 +71,19 @@ async function installDotNet(
             }
         }
     } else if (versionSpec) {
-        console.log(tl.loc("ToolToInstall", packageType, versionSpec));  
+        console.log(tl.loc("ToolToInstall", packageType, versionSpec));
         let versionSpecParts = new VersionParts(versionSpec);
-        let versionInfo: VersionInfo = await versionFetcher.getVersionInfo(versionSpecParts.versionSpec, packageType, includePreviewVersions);           
-        
+        let versionInfo: VersionInfo = await versionFetcher.getVersionInfo(versionSpecParts.versionSpec, packageType, includePreviewVersions);
+
         if (!versionInfo) {
             throw tl.loc("MatchingVersionNotFound", versionSpecParts.versionSpec);
         }
         if (!dotNetCoreInstaller.isVersionInstalled(versionInfo.getVersion())) {
             await dotNetCoreInstaller.downloadAndInstall(versionInfo, versionFetcher.getDownloadUrl(versionInfo));
-        }          
+        }
     } else {
         throw new error("Hey developer you have called the method `installDotNet` without a `versionSpec` or without `useGlobalJson`. that is impossible.");
-    }    
+    }
 }
 
 function addDotNetCoreToolPath() {
