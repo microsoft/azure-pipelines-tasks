@@ -82,7 +82,7 @@ let a: any = <any>{
             "code": 0,
             "stdout": "successfully ran up command"
         },
-        "docker-compose -f /tmp/tempdir/100/docker-compose.yml --pull --parallel" :{
+        "docker-compose -f /tmp/tempdir/100/docker-compose.yml build --pull --parallel" :{
             "code": 0,
             "stdout": "sucessfully built the service images"
         }
