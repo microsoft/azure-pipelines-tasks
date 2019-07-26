@@ -20,6 +20,7 @@ export class AzureAppService {
     private _appServiceConfigurationDetails: AzureAppServiceConfigurationDetails;
     private _appServicePublishingProfile: any;
     private _appServiceApplicationSetings: AzureAppServiceConfigurationDetails;
+    private _appServiceConnectionStrings: AzureAppServiceConfigurationDetails;
 
     constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string) {
         this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
@@ -340,6 +341,55 @@ export class AzureAppService {
 
     }
 
+    public async getConnectionStrings(force?: boolean): Promise<AzureAppServiceConfigurationDetails> {
+        if(force || !this._appServiceConnectionStrings) {
+            this._appServiceConnectionStrings = await this._getConnectionStrings();
+        }
+
+        return this._appServiceConnectionStrings;
+    }
+
+    public async patchConnectionString(properties: any): Promise<any> {
+        var connectionStringSettings = await this.getConnectionStrings(); 
+        var isNewValueUpdated: boolean = false;
+        for(var key in properties) {
+            if(connectionStringSettings.properties[key] != properties[key]) {
+                tl.debug(`Value of ${key} has been changed to ${properties[key]}`);
+                isNewValueUpdated = true;
+            }
+
+            connectionStringSettings.properties[key] = properties[key];
+        }
+
+        if(isNewValueUpdated) {
+            await this.updateConnectionStrings(connectionStringSettings);
+        }
+    }
+
+    public async updateConnectionStrings(connectionStringSettings): Promise<AzureAppServiceConfigurationDetails> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'PUT';
+            httpRequest.body = JSON.stringify(connectionStringSettings);
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/connectionstrings`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+            
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToUpdateAppServiceConnectionStrings', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+    }
+
     public async getMetadata(): Promise<AzureAppServiceConfigurationDetails> {
         try {
             var httpRequest = new webClient.WebRequest();
@@ -444,6 +494,29 @@ export class AzureAppService {
         }
         catch(error) {
             throw Error(tl.loc('FailedToGetAppServiceApplicationSettings', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+    }
+
+    private async _getConnectionStrings(): Promise<AzureAppServiceConfigurationDetails> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'POST';
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/connectionstrings/list`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+            
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToGetAppServiceConnectionStrings', this._getFormattedName(), this._client.getFormattedError(error)));
         }
     }
 
