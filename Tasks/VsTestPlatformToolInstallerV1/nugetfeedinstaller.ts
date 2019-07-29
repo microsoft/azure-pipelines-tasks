@@ -23,7 +23,7 @@ export class NugetFeedInstaller {
                 if (!helpers.isNullEmptyOrUndefined(password)) {
                     tl.debug('Attempting to write feed details along with provided credentials to temporary config file.');
                     tempConfigFilePath = helpers.GenerateTempFile(`${uuid.v4()}.config`);
-                    const feedId = uuid.v1();
+                    const feedId = uuid.v4();
                     this.prepareNugetConfigFile(packageSource, tempConfigFilePath, username, password, feedId);
                     packageSource = feedId;
                     ci.addToConsolidatedCi('passwordProvided', 'true');
