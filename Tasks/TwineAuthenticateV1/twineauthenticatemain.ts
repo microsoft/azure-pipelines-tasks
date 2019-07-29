@@ -35,37 +35,10 @@ async function main(): Promise<void> {
 
         let pypircPath = utils.getPypircPath();
 
-        // Case when there are multiple twine auth tasks in a build
-        if (tl.exist(pypircPath)) {
-            // merge two tasks
-            tl.debug(tl.loc("Info_StartParsingExistingPypircFile", pypircPath));
-            let fileContent = ini.parse(fs.readFileSync(pypircPath, "utf-8"));
-
-            // Adding new endpoints to already existing .pypirc file.
-            for (const entry of newEndpointsToAdd){
-                console.log(tl.loc("Info_AddingAuthForRegistry", entry.packageSource.feedName));
-
-                if (entry.packageSource.feedName in fileContent){
-                    // Hard fail if there is a name collision from service endpoint
-                    throw new Error(tl.loc("Error_DuplicateEntryForExternalFeed",
-                    entry.packageSource.feedName));
-                }
-
-                fileContent[entry.packageSource.feedName] = new Repository(
-                    entry.packageSource.feedUri,
-                    entry.username,
-                    entry.password);
-                fileContent["distutils"]["index-servers"] += " " + entry.packageSource.feedName;
-            }
-            let encodedStr = ini.encode(fileContent);
-            fs.writeFileSync(pypircPath, encodedStr);
-        }
-        else {
-            // create new
-            fs.writeFileSync(pypircPath, formPypircFormatFromData(newEndpointsToAdd));
-            tl.setVariable("PYPIRC_PATH", pypircPath, false);
-            tl.debug(tl.loc("VariableSetForPypirc", pypircPath));
-        }
+        // create new file. We do not merge existing files and always create a fresh file
+        fs.writeFileSync(pypircPath, formPypircFormatFromData(newEndpointsToAdd));
+        tl.setVariable("PYPIRC_PATH", pypircPath, false);
+        tl.debug(tl.loc("VariableSetForPypirc", pypircPath));
 
         // Configuring the pypirc file
         console.log(tl.loc("Info_SuccessAddingAuth", internalFeed.length, externalEndpoints.length));
