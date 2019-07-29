@@ -1,0 +1,51 @@
+{
+    "id": "D4B964F9-EA90-41BB-9526-29589628AD90",
+    "name": "MavenAuthenticate",
+    "friendlyName": "Maven Authenticate",
+    "description": "Provides credentials for Azure Artifacts feeds and service connections for maven repositories",
+    "helpMarkDown": "",
+    "category": "Package",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "minimumAgentVersion": "2.115.0",
+    "instanceNameFormat": "Maven Authenticate $(feed)",
+    "inputs": [
+        {
+            "name": "feed",
+            "type": "pickList",
+            "label": "Feed",
+            "defaultValue": "",
+            "helpMarkdown": "Select multiple feeds to authenticate.",
+            "required": true,
+            "properties": {
+                "EditableOptions": "true",
+                "MultiSelectFlatList": "true"
+            }
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "feed",
+            "endpointId": "tfs:feed",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "mavenauth.js"
+        }
+    },
+    "messages": {
+        "Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file."
+    }
+}

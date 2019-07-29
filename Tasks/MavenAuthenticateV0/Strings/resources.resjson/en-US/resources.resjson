@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Maven Authenticate",
+  "loc.helpMarkDown": "",
+  "loc.description": "Provides credentials for Azure Artifacts feeds and service connections for maven repositories",
+  "loc.instanceNameFormat": "Maven Authenticate $(feed)",
+  "loc.input.label.feed": "Feed",
+  "loc.messages.Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file."
+}
