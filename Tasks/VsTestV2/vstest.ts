@@ -10,7 +10,7 @@ import * as ci from './cieventlogger';
 import * as testselectorinvoker from './testselectorinvoker';
 import { AreaCodes, ResultMessages } from './constants';
 import * as os from 'os';
-import * as uuid from 'uuid';
+import * as uuidV4 from 'uuid/v4';
 import * as fs from 'fs';
 import * as xml2js from 'xml2js';
 import * as process from 'process';
@@ -384,7 +384,7 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
 }
 
 function getVstestTestsList(vsVersion: number): string {
-    const tempFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
+    const tempFile = utils.Helper.GenerateTempFile(uuidV4() + '.txt');
     tl.debug('Discovered tests listed at: ' + tempFile);
     const argsArray: string[] = [];
 
@@ -433,8 +433,8 @@ async function runVStest(settingsFile: string, vsVersion: number): Promise<tl.Ta
     let testCaseFilterOutput = '';
     let listFile = '';
     if (tiaConfig.userMapFile) {
-        testCaseFilterFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
-        testCaseFilterOutput = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
+        testCaseFilterFile = utils.Helper.GenerateTempFile(uuidV4() + '.txt');
+        testCaseFilterOutput = utils.Helper.GenerateTempFile(uuidV4() + '.txt');
     }
 
     let testselector = new testselectorinvoker.TestSelectorInvoker();

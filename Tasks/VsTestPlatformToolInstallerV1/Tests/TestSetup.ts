@@ -204,14 +204,10 @@ tlClone.assertAgent = function(variable: string) {
 // Register the tl mock
 tr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
-const uuid = require('uuid');
 // Create a mock for the uuid module
-const uuidClone = Object.assign({}, uuid);
-uuidClone.v4 = function() {
+tr.registerMock('uuid/v4', function () {
     return process.env[testConstants.feedId];
-};
-
-tr.registerMock('uuid', uuidClone);
+});
 
 const fs = require('fs');
 // Create a mock for fs operations

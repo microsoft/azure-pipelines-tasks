@@ -5,7 +5,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import { publishEvent } from './cieventlogger';
 import * as ci from './cieventlogger';
-let uuid = require('uuid');
+import * as uuidV4 from 'uuid/v4';
 
 export class TestResultsPublisher {
     constructor(matchingTestResultsFiles: string[], mergeResults: string, failTaskOnFailedTests: string, platform: string, config: string,
@@ -56,7 +56,7 @@ export class TestResultsPublisher {
         try {
             const agentTempDirectory = tl.getVariable('Agent.TempDirectory');
             // The response file is being created in agent temp directory so that it is automatically deleted after.
-            responseFilePath = path.join(agentTempDirectory, uuid.v4() + '.txt');
+            responseFilePath = path.join(agentTempDirectory, uuidV4() + '.txt');
 
             // Adding quotes around matching file names
             matchingTestResultsFiles = this.modifyMatchingFileName(matchingTestResultsFiles);

@@ -8,7 +8,7 @@ import * as ci from './cieventlogger';
 import * as constants from './constants';
 
 const str = require('string');
-const uuid = require('uuid');
+const uuidV4 = require('uuid/v4');
 const xml2js = require('xml2js');
 const parser = new xml2js.Parser();
 const builder = new xml2js.Builder();
@@ -106,7 +106,7 @@ export class Helper {
 
     public static saveToFile(fileContents: string, extension: string): Q.Promise<string> {
         const defer = Q.defer<string>();
-        const tempFile = Helper.GenerateTempFile(uuid.v4() + extension);
+        const tempFile = Helper.GenerateTempFile(uuidV4() + extension);
         fs.writeFile(tempFile, fileContents, function (err) {
             if (err) {
                 defer.reject(err);

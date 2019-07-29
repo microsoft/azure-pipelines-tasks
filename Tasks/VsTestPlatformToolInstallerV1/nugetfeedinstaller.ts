@@ -6,7 +6,7 @@ import * as perf from 'performance-now';
 import * as ci from './cieventlogger';
 import * as constants from './constants';
 import * as helpers from './helpers';
-import * as uuid from 'uuid';
+import * as uuidV4 from 'uuid/v4';
 import * as fs from 'fs';
 import { NugetPackageVersionHelper } from './nugetpackageversionhelper';
 import { NugetDownloadHelper } from './nugetdownloadhelper';
@@ -22,8 +22,8 @@ export class NugetFeedInstaller {
             try {
                 if (!helpers.isNullEmptyOrUndefined(password)) {
                     tl.debug('Attempting to write feed details along with provided credentials to temporary config file.');
-                    tempConfigFilePath = helpers.GenerateTempFile(`${uuid.v4()}.config`);
-                    const feedId = uuid.v4();
+                    tempConfigFilePath = helpers.GenerateTempFile(`${uuidV4()}.config`);
+                    const feedId = uuidV4();
                     this.prepareNugetConfigFile(packageSource, tempConfigFilePath, username, password, feedId);
                     packageSource = feedId;
                     ci.addToConsolidatedCi('passwordProvided', 'true');

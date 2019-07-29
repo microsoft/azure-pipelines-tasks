@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as utils from './helpers';
 import * as outStream from './outputstream';
 import * as os from 'os';
-import * as uuid from 'uuid';
+import * as uuidV4 from 'uuid/v4';
 import * as fs from 'fs';
 import * as process from 'process';
 import { InputDataContract } from './inputdatacontract';
@@ -61,7 +61,7 @@ export class NonDistributedTest {
         dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
 
         // Invoke DtaExecutionHost with the input json file
-        const inputFilePath = utils.Helper.GenerateTempFile('input_' + uuid.v4() + '.json');
+        const inputFilePath = utils.Helper.GenerateTempFile('input_' + uuidV4() + '.json');
         utils.Helper.removeEmptyNodes(this.inputDataContract);
 
         try {
@@ -129,7 +129,7 @@ export class NonDistributedTest {
                 throw new Error(tl.loc('noTestSourcesFound', this.sourceFilter.toString()));
             }
 
-            const tempFile = utils.Helper.GenerateTempFile('testSources_' + uuid.v4() + '.src');
+            const tempFile = utils.Helper.GenerateTempFile('testSources_' + uuidV4() + '.src');
             fs.writeFileSync(tempFile, filesMatching.join(os.EOL));
             tl.debug('Test Sources file :' + tempFile);
             return tempFile;

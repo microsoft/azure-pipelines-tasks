@@ -44,10 +44,8 @@ tr.setAnswers(a);
 tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
 
 // Mock guid generator
-tr.registerMock('uuid', {
-    v4: function () {
-        return newUuid;
-    }
+tr.registerMock('uuid/v4', function () {
+    return newUuid;
 });
 
 // Create mock for getVariable

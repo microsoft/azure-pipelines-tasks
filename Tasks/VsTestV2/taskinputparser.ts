@@ -7,7 +7,7 @@ import * as constants from './constants';
 import * as ci from './cieventlogger';
 import * as versionFinder from './versionfinder';
 import { AreaCodes, ResultMessages } from './constants';
-import * as uuid from 'uuid';
+import * as uuidV4 from 'uuid/v4';
 const regedit = require('regedit');
 
 export function getvsTestConfigurations() {
@@ -16,10 +16,10 @@ export function getvsTestConfigurations() {
     vsTestConfiguration.isResponseFileRun = false;
     vsTestConfiguration.publishTestResultsInTiaMode = false;
     vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');
-    vsTestConfiguration.vstestDiagFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
-    vsTestConfiguration.responseFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
-    vsTestConfiguration.vstestArgsFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
-    vsTestConfiguration.responseSupplementryFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
+    vsTestConfiguration.vstestDiagFile = utils.Helper.GenerateTempFile(uuidV4() + '.txt');
+    vsTestConfiguration.responseFile = utils.Helper.GenerateTempFile(uuidV4() + '.txt');
+    vsTestConfiguration.vstestArgsFile = utils.Helper.GenerateTempFile(uuidV4() + '.txt');
+    vsTestConfiguration.responseSupplementryFile = utils.Helper.GenerateTempFile(uuidV4() + '.txt');
     vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isResponseFileSupported() || utils.Helper.isToolsInstallerFlow(vsTestConfiguration);
     return vsTestConfiguration;
 }
@@ -176,7 +176,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         tl.warning(tl.loc('uitestsparallel'));
     }
 
-    testConfiguration.taskInstanceIdentifier = uuid.v4();
+    testConfiguration.taskInstanceIdentifier = uuidV4();
 
     try {
         versionFinder.getVsTestRunnerDetails(testConfiguration);
@@ -329,9 +329,9 @@ function getTiaConfiguration(): models.TiaConfiguration {
     tiaConfiguration.fileLevel = tl.getVariable('tia.filelevel');
     tiaConfiguration.sourcesDir = tl.getVariable('build.sourcesdirectory');
     tiaConfiguration.tiaFilterPaths = tl.getVariable('TIA_IncludePathFilters');
-    tiaConfiguration.runIdFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
-    tiaConfiguration.baseLineBuildIdFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
-    tiaConfiguration.responseFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
+    tiaConfiguration.runIdFile = utils.Helper.GenerateTempFile(uuidV4() + '.txt');
+    tiaConfiguration.baseLineBuildIdFile = utils.Helper.GenerateTempFile(uuidV4() + '.txt');
+    tiaConfiguration.responseFile = utils.Helper.GenerateTempFile(uuidV4() + '.txt');
 
     tiaConfiguration.useNewCollector = false;
 

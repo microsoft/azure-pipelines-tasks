@@ -8,7 +8,7 @@ import * as os from 'os';
 import * as ci from './cieventlogger';
 import { TestSelectorInvoker } from './testselectorinvoker';
 import { writeFileSync } from 'fs';
-import * as uuid from 'uuid';
+import * as uuidV4 from 'uuid/v4';
 
 const testSelector = new TestSelectorInvoker();
 
@@ -64,7 +64,7 @@ export class DistributedTest {
         }
 
         // Invoke DtaExecutionHost with the input json file
-        const inputFilePath = utils.Helper.GenerateTempFile('input_' + uuid.v4() + '.json');
+        const inputFilePath = utils.Helper.GenerateTempFile('input_' + uuidV4() + '.json');
         utils.Helper.removeEmptyNodes(this.inputDataContract);
 
         try {
@@ -114,7 +114,7 @@ export class DistributedTest {
                 throw new Error(tl.loc('noTestSourcesFound', sourceFilter.toString()));
             }
 
-            const tempFile = utils.Helper.GenerateTempFile('testSources_' + uuid.v4() + '.src');
+            const tempFile = utils.Helper.GenerateTempFile('testSources_' + uuidV4() + '.src');
             fs.writeFileSync(tempFile, filesMatching.join(os.EOL));
             tl.debug('Test Sources file :' + tempFile);
             return tempFile;
