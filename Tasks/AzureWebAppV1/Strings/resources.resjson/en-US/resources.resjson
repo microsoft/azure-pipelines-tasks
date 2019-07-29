@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Web App",
-  "loc.helpMarkDown": "[More information](https://aka.ms/azurewebappdeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebappdeployreadme)",
   "loc.description": "Deploy an Azure Web App for Linux or Windows",
   "loc.instanceNameFormat": "Azure Web App Deploy: $(appName)",
   "loc.group.displayName.AdditionalDeploymentOptions": "Additional Deployment Options",
@@ -27,6 +27,8 @@
   "loc.input.help.appSettings": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.configurationStrings": "Configuration settings",
   "loc.input.help.configurationStrings": "Edit web app configuration settings following the syntax -key value. Value containing spaces should be enclosed in double quotes.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
+  "loc.input.label.connectionStrings": "Connection Strings",
+  "loc.input.help.connectionStrings": "Edit web app connection strings following the json syntax as follows: [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"key1\" <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\" \"valueabcd\"<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;\"type\" \"MySql\"}<br/> ]",
   "loc.input.label.deploymentMethod": "Deployment method",
   "loc.input.help.deploymentMethod": "Choose the deployment method for the app.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Invalid App Service package or folder path provided: %s",

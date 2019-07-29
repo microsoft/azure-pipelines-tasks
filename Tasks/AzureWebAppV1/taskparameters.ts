@@ -22,6 +22,7 @@ export class TaskParametersUtility {
             AppSettings: tl.getInput('appSettings', false),
             StartupCommand: tl.getInput('startUpCommand', false),
             ConfigurationSettings: tl.getInput('configurationStrings', false),
+            ConnectionStrings: tl.getInput('connectionStrings', false),
             ResourceGroupName: tl.getInput('resourceGroupName', false),
             SlotName: tl.getInput('slotName', false),
             WebAppName: tl.getInput('appName', true)
@@ -120,6 +121,7 @@ export interface TaskParameters {
     StartupCommand?: string;
     RuntimeStack?: string;
     ConfigurationSettings?: string;
+    ConnectionStrings?: string;
     /** Additional parameters */
     azureEndpoint?: AzureEndpoint;
     isLinuxApp?: boolean;

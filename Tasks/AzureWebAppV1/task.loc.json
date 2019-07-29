@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 20
+    "Patch": 21
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -162,6 +162,15 @@
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
+    },
+    {
+      "name": "connectionStrings",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.connectionStrings",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.connectionStrings"
     },
     {
       "name": "deploymentMethod",

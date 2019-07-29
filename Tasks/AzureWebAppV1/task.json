@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 20
+        "Patch": 21
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -162,6 +162,15 @@
             "properties": {
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
             }
+        },
+        {
+            "name": "connectionStrings",
+            "type": "multiLine",
+            "label": "Connection Strings",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "ApplicationAndConfigurationSettings",
+            "helpMarkDown": "Edit web app connection strings following the json syntax as follows: [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"key1\" <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\" \"valueabcd\"<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;\"type\" \"MySql\"}<br/> ]"
         },
         {
             "name": "deploymentMethod",
