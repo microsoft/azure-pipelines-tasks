@@ -16,10 +16,10 @@ export function getvsTestConfigurations() {
     vsTestConfiguration.isResponseFileRun = false;
     vsTestConfiguration.publishTestResultsInTiaMode = false;
     vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');
-    vsTestConfiguration.vstestDiagFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
-    vsTestConfiguration.responseFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
-    vsTestConfiguration.vstestArgsFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
-    vsTestConfiguration.responseSupplementryFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
+    vsTestConfiguration.vstestDiagFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
+    vsTestConfiguration.responseFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
+    vsTestConfiguration.vstestArgsFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
+    vsTestConfiguration.responseSupplementryFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
     vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isResponseFileSupported() || utils.Helper.isToolsInstallerFlow(vsTestConfiguration);
     return vsTestConfiguration;
 }
@@ -329,9 +329,9 @@ function getTiaConfiguration(): models.TiaConfiguration {
     tiaConfiguration.fileLevel = tl.getVariable('tia.filelevel');
     tiaConfiguration.sourcesDir = tl.getVariable('build.sourcesdirectory');
     tiaConfiguration.tiaFilterPaths = tl.getVariable('TIA_IncludePathFilters');
-    tiaConfiguration.runIdFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
-    tiaConfiguration.baseLineBuildIdFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
-    tiaConfiguration.responseFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
+    tiaConfiguration.runIdFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
+    tiaConfiguration.baseLineBuildIdFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
+    tiaConfiguration.responseFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
 
     tiaConfiguration.useNewCollector = false;
 

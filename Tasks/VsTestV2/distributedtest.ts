@@ -64,7 +64,7 @@ export class DistributedTest {
         }
 
         // Invoke DtaExecutionHost with the input json file
-        const inputFilePath = utils.Helper.GenerateTempFile('input_' + uuid.v1() + '.json');
+        const inputFilePath = utils.Helper.GenerateTempFile('input_' + uuid.v4() + '.json');
         utils.Helper.removeEmptyNodes(this.inputDataContract);
 
         try {
@@ -114,7 +114,7 @@ export class DistributedTest {
                 throw new Error(tl.loc('noTestSourcesFound', sourceFilter.toString()));
             }
 
-            const tempFile = utils.Helper.GenerateTempFile('testSources_' + uuid.v1() + '.src');
+            const tempFile = utils.Helper.GenerateTempFile('testSources_' + uuid.v4() + '.src');
             fs.writeFileSync(tempFile, filesMatching.join(os.EOL));
             tl.debug('Test Sources file :' + tempFile);
             return tempFile;

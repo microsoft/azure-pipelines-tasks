@@ -384,7 +384,7 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
 }
 
 function getVstestTestsList(vsVersion: number): string {
-    const tempFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
+    const tempFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
     tl.debug('Discovered tests listed at: ' + tempFile);
     const argsArray: string[] = [];
 
@@ -433,8 +433,8 @@ async function runVStest(settingsFile: string, vsVersion: number): Promise<tl.Ta
     let testCaseFilterOutput = '';
     let listFile = '';
     if (tiaConfig.userMapFile) {
-        testCaseFilterFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
-        testCaseFilterOutput = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
+        testCaseFilterFile = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
+        testCaseFilterOutput = utils.Helper.GenerateTempFile(uuid.v4() + '.txt');
     }
 
     let testselector = new testselectorinvoker.TestSelectorInvoker();

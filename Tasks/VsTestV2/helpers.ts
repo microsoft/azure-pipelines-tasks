@@ -106,7 +106,7 @@ export class Helper {
 
     public static saveToFile(fileContents: string, extension: string): Q.Promise<string> {
         const defer = Q.defer<string>();
-        const tempFile = Helper.GenerateTempFile(uuid.v1() + extension);
+        const tempFile = Helper.GenerateTempFile(uuid.v4() + extension);
         fs.writeFile(tempFile, fileContents, function (err) {
             if (err) {
                 defer.reject(err);

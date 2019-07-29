@@ -45,7 +45,7 @@ tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-
 
 // Mock guid generator
 tr.registerMock('uuid', {
-    v1: function () {
+    v4: function () {
         return newUuid;
     }
 });

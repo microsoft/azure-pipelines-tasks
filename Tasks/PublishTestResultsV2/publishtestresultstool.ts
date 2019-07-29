@@ -56,7 +56,7 @@ export class TestResultsPublisher {
         try {
             const agentTempDirectory = tl.getVariable('Agent.TempDirectory');
             // The response file is being created in agent temp directory so that it is automatically deleted after.
-            responseFilePath = path.join(agentTempDirectory, uuid.v1() + '.txt');
+            responseFilePath = path.join(agentTempDirectory, uuid.v4() + '.txt');
 
             // Adding quotes around matching file names
             matchingTestResultsFiles = this.modifyMatchingFileName(matchingTestResultsFiles);
