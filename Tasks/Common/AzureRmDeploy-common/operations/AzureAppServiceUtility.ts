@@ -158,16 +158,22 @@ export class AzureAppServiceUtility {
         console.log(tl.loc('UpdatedAppServiceConfigurationSettings'));
     }
 
-    public async updateConnectionStrings(properties: any) : Promise<void> {
-        for(var property in properties) {
-            if(!!properties[property] && properties[property].value !== undefined) {
-                properties[property] = properties[property].value;
+    public async updateConnectionStrings(addProperties: any, deleteProperties?: any): Promise<boolean>  {
+        var connectionStringProperties = {};
+        for(var property in addProperties) {
+            if (!addProperties[property].type) {
+                addProperties[property].type = "Custom";
             }
+            connectionStringProperties[addProperties[property].name] = addProperties[property];
+            delete connectionStringProperties[addProperties[property].name].name;
         }
 
-        console.log(tl.loc('UpdatingAppServiceConnectionStrings', JSON.stringify(properties)));
-        await this._appService.patchConnectionString({'properties': properties});
-        console.log(tl.loc('UpdatedAppServiceConfigurationSettings'));
+        console.log(tl.loc('UpdatingAppServiceConnectionStrings', JSON.stringify(connectionStringProperties)));
+        var isNewValueUpdated: boolean = await this._appService.patchConnectionString(connectionStringProperties, deleteProperties);
+        if(!isNewValueUpdated) {
+            console.log(tl.loc('UpdatedAppServiceConnectionStrings'));
+            return isNewValueUpdated;
+        }
     }
 
     public async updateAndMonitorAppSettings(addProperties?: any, deleteProperties?: any): Promise<boolean> {

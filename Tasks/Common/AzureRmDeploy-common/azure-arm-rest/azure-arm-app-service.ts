@@ -349,16 +349,23 @@ export class AzureAppService {
         return this._appServiceConnectionStrings;
     }
 
-    public async patchConnectionString(properties: any): Promise<any> {
+    public async patchConnectionString(addProperties: any, deleteProperties?: any): Promise<any> {
         var connectionStringSettings = await this.getConnectionStrings(); 
         var isNewValueUpdated: boolean = false;
-        for(var key in properties) {
-            if(connectionStringSettings.properties[key] != properties[key]) {
-                tl.debug(`Value of ${key} has been changed to ${properties[key]}`);
+        for(var key in addProperties) {
+            if(JSON.stringify(connectionStringSettings.properties[key]) != JSON.stringify(addProperties[key])) {
+                tl.debug(`Value of ${key} has been changed to ${JSON.stringify(addProperties[key])}`);
                 isNewValueUpdated = true;
             }
+            connectionStringSettings.properties[key] = addProperties[key];
+        }
 
-            connectionStringSettings.properties[key] = properties[key];
+        for(var key in deleteProperties) {
+            if(key in connectionStringSettings.properties) {
+                delete connectionStringSettings.properties[key];
+                tl.debug(`Removing app setting : ${key}`);
+                isNewValueUpdated = true;
+            }
         }
 
         if(isNewValueUpdated) {
