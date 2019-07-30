@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 21
+        "Patch": 22
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -170,7 +170,12 @@
             "defaultValue": "",
             "required": false,
             "groupName": "ApplicationAndConfigurationSettings",
-            "helpMarkDown": "Edit web app connection strings following the json syntax as follows: [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"key1\" <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\" \"valueabcd\"<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;\"type\" \"MySql\"}<br/> ]"
+            "helpMarkDown": "Edit web app connection strings following the json syntax as follows:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key1\" <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueabcd\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"type\": \"MySql\" <br/> &nbsp;&nbsp; }<br/> ]",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "5000"
+            }
         },
         {
             "name": "deploymentMethod",
@@ -354,9 +359,13 @@
         "FailedToGetAppServiceMetadata": "Failed to get App service '%s' Meta data. Error: %s",
         "FailedToPatchAppServiceConfiguration": "Failed to patch App Service '%s' configuration. Error: %s",
         "FailedToUpdateAppServiceConfiguration": "Failed to update App service '%s' configuration. Error: %s",
+        "FailedToUpdateAppServiceConnectionStrings": "Failed to update App service '%s' Connection Strings. Error: %s",
+        "FailedToUpdateAppServiceConnectionStringSlotSettings": "Failed to update App service '%s' Connection String Slot Settings. Error: %s",
         "FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",
         "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
         "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
+        "FailedToGetAppServiceConnectionStrings": "Failed to get App service '%s' Connection strings. Error: %s",
+        "FailedToGetAppServiceConnectionStringSlotSettings": "Failed to get App service '%s' Connection string slot settings. Error: %s",
         "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
         "UpdatingAppServiceConnectionStrings": "Updating App Service Connection Strings. Data: %s",
         "UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",

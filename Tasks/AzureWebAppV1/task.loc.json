@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 22
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -170,7 +170,12 @@
       "defaultValue": "",
       "required": false,
       "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "ms-resource:loc.input.help.connectionStrings"
+      "helpMarkDown": "ms-resource:loc.input.help.connectionStrings",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"
+      }
     },
     {
       "name": "deploymentMethod",
@@ -354,9 +359,13 @@
     "FailedToGetAppServiceMetadata": "ms-resource:loc.messages.FailedToGetAppServiceMetadata",
     "FailedToPatchAppServiceConfiguration": "ms-resource:loc.messages.FailedToPatchAppServiceConfiguration",
     "FailedToUpdateAppServiceConfiguration": "ms-resource:loc.messages.FailedToUpdateAppServiceConfiguration",
+    "FailedToUpdateAppServiceConnectionStrings": "ms-resource:loc.messages.FailedToUpdateAppServiceConnectionStrings",
+    "FailedToUpdateAppServiceConnectionStringSlotSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceConnectionStringSlotSettings",
     "FailedToGetAppServiceConfiguration": "ms-resource:loc.messages.FailedToGetAppServiceConfiguration",
     "FailedToGetAppServicePublishingCredentials": "ms-resource:loc.messages.FailedToGetAppServicePublishingCredentials",
     "FailedToGetAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettings",
+    "FailedToGetAppServiceConnectionStrings": "ms-resource:loc.messages.FailedToGetAppServiceConnectionStrings",
+    "FailedToGetAppServiceConnectionStringSlotSettings": "ms-resource:loc.messages.FailedToGetAppServiceConnectionStringSlotSettings",
     "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
     "UpdatingAppServiceConnectionStrings": "ms-resource:loc.messages.UpdatingAppServiceConnectionStrings",
     "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",

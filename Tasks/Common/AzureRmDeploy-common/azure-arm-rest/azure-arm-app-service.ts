@@ -21,6 +21,7 @@ export class AzureAppService {
     private _appServicePublishingProfile: any;
     private _appServiceApplicationSetings: AzureAppServiceConfigurationDetails;
     private _appServiceConnectionStrings: AzureAppServiceConfigurationDetails;
+    private _appServiceConnectionStringSlotSetting: AzureAppServiceConfigurationDetails;
 
     constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string) {
         this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
@@ -342,8 +343,16 @@ export class AzureAppService {
     }
 
     public async getConnectionStrings(force?: boolean): Promise<AzureAppServiceConfigurationDetails> {
+        if(force || !this._appServiceConnectionStringSlotSetting) {
+            this._appServiceConnectionStringSlotSetting = await this._getConnectionStrings();
+        }
+
+        return this._appServiceConnectionStringSlotSetting;
+    }
+
+    public async getConnectionStringSlotSettings(force?: boolean): Promise<AzureAppServiceConfigurationDetails> {
         if(force || !this._appServiceConnectionStrings) {
-            this._appServiceConnectionStrings = await this._getConnectionStrings();
+            this._appServiceConnectionStrings = await this._getConnectionStringSlotSettings();
         }
 
         return this._appServiceConnectionStrings;
@@ -394,6 +403,48 @@ export class AzureAppService {
         }
         catch(error) {
             throw Error(tl.loc('FailedToUpdateAppServiceConnectionStrings', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+    }
+
+    public async patchConnectionStringSlot(addProperties: any): Promise<any> {
+        var connectionStringSlotSettings = await this.getConnectionStringSlotSettings();
+        var isNewValueUpdated: boolean = false;
+        for(var key in addProperties) {
+            if(addProperties[key].slotSetting == true) {
+                if((connectionStringSlotSettings.properties.connectionStringNames.length == 0) || (!connectionStringSlotSettings.properties.connectionStringNames.includes(key))) {
+                    connectionStringSlotSettings.properties.connectionStringNames.push(key);
+                }
+                tl.debug(`Slot setting updated for key : ${key}`);
+                isNewValueUpdated = true;
+            }
+        }
+
+        if(isNewValueUpdated) {
+            await this.updateSlotSettings(connectionStringSlotSettings);
+        }
+    }
+
+    public async updateSlotSettings(connectionStringSettings): Promise<AzureAppServiceConfigurationDetails> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'PUT';
+            httpRequest.body = JSON.stringify(connectionStringSettings);
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/slotConfigNames`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+            
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToUpdateAppServiceConnectionStringSlotSettings', this._getFormattedName(), this._client.getFormattedError(error)));
         }
     }
 
@@ -524,6 +575,29 @@ export class AzureAppService {
         }
         catch(error) {
             throw Error(tl.loc('FailedToGetAppServiceConnectionStrings', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+    }
+
+    private async _getConnectionStringSlotSettings(): Promise<AzureAppServiceConfigurationDetails> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'GET';
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/slotConfigNames`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+            
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToGetAppServiceConnectionStringSlotSettings', this._getFormattedName(), this._client.getFormattedError(error)));
         }
     }
 
