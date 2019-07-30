@@ -9,14 +9,14 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 0,
+    "Minor": 156,
     "Patch": 0
   },
   "runsOn": [
     "Agent",
     "DeploymentGroup"
   ],
-  "minimumAgentVersion": "2.115.0",
+  "minimumAgentVersion": "2.120.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -83,17 +83,15 @@
     "Info_SuccessAddingAuth": "ms-resource:loc.messages.Info_SuccessAddingAuth",
     "Info_AddingPasswordAuthEntry": "ms-resource:loc.messages.Info_AddingPasswordAuthEntry",
     "Info_AddingTokenAuthEntry": "ms-resource:loc.messages.Info_AddingTokenAuthEntry",
-    "Info_StartParsingExistingPypircFile": "ms-resource:loc.messages.Info_StartParsingExistingPypircFile",
     "Error_FailedToParseFeedUrlAndAuth": "ms-resource:loc.messages.Error_FailedToParseFeedUrlAndAuth",
-    "Warning_DuplicateEntryForInternalFeed": "ms-resource:loc.messages.Warning_DuplicateEntryForInternalFeed",
-    "Error_DuplicateEntryForExternalFeed": "ms-resource:loc.messages.Error_DuplicateEntryForExternalFeed",
+    "Warning_OnlyOneFeedAllowed": "ms-resource:loc.messages.Warning_OnlyOneFeedAllowed",
+    "Warning_OnlyOneServiceConnectionAllowed": "ms-resource:loc.messages.Warning_OnlyOneServiceConnectionAllowed",
+    "Error_DuplicateEntryForFeed": "ms-resource:loc.messages.Error_DuplicateEntryForFeed",
     "FailedToGetPackagingUri": "ms-resource:loc.messages.FailedToGetPackagingUri",
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
-    "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable",
     "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
     "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
-    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile",
-    "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
+    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile"
   },
   "postjobexecution": {
     "Node": {

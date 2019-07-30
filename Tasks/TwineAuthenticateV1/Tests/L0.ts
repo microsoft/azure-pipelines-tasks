@@ -30,7 +30,7 @@ describe('Twine Authenticate V1 Suite', function () {
         assert.equal(fileContent["distutils"]["index-servers"], "TestFeed", "Test Feed should be added to auth list.");
 
         assert.equal(fileContent["TestFeed"]["repository"],
-        "https://example.visualstudio.com/defaultcollection/TestFeed",
+        "https://vsts/packagesource/TestFeed",
         "Test Feed repository should be correct.");
 
         assert.equal(fileContent["TestFeed"]["username"],

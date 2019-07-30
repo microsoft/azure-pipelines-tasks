@@ -4,7 +4,7 @@ import * as os from "os";
 import * as path from "path";
 import * as util from "util";
 import * as tl from "azure-pipelines-task-lib";
-import * as telemetry from "utility-common/telemetry";
+import { emitTelemetry } from 'artifacts-common/telemetry';
 import * as auth from "./authentication";
 import * as utils from "./utilities";
 
@@ -25,11 +25,17 @@ export class Repository
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));
+    tl.setResourcePath(path.join(__dirname, "node_modules/artifacts-common/module.json"));
+
+    let internalFeedSuccessCount: number = 0;
+    let externalFeedSuccessCount: number = 0;
     try {
-        // Local feeds
+        // Local feed
         const internalFeed = await auth.getInternalAuthInfoArray("artifactFeed");
-        // external service endpoints
+
+        // external service endpoint
         const externalEndpoints = await auth.getExternalAuthInfoArray("pythonUploadServiceConnection");
+
         // combination of both internal and external
         const newEndpointsToAdd = internalFeed.concat(externalEndpoints);
 
@@ -41,25 +47,19 @@ async function main(): Promise<void> {
         tl.debug(tl.loc("VariableSetForPypirc", pypircPath));
 
         // Configuring the pypirc file
-        console.log(tl.loc("Info_SuccessAddingAuth", internalFeed.length, externalEndpoints.length));
+        internalFeedSuccessCount = internalFeed.length;
+        externalFeedSuccessCount = externalEndpoints.length;
+        console.log(tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount));
     }
     catch (error) {
         tl.error(error);
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToAddAuthentication"));
         return;
     } finally{
-        _logTwineAuthStartupVariables();
-    }
-}
- // Telemetry
-function _logTwineAuthStartupVariables() {
-    try {
-        const twineAuthenticateTelemetry = {
-            "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
-            };
-        telemetry.emitTelemetry("Packaging", "TwineAuthenticate", twineAuthenticateTelemetry);
-    } catch (err) {
-        tl.debug(`Unable to log Twine Authenticate task init telemetry. Err:( ${err} )`);
+        emitTelemetry("Packaging", "TwineAuthenticateV1", {
+            "InternalFeedAuthCount": internalFeedSuccessCount,
+            "ExternalFeedAuthCount": externalFeedSuccessCount,
+        });
     }
 }
 
@@ -73,7 +73,7 @@ function formPypircFormatFromData(authInfo: auth.AuthInfo[]): string{
         console.log(tl.loc("Info_AddingAuthForRegistry", entry.packageSource.feedName));
 
         if (entry.packageSource.feedName in ent){
-            throw new Error(tl.loc("Error_DuplicateEntryForExternalFeed",
+            throw new Error(tl.loc("Error_DuplicateEntryForFeed",
                     entry.packageSource.feedName));
         }
         header += util.format("%s ", entry.packageSource.feedName);

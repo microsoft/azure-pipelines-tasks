@@ -1,58 +1,51 @@
-import * as path from "path";
+import { getPackagingRouteUrl } from "artifacts-common/connectionDataUtils";
+import { ProtocolType } from "artifacts-common/protocols";
+import { getPackagingServiceConnections } from "artifacts-common/serviceConnectionUtils";
+import { getProjectScopedFeed } from "artifacts-common/stringUtils";
+import { emitTelemetry } from "artifacts-common/telemetry";
+import { getSystemAccessToken } from "artifacts-common/webapi";
 import * as tl from "azure-pipelines-task-lib";
-import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import * as telemetry from "utility-common/telemetry";
-import * as auth from "./authentication";
+import * as path from "path";
 import * as utils from "./utilities";
-import { getProjectAndFeedIdFromInput } from 'packaging-common/util';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));
+    tl.setResourcePath(path.join(__dirname, "node_modules/artifacts-common/module.json"));
 
+    let internalFeedSuccessCount: number = 0;
+    let externalFeedSuccessCount: number = 0;
     try {
-        let packagingLocation: string;
-
         let internalAndExternalEndpoints: string[] = [];
 
         const feedList  = tl.getDelimitedInput("artifactFeeds", ",");
         const onlyAddExtraIndex = tl.getBoolInput("onlyAddExtraIndex");
 
+        const pypiSimpleApiLocationId: string = "93377A2C-F5FB-48B9-A8DC-7781441CABF1";
+        const pypiApiVersion: string = "5.0";
+
         // Local feeds
         if (feedList)
         {
             tl.debug(tl.loc("Info_AddingInternalFeeds", feedList.length));
-            const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-            const localAccessToken = pkgLocationUtils.getSystemAccessToken();
-            try {
-                // This call is to get the packaging URI(abc.pkgs.vs.com) which is same for all protocols.
-                packagingLocation = await pkgLocationUtils.getNuGetUriFromBaseServiceUri(
-                    serviceUri,
-                    localAccessToken);
-            } catch (error) {
-                tl.debug(tl.loc("FailedToGetPackagingUri"));
-                tl.debug(JSON.stringify(error));
-                packagingLocation = serviceUri;
-            }
+            const localAccessToken = getSystemAccessToken();
 
             for (const feedName of feedList) {
-                const feed = getProjectAndFeedIdFromInput(feedName);
-                const feedUri = await pkgLocationUtils.getFeedRegistryUrl(
-                    packagingLocation,
-                    pkgLocationUtils.RegistryType.PyPiSimple,
+                const feed = getProjectScopedFeed(feedName);
+                const feedUri = await getPackagingRouteUrl(
+                    ProtocolType.PyPi,
+                    pypiApiVersion,
+                    pypiSimpleApiLocationId,
                     feed.feedId,
-                    feed.projectId,
-                    localAccessToken);
-                const pipUri = utils.formPipCompatibleUri("build", localAccessToken, feedUri);
+                    feed.projectId);
+                const pipUri = utils.addCredentialsToUri("build", localAccessToken, feedUri);
                 internalAndExternalEndpoints.push(pipUri);
             }
         }
 
         // external service endpoints
-        const endpointNames = tl.getDelimitedInput("pythonDownloadServiceConnections", ",");
-
-        const externalEndpoints = auth.getExternalAuthInfoArray(endpointNames);
+        const externalEndpoints = getPackagingServiceConnections("pythonDownloadServiceConnections");
         externalEndpoints.forEach((id) => {
-            const externalPipUri = utils.formPipCompatibleUri(id.username, id.password, id.packageSource.feedUri);
+            const externalPipUri = utils.getUriWithCredentials(id);
             internalAndExternalEndpoints.push(externalPipUri);
         });
 
@@ -75,27 +68,19 @@ async function main(): Promise<void> {
             }
         }
 
-        console.log(tl.loc("Info_SuccessAddingAuth", feedList.length, externalEndpoints.length));
+        internalFeedSuccessCount = feedList.length;
+        externalFeedSuccessCount = externalEndpoints.length;
+        console.log(tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount));
     }
     catch (error) {
         tl.error(error);
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToAddAuthentication"));
         return;
     } finally{
-        _logPipAuthStartupVariables();
-    }
-}
-
-// Telemetry
-function _logPipAuthStartupVariables() {
-    try {
-        const pipAuthenticateTelemetry = {
-            "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
-            };
-
-        telemetry.emitTelemetry("Packaging", "PipAuthenticate", pipAuthenticateTelemetry);
-    } catch (err) {
-        tl.debug(`Unable to log Pip Authenticate task init telemetry. Err:( ${err} )`);
+        emitTelemetry("Packaging", "PipAuthenticateV1", {
+            "InternalFeedAuthCount": internalFeedSuccessCount,
+            "ExternalFeedAuthCount": externalFeedSuccessCount,
+        });
     }
 }
 
