@@ -1,0 +1,229 @@
+{
+    "id": "61F2A582-95AE-4948-B34D-A1B3C4F6A737",
+    "name": "DownloadPipelineArtifact",
+    "friendlyName": "Download pipeline artifact",
+    "description": "Download build and pipeline artifacts",
+    "helpMarkDown": "Download one or more published build or pipeline artifacts.",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-pipeline-artifact",
+    "category": "Utility",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 2,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "groups": [],
+    "demands": [],
+    "preview": true,
+    "minimumAgentVersion": "2.153.1",
+    "inputs": [
+        {
+            "name": "source",
+            "aliases": [
+                "buildType"
+            ],
+            "type": "radio",
+            "label": "Download artifacts produced by",
+            "defaultValue": "current",
+            "required": true,
+            "options": {
+                "current": "Current run",
+                "specific": "Specific run"
+            },
+            "helpMarkDown": "Download artifacts produced by the current pipeline run, or from a specific pipeline run."
+        },
+        {
+            "name": "project",
+            "type": "pickList",
+            "label": "Project",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "source == specific",
+            "properties": {
+                "EditableOptions": "True",
+                "DisableManageLink": "True"
+            },
+            "helpMarkDown": "The project from which to download the pipeline artifacts."
+        },
+        {
+            "name": "pipeline",
+            "aliases": [
+                "definition"
+            ],
+            "type": "pickList",
+            "label": "Build pipeline",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "source == specific",
+            "properties": {
+                "EditableOptions": "True",
+                "DisableManageLink": "True",
+                "IsSearchable": "True"
+            },
+            "helpMarkDown": "Select the build pipeline name."
+        },
+        {
+            "name": "preferTriggeringPipeline",
+            "aliases": [
+                "specificBuildWithTriggering"
+            ],
+            "type": "boolean",
+            "label": "When appropriate, download artifacts from the triggering build.",
+            "defaultValue": "false",
+            "required": false,
+            "visibleRule": "source == specific",
+            "helpMarkDown": "If checked, this build task will try to download artifacts from the triggering build. If there is no triggering build from the specified pipeline, it will download artifacts from the build specified in the options below."
+        },
+        {
+            "name": "runVersion",
+            "aliases": [
+                "buildVersionToDownload"
+            ],
+            "type": "pickList",
+            "label": "Build version to download",
+            "defaultValue": "latest",
+            "visibleRule": "source == specific",
+            "required": true,
+            "options": {
+                "latest": "Latest",
+                "latestFromBranch": "Latest from specific branch and specified Build Tags",
+                "specific": "Specific version"
+            }
+        },
+        {
+            "name": "runBranch",
+            "aliases": [
+                "branchName"
+            ],
+            "type": "string",
+            "label": "Branch name",
+            "defaultValue": "refs/heads/master",
+            "visibleRule": "source == specific && runVersion == latestFromBranch",
+            "required": true,
+            "helpMarkDown": "Specify to filter on branch/ref name, for example: ```refs/heads/develop```."
+        },
+        {
+            "name": "runId",
+            "aliases": [
+                "pipelineId",
+                "buildId"
+            ],
+            "type": "pickList",
+            "label": "Build",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "source == specific && runVersion == specific",
+            "properties": {
+                "EditableOptions": "True",
+                "DisableManageLink": "True"
+            },
+            "helpMarkDown": "The build from which to download the artifacts."
+        },
+        {
+            "name": "tags",
+            "type": "string",
+            "label": "Build Tags",
+            "defaultValue": "",
+            "visibleRule": "source == specific && runVersion != specific",
+            "required": false,
+            "helpMarkDown": "A comma-delimited list of tags. Only builds with these tags will be returned."
+        },
+        {
+            "name": "artifact",
+            "aliases": [
+                "artifactName"
+            ],
+            "type": "pickList",
+            "label": "Artifact name",
+            "defaultValue": "",
+            "required": false,
+            "properties": {
+                "EditableOptions": "True",
+                "DisableManageLink": "True"
+            },
+            "helpMarkDown": "The name of the artifact to download. If left empty, it will download all artifacts associated to the pipeline run."
+        },
+        {
+            "name": "patterns",
+            "aliases": [
+                "itemPattern"
+            ],
+            "type": "multiLine",
+            "label": "Matching patterns",
+            "defaultValue": "**",
+            "required": false,
+            "properties": {
+                "rows": "3",
+                "resizable": "true"
+            },
+            "helpMarkDown": "One or more file matching patterns (new line delimited) that limit which files get downloaded."
+        },
+        {
+            "name": "path",
+            "aliases": [
+                "targetPath",
+                "downloadPath"
+            ],
+            "type": "string",
+            "label": "Destination directory",
+            "defaultValue": "$(Pipeline.Workspace)",
+            "required": true,
+            "helpMarkDown": "Directory to download the artifact files to. Can be relative to the pipeline workspace directory or absolute. If multi-download option is applied (by leaving an empty artifact name), a sub-directory will be created for each."
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "endpointId": "tfs:teamfoundation",
+            "target": "project",
+            "endpointUrl": "{{endpoint.url}}/_apis/projects?$skip={{skip}}&$top=1000",
+            "resultSelector": "jsonpath:$.value[?(@.state=='wellFormed')]",
+            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
+            "callbackContextTemplate": "{\"skip\": \"{{add skip 1000}}\"}",
+            "callbackRequiredTemplate": "{{isEqualNumber result.count 1000}}",
+            "initialContextTemplate": "{\"skip\": \"0\"}"
+        },
+        {
+            "endpointId": "tfs:teamfoundation",
+            "target": "pipeline",
+            "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?api-version=3.0-preview&$top=500&continuationToken={{{continuationToken}}}&name=*{{name}}*&queryOrder=2",
+            "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
+            "parameters": {
+                "project": "$(project)",
+                "name": "$(name)"
+            },
+            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
+            "callbackContextTemplate": "{\"continuationToken\" : \"{{{headers.x-ms-continuationtoken}}}\"}",
+            "callbackRequiredTemplate": "{{{#headers.x-ms-continuationtoken}}}true{{{/headers.x-ms-continuationtoken}}}",
+            "initialContextTemplate": "{\"continuationToken\" : \"{{{system.utcNow}}}\"}"
+        },
+        {
+            "endpointId": "tfs:teamfoundation",
+            "target": "runId",
+            "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds?definitions={{pipeline}}&resultFilter=succeeded,partiallySucceeded&$top=200",
+            "resultSelector": "jsonpath:$.value[*]",
+            "parameters": {
+                "project": "$(project)",
+                "pipeline": "$(pipeline)"
+            },
+            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{buildNumber}}}\" }"
+        },
+        {
+            "endpointId": "tfs:teamfoundation",
+            "target": "artifact",
+            "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds/{{runId}}/artifacts",
+            "resultSelector": "jsonpath:$.value[*]",
+            "parameters": {
+                "project": "$(project)",
+                "runId": "$(runId)"
+            },
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        }
+    ],
+    "instanceNameFormat": "Download Pipeline Artifact",
+    "execution": {
+        "AgentPlugin": {
+            "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTaskV2_0_0, Agent.Plugins"
+        }
+    },
+    "messages": {}
+}

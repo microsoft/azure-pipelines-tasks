@@ -8,14 +8,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 2,
-    "Patch": 37
+    "Minor": 146,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
     "DeploymentGroup"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "2.115.0",
   "groups": [
     {
       "name": "advanced",

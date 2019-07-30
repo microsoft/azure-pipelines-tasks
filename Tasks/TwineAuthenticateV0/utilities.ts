@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 export function getPypircPath(): string {
     let pypircPath: string;
@@ -8,8 +8,7 @@ export function getPypircPath(): string {
         pypircPath = tl.getVariable("PYPIRC_PATH");
     }
     else {
-       // tslint:disable-next-line:max-line-length
-       let tempPath = tl.getVariable("Agent.BuildDirectory") || tl.getVariable("Agent.ReleaseDirectory") || process.cwd();
+       let tempPath = tl.getVariable("Agent.TempDirectory");
        tempPath = path.join(tempPath, "twineAuthenticate");
        tl.mkdirP(tempPath);
        let savePypircPath = fs.mkdtempSync(tempPath + path.sep);

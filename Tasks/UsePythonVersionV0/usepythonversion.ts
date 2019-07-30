@@ -3,11 +3,12 @@ import * as path from 'path';
 
 import * as semver from 'semver';
 
-import * as task from 'vsts-task-lib/task';
-import * as tool from 'vsts-task-tool-lib/tool';
+import * as task from 'azure-pipelines-task-lib/task';
+import * as tool from 'azure-pipelines-tool-lib/tool';
 
 import { Platform } from './taskutil';
 import * as toolUtil  from './toolutil';
+import { desugarDevVersion, pythonVersionToSemantic } from './versionspec';
 
 interface TaskParameters {
     versionSpec: string,
@@ -15,16 +16,75 @@ interface TaskParameters {
     architecture: string
 }
 
-export function pythonVersionToSemantic(versionSpec: string) {
-    const prereleaseVersion = /(\d+\.\d+\.\d+)([a|b|rc]\d*)/g;
-    return versionSpec.replace(prereleaseVersion, '$1-$2');
+// Python has "scripts" or "bin" directories where command-line tools that come with packages are installed.
+// This is where pip is, along with anything that pip installs.
+// There is a seperate directory for `pip install --user`.
+//
+// For reference, these directories are as follows:
+//   macOS / Linux:
+//      <sys.prefix>/bin (by default /usr/local/bin, but not on hosted agents -- see the `else`)
+//      (--user) ~/.local/bin
+//   Windows:
+//      <Python installation dir>\Scripts
+//      (--user) %APPDATA%\Python\PythonXY\Scripts
+// See https://docs.python.org/3/library/sysconfig.html
+
+function binDir(installDir: string, platform: Platform): string {
+    if (platform === Platform.Windows) {
+        return path.join(installDir, 'Scripts');
+    } else {
+        return path.join(installDir, 'bin');
+    }
 }
 
-export async function usePythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
-    // Python's prelease versions look like `3.7.0b2`.
-    // This is the one part of Python versioning that does not look like semantic versioning, which specifies `3.7.0-b2`.
-    // If the version spec contains prerelease versions, we need to convert them to the semantic version equivalent
-    const semanticVersionSpec = pythonVersionToSemantic(parameters.versionSpec);
+function pypyNotFoundError(majorVersion: 2 | 3) {
+    throw new Error([
+        task.loc('PyPyNotFound', majorVersion),
+        // 'Python' is intentional here
+        task.loc('ToolNotFoundMicrosoftHosted', 'Python', 'https://aka.ms/hosted-agent-software'),
+        task.loc('ToolNotFoundSelfHosted', 'Python', 'https://go.microsoft.com/fwlink/?linkid=871498')
+    ].join(os.EOL));
+}
+
+// Note on the tool cache layout for PyPy:
+// PyPy has its own versioning scheme that doesn't follow the Python versioning scheme.
+// A particular version of PyPy may contain one or more versions of the Python interpreter.
+// For example, PyPy 7.0 contains Python 2.7, 3.5, and 3.6-alpha.
+// We only care about the Python version, so we don't use the PyPy version for the tool cache.
+
+function usePyPy(majorVersion: 2 | 3, parameters: TaskParameters, platform: Platform): void {
+    const findPyPy = tool.findLocalTool.bind(undefined, 'PyPy', majorVersion.toString());
+    let installDir: string | null = findPyPy(parameters.architecture);
+
+    if (!installDir && platform === Platform.Windows) {
+        // PyPy only precompiles binaries for x86, but the architecture parameter defaults to x64.
+        // On Hosted VS2017, we only install an x86 version.
+        // Fall back to x86.
+        installDir = findPyPy('x86');
+    }
+
+    if (!installDir) {
+        // PyPy not installed in $(Agent.ToolsDirectory)
+        throw pypyNotFoundError(majorVersion);
+    }
+
+    // For PyPy, Windows uses 'bin', not 'Scripts'.
+    const _binDir = path.join(installDir, 'bin');
+
+    // On Linux and macOS, the Python interpreter is in 'bin'.
+    // On Windows, it is in the installation root.
+    const pythonLocation = platform === Platform.Windows ? installDir : _binDir;
+    task.setVariable('pythonLocation', pythonLocation);
+
+    if (parameters.addToPath) {
+        toolUtil.prependPathSafe(installDir);
+        toolUtil.prependPathSafe(_binDir);
+    }
+}
+
+async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
+    const desugaredVersionSpec = desugarDevVersion(parameters.versionSpec);
+    const semanticVersionSpec = pythonVersionToSemantic(desugaredVersionSpec);
     task.debug(`Semantic version spec of ${parameters.versionSpec} is ${semanticVersionSpec}`);
 
     const installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
@@ -51,25 +111,9 @@ export async function usePythonVersion(parameters: Readonly<TaskParameters>, pla
     task.setVariable('pythonLocation', installDir);
     if (parameters.addToPath) {
         toolUtil.prependPathSafe(installDir);
+        toolUtil.prependPathSafe(binDir(installDir, platform))
 
-        // Make sure Python's "bin" directories are in PATH.
-        // Python has "scripts" or "bin" directories where command-line tools that come with packages are installed.
-        // This is where pip is, along with anything that pip installs.
-        // There is a seperate directory for `pip install --user`.
-        //
-        // For reference, these directories are as follows:
-        //   macOS / Linux:
-        //      <sys.prefix>/bin (by default /usr/local/bin, but not on hosted agents -- see the `else`)
-        //      (--user) ~/.local/bin
-        //   Windows:
-        //      <Python installation dir>\Scripts
-        //      (--user) %APPDATA%\Python\PythonXY\Scripts
-        // See https://docs.python.org/3/library/sysconfig.html
         if (platform === Platform.Windows) {
-            // On Windows, these directories do not get added to PATH, so we will add them ourselves.
-            const scriptsDir = path.join(installDir, 'Scripts');
-            toolUtil.prependPathSafe(scriptsDir);
-
             // Add --user directory
             // `installDir` from tool cache should look like $AGENT_TOOLSDIRECTORY/Python/<semantic version>/x64/
             // So if `findLocalTool` succeeded above, we must have a conformant `installDir`
@@ -79,13 +123,18 @@ export async function usePythonVersion(parameters: Readonly<TaskParameters>, pla
 
             const userScriptsDir = path.join(process.env['APPDATA'], 'Python', `Python${major}${minor}`, 'Scripts');
             toolUtil.prependPathSafe(userScriptsDir);
-        } else {
-            // On Linux and macOS, tools cache should be set up so that each Python version has its own "bin" directory.
-            // We do this so that the tool cache can just be dropped on an agent with minimal installation (no copying to /usr/local).
-            // This allows us side-by-side the same minor version of Python with different patch versions or architectures (since Python uses /usr/local/lib/python3.6, etc.).
-            toolUtil.prependPathSafe(path.join(installDir, 'bin'));
-
-            // On Linux and macOS, pip will create the --user directory and add it to PATH as needed.
         }
+        // On Linux and macOS, pip will create the --user directory and add it to PATH as needed.
+    }
+}
+
+export async function usePythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
+    switch (parameters.versionSpec.toUpperCase()) {
+        case 'PYPY2':
+            return usePyPy(2, parameters, platform);
+        case 'PYPY3':
+            return usePyPy(3, parameters, platform);
+        default:
+            return await useCpythonVersion(parameters, platform);
     }
 }

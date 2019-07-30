@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "App Center 测试",
   "loc.helpMarkDown": "有关此任务的帮助信息，请访问 Visual Studio App Center [支持站点](https://aka.ms/appcentersupport)。",
-  "loc.description": "使用 Visual Studio App Center 测试应用包。",
+  "loc.description": "使用 Visual Studio App Center 测试应用包",
   "loc.instanceNameFormat": "使用 Visual Studio App Center 测试 ",
   "loc.group.displayName.prepare": "准备测试",
   "loc.group.displayName.run": "运行测试",
@@ -28,7 +28,7 @@
   "loc.input.help.calabashSkipConfigCheck": "在没有 Cucumber 配置文件的情况下强制运行。",
   "loc.input.label.uitestBuildDir": "生成目录",
   "loc.input.help.uitestBuildDir": "具有生成测试程序集的目录的路径。",
-  "loc.input.label.uitestStoreFile": "存储文件",
+  "loc.input.label.uitestStorePath": "存储文件",
   "loc.input.label.uitestStorePass": "存储密码",
   "loc.input.label.uitestKeyAlias": "密钥别名",
   "loc.input.label.uitestKeyPass": "密钥密码",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613744)",
-  "loc.description": "[Depreciated] Testing mobile apps with Xamarin Test Cloud using Xamarin.UITest - recommended task is now AppCenterTest",
+  "loc.description": "[Deprecated] Test mobile apps with Xamarin Test Cloud using Xamarin.UITest. Instead, use the 'App Center test' task.",
   "loc.instanceNameFormat": "Test $(app) with Xamarin.UITest in Xamarin Test Cloud",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.app": "App file",
@@ -27,6 +27,6 @@
   "loc.input.help.testCloudLocation": "The path to test-cloud.exe.  Wildcards can be used, in which case the first occurrence of test-cloud.exe is used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)).",
   "loc.input.label.optionalArgs": "Optional arguments",
   "loc.input.help.optionalArgs": "Additional arguments passed to test-cloud.exe.",
-  "loc.input.label.publishNUnitResults": "Publish results to Azure Pipelines/TFS",
-  "loc.input.help.publishNUnitResults": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to Azure Pipelines/TFS."
+  "loc.input.label.publishNUnitResults": "Publish results to Azure Pipelines",
+  "loc.input.help.publishNUnitResults": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to Azure Pipelines."
 }

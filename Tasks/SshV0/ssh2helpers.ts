@@ -1,22 +1,22 @@
-import tl = require('vsts-task-lib/task');
-import Q = require('q');
-var Ssh2Client = require('ssh2').Client;
-var Scp2Client = require('scp2');
+import * as tl from 'vsts-task-lib/task';
+import * as Q from 'q';
+import * as scp2 from 'scp2';
+import * as ssh2 from 'ssh2';
 
 export class RemoteCommandOptions {
-    public failOnStdErr : boolean;
+    public failOnStdErr: boolean;
 }
 
 /**
  * Uses scp2 to copy a file to remote machine
  * @param scriptFile
  * @param scpConfig
- * @returns {Promise<string>|Promise<T>}
+ * @returns {Promise<string>}
  */
-export function copyScriptToRemoteMachine(scriptFile : string, scpConfig : any) : Q.Promise<string> {
-    var defer = Q.defer<string>();
+export function copyScriptToRemoteMachine(scriptFile: string, scpConfig: any): Q.Promise<string> {
+    const defer = Q.defer<string>();
 
-    Scp2Client.scp(scriptFile, scpConfig, (err) => {
+    scp2.scp(scriptFile, scpConfig, (err) => {
         if (err) {
             defer.reject(tl.loc('RemoteCopyFailed', err));
         } else {
@@ -31,11 +31,11 @@ export function copyScriptToRemoteMachine(scriptFile : string, scpConfig : any) 
 /**
  * Sets up an SSH client connection, when promise is fulfilled, returns the connection object
  * @param sshConfig
- * @returns {Promise<any>|Promise<T>}
+ * @returns {Promise<any>}
  */
-export function setupSshClientConnection(sshConfig: any) : Q.Promise<any> {
-    var defer = Q.defer<any>();
-    var client = new Ssh2Client();
+export function setupSshClientConnection(sshConfig: any): Q.Promise<any> {
+    const defer = Q.defer<any>();
+    const client = new ssh2.Client();
     client.on('ready', () => {
         defer.resolve(client);
     }).on('error', (err) => {
@@ -49,9 +49,9 @@ export function setupSshClientConnection(sshConfig: any) : Q.Promise<any> {
  * @param command
  * @param sshClient
  * @param options
- * @returns {Promise<string>|Promise<T>}
+ * @returns {Promise<string>}
  */
-export function runCommandOnRemoteMachine(command: string, sshClient: any, options: RemoteCommandOptions) : Q.Promise<string> {
+export function runCommandOnRemoteMachine(command: string, sshClient: any, options: RemoteCommandOptions): Q.Promise<string> {
     const defer = Q.defer<string>();
     let stdErrWritten: boolean = false;
 

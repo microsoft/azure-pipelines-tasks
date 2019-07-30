@@ -24,7 +24,7 @@
   "loc.input.label.DatabaseName": "데이터베이스 이름",
   "loc.input.help.DatabaseName": "SQL Server 데이터베이스의 이름을 제공합니다.",
   "loc.input.label.AuthScheme": "인증",
-  "loc.input.help.AuthScheme": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the account used to configure deployment agent, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below.",
+  "loc.input.help.AuthScheme": "SQL Server에 연결하기 위한 인증 모드를 선택합니다. Windows 인증 모드에서는 배포 에이전트를 구성하는 데 사용된 계정을 사용하여 SQL Server에 연결합니다. SQL Server 인증 모드에서는 아래 매개 변수에 SQL 로그인 및 암호를 지정해야 합니다.",
   "loc.input.label.SqlUsername": "SQL 사용자 이름",
   "loc.input.help.SqlUsername": "SQL Server에 연결할 SQL 로그인을 제공합니다. 이 옵션은 SQL Server 인증 모드를 선택한 경우에만 사용할 수 있습니다.",
   "loc.input.label.SqlPassword": "SQL 암호",

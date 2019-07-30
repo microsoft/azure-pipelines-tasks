@@ -13,7 +13,7 @@ This Azure DevOps extension (JavaToolInstallerV0) is based on or incorporates ma
 7.	amdefine (git+https://github.com/jrburke/amdefine.git)
 8.	ansi-regex (git+https://github.com/chalk/ansi-regex.git)
 9.	ansi-styles (git+https://github.com/chalk/ansi-styles.git)
-10.	artifact-engine (https://github.com/Microsoft/vsts-rm-extensions/tree/master/Extensions/ArtifactEngine)
+10.	artifact-engine (https://github.com/Microsoft/azure-pipelines-extensions/tree/master/Extensions/ArtifactEngine)
 11.	asn1 (git://github.com/joyent/node-asn1.git)
 12.	assert-plus (git+https://github.com/mcavage/node-assert-plus.git)
 13.	assert-plus (git+https://github.com/mcavage/node-assert-plus.git)

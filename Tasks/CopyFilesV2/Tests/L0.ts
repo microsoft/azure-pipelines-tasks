@@ -189,6 +189,34 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
+    it('preserves timestamp if specified', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let testPath = path.join(__dirname, 'L0preservesTimestampIfSpecified.js');
+        let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
+        runner.run();
+
+        assert(
+            runner.succeeded,
+            'should have succeeded');
+        assert(
+            runner.stdOutContained(`Calling fs.utimes on ${path.normalize('/destDir')}`),
+            'should have copied timestamp');
+        assert(
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir')}`),
+            'should have mkdirP destDir');
+        assert(
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir/someOtherDir')}`),
+            'should have mkdirP someOtherDir');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file1.file')} to ${path.normalize('/destDir/someOtherDir/file1.file')}`),
+            'should have copied file1');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
+            'should have copied file2');
+        done();
+    });
+
     it('cleans if specified', (done: MochaDone) => {
         this.timeout(1000);
 

@@ -28,5 +28,6 @@
   "loc.messages.Couldnotfetchaccesstoken": "Azure에 대한 액세스 토큰을 가져올 수 없습니다. 상태 코드: %s(%s) %s.",
   "loc.messages.SPNExpiredCheck": "SPN이 유효하고 만료되지 않았는지 확인하세요.",
   "loc.messages.FailedToGetAzureMetricAlerts": "Application Insights 경고 규칙을 가져오지 못했습니다. %s. 오류: %s",
-  "loc.messages.FailedToUpdateAzureMetricAlerts": "Azure 메트릭 경고 규칙 '%s' 리소스를 업데이트하지 못했습니다. 오류: %s"
+  "loc.messages.FailedToUpdateAzureMetricAlerts": "Azure 메트릭 경고 규칙 '%s' 리소스를 업데이트하지 못했습니다. 오류: %s",
+  "loc.messages.ExpiredServicePrincipal": "Azure의 액세스 토큰을 페치할 수 없습니다. 사용한 서비스 주체가 유효하고 만료되지 않았는지 확인하세요."
 }

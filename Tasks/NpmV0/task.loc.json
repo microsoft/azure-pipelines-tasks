@@ -3,13 +3,14 @@
   "name": "Npm",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 2,
-    "Patch": 26
+    "Minor": 151,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -18,7 +19,7 @@
   "demands": [
     "npm"
   ],
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {

@@ -138,6 +138,8 @@
         "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release definition",
         "FailedToGetAzureMetricAlerts": "Failed to get Azure metric alerts: %s. Error: %s",
         "FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s",
-        "ResponseNotValid": "Response is not in a valid format"
+        "ResponseNotValid": "Response is not in a valid format",
+        "NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

@@ -21,60 +21,49 @@ steps:
   inputs:
     versionSpec: "8.x"
 
+- script: npm i -g npm@6.9.0
+  displayName: Use npm version 6.9.0
+
 # npm install
 - script: npm install
   displayName: npm install
 
-# Slice the tasks (sets TASK_PATTERN)
-- script: node ./ci/set-task-slice.js
-  displayName: Set task slice
+# Filter out unchanged tasks
+- script: node ./ci/filter-tasks.js
+  displayName: Filter out unchanged tasks
+  env:
+    PACKAGE_ENDPOINT: $(Package.Endpoint)
+    PACKAGE_TOKEN: $(Package.Token)
 
 # Build
 - script: node make.js build --task "$(task_pattern)"
   displayName: Build
+  condition: ne(variables['numTasks'], 0)
 
 # Only on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
-  # Stage slice
-  - script: node ./ci/stage-slice.js
-    displayName: Stage slice
-    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+  # Stage packages
+  - script: node ./ci/stage-package.js
+    displayName: Stage package
+    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
 
-  # Publish slice artifact
+  # Publish artifact
   - task: PublishBuildArtifacts@1
-    displayName: Publish slice artifact
-    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+    displayName: Publish package artifact
+    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
     inputs:
       pathToPublish: _package/tasks.zip
-      artifactName: slice-$(system.jobPositionInPhase)
+      artifactName: package
       publishLocation: container
 
 # Test
 - script: node make.js test
   displayName: Test with node 6
+  condition: ne(variables['numTasks'], 0)
 - script: node make.js testLegacy --task "$(task_pattern)"
   displayName: Legacy tests with node 6
-
-# Publish test results
-- task: PublishTestResults@2
-  displayName: Publish Test Results test-*.xml
-  inputs:
-    testResultsFiles: 'test-*.xml'
-    testRunTitle: 'Node 6 Test Results'
-    searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
-
-# Test with node 5
-- script: node make.js test --node 5 --runner ts
-  displayName: Test with node 5
-- script: node make.js testLegacy --node 5 --runner ts --task "$(task_pattern)"
-  displayName: Legacy tests with node 5
-- task: PublishTestResults@2
-  displayName: Publish Test Results test-*.xml
-  inputs:
-    testResultsFiles: 'test-*.xml'
-    testRunTitle: 'Node 5 Test Results'
-    searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
+  condition: ne(variables['numTasks'], 0)
 
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
@@ -82,4 +71,4 @@ steps:
   # Stop collect diagnostics
   - powershell: ./ci/stop-collect-diagnostics.ps1
     displayName: Stop collect diagnostics
-    condition: and(always(), eq(variables.collect_diagnostics, 'true'))
+    condition: and(always(), eq(variables.collect_diagnostics, 'true'), ne(variables['numTasks'], 0))

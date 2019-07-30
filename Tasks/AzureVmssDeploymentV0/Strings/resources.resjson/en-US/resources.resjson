@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure VM scale set Deployment",
+  "loc.friendlyName": "Azure VM scale set deployment",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=852117)",
-  "loc.description": "Deploy Virtual Machine scale set image",
+  "loc.description": "Deploy a virtual machine scale set image",
   "loc.instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
   "loc.releaseNotes": "- Updates Azure Virtual Machine scale set with a custom machine image.",
   "loc.group.displayName.AzureDetails": "Azure Details",
@@ -75,5 +75,6 @@
   "loc.messages.UploadingItem": "Uploading %s.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }

@@ -27,10 +27,15 @@ try {
     $tempDirectory = Get-VstsTaskVariable -Name 'agent.tempDirectory' -Require
     Assert-VstsPath -LiteralPath $tempDirectory -PathType 'Container'
     $filePath = [System.IO.Path]::Combine($tempDirectory, "$([System.Guid]::NewGuid()).cmd")
+    $fileEncoding = [System.Console]::OutputEncoding
+    if ($fileEncoding.CodePage -eq 65001) {
+        # If UTF8, write without BOM
+        $fileEncoding = New-Object System.Text.UTF8Encoding $False
+    }
     $null = [System.IO.File]::WriteAllText(
         $filePath,
         $contents.ToString(),
-        ([System.Console]::OutputEncoding))
+        $fileEncoding)
 
     # Prepare the external command values.
     $cmdPath = $env:ComSpec
@@ -57,6 +62,7 @@ try {
     $failed = $false
 
     # Run the script.
+    Write-Host '========================== Starting Command Output ==========================='
     if (!$input_failOnStderr) {
         Invoke-VstsTool @splat
     } else {

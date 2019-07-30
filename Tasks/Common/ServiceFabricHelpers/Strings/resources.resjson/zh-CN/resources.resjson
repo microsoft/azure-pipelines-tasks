@@ -1,6 +1,6 @@
 {
   "loc.messages.AadAuthority": "AAD 颁发机构: {0}",
-  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "具有指纹 {0} 的证书在本地证书存储中不存在。这可能会导致错误。如果发布/生成失败，请重试此操作，或确保多个代理未在同一计算机上同时使用同一服务终结点运行生成/发布。",
   "loc.messages.ClientAppId": "客户端应用程序 ID: {0}",
   "loc.messages.ClusterAppId": "群集应用程序 ID: {0}",
   "loc.messages.ConnectedToCluster": "成功连接到群集。",
@@ -14,5 +14,6 @@
   "loc.messages.RetryingClusterConnection": "正在重试连接到群集...",
   "loc.messages.WarningOnRemoveCertificate": "尝试删除客户端证书时出错。错误消息: {0}",
   "loc.messages.TelemetryWarning": "无法推送遥测数据。错误: {0}",
-  "loc.messages.SfSdkVersion": "Service Fabric SDK 版本: {0}。"
+  "loc.messages.SfSdkVersion": "Service Fabric SDK 版本: {0}。",
+  "loc.messages.TaskNotRunningOnx64Agent": "该代理不是 x64 代理。仅 x64 代理支持此任务。"
 }

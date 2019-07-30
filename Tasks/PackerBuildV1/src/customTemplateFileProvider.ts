@@ -30,4 +30,8 @@ export default class CustomTemplateFileProvider extends TemplateFileProviderBase
         this._templateFileLocation = initialTemplateFileLocation;
         return this._templateFileLocation; 
     }
+    
+    public cleanup(): void {
+        // do not delete in case of user provided template.
+    }
 }

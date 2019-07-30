@@ -26,84 +26,12 @@ function Get-FormattedSqlUsername
             $sqlServerFirstName = $serverNameSplittedArgs[0]
             if ((-not $sqlUsername.Trim().Contains("@" + $sqlServerFirstName)) -and $sqlUsername.Contains('@'))
             {
-                $sqlUsername = $sqlUsername + "@" + $serverName 
+                $sqlUsername = $sqlUsername + "@" + $serverName
             }
         }
     }
 
     return $sqlUsername
-}
-
-function Get-AgentIPRange
-{
-    param(
-        [String] $serverName,
-        [String] $sqlUserName,
-        [String] $sqlPassword
-    )
-
-    [hashtable] $IPRange = @{}
-
-    $formattedSqlUsername = $sqlUserName
-
-    if($sqlUserName)
-    {
-        $formattedSqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUserName -serverName $serverName
-    }
-
-	if (Get-Command -Name "Invoke-Sqlcmd" -ErrorAction SilentlyContinue)
-	{
-		try {
-			Write-Verbose "Reaching SqlServer to check connection by running Invoke-SqlCmd"
-			Write-Verbose "Invoke-Sqlcmd -ServerInstance $serverName -Username $formattedSqlUsername -Password ****** -Query `"select getdate()`" -ErrorVariable errors -ConnectionTimeout 120 | Out-String"
-
-			$output = Invoke-Sqlcmd -ServerInstance $serverName -Username $formattedSqlUsername -Password $sqlPassword -Query "select getdate()" -ErrorVariable errors -ConnectionTimeout 120 | Out-String
-		}
-		catch {
-			Write-Verbose "Failed to reach SQL server $serverName. $($_.Exception.Message)"
-		}
-	}
-	else 
-	{
-		$sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmd\SQLCMD.exe"
-		$env:SQLCMDPASSWORD = $sqlPassword
-
-		$sqlCmdArgs = "-S `"$serverName`" -U `"$formattedSqlUsername`" -Q `"select getdate()`""
-
-		Write-Verbose "Reaching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"    
-
-		$ErrorActionPreference = 'Continue'
-
-		$output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
-	
-		$ErrorActionPreference = 'Stop'
-	}
-    
-    if($errors.Count -gt 0)
-    {
-        $errMsg = $errors[0].ToString()
-        Write-Verbose "Error Message : $errMsg"
-        $output = $errMsg
-    }
-
-    if($output)
-    {
-        Write-Verbose "Message To Parse: $output"
-
-        $pattern = "([0-9]+)\.([0-9]+)\.([0-9]+)\."
-        $regex = New-Object  -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
-
-        if($output.Contains("sp_set_firewall_rule") -eq $true -and $regex.IsMatch($output) -eq $true)
-        {
-            $ipRangePrefix = $regex.Match($output).Groups[0].Value;
-            Write-Verbose "IP Range Prefix $ipRangePrefix"
-
-            $IPRange.StartIPAddress = $ipRangePrefix + '0'
-            $IPRange.EndIPAddress = $ipRangePrefix + '255'
-        }
-    }
-
-    return $IPRange
 }
 
 function Get-Endpoint
@@ -150,7 +78,7 @@ function Get-SqlPackageCommandArguments
 {
     param(
         [String] $sqlpackageAction,
-        [String] $targetMethod,
+        [String] $authenticationType,
         [String] $sourceFile,
         [String] $targetFile,
         [String] $sourceServerName,
@@ -161,7 +89,8 @@ function Get-SqlPackageCommandArguments
         [String] $sourcePassword,
         [String] $targetUser,
         [String] $targetPassword,
-        [String] $connectionString,
+        [String] $targetConnectionString,
+        [String] $sourceConnectionString,
         [String] $publishProfile,
         [String] $outputPath,
         [String] $additionalArguments,
@@ -172,8 +101,8 @@ function Get-SqlPackageCommandArguments
 
     $sqlPackageOptions =
     @{
-        SourceFile = "/SourceFile:"; 
-        Action = "/Action:"; 
+        SourceFile = "/SourceFile:";
+        Action = "/Action:";
         TargetServerName = "/TargetServerName:";
         TargetDatabaseName = "/TargetDatabaseName:";
         TargetUser = "/TargetUser:";
@@ -182,6 +111,7 @@ function Get-SqlPackageCommandArguments
         Profile = "/Profile:";
         SourceServerName = "/SourceServerName:";
         SourceDatabaseName = "/SourceDatabaseName:";
+        SourceConnectionString = "/SourceConnectionString:";
         SourceUser = "/SourceUser:";
         SourcePassword = "/SourcePassword:";
         TargetFile = "/TargetFile:";
@@ -189,7 +119,7 @@ function Get-SqlPackageCommandArguments
     }
 
     $sqlPackageArguments = @("$($sqlPackageOptions.Action)$sqlpackageAction")
-    
+
     if ($sourceFile) {
         $sqlPackageArguments += @("$($sqlPackageOptions.SourceFile)`"$sourceFile`"")
     }
@@ -198,14 +128,14 @@ function Get-SqlPackageCommandArguments
         $sqlPackageArguments += @("$($sqlPackageOptions.TargetFile)`"$targetFile`"")
     }
 
-    if ($targetMethod -eq "server") {
+    if ($authenticationType -eq "server") {
         if ($sourceServerName -and $sourceDatabaseName) {
-            $sqlPackageArguments += @("$($sqlPackageOptions.SourceServerName)`"$sourceServerName`"", 
+            $sqlPackageArguments += @("$($sqlPackageOptions.SourceServerName)`"$sourceServerName`"",
                                       "$($sqlPackageOptions.SourceDatabaseName)`"$sourceDatabaseName`"")
         }
 
         if ($targetServerName -and $targetDatabaseName) {
-            $sqlPackageArguments += @("$($sqlPackageOptions.TargetServerName)`"$targetServerName`"", 
+            $sqlPackageArguments += @("$($sqlPackageOptions.TargetServerName)`"$targetServerName`"",
                                       "$($sqlPackageOptions.TargetDatabaseName)`"$targetDatabaseName`"")
         }
 
@@ -229,7 +159,7 @@ function Get-SqlPackageCommandArguments
 
             if ($isOutputSecure) {
                 $sqlPassword = "********"
-            } 
+            }
             else {
                 $sqlPassword = ConvertParamToSqlSupported $sqlPassword
             }
@@ -245,11 +175,38 @@ function Get-SqlPackageCommandArguments
             }
         }
     }
-    elseif ($targetMethod -eq "connectionString") { 
+    elseif ($authenticationType -eq "connectionString") {
         # check this for extract and export
-        $sqlPackageArguments += @("$($sqlPackageOptions.TargetConnectionString)`"$connectionString`"")
+        if ($TargetConnectionString) {
+          $sqlPackageArguments += @("$($sqlPackageOptions.TargetConnectionString)`"$targetConnectionString`"")
+        }
+        else {
+          $sqlPackageArguments += @("$($sqlPackageOptions.SourceConnectionString)`"$sourceConnectionString`"")
+        }
     }
-    
+    elseif ($authenticationType -eq "aadAuthenticationPassword" -or $authenticationType -eq "aadAuthenticationIntegrated") {
+
+        $databaseName = $targetDatabaseName
+        $sqlServerName = $targetServerName
+
+        if (-not $databaseName) {
+          $databaseName = $sourceDatabaseName
+        }
+
+        if (-not $sqlServerName) {
+          $sqlServerName = $sourceServerName
+        }
+
+        $connectionString = Get-AADAuthenticationConnectionString -authenticationType $authenticationType -serverName $sqlServerName -databaseName $databaseName -sqlUserName $sqlUserName -sqlPassword $sqlPassword
+
+        if ($targetDatabaseName) {
+          $sqlPackageArguments += @("$($sqlPackageOptions.TargetConnectionString)`"$connectionString`"")
+        }
+        else {
+          $sqlPackageArguments += @("$($sqlPackageOptions.SourceConnectionString)`"$connectionString`"")
+        }
+    }
+
 
     if ($publishProfile) {
         # validate publish profile
@@ -266,15 +223,37 @@ function Get-SqlPackageCommandArguments
 
     # not supported in Extract Export
     $defaultTimeout = 120
-    if (-not ($sqlpackageAction -eq "Extract" -or $sqlpackageAction -eq "Export") -and -not ($additionalArguments.ToLower().Contains("/targettimeout:") -or $additionalArguments.ToLower().Contains("/tt:"))) {
+    if (($authenticationType -eq "server") -and -not ($sqlpackageAction -eq "Extract" -or $sqlpackageAction -eq "Export") -and -not ($additionalArguments.ToLower().Contains("/targettimeout:") -or $additionalArguments.ToLower().Contains("/tt:"))) {
         # Add Timeout of 120 Seconds
         $additionalArguments = $additionalArguments + " /TargetTimeout:$defaultTimeout"
     }
 
     $sqlPackageArguments += @("$additionalArguments")
-    $scriptArgument = $sqlPackageArguments -join " " 
+    $scriptArgument = $sqlPackageArguments -join " "
 
     return $scriptArgument
+}
+
+function Get-AADAuthenticationConnectionString
+{
+  param(
+      [String][Parameter(Mandatory=$true)] $authenticationType,
+      [String][Parameter(Mandatory=$true)] $serverName,
+      [String][Parameter(Mandatory=$true)] $databaseName,
+      [String] $sqlUserName,
+      [String] $sqlPassword
+  )
+
+  $connectionString = "Data Source=$serverName; Initial Catalog=$databaseName; "
+
+  if ($authenticationType -eq "aadAuthenticationPassword") {
+     $connectionString += @("Authentication=Active Directory Password; UID=$sqlUserName; PWD=$sqlPassword")
+  }
+  else {
+     $connectionString += @("Authentication=Active Directory Integrated;")
+  }
+
+  return $connectionString
 }
 
 function Execute-Command
@@ -284,15 +263,15 @@ function Execute-Command
         [String][Parameter(Mandatory=$true)] $Arguments
     )
 
-    $ErrorActionPreference = 'Continue' 
+    $ErrorActionPreference = 'Continue'
     Invoke-Expression "& '$FileName' --% $Arguments" 2>&1 -ErrorVariable errors | ForEach-Object {
         if ($_ -is [System.Management.Automation.ErrorRecord]) {
             Write-Error $_
         } else {
             Write-Host $_
         }
-    } 
-    
+    }
+
     foreach($errorMsg in $errors){
         Write-Error $errorMsg
     }
@@ -303,6 +282,35 @@ function Execute-Command
     }
 }
 
+function Detect-AuthenticationType
+{
+   param(
+     [String]$serverName,
+     [String]$databaseName,
+     [String]$sqlUsername,
+     [String]$sqlPassword,
+     [String]$aadSqlUsername,
+     [String]$aadSqlPassword,
+     [String]$connectionString
+   )
+
+   if ($serverName -and $databaseName) {
+     if ($sqlUsername -and $sqlPassword) {
+       $authenticationType = "server";
+     } elseif ($aadSqlUserName -and $aadSqlPassword) {
+       $authenticationType = "aadAuthenticationPassword";
+     } else {
+       $authenticationType = "aadAuthenticationIntegrated";
+     }
+   } elseif ($connectionString) {
+     $authenticationType = "connectionString";
+   } else {
+     throw (Get-VstsLocString -Key "SAD_InvalidAuthenticationInputs")
+   }
+
+   return $authenticationType
+}
+
 function ConvertParamToSqlSupported
 {
     param([String]$param)
@@ -311,6 +319,7 @@ function ConvertParamToSqlSupported
 
     return $param
 }
+
 function EscapeSpecialChars
 {
     param(
@@ -323,6 +332,54 @@ function EscapeSpecialChars
 # Function to import SqlPS module & avoid directory switch
 function Import-Sqlps {
     Push-Location
-    Import-Module SqlPS -ErrorAction 'SilentlyContinue' 3>&1 | Out-Null
+
+    $modules = Get-Module -Name SQLServer -ListAvailable
+    if ($modules)
+    {
+      Import-Module SQLServer -ErrorAction 'SilentlyContinue' 3>&1 | Out-Null
+      Write-Verbose "Imported SQLServer PS module."
+    } else {
+      Write-Verbose "SQLServer PS module is not installed. Importing SQLPS"
+      Import-Module SqlPS -ErrorAction 'SilentlyContinue' 3>&1 | Out-Null
+    }
+
     Pop-Location
 }
+
+function CmdletHasMember {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$cmdlet,
+        [Parameter(Mandatory=$true)]
+        [string]$memberName)
+    try{
+        $hasMember = (gcm $cmdlet).Parameters.Keys.Contains($memberName)
+        return $hasMember
+    }
+    catch
+    {
+        return $false;
+    }
+}
+
+function GetSHA256String {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$false)]
+        [string] $inputString)
+    
+    if ($inputString) {
+        $hashHandler = [System.Security.Cryptography.HashAlgorithm]::Create('sha256')
+        $hash = $hashHandler.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($inputString.ToLower()))
+
+        $hashString = [System.BitConverter]::ToString($hash)
+        $hashString = $hashString.Replace('-', '').ToLower()
+        return $hashString;
+    }
+
+    return ""
+}
+
+
+

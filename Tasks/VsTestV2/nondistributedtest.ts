@@ -1,5 +1,5 @@
-import * as tl from 'vsts-task-lib/task';
-import * as tr from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import * as path from 'path';
 import * as utils from './helpers';
 import * as outStream from './outputstream';
@@ -36,19 +36,19 @@ export class NonDistributedTest {
 
             if (exitCode !== 0 && !this.inputDataContract.ExecutionSettings.IgnoreTestFailures) {
                 tl.debug('Modules/DTAExecutionHost.exe process exited with code ' + exitCode);
-                tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailed'));
+                tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailed'), true);
                 return;
             } else {
                 if (exitCode !== 0) {
                     console.log('Task marked as success because IgnoreTestFailures is enabled');
                 }
                 tl.debug(`Modules/DTAExecutionHost.exe exited with code ${exitCode}`);
-                tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
+                tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded', true);
             }
 
         } catch (err) {
             tl.error(err);
-            tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'));
+            tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'), true);
         }
     }
 
@@ -68,10 +68,6 @@ export class NonDistributedTest {
             fs.writeFileSync(inputFilePath, JSON.stringify(this.inputDataContract));
         } catch (e) {
             tl.setResult(tl.TaskResult.Failed, `Failed to write to the input json file ${inputFilePath} with error ${e}`);
-        }
-
-        if (utils.Helper.isDebugEnabled()) {
-            utils.Helper.uploadFile(inputFilePath);
         }
 
         dtaExecutionHostTool.arg(['--inputFile', inputFilePath]);

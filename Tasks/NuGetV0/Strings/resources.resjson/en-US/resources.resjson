@@ -1,6 +1,7 @@
 {
-  "loc.friendlyName": "NuGet Command",
-  "loc.description": "Deprecated: use the “NuGet” task instead. It works with the new Tool Installer framework so you can easily use new versions of NuGet without waiting for a task update, provides better support for authenticated feeds outside this account/collection, and uses NuGet 4 by default.",
+  "loc.friendlyName": "NuGet command",
+  "loc.helpMarkDown": "",
+  "loc.description": "Deprecated: use the “NuGet” task instead. It works with the new Tool Installer framework so you can easily use new versions of NuGet without waiting for a task update, provides better support for authenticated feeds outside this organization/collection, and uses NuGet 4 by default.",
   "loc.instanceNameFormat": "NuGet $(command)",
   "loc.input.label.command": "Command",
   "loc.input.help.command": "The NuGet command to run.\n\nExamples: restore, pack",

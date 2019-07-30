@@ -1,6 +1,6 @@
 "use strict";
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 
 import ClusterConnection from "./clusterconnection";
@@ -12,7 +12,8 @@ tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
 tl.cd(tl.getInput("cwd"));
 
 var registryType = tl.getInput("containerRegistryType", true);
-var command = tl.getInput("command", true);
+var command = tl.getInput("command", false);
+const environmentVariableMaximumSize = 32766;
 
 var kubeconfigfilePath;
 if (command === "logout") {
@@ -53,8 +54,10 @@ async function run(clusterConnection: ClusterConnection, command: string)
     if(configMapName) {
         await kubectlConfigMap.run(clusterConnection, configMapName);
     }
-    
-    await executeKubectlCommand(clusterConnection, command);  
+
+    if(command) {
+        await executeKubectlCommand(clusterConnection, command);
+    }  
 }
 
 // execute kubectl command
@@ -71,7 +74,8 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
 
     var telemetry = {
         registryType: registryType,
-        command: command
+        command: command,
+        jobId: tl.getVariable('SYSTEM_JOBID')
     };
 
     console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
@@ -81,6 +85,11 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
     var result = "";
     return commandImplementation.run(clusterConnection, command, (data) => result += data)
     .fin(function cleanup() {
-        tl.setVariable('KubectlOutput', result);
+        var commandOutputLength = result.length;
+        if (commandOutputLength > environmentVariableMaximumSize) {
+            tl.warning(tl.loc("OutputVariableDataSizeExceeded", commandOutputLength, environmentVariableMaximumSize));
+        } else {
+            tl.setVariable('KubectlOutput', result);
+        }
     });
 }

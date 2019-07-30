@@ -1,11 +1,11 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { TaskParameters } from './TaskParameters';
 import fs = require('fs');
 import * as Constant from './Constants';
 import path = require('path');
 import Q = require('q');
 
-var packageUtility = require('webdeployment-common/packageUtility.js');
+var packageUtility = require('webdeployment-common-v2/packageUtility.js');
 var parseString = require('xml2js').parseString;
 const ERROR_FILE_NAME = "error.txt";
 
@@ -89,7 +89,7 @@ export class PublishProfileUtility {
         });
     }
     
-    public async RunCmd(cmdArgs) {
+    public async RunCmd(cmdTool: string, cmdArgs: string) {
         var deferred = Q.defer();
         var cmdError = null;
         var errorFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'), ERROR_FILE_NAME);
@@ -103,7 +103,7 @@ export class PublishProfileUtility {
         });
 
         try {
-           await tl.exec("cmd", cmdArgs, <any>{
+           await tl.exec(cmdTool, cmdArgs, <any>{
                errStream: errObj,
 			   outStream: process.stdout,
 			   failOnStdErr: true,

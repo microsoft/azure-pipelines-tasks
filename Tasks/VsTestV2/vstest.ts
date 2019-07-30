@@ -1,24 +1,19 @@
-import * as tl from 'vsts-task-lib/task';
-import * as tr from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import * as  path from 'path';
 import * as models from './models';
 import * as taskInputParser from './taskinputparser';
-import * as inputParser from './inputparser';
 import * as settingsHelper from './settingshelper';
-import * as vstestVersion from './vstestversion';
 import * as utils from './helpers';
 import * as outStream from './outputstream';
 import * as ci from './cieventlogger';
 import * as testselectorinvoker from './testselectorinvoker';
 import { AreaCodes, ResultMessages } from './constants';
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
 import * as os from 'os';
 import * as uuid from 'uuid';
 import * as fs from 'fs';
 import * as xml2js from 'xml2js';
-import * as perf from 'performance-now';
 import * as process from 'process';
-const regedit = require('regedit');
 
 const runSettingsExt = '.runsettings';
 const testSettingsExt = '.testsettings';
@@ -87,11 +82,11 @@ export function startTest() {
                 uploadFile(path.join(os.tmpdir(), 'TestSelector.log'));
             }
             if (taskResult == tl.TaskResult.Failed) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'));
+                tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'), true);
             }
             else {
                 consolidatedCiData.result = 'Succeeded';
-                tl.setResult(tl.TaskResult.Succeeded, tl.loc('VstestPassedReturnCode'));
+                tl.setResult(tl.TaskResult.Succeeded, tl.loc('VstestPassedReturnCode'), true);
             }
             ci.publishEvent(consolidatedCiData);
 
@@ -99,12 +94,12 @@ export function startTest() {
             uploadVstestDiagFile();
             utils.Helper.publishEventToCi(AreaCodes.INVOKEVSTEST, err.message, 1002, false);
             console.log('##vso[task.logissue type=error;code=' + err + ';TaskName=VSTest]');
-            tl.setResult(tl.TaskResult.Failed, err);
+            tl.setResult(tl.TaskResult.Failed, err, true);
         });
     } catch (error) {
         uploadVstestDiagFile();
         utils.Helper.publishEventToCi(AreaCodes.RUNTESTSLOCALLY, error.message, 1003, false);
-        tl.setResult(tl.TaskResult.Failed, error);
+        tl.setResult(tl.TaskResult.Failed, error, true);
     }
 }
 

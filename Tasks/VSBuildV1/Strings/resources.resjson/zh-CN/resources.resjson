@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Visual Studio 版本",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "使用 MSBuild 生成，并设置 Visual Studio 版本属性。",
+  "loc.description": "使用 MSBuild 生成并设置 Visual Studio 版本属性",
   "loc.instanceNameFormat": "生成解决方案 $(solution)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.solution": "解决方案",
@@ -26,6 +26,8 @@
   "loc.input.help.logProjectEvents": "可以选择记录每个项目的时间线详细信息。",
   "loc.input.label.createLogFile": "创建日志文件",
   "loc.input.help.createLogFile": "选择创建一个日志文件(仅限 Windows)。",
+  "loc.input.label.logFileVerbosity": "日志文件详细级别",
+  "loc.input.help.logFileVerbosity": "可选日志文件详细级别。",
   "loc.messages.MSBuildLocationDeprecated0": "已弃用 MSBuild 位置参数。将忽略值“{0}”",
   "loc.messages.MSBuildVersionDeprecated0": "已弃用 MSBuild 版本参数。将忽略值“{0}”。",
   "loc.messages.UnexpectedVSVersion0": "意外的 Visual Studio 版本“{0}”。",

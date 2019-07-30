@@ -1,19 +1,22 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
-import * as ParameterParser from '../operations/ParameterParserUtility'
+import * as ParameterParser from 'webdeployment-common-v2/ParameterParserUtility';
 import { DeploymentType } from '../operations/TaskParameters';
-import { PackageType } from 'webdeployment-common/packageUtility';
+import { PackageType } from 'webdeployment-common-v2/packageUtility';
 const deleteOldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
 const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 0';
-var deployUtility = require('webdeployment-common/utility.js');
-var zipUtility = require('webdeployment-common/ziputility.js');
+var deployUtility = require('webdeployment-common-v2/utility.js');
+var zipUtility = require('webdeployment-common-v2/ziputility.js');
 
 export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvider{
     
     private zipDeploymentID: string;
  
     public async DeployWebAppStep() {
+        let deploymentMethodtelemetry = '{"deploymentMethod":"Zip Deploy"}';
+        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureWebAppDeployment]" + deploymentMethodtelemetry);
+
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams);
 
         if(this.taskParams.UseWebDeploy && this.taskParams.DeploymentType === DeploymentType.zipDeploy) {

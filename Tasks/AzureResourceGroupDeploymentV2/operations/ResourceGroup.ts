@@ -13,6 +13,7 @@ import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
+import { sleepFor } from 'azure-arm-rest/webClient';
 
 var hm = require("typed-rest-client/HttpClient");
 var uuid = require("uuid");
@@ -170,7 +171,7 @@ export class ResourceGroup {
             tl.error(error.message);
             if (error.details) {
                 tl.error(tl.loc("Details"));
-                
+
 
                 for (var i = 0; i < error.details.length; i++) {
                     var errorMessage = null;
@@ -189,7 +190,7 @@ export class ResourceGroup {
                     }
                 }
 
-                
+
             }
         } else {
             tl.error(error);
@@ -279,7 +280,7 @@ export class ResourceGroup {
         var timestamp = new Date(Date.now());
         var uniqueId = uuid().substr(0, 4);
         var suffix = util.format("%s%s%s-%s%s%s-%s", timestamp.getFullYear(),
-            formatNumber(timestamp.getMonth()),
+            formatNumber(timestamp.getMonth() + 1),
             formatNumber(timestamp.getDate()),
             formatNumber(timestamp.getHours()),
             formatNumber(timestamp.getMinutes()),
@@ -316,6 +317,15 @@ export class ResourceGroup {
         var overrideParameters: NameValuePair[] = PowerShellParameters.parse(this.taskParameters.overrideParameters, true, "\\");
         for (var overrideParameter of overrideParameters) {
             tl.debug("Overriding key: " + overrideParameter.name);
+            if (this.taskParameters.addSpnToEnvironment) {
+                if (overrideParameter.value === "$servicePrincipalId") {
+                    overrideParameter.value = tl.getEndpointAuthorizationParameter(this.taskParameters.connectedService, 'serviceprincipalid', true);
+                }
+                if (overrideParameter.value === "$servicePrincipalKey") {
+                    overrideParameter.value = tl.getEndpointAuthorizationParameter(this.taskParameters.connectedService, 'serviceprincipalkey', false);
+                }
+            }
+
             try {
                 overrideParameter.value = this.castToType(overrideParameter.value, template.parameters[overrideParameter.name].type);
             } catch (error) {
@@ -489,7 +499,9 @@ export class ResourceGroup {
         return new Promise<void>((resolve, reject) => {
             console.log(tl.loc("StartingValidation"));
             deployment.properties["mode"] = "Incremental";
-            armClient.deployments.validate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, (error, result, request, response) => {
+            this.taskParameters.deploymentName = this.taskParameters.deploymentName || this.createDeploymentName();
+            console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
+            armClient.deployments.validate(this.taskParameters.resourceGroupName, this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
                 if (error) {
                     return reject(tl.loc("CreateTemplateDeploymentValidationFailed", utils.getError(error)));
                 }
@@ -504,14 +516,19 @@ export class ResourceGroup {
         });
     }
 
-    private async performAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment): Promise<void> {
+    private async performAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount = 0): Promise<void> {
         if (deployment.properties["mode"] === "Validation") {
             return this.validateDeployment(armClient, deployment);
         } else {
             console.log(tl.loc("StartingDeployment"));
             return new Promise<void>((resolve, reject) => {
-                armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, (error, result, request, response) => {
+                this.taskParameters.deploymentName = this.taskParameters.deploymentName || this.createDeploymentName();
+                console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
+                armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
                     if (error) {
+                        if(error.code == "ResourceGroupNotFound" && retryCount > 0){
+                            return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount);
+                        }
                         this.writeDeploymentErrors(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
@@ -527,6 +544,11 @@ export class ResourceGroup {
         }
     }
 
+    private async waitAndPerformAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount): Promise<void> {
+        await sleepFor(3);
+        return this.performAzureDeployment(armClient, deployment, retryCount - 1);
+    }
+
     private async createTemplateDeployment(armClient: armResource.ResourceManagementClient) {
         console.log(tl.loc("CreatingTemplateDeployment"));
         var deployment: Deployment;
@@ -537,7 +559,7 @@ export class ResourceGroup {
         } else {
             throw new Error(tl.loc("InvalidTemplateLocation"));
         }
-        await this.performAzureDeployment(armClient, deployment);
+        await this.performAzureDeployment(armClient, deployment, 3);
     }
 
     private enablePrereqDG = "ConfigureVMWithDGAgent";

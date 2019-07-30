@@ -8,19 +8,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
-  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "2.2.48",
     "@types/node": "6.0.68",
     "@types/q": "1.0.7",
     "q": "1.4.1",
-    "webdeployment-common": "file:../../_build/Tasks/Common/webdeployment-common-1.0.0.tgz"
+    "webdeployment-common-v2": "file:../../_build/Tasks/Common/webdeployment-common-v2-2.0.0.tgz"
   }
 }

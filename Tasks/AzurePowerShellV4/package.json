@@ -1,0 +1,13 @@
+{
+    "name": "azure-powershell-v4",
+    "author": {
+        "name": "Microsoft Corporation"
+    },
+    "dependencies": {
+        "@types/mocha": "2.2.48",
+        "@types/node": "6.0.68",
+        "@types/q": "1.0.7",
+        "azure-arm-rest-v2": "file:../../_build/Tasks/Common/azure-arm-rest-v2-2.0.0.tgz",
+        "azure-pipelines-task-lib": "2.8.0"
+    }
+}

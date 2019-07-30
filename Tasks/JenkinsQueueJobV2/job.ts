@@ -5,7 +5,6 @@ import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 import url = require('url');
-import shell = require('shelljs');
 import request = require('request');
 
 import { JobSearch } from './jobsearch';
@@ -276,7 +275,9 @@ export class Job {
                 if (thisJob.queue.TaskOptions.capturePipeline) {
                     const downstreamProjects = thisJob.Search.ParsedTaskBody.downstreamProjects || [];
                     downstreamProjects.forEach((project) => {
-                        new Job(thisJob.queue, thisJob, project.url, null, -1, project.name); // will add a new child to the tree
+                        if (project.color !== 'disabled') {
+                            new Job(thisJob.queue, thisJob, project.url, null, -1, project.name); // will add a new child to the tree
+                        }
                     });
                 }
                 thisJob.Search.ResolveIfKnown(thisJob); // could change state

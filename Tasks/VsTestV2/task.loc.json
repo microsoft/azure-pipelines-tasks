@@ -3,6 +3,7 @@
   "name": "VSTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/vstest",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
@@ -16,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 144,
+    "Minor": 156,
     "Patch": 1
   },
   "demands": [
@@ -206,6 +207,7 @@
       "groupName": "executionOptions",
       "options": {
         "latest": "Latest",
+        "16.0": "Visual Studio 2019",
         "15.0": "Visual Studio 2017",
         "14.0": "Visual Studio 2015",
         "toolsInstaller": "Installed by Tools Installer"
@@ -409,7 +411,7 @@
       "name": "diagnosticsEnabled",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.diagnosticsEnabled",
-      "defaultValue": "True",
+      "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.diagnosticsEnabled",
       "groupName": "executionOptions"
@@ -616,6 +618,8 @@
     "UserProvidedSourceFilter": "ms-resource:loc.messages.UserProvidedSourceFilter",
     "UnableToGetFeatureFlag": "ms-resource:loc.messages.UnableToGetFeatureFlag",
     "diagnosticsInput": "ms-resource:loc.messages.diagnosticsInput",
-    "UncPathNotSupported": "ms-resource:loc.messages.UncPathNotSupported"
+    "UncPathNotSupported": "ms-resource:loc.messages.UncPathNotSupported",
+    "LookingForBuildToolsInstalltion": "ms-resource:loc.messages.LookingForBuildToolsInstalltion",
+    "LookingForVsInstalltion": "ms-resource:loc.messages.LookingForVsInstalltion"
   }
 }

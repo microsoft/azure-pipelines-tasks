@@ -16,6 +16,7 @@ export function emitTelemetry(area: string, feature: string, taskSpecificTelemet
         if (semver.gte(agentVersion, '2.120.0')) {
             // Common Telemetry VARs that will be concatenated with the supplied telem object.
             let commonTelem = {
+                'SYSTEM_TASKINSTANCEID': tl.getVariable('SYSTEM_TASKINSTANCEID'),
                 'SYSTEM_JOBID': tl.getVariable('SYSTEM_JOBID'),
                 'SYSTEM_PLANID': tl.getVariable('SYSTEM_PLANID'),
                 'SYSTEM_COLLECTIONID': tl.getVariable('SYSTEM_COLLECTIONID'),
@@ -44,7 +45,7 @@ export function emitTelemetry(area: string, feature: string, taskSpecificTelemet
                 feature,
                 JSON.stringify(copy));
         } else {
-            tl.debug(`Agent version of ( ${agentVersion} ) does not meet minimum reqiurements for telemetry`);
+            tl.debug(`Agent version of ( ${agentVersion} ) does not meet minimum requirements for telemetry`);
         }
     } catch (err) {
         tl.debug(`Unable to log telemetry. Err:( ${err} )`);
