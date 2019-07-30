@@ -224,6 +224,7 @@ export class AzureAppService {
         }
 
         if(isNewValueUpdated) {
+            applicationSettings.properties[constants.WebsiteEnableSyncUpdateSiteKey] = 'true';
             await this.updateApplicationSettings(applicationSettings);
         }
 
