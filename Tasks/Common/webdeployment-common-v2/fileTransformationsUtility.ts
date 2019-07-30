@@ -55,7 +55,7 @@ export function advancedFileTransformations(isFolderBasedDeployment: boolean, ta
         }
         else {
             let isTransformationApplied: boolean = true;
-            if(failNoTransformation || transformationRules.length > 0) {
+            if(failNoTransformation || transformationRules.length > 0) {                
                 transformationRules.forEach(function(rule) {
                     var args = ParameterParser.parse(rule);
                     if(Object.keys(args).length < 2 || !args["transform"] || !args["xml"]) {
@@ -69,11 +69,11 @@ export function advancedFileTransformations(isFolderBasedDeployment: boolean, ta
                     }
                 });
             }
-            else{    
-                var environmentName = tl.getVariable('Release.EnvironmentName');              
-                let transformConfigs = ["Release.config"]; 
-                if(environmentName && environmentName.toLowerCase() != 'release') { 
-                    transformConfigs.push(environmentName + ".config"); 
+            else{   
+                var environmentName = tl.getVariable('Release.EnvironmentName');             
+                let transformConfigs = ["Release.config"];
+                if(environmentName && environmentName.toLowerCase() != 'release') {
+                    transformConfigs.push(environmentName + ".config");
                 }
             }
             if(isTransformationApplied) {
