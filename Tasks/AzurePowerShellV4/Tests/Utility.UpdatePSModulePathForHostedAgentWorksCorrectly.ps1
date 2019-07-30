@@ -3,7 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\PreJobExecutionUtility.ps1
+. $PSScriptRoot\..\Utility.ps1
 
 $azModulePath = "c:\modules\az_3.6.0"
 

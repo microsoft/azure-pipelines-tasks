@@ -61,10 +61,10 @@ describe('AzurePowerShell Suite', function () {
             psr.run(path.join(__dirname, 'FailsForNativeCommandError.ps1'), done);
         })
         it('Get-LatestModule returns the latest available module', (done) => {
-            psr.run(path.join(__dirname, 'PreJobExecutionUtility.Get-LatestModule.ps1'), done);
+            psr.run(path.join(__dirname, 'Utility.Get-LatestModule.ps1'), done);
         })
         it('Update-PSModulePathForHostedAgent updated psmodulepath correctly', (done) => {
-            psr.run(path.join(__dirname, 'PreJobExecutionUtility.UpdatePSModulePathForHostedAgentWorksCorrectly.ps1'), done);
+            psr.run(path.join(__dirname, 'Utility.UpdatePSModulePathForHostedAgentWorksCorrectly.ps1'), done);
         })
     }
 });
