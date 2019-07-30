@@ -21,11 +21,37 @@ if ($scriptArguments -match '[\r\n]') {
     throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptArguments)
 }
 
+$targetAzurePs = Get-VstsInput -Name TargetAzurePs
+$customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
+
+# string constants
+$otherVersion = "OtherVersion"
+$latestVersion = "LatestVersion"
+
+if ($targetAzurePs -eq $otherVersion) {
+    if ($customTargetAzurePs -eq $null) {
+        throw (Get-VstsLocString -Key InvalidAzurePsVersion $customTargetAzurePs)
+    } else {
+        $targetAzurePs = $customTargetAzurePs.Trim()        
+    }
+}
+
+$pattern = "^[0-9]+\.[0-9]+\.[0-9]+$"
+$regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
+
+if ($targetAzurePs -eq $latestVersion) {
+    $targetAzurePs = ""
+} elseif (-not($regex.IsMatch($targetAzurePs))) {
+    throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
+}
+
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $endpoint = Get-VstsEndpoint -Name $serviceName -Require
 
-. "$PSScriptRoot/PreJobExecutionAzurePowerShell.ps1"
+. "$PSScriptRoot/PreJobExecutionUtility.ps1"
+Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
 
+. "$PSScriptRoot/PreJobExecutionAzurePowerShell.ps1"
 $env:PSModulePath = Get-VstsTaskVariable -Name "AZ_PS_MODULE_PATH"
 
 try 
