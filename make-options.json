@@ -140,7 +140,7 @@
         "SqlServerDacpacDeployment",
         "SshV0",
         "TwineAuthenticateV0",
-	"TwineAuthenticateV1",
+        "TwineAuthenticateV1",
         "UniversalPackagesV0",
         "UseDotNetV2",
         "UseNodeV1",
