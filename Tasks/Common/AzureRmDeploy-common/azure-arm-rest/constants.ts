@@ -27,3 +27,5 @@ export const AzureRmEndpointAuthenticationScheme = {
 	"ServicePrincipal": "serviceprincipal",
 	"ManagedServiceIdentity": "managedserviceidentity"
 }
+
+export const WebsiteEnableSyncUpdateSiteKey: string = "WEBSITE_ENABLE_SYNC_UPDATE_SITE";
