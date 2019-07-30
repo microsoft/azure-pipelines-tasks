@@ -8,6 +8,8 @@ $scriptInline = Get-VstsInput -Name Inline
 $scriptArguments = Get-VstsInput -Name ScriptArguments
 $__vsts_input_errorActionPreference = Get-VstsInput -Name errorActionPreference
 $__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError
+$targetAzurePs = Get-VstsInput -Name TargetAzurePs
+$customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
 
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
@@ -20,9 +22,6 @@ if ($scriptType -eq "FilePath") {
 if ($scriptArguments -match '[\r\n]') {
     throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptArguments)
 }
-
-$targetAzurePs = Get-VstsInput -Name TargetAzurePs
-$customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
 
 # string constants
 $otherVersion = "OtherVersion"
