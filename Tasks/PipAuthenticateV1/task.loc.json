@@ -9,14 +9,14 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 0,
+    "Minor": 156,
     "Patch": 0
   },
   "runsOn": [
     "Agent",
     "DeploymentGroup"
   ],
-  "minimumAgentVersion": "2.115.0",
+  "minimumAgentVersion": "2.120.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -91,7 +91,6 @@
     "Error_FailedToParseFeedUrlAndAuth": "ms-resource:loc.messages.Error_FailedToParseFeedUrlAndAuth",
     "FailedToGetPackagingUri": "ms-resource:loc.messages.FailedToGetPackagingUri",
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
-    "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable",
     "Warn_TooManyFeedEntries": "ms-resource:loc.messages.Warn_TooManyFeedEntries",
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   }

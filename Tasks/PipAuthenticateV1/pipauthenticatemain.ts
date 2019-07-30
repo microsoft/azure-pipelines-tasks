@@ -8,7 +8,8 @@ import { getProjectAndFeedIdFromInput } from 'packaging-common/util';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));
-
+    let internalFeedSuccessCount: number = 0;
+    let externalFeedSuccessCount: number = 0;
     try {
         let packagingLocation: string;
 
@@ -42,7 +43,7 @@ async function main(): Promise<void> {
                     feed.feedId,
                     feed.projectId,
                     localAccessToken);
-                const pipUri = utils.formPipCompatibleUri("build", localAccessToken, feedUri);
+                const pipUri = utils.addCredentialsToUri("build", localAccessToken, feedUri);
                 internalAndExternalEndpoints.push(pipUri);
             }
         }
@@ -52,7 +53,7 @@ async function main(): Promise<void> {
 
         const externalEndpoints = auth.getExternalAuthInfoArray(endpointNames);
         externalEndpoints.forEach((id) => {
-            const externalPipUri = utils.formPipCompatibleUri(id.username, id.password, id.packageSource.feedUri);
+            const externalPipUri = utils.addCredentialsToUri(id.username, id.password, id.packageSource.feedUri);
             internalAndExternalEndpoints.push(externalPipUri);
         });
 
@@ -75,22 +76,25 @@ async function main(): Promise<void> {
             }
         }
 
-        console.log(tl.loc("Info_SuccessAddingAuth", feedList.length, externalEndpoints.length));
+        internalFeedSuccessCount = feedList.length;
+        externalFeedSuccessCount = externalEndpoints.length;
+        console.log(tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount));
     }
     catch (error) {
         tl.error(error);
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToAddAuthentication"));
         return;
     } finally{
-        _logPipAuthStartupVariables();
+        _logPipAuthStartupVariables(internalFeedSuccessCount, externalFeedSuccessCount);
     }
 }
 
 // Telemetry
-function _logPipAuthStartupVariables() {
+function _logPipAuthStartupVariables(internalFeedSuccessCount: number, externalFeedSuccessCount: number) {
     try {
         const pipAuthenticateTelemetry = {
-            "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
+            "InternalFeedAuthCount": internalFeedSuccessCount,
+            "ExternalFeedAuthCount": externalFeedSuccessCount,
             };
 
         telemetry.emitTelemetry("Packaging", "PipAuthenticate", pipAuthenticateTelemetry);

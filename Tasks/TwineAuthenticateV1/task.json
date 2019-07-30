@@ -9,14 +9,14 @@
     "category": "Package",
     "version": {
         "Major": 1,
-        "Minor": 0,
+        "Minor": 156,
         "Patch": 0
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.120.0",
     "instanceNameFormat": "Twine Authenticate $(message)",
     "groups": [
         {
@@ -83,13 +83,11 @@
         "Info_SuccessAddingAuth": "Successfully added auth for %s internal feeds and %s external endpoint.",
         "Info_AddingPasswordAuthEntry": "Adding username password auth entry for feed %s",
         "Info_AddingTokenAuthEntry": "Adding token auth entry for feed %s",
-        "Info_StartParsingExistingPypircFile": "Starting to parse existing .pypirc file at %s",
         "Error_FailedToParseFeedUrlAndAuth": "Failed to parse the feed url and add auth information. %s",
         "Warning_DuplicateEntryForInternalFeed": "Duplicate entry found for endpoint name %s. Auth already exists for this feed name. Please make sure all the endpoint names are unique and not colliding with feed names in this organization.",
         "Error_DuplicateEntryForExternalFeed": "Duplicate entry found for endpoint name %s. Auth entry already exists for this name in .pypirc file. Please make sure all the endpoint names are unique and does not collide with feed names from this organization.",
         "FailedToGetPackagingUri": "Unable to get packaging uri, using default collection uri.",
         "FailedToAddAuthentication": "Failed to add authentication.",
-        "FeedTokenUnavailable": "Failed to get the access token for this organization.",
         "NoPypircFile": "No .pypirc file to clean up.",
         "VariableSetForPypirc": "Environment variable for .pypirc at %s is set.",
         "Info_RemovingPypircFile": "Removing .pypirc file from %s",

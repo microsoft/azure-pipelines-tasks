@@ -25,6 +25,8 @@ export class Repository
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));
+    let internalFeedSuccessCount: number = 0;
+    let externalFeedSuccessCount: number = 0;
     try {
         // Local feeds
         const internalFeed = await auth.getInternalAuthInfoArray("artifactFeed");
@@ -41,21 +43,24 @@ async function main(): Promise<void> {
         tl.debug(tl.loc("VariableSetForPypirc", pypircPath));
 
         // Configuring the pypirc file
-        console.log(tl.loc("Info_SuccessAddingAuth", internalFeed.length, externalEndpoints.length));
+        internalFeedSuccessCount = internalFeed.length;
+        externalFeedSuccessCount = externalEndpoints.length;
+        console.log(tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount));
     }
     catch (error) {
         tl.error(error);
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToAddAuthentication"));
         return;
     } finally{
-        _logTwineAuthStartupVariables();
+        _logTwineAuthStartupVariables(internalFeedSuccessCount, externalFeedSuccessCount);
     }
 }
  // Telemetry
-function _logTwineAuthStartupVariables() {
+function _logTwineAuthStartupVariables(internalFeedCount: number, externalFeedCount: number) {
     try {
         const twineAuthenticateTelemetry = {
-            "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
+            "InternalFeedAuthCount": internalFeedCount,
+            "ExternalFeedAuthCount": externalFeedCount,
             };
         telemetry.emitTelemetry("Packaging", "TwineAuthenticate", twineAuthenticateTelemetry);
     } catch (err) {
