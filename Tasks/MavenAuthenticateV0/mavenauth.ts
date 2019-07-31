@@ -1,5 +1,5 @@
 import tl = require('azure-pipelines-task-lib/task');
-import util = require('./mavenutil');
+import util = require('./mavenutils');
 
 import * as path from 'path';
 
@@ -9,7 +9,14 @@ const accessTokenEnvSetting: string = 'ENV_MAVEN_ACCESS_TOKEN';
 
 async function run(): Promise<void> {
     try {
-        const feeds: string[] = tl.getDelimitedInput("feed", ",", true);
+        const internalFeedServerElements = util.getInternalFeedsServerElements("feeds");
+        const externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("serviceEndpoints");
+        const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
+
+        if(newServerElements.length === 0) {
+            tl.warning(tl.loc("Warning_NoEndpointsToAuth"));
+            return;
+        }
 
         let userM2FolderPath: string = "";
 
@@ -20,35 +27,26 @@ async function run(): Promise<void> {
         }
 
         if (!tl.exist(userM2FolderPath)) {
-            tl.debug(".m2 folder does not exist, creating: " + userM2FolderPath);
+            tl.debug(tl.loc("Info_M2FolderDoesntExist", userM2FolderPath));
             tl.mkdirP(userM2FolderPath);
         }
-
-        tl.debug("Found the current user's .m2 folder: " + userM2FolderPath);
 
         let userSettingsXmlPath: string = path.join(userM2FolderPath, SettingsXmlName);
         let settingsJson: any;
 
         if(tl.exist(userSettingsXmlPath)) {
-            tl.debug("User already has a settings.xml.");
+            tl.debug(tl.loc("Info_SettingsXmlRead", userSettingsXmlPath));
             settingsJson = await util.readXmlFileAsJson(userSettingsXmlPath)
         }
+        else {
+            tl.debug(tl.loc("Info_CreatingSettingsXml", userSettingsXmlPath));
+        }
 
-        for (let feed of feeds) {
-            let serverJson:any = {
-                id: feed,
-                configuration: {
-                    httpHeaders: {
-                        property: {
-                            name: 'Authorization',
-                            value: 'Basic ${env.' + accessTokenEnvSetting + '}'
-                        }
-                    }
-                }
-            };
-
-            settingsJson =  util.mavenSettingsJsonInsertServer(settingsJson, serverJson);
+        for (let serverElement of newServerElements) {
+            settingsJson = util.mavenSettingsJsonInsertServer(settingsJson, serverElement);
         };
+
+        tl.debug(tl.loc("Info_WritingToSettingsXml"));
         await util.writeJsonAsSettingsFile(userSettingsXmlPath, settingsJson);
     }
     catch (err) {

@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 28
     },
     "runsOn": [
         "Agent",
@@ -19,21 +19,29 @@
     "instanceNameFormat": "Maven Authenticate $(feed)",
     "inputs": [
         {
-            "name": "feed",
+            "name": "feeds",
             "type": "pickList",
-            "label": "Feed",
+            "label": "Feeds",
             "defaultValue": "",
-            "helpMarkdown": "Select multiple feeds to authenticate.",
-            "required": true,
+            "helpMarkdown": "Select one or multiple feeds to authenticate.",
             "properties": {
                 "EditableOptions": "true",
+                "MultiSelectFlatList": "true"
+            }
+        },
+        {
+            "name": "serviceEndpoints",
+            "label": "Credentials for repositories outside this organization/collection",
+            "helpMarkDown": "Credentials to use for external repositories located in the project's pom.xml.",
+            "type": "connectedService:externalmavenrepository",
+            "properties": {
                 "MultiSelectFlatList": "true"
             }
         }
     ],
     "dataSourceBindings": [
         {
-            "target": "feed",
+            "target": "feeds",
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
@@ -46,6 +54,13 @@
         }
     },
     "messages": {
-        "Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file."
+        "Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file.",
+        "Warning_NoEndpointsToAuth": "No repositories were selected to authenticate, please check your task configuration.",
+        "Info_GeneratingExternalRepositories": "Generating configs for %s external repositories.",
+        "Info_GeneratingInternalFeeds": "Generating configs for %s internal feeds.",
+        "Info_M2FolderDoesntExist": ".m2 folder not found at location %s, creating new folder.",
+        "Info_SettingsXmlRead": "Adding authentication to settings file %s.",
+        "Info_CreatingSettingsXml": "Creating new settings.xml at path %s.",
+        "Info_WritingToSettingsXml": "Writing new settings.xml with added authentication."
     }
 }

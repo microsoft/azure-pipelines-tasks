@@ -118,4 +118,57 @@ describe("authenticate azure artifacts feeds for maven", function() {
         done();
     });
 
+    it("it should create a new settings.xml in the .m2 folder and add auth for 3 different types of service connections.", (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, "L0ServiceConnections.js");
+
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert.equal(tl.ls(null, [m2DirPath]).length, 1, "Should have one file.");
+        const settingsXmlStats = tl.stats(settingsXmlPath);
+        assert(settingsXmlStats && settingsXmlStats.isFile(), "settings.xml file should be created.");
+
+        const data = fs.readFileSync(settingsXmlPath, 'utf-8');
+
+        assert.equal(data.match(serversRegex).length, 1, "Only one <servers> entry should be created.");
+        assert.equal(data.match(serverRegex).length, 3, "3 <server> entries should be created.");
+
+        assert.equal(data.match(/<id>tokenBased<\/id>/gi).length, 1, "Only one tokenBased entry should be created.");
+        assert.equal(data.match(/<id>privateKeyBased<\/id>/gi).length, 1, "Only one privateKeyBased entry should be created.");
+        assert.equal(data.match(/<id>usernamePasswordBased<\/id>/gi).length, 1, "Only one usernamePasswordBased entry should be created.");
+
+        assert.equal(data.match(/<username>--testUserName--<\/username>/gi).length, 1, "Only one username entry should be created.");
+        assert.equal(data.match(/<password>--testPassword--<\/password>/gi).length, 1, "Only one password entry should be created.");
+
+        assert.equal(data.match(/<privateKey>--privateKey--<\/privateKey>/gi).length, 1, "Only one privateKey entry should be created.");
+        assert.equal(data.match(/<passphrase>--passphrase--<\/passphrase>/gi).length, 1, "Only one passphrase entry should be created.");
+
+        assert.equal(data.match(/<value>Basic --token--<\/value>/gi).length, 1, "Only one api token entry should be created.");
+
+        assert(tr.stderr.length === 0, "should not have written to stderr");
+        assert(tr.succeeded, "task should have succeeded");
+
+        done();
+    });
+
+    it("it should warn if no inputs are provided.", (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, "L0EmptyInput.js");
+
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert.equal(tl.ls(null, [m2DirPath]).length, 0, "Settings.xml file should not be created.");
+
+        assert(tr.stderr.length === 0, "should not have written to stderr");
+        assert(tr.succeeded, "task should have succeeded");
+        assert(tr.stdOutContained("vso[task.issue type=warning;]loc_mock_Warning_NoEndpointsToAuth"), "No endpoints warning should be displayed");
+
+        done();
+    });
 });

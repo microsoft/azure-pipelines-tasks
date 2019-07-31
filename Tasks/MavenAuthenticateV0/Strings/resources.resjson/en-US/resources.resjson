@@ -3,6 +3,15 @@
   "loc.helpMarkDown": "",
   "loc.description": "Provides credentials for Azure Artifacts feeds and service connections for maven repositories",
   "loc.instanceNameFormat": "Maven Authenticate $(feed)",
-  "loc.input.label.feed": "Feed",
-  "loc.messages.Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file."
+  "loc.input.label.feeds": "Feeds",
+  "loc.input.label.serviceEndpoints": "Credentials for repositories outside this organization/collection",
+  "loc.input.help.serviceEndpoints": "Credentials to use for external repositories located in the project's pom.xml.",
+  "loc.messages.Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file.",
+  "loc.messages.Warning_NoEndpointsToAuth": "No repositories were selected to authenticate, please check your task configuration.",
+  "loc.messages.Info_GeneratingExternalRepositories": "Generating configs for %s external repositories.",
+  "loc.messages.Info_GeneratingInternalFeeds": "Generating configs for %s internal feeds.",
+  "loc.messages.Info_M2FolderDoesntExist": ".m2 folder not found at location %s, creating new folder.",
+  "loc.messages.Info_SettingsXmlRead": "Adding authentication to settings file %s.",
+  "loc.messages.Info_CreatingSettingsXml": "Creating new settings.xml at path %s.",
+  "loc.messages.Info_WritingToSettingsXml": "Writing new settings.xml with added authentication."
 }

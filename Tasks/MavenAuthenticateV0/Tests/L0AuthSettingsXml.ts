@@ -11,11 +11,9 @@ const settingsXmlName = "settings.xml";
 const settingsXmlPath = path.join(m2DirPath, settingsXmlName);
 
 // Set inputs
-tr.setInput("feed", "feedName1");
+tr.setInput("feeds", "feedName1");
 tr.setInput("verbosity", "verbose");
-
-console.log(settingsXmlPath);
-console.log(m2DirPath);
+tr.setInput("serviceEndpoints", "");
 
 // provide answers for task mock
 tr.setAnswers({
