@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 155,
-        "Patch": 6
+        "Minor": 156,
+        "Patch": 0
     },
     "demands": [],
     "groups": [],
@@ -51,7 +51,6 @@
             "label": "Namespace",
             "required": true,
             "defaultValue": "",
-            "visibleRule": "action != bake",
             "helpMarkDown": "Sets the namespace for the commands by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
         },
         {
