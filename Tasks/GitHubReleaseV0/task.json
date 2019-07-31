@@ -187,8 +187,6 @@
             "required": false,
             "visibleRule": "action = create || action = edit",
             "helpMarkDown": "If set to `true`, a list of changes (commits and issues) between this and the last published release will be generated and appended to the release notes."
-<<<<<<< HEAD
-=======
         },
         {
             "name": "changeLogCompareToRelease",
@@ -213,7 +211,6 @@
             "groupName": "changeLogConfiguration",
             "visibleRule": "changeLogCompareToRelease = lastNonDraftReleaseByTag",
             "helpMarkDown": "Specify the regex for release tag. Release matching this tag will be used as base for changelog computation."
->>>>>>> ec205fb64... GitHubRelease Task: ChangeLog enhancements: Changes after PM Review (#10986)
         }
     ],
     "dataSourceBindings": [
@@ -277,11 +274,6 @@
         "CommitDiffBehind": "Cannot compute the changes as the provided target commit is older than the commit of the last published release.",
         "CommitDiffEqual": "No changes were found. The provided target commit is the same as the commit of the last published release.",
         "FetchLatestPublishRelease": "Fetching the latest published release...",
-<<<<<<< HEAD
-        "FetchLatestPublishReleaseSuccess": "Found the latest published release: %s",
-        "GetLatestReleaseError": "An unexpected error occurred while fetching the latest published release.",
-        "NoLatestPublishRelease": "No releases are published yet in the repository.",
-=======
         "FetchLatestNonDraftRelease": "Fetching the latest non-draft release...",
         "FetchLastReleaseByTag": "Fetching the latest release matching the tag pattern: %s ",
         "FetchLatestPublishReleaseSuccess": "Found the latest published release: %s",
@@ -291,7 +283,6 @@
         "NoLatestPublishRelease": "No releases are published yet in the repository.",
         "NoMatchingReleases": "No non-draft releases found.",
         "NoTagMatchingReleases": "No releases found matching the tag pattern: %s ",
->>>>>>> ec205fb64... GitHubRelease Task: ChangeLog enhancements: Changes after PM Review (#10986)
         "FetchCommitDiff": "Fetching the list of commits since the last published release...",
         "FetchCommitDiffSuccess": "Found the list of changes.",
         "FetchCommitDiffError": "An unexpected error occurred while fetching the list of changes.",
@@ -303,10 +294,7 @@
         "InvalidActionSet": "Invalid action: %s. Only 'create', 'edit', or 'delete' actions are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
         "InvalidTagSource": "Invalid tag source: %s. Only 'auto', or 'manual' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
         "InvalidReleaseNotesSource": "Invalid release notes source: %s. Only 'file', or 'input' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
-<<<<<<< HEAD
-=======
         "InvalidCompareWithAttribute": "Invalid compareWith attribute: %s. Only 'lastFullRelease, 'lastNonDraftRelease', or 'lastNonDraftReleaseByTag' options are allowed. For yaml syntax see: https://aka.ms/AA3m1bq",
->>>>>>> ec205fb64... GitHubRelease Task: ChangeLog enhancements: Changes after PM Review (#10986)
         "InvalidAssetUploadMode": "Invalid asset upload mode: %s. Only 'delete', or 'replace' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
         "TagRequiredEditDeleteAction": "For '%s' action, a tag is required. Please specify a tag in the step. For yaml syntax see: https://aka.ms/AA3m1bq",
         "TagRequiredCreateAction": "Tag source is set to manual- please specify a tag for create action. For yaml syntax see: https://aka.ms/AA3m1bq",
