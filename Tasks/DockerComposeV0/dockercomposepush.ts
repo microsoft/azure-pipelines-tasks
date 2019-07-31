@@ -9,7 +9,9 @@ import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 function dockerPush(connection: DockerComposeConnection, imageName: string) {
     var command = connection.createCommand();
     command.arg("push");
-    command.line(dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false)));
+    var arg = tl.getInput("arguments", false);
+    var commandArgs = dockerCommandUtils.getCommandArguments(arg || "");
+    command.line(commandArgs || "");
     command.arg(imageName);
     return connection.execCommand(command);
 }

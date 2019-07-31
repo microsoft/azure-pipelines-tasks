@@ -61,7 +61,9 @@ function addOtherTags(connection: DockerComposeConnection, imageName: string): a
 export function run(connection: DockerComposeConnection): any {
     var command = connection.createComposeCommand();
     command.arg("build");
-    command.line(dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false)));
+    var arg = tl.getInput("arguments", false);
+    var commandArgs = dockerCommandUtils.getCommandArguments(arg || "");
+    command.line(commandArgs || "");
     return connection.execCommand(command)
     .then(() => connection.getImages(true))
     .then(images => {

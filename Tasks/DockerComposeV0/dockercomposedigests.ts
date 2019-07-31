@@ -10,7 +10,9 @@ import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 function dockerPull(connection: DockerComposeConnection, imageName: string, imageDigests: any, serviceName: string) {
     var command = connection.createCommand();
     command.arg("pull");
-    command.line(dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false)));
+    var arg = tl.getInput("arguments", false);
+    var commandArgs = dockerCommandUtils.getCommandArguments(arg || "");
+    command.line(commandArgs || "");
     command.arg(imageName);
 
     var output = "";

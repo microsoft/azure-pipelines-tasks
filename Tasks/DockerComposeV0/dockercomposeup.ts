@@ -23,6 +23,8 @@ export function run(connection: DockerComposeConnection): any {
         command.arg("--abort-on-container-exit");
     }
 
-    command.line(dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false)));
+    var arg = tl.getInput("arguments", false);
+    var commandArgs = dockerCommandUtils.getCommandArguments(arg || "");
+    command.line(commandArgs || "");
     return connection.execCommand(command);
 }
