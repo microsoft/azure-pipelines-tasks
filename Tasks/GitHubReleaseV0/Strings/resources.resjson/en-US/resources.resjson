@@ -37,7 +37,7 @@
   "loc.input.label.addChangeLog": "Add changelog",
   "loc.input.help.addChangeLog": "If set to `true`, a list of changes (commits and issues) between this and the last published release will be generated and appended to the release notes.",
   "loc.input.label.changeLogCompareToRelease": "Compare to",
-  "loc.input.help.changeLogCompareToRelease": "Indicate which release we should compare with to generate the changelog.",
+  "loc.input.help.changeLogCompareToRelease": "Indicate which release we should compare with to generate the changelog: \nLast full release: Compares the current release with  the most recent non-draft release which is not marked as pre-release.\nLast non-draft release: Compares the current release with the most recent non-draft release.\nLast non-draft release by tag: Compares the current release with the last non-draft release matching the specified tag. You can also specify a regex instead of an exact tag.",
   "loc.input.label.changeLogCompareToReleaseTag": "Release Tag",
   "loc.input.help.changeLogCompareToReleaseTag": "Specify the regex for release tag. Release matching this tag will be used as base for changelog computation.",
   "loc.messages.GithubApiFailError": "An unexpected error occurred.",
