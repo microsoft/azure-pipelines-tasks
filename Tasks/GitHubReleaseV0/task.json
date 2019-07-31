@@ -204,7 +204,7 @@
             "defaultValue": "lastFullRelease",
             "groupName": "changeLogConfiguration",
             "visibleRule": "addChangeLog = true",
-            "helpMarkDown": "Indicate which release we should compare with to generate the changelog.",
+            "helpMarkDown": "Indicate which release we should compare with to generate the changelog: \nLast full release: Compares the current release with  the most recent non-draft release which is not marked as pre-release.\nLast non-draft release: Compares the current release with the most recent non-draft release.\nLast non-draft release by tag: Compares the current release with the last non-draft release matching the specified tag. You can also specify a regex instead of an exact tag.",
             "options": {
                 "lastFullRelease": "Last full release",
                 "lastNonDraftRelease": "Last non-draft release",
