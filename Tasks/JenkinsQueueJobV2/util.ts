@@ -42,7 +42,8 @@ export class FailTaskError extends Error {
 }
 
 export function convertJobName(jobName: string): string {
-    return '/job/' + jobName.replace('/', '/job/');
+    const dirSeperatorRegExp: RegExp = /\//gi;
+    return '/job/' + jobName.replace(dirSeperatorRegExp, '/job/');
 }
 
 export function addUrlSegment(baseUrl: string, segment: string): string {
