@@ -19,6 +19,14 @@
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
+  "groups": [
+    {
+      "name": "changeLogConfiguration",
+      "displayName": "ms-resource:loc.group.displayName.changeLogConfiguration",
+      "isExpanded": true,
+      "visibleRule": "addChangeLog = true"
+    }
+  ],
   "inputs": [
     {
       "name": "gitHubConnection",
@@ -179,6 +187,30 @@
       "required": false,
       "visibleRule": "action = create || action = edit",
       "helpMarkDown": "ms-resource:loc.input.help.addChangeLog"
+    },
+    {
+      "name": "changeLogCompareToRelease",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.changeLogCompareToRelease",
+      "required": true,
+      "defaultValue": "lastFullRelease",
+      "groupName": "changeLogConfiguration",
+      "visibleRule": "addChangeLog = true",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogCompareToRelease",
+      "options": {
+        "lastFullRelease": "Last full release",
+        "lastNonDraftRelease": "Last non-draft release",
+        "lastNonDraftReleaseByTag": "Last non-draft release by tag"
+      }
+    },
+    {
+      "name": "changeLogCompareToReleaseTag",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.changeLogCompareToReleaseTag",
+      "required": true,
+      "groupName": "changeLogConfiguration",
+      "visibleRule": "changeLogCompareToRelease = lastNonDraftReleaseByTag",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogCompareToReleaseTag"
     }
   ],
   "dataSourceBindings": [
@@ -245,6 +277,12 @@
     "FetchLatestPublishReleaseSuccess": "ms-resource:loc.messages.FetchLatestPublishReleaseSuccess",
     "GetLatestReleaseError": "ms-resource:loc.messages.GetLatestReleaseError",
     "NoLatestPublishRelease": "ms-resource:loc.messages.NoLatestPublishRelease",
+    "FetchMatchingReleaseSuccess": "ms-resource:loc.messages.FetchMatchingReleaseSuccess",
+    "FetchTagMatchingReleaseSuccess": "ms-resource:loc.messages.FetchTagMatchingReleaseSuccess",
+    "GetLatestReleaseError": "ms-resource:loc.messages.GetLatestReleaseError",
+    "NoLatestPublishRelease": "ms-resource:loc.messages.NoLatestPublishRelease",
+    "NoMatchingReleases": "ms-resource:loc.messages.NoMatchingReleases",
+    "NoTagMatchingReleases": "ms-resource:loc.messages.NoTagMatchingReleases",
     "FetchCommitDiff": "ms-resource:loc.messages.FetchCommitDiff",
     "FetchCommitDiffSuccess": "ms-resource:loc.messages.FetchCommitDiffSuccess",
     "FetchCommitDiffError": "ms-resource:loc.messages.FetchCommitDiffError",

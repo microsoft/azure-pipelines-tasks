@@ -221,6 +221,17 @@ export class Utility {
         }
     }
 
+<<<<<<< HEAD
+=======
+    public static validateStartCommitSpecification(compareWith: string) {
+        if (compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastFullRelease.toUpperCase() 
+            && compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastNonDraftRelease.toUpperCase()
+            && compareWith.toUpperCase() != changeLogStartCommitSpecification.lastNonDraftReleaseByTag.toUpperCase()) {
+            throw new Error(tl.loc("InvalidCompareWithAttribute", compareWith));
+        }
+    }
+
+>>>>>>> ec205fb64... GitHubRelease Task: ChangeLog enhancements: Changes after PM Review (#10986)
     public static validateAssetUploadMode(assetUploadMode: string) {
         if (assetUploadMode !== AssetUploadMode.delete && assetUploadMode !== AssetUploadMode.replace) {
             throw new Error(tl.loc("InvalidAssetUploadMode", assetUploadMode));
@@ -256,6 +267,21 @@ export class AssetUploadMode {
     public static readonly replace = "replace";
 }
 
+<<<<<<< HEAD
+=======
+export class changeLogStartCommitSpecification {
+    public static readonly lastFullRelease = "lastFullRelease";
+    public static readonly lastNonDraftRelease = "lastNonDraftRelease";
+    public static readonly lastNonDraftReleaseByTag = "lastNonDraftReleaseByTag";
+}
+
+export enum ChangeLogStartCommit{
+    lastFullRelease = 0,
+    lastNonDraftRelease,
+    lastNonDraftReleaseByTag
+}
+
+>>>>>>> ec205fb64... GitHubRelease Task: ChangeLog enhancements: Changes after PM Review (#10986)
 class ReleaseNotesSelectionMode {
     public static readonly input = "input";
     public static readonly file = "file";

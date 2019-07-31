@@ -16,4 +16,10 @@ export class Inputs {
     public static readonly releaseNotes = "releaseNotes";
     public static readonly addChangeLog = "addChangeLog";
     public static readonly deleteExistingAssets = "deleteExistingAssets";
+<<<<<<< HEAD
+=======
+    public static readonly tagPattern = "tagPattern";
+    public static readonly changeLogCompareToRelease = "changeLogCompareToRelease";
+    public static readonly changeLogCompareToReleaseTag = "changeLogCompareToReleaseTag";
+>>>>>>> ec205fb64... GitHubRelease Task: ChangeLog enhancements: Changes after PM Review (#10986)
 }

@@ -99,9 +99,18 @@ class Main {
         const releaseNoteInput = tl.getInput(Inputs.releaseNotes);
         const showChangeLog: boolean = tl.getBoolInput(Inputs.addChangeLog);
 
+<<<<<<< HEAD
         // Generate the change log 
         // Get change log for top 250 commits only
         const changeLog: string = showChangeLog ? await new ChangeLog().getChangeLog(githubEndpointToken, repositoryName, target, 250) : "";
+=======
+        const changeLogCompareToRelease = tl.getInput(Inputs.changeLogCompareToRelease);
+        showChangeLog && Utility.validateStartCommitSpecification(changeLogCompareToRelease);
+        const changeLogCompareToReleaseTag = tl.getInput(Inputs.changeLogCompareToReleaseTag) || undefined;
+        // Generate the change log 
+        // Get change log for top 250 commits only
+        const changeLog: string = showChangeLog ? await new ChangeLog().getChangeLog(githubEndpointToken, repositoryName, target, 250, ChangeLogStartCommit[changeLogCompareToRelease], changeLogCompareToReleaseTag) : "";
+>>>>>>> ec205fb64... GitHubRelease Task: ChangeLog enhancements: Changes after PM Review (#10986)
 
         // Append change log to release note
         const releaseNote: string = Utility.getReleaseNote(releaseNotesSource, releaseNotesFile, releaseNoteInput, changeLog) || undefined;
