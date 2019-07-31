@@ -4,10 +4,14 @@ import * as tl from "azure-pipelines-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as sourceUtils from "docker-common-v2/sourceutils";
 import * as imageUtils from "docker-common-v2/containerimageutils";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 
 function dockerPush(connection: DockerComposeConnection, imageName: string) {
     var command = connection.createCommand();
     command.arg("push");
+    var arg = tl.getInput("arguments", false);
+    var commandArgs = dockerCommandUtils.getCommandArguments(arg || "");
+    command.line(commandArgs || "");
     command.arg(imageName);
     return connection.execCommand(command);
 }

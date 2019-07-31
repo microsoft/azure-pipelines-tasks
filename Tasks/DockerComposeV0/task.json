@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 155,
-        "Patch": 1
+        "Minor": 156,
+        "Patch": 0
     },
     "demands": [],
     "preview": "false",
@@ -267,6 +267,13 @@
             "required": true,
             "visibleRule": "action = Run a Docker Compose command",
             "helpMarkDown": "Docker Compose command to execute with arguments. For example, 'rm --all' to remove all stopped service containers."
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "visibleRule": "action != Lock services && action != Combine configuration && action != Write service image digests",
+            "label": "Arguments",
+            "helpMarkDown": "Docker Compose command options. Ex:<br> For build command,<br>--pull --compress --parallel"
         },
         {
             "name": "dockerHostEndpoint",
