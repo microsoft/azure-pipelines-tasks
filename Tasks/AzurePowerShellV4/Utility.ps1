@@ -25,7 +25,6 @@ function Update-PSModulePathForHostedAgent {
         else {
             $hostedAgentAzModulePath = Get-LatestModule -patternToMatch "^az_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"
         }
-
         $env:PSModulePath = $hostedAgentAzModulePath + ";" + $env:PSModulePath
         $env:PSModulePath = $env:PSModulePath.TrimStart(';') 
     } finally {
