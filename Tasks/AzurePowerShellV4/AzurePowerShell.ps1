@@ -44,11 +44,12 @@ if ($targetAzurePs -eq $latestVersion) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
 
+. "$PSScriptRoot/Utility.ps1"
+
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $endpoint = Get-VstsEndpoint -Name $serviceName -Require
 $env:PSModulePath = Get-VstsTaskVariable -Name "AZ_PS_MODULE_PATH"
 
-. "$PSScriptRoot/Utility.ps1"
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
 
 try 
