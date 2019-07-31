@@ -223,8 +223,8 @@ export class Utility {
 
     public static validateStartCommitSpecification(compareWith: string) {
         if (compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastFullRelease.toUpperCase() 
-            && compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastRelease.toUpperCase()
-            && compareWith.toUpperCase() != changeLogStartCommitSpecification.lastReleaseByTag.toUpperCase()) {
+            && compareWith.toUpperCase() !== changeLogStartCommitSpecification.lastNonDraftRelease.toUpperCase()
+            && compareWith.toUpperCase() != changeLogStartCommitSpecification.lastNonDraftReleaseByTag.toUpperCase()) {
             throw new Error(tl.loc("InvalidCompareWithAttribute", compareWith));
         }
     }
@@ -271,14 +271,14 @@ export class AssetUploadMode {
 
 export class changeLogStartCommitSpecification {
     public static readonly lastFullRelease = "lastFullRelease";
-    public static readonly lastRelease = "lastRelease";
-    public static readonly lastReleaseByTag = "lastReleaseByTag";
+    public static readonly lastNonDraftRelease = "lastNonDraftRelease";
+    public static readonly lastNonDraftReleaseByTag = "lastNonDraftReleaseByTag";
 }
 
 export enum ChangeLogStartCommit{
     lastFullRelease = 0,
-    lastRelease,
-    lastReleaseByTag
+    lastNonDraftRelease,
+    lastNonDraftReleaseByTag
 }
 
 class ReleaseNotesSelectionMode {
