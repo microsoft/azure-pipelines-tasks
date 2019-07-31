@@ -119,11 +119,15 @@ export function substituteImageNameInSpecFile(currentString: string, imageName: 
     return currentString.split('\n').reduce((acc, line) => {
         const imageKeyword = line.match(/^ *image:/);
         if (imageKeyword) {
-            const [currentImageName, currentImageTag] = line
+            let [currentImageName, currentImageTag] = line
                 .substring(imageKeyword[0].length) // consume the line from keyword onwards
                 .trim()
                 .replace(/[',"]/g, '') // replace allowed quotes with nothing
                 .split(':');
+
+            if (!currentImageTag && currentImageName.indexOf(' ') > 0) {
+                currentImageName = currentImageName.split(' ')[0]; // Stripping off comments
+            }
 
             if (currentImageName === imageName) {
                 return acc + `${imageKeyword[0]} ${imageNameWithNewTag}\n`;
