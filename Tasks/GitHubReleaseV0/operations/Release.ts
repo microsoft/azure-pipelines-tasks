@@ -191,6 +191,38 @@ export class Release {
         return await sendRequest(request);
     }
 
+    public async getIssuesListWithLabels(githubEndpointToken: string, repositoryName: string, issues: number[]) {
+        let request = new WebRequest();
+        request.uri = util.format(this._graphQLUrlFormat, Utility.getGitHubApiUrl());
+        request.method = "POST";
+        request.headers = {
+            'Authorization': 'token ' + githubEndpointToken
+        };
+        let issuesQuery = issues.map(issue =>
+            `_${issue}: issue(number: ${issue}){
+                title
+                state
+                labels(last: 100) {
+                    edges {
+                        node{
+                            name
+                            description
+                        }
+                    }
+                }
+            }`
+        ).join(", ");
+        let repositoryDetails = repositoryName.split("/");
+        let query = `{
+            repository(owner: ${repositoryDetails[0]}, name: ${repositoryDetails[1]}){
+                ${issuesQuery}
+            }
+        }`;
+        request.body = JSON.stringify({ query });
+        tl.debug("Get issues along with labels: " + JSON.stringify(request));
+        return await sendRequest(request)
+    }
+
     private readonly _createReleaseApiUrlFormat: string = "%s/repos/%s/releases";
     private readonly _editOrDeleteReleaseApiUrlFormat: string = "%s/repos/%s/releases/%s";
     private readonly _deleteReleaseAssetApiUrlFormat: string = "%s/repos/%s/releases/assets/%s";
@@ -201,4 +233,5 @@ export class Release {
     private readonly _getTagsApiUrlFormat: string = "%s/repos/%s/tags";
     private readonly _getCommitsListApiUrlFormat: string = "%s/repos/%s/compare/%s...%s";
     private readonly _getCommitsBeforeGivenShaApiUrlFormat: string = "%s/repos/%s/commits?sha=%s&per_page=100";
+    private readonly _graphQLUrlFormat: string = "%s/graphql";
 }
