@@ -83,6 +83,8 @@ Tasks/CmdLineV2/*   @bryanmacfarlane
 
 Tasks/CocoaPodsV0/*     @madhurig
 
+Tasks/Common/artifacts-common/*     @zjrunner   @zarenner   @shubham90
+
 Tasks/Common/AzureRmDeploy-common/*   @vincentdass  @SumiranAgg
 
 Tasks/Common/Deployment/*   @bishal-pdMSFT  @chshrikh
@@ -246,6 +248,8 @@ Tasks/NpmAuthenticateV0/*       @zjrunner
 Tasks/NuGetV0/*     @zjrunner
 
 Tasks/NuGetCommandV2/*      @zjrunner @jotaylo
+
+Tasks/NuGetAuthenticateV0/*      @zjrunner @zarenner
 
 Tasks/NuGetPackagerV0/*     @zjrunner
 

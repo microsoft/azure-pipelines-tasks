@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 155,
-    "Patch": 5
+    "Minor": 156,
+    "Patch": 0
   },
   "demands": [],
   "groups": [],
@@ -50,8 +50,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.namespace",
       "required": true,
-      "defaultValue": "default",
-      "visibleRule": "action != bake",
+      "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.namespace"
     },
     {
