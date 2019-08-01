@@ -99,6 +99,10 @@ if (process.env[shared.TestEnvVars.action] === 'bake') {
         'code': 0,
         stdout: 'baked manifest from helm chart'
     };
+    a.exec[`helm template ${process.env[shared.TestEnvVars.helmChart]} --namespace ${namespace} --set name=value:with:colons`] = {
+        'code': 0,
+        stdout: 'baked manifest from helm chart'
+    };
 
     const kubectlVersion = `${kubectlPath} version --client=true -o json`;
     a.exec[kubectlVersion] = {
