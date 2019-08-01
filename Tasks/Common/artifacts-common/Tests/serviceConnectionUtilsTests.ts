@@ -2,7 +2,6 @@ import * as assert from "assert";
 import * as mockery from "mockery";
 import { EndpointAuthorization } from "azure-pipelines-task-lib";
 import { ServiceConnectionAuthType, TokenServiceConnection, UsernamePasswordServiceConnection, IAdditionalData } from "../serviceConnectionUtils";
-import { stringify } from "querystring";
 
 export function serviceConnectionUtilsTests() {
 

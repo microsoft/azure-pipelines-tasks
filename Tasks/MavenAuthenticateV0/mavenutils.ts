@@ -40,7 +40,7 @@ export function getInternalFeedsServerElements(input: string) {
 }
 
 export function getExternalServiceEndpointsServerElements(input: string) {
-    var serviceConnections = getPackagingServiceConnections(input, ["RepositoryId"]);
+    var serviceConnections = getPackagingServiceConnections(input, ["REPOSITORYID"]);
     var serverElements: any[] = [];
     if (!serviceConnections || serviceConnections.length === 0)
     {
@@ -54,7 +54,7 @@ export function getExternalServiceEndpointsServerElements(input: string) {
                 const usernamePasswordAuthInfo = serviceConnection as UsernamePasswordServiceConnection;
 
                 serverElements.push({
-                    id: serviceConnection.additionalData["RepositoryId"],
+                    id: serviceConnection.additionalData["REPOSITORYID"],
                     username: usernamePasswordAuthInfo.username,
                     password: usernamePasswordAuthInfo.password,
 
@@ -65,7 +65,7 @@ export function getExternalServiceEndpointsServerElements(input: string) {
             case (ServiceConnectionAuthType.Token):
                 const tokenAuthInfo = serviceConnection as TokenServiceConnection;
                 serverElements.push({
-                    id: serviceConnection.additionalData["RepositoryId"],
+                    id: serviceConnection.additionalData["REPOSITORYID"],
                     configuration: {
                         httpHeaders: {
                             property: {
@@ -80,7 +80,7 @@ export function getExternalServiceEndpointsServerElements(input: string) {
             case (ServiceConnectionAuthType.PrivateKey):
                 const privateKeyAuthInfo = serviceConnection as PrivateKeyServiceConnection;
                 serverElements.push({
-                    id: serviceConnection.additionalData["RepositoryId"],
+                    id: serviceConnection.additionalData["REPOSITORYID"],
                     privateKey: privateKeyAuthInfo.privateKey,
                     passphrase: privateKeyAuthInfo.passphrase
                 });
