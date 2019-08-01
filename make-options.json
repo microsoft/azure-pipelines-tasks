@@ -104,6 +104,7 @@
         "NodeToolV0",
         "NpmV1",
         "NpmAuthenticateV0",
+        "NuGetAuthenticateV0",
         "NuGetV0",
         "NuGetCommandV2",
         "NuGetPackagerV0",
