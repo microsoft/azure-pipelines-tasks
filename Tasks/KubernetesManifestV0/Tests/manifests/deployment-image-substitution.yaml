@@ -21,6 +21,12 @@ spec:
         - containerPort: 80
       - name: edgecase
         image: nginx-image:1.7.9
+      - name: untagged
+        image: mysql 
+      - name: untaggedonacr
+        image: myacr.azurecr.io/myimage 
+      - name: untaggedwithcomment
+        image: myimagewithcomment # this is a comment
       imagePullSecrets:
       - name: key1
       initContainers:
