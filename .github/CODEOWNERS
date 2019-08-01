@@ -231,6 +231,8 @@ Tasks/KubernetesManifestV0/*    @bansalaseem
 
 Tasks/ManualInterventionV8/*    @bansalaseem
 
+Tasks/MavenAuthenticateV0/*     @zjrunner   @aasim
+
 Tasks/MavenV2/*     @madhurig
 
 Tasks/MavenV3/*     @madhurig
