@@ -8,6 +8,8 @@ import * as xml2js from 'xml2js';
 import * as os from 'os';
 import * as fse from 'fs-extra';
 
+import { getPackagingServiceConnections, ServiceConnection, ServiceConnectionAuthType, UsernamePasswordServiceConnection, TokenServiceConnection, PrivateKeyServiceConnection } from "artifacts-common/serviceConnectionUtils";
+
 const accessTokenEnvSetting: string = 'ENV_MAVEN_ACCESS_TOKEN';
 
 export function getInternalFeedsServerElements(input: string) {
@@ -38,61 +40,58 @@ export function getInternalFeedsServerElements(input: string) {
 }
 
 export function getExternalServiceEndpointsServerElements(input: string) {
-    const serviceEndpointIds: string[] = tl.getDelimitedInput(input, ",", false);
-    var serverElements: any[] = [];
 
-    if (!serviceEndpointIds || serviceEndpointIds.length === 0)
+    var serviceConnections = getPackagingServiceConnections(input, ["RepositoryId"]);
+    var serverElements: any[] = [];
+    tl.debug("Here " + serviceConnections.length);
+    if (!serviceConnections || serviceConnections.length === 0)
     {
         return serverElements;
     }
 
-    tl.debug(tl.loc("Info_GeneratingExternalRepositories", serviceEndpointIds.length));
-    for (let serviceEndpointId of serviceEndpointIds) {
-        let repositoryId = tl.getEndpointDataParameter(serviceEndpointId, "RepositoryId", false);
-        let externalAuth = tl.getEndpointAuthorization(serviceEndpointId, true);
-        let scheme = tl.getEndpointAuthorizationScheme(serviceEndpointId, true).toLowerCase();
-
-        switch(scheme) {
-            case "privatekey":
-                const privateKey = externalAuth.parameters["privateKey"];
-                const passphrase = externalAuth.parameters["passphrase"];
+    tl.debug(tl.loc("Info_GeneratingExternalRepositories", serviceConnections.length));
+    for(let serviceConnection of serviceConnections) {
+        switch (serviceConnection.authType) {
+            case (ServiceConnectionAuthType.UsernamePassword):
+                const usernamePasswordAuthInfo = serviceConnection as UsernamePasswordServiceConnection;
 
                 serverElements.push({
-                    id: repositoryId,
-                    privateKey: privateKey,
-                    passphrase: passphrase
+                    id: serviceConnection.additionalData["RepositoryId"],
+                    username: usernamePasswordAuthInfo.username,
+                    password: usernamePasswordAuthInfo.password,
+
                 });
-                break;
-            case "usernamepassword":
-                let username = externalAuth.parameters["username"];
-                let password = externalAuth.parameters["password"];
 
-                serverElements.push({
-                    id: repositoryId,
-                    username: username,
-                    password: password
-                });
+                tl.debug(`Detected username/password credentials for '${serviceConnection.packageSource.uri}'`);
                 break;
-            case "token":
-                const token = externalAuth.parameters["apitoken"];
-
+            case (ServiceConnectionAuthType.Token):
+                const tokenAuthInfo = serviceConnection as TokenServiceConnection;
                 serverElements.push({
-                    id: repositoryId,
+                    id: serviceConnection.additionalData["RepositoryId"],
                     configuration: {
                         httpHeaders: {
                             property: {
                                 name: 'Authorization',
-                                value: 'Basic ' + token
+                                value: 'Basic ' + tokenAuthInfo.token
                             }
                         }
                     }
                 });
+                tl.debug(`Detected token credentials for '${serviceConnection.packageSource.uri}'`);
                 break;
-            case "none":
+            case (ServiceConnectionAuthType.PrivateKey):
+                const privateKeyAuthInfo = serviceConnection as PrivateKeyServiceConnection;
+                serverElements.push({
+                    id: serviceConnection.additionalData["RepositoryId"],
+                    privateKey: privateKeyAuthInfo.privateKey,
+                    passphrase: privateKeyAuthInfo.passphrase
+                });
+                tl.debug(`Detected token credentials for '${serviceConnection.packageSource.uri}'`);
+                break;
             default:
-                break;
+                throw Error(tl.loc('CredProvider_Error_InvalidServiceConnection'));
         }
-    }
+    }   
 
     return serverElements;
 }

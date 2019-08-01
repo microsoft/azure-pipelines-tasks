@@ -19,11 +19,10 @@
   "dependencies": {
     "@types/node": "^12.6.8",
     "@types/q": "^1.5.2",
+    "artifacts-common": "file:../../_build/Tasks/Common/artifacts-common-0.1.0.tgz",
     "azure-pipelines-task-lib": "^2.8.0",
     "fs-extra": "^0.30.0",
-    "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz",
     "strip-bom": "^3.0.0",
-    "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
     "xml2js": "^0.4.16"
   }
 }

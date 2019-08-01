@@ -1,7 +1,8 @@
 import * as assert from "assert";
 import * as mockery from "mockery";
 import { EndpointAuthorization } from "azure-pipelines-task-lib";
-import { ServiceConnectionAuthType, TokenServiceConnection, UsernamePasswordServiceConnection } from "../serviceConnectionUtils";
+import { ServiceConnectionAuthType, TokenServiceConnection, UsernamePasswordServiceConnection, IAdditionalData } from "../serviceConnectionUtils";
+import { stringify } from "querystring";
 
 export function serviceConnectionUtilsTests() {
 
@@ -72,7 +73,8 @@ export function serviceConnectionUtilsTests() {
                 uri: "https://contoso.com/nuget/v3/index.json" 
             },
             authType: ServiceConnectionAuthType.Token,
-            token: "sometoken"
+            token: "sometoken",
+            additionalData: {}
         }]);
         done();
     });
@@ -115,7 +117,8 @@ export function serviceConnectionUtilsTests() {
             },
             authType: ServiceConnectionAuthType.UsernamePassword,
             username: "someusername",
-            password: "somepassword"
+            password: "somepassword",
+            additionalData: {}
         }]);
         done();
     });
@@ -153,6 +156,74 @@ export function serviceConnectionUtilsTests() {
 
         let serviceConnectionUtilsWithMocks = require("../serviceConnectionUtils");
         assert.throws(() => serviceConnectionUtilsWithMocks.getPackagingServiceConnections(serviceConnectionsKey));
+        done();
+    });
+
+    it("getPackagingServiceConnections token good additional data good", (done: MochaDone) => {
+        let mockTask = {
+            debug: () => {},
+            getDelimitedInput: (key) => ["tokenendpoint1"],
+            getEndpointUrl: (key, optional) => "https://contoso.com/nuget/v3/index.json",
+            getEndpointAuthorization: (key, optional) => <EndpointAuthorization>{
+                parameters: { "apitoken": "sometoken" },
+                scheme: "token"
+            },
+            getEndpointAuthorizationScheme: (key, optional): string => "token",
+            getEndpointDataParameter: (id, key, optional) => {
+                var values = {
+                    "key1" : "value1",
+                    "key2" : "value2"
+                }
+                return values[key];
+            }
+        };
+        mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
+
+        let serviceConnectionUtilsWithMocks = require("../serviceConnectionUtils");
+        assert.deepEqual(serviceConnectionUtilsWithMocks.getPackagingServiceConnections(serviceConnectionsKey, ["key1", "key2"]), [<TokenServiceConnection>{
+            packageSource: {
+                uri: "https://contoso.com/nuget/v3/index.json" 
+            },
+            authType: ServiceConnectionAuthType.Token,
+            token: "sometoken",
+            additionalData: {
+                "key1" : "value1",
+                "key2" : "value2"
+            } as IAdditionalData
+        }]);
+        done();
+    });
+
+    it("getPackagingServiceConnections token good missing additional data doesn't throw", (done: MochaDone) => {
+        let mockTask = {
+            debug: () => {},
+            getDelimitedInput: (key) => ["tokenendpoint1"],
+            getEndpointUrl: (key, optional) => "https://contoso.com/nuget/v3/index.json",
+            getEndpointAuthorization: (key, optional) => <EndpointAuthorization>{
+                parameters: { "apitoken": "sometoken" },
+                scheme: "token"
+            },
+            getEndpointAuthorizationScheme: (key, optional): string => "token",
+            getEndpointDataParameter: (id, key, optional) => {
+                var values = {
+                    "key2" : "value2"
+                }
+                return values[key];
+            }
+        };
+        mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
+
+        let serviceConnectionUtilsWithMocks = require("../serviceConnectionUtils");
+        assert.deepEqual(serviceConnectionUtilsWithMocks.getPackagingServiceConnections(serviceConnectionsKey, ["key1", "key2"]), [<TokenServiceConnection>{
+            packageSource: {
+                uri: "https://contoso.com/nuget/v3/index.json" 
+            },
+            authType: ServiceConnectionAuthType.Token,
+            token: "sometoken",
+            additionalData: {
+                "key2" : "value2"
+            } as IAdditionalData
+        }]);
         done();
     });
 }

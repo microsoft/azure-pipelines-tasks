@@ -15,6 +15,7 @@ tr.setInput("feeds", "");
 tr.setInput("serviceEndpoints", "tokenBased,usernamePasswordBased,privateKeyBased");
 tr.setInput("verbosity", "verbose");
 
+process.env["ENDPOINT_URL_tokenBased"] = "https://endpoint";
 process.env["ENDPOINT_DATA_tokenBased_RepositoryId"] = "tokenBased";
 process.env["ENDPOINT_AUTH_SCHEME_tokenBased"] = "token";
 process.env["ENDPOINT_AUTH_tokenBased"] = JSON.stringify({
@@ -23,6 +24,7 @@ process.env["ENDPOINT_AUTH_tokenBased"] = JSON.stringify({
     }
 }); 
 
+process.env["ENDPOINT_URL_usernamePasswordBased"] = "https://endpoint";
 process.env["ENDPOINT_DATA_usernamePasswordBased_RepositoryId"] = "usernamePasswordBased";
 process.env["ENDPOINT_AUTH_SCHEME_usernamePasswordBased"] = "usernamepassword";
 process.env["ENDPOINT_AUTH_usernamePasswordBased"] = JSON.stringify({
@@ -32,6 +34,7 @@ process.env["ENDPOINT_AUTH_usernamePasswordBased"] = JSON.stringify({
     }
 }); 
 
+process.env["ENDPOINT_URL_privateKeyBased"] = "https://endpoint";
 process.env["ENDPOINT_DATA_privateKeyBased_RepositoryId"] = "privateKeyBased";
 process.env["ENDPOINT_AUTH_SCHEME_privateKeyBased"] = "privateKey";
 process.env["ENDPOINT_AUTH_privateKeyBased"] = JSON.stringify({

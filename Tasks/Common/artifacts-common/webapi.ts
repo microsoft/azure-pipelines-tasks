@@ -2,15 +2,15 @@ import * as api from 'azure-devops-node-api';
 import { IRequestOptions } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
 import * as tl from 'azure-pipelines-task-lib/task';
 
-export function getWebApiWithProxy(serviceUri: string, accessToken: string): api.WebApi {
+export function getWebApiWithProxy(serviceUri: string, accessToken: string, options?: IRequestOptions): api.WebApi {
     const credentialHandler = api.getBasicHandler('vsts', accessToken);
-    const options: IRequestOptions = {
+    const defaultOptions: IRequestOptions = {
         proxy: tl.getHttpProxyConfiguration(serviceUri),
         allowRetries: true,
         maxRetries: 5
     };
 
-    return new api.WebApi(serviceUri, credentialHandler, options);
+    return new api.WebApi(serviceUri, credentialHandler, {...defaultOptions, ...options});
 }
 
 export function getSystemAccessToken(): string {
