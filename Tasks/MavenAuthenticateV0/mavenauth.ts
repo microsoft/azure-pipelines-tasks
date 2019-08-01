@@ -2,15 +2,18 @@ import tl = require('azure-pipelines-task-lib/task');
 import util = require('./mavenutils');
 
 import * as path from 'path';
+import { emitTelemetry } from "utility-common/telemetry";
 
 const M2FolderName: string = ".m2";
 const SettingsXmlName: string = "settings.xml";
 const accessTokenEnvSetting: string = 'ENV_MAVEN_ACCESS_TOKEN';
 
 async function run(): Promise<void> {
+    let internalFeedServerElements: any[] = [];
+    let externalServiceEndpointsServerElements: any[] = [];
     try {
-        const internalFeedServerElements = util.getInternalFeedsServerElements("feeds");
-        const externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("serviceEndpoints");
+        internalFeedServerElements = util.getInternalFeedsServerElements("feeds");
+        externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("serviceEndpoints");
         const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
 
         if(newServerElements.length === 0) {
@@ -51,6 +54,16 @@ async function run(): Promise<void> {
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message);
+    }
+    finally {
+        try {
+            emitTelemetry("Packaging", "MavenAuthenticate", {
+                "InternalFeedAuthCount": internalFeedServerElements.length,
+                "ExternalRepoAuthCount": externalServiceEndpointsServerElements.length
+            })
+        } catch(error) {
+            tl.debug("Unable to log MavenAuthenticate task telemetry, Error: " + error);
+        }
     }
 }
 
