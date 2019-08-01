@@ -61,6 +61,7 @@
     "Info_M2FolderDoesntExist": "ms-resource:loc.messages.Info_M2FolderDoesntExist",
     "Info_SettingsXmlRead": "ms-resource:loc.messages.Info_SettingsXmlRead",
     "Info_CreatingSettingsXml": "ms-resource:loc.messages.Info_CreatingSettingsXml",
-    "Info_WritingToSettingsXml": "ms-resource:loc.messages.Info_WritingToSettingsXml"
+    "Info_WritingToSettingsXml": "ms-resource:loc.messages.Info_WritingToSettingsXml",
+    "Error_InvalidServiceConnection": "ms-resource:loc.messages.Error_InvalidServiceConnection"
   }
 }

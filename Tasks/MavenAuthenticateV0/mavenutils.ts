@@ -40,10 +40,8 @@ export function getInternalFeedsServerElements(input: string) {
 }
 
 export function getExternalServiceEndpointsServerElements(input: string) {
-
     var serviceConnections = getPackagingServiceConnections(input, ["RepositoryId"]);
     var serverElements: any[] = [];
-    tl.debug("Here " + serviceConnections.length);
     if (!serviceConnections || serviceConnections.length === 0)
     {
         return serverElements;
@@ -89,7 +87,7 @@ export function getExternalServiceEndpointsServerElements(input: string) {
                 tl.debug(`Detected token credentials for '${serviceConnection.packageSource.uri}'`);
                 break;
             default:
-                throw Error(tl.loc('CredProvider_Error_InvalidServiceConnection'));
+                throw Error(tl.loc('Error_InvalidServiceConnection', serviceConnection.packageSource.uri));
         }
     }   
 

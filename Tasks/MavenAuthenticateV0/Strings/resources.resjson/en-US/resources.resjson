@@ -13,5 +13,6 @@
   "loc.messages.Info_M2FolderDoesntExist": ".m2 folder not found at location %s, creating new folder.",
   "loc.messages.Info_SettingsXmlRead": "Adding authentication to settings file %s.",
   "loc.messages.Info_CreatingSettingsXml": "Creating new settings.xml at path %s.",
-  "loc.messages.Info_WritingToSettingsXml": "Writing new settings.xml with added authentication."
+  "loc.messages.Info_WritingToSettingsXml": "Writing new settings.xml with added authentication.",
+  "loc.messages.Error_InvalidServiceConnection": "The service connection for %s is invalid."
 }

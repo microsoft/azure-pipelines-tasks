@@ -61,6 +61,7 @@
         "Info_M2FolderDoesntExist": ".m2 folder not found at location %s, creating new folder.",
         "Info_SettingsXmlRead": "Adding authentication to settings file %s.",
         "Info_CreatingSettingsXml": "Creating new settings.xml at path %s.",
-        "Info_WritingToSettingsXml": "Writing new settings.xml with added authentication."
+        "Info_WritingToSettingsXml": "Writing new settings.xml with added authentication.",
+        "Error_InvalidServiceConnection": "The service connection for %s is invalid."
     }
 }
