@@ -2,7 +2,7 @@
   "loc.friendlyName": "Maven Authenticate",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2099968)",
   "loc.description": "Provides credentials for Azure Artifacts feeds and service connections for maven repositories",
-  "loc.instanceNameFormat": "Maven Authenticate $(feed)",
+  "loc.instanceNameFormat": "Maven Authenticate",
   "loc.input.label.feeds": "Feeds",
   "loc.input.label.serviceEndpoints": "Credentials for repositories outside this organization/collection",
   "loc.input.help.serviceEndpoints": "Credentials to use for external repositories located in the project's pom.xml.",

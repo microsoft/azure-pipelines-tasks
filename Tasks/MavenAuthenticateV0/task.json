@@ -17,7 +17,7 @@
         "DeploymentGroup"
     ],
     "minimumAgentVersion": "2.115.0",
-    "instanceNameFormat": "Maven Authenticate $(feed)",
+    "instanceNameFormat": "Maven Authenticate",
     "inputs": [
         {
             "name": "feeds",
