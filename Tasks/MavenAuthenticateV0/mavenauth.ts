@@ -11,8 +11,8 @@ async function run(): Promise<void> {
     let internalFeedServerElements: any[] = [];
     let externalServiceEndpointsServerElements: any[] = [];
     try {
-        internalFeedServerElements = util.getInternalFeedsServerElements("feeds");
-        externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("serviceEndpoints");
+        internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
+        externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
         const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
 
         if(newServerElements.length === 0) {
@@ -45,11 +45,11 @@ async function run(): Promise<void> {
         }
 
         for (let serverElement of newServerElements) {
-            settingsJson = util.mavenSettingsJsonInsertServer(settingsJson, serverElement);
+            settingsJson = util.addRepositoryEntryToSettingsJson(settingsJson, serverElement);
         };
 
         tl.debug(tl.loc("Info_WritingToSettingsXml"));
-        await util.writeJsonAsSettingsFile(userSettingsXmlPath, settingsJson);
+        await util.jsonToXmlConverter(userSettingsXmlPath, settingsJson);
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message);

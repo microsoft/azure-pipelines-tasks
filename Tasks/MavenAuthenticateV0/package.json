@@ -1,5 +1,5 @@
 {
-  "name": "maven-authenticate-task",
+  "name": "mavenauthenticate",
   "version": "0.1.0",
   "description": "Azure Pipelines Maven Authenticate Task",
   "main": "mavenauth.js",

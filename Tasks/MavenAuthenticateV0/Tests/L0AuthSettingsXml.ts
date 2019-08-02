@@ -11,11 +11,16 @@ const settingsXmlName = "settings.xml";
 const settingsXmlPath = path.join(m2DirPath, settingsXmlName);
 
 // Set inputs
-tr.setInput("feeds", "feedName1");
+tr.setInput("artifactsFeeds", "feedName1");
 tr.setInput("verbosity", "verbose");
-tr.setInput("serviceEndpoints", "");
-process.env["ENDPOINT_AUTH_SYSTEMVSSCONNECTION"] =
-    '{"scheme":"OAuth","parameters":{"AccessToken":"YWFtYWxsYWQ6ZXd0emE1bmN3MzN6c3lyM2NoN2prazUzejczamN6MnluNGtiNzd0ZXc0NnlhZzV2d3ZlcQ=="}}';
+tr.setInput("mavenServiceConnections", "");
+
+let mockApi = {
+    getSystemAccessToken: () => {
+        return "token";
+    }
+};
+tr.registerMock('artifacts-common/webapi', mockApi);
 
 // provide answers for task mock
 tr.setAnswers({

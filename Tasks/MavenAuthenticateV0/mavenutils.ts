@@ -9,9 +9,8 @@ import * as xml2js from 'xml2js';
 import * as os from 'os';
 import * as fse from 'fs-extra';
 
-import { getPackagingServiceConnections, ServiceConnection, ServiceConnectionAuthType, UsernamePasswordServiceConnection, TokenServiceConnection, PrivateKeyServiceConnection } from "artifacts-common/serviceConnectionUtils";
+import { getPackagingServiceConnections, ServiceConnectionAuthType, UsernamePasswordServiceConnection, TokenServiceConnection, PrivateKeyServiceConnection } from "artifacts-common/serviceConnectionUtils";
 
-const accessTokenString = getSystemAccessToken();
 export function getInternalFeedsServerElements(input: string) {
     const feeds: string[] = tl.getDelimitedInput(input, ",", false);
     var serverElements: any[] = [];
@@ -26,7 +25,7 @@ export function getInternalFeedsServerElements(input: string) {
         serverElements.push({
                 id: feed,
                 username: "AzureDevOps",
-                password: accessTokenString
+                password: getSystemAccessToken()
             });
     }
 
@@ -93,11 +92,11 @@ export function readXmlFileAsJson(filePath: string): Q.Promise<any> {
         .then(convertXmlStringToJson);
 }
 
-export function writeJsonAsSettingsFile(filePath: string, jsonContent: any): Q.Promise<void> {
+export function jsonToXmlConverter(filePath: string, jsonContent: any): Q.Promise<void> {
     return writeJsonAsXmlFile(filePath, jsonContent.settings, 'settings');
 }
 
-export function mavenSettingsJsonInsertServer (json: any, serverJson:any): any {
+export function addRepositoryEntryToSettingsJson(json: any, serverJson:any): any {
     if (!json) {
         json = {};
     }
@@ -123,6 +122,7 @@ function addPropToJson(obj: any, propName:string, value: any): void {
         obj = {};
     }
 
+    // If the root 'obj' already contains a 'server' property set it as the root object.
     if (obj instanceof Array) {
         let propNode = obj.find(o => o[propName]);
         if (propNode) {
@@ -130,6 +130,7 @@ function addPropToJson(obj: any, propName:string, value: any): void {
         }
     }
 
+    // Checks if an arry contains a key
     let containsId: (o) => boolean = function(o) {
         if (value && value.id) {
             if (o.id instanceof Array) {
@@ -143,33 +144,34 @@ function addPropToJson(obj: any, propName:string, value: any): void {
         return false;
     };
 
-    if (propName in obj) {
-        if (obj[propName] instanceof Array) {
+    if (propName in obj) { // If the 'server' property is a key within this object
+        if (obj[propName] instanceof Array) { // if the 'server' value is an array, append our value to this array
             let existing = obj[propName].find(containsId);
-            if (existing) {
+            if (existing) { // Skip replaing existing value.
                 tl.warning(tl.loc('Warning_FeedEntryAlreadyExists', value.id));
                 tl.debug('Entry: ' + value.id);
             } else {
                 obj[propName].push(value);
             }
-        } else if (typeof obj[propName] !== 'object') {
+        } else if (typeof obj[propName] !== 'object') { // If the 'server' element is not an 'object', destroy it
+                                                        // and replace with a server element with our value.
             obj[propName] = [obj[propName], value];
-        } else {
+        } else { // If 'server' value is an object, combine our and their value into an array and assign it to 'server'
             let prop = {};
             prop[propName] = value;
             obj[propName] = [obj[propName], value];
         }
-    } else if (obj instanceof Array) {
+    } else if (obj instanceof Array) { // If we simply get an array of 'server' objects
         let existing = obj.find(containsId);
-        if (existing) {
+        if (existing) {  // Don't replace existing value.
             tl.warning(tl.loc('Warning_FeedEntryAlreadyExists', value.id));
             tl.debug('Entry: ' + value.id);
-        } else {
+        } else { // Append our value to the 'server' array.
             let prop = {};
             prop[propName] = value;
             obj.push(prop);
         }
-    } else {
+    } else { // The root object was empty, simply assign our value to it.
         obj[propName] = value;
     }
 }

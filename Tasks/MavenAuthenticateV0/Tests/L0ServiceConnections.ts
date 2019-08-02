@@ -11,11 +11,16 @@ const settingsXmlName = "settings.xml";
 const settingsXmlPath = path.join(m2DirPath, settingsXmlName);
 
 // Set inputs
-tr.setInput("feeds", "");
-tr.setInput("serviceEndpoints", "tokenBased,usernamePasswordBased,privateKeyBased");
+tr.setInput("artifactsFeeds", "");
+tr.setInput("mavenServiceConnections", "tokenBased,usernamePasswordBased,privateKeyBased");
 tr.setInput("verbosity", "verbose");
-process.env["ENDPOINT_AUTH_SYSTEMVSSCONNECTION"] =
-    '{"scheme":"OAuth","parameters":{"AccessToken":"YWFtYWxsYWQ6ZXd0emE1bmN3MzN6c3lyM2NoN2prazUzejczamN6MnluNGtiNzd0ZXc0NnlhZzV2d3ZlcQ=="}}';
+
+let mockApi = {
+    getSystemAccessToken: () => {
+        return "token";
+    }
+};
+tr.registerMock('artifacts-common/webapi', mockApi);
 
 process.env["ENDPOINT_URL_tokenBased"] = "https://endpoint";
 process.env["ENDPOINT_DATA_tokenBased_REPOSITORYID"] = "tokenBased";

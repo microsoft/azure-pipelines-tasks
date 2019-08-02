@@ -9,20 +9,20 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 1,
+    "Minor": 156,
     "Patch": 0
   },
   "runsOn": [
     "Agent",
     "DeploymentGroup"
   ],
-  "minimumAgentVersion": "2.115.0",
+  "minimumAgentVersion": "2.120.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "feeds",
+      "name": "artifactsFeeds",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.feeds",
+      "label": "ms-resource:loc.input.label.artifactsFeeds",
       "defaultValue": "",
       "helpMarkdown": "Select one or multiple feeds to authenticate.",
       "properties": {
@@ -31,9 +31,9 @@
       }
     },
     {
-      "name": "serviceEndpoints",
-      "label": "ms-resource:loc.input.label.serviceEndpoints",
-      "helpMarkDown": "ms-resource:loc.input.help.serviceEndpoints",
+      "name": "mavenServiceConnections",
+      "label": "ms-resource:loc.input.label.mavenServiceConnections",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenServiceConnections",
       "type": "connectedService:externalmavenrepository",
       "properties": {
         "MultiSelectFlatList": "true"
@@ -42,7 +42,7 @@
   ],
   "dataSourceBindings": [
     {
-      "target": "feeds",
+      "target": "artifactsFeeds",
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",

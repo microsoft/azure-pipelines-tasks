@@ -173,7 +173,7 @@ function getAdditionalDataParameters(endpointName: string, dataParameters?: stri
     }
 
     for (let dataParameter of dataParameters) {
-        var dataValue = tl.getEndpointDataParameter(endpointName, dataParameter, false);
+        let dataValue = tl.getEndpointDataParameter(endpointName, dataParameter, false);
         if(dataValue) {
             additionalData[dataParameter] = dataValue;
         }
