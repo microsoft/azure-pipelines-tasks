@@ -1,5 +1,5 @@
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as protocols from './protocols'
+import * as protocols from './protocols';
 import * as api from './webapi';
 import { retryOnException } from './retryUtils';
 import { ConnectOptions } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
@@ -26,6 +26,35 @@ export async function getConnectionDataForProtocol(protocolType: protocols.Proto
         const connectionData = await locationApi.getConnectionData(ConnectOptions.IncludeServices);
         tl.debug('Successfully acquired the connection data');
         return connectionData;
+    }, 3, 1000);
+}
+
+/**
+ * Gets the api location url for any feed given the location id. This method won't work for routes that have paramerters other than feedId and projectId.
+ * @param protocolType Packaging protoocol like "NuGet", "PyPI"
+ * @param apiVersion Api version of the endpoint. ex: 3.0-preview, 5.0
+ * @param locationGuid location id for an api. ex: 93377A2C-F5FB-48B9-A8DC-7781441CABF1 for PyPi simple api
+ * @param feedId FeedId to put in api params
+ * @param project projectId to put in api params
+ */
+export async function getPackagingRouteUrl(
+    protocolType: protocols.ProtocolType,
+    apiVersion: string,
+    locationGuid: string,
+    feedId: string,
+    project: string): Promise<string> {
+
+    tl.debug('Finding route for location ' + locationGuid);
+    return await retryOnException(async () => {
+        const accessToken = api.getSystemAccessToken();
+        const areaId = protocols.getAreaIdForProtocol(protocolType);
+        const serviceUri = await getServiceUriFromAreaId(areaId, accessToken);
+
+        const webApi = api.getWebApiWithProxy(serviceUri, accessToken);
+        const data = await webApi.vsoClient.getVersioningData(apiVersion, protocols.ProtocolType[protocolType], locationGuid, { feedId: feedId, project: project });
+
+        tl.debug('Resolved Route: ' + data.requestUrl);
+        return data.requestUrl;
     }, 3, 1000);
 }
 
