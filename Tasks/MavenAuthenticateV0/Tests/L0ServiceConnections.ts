@@ -14,6 +14,8 @@ const settingsXmlPath = path.join(m2DirPath, settingsXmlName);
 tr.setInput("feeds", "");
 tr.setInput("serviceEndpoints", "tokenBased,usernamePasswordBased,privateKeyBased");
 tr.setInput("verbosity", "verbose");
+process.env["ENDPOINT_AUTH_SYSTEMVSSCONNECTION"] =
+    '{"scheme":"OAuth","parameters":{"AccessToken":"YWFtYWxsYWQ6ZXd0emE1bmN3MzN6c3lyM2NoN2prazUzejczamN6MnluNGtiNzd0ZXc0NnlhZzV2d3ZlcQ=="}}';
 
 process.env["ENDPOINT_URL_tokenBased"] = "https://endpoint";
 process.env["ENDPOINT_DATA_tokenBased_REPOSITORYID"] = "tokenBased";

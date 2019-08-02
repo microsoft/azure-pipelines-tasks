@@ -8,5 +8,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput("feeds", "");
 tr.setInput("verbosity", "verbose");
 tr.setInput("serviceEndpoints", "");
+process.env["ENDPOINT_AUTH_SYSTEMVSSCONNECTION"] =
+    '{"scheme":"OAuth","parameters":{"AccessToken":"YWFtYWxsYWQ6ZXd0emE1bmN3MzN6c3lyM2NoN2prazUzejczamN6MnluNGtiNzd0ZXc0NnlhZzV2d3ZlcQ=="}}';
 
 tr.run();
