@@ -1,4 +1,4 @@
-import * as pkgMock from 'artifacts-common/Tests/mockHelper';
+import * as pkgMock from 'artifacts-common/Tests/MockHelper';
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
