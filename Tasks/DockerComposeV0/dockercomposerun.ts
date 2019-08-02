@@ -2,6 +2,7 @@
 
 import * as tl from "azure-pipelines-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 
 export function run(connection: DockerComposeConnection): any {
     var command = connection.createComposeCommand();
@@ -39,6 +40,10 @@ export function run(connection: DockerComposeConnection): any {
 
     var serviceName = tl.getInput("serviceName", true);
     command.arg(serviceName);
+
+    var arg = tl.getInput("arguments", false);
+    var commandArgs = dockerCommandUtils.getCommandArguments(arg || "");
+    command.line(commandArgs || "");
 
     var containerCommand = tl.getInput("containerCommand");
     if (containerCommand) {
