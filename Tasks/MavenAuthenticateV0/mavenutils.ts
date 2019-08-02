@@ -3,6 +3,7 @@ import Q = require('q');
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import stripbom = require('strip-bom');
+import { getSystemAccessToken } from 'artifacts-common/webapi'
 
 import * as xml2js from 'xml2js';
 import * as os from 'os';
@@ -10,8 +11,7 @@ import * as fse from 'fs-extra';
 
 import { getPackagingServiceConnections, ServiceConnection, ServiceConnectionAuthType, UsernamePasswordServiceConnection, TokenServiceConnection, PrivateKeyServiceConnection } from "artifacts-common/serviceConnectionUtils";
 
-const accessTokenEnvSetting: string = 'ENV_MAVEN_ACCESS_TOKEN';
-
+const accessTokenString = getSystemAccessToken();
 export function getInternalFeedsServerElements(input: string) {
     const feeds: string[] = tl.getDelimitedInput(input, ",", false);
     var serverElements: any[] = [];
@@ -25,14 +25,8 @@ export function getInternalFeedsServerElements(input: string) {
     for (let feed of feeds) {
         serverElements.push({
                 id: feed,
-                configuration: {
-                    httpHeaders: {
-                        property: {
-                            name: 'Authorization',
-                            value: 'Basic ${env.' + accessTokenEnvSetting + '}'
-                        }
-                    }
-                }
+                username: "AzureDevOps",
+                password: accessTokenString
             });
     }
 
