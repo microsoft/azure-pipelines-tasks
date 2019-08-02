@@ -37,7 +37,7 @@ export async function getConnectionDataForProtocol(protocolType: protocols.Proto
  * @param feedId FeedId to put in api params
  * @param project projectId to put in api params
  */
-export async function getPackagingEndpointUrl(
+export async function getPackagingRouteUrl(
     protocolType: protocols.ProtocolType,
     apiVersion: string,
     locationGuid: string,

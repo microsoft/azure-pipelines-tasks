@@ -1,4 +1,4 @@
-import { getPackagingEndpointUrl } from "artifacts-common/connectionDataUtils";
+import { getPackagingRouteUrl } from "artifacts-common/connectionDataUtils";
 import { ProtocolType } from "artifacts-common/protocols";
 import { getPackagingServiceConnections } from "artifacts-common/serviceConnectionUtils";
 import { getProjectScopedFeed } from "artifacts-common/stringUtils";
@@ -31,7 +31,7 @@ async function main(): Promise<void> {
 
             for (const feedName of feedList) {
                 const feed = getProjectScopedFeed(feedName);
-                const feedUri = await getPackagingEndpointUrl(
+                const feedUri = await getPackagingRouteUrl(
                     ProtocolType.PyPi,
                     pypiApiVersion,
                     pypiSimpleApiLocationId,
