@@ -18,7 +18,7 @@ export function registerLocationHelpersMock(tmr: tmrm.TaskMockRunner) {
 
     };
     const mockConnectionDataUtils = {
-        getPackagingEndpointUrl: function(protocolType: protocols.ProtocolType, apiVersion: string, locationGuid: string, feedId: string, project: string) {
+        getPackagingRouteUrl: function(protocolType: protocols.ProtocolType, apiVersion: string, locationGuid: string, feedId: string, project: string) {
             let url: string = "https://vsts/packagesource";
             if(project != null) {
                 url = url + "/" + project;
