@@ -168,6 +168,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.qualifyImageName"
     },
     {
+      "name": "qualifySourceImageName",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.qualifySourceImageName",
+      "defaultValue": "false",
+      "visibleRule": "command = Tag image || command = tag",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.qualifySourceImageName"
+    },
+    {
       "name": "includeSourceTags",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.includeSourceTags",

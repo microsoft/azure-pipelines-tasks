@@ -168,6 +168,15 @@
             "helpMarkDown": "Qualify the image name with the Docker registry service connection's hostname if not otherwise specified."
         },
         {
+            "name": "qualifySourceImageName",
+            "type": "boolean",
+            "label": "Qualify source image name",
+            "defaultValue": "false",
+            "visibleRule": "command = Tag image || command = tag",
+            "groupName": "commands",
+            "helpMarkDown": "Qualify the source image name with the Docker registry service connection's hostname if not otherwise specified."
+        },
+        {
             "name": "includeSourceTags",
             "type": "boolean",
             "label": "Include source tags",
