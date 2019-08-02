@@ -55,7 +55,7 @@ export function advancedFileTransformations(isFolderBasedDeployment: boolean, ta
         }
         else {
             let isTransformationApplied: boolean = true;
-            if(failNoTransformation || transformationRules.length > 0) {                
+            if(transformationRules.length > 0) {                
                 transformationRules.forEach(function(rule) {
                     var args = ParameterParser.parse(rule);
                     if(Object.keys(args).length < 2 || !args["transform"] || !args["xml"]) {
@@ -83,7 +83,10 @@ export function advancedFileTransformations(isFolderBasedDeployment: boolean, ta
                 if(failNoTransformation) {
                     tl.error(tl.loc('FailedToApplySpecialTransformationReason1'));
                 }
-            }            
+                else {
+                    console.log(tl.loc("FailedToApplySpecialTransformation"));
+                }
+            }          
         }
     }
 
@@ -97,12 +100,19 @@ export function advancedFileTransformations(isFolderBasedDeployment: boolean, ta
                 isSubstitutionApplied = xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath, isFolderBasedDeployment, fileName) || isSubstitutionApplied;
             });
         }
+
         if(isSubstitutionApplied) {
             console.log(tl.loc('XMLvariablesubstitutionappliedsuccessfully')); 
         } 
         else { 
-            tl.error(tl.loc('FailedToApplyXMLvariablesubstitution')); 
+            if(failNoTransformation) {
+                tl.error(tl.loc('FailedToApplyXMLvariablesubstitutionReason1'));
+            }
+            else {
+                tl.error(tl.loc('FailedToApplyXMLvariablesubstitution')); 
+            }
         }
+
     }
 
     if(variableSubstitutionFileFormat === "json") {
@@ -114,8 +124,14 @@ export function advancedFileTransformations(isFolderBasedDeployment: boolean, ta
         if(isSubstitutionApplied) {
             console.log(tl.loc('JSONvariablesubstitutionappliedsuccessfully')); 
         } 
-        else { 
-            tl.error(tl.loc('FailedToApplyJSONvariablesubstitution')); 
+        else {
+            if(failNoTransformation) {
+                tl.error(tl.loc('FailedToApplyJSONvariablesubstitutionReason1'));
+            }
+            else {
+                tl.error(tl.loc('FailedToApplyJSONvariablesubstitution'));  
+            }
         }
+        
     }
 }

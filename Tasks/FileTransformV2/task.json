@@ -20,6 +20,7 @@
         "Minor": 0,
         "Patch": 0
     },
+    "preview": "true",
     "instanceNameFormat": "File Transform: $(Package)",
     "groups": [
         {
@@ -91,8 +92,10 @@
     "messages": {
         "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
         "FailedToApplyJSONvariablesubstitution": "Failed to apply JSON variable substitution.",
+        "FailedToApplyJSONvariablesubstitutionReason1": "Failed to apply JSON variable substitution. Changes are already present in the package.",
         "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
         "FailedToApplyXMLvariablesubstitution": "Failed to apply XML variable substitution.",
+        "FailedToApplyXMLvariablesubstitutionReason1": "Failed to apply XML variable substitution. Changes are already present in the package.",
         "XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",
         "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
         "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
