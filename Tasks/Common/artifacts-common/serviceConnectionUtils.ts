@@ -107,7 +107,7 @@ export function getPackagingServiceConnections(endpointsInputName: string): Serv
                     password));
                 break;
             case "none": // We only support this for nuget today. npm and python tasks do not use this endpoint auth scheme.
-                if ("nugetkey" in endpointAuth.parameters) {
+                if (!("nugetkey" in endpointAuth.parameters)) {
                     throw Error(tl.loc("ServiceConnections_Error_FailedToParseServiceEndpoint_MissingParameter", uri, "nugetkey"));
                 }
 
