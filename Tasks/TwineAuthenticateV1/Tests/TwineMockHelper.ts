@@ -1,5 +1,5 @@
+import * as pkgMock from 'artifacts-common/Tests/mockHelper';
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import * as pkgMock from 'packaging-common/Tests/MockHelper';
 import path = require('path');
 
 export class TwineMockHelper {

@@ -1,5 +1,5 @@
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import * as pkgMock from 'packaging-common/Tests/MockHelper';
+import * as pkgMock from 'artifacts-common/Tests/mockHelper';
 
 export class PipMockHelper {
 

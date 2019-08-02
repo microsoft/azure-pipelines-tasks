@@ -37,8 +37,8 @@
                 "artifactFeed"
             ],
             "type": "pickList",
-            "label": "My feeds (select below)",
-            "helpMarkDown": "Select feeds to authenticate present in this organization.",
+            "label": "My feed (select below)",
+            "helpMarkDown": "Select a feed to authenticate present in this organization.",
             "defaultValue": "",
             "required": "false",
             "groupName": "feedAuthentication",
@@ -52,9 +52,9 @@
                 "pythonUploadServiceConnection"
             ],
             "type": "connectedService:externalPythonUploadFeed",
-            "label": "Feeds from external organizations",
+            "label": "Feed from external organizations",
             "required": false,
-            "helpMarkDown": "Select endpoints to authenticate outside this organization. Make sure the endpoints have package upload permissions.",
+            "helpMarkDown": "Select an endpoint to authenticate outside this organization. Make sure the endpoint has package upload permissions.",
             "properties": {
                 "EditableOptions": "False"
             },
@@ -77,21 +77,21 @@
         }
     },
     "messages": {
-        "Info_AddingInternalFeeds": "Adding auth information for %s internal feed(s).",
+        "Info_AddingInternalFeeds": "Adding auth information for %s internal feed.",
         "Info_AddingExternalFeeds": "Adding auth information for %s external endpoint.",
         "Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",
-        "Info_SuccessAddingAuth": "Successfully added auth for %s internal feeds and %s external endpoint.",
+        "Info_SuccessAddingAuth": "Successfully added auth for %s internal feed and %s external endpoint.",
         "Info_AddingPasswordAuthEntry": "Adding username password auth entry for feed %s",
         "Info_AddingTokenAuthEntry": "Adding token auth entry for feed %s",
         "Error_FailedToParseFeedUrlAndAuth": "Failed to parse the feed url and add auth information. %s",
-        "Warning_DuplicateEntryForInternalFeed": "Duplicate entry found for endpoint name %s. Auth already exists for this feed name. Please make sure all the endpoint names are unique and not colliding with feed names in this organization.",
-        "Error_DuplicateEntryForExternalFeed": "Duplicate entry found for endpoint name %s. Auth entry already exists for this name in .pypirc file. Please make sure all the endpoint names are unique and does not collide with feed names from this organization.",
+        "Warning_OnlyOneFeedAllowed": "Only one internal feed can be authorized at a time using this task. All the feeds except first one will be ignored.",
+        "Warning_OnlyOneServiceConnectionAllowed": "Only one service connection can be authorized at a time using this task. All the connections except first one will be ignored.",
+        "Error_DuplicateEntryForFeed": "This is a duplicate entry for the feed name. Use unique names to avoid potential publish issues.",
         "FailedToGetPackagingUri": "Unable to get packaging uri, using default collection uri.",
         "FailedToAddAuthentication": "Failed to add authentication.",
         "NoPypircFile": "No .pypirc file to clean up.",
         "VariableSetForPypirc": "Environment variable for .pypirc at %s is set.",
-        "Info_RemovingPypircFile": "Removing .pypirc file from %s",
-        "Warning_SessionCreationFailed": "Could not create provenance session: %s"
+        "Info_RemovingPypircFile": "Removing .pypirc file from %s"
     },
     "postjobexecution": {
         "Node": {

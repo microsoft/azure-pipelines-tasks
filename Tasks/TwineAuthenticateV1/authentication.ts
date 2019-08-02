@@ -1,10 +1,13 @@
 import * as tl from "azure-pipelines-task-lib/task";
-import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import { getProjectAndFeedIdFromInput } from 'packaging-common/util';
+import { getPackagingEndpointUrl } from "artifacts-common/connectionDataUtils";
+import { ProtocolType } from "artifacts-common/protocols";
+import { getPackagingServiceConnections } from "artifacts-common/serviceConnectionUtils";
+import { getProjectAndFeedIdFromInput } from "artifacts-common/stringUtils";
+import { getSystemAccessToken } from "artifacts-common/webapi";
 
 export interface IPackageSource {
-    feedUri: string;
     feedName: string;
+    feedUri: string;
     isInternalSource: boolean;
 }
 
@@ -38,41 +41,28 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<AuthIn
         return internalAuthArray;
     }
 
-    tl.debug(tl.loc("Info_AddingInternalFeeds", feedList.length));
-
-    let packagingLocation: string;
-    const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-    const localAccessToken = pkgLocationUtils.getSystemAccessToken();
-    try {
-        // This call is to get the packaging URI(abc.pkgs.vs.com) which is same for all protocols.
-        packagingLocation = await pkgLocationUtils.getNuGetUriFromBaseServiceUri(
-            serviceUri,
-            localAccessToken);
-    } catch (error) {
-        tl.debug(tl.loc("FailedToGetPackagingUri"));
-        tl.debug(JSON.stringify(error));
-        packagingLocation = serviceUri;
+    if (feedList.length > 1)
+    {
+        tl.warning(tl.loc("Warning_OnlyOneFeedAllowed", feedList.length));
     }
 
-    internalAuthArray = await Promise.all(feedList.map(async (feedName:string) => {
-        const feed = getProjectAndFeedIdFromInput(feedName)
-        const feedUri = await pkgLocationUtils.getFeedRegistryUrl(
-            packagingLocation,
-            pkgLocationUtils.RegistryType.PyPiUpload,
-            feed.feedId,
-            feed.projectId,
-            localAccessToken,
-            true /* useSession */);
-        return new AuthInfo({
-            feedName,
-            feedUri,
-            isInternalSource: true,
-            } as IPackageSource,
-            AuthType.Token,
-            "build",
-            localAccessToken,
-        );
-    }));
+    tl.debug(tl.loc("Info_AddingInternalFeeds", feedList.length));
+
+    const localAccessToken = getSystemAccessToken();
+
+    const pypiUploadApiLocationId: string = "C7A75C1B-08AC-4B11-B468-6C7EF835C85E";
+    const pypiApiVersion: string = "5.0";
+
+    const feed = getProjectAndFeedIdFromInput(feedList[0]);
+    const feedUri: string = await getPackagingEndpointUrl(
+        ProtocolType.PyPi,
+        pypiApiVersion,
+        pypiUploadApiLocationId,
+        feed.feedId,
+        feed.projectId);
+
+    const packageSource = { feedName: feed.feedId, feedUri: feedUri, isInternalSource: true } as IPackageSource;
+    internalAuthArray.push(new AuthInfo(packageSource, AuthType.Token, "build", localAccessToken));
 
     return internalAuthArray;
 }
@@ -86,45 +76,48 @@ export async function getExternalAuthInfoArray(inputKey: string): Promise<AuthIn
     {
         return externalAuthArray;
     }
-
-    tl.debug(tl.loc("Info_AddingExternalFeeds", endpointNames.length));
-    for (let endpointId of endpointNames)
+    if (endpointNames.length > 1)
     {
-        let feedUri = tl.getEndpointUrl(endpointId, false);
-        let endpointName = tl.getEndpointDataParameter(endpointId, "endpointname", false);
-        let externalAuth = tl.getEndpointAuthorization(endpointId, true);
-        let scheme = tl.getEndpointAuthorizationScheme(endpointId, true).toLowerCase();
-        switch(scheme) {
-            case "token":
-                const token = externalAuth.parameters["apitoken"];
-                tl.debug(tl.loc("Info_AddingTokenAuthEntry", feedUri));
-                externalAuthArray.push(new AuthInfo({
-                        feedName: endpointName,
-                        feedUri,
-                        isInternalSource: false,
-                    } as IPackageSource,
-                    AuthType.Token,
-                    "build", // fake username, could be anything.
-                    token,
-                    ));
-                break;
-            case "usernamepassword":
-                let username = externalAuth.parameters["username"];
-                let password = externalAuth.parameters["password"];
-                tl.debug(tl.loc("Info_AddingPasswordAuthEntry", feedUri));
-                externalAuthArray.push(new AuthInfo({
-                        feedName: endpointName,
-                        feedUri,
-                        isInternalSource: false,
-                    } as IPackageSource,
-                    AuthType.UsernamePassword,
-                    username,
-                    password));
-                break;
-            case "none":
-            default:
-                break;
-        }
+        tl.warning(tl.loc("Warning_OnlyOneServiceConnectionAllowed", endpointNames.length));
+    }
+
+    const endpointId= endpointNames[0];
+    tl.debug(tl.loc("Info_AddingExternalFeeds", endpointNames.length));
+    let feedUri = tl.getEndpointUrl(endpointId, false);
+    let endpointName = tl.getEndpointDataParameter(endpointId, "endpointname", false);
+    let externalAuth = tl.getEndpointAuthorization(endpointId, true);
+    let scheme = tl.getEndpointAuthorizationScheme(endpointId, true).toLowerCase();
+
+    switch(scheme) {
+        case "token":
+            const token = externalAuth.parameters["apitoken"];
+            tl.debug(tl.loc("Info_AddingTokenAuthEntry", feedUri));
+            externalAuthArray.push(new AuthInfo({
+                    feedName: endpointName,
+                    feedUri,
+                    isInternalSource: false,
+                } as IPackageSource,
+                AuthType.Token,
+                "build", // fake username, could be anything.
+                token,
+                ));
+            break;
+        case "usernamepassword":
+            let username = externalAuth.parameters["username"];
+            let password = externalAuth.parameters["password"];
+            tl.debug(tl.loc("Info_AddingPasswordAuthEntry", feedUri));
+            externalAuthArray.push(new AuthInfo({
+                    feedName: endpointName,
+                    feedUri,
+                    isInternalSource: false,
+                } as IPackageSource,
+                AuthType.UsernamePassword,
+                username,
+                password));
+            break;
+        case "none":
+        default:
+            break;
     }
     return externalAuthArray;
 }
