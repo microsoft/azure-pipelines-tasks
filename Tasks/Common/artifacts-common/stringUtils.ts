@@ -1,14 +1,16 @@
-import * as tl from 'azure-pipelines-task-lib/task';
-
-export function getProjectAndFeedIdFromInputParam(inputParam: string): any {
-    const feedProject = tl.getInput(inputParam);
-    return getProjectAndFeedIdFromInput(feedProject);
+export interface ProjectScopedFeed {
+    feedId: string;
+    projectId?: string;
 }
 
-export function getProjectAndFeedIdFromInput(feedProject: string): any {
+/**
+ * Separated feedId and projectId from a single string.
+ * @param feedProject '/' separated feed and project string
+ */
+export function getProjectScopedFeed(feedProject: string): ProjectScopedFeed {
     let projectId = null;
     let feedId = feedProject;
-    if(feedProject && feedProject.includes('/')) {
+    if (feedProject && feedProject.includes('/')) {
         const feedProjectParts = feedProject.split('/');
         projectId = feedProjectParts[0] || null;
         feedId = feedProjectParts[1];
@@ -17,5 +19,5 @@ export function getProjectAndFeedIdFromInput(feedProject: string): any {
     return {
         feedId: feedId,
         projectId: projectId
-    };
+    } as ProjectScopedFeed;
 }

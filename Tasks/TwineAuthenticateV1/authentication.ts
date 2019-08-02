@@ -2,7 +2,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import { getPackagingEndpointUrl } from "artifacts-common/connectionDataUtils";
 import { ProtocolType } from "artifacts-common/protocols";
 import { getPackagingServiceConnections } from "artifacts-common/serviceConnectionUtils";
-import { getProjectAndFeedIdFromInput } from "artifacts-common/stringUtils";
+import { getProjectScopedFeed } from "artifacts-common/stringUtils";
 import { getSystemAccessToken } from "artifacts-common/webapi";
 
 export interface IPackageSource {
@@ -53,7 +53,7 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<AuthIn
     const pypiUploadApiLocationId: string = "C7A75C1B-08AC-4B11-B468-6C7EF835C85E";
     const pypiApiVersion: string = "5.0";
 
-    const feed = getProjectAndFeedIdFromInput(feedList[0]);
+    const feed = getProjectScopedFeed(feedList[0]);
     const feedUri: string = await getPackagingEndpointUrl(
         ProtocolType.PyPi,
         pypiApiVersion,

@@ -1,7 +1,7 @@
 import { getPackagingEndpointUrl } from "artifacts-common/connectionDataUtils";
 import { ProtocolType } from "artifacts-common/protocols";
 import { getPackagingServiceConnections } from "artifacts-common/serviceConnectionUtils";
-import { getProjectAndFeedIdFromInput } from "artifacts-common/stringUtils";
+import { getProjectScopedFeed } from "artifacts-common/stringUtils";
 import { emitTelemetry } from "artifacts-common/telemetry";
 import { getSystemAccessToken } from "artifacts-common/webapi";
 import * as tl from "azure-pipelines-task-lib";
@@ -30,7 +30,7 @@ async function main(): Promise<void> {
             const localAccessToken = getSystemAccessToken();
 
             for (const feedName of feedList) {
-                const feed = getProjectAndFeedIdFromInput(feedName);
+                const feed = getProjectScopedFeed(feedName);
                 const feedUri = await getPackagingEndpointUrl(
                     ProtocolType.PyPi,
                     pypiApiVersion,
