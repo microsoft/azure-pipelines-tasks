@@ -263,6 +263,8 @@ Tasks/PackerBuildV1/*   @sachinma
 
 Tasks/PipAuthenticateV0/*     @zjrunner @shubham90
 
+Tasks/PipAuthenticateV1/*     @zjrunner @shubham90
+
 Tasks/PowerShellV2/*    @bryanmacfarlane
 
 Tasks/PowerShellOnTargetMachinesV1/*    @kmkumaran
@@ -316,6 +318,8 @@ Tasks/SqlServerDacpacDeployment/*   @kmkumaran
 Tasks/SshV0/*   @madhurig
 
 Tasks/TwineAuthenticateV0/*     @zjrunner
+
+Tasks/TwineAuthenticateV1/*     @zjrunner @shubham90
 
 Tasks/UniversalPackagesV0/*     @zjrunner
 
