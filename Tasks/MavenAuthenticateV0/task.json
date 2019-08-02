@@ -3,7 +3,8 @@
     "name": "MavenAuthenticate",
     "friendlyName": "Maven Authenticate",
     "description": "Provides credentials for Azure Artifacts feeds and service connections for maven repositories",
-    "helpMarkDown": "",
+    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=2099968",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2099968)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {

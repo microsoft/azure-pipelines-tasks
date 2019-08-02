@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven Authenticate",
-  "loc.helpMarkDown": "",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2099968)",
   "loc.description": "Provides credentials for Azure Artifacts feeds and service connections for maven repositories",
   "loc.instanceNameFormat": "Maven Authenticate $(feed)",
   "loc.input.label.feeds": "Feeds",
