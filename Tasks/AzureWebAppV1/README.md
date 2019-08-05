@@ -20,7 +20,7 @@ The following pre-requisites need to be setup in the target machine(s) for the t
 
 ##### Azure Web App or Azure Function
 
-The task is used to deploy a Web  project to an existing Azure Web App. The Web App should exist prior to running the task. The Web App can be created from the [Azure portal](https://azure.microsoft.com/en-in/documentation/videos/azure-app-service-web-apps-with-yochay-kiriaty/) and [configured](https://azure.microsoft.com/en-us/documentation/articles/web-sites-configure/) there. Alternatively, the [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell) can be used to run [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx) to provision and configure the Web App.
+The task is used to deploy a Web  project to an existing Azure Web App. The Web App should exist prior to running the task. The Web App can be created from the [Azure portal](https://azure.microsoft.com/en-in/documentation/videos/azure-app-service-web-apps-with-yochay-kiriaty/) and [configured](https://azure.microsoft.com/en-us/documentation/articles/web-sites-configure/) there. Alternatively, the [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShellV4) can be used to run [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx) to provision and configure the Web App.
 
 The task can also be used to deply [Azure Functions](https://azure.microsoft.com/en-in/services/functions/) (Windows/Linux/Containers).
 
@@ -91,13 +91,13 @@ The task is used to deploy a Web  project to an existing Azure Web App or Functi
 
 * **App Service type\*:** Select the Azure App Service type. The different app types supported are Function App, Web App on Windows, Web App on Linux, Web App for Containers and Azure App Service Environments
 
-* **App Service Name\*:** Select the name of an existing Azure App Service. Enter the name of the Web App if it was provisioned dynamically using the [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell) and [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx).
+* **App Service Name\*:** Select the name of an existing Azure App Service. Enter the name of the Web App if it was provisioned dynamically using the [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShellV4) and [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx).
 
 * **Deploy to Slot:** Select the option to deploy to an existing slot other than the Production slot. Do not select this option if the Web project is being deployed to the Production slot. The Web App itself is the Production slot.
 
-* **Resource Group:** Select the Azure Resource Group that contains the Azure App Service specified above. Enter the name of the Azure Resource Group if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell). This is a required parameter if the option to Deploy to Slot has been selected.
+* **Resource Group:** Select the Azure Resource Group that contains the Azure App Service specified above. Enter the name of the Azure Resource Group if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShellV4). This is a required parameter if the option to Deploy to Slot has been selected.
 
-* **Slot:** Select the Slot to deploy the Web project to. Enter the name of the Slot if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell). This is a required parameter if the option to Deploy to Slot has been selected.
+* **Slot:** Select the Slot to deploy the Web project to. Enter the name of the Slot if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShellV4). This is a required parameter if the option to Deploy to Slot has been selected.
 
 * **Virtual Application:** Specify the name of the Virtual Application that has been configured in the Azure portal. The option is not required for deployments to the website root. The Virtual Application should have been [configured](https://azure.microsoft.com/en-us/documentation/articles/web-sites-configure/) prior to deploying the Web project to it using the task.
 
@@ -120,8 +120,8 @@ This will also remove all files related to any extension (for example Applicatio
 
 * **Generate Web.config:** A standard Web.config will be generated and deployed to Azure App Service if the application does not have one. For example, for [Nodejs application, web.config](https://github.com/projectkudu/kudu/wiki/Using-a-custom-web.config-for-Node-apps) will have startup file and iis_node module values. Similarly for Python (Bottle, Django, Flask) the web.config will have details of WSGI handler, Python path etc. The task will generate a new web.config only when the artifact package/folder does not contain an existing web.config. The default values populated by the task can be overriden in the task by using the Web.config parameters field. 
 
-* **Web.config parameters:** Edit values like startup file in the task generated web.config file. The default values populated by the task can be overridden in the task by passing the web.config parameters. This edit feature is **only for the generated web.config**. Feature is useful when [Azure App Service Manage task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzureAppServiceManage) is used to install specific Python version by using extensions or when you want to provide a different startup file for Node.js. 
-In  case of Python, the path can be set as an output variable of the [Azure App Service Manage task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzureAppServiceManage)  and then set as the Python path in the web.config generated by this deploy task. You can try out this feature by selecting any Python, Nodejs, PHP release definition template.
+* **Web.config parameters:** Edit values like startup file in the task generated web.config file. The default values populated by the task can be overridden in the task by passing the web.config parameters. This edit feature is **only for the generated web.config**. Feature is useful when [Azure App Service Manage task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzureAppServiceManageV0) is used to install specific Python version by using extensions or when you want to provide a different startup file for Node.js. 
+In  case of Python, the path can be set as an output variable of the [Azure App Service Manage task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzureAppServiceManageV0)  and then set as the Python path in the web.config generated by this deploy task. You can try out this feature by selecting any Python, Nodejs, PHP release definition template.
 
 * **File transformation and variable substitution:**  Refer to following links:
   * [XML transformation](https://docs.microsoft.com/en-us/vsts/build-release/tasks/transforms-variable-substitution?view=vsts#xml-transformation)
@@ -186,7 +186,7 @@ Edit web app [configuration settings](https://docs.microsoft.com/en-us/azure/app
 
 ### Output Variables
 
-* **Web App Hosted URL:** Provide a name, like FabrikamWebAppURL for the variable for the Azure App Service Hosted URL. The variable can be used as $(variableName), like $(FabrikamWebAppURL) to refer to the Hosted URL of the Azure App Service in subsequent tasks like in the [Run Functional Tests task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/RunDistributedTests) or the [Visual Studio Test task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/VsTest).
+* **Web App Hosted URL:** Provide a name, like FabrikamWebAppURL for the variable for the Azure App Service Hosted URL. The variable can be used as $(variableName), like $(FabrikamWebAppURL) to refer to the Hosted URL of the Azure App Service in subsequent tasks like in the [Run Functional Tests task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/RunDistributedTestsV1) or the [Visual Studio Test task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/VsTestV2).
 
 
 ### FAQ
