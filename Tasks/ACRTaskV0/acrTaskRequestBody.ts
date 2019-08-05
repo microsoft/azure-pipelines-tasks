@@ -11,12 +11,14 @@ export interface ITaskStepProperties {
 export interface EncodedTaskStep extends ITaskStepProperties {
 	values: Value[];
 	contextPath: string;
+	contextAccessToken: string;
 	encodedTaskContent: string;
 	encodedValuesContent: string;
 }
 
 export interface IFileTaskStep extends ITaskStepProperties {
 	contextPath: string;
+	contextAccessToken: string;
 	taskFilePath: string;
 	valuesFilePath: string;
 }
@@ -67,4 +69,11 @@ export interface IAcrTaskRequestBody {
 	tags: { [key: string] : string };
 	properties: IAcrTaskRequestBodyProperties;
 
+}
+
+export class OutputImage {
+	registry: string;
+	repository: string;
+	tag: string;
+	digest: string;
 }

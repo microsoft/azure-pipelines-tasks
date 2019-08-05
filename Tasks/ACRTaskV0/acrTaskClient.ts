@@ -10,6 +10,7 @@ export class ACRRegistry {
     name: string;
     location: string;
     resourceGroup: string;
+    loginServer: string;
 }
 
 export class AcrTask{
@@ -19,6 +20,7 @@ export class AcrTask{
     dockerFile: string;
     yamlFile: string;
     context: string;
+    contextAccessToken: string;
     taskRequestStepType: string;
     valuesFilePath: string;
     arguments: string
@@ -312,7 +314,7 @@ export class AcrTaskClient extends ServiceClient {
             var statusCode = response.statusCode;
             if (statusCode === 200) {
                 tl.debug("Response for get run" + JSON.stringify(response));
-                return new ApiResult(null, response.body.properties.status);
+                return new ApiResult(null, response.body.properties);
             }
             else {
                 // Generate exception
@@ -392,7 +394,8 @@ export class AcrTaskClient extends ServiceClient {
             var encodedTask = {
                 type : AcrTaskRequest.TaskRequestStepType.EncodedTask,
                 encodedTaskContent: encodedTaskContent,
-                contextPath: this.acrTask.context
+                contextPath: this.acrTask.context,
+                contextAccessToken: this.acrTask.contextAccessToken
             } as AcrTaskRequest.EncodedTaskStep;
     
             if(!!this.acrTask.valuesFilePath)
@@ -413,7 +416,8 @@ export class AcrTaskClient extends ServiceClient {
         var fileTask = {
             type : AcrTaskRequest.TaskRequestStepType.FileTask,
             taskFilePath : this.acrTask.yamlFile,
-            contextPath: this.acrTask.context
+            contextPath: this.acrTask.context,
+            contextAccessToken: this.acrTask.contextAccessToken
         } as AcrTaskRequest.IFileTaskStep;
 
         if(!!this.acrTask.valuesFilePath)
