@@ -52,6 +52,41 @@
             "defaultValue": ""
         },
         {
+            "name": "connectionType",
+            "type": "pickList",
+            "label": "Repository Connection type",
+            "defaultValue": "github",
+            "required": true,
+            "options": {
+                "github": "Github"
+            },
+            "helpMarkDown": "Select the repository connection type or artifact connection type"
+        },
+        {
+            "name": "gitHubConnection",
+            "type": "connectedService:github:OAuth,PersonalAccessToken",
+            "label": "GitHub Connection",
+            "visibleRule": "connectionType == github",
+            "required": false,
+            "helpMarkDown": "GitHub service connection"
+        },
+        {
+            "name":"repoUrl",
+            "type":"string",
+            "label":"Repository Url",
+            "defaultValue":"$(Build.Repository.Uri)",
+            "required":true,
+            "helpMarkDown":"Repository url to be used as the source context"
+        },
+        {
+            "name":"branch",
+            "type":"string",
+            "label":"Branch",
+            "defaultValue":"master",
+            "required":true,
+            "helpMarkDown":"Branch to be used as source context."
+        },
+        {
             "name": "dockerfileOrYaml",
             "type": "string",
             "label": "Dockerfile/Yaml",

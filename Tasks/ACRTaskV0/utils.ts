@@ -5,22 +5,27 @@ import * as pipelineUtils from "docker-common-v2/pipelineutils";
 import { Resources } from 'azure-arm-rest-v2/azure-arm-resource';
 import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
 import { AcrTask, ACRRegistry } from "./acrtaskclient";
+import webClient = require("azure-arm-rest-v2/webClient");
 
-export function getContextPath(): string
+export function populateContextDetails(acrTask: AcrTask): void
 {
-    var repoUri = tl.getVariable("Build.Repository.Uri");
-    let hostType = tl.getVariable("SYSTEM_HOSTTYPE");
-    var branch = "";
-    if (hostType.toLowerCase() === "build") {
-       branch = tl.getVariable("Build.SourceBranchName");
-    }
-    else
+    var repoUri = tl.getInput("repoUrl", true);
+    var branch = tl.getInput("branch", true);
+    var connectionType = tl.getInput("connectionType", true);
+    var connection = "";
+    var accessToken = "";
+    if(connectionType == "github")
     {
-        branch = tl.getVariable("Build.SourceBranch");
+        connection = tl.getInput("githubConnection", true);
+        accessToken = tl.getEndpointAuthorizationParameter(connection, 'AccessToken', false);
     }
-    var convertedGitRepoUri = repoUri.replace("https://", "git://");
+
+    repoUri = repoUri.endsWith("/") ? repoUri.substring(0, repoUri.length - 1): repoUri;
+    var convertedGitRepoUri = repoUri.endsWith(".git") ? repoUri : repoUri.concat(".git");
     var contextPath = convertedGitRepoUri.concat("#", branch);
-    return contextPath;
+
+    acrTask.context = contextPath;
+    acrTask.contextAccessToken = accessToken;
 }
 
 export function getResourceGroupNameFromUrl(id: string): string{
@@ -46,6 +51,7 @@ export async function getContainerRegistryDetails(endpoint: AzureEndpoint, resou
         acrRegistry.name = resourceName;
         acrRegistry.location = acrRegistryObject.location;
         acrRegistry.resourceGroup = getResourceGroupNameFromUrl(acrRegistryObject.id);
+        acrRegistry.loginServer = resourceName.concat(".azurecr.io");
         return acrRegistry;
     }
     else {
@@ -132,3 +138,94 @@ export function createBuildCommand(acrTask: AcrTask): string
     return buildString.trim();
 }
 
+export async function publishToImageMetadataStore(outputImages: acrTaskRequest.OutputImage[]): Promise<any> {
+    const build = "build";
+    const hostType = tl.getVariable("System.HostType").toLowerCase();
+    const runId = hostType === build ? parseInt(tl.getVariable("Build.BuildId")) : parseInt(tl.getVariable("Release.ReleaseId"));
+    const pipelineVersion =  hostType === build ? tl.getVariable("Build.BuildNumber") : tl.getVariable("Release.ReleaseName");
+    const pipelineName = tl.getVariable("System.DefinitionName");
+    const pipelineId = tl.getVariable("System.DefinitionId");
+    const jobName = tl.getVariable("System.PhaseDisplayName");
+
+    const requestUrl = tl.getVariable("System.TeamFoundationCollectionUri") + tl.getVariable("System.TeamProject") + "/_apis/deployment/imagedetails?api-version=5.0-preview.1";
+    
+    try
+    {
+        //get all distinct qualified image names and then get the respective tags for them
+        var flags = [];
+        for(var i = 0; i < outputImages.length; i++)
+        {
+            var qualifiedImageName  = outputImages[i].registry.concat("/", outputImages[i].repository);
+            if(flags[qualifiedImageName]) 
+            {
+                continue;
+            }
+
+            flags[qualifiedImageName] = true;
+            var filteredOutputImages = outputImages.filter(function(image) {
+                return image.registry.concat("/", image.repository) == qualifiedImageName;
+            });
+    
+            var tags: string[] = [];
+    
+            filteredOutputImages.forEach(function(image) {
+                tags.push(image.tag);
+            });
+    
+            let imageUri = "https://" + outputImages[i].registry + "/" + outputImages[i].repository + "@" + outputImages[i].digest +"";
+    
+            const requestBody: string = JSON.stringify(
+                {
+                    "imageName": imageUri,
+                    "imageUri": imageUri,
+                    "hash": outputImages[i].digest,
+                    "baseImageName": "",
+                    "distance": 0,
+                    "imageType": "",
+                    "mediaType": "",
+                    "tags": tags,
+                    "layerInfo": "",
+                    "runId": runId,
+                    "pipelineVersion": pipelineVersion,
+                    "pipelineName": pipelineName,
+                    "pipelineId": pipelineId,
+                    "jobName": jobName,
+                    "imageSize": ""
+                }
+            );
+        
+            await sendRequestToImageStore(requestBody, requestUrl);
+        }
+    }
+    catch(error)
+    {
+        tl.debug("Unable to push to Image Details Artifact Store, Error: " + error);
+    }
+}
+
+async function sendRequestToImageStore(requestBody: string, requestUrl: string): Promise<any> {
+    const request = new webClient.WebRequest();
+    const accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
+    request.uri = requestUrl;
+    request.method = 'POST';
+    request.body = requestBody;
+    request.headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + accessToken
+    };
+
+    tl.debug("requestUrl: " + requestUrl);
+    tl.debug("requestBody: " + requestBody);
+    tl.debug("accessToken: " + accessToken);
+
+    try {
+        tl.debug("Sending request for pushing image to Image meta data store");
+        const response = await webClient.sendRequest(request);
+        return response;
+    }
+    catch (error) {
+        tl.debug("Unable to push to Image Details Artifact Store, Error: " + error);
+    }
+
+    return Promise.resolve();
+}

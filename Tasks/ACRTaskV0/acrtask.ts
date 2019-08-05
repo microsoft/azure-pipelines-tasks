@@ -6,7 +6,7 @@ import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
 import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
 import Q = require('q');
 import {ACRRegistry, AcrTask, AcrTaskClient} from "./acrtaskclient";
-import { TaskRequestStepType } from "./acrtaskrequestbody";
+import { TaskRequestStepType, OutputImage } from "./acrtaskrequestbody";
 import * as utils from "./utils";
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -21,8 +21,7 @@ async function getTask(acrTaskClient: AcrTaskClient): Promise<string> {
         if(error){
             defer.reject(new Error(tl.loc("FailedToFetchTask", acrTaskClient.acrTask, acrTaskClient.getFormattedError(error))));
         }
-        else
-        {
+        else{
             defer.resolve();
         }
     });
@@ -33,10 +32,12 @@ async function getTask(acrTaskClient: AcrTaskClient): Promise<string> {
 async function createOrUpdateTask(acrTaskClient: AcrTaskClient): Promise<string> {
     let defer = Q.defer<string>();
     acrTaskClient.createOrUpdateTask((error, result, request, response) => {
-        if(error){
+        if(error)
+        {
             defer.reject(new Error(tl.loc("FailedToCreateOrUpdateTask", acrTaskClient.getFormattedError(error))));
         }
-        else{
+        else
+        {
             try
             { 
                 const taskId =  result.body.id;
@@ -88,7 +89,7 @@ async function getlogLink(runId: string, acrTaskClient:AcrTaskClient): Promise<s
     return defer.promise;
 }
 
-function pollGetRunStatus(runId: string, acrTaskClient: AcrTaskClient): Q.Promise<string> {
+function pollGetRunStatus(runId: string, acrTaskClient: AcrTaskClient): Q.Promise<any> {
     const defer: Q.Deferred<string> = Q.defer<string>();
    
     const poll = async () => {
@@ -97,8 +98,9 @@ function pollGetRunStatus(runId: string, acrTaskClient: AcrTaskClient): Q.Promis
                 defer.reject(new Error(tl.loc("FailedToFetchRun", runId, acrTaskClient.getFormattedError(error))));
             }
             else if (result != null) {
-                console.log(tl.loc("TaskRunStatus", runId, result));
-                if(result != "Queued" &&  result != "Running" && result != "Started")
+                var status = result.status;
+                console.log(tl.loc("TaskRunStatus", runId, status));
+                if(status != "Queued" &&  status != "Running" && status != "Started")
                 {
                     defer.resolve(result);
                 }
@@ -164,8 +166,7 @@ async function run() {
             setEncodedTaskInputs(acrTask, dockerfileOrYaml);
         }
 
-        acrTask.context = utils.getContextPath();
-
+        utils.populateContextDetails(acrTask);
         let acrTaskClient = new AcrTaskClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, acrTask);
         await getTask(acrTaskClient);
         var taskId = await createOrUpdateTask(acrTaskClient);
@@ -190,7 +191,7 @@ async function run() {
             }
         });
 
-        var runStatus = await pollGetRunStatus(runId, acrTaskClient); 
+        var run = await pollGetRunStatus(runId, acrTaskClient); 
         var loglink = await getlogLink(runId, acrTaskClient);
         if(!loglink)
         {
@@ -200,8 +201,13 @@ async function run() {
         var logfilepath = await toolLib.downloadTool(loglink);
         var readstream =  fs.createReadStream(logfilepath);
         console.log(tl.loc("DownloadedRunLogs"), await utils.streamToString(readstream));
-        switch (runStatus) {
+        switch (run.status) {
             case "Succeeded":
+                if(!!run.outputImages)
+                {
+                    var outputImages: OutputImage[] = run.outputImages; 
+                    await utils.publishToImageMetadataStore(outputImages);
+                }
                 tl.setResult(tl.TaskResult.Succeeded, tl.loc("TaskRunSucceeded"));
                 break;
             case "Cancelled":
