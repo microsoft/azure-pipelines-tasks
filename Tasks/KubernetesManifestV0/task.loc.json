@@ -50,8 +50,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.namespace",
       "required": true,
-      "defaultValue": "default",
-      "visibleRule": "action != bake",
+      "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.namespace"
     },
     {

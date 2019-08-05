@@ -269,6 +269,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.dockerComposeCommand"
     },
     {
+      "name": "arguments",
+      "type": "string",
+      "visibleRule": "action != Lock services && action != Combine configuration && action != Write service image digests",
+      "label": "ms-resource:loc.input.label.arguments",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    },
+    {
       "name": "dockerHostEndpoint",
       "type": "connectedService:dockerhost",
       "label": "ms-resource:loc.input.label.dockerHostEndpoint",
