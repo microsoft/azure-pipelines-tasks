@@ -1357,7 +1357,7 @@ var createRootPushCmd = function (nugetPackagesPath) {
  * 
  * e.g. - 
  * <Directory Path="[ServicingDir]Tasks\Individual\AndroidSigningV2\">
- *   <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2/*" />
+ *   <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2/content/*" />
  * </Directory>
  *
  * @param {*} taskFolderName 
@@ -1368,7 +1368,7 @@ var getServicingXmlContent = function (taskFolderName, fullTaskName, taskVersion
     var servicingXmlContent = '';
 
     servicingXmlContent += `  <Directory Path="[ServicingDir]Tasks\\Individual\\${taskFolderName}\\">` + os.EOL;
-    servicingXmlContent += `    <File Origin="nuget://${fullTaskName}/*" />` + os.EOL;
+    servicingXmlContent += `    <File Origin="nuget://${fullTaskName}/content/*" />` + os.EOL;
     servicingXmlContent += `  </Directory>` + os.EOL;
 
     return servicingXmlContent;
