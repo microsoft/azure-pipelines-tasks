@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import * as mockery from "mockery";
 import { EndpointAuthorization } from "azure-pipelines-task-lib";
-import { ServiceConnectionAuthType, TokenServiceConnection, UsernamePasswordServiceConnection, IAdditionalData } from "../serviceConnectionUtils";
+import { ServiceConnectionAuthType, TokenServiceConnection, UsernamePasswordServiceConnection, ApiKeyServiceConnection, IAdditionalData } from "../serviceConnectionUtils";
 
 export function serviceConnectionUtilsTests() {
 
@@ -21,6 +21,7 @@ export function serviceConnectionUtilsTests() {
 
     beforeEach(() => {
         mockery.resetCache();
+        mockery.registerAllowable("../serviceConnectionUtils");
     });
 
     afterEach(() => {
@@ -55,6 +56,7 @@ export function serviceConnectionUtilsTests() {
 
     it("getPackagingServiceConnections token good", (done: MochaDone) => {
         let mockTask = {
+            loc: msg => msg,
             debug: () => {},
             getDelimitedInput: (key) => ["tokenendpoint1"],
             getEndpointUrl: (key, optional) => "https://contoso.com/nuget/v3/index.json",
@@ -80,6 +82,7 @@ export function serviceConnectionUtilsTests() {
     
     it("getPackagingServiceConnections token missing apitoken throws", (done: MochaDone) => {
         let mockTask = {
+            loc: msg => msg,
             debug: () => {},
             getDelimitedInput: (key) => ["tokenendpoint1"],
             getEndpointUrl: (key, optional) => "https://contoso.com/nuget/v3/index.json",
@@ -98,6 +101,7 @@ export function serviceConnectionUtilsTests() {
 
     it("getPackagingServiceConnections username/password good", (done: MochaDone) => {
         let mockTask = {
+            loc: msg => msg,
             debug: () => {},
             getDelimitedInput: (key) => ["tokenendpoint1"],
             getEndpointUrl: (key, optional) => "https://contoso.com/nuget/v3/index.json",
@@ -124,6 +128,7 @@ export function serviceConnectionUtilsTests() {
       
     it("getPackagingServiceConnections username/password missing username throws", (done: MochaDone) => {
         let mockTask = {
+            loc: msg => msg,
             debug: () => {},
             getDelimitedInput: (key) => ["tokenendpoint1"],
             getEndpointUrl: (key, optional) => "https://contoso.com/nuget/v3/index.json",
@@ -157,6 +162,52 @@ export function serviceConnectionUtilsTests() {
         assert.throws(() => serviceConnectionUtilsWithMocks.getPackagingServiceConnections(serviceConnectionsKey));
         done();
     });
+
+    it("getPackagingServiceConnections apikey good", (done: MochaDone) => {
+        let mockTask = {
+            loc: msg => msg,
+            debug: () => {},
+            getDelimitedInput: (key) => ["tokenendpoint1"],
+            getEndpointUrl: (key, optional) => "https://contoso.com/nuget/v3/index.json",
+            getEndpointAuthorization: (key, optional) => <EndpointAuthorization>{
+                parameters: { "nugetkey": "someapikey" },
+                scheme: "none"
+            },
+            getEndpointAuthorizationScheme: (key, optional): string => "none"
+        };
+        mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
+
+        let serviceConnectionUtilsWithMocks = require("../serviceConnectionUtils");
+        assert.deepEqual(serviceConnectionUtilsWithMocks.getPackagingServiceConnections(serviceConnectionsKey), [<ApiKeyServiceConnection>{
+            packageSource: {
+                uri: "https://contoso.com/nuget/v3/index.json" 
+            },
+            authType: ServiceConnectionAuthType.ApiKey,
+            apiKey: "someapikey",
+	    additionalData: {}
+        }]);
+        done();
+    });
+
+    it("getPackagingServiceConnections apikey missing nugetkey throws", (done: MochaDone) => {
+        let mockTask = {
+            loc: msg => msg,
+            debug: () => {},
+            getDelimitedInput: (key) => ["tokenendpoint1"],
+            getEndpointUrl: (key, optional) => "https://contoso.com/nuget/v3/index.json",
+            getEndpointAuthorization: (key, optional) => <EndpointAuthorization>{
+                parameters: { /* missing nugetkey */ },
+                scheme: "none"
+            },
+            getEndpointAuthorizationScheme: (key, optional): string => "none"
+        };
+        mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
+
+        let serviceConnectionUtilsWithMocks = require("../serviceConnectionUtils");
+        assert.throws(() => serviceConnectionUtilsWithMocks.getPackagingServiceConnections(serviceConnectionsKey));
+        done();
+    });
+
 
     it("getPackagingServiceConnections token good additional data good", (done: MochaDone) => {
         let mockTask = {
