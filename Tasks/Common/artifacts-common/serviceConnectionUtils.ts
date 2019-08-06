@@ -7,11 +7,16 @@ export interface IExternalPackageSource {
     uri: string;
 }
 
+export interface IAdditionalData {
+    [x: string]: string
+}
+
 export abstract class ServiceConnection
 {
     constructor(
         public packageSource: IExternalPackageSource,
-        public authType: ServiceConnectionAuthType) {
+        public authType: ServiceConnectionAuthType,
+        public additionalData?: IAdditionalData) {
     }
 }
 
@@ -19,9 +24,10 @@ export class TokenServiceConnection extends ServiceConnection
 {
     constructor(
         public packageSource: IExternalPackageSource,
-        public token: string)
+        public token: string,
+        public additionalData?: IAdditionalData)
     {
-        super(packageSource, ServiceConnectionAuthType.Token);
+        super(packageSource, ServiceConnectionAuthType.Token, additionalData);
     }
 }
 
@@ -30,9 +36,10 @@ export class UsernamePasswordServiceConnection extends ServiceConnection
     constructor(
         public packageSource: IExternalPackageSource,
         public username: string,
-        public password: string)
+        public password: string,
+        public additionalData?: IAdditionalData)
     {
-        super(packageSource, ServiceConnectionAuthType.UsernamePassword);
+        super(packageSource, ServiceConnectionAuthType.UsernamePassword, additionalData);
     }
 }
 
@@ -40,9 +47,21 @@ export class ApiKeyServiceConnection extends ServiceConnection
 {
     constructor(
         public packageSource: IExternalPackageSource,
-        public apiKey: string)
+        public apiKey: string,
+        public additionalData?: IAdditionalData)
     {
-        super(packageSource, ServiceConnectionAuthType.ApiKey);
+        super(packageSource, ServiceConnectionAuthType.ApiKey, additionalData);
+    }
+}
+
+export class PrivateKeyServiceConnection extends ServiceConnection {
+    constructor(
+        public packageSource: IExternalPackageSource,
+        public privateKey: string,
+        public passphrase: string,
+        public additionalData?: IAdditionalData) 
+    {
+        super(packageSource, ServiceConnectionAuthType.PrivateKey, additionalData)
     }
 }
 
@@ -50,7 +69,8 @@ export enum ServiceConnectionAuthType
 {
     Token, 
     UsernamePassword,
-    ApiKey
+    ApiKey,
+    PrivateKey
 }
 
 /**
@@ -58,7 +78,7 @@ export enum ServiceConnectionAuthType
  * 
  * @param endpointsInputName The name of the task input containing the service connections endpoints
  */
-export function getPackagingServiceConnections(endpointsInputName: string): ServiceConnection[]
+export function getPackagingServiceConnections(endpointsInputName: string, dataParameters?: string[]): ServiceConnection[]
 {
     let endpointNames = tl.getDelimitedInput(endpointsInputName, ',');
 
@@ -72,7 +92,7 @@ export function getPackagingServiceConnections(endpointsInputName: string): Serv
         let uri = tl.getEndpointUrl(endpointName, false);
         let endpointAuth = tl.getEndpointAuthorization(endpointName, true);
         let endpointAuthScheme = tl.getEndpointAuthorizationScheme(endpointName, true).toLowerCase();
-
+        let additionalData = getAdditionalDataParameters(endpointName, dataParameters);
         switch (endpointAuthScheme) {
             case "token":
                 if (!("apitoken" in endpointAuth.parameters)) {
@@ -85,7 +105,8 @@ export function getPackagingServiceConnections(endpointsInputName: string): Serv
                     {
                         uri: uri
                     },
-                    token));
+                    token,
+                    additionalData));
                 break;
             case "usernamepassword":
                 if (!("username" in endpointAuth.parameters)) {
@@ -104,7 +125,23 @@ export function getPackagingServiceConnections(endpointsInputName: string): Serv
                         uri: uri
                     },
                     username,
-                    password));
+                    password,
+                    additionalData));
+                break;
+            case "privatekey":
+                if (!("privateKey" in endpointAuth.parameters)) {
+                    throw Error(tl.loc("ServiceConnections_Error_FailedToParseServiceEndpoint_MissingParameter", uri, "privatekey"));
+                }
+                let privateKey = endpointAuth.parameters["privateKey"];
+                let passphrase = endpointAuth.parameters["passphrase"];
+                tl.debug("Found privateKey/passphrase service connection for package source " + uri);
+                serviceConnections.push(new PrivateKeyServiceConnection(
+                    {
+                        uri: uri
+                    },
+                    privateKey,
+                    passphrase,
+                    additionalData));
                 break;
             case "none": // We only support this for nuget today. npm and python tasks do not use this endpoint auth scheme.
                 if (!("nugetkey" in endpointAuth.parameters)) {
@@ -117,7 +154,8 @@ export function getPackagingServiceConnections(endpointsInputName: string): Serv
                     {
                         uri: uri
                     },
-                    apiKey));
+                    apiKey,
+                    additionalData));
                 break;
             default: 
                 throw Error(tl.loc("ServiceConnections_Error_FailedToParseServiceEndpoint_BadScheme", uri, endpointAuthScheme));
@@ -125,4 +163,21 @@ export function getPackagingServiceConnections(endpointsInputName: string): Serv
     });
 
     return serviceConnections;
+}
+
+function getAdditionalDataParameters(endpointName: string, dataParameters?: string[]): IAdditionalData { 
+    var additionalData: IAdditionalData = {};
+
+    if(!dataParameters) {
+        return additionalData;
+    }
+
+    for (let dataParameter of dataParameters) {
+        let dataValue = tl.getEndpointDataParameter(endpointName, dataParameter, false);
+        if(dataValue) {
+            additionalData[dataParameter] = dataValue;
+        }
+    }
+
+    return additionalData;
 }
