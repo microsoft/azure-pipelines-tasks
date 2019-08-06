@@ -286,6 +286,10 @@ class ReleaseNotesSelectionMode {
     public static readonly file = "file";
 }
 
+export class GitHubIssueState{
+    public static readonly closed = "CLOSED";
+}
+
 export class GitHubAttributes {
     public static readonly id: string = "id";
     public static readonly nameAttribute: string = "name";
@@ -343,4 +347,5 @@ export class Delimiters {
     public static readonly openingBracketWithSpace: string = " [";
     public static readonly closingBracketWithSpace: string = " ]";
     public static readonly star: string = "*";
+    public static readonly colon: string = ":";
 }

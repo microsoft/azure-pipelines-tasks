@@ -1,6 +1,6 @@
 import tl = require("azure-pipelines-task-lib/task");
 import util = require("util");
-import { Utility, GitHubAttributes, IRepositoryIssueId, Delimiters, AzureDevOpsVariables, ChangeLogStartCommit } from "./Utility";
+import { Utility, GitHubAttributes, IRepositoryIssueId, Delimiters, AzureDevOpsVariables, ChangeLogStartCommit, GitHubIssueState } from "./Utility";
 import { Release } from "./Release";
 import { Helper } from "./Helper";
 
@@ -15,7 +15,7 @@ export class ChangeLog {
      * @param compareWithRelease
      * @param changeLogCompareToReleaseTag
      */
-    public async getChangeLog(githubEndpointToken: string, repositoryName: string, target: string, top: number, compareWithRelease: ChangeLogStartCommit, changeLogCompareToReleaseTag?: string): Promise<string> {
+    public async getChangeLog(githubEndpointToken: string, repositoryName: string, target: string, top: number, compareWithRelease: ChangeLogStartCommit, changeLogCompareToReleaseTag?: string, changeLogLabels?: any): Promise<string> {
         console.log(tl.loc("ComputingChangeLog"));
 
         let release = new Release();
@@ -60,39 +60,89 @@ export class ChangeLog {
 
                 let commitIdToRepoIssueIdsDictionary: { [key: string]: Set<string> } = this._getCommitIdToRepoIssueIdsDictionary(commitIdToMessageDictionary, repositoryName);
                 tl.debug("commitIdToRepoIssueIdsDictionary: " + JSON.stringify(commitIdToRepoIssueIdsDictionary));
-                
-                let changeLog: string = "";
-                let topXChangeLog: string = ""; // where 'X' is the this._changeLogVisibleLimit.
-                let seeMoreChangeLog: string = "";
 
-                // Evaluate change log
-                Object.keys(commitIdToRepoIssueIdsDictionary).forEach((commitId: string, index: number) => {
-                    let changeLogPerCommit: string = this._getChangeLogPerCommit(commitId, commitIdToMessageDictionary[commitId], commitIdToRepoIssueIdsDictionary[commitId], repositoryName);
+                if (!!changeLogLabels) {
+                    //Generate issue based change log
+                    let issues = new Set([]);
+                    Object.keys(commitIdToRepoIssueIdsDictionary).forEach((commitId: string, index: number) => {
+                        commitIdToRepoIssueIdsDictionary[commitId].forEach(repoIssueId => {
+                            let issueDetails = Utility.extractRepoAndIssueId(repoIssueId);
+                            let issueId = Number(issueDetails.issueId);
+                            if (!!issueId && issueDetails.repository === repositoryName) {
+                                issues.add(issueId);
+                            }
+                        });
+                    });
 
-                    // If changes are more than 10, then we will show See more button which will be collapsible.
-                    // And under that seeMoreChangeLog will be shown
-                    // topXChangeLog will be visible to user.
-                    if (index >= this._changeLogVisibleLimit) {
-                        seeMoreChangeLog = seeMoreChangeLog + changeLogPerCommit + Delimiters.newLine;
+                    if (issues.size === 0){
+                        console.log(tl.loc("NoIssuesLinkedError"));
+                        return "";
                     }
-                    else {
-                        topXChangeLog = topXChangeLog + changeLogPerCommit + Delimiters.newLine;
+                    let issuesListResponse = await release.getIssuesListWithLabels(githubEndpointToken, repositoryName, Array.from(issues));
+                    if (issuesListResponse.statusCode === 200){
+                        if (!!issuesListResponse.body.errors){
+                            console.log(tl.loc("IssuesFetchError"));
+                            throw new Error(JSON.stringify(issuesListResponse.body.errors));
+                        }
+                        else{
+                            let changeLog: string = "";
+                            let labels = changeLogLabels.labels;
+                            let issuesList = issuesListResponse.body.data.repository;
+                            tl.debug("issuesListResponse: " + JSON.stringify(issuesList));
+                            let labelsRankDictionary: {[key: string]: number} = this._getLabelsRankDictionary(labels);
+                            let labelsIssuesDictionary = this._getLabelsIssuesDictionary(labelsRankDictionary, issuesList);
+                            tl.debug("labelsIssuesDictionary: " + JSON.stringify(labelsIssuesDictionary));
+                            labels.push({"label":"others", "displayName": "Others"}); //Default category in case of undefined labels or no label.
+                            labels.forEach(labelDetails => {
+                                let labelDisplayName = this._getLabelDisplayName(labelDetails);
+                                changeLog = changeLog + labelDisplayName;
+                                labelsIssuesDictionary[labelDetails.label].forEach(issueDetails => {
+                                    let changeLogPerIssue: string = this._getChangeLogPerIssue(issueDetails);
+                                    changeLog = changeLog + changeLogPerIssue + Delimiters.newLine;
+                                });
+                            });
+                            return changeLog;
+                        }
                     }
-                });
-
-                if (topXChangeLog) {
-                    changeLog = this._ChangeLogTitle + topXChangeLog;
-
-                    if(!seeMoreChangeLog) {
-                        changeLog = changeLog + Delimiters.newLine + this._getAutoGeneratedText();
-                    }
-                    else {
-                        changeLog = changeLog + util.format(this._seeMoreChangeLogFormat, this._seeMoreText, seeMoreChangeLog, this._getAutoGeneratedText());
+                    else{
+                        console.log(tl.loc("IssuesFetchError"));
+                        throw new Error(issuesListResponse.body[GitHubAttributes.message]);
                     }
                 }
+                else{
+                    //Generate commit difference based change log.
+                    let changeLog: string = "";
+                    let topXChangeLog: string = ""; // where 'X' is the this._changeLogVisibleLimit.
+                    let seeMoreChangeLog: string = "";
+                    // Evaluate change log
+                    Object.keys(commitIdToRepoIssueIdsDictionary).forEach((commitId: string, index: number) => {
+                        let changeLogPerCommit: string = this._getChangeLogPerCommit(commitId, commitIdToMessageDictionary[commitId], commitIdToRepoIssueIdsDictionary[commitId], repositoryName);
 
-                console.log(tl.loc("ComputingChangeLogSuccess"));
-                return changeLog;
+                        // If changes are more than 10, then we will show See more button which will be collapsible.
+                        // And under that seeMoreChangeLog will be shown
+                        // topXChangeLog will be visible to user.
+                        if (index >= this._changeLogVisibleLimit) {
+                            seeMoreChangeLog = seeMoreChangeLog + changeLogPerCommit + Delimiters.newLine;
+                        }
+                        else {
+                            topXChangeLog = topXChangeLog + changeLogPerCommit + Delimiters.newLine;
+                        }
+                    });
+
+                    if (topXChangeLog) {
+                        changeLog = this._ChangeLogTitle + topXChangeLog;
+
+                        if(!seeMoreChangeLog) {
+                            changeLog = changeLog + Delimiters.newLine + this._getAutoGeneratedText();
+                        }
+                        else {
+                            changeLog = changeLog + util.format(this._seeMoreChangeLogFormat, this._seeMoreText, seeMoreChangeLog, this._getAutoGeneratedText());
+                        }
+                    }
+
+                    console.log(tl.loc("ComputingChangeLogSuccess"));
+                    return changeLog;
+                }         
             }
         }
         else{
@@ -313,6 +363,70 @@ export class ChangeLog {
         });
 
         return commitIdToRepoIssueIdsDictionary;
+    }
+
+    /**
+     * Returns a dictionary of { label to rank }.
+     * This dictionary is used to find the label with highest priority.
+     * @param labels 
+     */
+    private _getLabelsRankDictionary(labels: any[]){
+        let labelsRankDictionary = {};
+        for (let index = 0; index < labels.length; index++){
+            labelsRankDictionary[labels[index].label] = index;
+        }
+        return labelsRankDictionary;
+    }
+
+    /**
+     * Returns a dictionary of { label to issues }.
+     * This dictionary is used to find all the issues under a label/category.
+     * @param labelsRankDictionary 
+     * @param issuesList 
+     */
+    private _getLabelsIssuesDictionary(labelsRankDictionary, issuesList){
+        let labelsIssuesDictionary = {};
+        Object.keys(issuesList).forEach((issue: string) => {
+            if (issuesList[issue].state !== GitHubIssueState.closed){
+                return;
+            }
+            let issueLabel: string = null;
+            let currentLabelRank: number = -1;
+            issuesList[issue].labels.edges && issuesList[issue].labels.edges.forEach(labelDetails => {
+                if (labelsRankDictionary[labelDetails.node.name] || labelsRankDictionary[labelDetails.node.name] > currentLabelRank){
+                    issueLabel = labelDetails.node.name;
+                    currentLabelRank = labelsRankDictionary[labelDetails.node.name];
+                }
+            });
+            if (currentLabelRank === -1){
+                issueLabel = "others"; //Default category
+            }
+            if (!labelsIssuesDictionary[issueLabel]){
+                labelsIssuesDictionary[issueLabel] = [{"issue": issuesList[issue].title, "issueId": issue[1]}];
+            }
+            else{
+                labelsIssuesDictionary[issueLabel].push({"issue": issuesList[issue].title, "issueId": issue[1]});
+            }
+        });
+        return labelsIssuesDictionary;
+    }
+
+    /**
+     * Returns the category heading specified by the user.
+     * Log format: ## labelDisplayName
+     * @param labelDetails 
+     */
+    private _getLabelDisplayName(labelDetails){
+        return Delimiters.newLine + Delimiters.newLine + Delimiters.hash + Delimiters.hash + Delimiters.space + labelDetails.displayName + Delimiters.newLine + Delimiters.newLine;
+    }
+
+    /**
+     * Returns the log for a single issue.
+     * Log format: * #issueId: issueTitle
+     * @param issueDetails 
+     */
+    private _getChangeLogPerIssue(issueDetails){
+        return Delimiters.star + Delimiters.space + Delimiters.hash + issueDetails.issueId + Delimiters.colon + Delimiters.space + issueDetails.issue;
     }
 
     /**

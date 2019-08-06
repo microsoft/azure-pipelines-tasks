@@ -198,6 +198,7 @@ export class Release {
         request.headers = {
             'Authorization': 'token ' + githubEndpointToken
         };
+        tl.debug("Fetching labels for issues: " + issues);
         let issuesQuery = issues.map(issue =>
             `_${issue}: issue(number: ${issue}){
                 title

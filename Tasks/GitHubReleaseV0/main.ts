@@ -101,13 +101,22 @@ class Main {
         const releaseNotesFile = tl.getPathInput(Inputs.releaseNotesFile, false, true);
         const releaseNoteInput = tl.getInput(Inputs.releaseNotes);
         const showChangeLog: boolean = tl.getBoolInput(Inputs.addChangeLog);
-
+        const changeLogLabelsInput = tl.getInput(Inputs.changeLogLabels);
+        let changeLogLabels: string;
+        try{
+            changeLogLabels = JSON.parse(changeLogLabelsInput);
+        }
+        catch(error){
+            changeLogLabels = null;
+            console.log(tl.loc("ChangeLogLabelsParseError"));
+        }
+        
         const changeLogCompareToRelease = tl.getInput(Inputs.changeLogCompareToRelease);
         showChangeLog && Utility.validateStartCommitSpecification(changeLogCompareToRelease);
         const changeLogCompareToReleaseTag = tl.getInput(Inputs.changeLogCompareToReleaseTag) || undefined;
         // Generate the change log 
         // Get change log for top 250 commits only
-        const changeLog: string = showChangeLog ? await new ChangeLog().getChangeLog(githubEndpointToken, repositoryName, target, 250, ChangeLogStartCommit[changeLogCompareToRelease], changeLogCompareToReleaseTag) : "";
+        const changeLog: string = showChangeLog ? await new ChangeLog().getChangeLog(githubEndpointToken, repositoryName, target, 250, ChangeLogStartCommit[changeLogCompareToRelease], changeLogCompareToReleaseTag, changeLogLabels) : "";
 
         // Append change log to release note
         const releaseNote: string = Utility.getReleaseNote(releaseNotesSource, releaseNotesFile, releaseNoteInput, changeLog) || undefined;
