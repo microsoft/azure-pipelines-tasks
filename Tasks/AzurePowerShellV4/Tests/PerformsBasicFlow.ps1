@@ -16,8 +16,6 @@ Register-Mock Initialize-AzModule
 Register-Mock Get-VstsEndpoint { @{auth = @{ scheme = "ServicePrincipal" }} }
 Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
-Register-Mock Get-VstsTaskVariable
-Register-Mock Set-VstsTaskVariable
 
 # Act.
 $actual = & $PSScriptRoot\..\AzurePowerShell.ps1
