@@ -15,6 +15,8 @@ Register-Mock Update-PSModulePathForHostedAgent
 Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
 Register-Mock Get-VstsEndpoint
+Register-Mock Get-VstsTaskVariable
+Register-Mock Set-VstsTaskVariable
 
 # Arrange the mock task SDK module.
 New-Module -Name VstsTaskSdk -ScriptBlock {
