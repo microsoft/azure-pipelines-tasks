@@ -165,7 +165,8 @@ export function serviceConnectionUtilsTests() {
                 uri: "https://contoso.com/nuget/v3/index.json" 
             },
             authType: ServiceConnectionAuthType.ApiKey,
-            apiKey: "someapikey"
+            apiKey: "someapikey",
+            additionalData: {}
         }]);
         done();
     });
