@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 156,
-        "Patch": 2
+        "Patch": 3
     },
     "minimumAgentVersion": "2.120.0",
     "instanceNameFormat": "NuGet Authenticate",
