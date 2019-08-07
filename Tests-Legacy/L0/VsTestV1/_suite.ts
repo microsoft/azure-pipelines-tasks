@@ -10,7 +10,7 @@ import shell = require('shelljs');
 import uuid = require('node-uuid');
 var ps = shell.which('powershell.exe');
 var psr = null;
-const tmpFileName = path.join(os.tmpdir(), uuid.v4() + ".json");
+const tmpFileName = path.join(os.tmpdir(), uuid.v1() + ".json");
 const testDllPath = path.join(__dirname, "data", "testDlls");
 const sysVstestLocation = "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe";
 
