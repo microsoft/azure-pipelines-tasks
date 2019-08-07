@@ -111,6 +111,8 @@ Tasks/Common/codeanalysis-common/*    @lkillgore
 
 Tasks/Common/codecoverage-tools/*     @nigurr   @lkillgore
 
+Tasks/Common/coveragepublisher/*     @karanjitsingh   @acesiddhu
+
 Tasks/Common/docker-common/*      @jikuma   @vithati
 
 Tasks/Common/ios-signing-common/*     @madhurig   @hashtagchris
@@ -270,6 +272,8 @@ Tasks/PowerShellOnTargetMachinesV3/*    @kmkumaran
 Tasks/PublishBuildArtifactsV1/*     @madhurig
 
 Tasks/PublishCodeCoverageResultsV1/*    @cltshivash    @nigurr 
+
+Tasks/PublishCodeCoverageResultsV2/*    @karanjitsingh @acesiddhu
 
 Tasks/PublishPipelineArtifactV0/*       @mihaif
 
