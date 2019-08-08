@@ -2,7 +2,6 @@
   "name": "coveragepublisher",
   "version": "1.0.0",
   "author": "Microsoft Corporation",
-  "description": "Build with Gradle",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"

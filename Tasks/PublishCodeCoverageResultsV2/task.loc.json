@@ -1,5 +1,5 @@
 {
-  "id": "2A7EBC54-C13E-490E-81A5-D7561AB7CD97",
+  "id": "454011c9-0fbf-4461-87a1-b184982aaf10",
   "name": "PublishCodeCoverageResults",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -24,24 +24,12 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "codeCoverageTool",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.codeCoverageTool",
-      "required": true,
-      "defaultValue": "JaCoCo",
-      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
-      "options": {
-        "Cobertura": "Cobertura",
-        "JaCoCo": "JaCoCo"
-      }
-    },
-    {
-      "name": "summaryFileLocation",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.summaryFileLocation",
+      "name": "summaryFileLocations",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.summaryFileLocations",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.summaryFileLocation"
+      "helpMarkDown": "ms-resource:loc.input.help.summaryFileLocations"
     },
     {
       "name": "pathToSources",
@@ -50,22 +38,6 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.pathToSources"
-    },
-    {
-      "name": "reportDirectory",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.reportDirectory",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.reportDirectory"
-    },
-    {
-      "name": "additionalCodeCoverageFiles",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.additionalCodeCoverageFiles",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.additionalCodeCoverageFiles"
     },
     {
       "name": "failIfCoverageEmpty",
