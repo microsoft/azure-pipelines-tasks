@@ -63,7 +63,7 @@
             "visibleRule": "artifactType = filePath"
         },
         {
-            "name": "Parallel",
+            "name": "parallel",
             "type": "boolean",
             "label": "Parallel copy",
             "defaultValue": "false",
@@ -72,7 +72,7 @@
             "visibleRule": "artifactType = filePath"
         },
         {
-            "name": "ParallelCount",
+            "name": "parallelCount",
             "type": "int",
             "label": "Parallel count",
             "defaultValue": 8,
