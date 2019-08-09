@@ -97,6 +97,7 @@
         "KubernetesV1",
         "KubernetesManifestV0",
         "ManualInterventionV8",
+        "MavenAuthenticateV0",
         "MavenV2",
         "MavenV3",
         "MSBuildV1",
