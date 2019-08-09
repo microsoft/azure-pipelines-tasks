@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
+import * as coveragePublisher from 'coveragepublisher/coveragepublisher';
 
 // Main entry point of this task.
 async function run() {
@@ -14,25 +15,10 @@ async function run() {
         const workingDirectory: string = taskLib.getVariable('System.DefaultWorkingDirectory');
         const pathToSources: string = taskLib.getInput('pathToSources');
 
-        let autogenerateHtmlReport: boolean = true;
-        let tempFolder = undefined;
-
-
-        
-        // Resolve summary file paths (may contain globs)
         var resolvedSummaryFiles = resolveSummaryFiles(workingDirectory, summaryFileLocations)
 
-        // taskLib.debug('Resolved summary file: ' + resolvedSummaryFile);
+        await coveragePublisher.PublishCodeCoverage(resolvedSummaryFiles, pathToSources);
 
-        // if (failIfCoverageIsEmpty) {
-        //     throw taskLib.loc('NoCodeCoverage');
-        // } else if (!taskLib.exist(resolvedSummaryFile)) {
-        //     taskLib.warning(taskLib.loc('NoCodeCoverage'));
-        // } else {
-        //     // Publish code coverage data
-        //     const ccPublisher = new taskLib.CodeCoveragePublisher();
-        //     ccPublisher.publish(codeCoverageTool, resolvedSummaryFile, tempFolder, additionalFileMatches);
-        // }
     } catch (err) {
         taskLib.setResult(taskLib.TaskResult.Failed, err);
     }

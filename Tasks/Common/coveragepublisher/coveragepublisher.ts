@@ -2,14 +2,17 @@
 import * as toolRunner from 'azure-pipelines-task-lib/toolrunner';
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
+import * as fs from 'fs';
 import * as path from 'path';
+import * as UUID from 'uuid/v4';
 
-export async function PublishCodeCoverage(inputFiles: Array<string>,  sourceDirectory?: string) {
-    
+export async function PublishCodeCoverage(inputFiles: string[], sourceDirectory?: string) {
+    var reportDirectory = path.join(getTempFolder(), UUID());
+    fs.mkdirSync(reportDirectory);
+    this.publishCoverage(inputFiles, reportDirectory, sourceDirectory)
 }
 
-
-async function publishCoverage(summaryFile: string, targetDir: string, pathToSources: string): Promise<boolean> {
+async function publishCoverage(inputFiles: string[], reportDirectory: string, pathToSources?: string) {
     const osvar = process.platform;
     let dotnet: toolRunner.ToolRunner;
 
@@ -19,24 +22,23 @@ async function publishCoverage(summaryFile: string, targetDir: string, pathToSou
         return false;
     }
 
-    // if (!dotnetPath && osvar === 'win32') {
-    //     // use full .NET to execute
-    //     dotnet = taskLib.tool(path.join(__dirname, 'net47', 'ReportGenerator.exe'));
-    // } else {
-    //     dotnet = taskLib.tool(dotnetPath);
-    //     dotnet.arg(path.join(__dirname, 'netcoreapp2.0', 'ReportGenerator.dll'));
-    // }
+    if (!dotnetPath && osvar === 'win32') {
+        // use full .NET to execute
+        dotnet = taskLib.tool(path.join(__dirname, 'CoveragePublisher.Console.exe'));
+    } else {
+        dotnet = taskLib.tool(dotnetPath);
+        dotnet.arg(path.join(__dirname, 'CoveragePublisher.Console.dll'));
+    }
 
-    dotnet.arg('-reports:' + summaryFile);
-    dotnet.arg('-targetdir:' + targetDir);
-    dotnet.arg('-reporttypes:HtmlInline_AzurePipelines');
+    dotnet.arg(inputFiles.join(" "));
+    dotnet.arg('--reportDirectory ' + reportDirectory);
 
-    if (!isNullOrWhitespace(pathToSources)) {
-        dotnet.arg('-sourceDirectory:' + pathToSources);
+    if(!isNullOrWhitespace(pathToSources)) {
+        dotnet.arg('--sourceDirectory ' + pathToSources);
     }
 
     try {
-        const result = await dotnet.exec({
+        await dotnet.exec({
             ignoreReturnCode: true,
             failOnStdErr: false,
             windowsVerbatimArguments: true,
@@ -45,21 +47,13 @@ async function publishCoverage(summaryFile: string, targetDir: string, pathToSou
         } as any);
 
         // Listen for stderr.
-        let isError = false;
-        dotnet.on('stderr', () => {
-            isError = true;
+        dotnet.on('stderr', (data) => {
+            taskLib.warning(data);
         });
 
-        if (result === 0 && !isError) {
-            console.log(taskLib.loc('GeneratedHtmlReport', targetDir));
-            return true;
-        } else {
-            taskLib.warning(taskLib.loc('FailedToGenerateHtmlReport', result));
-        }
     } catch (err) {
-        taskLib.warning(taskLib.loc('FailedToGenerateHtmlReport', err));
+        taskLib.warning("Error occured while publishing coverage: " + err);
     }
-    return false;
 }
 
 

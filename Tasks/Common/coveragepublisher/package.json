@@ -7,8 +7,10 @@
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
   "dependencies": {
+    "@types/node": "^12.7.1",
     "azure-pipelines-task-lib": "^2.8.0",
-    "os": "^0.1.1"
+    "os": "^0.1.1",
+    "uuid": "^3.3.2"
   },
   "main": "VSTS Tasks Code Coverage Tools",
   "scripts": {
