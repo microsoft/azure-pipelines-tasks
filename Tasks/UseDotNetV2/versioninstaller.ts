@@ -8,6 +8,7 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 import * as utils from "./versionutilities";
 import { VersionInfo } from "./models"
+const uuidV4 = require('uuid/v4');
 
 export class VersionInstaller {
     constructor(packageType: string, installationPath: string) {
@@ -43,7 +44,10 @@ export class VersionInstaller {
             // Extract
             console.log(tl.loc("ExtractingPackage", downloadPath));
             try {
-                var extPath = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath) : await toolLib.extractTar(downloadPath);
+                let tempDirectory = tl.getVariable('Agent.TempDirectory');
+                var destination: string = uuidV4();
+                destination = path.join( tempDirectory, destination.substr(destination.length - 4));
+                var extPath = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath, destination) : await toolLib.extractTar(downloadPath);
             }
             catch (ex) {
                 throw tl.loc("FailedWhileExtractingPacakge", ex);
