@@ -45,8 +45,7 @@ export class VersionInstaller {
             console.log(tl.loc("ExtractingPackage", downloadPath));
             try {
                 let tempDirectory = tl.getVariable('Agent.TempDirectory');
-                var destination: string = uuidV4();
-                destination = path.join( tempDirectory, destination.substr(destination.length - 4));
+                var destination = path.join( tempDirectory, this._tinyGuid());
                 var extPath = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath, destination) : await toolLib.extractTar(downloadPath);
             }
             catch (ex) {
@@ -172,6 +171,14 @@ export class VersionInstaller {
         }
 
         throw tl.loc("FileNameNotCorrectCompleteFileName", name);
+    }
+
+    private _tinyGuid() {
+        return "yxxx".replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0;
+            var v = c === "x" ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
     }
 
     private packageType: string;
