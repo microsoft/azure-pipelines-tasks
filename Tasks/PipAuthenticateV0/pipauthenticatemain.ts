@@ -4,6 +4,7 @@ import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as telemetry from "utility-common/telemetry";
 import * as auth from "./authentication";
 import * as utils from "./utilities";
+import { getProjectAndFeedIdFromInput } from 'packaging-common/util';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));
@@ -16,12 +17,12 @@ async function main(): Promise<void> {
             pipEnvVar = tl.getVariable("PIP_EXTRA_INDEX_URL");
         }
 
-        const feedIds  = tl.getDelimitedInput("feedList", ",");
+        const feedList  = tl.getDelimitedInput("feedList", ",");
 
         // Local feeds
-        if (feedIds)
+        if (feedList)
         {
-            tl.debug(tl.loc("Info_AddingInternalFeeds", feedIds.length));
+            tl.debug(tl.loc("Info_AddingInternalFeeds", feedList.length));
             const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
             const localAccessToken = pkgLocationUtils.getSystemAccessToken();
             try {
@@ -35,12 +36,13 @@ async function main(): Promise<void> {
                 packagingLocation = serviceUri;
             }
 
-            for (const feedId of feedIds) {
+            for (const feedName of feedList) {
+                const feed = getProjectAndFeedIdFromInput(feedName)
                 const feedUri = await pkgLocationUtils.getFeedRegistryUrl(
                     packagingLocation, 
                     pkgLocationUtils.RegistryType.PyPiSimple, 
-                    feedId,
-                    null,
+                    feed.feedId,
+                    feed.projectId,
                     localAccessToken);
                 const pipUri = utils.formPipCompatibleUri("build", localAccessToken, feedUri);
                 pipEnvVar = pipEnvVar + " " + pipUri;
@@ -58,7 +60,7 @@ async function main(): Promise<void> {
 
         // Setting variable
         tl.setVariable("PIP_EXTRA_INDEX_URL", pipEnvVar, false);
-        console.log(tl.loc("Info_SuccessAddingAuth", feedIds.length, externalEndpoints.length));
+        console.log(tl.loc("Info_SuccessAddingAuth", feedList.length, externalEndpoints.length));
 
         const pipauthvar = tl.getVariable("PIP_EXTRA_INDEX_URL");
         if (pipauthvar.length < pipEnvVar.length){

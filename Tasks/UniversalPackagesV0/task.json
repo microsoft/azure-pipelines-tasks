@@ -9,7 +9,7 @@
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 153,
+        "Minor": 156,
         "Patch": 1
     },
     "runsOn": [
@@ -347,7 +347,7 @@
                 "Information": "Information",
                 "Warning": "Warning",
                 "Error": "Error",
-                "Critical": "Citical"
+                "Critical": "Critical"
             }
         },
         {
@@ -435,6 +435,7 @@
         "Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",
         "FailedToGetLatestPackageVersion": "Failed to get package versions",
         "Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages",
+        "Warning_SessionCreationFailed": "Could not create provenance session: %s",
         "Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server.",
         "Error_ProcessorArchitectureNotSupported": "Universal Packages require an x64 agent."
     }

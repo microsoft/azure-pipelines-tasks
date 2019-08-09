@@ -54,7 +54,7 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
         var deployCmdFilePath = this.GetDeployCmdFilePath();
 
         await this.SetMsdeployEnvPath();
-        var cmdArgs:string = this.GetDeployScriptCmdArgs(deployCmdFilePath, msDeployPublishingProfile);
+        var cmdArgs:string = this.GetDeployScriptCmdArgs(msDeployPublishingProfile);
 
         var retryCountParam = tl.getVariable("appservice.msdeployretrycount");
         var retryCount = (retryCountParam && !(isNaN(Number(retryCountParam)))) ? Number(retryCountParam): DEFAULT_RETRY_COUNT; 
@@ -63,7 +63,7 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
             while(true) {
                 try {
                     retryCount -= 1;
-                    await this.publishProfileUtility.RunCmd(cmdArgs);
+                    await this.publishProfileUtility.RunCmd(deployCmdFilePath, cmdArgs);
                     break;
                 }
                 catch (error) {
@@ -109,8 +109,8 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
         return packageUtility.PackageUtility.getPackagePath(packageDir + "\\*.deploy.cmd");
     }
 
-    private GetDeployScriptCmdArgs(deploycmdFileName:string, msDeployPublishingProfile:any): string {
-        var deployCmdArgs: string = " /C " + deploycmdFileName + " /Y /A:basic \"/U:" + msDeployPublishingProfile.UserName + "\" \"\\\"/P:" + msDeployPublishingProfile.UserPWD 
+    private GetDeployScriptCmdArgs(msDeployPublishingProfile:any): string {
+        var deployCmdArgs: string = " /Y /A:basic \"/U:" + msDeployPublishingProfile.UserName + "\" \"\\\"/P:" + msDeployPublishingProfile.UserPWD 
             + "\\\"\" \"\\\"/M:" + "https://" + msDeployPublishingProfile.PublishUrl + "/msdeploy.axd?site=" + msDeployPublishingProfile.WebAppName + "\\\"\"";
 
         if(msDeployPublishingProfile.TakeAppOfflineFlag) {

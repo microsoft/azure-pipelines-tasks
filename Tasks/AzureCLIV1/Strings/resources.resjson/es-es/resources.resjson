@@ -16,7 +16,7 @@
   "loc.input.label.args": "Argumentos",
   "loc.input.help.args": "Argumentos pasados al script",
   "loc.input.label.addSpnToEnvironment": "Acceder a los detalles de la entidad de servicio en el script",
-  "loc.input.help.addSpnToEnvironment": "Agregue el identificador de entidad de servicio y la clave del punto de conexión de Azure que ha seleccionado al entorno de ejecución del script. Puede usar las variables \"$servicePrincipalId\" y \"$servicePrincipalKey\" en el script.\n\nEsto solo se sigue cuando el punto de conexión de Azure tiene un esquema de autenticación de la entidad de servicio.",
+  "loc.input.help.addSpnToEnvironment": "Agregue el identificador de entidad de servicio y la clave del punto de conexión de Azure que ha seleccionado al entorno de ejecución del script. Puede usar las variables \"$servicePrincipalId\", \"$servicePrincipalKey\" y \"$tenantId\" en el script.\n\nEsto solo se sigue cuando el punto de conexión de Azure tiene un esquema de autenticación de la entidad de servicio.",
   "loc.input.label.useGlobalConfig": "Usar la configuración global de la CLI de Azure",
   "loc.input.help.useGlobalConfig": "Si es false, esta tarea usará su propio [directorio de configuración de la CLI de Azure](https://docs.microsoft.com/en-us/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file). Se puede usar para ejecutar tareas de la CLI de Azure en versiones en *paralelo*.",
   "loc.input.label.cwd": "Directorio de trabajo",

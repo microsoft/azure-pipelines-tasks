@@ -1,8 +1,8 @@
 {
     "id": "501DD25D-1785-43E4-B4E5-A5C78CCC0573",
     "name": "AzureFunctionApp",
-    "friendlyName": "Azure Function",
-    "description": "Deploy an Azure Function for Linux or Windows",
+    "friendlyName": "Azure Functions",
+    "description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based web applications",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiondeployreadme)",
     "category": "Deploy",
@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 20
+        "Minor": 155,
+        "Patch": 1
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [

@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 153,
+    "Minor": 156,
     "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -301,6 +301,18 @@
       "defaultValue": "false",
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.mavenFeedAuthenticate"
+    },
+    {
+      "name": "skipEffectivePom",
+      "aliases": [
+        "effectivePomSkip"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipEffectivePom",
+      "required": true,
+      "defaultValue": "false",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.skipEffectivePom"
     },
     {
       "name": "sqAnalysisEnabled",

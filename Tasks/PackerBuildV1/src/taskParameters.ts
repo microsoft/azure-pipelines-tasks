@@ -85,7 +85,6 @@ export default class TaskParameters {
 
                 this.graphCredentials = this._getAzureADGraphCredentials(this.serviceEndpoint);
             }
-            
             console.log(tl.loc("ParsingAdditionalBuilderParameters"));
             this.additionalBuilderParameters = JSON.parse(tl.getInput("additionalBuilderParameters"));
             this.skipTempFileCleanupDuringVMDeprovision = tl.getBoolInput("skipTempFileCleanupDuringVMDeprovision", false);

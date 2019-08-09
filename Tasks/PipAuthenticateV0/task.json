@@ -9,8 +9,8 @@
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 154,
-        "Patch": 0
+        "Minor": 156,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -64,7 +64,7 @@
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.name}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {
@@ -83,6 +83,7 @@
         "FailedToGetPackagingUri": "Unable to get packaging uri, using default collection uri.",
         "FailedToAddAuthentication": "Failed to add authentication.",
         "FeedTokenUnavailable": "Failed to get the access token for this organization.",
-        "Warn_TooManyFeedEntries": "Too many feed entries for auth. Please reduce the number of repositories in the task."
+        "Warn_TooManyFeedEntries": "Too many feed entries for auth. Please reduce the number of repositories in the task.",
+        "Warning_SessionCreationFailed": "Could not create provenance session: %s"
     }
 }

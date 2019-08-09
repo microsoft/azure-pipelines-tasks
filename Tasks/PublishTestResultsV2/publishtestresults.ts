@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as publishTestResultsTool from './publishtestresultstool';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as ci from './cieventlogger';
 
 const MERGE_THRESHOLD = 100;

@@ -1,14 +1,14 @@
 'use strict';
 
-import * as tl from 'vsts-task-lib/task';
-import { Kubectl } from 'kubernetes-common/kubectl-object-model';
+import * as tl from 'azure-pipelines-task-lib/task';
+import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
 import * as utils from '../utils/utilities';
 import * as TaskInputParameters from '../models/TaskInputParameters';
 
 export async function deleteResources(ignoreSslErrors?: boolean) {
     const args = TaskInputParameters.args;
 
-    if (args == null || args.length == 0) {
+    if (args == null || args.length === 0) {
         throw (tl.loc('ArgumentsInputNotSupplied'));
     }
 

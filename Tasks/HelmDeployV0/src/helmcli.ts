@@ -1,9 +1,9 @@
 import path = require("path");
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 import os = require("os");
-import * as tr from "vsts-task-lib/toolrunner";
+import * as tr from "azure-pipelines-task-lib/toolrunner";
 import basecommand from "./basecommand"
 
 export default class helmcli extends basecommand {
