@@ -1,8 +1,8 @@
 
-You can take a look at this document to learn about how you can add a new [server task](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/authoring/servertaskauthoring.md). Assuming that you are aware of the process for adding a server task, then to make it a gate, you should do the following.
+You can take a look at this document to learn about how you can add a new [server task](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/authoring/servertaskauthoring.md). Assuming that you are aware of the process for adding a server task, to make it into a gate, you should do the following.
 
 #### Change the RunsOn property :
-RunsOn property in task.json specifies where the task should run. The possible values for this property are as follows: -
+RunsOn property in task.json specifies where the task should run. The possible values for this property are as follows:
 
 - Agent
 - DeploymentGroup
@@ -13,11 +13,11 @@ The default value of this property is Agent, but you can change it to ServerGate
 
 #### Provide the result evaluation expression :
 
-In case you are using http request executions in your task, then you should provide the result evaluation expression so that the system can evaluate whether a particular run of a gate has passed or failed. You can learn more about the possible constructs in the expression in this [document](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/authoring/servertaskauthoring.md) and can also look at our built-in tasks for the real world usages ([Azure monitor task](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureMonitorV0/task.json), [Query work items](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/QueryWorkItemsV0/task.json)).
+If you are using http request executions in your task, then you should provide the result evaluation expression so that the system can evaluate whether a particular run of a gate has passed or failed. You can learn more about the possible constructs in the expression in this [document](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/authoring/servertaskauthoring.md) and can also look at our built-in tasks for the real world usages ([Azure monitor task](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureMonitorV0/task.json), [Query work items](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/QueryWorkItemsV0/task.json)).
 
-#### Understand the model difference between gate and server task:
+#### Understand the model difference between gate and server tasks:
 
-Server task can be used to do 2 kinds of activities:
+Server tasks can be used to do 2 kinds of activities:
 
 - Create a new resource on an external system.
 - Query an external system.
