@@ -146,7 +146,8 @@ describe("authenticate azure artifacts feeds for maven", function() {
         assert.equal(data.match(/<privateKey>--privateKey--<\/privateKey>/gi).length, 1, "Only one privateKey entry should be created.");
         assert.equal(data.match(/<passphrase>--passphrase--<\/passphrase>/gi).length, 1, "Only one passphrase entry should be created.");
 
-        assert.equal(data.match(/<value>Basic --token--<\/value>/gi).length, 1, "Only one api token entry should be created.");
+        assert.equal(data.match(/<username>AzureDevOps<\/username>/gi).length, 1, "Only one username entry should be created for api token.");
+        assert.equal(data.match(/<password>--token--<\/password>/gi).length, 1, "Only one password entry should be created for api token.");
 
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.succeeded, "task should have succeeded");
