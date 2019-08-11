@@ -225,8 +225,9 @@
             "type": "multiLine",
             "label": "Labels",
             "required": false,
+            "defaultValue": "{ \"labels\" : [{ \"label\" : \"bug\", \"displayName\" : \"Bugs\" }]}",
             "groupName": "changeLogConfiguration",
-            "helpMarkDown": "Specify the labels to be used for changelog categorization. If leaved blank, ChangeLog is generated based on commit history."
+            "helpMarkDown": "Specify the labels to be used for change log categorization."
         }
     ],
     "dataSourceBindings": [
@@ -319,6 +320,6 @@
         "SearchingFileMatchingPattern": "Searching for file(s) matching '%s'.",
         "IssuesFetchError": "Error fetching issues. Cannot generate change log.",
         "NoIssuesLinkedError": "No issues are linked to commits in the specified commit Diff.",
-        "ChangeLogLabelsParseError": "Unable to parse changeLogLabels. Change log will be generated based on commit difference."
+        "ChangeLogLabelsParseError": "Unable to parse changeLog labels."
     }
 }

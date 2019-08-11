@@ -225,6 +225,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.changeLogLabels",
       "required": false,
+      "defaultValue": "{ \"labels\" : [{ \"label\" : \"bug\", \"displayName\" : \"Bugs\" }]}",
       "groupName": "changeLogConfiguration",
       "helpMarkDown": "ms-resource:loc.input.help.changeLogLabels"
     }

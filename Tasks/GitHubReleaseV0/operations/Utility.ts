@@ -288,6 +288,7 @@ class ReleaseNotesSelectionMode {
 
 export class GitHubIssueState{
     public static readonly closed = "CLOSED";
+    public static readonly merged = "MERGED";
 }
 
 export class GitHubAttributes {

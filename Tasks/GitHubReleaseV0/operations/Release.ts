@@ -199,28 +199,65 @@ export class Release {
             'Authorization': 'token ' + githubEndpointToken
         };
         tl.debug("Fetching labels for issues: " + issues);
-        let issuesQuery = issues.map(issue =>
-            `_${issue}: issue(number: ${issue}){
-                title
-                state
-                labels(last: 100) {
-                    edges {
-                        node{
-                            name
-                            description
+        let issuesQuery = issues.map(issue => `_${issue}: issueOrPullRequest(number: ${issue}){ ...labelsForIssue ...labelsForPullRequest }`).join(", ");
+        let repositoryDetails = repositoryName.split("/");
+        let labelsFragmentForIssue = `fragment labelsForIssue on Issue{
+        title
+        state
+        labels(last: 10) {
+            edges {
+                node{
+                    name
+                    }
+                }
+            }
+        }`;
+        let labelsFragmentForPullRequest = `fragment labelsForPullRequest on PullRequest{
+            title
+            state
+            changedFiles
+            labels(last: 10) {
+                edges {
+                    node{
+                        name
                         }
                     }
                 }
-            }`
-        ).join(", ");
-        let repositoryDetails = repositoryName.split("/");
-        let query = `{
+            }`;
+        let query = `query{
             repository(owner: ${repositoryDetails[0]}, name: ${repositoryDetails[1]}){
                 ${issuesQuery}
             }
-        }`;
+        }
+        ${labelsFragmentForIssue}
+        ${labelsFragmentForPullRequest}`;
         request.body = JSON.stringify({ query });
         tl.debug("Get issues along with labels: " + JSON.stringify(request));
+        return await sendRequest(request)
+    }
+
+    public async getIssuesList(githubEndpointToken: string, repositoryName: string, issues: number[]) {
+        let request = new WebRequest();
+        request.uri = util.format(this._graphQLUrlFormat, Utility.getGitHubApiUrl());
+        request.method = "POST";
+        request.headers = {
+            'Authorization': 'token ' + githubEndpointToken
+        };
+        tl.debug("Fetching labels for issues: " + issues);
+        let issuesQuery = issues.map(issue => `_${issue}: issue(number: ${issue}){ ...labelsFragment }`).join(", ");
+        let repositoryDetails = repositoryName.split("/");
+        let labelsFragment = `fragment labelsFragment on Issue{
+        title
+        state
+        }`;
+        let query = `query{
+            repository(owner: ${repositoryDetails[0]}, name: ${repositoryDetails[1]}){
+                ${issuesQuery}
+            }
+        }
+        ${labelsFragment}`;
+        request.body = JSON.stringify({ query });
+        tl.debug("Get issues list: " + JSON.stringify(request));
         return await sendRequest(request)
     }
 
