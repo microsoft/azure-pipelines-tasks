@@ -78,7 +78,7 @@ export class ChangeLog {
                         });
                     });
 
-                   return this._getIssueBasedChangeLog(commitIdToRepoIssueIdsDictionary, commitIdToMessageDictionary, Array.from(issues), repositoryName, release, githubEndpointToken, changeLogLabels.labels);
+                   return this._getAllIssuesChangeLog(commitIdToRepoIssueIdsDictionary, commitIdToMessageDictionary, Array.from(issues), repositoryName, release, githubEndpointToken);
                 }
                 else{
                     return this._getCommitBasedChangeLog(commitIdToRepoIssueIdsDictionary, commitIdToMessageDictionary, repositoryName);
@@ -659,7 +659,7 @@ export class ChangeLog {
     // Supported format for GitHub issues: #26 GH-26 repositoryName#26 repositoryNameGH-26, where GH is case in-sensitive.
     private readonly _issueRegex = new RegExp("(?:^|[^A-Za-z0-9_]?)([a-z0-9_]+/[a-zA-Z0-9-_.]+)?(?:#|[G|g][H|h]-)([0-9]+)(?:[^A-Za-z_]|$)", "gm");
     private readonly _commitsBasedChangeLogTitle: string = "Changes";
-    private readonly _allIssuesChangeLogTitle: string = "All issues";
+    private readonly _allIssuesChangeLogTitle: string = "All linked issues/pull requests";
     private readonly _seeMoreText: string = "See more";
     private readonly _noStateSpecified: string = "none";
     private readonly _defaultGroup: string = "Others";
