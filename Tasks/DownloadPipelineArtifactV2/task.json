@@ -141,7 +141,7 @@
                 "EditableOptions": "True",
                 "DisableManageLink": "True"
             },
-            "helpMarkDown": "The name of the artifact to download. If left empty, it will download all artifacts associated to the pipeline run."
+            "helpMarkDown": "The name of the artifact to download. If left empty, it will download all artifact associated to the pipeline run."
         },
         {
             "name": "patterns",
