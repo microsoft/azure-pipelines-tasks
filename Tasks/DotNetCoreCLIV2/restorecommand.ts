@@ -45,6 +45,9 @@ export async function run(): Promise<void> {
             packagesDirectory = null;
         }
 
+        // Allow for custom arguments
+        const customArguments = tl.getInput('arguments');
+
         // Setting up auth-related variables
         tl.debug('Setting up auth');
         const serviceUri = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
@@ -132,7 +135,7 @@ export async function run(): Promise<void> {
 
         try {
             for (const projectFile of projectFiles) {
-                await dotNetRestoreAsync(dotnetPath, projectFile, packagesDirectory, configFile, noCache, verbosity);
+                await dotNetRestoreAsync(dotnetPath, projectFile, packagesDirectory, configFile, noCache, verbosity, customArguments);
             }
         } finally {
             credCleanup();
@@ -154,7 +157,7 @@ export async function run(): Promise<void> {
     }
 }
 
-function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDirectory: string, configFile: string, noCache: boolean, verbosity: string): Q.Promise<number> {
+function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDirectory: string, configFile: string, noCache: boolean, verbosity: string, customArguments: string): Q.Promise<number> {
     const dotnet = tl.tool(dotnetPath);
     dotnet.arg('restore');
 
@@ -177,6 +180,11 @@ function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDir
     if (verbosity && verbosity !== '-') {
         dotnet.arg('--verbosity');
         dotnet.arg(verbosity);
+    }
+
+    // Allow for custom arguments
+    if(customArguments) {
+        dotnet.arg(customArguments);
     }
 
     const envWithProxy = ngRunner.setNuGetProxyEnvironment(process.env, configFile, null);
