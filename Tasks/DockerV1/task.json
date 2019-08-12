@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 154,
+        "Minor": 155,
         "Patch": 3
     },
     "demands": [],
@@ -166,6 +166,15 @@
             "visibleRule": "command = Build an image || command = build || command = Tag image || command = tag || command = Push an image || command = push || command = Run an image || command = run",
             "groupName": "commands",
             "helpMarkDown": "Qualify the image name with the Docker registry service connection's hostname if not otherwise specified."
+        },
+        {
+            "name": "qualifySourceImageName",
+            "type": "boolean",
+            "label": "Qualify source image name",
+            "defaultValue": "false",
+            "visibleRule": "command = Tag image || command = tag",
+            "groupName": "commands",
+            "helpMarkDown": "Qualify the source image name with the Docker registry service connection's hostname if not otherwise specified."
         },
         {
             "name": "includeSourceTags",
