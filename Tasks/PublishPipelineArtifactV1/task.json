@@ -79,7 +79,7 @@
             "defaultValue": 8,
             "required": false,
             "helpMarkDown": "Enter the degree of parallelism, or number of threads used, to perform the copy. The value must be at least 1 and not greater than 128.",
-            "visibleRule": "artifactType = filepath && Parallel = true"
+            "visibleRule": "artifactType = filepath && parallel = true"
         }
     ],
     "instanceNameFormat": "Publish Pipeline Artifact",
