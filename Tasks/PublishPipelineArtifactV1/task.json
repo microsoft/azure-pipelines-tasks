@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 1
+        "Minor": 1,
+        "Patch": 0
     },
     "groups": [],
     "demands": [],
@@ -38,7 +38,8 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Name of the artifact to publish. If not set, defaults to a unique ID scoped to the job."
-        }, {
+        }, 
+        {
             "name": "artifactType",
             "aliases": [
                 "publishLocation"
@@ -50,7 +51,7 @@
             "helpMarkDown": "Choose whether to store the artifact in Azure Pipelines, or to copy it to a file share that must be accessible from the pipeline agent.",
             "options": {
                 "pipeline": "Azure Pipelines",
-                "filePath": "A file share"
+                "filepath": "A file share"
             }
         },
         {
@@ -60,7 +61,7 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The file share to which the artifact files will be copied. This can include variables. Example: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). Publishing artifacts from a Linux or macOS agent to a file share is not supported.",
-            "visibleRule": "artifactType = filePath"
+            "visibleRule": "artifactType = filepath"
         },
         {
             "name": "parallel",
@@ -69,7 +70,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Select whether to copy files in parallel using multiple threads for greater potential throughput. If this setting is not enabled, one thread will be used.",
-            "visibleRule": "artifactType = filePath"
+            "visibleRule": "artifactType = filepath"
         },
         {
             "name": "parallelCount",
@@ -78,7 +79,7 @@
             "defaultValue": 8,
             "required": false,
             "helpMarkDown": "Enter the degree of parallelism, or number of threads used, to perform the copy. The value must be at least 1 and not greater than 128.",
-            "visibleRule": "artifactType = filePath && Parallel = true"
+            "visibleRule": "artifactType = filepath && Parallel = true"
         }
     ],
     "instanceNameFormat": "Publish Pipeline Artifact",
