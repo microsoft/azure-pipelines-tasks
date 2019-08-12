@@ -51,7 +51,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.artifactType",
       "options": {
         "pipeline": "Azure Pipelines",
-        "filePath": "A file share"
+        "filepath": "A file share"
       }
     },
     {
@@ -61,25 +61,25 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.fileSharePath",
-      "visibleRule": "artifactType = filePath"
+      "visibleRule": "artifactType = filepath"
     },
     {
-      "name": "Parallel",
+      "name": "parallel",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.Parallel",
+      "label": "ms-resource:loc.input.label.parallel",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.Parallel",
-      "visibleRule": "artifactType = filePath"
+      "helpMarkDown": "ms-resource:loc.input.help.parallel",
+      "visibleRule": "artifactType = filepath"
     },
     {
-      "name": "ParallelCount",
+      "name": "parallelCount",
       "type": "int",
-      "label": "ms-resource:loc.input.label.ParallelCount",
+      "label": "ms-resource:loc.input.label.parallelCount",
       "defaultValue": 8,
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.ParallelCount",
-      "visibleRule": "artifactType = filePath && Parallel = true"
+      "helpMarkDown": "ms-resource:loc.input.help.parallelCount",
+      "visibleRule": "artifactType = filepath && Parallel = true"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
