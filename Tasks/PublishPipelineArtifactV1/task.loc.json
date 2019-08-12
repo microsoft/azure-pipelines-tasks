@@ -79,7 +79,7 @@
       "defaultValue": 8,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.parallelCount",
-      "visibleRule": "artifactType = filepath && Parallel = true"
+      "visibleRule": "artifactType = filepath && parallel = true"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
