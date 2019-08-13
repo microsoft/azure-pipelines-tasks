@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require('assert');
-const ttm = require('vsts-task-lib/mock-test');
-const tl = require('vsts-task-lib');
+const ttm = require('azure-pipelines-task-lib/mock-test');
+const tl = require('azure-pipelines-task-lib');
 const path = require('path');
 
 function setResponseFile(name) {
