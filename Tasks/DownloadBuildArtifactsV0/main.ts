@@ -350,13 +350,13 @@ async function main(): Promise<void> {
 
 function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount): Promise<any> {
     var executePromise = new Promise((resolve, reject) => {
-        executeWithRetriesImplementation(operationName, operation, retryCount, resolve, reject);
+        executeWithRetriesImplementation(operationName, operation, retryCount, resolve, reject, retryCount);
     });
 
     return executePromise;
 }
 
-function executeWithRetriesImplementation(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject) {
+function executeWithRetriesImplementation(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject, retryCountLimit) {
     operation().then((result) => {
         resolve(result);
     }).catch((error) => {
@@ -367,9 +367,16 @@ function executeWithRetriesImplementation(operationName: string, operation: () =
         else {
             console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
             currentRetryCount = currentRetryCount - 1;
-            setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject), 4 * 1000);
+            setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject, retryCountLimit), getRetryIntervalInSeconds(retryCountLimit - currentRetryCount) * 1000);
         }
     });
+}
+
+function getRetryIntervalInSeconds(retryCount: number): number {
+    let MaxRetryLimitInSeconds = 360;
+    let baseRetryIntervalInSeconds = 5; 
+    var exponentialBackOff = baseRetryIntervalInSeconds * Math.pow(3, (retryCount + 1));
+    return exponentialBackOff < MaxRetryLimitInSeconds ? exponentialBackOff : MaxRetryLimitInSeconds ;
 }
 
 async function getZipFromUrl(artifactArchiveUrl: string, localPathRoot: string, handler: webHandlers.PersonalAccessTokenCredentialHandler, downloaderOptions: engine.ArtifactEngineOptions) {

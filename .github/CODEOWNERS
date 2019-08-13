@@ -83,6 +83,8 @@ Tasks/CmdLineV2/*   @bryanmacfarlane
 
 Tasks/CocoaPodsV0/*     @madhurig
 
+Tasks/Common/artifacts-common/*     @zjrunner   @zarenner   @shubham90
+
 Tasks/Common/AzureRmDeploy-common/*   @vincentdass  @SumiranAgg
 
 Tasks/Common/Deployment/*   @bishal-pdMSFT  @chshrikh
@@ -229,6 +231,8 @@ Tasks/KubernetesManifestV0/*    @bansalaseem
 
 Tasks/ManualInterventionV8/*    @bansalaseem
 
+Tasks/MavenAuthenticateV0/*     @zjrunner   @aasim
+
 Tasks/MavenV2/*     @madhurig
 
 Tasks/MavenV3/*     @madhurig
@@ -247,6 +251,8 @@ Tasks/NuGetV0/*     @zjrunner
 
 Tasks/NuGetCommandV2/*      @zjrunner @jotaylo
 
+Tasks/NuGetAuthenticateV0/*      @zjrunner @zarenner
+
 Tasks/NuGetPackagerV0/*     @zjrunner
 
 Tasks/NuGetPublisherV0/*    @zjrunner
@@ -258,6 +264,8 @@ Tasks/PackerBuildV0/*   @sachinma
 Tasks/PackerBuildV1/*   @sachinma
 
 Tasks/PipAuthenticateV0/*     @zjrunner @shubham90
+
+Tasks/PipAuthenticateV1/*     @zjrunner @shubham90
 
 Tasks/PowerShellV2/*    @bryanmacfarlane
 
@@ -312,6 +320,8 @@ Tasks/SqlServerDacpacDeployment/*   @kmkumaran
 Tasks/SshV0/*   @madhurig
 
 Tasks/TwineAuthenticateV0/*     @zjrunner
+
+Tasks/TwineAuthenticateV1/*     @zjrunner @shubham90
 
 Tasks/UniversalPackagesV0/*     @zjrunner
 
