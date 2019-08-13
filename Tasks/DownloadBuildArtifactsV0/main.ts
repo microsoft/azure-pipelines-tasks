@@ -375,7 +375,7 @@ function executeWithRetriesImplementation(operationName: string, operation: () =
 function getRetryIntervalInSeconds(retryCount: number): number {
     let MaxRetryLimitInSeconds = 360;
     let baseRetryIntervalInSeconds = 5; 
-    var exponentialBackOff = baseRetryIntervalInSeconds * (3 ^ (retryCount + 1));
+    var exponentialBackOff = baseRetryIntervalInSeconds * Math.pow(3, (retryCount + 1));
     return exponentialBackOff < MaxRetryLimitInSeconds ? exponentialBackOff : MaxRetryLimitInSeconds ;
 }
 
