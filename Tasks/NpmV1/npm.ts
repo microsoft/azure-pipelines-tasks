@@ -37,6 +37,8 @@ async function main(): Promise<void> {
     switch (command) {
         case NpmCommand.Install:
             return npmCustom.run(packagingLocation, NpmCommand.Install);
+        case NpmCommand.ContinuousIntegration:
+            return npmCustom.run(packagingLocation, NpmCommand.ContinuousIntegration);
         case NpmCommand.Publish:
             return npmPublish.run(packagingLocation);
         case NpmCommand.Custom:
