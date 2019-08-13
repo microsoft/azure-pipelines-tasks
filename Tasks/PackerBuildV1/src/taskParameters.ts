@@ -126,14 +126,6 @@ export default class TaskParameters {
         return inputPath;
     }
 
-    private _tinyGuid() {
-        return "yxxx".replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0;
-            var v = c === "x" ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
-
     private _getAzureADGraphCredentials(connectedService: string): msRestAzure.ApplicationTokenCredentials {
         var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
         var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);

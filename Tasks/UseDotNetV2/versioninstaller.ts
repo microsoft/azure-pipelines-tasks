@@ -8,7 +8,7 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 import * as utils from "./versionutilities";
 import { VersionInfo } from "./models"
-const uuidV4 = require('uuid/v4');
+import { tinyGuid } from 'utility-common-v2/tinyGuidUtility'
 
 export class VersionInstaller {
     constructor(packageType: string, installationPath: string) {
@@ -45,7 +45,7 @@ export class VersionInstaller {
             console.log(tl.loc("ExtractingPackage", downloadPath));
             try {
                 let tempDirectory = tl.getVariable('Agent.TempDirectory');
-                var destination = path.join( tempDirectory, this._tinyGuid());
+                var destination = path.join( tempDirectory, tinyGuid());
                 var extPath = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath, destination) : await toolLib.extractTar(downloadPath);
             }
             catch (ex) {
@@ -171,14 +171,6 @@ export class VersionInstaller {
         }
 
         throw tl.loc("FileNameNotCorrectCompleteFileName", name);
-    }
-
-    private _tinyGuid() {
-        return "yxxx".replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0;
-            var v = c === "x" ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
     }
 
     private packageType: string;
