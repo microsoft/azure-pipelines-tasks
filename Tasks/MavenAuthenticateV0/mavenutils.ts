@@ -59,14 +59,8 @@ export function getExternalServiceEndpointsServerElements(input: string) {
                 const tokenAuthInfo = serviceConnection as TokenServiceConnection;
                 serverElements.push({
                     id: serviceConnection.additionalData["REPOSITORYID"],
-                    configuration: {
-                        httpHeaders: {
-                            property: {
-                                name: 'Authorization',
-                                value: 'Basic ' + tokenAuthInfo.token
-                            }
-                        }
-                    }
+                    username: "AzureDevOps",
+                    password: tokenAuthInfo.token
                 });
                 tl.debug(`Detected token credentials for '${serviceConnection.packageSource.uri}'`);
                 break;
