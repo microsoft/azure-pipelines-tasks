@@ -101,7 +101,6 @@ async function queryLatestMatch(versionSpec: string): Promise<string> {
             // versions in the file are prefixed with 'v', which is not valid SemVer
             // remove 'v' so that toolLib.evaluateVersions behaves properly
             nodeVersion.semanticVersion = toolLib.cleanVersion(nodeVersion.version);
-            console.log(nodeVersion.semanticVersion);
             versions.push(nodeVersion.semanticVersion);
         }
     });
