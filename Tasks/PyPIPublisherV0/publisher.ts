@@ -1,4 +1,4 @@
-var tl = require('vsts-task-lib/task');
+var tl = require('azure-pipelines-task-lib/task');
 var os = require('os');
 var path = require('path');
 var util = require("util");

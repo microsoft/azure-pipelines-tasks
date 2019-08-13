@@ -1,4 +1,4 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 var mockery = require('mockery');
 mockery.enable({
     useCleanCache: true,
@@ -6,7 +6,7 @@ mockery.enable({
     warnOnUnregistered: false
 });
 
-mockery.registerMock('vsts-task-lib/task', {
+mockery.registerMock('azure-pipelines-task-lib/task', {
     exist: function (path: string) { tl.debug(tl.loc("inexist")); return false; },
     mkdirP: function (path: string) {
         tl.debug(tl.loc("inmkdirp"))

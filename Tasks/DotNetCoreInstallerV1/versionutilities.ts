@@ -1,6 +1,6 @@
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
-import * as toolLib from 'vsts-task-tool-lib';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as toolLib from 'azure-pipelines-tool-lib';
 import * as semver from 'semver';
 import { VersionInfo } from "./models"
 
@@ -51,7 +51,7 @@ export function getMatchingVersionFromList(versionInfoList: VersionInfo[], versi
     });
 
     if (versionList.length > 0) {
-        let matchedVersion = semver.maxSatisfying(versionList, versionSpec, { includePrerelease: includePreviewVersions });
+        let matchedVersion = semver.maxSatisfying(versionList, versionSpec, includePreviewVersions);
         if (matchedVersion) {
             return versionInfoList.find(versionInfo => {
                 return versionInfo.getVersion() == matchedVersion
