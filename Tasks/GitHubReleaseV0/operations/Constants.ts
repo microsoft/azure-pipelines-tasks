@@ -20,4 +20,5 @@ export class Inputs {
     public static readonly tagPattern = "tagPattern";
     public static readonly changeLogCompareToRelease = "changeLogCompareToRelease";
     public static readonly changeLogCompareToReleaseTag = "changeLogCompareToReleaseTag";
+    public static readonly changeLogType = "changeLogType";
 }

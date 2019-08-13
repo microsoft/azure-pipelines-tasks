@@ -281,6 +281,10 @@ export enum ChangeLogStartCommit{
     lastNonDraftReleaseByTag
 }
 
+export class ChangeLogType{
+    public static readonly issueBased = "issueBased";
+    public static readonly commitBased = "commitBased";
+}
 class ReleaseNotesSelectionMode {
     public static readonly input = "input";
     public static readonly file = "file";

@@ -221,11 +221,25 @@
       "helpMarkDown": "ms-resource:loc.input.help.changeLogCompareToReleaseTag"
     },
     {
+      "name": "changeLogType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.changeLogType",
+      "required": true,
+      "defaultValue": "issueBased",
+      "groupName": "changeLogConfiguration",
+      "visibleRule": "addChangeLog = true",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogType",
+      "options": {
+        "commitBased": "Commit based",
+        "issueBased": "Issue based"
+      }
+    },
+    {
       "name": "changeLogLabels",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.changeLogLabels",
-      "required": false,
-      "defaultValue": "{ \"labels\" : [{ \"label\" : \"bug\", \"displayName\" : \"Bugs\" }]}",
+      "required": true,
+      "visibleRule": "changeLogType = issueBased",
       "groupName": "changeLogConfiguration",
       "helpMarkDown": "ms-resource:loc.input.help.changeLogLabels"
     }
@@ -320,6 +334,7 @@
     "SearchingFileMatchingPattern": "ms-resource:loc.messages.SearchingFileMatchingPattern",
     "IssuesFetchError": "ms-resource:loc.messages.IssuesFetchError",
     "NoIssuesLinkedError": "ms-resource:loc.messages.NoIssuesLinkedError",
-    "ChangeLogLabelsParseError": "ms-resource:loc.messages.ChangeLogLabelsParseError"
+    "ChangeLogLabelsParseError": "ms-resource:loc.messages.ChangeLogLabelsParseError",
+    "NoLabelsSpecified": "ms-resource:loc.messages.NoLabelsSpecified"
   }
 }

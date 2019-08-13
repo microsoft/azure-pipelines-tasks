@@ -220,12 +220,27 @@
             "visibleRule": "changeLogCompareToRelease = lastNonDraftReleaseByTag",
             "helpMarkDown": "Specify the regex for release tag. Release matching this tag will be used as base for changelog computation."
         },
+        
+        {
+            "name": "changeLogType",
+            "type": "radio",
+            "label": "Change log type",
+            "required": true,
+            "defaultValue": "issueBased",
+            "groupName": "changeLogConfiguration",
+            "visibleRule": "addChangeLog = true",
+            "helpMarkDown": "Change log type",
+            "options": {
+                "commitBased": "Commit based",
+                "issueBased": "Issue based"
+            }
+        },
         {
             "name": "changeLogLabels",
             "type": "multiLine",
             "label": "Labels",
-            "required": false,
-            "defaultValue": "{ \"labels\" : [{ \"label\" : \"bug\", \"displayName\" : \"Bugs\" }]}",
+            "required": true,
+            "visibleRule": "changeLogType = issueBased",
             "groupName": "changeLogConfiguration",
             "helpMarkDown": "Specify the labels to be used for change log categorization."
         }
@@ -320,6 +335,7 @@
         "SearchingFileMatchingPattern": "Searching for file(s) matching '%s'.",
         "IssuesFetchError": "Error fetching issues. Cannot generate change log.",
         "NoIssuesLinkedError": "No issues are linked to commits in the specified commit Diff.",
-        "ChangeLogLabelsParseError": "Unable to parse changeLog labels."
+        "ChangeLogLabelsParseError": "Unable to parse changeLog labels.",
+        "NoLabelsSpecified": "Error occured while parsing the labels. For yaml syntax see: https://aka.ms/AA3m1bq"
     }
 }
