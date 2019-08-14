@@ -20,6 +20,7 @@
     "Minor": 0,
     "Patch": 0
   },
+  "preview": "true",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -38,48 +39,30 @@
       "helpMarkDown": "ms-resource:loc.input.help.folderPath"
     },
     {
-      "name": "enableXmlTransform",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.enableXmlTransform",
-      "required": false,
-      "defaultValue": false,
-      "helpMarkDown": "ms-resource:loc.input.help.enableXmlTransform"
-    },
-    {
       "name": "xmlTransformationRules",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.xmlTransformationRules",
       "defaultValue": "-transform **\\*.Release.config -xml **\\*.config",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.xmlTransformationRules",
-      "visibleRule": "enableXmlTransform == true"
-    },
-    {
-      "name": "fileType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.fileType",
-      "defaultValue": "",
       "required": false,
-      "options": {
-        "": "Select file format",
-        "xml": "XML",
-        "json": "JSON"
-      },
-      "properties": {
-        "EditableOptions": "False"
-      },
-      "groupName": "VariableSubstitution",
-      "helpMarkDown": "ms-resource:loc.input.help.fileType"
+      "helpMarkDown": "ms-resource:loc.input.help.xmlTransformationRules"
     },
     {
-      "name": "targetFiles",
+      "name": "jsonTargetFiles",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.targetFiles",
+      "label": "ms-resource:loc.input.label.jsonTargetFiles",
       "required": false,
       "defaultValue": "",
       "groupName": "VariableSubstitution",
-      "visibleRule": "fileType = xml || fileType = json",
-      "helpMarkDown": "ms-resource:loc.input.help.targetFiles"
+      "helpMarkDown": "ms-resource:loc.input.help.jsonTargetFiles"
+    },
+    {
+      "name": " xmlTargetFiles",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label. xmlTargetFiles",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "VariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help. xmlTargetFiles"
     }
   ],
   "execution": {
@@ -91,8 +74,10 @@
   "messages": {
     "JSONvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.JSONvariablesubstitutionappliedsuccessfully",
     "FailedToApplyJSONvariablesubstitution": "ms-resource:loc.messages.FailedToApplyJSONvariablesubstitution",
+    "FailedToApplyJSONvariablesubstitutionReason1": "ms-resource:loc.messages.FailedToApplyJSONvariablesubstitutionReason1",
     "XMLvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.XMLvariablesubstitutionappliedsuccessfully",
     "FailedToApplyXMLvariablesubstitution": "ms-resource:loc.messages.FailedToApplyXMLvariablesubstitution",
+    "FailedToApplyXMLvariablesubstitutionReason1": "ms-resource:loc.messages.FailedToApplyXMLvariablesubstitutionReason1",
     "XDTTransformationsappliedsuccessfully": "ms-resource:loc.messages.XDTTransformationsappliedsuccessfully",
     "CannotPerformXdtTransformationOnNonWindowsPlatform": "ms-resource:loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform",
     "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
@@ -116,6 +101,7 @@
     "ConfigFileUpdated": "ms-resource:loc.messages.ConfigFileUpdated",
     "SkippedUpdatingFile": "ms-resource:loc.messages.SkippedUpdatingFile",
     "FailedToApplyTransformationReason1": "ms-resource:loc.messages.FailedToApplyTransformationReason1",
-    "FailedToApplyTransformationReason2": "ms-resource:loc.messages.FailedToApplyTransformationReason2"
+    "FailedToApplyTransformationReason2": "ms-resource:loc.messages.FailedToApplyTransformationReason2",
+    "FileTranformationNotEnabled": "ms-resource:loc.messages.FileTranformationNotEnabled"
   }
 }

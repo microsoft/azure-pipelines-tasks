@@ -39,48 +39,30 @@
             "helpMarkDown": "File path to the package or a folder.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
-            "name": "enableXmlTransform",
-            "type": "boolean",
-            "label": "XML transformation",
-            "required": false,
-            "defaultValue": false,
-            "helpMarkDown": "Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform."
-        },
-        {
             "name": "xmlTransformationRules",
             "type": "multiLine",
-            "label": "Transformation rules",
+            "label": "XML Transformation rules",
             "defaultValue": "-transform **\\*.Release.config -xml **\\*.config",
-            "required": true,
-            "helpMarkDown": "Provide new line separated list of transformation file rules using the syntax: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>",
-            "visibleRule": "enableXmlTransform == true"
-        },
-        {
-            "name": "fileType",
-            "type": "pickList",
-            "label": "File format",
-            "defaultValue": "",
             "required": false,
-            "options": {
-                "": "Select file format",
-                "xml": "XML",
-                "json": "JSON"
-            },
-            "properties": {
-                "EditableOptions": "False"
-            },
-            "groupName": "VariableSubstitution",
-            "helpMarkDown": "Provide file format on which substitution has to be perfformed<br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. Variable Substitution is run after config transforms.<br/>To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build or release pipeline (or release pipeline's environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables."
+            "helpMarkDown": "Provide new line separated list of transformation file rules using the syntax: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>"
         },
         {
-            "name": "targetFiles",
+            "name": "jsonTargetFiles",
             "type": "multiLine",
-            "label": "Target files",
+            "label": "JSON target files",
             "required": false,
             "defaultValue": "",
             "groupName": "VariableSubstitution",
-            "visibleRule": "fileType = xml || fileType = json",
-            "helpMarkDown": "Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder."
+            "helpMarkDown": "Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build or release pipeline (or release pipeline's environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> } <br/> Variable Substitution is run after configuration transforms. </br> </br> Note: Only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables. "
+        },
+        {
+            "name": " xmlTargetFiles",
+            "type": "multiLine",
+            "label": "XML target files",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "VariableSubstitution",
+            "helpMarkDown": "Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder. <br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. <br/> Variable Substitution is run after configuration transforms. </br> Note: Only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables."
         }
     ],
     "execution": {
@@ -119,6 +101,7 @@
         "ConfigFileUpdated" : "Config file : %s updated.",
         "SkippedUpdatingFile" : "Skipped Updating file: %s",
         "FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
-        "FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package."
+        "FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
+        "FileTranformationNotEnabled" : "File Tranformation is not enabled. Please provide one of the following : XML Tranformation rules or JSON/XML target files for variable substitution."
     }
 }
