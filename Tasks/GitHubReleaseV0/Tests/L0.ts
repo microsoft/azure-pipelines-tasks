@@ -110,8 +110,9 @@ describe('GitHubReleaseTaskTests Suite', function() {
         let tp = path.join(__dirname, 'ChangeLogTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
         assert(tr.stdout.search(TestString.getChangeLogKeyword) >= 0, 'should have printed: ' + TestString.getChangeLogKeyword);
+        assert(tr.stdout.search(TestString.allIssuesChangeLog) >= 0, 'should have printed: ' + TestString.allIssuesChangeLog);
+        assert(tr.stdout.search(TestString.issueBasedChangeLog) >= 0, 'should have printed: ' + TestString.issueBasedChangeLog);
         assert(tr.stdout.search("Tag Name: v1.2") >=0, 'should have printed: TagName: v1.2');
         assert(tr.stdout.search("Tag Name: pre_rel") >=0, 'should have printed: TagName: pre_rel');
         assert(tr.stdout.search("Tag Name: tagName") >=0, 'should have printed: TagName: tagName');
