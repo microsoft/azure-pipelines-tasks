@@ -106,7 +106,8 @@ export class VersionParts {
                 throw "";
             }
 
-            return !!semver.valid(version);
+            new semver.Range(version);
+            return true;
         }
         catch (ex) {
             throw tl.loc("VersionNotAllowed", version)
