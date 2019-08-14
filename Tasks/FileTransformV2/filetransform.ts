@@ -10,24 +10,27 @@ async function main() {
     tl.setResourcePath(path.join( __dirname, 'node_modules/webdeployment-common-v2/module.json'));
     let webPackage = new Package(tl.getPathInput('folderPath', true));
     let packagePath = webPackage.getPath();
-    let fileType = tl.getInput("fileType", false);
-    let targetFiles = tl.getDelimitedInput('targetFiles', '\n', false);
-    let xmlTransformation = tl.getBoolInput('enableXmlTransform', false);
+    let xmlTransformation = true;
     let xmlTransformationRules = tl.getDelimitedInput('xmlTransformationRules', '\n', false);
-    let applyFileTransformFlag = fileType || xmlTransformation;
-    if (applyFileTransformFlag) {
+    let xmlTargetFiles = tl.getDelimitedInput('xmlTargetFiles', '\n', false);
+    let jsonTargetFiles = tl.getDelimitedInput('jsonTargetFiles', '\n', false);
+    if(xmlTransformationRules.length == 0) {
+        xmlTransformation = false;
+    }
+
+    if ( xmlTransformation || xmlTargetFiles.length != 0 || xmlTargetFiles.length != 0) {
         let isFolderBasedDeployment: boolean = tl.stats(packagePath).isDirectory();
         if(!isFolderBasedDeployment) {
             var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, packagePath, webPackage.getPackageType());
-            fileTransformationsUtility.advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, folderPath, xmlTransformationRules, true);
+            fileTransformationsUtility.enhancedFileTransformations(isFolderBasedDeployment, xmlTransformation, folderPath, xmlTransformationRules, xmlTargetFiles, jsonTargetFiles, true);
             await zipUtility.archiveFolder(folderPath, path.dirname(packagePath), path.basename(packagePath));
         }
         else {
-            fileTransformationsUtility.advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, packagePath, xmlTransformationRules, true);
+            fileTransformationsUtility.enhancedFileTransformations(isFolderBasedDeployment, xmlTransformation, packagePath, xmlTransformationRules, xmlTargetFiles, jsonTargetFiles, true);
         }
     }
     else {
-        tl.debug('File Tranformation not enabled');
+        throw Error(tl.loc('FileTranformationNotEnabled'));
     }
 }
 
