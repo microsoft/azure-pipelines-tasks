@@ -45,8 +45,8 @@ export class VersionInstaller {
             console.log(tl.loc("ExtractingPackage", downloadPath));
             try {
                 let tempDirectory = tl.getVariable('Agent.TempDirectory');
-                var destination = path.join( tempDirectory, tinyGuid());
-                var extPath = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath, destination) : await toolLib.extractTar(downloadPath);
+                let destination = path.join( tempDirectory, tinyGuid());
+                var extDirectory = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath, destination) : await toolLib.extractTar(downloadPath);
             }
             catch (ex) {
                 throw tl.loc("FailedWhileExtractingPacakge", ex);
@@ -54,7 +54,7 @@ export class VersionInstaller {
 
             // Copy folders
             tl.debug(tl.loc("CopyingFoldersIntoPath", this.installationPath));
-            var allRootLevelEnteriesInDir: string[] = tl.ls("", [extPath]).map(name => path.join(extPath, name));
+            var allRootLevelEnteriesInDir: string[] = tl.ls("", [extDirectory]).map(name => path.join(extDirectory, name));
             var directoriesTobeCopied: string[] = allRootLevelEnteriesInDir.filter(path => fs.lstatSync(path).isDirectory());
             directoriesTobeCopied.forEach((directoryPath) => {
                 tl.cp(directoryPath, this.installationPath, "-rf", false);
