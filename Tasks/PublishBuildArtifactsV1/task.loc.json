@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 155,
+    "Minor": 157,
     "Patch": 0
   },
   "demands": [],
@@ -77,12 +77,12 @@
       "visibleRule": "ArtifactType = FilePath && Parallel = true"
     },
     {
-      "name": "SilentCopy",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.SilentCopy",
-      "defaultValue": "false",
+      "name": "FileCopyOptions",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.FileCopyOptions",
+      "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.SilentCopy",
+      "helpMarkDown": "ms-resource:loc.input.help.FileCopyOptions",
       "visibleRule": "ArtifactType = FilePath"
     }
   ],

@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 155,
+        "Minor": 157,
         "Patch": 0
     },
     "demands": [],
@@ -77,12 +77,12 @@
             "visibleRule": "ArtifactType = FilePath && Parallel = true"
         },
         {
-            "name": "SilentCopy",
-            "type": "boolean",
-            "label": "Silence file copy output",
-            "defaultValue": "false",
+            "name": "FileCopyOptions",
+            "type": "string",
+            "label": "File copy options",
+            "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Silence the output when copying the artifact files to a file share.",
+            "helpMarkDown": "Pass additional options to the file copy command.",
             "visibleRule": "ArtifactType = FilePath"
         }
     ],
