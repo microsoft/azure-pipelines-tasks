@@ -67,6 +67,98 @@ export class ChangeLogTests {
                                 {"sha": "abc", "commit": { "message": "Fixing issue #2 #3.\n\n desc #4 GH-5" } },
                                 {"sha": "xyz", "commit": { "message": "Fixing issue #56.\n\n desc Gh-9" } }
                             ] }
+                        };
+                    },
+                    getIssuesList: function (githubEndpointToken: string, repositoryName: string, issues: number[], includeLabels: boolean) {
+                        if (includeLabels) {
+                            return {
+                                statusCode: 200,
+                                body: {
+                                    "data": {
+                                        "repository": {
+                                            "_1": {
+                                                "title": "Incorrect color contrast in control panel",
+                                                "state": "CLOSED",
+                                                "labels": {
+                                                    "edges": [
+                                                        {
+                                                            "node": {
+                                                                "name": "bug"
+                                                            }
+                                                        },
+                                                        {
+                                                            "node": {
+                                                                "name": "ux"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "_2": {
+                                                "title": "Text alignment confusing in panel",
+                                                "state": "OPEN",
+                                                "labels": {
+                                                    "edges": [
+                                                        {
+                                                            "node": {
+                                                                "name": "bug"
+                                                            }
+                                                        },
+                                                        {
+                                                            "node": {
+                                                                "name": "ux"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "_3": {
+                                                "title": "Fixed previous minor bugs",
+                                                "state": "OPEN",
+                                                "changedFiles": 1,
+                                                "labels": {
+                                                    "edges": [
+                                                        {
+                                                            "node": {
+                                                                "name": "nit"
+                                                            }
+                                                        },
+                                                        {
+                                                            "node": {
+                                                                "name": "bug"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            return {
+                                statusCode: 200,
+                                body: {
+                                    "data": {
+                                        "repository": {
+                                            "_1": {
+                                                "title": "Incorrect color contrast in control panel",
+                                                "state": "CLOSED",
+                                            },
+                                            "_2": {
+                                                "title": "Text alignment confusing in panel",
+                                                "state": "OPEN",
+                                            },
+                                            "_3": {
+                                                "title": "Fixed previous minor bugs",
+                                                "state": "OPEN",
+                                                "changedFiles": 1,
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
