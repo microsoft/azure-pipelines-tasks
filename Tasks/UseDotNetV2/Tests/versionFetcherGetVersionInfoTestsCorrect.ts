@@ -15,7 +15,7 @@ mockery.registerMock('typed-rest-client/HttpClient', {
             get: function (url: string, headers) {
                 if (url == DotNetCoreReleasesIndexUrl) {
                     return new Promise((resolve, reject) => {
-                        resolve(new HttpClientResponse(`{"releases-index": [{"channel-version": "2.0","releases.json": "${ReleasesJsonUrl0}"}, {"channel-version": "2.1","releases.json": "${ReleasesJsonUrl1}"}, {"channel-version": "2.2","releases.json": "${ReleasesJsonUrl2}"}, {"channel-version": "2.3","releases.json": "${ReleasesJsonUrl3}"}]}`))
+                        resolve(new HttpClientResponse(`{"releases-index": [{"channel-version": "2.0","releases.json": "${ReleasesJsonUrl0}"}, {"channel-version": "2.1","releases.json": "${ReleasesJsonUrl1}"}, {"channel-version": "2.2","releases.json": "${ReleasesJsonUrl2}"}, {"channel-version": "2.3","releases.json": "${ReleasesJsonUrl3}"}]}`));
                     });
                 }
                 else if (url == ReleasesJsonUrl0) {
@@ -45,7 +45,35 @@ mockery.registerMock('typed-rest-client/HttpClient', {
                 }
                 else if (url == ReleasesJsonUrl2) {
                     return new Promise((resolve, reject) => {
-                        resolve(new HttpClientResponse(`{"releases": [{"sdk": {"version": "2.2.106-preview-1","files": []}}, {"sdk": { "version": "2.2.105","files": []}}, {"sdk": { "version": "2.2.103","files": []}}]}`));
+                        resolve(new HttpClientResponse(`
+                        {
+                            "releases": [
+                                {
+                                    "sdk": {
+                                        "version": "2.2.106-preview-1",
+                                        "files": []
+                                    }
+                                },
+                                {
+                                    "sdks": [
+                                        {
+                                            "version": "2.2.104",
+                                            "files": []
+                                        },
+                                        {
+                                            "version": "2.2.105",
+                                            "files": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "sdk": {
+                                        "version": "2.2.103",
+                                        "files": []
+                                    }
+                                }
+                            ]
+                        }`));
                     });
                 }
                 else if (url == ReleasesJsonUrl3) {
@@ -72,10 +100,13 @@ versionFetcher.getVersionInfo(process.env["__versionspec__"], "sdk", process.env
         if (process.env["__versionspec__"] == "2.2.103" && versionInfo.getVersion() != "2.2.103") {
             throw "";
         }
+        else if (process.env["__versionspec__"] == "2.2.104" && versionInfo.getVersion() != "2.2.104") {
+            throw "";
+        }
         else if (process.env["__versionspec__"] == "2.1.104" && versionInfo.getVersion() != "2.1.104") {
             throw "";
         }
-        else if (process.env["__versionspec__"] == "2.x" && versionInfo.getVersion() != "2.3.105" ) {
+        else if (process.env["__versionspec__"] == "2.x" && versionInfo.getVersion() != "2.3.105") {
             throw "";
         }
         else if (process.env["__versionspec__"] == "2.2.x" && process.env["__inlcudepreviewversion__"] != "true" && versionInfo.getVersion() != "2.2.105") {
