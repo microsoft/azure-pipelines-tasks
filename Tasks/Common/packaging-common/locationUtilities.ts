@@ -37,7 +37,7 @@ export async function getServiceUriFromAreaId(serviceUri: string, accessToken: s
 
     tl.debug(`Getting URI for area ID ${areaId} from ${serviceUri}`);
     try {
-        const serviceUriFromArea = await locationApi.getResourceArea(areaId);
+        const serviceUriFromArea = await retryOnExceptionHelper(() => locationApi.getResourceArea(areaId), 3, 1000);
         return serviceUriFromArea.locationUrl;
     } catch (error) {
         throw new Error(error);
@@ -94,7 +94,7 @@ export async function getPackagingUris(protocolType: ProtocolType): Promise<Pack
 
     tl.debug('Acquiring Packaging endpoints from ' + serviceUri);
 
-    const connectionData = await locationApi.getConnectionData(interfaces.ConnectOptions.IncludeServices);
+    const connectionData = await retryOnExceptionHelper(() => locationApi.getConnectionData(interfaces.ConnectOptions.IncludeServices), 3, 1000);
 
     tl.debug('Successfully acquired the connection data');
     const defaultAccessPoint: string = connectionData.locationServiceData.accessMappings.find((mapping) =>
@@ -148,6 +148,27 @@ export function getWebApiWithProxy(serviceUri: string, accessToken?: string): vs
         maxRetries: 5
     };
     return new vsts.WebApi(serviceUri, credentialHandler, options);
+}
+
+// This function is to apply retries generically for any unreliable network calls
+export async function retryOnExceptionHelper<T>(action: () => Promise<T>, maxTries: number, retryIntervalInMilliseconds: number): Promise<T> {
+    while (true) {
+        try {
+            return await action();
+        } catch (error) {
+            maxTries--;
+            if (maxTries < 1) {
+                throw Error(error);
+            }
+            tl.debug(`Network call failed. Number of retries left: ${maxTries}`);
+            tl.debug(JSON.stringify(error));
+            await delay(retryIntervalInMilliseconds);
+        }
+    }
+}
+
+function delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
 }
 
 interface RegistryLocation {

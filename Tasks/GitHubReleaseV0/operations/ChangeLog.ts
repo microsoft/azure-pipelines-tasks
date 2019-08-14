@@ -13,9 +13,9 @@ export class ChangeLog {
      * @param target 
      * @param top 
      * @param compareWithRelease
-     * @param releaseTag
+     * @param changeLogCompareToReleaseTag
      */
-    public async getChangeLog(githubEndpointToken: string, repositoryName: string, target: string, top: number, compareWithRelease: ChangeLogStartCommit, releaseTag?: string): Promise<string> {
+    public async getChangeLog(githubEndpointToken: string, repositoryName: string, target: string, top: number, compareWithRelease: ChangeLogStartCommit, changeLogCompareToReleaseTag?: string): Promise<string> {
         console.log(tl.loc("ComputingChangeLog"));
 
         let release = new Release();
@@ -27,7 +27,7 @@ export class ChangeLog {
         // Get the curent commit.
         let endCommitSha: string = await new Helper().getCommitShaFromTarget(githubEndpointToken, repositoryName, target);
         //Get the start commit.
-        let startCommitSha: string = await this.getStartCommitSha(githubEndpointToken, repositoryName, endCommitSha, top,compareWithRelease, releaseTag);
+        let startCommitSha: string = await this.getStartCommitSha(githubEndpointToken, repositoryName, endCommitSha, top,compareWithRelease, changeLogCompareToReleaseTag);
         // Compare the diff between 2 commits.
         tl.debug("start commit: "+ startCommitSha + "; end commit: "+ endCommitSha);
         console.log(tl.loc("FetchCommitDiff"));
@@ -108,10 +108,10 @@ export class ChangeLog {
      * @param endCommitSha 
      * @param top 
      * @param compareWithRelease
-     * @param releaseTag
+     * @param changeLogCompareToReleaseTag
      */
 
-    public async getStartCommitSha(githubEndpointToken: string, repositoryName: string, endCommitSha: string, top: number, compareWithRelease: ChangeLogStartCommit, releaseTag?: string): Promise<string> {
+    public async getStartCommitSha(githubEndpointToken: string, repositoryName: string, endCommitSha: string, top: number, compareWithRelease: ChangeLogStartCommit, changeLogCompareToReleaseTag?: string): Promise<string> {
         let release = new Release();
         let startCommitSha: string;
         if (compareWithRelease === ChangeLogStartCommit.lastFullRelease) {
@@ -146,15 +146,15 @@ export class ChangeLog {
         }
 
         let comparer;
-        if (compareWithRelease === ChangeLogStartCommit.lastRelease) {
+        if (compareWithRelease === ChangeLogStartCommit.lastNonDraftRelease) {
             //Latest non-draft Release
             console.log(tl.loc("FetchLatestNonDraftRelease"));
             comparer = release => !release[GitHubAttributes.draft];
         }
         else {
             //Latest release with the given tag or matching the given regex.
-            console.log(tl.loc("FetchLastReleaseByTag"));
-            comparer = release => !release[GitHubAttributes.draft] && Utility.isTagMatching(release[GitHubAttributes.tagName], releaseTag);
+            console.log(tl.loc("FetchLastReleaseByTag", changeLogCompareToReleaseTag));
+            comparer = release => !release[GitHubAttributes.draft] && Utility.isTagMatching(release[GitHubAttributes.tagName], changeLogCompareToReleaseTag);
 
         }
 
@@ -163,13 +163,15 @@ export class ChangeLog {
         //If no such release exists, get the start commit
         //else get the commit for that tag.
         if (!initialTag) {
-            console.log(tl.loc("NoMatchingReleases"));
+            (compareWithRelease === ChangeLogStartCommit.lastNonDraftRelease) && console.log(tl.loc("NoMatchingReleases"));
+            (compareWithRelease === ChangeLogStartCommit.lastNonDraftReleaseByTag) && console.log(tl.loc("NoTagMatchingReleases", changeLogCompareToReleaseTag));
             console.log(tl.loc("FetchInitialCommit"));
             startCommitSha = await this._getInitialCommit(githubEndpointToken, repositoryName, endCommitSha, top);
             console.log(tl.loc("FetchInitialCommitSuccess", startCommitSha));
         }
         else {
-            console.log(tl.loc("FetchMatchingReleaseSuccess"));
+            (compareWithRelease === ChangeLogStartCommit.lastNonDraftRelease) && console.log(tl.loc("FetchMatchingReleaseSuccess"));
+            (compareWithRelease === ChangeLogStartCommit.lastNonDraftReleaseByTag) && console.log(tl.loc("FetchTagMatchingReleaseSuccess", changeLogCompareToReleaseTag));
             startCommitSha = await this._getCommitForTag(githubEndpointToken, repositoryName, initialTag);
         }
 
