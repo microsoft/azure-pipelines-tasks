@@ -191,7 +191,7 @@ export class Release {
         return await sendRequest(request);
     }
 
-    public async getIssuesListWithLabels(githubEndpointToken: string, repositoryName: string, issues: number[]) {
+    public async getIssuesList(githubEndpointToken: string, repositoryName: string, issues: number[], includeLabels: boolean) {
         let request = new WebRequest();
         request.uri = util.format(this._graphQLUrlFormat, Utility.getGitHubApiUrl());
         request.method = "POST";
@@ -224,46 +224,25 @@ export class Release {
                     }
                 }
             }`;
+        let fragmentForIssue = `fragment labelsForIssue on Issue{
+                title
+                state
+                }`;
+        let fragmentForPullRequest = `fragment labelsForPullRequest on PullRequest{
+                    title
+                    state
+                    }`;
+        
         let query = `query{
             repository(owner: ${repositoryDetails[0]}, name: ${repositoryDetails[1]}){
                 ${issuesQuery}
             }
         }
-        ${labelsFragmentForIssue}
-        ${labelsFragmentForPullRequest}`;
+        ${includeLabels ? labelsFragmentForIssue : fragmentForIssue}
+        ${includeLabels ? labelsFragmentForPullRequest : fragmentForPullRequest}`;
         request.body = JSON.stringify({ query });
         tl.debug("Get issues along with labels: " + JSON.stringify(request));
-        return await sendRequest(request)
-    }
-
-    public async getIssuesList(githubEndpointToken: string, repositoryName: string, issues: number[]) {
-        let request = new WebRequest();
-        request.uri = util.format(this._graphQLUrlFormat, Utility.getGitHubApiUrl());
-        request.method = "POST";
-        request.headers = {
-            'Authorization': 'token ' + githubEndpointToken
-        };
-        tl.debug("Fetching labels for issues: " + issues);
-        let issuesQuery = issues.map(issue => `_${issue}: issueOrPullRequest(number: ${issue}){ ...labelsForIssue ...labelsForPullRequest }`).join(", ");
-        let repositoryDetails = repositoryName.split("/");
-        let labelsFragmentForIssue = `fragment labelsForIssue on Issue{
-        title
-        state
-        }`;
-        let labelsFragmentForPullRequest = `fragment labelsForPullRequest on PullRequest{
-            title
-            state
-            }`;
-        let query = `query{
-            repository(owner: ${repositoryDetails[0]}, name: ${repositoryDetails[1]}){
-                ${issuesQuery}
-            }
-        }
-        ${labelsFragmentForIssue}
-        ${labelsFragmentForPullRequest}`;
-        request.body = JSON.stringify({ query });
-        tl.debug("Get issues list: " + JSON.stringify(request));
-        return await sendRequest(request)
+        return await sendRequest(request);
     }
 
     private readonly _createReleaseApiUrlFormat: string = "%s/repos/%s/releases";

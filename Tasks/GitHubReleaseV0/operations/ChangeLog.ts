@@ -13,9 +13,11 @@ export class ChangeLog {
      * @param target 
      * @param top 
      * @param compareWithRelease
+     * @param changeLogType
      * @param changeLogCompareToReleaseTag
+     * @param changeLogLabels
      */
-    public async getChangeLog(githubEndpointToken: string, repositoryName: string, target: string, top: number, compareWithRelease: ChangeLogStartCommit, changeLogCompareToReleaseTag?: string, changeLogType?: string, changeLogLabels?: any): Promise<string> {
+    public async getChangeLog(githubEndpointToken: string, repositoryName: string, target: string, top: number, compareWithRelease: ChangeLogStartCommit, changeLogType: string, changeLogCompareToReleaseTag?: string, changeLogLabels?: any[]): Promise<string> {
         console.log(tl.loc("ComputingChangeLog"));
 
         let release = new Release();
@@ -60,36 +62,34 @@ export class ChangeLog {
 
                 let commitIdToRepoIssueIdsDictionary: { [key: string]: Set<string> } = this._getCommitIdToRepoIssueIdsDictionary(commitIdToMessageDictionary, repositoryName);
                 tl.debug("commitIdToRepoIssueIdsDictionary: " + JSON.stringify(commitIdToRepoIssueIdsDictionary));
-                if(changeLogType === ChangeLogType.commitBased){
+                if (changeLogType === ChangeLogType.commitBased) {
                     return this._getCommitBasedChangeLog(commitIdToRepoIssueIdsDictionary, commitIdToMessageDictionary, repositoryName);
                 }
-                else if(!!changeLogLabels && !!changeLogLabels.labels && changeLogLabels.labels.length !== 0){
+                else {
                     let issues = new Set([]);
-                        Object.keys(commitIdToRepoIssueIdsDictionary).forEach((commitId: string) => {
-                            if (issues.size >= top){
+                    Object.keys(commitIdToRepoIssueIdsDictionary).forEach((commitId: string) => {
+                        if (issues.size >= top) {
+                            return;
+                        }
+                        commitIdToRepoIssueIdsDictionary[commitId].forEach(repoIssueId => {
+                            if (issues.size >= top) {
                                 return;
                             }
-                            commitIdToRepoIssueIdsDictionary[commitId].forEach(repoIssueId => {
-                                if (issues.size >= top){
-                                    return;
-                                }
-                                let issueDetails = Utility.extractRepoAndIssueId(repoIssueId);
-                                let issueId = Number(issueDetails.issueId);
-                                if (!!issueId && issueDetails.repository === repositoryName) {
-                                    issues.add(issueId);
-                                }
-                            });
+                            let issueDetails = Utility.extractRepoAndIssueId(repoIssueId);
+                            let issueId = Number(issueDetails.issueId);
+                            if (!!issueId && issueDetails.repository === repositoryName) {
+                                issues.add(issueId);
+                            }
                         });
-                        
-                        if(changeLogLabels.labels[0].label === "*"){
-                            return this._getAllIssuesChangeLog(Array.from(issues), repositoryName, release, githubEndpointToken);
-                        }
-                        return this._getIssueBasedChangeLog(Array.from(issues), repositoryName, release, githubEndpointToken, changeLogLabels.labels);
+                    });
+
+                    if (!!changeLogLabels && !!changeLogLabels.length) {
+                        return this._getIssueBasedChangeLog(Array.from(issues), repositoryName, release, githubEndpointToken, changeLogLabels);
+                    }
+                    else {
+                        return this._getAllIssuesChangeLog(Array.from(issues), repositoryName, release, githubEndpointToken);
+                    }
                 }
-                else{
-                    tl.warning(tl.loc("NoLabelsSpecified"));
-                        return "";
-                }     
             }
         }
         else{
@@ -112,7 +112,7 @@ export class ChangeLog {
             return "";
         }
 
-        let issuesListResponse = await release.getIssuesListWithLabels(githubEndpointToken, repositoryName, issues);
+        let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, true);
         if (issuesListResponse.statusCode === 200) {
             if (!!issuesListResponse.body.errors) {
                 console.log(tl.loc("IssuesFetchError"));
@@ -151,15 +151,7 @@ export class ChangeLog {
                         }
                     });
                 });
-                if (topXChangeLog) {
-                    changeLog = topXChangeLog;
-                    if (!seeMoreChangeLog) {
-                        changeLog = changeLog + Delimiters.newLine + this._getAutoGeneratedText();
-                    }
-                    else {
-                        changeLog = changeLog + util.format(this._seeMoreChangeLogFormat, this._seeMoreText, seeMoreChangeLog, this._getAutoGeneratedText());
-                    }
-                }
+                changeLog = this._generateChangeLog(topXChangeLog, seeMoreChangeLog, false);
                 console.log(tl.loc("ComputingChangeLogSuccess"));
                 return changeLog;
             }
@@ -184,7 +176,7 @@ export class ChangeLog {
             return "";
         }
 
-        let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues);
+        let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, false);
         if (issuesListResponse.statusCode === 200) {
             if (!!issuesListResponse.body.errors) {
                 console.log(tl.loc("IssuesFetchError"));
@@ -207,17 +199,7 @@ export class ChangeLog {
                         topXChangeLog = topXChangeLog + changeLogPerIssue + Delimiters.newLine;
                     }
                 });
-                if (topXChangeLog) {
-                    changeLog = util.format(this._changeLogTitleFormat, this._changeLogTitle) + topXChangeLog;
-
-                    if (!seeMoreChangeLog) {
-                        changeLog = changeLog + Delimiters.newLine + this._getAutoGeneratedText();
-                    }
-                    else {
-                        changeLog = changeLog + util.format(this._seeMoreChangeLogFormat, this._seeMoreText, seeMoreChangeLog, this._getAutoGeneratedText());
-                    }
-                }
-
+                changeLog = this._generateChangeLog(topXChangeLog, seeMoreChangeLog, true);
                 console.log(tl.loc("ComputingChangeLogSuccess"));
                 return changeLog;
             }
@@ -252,18 +234,7 @@ export class ChangeLog {
                 topXChangeLog = topXChangeLog + changeLogPerCommit + Delimiters.newLine;
             }
         });
-
-        if (topXChangeLog) {
-            changeLog = util.format(this._changeLogTitleFormat, this._changeLogTitle) + topXChangeLog;
-
-            if(!seeMoreChangeLog) {
-                changeLog = changeLog + Delimiters.newLine + this._getAutoGeneratedText();
-            }
-            else {
-                changeLog = changeLog + util.format(this._seeMoreChangeLogFormat, this._seeMoreText, seeMoreChangeLog, this._getAutoGeneratedText());
-            }
-        }
-
+        changeLog = this._generateChangeLog(topXChangeLog, seeMoreChangeLog, true);
         console.log(tl.loc("ComputingChangeLogSuccess"));
         return changeLog;
     }
@@ -493,7 +464,7 @@ export class ChangeLog {
             if (!labels[index].label || !labels[index].displayName) continue;
             let label = labels[index].label;
             let issueState = labels[index].state || this._noStateSpecified;
-            let key = (label+ Delimiters.hash +issueState).toLocaleLowerCase();
+            let key = (label+ Delimiters.hash +issueState).toLowerCase();
             if (!labelsRankDictionary[key]){
                 labelsRankDictionary[key] = {displayName: labels[index].displayName, rank: index};
             }
@@ -520,17 +491,17 @@ export class ChangeLog {
             let issueState = issuesList[issue].state;
             //For Pull Requests, show only Merged PRs, Ignore Closed PRs
             if (!!issuesList[issue].changedFiles){
-                if(issueState.toLocaleLowerCase() === GitHubIssueState.merged.toLocaleLowerCase()){
+                if(issueState.toLowerCase() === GitHubIssueState.merged.toLowerCase()){
                     issueState = GitHubIssueState.closed;
                 }
-                else if (issueState.toLocaleLowerCase() === GitHubIssueState.closed.toLocaleLowerCase()){
+                else if (issueState.toLowerCase() === GitHubIssueState.closed.toLowerCase()){
                     return;
                 }
             }
             issuesList[issue].labels.edges && issuesList[issue].labels.edges.forEach(labelDetails => {
-                let key = (labelDetails.node.name + Delimiters.hash + issueState).toLocaleLowerCase();
+                let key = (labelDetails.node.name + Delimiters.hash + issueState).toLowerCase();
                 if(!labelsRankDictionary[key]) {
-                    key = (labelDetails.node.name + Delimiters.hash + this._noStateSpecified).toLocaleLowerCase();
+                    key = (labelDetails.node.name + Delimiters.hash + this._noStateSpecified).toLowerCase();
                 }
 
                 if (labelsRankDictionary[key] && labelsRankDictionary[key].rank < currentLabelRank){
@@ -673,6 +644,21 @@ export class ChangeLog {
         return "";
     }
 
+    private _generateChangeLog(topXChangeLog: string, seeMoreChangeLog: string, includeDefaultTitle: boolean): string {
+        let changeLog: string = "";
+        if (topXChangeLog) {
+            changeLog = (includeDefaultTitle ? util.format(this._changeLogTitleFormat, this._changeLogTitle) : "") + topXChangeLog;
+
+            if(!seeMoreChangeLog) {
+                changeLog = changeLog + Delimiters.newLine + this._getAutoGeneratedText();
+            }
+            else {
+                changeLog = changeLog + util.format(this._seeMoreChangeLogFormat, this._seeMoreText, seeMoreChangeLog, this._getAutoGeneratedText());
+            }
+        }
+        return changeLog;
+    }
+
     private _getAutoGeneratedUrl(): string {
         let releaseUrl: string = tl.getVariable(AzureDevOpsVariables.releaseWebUrl);
 
@@ -699,10 +685,10 @@ export class ChangeLog {
     // https://github.com/moby/moby/commit/df23a1e675c7e3cbad617374d85c48103541ee14?short_path=6206c94#diff-6206c94cde21ec0a5563c8369b71e609
     // Supported format for GitHub issues: #26 GH-26 repositoryName#26 repositoryNameGH-26, where GH is case in-sensitive.
     private readonly _issueRegex = new RegExp("(?:^|[^A-Za-z0-9_]?)([a-z0-9_]+/[a-zA-Z0-9-_.]+)?(?:#|[G|g][H|h]-)([0-9]+)(?:[^A-Za-z_]|$)", "gm");
-    private readonly _changeLogTitle: string = "Changes";
-    private readonly _seeMoreText: string = "See more";
+    private readonly _changeLogTitle: string = tl.loc("ChangeLogTitle");
+    private readonly _seeMoreText: string = tl.loc("SeeMoreText");
     private readonly _noStateSpecified: string = "none";
-    private readonly _defaultGroup: string = "Others";
+    private readonly _defaultGroup: string = tl.loc("DefaultCategory");
     private readonly _changeLogVisibleLimit: number = 10;
     private readonly _changeLogTitleFormat: string = "\n\n## %s:\n\n";
     private readonly _buildUrlFormat: string = "%s/%s/_build/results?buildId=%s&view=logs";

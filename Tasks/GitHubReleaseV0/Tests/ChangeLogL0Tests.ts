@@ -10,7 +10,7 @@ export class ChangeLogL0Tests {
     }
 
     public static async validateGetChangeLog1() {
-        let changes = await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastFullRelease);
+        let changes = await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastFullRelease, "commitBased");
     
         if (changes === this.expectedChanges) {
             console.log(TestString.getChangeLogKeyword);
@@ -18,14 +18,14 @@ export class ChangeLogL0Tests {
     }
 
     public static async validateGetChangeLog2() {
-        await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastNonDraftRelease);
+        await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastNonDraftRelease, "commitBased");
     }
 
     public static async validateGetChangeLog3() {
-        await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastNonDraftReleaseByTag, "v1.*");
+        await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastNonDraftReleaseByTag, "commitBased", "v1.*");
     }
 
-    public static readonly expectedChanges = "\n\n## Changes:\n\n* xyz Fixing issue #56. [ #9 ]\n* abc Fixing issue #2 #3. [ #4, #5 ]\n\nThis list of changes was [auto generated](MOCK_RELEASE_URL).";
+    public static readonly expectedChanges = "\n\n## loc_mock_ChangeLogTitle:\n\n* xyz Fixing issue #56. [ #9 ]\n* abc Fixing issue #2 #3. [ #4, #5 ]\n\nThis list of changes was [auto generated](MOCK_RELEASE_URL).";
 
 }
 

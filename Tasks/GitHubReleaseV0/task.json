@@ -224,12 +224,12 @@
         {
             "name": "changeLogType",
             "type": "radio",
-            "label": "Change log type",
+            "label": "Changelog type",
             "required": true,
             "defaultValue": "issueBased",
             "groupName": "changeLogConfiguration",
             "visibleRule": "addChangeLog = true",
-            "helpMarkDown": "Change log type",
+            "helpMarkDown": "Changelog can be commit based or issue based . Commit based changelog lists all commits included in a release where as Issue based changelog lists all the issues/pr included in the release. ",
             "options": {
                 "commitBased": "Commit based",
                 "issueBased": "Issue based"
@@ -238,11 +238,12 @@
         {
             "name": "changeLogLabels",
             "type": "multiLine",
-            "label": "Labels",
-            "required": true,
+            "label": "Categories",
+            "required": false,
             "visibleRule": "changeLogType = issueBased",
+            "defaultValue" : "[{ \"label\" : \"bug\", \"displayName\" : \"Bugs\", \"state\" : \"closed\" }]",
             "groupName": "changeLogConfiguration",
-            "helpMarkDown": "Specify the labels to be used for change log categorization."
+            "helpMarkDown": "Using this you can categorize changes based on the label associated with the issue/pr. For a label you can mention the display name for the category and the state of issue. E.g. `\"[{ \"label\" : \"bug\", \"displayName\" : \"Bugs\", \"state\" : \"closed\" }]\"` .In case a change has multiple labels on it, the first specified label takes priority. Leave this field empty, to see a flat list of issues/pr."
         }
     ],
     "dataSourceBindings": [
@@ -335,7 +336,10 @@
         "SearchingFileMatchingPattern": "Searching for file(s) matching '%s'.",
         "IssuesFetchError": "Error fetching issues. Cannot generate change log.",
         "NoIssuesLinkedError": "No issues are linked to commits in the specified commit Diff.",
-        "ChangeLogLabelsParseError": "Unable to parse changeLog labels.",
-        "NoLabelsSpecified": "Error occured while parsing the labels. For yaml syntax see: https://aka.ms/AA3m1bq"
+        "LabelsSyntaxError": "Error occured while parsing the labels. For yaml syntax see: https://aka.ms/AA3m1bq",
+        "InvalidChangeLogTypeAttribute": "Invalid ChangeLogType attribute: %s. Only 'commitBased' or 'issueBased' options are allowed. For yaml syntax see: https://aka.ms/AA3m1bq",
+        "ChangeLogTitle": "Changes",
+        "DefaultCategory": "Others",
+        "SeeMoreText": "See More"
     }
 }

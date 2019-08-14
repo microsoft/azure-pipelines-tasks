@@ -102,28 +102,26 @@ class Main {
         const showChangeLog: boolean = tl.getBoolInput(Inputs.addChangeLog);
         let changeLog: string = "";
         if (showChangeLog){
-            let changeLogLabels: any;
+            let changeLogLabels: any = null;
             const changeLogCompareToRelease = tl.getInput(Inputs.changeLogCompareToRelease);
-            const changeLogLabelsInput = tl.getInput(Inputs.changeLogLabels);
             Utility.validateStartCommitSpecification(changeLogCompareToRelease);
             const changeLogType = tl.getInput(Inputs.changeLogType);
+            Utility.validateChangeLogType(changeLogType);
             if (changeLogType === ChangeLogType.issueBased){
+                const changeLogLabelsInput = tl.getInput(Inputs.changeLogLabels);
                 try{
                     changeLogLabels = JSON.parse(changeLogLabelsInput);
                 }
                 catch(error){
-                    changeLogLabels = {};
-                    tl.warning(tl.loc("ChangeLogLabelsParseError"));
+                    changeLogLabels = [];
+                    tl.warning(tl.loc("LabelsSyntaxError"));
                 }
-            }
-            else{
-                changeLogLabels = null;
             }
 
             const changeLogCompareToReleaseTag = tl.getInput(Inputs.changeLogCompareToReleaseTag) || undefined;
             // Generate the change log 
             // Get change log for top 250 commits only
-            changeLog = await new ChangeLog().getChangeLog(githubEndpointToken, repositoryName, target, 250, ChangeLogStartCommit[changeLogCompareToRelease], changeLogCompareToReleaseTag, changeLogType, changeLogLabels) ;
+            changeLog = await new ChangeLog().getChangeLog(githubEndpointToken, repositoryName, target, 250, ChangeLogStartCommit[changeLogCompareToRelease], changeLogType, changeLogCompareToReleaseTag, changeLogLabels);
         }
         // Append change log to release note
         const releaseNote: string = Utility.getReleaseNote(releaseNotesSource, releaseNotesFile, releaseNoteInput, changeLog) || undefined;

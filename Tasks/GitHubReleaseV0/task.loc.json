@@ -238,8 +238,9 @@
       "name": "changeLogLabels",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.changeLogLabels",
-      "required": true,
+      "required": false,
       "visibleRule": "changeLogType = issueBased",
+      "defaultValue": "[{ \"label\" : \"bug\", \"displayName\" : \"Bugs\", \"state\" : \"closed\" }]",
       "groupName": "changeLogConfiguration",
       "helpMarkDown": "ms-resource:loc.input.help.changeLogLabels"
     }
@@ -334,7 +335,10 @@
     "SearchingFileMatchingPattern": "ms-resource:loc.messages.SearchingFileMatchingPattern",
     "IssuesFetchError": "ms-resource:loc.messages.IssuesFetchError",
     "NoIssuesLinkedError": "ms-resource:loc.messages.NoIssuesLinkedError",
-    "ChangeLogLabelsParseError": "ms-resource:loc.messages.ChangeLogLabelsParseError",
-    "NoLabelsSpecified": "ms-resource:loc.messages.NoLabelsSpecified"
+    "LabelsSyntaxError": "ms-resource:loc.messages.LabelsSyntaxError",
+    "InvalidChangeLogTypeAttribute": "ms-resource:loc.messages.InvalidChangeLogTypeAttribute",
+    "ChangeLogTitle": "ms-resource:loc.messages.ChangeLogTitle",
+    "DefaultCategory": "ms-resource:loc.messages.DefaultCategory",
+    "SeeMoreText": "ms-resource:loc.messages.SeeMoreText"
   }
 }
