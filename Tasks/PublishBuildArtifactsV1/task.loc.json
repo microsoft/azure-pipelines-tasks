@@ -17,6 +17,13 @@
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "PathtoPublish",
@@ -81,6 +88,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.FileCopyOptions",
       "defaultValue": "",
+      "groupName": "advanced",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.FileCopyOptions",
       "visibleRule": "ArtifactType = FilePath"

@@ -17,6 +17,13 @@
     },
     "demands": [],
     "minimumAgentVersion": "1.91.0",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
     "inputs": [
         {
             "name": "PathtoPublish",
@@ -81,8 +88,9 @@
             "type": "string",
             "label": "File copy options",
             "defaultValue": "",
+            "groupName": "advanced",
             "required": false,
-            "helpMarkDown": "Pass additional options to the file copy command.",
+            "helpMarkDown": "Pass additional options to the Robocopy command.",
             "visibleRule": "ArtifactType = FilePath"
         }
     ],
