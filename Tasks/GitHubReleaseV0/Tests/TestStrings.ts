@@ -23,4 +23,6 @@ export class TestString {
     public static readonly extractRepoAndIssueIdKeyword: string = "extractRepoAndIssueId method should work properly";
     public static readonly getFirstLineKeyword: string = "getFirstLine method should work properly";
     public static readonly tagMatchingKeyword: string = "isTagMatching method should work properly";
+    public static readonly allIssuesChangeLog: string = "getChangeLog should generate All Issues ChangeLog";
+    public static readonly issueBasedChangeLog: string = "getChangeLog should generate Issue Based ChangeLog";
 }
