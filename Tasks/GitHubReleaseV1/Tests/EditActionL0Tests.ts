@@ -3,7 +3,7 @@ import * as path from 'path';
 import { Inputs } from '../operations/Constants';
 import * as sinon from 'sinon';
 
-export class CreateAction2L0Tests {
+export class EditActionL0Tests {
     
     public static startTest() {
         let tp = path.join(__dirname, '..', 'main.js');
@@ -11,10 +11,11 @@ export class CreateAction2L0Tests {
         
         tr.setInput(Inputs.gitHubConnection, "connection");
         tr.setInput(Inputs.repositoryName, "repo");
-        tr.setInput(Inputs.action, "create");
-        tr.setInput(Inputs.tagSource, "gitTag");
+        tr.setInput(Inputs.action, "edit");
         tr.setInput(Inputs.target, "master");
-        tr.setInput(Inputs.releaseNotesSource, "input");
+        tr.setInput(Inputs.tagSource, "manual");
+        tr.setInput(Inputs.tag, "v1.0.0");
+        tr.setInput(Inputs.releaseNotesSource, "inline");
         
         this.stub(tr);
         tr.run();
@@ -27,22 +28,33 @@ export class CreateAction2L0Tests {
         
         var Utility = require('../operations/Utility');
         this.sandbox.stub(Utility.Utility, "getGithubEndPointToken").callsFake(function() { return { scheme: 'OAuth', parameters: { AccessToken: "**someToken**"}} });
-        
+
         tr.registerMock("./operations/Helper", {
             Helper: function () {
                 return {
-                    getTagForCommitTarget: function() {
+                    getReleaseIdForTag: () => {
                         return null;
                     },
-                    publishTelemetry: function() {
+                    publishTelemetry: () => {
 
                     }
                 }
             }
-        });        
+        });
+
+        tr.registerMock("./operations/Action", {
+            Action: function () {
+                return {
+                    createReleaseAction: () => {
+                        console.log("L0Test: create release action method should be called when no release is present for given tag"); // = this.editActionKeyWord
+                    }
+                }
+            }
+        });
+        
     }
     
     public static sandbox;
 }
 
-CreateAction2L0Tests.startTest();
+EditActionL0Tests.startTest();

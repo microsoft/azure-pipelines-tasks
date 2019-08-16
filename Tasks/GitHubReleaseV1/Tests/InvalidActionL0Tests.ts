@@ -3,7 +3,7 @@ import * as path from 'path';
 import { Inputs } from '../operations/Constants';
 import * as sinon from 'sinon';
 
-export class CreateAction2L0Tests {
+export class InvalidActionL0Tests {
     
     public static startTest() {
         let tp = path.join(__dirname, '..', 'main.js');
@@ -11,10 +11,9 @@ export class CreateAction2L0Tests {
         
         tr.setInput(Inputs.gitHubConnection, "connection");
         tr.setInput(Inputs.repositoryName, "repo");
-        tr.setInput(Inputs.action, "create");
-        tr.setInput(Inputs.tagSource, "gitTag");
+        tr.setInput(Inputs.action, "creadte");
         tr.setInput(Inputs.target, "master");
-        tr.setInput(Inputs.releaseNotesSource, "input");
+        tr.setInput(Inputs.tag, "tag");
         
         this.stub(tr);
         tr.run();
@@ -26,23 +25,10 @@ export class CreateAction2L0Tests {
         this.sandbox = sinon.sandbox.create();
         
         var Utility = require('../operations/Utility');
-        this.sandbox.stub(Utility.Utility, "getGithubEndPointToken").callsFake(function() { return { scheme: 'OAuth', parameters: { AccessToken: "**someToken**"}} });
-        
-        tr.registerMock("./operations/Helper", {
-            Helper: function () {
-                return {
-                    getTagForCommitTarget: function() {
-                        return null;
-                    },
-                    publishTelemetry: function() {
-
-                    }
-                }
-            }
-        });        
+        this.sandbox.stub(Utility.Utility, "getGithubEndPointToken").callsFake(function() { return { scheme: 'OAuth', parameters: { AccessToken: "**someToken**"}} });   
     }
     
     public static sandbox;
 }
 
-CreateAction2L0Tests.startTest();
+InvalidActionL0Tests.startTest();

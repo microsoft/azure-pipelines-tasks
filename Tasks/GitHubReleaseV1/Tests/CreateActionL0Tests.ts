@@ -3,7 +3,7 @@ import * as path from 'path';
 import { Inputs } from '../operations/Constants';
 import * as sinon from 'sinon';
 
-export class CreateAction2L0Tests {
+export class CreateActionL0Tests {
     
     public static startTest() {
         let tp = path.join(__dirname, '..', 'main.js');
@@ -12,9 +12,10 @@ export class CreateAction2L0Tests {
         tr.setInput(Inputs.gitHubConnection, "connection");
         tr.setInput(Inputs.repositoryName, "repo");
         tr.setInput(Inputs.action, "create");
-        tr.setInput(Inputs.tagSource, "gitTag");
+        tr.setInput(Inputs.tagSource, "userSpecifiedTag");
+        tr.setInput(Inputs.tag, "tag");
         tr.setInput(Inputs.target, "master");
-        tr.setInput(Inputs.releaseNotesSource, "input");
+        tr.setInput(Inputs.releaseNotesSource, "inline");
         
         this.stub(tr);
         tr.run();
@@ -31,18 +32,29 @@ export class CreateAction2L0Tests {
         tr.registerMock("./operations/Helper", {
             Helper: function () {
                 return {
-                    getTagForCommitTarget: function() {
-                        return null;
+                    getTagForCreateAction: function() {
+                        return "v1.0.1";
                     },
                     publishTelemetry: function() {
 
                     }
                 }
             }
-        });        
+        });
+
+        tr.registerMock("./operations/Action", {
+            Action: function () {
+                return {
+                    createReleaseAction: () => {
+                        console.log("L0Test: create release action method should be called"); // = this.createActionKeyWord
+                    }
+                }
+            }
+        });
+        
     }
     
     public static sandbox;
 }
 
-CreateAction2L0Tests.startTest();
+CreateActionL0Tests.startTest();
