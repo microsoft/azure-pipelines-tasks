@@ -51,7 +51,7 @@ export function getMatchingVersionFromList(versionInfoList: VersionInfo[], versi
     });
 
     if (versionList.length > 0) {
-        let matchedVersion = semver.maxSatisfying(versionList, versionSpec, includePreviewVersions);
+        let matchedVersion = semver.maxSatisfying(versionList, versionSpec, { includePrerelease: includePreviewVersions });
         if (matchedVersion) {
             return versionInfoList.find(versionInfo => {
                 return versionInfo.getVersion() == matchedVersion

@@ -64,6 +64,7 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
     error: function (errorMessage) { return tl.error(errorMessage); },
     getVariable: function (variableName) { return tl.getVariable(variableName); },
     getHttpProxyConfiguration: function () { return ""; },
+    getHttpCertConfiguration: function () { return "" },
     setResourcePath: function (path) { return; }
 });
 

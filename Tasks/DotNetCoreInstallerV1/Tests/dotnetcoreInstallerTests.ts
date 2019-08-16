@@ -106,6 +106,7 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
         }
     },
     getHttpProxyConfiguration: function () { return ""; },
+    getHttpCertConfiguration: function () { return "" },
     setResourcePath: function (resourcePath) { return; },
     setResult: function (result: tl.TaskResult, message: string): void {
         tl.setResult(result, message);
