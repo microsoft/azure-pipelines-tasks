@@ -14,7 +14,7 @@ export class CreateAction2L0Tests {
         tr.setInput(Inputs.action, "create");
         tr.setInput(Inputs.tagSource, "gitTag");
         tr.setInput(Inputs.target, "master");
-        tr.setInput(Inputs.releaseNotesSource, "input");
+        tr.setInput(Inputs.releaseNotesSource, "inline");
         
         this.stub(tr);
         tr.run();
