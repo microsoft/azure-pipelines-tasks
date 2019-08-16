@@ -56,13 +56,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.jsonTargetFiles"
     },
     {
-      "name": " xmlTargetFiles",
+      "name": "xmlTargetFiles",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label. xmlTargetFiles",
+      "label": "ms-resource:loc.input.label.xmlTargetFiles",
       "required": false,
       "defaultValue": "",
       "groupName": "VariableSubstitution",
-      "helpMarkDown": "ms-resource:loc.input.help. xmlTargetFiles"
+      "helpMarkDown": "ms-resource:loc.input.help.xmlTargetFiles"
     }
   ],
   "execution": {
