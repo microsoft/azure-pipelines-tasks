@@ -204,16 +204,28 @@ export class AzureAppService {
         }
     }
 
-    public async patchApplicationSettings(addProperties: any, deleteProperties?: any): Promise<boolean> {
+    public async patchApplicationSettings(addProperties: any, deleteProperties?: any, formatJSON?: boolean): Promise<boolean> {
         var applicationSettings = await this.getApplicationSettings();
         var isNewValueUpdated: boolean = false;
-        for(var key in addProperties) {
-            if(applicationSettings.properties[key] != addProperties[key]) {
-                tl.debug(`Value of ${key} has been changed to ${addProperties[key]}`);
-                isNewValueUpdated = true;
-            }
+        if(formatJSON) {
+            for(var key in addProperties) {
+                if(JSON.stringify(applicationSettings.properties[key]) != JSON.stringify(addProperties[key])) {
+                    tl.debug(`Value of ${key} has been changed to ${JSON.stringify(addProperties[key])}`);
+                    isNewValueUpdated = true;
+                }
 
-            applicationSettings.properties[key] = addProperties[key];
+                applicationSettings.properties[key] = addProperties[key];
+            }
+        }
+        else {
+            for(var key in addProperties) {
+                if(applicationSettings.properties[key] != addProperties[key]) {
+                    tl.debug(`Value of ${key} has been changed to ${addProperties[key]}`);
+                    isNewValueUpdated = true;
+                }
+
+                applicationSettings.properties[key] = addProperties[key];
+            }
         }
         for(var key in deleteProperties) {
             if(key in applicationSettings.properties) {
@@ -431,7 +443,7 @@ export class AzureAppService {
             httpRequest.method = 'PUT';
             httpRequest.body = JSON.stringify(connectionStringSettings);
             var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
-            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/slotConfigNames`,
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/config/slotConfigNames`,
             {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
@@ -584,7 +596,7 @@ export class AzureAppService {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'GET';
             var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
-            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/slotConfigNames`,
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/config/slotConfigNames`,
             {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,

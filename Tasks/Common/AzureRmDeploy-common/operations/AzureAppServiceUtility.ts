@@ -146,15 +146,28 @@ export class AzureAppServiceUtility {
         return physicalToVirtualPathMap.physicalPath;
     }   
 
-    public async updateConfigurationSettings(properties: any) : Promise<void> {
-        for(var property in properties) {
-            if(!!properties[property] && properties[property].value !== undefined) {
-                properties[property] = properties[property].value;
+    public async updateConfigurationSettings(properties: any, formatJSON?: boolean) : Promise<void> {
+        if(formatJSON) {
+            var configurationSettingsProperties = {};
+            for(var property in properties) {
+                configurationSettingsProperties[properties[property].name] = properties[property];
+                delete configurationSettingsProperties[properties[property].name].name;
             }
-        }
 
-        console.log(tl.loc('UpdatingAppServiceConfigurationSettings', JSON.stringify(properties)));
-        await this._appService.patchConfiguration({'properties': properties});
+            console.log(tl.loc('UpdatingAppServiceConfigurationSettings', JSON.stringify(configurationSettingsProperties)));
+            await this._appService.patchConfiguration({'properties': configurationSettingsProperties});
+        }
+        else
+        {
+            for(var property in properties) {
+                if(!!properties[property] && properties[property].value !== undefined) {
+                    properties[property] = properties[property].value;
+                }
+            }
+    
+            console.log(tl.loc('UpdatingAppServiceConfigurationSettings', JSON.stringify(properties)));
+            await this._appService.patchConfiguration({'properties': properties});    
+        }
         console.log(tl.loc('UpdatedAppServiceConfigurationSettings'));
     }
 
@@ -180,16 +193,28 @@ export class AzureAppServiceUtility {
         }
     }
 
-    public async updateAndMonitorAppSettings(addProperties?: any, deleteProperties?: any): Promise<boolean> {
-        for(var property in addProperties) {
-            if(!!addProperties[property] && addProperties[property].value !== undefined) {
-                addProperties[property] = addProperties[property].value;
+    public async updateAndMonitorAppSettings(addProperties?: any, deleteProperties?: any, formatJSON?: boolean): Promise<boolean> {
+        if(formatJSON) {
+            var appSettingsProperties = {};
+            for(var property in addProperties) {
+                appSettingsProperties[addProperties[property].name] = addProperties[property].value;
             }
+        
+            console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(appSettingsProperties), JSON.stringify(deleteProperties)));
+            var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(appSettingsProperties, deleteProperties, true);
+        }
+        else
+        {
+            for(var property in addProperties) {
+                if(!!addProperties[property] && addProperties[property].value !== undefined) {
+                    addProperties[property] = addProperties[property].value;
+                }
+            }
+            
+            console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(addProperties), JSON.stringify(deleteProperties)));
+            var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
         }
         
-        console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(addProperties), JSON.stringify(deleteProperties)));
-        var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
-
         if(!isNewValueUpdated) {
             console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
             return isNewValueUpdated;
