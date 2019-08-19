@@ -74,6 +74,7 @@
         "FtpUploadV1",
         "FtpUploadV2",
         "GitHubReleaseV0",
+        "GitHubReleaseV1",
         "GoV0",
         "GoToolV0",
         "GradleV2",
