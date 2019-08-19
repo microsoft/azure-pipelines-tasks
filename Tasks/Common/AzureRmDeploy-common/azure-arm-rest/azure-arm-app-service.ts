@@ -20,8 +20,8 @@ export class AzureAppService {
     private _appServiceConfigurationDetails: AzureAppServiceConfigurationDetails;
     private _appServicePublishingProfile: any;
     private _appServiceApplicationSetings: AzureAppServiceConfigurationDetails;
-    private _appServiceConnectionStrings: AzureAppServiceConfigurationDetails;
-    private _appServiceConnectionStringSlotSetting: AzureAppServiceConfigurationDetails;
+    private _appServiceConfigurationSettings: AzureAppServiceConfigurationDetails;
+    private _appServiceConnectionString: AzureAppServiceConfigurationDetails;
 
     constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string) {
         this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
@@ -242,7 +242,26 @@ export class AzureAppService {
 
         return isNewValueUpdated;
     }
+
+    public async patchApplicationSettingsSlot(addProperties: any): Promise<any> {
+        var appSettingsSlotSettings = await this.getSlotConfigurationNames();
+        var isNewValueUpdated: boolean = false;
+        for(var key in addProperties) {
+            if(addProperties[key].slotSetting == true) {
+                if((appSettingsSlotSettings.properties.appSettingNames.length == 0) || (!appSettingsSlotSettings.properties.appSettingNames.includes(addProperties[key].name))) {
+                    appSettingsSlotSettings.properties.appSettingNames.push(addProperties[key].name);
+                }
+                tl.debug(`Slot setting updated for key : ${addProperties[key].name}`);
+                isNewValueUpdated = true;
+            }
+        }
+
+        if(isNewValueUpdated) {
+            await this.updateSlotConfigSettings(appSettingsSlotSettings);
+        }
     
+    }
+
     public async syncFunctionTriggers(): Promise<any> {
         try {
             let i = 0;
@@ -356,19 +375,19 @@ export class AzureAppService {
     }
 
     public async getConnectionStrings(force?: boolean): Promise<AzureAppServiceConfigurationDetails> {
-        if(force || !this._appServiceConnectionStringSlotSetting) {
-            this._appServiceConnectionStringSlotSetting = await this._getConnectionStrings();
+        if(force || !this._appServiceConnectionString) {
+            this._appServiceConnectionString = await this._getConnectionStrings();
         }
 
-        return this._appServiceConnectionStringSlotSetting;
+        return this._appServiceConnectionString;
     }
 
-    public async getConnectionStringSlotSettings(force?: boolean): Promise<AzureAppServiceConfigurationDetails> {
-        if(force || !this._appServiceConnectionStrings) {
-            this._appServiceConnectionStrings = await this._getConnectionStringSlotSettings();
+    public async getSlotConfigurationNames(force?: boolean): Promise<AzureAppServiceConfigurationDetails> {
+        if(force || !this._appServiceConfigurationSettings) {
+            this._appServiceConfigurationSettings = await this._getSlotConfigurationNames();
         }
 
-        return this._appServiceConnectionStrings;
+        return this._appServiceConfigurationSettings;
     }
 
     public async patchConnectionString(addProperties: any, deleteProperties?: any): Promise<any> {
@@ -395,7 +414,7 @@ export class AzureAppService {
         }
     }
 
-    public async updateConnectionStrings(connectionStringSettings): Promise<AzureAppServiceConfigurationDetails> {
+    public async updateConnectionStrings(connectionStringSettings: any): Promise<AzureAppServiceConfigurationDetails> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'PUT';
@@ -420,7 +439,7 @@ export class AzureAppService {
     }
 
     public async patchConnectionStringSlot(addProperties: any): Promise<any> {
-        var connectionStringSlotSettings = await this.getConnectionStringSlotSettings();
+        var connectionStringSlotSettings = await this.getSlotConfigurationNames();
         var isNewValueUpdated: boolean = false;
         for(var key in addProperties) {
             if(addProperties[key].slotSetting == true) {
@@ -433,16 +452,15 @@ export class AzureAppService {
         }
 
         if(isNewValueUpdated) {
-            await this.updateSlotSettings(connectionStringSlotSettings);
+            await this.updateSlotConfigSettings(connectionStringSlotSettings);
         }
     }
 
-    public async updateSlotSettings(connectionStringSettings): Promise<AzureAppServiceConfigurationDetails> {
+    public async updateSlotConfigSettings(SlotConfigSettings: any): Promise<AzureAppServiceConfigurationDetails> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'PUT';
-            httpRequest.body = JSON.stringify(connectionStringSettings);
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.body = JSON.stringify(SlotConfigSettings);
             httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/config/slotConfigNames`,
             {
                 '{resourceGroupName}': this._resourceGroup,
@@ -457,7 +475,7 @@ export class AzureAppService {
             return response.body;
         }
         catch(error) {
-            throw Error(tl.loc('FailedToUpdateAppServiceConnectionStringSlotSettings', this._getFormattedName(), this._client.getFormattedError(error)));
+            throw Error(tl.loc('FailedToUpdateAppServiceConfigSlotSettings', this._getFormattedName(), this._client.getFormattedError(error)));
         }
     }
 
@@ -591,11 +609,10 @@ export class AzureAppService {
         }
     }
 
-    private async _getConnectionStringSlotSettings(): Promise<AzureAppServiceConfigurationDetails> {
+    private async _getSlotConfigurationNames(): Promise<AzureAppServiceConfigurationDetails> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'GET';
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
             httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/config/slotConfigNames`,
             {
                 '{resourceGroupName}': this._resourceGroup,
@@ -610,7 +627,7 @@ export class AzureAppService {
             return response.body;
         }
         catch(error) {
-            throw Error(tl.loc('FailedToGetAppServiceConnectionStringSlotSettings', this._getFormattedName(), this._client.getFormattedError(error)));
+            throw Error(tl.loc('FailedToGetAppServiceSlotConfigurationNames', this._getFormattedName(), this._client.getFormattedError(error)));
         }
     }
 

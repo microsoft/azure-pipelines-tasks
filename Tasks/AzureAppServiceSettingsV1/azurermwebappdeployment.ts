@@ -3,16 +3,10 @@ import path = require('path');
 import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
 import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
-import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility';
 import { AzureAppServiceUtility } from 'azurermdeploycommon/operations/AzureAppServiceUtility';
-
-const webAppKindMap = new Map([
-    [ 'app', 'webApp' ],
-    [ 'app,linux', 'webAppLinux' ]
-]);
+import { AzureResourceFilterUtils } from './operations/AzureResourceFilterUtils';
 
 async function main() {
-    let isDeploymentSuccess: boolean = true;
 
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -27,10 +21,10 @@ async function main() {
 
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
+        resourceGroupName = await AzureResourceFilterUtils.getResourceGroupName(azureEndpoint, 'Microsoft.Web/Sites', webAppName);
+        tl.debug(`Resource Group: ${resourceGroupName}`);
 
         var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
-        var configSettings = await appService.get(true);
-        var webAppKind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
         let appServiceUtility: AzureAppServiceUtility = new AzureAppServiceUtility(appService);
 
         var endpointTelemetry = '{"endpointId":"' + connectedServiceName + '"}';

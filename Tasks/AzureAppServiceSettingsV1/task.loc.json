@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -67,7 +67,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.slotName",
       "defaultValue": "production",
-      "required": true,
+      "required": false,
       "properties": {
         "EditableOptions": "True"
       },
@@ -281,12 +281,12 @@
     "FailedToPatchAppServiceConfiguration": "ms-resource:loc.messages.FailedToPatchAppServiceConfiguration",
     "FailedToUpdateAppServiceConfiguration": "ms-resource:loc.messages.FailedToUpdateAppServiceConfiguration",
     "FailedToUpdateAppServiceConnectionStrings": "ms-resource:loc.messages.FailedToUpdateAppServiceConnectionStrings",
-    "FailedToUpdateAppServiceConnectionStringSlotSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceConnectionStringSlotSettings",
+    "FailedToUpdateAppServiceConfigSlotSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceConfigSlotSettings",
     "FailedToGetAppServiceConfiguration": "ms-resource:loc.messages.FailedToGetAppServiceConfiguration",
     "FailedToGetAppServicePublishingCredentials": "ms-resource:loc.messages.FailedToGetAppServicePublishingCredentials",
     "FailedToGetAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettings",
     "FailedToGetAppServiceConnectionStrings": "ms-resource:loc.messages.FailedToGetAppServiceConnectionStrings",
-    "FailedToGetAppServiceConnectionStringSlotSettings": "ms-resource:loc.messages.FailedToGetAppServiceConnectionStringSlotSettings",
+    "FailedToGetAppServiceSlotConfigurationNames": "ms-resource:loc.messages.FailedToGetAppServiceSlotConfigurationNames",
     "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
     "UpdatingAppServiceConnectionStrings": "ms-resource:loc.messages.UpdatingAppServiceConnectionStrings",
     "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",

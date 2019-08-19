@@ -1,7 +1,7 @@
 {
     "id": "3eeea460-bffa-11e9-9cb5-2a2ae2dbcce4",
     "name": "AzureAppServiceSettings",
-    "friendlyName": "Azure Web App Settings",
+    "friendlyName": "Azure App Service Settings",
     "description": "Update/Add App settings an Azure Web App for Linux or Windows",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebappdeployreadme)",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 0
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -67,11 +67,11 @@
             "type": "pickList",
             "label": "Slot",
             "defaultValue": "production",
-            "required": true,
+            "required": false,
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select an existing Slot"
+            "helpMarkDown": "Enter or Select an existing Slot. If no slot is selected, changes will be made to production."
         },
         {
             "name": "appSettings",
@@ -80,7 +80,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "ApplicationAndConfigurationSettings",
-            "helpMarkDown": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
+            "helpMarkDown": "Add/Update App Service Connection strings using the json syntax as follows:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key1\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueabcd\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": false <br/> &nbsp;&nbsp; },<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key2\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueefgh\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": true <br/> &nbsp;&nbsp; }<br/>]",
             "properties": {
                 "resizable": "true",
                 "rows": "8",
@@ -90,11 +90,11 @@
         {
             "name": "configurationStrings",
             "type": "multiLine",
-            "label": "Configuration settings",
+            "label": "General settings",
             "defaultValue": "",
             "required": false,
             "groupName": "ApplicationAndConfigurationSettings",
-            "helpMarkDown": "Edit web app configuration settings following the syntax -key value. Value containing spaces should be enclosed in double quotes.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
+            "helpMarkDown": "Add/Update App Service Connection strings using the json syntax as follows:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"alwaysOn\": true, <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"webSocketsEnabled\": false<br/> &nbsp;&nbsp; }<br/>]",
             "properties": {
                 "resizable": "true",
                 "rows": "8",
@@ -108,7 +108,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "ApplicationAndConfigurationSettings",
-            "helpMarkDown": "Edit web app connection strings following the json syntax as follows:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key1\" <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueabcd\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"type\": \"MySql\" <br/> &nbsp;&nbsp; }<br/> ]",
+            "helpMarkDown": "Add/Update App Service Connection strings using the json syntax as follows:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key1\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueabcd\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"type\": \"MySql\", <br/> &nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": false <br/> &nbsp;&nbsp; },<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key2\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueefgh\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"type\": \"Custom\", <br/> &nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": true <br/> &nbsp;&nbsp; }<br/>]",
             "properties": {
                 "resizable": "true",
                 "rows": "8",
@@ -281,12 +281,12 @@
         "FailedToPatchAppServiceConfiguration": "Failed to patch App Service '%s' configuration. Error: %s",
         "FailedToUpdateAppServiceConfiguration": "Failed to update App service '%s' configuration. Error: %s",
         "FailedToUpdateAppServiceConnectionStrings": "Failed to update App service '%s' Connection Strings. Error: %s",
-        "FailedToUpdateAppServiceConnectionStringSlotSettings": "Failed to update App service '%s' Connection String Slot Settings. Error: %s",
+        "FailedToUpdateAppServiceConfigSlotSettings": "Failed to update App service '%s' Configuration Slot Settings. Error: %s",
         "FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",
         "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
         "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
         "FailedToGetAppServiceConnectionStrings": "Failed to get App service '%s' Connection strings. Error: %s",
-        "FailedToGetAppServiceConnectionStringSlotSettings": "Failed to get App service '%s' Connection string slot settings. Error: %s",
+        "FailedToGetAppServiceSlotConfigurationNames": "Failed to get App service '%s' Slot Configuration Names. Error: %s",
         "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
         "UpdatingAppServiceConnectionStrings": "Updating App Service Connection Strings. Data: %s",
         "UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",

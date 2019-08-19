@@ -148,12 +148,7 @@ export class AzureAppServiceUtility {
 
     public async updateConfigurationSettings(properties: any, formatJSON?: boolean) : Promise<void> {
         if(formatJSON) {
-            var configurationSettingsProperties = {};
-            for(var property in properties) {
-                configurationSettingsProperties[properties[property].name] = properties[property];
-                delete configurationSettingsProperties[properties[property].name].name;
-            }
-
+            var configurationSettingsProperties = properties[0];
             console.log(tl.loc('UpdatingAppServiceConfigurationSettings', JSON.stringify(configurationSettingsProperties)));
             await this._appService.patchConfiguration({'properties': configurationSettingsProperties});
         }
@@ -215,6 +210,7 @@ export class AzureAppServiceUtility {
             var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
         }
         
+        await this._appService.patchApplicationSettingsSlot(addProperties);
         if(!isNewValueUpdated) {
             console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
             return isNewValueUpdated;
