@@ -1,1 +1,5 @@
-{}
+{
+  "loc.messages.InstallDotNetCoreForHtmlReport": "Please install dotnet core to enable automatic generation of Html report.",
+  "loc.messages.ErrorWhilePublishing": "Error occured while publishing coverage: ",
+  "loc.messages.UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases"
+}

@@ -43,10 +43,17 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
     }
 
     try {
+        const env = {
+            "SYSTEM_ACCESSTOKEN": taskLib.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false),
+            "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI": taskLib.getVariable('System.TeamFoundationCollectionUri'),
+            "BUILD_BUILDID": taskLib.getVariable('Build.BuildId'),
+            "BUILD_CONTAINERID": taskLib.getVariable('Build.ContainerId'),
+            "AGENT_TEMPPATH": taskLib.getVariable('Agent.TempPath'),
+            "SYSTEM_TEAMPROJECTID": taskLib.getVariable('System.TeamProjectId')
+        };
+
         await dotnet.exec({
-            env: {
-                "SYSTEM_ACCESSTOKEN": taskLib.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false)
-            },
+            env,
             ignoreReturnCode: true,
             failOnStdErr: false,
             windowsVerbatimArguments: true,
@@ -55,7 +62,6 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
                     taskLib.warning(data);
                 }
             },
-            outStream: process.stdout
         } as any);
 
     } catch (err) {
