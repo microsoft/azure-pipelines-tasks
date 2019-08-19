@@ -188,11 +188,11 @@ export class AzureAppServiceUtility {
             var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
         }
         
-        await this._appService.patchApplicationSettingsSlot(addProperties);
         if(!isNewValueUpdated) {
             console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
-            return isNewValueUpdated;
         }
+
+        await this._appService.patchApplicationSettingsSlot(addProperties);
 
         return isNewValueUpdated;
     }
