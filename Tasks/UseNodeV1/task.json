@@ -17,10 +17,11 @@
     "version": {
         "Major": 1,
         "Minor": 156,
-        "Patch": 0
+        "Patch": 2
     },
     "satisfies": [
         "Node",
+        "npm",
         "node.js"
     ],
     "demands": [],
