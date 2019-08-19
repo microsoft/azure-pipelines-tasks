@@ -16,6 +16,7 @@ export class AzureAppService {
     private _name: string;
     private _slot: string;
     private _appKind: string;
+    private _isConsumptionApp: boolean;
     public _client: ServiceClient;
     private _appServiceConfigurationDetails: AzureAppServiceConfigurationDetails;
     private _appServicePublishingProfile: any;
@@ -23,12 +24,13 @@ export class AzureAppService {
     private _appServiceConfigurationSettings: AzureAppServiceConfigurationDetails;
     private _appServiceConnectionString: AzureAppServiceConfigurationDetails;
 
-    constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string) {
+    constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string, isConsumptionApp?: boolean) {
         this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
         this._resourceGroup = resourceGroup;
         this._name = name;
         this._slot = (slot && slot.toLowerCase() == constants.productionSlot) ? null : slot;
         this._appKind = appKind;
+        this._isConsumptionApp = isConsumptionApp;
     }
 
     public async start(): Promise<void> {
@@ -236,7 +238,7 @@ export class AzureAppService {
         }
 
         if(isNewValueUpdated) {
-            applicationSettings.properties[constants.WebsiteEnableSyncUpdateSiteKey] = 'true';
+            applicationSettings.properties[constants.WebsiteEnableSyncUpdateSiteKey] =  this._isConsumptionApp ? 'false' : 'true';
             await this.updateApplicationSettings(applicationSettings);
         }
 
