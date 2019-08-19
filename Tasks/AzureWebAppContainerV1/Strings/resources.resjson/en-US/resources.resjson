@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Web App for Containers",
-  "loc.helpMarkDown": "[More information](https://aka.ms/azurewebapponcontainerdeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebapponcontainerdeployreadme)",
   "loc.description": "Deploy containers to Azure App Service",
   "loc.instanceNameFormat": "Azure Web App on Container Deploy: $(appName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
