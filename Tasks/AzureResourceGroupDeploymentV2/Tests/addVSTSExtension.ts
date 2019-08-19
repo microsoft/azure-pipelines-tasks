@@ -21,6 +21,7 @@ tr.setInput("copyAzureVMTags", process.env["copyAzureVMTags"]);
 tr.setInput("deploymentGroupEndpoint", "PatEndpoint");
 tr.setInput("outputVariable", process.env["outputVariable"]);
 
+
 process.env["ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID"] = "id";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALKEY"] = "key";
