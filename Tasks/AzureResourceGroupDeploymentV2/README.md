@@ -73,6 +73,28 @@ The following parameters are shown when the selected action is to create or upda
  
  * **Deployment Mode**: This specifies the [deployment mode](https://azure.microsoft.com/en-us/documentation/articles/resource-group-template-deploy) in which the Azure resources specified in the template have to be deployed. Incremental mode handles deployments as incremental updates to the resource group . It leaves unchanged resources that exist in the resource group but are not specified in the template. Complete mode deletes resources that are not in your template. [Validate mode](https://msdn.microsoft.com/en-us/library/azure/dn790547.aspx) enables you to find syntactical problems with the template before creating actual resources. By default, incremental mode is used. 
  
+ ### Deployment Outputs:
+  It is the output of the deployment object created using Azure Resource Manager templates which can be used in the subsequent tasks like Powershell and Azure CLI.
+
+ **How to use Deployment output**
+  The deployment output can be parsed to JSON object using "ConvertFrom-Json" PowerShell cmdlet in Poweshell task and then that object can be used in other tasks.
+
+  Example:
+  ```
+  $var=ConvertFrom-Json '$(storageAccountName)'
+  $value=$var.storageAccountName.value
+  Write-Host "##vso[task.setvariable variable=value;]$value"
+  ```
+
+  On linux agent if you want to use deployment output in Azure CLI task, you can avoid extra Powershell task by adding double quotes to convert it to valid JSON. This is needed because Azure CLI task on linux uses bash and the bash removes the double quotes of JSON string making it invalid JSON.
+
+  Example:
+  ```
+  var=`echo "$(storageAccountName)" |  sed -e 's/}/"\n}/g'  |   sed -e 's/{/{\n"/g' |   sed -e 's/:/":"/g'  |   sed -e 's/,/",\n"/g'  |   sed -e 's/"}/}/g'  |   sed -e 's/}"/}/g'  |   sed -e 's/"{/{/g'  | sed -e 's/\[/\[\n"/g'  | sed -e 's/]/"\n]/g'  | sed -e 's/"\[/\[/g' | sed -e 's/]"/]/g'`
+  sa_name=`echo $var | jq -r .storageAccountName.value`
+  echo $sa_name
+  ```
+
  ### Advanced deployment options for virtual machines:
  
  These options would be applicable only when the Resource group contains virtual machines.
