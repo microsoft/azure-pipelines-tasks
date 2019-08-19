@@ -17,7 +17,6 @@ export class AzureAppService {
     private _slot: string;
     private _appKind: string;
     private _isConsumptionApp: boolean;
-    private _enableKuduSync: string;
     public _client: ServiceClient;
     private _appServiceConfigurationDetails: AzureAppServiceConfigurationDetails;
     private _appServicePublishingProfile: any;
@@ -30,7 +29,6 @@ export class AzureAppService {
         this._slot = (slot && slot.toLowerCase() == constants.productionSlot) ? null : slot;
         this._appKind = appKind;
         this._isConsumptionApp = isConsumptionApp;
-        this._enableKuduSync = this._isConsumptionApp ? 'false' : 'true';
     }
 
     public async start(): Promise<void> {
@@ -226,7 +224,7 @@ export class AzureAppService {
         }
 
         if(isNewValueUpdated) {
-            applicationSettings.properties[constants.WebsiteEnableSyncUpdateSiteKey] =  this._enableKuduSync;
+            applicationSettings.properties[constants.WebsiteEnableSyncUpdateSiteKey] =  this._isConsumptionApp ? 'false' : 'true';
             await this.updateApplicationSettings(applicationSettings);
         }
 
