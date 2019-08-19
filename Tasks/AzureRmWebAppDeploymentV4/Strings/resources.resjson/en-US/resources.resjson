@@ -224,5 +224,19 @@
   "loc.messages.JarPathNotPresent": "Java jar path is not present",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
   "loc.messages.RunFromZipPreventsFileInUseError": "Move from Web Deploy to RunFrom Package, which helps in avoiding FILE_IN_USE error. Note that Run From Package does not support msBuild package type. Please change your package format to use this deployment method.",
-  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+  "loc.messages.MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.",
+  "loc.messages.JSONvariableSubstitution": "Applying JSON variable substitution for %s",
+  "loc.messages.SubstitutingValueonKey": "Substituting value on key: %s",
+  "loc.messages.SubstitutingValueonKeyWithNumber": "Substituting value on key %s with (number) value: %s",
+  "loc.messages.SubstitutingValueonKeyWithBoolean": "Substituting value on key %s with (boolean) value: %s",
+  "loc.messages.SubstitutingValueonKeyWithObject": "Substituting value on key %s with (object) value: %s",
+  "loc.messages.SubstitutingValueonKeyWithString": "Substituting value on key %s with (string) value: %s",
+  "loc.messages.ApplyingXDTtransformation": "Applying XDT Transformation from transformation file %s -> source file %s ",
+  "loc.messages.SubstitutionForXmlNode": "Processing substitution for xml node : %s",
+  "loc.messages.UpdatingKeyWithTokenValue": "Updating value for key= %s with token value: %s",
+  "loc.messages.SubstitutingConnectionStringValue": "Substituting connectionString value for connectionString = %s with token value: %s ",
+  "loc.messages.VariableSubstitutionInitiated": "Initiated variable substitution in config file : %s",
+  "loc.messages.ConfigFileUpdated": "Config file : %s updated.",
+  "loc.messages.SkippedUpdatingFile": "Skipped Updating file: %s"
 }

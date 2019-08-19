@@ -31,5 +31,19 @@
   "loc.messages.CallbackCannotBeNull": "The callback cannot be null.",
   "loc.messages.UnableToCreateDatabaseException": "Unable to create database.",
   "loc.messages.WindowMysqlClientMissingError": "MySQL client is missing on the Windows agent machine. Please install it by running the MySQL client installer 'https://aka.ms/window-mysqlcli-installer' script file on the agent machine.",
-  "loc.messages.LinuxMysqlClientMissingError": "MySQL client is missing on the Linux agent machine. Please install it by running 'sudo apt-get install mysql-client'."
+  "loc.messages.LinuxMysqlClientMissingError": "MySQL client is missing on the Linux agent machine. Please install it by running 'sudo apt-get install mysql-client'.",
+  "loc.messages.MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.",
+  "loc.messages.JSONvariableSubstitution": "Applying JSON variable substitution for %s",
+  "loc.messages.SubstitutingValueonKey": "Substituting value on key: %s",
+  "loc.messages.SubstitutingValueonKeyWithNumber": "Substituting value on key %s with (number) value: %s",
+  "loc.messages.SubstitutingValueonKeyWithBoolean": "Substituting value on key %s with (boolean) value: %s",
+  "loc.messages.SubstitutingValueonKeyWithObject": "Substituting value on key %s with (object) value: %s",
+  "loc.messages.SubstitutingValueonKeyWithString": "Substituting value on key %s with (string) value: %s",
+  "loc.messages.ApplyingXDTtransformation": "Applying XDT Transformation from transformation file %s -> source file %s ",
+  "loc.messages.SubstitutionForXmlNode": "Processing substitution for xml node : %s",
+  "loc.messages.UpdatingKeyWithTokenValue": "Updating value for key= %s with token value: %s",
+  "loc.messages.SubstitutingConnectionStringValue": "Substituting connectionString value for connectionString = %s with token value: %s ",
+  "loc.messages.VariableSubstitutionInitiated": "Initiated variable substitution in config file : %s",
+  "loc.messages.ConfigFileUpdated": "Config file : %s updated.",
+  "loc.messages.SkippedUpdatingFile": "Skipped Updating file: %s"
 }

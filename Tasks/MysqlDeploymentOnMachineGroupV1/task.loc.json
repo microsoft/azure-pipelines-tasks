@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 156,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -117,6 +117,20 @@
     "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
     "UnableToCreateDatabaseException": "ms-resource:loc.messages.UnableToCreateDatabaseException",
     "WindowMysqlClientMissingError": "ms-resource:loc.messages.WindowMysqlClientMissingError",
-    "LinuxMysqlClientMissingError": "ms-resource:loc.messages.LinuxMysqlClientMissingError"
+    "LinuxMysqlClientMissingError": "ms-resource:loc.messages.LinuxMysqlClientMissingError",
+    "MissingArgumentsforXMLTransformation": "ms-resource:loc.messages.MissingArgumentsforXMLTransformation",
+    "JSONvariableSubstitution": "ms-resource:loc.messages.JSONvariableSubstitution",
+    "SubstitutingValueonKey": "ms-resource:loc.messages.SubstitutingValueonKey",
+    "SubstitutingValueonKeyWithNumber": "ms-resource:loc.messages.SubstitutingValueonKeyWithNumber",
+    "SubstitutingValueonKeyWithBoolean": "ms-resource:loc.messages.SubstitutingValueonKeyWithBoolean",
+    "SubstitutingValueonKeyWithObject": "ms-resource:loc.messages.SubstitutingValueonKeyWithObject",
+    "SubstitutingValueonKeyWithString": "ms-resource:loc.messages.SubstitutingValueonKeyWithString",
+    "ApplyingXDTtransformation": "ms-resource:loc.messages.ApplyingXDTtransformation",
+    "SubstitutionForXmlNode": "ms-resource:loc.messages.SubstitutionForXmlNode",
+    "UpdatingKeyWithTokenValue": "ms-resource:loc.messages.UpdatingKeyWithTokenValue",
+    "SubstitutingConnectionStringValue": "ms-resource:loc.messages.SubstitutingConnectionStringValue",
+    "VariableSubstitutionInitiated": "ms-resource:loc.messages.VariableSubstitutionInitiated",
+    "ConfigFileUpdated": "ms-resource:loc.messages.ConfigFileUpdated",
+    "SkippedUpdatingFile": "ms-resource:loc.messages.SkippedUpdatingFile"
   }
 }

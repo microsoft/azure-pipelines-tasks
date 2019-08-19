@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 156,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.104.1",
@@ -185,6 +185,20 @@
     "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage",
     "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed",
     "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol",
-    "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy"
+    "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy",
+    "MissingArgumentsforXMLTransformation": "ms-resource:loc.messages.MissingArgumentsforXMLTransformation",
+    "JSONvariableSubstitution": "ms-resource:loc.messages.JSONvariableSubstitution",
+    "SubstitutingValueonKey": "ms-resource:loc.messages.SubstitutingValueonKey",
+    "SubstitutingValueonKeyWithNumber": "ms-resource:loc.messages.SubstitutingValueonKeyWithNumber",
+    "SubstitutingValueonKeyWithBoolean": "ms-resource:loc.messages.SubstitutingValueonKeyWithBoolean",
+    "SubstitutingValueonKeyWithObject": "ms-resource:loc.messages.SubstitutingValueonKeyWithObject",
+    "SubstitutingValueonKeyWithString": "ms-resource:loc.messages.SubstitutingValueonKeyWithString",
+    "ApplyingXDTtransformation": "ms-resource:loc.messages.ApplyingXDTtransformation",
+    "SubstitutionForXmlNode": "ms-resource:loc.messages.SubstitutionForXmlNode",
+    "UpdatingKeyWithTokenValue": "ms-resource:loc.messages.UpdatingKeyWithTokenValue",
+    "SubstitutingConnectionStringValue": "ms-resource:loc.messages.SubstitutingConnectionStringValue",
+    "VariableSubstitutionInitiated": "ms-resource:loc.messages.VariableSubstitutionInitiated",
+    "ConfigFileUpdated": "ms-resource:loc.messages.ConfigFileUpdated",
+    "SkippedUpdatingFile": "ms-resource:loc.messages.SkippedUpdatingFile"
   }
 }

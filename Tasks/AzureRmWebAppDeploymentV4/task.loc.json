@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 156,
-    "Patch": 5
+    "Patch": 6
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -637,6 +637,20 @@
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "RunFromZipPreventsFileInUseError": "ms-resource:loc.messages.RunFromZipPreventsFileInUseError",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "MissingArgumentsforXMLTransformation": "ms-resource:loc.messages.MissingArgumentsforXMLTransformation",
+    "JSONvariableSubstitution": "ms-resource:loc.messages.JSONvariableSubstitution",
+    "SubstitutingValueonKey": "ms-resource:loc.messages.SubstitutingValueonKey",
+    "SubstitutingValueonKeyWithNumber": "ms-resource:loc.messages.SubstitutingValueonKeyWithNumber",
+    "SubstitutingValueonKeyWithBoolean": "ms-resource:loc.messages.SubstitutingValueonKeyWithBoolean",
+    "SubstitutingValueonKeyWithObject": "ms-resource:loc.messages.SubstitutingValueonKeyWithObject",
+    "SubstitutingValueonKeyWithString": "ms-resource:loc.messages.SubstitutingValueonKeyWithString",
+    "ApplyingXDTtransformation": "ms-resource:loc.messages.ApplyingXDTtransformation",
+    "SubstitutionForXmlNode": "ms-resource:loc.messages.SubstitutionForXmlNode",
+    "UpdatingKeyWithTokenValue": "ms-resource:loc.messages.UpdatingKeyWithTokenValue",
+    "SubstitutingConnectionStringValue": "ms-resource:loc.messages.SubstitutingConnectionStringValue",
+    "VariableSubstitutionInitiated": "ms-resource:loc.messages.VariableSubstitutionInitiated",
+    "ConfigFileUpdated": "ms-resource:loc.messages.ConfigFileUpdated",
+    "SkippedUpdatingFile": "ms-resource:loc.messages.SkippedUpdatingFile"
   }
 }

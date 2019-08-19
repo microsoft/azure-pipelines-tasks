@@ -18,7 +18,7 @@
     "version": {
         "Major": 4,
         "Minor": 156,
-        "Patch": 5
+        "Patch": 6
     },
     "releaseNotes": "What's new in version 4.*<br />Supports Zip Deploy, Run From Package, War Deploy [Details here](https://aka.ms/appServiceDeploymentMethods)<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
@@ -637,6 +637,20 @@
         "JarPathNotPresent": "Java jar path is not present",
         "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
         "RunFromZipPreventsFileInUseError": "Move from Web Deploy to RunFrom Package, which helps in avoiding FILE_IN_USE error. Note that Run From Package does not support msBuild package type. Please change your package format to use this deployment method.",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.",
+        "JSONvariableSubstitution" : "Applying JSON variable substitution for %s",
+        "SubstitutingValueonKey" : "Substituting value on key: %s",
+        "SubstitutingValueonKeyWithNumber" : "Substituting value on key %s with (number) value: %s",
+        "SubstitutingValueonKeyWithBoolean" : "Substituting value on key %s with (boolean) value: %s",
+        "SubstitutingValueonKeyWithObject" : "Substituting value on key %s with (object) value: %s",
+        "SubstitutingValueonKeyWithString" : "Substituting value on key %s with (string) value: %s",
+        "ApplyingXDTtransformation" : "Applying XDT Transformation from transformation file %s -> source file %s ",
+        "SubstitutionForXmlNode" : "Processing substitution for xml node : %s",
+        "UpdatingKeyWithTokenValue" : "Updating value for key= %s with token value: %s",
+        "SubstitutingConnectionStringValue" : "Substituting connectionString value for connectionString = %s with token value: %s ",
+        "VariableSubstitutionInitiated" : "Initiated variable substitution in config file : %s",
+        "ConfigFileUpdated" : "Config file : %s updated.",
+        "SkippedUpdatingFile" : "Skipped Updating file: %s"
     }
 }

@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 156,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [],
     "minimumAgentVersion": "1.100.0",
@@ -224,6 +224,20 @@
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not retrieve an access token for the managed service principal. Please configure Managed Service Identity (MSI) for the virtual machine. See 'https://aka.ms/azure-msi-docs'.Assign role to created MSI Identity. See 'https://aka.ms/assign-role-msi'. Status code: %s. Status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not retrieve an access token for the managed service principal. Status code: %s. Status message: %s",
         "NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.",
+        "JSONvariableSubstitution" : "Applying JSON variable substitution for %s",
+        "SubstitutingValueonKey" : "Substituting value on key: %s",
+        "SubstitutingValueonKeyWithNumber" : "Substituting value on key %s with (number) value: %s",
+        "SubstitutingValueonKeyWithBoolean" : "Substituting value on key %s with (boolean) value: %s",
+        "SubstitutingValueonKeyWithObject" : "Substituting value on key %s with (object) value: %s",
+        "SubstitutingValueonKeyWithString" : "Substituting value on key %s with (string) value: %s",
+        "ApplyingXDTtransformation" : "Applying XDT Transformation from transformation file %s -> source file %s ",
+        "SubstitutionForXmlNode" : "Processing substitution for xml node : %s",
+        "UpdatingKeyWithTokenValue" : "Updating value for key= %s with token value: %s",
+        "SubstitutingConnectionStringValue" : "Substituting connectionString value for connectionString = %s with token value: %s ",
+        "VariableSubstitutionInitiated" : "Initiated variable substitution in config file : %s",
+        "ConfigFileUpdated" : "Config file : %s updated.",
+        "SkippedUpdatingFile" : "Skipped Updating file: %s"
     }
 }
