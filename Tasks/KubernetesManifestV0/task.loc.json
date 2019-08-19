@@ -61,6 +61,7 @@
       "defaultValue": "none",
       "options": {
         "canary": "Canary",
+        "bluegreen": "Blue Green",
         "none": "None"
       },
       "helpMarkDown": "ms-resource:loc.input.help.strategy",

@@ -43,7 +43,7 @@ export function deleteCanaryDeployment(kubectl: Kubectl, manifestFilePaths: stri
     }
 }
 
-export function deployCanary(kubectl: Kubectl, filePaths: string[]) {
+export function deploy(kubectl: Kubectl, filePaths: string[]) {
     const newObjectsList = [];
     const percentage = parseInt(TaskInputParameters.canaryPercentage);
 

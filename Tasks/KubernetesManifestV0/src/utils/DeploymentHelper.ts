@@ -5,6 +5,7 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as yaml from 'js-yaml';
 import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
+import * as blueGreenDeploymentHelper from '../utils/BlueGreenDeploymentHelper';
 import * as KubernetesObjectUtility from '../utils/KubernetesObjectUtility';
 import * as constants from '../models/constants';
 import * as TaskInputParameters from '../models/TaskInputParameters';
@@ -27,7 +28,7 @@ export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], depl
     inputManifestFiles = updateImagePullSecretsInManifestFiles(inputManifestFiles, TaskInputParameters.imagePullSecrets);
 
     // deployment
-    const deployedManifestFiles = deployManifests(inputManifestFiles, kubectl, isCanaryDeploymentStrategy(deploymentStrategy));
+    const deployedManifestFiles = await deployManifests(inputManifestFiles, kubectl, deploymentStrategy);
 
     // check manifest stability
     const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.deploymentTypes);
@@ -47,13 +48,19 @@ function getManifestFiles(manifestFilePaths: string[]): string[] {
     return files;
 }
 
-function deployManifests(files: string[], kubectl: Kubectl, isCanaryDeploymentStrategy: boolean): string[] {
+async function deployManifests(files: string[], kubectl: Kubectl, deploymentStrategy: string) {
     let result;
-    if (isCanaryDeploymentStrategy) {
-        const canaryDeploymentOutput = canaryDeploymentHelper.deployCanary(kubectl, files);
+    if (isCanaryDeploymentStrategy(deploymentStrategy)) {
+        const canaryDeploymentOutput = canaryDeploymentHelper.deploy(kubectl, files);
         result = canaryDeploymentOutput.result;
         files = canaryDeploymentOutput.newFilePaths;
-    } else {
+    }
+    else if (isBlueGreenDeploymentStrategy(deploymentStrategy)) {
+        const canaryDeploymentOutput = await blueGreenDeploymentHelper.deploy(kubectl, files);
+        result = canaryDeploymentOutput.result;
+        files = canaryDeploymentOutput.newFilePaths;
+    }
+    else {
         result = kubectl.apply(files);
     }
     utils.checkForErrors([result]);
@@ -63,7 +70,7 @@ function deployManifests(files: string[], kubectl: Kubectl, isCanaryDeploymentSt
 async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): Promise<void> {
     const rolloutStatusResults = [];
     const numberOfResources = resources.length;
-    for (let i = 0; i< numberOfResources; i++) {
+    for (let i = 0; i < numberOfResources; i++) {
         const resource = resources[i];
         if (models.workloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
             rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
@@ -145,7 +152,11 @@ function updateImagePullSecretsInManifestFiles(filePaths: string[], imagePullSec
 }
 
 function isCanaryDeploymentStrategy(deploymentStrategy: string): boolean {
-    return deploymentStrategy != null && deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY.toUpperCase();
+    return !!deploymentStrategy && deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY.toUpperCase();
+}
+
+function isBlueGreenDeploymentStrategy(deploymentStrategy: string): boolean {
+    return !!deploymentStrategy && deploymentStrategy.toUpperCase() === blueGreenDeploymentHelper.DEPLOYMENT_STRATEGY;
 }
 
 async function checkPodStatus(kubectl: Kubectl, podName: string): Promise<void> {
