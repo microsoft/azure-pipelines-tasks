@@ -21,6 +21,7 @@
     "Patch": 0
   },
   "preview": "true",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {

@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "File transformation and variable substitution task: Update tokens in your XML based configuration files and then replaces those tokens with variable values. <br/>Currently only XML, JSON file formats are supported for variable substitution.",
   "loc.description": "Replace tokens with variable values in XML or JSON configuration files",
   "loc.instanceNameFormat": "File Transform: $(Package)",
+  "loc.releaseNotes": "More optimized task fields that allow users to enable any/all of the transformation (XML), variable substitution (JSON and XML) features in a single task instance.</br>Task fails when any of the configured transformation/substitution is NOT applied or when the task is no-op.",
   "loc.group.displayName.VariableSubstitution": "Variable Substitution",
   "loc.input.label.folderPath": "Package or folder",
   "loc.input.help.folderPath": "File path to the package or a folder.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip.",
