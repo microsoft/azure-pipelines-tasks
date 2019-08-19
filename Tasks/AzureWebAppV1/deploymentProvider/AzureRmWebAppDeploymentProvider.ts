@@ -58,10 +58,6 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             var customConfigurationSettings = ParameterParser.parse(this.taskParams.ConfigurationSettings);
             await this.appServiceUtility.updateConfigurationSettings(customConfigurationSettings);
         }
-        if(this.taskParams.ConnectionStrings) {
-            var customConnectionStrings = JSON.parse(this.taskParams.ConnectionStrings);
-            await this.appServiceUtility.updateConnectionStrings(customConnectionStrings);
-        }
 
         await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
     }

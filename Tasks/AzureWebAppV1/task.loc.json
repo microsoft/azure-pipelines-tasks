@@ -164,20 +164,6 @@
       }
     },
     {
-      "name": "connectionStrings",
-      "type": "multiLine",
-      "label": "ms-resource:loc.input.label.connectionStrings",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "ms-resource:loc.input.help.connectionStrings",
-      "properties": {
-        "resizable": "true",
-        "rows": "10",
-        "maxLength": "5000"
-      }
-    },
-    {
       "name": "deploymentMethod",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.deploymentMethod",
@@ -359,18 +345,12 @@
     "FailedToGetAppServiceMetadata": "ms-resource:loc.messages.FailedToGetAppServiceMetadata",
     "FailedToPatchAppServiceConfiguration": "ms-resource:loc.messages.FailedToPatchAppServiceConfiguration",
     "FailedToUpdateAppServiceConfiguration": "ms-resource:loc.messages.FailedToUpdateAppServiceConfiguration",
-    "FailedToUpdateAppServiceConnectionStrings": "ms-resource:loc.messages.FailedToUpdateAppServiceConnectionStrings",
-    "FailedToUpdateAppServiceConnectionStringSlotSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceConnectionStringSlotSettings",
     "FailedToGetAppServiceConfiguration": "ms-resource:loc.messages.FailedToGetAppServiceConfiguration",
     "FailedToGetAppServicePublishingCredentials": "ms-resource:loc.messages.FailedToGetAppServicePublishingCredentials",
     "FailedToGetAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettings",
-    "FailedToGetAppServiceConnectionStrings": "ms-resource:loc.messages.FailedToGetAppServiceConnectionStrings",
-    "FailedToGetAppServiceConnectionStringSlotSettings": "ms-resource:loc.messages.FailedToGetAppServiceConnectionStringSlotSettings",
     "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
-    "UpdatingAppServiceConnectionStrings": "ms-resource:loc.messages.UpdatingAppServiceConnectionStrings",
     "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
-    "UpdatedAppServiceConnectionStrings": "ms-resource:loc.messages.UpdatedAppServiceConnectionStrings",
     "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",

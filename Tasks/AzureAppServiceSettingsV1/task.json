@@ -159,7 +159,7 @@
     "instanceNameFormat": "Azure Web App Settings: $(WebAppName)",
     "execution": {
         "Node": {
-            "target": "azurermwebappdeployment.js"
+            "target": "azurewebappsettings.js"
         }
     },
     "messages": {
