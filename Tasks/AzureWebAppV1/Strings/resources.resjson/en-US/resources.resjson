@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Web App",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebappdeployreadme)",
+  "loc.helpMarkDown": "[More information](https://aka.ms/azurewebappdeployreadme)",
   "loc.description": "Deploy an Azure Web App for Linux or Windows",
   "loc.instanceNameFormat": "Azure Web App Deploy: $(appName)",
   "loc.group.displayName.AdditionalDeploymentOptions": "Additional Deployment Options",
