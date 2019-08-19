@@ -9,10 +9,15 @@ import * as UUID from 'uuid/v4';
 export async function PublishCodeCoverage(inputFiles: string[], sourceDirectory?: string) {
     var reportDirectory = path.join(getTempFolder(), UUID());
     fs.mkdirSync(reportDirectory);
-    this.publishCoverage(inputFiles, reportDirectory, sourceDirectory)
+    publishCoverage(inputFiles, reportDirectory, sourceDirectory)
 }
 
 async function publishCoverage(inputFiles: string[], reportDirectory: string, pathToSources?: string) {
+
+    if(!inputFiles || inputFiles.length == 0) {
+        return;
+    }
+
     const osvar = process.platform;
     let dotnet: toolRunner.ToolRunner;
 
@@ -24,10 +29,10 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
 
     if (!dotnetPath && osvar === 'win32') {
         // use full .NET to execute
-        dotnet = taskLib.tool(path.join(__dirname, 'CoveragePublisher.Console.exe'));
+        dotnet = taskLib.tool(path.join(__dirname, 'CoveragePublisher', 'CoveragePublisher.Console.exe'));
     } else {
         dotnet = taskLib.tool(dotnetPath);
-        dotnet.arg(path.join(__dirname, 'CoveragePublisher.Console.dll'));
+        dotnet.arg(path.join(__dirname, "CoveragePublisher", 'CoveragePublisher.Console.dll'));
     }
 
     dotnet.arg(inputFiles.join(" "));
@@ -39,20 +44,22 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
 
     try {
         await dotnet.exec({
+            env: {
+                "SYSTEM_ACCESSTOKEN": taskLib.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false)
+            },
             ignoreReturnCode: true,
             failOnStdErr: false,
             windowsVerbatimArguments: true,
-            errStream: process.stdout,
+            errStream: {
+                write: (data) => {
+                    taskLib.warning(data);
+                }
+            },
             outStream: process.stdout
         } as any);
 
-        // Listen for stderr.
-        dotnet.on('stderr', (data) => {
-            taskLib.warning(data);
-        });
-
     } catch (err) {
-        taskLib.warning("Error occured while publishing coverage: " + err);
+        taskLib.warning(taskLib.loc('ErrorWhilePublishing') + err);
     }
 }
 

@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
 import * as coveragePublisher from 'coveragepublisher/coveragepublisher';
+import { realpathSync } from 'fs';
 
 // Main entry point of this task.
 async function run() {
@@ -16,6 +17,14 @@ async function run() {
         const pathToSources: string = taskLib.getInput('pathToSources');
 
         var resolvedSummaryFiles = resolveSummaryFiles(workingDirectory, summaryFileLocations)
+
+        if(resolvedSummaryFiles == []) {
+            if(failIfCoverageIsEmpty === true) {
+                throw taskLib.loc('NoCodeCoverage');
+            } else {
+                taskLib.warning(taskLib.loc('NoCodeCoverage'));
+            }
+        }
 
         await coveragePublisher.PublishCodeCoverage(resolvedSummaryFiles, pathToSources);
 
@@ -37,7 +46,7 @@ function resolveSummaryFiles(workingDirectory: string, summaryFiles: string): st
                     filePattern,
                     findOptions);
                 
-                taskLib.debug(taskLib.loc('FoundNMatchesForPattern', pathMatches.length, filePattern));
+                console.log(taskLib.loc('FoundNMatchesForPattern', pathMatches.length, filePattern));
 
                 pathMatches.forEach(path => {
                     if(pathExistsAsFile(path)) {
@@ -48,14 +57,13 @@ function resolveSummaryFiles(workingDirectory: string, summaryFiles: string): st
 
             resolvedSummaryFiles.forEach(path => {
                 console.log(path);
-            })
+            });
+
+            return resolvedSummaryFiles;
         }
-        else {
-            return []
-        }
-    } else {
-        return [];
     }
+
+    return [];
 }
 
 // Gets whether the specified path exists as file.
