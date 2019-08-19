@@ -166,28 +166,6 @@ export class AzureAppServiceUtility {
         console.log(tl.loc('UpdatedAppServiceConfigurationSettings'));
     }
 
-    public async updateConnectionStrings(addProperties: any, deleteProperties?: any): Promise<boolean>  {
-        var connectionStringProperties = {};
-        for(var property in addProperties) {
-            if (!addProperties[property].type) {
-                addProperties[property].type = "Custom";
-            }
-            if (!addProperties[property].slotSetting) {
-                addProperties[property].slotSetting = false;
-            }
-            connectionStringProperties[addProperties[property].name] = addProperties[property];
-            delete connectionStringProperties[addProperties[property].name].name;
-        }
-
-        console.log(tl.loc('UpdatingAppServiceConnectionStrings', JSON.stringify(connectionStringProperties)));
-        var isNewValueUpdated: boolean = await this._appService.patchConnectionString(connectionStringProperties, deleteProperties);
-        await this._appService.patchConnectionStringSlot(connectionStringProperties);
-        if(!isNewValueUpdated) {
-            console.log(tl.loc('UpdatedAppServiceConnectionStrings'));
-            return isNewValueUpdated;
-        }
-    }
-
     public async updateAndMonitorAppSettings(addProperties?: any, deleteProperties?: any, formatJSON?: boolean): Promise<boolean> {
         if(formatJSON) {
             var appSettingsProperties = {};
@@ -217,6 +195,28 @@ export class AzureAppServiceUtility {
         }
 
         return isNewValueUpdated;
+    }
+
+    public async updateConnectionStrings(addProperties: any, deleteProperties?: any): Promise<boolean>  {
+        var connectionStringProperties = {};
+        for(var property in addProperties) {
+            if (!addProperties[property].type) {
+                addProperties[property].type = "Custom";
+            }
+            if (!addProperties[property].slotSetting) {
+                addProperties[property].slotSetting = false;
+            }
+            connectionStringProperties[addProperties[property].name] = addProperties[property];
+            delete connectionStringProperties[addProperties[property].name].name;
+        }
+
+        console.log(tl.loc('UpdatingAppServiceConnectionStrings', JSON.stringify(connectionStringProperties)));
+        var isNewValueUpdated: boolean = await this._appService.patchConnectionString(connectionStringProperties, deleteProperties);
+        await this._appService.patchConnectionStringSlot(connectionStringProperties);
+        if(!isNewValueUpdated) {
+            console.log(tl.loc('UpdatedAppServiceConnectionStrings'));
+            return isNewValueUpdated;
+        }
     }
 
     public async enableRenameLockedFiles(): Promise<void> {
