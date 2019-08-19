@@ -3,7 +3,7 @@
     "name": "GitHubRelease",
     "friendlyName": "GitHub Release",
     "description": "Create, edit, or delete a GitHub release",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/github-release",
+    "helpUrl": "https://aka.ms/AA5vv5o",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/AA3aeiw)",
     "category": "Utility",
     "visibility": [
