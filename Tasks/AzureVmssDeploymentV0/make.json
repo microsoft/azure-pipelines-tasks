@@ -1,19 +1,19 @@
 {
     "common": [
         {
-            "module": "../Common/azure-arm-rest",
+            "module": "../Common/azure-arm-rest-v2",
             "type": "node",
             "dest": "./",
             "compile" : true
         },
         {
-            "module": "../Common/azure-blobstorage-artifactProvider",
+            "module": "../Common/azure-blobstorage-artifactProvider-v2",
             "type": "node",
             "dest": "./",
             "compile" : true
         },
         {
-            "module": "../Common/utility-common",
+            "module": "../Common/utility-common-v2",
             "type": "node",
             "dest": "./",
             "compile" : true
@@ -22,9 +22,9 @@
     "rm": [
         {
             "items": [
-                "node_modules/azure-arm-rest/node_modules/vsts-task-lib",
-                "node_modules/utility-common/node_modules/vsts-task-lib",
-                "node_modules/azure-blobstorage-artifactProvider/node_modules/vsts-task-lib"
+                "node_modules/azure-arm-rest-v2/node_modules/azure-pipelines-task-lib",
+                "node_modules/utility-common-v2/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-blobstorage-artifactProvider-v2/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

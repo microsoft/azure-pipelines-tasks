@@ -29,6 +29,14 @@ describe('Azure VMSS Deployment', function () {
     after(function () {
     });
 
+    process.env['AGENT_HOMEDIRECTORY'] = process.env['AGENT_HOMEDIRECTORY'] || "C:\\temp\\agent\\home";
+    process.env['BUILD_SOURCESDIRECTORY'] = process.env['BUILD_SOURCESDIRECTORY'] || "C:\\temp\\agent\\home\\sources",
+    process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] || "C:\\temp\\agent\\home";
+    process.env["AGENT_TEMPDIRECTORY"] = process.env["AGENT_TEMPDIRECTORY"] || "C:\\temp\\agent\\home\\temp";
+
+    // uncomment to get test traces
+    //	process.env['TASK_TEST_TRACE'] = "1";
+
     if (tl.osType().match(/^Win/)) {
         it("should succeed if vmss image updated successfully", (done) => {
             let tp = path.join(__dirname, "updateImageOnWindowsAgent.js");
