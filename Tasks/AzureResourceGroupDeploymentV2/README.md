@@ -77,7 +77,7 @@ The following parameters are shown when the selected action is to create or upda
   Outputs created by Azure Resource Manager template deployment. It can be used in the subsequent tasks (like Powershell and Azure CLI) for further processing.
 
  **How to use Deployment output**
-  The deployment output can be parsed to JSON object using "ConvertFrom-Json" PowerShell cmdlet in Poweshell task and then that object can be used in other tasks.
+  The deployment output can be parsed to JSON object using "ConvertFrom-Json" Powershell cmdlet in Powershell/Azure Powershell task and then that object can be used in same task or subsequent tasks.
 
   Example:
   ```
@@ -86,11 +86,11 @@ The following parameters are shown when the selected action is to create or upda
   Write-Host "##vso[task.setvariable variable=storageAccount;]$value"
   ```
 
-  On linux agent if you want to use deployment output in Azure CLI task, you can avoid extra Powershell task by adding double quotes to convert it to valid JSON. This is needed because Azure CLI task on linux uses bash and the bash removes the double quotes of JSON string making it invalid JSON.
+  On linux agent, same technique can be used to create a JSON object. However, if you want to avoid Powershell task, you can use a script similar to below which converts the Outputs to valid JSON by adding double quotes.
 
-  Example:
   ```
   var=`echo "$(storageAccountName)" | \
+  sed -e 's/ //g' | \
   sed -e 's/}/"\n}/g' | \
   sed -e 's/{/{\n"/g' | \
   sed -e 's/:/":"/g'  | \
