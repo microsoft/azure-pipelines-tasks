@@ -15,6 +15,7 @@ export async function PublishCodeCoverage(inputFiles: string[], sourceDirectory?
 async function publishCoverage(inputFiles: string[], reportDirectory: string, pathToSources?: string) {
 
     if(!inputFiles || inputFiles.length == 0) {
+        taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc("NoInputFiles"));
         return;
     }
 

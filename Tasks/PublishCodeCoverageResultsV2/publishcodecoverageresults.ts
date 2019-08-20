@@ -51,12 +51,9 @@ function resolveSummaryFiles(workingDirectory: string, summaryFiles: string): st
                 pathMatches.forEach(path => {
                     if(pathExistsAsFile(path)) {
                         resolvedSummaryFiles.push(path);
+                        console.log(path);
                     }
                 });
-            });
-
-            resolvedSummaryFiles.forEach(path => {
-                console.log(path);
             });
 
             return resolvedSummaryFiles;
