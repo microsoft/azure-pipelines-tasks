@@ -14,8 +14,7 @@ Register-Mock Initialize-AzModule
 Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
 Register-Mock Get-VstsEndpoint
-Register-Mock Get-VstsTaskVariable
-Register-Mock Set-VstsTaskVariable
+Register-Mock Get-VstsTaskVariable {"C:\Modules"}
 
 # Act.
 $actual = @( & $PSScriptRoot\..\AzurePowerShell.ps1 )
