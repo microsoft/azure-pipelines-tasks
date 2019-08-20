@@ -9,7 +9,7 @@ async function run() {
         taskLib.setResourcePath(path.join(__dirname, 'task.json'));
 
         // Get input values
-        const summaryFileLocations = taskLib.getInput('summaryFileLocations', true);
+        const summaryFileLocations = taskLib.getInput('summaryFileLocation', true);
         const failIfCoverageIsEmpty: boolean = taskLib.getBoolInput('failIfCoverageEmpty');
         const workingDirectory: string = taskLib.getVariable('System.DefaultWorkingDirectory');
         const pathToSources: string = taskLib.getInput('pathToSources');

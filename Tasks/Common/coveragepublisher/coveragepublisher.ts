@@ -36,7 +36,7 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
         dotnet.arg(path.join(__dirname, "CoveragePublisher", 'CoveragePublisher.Console.dll'));
     }
 
-    dotnet.arg(inputFiles.join(" "));
+    dotnet.arg('"' + inputFiles.join('" "') + '"');
     dotnet.arg('--reportDirectory ' + reportDirectory);
 
     if(!isNullOrWhitespace(pathToSources)) {
@@ -55,18 +55,19 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
 
         await dotnet.exec({
             env,
-            ignoreReturnCode: true,
-            failOnStdErr: false,
+            ignoreReturnCode: false,
+            failOnStdErr: true,
             windowsVerbatimArguments: true,
             errStream: {
-                write: (data) => {
-                    taskLib.warning(data);
+                write: (data: Buffer) => {
+                    console.error(data.toString());
+                    taskLib.setResult(taskLib.TaskResult.Failed, undefined);
                 }
             },
         } as any);
 
     } catch (err) {
-        taskLib.warning(taskLib.loc('ErrorWhilePublishing') + err);
+        // Logging should be handled thorugh error stream
     }
 }
 

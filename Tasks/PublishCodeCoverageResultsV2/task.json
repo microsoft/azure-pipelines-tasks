@@ -17,14 +17,14 @@
     "version": {
         "Major": 2,
         "Minor": 158,
-        "Patch": 1
+        "Patch": 6
     },
     "demands": [],
     "minimumAgentVersion": "2.102.0",
     "instanceNameFormat": "Publish code coverage results",
     "inputs": [
         {
-            "name": "summaryFileLocations",
+            "name": "summaryFileLocation",
             "type": "multiLine",
             "label": "Summary file",
             "defaultValue": "",

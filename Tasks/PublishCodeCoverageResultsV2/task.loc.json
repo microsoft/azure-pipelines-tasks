@@ -17,19 +17,19 @@
   "version": {
     "Major": 2,
     "Minor": 158,
-    "Patch": 1
+    "Patch": 6
   },
   "demands": [],
   "minimumAgentVersion": "2.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "summaryFileLocations",
+      "name": "summaryFileLocation",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.summaryFileLocations",
+      "label": "ms-resource:loc.input.label.summaryFileLocation",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.summaryFileLocations"
+      "helpMarkDown": "ms-resource:loc.input.help.summaryFileLocation"
     },
     {
       "name": "pathToSources",
