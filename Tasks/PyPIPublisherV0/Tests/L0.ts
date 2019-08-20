@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import * as ttm from 'vsts-task-lib/mock-test';
 import * as path from 'path';
 
 describe('PyPI Publisher', function () {
@@ -9,7 +9,7 @@ describe('PyPI Publisher', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-//        console.log(tr.stderr, tr.stdout);
+        //console.log(tr.stderr, tr.stdout);
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdOutContained('twine installed successfully'));
         assert(tr.stdOutContained('distribution files created successfully'));
@@ -22,7 +22,7 @@ describe('PyPI Publisher', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-//        console.log(tr.stderr, tr.stdout);
+        //console.log(tr.stderr, tr.stdout);
         assert(tr.failed, 'task should have failed');
         assert(tr.stdOutContained('twine installed failed'));
         done();
