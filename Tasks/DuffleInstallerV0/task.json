@@ -46,3 +46,4 @@
         "DownloadStableVersionFailed": "Can not download Duffle stable version file from %s. Falling back to %s"
     }
 }
+    
