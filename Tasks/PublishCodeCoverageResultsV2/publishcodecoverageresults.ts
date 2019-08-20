@@ -1,8 +1,6 @@
 import * as path from 'path';
 import * as taskLib from 'azure-pipelines-task-lib/task';
-import * as os from 'os';
 import * as coveragePublisher from 'coveragepublisher/coveragepublisher';
-import { realpathSync } from 'fs';
 
 // Main entry point of this task.
 async function run() {
