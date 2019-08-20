@@ -48,7 +48,6 @@ if ($targetAzurePs -eq $latestVersion) {
 
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $endpoint = Get-VstsEndpoint -Name $serviceName -Require
-$env:PSModulePath = Get-VstsTaskVariable -Name "AZ_PS_MODULE_PATH"
 
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
 
