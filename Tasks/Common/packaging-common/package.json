@@ -12,6 +12,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@types/getos": "^3.0.0",
     "@types/ini": "1.3.30",
     "@types/ltx": "2.8.0",
     "@types/mocha": "5.2.6",
@@ -22,6 +23,7 @@
     "azure-devops-node-api": "8.0.0",
     "azure-pipelines-task-lib": "2.8.0",
     "azure-pipelines-tool-lib": "0.12.0",
+    "getos": "^3.1.1",
     "ini": "^1.3.4",
     "ip-address": "^5.8.9",
     "ltx": "^2.6.2",

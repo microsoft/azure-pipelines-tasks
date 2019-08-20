@@ -1,6 +1,7 @@
 // Placed as a separate file for the purpose of unit testing
 import AdmZip = require('adm-zip');
 import os = require("os");
+import * as getos from "getos";
 import * as path from "path";
 import * as semver from "semver";
 import * as pkgLocationUtils from "../locationUtilities";
@@ -52,6 +53,16 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
         arch = "amd64";
     }
 
+    let distroName = null;
+    let distroVersion = null;
+    if (osName.toLowerCase() === 'linux') {
+        let distro = await getDistro();
+        if (distro) {
+            distroName = distro.name;
+            distroVersion = distro.version;
+        }
+    }
+
     // https://github.com/nodejs/node-v0.x-archive/issues/2862
     if (arch === "ia32") {
         if (process.env.PROCESSOR_ARCHITEW6432 != null && process.env.PROCESSOR_ARCHITEW6432.toUpperCase() === "AMD64") {
@@ -69,8 +80,8 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
 
     const blobstoreConnection = pkgLocationUtils.getWebApiWithProxy(serviceUri, accessToken);
 
-    const artifactToolGetUrl = await blobstoreConnection.vsoClient.getVersioningData(ApiVersion, blobstoreAreaName, blobstoreAreaId, { toolName }, {osName, arch});
-
+    const artifactToolGetUrl = await blobstoreConnection.vsoClient.getVersioningData(ApiVersion, blobstoreAreaName, blobstoreAreaId, { toolName }, { osName, arch, distroName, distroVersion });
+    tl.debug(`Making a request to '${artifactToolGetUrl.requestUrl}' to get ArtifactTool client information`);
     const artifactToolUri =  await blobstoreConnection.rest.get(artifactToolGetUrl.requestUrl);
 
     if (artifactToolUri.statusCode !== 200) {
@@ -92,6 +103,34 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
         tl.debug(tl.loc("Info_ResolvedToolFromCache", artifactToolPath));
     }
     return getArtifactToolLocation(artifactToolPath);
+}
+
+interface DistroInfo {
+    name: string,
+    version: string
+}
+
+async function getDistro(): Promise<DistroInfo> {
+    try {
+        let osInfo = await new Promise<getos.Os>((resolve, reject) => {
+            getos((error, os) => {
+                if (error) reject(error);
+                resolve(os);
+            })
+        });
+
+        if (osInfo.os != "linux") {
+            return null;
+        }
+
+        let linuxOsInfo = osInfo as getos.LinuxOs;
+        return {
+            name: linuxOsInfo.dist,
+            version: linuxOsInfo.release
+        };
+    } catch(err) {
+        return null;
+    }
 }
 
 export function getVersionUtility(versionRadio: string, highestVersion: string): string {
