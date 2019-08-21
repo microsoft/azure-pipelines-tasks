@@ -9,9 +9,9 @@ import child = require('child_process');
 var shell = require('shelljs');
 
 function debug(message) {
-    if (process.env['TASK_TEST_TRACE']) {
+    //if (process.env['TASK_TEST_TRACE']) {
         console.log(message);
-    }
+    //}
 }
 
 export function testSupported() {
@@ -37,6 +37,9 @@ export class PSRunner extends events.EventEmitter {
 	private _childProcess: child.ChildProcess;
 	private _errors: string[];
 	private _runDeferred: Q.Deferred<void>;
+	
+	console.log("##############################printing env var");
+	console.log(process.env);
 
 	public start(): void {
 		this.emit('starting');
