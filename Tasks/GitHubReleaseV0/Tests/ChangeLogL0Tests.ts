@@ -9,6 +9,7 @@ export class ChangeLogL0Tests {
         await this.validateGetChangeLog3();
         await this.validateGetChangeLog4();
         await this.validateGetChangeLog5();
+        await this.validateGetChangeLog6();
     }
 
     public static async validateGetChangeLog1() {
@@ -39,6 +40,15 @@ export class ChangeLogL0Tests {
         let changes = await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastFullRelease, "issueBased", null, JSON.parse(changeLogLabels));
         if (changes === this.expectedIssueBasedChanges) {
             console.log(TestString.issueBasedChangeLog);
+        }
+    }
+
+    public static async validateGetChangeLog6(){
+        let changeLogLabels = `[{"label": "hello", "displayName": "Closed UX Issues/PRs", "state": "CLOSED"}, {"label" : "nope", "displayName": "Open Bugs", "state": "OPEN"}]`;
+        let changes = await new ChangeLog().getChangeLog("endpoint", "owner/repo", "target", 250, ChangeLogStartCommit.lastFullRelease, "issueBased", null, JSON.parse(changeLogLabels));
+
+        if (changes === this.expectedAllIssuesChanges) {
+            console.log(TestString.noCategoryChangeLog);
         }
     }
 
