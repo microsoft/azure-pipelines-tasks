@@ -132,6 +132,7 @@ export class ChangeLog {
                 tl.debug("Group wise issues : " + JSON.stringify(groupedIssuesDictionary));
                 Object.keys(groupedIssuesDictionary).forEach((group: string) => {
                     if (groupedIssuesDictionary[group].length === 0) return;
+                    //If the only category is the default cateogry, don't add the category title.
                     if (index > 0 || group!= this._defaultGroup){
                         let changeLogGroupTitle = util.format(this._groupTitleFormat, group);
                         if (index >= this._changeLogVisibleLimit) {
