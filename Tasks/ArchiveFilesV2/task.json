@@ -129,6 +129,7 @@
         "ArchiveFileExistsButNotAFile": "Specified archive file: %s already exists and is not a file.",
         "FailedArchiveFile": "Specified archive file: %s cannot be created because it cannot be accessed: %s",
         "FoundNFiles": "Found %d files",
-        "ArchivingFile": "Archiving file: %s"
+        "ArchivingFile": "Archiving file: %s",
+        "MoreFiles": "... %d more ..."
     }
 }

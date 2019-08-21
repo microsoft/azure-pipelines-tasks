@@ -129,6 +129,7 @@
     "ArchiveFileExistsButNotAFile": "ms-resource:loc.messages.ArchiveFileExistsButNotAFile",
     "FailedArchiveFile": "ms-resource:loc.messages.FailedArchiveFile",
     "FoundNFiles": "ms-resource:loc.messages.FoundNFiles",
-    "ArchivingFile": "ms-resource:loc.messages.ArchivingFile"
+    "ArchivingFile": "ms-resource:loc.messages.ArchivingFile",
+    "MoreFiles": "ms-resource:loc.messages.MoreFiles"
   }
 }

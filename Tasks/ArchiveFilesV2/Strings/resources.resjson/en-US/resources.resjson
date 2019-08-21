@@ -28,5 +28,6 @@
   "loc.messages.ArchiveFileExistsButNotAFile": "Specified archive file: %s already exists and is not a file.",
   "loc.messages.FailedArchiveFile": "Specified archive file: %s cannot be created because it cannot be accessed: %s",
   "loc.messages.FoundNFiles": "Found %d files",
-  "loc.messages.ArchivingFile": "Archiving file: %s"
+  "loc.messages.ArchivingFile": "Archiving file: %s",
+  "loc.messages.MoreFiles": "... %d more ..."
 }
