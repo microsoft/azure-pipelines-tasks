@@ -9,9 +9,9 @@ import child = require('child_process');
 var shell = require('shelljs');
 
 function debug(message) {
-    if (process.env['TASK_TEST_TRACE']) {
+    //if (process.env['TASK_TEST_TRACE']) {
         console.log(message);
-    }
+    //}
 }
 
 export function testSupported() {
