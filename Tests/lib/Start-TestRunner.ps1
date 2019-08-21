@@ -71,7 +71,6 @@ while ($true) {
 
     # Cleanup the environment variables.
     $currentMatches = @{ }
-    Get-ChildItem -LiteralPath env:
     foreach ($envVar in (Get-ChildItem -LiteralPath env:)) {
         # Remove the environment variable if it is new.
         if (!$originalEnv.ContainsKey($envVar.Name)) {
