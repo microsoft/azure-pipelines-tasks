@@ -40,6 +40,10 @@ export class PSRunner extends events.EventEmitter {
 
 	public start(): void {
 		this.emit('starting');
+	
+		console.log("##############################printing env var");
+		console.log(process.env);
+		
 		var defer = Q.defer<void>();
 		this._childProcess = child.spawn(
 			"powershell.exe", // command
