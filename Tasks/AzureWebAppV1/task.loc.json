@@ -107,6 +107,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.package"
     },
     {
+      "name": "customWarName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customWarName",
+      "defaultValue": "",
+      "visibleRule": "package EndsWith .war",
+      "helpMarkDown": "ms-resource:loc.input.help.customWarName"
+    },
+    {
       "name": "runtimeStack",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.runtimeStack",
