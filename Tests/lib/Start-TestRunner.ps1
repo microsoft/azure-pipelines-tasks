@@ -57,7 +57,10 @@ function Invoke-Test {
 
 # Record the original environment variables.
 $originalEnv = @{ }
+Get-ChildItem -LiteralPath env:
 foreach ($envVar in (Get-ChildItem -LiteralPath env:)) {
+    Write-Host "Environment key1: '$envVar.Name'"
+    Write-Host "Environment value1: '$envVar.Value'"
     $originalEnv[$envVar.Name] = $envVar.Value
 }
 
@@ -71,7 +74,10 @@ while ($true) {
 
     # Cleanup the environment variables.
     $currentMatches = @{ }
+    Get-ChildItem -LiteralPath env:
     foreach ($envVar in (Get-ChildItem -LiteralPath env:)) {
+	    Write-Host "Environment key2: '$envVar.Name'"
+        Write-Host "Environment value2: '$envVar.Value'"
         # Remove the environment variable if it is new.
         if (!$originalEnv.ContainsKey($envVar.Name)) {
             Remove-Item -LiteralPath $envVar.PSPath
