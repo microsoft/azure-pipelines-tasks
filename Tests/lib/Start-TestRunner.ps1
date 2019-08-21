@@ -57,9 +57,16 @@ function Invoke-Test {
 
 # Record the original environment variables.
 $originalEnv = @{ }
+<<<<<<< HEAD
 Write-Host "Environment path variable1: "
 foreach ($envVar in (Get-ChildItem -LiteralPath env:)) {
     Write-Host $envVar.Name + ": " + $envVar.Value
+=======
+Get-ChildItem -LiteralPath env:
+foreach ($envVar in (Get-ChildItem -LiteralPath env:)) {
+    Write-Host "Environment key1: '$envVar.Name'"
+    Write-Host "Environment value1: '$envVar.Value'"
+>>>>>>> master
     $originalEnv[$envVar.Name] = $envVar.Value
 }
 
