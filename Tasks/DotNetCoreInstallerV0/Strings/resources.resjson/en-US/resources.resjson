@@ -6,7 +6,7 @@
   "loc.input.label.packageType": "Package to install",
   "loc.input.help.packageType": "Please select whether to install only runtime or full SDK.",
   "loc.input.label.version": "Version",
-  "loc.input.help.version": "Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json)",
+  "loc.input.help.version": "Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).\n **NOTE: the task will not work with new versions of .NET Core. Kindly upgrade to 2.\\* version of the task to download latest versions od .NET Core.**",
   "loc.messages.ToolFailed": "Tool install failed: %s",
   "loc.messages.ImplicitVersionNotSupported": "Version should be a valid and explicit version: %s",
   "loc.messages.getMachinePlatformFailed": "Failed to get machine platform details. Error: %s.",
