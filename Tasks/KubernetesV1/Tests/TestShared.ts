@@ -21,7 +21,7 @@ export let TestEnvVars = {
     configMapFile: "__configMapFile__",
     configMapArguments: "__configMapArguments__",
     versionOrLocation: "__versionOrLocation__",
-    versionSpec: "__versionSpec__",
+    versionSpec: "__versionspec__",
     checkLatest: "__checkLatest__",
     specifyLocation: "__specifyLocation__",
     outputFormat: "__outputFormat__",

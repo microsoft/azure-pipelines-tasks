@@ -3,7 +3,7 @@
     "name": "GitHubRelease",
     "friendlyName": "GitHub Release",
     "description": "Create, edit, or delete a GitHub release",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/github-release",
+    "helpUrl": "https://aka.ms/AA5vv5o",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/AA3aeiw)",
     "category": "Utility",
     "visibility": [
@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 157,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -89,7 +89,7 @@
             "label": "Tag Pattern",
             "required": false,
             "visibleRule": "tagSource = auto",
-            "helpMarkDown": "Specify the regex for tag to be used for release creation."
+            "helpMarkDown": " Specify the git tag pattern using regex(Eg. `release-v1.*`). GitHub release will be created only for commits that have matching git tag. "
         },
         {
             "name": "tag",
@@ -226,7 +226,7 @@
             "type": "radio",
             "label": "Changelog type",
             "required": true,
-            "defaultValue": "issueBased",
+            "defaultValue": "commitBased",
             "groupName": "changeLogConfiguration",
             "visibleRule": "addChangeLog = true",
             "helpMarkDown": "Changelog can be commit based or issue based . Commit based changelog lists all commits included in a release where as Issue based changelog lists all the issues/pr included in the release. ",
@@ -283,7 +283,7 @@
         "MissingAssetError": "File not found: %s",
         "MultipleReleasesFoundError": "Only 1 release was expected but more than 1 release was found for tag: %s. Unable to perform the action.",
         "MultipleTagFound": "Only 1 tag was expected but more than 1 tag was found for the given commit: %s. Unable to perform the action.",
-        "NoTagFound": "Release will not be created as no tags could be found for the target commit. For more details check out the ‘Tag Source’ section in documentation: https://aka.ms/AA4f03a.",
+        "NoTagFound": "Release will not be created as the tags for the target commit do not match with the given tag pattern.",
         "DeleteAllExistingAssets": "Deleting all existing assets...",
         "DuplicateAssetFound": "Duplicate asset found: %s",
         "AssetsDeletedSuccessfully": "Assets deleted successfully.",
