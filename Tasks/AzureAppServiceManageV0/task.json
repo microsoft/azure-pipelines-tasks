@@ -136,7 +136,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Preserve the Virtual network settings",
-            "visibleRule": "Action = Swap Slotsp"
+            "visibleRule": "Action = Swap Slots"
         },
         {
             "name": "Slot",

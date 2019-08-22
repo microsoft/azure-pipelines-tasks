@@ -136,7 +136,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.PreserveVnet",
-      "visibleRule": "Action = Swap Slotsp"
+      "visibleRule": "Action = Swap Slots"
     },
     {
       "name": "Slot",

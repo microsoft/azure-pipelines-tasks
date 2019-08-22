@@ -47,7 +47,7 @@ async function run() {
         tl.debug(`Resource Group: ${resourceGroupName}`);
         var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
         var azureAppServiceUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appService);
-        
+
         switch(action) {
             case "Start Azure App Service": {
                 await appService.start();
@@ -75,6 +75,7 @@ async function run() {
                 var appServiceTargetSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, targetSlot);
                 var appServiceSourceSlotUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appServiceSourceSlot);
                 var appServiceTargetSlotUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appServiceTargetSlot);
+
                 if(appServiceSourceSlot.getSlot().toLowerCase() == appServiceTargetSlot.getSlot().toLowerCase()) {	
                     updateDeploymentStatus = false;	
                     throw new Error(tl.loc('SourceAndTargetSlotCannotBeSame'));	
@@ -85,7 +86,7 @@ async function run() {
                     await Promise.all([appServiceSourceSlotUtils.pingApplication(), appServiceTargetSlotUtils.pingApplication()]);
                 }
                 catch(error) {
-                    tl.debug('Failed to warm-up slots. Error: ' + error)
+                    tl.debug('Failed to warm-up slots. Error: ' + error);
                 }
 
                 await appServiceSourceSlot.swap(targetSlot, preserveVnet);
