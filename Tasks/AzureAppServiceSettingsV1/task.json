@@ -80,7 +80,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "ApplicationAndConfigurationSettings",
-            "helpMarkDown": "Add/Update App Service Connection strings using the json syntax as follows:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key1\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueabcd\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": false <br/> &nbsp;&nbsp; },<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key2\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueefgh\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": true <br/> &nbsp;&nbsp; }<br/>]",
+            "helpMarkDown": "Add/Update App Service App Settings using the json syntax as follows:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key1\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueabcd\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": false <br/> &nbsp;&nbsp; },<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key2\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueefgh\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": true <br/> &nbsp;&nbsp; }<br/>]",
             "properties": {
                 "resizable": "true",
                 "rows": "8",
@@ -94,7 +94,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "ApplicationAndConfigurationSettings",
-            "helpMarkDown": "Add/Update App Service Connection strings using the json syntax as follows:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"alwaysOn\": true, <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"webSocketsEnabled\": false<br/> &nbsp;&nbsp; }<br/>]",
+            "helpMarkDown": "Add/Update App Service General Settings using the json syntax as follows:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"alwaysOn\": true, <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"webSocketsEnabled\": false<br/> &nbsp;&nbsp; }<br/>]",
             "properties": {
                 "resizable": "true",
                 "rows": "8",
