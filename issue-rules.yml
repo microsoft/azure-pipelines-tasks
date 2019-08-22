@@ -61,35 +61,35 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'AzureCli'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'ResourceGroup'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'Vmss'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'DotNetCore'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'UseDotNet'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'Go'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'Packer'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'ServiceFabric'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'IoTEdge'
   addLabels: ['Area: Release']
