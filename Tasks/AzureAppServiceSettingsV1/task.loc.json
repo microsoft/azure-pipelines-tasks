@@ -150,6 +150,25 @@
   "messages": {
     "GotconnectiondetailsforazureRMWebApp0": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0",
     "ResourceDoesntExist": "ms-resource:loc.messages.ResourceDoesntExist",
-    "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService"
+    "FailedToGetAppServiceDetails": "ms-resource:loc.messages.FailedToGetAppServiceDetails",
+    "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
+    "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
+    "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
+    "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
+    "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
+    "UpdatingAppServiceConnectionStrings": "ms-resource:loc.messages.UpdatingAppServiceConnectionStrings",
+    "UpdatedAppServiceConnectionStrings": "ms-resource:loc.messages.UpdatedAppServiceConnectionStrings",
+    "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
+    "FailedToUpdateAppServiceConfigSlotSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceConfigSlotSettings",
+    "FailedToUpdateAppServiceConnectionStrings": "ms-resource:loc.messages.FailedToUpdateAppServiceConnectionStrings",
+    "FailedToUpdateAppServiceConnectionStringSlotSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceConnectionStringSlotSettings",
+    "FailedToGetAppServiceConnectionStrings": "ms-resource:loc.messages.FailedToGetAppServiceConnectionStrings",
+    "FailedToGetAppServiceConnectionStringSlotSettings": "ms-resource:loc.messages.FailedToGetAppServiceConnectionStringSlotSettings",
+    "FailedToGetAppServiceSlotConfigurationNames": "ms-resource:loc.messages.FailedToGetAppServiceSlotConfigurationNames",
+    "FailedToPatchAppServiceConfiguration": "ms-resource:loc.messages.FailedToPatchAppServiceConfiguration",
+    "FailedToUpdateAppServiceConfiguration": "ms-resource:loc.messages.FailedToUpdateAppServiceConfiguration",
+    "FailedToGetAppServiceConfiguration": "ms-resource:loc.messages.FailedToGetAppServiceConfiguration",
+    "FailedToGetAppServicePublishingCredentials": "ms-resource:loc.messages.FailedToGetAppServicePublishingCredentials",
+    "FailedToGetAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettings"
   }
 }
