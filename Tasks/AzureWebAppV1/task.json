@@ -112,7 +112,7 @@
             "label": "Custom war name",
             "defaultValue": "",
             "visibleRule": "package EndsWith .war",
-            "helpMarkDown": "Specify name of the app you want to deploy to."
+            "helpMarkDown": "Specify custom folder name you want to deploy to. <br/>If the field is empty, package is deployed to <appname>.azurewebsites.net/<warpackagename><br/> If ROOT is entered, package is deployed to <appname>.azurewebsited.net <br/>else it is deployed to <appname>.azurewebsited.net/<customWarName>"
         },
         {
             "name": "runtimeStack",
