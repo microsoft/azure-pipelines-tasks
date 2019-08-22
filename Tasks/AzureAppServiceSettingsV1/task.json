@@ -141,7 +141,7 @@
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         }
     ],
-    "instanceNameFormat": "Azure Web App Settings: $(WebAppName)",
+    "instanceNameFormat": "Azure App Service Settings: $(WebAppName)",
     "execution": {
         "Node": {
             "target": "azurewebappsettings.js"
