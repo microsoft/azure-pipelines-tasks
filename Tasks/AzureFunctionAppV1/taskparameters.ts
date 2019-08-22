@@ -26,8 +26,7 @@ export class TaskParametersUtility {
             ConfigurationSettings: tl.getInput('configurationStrings', false),
             ResourceGroupName: tl.getInput('resourceGroupName', false),
             SlotName: tl.getInput('slotName', false),
-            WebAppName: tl.getInput('appName', true),
-            CustomWarName: tl.getInput('customWarName', false)
+            WebAppName: tl.getInput('appName', true)
         }  
 
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
@@ -130,7 +129,6 @@ export interface TaskParameters {
     StartupCommand?: string;
     RuntimeStack?: string;
     ConfigurationSettings?: string;
-    CustomWarName?: string;
     /** Additional parameters */
     azureEndpoint?: AzureEndpoint;
     isLinuxApp?: boolean;
