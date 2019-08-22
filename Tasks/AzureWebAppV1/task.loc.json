@@ -107,12 +107,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.package"
     },
     {
-      "name": "customWarName",
+      "name": "customDeployFolder",
       "type": "string",
-      "label": "ms-resource:loc.input.label.customWarName",
+      "label": "ms-resource:loc.input.label.customDeployFolder",
       "defaultValue": "",
       "visibleRule": "package EndsWith .war",
-      "helpMarkDown": "ms-resource:loc.input.help.customWarName"
+      "helpMarkDown": "ms-resource:loc.input.help.customDeployFolder"
     },
     {
       "name": "runtimeStack",

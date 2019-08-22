@@ -25,7 +25,7 @@ export class TaskParametersUtility {
             ResourceGroupName: tl.getInput('resourceGroupName', false),
             SlotName: tl.getInput('slotName', false),
             WebAppName: tl.getInput('appName', true),
-            CustomWarName: tl.getInput('customWarName', false)
+            CustomWarName: tl.getInput('customDeployFolder', false)
         }  
         
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
