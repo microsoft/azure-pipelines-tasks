@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 154,
-        "Patch": 5
+        "Minor": 157,
+        "Patch": 1
     },
     "preview": true,
     "releaseNotes": "Added support for Az Module and cross platform agents.",
@@ -143,6 +143,14 @@
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
+    "prejobexecution": {
+        "PowerShell3": {
+            "target": "PreJobExecutionAzurePowerShell.ps1",
+            "platforms": [
+                "windows"
+            ]
+        }
+    },
     "execution": {
         "PowerShell3": {
             "target": "azurepowershell.ps1",

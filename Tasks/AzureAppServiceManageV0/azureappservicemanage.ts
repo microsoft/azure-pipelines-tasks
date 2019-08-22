@@ -13,6 +13,37 @@ import { KuduServiceUtils } from './operations/KuduServiceUtils';
 import { AzureResourceFilterUtils } from './operations/AzureResourceFilterUtils';
 import { enableContinuousMonitoring } from './operations/ContinuousMonitoringUtils';
 
+const webAppKindMap = new Map([
+    [ 'app', 'webApp' ],
+    [ 'app,linux', 'webAppLinux' ],
+    [ 'app,container', 'webAppContainer']
+]);
+
+async function advancedSlotSwap(updateDeploymentStatus: boolean, targetSlot: string, appServiceSourceSlot: AzureAppService, appServiceTargetSlot: AzureAppService, appServiceSourceSlotUtils: AzureAppServiceUtils, appServiceTargetSlotUtils: AzureAppServiceUtils, preserveVnet: boolean, caseValue: string) {
+
+    if(appServiceSourceSlot.getSlot().toLowerCase() == appServiceTargetSlot.getSlot().toLowerCase()) {
+        updateDeploymentStatus = false;
+        throw new Error(tl.loc('SourceAndTargetSlotCannotBeSame'));
+    }
+
+    console.log(tl.loc('WarmingUpSlots'));
+    try {
+        await Promise.all([appServiceSourceSlotUtils.pingApplication(), appServiceTargetSlotUtils.pingApplication()]);
+    }
+    catch(error) {
+        tl.debug('Failed to warm-up slots. Error: ' + error);
+    }
+    
+    if(caseValue == "Swap Slots" || caseValue == "Complete Swap") {
+        await appServiceSourceSlot.swap(targetSlot, preserveVnet);
+    }
+    else if(caseValue == "Start Swap With Preview") {
+        await appServiceSourceSlot.swapSlotWithPreview(targetSlot, preserveVnet);
+    }
+    
+    return updateDeploymentStatus;
+}
+
 async function run() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -47,7 +78,23 @@ async function run() {
         tl.debug(`Resource Group: ${resourceGroupName}`);
         var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
         var azureAppServiceUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appService);
+        var configSettings = await appService.get(true);
+        var WebAppKind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
+        var isLinuxApp = WebAppKind && WebAppKind.indexOf("linux") !=-1;
+        var isContainerApp = WebAppKind && WebAppKind.indexOf("container") !=-1;
 
+        if((action == "Start Swap With Preview" || action == "Complete Swap" || action == "Cancel Swap") && (isLinuxApp || isContainerApp))
+        {
+            throw Error(tl.loc('SwapWithPreviewNotsupported'));
+        }
+        if(action == "Swap Slots" || action == "Start Swap With Preview" || action == "Complete Swap")
+        {
+            targetSlot = (swapWithProduction) ? "production" : targetSlot;
+            var appServiceSourceSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, sourceSlot);
+            var appServiceTargetSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, targetSlot);
+            var appServiceSourceSlotUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appServiceSourceSlot);
+            var appServiceTargetSlotUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appServiceTargetSlot);
+        }
         switch(action) {
             case "Start Azure App Service": {
                 await appService.start();
@@ -69,27 +116,25 @@ async function run() {
                 await appService.delete();
                 break;
             }
+            case "Complete Swap":
             case "Swap Slots": {
-                targetSlot = (swapWithProduction) ? "production" : targetSlot;
+                updateDeploymentStatus = await advancedSlotSwap(updateDeploymentStatus, targetSlot, appServiceSourceSlot, appServiceTargetSlot, appServiceSourceSlotUtils, appServiceTargetSlotUtils, preserveVnet, action);
+                break;
+            }
+            case "Start Swap With Preview": {
+                updateDeploymentStatus = await advancedSlotSwap(updateDeploymentStatus, targetSlot, appServiceSourceSlot, appServiceTargetSlot, appServiceSourceSlotUtils, appServiceTargetSlotUtils, preserveVnet, action);
+                break;
+            }
+            case "Cancel Swap": {
                 var appServiceSourceSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, sourceSlot);
-                var appServiceTargetSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, targetSlot);
                 var appServiceSourceSlotUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appServiceSourceSlot);
-                var appServiceTargetSlotUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appServiceTargetSlot);
-
-                if(appServiceSourceSlot.getSlot().toLowerCase() == appServiceTargetSlot.getSlot().toLowerCase()) {
-                    updateDeploymentStatus = false;
-                    throw new Error(tl.loc('SourceAndTargetSlotCannotBeSame'));
-                }
-
-                console.log(tl.loc('WarmingUpSlots'));
                 try {
-                    await Promise.all([appServiceSourceSlotUtils.pingApplication(), appServiceTargetSlotUtils.pingApplication()]);
+                    await appServiceSourceSlotUtils.pingApplication();
                 }
                 catch(error) {
-                    tl.debug('Failed to warm-up slots. Error: ' + error);
+                    tl.debug('Failed to warm-up slot. Error: ' + error);
                 }
-
-                await appServiceSourceSlot.swap(targetSlot, preserveVnet);
+                appServiceSourceSlot.cancelSwapSlotWithPreview();
                 break;
             }
             case "Start all continuous webjobs": {
