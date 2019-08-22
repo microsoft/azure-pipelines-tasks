@@ -18,15 +18,15 @@ async function main() {
         xmlTransformation = false;
     }
 
-    if ( xmlTransformation || xmlTargetFiles.length != 0 || xmlTargetFiles.length != 0) {
+    if ( xmlTransformation || xmlTargetFiles.length != 0 || jsonTargetFiles.length != 0) {
         let isFolderBasedDeployment: boolean = tl.stats(packagePath).isDirectory();
         if(!isFolderBasedDeployment) {
             var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, packagePath, webPackage.getPackageType());
-            fileTransformationsUtility.enhancedFileTransformations(isFolderBasedDeployment, xmlTransformation, folderPath, xmlTransformationRules, xmlTargetFiles, jsonTargetFiles, true);
+            fileTransformationsUtility.enhancedFileTransformations(isFolderBasedDeployment, xmlTransformation, folderPath, xmlTransformationRules, xmlTargetFiles, jsonTargetFiles);
             await zipUtility.archiveFolder(folderPath, path.dirname(packagePath), path.basename(packagePath));
         }
         else {
-            fileTransformationsUtility.enhancedFileTransformations(isFolderBasedDeployment, xmlTransformation, packagePath, xmlTransformationRules, xmlTargetFiles, jsonTargetFiles, true);
+            fileTransformationsUtility.enhancedFileTransformations(isFolderBasedDeployment, xmlTransformation, packagePath, xmlTransformationRules, xmlTargetFiles, jsonTargetFiles);
         }
     }
     else {
