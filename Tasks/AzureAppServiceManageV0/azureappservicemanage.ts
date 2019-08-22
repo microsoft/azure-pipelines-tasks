@@ -76,9 +76,9 @@ async function run() {
                 var appServiceSourceSlotUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appServiceSourceSlot);
                 var appServiceTargetSlotUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appServiceTargetSlot);
 
-                if(appServiceSourceSlot.getSlot().toLowerCase() == appServiceTargetSlot.getSlot().toLowerCase()) {	
-                    updateDeploymentStatus = false;	
-                    throw new Error(tl.loc('SourceAndTargetSlotCannotBeSame'));	
+                if(appServiceSourceSlot.getSlot().toLowerCase() == appServiceTargetSlot.getSlot().toLowerCase()) {
+                    updateDeploymentStatus = false;
+                    throw new Error(tl.loc('SourceAndTargetSlotCannotBeSame'));
                 }
 
                 console.log(tl.loc('WarmingUpSlots'));
