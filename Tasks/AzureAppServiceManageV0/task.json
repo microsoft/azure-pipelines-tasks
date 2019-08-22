@@ -19,7 +19,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 56
+        "Patch": 57
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -118,7 +118,7 @@
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "Select the option to swap the traffic of source slot with production. If this option is not selected, then you will have to provide source and target slot names.",
-            "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview  || Action = Complete Swap || Action = Cancel Swap"
+            "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview  || Action = Complete Swap"
         },
         {
             "name": "TargetSlot",
@@ -139,7 +139,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Preserve the Virtual network settings",
-            "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview || Action = Complete Swap || Action = Cancel Swap"
+            "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview || Action = Complete Swap"
         },
         {
             "name": "Slot",
@@ -430,6 +430,6 @@
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
         "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your Web App gives you certificate validation errors, you're probably using a self-signed certificate. To resolve such errors, you must set a variable named `VSTS_ARM_REST_IGNORE_SSL_ERRORS` to the value `true` in the build or release pipeline.",
         "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
-        "SwapWithPreviewNotsupported" : "Swap with preview isn't supported in webapps on Linux and in webapps for containers ."
+        "SwapWithPreviewNotsupported" : "Swap with preview isn't supported for Linux webapps and Container webapps."
     }
 }

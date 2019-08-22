@@ -19,7 +19,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 56
+    "Patch": 57
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -118,7 +118,7 @@
       "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.SwapWithProduction",
-      "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview  || Action = Complete Swap || Action = Cancel Swap"
+      "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview  || Action = Complete Swap"
     },
     {
       "name": "TargetSlot",
@@ -139,7 +139,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.PreserveVnet",
-      "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview || Action = Complete Swap || Action = Cancel Swap"
+      "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview || Action = Complete Swap"
     },
     {
       "name": "Slot",
