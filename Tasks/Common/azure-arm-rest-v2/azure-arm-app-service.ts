@@ -190,7 +190,7 @@ export class AzureAppService {
         }
     }
 
-    public async CancelSwapSlotWithPreview(): Promise<void> {
+    public async cancelSwapSlotWithPreview(): Promise<void> {
         try {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'POST';

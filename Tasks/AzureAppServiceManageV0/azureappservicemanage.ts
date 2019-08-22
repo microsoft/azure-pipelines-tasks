@@ -134,7 +134,7 @@ async function run() {
                 catch(error) {
                     tl.debug('Failed to warm-up slot. Error: ' + error);
                 }
-                appServiceSourceSlot.CancelSwapSlotWithPreview();
+                appServiceSourceSlot.cancelSwapSlotWithPreview();
                 break;
             }
             case "Start all continuous webjobs": {
