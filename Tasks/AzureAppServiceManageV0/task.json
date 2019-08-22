@@ -109,7 +109,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "The swap action directs destination slot's traffic to the source slot",
-            "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview  || Action = Complete Swap || Action = Cancel Swap"
+            "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview  || Action = Complete Swap"
         },
         {
             "name": "SwapWithProduction",
@@ -150,7 +150,7 @@
                 "EditableOptions": "True"
             },
             "required": true,
-            "visibleRule": "Action = Delete Slot || SpecifySlot = true"
+            "visibleRule": "Action = Delete Slot || Action = Cancel Swap || SpecifySlot = true"
         },
         {
             "name": "ExtensionsList",
