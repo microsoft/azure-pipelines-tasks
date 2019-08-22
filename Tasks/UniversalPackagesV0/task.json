@@ -9,8 +9,8 @@
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 156,
-        "Patch": 1
+        "Minor": 157,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -146,7 +146,7 @@
             "type": "pickList",
             "label": "Version",
             "defaultValue": "",
-            "helpMarkDown": "Select the package version or use a variable containing the version to download.",
+            "helpMarkDown": "Select the package version or use a variable containing the version to download. This can also be a wildcard expression such as * to get the highest version, 1.* to get the highest version with major version 1, or 1.2.* to get the highest patch release with major version 1 and minor version 2.",
             "required": "true",
             "groupName": "packageDownloadDetails",
             "visibleRule": "internalOrExternalDownload = internal",
@@ -180,7 +180,7 @@
             "type": "string",
             "label": "Version",
             "defaultValue": "",
-            "helpMarkDown": "Package version to download",
+            "helpMarkDown": "Select the package version or use a variable containing the version to download. This can also be a wildcard expression such as * to get the highest version, 1.* to get the highest version with major version 1, or 1.2.* to get the highest patch release with major version 1 and minor version 2.",
             "required": "true",
             "groupName": "packageDownloadDetails",
             "visibleRule": "internalOrExternalDownload = external"
