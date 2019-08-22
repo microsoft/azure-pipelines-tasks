@@ -1,10 +1,30 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
-import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
+import { AzureRMEndpoint, dispose } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
 import { AzureAppServiceUtility } from 'azurermdeploycommon/operations/AzureAppServiceUtility';
-import { AzureResourceFilterUtils } from './operations/AzureResourceFilterUtils';
+import { Resources } from 'azurermdeploycommon/azure-arm-rest/azure-arm-resource';
+
+export class AzureResourceFilterUtils {
+    public static async getResourceGroupName(endpoint: AzureEndpoint, resourceType: string, resourceName: string): Promise<string> {
+        var azureResources: Resources = new Resources(endpoint);
+        var filteredResources: Array<any> = await azureResources.getResources(resourceType, resourceName);
+        let resourceGroupName: string;
+        if(!filteredResources || filteredResources.length == 0) {
+            throw new Error(tl.loc('ResourceDoesntExist', resourceName));
+        }
+        else if(filteredResources.length == 1) {
+            resourceGroupName = filteredResources[0].id.split("/")[4];
+        }
+        else {
+            throw new Error(tl.loc('MultipleResourceGroupFoundForAppService', resourceName));
+        }
+
+        return resourceGroupName;
+    }
+}
+
 
 async function main() {
 
@@ -44,14 +64,13 @@ async function main() {
             await appServiceUtility.updateConnectionStrings(customConnectionStrings);
         }
         
-        
     }
     catch(error) {
         
         tl.setResult(tl.TaskResult.Failed, error);
     }
     finally {
-        
+        dispose();
     }
 }
 
