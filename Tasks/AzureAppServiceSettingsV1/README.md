@@ -94,9 +94,8 @@ steps:
 - task: AzureAppServiceSettings@1
   displayName: 'Azure App Service Settings: eava1234'
   inputs:
-    azureSubscription: dtlqa
-    WebAppName: eava1234
-    ResourceGroupName: 'test_eava'
+    azureSubscription: demo_subscription_id
+    WebAppName: demo_webapp
     appSettings: |
      [ { "name": "key1", "value": "valueabcd", "slotSetting": false }, { "name": "key2", "value": "valueefgh", "slotSetting": true } ]
     generalSettings: |
