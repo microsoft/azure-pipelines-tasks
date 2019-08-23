@@ -88,13 +88,13 @@
       }
     },
     {
-      "name": "configurationStrings",
+      "name": "generalSettings",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.configurationStrings",
+      "label": "ms-resource:loc.input.label.generalSettings",
       "defaultValue": "",
       "required": false,
       "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "ms-resource:loc.input.help.configurationStrings",
+      "helpMarkDown": "ms-resource:loc.input.help.generalSettings",
       "properties": {
         "resizable": "true",
         "rows": "8",

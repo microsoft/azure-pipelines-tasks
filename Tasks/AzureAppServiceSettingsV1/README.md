@@ -4,8 +4,6 @@
 
 The Azure App Service Settings task is used to update different Azure App Service settings for [Web Apps](https://azure.microsoft.com/en-in/documentation/articles/app-service-web-overview/). The task works on cross platform Azure Pipelines agents running Windows, Linux or Mac.
 
-The task works for [ASP.NET](https://www.visualstudio.com/en-us/docs/release/examples/azure/azure-web-apps-from-build-and-release-hubs), [ASP.NET Core](https://www.visualstudio.com/en-us/docs/release/examples/azure/aspnet-core10-azure-web-apps), PHP, Java, Python, Go and [Node.js](https://www.visualstudio.com/en-us/docs/release/examples/nodejs/node-to-azure-webapps) based web applications.
-
 The task is **under development and is available to a limited set of Azure DevOps organizations**.
 
 ## Contact Information
@@ -39,13 +37,11 @@ The task is used to deploy a Web  project to an existing Azure Web App or Functi
 
 * **App Service Name\*:** Select the name of an existing Azure App Service. Enter the name of the Web App if it was provisioned dynamically using the [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell) and [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx).
 
+* **Resource Group:** Select the Azure Resource Group that contains the Azure App Service specified above. Enter the name of the Azure Resource Group if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell). This is a required parameter if the option to Deploy to Slot has been selected. However, Resource Group is an optional field for YAML. 
+
 * **Slot:** Select the option to change settings of an existing slot other than the Production slot. Do not select this option if the changes are to be made to the Production slot. The Web App itself is the Production slot.
 
-* **Resource Group:** Select the Azure Resource Group that contains the Azure App Service specified above. Enter the name of the Azure Resource Group if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell). This is a required parameter if the option to Deploy to Slot has been selected.
-
-* **Slot:** Select the Slot to deploy the Web project to. Enter the name of the Slot if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell). This is a required parameter if the option to Deploy to Slot has been selected.
-
-* *Application and Configuration Settings*
+* **Application and Configuration Settings**
 
 [Configure an App Service app](https://docs.microsoft.com/en-us/azure/app-service/configure-common)
 
@@ -76,7 +72,6 @@ Edit web app [General settings](https://docs.microsoft.com/en-us/azure/app-servi
 
 **Connection Strings**: [Connection Strings](https://docs.microsoft.com/en-us/azure/app-service/configure-common?toc=%2fazure%2fapp-service%2fcontainers%2ftoc.json#configure-connection-strings) contains name/value pairs that your web app will load on start up. Edit web app application settings by following the syntax :
 >Example :
-
 [
    {
     "name": "key1", 
@@ -92,13 +87,20 @@ Edit web app [General settings](https://docs.microsoft.com/en-us/azure/app-servi
    }
 ]
 
-### Output Variables
+### YAML snippet
 
-* **Web App Hosted URL:** Provide a name, like FabrikamWebAppURL for the variable for the Azure App Service Hosted URL. The variable can be used as $(variableName), like $(FabrikamWebAppURL) to refer to the Hosted URL of the Azure App Service in subsequent tasks like in the [Run Functional Tests task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/RunDistributedTests) or the [Visual Studio Test task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/VsTest).
-
-
-### FAQ
-* To ignore SSL error set a Variable of name VSTS_ARM_REST_IGNORE_SSL_ERRORS with value : true in the release definition.
-* The task works with the [Azure Resource Manager APIs](https://msdn.microsoft.com/en-us/library/azure/dn790568.aspx) only.
-* For avoiding deployment failure with error code ERROR_FILE_IN_USE, in case of .NET apps targeting Web App on Windows, ensure that 'Rename locked files' and 'Take App Offline' are enabled. For zero downtime deployment use slot swap.
-* When deploying to an App Service with App Insights configured, if you have enabled “Remove additional files at destination” then you also need to enable “Exclude files from the App_Data folder” in order to keep App insights extension in safe state. This is required because App Insights continuous web job gets installed into the App_Data folder. 
+```
+steps:
+- task: AzureAppServiceSettings@1
+  displayName: 'Azure App Service Settings: eava1234'
+  inputs:
+    azureSubscription: dtlqa
+    WebAppName: eava1234
+    ResourceGroupName: 'test_eava'
+    appSettings: |
+     [ { "name": "key1", "value": "valueabcd", "slotSetting": false }, { "name": "key2", "value": "valueefgh", "slotSetting": true } ]
+    generalSettings: |
+     [ { "alwaysOn": true, "webSocketsEnabled": false } ]
+    connectionStrings: |
+     [ { "name": "key1", "value": "valueabcd", "type": "MySql", "slotSetting": false }, { "name": "key2", "value": "valueefgh", "type": "Custom", "slotSetting": true } ]
+```

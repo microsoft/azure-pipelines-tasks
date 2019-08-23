@@ -36,7 +36,7 @@ async function main() {
         var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
         var slotName: string = tl.getInput('slotName', false);
         var AppSettings: string = tl.getInput('appSettings', false);
-        var ConfigurationSettings: string = tl.getInput('configurationStrings', false);
+        var ConfigurationSettings: string = tl.getInput('generalSettings', false);
         var ConnectionStrings: string = tl.getInput('connectionStrings', false);
 
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(connectedServiceName).getEndpoint();

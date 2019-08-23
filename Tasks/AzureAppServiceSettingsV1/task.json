@@ -88,7 +88,7 @@
             }
         },
         {
-            "name": "configurationStrings",
+            "name": "generalSettings",
             "type": "multiLine",
             "label": "General settings",
             "defaultValue": "",
