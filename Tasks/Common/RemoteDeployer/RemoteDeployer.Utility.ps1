@@ -81,6 +81,9 @@ function Get-TemporaryLogsFolder {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         $agentTempDirectory = Get-VstsTaskVariable -Name 'Agent.TempDirectory'
+        if ([string]::IsNullOrEmpty($agentTempDirectory)) {
+            $agentTempDirectory = $env:TEMP
+        }
         $tempFolderName = [Guid]::NewGuid().ToString()
         $tempLogsFolder = [System.IO.Path]::Combine($agentTempDirectory, $tempFolderName)
         if((Test-Path -LiteralPath $tempLogsFolder -PathType 'Container') -eq $true) {
