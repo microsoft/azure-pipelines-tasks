@@ -19,7 +19,7 @@ const webAppKindMap = new Map([
     [ 'app,container', 'webAppContainer']
 ]);
 
-async function advancedSlotSwap(updateDeploymentStatus: boolean, targetSlot: string, appServiceSourceSlot: AzureAppService, appServiceTargetSlot: AzureAppService, appServiceSourceSlotUtils: AzureAppServiceUtils, appServiceTargetSlotUtils: AzureAppServiceUtils, preserveVnet: boolean, caseValue: string) {
+async function advancedSlotSwap(updateDeploymentStatus: boolean, appServiceSourceSlot: AzureAppService, appServiceTargetSlot: AzureAppService, appServiceSourceSlotUtils: AzureAppServiceUtils, appServiceTargetSlotUtils: AzureAppServiceUtils) {
 
     if(appServiceSourceSlot.getSlot().toLowerCase() == appServiceTargetSlot.getSlot().toLowerCase()) {
         updateDeploymentStatus = false;
@@ -32,13 +32,6 @@ async function advancedSlotSwap(updateDeploymentStatus: boolean, targetSlot: str
     }
     catch(error) {
         tl.debug('Failed to warm-up slots. Error: ' + error);
-    }
-    
-    if(caseValue == "Swap Slots" || caseValue == "Complete Swap") {
-        await appServiceSourceSlot.swap(targetSlot, preserveVnet);
-    }
-    else if(caseValue == "Start Swap With Preview") {
-        await appServiceSourceSlot.swapSlotWithPreview(targetSlot, preserveVnet);
     }
     
     return updateDeploymentStatus;
@@ -118,22 +111,17 @@ async function run() {
             }
             case "Complete Swap":
             case "Swap Slots": {
-                updateDeploymentStatus = await advancedSlotSwap(updateDeploymentStatus, targetSlot, appServiceSourceSlot, appServiceTargetSlot, appServiceSourceSlotUtils, appServiceTargetSlotUtils, preserveVnet, action);
+                updateDeploymentStatus = await advancedSlotSwap(updateDeploymentStatus, appServiceSourceSlot, appServiceTargetSlot, appServiceSourceSlotUtils, appServiceTargetSlotUtils);
+                await appServiceSourceSlot.swap(targetSlot, preserveVnet);
                 break;
             }
             case "Start Swap With Preview": {
-                updateDeploymentStatus = await advancedSlotSwap(updateDeploymentStatus, targetSlot, appServiceSourceSlot, appServiceTargetSlot, appServiceSourceSlotUtils, appServiceTargetSlotUtils, preserveVnet, action);
+                updateDeploymentStatus = await advancedSlotSwap(updateDeploymentStatus, appServiceSourceSlot, appServiceTargetSlot, appServiceSourceSlotUtils, appServiceTargetSlotUtils);
+                await appServiceSourceSlot.swapSlotWithPreview(targetSlot, preserveVnet);
                 break;
             }
             case "Cancel Swap": {
                 var appServiceSourceSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
-                var appServiceSourceSlotUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appServiceSourceSlot);
-                try {
-                    await appServiceSourceSlotUtils.pingApplication();
-                }
-                catch(error) {
-                    tl.debug('Failed to warm-up slot. Error: ' + error);
-                }
                 appServiceSourceSlot.cancelSwapSlotWithPreview();
                 break;
             }
