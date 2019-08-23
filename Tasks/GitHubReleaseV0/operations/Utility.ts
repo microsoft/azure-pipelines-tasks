@@ -229,6 +229,12 @@ export class Utility {
         }
     }
 
+    public static validateChangeLogType(changeLogType: string) {
+        if (changeLogType.toUpperCase() !== ChangeLogType.issueBased.toUpperCase() 
+        && changeLogType.toUpperCase() !== ChangeLogType.commitBased.toUpperCase() ) {
+        throw new Error(tl.loc("InvalidChangeLogTypeAttribute", changeLogType));
+    }
+    }
     public static validateAssetUploadMode(assetUploadMode: string) {
         if (assetUploadMode !== AssetUploadMode.delete && assetUploadMode !== AssetUploadMode.replace) {
             throw new Error(tl.loc("InvalidAssetUploadMode", assetUploadMode));
@@ -281,9 +287,18 @@ export enum ChangeLogStartCommit{
     lastNonDraftReleaseByTag
 }
 
+export class ChangeLogType{
+    public static readonly issueBased = "issueBased";
+    public static readonly commitBased = "commitBased";
+}
 class ReleaseNotesSelectionMode {
     public static readonly input = "input";
     public static readonly file = "file";
+}
+
+export class GitHubIssueState{
+    public static readonly closed = "CLOSED";
+    public static readonly merged = "MERGED";
 }
 
 export class GitHubAttributes {
@@ -343,4 +358,5 @@ export class Delimiters {
     public static readonly openingBracketWithSpace: string = " [";
     public static readonly closingBracketWithSpace: string = " ]";
     public static readonly star: string = "*";
+    public static readonly colon: string = ":";
 }
