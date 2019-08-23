@@ -181,7 +181,8 @@ export class ApplicationTokenCredentials {
             retriableErrorCodes: null,
             retriableStatusCodes: [400, 408, 409, 500, 502, 503, 504],
             retryCount: null,
-            retryIntervalInSeconds: null
+            retryIntervalInSeconds: null,
+            retryRequestTimedout: null
         };
 
         webClient.sendRequest(webRequest, webRequestOptions).then(
@@ -223,7 +224,8 @@ export class ApplicationTokenCredentials {
             retriableErrorCodes: null,
             retriableStatusCodes: [400, 403, 408, 409, 500, 502, 503, 504],
             retryCount: null,
-            retryIntervalInSeconds: null
+            retryIntervalInSeconds: null,
+            retryRequestTimedout: null
         };
 
         webClient.sendRequest(webRequest, webRequestOptions).then(
