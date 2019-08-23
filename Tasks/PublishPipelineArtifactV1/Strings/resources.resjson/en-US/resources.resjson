@@ -6,5 +6,5 @@
   "loc.input.label.path": "File or directory path",
   "loc.input.help.path": "The path of the file or directory to publish. Can be absolute or relative to the default working directory. Can include [variables](https://go.microsoft.com/fwlink/?LinkID=550988), but wildcards are not supported.",
   "loc.input.label.artifactName": "Artifact name",
-  "loc.input.help.artifactName": "Name of the artifact to publish. If not set, defaults to a unique ID scoped to the job."
+  "loc.input.help.artifactName": "Name of the artifact to publish."
 }
