@@ -92,7 +92,7 @@ Edit web app [General settings](https://docs.microsoft.com/en-us/azure/app-servi
 ```
 steps:
 - task: AzureAppServiceSettings@1
-  displayName: 'Azure App Service Settings: eava1234'
+  displayName: 'Azure App Service Settings: demo_webapp'
   inputs:
     azureSubscription: demo_subscription_id
     WebAppName: demo_webapp
