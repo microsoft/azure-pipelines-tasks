@@ -24,7 +24,7 @@ interface FtpOptions {
     cleanContents: boolean;
     preservePaths: boolean;
     trustSSL: boolean;
-    forceUtf8: boolean;
+    enableUtf8: boolean;
     customCmds: string[];
 }
 
@@ -199,7 +199,7 @@ function getFtpOptions(): FtpOptions {
         cleanContents: tl.getBoolInput("cleanContents", false),
         preservePaths: tl.getBoolInput("preservePaths", true),
         trustSSL: tl.getBoolInput("trustSSL", true),
-        forceUtf8: tl.getBoolInput("forceUtf8", false),
+        enableUtf8: tl.getBoolInput("enableUtf8", false),
         customCmds: tl.getDelimitedInput("customCmds", "\n", false)
     };
 }
@@ -244,7 +244,7 @@ async function getFtpClient(options: FtpOptions): Promise<ftp.Client> {
     });
 
     // Run custom commands upon connection
-    if (options.forceUtf8) {
+    if (options.enableUtf8) {
         await ftpClient.send("OPTS UTF8 ON");
     }
     

@@ -113,12 +113,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.remotePath"
     },
     {
-      "name": "forceUtf8",
+      "name": "enableUtf8",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.forceUtf8",
+      "label": "ms-resource:loc.input.label.enableUtf8",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.forceUtf8",
+      "helpMarkDown": "ms-resource:loc.input.help.enableUtf8",
       "groupName": "advanced"
     },
     {

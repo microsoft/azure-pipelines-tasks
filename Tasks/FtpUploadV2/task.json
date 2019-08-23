@@ -113,12 +113,12 @@
             "helpMarkDown": "Upload files to this directory on the remote FTP server."
         },
         {
-            "name": "forceUtf8",
+            "name": "enableUtf8",
             "type": "boolean",
-            "label": "Force UTF8",
+            "label": "Enable UTF8 support",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Send 'OPTS UTF8 ON' to the remote FTP server.",
+            "helpMarkDown": "Enables UTF-8 support for the FTP connection ('OPTS UTF8 ON').",
             "groupName": "advanced"
         },
         {
@@ -161,10 +161,10 @@
         {
             "name": "customCmds",
             "type": "multiLine",
-            "label": "Optional FTP Commands",
+            "label": "FTP Commands",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Custom FTP Commands that will be sent to the remote FTP server upon connection.",
+            "helpMarkDown": "Optional FTP Commands that will be sent to the remote FTP server upon connection.",
             "groupName": "advanced",
             "properties": {
                 "resizable": "true",
