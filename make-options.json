@@ -9,6 +9,7 @@
         "AppCenterTestV1",
         "ArchiveFilesV2",
         "AzureAppServiceManageV0",
+        "AzureAppServiceSettingsV1",
         "AzureCLIV1",
         "AzureCloudPowerShellDeploymentV1",
         "AzureFileCopyV2",
