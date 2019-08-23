@@ -243,11 +243,12 @@ export class AzureAppService {
 
     public async patchApplicationSettingsSlot(addProperties: any): Promise<any> {
         var appSettingsSlotSettings = await this.getSlotConfigurationNames();
+        let appSettingNames = appSettingsSlotSettings.properties.appSettingNames;
         var isNewValueUpdated: boolean = false;
         for(var key in addProperties) {
             if(addProperties[key].slotSetting == true) {
-                if((appSettingsSlotSettings.properties.appSettingNames.length == 0) || (!appSettingsSlotSettings.properties.appSettingNames.includes(addProperties[key].name))) {
-                    appSettingsSlotSettings.properties.appSettingNames.push(addProperties[key].name);
+                if((appSettingNames.length == 0) || (!appSettingNames.includes(addProperties[key].name))) {
+                    appSettingNames.push(addProperties[key].name);
                 }
                 tl.debug(`Slot setting updated for key : ${addProperties[key].name}`);
                 isNewValueUpdated = true;
@@ -388,7 +389,7 @@ export class AzureAppService {
         return this._appServiceConfigurationSettings;
     }
 
-    public async patchConnectionString(addProperties: any, deleteProperties?: any): Promise<any> {
+    public async patchConnectionString(addProperties: any): Promise<any> {
         var connectionStringSettings = await this.getConnectionStrings(); 
         var isNewValueUpdated: boolean = false;
         for(var key in addProperties) {
@@ -397,14 +398,6 @@ export class AzureAppService {
                 isNewValueUpdated = true;
             }
             connectionStringSettings.properties[key] = addProperties[key];
-        }
-
-        for(var key in deleteProperties) {
-            if(key in connectionStringSettings.properties) {
-                delete connectionStringSettings.properties[key];
-                tl.debug(`Removing app setting : ${key}`);
-                isNewValueUpdated = true;
-            }
         }
 
         if(isNewValueUpdated) {
@@ -438,11 +431,12 @@ export class AzureAppService {
 
     public async patchConnectionStringSlot(addProperties: any): Promise<any> {
         var connectionStringSlotSettings = await this.getSlotConfigurationNames();
+        let connectionStringNames = connectionStringSlotSettings.properties.connectionStringNames;
         var isNewValueUpdated: boolean = false;
         for(var key in addProperties) {
             if(addProperties[key].slotSetting == true) {
-                if((connectionStringSlotSettings.properties.connectionStringNames.length == 0) || (!connectionStringSlotSettings.properties.connectionStringNames.includes(key))) {
-                    connectionStringSlotSettings.properties.connectionStringNames.push(key);
+                if((connectionStringNames.length == 0) || (!connectionStringNames.includes(key))) {
+                    connectionStringNames.push(key);
                 }
                 tl.debug(`Slot setting updated for key : ${key}`);
                 isNewValueUpdated = true;
