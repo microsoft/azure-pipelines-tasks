@@ -21,6 +21,10 @@ export function AzureAppServiceMockTests() {
             slotdelete(tr);
             console.log("\tvalidating swap");
             swap(tr);
+            console.log("\tvalidating swapSlotWithPreview");
+            swapSlotWithPreview(tr);
+            console.log("\tvalidating cancelSwapSlotWithPreview");
+            cancelSwapSlotWithPreview(tr);
             console.log("\tvalidating get");
             get(tr);
             console.log("\tvalidating getPublishingProfileWithSecrets");
@@ -91,6 +95,21 @@ function swap(tr) {
     assert(tr.stdOutContained('SwappingAppServiceSlotSlots MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME MOCK_TARGET_SLOT'), 'Should have printed: SwappingAppServiceSlotSlots MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME MOCK_TARGET_SLOT');
     assert(tr.stdOutContained('Error: FailedToSwapAppServiceSlotSlots MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME MOCK_TARGET_SLOT one of the slots is in stopped state. (CODE: 501)'),
         'Should have printed: Error: FailedToSwapAppServiceSlotSlots MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME MOCK_TARGET_SLOT one of the slots is in stopped state. (CODE: 501)');
+}
+
+function swapSlotWithPreview(tr) {
+    assert(tr.stdOutContained('SwappingAppServiceSlotSlotsPhase1 MOCK_APP_SERVICE_NAME production MOCK_TARGET_SLOT'), 'Should have printed: SwappingAppServiceSlotSlotsPhase1 MOCK_APP_SERVICE_NAME production MOCK_TARGET_SLOT');
+    assert(tr.stdOutContained('SwappedAppServiceSlotSlotsPhase1 MOCK_APP_SERVICE_NAME production MOCK_TARGET_SLOT'), 'Should have printed: SwappedAppServiceSlotSlotsPhase1 MOCK_APP_SERVICE_NAME production MOCK_TARGET_SLOT');
+    assert(tr.stdOutContained('SwappingAppServiceSlotSlotsPhase1 MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME MOCK_TARGET_SLOT'), 'Should have printed: SwappingAppServiceSlotSlotsPhase1 MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME MOCK_TARGET_SLOT');
+    assert(tr.stdOutContained('Error: FailedToSwapAppServiceSlotSlotsPhase1 MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME MOCK_TARGET_SLOT one of the slots is in stopped state. (CODE: 501)'),
+       'Should have printed: Error: FailedToSwapAppServiceSlotSlotsPhase1 MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME MOCK_TARGET_SLOT one of the slots is in stopped state. (CODE: 501)');
+}
+
+function cancelSwapSlotWithPreview(tr) {
+    assert(tr.stdOutContained('CancelSwapAppServiceSlotSlotsPhase1 MOCK_APP_SERVICE_NAME production'), 'Should have printed: CancelSwapAppServiceSlotSlotsPhase1 MOCK_APP_SERVICE_NAME production');
+    assert(tr.stdOutContained('CancelledSwapAppServiceSlotSlotsPhase1 MOCK_APP_SERVICE_NAME production'), 'Should have printed: CancelledSwapAppServiceSlotSlotsPhase1 MOCK_APP_SERVICE_NAME production');
+    assert(tr.stdOutContained('Error: FailedToCancelSwapAppServiceSlotSlotsPhase1 MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME slot is in stopped state. (CODE: 501)'),
+        'Should have printed: Error: FailedToCancelSwapAppServiceSlotSlotsPhase1 MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME slot is in stopped state. (CODE: 501)');
 }
 
 function get(tr) {
