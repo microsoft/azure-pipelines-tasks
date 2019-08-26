@@ -183,7 +183,7 @@ export class ResourceGroup {
                     } else {
                         errorMessage = util.format("%s: %s", error.details[i].code, error.details[i].message);
                         if(error.details[i].details == 'object' && error.details[i].details != null && error.details[i].details != undefined) {
-                            if(error.details[i].details.isArray()) {
+                            if(Array.isArray(error.details[i].details)) {
                                 for(var detail in error.details[i].details) {
                                     errorMessage += "\n" + JSON.stringify(detail);
                                 }
