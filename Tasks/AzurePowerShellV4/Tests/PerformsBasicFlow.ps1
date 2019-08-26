@@ -16,6 +16,7 @@ Register-Mock Initialize-AzModule
 Register-Mock Get-VstsEndpoint { @{auth = @{ scheme = "ServicePrincipal" }} }
 Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
+Register-Mock Get-VstsTaskVariable { $env:PSModulePath } -- -Name 'AZ_PS_MODULE_PATH' -Require
 
 # Act.
 $actual = & $PSScriptRoot\..\AzurePowerShell.ps1
@@ -30,3 +31,6 @@ Assert-WasCalled Initialize-AzModule
 
 # Assert the target script was invoked with the specified args.
 Assert-AreEqual @('arg1', 'arg2') $actual.Args
+
+# Clean Up
+Unregister-Mock Get-VstsTaskVariable

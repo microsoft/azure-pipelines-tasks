@@ -7,6 +7,8 @@ import { AzureAppServiceUtility } from 'azurermdeploycommon/operations/AzureAppS
 import tl = require('azure-pipelines-task-lib/task');
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
+import { PackageUtility } from 'azurermdeploycommon/webdeployment-common/packageUtility';
+import { AzureDeployPackageArtifactAlias } from 'azurermdeploycommon/Constants';
 
 export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider {
     protected taskParams:TaskParameters;
@@ -19,6 +21,8 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;
+        let packageArtifactAlias = PackageUtility.getArtifactAlias(this.taskParams.Package.getPath());
+        tl.setVariable(AzureDeployPackageArtifactAlias, packageArtifactAlias);
     }
 
     public async PreDeploymentStep() {
@@ -51,8 +55,8 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         }
 
         if(this.taskParams.ConfigurationSettings) {
-            var customApplicationSettings = ParameterParser.parse(this.taskParams.ConfigurationSettings);
-            await this.appServiceUtility.updateConfigurationSettings(customApplicationSettings);
+            var customConfigurationSettings = ParameterParser.parse(this.taskParams.ConfigurationSettings);
+            await this.appServiceUtility.updateConfigurationSettings(customConfigurationSettings);
         }
 
         await this.appServiceUtility.updateScmTypeAndConfigurationDetails();

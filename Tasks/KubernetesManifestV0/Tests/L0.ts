@@ -29,6 +29,7 @@ describe('Kubernetes Manifests Suite', function () {
         delete process.env[shared.TestEnvVars.arguments];
         delete process.env[shared.TestEnvVars.namespace];
         delete process.env[shared.TestEnvVars.dockerComposeFile];
+        delete process.env[shared.TestEnvVars.releaseName];
         delete process.env.RemoveNamespaceFromEndpoint;
     });
 
@@ -195,6 +196,24 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
+    it('Run should succeed with helm bake should override values with : correctly', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.helmChart] = 'helmChart';
+        process.env[shared.TestEnvVars.renderType] = 'helm2';
+        process.env[shared.TestEnvVars.overrides] = 'name:value:with:colons';
+        process.env.RemoveNamespaceFromEndpoint = 'true';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('set manifestsBundle') > -1, 'task should have set manifestsBundle output variable');
+        assert(tr.stdout.indexOf('--namespace default') > -1, 'should have used default namespace');
+        assert(tr.stdout.indexOf('--set name=value:with:colons') > -1, 'should have parsed the :s correctly');
+        assert(tr.stdout.indexOf('baked manifest from helm chart') === -1, 'should have masked the baked manifest from stdout');
+        assert(tr.stdout.indexOf('Namespace was not supplied nor present in the endpoint; using "default" namespace instead.') > -1, 'should have added a debug log');
+        done();
+    });
+
     it('Run should successfully create secret', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -275,6 +294,18 @@ describe('Kubernetes Manifests Suite', function () {
 
         assert(bigSecondYaml.spec.template.spec.containers[0].image === 'nginx:42', 'nginx image not tagged correctly');
         assert(bigSecondYaml.spec.template.spec.initContainers[0].image === 'nginx-init:42.1', 'nginx-init image not tagged correctly');
+
+        const untaggedImages = utils.substituteImageNameInSpecFile(deploymentFile, 'mysql', 'mysql:8.0');
+        const untaggedImagesYaml = yaml.load(untaggedImages);
+        assert(untaggedImagesYaml.spec.template.spec.containers[2].image === 'mysql:8.0', 'untagged image not tagged correctly');
+
+        const untaggedImagesWithRegistry = utils.substituteImageNameInSpecFile(deploymentFile, 'myacr.azurecr.io/myimage', 'myacr.azurecr.io/myimage:1');
+        const untaggedImagesWithRegistryYaml = yaml.load(untaggedImagesWithRegistry);
+        assert(untaggedImagesWithRegistryYaml.spec.template.spec.containers[3].image === 'myacr.azurecr.io/myimage:1', 'untagged image with registry not tagged correctly');
+
+        const untaggedImagesWithComment = utils.substituteImageNameInSpecFile(deploymentFile, 'myimagewithcomment', 'myimagewithcomment:1');
+        const untaggedImagesWithCommentYaml = yaml.load(untaggedImagesWithComment);
+        assert(untaggedImagesWithCommentYaml.spec.template.spec.containers[4].image === 'myimagewithcomment:1', 'untagged image with comment not tagged correctly');
         done();
     });
 

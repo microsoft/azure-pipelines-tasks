@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 155,
+    "Minor": 156,
     "Patch": 0
   },
   "demands": [],
@@ -267,6 +267,13 @@
       "required": true,
       "visibleRule": "action = Run a Docker Compose command",
       "helpMarkDown": "ms-resource:loc.input.help.dockerComposeCommand"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "visibleRule": "action != Lock services && action != Combine configuration && action != Write service image digests",
+      "label": "ms-resource:loc.input.label.arguments",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
     },
     {
       "name": "dockerHostEndpoint",
