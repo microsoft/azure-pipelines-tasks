@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 154,
-    "Patch": 5
+    "Minor": 157,
+    "Patch": 1
   },
   "preview": true,
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -143,6 +143,14 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "prejobexecution": {
+    "PowerShell3": {
+      "target": "PreJobExecutionAzurePowerShell.ps1",
+      "platforms": [
+        "windows"
+      ]
+    }
+  },
   "execution": {
     "PowerShell3": {
       "target": "azurepowershell.ps1",
