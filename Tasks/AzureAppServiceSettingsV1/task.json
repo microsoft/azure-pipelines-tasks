@@ -4,7 +4,7 @@
     "friendlyName": "Azure App Service Settings",
     "description": "Update/Add App settings an Azure Web App for Linux or Windows",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
-    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebappdeployreadme)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/AA5wsgy)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -169,6 +169,7 @@
         "FailedToUpdateAppServiceConfiguration": "Failed to update App service '%s' configuration. Error: %s",	
         "FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",	
         "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",	
-        "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s"
+        "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
+        "AppServiceSettingsNotEnabled" : "App Service Settings is not enabled. Please provide one of the following : App Settings or General Settings or Connection Strings."
     }
 }

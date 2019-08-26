@@ -39,6 +39,10 @@ async function main() {
         var ConfigurationSettings: string = tl.getInput('generalSettings', false);
         var ConnectionStrings: string = tl.getInput('connectionStrings', false);
 
+        if(!AppSettings || !ConfigurationSettings || !ConnectionStrings) {
+            throw Error(tl.loc("AppServiceSettingsNotEnabled"));
+        }
+        
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
         if (!resourceGroupName) {

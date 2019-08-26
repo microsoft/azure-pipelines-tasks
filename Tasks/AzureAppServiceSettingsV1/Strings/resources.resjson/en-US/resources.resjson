@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure App Service Settings",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebappdeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/AA5wsgy)",
   "loc.description": "Update/Add App settings an Azure Web App for Linux or Windows",
   "loc.instanceNameFormat": "Azure App Service Settings: $(WebAppName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
@@ -39,5 +39,6 @@
   "loc.messages.FailedToUpdateAppServiceConfiguration": "Failed to update App service '%s' configuration. Error: %s",
   "loc.messages.FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",
   "loc.messages.FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
-  "loc.messages.FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s"
+  "loc.messages.FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
+  "loc.messages.AppServiceSettingsNotEnabled": "App Service Settings is not enabled. Please provide one of the following : App Settings or General Settings or Connection Strings."
 }
