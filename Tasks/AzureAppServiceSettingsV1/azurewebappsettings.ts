@@ -32,8 +32,8 @@ async function main() {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         tl.setResourcePath(path.join( __dirname, 'node_modules/azurermdeploycommon/module.json'));
         var connectedServiceName = tl.getInput('ConnectedServiceName', true);
-        var webAppName: string = tl.getInput('WebAppName', true);
-        var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
+        var webAppName: string = tl.getInput('appName', true);
+        var resourceGroupName: string = tl.getInput('resourceGroupName', false);
         var slotName: string = tl.getInput('slotName', false);
         var AppSettings: string = tl.getInput('appSettings', false);
         var ConfigurationSettings: string = tl.getInput('generalSettings', false);
