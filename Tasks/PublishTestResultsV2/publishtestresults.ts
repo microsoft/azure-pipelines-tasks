@@ -14,20 +14,6 @@ function isNullOrWhitespace(input: any) {
     return input.replace(/\s/g, '').length < 1;
 }
 
-function getDotNetVersion() {
-    let dotnet: tr.ToolRunner;
-    const dotnetPath = tl.which('dotnet', false);
-
-    if (dotnetPath){
-        try {
-            dotnet = tl.tool(dotnetPath);
-            dotnet.arg('--version');
-            return dotnet.execSync().stdout.trim();
-        } catch (err) {}
-    }
-    return '';
-}
-
 function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, platform, config, runTitle, publishRunAttachments, testRunSystem) {
     var properties = <{ [key: string]: string }>{};
     properties['type'] = testRunner;
@@ -56,6 +42,20 @@ function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, p
     properties['testRunSystem'] = testRunSystem;
 
     tl.command('results.publish', properties, '');
+}
+
+function getDotNetVersion() {
+    let dotnet: tr.ToolRunner;
+    const dotnetPath = tl.which('dotnet', false);
+
+    if (dotnetPath){
+        try {
+            dotnet = tl.tool(dotnetPath);
+            dotnet.arg('--version');
+            return dotnet.execSync().stdout.trim();
+        } catch (err) {}
+    }
+    return '';
 }
 
 async function run() {
