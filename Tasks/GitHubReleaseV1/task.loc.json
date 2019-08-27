@@ -3,7 +3,7 @@
   "name": "GitHubRelease",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/github-release",
+  "helpUrl": "https://aka.ms/AA5vv5o",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -225,7 +225,7 @@
       "type": "radio",
       "label": "ms-resource:loc.input.label.changeLogType",
       "required": true,
-      "defaultValue": "issueBased",
+      "defaultValue": "commitBased",
       "groupName": "changeLogConfiguration",
       "visibleRule": "addChangeLog = true",
       "helpMarkDown": "ms-resource:loc.input.help.changeLogType",

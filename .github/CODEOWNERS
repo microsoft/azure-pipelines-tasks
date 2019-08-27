@@ -19,6 +19,8 @@ Tasks/ArchiveFilesV2/*  @bryanmacfarlane
 
 Tasks/AzureAppServiceManageV0/*     @kmkumaran      @SumiranAgg     @vincentdass
 
+Tasks/AzureAppServiceSettingsV1/*     @eaarora-ms      @SumiranAgg     @vincentdass     @niadak
+
 Tasks/AzureCLIV1/*      @sachinma
 
 Tasks/AzureCloudPowerShellDeploymentV1/*    @kmkumaran
@@ -169,7 +171,9 @@ Tasks/DownloadGitHubReleasesV0/*    @Lovakumar      @gykuma
 
 Tasks/DownloadPackageV0/*       @zjrunner
 
-Tasks/DownloadPipelineArtifactV0/*      @mihaif
+Tasks/DownloadPipelineArtifactV0/*      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
+
+Tasks/DownloadPipelineArtifactV1/*      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
 Tasks/DownloadSecureFileV1/*    @madhurig
 
@@ -279,9 +283,9 @@ Tasks/PublishBuildArtifactsV1/*     @madhurig
 
 Tasks/PublishCodeCoverageResultsV1/*    @cltshivash    @nigurr 
 
-Tasks/PublishPipelineArtifactV0/*       @mihaif
+Tasks/PublishPipelineArtifactV0/*       @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
-Tasks/PublishSymbolsV2/*    @arunkm
+Tasks/PublishSymbolsV2/*    @arunkm @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
 
 Tasks/PublishTestResultsV1/*    @smalpani
 
