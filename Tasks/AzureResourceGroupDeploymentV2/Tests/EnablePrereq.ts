@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
 let taskPath = path.join(__dirname, '..', 'main.js');
@@ -24,7 +24,7 @@ process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID"] = "sId";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";
 process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
-
+console.log("test");
 var CSMJson = path.join(__dirname, "CSM.json");
 var CSMwithComments = path.join(__dirname, "CSMwithComments.json");
 var defaults = path.join(__dirname, "defaults.json");
@@ -42,9 +42,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 
 tr.setAnswers(a);
 
-tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
-tr.registerMock('azure-arm-rest/webRequestUtility', require('./mock_node_modules/webRequestUtility'));
-tr.registerMock('azure-arm-rest/azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));
-tr.registerMock('azure-arm-rest/azure-arm-network', require('./mock_node_modules/azure-arm-network'));
-tr.registerMock('azure-arm-rest/azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
+tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
+tr.registerMock('azure-arm-rest-v2/webRequestUtility', require('./mock_node_modules/webRequestUtility'));
+tr.registerMock('azure-arm-rest-v2/azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));
+tr.registerMock('azure-arm-rest-v2/azure-arm-network', require('./mock_node_modules/azure-arm-network'));
+tr.registerMock('azure-arm-rest-v2/azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
 tr.run();

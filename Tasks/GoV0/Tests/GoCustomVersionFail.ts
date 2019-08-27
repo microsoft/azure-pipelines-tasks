@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import os = require('os');
 
@@ -30,6 +30,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 
 tr.setAnswers(a);
 
-tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
-tr.registerMock('vsts-task-tool-lib/tool', require('./mock_node_modules/tool'));
+tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
+tr.registerMock('azure-pipelines-task-tool-lib/tool', require('./mock_node_modules/tool'));
 tr.run();
