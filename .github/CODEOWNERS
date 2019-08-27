@@ -19,6 +19,8 @@ Tasks/ArchiveFilesV2/*  @bryanmacfarlane
 
 Tasks/AzureAppServiceManageV0/*     @kmkumaran      @SumiranAgg     @vincentdass
 
+Tasks/AzureAppServiceSettingsV1/*     @eaarora-ms      @SumiranAgg     @vincentdass     @niadak
+
 Tasks/AzureCLIV1/*      @sachinma
 
 Tasks/AzureCloudPowerShellDeploymentV1/*    @kmkumaran

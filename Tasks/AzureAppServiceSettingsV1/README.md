@@ -95,7 +95,7 @@ steps:
   displayName: 'Azure App Service Settings: demo_webapp'
   inputs:
     azureSubscription: demo_subscription_id
-    WebAppName: demo_webapp
+    appName: demo_webapp
     appSettings: |
      [ { "name": "key1", "value": "valueabcd", "slotSetting": false }, { "name": "key2", "value": "valueefgh", "slotSetting": true } ]
     generalSettings: |
