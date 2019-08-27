@@ -1,7 +1,6 @@
 import * as semver from "semver";
-import * as url from "url";
 
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import * as utils from "./versionutilities";
 
@@ -107,7 +106,7 @@ export class VersionParts {
                 throw "";
             }
 
-            semver.Range(version);
+            new semver.Range(version);
             return true;
         }
         catch (ex) {
