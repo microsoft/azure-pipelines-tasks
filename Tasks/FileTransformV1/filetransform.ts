@@ -17,17 +17,18 @@ async function main() {
     let applyFileTransformFlag = fileType || xmlTransformation;
     if (applyFileTransformFlag) {
         let isFolderBasedDeployment: boolean = tl.stats(packagePath).isDirectory();
+        let predefinedTransformation = tl.getBoolInput('enablePredefinedVariables', false);
         if(!isFolderBasedDeployment) {
             var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, packagePath, webPackage.getPackageType());
-            fileTransformationsUtility.advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, folderPath, xmlTransformationRules);
+            fileTransformationsUtility.advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, folderPath, predefinedTransformation, xmlTransformationRules);
             await zipUtility.archiveFolder(folderPath, path.dirname(packagePath), path.basename(packagePath));
         }
         else {
-            fileTransformationsUtility.advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, packagePath, xmlTransformationRules);
+            fileTransformationsUtility.advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, packagePath, predefinedTransformation, xmlTransformationRules);
         }
     }
     else {
-        tl.debug('File Tranformation not enabled');
+        tl.debug('File Transformation not enabled');
     }
 }
 
