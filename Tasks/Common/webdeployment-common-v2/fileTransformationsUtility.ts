@@ -47,7 +47,7 @@ export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles:
     }
 }
 
-export function advancedFileTransformations(isFolderBasedDeployment: boolean, targetFiles: any, xmlTransformation: boolean, variableSubstitutionFileFormat: string, folderPath: string, predefinedTransformation: boolean=false, transformationRules: any) {
+export function advancedFileTransformations(isFolderBasedDeployment: boolean, targetFiles: any, xmlTransformation: boolean, variableSubstitutionFileFormat: string, folderPath: string, transformationRules: any, predefinedSubstitution: boolean=false) {
 
     if(xmlTransformation) {
         if(!tl.osType().match(/^Win/)) {
@@ -101,7 +101,7 @@ export function advancedFileTransformations(isFolderBasedDeployment: boolean, ta
         if(!targetFiles || targetFiles.length == 0) {
             targetFiles = ["**/*.json"];
         }
-        jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, targetFiles, predefinedTransformation, true);
+        jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, targetFiles, true, predefinedSubstitution);
         console.log(tl.loc('JSONvariablesubstitutionappliedsuccessfully'));
     }
 }

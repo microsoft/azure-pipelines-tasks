@@ -71,6 +71,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.fileType"
     },
     {
+      "name": "enablePredefinedVariables",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enablePredefinedVariables",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.enablePredefinedVariables"
+    },
+    {
       "name": "targetFiles",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.targetFiles",

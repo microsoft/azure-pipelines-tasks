@@ -6,7 +6,7 @@ import { isNumber, isBoolean } from 'util';
 var varUtility = require ('./variableutility.js');
 var fileEncoding = require('./fileencoding.js');
 var utility = require('./utility.js');
-export function createEnvTree(envVariables, predefinedTransformation: boolean=false) {
+export function createEnvTree(envVariables, predefinedSubstitution: boolean=false) {
     // __proto__ is marked as null, so that custom object can be assgined.
     // This replacement do not affect the JSON object, as no inbuilt JSON function is referenced.
     var envVarTree = {
@@ -18,7 +18,7 @@ export function createEnvTree(envVariables, predefinedTransformation: boolean=fa
     };
     for(let envVariable of envVariables) {
         var envVarTreeIterator = envVarTree;
-        if(varUtility.isPredefinedVariable(envVariable.name) && !predefinedTransformation) {
+        if(varUtility.isPredefinedVariable(envVariable.name) && !predefinedSubstitution) {
             continue;
         } 
         var envVariableNameArray = (envVariable.name).split('.');
@@ -169,8 +169,8 @@ export function stripJsonComments(content) {
     return contentWithoutComments;
 }
 
-export function jsonVariableSubstitution(absolutePath, jsonSubFiles, predefinedTransformation: boolean=false, substituteAllTypes?: boolean) {
-    var envVarObject = createEnvTree(tl.getVariables(), predefinedTransformation);
+export function jsonVariableSubstitution(absolutePath, jsonSubFiles, substituteAllTypes?: boolean, predefinedSubstitution: boolean=false) {
+    var envVarObject = createEnvTree(tl.getVariables(), predefinedSubstitution);
     for(let jsonSubFile of jsonSubFiles) {
         console.log(tl.loc('JSONvariableSubstitution' , jsonSubFile));
         var matchFiles = utility.findfiles(path.join(absolutePath, jsonSubFile));
