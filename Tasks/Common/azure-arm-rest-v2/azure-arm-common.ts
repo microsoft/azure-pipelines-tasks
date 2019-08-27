@@ -13,6 +13,7 @@ export class ApplicationTokenCredentials {
     private domain: string;
     private authType: string;
     private secret?: string;
+    private accessToken?: string;
     private certFilePath?: string;
     private isADFSEnabled?: boolean;
     public baseUrl: string;
@@ -23,7 +24,7 @@ export class ApplicationTokenCredentials {
     public msiClientId: string;
     private token_deferred: Q.Promise<string>;
 
-    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean) {
+    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean, access_token?: string) {
 
         if (!Boolean(domain) || typeof domain.valueOf() !== 'string') {
             throw new Error(tl.loc("DomainCannotBeEmpty"));
@@ -83,10 +84,19 @@ export class ApplicationTokenCredentials {
         }
         
         this.isADFSEnabled = isADFSEnabled;
+        this.accessToken = access_token;
 
     }
 
     public getToken(force?: boolean): Q.Promise<string> {
+        if (this.accessToken !== null) {
+            tl.debug("==================== USING ENDPOINT PROVIDED ACCESS TOKEN ====================");
+            // let deferred = Q.defer<string>();
+            // deferred.resolve(this.accessToken);
+            tl.debug("==================== USING ENDPOINT PROVIDED ACCESS TOKEN ====================");
+            // return deferred.promise;
+        }
+        
         if (!this.token_deferred || force) {
             if(this.scheme === AzureModels.Scheme.ManagedServiceIdentity)
             {
