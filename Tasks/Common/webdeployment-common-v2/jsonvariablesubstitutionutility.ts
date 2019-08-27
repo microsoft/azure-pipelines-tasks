@@ -169,7 +169,7 @@ export function stripJsonComments(content) {
     return contentWithoutComments;
 }
 
-export function jsonVariableSubstitution(absolutePath, jsonSubFiles, substituteAllTypes?: boolean, predefinedSubstitution: boolean=false) {
+export function jsonVariableSubstitution(absolutePath, jsonSubFiles, substituteAllTypes: boolean=false, predefinedSubstitution: boolean=false) {
     var envVarObject = createEnvTree(tl.getVariables(), predefinedSubstitution);
     for(let jsonSubFile of jsonSubFiles) {
         console.log(tl.loc('JSONvariableSubstitution' , jsonSubFile));
