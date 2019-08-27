@@ -192,7 +192,8 @@ Edit web app [configuration settings](https://docs.microsoft.com/en-us/azure/app
 ### Troubleshooting :
 
 - **Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.**
-    Service connection used by the task would have been expired or removed from the app registrations. Visit the service connection page and verify the connection for the affected service endpoint.
+
+    Service connection used by the task would have been expired or the service principal use must have been removed from the app registrations.  [Troubleshoot the affected Azure Resource Manager service connection.](https://docs.microsoft.com/en-us/azure/devops/pipelines/release/azure-rm-endpoint?view=azure-devops)
 
 - **SSL error**
     To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline",
