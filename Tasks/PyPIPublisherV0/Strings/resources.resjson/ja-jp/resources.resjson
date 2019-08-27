@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "PyPI Publisher",
+  "loc.friendlyName": "PyPI パブリッシャー",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=875289)",
-  "loc.description": "sdist または wheel を作成し、Twine を使用して PyPI 対応のインデックスにアップロードします。",
+  "loc.description": "sdist または wheel を作成し、Twine を使用して PyPI 対応のインデックスにアップロードします",
   "loc.instanceNameFormat": "パッケージ化して PyPI へ発行する",
   "loc.input.label.serviceEndpoint": "PyPI サービス接続",
   "loc.input.help.serviceEndpoint": "パッケージ インデックスに接続するための汎用サービス接続です。",

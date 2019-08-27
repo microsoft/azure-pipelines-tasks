@@ -7,6 +7,8 @@
   "loc.input.help.codeCoverageTool": "Outil de génération des résultats de couverture du code.",
   "loc.input.label.summaryFileLocation": "Fichier récapitulatif",
   "loc.input.help.summaryFileLocation": "Chemin du fichier récapitulatif contenant les statistiques de couverture du code, par exemple la couverture de ligne, de méthode et de classe. La valeur peut contenir des modèles minimatch. Exemple : '$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml'",
+  "loc.input.label.pathToSources": "Chemin des fichiers sources",
+  "loc.input.help.pathToSources": "Le chemin des fichiers sources est obligatoire quand les rapports XML de couverture ne contiennent pas le chemin absolu des fichiers sources. Par exemple, les rapports JaCoCo n'utilisent pas de chemins absolus, et durant la publication de la couverture JaCoCo pour les applications Java, le modèle est similaire à '$(System.DefaultWorkingDirectory)/MyApp/src/main/java/'.<br />Cette entrée est également nécessaire si les tests sont exécutés dans un conteneur Docker. Cette entrée doit pointer vers le chemin absolu des fichiers sources sur l'hôte. Exemple : '$(System.DefaultWorkingDirectory)/MyApp/'",
   "loc.input.label.reportDirectory": "Répertoire de rapports",
   "loc.input.help.reportDirectory": "Chemin du répertoire des rapports HTML de couverture du code. Le répertoire des rapports est publié pour être affiché plus tard en tant qu'artefact de la build. La valeur peut contenir des modèles minimatch. Exemple : '$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura'",
   "loc.input.label.additionalCodeCoverageFiles": "Fichiers supplémentaires",
@@ -15,5 +17,10 @@
   "loc.input.help.failIfCoverageEmpty": "Échec de la tâche si la couverture du code ne produit aucun résultat à publier.",
   "loc.messages.FoundNMatchesForPattern": "%s résultat(s) correspondant au modèle %s",
   "loc.messages.MultipleSummaryFilesFound": "Plusieurs fichiers ou répertoires correspondants ont été trouvés. Utilisation de la première correspondance : %s",
-  "loc.messages.NoCodeCoverage": "Il n'existe aucun résultat de couverture du code à publier."
+  "loc.messages.NoCodeCoverage": "Il n'existe aucun résultat de couverture du code à publier.",
+  "loc.messages.InstallDotNetCoreForHtmlReport": "Installez dotnet core pour activer la génération automatique du rapport HTML.",
+  "loc.messages.FailedToGenerateHtmlReport": "Échec de la génération du rapport HTML. Erreur : %s",
+  "loc.messages.IgnoringReportDirectory": "Le répertoire du rapport de couverture au format HTML est ignoré, car nous générons automatiquement le contenu HTML",
+  "loc.messages.UpgradeAgentMessage": "Mettez à niveau votre version d'agent. https://github.com/Microsoft/vsts-agent/releases",
+  "loc.messages.GeneratedHtmlReport": "Rapport HTML de couverture du code généré : %s"
 }

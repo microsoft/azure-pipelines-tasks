@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Обновление манифестов Service Fabric",
   "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkId=820529)",
-  "loc.description": "Автоматически обновляет части манифестов приложения и службы внутри упакованного приложения Service Fabric.",
+  "loc.description": "Автоматическое обновление частей манифестов приложений и служб в упакованном приложении Azure Service Fabric",
   "loc.instanceNameFormat": "Обновление манифестов Service Fabric ($(updateType))",
   "loc.input.label.updateType": "Тип обновления",
   "loc.input.help.updateType": "Укажите тип изменения, которое необходимо внести в файлы манифеста. Чтобы использовать оба типа изменений, добавьте экземпляр этой задачи в конвейер сборки для каждого из типов.",

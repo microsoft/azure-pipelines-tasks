@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Publier l'artefact de pipeline",
+  "loc.friendlyName": "Publier un artefact de pipeline",
   "loc.helpMarkDown": "Publiez un répertoire ou un fichier local en tant qu'artefact nommé pour le pipeline actuel.",
-  "loc.description": "Publier l'artefact de pipeline",
+  "loc.description": "Publier un répertoire ou un fichier local en tant qu'artefact nommé pour le pipeline actuel",
   "loc.instanceNameFormat": "Publier l'artefact de pipeline",
   "loc.input.label.artifactName": "Nom de cet artefact",
   "loc.input.help.artifactName": "Nom de cet artefact.",

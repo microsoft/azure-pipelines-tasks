@@ -34,7 +34,9 @@ export function getConnection(areaId: string, collectionUrl: string): Promise<We
         .getServiceUriFromAreaId(collectionUrl, accessToken, areaId)
         .then(url => {
             const options: IRequestOptions = {
-                proxy: tl.getHttpProxyConfiguration(url)
+                proxy: tl.getHttpProxyConfiguration(url),
+                maxRetries: 5,
+                allowRetries: true
             };
             return new WebApi(url, new BearerHandlerForPresignedUrls(accessToken), options);
         })

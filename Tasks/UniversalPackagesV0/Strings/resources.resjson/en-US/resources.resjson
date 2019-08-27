@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Universal packages",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/universalpackagesannounce)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/universalpackagesannounce)",
   "loc.description": "Download or publish Universal Packages",
   "loc.instanceNameFormat": "Universal $(command)",
   "loc.group.displayName.packageDownloadDetails": "Feed & package details",
@@ -18,13 +18,13 @@
   "loc.input.label.feedListDownload": "Feed",
   "loc.input.label.packageListDownload": "Package name",
   "loc.input.label.versionListDownload": "Version",
-  "loc.input.help.versionListDownload": "Select the package version or use a variable containing the version to download.",
+  "loc.input.help.versionListDownload": "Select the package version or use a variable containing the version to download. This can also be a wildcard expression such as * to get the highest version, 1.* to get the highest version with major version 1, or 1.2.* to get the highest patch release with major version 1 and minor version 2.",
   "loc.input.label.feedDownloadExternal": "Feed",
   "loc.input.help.feedDownloadExternal": "Feed name",
   "loc.input.label.packageDownloadExternal": "Package name",
   "loc.input.help.packageDownloadExternal": "Package name",
   "loc.input.label.versionDownloadExternal": "Version",
-  "loc.input.help.versionDownloadExternal": "Package version to download",
+  "loc.input.help.versionDownloadExternal": "Select the package version or use a variable containing the version to download. This can also be a wildcard expression such as * to get the highest version, 1.* to get the highest version with major version 1, or 1.2.* to get the highest patch release with major version 1 and minor version 2.",
   "loc.input.label.publishDirectory": "Path to file(s) to publish",
   "loc.input.help.publishDirectory": "Specifies the path to list of files to be published.",
   "loc.input.label.internalOrExternalPublish": "Feed location",
@@ -81,6 +81,7 @@
   "loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",
   "loc.messages.FailedToGetLatestPackageVersion": "Failed to get package versions",
   "loc.messages.Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages",
+  "loc.messages.Warning_SessionCreationFailed": "Could not create provenance session: %s",
   "loc.messages.Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server.",
   "loc.messages.Error_ProcessorArchitectureNotSupported": "Universal Packages require an x64 agent."
 }

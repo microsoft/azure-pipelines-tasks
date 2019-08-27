@@ -51,5 +51,6 @@
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "入力 %s に一致するバージョンは見つかりませんでした",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "%s のダウンロード URL が見つかりませんでした",
   "loc.messages.Error_NuGetToolInstallerFailer": "ツールをインストールできませんでした: %s",
-  "loc.messages.Warning_UpdatingNuGetVersion": "NuGet.exe のバージョンを %s に更新しています (現在のバージョンは %s)。NuGet を新しいバージョンに更新すると、動作の変更やビルド ブレークを起こす変更が発生することがあります。これを避けるには、タスクの [最新バージョンのチェック] オプションをオフにします。"
+  "loc.messages.Warning_UpdatingNuGetVersion": "NuGet.exe のバージョンを %s に更新しています (現在のバージョンは %s)。NuGet を新しいバージョンに更新すると、動作の変更やビルド ブレークを起こす変更が発生することがあります。これを避けるには、タスクの [最新バージョンのチェック] オプションをオフにします。",
+  "loc.messages.UnsupportedProjectScopedFeeds": "プロジェクトを対象とするフィードは、このバージョンの \"NuGet の復元\" タスクではサポートされていません。バージョン 2 以降の \"NuGet\" タスクをご使用ください。"
 }

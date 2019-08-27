@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 151,
-    "Patch": 0
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "showEnvironmentVariables": true,
@@ -35,7 +35,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.script",
       "required": true,
-      "defaultValue": "echo Write your commands here\n\necho Use the environment variables input below to pass secret variables to this script",
+      "defaultValue": "echo Write your commands here\n\necho Hello world\n",
       "properties": {
         "resizable": "true",
         "rows": "10",

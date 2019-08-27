@@ -4,7 +4,7 @@
     "friendlyName": "Use Python version",
     "description": "Use the specified version of Python from the tool cache, optionally adding it to the PATH",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/use-python-version",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=871498)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=871498) or [see the Python documentation](https://www.python.org/doc/)",
     "category": "Tool",
     "runsOn": [
         "Agent",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 2
     },
     "demands": [],
     "instanceNameFormat": "Use Python $(versionSpec)",

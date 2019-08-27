@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "批次指令碼",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613733)",
-  "loc.description": "執行 Windows cmd 或 bat 指令碼，並選擇性地允許其變更環境",
+  "loc.description": "執行 Windows 命令或批次指令碼，並選擇性地允許其變更環境",
   "loc.instanceNameFormat": "執行指令碼 $(filename)",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.filename": "路徑",

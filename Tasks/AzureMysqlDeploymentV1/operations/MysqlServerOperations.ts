@@ -1,7 +1,7 @@
-import task = require('vsts-task-lib/task');
-import { AzureMysqlManagementClient } from 'azure-arm-rest/azure-arm-mysql';
+import task = require('azure-pipelines-task-lib/task');
+import { AzureMysqlManagementClient } from 'azure-arm-rest-v2/azure-arm-mysql';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
-import { ApplicationTokenCredentials} from 'azure-arm-rest/azure-arm-common';
+import { ApplicationTokenCredentials} from 'azure-arm-rest-v2/azure-arm-common';
 import { MysqlServer } from '../models/MysqlServer';
 import Q = require('q');
 

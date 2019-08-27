@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 151,
+        "Minor": 156,
         "Patch": 1
     },
     "groups": [
@@ -239,6 +239,7 @@
         "DownloadArtifacts": "Downloading artifact %s from: %s",
         "DownloadingArtifactsForBuild": "Downloading artifacts for build: %s",
         "LinkedArtifactCount": "Linked artifacts count:  %s",
+        "ExtractionFailed": "Failed to extract package with error %s",
         "FileContainerInvalidArtifactData": "Invalid file container artifact. Resource data must be in the format #/{container id}/path",
         "UnsupportedArtifactType": "Unsupported artifact type: %s",
         "BuildNotFound": "Build with ID %s not found",

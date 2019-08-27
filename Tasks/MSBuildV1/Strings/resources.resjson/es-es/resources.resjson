@@ -27,6 +27,8 @@
   "loc.input.help.logProjectEvents": "De manera opcional, se registran los detalles de la escala de tiempo de cada proyecto (solo Windows).",
   "loc.input.label.createLogFile": "Crear archivo de registro",
   "loc.input.help.createLogFile": "Si quiere, puede crear un archivo de registro (solo en Windows).",
+  "loc.input.label.logFileVerbosity": "Nivel de detalle del archivo de registro",
+  "loc.input.help.logFileVerbosity": "Nivel de detalle del archivo de registro opcional.",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "\"Registrar detalles del proyecto\" solo se admite en Windows.",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "\"Crear archivo de registro\" solo se admite en Windows.",
   "loc.messages.MSB_BuildToolNotFound": "No se ha encontrado MSBuild o xbuild (Mono) en el agente de macOS o Linux."

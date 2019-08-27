@@ -189,6 +189,7 @@ export function setConsoleCodePage() {
 export async function getNuGetFeedRegistryUrl(
     packagingCollectionUrl: string,
     feedId: string,
+    project: string,
     nuGetVersion: VersionInfo,
     accessToken?: string,
     useSession?: boolean): Promise<string>
@@ -207,7 +208,7 @@ export async function getNuGetFeedRegistryUrl(
         packagingCollectionUrl = collectionUrl;
     }
 
-    return await locationUtilities.getFeedRegistryUrl(packagingCollectionUrl, registryType, feedId, accessToken, useSession);
+    return await locationUtilities.getFeedRegistryUrl(packagingCollectionUrl, registryType, feedId, project, accessToken, useSession);
 }
 
 export function getSourcesFromNuGetConfig(configPath: string): IPackageSourceBase[] {

@@ -2,11 +2,11 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
-import ContainerConnection from "docker-common/containerconnection";
-import * as dockerCommandUtils from "docker-common/dockercommandutils";
-import * as fileUtils from "docker-common/fileutils";
-import * as pipelineUtils from "docker-common/pipelineutils";
+import * as tl from "azure-pipelines-task-lib/task";
+import ContainerConnection from "docker-common-v2/containerconnection";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
+import * as fileUtils from "docker-common-v2/fileutils";
+import * as pipelineUtils from "docker-common-v2/pipelineutils";
 import * as utils from "./utils";
 
 function useDefaultBuildContext(buildContext: string): boolean {
@@ -15,7 +15,7 @@ function useDefaultBuildContext(buildContext: string): boolean {
     return buildContext === defaultPath;
 }
 
-export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, ignoreArguments?: boolean): any {
+export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
     // find dockerfile path
     let dockerfilepath = tl.getInput("Dockerfile", true);
     let dockerFile = fileUtils.findDockerFile(dockerfilepath);
@@ -25,7 +25,8 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     }
 
     // get command arguments
-    let commandArguments = ignoreArguments ? "" : tl.getInput("arguments", false);
+    // ignore the arguments input if the command is buildAndPush, as it is ambiguous
+    let commandArguments = isBuildAndPushCommand ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
     
     // get qualified image names by combining container registry(s) and repository
     let repositoryName = tl.getInput("repository");
@@ -33,17 +34,18 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     // if container registry is provided, use that
     // else, use the currently logged in registries
     if (tl.getInput("containerRegistry")) {
-        let imageName = connection.getQualifiedImageName(repositoryName);
+        let imageName = connection.getQualifiedImageName(repositoryName, true);
         if (imageName) {
             imageNames.push(imageName);
         }
     }
     else {
-        imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName);
+        imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName, true);
     }
 
+    const addPipelineData = tl.getBoolInput("addPipelineData");
     // get label arguments
-    let labelArguments = pipelineUtils.getDefaultLabels();
+    let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
 
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");

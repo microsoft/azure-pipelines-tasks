@@ -53,6 +53,7 @@ export class DotNetCoreReleaseFetcher {
         }
         else {
             console.log(taskLib.loc("WarningVersionNotFound", version));
+            taskLib.warning(taskLib.loc('UpdateToNewerVersion', version));
             downloadUrls = this.getFallbackDownloadUrls(type, version);
         }
 
@@ -145,4 +146,4 @@ export class DotNetCoreReleaseFetcher {
     }
 }
 
-const DotNetCoreReleasesUrl: string = "https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases.json";
+const DotNetCoreReleasesUrl: string = "https://raw.githubusercontent.com/microsoft/azure-pipelines-tasks/master/Tasks/DotNetCoreInstallerV0/externals/releases.json";

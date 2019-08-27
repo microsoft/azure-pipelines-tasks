@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import webClient = require('./webClient');
 import  {ToError, ServiceClient } from './AzureServiceClient';
 import { AzureEndpoint, ApplicationInsights } from './azureModels';

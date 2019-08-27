@@ -4,7 +4,7 @@
     "friendlyName": "Install Apple provisioning profile",
     "description": "Install an Apple provisioning profile required to build on a macOS agent machine",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-apple-provisioning-profile",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862068)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862068)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 151,
-        "Patch": 1
+        "Minor": 156,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",

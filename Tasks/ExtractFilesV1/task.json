@@ -5,7 +5,7 @@
     "description": "Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/extract-files",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=800269)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 1
     },
     "instanceNameFormat": "Extract files $(message)",
     "inputs": [

@@ -1,6 +1,6 @@
 "use strict";
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 
 import ClusterConnection from "./clusterconnection";
@@ -74,7 +74,8 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
 
     var telemetry = {
         registryType: registryType,
-        command: command
+        command: command,
+        jobId: tl.getVariable('SYSTEM_JOBID')
     };
 
     console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
