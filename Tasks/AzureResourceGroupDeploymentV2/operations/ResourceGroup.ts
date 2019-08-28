@@ -182,7 +182,7 @@ export class ResourceGroup {
                         errorMessage = this.getPolicyErrorMessage(error.details[i]);
                     } else {
                         errorMessage = util.format("%s: %s", error.details[i].code, error.details[i].message);
-                        if(error.details[i].details != null && error.details[i].details != undefined) {
+                        if(error.details[i].details) {
                             if(typeof error.details[i].details == 'object') {
                                 if(Array.isArray(error.details[i].details)) {
                                     for(var detail in error.details[i].details) {
