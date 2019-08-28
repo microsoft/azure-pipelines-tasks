@@ -50,7 +50,8 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
             "BUILD_BUILDID": taskLib.getVariable('Build.BuildId'),
             "BUILD_CONTAINERID": taskLib.getVariable('Build.ContainerId'),
             "AGENT_TEMPPATH": taskLib.getVariable('Agent.TempPath'),
-            "SYSTEM_TEAMPROJECTID": taskLib.getVariable('System.TeamProjectId')
+            "SYSTEM_TEAMPROJECTID": taskLib.getVariable('System.TeamProjectId'),
+            "PIPELINES_COVERAGEPUBLISHER_DEBUG": taskLib.getVariable('PIPELINES_COVERAGEPUBLISHER_DEBUG')
         };
 
         await dotnet.exec({
