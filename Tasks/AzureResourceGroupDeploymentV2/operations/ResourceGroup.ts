@@ -184,13 +184,7 @@ export class ResourceGroup {
                         errorMessage = util.format("%s: %s", error.details[i].code, error.details[i].message);
                         if(error.details[i].details) {
                             if(typeof error.details[i].details == 'object') {
-                                if(Array.isArray(error.details[i].details)) {
-                                    for(var detail in error.details[i].details) {
-                                        errorMessage += "\n" + JSON.stringify(detail);
-                                    }
-                                } else {
-                                    errorMessage += "\n" + JSON.stringify(error.details[i].details);
-                                }
+                                errorMessage += "\n" + JSON.stringify(error.details[i].details);
                             } else {
                                 errorMessage += " " + String(error.details[i].details);
                             }
