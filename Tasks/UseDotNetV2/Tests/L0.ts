@@ -224,7 +224,7 @@ describe('UseDotNet', function () {
     });
 
     it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should return latest version info even if includePreviewVersion is true but latest version is non preview", (done) => {
-        process.env["__versionSpec__"] = "2.3.x";
+        process.env["__versionspec__"] = "2.3.x";
         process.env["__inlcudepreviewversion__"] = "true";
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoTestsCorrect.js"));
         tr.run();

@@ -1,8 +1,8 @@
 import os = require('os');
 import path = require('path');
 var process = require('process');
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 
 // used for escaping the path to the Invoke-Robocopy.ps1 script that is passed to the powershell command
 let pathToScriptPSString = (filePath: string) => {
@@ -51,6 +51,7 @@ async function run() {
         let pathtoPublish: string = tl.getPathInput('PathtoPublish', true, true);
         let artifactName: string = tl.getInput('ArtifactName', true);
         let artifactType: string = tl.getInput('ArtifactType', true);
+        const fileCopyOptions = tl.getInput('FileCopyOptions', false);
 
 
         let hostType = tl.getVariable('system.hostType');
@@ -100,6 +101,10 @@ async function run() {
                     let parentFolder = path.dirname(pathtoPublish);
                     let file = path.basename(pathtoPublish);
                     command = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(parentFolder)} -Target ${pathToRobocopyPSString(artifactPath)} -ParallelCount ${parallelCount} -File '${file}'`
+                }
+
+                if (fileCopyOptions) {
+                    command += ` -FileCopyOptions '${fileCopyOptions}'`;
                 }
 
                 let powershell = new tr.ToolRunner('powershell.exe');

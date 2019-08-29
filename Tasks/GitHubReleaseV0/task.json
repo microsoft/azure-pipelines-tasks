@@ -3,7 +3,7 @@
     "name": "GitHubRelease",
     "friendlyName": "GitHub Release",
     "description": "Create, edit, or delete a GitHub release",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/github-release",
+    "helpUrl": "https://aka.ms/AA5vv5o",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/AA3aeiw)",
     "category": "Utility",
     "visibility": [
@@ -14,8 +14,8 @@
     "preview": true,
     "version": {
         "Major": 0,
-        "Minor": 156,
-        "Patch": 0
+        "Minor": 157,
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -89,7 +89,7 @@
             "label": "Tag Pattern",
             "required": false,
             "visibleRule": "tagSource = auto",
-            "helpMarkDown": "Specify the regex for tag to be used for release creation."
+            "helpMarkDown": " Specify the git tag pattern using regex(Eg. `release-v1.*`). GitHub release will be created only for commits that have matching git tag. "
         },
         {
             "name": "tag",
@@ -219,6 +219,31 @@
             "groupName": "changeLogConfiguration",
             "visibleRule": "changeLogCompareToRelease = lastNonDraftReleaseByTag",
             "helpMarkDown": "Specify the regex for release tag. Release matching this tag will be used as base for changelog computation."
+        },
+        
+        {
+            "name": "changeLogType",
+            "type": "radio",
+            "label": "Changelog type",
+            "required": true,
+            "defaultValue": "commitBased",
+            "groupName": "changeLogConfiguration",
+            "visibleRule": "addChangeLog = true",
+            "helpMarkDown": "Changelog can be commit based or issue based . Commit based changelog lists all commits included in a release where as Issue based changelog lists all the issues/pr included in the release. ",
+            "options": {
+                "commitBased": "Commit based",
+                "issueBased": "Issue based"
+            }
+        },
+        {
+            "name": "changeLogLabels",
+            "type": "multiLine",
+            "label": "Categories",
+            "required": false,
+            "visibleRule": "changeLogType = issueBased",
+            "defaultValue" : "[{ \"label\" : \"bug\", \"displayName\" : \"Bugs\", \"state\" : \"closed\" }]",
+            "groupName": "changeLogConfiguration",
+            "helpMarkDown": "Using this you can categorize changes based on the label associated with the issue/pr. For a label you can mention the display name for the category and the state of issue. E.g. `\"[{ \"label\" : \"bug\", \"displayName\" : \"Bugs\", \"state\" : \"closed\" }]\"` .In case a change has multiple labels on it, the first specified label takes priority. Leave this field empty, to see a flat list of issues/pr."
         }
     ],
     "dataSourceBindings": [
@@ -258,7 +283,7 @@
         "MissingAssetError": "File not found: %s",
         "MultipleReleasesFoundError": "Only 1 release was expected but more than 1 release was found for tag: %s. Unable to perform the action.",
         "MultipleTagFound": "Only 1 tag was expected but more than 1 tag was found for the given commit: %s. Unable to perform the action.",
-        "NoTagFound": "Release will not be created as no tags could be found for the target commit. For more details check out the ‘Tag Source’ section in documentation: https://aka.ms/AA4f03a.",
+        "NoTagFound": "Release will not be created as the tags for the target commit do not match with the given tag pattern.",
         "DeleteAllExistingAssets": "Deleting all existing assets...",
         "DuplicateAssetFound": "Duplicate asset found: %s",
         "AssetsDeletedSuccessfully": "Assets deleted successfully.",
@@ -308,6 +333,13 @@
         "TagRequiredCreateAction": "Tag source is set to manual- please specify a tag for create action. For yaml syntax see: https://aka.ms/AA3m1bq",
         "NoFileFoundMatchingPattern": "No files found matching '%s'. Nothing to upload.",
         "PatternIsADirectory": "'%s' cannot be uploaded as it is a directory. Please specify a file.",
-        "SearchingFileMatchingPattern": "Searching for file(s) matching '%s'."
+        "SearchingFileMatchingPattern": "Searching for file(s) matching '%s'.",
+        "IssuesFetchError": "Error fetching issues. Cannot generate change log.",
+        "NoIssuesLinkedError": "No issues are linked to commits in the specified commit Diff.",
+        "LabelsSyntaxError": "Error occured while parsing the labels. For yaml syntax see: https://aka.ms/AA3m1bq",
+        "InvalidChangeLogTypeAttribute": "Invalid ChangeLogType attribute: %s. Only 'commitBased' or 'issueBased' options are allowed. For yaml syntax see: https://aka.ms/AA3m1bq",
+        "ChangeLogTitle": "Changes",
+        "DefaultCategory": "Others",
+        "SeeMoreText": "See More"
     }
 }
