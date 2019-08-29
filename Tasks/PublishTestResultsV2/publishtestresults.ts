@@ -91,7 +91,7 @@ async function run() {
             allowBrokenSymbolicLinks: true,
             followSpecifiedSymbolicLink: true,
             followSymbolicLinks: true
-        };
+        }; 
 
         const matchingTestResultsFiles = tl.findMatch(searchFolder, testResultsFiles, findOptions);
 
