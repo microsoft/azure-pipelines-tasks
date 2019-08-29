@@ -10,10 +10,7 @@ param(
     [int]$ParallelCount,
 
     [Parameter(Mandatory = $false)]
-    [string]$File,
-
-    [Parameter(Mandatory = $false)]
-    [string]$FileCopyOptions)
+    [string]$File)
 
 # This script translates the output from robocopy into UTF8. Node has limited
 # built-in support for encodings.
@@ -47,11 +44,11 @@ if (!$File) {
 
 # Print the ##command. The /MT parameter is only supported on 2008 R2 and higher.
 if ($ParallelCount -gt 1) {
-    $FileCopyOptions = "$FileCopyOptions /MT:$ParallelCount"
+    [System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount `"$Source`" `"$Target`" `"$File`"")
 }
-
-# Print the ##command. The /MT parameter is only supported on 2008 R2 and higher.
-[System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 $FileCopyOptions `"$Source`" `"$Target`" `"$File`"")
+else {
+    [System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 `"$Source`" `"$Target`" `"$File`"")
+}
 
 # The $OutputEncoding variable instructs PowerShell how to interpret the output
 # from the external command.
@@ -76,9 +73,9 @@ $OutputEncoding = [System.Text.Encoding]::Default
 # will launch the external command in such a way that it inherits the streams.
 #
 # Note, the /MT parameter is only supported on 2008 R2 and higher.
-
-& robocopy.exe /E /COPY:DA /NP /R:3 $FileCopyOptions $Source $Target $File 2>&1 |
-    ForEach-Object {
+if ($ParallelCount -gt 1) {
+    & robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount $Source $Target $File 2>&1 |
+        ForEach-Object {
         if ($_ -is [System.Management.Automation.ErrorRecord]) {
             [System.Console]::WriteLine($_.Exception.Message)
         }
@@ -86,6 +83,18 @@ $OutputEncoding = [System.Text.Encoding]::Default
             [System.Console]::WriteLine($_)
         }
     }
+}
+else {
+    & robocopy.exe /E /COPY:DA /NP /R:3 $Source $Target $File 2>&1 |
+        ForEach-Object {
+        if ($_ -is [System.Management.Automation.ErrorRecord]) {
+            [System.Console]::WriteLine($_.Exception.Message)
+        }
+        else {
+            [System.Console]::WriteLine($_)
+        }
+    }
+}
 
 [System.Console]::WriteLine("##[debug]robocopy exit code '$LASTEXITCODE'")
 [System.Console]::Out.Flush()
