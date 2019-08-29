@@ -189,8 +189,25 @@ Edit web app [configuration settings](https://docs.microsoft.com/en-us/azure/app
 * **Web App Hosted URL:** Provide a name, like FabrikamWebAppURL for the variable for the Azure App Service Hosted URL. The variable can be used as $(variableName), like $(FabrikamWebAppURL) to refer to the Hosted URL of the Azure App Service in subsequent tasks like in the [Run Functional Tests task](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/RunDistributedTestsV1) or the [Visual Studio Test task](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/VsTestV2).
 
 
-### FAQ
-* To ignore SSL error set a Variable of name VSTS_ARM_REST_IGNORE_SSL_ERRORS with value : true in the release definition.
-* The task works with the [Azure Resource Manager APIs](https://msdn.microsoft.com/en-us/library/azure/dn790568.aspx) only.
-* For avoiding deployment failure with error code ERROR_FILE_IN_USE, in case of .NET apps targeting Web App on Windows, ensure that 'Rename locked files' and 'Take App Offline' are enabled. For zero downtime deployment use slot swap.
-* When deploying to an App Service with App Insights configured, if you have enabled “Remove additional files at destination” then you also need to enable “Exclude files from the App_Data folder” in order to keep App insights extension in safe state. This is required because App Insights continuous web job gets installed into the App_Data folder.
+### Troubleshooting :
+
+- **Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.**
+
+    Service connection used by the task would have been expired or the service principal use must have been removed from the app registrations.  [Troubleshoot the affected Azure Resource Manager service connection.](https://docs.microsoft.com/en-us/azure/devops/pipelines/release/azure-rm-endpoint?view=azure-devops)
+
+- **SSL error**
+    To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline",
+
+- **Managed Service Identity (MSI)**
+    configure Managed Service Identity (MSI) for virtual machine https://aka.ms/azure-msi-docs
+    
+    
+- **Publish using zip deploy option is not supported for msBuild package type**
+    Follow the steps provided in the link https://github.com/microsoft/azure-pipelines-tasks/wiki/Migrating-from-Web-Deploy-to-Run-From-Package-deployment-mechanism 
+    
+- **ERROR_FILE_IN_USE**
+ * For avoiding deployment failure with error code ERROR_FILE_IN_USE, in case of .NET apps targeting Web App on Windows, ensure that 'Rename locked files' and 'Take App Offline' are enabled. For zero downtime deployment use slot swap.
+ * You can also use `Run From Package` deployment method to avoid resource locking.
+
+- **Web Job deployment**
+When deploying to an App Service with App Insights configured, if you have enabled “Remove additional files at destination” then you also need to enable “Exclude files from the App_Data folder” in order to keep App insights extension in safe state. This is required because App Insights continuous web job gets installed into the App_Data folder.

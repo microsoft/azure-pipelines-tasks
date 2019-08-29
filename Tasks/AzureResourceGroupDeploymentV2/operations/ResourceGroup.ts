@@ -1,11 +1,11 @@
 import path = require("path");
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 
 import env = require("./Environment");
 import deployAzureRG = require("../models/DeployAzureRG");
-import armResource = require("azure-arm-rest/azure-arm-resource");
+import armResource = require("azure-arm-rest-v2/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
 import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
 import { PowerShellParameters, NameValuePair } from "./ParameterParser";
@@ -13,7 +13,7 @@ import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
-import { sleepFor } from 'azure-arm-rest/webClient';
+import { sleepFor } from 'azure-arm-rest-v2/webClient';
 
 var hm = require("typed-rest-client/HttpClient");
 var uuid = require("uuid");
