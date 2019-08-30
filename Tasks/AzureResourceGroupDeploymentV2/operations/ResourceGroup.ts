@@ -181,7 +181,14 @@ export class ResourceGroup {
                         policyLink = this.getPolicyHelpLink(error.details[i]);
                         errorMessage = this.getPolicyErrorMessage(error.details[i]);
                     } else {
-                        errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
+                        errorMessage = util.format("%s: %s", error.details[i].code, error.details[i].message);
+                        if(error.details[i].details) {
+                            if(typeof error.details[i].details == 'object') {
+                                errorMessage += " " + JSON.stringify(error.details[i].details);
+                            } else {
+                                errorMessage += " " + String(error.details[i].details);
+                            }
+                        } 
                     }
 
                     tl.error(errorMessage);
