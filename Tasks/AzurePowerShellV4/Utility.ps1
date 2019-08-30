@@ -17,7 +17,6 @@ function Get-SavedModulePathLinux {
 function Update-PSModulePathForHostedAgent {
     [CmdletBinding()]
     param([string] $targetAzurePs)
-    Trace-VstsEnteringInvocation $MyInvocation
     try {
         if ($targetAzurePs) {
             $hostedAgentAzModulePath = Get-SavedModulePath -azurePowerShellVersion $targetAzurePs
@@ -29,7 +28,6 @@ function Update-PSModulePathForHostedAgent {
         $env:PSModulePath = $env:PSModulePath.TrimStart(';') 
     } finally {
         Write-Verbose "The updated value of the PSModulePath is: $($env:PSModulePath)"
-        Trace-VstsLeavingInvocation $MyInvocation
     }
 }
 

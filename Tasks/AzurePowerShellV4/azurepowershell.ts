@@ -5,6 +5,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
 import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
 var uuidV4 = require('uuid/v4');
+const isWindows = os.type().match(/^Win/);
 
 async function run() {
     try {
@@ -30,6 +31,8 @@ async function run() {
         let customTargetAzurePs: string = tl.getInput('CustomTargetAzurePs', false);
         let serviceName = tl.getInput('ConnectedServiceNameARM',/*required*/true);
         let endpointObject= await new AzureRMEndpoint(serviceName).getEndpoint();
+        let input_pwsh = tl.getBoolInput('pwsh', false);
+        let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
 
         // string constants
         let otherVersion = "OtherVersion"
@@ -57,7 +60,15 @@ async function run() {
         // Generate the script contents.
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
-        let azFilePath = path.join(path.resolve(__dirname), 'InitializeAz.ps1');
+        let azFilePath;
+
+        if (isWindows) {
+            azFilePath = path.join(path.resolve(__dirname), 'InitializeAzWindows.ps1');
+        }
+        else {
+            azFilePath = path.join(path.resolve(__dirname), 'InitializeAzLinux.ps1');
+        }
+
         contents.push(`$ErrorActionPreference = '${_vsts_input_errorActionPreference}'`); 
         if(targetAzurePs == "") {
             contents.push(`${azFilePath} -endpoint '${endpoint}'`);
@@ -79,6 +90,7 @@ async function run() {
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
+        let powershell;
 
         await fs.writeFile(
             filePath,
@@ -92,7 +104,10 @@ async function run() {
         //
         // Note, use "-Command" instead of "-File" to match the Windows implementation. Refer to
         // comment on Windows implementation for an explanation why "-Command" is preferred.
-        let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
+
+        if(input_pwsh || !(isWindows))  {
+            console.log("Using PowerShell Core");
+            powershell = tl.tool(tl.which('pwsh'))
             .arg('-NoLogo')
             .arg('-NoProfile')
             .arg('-NonInteractive')
@@ -100,8 +115,21 @@ async function run() {
             .arg('Unrestricted')
             .arg('-Command')
             .arg(`. '${filePath.replace("'", "''")}'`);
+        }
+        else {
+            console.log("Using Windows PowerShell");
+            powershell = tl.tool(tl.which('powershell'))
+            .arg('-NoLogo')
+            .arg('-NoProfile')
+            .arg('-NonInteractive')
+            .arg('-ExecutionPolicy')
+            .arg('Unrestricted')
+            .arg('-Command')
+            .arg(`. '${filePath.replace("'", "''")}'`);
+        }
 
         let options = <tr.IExecOptions>{
+            cwd: input_workingDirectory,
             failOnStdErr: false,
             errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
             outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
