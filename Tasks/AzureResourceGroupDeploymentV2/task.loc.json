@@ -13,9 +13,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 2,
-    "Minor": 156,
-    "Patch": 1
+    "Major": 4,
+    "Minor": 0,
+    "Patch": 19
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -29,22 +29,36 @@
       "name": "Template",
       "displayName": "ms-resource:loc.group.displayName.Template",
       "isExpanded": true,
-      "visibleRule": "action = Create Or Update Resource Group"
+      "visibleRule": "action = Create Or Update Resource Group || deploymentScope = Subscription || deploymentScope = Management Group"
     },
     {
       "name": "AdvancedDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdvancedDeploymentOptions",
       "isExpanded": true,
-      "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
+      "visibleRule": "(action = Create Or Update Resource Group || action = Select Resource Group) && deploymentScope = Resource Group"
     },
     {
       "name": "Advanced",
       "displayName": "ms-resource:loc.group.displayName.Advanced",
       "isExpanded": true,
-      "visibleRule": "action = Create Or Update Resource Group"
+      "visibleRule": "action = Create Or Update Resource Group || deploymentScope = Subscription || deploymentScope = Management Group"
     }
   ],
   "inputs": [
+    {
+      "name": "deploymentScope",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.deploymentScope",
+      "defaultValue": "Resource Group",
+      "required": "true",
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentScope",
+      "options": {
+        "Management group": "Management Group",
+        "Subscription": "Subscription",
+        "Resource group": "Resource Group"
+      }
+    },
     {
       "name": "ConnectedServiceName",
       "aliases": [
@@ -55,7 +69,10 @@
       "defaultValue": "",
       "required": true,
       "groupName": "AzureDetails",
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+      }
     },
     {
       "name": "action",
@@ -74,7 +91,8 @@
         "Restart": "Restart virtual machines",
         "Delete": "Delete virtual machines",
         "DeleteRG": "Delete resource group"
-      }
+      },
+      "visibleRule": "deploymentScope = Resource Group"
     },
     {
       "name": "resourceGroupName",
@@ -85,7 +103,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName",
       "properties": {
         "EditableOptions": "True"
-      }
+      },
+      "visibleRule": "deploymentScope = Resource Group"
     },
     {
       "name": "location",
@@ -97,7 +116,7 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "action = Create Or Update Resource Group"
+      "visibleRule": "action = Create Or Update Resource Group || deploymentScope = Subscription || deploymentScope = Management Group"
     },
     {
       "name": "templateLocation",

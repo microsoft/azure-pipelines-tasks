@@ -73,7 +73,11 @@ export class AzureRGTaskParameters {
     public runAgentServiceAsUser: boolean;
     public addSpnToEnvironment: boolean;
     public connectedService: string;
-
+    public deploymentScope: string;
+    public serviceEndpointScope: string;
+    public managementGroupId: string
+    public subscriptionName: string
+    
     private getVSTSPatToken(deploymentGroupEndpointName: string): TokenCredentials {
         var endpointAuth = tl.getEndpointAuthorization(deploymentGroupEndpointName, true);
         if (endpointAuth.scheme === 'Token') {
@@ -109,7 +113,7 @@ export class AzureRGTaskParameters {
             console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureResourceGroupDeployment]" + endpointTelemetry);
             this.subscriptionId = tl.getEndpointDataParameter(this.connectedService, "SubscriptionId", true);
             this.endpointPortalUrl = tl.getEndpointDataParameter(this.connectedService, "armManagementPortalUrl", true);
-            this.resourceGroupName = tl.getInput("resourceGroupName", true);
+            this.resourceGroupName = tl.getInput("resourceGroupName", false);
             this.action = tl.getInput("action");
             this.location = tl.getInput("location");
             this.templateLocation = tl.getInput("templateLocation");
@@ -143,6 +147,19 @@ export class AzureRGTaskParameters {
             this.deploymentGroupProjectName = tl.getInput("project");
             this.deploymentOutputs = tl.getInput("deploymentOutputs");
             this.addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
+            
+            this.deploymentScope = tl.getInput("DeploymentScope", true);
+            var scope = tl.getEndpointDataParameter(this.connectedService, 'ScopeLevel', true);
+            this.serviceEndpointScope = scope;
+            if(scope === "Subscription"){
+                var authScope = tl.getEndpointAuthorizationParameter(this.connectedService, 'scope', true);
+                if(!!authScope && authScope.toLowerCase().includes("resourcegroups")){
+                    this.serviceEndpointScope = "ResourceGroup";
+                }
+            }
+            else{
+                this.managementGroupId = tl.getEndpointDataParameter(this.connectedService, 'ManagementGroupId', true);
+            }
             return this;
         } catch (error) {
             throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));

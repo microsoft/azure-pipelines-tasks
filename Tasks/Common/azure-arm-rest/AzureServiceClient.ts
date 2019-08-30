@@ -52,6 +52,7 @@ export class ServiceClient {
     protected generateClientRequestId: boolean;
 
     public subscriptionId: string;
+    public managementGroupId: string;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, timeout?: number) {
         this.validateInputs(credentials, subscriptionId);

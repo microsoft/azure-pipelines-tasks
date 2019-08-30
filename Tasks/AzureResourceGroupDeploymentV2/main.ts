@@ -4,10 +4,21 @@ import path = require("path");
 import deployAzureRG = require("./models/DeployAzureRG");
 import virtualMachine = require("./operations/VirtualMachine");
 import resourceGroup = require("./operations/ResourceGroup");
+import managementGroup = require("./operations/ManagementGroup");
 
 function run(): Promise<void> {
     var azureRGTaskParameters = new deployAzureRG.AzureRGTaskParameters();
     return azureRGTaskParameters.getAzureRGTaskParameters().then((taskParameters) => {
+        
+        if(taskParameters.deploymentScope === "Management group"){        
+            var managementGroupOperationsController = new managementGroup.ManagementGroup(taskParameters);
+            return managementGroupOperationsController.deployToManagementGroupScope();
+        }
+        else if(taskParameters.deploymentScope === "Subscription"){        
+            var managementGroupOperationsController = new managementGroup.ManagementGroup(taskParameters);
+            return managementGroupOperationsController.deployToManagementGroupScope();
+        }
+
         var resourceGroupOperationsController = new resourceGroup.ResourceGroup(taskParameters);
         var virtualMachineOperation = new virtualMachine.VirtualMachine(taskParameters);
         switch (taskParameters.action) {
