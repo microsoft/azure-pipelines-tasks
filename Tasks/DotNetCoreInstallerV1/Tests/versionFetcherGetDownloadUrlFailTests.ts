@@ -1,4 +1,4 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
 import { toolrunner } from './mocks/mockedModels'
 var mockery = require('mockery');
@@ -19,7 +19,7 @@ mockery.registerMock('typed-rest-client/HttpClient', {
     }
 });
 
-mockery.registerMock('vsts-task-lib/task', {
+mockery.registerMock('azure-pipelines-task-lib/task', {
     osType: function () { return process.env["__ostype__"]; },
     which: function (tool: string, check: boolean) {
         if (tool == 'powershell') {
@@ -64,6 +64,7 @@ mockery.registerMock('vsts-task-lib/task', {
     error: function (errorMessage) { return tl.error(errorMessage); },
     getVariable: function (variableName) { return tl.getVariable(variableName); },
     getHttpProxyConfiguration: function () { return ""; },
+    getHttpCertConfiguration: function () { return "" },
     setResourcePath: function (path) { return; }
 });
 
