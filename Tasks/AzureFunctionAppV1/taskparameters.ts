@@ -6,6 +6,7 @@ import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-en
 import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/AzureResourceFilterUtility';
 import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
 const skuDynamicValue: string = 'dynamic';
+const skuElasticPremiumValue: string = 'elasticpremium';
 
 const webAppKindMap = new Map([
     [ 'functionapp', 'functionApp' ],
@@ -35,7 +36,7 @@ export class TaskParametersUtility {
         var appDetails = await this.getWebAppKind(taskParameters);
         taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
         taskParameters.WebAppKind = appDetails["webAppKind"];
-        taskParameters.isConsumption = appDetails["sku"].toLowerCase() == skuDynamicValue;
+        taskParameters.isConsumption = appDetails["sku"] == skuDynamicValue || appDetails["sku"] == skuElasticPremiumValue;
         
         taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("Linux") !=-1;
 
@@ -78,7 +79,7 @@ export class TaskParametersUtility {
         return {
             resourceGroupName: resourceGroupName,
             webAppKind: kind,
-            sku: sku
+            sku: sku.toLowerCase()
         };
     }
 
