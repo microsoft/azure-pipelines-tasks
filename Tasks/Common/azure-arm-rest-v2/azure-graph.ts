@@ -1,6 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 import msRestAzure = require("./azure-arm-common");
 import azureServiceClient = require("./AzureServiceClient");
+import azureServiceClientBase = require("./AzureServiceClientBase");
 import webClient = require("./webClient");
 import util = require("util");
 import Q = require("q");
@@ -73,7 +74,7 @@ export class ServicePrincipals {
                 deferred.resolve(result);
             }
             else {
-                deferred.reject(azureServiceClient.ToError(response));
+                deferred.reject(azureServiceClientBase.ToError(response));
             }
         }).catch(function(error) {
             deferred.reject(error);
