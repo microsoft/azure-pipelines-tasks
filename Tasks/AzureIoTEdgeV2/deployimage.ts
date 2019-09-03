@@ -41,9 +41,6 @@ class azureclitask {
       configId = util.normalizeDeploymentId(configId);
       console.log(tl.loc('NomralizedDeployementId', configId));
 
-      let script1 = ["iot", "edge", "deployment", "delete", "--hub-name", iothub, "--config-id", configId];
-      let script2 = ["iot", "edge", "deployment", "create", "--config-id", configId, "--hub-name", iothub, "--content", deploymentJsonPath, "--target-condition", targetCondition, "--priority", priority.toString(), "--output", "none"];
-
       this.loginAzure();
 
       tl.debug('OS release:' + os.release());
@@ -95,8 +92,8 @@ class azureclitask {
         errStream: outputStream as stream.Writable
       } as IExecOptions;
 
-      let result1 = tl.execSync('az', script1, Constants.execSyncSilentOption);
-      let result2 = await tl.exec('az', script2, execOptions);
+      let result1 = tl.execSync('az', ["iot", "edge", "deployment", "delete", "--hub-name", iothub, "--config-id", configId], Constants.execSyncSilentOption);
+      let result2 = await tl.exec('az', ["iot", "edge", "deployment", "create", "--config-id", configId, "--hub-name", iothub, "--content", deploymentJsonPath, "--target-condition", targetCondition, "--priority", priority.toString(), "--output", "none"], execOptions);
       if (result2 !== 0) {
         throw new Error(`Failed to create deployment. Error: ${outputStream.content}`);
       }

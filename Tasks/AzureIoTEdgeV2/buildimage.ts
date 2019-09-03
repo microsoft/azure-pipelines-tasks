@@ -33,8 +33,7 @@ export async function run() {
     outStream: outputStream as stream.Writable,
   } as IExecOptions;
   let defaultPlatform = tl.getInput('defaultPlatform', true);
-  let command: string[] = ["build", "--file", templateFilePath, "--platform", defaultPlatform];
-  await tl.exec(`${Constants.iotedgedev}`, command, execOptions);
+  await tl.exec(`${Constants.iotedgedev}`, ["build", "--file", templateFilePath, "--platform", defaultPlatform], execOptions);
 
   let outLog: string = outputStream.content;
   let filterReg: RegExp = /Expanding '[^']*' to '([^']*)'/g;

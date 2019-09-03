@@ -75,8 +75,7 @@ export async function run() {
       env: envList,
     } as IExecOptions;
     let defaultPlatform = tl.getInput('defaultPlatform', true);
-    let command: string[] = ["push", "--no-build", "--file", templateFilePath, "--platform", defaultPlatform];
-    await tl.exec(`${Constants.iotedgedev}`, command, execOptions);
+    await tl.exec(`${Constants.iotedgedev}`, ["push", "--no-build", "--file", templateFilePath, "--platform", defaultPlatform], execOptions);
 
     tl.execSync(`docker`, `logout`, Constants.execSyncSilentOption);
     util.createOrAppendDockerCredentials(registryAuthenticationToken);
