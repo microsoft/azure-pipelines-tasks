@@ -5,8 +5,6 @@ import Q = require('q');
 
 export class DeploymentsBase {
     protected client: azureServiceClientBase.AzureServiceClientBase;
-    protected uriFormat: string;
-    protected deploymentName: string;
 
     constructor(client: azureServiceClientBase.AzureServiceClientBase) {
         this.client = client;

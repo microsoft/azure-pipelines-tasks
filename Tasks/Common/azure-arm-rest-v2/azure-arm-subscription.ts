@@ -1,3 +1,4 @@
+import tl = require('azure-pipelines-task-lib/task');
 import msRestAzure = require('./azure-arm-common');
 import azureServiceClientBase = require('./AzureServiceClientBase');
 import depolymentsBase = require('./DeploymentsBase');
@@ -8,8 +9,8 @@ export class SubscriptionManagementClient extends azureServiceClientBase.AzureSe
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, options?: any) {
         super(credentials);
-
-        this.apiVersion = (credentials.isAzureStackEnvironment) ? '2016-06-01' : '2019-05-10';
+        this.validateInputs(subscriptionId);
+        this.apiVersion = '2019-05-10';
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
         if (!!options && !!options.longRunningOperationRetryTimeout) {
@@ -17,6 +18,12 @@ export class SubscriptionManagementClient extends azureServiceClientBase.AzureSe
         }
         this.deployments = new SubscriptionDeployments(this);
         this.subscriptionId = subscriptionId;
+    }
+
+    private validateInputs(subscriptionId: string) {
+        if (!subscriptionId) {
+            throw new Error(tl.loc("SubscriptionIdCannotBeNull"));
+        }
     }
 }
 

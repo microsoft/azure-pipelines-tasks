@@ -1,3 +1,4 @@
+import tl = require('azure-pipelines-task-lib/task');
 import msRestAzure = require('./azure-arm-common');
 import azureServiceClientBase = require('./AzureServiceClientBase');
 import depolymentsBase = require('./DeploymentsBase');
@@ -8,8 +9,8 @@ export class ManagementGroupManagementClient extends azureServiceClientBase.Azur
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, managementGroupId: string, options?: any) {
         super(credentials);
-
-        this.apiVersion = (credentials.isAzureStackEnvironment) ? '2016-06-01' : '2019-05-10';
+        this.validateInputs(managementGroupId);
+        this.apiVersion = '2019-05-10';
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
         if (!!options && !!options.longRunningOperationRetryTimeout) {
@@ -17,6 +18,12 @@ export class ManagementGroupManagementClient extends azureServiceClientBase.Azur
         }
         this.deployments = new ManagementGroupDeployments(this);
         this.managementGroupId = managementGroupId;
+    }
+
+    private validateInputs(managementGroupId: string) {
+        if (!managementGroupId) {
+            throw new Error(tl.loc("ManagementGroupIdCannotBeNull"));
+        }
     }
 }
 

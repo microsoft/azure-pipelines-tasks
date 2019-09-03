@@ -256,7 +256,7 @@ export class AzureServiceClientBase {
         return error;
     }
 
-    protected sleepFor(sleepDurationInSeconds): Promise<any> {
+    private sleepFor(sleepDurationInSeconds): Promise<any> {
         return new Promise((resolve, reeject) => {
             setTimeout(resolve, sleepDurationInSeconds * 1000);
         });
