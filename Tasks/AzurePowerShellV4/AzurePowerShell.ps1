@@ -10,6 +10,8 @@ $__vsts_input_errorActionPreference = Get-VstsInput -Name errorActionPreference
 $__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
+$input_pwsh = Get-VstsInput -Name 'pwsh' -AsBool
+$input_workingDirectory = Get-VstsInput -Name 'workingDirectory' -Require
 
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
@@ -54,10 +56,6 @@ Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
 
 try 
 {
-    # Initialize Azure.
-    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs
-    
     # Trace the expression as it will be invoked.
     $__vstsAzPSInlineScriptPath = $null
     If ($scriptType -eq "InlineScript") {
@@ -66,6 +64,27 @@ try
         ($scriptInline | Out-File $__vstsAzPSInlineScriptPath)
         $scriptPath = $__vstsAzPSInlineScriptPath
     }
+
+    # Prepare the external command values.
+    #
+    # Note, use "-Command" instead of "-File". On PowerShell v4 and V3 when using "-File", terminating
+    # errors do not cause a non-zero exit code.
+    if ($input_pwsh) {
+        $powershellPath = Get-Command -Name pwsh.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
+    } else {
+        $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
+    }
+    Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
+    $arguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `". '$($scriptPath.Replace("'", "''"))'`""
+    $splat = @{
+        'FileName' = $powershellPath
+        'Arguments' = $arguments
+        'WorkingDirectory' = $input_workingDirectory
+    }
+
+    # Initialize Azure.
+    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+    Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs
 
     $scriptCommand = "& '$($scriptPath.Replace("'", "''"))' $scriptArguments"
     Remove-Variable -Name scriptType
