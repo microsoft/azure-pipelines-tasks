@@ -10,7 +10,10 @@ param(
     [int]$ParallelCount,
 
     [Parameter(Mandatory = $false)]
-    [string]$File)
+    [string]$File,
+
+    [Parameter(Mandatory = $false)]
+    [string]$FileCopyOptions)
 
 # This script translates the output from robocopy into UTF8. Node has limited
 # built-in support for encodings.
@@ -42,9 +45,19 @@ if (!$File) {
     $File = "*";
 }
 
-# Print the ##command. The /MT parameter is only supported on 2008 R2 and higher.
+$CopyOptionsArray = @()
+if ($FileCopyOptions) {
+    $CopyOptionsArray += $FileCopyOptions.Split(' ')
+}
+
+# The /MT parameter is only supported on 2008 R2 and higher.
 if ($ParallelCount -gt 1) {
-    [System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount `"$Source`" `"$Target`" `"$File`"")
+    $CopyOptionsArray += "/MT:$ParallelCount"
+}
+
+# Print the ##command.
+if ($CopyOptionsArray.count -gt 0) {
+    [System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 $CopyOptionsArray `"$Source`" `"$Target`" `"$File`"")
 }
 else {
     [System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 `"$Source`" `"$Target`" `"$File`"")
@@ -73,8 +86,8 @@ $OutputEncoding = [System.Text.Encoding]::Default
 # will launch the external command in such a way that it inherits the streams.
 #
 # Note, the /MT parameter is only supported on 2008 R2 and higher.
-if ($ParallelCount -gt 1) {
-    & robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount $Source $Target $File 2>&1 |
+if ($CopyOptionsArray.count -gt 0) {
+    & robocopy.exe /E /COPY:DA /NP /R:3 $CopyOptionsArray $Source $Target $File 2>&1 |
         ForEach-Object {
         if ($_ -is [System.Management.Automation.ErrorRecord]) {
             [System.Console]::WriteLine($_.Exception.Message)
