@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 157,
-    "Patch": 0
+    "Patch": 3
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -105,6 +105,14 @@
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.package"
+    },
+    {
+      "name": "customDeployFolder",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customDeployFolder",
+      "defaultValue": "",
+      "visibleRule": "package EndsWith .war",
+      "helpMarkDown": "ms-resource:loc.input.help.customDeployFolder"
     },
     {
       "name": "runtimeStack",

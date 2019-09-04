@@ -19,7 +19,9 @@ Tasks/ArchiveFilesV2/*  @bryanmacfarlane
 
 Tasks/AzureAppServiceManageV0/*     @kmkumaran      @SumiranAgg     @vincentdass
 
-Tasks/AzureCLIV1/*      @sachinma
+Tasks/AzureAppServiceSettingsV1/*     @eaarora-ms      @SumiranAgg     @vincentdass     @niadak
+
+Tasks/AzureCLIV1/*      @bishal-pdmsft
 
 Tasks/AzureCloudPowerShellDeploymentV1/*    @kmkumaran
 
@@ -57,7 +59,7 @@ Tasks/AzurePowerShellV3/*   @kmkumaran
 
 Tasks/AzurePowershellV4/*   @kmkumaran
 
-Tasks/AzureResourceGroupDeploymentV2/*      @sachinma
+Tasks/AzureResourceGroupDeploymentV2/*      @bishal-pdmsft
 
 Tasks/AzureRmWebAppDeploymentV3/*   @kmkumaran    @SumiranAgg     @vincentdass
 
@@ -67,7 +69,7 @@ Tasks/AzureWebAppV1/*   @kmkumaran    @SumiranAgg     @vincentdass
 
 Tasks/AzureWebAppContainerV1/*   @kmkumaran    @SumiranAgg     @vincentdass
 
-Tasks/AzureVmssDeploymentV0/*       @sachinma
+Tasks/AzureVmssDeploymentV0/*       @bishal-pdmsft
 
 Tasks/BashV3/*  @bryanmacfarlane
 
@@ -103,11 +105,11 @@ Tasks/Common/VstsAzureHelpers_/*  @rajatagrawal-dev   @vincentdass
 
 Tasks/Common/VstsAzureRestHelpers_/*  @Ajay-MS  @rajatagrawal-dev
 
-Tasks/Common/azure-arm-rest/*   @vincentdass    @Ajay-MS
+Tasks/Common/azure-arm-rest/*   @vincentdass    @Ajay-MS    @bishal-pdmsft
 
-Tasks/Common/azure-arm-rest-v2/*    @kmkumaran      @SumiranAgg     @vincentdass
+Tasks/Common/azure-arm-rest-v2/*    @kmkumaran      @SumiranAgg     @vincentdass    @bishal-pdmsft
 
-Tasks/Common/azure-blobstorage-artifactProvider/*   @omeshp   @hiyadav
+Tasks/Common/azure-blobstorage-artifactProvider/*   @omeshp   @hiyadav    @bishal-pdmsft
 
 Tasks/Common/codeanalysis-common/*    @lkillgore
 
@@ -155,11 +157,11 @@ Tasks/DockerV2/*    @bansalaseem
 
 Tasks/DockerComposeV0/*     @bansalaseem
 
-Tasks/DotNetCoreCLIV2/*     @sachinma
+Tasks/DotNetCoreCLIV2/*     @bishal-pdmsft
 
-Tasks/DotNetCoreInstallerV0/*   @sachinma
+Tasks/DotNetCoreInstallerV0/*   @bishal-pdmsft
 
-Tasks/DotNetCoreInstallerV1/*   @sachinma
+Tasks/DotNetCoreInstallerV1/*   @bishal-pdmsft
 
 Tasks/DownloadBuildArtifactsV0/*    @Lovakumar      @omeshp
 
@@ -169,7 +171,9 @@ Tasks/DownloadGitHubReleasesV0/*    @Lovakumar      @gykuma
 
 Tasks/DownloadPackageV0/*       @zjrunner
 
-Tasks/DownloadPipelineArtifactV0/*      @mihaif
+Tasks/DownloadPipelineArtifactV0/*      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
+
+Tasks/DownloadPipelineArtifactV1/*      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
 Tasks/DownloadSecureFileV1/*    @madhurig
 
@@ -183,9 +187,9 @@ Tasks/FtpUploadV1/*     @madhurig
 
 Tasks/GithubReleaseV0/*     @prativen   @mdmdakbar
 
-Tasks/GoV0/*    @sachinma
+Tasks/GoV0/*    @bishal-pdmsft
 
-Tasks/GoToolV0/*    @sachinma
+Tasks/GoToolV0/*    @bishal-pdmsft
 
 Tasks/GradleV2/*    @madhurig
 
@@ -259,9 +263,9 @@ Tasks/NuGetPublisherV0/*    @zjrunner
 
 Tasks/NuGetToolInstallerV0/*    @zjrunner
 
-Tasks/PackerBuildV0/*   @sachinma
+Tasks/PackerBuildV0/*   @bishal-pdmsft
 
-Tasks/PackerBuildV1/*   @sachinma
+Tasks/PackerBuildV1/*   @bishal-pdmsft
 
 Tasks/PipAuthenticateV0/*     @zjrunner @shubham90
 
@@ -279,9 +283,9 @@ Tasks/PublishBuildArtifactsV1/*     @madhurig
 
 Tasks/PublishCodeCoverageResultsV1/*    @cltshivash    @nigurr 
 
-Tasks/PublishPipelineArtifactV0/*       @mihaif
+Tasks/PublishPipelineArtifactV0/*       @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
-Tasks/PublishSymbolsV2/*    @arunkm
+Tasks/PublishSymbolsV2/*    @arunkm @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
 
 Tasks/PublishTestResultsV1/*    @smalpani
 
@@ -289,7 +293,7 @@ Tasks/PublishTestResultsV2/*    @SadagopanRajaram
 
 Tasks/PublishToAzureServiceBusV1/*      @bansalaseem
 
-Tasks/PyPIPublisherV0/*     @sachinma   @madhurig
+Tasks/PyPIPublisherV0/*     @bishal-pdmsft   @madhurig
 
 Tasks/PythonScriptV0/*      @madhurig
 
@@ -303,13 +307,13 @@ Tasks/RunJMeterLoadTestV1/*     @smalpani
 
 Tasks/RunLoadTestV1/*   @cltshivash
 
-Tasks/ServiceFabricComposeDeployV0/*    @sachinma
+Tasks/ServiceFabricComposeDeployV0/*    @bishal-pdmsft
 
-Tasks/ServiceFabricDeployV1/*   @sachinma
+Tasks/ServiceFabricDeployV1/*   @bishal-pdmsft
 
-Tasks/ServiceFabricPowerShellV1/*   @sachinma
+Tasks/ServiceFabricPowerShellV1/*   @bishal-pdmsft
 
-Tasks/ServiceFabricUpdateManifestsV2/*  @sachinma
+Tasks/ServiceFabricUpdateManifestsV2/*  @bishal-pdmsft
 
 Tasks/SqlAzureDacpacDeploymentV1/*      @kmkumaran
 
@@ -325,7 +329,7 @@ Tasks/TwineAuthenticateV1/*     @zjrunner @shubham90
 
 Tasks/UniversalPackagesV0/*     @zjrunner
 
-Tasks/UseDotNetV2/*     @sachinma
+Tasks/UseDotNetV2/*     @bishal-pdmsft
 
 Tasks/UseNodeV1/*     @damccorm
 
