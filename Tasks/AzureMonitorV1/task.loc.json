@@ -18,8 +18,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 151,
-    "Patch": 2
+    "Minor": 157,
+    "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -187,7 +187,7 @@
         "ResourceGroupName": "$(ResourceGroupName)"
       },
       "requestContent": "{\"requests\":[{\"httpMethod\":\"GET\",\"relativeUrl\":\"/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{ResourceGroupName}}}/providers/microsoft.insights/activityLogAlerts?api-Version=2017-04-01\"}, {\"httpMethod\":\"GET\",\"relativeUrl\":\"/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{ResourceGroupName}}}/providers/microsoft.insights/metricAlerts?api-version=2018-03-01\"}, {\"httpMethod\":\"GET\",\"relativeUrl\":\"/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{ResourceGroupName}}}/providers/microsoft.insights/scheduledqueryrules?api-version=2018-04-16\"}]}",
-      "resultSelector": "jsonpath:$.responses[?(@.httpStatusCode == 200)].content.value[?(@.properties.enabled == true)]",
+      "resultSelector": "jsonpath:$.responses[?(@.httpStatusCode == 200)].content.value[?(@.properties.enabled == true || @.properties.enabled == 'true')]",
       "resultTemplate": "{ \"Value\" : \"{{#removePrefixFromPath type 'Microsoft.Insights'}}{{/removePrefixFromPath}}/{{{name}}}\", \"DisplayValue\" : \"{{{name}}} [{{#removePrefixFromPath type 'Microsoft.Insights'}}{{/removePrefixFromPath}}]\" }"
     }
   ],
