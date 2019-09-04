@@ -217,7 +217,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
                     <b>Examples:</b> <br>
                     <code>##vso[task.uploadsummary]c:\testsummary.md</code> <br>
                     It is a short hand form for the command <br>
-                    <code>##vso[task.addattachment type=Distributedtask.Core.Summary;name=testsummaryname;]c:\testsummary.md</code><br>
+                    <code>##vso[task.addattachment type=DistributedTask.Core.Summary;name=testsummaryname;]c:\testsummary.md</code><br>
                 </p>
             </td>
             <td>
