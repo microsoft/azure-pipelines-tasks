@@ -1,4 +1,4 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
 import { toolrunner } from './mocks/mockedModels'
 import { Constants } from "../versionutilities";
@@ -24,7 +24,7 @@ mockery.registerMock('typed-rest-client/HttpClient', {
     }
 });
 
-mockery.registerMock('vsts-task-tool-lib/tool', {
+mockery.registerMock('azure-pipelines-tool-lib/tool', {
     downloadTool: function (url: string, fileName?: string): Promise<string> {
         return Promise<string>((resolve, reject) => {
             if (process.env["__case__"] == "downloaderror") {
@@ -54,7 +54,7 @@ mockery.registerMock('vsts-task-tool-lib/tool', {
     }
 })
 
-mockery.registerMock('vsts-task-lib/task', {
+mockery.registerMock('azure-pipelines-task-lib/task', {
     exist: function (elementPath: string) {
         if (elementPath.startsWith(installationPath)) {
             return true;
@@ -131,6 +131,7 @@ mockery.registerMock('vsts-task-lib/task', {
     error: function (errorMessage) { return tl.error(errorMessage); },
     getVariable: function (variableName) { return tl.getVariable(variableName); },
     getHttpProxyConfiguration: function () { return ""; },
+    getHttpCertConfiguration: function () { return "" },
     setResourcePath: function (path) { return; }
 });
 

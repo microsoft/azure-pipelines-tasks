@@ -151,7 +151,7 @@ export function getWebApiWithProxy(serviceUri: string, accessToken?: string): vs
 }
 
 // This function is to apply retries generically for any unreliable network calls
-async function retryOnExceptionHelper<T>(action: () => Promise<T>, maxTries: number, retryIntervalInMilliseconds: number): Promise<T> {
+export async function retryOnExceptionHelper<T>(action: () => Promise<T>, maxTries: number, retryIntervalInMilliseconds: number): Promise<T> {
     while (true) {
         try {
             return await action();
@@ -238,8 +238,7 @@ export async function getFeedRegistryUrl(
             [vssConnection.authHandler],
             vssConnection.options);
     }
-
-    const data = await vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: sessionId, project: project });
+    const data = await retryOnExceptionHelper(() =>  vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: sessionId, project: project }), 3, 1000);
 
     tl.debug("Feed registry url: " + data.requestUrl);
     return data.requestUrl;

@@ -1,5 +1,5 @@
 import * as os from 'os';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import { Constants } from '../versionutilities';
 import { VersionInfo } from '../models';
 
@@ -31,7 +31,7 @@ mockery.registerMock('fs', {
     }
 });
 
-mockery.registerMock('vsts-task-tool-lib/tool', {
+mockery.registerMock('azure-pipelines-tool-lib/tool', {
     prependPath: function (toolPath: string): void {
         if (process.env["__case__"] == "globaltoolpathfailure" && toolPath.includes(Constants.relativeGlobalToolPath)) {
             throw tl.loc("ErrorWhileSettingDotNetToolPath");
@@ -50,7 +50,7 @@ mockery.registerMock('vsts-task-tool-lib/tool', {
     },
 })
 
-mockery.registerMock('vsts-task-lib/task', {
+mockery.registerMock('azure-pipelines-task-lib/task', {
     osType: function () { return os.type(); },
     mkdirP: function (directoryPath) { return; },
     loc: function (locString, ...param: string[]) { return tl.loc(locString, param); },
@@ -106,6 +106,7 @@ mockery.registerMock('vsts-task-lib/task', {
         }
     },
     getHttpProxyConfiguration: function () { return ""; },
+    getHttpCertConfiguration: function () { return "" },
     setResourcePath: function (resourcePath) { return; },
     setResult: function (result: tl.TaskResult, message: string): void {
         tl.setResult(result, message);

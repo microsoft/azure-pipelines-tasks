@@ -82,7 +82,7 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
     if (!artifactToolPath) {
         tl.debug(tl.loc("Info_DownloadingArtifactTool", artifactToolUri.result['uri']));
 
-        const zippedToolsDir: string = await toollib.downloadTool(artifactToolUri.result['uri']);
+        const zippedToolsDir: string = await pkgLocationUtils.retryOnExceptionHelper(() => toollib.downloadTool(artifactToolUri.result['uri']), 3, 1000);
 
         tl.debug("Downloaded zipped artifact tool to " + zippedToolsDir);
         const unzippedToolsDir = await extractZip(zippedToolsDir);

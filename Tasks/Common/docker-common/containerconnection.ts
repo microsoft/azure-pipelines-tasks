@@ -94,6 +94,16 @@ export default class ContainerConnection {
                     imageNames.push(imageName);
                 });
             }
+            else {
+                // in case there is no login information found and a repository is specified, the intention
+                // might be to tag the image to refer locally.
+                let imageName = repository;
+                if (enforceDockerNamingConvention) {
+                    imageName = imageUtils.generateValidImageName(imageName);
+                }
+                
+                imageNames.push(imageName);
+            }
         }
 
         return imageNames;
