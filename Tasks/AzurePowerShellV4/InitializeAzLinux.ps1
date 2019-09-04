@@ -15,7 +15,6 @@ $environmentName = $endpointObject.environment
 . "$PSScriptRoot/Utility.ps1"
 Update-PSModulePathForHostedAgentLinux -targetAzurePs $targetAzurePs
 
-Write-Host "InitializeAzLinux invoked"
 if($targetAzurePs -eq ""){
     $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
 }
@@ -52,21 +51,6 @@ $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
 $scopeLevel = "Subscription"
 if($endpointObject.scopeLevel) {
     $scopeLevel = $endpointObject.scopeLevel
-}
-
-function Format-Splat {
-    [CmdletBinding()]
-    param([Parameter(Mandatory = $true)][hashtable]$Hashtable)
-
-    # Collect the parameters (names and values) in an array.
-    $parameters = foreach ($key in $Hashtable.Keys) {
-        $value = $Hashtable[$key]
-        # If the value is a bool, format the parameter as a switch (ending with ':').
-        if ($value -is [bool]) { "-$($key):" } else { "-$key" }
-        $value
-    }
-    
-    "$parameters" # String join the array.
 }
 
 if ($endpointObject.scheme -eq 'ServicePrincipal') {
