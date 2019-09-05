@@ -81,74 +81,64 @@ try
         'Arguments' = $arguments
         'WorkingDirectory' = $input_workingDirectory
     }
-
-    # Initialize Azure.
-    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs
-
-    $scriptCommand = "& '$($scriptPath.Replace("'", "''"))' $scriptArguments"
-    Remove-Variable -Name scriptType
-    Remove-Variable -Name scriptPath
-    Remove-Variable -Name scriptInline
-    Remove-Variable -Name scriptArguments
-
-    # Remove all commands imported from VstsTaskSdk, other than Out-Default.
-    # Remove all commands imported from VstsAzureHelpers_.
-    Get-ChildItem -LiteralPath function: |
-        Where-Object {
-            ($_.ModuleName -eq 'VstsTaskSdk' -and $_.Name -ne 'Out-Default') -or
-            ($_.Name -eq 'Invoke-VstsTaskScript') -or
-            ($_.ModuleName -eq 'VstsAzureHelpers_' )
-        } |
-        Remove-Item
-
-    # For compatibility with the legacy handler implementation, set the error action
+	
+	# For compatibility with the legacy handler implementation, set the error action
     # preference to continue. An implication of changing the preference to Continue,
     # is that Invoke-VstsTaskScript will no longer handle setting the result to failed.
     $global:ErrorActionPreference = 'Continue'
+    $failed = $false
 
-    # Undocumented VstsTaskSdk variable so Verbose/Debug isn't converted to ##vso[task.debug].
-    # Otherwise any content the ad-hoc script writes to the verbose pipeline gets dropped by
-    # the agent when System.Debug is not set.
-    $global:__vstsNoOverrideVerbose = $true
+    # Run the script.
+    Write-Host '========================== Starting Command Output ==========================='
+    if (!$__vsts_input_failOnStandardError) {
+        Invoke-VstsTool @splat
+		
+		# Initialize Azure.
+        Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+        Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs
+    } else {
+        $inError = $false
+        $errorLines = New-Object System.Text.StringBuilder
+        Invoke-VstsTool @splat 2>&1 |
+            ForEach-Object {
+                if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                    # Buffer the error lines.
+                    $failed = $true
+                    $inError = $true
+                    $null = $errorLines.AppendLine("$($_.Exception.Message)")
 
-    # Run the user's script. Redirect the error pipeline to the output pipeline to enable
-    # a couple goals due to compatibility with the legacy handler implementation:
-    # 1) STDERR from external commands needs to be converted into error records. Piping
-    #    the redirected error output to an intermediate command before it is piped to
-    #    Out-Default will implicitly perform the conversion.
-    # 2) The task result needs to be set to failed if an error record is encountered.
-    #    As mentioned above, the requirement to handle this is an implication of changing
-    #    the error action preference.
-    ([scriptblock]::Create($scriptCommand)) | 
-        ForEach-Object {
-            Remove-Variable -Name scriptCommand
-            Write-Host "##[command]$_"
-            . $_ 2>&1
-        } | 
-        ForEach-Object {
-            if($_ -is [System.Management.Automation.ErrorRecord]) {
-                if($_.FullyQualifiedErrorId -eq "NativeCommandError" -or $_.FullyQualifiedErrorId -eq "NativeCommandErrorMessage") {
-                    ,$_
-                    if($__vsts_input_failOnStandardError -eq $true) {
-                        "##vso[task.complete result=Failed]"
-                    }
-                }
-                else {
-                    if($__vsts_input_errorActionPreference -eq "continue") {
-                        ,$_
-                        if($__vsts_input_failOnStandardError -eq $true) {
-                            "##vso[task.complete result=Failed]"
+                    # Write to verbose to mitigate if the process hangs.
+                    Write-Verbose "STDERR: $($_.Exception.Message)"
+                } else {
+                    # Flush the error buffer.
+                    if ($inError) {
+                        $inError = $false
+                        $message = $errorLines.ToString().Trim()
+                        $null = $errorLines.Clear()
+                        if ($message) {
+                            Write-VstsTaskError -Message $message
                         }
                     }
-                    elseif($__vsts_input_errorActionPreference -eq "stop") {
-                        throw $_
-                    }
+
+                    Write-Host "$_"
                 }
-            } else {
-                ,$_
+            }
+
+        # Flush the error buffer one last time.
+        if ($inError) {
+            $inError = $false
+            $message = $errorLines.ToString().Trim()
+            $null = $errorLines.Clear()
+            if ($message) {
+                Write-VstsTaskError -Message $message
             }
         }
+    }
+
+    # Fail if any errors.
+    if ($failed) {
+        Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
+    }
 }
 finally {
     if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
@@ -158,4 +148,5 @@ finally {
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Remove-EndpointSecrets
     Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue
+	Trace-VstsLeavingInvocation $MyInvocation
 }
