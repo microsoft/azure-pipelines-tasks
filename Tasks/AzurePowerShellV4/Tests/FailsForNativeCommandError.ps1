@@ -15,6 +15,7 @@ Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
 Register-Mock Get-VstsEndpoint
 Register-Mock Get-VstsTaskVariable { $env:PSModulePath } -- -Name 'AZ_PS_MODULE_PATH' -Require
+Register-Mock Assert-VstsPath
 
 # Act.
 $actual = @( & $PSScriptRoot\..\AzurePowerShell.ps1 )

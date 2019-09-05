@@ -16,6 +16,7 @@ Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
 Register-Mock Get-VstsEndpoint
 Register-Mock Get-VstsTaskVariable { $env:PSModulePath } -- -Name 'AZ_PS_MODULE_PATH' -Require
+Register-Mock Assert-VstsPath
 
 # Arrange the mock task SDK module.
 New-Module -Name VstsTaskSdk -ScriptBlock {

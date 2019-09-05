@@ -92,8 +92,8 @@ try
     Write-Host '========================== Starting Command Output ==========================='
     if (!$__vsts_input_failOnStandardError) {
         Invoke-VstsTool @splat
-		
-		# Initialize Azure.
+        
+        # Initialize Azure.
         Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
         Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs
     } else {
@@ -148,5 +148,5 @@ finally {
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Remove-EndpointSecrets
     Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue
-	Trace-VstsLeavingInvocation $MyInvocation
+    Trace-VstsLeavingInvocation $MyInvocation
 }
