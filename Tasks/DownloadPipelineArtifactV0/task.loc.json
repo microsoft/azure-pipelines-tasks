@@ -16,6 +16,7 @@
   "demands": [],
   "preview": true,
   "minimumAgentVersion": "2.155.1",
+  "deprecated": true,
   "inputs": [
     {
       "name": "pipelineId",
