@@ -226,7 +226,7 @@ export class DotNetCoreVersionFetcher {
         return adjacentChannels;
     }
 
-    private detectMachineOS(): string[] {
+    private detectMachineOS(): void {
         if (!this.machineOsSuffixes) {
             let osSuffix = [];
             let scriptRunner: trm.ToolRunner;
@@ -280,8 +280,6 @@ export class DotNetCoreVersionFetcher {
 
             this.machineOsSuffixes = osSuffix;
         }
-
-        return this.machineOsSuffixes;
     }
 
     private setFileAttribute(file: string, mode: string): void {
