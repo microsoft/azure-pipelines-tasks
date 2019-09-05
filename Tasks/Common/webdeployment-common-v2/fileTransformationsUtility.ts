@@ -82,8 +82,8 @@ export function advancedFileTransformations(isFolderBasedDeployment: boolean, ta
                 console.log(tl.loc("XDTTransformationsappliedsuccessfully"));
             }
             else {
-                console.log(tl.loc("FailedToApplySpecialTransformation"));
-            }          
+                tl.warning(tl.loc('FailedToApplySpecialTransformation'));
+            }
         }
     }
 
