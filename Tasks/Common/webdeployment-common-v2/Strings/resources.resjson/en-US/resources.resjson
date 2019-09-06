@@ -10,6 +10,7 @@
   "loc.messages.NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
   "loc.messages.FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
   "loc.messages.MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.",
+  "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern: %s. Please restrain the search pattern.",
   "loc.messages.JSONvariableSubstitution": "Applying JSON variable substitution for %s",
   "loc.messages.SubstitutingValueonKey": "Substituting value on key: %s",
   "loc.messages.SubstitutingValueonKeyWithNumber": "Substituting value on key %s with (number) value: %s",

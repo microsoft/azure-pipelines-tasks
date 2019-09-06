@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as publishTestResultsTool from './publishtestresultstool';
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import * as ci from './cieventlogger';
 
 const MERGE_THRESHOLD = 100;
@@ -43,6 +44,20 @@ function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, p
     tl.command('results.publish', properties, '');
 }
 
+function getDotNetVersion() {
+    let dotnet: tr.ToolRunner;
+    const dotnetPath = tl.which('dotnet', false);
+    
+    if (dotnetPath){
+        try {
+            dotnet = tl.tool(dotnetPath);
+            dotnet.arg('--version');
+            return dotnet.execSync().stdout.trim();
+        } catch (err) {}
+    }
+    return '';
+}
+
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -76,7 +91,7 @@ async function run() {
             allowBrokenSymbolicLinks: true,
             followSpecifiedSymbolicLink: true,
             followSymbolicLinks: true
-        };
+        }; 
 
         const matchingTestResultsFiles = tl.findMatch(searchFolder, testResultsFiles, findOptions);
 
@@ -90,6 +105,9 @@ async function run() {
         ci.addToConsolidatedCi('config', config);
         ci.addToConsolidatedCi('platform', platform);
         ci.addToConsolidatedCi('testResultsFilesCount', testResultsFilesCount);
+
+        const dotnetVersion = getDotNetVersion();
+        ci.addToConsolidatedCi('dotnetVersion', dotnetVersion);
 
         const forceMerge = testResultsFilesCount > MERGE_THRESHOLD;
         if (forceMerge) {
