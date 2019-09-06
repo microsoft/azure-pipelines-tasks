@@ -122,7 +122,9 @@ export class VersionParts {
                 throw tl.loc("OnlyExplicitVersionAllowed", version);
             }
 
-            semver.valid(version);
+            if(!semver.valid(version)) {
+                throw tl.loc("InvalidVersion", version);
+            }
         }
         catch (ex) {
             throw tl.loc("VersionNotAllowed", version, ex);
