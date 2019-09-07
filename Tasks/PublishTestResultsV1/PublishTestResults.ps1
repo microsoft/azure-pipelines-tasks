@@ -81,7 +81,6 @@ try
 		    }
 		    if($publishRunLevelAttachmentsExists)
 		    {
-                Write-Verbose "TestRunner :" $testRunner
                 if($switchToPowerShell) {
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption
                 } else {
