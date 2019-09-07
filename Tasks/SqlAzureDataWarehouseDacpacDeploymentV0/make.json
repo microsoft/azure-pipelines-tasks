@@ -1,0 +1,50 @@
+{
+    "common": [
+        {
+            "module": "../Common/VstsAzureRestHelpers_",
+            "type": "ps"
+        },
+        {
+            "module": "../Common/VstsAzureHelpers_",
+            "type": "ps"
+        },
+        {
+            "module": "../Common/TlsHelper_",
+            "type": "ps"
+        }
+    ],
+    "externals": {
+        "nugetv2": [
+            {
+                "name": "VstsTaskSdk",
+                "version": "0.10.0",
+                "repository": "https://www.powershellgallery.com/api/v2/",
+                "cp": [
+                    {
+                        "source": [
+                            "*.dll",
+                            "*.ps1",
+                            "*.psd1",
+                            "*.psm1",
+                            "lib.json",
+                            "Strings"
+                        ],
+                        "dest": "ps_modules/VstsTaskSdk/",
+                        "options": "-R"
+                    }
+                ]
+            }
+        ],
+        "archivePackages": [
+            {
+                "archiveName": "SQLCMD.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/SQLCMD/11.0/SQLCMD.zip",
+                "dest": "./"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/vswhere/1_0_62/vswhere.zip",
+                "dest": "./"
+            }
+        ]
+    }
+}
