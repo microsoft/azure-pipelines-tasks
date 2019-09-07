@@ -17,7 +17,7 @@
     "version": {
         "Major": 4,
         "Minor": 157,
-        "Patch": 4
+        "Patch": 5
     },
     "preview": true,
     "releaseNotes": "Added support for Az Module and cross platform agents.",
@@ -111,6 +111,22 @@
             "required": false,
             "defaultValue": "false",
             "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream."
+        },
+        {
+            "name": "pwsh",
+            "type": "boolean",
+            "label": "Use PowerShell core",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "If this is true, then on Windows the task will use pwsh.exe instead of powerShell.exe."
+        },
+        {
+            "name": "workingDirectory",
+            "type": "filePath",
+            "label": "Working Directory",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Working directory where the script is run."
         },
         {
             "name": "TargetAzurePs",
