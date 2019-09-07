@@ -61,6 +61,12 @@ try
     }
     else
     {
+        $switchToPowerShell = Get-TaskVariable -Context $distributedTaskContext -Name "UsePowerShellScripts"
+        if($switchToPowerShell) {
+            Write-Verbose "Will be using the powershell scripts"
+        } else {
+            Write-Verbose "Will be using Agent Commands"
+        }
         $publishResultsOption = Convert-String $publishRunAttachments Boolean
         $mergeResults = Convert-String $mergeTestResults Boolean
         Write-Verbose "Calling Publish-TestResults"
@@ -75,30 +81,47 @@ try
 		    }
 		    if($publishRunLevelAttachmentsExists)
 		    {
-			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption
+                Write-Verbose "TestRunner :" $testRunner
+                if($switchToPowerShell) {
+                    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption
+                } else {
+                    Write-Host "##vso[results.publish type=VSTest;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunner]"
+                }
 		    }
 		    else 
 		    {
 			    if(!$publishResultsOption)
 			    {
 			        Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
-			    }
-			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
+                }
+                if($switchToPowerShell) {
+                    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
+                } else {
+                    Write-Host "##vso[results.publish type=VSTest;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunner]"
+                }
 		    }
 	    }
 	    else
 	    {
 		    if($publishRunLevelAttachmentsExists)
 		    {
-			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption -RunTitle $testRunTitle
+                if($switchToPowerShell) {
+                    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption -RunTitle $testRunTitle
+                } else {
+                    Write-Host "##vso[results.publish type=VSTest;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunner;runTitle=$testRunTitle]"
+                }
 		    }
 		    else 
 		    {
 			    if(!$publishResultsOption)
 			    {
 			        Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
-			    }
-			    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
+                }
+                if($switchToPowerShell) {
+                    Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
+                } else {
+                    Write-Host "##vso[results.publish type=VSTest;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunner;runTitle=$testRunTitle]"
+                }
 		    }
 	    }
     }
