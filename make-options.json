@@ -29,6 +29,7 @@
         "AzurePowerShellV3",
         "AzurePowerShellV4",
         "AzureResourceGroupDeploymentV2",
+        "AzureResourceManagerTemplateDeployment",
         "AzureRmWebAppDeploymentV3",
         "AzureRmWebAppDeploymentV4",
         "AzureWebAppV1",
