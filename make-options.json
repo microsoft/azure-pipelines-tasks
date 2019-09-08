@@ -45,6 +45,7 @@
         "CocoaPodsV0",
         "CondaEnvironmentV0",
         "CondaEnvironmentV1",
+		"ContainerStructureTestV1",
         "CopyFilesV2",
         "CopyFilesOverSSHV0",
         "CUrlUploaderV2",

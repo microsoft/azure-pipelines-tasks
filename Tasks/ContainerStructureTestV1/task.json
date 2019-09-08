@@ -1,0 +1,42 @@
+{
+    "id": "39bc2c9b-55b7-4835-89cd-6cc699ef7220",
+    "name": "ContainerStructureTest",
+    "friendlyName": "Container Structure Test",
+    "description": "Runs Container structure tests using Google container structure test framework",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
+    "category": "Test",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "demands": [],
+    "minimumAgentVersion": "2.0.0",
+    "inputs": [
+        {
+            "name": "testFile",
+            "type": "multiline",
+            "label": "Test Files",
+            "required": true,
+            "helpMarkDown": "Test files path, that contains container structure tests. Either .yaml or .json files"
+        }
+    ],
+    "instanceNameFormat": "Container Structure Test $(testFile)",
+    "execution": {
+        "Node": {
+            "target": "containerstructuretest.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "NoMatchingFilesFound": "No test files matching '%s' were found.",
+        "ErrorTestResultsPublisher": "Error while executing Test: %s.",
+        "ErrorFailTaskOnFailedTests": "There are one or more test failures detected in test. Detailed summary of published test results can be viewed in the Tests tab."
+    }
+}
