@@ -15,7 +15,6 @@
     "groups": [],
     "demands": [],
     "preview": true,
-    "minimumAgentVersion": "2.155.1",
     "inputs": [
         {
             "name": "path",
