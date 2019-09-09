@@ -73,56 +73,56 @@ try
         
         $publishRunLevelAttachmentsExists = CmdletHasMember "PublishRunLevelAttachments"
         $runTitleMemberExists = CmdletHasMember "RunTitle"
-	    if(!($runTitleMemberExists))
-	    {
-		    if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
-		    {
-			    Write-Warning "Update the build agent to be able to use the custom run title feature."
-		    }
-		    if($publishRunLevelAttachmentsExists)
-		    {
+        if(!($runTitleMemberExists))
+        {
+            if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
+            {
+                Write-Warning "Update the build agent to be able to use the custom run title feature."
+            }
+            if($publishRunLevelAttachmentsExists)
+            {
                 if($switchToPowerShell) {
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption
                 } else {
                     Write-Host "##vso[results.publish type=VSTest;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunner]"
                 }
-		    }
-		    else 
-		    {
-			    if(!$publishResultsOption)
-			    {
-			        Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
+            }
+            else 
+            {
+                if(!$publishResultsOption)
+                {
+                    Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
                 }
                 if($switchToPowerShell) {
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
                 } else {
                     Write-Host "##vso[results.publish type=VSTest;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunner]"
                 }
-		    }
-	    }
-	    else
-	    {
-		    if($publishRunLevelAttachmentsExists)
-		    {
+            }
+        }
+        else
+        {
+            if($publishRunLevelAttachmentsExists)
+            {
                 if($switchToPowerShell) {
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption -RunTitle $testRunTitle
                 } else {
                     Write-Host "##vso[results.publish type=VSTest;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunner;runTitle=$testRunTitle]"
                 }
-		    }
-		    else 
-		    {
-			    if(!$publishResultsOption)
-			    {
-			        Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
+            }
+            else 
+            {
+                if(!$publishResultsOption)
+                {
+                    Write-Warning "Update the build agent to be able to opt out of test run attachment upload." 
                 }
                 if($switchToPowerShell) {
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
                 } else {
                     Write-Host "##vso[results.publish type=VSTest;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunner;runTitle=$testRunTitle]"
                 }
-		    }
-	    }
+            }
+        }
     }
 }
 catch
