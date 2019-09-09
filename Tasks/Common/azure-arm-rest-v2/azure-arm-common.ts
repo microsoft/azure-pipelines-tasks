@@ -89,14 +89,11 @@ export class ApplicationTokenCredentials {
     }
 
     public getToken(force?: boolean): Q.Promise<string> {
-        // we can have an optional parameter checkEndpointAccessToken?: string to explicitly check for an access token first
-        // or we can depend on force param itself to check for access token
-        if (this.accessToken !== null) {
+        if (this.accessToken !== null && !force) {
             tl.debug("==================== USING ENDPOINT PROVIDED ACCESS TOKEN ====================");
-            // let deferred = Q.defer<string>();
-            // deferred.resolve(this.accessToken);
-            tl.debug("==================== USING ENDPOINT PROVIDED ACCESS TOKEN ====================");
-            // return deferred.promise;
+            let deferred = Q.defer<string>();
+            deferred.resolve(this.accessToken);
+            return deferred.promise;
         }
         
         if (!this.token_deferred || force) {
