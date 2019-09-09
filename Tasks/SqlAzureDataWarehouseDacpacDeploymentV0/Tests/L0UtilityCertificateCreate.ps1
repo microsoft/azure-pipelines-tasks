@@ -5,7 +5,7 @@ param()
 . $PSScriptRoot\MockVariable.ps1
 
 
-#path to Utility.ps1 for SqlAzureDacpacDeployment task
+#path to Utility.ps1 for SqlAzureDataWarehouseDacpacDeployment task
 . "$PSScriptRoot\..\Utility.ps1"
 
 Register-Mock Add-AzureSqlDatabaseServerFirewallRule { 

@@ -9,7 +9,7 @@ import path = require('path');
 var psm = require('../../../Tests/lib/psRunner');
 var psr = null;
 
-describe('SqlAzureDacpacDeployment  Suite', function () {
+describe('SqlAzureDataWarehouseDacpacDeployment  Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
@@ -34,7 +34,7 @@ describe('SqlAzureDacpacDeployment  Suite', function () {
     }
 });
 
-describe('SqlAzureDacpacDeployment - SqlAzureActions Suite', function () {
+describe('SqlAzureDataWarehouseDacpacDeployment - SqlAzureActions Suite', function () {
     this.timeout(10000);
 
     before((done) => {
@@ -66,7 +66,7 @@ describe('SqlAzureDacpacDeployment - SqlAzureActions Suite', function () {
     }
 });
 
-describe('SqlAzureDacpacDeployment - Utility Suite', function () {
+describe('SqlAzureDataWarehouseDacpacDeployment - Utility Suite', function () {
     this.timeout(10000);
 
     before((done) => {

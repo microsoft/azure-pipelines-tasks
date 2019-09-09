@@ -1,8 +1,8 @@
 {
-    "id": "CE85A08B-A538-4D2B-8589-1D37A9AB970F",
-    "name": "SqlAzureDacpacDeployment",
-    "friendlyName": "Azure SQL Database deployment",
-    "description": "Deploy an Azure SQL Database using DACPAC or run scripts using SQLCMD",
+    "id": "2D429209-58FB-4A53-83AD-9CF58807B56C",
+    "name": "SqlAzureDataWarehouseDacpacDeployment",
+    "friendlyName": "Azure SQL Data Warehouse deployment",
+    "description": "Deploy an Azure SQL Data Warehouse using DACPAC or run scripts using SQLCMD",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
     "category": "Deploy",
@@ -113,7 +113,7 @@
             "groupName": "target",
             "defaultValue": "",
             "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated",
-            "helpMarkDown": "Name of the Azure SQL Database, where the files will be deployed."
+            "helpMarkDown": "Name of the Azure SQL Data Warehouse, where the files will be deployed."
         },
         {
             "name": "SqlUsername",
@@ -252,7 +252,7 @@
             "required": false,
             "groupName": "taskDetails",
             "defaultValue": "",
-            "helpMarkDown": "Publish profile provides fine-grained control over Azure SQL Database creation or upgrades. Specify the path to the Publish profile XML file on the automation agent or on a UNC share. Predefined system variables like, $(agent.buildDirectory) or $(agent.releaseDirectory) can also be used here.",
+            "helpMarkDown": "Publish profile provides fine-grained control over Azure SQL Data Warehouse creation or upgrades. Specify the path to the Publish profile XML file on the automation agent or on a UNC share. Predefined system variables like, $(agent.buildDirectory) or $(agent.releaseDirectory) can also be used here.",
             "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Script || DeploymentAction = DeployReport"
         },
         {
@@ -262,7 +262,7 @@
             "required": false,
             "groupName": "taskDetails",
             "defaultValue": "",
-            "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied when deploying the Azure SQL Database, in case DACPAC option is selected like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided).",
+            "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied when deploying the Azure SQL Data Warehouse, in case DACPAC option is selected like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided).",
             "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Extract || DeploymentAction = Export || DeploymentAction = Import || DeploymentAction = Script || DeploymentAction = DeployReport || DeploymentAction = DriftReport"
         },
         {
@@ -272,7 +272,7 @@
             "required": false,
             "groupName": "taskDetails",
             "defaultValue": "",
-            "helpMarkDown": "Additional Invoke-Sqlcmd arguments that will be applied when executing the given SQL query on the Azure SQL Database like, -ConnectionTimeout 100 -OutputSqlErrors.",
+            "helpMarkDown": "Additional Invoke-Sqlcmd arguments that will be applied when executing the given SQL query on the Azure SQL Data Warehouse like, -ConnectionTimeout 100 -OutputSqlErrors.",
             "visibleRule": "TaskNameSelector = SqlTask"
         },
         {
@@ -282,7 +282,7 @@
             "required": false,
             "groupName": "taskDetails",
             "defaultValue": "",
-            "helpMarkDown": "Additional Invoke-Sqlcmd arguments that will be applied when executing the given SQL query on the Azure SQL Database like, -ConnectionTimeout 100 -OutputSqlErrors",
+            "helpMarkDown": "Additional Invoke-Sqlcmd arguments that will be applied when executing the given SQL query on the Azure SQL Data Warehouse like, -ConnectionTimeout 100 -OutputSqlErrors",
             "visibleRule": "TaskNameSelector = InlineSqlTask"
         },
         {

@@ -1,6 +1,6 @@
 {
-  "id": "CE85A08B-A538-4D2B-8589-1D37A9AB970F",
-  "name": "SqlAzureDacpacDeployment",
+  "id": "2D429209-58FB-4A53-83AD-9CF58807B56C",
+  "name": "SqlAzureDataWarehouseDacpacDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment",

@@ -4,7 +4,7 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\MockVariable.ps1
 
-#path to Utility.ps1 for SqlAzureDacpacDeployment task
+#path to Utility.ps1 for SqlAzureDataWarehouseDacpacDeployment task
 . "$PSScriptRoot\..\SqlAzureActions.ps1"
 
 # TEST 1 : If connection failed because of firewall exception using Sqlcmd.exe

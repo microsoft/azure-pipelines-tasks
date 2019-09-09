@@ -63,7 +63,7 @@ try {
                                   "`"subscriptionId`":`"$subscriptionId`",",
                                   "`"serverName`": `"$encodedServerName`",",
                                   "`"databaseName`": `"$encodedDatabaseName`"}")
-    Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=SqlAzureDacpacDeployment]$telemetryJsonContent"
+    Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=SqlAzureDataWarehouseDacpacDeployment]$telemetryJsonContent"
 
     Import-Sqlps
 
