@@ -14,7 +14,6 @@
   },
   "groups": [],
   "demands": [],
-  "preview": false,
   "minimumAgentVersion": "2.155.1",
   "deprecated": true,
   "inputs": [
