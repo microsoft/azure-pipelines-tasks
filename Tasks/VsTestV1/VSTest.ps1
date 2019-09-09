@@ -262,7 +262,7 @@ finally
                         if($switchToPowerShell) {
                             Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle -PublishRunLevelAttachments $publishResultsOption
                         } else {
-                            Write-Host "##vso[results.publish type=VSTest;publishRunAttachments=$publishResultsOption;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest;runTitle=$testRunTitle]"
+                            Write-Host "##vso[results.publish type=VSTest;publishRunAttachments=$publishResultsOption;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest;runTitle=$testRunTitle;]"
                         }
                     }
                     else
@@ -274,7 +274,7 @@ finally
                         if($switchToPowerShell) {
                             Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle
                         } else  {
-                            Write-Host "##vso[results.publish type=VSTest;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest;runTitle=$testRunTitle]"
+                            Write-Host "##vso[results.publish type=VSTest;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest;runTitle=$testRunTitle;]"
                         }
                     }
                 }
@@ -290,7 +290,7 @@ finally
                         if($switchToPowerShell) {
                             Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -PublishRunLevelAttachments $publishResultsOption
                         } else {
-                            Write-Host "##vso[results.publish type=VSTest;publishRunAttachments=$publishResultsOption;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest]"
+                            Write-Host "##vso[results.publish type=VSTest;publishRunAttachments=$publishResultsOption;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest;]"
                         }
                     }
                     else
@@ -302,7 +302,7 @@ finally
                         if($switchToPowerShell) {
                             Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
                         } else {
-                            Write-Host "##vso[results.publish type=VSTest;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest]"
+                            Write-Host "##vso[results.publish type=VSTest;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest;]"
                         }
                     }		
                 }

@@ -62,11 +62,13 @@ try
     else
     {
         $switchToPowerShell = Get-TaskVariable -Context $distributedTaskContext -Name "UsePowerShellScripts"
+
         if($switchToPowerShell) {
             Write-Verbose "Will be using the powershell scripts"
         } else {
             Write-Verbose "Will be using Agent Commands"
         }
+        $testRunSystem = "VSTS - PTR";
         $publishResultsOption = Convert-String $publishRunAttachments Boolean
         $mergeResults = Convert-String $mergeTestResults Boolean
         Write-Verbose "Calling Publish-TestResults"
@@ -84,7 +86,7 @@ try
                 if($switchToPowerShell) {
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption
                 } else {
-                    Write-Host "##vso[results.publish type=VSTest;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunner]"
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunSystem;]"
                 }
             }
             else 
@@ -96,7 +98,7 @@ try
                 if($switchToPowerShell) {
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
                 } else {
-                    Write-Host "##vso[results.publish type=VSTest;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunner]"
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunSystem;]"
                 }
             }
         }
@@ -107,7 +109,7 @@ try
                 if($switchToPowerShell) {
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption -RunTitle $testRunTitle
                 } else {
-                    Write-Host "##vso[results.publish type=VSTest;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunner;runTitle=$testRunTitle]"
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunSystem;runTitle=$testRunTitle;]"
                 }
             }
             else 
@@ -119,7 +121,7 @@ try
                 if($switchToPowerShell) {
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
                 } else {
-                    Write-Host "##vso[results.publish type=VSTest;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunner;runTitle=$testRunTitle]"
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunSystem;runTitle=$testRunTitle;]"
                 }
             }
         }
