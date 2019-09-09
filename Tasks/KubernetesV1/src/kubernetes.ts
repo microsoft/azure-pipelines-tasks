@@ -114,8 +114,10 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
                 tl.setVariable('KubectlOutput', result.toString());
             }
 
+            const outputFormat: string = tl.getInput("outputFormat", false);
+            const isOutputFormatSpecified: boolean = outputFormat && (outputFormat.toLowerCase() === "json" || outputFormat.toLowerCase() === "yaml");
             // The deployment data is pushed to evidence store only for commands like 'apply' or 'create' which support Json and Yaml output format
-            if (publishPipelineMetadata && publishPipelineMetadata.toLowerCase() == "true" && isJsonOrYamlOutputFormatSupported(command)) {
+            if (publishPipelineMetadata && publishPipelineMetadata.toLowerCase() == "true" && isOutputFormatSpecified && isJsonOrYamlOutputFormatSupported(command)) {
                 // For each output, check if it contains a JSON object
                 result.forEach(res => {
                     let parsedObject: any;
