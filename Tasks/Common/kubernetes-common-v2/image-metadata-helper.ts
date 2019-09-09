@@ -5,13 +5,13 @@ const matchPatternForImageName = new RegExp(/\:\/\/(.+?)\@/);
 const matchPatternForDigest = new RegExp(/\@sha256\:(.+)/);
 const matchPatternForFileArgument = new RegExp(/-f\s|-filename\s/);
 const matchPatternForServerUrl = new RegExp(/https\:\/\/(.+)/);
-const appliedConfigurationKey = "kubectl.kubernetes.io/last-applied-configuration";
 const orgUrl = tl.getVariable('System.TeamFoundationCollectionUri');
 const build = "build";
 const hostType = tl.getVariable("System.HostType").toLowerCase();
 const isBuild = hostType === build;
 const deploymentTypes: string[] = ["deployment", "replicaset", "daemonset", "pod", "statefulset"];
 
+// ToDo: Add UTs for public methods
 export function getDeploymentMetadata(deploymentObject: any, allPods: any, deploymentStrategy: string, clusterInfo: any, manifestFilePaths?: string[]): any {
     let imageIds: string[] = [];
     let kind: string = deploymentObject.kind;
