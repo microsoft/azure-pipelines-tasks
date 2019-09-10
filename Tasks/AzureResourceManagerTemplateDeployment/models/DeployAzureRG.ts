@@ -30,37 +30,15 @@ export class AzureRGTaskParameters {
         return azureEndpoint.applicationTokenCredentials;
     }
 
-    public async getAzureRGTaskParameters() : Promise<AzureRGTaskParameters> 
+    public async getAzureRGTaskParameters() : Promise<AzureRGTaskParameters>
     {
         try {
             this.connectedService = tl.getInput("ConnectedServiceName", true);
             var endpointTelemetry = '{"endpointId":"' + this.connectedService + '"}';
             console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureResourceGroupDeployment]" + endpointTelemetry);
-            
-            //Deployment Scope            
-            this.deploymentScope = tl.getInput("deploymentScope");
-            if(!this.deploymentScope){
-                this.deploymentScope = "Resource Group";
-            }
-
-            //Subscripion Id
-            this.subscriptionId = tl.getInput("subscriptionName");
-            if(!this.subscriptionId) {
-                this.subscriptionId = tl.getEndpointDataParameter(this.connectedService, "SubscriptionId", true);
-                
-                if(!this.subscriptionId && this.deploymentScope != "Management Group"){
-                    throw new Error(tl.loc("ARGD_ConstructorFailed"));
-                }
-            }
-
-            //Resource group name
-            this.resourceGroupName = tl.getInput("resourceGroupName");
-            if(!this.resourceGroupName && this.deploymentScope === "Resource Group"){
-                throw new Error(tl.loc("ARGD_ConstructorFailed"));                
-            }
 
             this.endpointPortalUrl = tl.getEndpointDataParameter(this.connectedService, "armManagementPortalUrl", true);
-            this.action = tl.getInput("action");            
+            this.action = tl.getInput("action");
             this.managementGroupId = tl.getEndpointDataParameter(this.connectedService, "ManagementGroupId", true);
             this.location = tl.getInput("location");
             this.templateLocation = tl.getInput("templateLocation");
@@ -72,16 +50,39 @@ export class AzureRGTaskParameters {
                 this.csmParametersFileLink = tl.getInput("csmParametersFileLink");
             }
             this.overrideParameters = tl.getInput("overrideParameters");
-            
+
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentName = tl.getInput("deploymentName");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = await this.getARMCredentials(this.connectedService);
             this.deploymentOutputs = tl.getInput("deploymentOutputs");
             this.addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
+
+            //Deployment Scope
+            this.deploymentScope = tl.getInput("deploymentScope");
+            if(!this.deploymentScope){
+                this.deploymentScope = "Resource Group";
+            }
+
+            //Subscripion Id
+            this.subscriptionId = tl.getInput("subscriptionName");
+            if(!this.subscriptionId) {
+                this.subscriptionId = tl.getEndpointDataParameter(this.connectedService, "SubscriptionId", true);
+
+                if(!this.subscriptionId && this.deploymentScope != "Management Group"){
+                    throw new Error(tl.loc("ARGD_ConstructorFailed"));
+                }
+            }
+
+            //Resource group name
+            this.resourceGroupName = tl.getInput("resourceGroupName");
+            if(!this.resourceGroupName && this.deploymentScope === "Resource Group"){
+                throw new Error(tl.loc("ARGD_ConstructorFailed"));
+            }
+
             return this;
         } catch (error) {
             throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));
         }
-    }    
+    }
 }

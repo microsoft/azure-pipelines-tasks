@@ -15,7 +15,7 @@
     "version": {
         "Major": 3,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 4
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -54,13 +54,13 @@
             }
         },
         {
-            "name": "armConnection",
+            "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
             "label": "Azure Resource Manager connection",
             "defaultValue": "",
             "required": true,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment.",
+            "helpMarkDown": "Select the Azure Resource Manager service connection for the deployment.",
             "properties": {
                 "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
             }
@@ -83,7 +83,7 @@
             "name": "subscriptionName",
             "type": "pickList",
             "label": "Subscription",
-            "required": false,
+            "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Name of the subscription",
             "visibleRule": "deploymentScope = Resource Group || deploymentScope = Subscription"
@@ -92,7 +92,7 @@
             "name": "resourceGroupName",
             "type": "pickList",
             "label": "Resource group",
-            "required": false,
+            "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Provide the name of a resource group.",
             "properties": {
@@ -110,7 +110,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "visibleRule": "action = Create Or Update Resource Group && deploymentScope = Resource Group"
+            "visibleRule": "action = Create Or Update Resource Group || deploymentScope != Resource Group"
         },
         {
             "name": "templateLocation",
@@ -221,13 +221,13 @@
     "dataSourceBindings": [
         {
             "target": "subscriptionName",
-            "endpointId": "$(ArmConnection)",
+            "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureSubscriptions",
             "resultTemplate": "{ \"Value\" : \"{{{subscriptionId}}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
         },
         {
             "target": "resourceGroupName",
-            "endpointId": "$(ArmConnection)",
+            "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureResourceGroups2",
             "parameters": {
                 "subscriptionId": "$(subscriptionName)"
@@ -235,11 +235,14 @@
         },
         {
             "target": "location",
-            "endpointId": "$(ArmConnection)",
-            "dataSourceName": "AzureLocationsByDeploymentScope"
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureLocationsByDeploymentScope",
+            "parameters": {
+                "deploymentScope": "$(deploymentScope)"
+            }
         }
     ],
-    "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
+    "instanceNameFormat": "ARM Template deployment: $(deploymentScope) scope",
     "execution": {
         "Node": {
             "target": "main.js"

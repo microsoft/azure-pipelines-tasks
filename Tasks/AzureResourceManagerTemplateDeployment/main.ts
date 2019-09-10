@@ -20,7 +20,7 @@ function run(): Promise<void> {
             var subscriptionOperationsController = new subscription.Subscription(new armSubscription.SubscriptionManagementClient(taskParameters.credentials, taskParameters.subscriptionId), taskParameters);
             return subscriptionOperationsController.deploy();
         }
-        var resourceGroupOperationsController = new resourceGroup.ResourceGroup(new armResource.ResourceManagementClient(taskParameters.credentials, taskParameters.subscriptionId), taskParameters);
+        var resourceGroupOperationsController = new resourceGroup.ResourceGroup(new armResource.ResourceManagementClient(taskParameters.credentials, taskParameters.resourceGroupName, taskParameters.subscriptionId), taskParameters);
         switch (taskParameters.action) {
             case "Create Or Update Resource Group":
                 return resourceGroupOperationsController.createOrUpdateResourceGroup();
@@ -30,7 +30,7 @@ function run(): Promise<void> {
                 throw tl.loc("InvalidAction", taskParameters.action);
         }
     });
-    
+
 }
 
 var taskManifestPath = path.join(__dirname, "task.json");
@@ -39,6 +39,6 @@ tl.setResourcePath(taskManifestPath);
 
 run().then((result) =>
    tl.setResult(tl.TaskResult.Succeeded, "")
-).catch((error) => 
+).catch((error) =>
     tl.setResult(tl.TaskResult.Failed, error)
 );
