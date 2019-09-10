@@ -45,6 +45,8 @@ export function ToError(response: webClient.WebResponse): AzureError {
 }
 
 export class AzureServiceClientBase {
+    public deployments: DeploymentsBase;
+
     protected credentials: msRestAzure.ApplicationTokenCredentials;
     protected apiVersion: string;
     protected baseUri: string;
@@ -52,37 +54,21 @@ export class AzureServiceClientBase {
     protected longRunningOperationRetryTimeout: number;
     protected generateClientRequestId: boolean;
 
-    public subscriptionId: string;
-    public managementGroupId: string;
-    public deployments: DeploymentsBase;
-
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, timeout?: number) {
         this.validateCredentials(credentials);
- 
+
         this.credentials = credentials;
         this.baseUri = this.credentials.baseUrl;
         this.longRunningOperationRetryTimeout = !!timeout ? timeout : 0; // In minutes
         this.deployments = new DeploymentsBase(this);
     }
 
-    protected validateCredentials(credentials: msRestAzure.ApplicationTokenCredentials) {
-        if (!credentials) {
-            throw new Error(tl.loc("CredentialsCannotBeNull"));
-        }
-    }
-
     public getCredentials(): msRestAzure.ApplicationTokenCredentials {
         return this.credentials;
     }
 
-    public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[], apiVersion?: string): string {
-        return this.getRequestUriForBaseUri(this.baseUri, uriFormat, parameters, queryParameters, apiVersion);
-    }
-
     public getRequestUriForBaseUri(baseUri: string, uriFormat: string, parameters: {}, queryParameters?: string[], apiVersion?: string): string {
         var requestUri = baseUri + uriFormat;
-        requestUri = requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
-        requestUri = requestUri.replace('{managementGroupId}', encodeURIComponent(this.managementGroupId));
         for (var key in parameters) {
             requestUri = requestUri.replace(key, encodeURIComponent(parameters[key]));
         }
@@ -140,14 +126,14 @@ export class AzureServiceClientBase {
                 || exceptionString.indexOf("unable to verify the first certificate") != -1
                 || exceptionString.indexOf("unable to get local issuer certificate") != -1) {
                     tl.warning(tl.loc('ASE_SSLIssueRecommendation'));
-            } 
+            }
 
             throw exception;
         }
-        
+
         if(httpResponse.headers["azure-asyncoperation"] || httpResponse.headers["location"])
             tl.debug(request.uri + " ==> " + httpResponse.headers["azure-asyncoperation"] || httpResponse.headers["location"])
-        
+
         return httpResponse;
     }
 
@@ -245,7 +231,7 @@ export class AzureServiceClientBase {
     public getFormattedError(error: any): string {
         if(error && error.message) {
             if(error.statusCode) {
-                var errorMessage = typeof error.message.valueOf() == 'string' ? error.message 
+                var errorMessage = typeof error.message.valueOf() == 'string' ? error.message
                     : (error.message.Code || error.message.code) + " - " + (error.message.Message || error.message.message)
                 error.message = `${errorMessage} (CODE: ${error.statusCode})`
             }
@@ -254,6 +240,16 @@ export class AzureServiceClientBase {
         }
 
         return error;
+    }
+
+    protected validateCredentials(credentials: msRestAzure.ApplicationTokenCredentials) {
+        if (!credentials) {
+            throw new Error(tl.loc("CredentialsCannotBeNull"));
+        }
+    }
+
+    protected getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[], apiVersion?: string): string {
+        return this.getRequestUriForBaseUri(this.baseUri, uriFormat, parameters, queryParameters, apiVersion);
     }
 
     private sleepFor(sleepDurationInSeconds): Promise<any> {

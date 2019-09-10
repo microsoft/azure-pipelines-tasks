@@ -9,10 +9,11 @@ import Q = require('q');
 
 export class ResourceManagementClient extends azureServiceClient.ServiceClient {
 
-    public deployments: ResourceDeployments;
-    public resourceGroups: ResourceGroups;
+    public deployments: depolymentsBase.DeploymentsBase;
+    public resourceGroup: ResourceGroup;
+    public resourceGroupName: string;
 
-    constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, options?: any) {
+    constructor(credentials: msRestAzure.ApplicationTokenCredentials, resourceGroupName: string, subscriptionId: string, options?: any) {
         super(credentials, subscriptionId);
 
         this.apiVersion = (credentials.isAzureStackEnvironment) ? '2016-06-01' : '2017-05-10';
@@ -21,8 +22,9 @@ export class ResourceManagementClient extends azureServiceClient.ServiceClient {
         if (!!options && !!options.longRunningOperationRetryTimeout) {
             this.longRunningOperationRetryTimeout = options.longRunningOperationRetryTimeout;
         }
-        this.resourceGroups = new ResourceGroups(this);
-        this.deployments = new ResourceDeployments(this);
+        this.resourceGroupName = resourceGroupName;
+        this.resourceGroup = new ResourceGroup(this);
+        this.deployments = new ResourceGroupDeployments(this);
     }
 }
 
@@ -64,20 +66,20 @@ export class Resources {
     }
 }
 
-export class ResourceGroups {
+export class ResourceGroup {
     private client: ResourceManagementClient;
 
     constructor(armClient: ResourceManagementClient) {
         this.client = armClient;
     }
 
-    public checkExistence(resourceGroupName: string, callback: azureServiceClientBase.ApiCallback): void {
+    public checkExistence(callback: azureServiceClientBase.ApiCallback): void {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            this.client.isValidResourceGroupName(resourceGroupName);
+            this.client.isValidResourceGroupName(this.client.resourceGroupName);
         } catch (error) {
             return callback(error);
         }
@@ -88,7 +90,7 @@ export class ResourceGroups {
         httpRequest.uri = this.client.getRequestUri(
             '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}',
             {
-                '{resourceGroupName}': resourceGroupName
+                '{resourceGroupName}': this.client.resourceGroupName
             }
         );
 
@@ -106,14 +108,14 @@ export class ResourceGroups {
             (error) => callback(error));
     }
 
-    public deleteMethod(resourceGroupName: string, callback: azureServiceClientBase.ApiCallback) {
+    public deleteMethod(callback: azureServiceClientBase.ApiCallback) {
         var client = this.client;
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            this.client.isValidResourceGroupName(resourceGroupName);
+            this.client.isValidResourceGroupName(this.client.resourceGroupName);
         } catch (error) {
             return callback(error);
         }
@@ -124,7 +126,7 @@ export class ResourceGroups {
         httpRequest.uri = this.client.getRequestUri(
             '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}',
             {
-                '{resourceGroupName}': resourceGroupName
+                '{resourceGroupName}': this.client.resourceGroupName
             }
         );
 
@@ -150,14 +152,14 @@ export class ResourceGroups {
             (error) => callback(error));
     }
 
-    public createOrUpdate(resourceGroupName: string, parameters, callback: azureServiceClientBase.ApiCallback) {
+    public createOrUpdate(parameters, callback: azureServiceClientBase.ApiCallback) {
 
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            this.client.isValidResourceGroupName(resourceGroupName);
+            this.client.isValidResourceGroupName(this.client.resourceGroupName);
             if (parameters === null || parameters === undefined) {
                 throw new Error(tl.loc("ParametersCannotBeNull"));
             }
@@ -172,7 +174,7 @@ export class ResourceGroups {
         httpRequest.uri = this.client.getRequestUri(
             '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}',
             {
-                '{resourceGroupName}': resourceGroupName,
+                '{resourceGroupName}': this.client.resourceGroupName,
             }
         );
 
@@ -197,8 +199,8 @@ export class ResourceGroups {
     }
 }
 
-export class ResourceDeployments extends depolymentsBase.DeploymentsBase {
-    
+export class ResourceGroupDeployments extends depolymentsBase.DeploymentsBase {
+
     protected client: ResourceManagementClient;
 
     constructor(client: ResourceManagementClient) {
@@ -206,13 +208,13 @@ export class ResourceDeployments extends depolymentsBase.DeploymentsBase {
         this.client = client;
     }
 
-    public createOrUpdate(resourceGroupName, deploymentName, deploymentParameters, callback) {
+    public createOrUpdate(deploymentName, deploymentParameters, callback) {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            this.client.isValidResourceGroupName(resourceGroupName);
+            this.client.isValidResourceGroupName(this.client.resourceGroupName);
         } catch (error) {
             return callback(error);
         }
@@ -221,20 +223,20 @@ export class ResourceDeployments extends depolymentsBase.DeploymentsBase {
         var requestUri = this.client.getRequestUri(
             '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Resources/deployments/{deploymentName}',
             {
-                '{resourceGroupName}': resourceGroupName,
+                '{resourceGroupName}': this.client.resourceGroupName,
                 '{deploymentName}': deploymentName
             }
         );
-        super.createOrUpdate(requestUri, deploymentName, deploymentParameters, callback);
+        super.deployTemplate(requestUri, deploymentName, deploymentParameters, callback);
     }
 
-    public validate(resourceGroupName, deploymentName, deploymentParameters, callback) {
+    public validate(deploymentName, deploymentParameters, callback) {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            this.client.isValidResourceGroupName(resourceGroupName);
+            this.client.isValidResourceGroupName(this.client.resourceGroupName);
         } catch (error) {
             return callback(error);
         }
@@ -243,10 +245,10 @@ export class ResourceDeployments extends depolymentsBase.DeploymentsBase {
         var requestUri = this.client.getRequestUri(
             '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Resources/deployments/{deploymentName}/validate',
             {
-                '{resourceGroupName}': resourceGroupName,
+                '{resourceGroupName}': this.client.resourceGroupName,
                 '{deploymentName}': deploymentName
             }
         );
-        super.validate(requestUri, deploymentName, deploymentParameters, callback);
+        super.validateTemplate(requestUri, deploymentName, deploymentParameters, callback);
     }
 }
