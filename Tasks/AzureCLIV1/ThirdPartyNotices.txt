@@ -20,7 +20,7 @@ Microsoft Azure CLI Task incorporates third party material from the projects lis
 14.	semver (https://github.com/npm/node-semver/)
 15.	ShellJS (https://github.com/shelljs/shelljs)
 16.	vso-node-api (https://github.com/Microsoft/vsts-node-api)
-17.	VSTS-task-lib  (https://github.com/Microsoft/vsts-task-lib)
+17.	azure-pipelines-task-lib  (https://github.com/Microsoft/azure-pipelines-task-lib)
 18.	wrappy (https://github.com/npm/wrappy)
 
 %% balanced-match  NOTICES, INFORMATION, AND LICENSE BEGIN HERE

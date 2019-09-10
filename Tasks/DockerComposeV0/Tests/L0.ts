@@ -15,6 +15,7 @@ describe('Docker Compose Suite', function() {
         delete process.env["__additionalDockerComposeFiles__"];
         delete process.env["__composeFilePath__"];
         delete process.env["__dockerComposeCommand__"];
+        delete process.env["__arguments__"];
     });
     after(function () {
     });
@@ -133,6 +134,21 @@ describe('Docker Compose Suite', function() {
             done();
         });
 
+        it('Runs successfully for windows docker compose service build with arguments', (done:MochaDone) => {
+            let tp = path.join(__dirname, 'L0Windows.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            process.env["__command__"] = "Build services";
+            process.env["__arguments__"] = "--pull --parallel";
+            tr.run();
+
+            assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.stdout.indexOf("[command]docker-compose -f F:\\dir2\\docker-compose.yml build --pull --parallel") != -1, "docker compose build should run with argumentss");
+            console.log(tr.stderr);
+            done();
+        });
+
     } else {
 
         it('Runs successfully for linux docker compose service build', (done:MochaDone) => {
@@ -244,6 +260,21 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]docker-compose -f /tmp/tempdir/100/docker-compose.yml -f /tmp/tempdir/100/docker-compose.override.yml up -d") != -1, "successfully ran up command");
+            console.log(tr.stderr);
+            done();
+        });
+
+        it('Runs successfully for linux docker compose service build with arguments', (done:MochaDone) => {
+            let tp = path.join(__dirname, 'L0Linux.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            process.env["__command__"] = "Build services";
+            process.env["__arguments__"] = "--pull --parallel";
+            tr.run();
+
+            assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.stdout.indexOf("[command]docker-compose -f /tmp/tempdir/100/docker-compose.yml build --pull --parallel") != -1, "docker compose build should run with argumentss");
             console.log(tr.stderr);
             done();
         });

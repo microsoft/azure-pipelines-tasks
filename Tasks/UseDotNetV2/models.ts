@@ -92,7 +92,7 @@ export class VersionParts {
             VersionParts.ValidateExplicitVersionNumber(version);
         }else{
             VersionParts.ValidateVersionSpec(version);
-        }        
+        }
         this.versionSpec = version;
         let parts: string[] = version.split(".");
         this.majorVersion = parts[0];
@@ -111,22 +111,23 @@ export class VersionParts {
         try {
             let parts = version.split('.');
             // validate version
-            if ((parts.length != 3) || // check if the version has 3 parts                
+            if ((parts.length != 3) || // check if the version has 3 parts
                 !parts[0] || // The major version must always be set
                 !parts[1] || // The minor version must always be set
-                !parts[2] || // The patch version must always be set                
+                !parts[2] || // The patch version must always be set
                 Number.isNaN(Number.parseInt(parts[0])) || // the major version number must be a number
                 Number.isNaN(Number.parseInt(parts[1])) || // the minor version number must be a number
-                Number.isNaN(Number.parseInt(parts[2].split('-')[0])) // the patch version number must be a number. (the patch version can have a '-' because of version numbers like: 1.0.0-beta-50)                                   
-
-            ) {                
-                throw tl.loc("VersionNumberHasTheWrongFormat", version);
+                Number.isNaN(Number.parseInt(parts[2].split('-')[0])) // the patch version number must be a number. (the patch version can have a '-' because of version numbers like: 1.0.0-beta-50)
+            ) {
+                throw tl.loc("OnlyExplicitVersionAllowed", version);
             }
-            new semver.Range(version);
+
+            if(!semver.valid(version)) {
+                throw tl.loc("InvalidVersion", version);
+            }
         }
         catch (ex) {
-            console.log(ex);
-            throw tl.loc("VersionNotAllowed", version)
+            throw tl.loc("VersionNotAllowed", version, ex);
         }
     }
 
@@ -152,11 +153,11 @@ export class VersionParts {
             ) {
                 throw tl.loc("VersionNumberHasTheWrongFormat", version);
             }
+
             new semver.Range(version);
         }
         catch (ex) {
-            console.log(ex);
-            throw tl.loc("VersionNotAllowed", version)
+            throw tl.loc("VersionNotAllowed", version, ex);
         }
     }
 
