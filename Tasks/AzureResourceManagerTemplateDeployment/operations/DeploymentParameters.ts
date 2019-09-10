@@ -1,15 +1,15 @@
+import { runInThisContext } from "vm";
+
 export class DeploymentParameters {
     public properties: Object;
     public location: string;
 
-    constructor(properties: Object) {
+    constructor(properties: Object, location?: string) {
         this.properties = properties;
+        this.location = location;
     }
     public updateCommonProperties(mode: string) {
         this.properties["mode"] = mode;
         this.properties["debugSetting"] = { "detailLevel": "requestContent, responseContent" };
-    }
-    public updateLocation(location: string) {
-        this.location = location;
     }
 }

@@ -53,7 +53,7 @@ class Utils {
         let index: number = 1;
         return errors.map(error => !!error ? util.format("%s. %s \n", index++, error) : "").join("");
     }
-    
+
     public static stripJsonComments(content) {
         if (!content || (content.indexOf("//") < 0 && content.indexOf("/*") < 0)) {
             return content;
@@ -141,7 +141,7 @@ class Utils {
                             } else {
                                 errorMessage += " " + String(error.details[i].details);
                             }
-                        } 
+                        }
                     }
 
                     tl.error(errorMessage);
@@ -155,6 +155,134 @@ class Utils {
         } else {
             tl.error(error);
         }
+    }
+
+    public static async getDeploymentObjectForPublicURL(taskParameters: deployAzureRG.AzureRGTaskParameters): Promise<DeploymentParameters> {
+        var properties = {};
+        properties["templateLink"] = {
+            uri: taskParameters.csmFileLink
+        };
+        var parameters: Map<string, ParameterValue> = {} as Map<string, ParameterValue>;
+        var deploymentParameters = new DeploymentParameters(properties);
+
+        if (this.isNonEmpty(taskParameters.csmParametersFileLink)) {
+            if (this.isNonEmpty(taskParameters.overrideParameters)) {
+                var contents = await this.downloadFile(taskParameters.csmParametersFileLink);
+                parameters = JSON.parse(this.stripJsonComments(contents)).parameters;
+            }
+            else {
+                deploymentParameters.properties["parametersLink"] = {
+                    uri: taskParameters.csmParametersFileLink
+                };
+            }
+        }
+
+        if (this.isNonEmpty(taskParameters.overrideParameters)) {
+            tl.debug("Downloading CSM Template File.. " + taskParameters.csmFileLink);
+            var templateFile = await this.downloadFile(taskParameters.csmFileLink);
+            var template;
+            try {
+                var template = JSON.parse(this.stripJsonComments(templateFile));
+                tl.debug("Loaded CSM File");
+            }
+            catch (error) {
+                throw new Error(tl.loc("TemplateParsingFailed", this.getError(error.message)));
+            }
+            parameters = this.updateOverrideParameters(taskParameters, template, parameters);
+            parameters = this.sanitizeParameters(parameters);
+            deploymentParameters.properties["parameters"] = parameters;
+        }
+
+        deploymentParameters.updateCommonProperties(taskParameters.deploymentMode);
+        return deploymentParameters;
+    }
+
+    public static createDeploymentName(taskParameters: deployAzureRG.AzureRGTaskParameters): string {
+        var name: string;
+        if (taskParameters.templateLocation == "Linked artifact") {
+            name = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), taskParameters.csmFile)[0];
+        } else {
+            name = taskParameters.csmFileLink;
+        }
+        name = path.basename(name).split(".")[0].replace(" ", "");
+        name = name.substr(0, 40);
+        var timestamp = new Date(Date.now());
+        var uniqueId = uuid().substr(0, 4);
+        var suffix = util.format("%s%s%s-%s%s%s-%s", timestamp.getFullYear(),
+            formatNumber(timestamp.getMonth() + 1),
+            formatNumber(timestamp.getDate()),
+            formatNumber(timestamp.getHours()),
+            formatNumber(timestamp.getMinutes()),
+            formatNumber(timestamp.getSeconds()),
+            uniqueId);
+        var deploymentName = util.format("%s-%s", name, suffix);
+        if (deploymentName.match(/^[-\w\._\(\)]+$/) === null) {
+            deploymentName = util.format("deployment-%s", suffix);
+        }
+        return deploymentName;
+    }
+
+    public static getDeploymentDataForLinkedArtifact(taskParameters: deployAzureRG.AzureRGTaskParameters): DeploymentParameters {
+        var template: TemplateObject;
+        var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), taskParameters.csmFile);
+        if (fileMatches.length > 1) {
+            throw new Error(tl.loc("TemplateFilePatternMatchingMoreThanOneFile", fileMatches));
+        }
+        if (fileMatches.length < 1) {
+            throw new Error(tl.loc("TemplateFilePatternMatchingNoFile"));
+        }
+        var csmFilePath = fileMatches[0];
+        if (!fs.lstatSync(csmFilePath).isDirectory()) {
+            tl.debug("Loading CSM Template File.. " + csmFilePath);
+            try {
+                template = JSON.parse(this.stripJsonComments(fileEncoding.readFileContentsAsText(csmFilePath)));
+            }
+            catch (error) {
+                throw new Error(tl.loc("TemplateParsingFailed", csmFilePath, this.getError(error.message)));
+            }
+            tl.debug("Loaded CSM File");
+        } else {
+            throw new Error(tl.loc("CsmFilePatternMatchesADirectoryInsteadOfAFile", csmFilePath));
+        }
+
+        var parameters: Map<string, ParameterValue> = {} as Map<string, ParameterValue>;
+        if (this.isNonEmpty(taskParameters.csmParametersFile)) {
+            var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), taskParameters.csmParametersFile);
+            if (fileMatches.length > 1) {
+                throw new Error(tl.loc("TemplateParameterFilePatternMatchingMoreThanOneFile", fileMatches));
+            }
+            if (fileMatches.length < 1) {
+                throw new Error(tl.loc("TemplateParameterFilePatternMatchingNoFile"));
+            }
+            var csmParametersFilePath = fileMatches[0];
+            if (!fs.lstatSync(csmParametersFilePath).isDirectory()) {
+                tl.debug("Loading Parameters File.. " + csmParametersFilePath);
+                try {
+                    var parameterFile = JSON.parse(this.stripJsonComments(fileEncoding.readFileContentsAsText(csmParametersFilePath)));
+                    tl.debug("Loaded Parameters File");
+                    parameters = parameterFile["parameters"] as Map<string, ParameterValue>;
+                } catch (error) {
+                    throw new Error(tl.loc("ParametersFileParsingFailed", csmParametersFilePath, this.getError(error.message)));
+                }
+            } else {
+                if (tl.filePathSupplied("csmParametersFile")) {
+                    throw new Error(tl.loc("ParametersPatternMatchesADirectoryInsteadOfAFile", csmParametersFilePath));
+                }
+            }
+        }
+
+        if (this.isNonEmpty(taskParameters.overrideParameters)) {
+            parameters = this.updateOverrideParameters(taskParameters, template, parameters);
+        }
+
+        parameters = this.sanitizeParameters(parameters);
+
+        var deploymentParameters = new DeploymentParameters({
+            template: template,
+            parameters: parameters
+        });
+        deploymentParameters.updateCommonProperties(taskParameters.deploymentMode);
+        return deploymentParameters;
     }
 
     private static getPolicyHelpLink(taskParameters: deployAzureRG.AzureRGTaskParameters, errorDetail) {
@@ -188,31 +316,6 @@ class Utils {
         }
 
         return errorMessage;
-    }
-
-    public static createDeploymentName(taskParameters: deployAzureRG.AzureRGTaskParameters): string {
-        var name: string;
-        if (taskParameters.templateLocation == "Linked artifact") {
-            name = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), taskParameters.csmFile)[0];
-        } else {
-            name = taskParameters.csmFileLink;
-        }
-        name = path.basename(name).split(".")[0].replace(" ", "");
-        name = name.substr(0, 40);
-        var timestamp = new Date(Date.now());
-        var uniqueId = uuid().substr(0, 4);
-        var suffix = util.format("%s%s%s-%s%s%s-%s", timestamp.getFullYear(),
-            formatNumber(timestamp.getMonth() + 1),
-            formatNumber(timestamp.getDate()),
-            formatNumber(timestamp.getHours()),
-            formatNumber(timestamp.getMinutes()),
-            formatNumber(timestamp.getSeconds()),
-            uniqueId);
-        var deploymentName = util.format("%s-%s", name, suffix);
-        if (deploymentName.match(/^[-\w\._\(\)]+$/) === null) {
-            deploymentName = util.format("deployment-%s", suffix);
-        }
-        return deploymentName;
     }
 
     private static castToType(value: string, type: string): any {
@@ -282,69 +385,6 @@ class Utils {
         });
     }
 
-    public static getDeploymentDataForLinkedArtifact(taskParameters: deployAzureRG.AzureRGTaskParameters): DeploymentParameters {
-        var template: TemplateObject;
-        var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), taskParameters.csmFile);
-        if (fileMatches.length > 1) {
-            throw new Error(tl.loc("TemplateFilePatternMatchingMoreThanOneFile", fileMatches));
-        }
-        if (fileMatches.length < 1) {
-            throw new Error(tl.loc("TemplateFilePatternMatchingNoFile"));
-        }
-        var csmFilePath = fileMatches[0];
-        if (!fs.lstatSync(csmFilePath).isDirectory()) {
-            tl.debug("Loading CSM Template File.. " + csmFilePath);
-            try {
-                template = JSON.parse(this.stripJsonComments(fileEncoding.readFileContentsAsText(csmFilePath)));
-            }
-            catch (error) {
-                throw new Error(tl.loc("TemplateParsingFailed", csmFilePath, this.getError(error.message)));
-            }
-            tl.debug("Loaded CSM File");
-        } else {
-            throw new Error(tl.loc("CsmFilePatternMatchesADirectoryInsteadOfAFile", csmFilePath));
-        }
-
-        var parameters: Map<string, ParameterValue> = {} as Map<string, ParameterValue>;
-        if (this.isNonEmpty(taskParameters.csmParametersFile)) {
-            var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), taskParameters.csmParametersFile);
-            if (fileMatches.length > 1) {
-                throw new Error(tl.loc("TemplateParameterFilePatternMatchingMoreThanOneFile", fileMatches));
-            }
-            if (fileMatches.length < 1) {
-                throw new Error(tl.loc("TemplateParameterFilePatternMatchingNoFile"));
-            }
-            var csmParametersFilePath = fileMatches[0];
-            if (!fs.lstatSync(csmParametersFilePath).isDirectory()) {
-                tl.debug("Loading Parameters File.. " + csmParametersFilePath);
-                try {
-                    var parameterFile = JSON.parse(this.stripJsonComments(fileEncoding.readFileContentsAsText(csmParametersFilePath)));
-                    tl.debug("Loaded Parameters File");
-                    parameters = parameterFile["parameters"] as Map<string, ParameterValue>;
-                } catch (error) {
-                    throw new Error(tl.loc("ParametersFileParsingFailed", csmParametersFilePath, this.getError(error.message)));
-                }
-            } else {
-                if (tl.filePathSupplied("csmParametersFile")) {
-                    throw new Error(tl.loc("ParametersPatternMatchesADirectoryInsteadOfAFile", csmParametersFilePath));
-                }
-            }
-        }
-
-        if (this.isNonEmpty(taskParameters.overrideParameters)) {
-            parameters = this.updateOverrideParameters(taskParameters, template, parameters);
-        }
-
-        parameters = this.sanitizeParameters(parameters);
-
-        var deploymentParameters = new DeploymentParameters({
-            template: template,
-            parameters: parameters
-        });
-        deploymentParameters.updateCommonProperties(taskParameters.deploymentMode);
-        return deploymentParameters;
-    }
-
     private static sanitizeParameters(parameters: Map<string, ParameterValue>): Map<string, ParameterValue> {
         var result: Map<string, ParameterValue> = {} as Map<string, ParameterValue>;
         for (var key in parameters) {
@@ -362,46 +402,6 @@ class Utils {
         }
 
         return result;
-    }
-
-    public static async getDeploymentObjectForPublicURL(taskParameters: deployAzureRG.AzureRGTaskParameters): Promise<DeploymentParameters> {
-        var properties = {};
-        properties["templateLink"] = {
-            uri: taskParameters.csmFileLink
-        };
-        var parameters: Map<string, ParameterValue> = {} as Map<string, ParameterValue>;
-        var deploymentParameters = new DeploymentParameters(properties);
-
-        if (this.isNonEmpty(taskParameters.csmParametersFileLink)) {
-            if (this.isNonEmpty(taskParameters.overrideParameters)) {
-                var contents = await this.downloadFile(taskParameters.csmParametersFileLink);
-                parameters = JSON.parse(this.stripJsonComments(contents)).parameters;
-            }
-            else {
-                deploymentParameters.properties["parametersLink"] = {
-                    uri: taskParameters.csmParametersFileLink
-                };
-            }
-        }
-
-        if (this.isNonEmpty(taskParameters.overrideParameters)) {
-            tl.debug("Downloading CSM Template File.. " + taskParameters.csmFileLink);
-            var templateFile = await this.downloadFile(taskParameters.csmFileLink);
-            var template;
-            try {
-                var template = JSON.parse(this.stripJsonComments(templateFile));
-                tl.debug("Loaded CSM File");
-            }
-            catch (error) {
-                throw new Error(tl.loc("TemplateParsingFailed", this.getError(error.message)));
-            }
-            parameters = this.updateOverrideParameters(taskParameters, template, parameters);
-            parameters = this.sanitizeParameters(parameters);
-            deploymentParameters.properties["parameters"] = parameters;
-        }
-
-        deploymentParameters.updateCommonProperties(taskParameters.deploymentMode);
-        return deploymentParameters;
     }
 }
 
