@@ -32,8 +32,6 @@
   "loc.input.help.DeploymentAction": "Выберите одно из действий SQL из списка. Дополнительные сведения см. <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">здесь</a>.​",
   "loc.input.label.DacpacFile": "DACPAC-файл",
   "loc.input.help.DacpacFile": "Расположение DACPAC-файла на агенте автоматизации или по UNC-пути, доступному для агента автоматизации, например \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Также можно использовать стандартные системные переменные, например $(agent.releaseDirectory).",
-  "loc.input.label.BacpacFile": "Файл BACPAC",
-  "loc.input.help.BacpacFile": "Расположение файла BACPAC в агенте автоматизации или по UNC-пути, доступному для агента автоматизации, например \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.bacpac. Также можно использовать стандартные системные переменные, например $(agent.releaseDirectory).",
   "loc.input.label.SqlFile": "Сценарий SQL",
   "loc.input.help.SqlFile": "Расположение файла сценария SQL на агенте автоматизации или по UNC-пути, доступному для агента автоматизации, например \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. Также можно использовать стандартные системные переменные, например $(agent.releaseDirectory).",
   "loc.input.label.SqlInline": "Встроенный сценарий SQL",
@@ -74,7 +72,6 @@
   "loc.messages.SAD_GeneratedFile": "Создан файл {0}. Файл отправляется в журналы.",
   "loc.messages.SAD_InvalidPublishOption": "Для действия публикации выбран недопустимый параметр: {0}",
   "loc.messages.SAD_DacpacFilePath": "Путь к файлу DACPAC:",
-  "loc.messages.SAD_BacpacFilePath": "Путь к файлу BACPAC:",
   "loc.messages.SAD_PublishProfilePath": "Путь к профилю публикации:",
   "loc.messages.SAD_DriftReportWarning": "При создании отчета о смещении для базы данных убедитесь в том, что база данных зарегистрирована в качестве приложения уровня данных.",
   "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "Импортированный Invoke-Sqlcmd не поддерживает connectionString. Установка модуля PS SQLServer."

@@ -32,8 +32,6 @@
   "loc.input.help.DeploymentAction": "Consente di scegliere una delle azioni SQL nell'elenco. Per maggiori dettagli, vedere il <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">collegamento</a>.",
   "loc.input.label.DacpacFile": "File del pacchetto di applicazione livello dati",
   "loc.input.help.DacpacFile": "Percorso del file del pacchetto di applicazione livello dati nell'agente di automazione o in un percorso UNC accessibile all'agente di automazione, ad esempio \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. È anche possibile usare variabili di sistema predefinite, ad esempio $(agent.releaseDirectory).",
-  "loc.input.label.BacpacFile": "File BACPAC",
-  "loc.input.help.BacpacFile": "Percorso del file BACPAC nell'agente di automazione o in un percorso UNC accessibile all'agente di automazione, ad esempio \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.bacpac. È anche possibile usare variabili di sistema predefinite, ad esempio $(agent.releaseDirectory).",
   "loc.input.label.SqlFile": "Script SQL",
   "loc.input.help.SqlFile": "Percorso del file di script SQL nell'agente di automazione o in un percorso UNC accessibile all'agente di automazione, ad esempio \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. È anche possibile usare variabili di sistema predefinite, ad esempio $(agent.releaseDirectory).",
   "loc.input.label.SqlInline": "SQL Script inline",
@@ -74,7 +72,6 @@
   "loc.messages.SAD_GeneratedFile": "È stato generato il file {0}. Il file verrà caricato nei log.",
   "loc.messages.SAD_InvalidPublishOption": "L'opzione selezionata per l'azione di pubblicazione non è valida: {0}",
   "loc.messages.SAD_DacpacFilePath": "Percorso del file DACPAC:",
-  "loc.messages.SAD_BacpacFilePath": "Percorso del file BACPAC:",
   "loc.messages.SAD_PublishProfilePath": "Percorso del profilo di pubblicazione:",
   "loc.messages.SAD_DriftReportWarning": "Durante la generazione di un report di deviazione del database, assicurarsi che il database sia registrato come applicazione livello dati.",
   "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "Il cmdlet Invoke-Sqlcmd importato non supporta connectionString. Installare il modulo PS SQLServer."

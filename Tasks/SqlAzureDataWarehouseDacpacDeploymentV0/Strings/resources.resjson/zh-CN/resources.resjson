@@ -32,8 +32,6 @@
   "loc.input.help.DeploymentAction": "从列表中选择一个 SQL 操作。有关详细信息，请访问<a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">链接</a>。",
   "loc.input.label.DacpacFile": "DACPAC 文件",
   "loc.input.help.DacpacFile": "自动化代理上或自动化代理可访问的 UNC 路径上 DACPAC 文件的位置，如 \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac。此处也可使用预定义系统变量，如 $(agent.releaseDirectory)。",
-  "loc.input.label.BacpacFile": "BACPAC 文件",
-  "loc.input.help.BacpacFile": "自动化代理上或可访问自动化代理的 UNC 路径上 BACPAC 文件的位置，如 \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.bacpac。此处也可使用预定义系统变量，如 $(agent.releaseDirectory)。",
   "loc.input.label.SqlFile": "SQL 脚本",
   "loc.input.help.SqlFile": "自动化代理上或自动化代理可访问的 UNC 路径上 SQL 脚本文件的位置，如 \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql。此处也可使用预定义系统变量，如 $(agent.releaseDirectory)。",
   "loc.input.label.SqlInline": "内联 SQL 脚本",
@@ -74,7 +72,6 @@
   "loc.messages.SAD_GeneratedFile": "生成的文件 {0}。正在将文件上传到日志。",
   "loc.messages.SAD_InvalidPublishOption": "为发布操作选择的选项无效: {0}",
   "loc.messages.SAD_DacpacFilePath": "DACPAC 文件路径:",
-  "loc.messages.SAD_BacpacFilePath": "BACPAC 文件路径:",
   "loc.messages.SAD_PublishProfilePath": "发布配置文件路径:",
   "loc.messages.SAD_DriftReportWarning": "生成数据库的偏移报告时，请确保数据库注册为数据层应用程序。",
   "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "导入的 Invoke-Sqlcmd 不支持 connectionString。请安装 SQLServer PS 模块。"

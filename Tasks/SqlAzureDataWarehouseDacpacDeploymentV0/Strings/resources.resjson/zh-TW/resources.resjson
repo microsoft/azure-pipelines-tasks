@@ -32,8 +32,6 @@
   "loc.input.help.DeploymentAction": "從清單選擇其中一個 SQL 動作。如需詳細資料，請參閱<a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">連結</a>。",
   "loc.input.label.DacpacFile": "DACPAC 檔案",
   "loc.input.help.DacpacFile": "自動化代理程式或 UNC 路徑上可為自動化代理程式存取的 DACPAC 檔案位置，例如 \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac。也可在此使用預先定義的系統變數，例如 $(agent.releaseDirectory)。",
-  "loc.input.label.BacpacFile": "BACPAC 檔案",
-  "loc.input.help.BacpacFile": "自動化代理程式或 UNC 路徑上可供自動化代理程式存取的 BACPAC 檔案位置，例如 \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.bacpac。也可在此使用預先定義的系統變數，例如 $(agent.releaseDirectory)。",
   "loc.input.label.SqlFile": "SQL 指令碼",
   "loc.input.help.SqlFile": "自動化代理程式或 UNC 路徑上可為自動化代理程式存取的 SQL 指令碼檔位置，例如 \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql。也可在此使用預先定義的系統變數，例如 $(agent.releaseDirectory)。",
   "loc.input.label.SqlInline": "內嵌 SQL 指令碼",
@@ -74,7 +72,6 @@
   "loc.messages.SAD_GeneratedFile": "已產生檔案 {0}。正在將檔案上傳到記錄。",
   "loc.messages.SAD_InvalidPublishOption": "為發行動作選取了無效的選項: {0}",
   "loc.messages.SAD_DacpacFilePath": "DACPAC 檔案路徑:",
-  "loc.messages.SAD_BacpacFilePath": "BACPAC 檔案路徑:",
   "loc.messages.SAD_PublishProfilePath": "發行設定檔路徑:",
   "loc.messages.SAD_DriftReportWarning": "在產生資料庫的漂移報告時，請確認資料庫已註冊為資料層應用程式。",
   "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "匯入的 Invoke-Sqlcmd 不支援 connectionString。請安裝 SQLServer PS 模組。"

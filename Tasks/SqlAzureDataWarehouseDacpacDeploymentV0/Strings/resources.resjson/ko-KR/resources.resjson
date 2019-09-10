@@ -32,8 +32,6 @@
   "loc.input.help.DeploymentAction": "목록에서 SQL 작업 중 하나를 선택합니다. 자세한 내용은 <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">링크</a>를 참조하세요.",
   "loc.input.label.DacpacFile": "DACPAC 파일",
   "loc.input.help.DacpacFile": "자동화 에이전트 또는 자동화 에이전트에 액세스할 수 있는 UNC 경로의 DACPAC 파일 위치입니다(예: \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac). 미리 정의된 시스템 변수(예: $(agent.releaseDirectory))도 여기에 사용할 수 있습니다.",
-  "loc.input.label.BacpacFile": "BACPAC 파일",
-  "loc.input.help.BacpacFile": "자동화 에이전트 또는 자동화 에이전트에서 액세스할 수 있는 UNC 경로에 있는 BACPAC 파일의 위치입니다(예: \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.bacpac). 미리 정의된 시스템 변수(예: $(agent.releaseDirectory))도 여기에 사용할 수 있습니다.",
   "loc.input.label.SqlFile": "SQL 스크립트",
   "loc.input.help.SqlFile": "자동화 에이전트 또는 자동화 에이전트에 액세스할 수 있는 UNC 경로의 SQL 스크립트 파일 위치입니다(예: \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql). 미리 정의된 시스템 변수(예: $(agent.releaseDirectory))도 여기에 사용할 수 있습니다.",
   "loc.input.label.SqlInline": "인라인 SQL 스크립트",
@@ -74,7 +72,6 @@
   "loc.messages.SAD_GeneratedFile": "{0} 파일을 생성했습니다. 로그에 파일을 업로드하는 중입니다.",
   "loc.messages.SAD_InvalidPublishOption": "게시 작업에 대해 잘못된 옵션을 선택했습니다. {0}",
   "loc.messages.SAD_DacpacFilePath": "DACPAC 파일 경로:",
-  "loc.messages.SAD_BacpacFilePath": "BACPAC 파일 경로:",
   "loc.messages.SAD_PublishProfilePath": "게시 프로필 경로:",
   "loc.messages.SAD_DriftReportWarning": "데이터베이스에 대한 드리프트 보고서를 생성하는 중 데이터베이스가 데이터 계층 애플리케이션으로 등록되었는지 확인하세요.",
   "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "가져온 Invoke-Sqlcmd는 connectionString을 지원하지 않습니다. SQLServer PS 모듈을 설치하세요."

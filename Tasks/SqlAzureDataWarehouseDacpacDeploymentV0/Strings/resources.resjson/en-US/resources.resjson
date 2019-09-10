@@ -32,8 +32,6 @@
   "loc.input.help.DeploymentAction": "Choose one of the SQL Actions from the list. For more details refer <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">link</a>.​",
   "loc.input.label.DacpacFile": "DACPAC File",
   "loc.input.help.DacpacFile": "Location of the DACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
-  "loc.input.label.BacpacFile": "BACPAC File",
-  "loc.input.help.BacpacFile": "Location of the BACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.bacpac. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
   "loc.input.label.SqlFile": "SQL Script",
   "loc.input.help.SqlFile": "Location of the SQL script file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
   "loc.input.label.SqlInline": "Inline SQL Script",
@@ -74,7 +72,6 @@
   "loc.messages.SAD_GeneratedFile": "Generated file {0}. Uploading file to the logs.",
   "loc.messages.SAD_InvalidPublishOption": "Invalid option selected for the publish action: {0}",
   "loc.messages.SAD_DacpacFilePath": "DACPAC file path:",
-  "loc.messages.SAD_BacpacFilePath": "BACPAC file path:",
   "loc.messages.SAD_PublishProfilePath": "Publish profile path:",
   "loc.messages.SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application.",
   "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "Imported Invoke-Sqlcmd doesn't support connectionString. Install SQLServer PS module."

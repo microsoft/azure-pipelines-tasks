@@ -32,8 +32,6 @@
   "loc.input.help.DeploymentAction": "Choisissez l'une des actions SQL dans la liste. Pour plus d'informations, consultez <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">lien</a>.​",
   "loc.input.label.DacpacFile": "Fichier DACPAC",
   "loc.input.help.DacpacFile": "Emplacement du fichier DACPAC sur l'agent Automation ou dans un chemin UNC auquel cet agent a accès, par exemple \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Vous pouvez également utiliser des variables système prédéfinies telles que $(agent.releaseDirectory).",
-  "loc.input.label.BacpacFile": "Fichier BACPAC",
-  "loc.input.help.BacpacFile": "Emplacement du fichier BACPAC sur l'agent Automation ou dans un chemin UNC auquel cet agent a accès, par exemple \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.bacpac. Vous pouvez également utiliser des variables système prédéfinies telles que $(agent.releaseDirectory).",
   "loc.input.label.SqlFile": "Script SQL",
   "loc.input.help.SqlFile": "Emplacement du fichier de script SQL sur l'agent Automation ou dans un chemin UNC auquel cet agent a accès, par exemple \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. Vous pouvez également utiliser des variables système prédéfinies telles que $(agent.releaseDirectory).",
   "loc.input.label.SqlInline": "Script SQL inline",
@@ -74,7 +72,6 @@
   "loc.messages.SAD_GeneratedFile": "Fichier généré {0}. Chargement du fichier dans les journaux.",
   "loc.messages.SAD_InvalidPublishOption": "Option non valide sélectionnée pour l'action de publication : {0}",
   "loc.messages.SAD_DacpacFilePath": "Chemin du fichier DACPAC :",
-  "loc.messages.SAD_BacpacFilePath": "Chemin du fichier BACPAC :",
   "loc.messages.SAD_PublishProfilePath": "Chemin du profil de publication :",
   "loc.messages.SAD_DriftReportWarning": "Durant la génération d'un rapport de dérive de la base de données, vérifiez que celle-ci est inscrite en tant qu'application de la couche Données.",
   "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "Le Invoke-Sqlcmd importé ne prend pas en charge connectionString. Installez le module SQLServer PS."

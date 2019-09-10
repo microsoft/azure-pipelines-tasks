@@ -36,7 +36,6 @@ $ipDetectionMethod = "IPAddressRange";
 $validInputConnectedServiceName = "validConnectedServiceName"
 
 $dacpacFile = "C:\Test\TestFile.dacpac"
-$bacpacFile = "C:\Test\TestFile.bacpac"
 $sqlFile = "C:\Test\TestFile.sql"
 
 $serverName = "a0nuel7r2k.database.windows.net"

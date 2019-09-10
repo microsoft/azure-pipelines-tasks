@@ -32,8 +32,6 @@
   "loc.input.help.DeploymentAction": "Wählen Sie eine der SQL-Aktionen aus der Liste aus. Weitere Informationen finden Sie <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">hier</a>.",
   "loc.input.label.DacpacFile": "DACPAC-Datei",
   "loc.input.help.DacpacFile": "Der Speicherort der DACPAC-Datei für den Automations-Agent oder einen UNC-Pfad, auf den der Automations-Agent zugreifen kann, z. B. \"\\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac\". Vordefinierte Systemvariablen (z. B. \"$(agent.releaseDirectory)\") können hier ebenfalls verwendet werden.",
-  "loc.input.label.BacpacFile": "BACPAC-Datei",
-  "loc.input.help.BacpacFile": "Der Speicherort der BACPAC-Datei auf dem Automations-Agent oder in einem UNC-Pfad, auf den der Automations-Agent zugreifen kann, z. B. \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.bacpac\". Vordefinierte Systemvariablen (z. B. \"$(agent.releaseDirectory)\") können hier ebenfalls verwendet werden.",
   "loc.input.label.SqlFile": "SQL-Skript",
   "loc.input.help.SqlFile": "Der Speicherort der SQL-Skriptdatei auf dem Automations-Agent oder in einem UNC-Pfad, auf den der Automations-Agent zugreifen kann, z. B. \"\\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql\". Vordefinierte Systemvariablen (z. B. \"$(agent.releaseDirectory)\") können hier ebenfalls verwendet werden.",
   "loc.input.label.SqlInline": "SQL-Inlineskript",
@@ -74,7 +72,6 @@
   "loc.messages.SAD_GeneratedFile": "Die Datei \"{0}\" wurde generiert. Datei wird in Protokolle hochgeladen.",
   "loc.messages.SAD_InvalidPublishOption": "Ungültige Option für die Veröffentlichung ausgewählt: {0}",
   "loc.messages.SAD_DacpacFilePath": "DACPAC-Dateipfad:",
-  "loc.messages.SAD_BacpacFilePath": "BACPAC-Dateipfad:",
   "loc.messages.SAD_PublishProfilePath": "Pfad für Veröffentlichungsprofil:",
   "loc.messages.SAD_DriftReportWarning": "Beim Generieren eines Abweichungsberichts für die Datenbank müssen Sie sicherstellen, dass die Datenbank als Datenebenenanwendung registriert ist.",
   "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "Das importierte Invoke-Sqlcmd bietet keine Unterstützung für ConnectionString. Installieren Sie das SQLServer-PS-Modul."

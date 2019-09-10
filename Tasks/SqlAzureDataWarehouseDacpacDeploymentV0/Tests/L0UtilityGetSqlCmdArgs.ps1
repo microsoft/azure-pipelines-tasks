@@ -8,7 +8,6 @@ param()
 $dacpacFilePath = "C:\Test\DB.dacpac"
 $publishProfilePath = "C:\Test\Profile.xml"
 $targetDacpacFilePath = "C:\Test\DB.dacpac"
-$targetBacpacFilePath = "C:\Test\DB.bacpac"
 $outputXmlPath = "C:\Test\Output.xml"
 $outputSqlPath = "C:\Test\Output.sql"
 $sqlpackageAdditionalArguments = "/AddArgs:args"
@@ -20,14 +19,6 @@ Assert-AreEqual '/Action:Publish /SourceFile:"C:\Test\DB.dacpac" /TargetServerNa
 $sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -authenticationType "server" -sqlpackageAction "Extract" -targetFile $targetDacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -additionalArguments $sqlpackageAdditionalArguments
 Assert-AreEqual '/Action:Extract /TargetFile:"C:\Test\DB.dacpac" /SourceServerName:"a0nuel7r2k.database.windows.net" /SourceDatabaseName:"TestDatabase" /SourceUser:"TestUser" /SourcePassword:"TestPassword" /AddArgs:args' `
                                     $sqlPackageCommandLineArguments "Should have constructed Argument for Extract action"
-
-$sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -authenticationType "server" -sqlpackageAction "Export" -targetFile $targetBacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -additionalArguments $sqlpackageAdditionalArguments
-Assert-AreEqual '/Action:Export /TargetFile:"C:\Test\DB.bacpac" /SourceServerName:"a0nuel7r2k.database.windows.net" /SourceDatabaseName:"TestDatabase" /SourceUser:"TestUser" /SourcePassword:"TestPassword" /AddArgs:args' `
-                                    $sqlPackageCommandLineArguments "Should have constructed Argument for Export action"
-
-$sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -authenticationType "server" -sqlpackageAction "Import" -sourceFile $bacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -additionalArguments $sqlpackageAdditionalArguments
-Assert-AreEqual '/Action:Import /TargetServerName:"a0nuel7r2k.database.windows.net" /TargetDatabaseName:"TestDatabase" /TargetUser:"TestUser" /TargetPassword:"TestPassword" /AddArgs:args /TargetTimeout:120' `
-                                    $sqlPackageCommandLineArguments "Should have constructed Argument for Import action"
 
 $sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -authenticationType "server" -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments
 Assert-AreEqual '/Action:DeployReport /SourceFile:"C:\Test\DB.dacpac" /TargetServerName:"a0nuel7r2k.database.windows.net" /TargetDatabaseName:"TestDatabase" /TargetUser:"TestUser" /TargetPassword:"TestPassword" /Profile:"C:\Test\Profile.xml" /OutputPath:"C:\Test\Output.xml" /AddArgs:args /TargetTimeout:120' `

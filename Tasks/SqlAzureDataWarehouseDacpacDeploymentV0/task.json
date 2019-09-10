@@ -192,8 +192,6 @@
             "options": {
                 "Publish": "Publish",
                 "Extract": "Extract",
-                "Export": "Export",
-                "Import": "Import",
                 "Script": "Script",
                 "DriftReport": "Drift Report",
                 "DeployReport": "Deploy Report"
@@ -210,16 +208,6 @@
             "defaultValue": "",
             "helpMarkDown": "Location of the DACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
             "visibleRule": "DeploymentAction = Publish || DeploymentAction = Script || DeploymentAction = DeployReport"
-        },
-        {
-            "name": "BacpacFile",
-            "type": "filePath",
-            "label": "BACPAC File",
-            "required": true,
-            "groupName": "taskDetails",
-            "defaultValue": "",
-            "helpMarkDown": "Location of the BACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.bacpac. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
-            "visibleRule": "DeploymentAction = Import"
         },
         {
             "name": "SqlFile",
@@ -263,7 +251,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied when deploying the Azure SQL Data Warehouse, in case DACPAC option is selected like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided).",
-            "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Extract || DeploymentAction = Export || DeploymentAction = Import || DeploymentAction = Script || DeploymentAction = DeployReport || DeploymentAction = DriftReport"
+            "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Extract || DeploymentAction = Script || DeploymentAction = DeployReport || DeploymentAction = DriftReport"
         },
         {
             "name": "SqlAdditionalArguments",
@@ -331,7 +319,7 @@
     "outputVariables": [
         {
             "name": "SqlDeploymentOutputFile",
-            "description": "Generated output file path when deployment package action is either of Extract, Export, Script, Drift Report, Deploy Report."
+            "description": "Generated output file path when deployment package action is either of Extract, Script, Drift Report, Deploy Report."
         }
     ],
     "instanceNameFormat": "Azure SQL $(TaskNameSelector)",
@@ -361,7 +349,6 @@
         "SAD_GeneratedFile": "Generated file {0}. Uploading file to the logs.",
         "SAD_InvalidPublishOption": "Invalid option selected for the publish action: {0}",
         "SAD_DacpacFilePath": "DACPAC file path:",
-        "SAD_BacpacFilePath": "BACPAC file path:",
         "SAD_PublishProfilePath": "Publish profile path:",
         "SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application.",
         "SAD_InvokeSQLCmdNotSupportingConnectionString": "Imported Invoke-Sqlcmd doesn't support connectionString. Install SQLServer PS module."

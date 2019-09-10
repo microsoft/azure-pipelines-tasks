@@ -32,8 +32,6 @@
   "loc.input.help.DeploymentAction": "リストから SQL アクションを 1 つ選択します。詳細については、<a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">リンク</a> を参照してください。",
   "loc.input.label.DacpacFile": "DACPAC ファイル",
   "loc.input.help.DacpacFile": "自動化エージェント上、または自動化エージェントからアクセス可能な UNC パス上の DACPAC ファイルの場所 (\\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac など)。$(agent.releaseDirectory) などの定義済みシステム変数も使用できます。",
-  "loc.input.label.BacpacFile": "BACPAC ファイル",
-  "loc.input.help.BacpacFile": "認証エージェントとして使用可能な自動化エージェントまたは UNC パス (\\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.bacpac など) 上の BACPAC ファイルの場所。$(agent.releaseDirectory) などの定義済みシステム変数も使用できます。",
   "loc.input.label.SqlFile": "SQL スクリプト",
   "loc.input.help.SqlFile": "自動化エージェント上、または自動化エージェントからアクセス可能な UNC パス上の SQL スクリプト ファイルの場所 (\\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql など)。$(agent.releaseDirectory) などの定義済みシステム変数も使用できます。",
   "loc.input.label.SqlInline": "インライン SQL スクリプト",
@@ -74,7 +72,6 @@
   "loc.messages.SAD_GeneratedFile": "ファイル {0} を生成しました。ファイルをログにアップロードしています。",
   "loc.messages.SAD_InvalidPublishOption": "発行アクションに無効なオプションが選択されました。{0}",
   "loc.messages.SAD_DacpacFilePath": "DACPAC ファイル パス:",
-  "loc.messages.SAD_BacpacFilePath": "BACPAC ファイル パス:",
   "loc.messages.SAD_PublishProfilePath": "プロファイルのパスの発行:",
   "loc.messages.SAD_DriftReportWarning": "データベースの誤差レポートの生成中に、データベースがデータ層アプリケーションとして登録されていることを確認します。",
   "loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString": "インポートされた Invoke-Sqlcmd は connectionString をサポートしていません。SQLServer PS モジュールをインストールしてください。"

@@ -8,7 +8,6 @@ $taskNameSelector = Get-VstsInput -Name "TaskNameSelector" -Require
 $dacpacFile = Get-VstsInput -Name "DacpacFile"
 $sqlFile = Get-VstsInput -Name "SqlFile"
 $sqlInline = Get-VstsInput -Name "SqlInline"
-$bacpacFile = Get-VstsInput -Name "BacpacFile"
 $serverName = Get-VstsInput -Name  "ServerName"
 $databaseName = Get-VstsInput -Name "DatabaseName"
 $connectedServiceName = Get-VstsInput -Name "ConnectedServiceName"
@@ -118,7 +117,7 @@ try {
 
     sleep -Seconds $firewallConfigWaitTime
 
-    if (@("Extract", "Export", "DriftReport", "DeployReport", "Script") -contains $deploymentAction) {
+    if (@("Extract", "DriftReport", "DeployReport", "Script") -contains $deploymentAction) {
         # Create the directory for output files
         $generatedOutputFilesRoot = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles"
         if (Test-Path $generatedOutputFilesRoot) {
@@ -145,14 +144,6 @@ try {
               "Extract" {
                   Write-Verbose "Executing 'Extract' action."
                   Extract-Dacpac -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
-              }
-              "Export" {
-                  Write-Verbose "Executing 'Export' action."
-                  Export-Bacpac -serverName $serverName -authenticationType $authenticationType -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
-              }
-              "Import" {
-                  Write-Verbose "Executing 'Import' action."
-                  Import-Bacpac -bacpacFile $bacpacFile -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
               }
               "DriftReport" {
                   Write-Verbose "Executing 'DriftReport' action."

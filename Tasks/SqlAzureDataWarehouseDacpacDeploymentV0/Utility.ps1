@@ -176,7 +176,7 @@ function Get-SqlPackageCommandArguments
         }
     }
     elseif ($authenticationType -eq "connectionString") {
-        # check this for extract and export
+        # check this for extract
         if ($TargetConnectionString) {
           $sqlPackageArguments += @("$($sqlPackageOptions.TargetConnectionString)`"$targetConnectionString`"")
         }
@@ -221,9 +221,9 @@ function Get-SqlPackageCommandArguments
         $sqlPackageArguments += @("$($sqlPackageOptions.OutputPath)`"$outputPath`"")
     }
 
-    # not supported in Extract Export
+    # not supported in Extract
     $defaultTimeout = 120
-    if (($authenticationType -eq "server") -and -not ($sqlpackageAction -eq "Extract" -or $sqlpackageAction -eq "Export") -and -not ($additionalArguments.ToLower().Contains("/targettimeout:") -or $additionalArguments.ToLower().Contains("/tt:"))) {
+    if (($authenticationType -eq "server") -and -not ($sqlpackageAction -eq "Extract") -and -not ($additionalArguments.ToLower().Contains("/targettimeout:") -or $additionalArguments.ToLower().Contains("/tt:"))) {
         # Add Timeout of 120 Seconds
         $additionalArguments = $additionalArguments + " /TargetTimeout:$defaultTimeout"
     }
