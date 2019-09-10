@@ -10,7 +10,36 @@ export class DeploymentsBase {
         this.client = client;
     }
 
-    public createOrUpdate(requestUri, deploymentName, deploymentParameters, callback) {
+    public createOrUpdate(deploymentName, deploymentParameters, callback){
+        throw new Error(tl.loc('MethodNotImplementedError', "createOrUpdate"));
+    }
+
+    public validate(deploymentName, deploymentParameters, callback){
+        throw new Error(tl.loc('MethodNotImplementedError', "validate"));
+    }
+
+    public getDeploymentResult(requestUri, callback) {
+        // Create HTTP transport objects
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.uri = requestUri;
+
+        // Send Request and process response.
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
+            if (response.statusCode != 200) {
+                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
+            }
+            else {
+                deferred.resolve(new azureServiceClientBase.ApiResult(null, response.body));
+            }
+            return deferred.promise;
+        }).then((apiResult: azureServiceClientBase.ApiResult) =>
+            callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
+    }
+
+    protected deployTemplate(requestUri, deploymentName, deploymentParameters, callback) {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
@@ -47,7 +76,7 @@ export class DeploymentsBase {
                 else {
                     this.client.getLongRunningOperationResult(response)
                         .then((operationResponse) => {
-                            this.get(requestUri, (error, response) => {
+                            this.getDeploymentResult(requestUri, (error, response) => {
 
                                 if (error) {
                                     resolve(new azureServiceClientBase.ApiResult(error));
@@ -70,28 +99,7 @@ export class DeploymentsBase {
             (error) => callback(error));
     }
 
-    public get(requestUri, callback) {
-        // Create HTTP transport objects
-        var httpRequest = new webClient.WebRequest();
-        httpRequest.method = 'GET';
-        httpRequest.uri = requestUri;
-
-        // Send Request and process response.
-        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
-            if (response.statusCode != 200) {
-                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
-            }
-            else {
-                deferred.resolve(new azureServiceClientBase.ApiResult(null, response.body));
-            }
-            return deferred.promise;
-        }).then((apiResult: azureServiceClientBase.ApiResult) => 
-            callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
-    }
-
-    public validate(requestUri, deploymentName, deploymentParameters, callback) {
+    protected validateTemplate(requestUri, deploymentName, deploymentParameters, callback) {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }

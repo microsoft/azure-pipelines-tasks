@@ -35,12 +35,6 @@ export class GraphManagementClient extends azureServiceClient.ServiceClient {
 
         this.servicePrincipals = new ServicePrincipals(this);
     }
-
-    protected validateInputs(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string) {
-        if (!credentials) {
-            throw new Error(tl.loc("CredentialsCannotBeNull"));
-        }
-    }
 }
 
 export class ServicePrincipals {

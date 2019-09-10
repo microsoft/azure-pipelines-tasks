@@ -5,6 +5,7 @@ import depolymentsBase = require('./DeploymentsBase');
 
 export class ManagementGroupManagementClient extends azureServiceClientBase.AzureServiceClientBase {
 
+    public managementGroupId: string;
     public deployments: ManagementGroupDeployments;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, managementGroupId: string, options?: any) {
@@ -20,6 +21,11 @@ export class ManagementGroupManagementClient extends azureServiceClientBase.Azur
         this.managementGroupId = managementGroupId;
     }
 
+    public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[], apiVersion?: string): string {
+        parameters['{managementGroupId}'] = encodeURIComponent(this.managementGroupId);
+        return super.getRequestUriForBaseUri(this.baseUri, uriFormat, parameters, queryParameters, apiVersion);
+    }
+
     private validateInputs(managementGroupId: string) {
         if (!managementGroupId) {
             throw new Error(tl.loc("ManagementGroupIdCannotBeNull"));
@@ -28,21 +34,24 @@ export class ManagementGroupManagementClient extends azureServiceClientBase.Azur
 }
 
 export class ManagementGroupDeployments extends depolymentsBase.DeploymentsBase {
-    
+
+    protected client: ManagementGroupManagementClient;
+
     constructor(client: ManagementGroupManagementClient) {
         super(client);
+        this.client = client;
     }
 
-    public deploy(deploymentName, deploymentParameters, callback) {
+    public createOrUpdate(deploymentName, deploymentParameters, callback) {
 
         // Create HTTP request uri
         var requestUri = this.client.getRequestUri(
-            '//providers/Microsoft.Management/managementGroups/{managementGroupId}/providers/Microsoft.Resources/deployments/{deploymentName}', 
+            '//providers/Microsoft.Management/managementGroups/{managementGroupId}/providers/Microsoft.Resources/deployments/{deploymentName}',
             {
                 '{deploymentName}': deploymentName
             }
         );
-        super.createOrUpdate(requestUri, deploymentName, deploymentParameters, callback);
+        super.deployTemplate(requestUri, deploymentName, deploymentParameters, callback);
     }
 
     public validate(deploymentName, deploymentParameters, callback) {
@@ -54,6 +63,6 @@ export class ManagementGroupDeployments extends depolymentsBase.DeploymentsBase 
                 '{deploymentName}': deploymentName
             }
         );
-        super.validate(requestUri, deploymentName, deploymentParameters, callback);
+        super.validateTemplate(requestUri, deploymentName, deploymentParameters, callback);
     }
 }

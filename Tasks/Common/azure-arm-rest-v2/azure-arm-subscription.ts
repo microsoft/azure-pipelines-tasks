@@ -5,6 +5,7 @@ import depolymentsBase = require('./DeploymentsBase');
 
 export class SubscriptionManagementClient extends azureServiceClientBase.AzureServiceClientBase {
 
+    public subscriptionId: string;
     public deployments: SubscriptionDeployments;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, options?: any) {
@@ -20,6 +21,11 @@ export class SubscriptionManagementClient extends azureServiceClientBase.AzureSe
         this.subscriptionId = subscriptionId;
     }
 
+    public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[], apiVersion?: string): string {
+        parameters['{subscriptionId}'] = encodeURIComponent(this.subscriptionId);
+        return super.getRequestUriForBaseUri(this.baseUri, uriFormat, parameters, queryParameters, apiVersion);
+    }
+
     private validateInputs(subscriptionId: string) {
         if (!subscriptionId) {
             throw new Error(tl.loc("SubscriptionIdCannotBeNull"));
@@ -28,14 +34,15 @@ export class SubscriptionManagementClient extends azureServiceClientBase.AzureSe
 }
 
 export class SubscriptionDeployments extends depolymentsBase.DeploymentsBase {
-    
-    protected client: azureServiceClientBase.AzureServiceClientBase;
+
+    protected client: SubscriptionManagementClient;
 
     constructor(client: SubscriptionManagementClient) {
         super(client);
+        this.client = client;
     }
 
-    public deploy(deploymentParameters, parameters, callback) {
+    public createOrUpdate(deploymentParameters, parameters, callback) {
 
         // Create HTTP request uri
         var uri = this.client.getRequestUri(
@@ -44,7 +51,7 @@ export class SubscriptionDeployments extends depolymentsBase.DeploymentsBase {
                 '{deploymentName}': deploymentParameters
             }
         );
-        super.createOrUpdate(uri, deploymentParameters, parameters, callback);
+        super.deployTemplate(uri, deploymentParameters, parameters, callback);
     }
 
     public validate(deploymentParameters, parameters, callback) {
@@ -56,6 +63,6 @@ export class SubscriptionDeployments extends depolymentsBase.DeploymentsBase {
                 '{deploymentName}': deploymentParameters
             }
         );
-        super.validate(uri, deploymentParameters, parameters, callback);
+        super.validateTemplate(uri, deploymentParameters, parameters, callback);
     }
 }
