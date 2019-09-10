@@ -19,7 +19,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 58
+    "Patch": 59
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -85,7 +85,7 @@
       "label": "ms-resource:loc.input.label.SpecifySlot",
       "defaultValue": "false",
       "required": false,
-      "visibleRule": "Action != Swap Slots && Action != Delete Slot && Action != Start Swap With Preview && Action != Complete Swap"
+      "visibleRule": "Action != Swap Slots && Action != Delete Slot && Action != Start Swap With Preview && Action != Complete Swap && Action != Cancel Swap"
     },
     {
       "name": "ResourceGroupName",
