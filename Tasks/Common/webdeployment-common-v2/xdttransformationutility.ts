@@ -122,10 +122,6 @@ export function specialXdtTransformation(rootFolder, transformConfig, sourceConf
             }
         }
     }
-    
-    if(!isTransformationApplied) {
-        tl.warning(tl.loc('FailedToApplyTransformation'));
-    }
 
     return isTransformationApplied;
 }

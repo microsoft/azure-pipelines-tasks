@@ -46,7 +46,7 @@ The task is used to deploy a Web  project to an existing Azure Web App or Functi
 [Configure an App Service app](https://docs.microsoft.com/en-us/azure/app-service/configure-common)
 
 **App settings**: [App settings](https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure#app-settings) contains name/value pairs that your web app will load on start up. Edit web app application settings by following the syntax :
->Example :
+>Example:
 [
    {
     "name": "key1", 
@@ -95,7 +95,7 @@ steps:
   displayName: 'Azure App Service Settings: demo_webapp'
   inputs:
     azureSubscription: demo_subscription_id
-    WebAppName: demo_webapp
+    appName: demo_webapp
     appSettings: |
      [ { "name": "key1", "value": "valueabcd", "slotSetting": false }, { "name": "key2", "value": "valueefgh", "slotSetting": true } ]
     generalSettings: |
