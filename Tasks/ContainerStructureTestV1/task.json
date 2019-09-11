@@ -25,6 +25,13 @@
             "label": "Test Files",
             "required": true,
             "helpMarkDown": "Test files path, that contains container structure tests. Either .yaml or .json files"
+        },
+        {
+            "name": "image",
+            "type": "string",
+            "label": "Image",
+            "required": true,
+            "helpMarkDown": "Image to be tested"
         }
     ],
     "instanceNameFormat": "Container Structure Test $(testFile)",
@@ -37,6 +44,10 @@
     "messages": {
         "NoMatchingFilesFound": "No test files matching '%s' were found.",
         "ErrorTestResultsPublisher": "Error while executing Test: %s.",
-        "ErrorFailTaskOnFailedTests": "There are one or more test failures detected in test. Detailed summary of published test results can be viewed in the Tests tab."
+        "ErrorFailTaskOnFailedTests": "There are one or more test failures detected in test. Detailed summary of published test results can be viewed in the Tests tab.",
+        "FileNotFoundException": "Unable to find the file: %s.",
+        "DownloadException": "Unable to download the file: %s",
+        "ErrorInExecutingCommand": "Error in executing the command: %s"
+
     }
 }

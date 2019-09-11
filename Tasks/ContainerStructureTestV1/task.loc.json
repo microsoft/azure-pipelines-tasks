@@ -1,0 +1,52 @@
+{
+  "id": "39bc2c9b-55b7-4835-89cd-6cc699ef7220",
+  "name": "ContainerStructureTest",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Test",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.0.0",
+  "inputs": [
+    {
+      "name": "testFile",
+      "type": "multiline",
+      "label": "ms-resource:loc.input.label.testFile",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testFile"
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.image",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.image"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "containerstructuretest.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "NoMatchingFilesFound": "ms-resource:loc.messages.NoMatchingFilesFound",
+    "ErrorTestResultsPublisher": "ms-resource:loc.messages.ErrorTestResultsPublisher",
+    "ErrorFailTaskOnFailedTests": "ms-resource:loc.messages.ErrorFailTaskOnFailedTests",
+    "FileNotFoundException": "ms-resource:loc.messages.FileNotFoundException",
+    "DownloadException": "ms-resource:loc.messages.DownloadException",
+    "ErrorInExecutingCommand": "ms-resource:loc.messages.ErrorInExecutingCommand"
+  }
+}
