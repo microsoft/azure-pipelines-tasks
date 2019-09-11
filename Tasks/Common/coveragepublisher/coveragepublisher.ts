@@ -24,7 +24,7 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
 
     const dotnetPath = taskLib.which('dotnet', false);
     if (!dotnetPath && osvar !== 'win32') {
-        taskLib.warning(taskLib.loc('InstallDotNetCoreForHtmlReport'));
+        taskLib.warning(taskLib.loc('InstallDotNetCoreForPublishing'));
         return false;
     }
 
