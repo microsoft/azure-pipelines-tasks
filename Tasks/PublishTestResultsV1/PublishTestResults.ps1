@@ -64,7 +64,7 @@ try
         $switchToPowerShell = Get-TaskVariable -Context $distributedTaskContext -Name "UsePowerShellScripts"
         $agentVersionVar = Get-TaskVariable -Context $distributedTaskContext -Name "Agent.Version"
         Write-Verbose "Agent Version: $agentVersionVar"
-        $agentVersion;
+
         try {
             $agentVersion = [version]$agentVersionVar;
         }
