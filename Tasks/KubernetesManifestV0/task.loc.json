@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 156,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "groups": [],
@@ -333,6 +333,7 @@
     "InvalidPromotetActionDeploymentStrategy": "ms-resource:loc.messages.InvalidPromotetActionDeploymentStrategy",
     "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
     "CouldNotDeterminePodStatus": "ms-resource:loc.messages.CouldNotDeterminePodStatus",
-    "KubectlShouldBeUpgraded": "ms-resource:loc.messages.KubectlShouldBeUpgraded"
+    "KubectlShouldBeUpgraded": "ms-resource:loc.messages.KubectlShouldBeUpgraded",
+    "CouldNotDetermineServiceStatus": "ms-resource:loc.messages.CouldNotDetermineServiceStatus"
   }
 }
