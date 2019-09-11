@@ -133,7 +133,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                         {
                             try
                             {
-                                $publicConfigStorageKey = Get-AzureStoragePrimaryKey $StorageAccount $useArmStorage.IsPresent
+                                $publicConfigStorageKey = Get-AzureStoragePrimaryKey $publicConfigStorageAccountName $useArmStorage.IsPresent
                             }
                             catch
                             {   

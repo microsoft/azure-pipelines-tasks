@@ -4,7 +4,7 @@
     "friendlyName": "Azure App Service Settings",
     "description": "Update/Add App settings an Azure Web App for Linux or Windows",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
-    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebappdeployreadme)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/AA5wsgy)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -17,9 +17,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
+        "Minor": 158,
         "Patch": 0
     },
+    "preview": "true",
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
@@ -41,7 +42,7 @@
             "helpMarkDown": "Select the Azure Resource Manager subscription"
         },
         {
-            "name": "WebAppName",
+            "name": "appName",
             "type": "pickList",
             "label": "App Service name",
             "defaultValue": "",
@@ -52,7 +53,7 @@
             "helpMarkDown": "Enter or Select the name of an existing Azure App Service"
         },
         {
-            "name": "ResourceGroupName",
+            "name": "resourceGroupName",
             "type": "pickList",
             "label": "Resource group",
             "defaultValue": "",
@@ -118,16 +119,16 @@
     ],
     "dataSourceBindings": [
         {
-            "target": "WebAppName",
+            "target": "appName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppNames"
         },
         {
-            "target": "ResourceGroupName",
+            "target": "resourceGroupName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppResourceGroup",
             "parameters": {
-                "WebAppName": "$(WebAppName)"
+                "WebAppName": "$(appName)"
             }
         },
         {
@@ -135,13 +136,13 @@
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppSlotsId",
             "parameters": {
-                "WebAppName": "$(WebAppName)",
-                "ResourceGroupName": "$(ResourceGroupName)"
+                "WebAppName": "$(appName)",
+                "ResourceGroupName": "$(resourceGroupName)"
             },
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         }
     ],
-    "instanceNameFormat": "Azure App Service Settings: $(WebAppName)",
+    "instanceNameFormat": "Azure App Service Settings: $(appName)",
     "execution": {
         "Node": {
             "target": "azurewebappsettings.js"
@@ -154,7 +155,6 @@
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
-        "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
         "UpdatingAppServiceConnectionStrings" : "Updating App Service Connection Strings. Data: %s",
         "UpdatedAppServiceConnectionStrings" : "Updated App Service Connection Strings. Data: %s",
@@ -169,6 +169,7 @@
         "FailedToUpdateAppServiceConfiguration": "Failed to update App service '%s' configuration. Error: %s",	
         "FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",	
         "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",	
-        "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s"
+        "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
+        "AppServiceSettingsNotEnabled" : "App Service Settings is not enabled. Please provide one of the following : App Settings or General Settings or Connection Strings."
     }
 }

@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
 const DefaultWorkingDirectory: string = "C:\\a\\w\\";
@@ -129,5 +129,5 @@ tr.registerMock('../utilities', utMock);
 
 tr.setAnswers(a);
 
-tr.registerMock('azure-arm-rest/azure-graph', require('./mock_node_modules/azure-graph'));
+tr.registerMock('azure-arm-rest-v2/azure-graph', require('./mock_node_modules/azure-graph'));
 tr.run();
