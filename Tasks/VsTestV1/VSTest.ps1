@@ -245,9 +245,10 @@ finally
             if($resultFiles)
             {
                 $switchToPowerShell = Get-TaskVariable -Context $distributedTaskContext -Name "UsePowerShellScripts"
-                if($switchToPowerShell -ieq "true") {
+                if ($switchToPowerShell -ieq "true") {
                     Write-Verbose "Using the powershell scripts to publish test results"
-                } else {
+                }
+                else {
                     Write-Verbose "Using Agent Command to publish test results"
                 }
 
@@ -259,9 +260,10 @@ finally
                 {
                     if($publishRunLevelAttachmentsExists)
                     {
-                        if($switchToPowerShell -ieq "true") {
+                        if ($switchToPowerShell -ieq "true") {
                             Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle -PublishRunLevelAttachments $publishResultsOption
-                        } else {
+                        }
+                        else {
                             Write-Host "##vso[results.publish type=VSTest;publishRunAttachments=$publishResultsOption;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest;runTitle=$testRunTitle;]"
                         }
                     }
@@ -271,9 +273,10 @@ finally
                         {
                             Write-Warning (Get-LocalizedString -Key "Update the agent to try out the '{0}' feature." -ArgumentList "opt in/out of publishing test run attachments")
                         }
-                        if($switchToPowerShell -ieq "true") {
+                        if ($switchToPowerShell -ieq "true") {
                             Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle
-                        } else  {
+                        }
+                        else {
                             Write-Host "##vso[results.publish type=VSTest;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest;runTitle=$testRunTitle;]"
                         }
                     }
@@ -287,9 +290,10 @@ finally
             
                     if($publishRunLevelAttachmentsExists)		
                     {
-                        if($switchToPowerShell -ieq "true") {
+                        if ($switchToPowerShell -ieq "true") {
                             Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -PublishRunLevelAttachments $publishResultsOption
-                        } else {
+                        }
+                        else {
                             Write-Host "##vso[results.publish type=VSTest;publishRunAttachments=$publishResultsOption;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest;]"
                         }
                     }
@@ -299,12 +303,13 @@ finally
                         {
                             Write-Warning (Get-LocalizedString -Key "Update the agent to try out the '{0}' feature." -ArgumentList "opt in/out of publishing test run attachments")
                         }
-                        if($switchToPowerShell -ieq "true") {
+                        if ($switchToPowerShell -ieq "true") {
                             Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
-                        } else {
+                        }
+                        else {
                             Write-Host "##vso[results.publish type=VSTest;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest;]"
                         }
-                    }		
+                    }
                 }
             }
             else
