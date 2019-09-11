@@ -11,9 +11,11 @@ export class KubernetesWorkload {
     public static daemonSet: string = 'DaemonSet';
     public static job: string = 'job';
     public static cronjob: string = 'cronjob';
+    public static service: string = "service";
+    public static ingress: string = "ingress";
 }
 
-export const deploymentTypes: string[] = ['deployment', 'replicaset', 'daemonset', 'pod', 'statefulset'];
+export const deploymentTypes: string[] = ['deployment', 'replicaset', 'daemonset', 'pod', 'statefulset', 'service', 'ingress'];
 export const workloadTypes: string[] = ['deployment', 'replicaset', 'daemonset', 'pod', 'statefulset', 'job', 'cronjob'];
 export const workloadTypesWithRolloutStatus: string[] = ['deployment', 'daemonset', 'statefulset'];
 
