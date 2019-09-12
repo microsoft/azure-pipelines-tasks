@@ -3,20 +3,16 @@ import webClient = require('./webClient');
 import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 
-export class DeploymentsBase {
+export abstract class DeploymentsBase {
     protected client: azureServiceClientBase.AzureServiceClientBase;
 
     constructor(client: azureServiceClientBase.AzureServiceClientBase) {
         this.client = client;
     }
 
-    public createOrUpdate(deploymentName, deploymentParameters, callback){
-        throw new Error(tl.loc('MethodNotImplementedError', "createOrUpdate"));
-    }
+    public abstract createOrUpdate(deploymentName, deploymentParameters, callback);
 
-    public validate(deploymentName, deploymentParameters, callback){
-        throw new Error(tl.loc('MethodNotImplementedError', "validate"));
-    }
+    public abstract validate(deploymentName, deploymentParameters, callback);
 
     public getDeploymentResult(requestUri, callback) {
         // Create HTTP transport objects

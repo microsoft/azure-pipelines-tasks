@@ -35,6 +35,10 @@ export class GraphManagementClient extends azureServiceClient.ServiceClient {
 
         this.servicePrincipals = new ServicePrincipals(this);
     }
+
+    //Since there is no subscriptionId so keeping the check here and empty.
+    protected validateInputs(subscriptionId: string) {
+    }
 }
 
 export class ServicePrincipals {

@@ -60,7 +60,6 @@ export class AzureServiceClientBase {
         this.credentials = credentials;
         this.baseUri = this.credentials.baseUrl;
         this.longRunningOperationRetryTimeout = !!timeout ? timeout : 0; // In minutes
-        this.deployments = new DeploymentsBase(this);
     }
 
     public getCredentials(): msRestAzure.ApplicationTokenCredentials {

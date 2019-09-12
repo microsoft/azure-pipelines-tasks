@@ -5,12 +5,6 @@ import { AzureServiceClientBase, AzureError } from './AzureServiceClientBase';
 export class ServiceClient extends AzureServiceClientBase{
     public subscriptionId: string;
 
-    protected apiVersion: string;
-    protected baseUri: string;
-    protected acceptLanguage: string;
-    protected longRunningOperationRetryTimeout: number;
-    protected generateClientRequestId: boolean;
-
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, timeout?: number) {
         super(credentials, timeout);
         this.validateInputs(subscriptionId);

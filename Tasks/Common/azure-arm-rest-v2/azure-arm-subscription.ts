@@ -6,7 +6,6 @@ import depolymentsBase = require('./DeploymentsBase');
 export class SubscriptionManagementClient extends azureServiceClientBase.AzureServiceClientBase {
 
     public subscriptionId: string;
-    public deployments: SubscriptionDeployments;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, options?: any) {
         super(credentials);

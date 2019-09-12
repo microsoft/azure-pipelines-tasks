@@ -6,7 +6,6 @@ import depolymentsBase = require('./DeploymentsBase');
 export class ManagementGroupManagementClient extends azureServiceClientBase.AzureServiceClientBase {
 
     public managementGroupId: string;
-    public deployments: ManagementGroupDeployments;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, managementGroupId: string, options?: any) {
         super(credentials);

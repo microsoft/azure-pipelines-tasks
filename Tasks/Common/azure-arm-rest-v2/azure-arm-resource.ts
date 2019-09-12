@@ -9,7 +9,6 @@ import Q = require('q');
 
 export class ResourceManagementClient extends azureServiceClient.ServiceClient {
 
-    public deployments: depolymentsBase.DeploymentsBase;
     public resourceGroup: ResourceGroup;
     public resourceGroupName: string;
 
