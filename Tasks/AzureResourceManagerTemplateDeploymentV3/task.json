@@ -15,7 +15,7 @@
     "version": {
         "Major": 3,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -29,7 +29,7 @@
             "name": "Template",
             "displayName": "Template",
             "isExpanded": true,
-            "visibleRule": "action = Create Or Update Resource Group || deploymentScope = Subscription || deploymentScope = Management Group"
+            "visibleRule": "action != Delete resource group"
         },
         {
             "name": "Advanced",
@@ -228,7 +228,7 @@
         {
             "target": "resourceGroupName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureResourceGroups2",
+            "dataSourceName": "AzureResourceGroupsByExplicitSubscription",
             "parameters": {
                 "subscriptionId": "$(subscriptionName)"
             }
@@ -238,6 +238,7 @@
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureLocationsByDeploymentScope",
             "parameters": {
+                "subscriptionId": "$(subscriptionName)",
                 "deploymentScope": "$(deploymentScope)"
             }
         }
@@ -274,21 +275,9 @@
         "DeletingResourceGroup": "Deleting resource group: %s",
         "CouldNotDeletedResourceGroup": "Could not delete resource group: '%s'. Operation failed with error: %s",
         "DeletedResourceGroup": "Deleted resource group: %s",
-        "RegisteringEnvironmentVariable": "Selecting the resource group details: %s.",
-        "FailedToFetchNetworkInterfaces": "Failed to fetch the list of network interfaces. Error: %s.",
-        "FailedToFetchLoadBalancers": "Failed to fetch the list of load balancers. Error: %s.",
-        "FailedToFetchPublicAddresses": "Failed to fetch the list of public addresses. Error: %s.",
-        "AddedToOutputVariable": "Resource group details were saved in following output variable: %s.",
         "InvalidAction": "This action is not defined. Check with the task author.",
         "TaskNotFound": "Task.json file could not be found: %s",
         "ARGD_ConstructorFailed": "Task failed while initializing. Error: %s",
-        "RuleExistsAlready": "Rule %s already exists on the security group '%s'",
-        "FailedToAddExtension": "Failed to add the network security rule with exception: %s",
-        "AddingSecurityRuleNSG": "Adding security rule for the network security group: %s",
-        "AddedSecurityRuleNSG": "Added inbound network security rule config %s with priority %s for port %s under security group %s with result: %s",
-        "FailedAddingNSGRule3Times": "Failed to add the network security rule to the security group %s after trying 3 times",
-        "FailedToDeleteExtension": "Deletion of extension failed",
-        "CredentialsCannotBeNull": "'credentials' cannot be null.",
         "SubscriptionIdCannotBeNull": "'subscriptionId' cannot be null.",
         "ManagementGroupIdCannotBeNull": "'managementGroupId' cannot be null.",
         "CallbackCannotBeNull": "callback cannot be null.",
@@ -303,20 +292,6 @@
         "ExtensionParametersCannotBeNull": "extensionParameters cannot be null or undefined.",
         "ClientIdCannotBeEmpty": "clientId must be a non empty string.",
         "DomainCannotBeEmpty": "domain must be a non empty string.",
-        "SecretCannotBeEmpty": "secret must be a non empty string.",
-        "armUrlCannotBeEmpty": "arm URL must be a non empty string.",
-        "authorityUrlCannotBeEmpty": "authority must be a non empty string.",
-        "LoadBalancerNameCannotBeNull": "'loadBalancerName cannot be null or undefined and it must be of type string.'",
-        "NetworkInterfaceNameCannotBeNull": "networkInterfaceName cannot be null or undefined and it must be of type string.",
-        "NetworkSecurityGroupNameCannotBeNull": "networkSecurityGroupName cannot be null or undefined and it must be of type string.",
-        "SecurityRuleNameCannotBeNull": "securityRuleName cannot be null or undefined and it must be of type string.",
-        "SecurityRuleParametersCannotBeNull": "securityRuleParameters cannot be null or undefined.",
-        "OutputVariableShouldNotBeEmpty": "Output variable should not be empty.",
-        "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
-        "InboundNatRuleAdditionFailed": "Addition of Inbound Nat Rule to the Load Balancer %s failed. Error: %s ",
-        "InboundNatRulesToNICFailed": "Addition of rule Id to the loadBalancerInboundNatRules of nic %s failed with the error: %s",
-        "DGAgentHandlerMajorVersion": "Deployment group extension handler major version is 1",
-        "TimeoutWhileWaiting": "Timed out while waiting",
         "InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
         "EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported file encodings are ['utf-8', 'utf-16le']",
         "CouldNotDetectEncoding": "Could not detect encoding of file '%s'",
@@ -343,8 +318,6 @@
         "UserNameCannotBeNull": "If the 'Run agent service as a user' input is selected, then 'User name' cannot be null.",
         "ASE_SSLIssueRecommendation": "To use a certificate, the certificate must be signed by a trusted certificate authority. If getting certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline.",
         "MoreInformationOnAzurePortal": "More information on Azure Portal",
-        "ResponseNotValid": "Response is not in a valid format",
         "LogDeploymentName": "Deployment name is %s",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }
