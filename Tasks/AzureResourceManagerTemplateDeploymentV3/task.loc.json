@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -29,7 +29,7 @@
       "name": "Template",
       "displayName": "ms-resource:loc.group.displayName.Template",
       "isExpanded": true,
-      "visibleRule": "action = Create Or Update Resource Group || deploymentScope = Subscription || deploymentScope = Management Group"
+      "visibleRule": "action != Delete resource group"
     },
     {
       "name": "Advanced",
@@ -66,6 +66,15 @@
       }
     },
     {
+      "name": "subscriptionName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.subscriptionName",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.subscriptionName",
+      "visibleRule": "deploymentScope = Resource Group || deploymentScope = Subscription"
+    },
+    {
       "name": "action",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.action",
@@ -78,15 +87,6 @@
         "DeleteRG": "Delete resource group"
       },
       "visibleRule": "deploymentScope = Resource Group"
-    },
-    {
-      "name": "subscriptionName",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.subscriptionName",
-      "required": true,
-      "groupName": "AzureDetails",
-      "helpMarkDown": "ms-resource:loc.input.help.subscriptionName",
-      "visibleRule": "deploymentScope = Resource Group || deploymentScope = Subscription"
     },
     {
       "name": "resourceGroupName",
@@ -228,7 +228,7 @@
     {
       "target": "resourceGroupName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureResourceGroups2",
+      "dataSourceName": "AzureResourceGroupsByExplicitSubscription",
       "parameters": {
         "subscriptionId": "$(subscriptionName)"
       }
@@ -238,6 +238,7 @@
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureLocationsByDeploymentScope",
       "parameters": {
+        "subscriptionId": "$(subscriptionName)",
         "deploymentScope": "$(deploymentScope)"
       }
     }
@@ -270,60 +271,15 @@
     "StartingValidation": "ms-resource:loc.messages.StartingValidation",
     "ValidDeployment": "ms-resource:loc.messages.ValidDeployment",
     "CreateTemplateDeploymentValidationFailed": "ms-resource:loc.messages.CreateTemplateDeploymentValidationFailed",
-    "TemplateValidationHadErrors": "ms-resource:loc.messages.TemplateValidationHadErrors",
     "DeletingResourceGroup": "ms-resource:loc.messages.DeletingResourceGroup",
     "CouldNotDeletedResourceGroup": "ms-resource:loc.messages.CouldNotDeletedResourceGroup",
     "DeletedResourceGroup": "ms-resource:loc.messages.DeletedResourceGroup",
-    "RegisteringEnvironmentVariable": "ms-resource:loc.messages.RegisteringEnvironmentVariable",
-    "FailedToFetchNetworkInterfaces": "ms-resource:loc.messages.FailedToFetchNetworkInterfaces",
-    "FailedToFetchLoadBalancers": "ms-resource:loc.messages.FailedToFetchLoadBalancers",
-    "FailedToFetchPublicAddresses": "ms-resource:loc.messages.FailedToFetchPublicAddresses",
-    "AddedToOutputVariable": "ms-resource:loc.messages.AddedToOutputVariable",
     "InvalidAction": "ms-resource:loc.messages.InvalidAction",
-    "TaskNotFound": "ms-resource:loc.messages.TaskNotFound",
     "ARGD_ConstructorFailed": "ms-resource:loc.messages.ARGD_ConstructorFailed",
-    "RuleExistsAlready": "ms-resource:loc.messages.RuleExistsAlready",
-    "FailedToAddExtension": "ms-resource:loc.messages.FailedToAddExtension",
-    "AddingSecurityRuleNSG": "ms-resource:loc.messages.AddingSecurityRuleNSG",
-    "AddedSecurityRuleNSG": "ms-resource:loc.messages.AddedSecurityRuleNSG",
-    "FailedAddingNSGRule3Times": "ms-resource:loc.messages.FailedAddingNSGRule3Times",
-    "FailedToDeleteExtension": "ms-resource:loc.messages.FailedToDeleteExtension",
-    "CredentialsCannotBeNull": "ms-resource:loc.messages.CredentialsCannotBeNull",
-    "SubscriptionIdCannotBeNull": "ms-resource:loc.messages.SubscriptionIdCannotBeNull",
-    "ManagementGroupIdCannotBeNull": "ms-resource:loc.messages.ManagementGroupIdCannotBeNull",
-    "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
-    "ResourceGroupCannotBeNull": "ms-resource:loc.messages.ResourceGroupCannotBeNull",
-    "ResourceGroupExceededLength": "ms-resource:loc.messages.ResourceGroupExceededLength",
-    "ResourceGroupDeceededLength": "ms-resource:loc.messages.ResourceGroupDeceededLength",
-    "ResourceGroupDoesntMatchPattern": "ms-resource:loc.messages.ResourceGroupDoesntMatchPattern",
-    "ParametersCannotBeNull": "ms-resource:loc.messages.ParametersCannotBeNull",
-    "DeploymentNameCannotBeNull": "ms-resource:loc.messages.DeploymentNameCannotBeNull",
-    "InvalidValue": "ms-resource:loc.messages.InvalidValue",
-    "ExpandShouldBeOfTypeString": "ms-resource:loc.messages.ExpandShouldBeOfTypeString",
-    "ExtensionParametersCannotBeNull": "ms-resource:loc.messages.ExtensionParametersCannotBeNull",
-    "ClientIdCannotBeEmpty": "ms-resource:loc.messages.ClientIdCannotBeEmpty",
-    "DomainCannotBeEmpty": "ms-resource:loc.messages.DomainCannotBeEmpty",
-    "SecretCannotBeEmpty": "ms-resource:loc.messages.SecretCannotBeEmpty",
-    "armUrlCannotBeEmpty": "ms-resource:loc.messages.armUrlCannotBeEmpty",
-    "authorityUrlCannotBeEmpty": "ms-resource:loc.messages.authorityUrlCannotBeEmpty",
-    "LoadBalancerNameCannotBeNull": "ms-resource:loc.messages.LoadBalancerNameCannotBeNull",
-    "NetworkInterfaceNameCannotBeNull": "ms-resource:loc.messages.NetworkInterfaceNameCannotBeNull",
-    "NetworkSecurityGroupNameCannotBeNull": "ms-resource:loc.messages.NetworkSecurityGroupNameCannotBeNull",
-    "SecurityRuleNameCannotBeNull": "ms-resource:loc.messages.SecurityRuleNameCannotBeNull",
-    "SecurityRuleParametersCannotBeNull": "ms-resource:loc.messages.SecurityRuleParametersCannotBeNull",
-    "OutputVariableShouldNotBeEmpty": "ms-resource:loc.messages.OutputVariableShouldNotBeEmpty",
-    "InvalidResponseLongRunningOperation": "ms-resource:loc.messages.InvalidResponseLongRunningOperation",
-    "InboundNatRuleAdditionFailed": "ms-resource:loc.messages.InboundNatRuleAdditionFailed",
-    "InboundNatRulesToNICFailed": "ms-resource:loc.messages.InboundNatRulesToNICFailed",
-    "DGAgentHandlerMajorVersion": "ms-resource:loc.messages.DGAgentHandlerMajorVersion",
-    "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting",
     "InvalidTemplateLocation": "ms-resource:loc.messages.InvalidTemplateLocation",
     "EncodingNotSupported": "ms-resource:loc.messages.EncodingNotSupported",
     "CouldNotDetectEncoding": "ms-resource:loc.messages.CouldNotDetectEncoding",
     "DetectedFileEncoding": "ms-resource:loc.messages.DetectedFileEncoding",
-    "HostUrlCannotBeEmpty": "ms-resource:loc.messages.HostUrlCannotBeEmpty",
-    "PatTokenCannotBeEmpty": "ms-resource:loc.messages.PatTokenCannotBeEmpty",
-    "OnlyTokenAuthAllowed": "ms-resource:loc.messages.OnlyTokenAuthAllowed",
     "ErrorWhileParsingParameter": "ms-resource:loc.messages.ErrorWhileParsingParameter",
     "TemplateFilePatternMatchingMoreThanOneFile": "ms-resource:loc.messages.TemplateFilePatternMatchingMoreThanOneFile",
     "TemplateParameterFilePatternMatchingMoreThanOneFile": "ms-resource:loc.messages.TemplateParameterFilePatternMatchingMoreThanOneFile",
@@ -331,20 +287,9 @@
     "TemplateParameterFilePatternMatchingNoFile": "ms-resource:loc.messages.TemplateParameterFilePatternMatchingNoFile",
     "ParametersPatternMatchesADirectoryInsteadOfAFile": "ms-resource:loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile",
     "CsmFilePatternMatchesADirectoryInsteadOfAFile": "ms-resource:loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile",
-    "ResourceNameCannotBeNull": "ms-resource:loc.messages.ResourceNameCannotBeNull",
     "AddedOutputVariable": "ms-resource:loc.messages.AddedOutputVariable",
-    "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
-    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
-    "SpecifiedAzureRmEndpointIsInvalid": "ms-resource:loc.messages.SpecifiedAzureRmEndpointIsInvalid",
-    "FailedToFetchAzureStackDependencyData": "ms-resource:loc.messages.FailedToFetchAzureStackDependencyData",
     "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
-    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
-    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
-    "UserNameCannotBeNull": "ms-resource:loc.messages.UserNameCannotBeNull",
-    "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
     "MoreInformationOnAzurePortal": "ms-resource:loc.messages.MoreInformationOnAzurePortal",
-    "ResponseNotValid": "ms-resource:loc.messages.ResponseNotValid",
-    "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName"
   }
 }
