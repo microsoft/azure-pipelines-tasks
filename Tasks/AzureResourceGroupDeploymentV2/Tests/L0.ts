@@ -363,7 +363,7 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "virtualMachineExtensions.deleteMethod function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("loc_mock_DGAgentDeletedFromAllVMs") > 0, "Deployment group agent should have been deleted from all VMs");
-            assert(tr.stdout.indexOf("resourceGroup.deleteMethod is called") > 0, "Task should have called resourceGroup.deleteMethod function from azure-sdk");
+            assert(tr.stdout.indexOf("resourceGroups.deleteMethod is called") > 0, "Task should have called resourceGroups.deleteMethod function from azure-sdk");
             assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Deployment group agent should have started to be deleted from VM");
             assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "Deployment group agent should have been deleted from VM");
             done();
@@ -434,7 +434,7 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") <= 0, "virtualMachineExtensions.deleteMethod function should not have been called from azure-sdk");
             assert(tr.stdout.indexOf("loc_mock_DGAgentDeletedFromAllVMs") <= 0, "Deployment group agent should not have been deleted since there are not vms");
             assert(tr.stdout.indexOf("loc_mock_DeleteExtension") <= 0, "Should not have tried to deleted extension since no vms are present");
-            assert(tr.stdout.indexOf("resourceGroup.deleteMethod is called") > 0, "Delete Resource Group function should have been called");
+            assert(tr.stdout.indexOf("resourceGroups.deleteMethod is called") > 0, "Delete Resource Group function should have been called");
             done();
         }
         catch (error) {
@@ -585,7 +585,7 @@ describe('Azure Resource Group Deployment', function () {
         try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loc_mock_DeletingResourceGroup") > 0, "Delete Resource Group function should have been called");
-            assert(tr.stdout.indexOf("resourceGroup.deleteMethod is called") > 0, "Task should have called resourceGroup.deleteMethod function from azure-sdk");
+            assert(tr.stdout.indexOf("resourceGroups.deleteMethod is called") > 0, "Task should have called resourceGroups.deleteMethod function from azure-sdk");
             done();
         }
         catch (error) {
@@ -749,7 +749,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    //Assertion check
+    //Assertion check 
     it('1 LB 2 Vms present, No Inbound Nat Rules Present', (done) => {
         // VM has WinRMHttps Listener enabled, but no NSG
         let tp = path.join(__dirname, 'EnablePrereq.js');

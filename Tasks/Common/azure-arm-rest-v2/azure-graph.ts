@@ -1,7 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
 import msRestAzure = require("./azure-arm-common");
 import azureServiceClient = require("./AzureServiceClient");
-import azureServiceClientBase = require("./AzureServiceClientBase");
 import webClient = require("./webClient");
 import util = require("util");
 import Q = require("q");
@@ -36,8 +35,10 @@ export class GraphManagementClient extends azureServiceClient.ServiceClient {
         this.servicePrincipals = new ServicePrincipals(this);
     }
 
-    //Since there is no subscriptionId so keeping the check here and empty.
-    protected validateInputs(subscriptionId: string) {
+    protected validateInputs(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string) {
+        if (!credentials) {
+            throw new Error(tl.loc("CredentialsCannotBeNull"));
+        }
     }
 }
 
@@ -72,7 +73,7 @@ export class ServicePrincipals {
                 deferred.resolve(result);
             }
             else {
-                deferred.reject(azureServiceClientBase.ToError(response));
+                deferred.reject(azureServiceClient.ToError(response));
             }
         }).catch(function(error) {
             deferred.reject(error);

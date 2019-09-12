@@ -4,6 +4,7 @@ import fs = require('fs');
 import util = require('util');
 import webClient = require('./webClient');
 import Q = require('q');
+import { ToError } from './AzureServiceClient';
 import { WebJob, SiteExtension } from './azureModels';
 import { KUDU_DEPLOYMENT_CONSTANTS } from './constants';
 

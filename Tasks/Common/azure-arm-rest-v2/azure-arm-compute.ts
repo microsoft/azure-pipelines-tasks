@@ -3,7 +3,6 @@ import tl = require('azure-pipelines-task-lib/task');
 import util = require("util");
 import webClient = require("./webClient");
 import azureServiceClient = require("./AzureServiceClient");
-import azureServiceClientBase = require("./AzureServiceClientBase");
 import Model = require("./azureModels");
 import Q = require("q");
 
@@ -49,7 +48,7 @@ export class VirtualMachines {
         this.client = client;
     }
 
-    public list(resourceGroupName, options, callback: azureServiceClientBase.ApiCallback) {
+    public list(resourceGroupName, options, callback: azureServiceClient.ApiCallback) {
         if (!callback && typeof options === 'function') {
             callback = options;
             options = null;
@@ -84,20 +83,20 @@ export class VirtualMachines {
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
-                        return new azureServiceClientBase.ApiResult(nextResult.error);
+                        return new azureServiceClient.ApiResult(nextResult.error);
                     }
                     result = result.concat(nextResult.result);
                 }
-                return new azureServiceClientBase.ApiResult(null, result);
+                return new azureServiceClient.ApiResult(null, result);
             }
             else {
-                return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response));
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
             }
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
-    public get(resourceGroupName, vmName, options, callback: azureServiceClientBase.ApiCallback) {
+    public get(resourceGroupName, vmName, options, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -136,20 +135,20 @@ export class VirtualMachines {
         httpRequest.headers = this.client.setCustomHeaders(options);
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 var result = response.body;
-                deferred.resolve(new azureServiceClientBase.ApiResult(null, result));
+                deferred.resolve(new azureServiceClient.ApiResult(null, result));
             }
             else {
-                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
-    public restart(resourceGroupName: string, vmName: string, callback: azureServiceClientBase.ApiCallback) {
+    public restart(resourceGroupName: string, vmName: string, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
@@ -178,26 +177,26 @@ export class VirtualMachines {
         httpRequest.body = null;
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode != 202) {
-                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.body.status == "Succeeded") {
-                        deferred.resolve(new azureServiceClientBase.ApiResult(null, operationResponse.body));
+                        deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                     }
                     else {
-                        deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(operationResponse)));
+                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
                 }, (error) => deferred.reject(error));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
-    public start(resourceGroupName: string, vmName: string, callback: azureServiceClientBase.ApiCallback) {
+    public start(resourceGroupName: string, vmName: string, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
@@ -223,27 +222,27 @@ export class VirtualMachines {
         httpRequest.body = null;
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 202) {
-                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.body.status == "Succeeded") {
-                        deferred.resolve(new azureServiceClientBase.ApiResult(null, operationResponse.body));
+                        deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                     }
                     else {
-                        deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(operationResponse)));
+                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
                 }, (error) => deferred.reject(error));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
-    public powerOff(resourceGroupName: string, vmName: string, callback: azureServiceClientBase.ApiCallback) {
+    public powerOff(resourceGroupName: string, vmName: string, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
@@ -268,27 +267,27 @@ export class VirtualMachines {
             }
         );
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 202) {
-                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.body.status == "Succeeded") {
-                        deferred.resolve(new azureServiceClientBase.ApiResult(null, operationResponse.body));
+                        deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                     }
                     else {
-                        deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(operationResponse)));
+                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
                 }, (error) => deferred.reject(error));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
-    public deallocate(resourceGroupName: string, vmName: string, callback: azureServiceClientBase.ApiCallback) {
+    public deallocate(resourceGroupName: string, vmName: string, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
@@ -313,27 +312,27 @@ export class VirtualMachines {
             }
         );
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 202) {
-                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.body.status == "Succeeded") {
-                        deferred.resolve(new azureServiceClientBase.ApiResult(null, operationResponse.body));
+                        deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                     }
                     else {
-                        deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(operationResponse)));
+                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
                 }, (error) => deferred.reject(error));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
-    public deleteMethod(resourceGroupName: string, vmName: string, callback: azureServiceClientBase.ApiCallback) {
+    public deleteMethod(resourceGroupName: string, vmName: string, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
@@ -360,23 +359,23 @@ export class VirtualMachines {
         );
         httpRequest.body = null;
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 202 && statusCode != 204) {
-                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.body.status === "Succeeded") {
                         // Generate Response
-                        deferred.resolve(new azureServiceClientBase.ApiResult(null, operationResponse.body));
+                        deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                     } else {
-                        deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(operationResponse)));
+                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
                 }, (error) => deferred.reject(error));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 }
@@ -388,7 +387,7 @@ export class VirtualMachineExtensions {
         this.client = client;
     }
 
-    public list(resourceGroupName: string, resourceName: string, resourceType: Model.ComputeResourceType, options, callback: azureServiceClientBase.ApiCallback) {
+    public list(resourceGroupName: string, resourceName: string, resourceType: Model.ComputeResourceType, options, callback: azureServiceClient.ApiCallback) {
         if (!callback && typeof options === 'function') {
             callback = options;
             options = null;
@@ -428,20 +427,20 @@ export class VirtualMachineExtensions {
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
-                        return new azureServiceClientBase.ApiResult(nextResult.error);
+                        return new azureServiceClient.ApiResult(nextResult.error);
                     }
                     result = result.concat(nextResult.result);
                 }
-                return new azureServiceClientBase.ApiResult(null, result);
+                return new azureServiceClient.ApiResult(null, result);
             }
             else {
-                return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response), result);
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response), result);
             }
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
-    public get(resourceGroupName: string, resourceName: string, resourceType: Model.ComputeResourceType, vmExtensionName: string, options, callback: azureServiceClientBase.ApiCallback) {
+    public get(resourceGroupName: string, resourceName: string, resourceType: Model.ComputeResourceType, vmExtensionName: string, options, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -482,20 +481,20 @@ export class VirtualMachineExtensions {
         httpRequest.body = null;
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 var result = response.body;
-                deferred.resolve(new azureServiceClientBase.ApiResult(null, result));
+                deferred.resolve(new azureServiceClient.ApiResult(null, result));
             }
             else {
-                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
-    public createOrUpdate(resourceGroupName: string, resourceName: string, resourceType: Model.ComputeResourceType, vmExtensionName: string, extensionParameters, callback: azureServiceClientBase.ApiCallback): void {
+    public createOrUpdate(resourceGroupName: string, resourceName: string, resourceType: Model.ComputeResourceType, vmExtensionName: string, extensionParameters, callback: azureServiceClient.ApiCallback): void {
         var client = this.client;
 
         if (!callback) {
@@ -539,27 +538,27 @@ export class VirtualMachineExtensions {
 
         // Send request
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode != 200 && response.statusCode != 201) {
-                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.body.status === "Succeeded") {
                         var result = { properties: { "provisioningState": operationResponse.body.status } };
-                        deferred.resolve(new azureServiceClientBase.ApiResult(null, result));
+                        deferred.resolve(new azureServiceClient.ApiResult(null, result));
                     } else {
-                        deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(operationResponse)));
+                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
                 }, (error) => deferred.reject(error));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
 
     }
 
-    public deleteMethod(resourceGroupName: string, resourceName: string, resourceType: Model.ComputeResourceType, vmExtensionName: string, callback: azureServiceClientBase.ApiCallback) {
+    public deleteMethod(resourceGroupName: string, resourceName: string, resourceType: Model.ComputeResourceType, vmExtensionName: string, callback: azureServiceClient.ApiCallback) {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
@@ -590,21 +589,21 @@ export class VirtualMachineExtensions {
 
         // Send request
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode !== 202 && response.statusCode !== 204) {
-                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.statusCode === 200) {
-                        deferred.resolve(new azureServiceClientBase.ApiResult(null));
+                        deferred.resolve(new azureServiceClient.ApiResult(null));
                     } else {
-                        deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(operationResponse)));
+                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
                 }, (error) => deferred.reject(error));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
@@ -617,7 +616,7 @@ export class VirtualMachineScaleSets {
         this.client = client;
     }
 
-    public list(options, callback: azureServiceClientBase.ApiCallback) {
+    public list(options, callback: azureServiceClient.ApiCallback) {
         if (!callback && typeof options === 'function') {
             callback = options;
             options = null;
@@ -641,20 +640,20 @@ export class VirtualMachineScaleSets {
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
-                        return new azureServiceClientBase.ApiResult(nextResult.error);
+                        return new azureServiceClient.ApiResult(nextResult.error);
                     }
                     result = result.concat(nextResult.result);
                 }
-                return new azureServiceClientBase.ApiResult(null, result);
+                return new azureServiceClient.ApiResult(null, result);
             }
             else {
-                return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response), result);
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response), result);
             }
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
-    public get(resourceGroupName: string, vmssName: string, options, callback: azureServiceClientBase.ApiCallback) {
+    public get(resourceGroupName: string, vmssName: string, options, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -695,20 +694,20 @@ export class VirtualMachineScaleSets {
         httpRequest.headers = this.client.setCustomHeaders(options);
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 var result = response.body;
-                deferred.resolve(new azureServiceClientBase.ApiResult(null, result));
+                deferred.resolve(new azureServiceClient.ApiResult(null, result));
             }
             else {
-                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
-    public updateImage(resourceGroupName: string, vmssName: string, imageUrl: string, options, callback: azureServiceClientBase.ApiCallback) {
+    public updateImage(resourceGroupName: string, vmssName: string, imageUrl: string, options, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -783,24 +782,24 @@ export class VirtualMachineScaleSets {
             console.log(tl.loc("NewVMSSImageUrl", imageUrl));
             console.log(tl.loc("VMSSUpdateImage", vmssName));
             this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-                var deferred = Q.defer<azureServiceClientBase.ApiResult>();
+                var deferred = Q.defer<azureServiceClient.ApiResult>();
                 var statusCode = response.statusCode;
                 if (response.statusCode == 200) {
                     // wait for image update to complete
                     this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                         if (operationResponse.body.status === "Succeeded") {
-                            deferred.resolve(new azureServiceClientBase.ApiResult(null, operationResponse.body));
+                            deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                         }
                         else {
-                            deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(operationResponse)));
+                            deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                         }
                     }, (error) => deferred.reject(error));
                 }
                 else {
-                    deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
+                    deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
                 }
                 return deferred.promise;
-            }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+            }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
                 (error) => callback(error));
         });
     }

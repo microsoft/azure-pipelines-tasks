@@ -1,5 +1,4 @@
-import { ServiceClient } from './AzureServiceClient';
-import { ToError } from './AzureServiceClientBase';
+import { ToError, ServiceClient } from './AzureServiceClient';
 import msRestAzure = require('./azure-arm-common');
 import tl = require('azure-pipelines-task-lib/task');
 import util = require('util');

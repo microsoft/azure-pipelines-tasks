@@ -1,6 +1,5 @@
 import msRestAzure = require("./azure-arm-common");
 import azureServiceClient = require("./AzureServiceClient");
-import azureServiceClientBase = require("./AzureServiceClientBase");
 import Model = require("./azureModels");
 import webClient = require("./webClient");
 import tl = require('azure-pipelines-task-lib/task');
@@ -73,7 +72,7 @@ export class StorageAccounts {
                 deferred.resolve(result);
             }
             else {
-                deferred.reject(azureServiceClientBase.ToError(response));
+                deferred.reject(azureServiceClient.ToError(response));
             }
         }).catch(function (error) {
             deferred.reject(error);
@@ -113,7 +112,7 @@ export class StorageAccounts {
                  deferred.resolve(result);
              }
              else {
-                 deferred.reject(azureServiceClientBase.ToError(response));
+                 deferred.reject(azureServiceClient.ToError(response));
              }
          }).catch(function(error) {
              deferred.reject(error);
@@ -168,7 +167,7 @@ export class StorageAccounts {
 
                 deferred.resolve(accessKeys);
             } else {
-                deferred.reject(azureServiceClientBase.ToError(response));
+                deferred.reject(azureServiceClient.ToError(response));
             }
         }).catch(function (error) {
             deferred.reject(error);
