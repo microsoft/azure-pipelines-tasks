@@ -32,6 +32,14 @@
       "label": "ms-resource:loc.input.label.image",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.image"
+    },
+    {
+      "name": "failTaskOnFailedTests",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failTaskOnFailedTests",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailedTests"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

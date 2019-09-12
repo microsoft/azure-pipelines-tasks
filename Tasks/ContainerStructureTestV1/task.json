@@ -32,6 +32,14 @@
             "label": "Image",
             "required": true,
             "helpMarkDown": "Image to be tested"
+        },
+        {
+            "name": "failTaskOnFailedTests",
+            "type": "boolean",
+            "label": "Fail if there are test failures",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected."
         }
     ],
     "instanceNameFormat": "Container Structure Test $(testFile)",

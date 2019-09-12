@@ -18,13 +18,21 @@ interface TestResult {
     "Errors": string[] | undefined;
 }
 
+const telemetryArea: string = 'TestExecution';
+const telemetryFeature: string = 'PublishTestResultsTask';
+const telemetryData: { [key: string]: any; } = <{ [key: string]: any; }>{};
+
+
 async function run() {
+    let taskResult = true;
     try {
         const osType = tl.osType().toLowerCase();
         tl.debug(`Os Type: ${osType}`);
+        telemetryData["OsType"] = osType;
 
         const testFilePath = tl.getInput('testFile', true);
         const image = tl.getInput('image', true);
+        const failTaskOnFailedTests: boolean = tl.getInput('failTaskOnFailedTests').toLowerCase() == 'true' ? true : false;
 
         const downloadUrl = getContainerStructureTestRunnerDownloadPath(osType);
         if (!downloadUrl) {
@@ -43,9 +51,18 @@ async function run() {
 
         publishTheTestResultsToTCM(output);
         publishTestResultsToMetadataStore(resultObj);
+
+        if (failTaskOnFailedTests && resultObj && resultObj.Fail > 0) {
+            taskResult = false;
+        }
     } catch (error) {
         tl.error(error);
+        telemetryData["Exception"] = error;
+        taskResult = false;
     } finally {
+        tl.setResult(taskResult ? tl.TaskResult.Succeeded : tl.TaskResult.Failed, '');
+        telemetryData["TaskResult"] = taskResult;
+        publishTelemetry();
         tl.debug("Finished Execution");
     }
 }
@@ -84,8 +101,11 @@ async function downloadTestRunner(downloadUrl: string): Promise<string> {
             tl.error(tl.loc('FileNotFoundException', path));
             throw new Error(tl.loc('FileNotFoundException', path));
         }
+        telemetryData["DownloadStatus"] = true;
         return gcst;
     }).catch((reason) => {
+        telemetryData["DownloadStatus"] = false;
+        telemetryData["DownloadError"] = reason;
         tl.error(tl.loc('DownloadException', reason));
         throw new Error(tl.loc('DownloadException', reason));
     })
@@ -129,9 +149,19 @@ function publishTheTestResultsToTCM(jsonResutlsString: string) {
     properties['testRunSystem'] = "VSTS-PTR";
 
     tl.command('results.publish', properties, '');
+    telemetryData["TCMPublishStatus"] = true;
 }
 
 function publishTestResultsToMetadataStore(testSummary: TestSummary) {
+}
+
+function publishTelemetry() {
+    try {
+        console.log(`##vso[telemetry.publish area=${telemetryArea};feature=${telemetryFeature}]${JSON.stringify(telemetryData)}`);
+    }
+    catch (err) {
+        tl.debug(`Error in writing telemetry : ${err}`);
+    }
 }
 
 run();
