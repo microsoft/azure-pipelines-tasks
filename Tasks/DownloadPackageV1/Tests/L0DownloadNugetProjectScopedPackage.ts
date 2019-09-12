@@ -12,7 +12,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput("packageType", "nuget");
 tr.setInput("feed", "projectId/feedId");
 tr.setInput("view", "viewId");
-tr.setInput("definition", "packageId");
+tr.setInput("definition", "6f598cbe-a5e2-4f75-aa78-e0fd08301a15");
 tr.setInput("version", "versionId");
 tr.setInput("downloadPath", outputPath);
 tr.setInput("extract", "true");
