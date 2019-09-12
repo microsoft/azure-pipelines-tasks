@@ -255,6 +255,8 @@ Tasks/NuGetPublisherV0/*    @zjrunner
 
 Tasks/NuGetToolInstallerV0/*    @zjrunner
 
+Tasks/OpenPolicyAgentInstallerV0/*    @Anumita
+
 Tasks/PackerBuildV0/*   @sachinma
 
 Tasks/PackerBuildV1/*   @sachinma
