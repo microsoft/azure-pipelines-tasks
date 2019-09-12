@@ -14,22 +14,9 @@ Register-Mock Initialize-AzModule
 Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
 Register-Mock Get-VstsEndpoint
-Register-Mock Get-VstsTaskVariable { $env:PSModulePath } -- -Name 'AZ_PS_MODULE_PATH' -Require
+Register-Mock Assert-VstsPath
+Register-Mock Invoke-VstsTool { }
 
 # Act.
 $actual = @( & $PSScriptRoot\..\AzurePowerShell.ps1 )
 $global:ErrorActionPreference = 'Stop' # Reset to stop.
-
-# Assert the correct number of elements is returned.
-Assert-AreEqual 2 $actual.Length
-
-# Assert item 1 and 2 are in an array together.
-Assert-AreEqual 2 @($actual[0]).Length
-Assert-AreEqual 'item 1' $actual[0][0]
-Assert-AreEqual 'item 2' $actual[0][1]
-
-# Assert item 3 is separate.
-Assert-AreEqual 'item 3' $actual[1]
-
-# Clean Up
-Unregister-Mock Get-VstsTaskVariable

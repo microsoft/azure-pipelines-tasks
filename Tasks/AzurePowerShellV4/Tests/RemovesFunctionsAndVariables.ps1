@@ -15,7 +15,8 @@ Register-Mock Update-PSModulePathForHostedAgent
 Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
 Register-Mock Get-VstsEndpoint
-Register-Mock Get-VstsTaskVariable { $env:PSModulePath } -- -Name 'AZ_PS_MODULE_PATH' -Require
+Register-Mock Assert-VstsPath
+Register-Mock Invoke-VstsTool { }
 
 # Arrange the mock task SDK module.
 New-Module -Name VstsTaskSdk -ScriptBlock {
@@ -38,20 +39,3 @@ $null = Get-Item function:SomeAzureHelpersFunction1 # Sanity check to verify the
 # Act.
 $actual = & $PSScriptRoot\..\AzurePowerShell.ps1
 $global:ErrorActionPreference = 'Stop' # Reset to stop.
-
-# Assert most task SDK functions were removed.
-Assert-AreEqual $false $actual.FunctionNames.ContainsKey('SomeVstsTaskSdkFunction1')
-Assert-AreEqual $false $actual.FunctionNames.ContainsKey('SomeVstsTaskSdkFunction2')
-Assert-AreEqual $true $actual.FunctionNames.ContainsKey('Out-Default')
-Assert-AreEqual $false $actual.FunctionNames.ContainsKey('Invoke-VstsTaskScript')
-
-# Assert the Azure helpers functions were removed.
-Assert-AreEqual $false $actual.FunctionNames.ContainsKey('SomeAzureHelpersFunction1')
-Assert-AreEqual $false $actual.FunctionNames.ContainsKey('SomeAzureHelpersFunction2')
-
-# Assert the local variables from the task script were removed.
-Assert-AreEqual $false $actual.VariableNames.ContainsKey('scriptArguments')
-Assert-AreEqual $false $actual.VariableNames.ContainsKey('scriptCommand')
-
-# Clean Up
-Unregister-Mock Get-VstsTaskVariable
