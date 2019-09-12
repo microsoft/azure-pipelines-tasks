@@ -33,7 +33,7 @@ if ($targetAzurePs -eq $otherVersion) {
     if ($customTargetAzurePs -eq $null) {
         throw (Get-VstsLocString -Key InvalidAzurePsVersion $customTargetAzurePs)
     } else {
-        $targetAzurePs = $customTargetAzurePs.Trim()        
+        $targetAzurePs = $customTargetAzurePs.Trim()
     }
 }
 
@@ -60,7 +60,7 @@ try
     Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs
 
     # Generate the script contents.
-    Write-Host "Generating the script"
+    Write-Host (Get-VstsLocString -Key 'GeneratingScript')
     $UpdatePSModulePathArgument = $null;
     if ($targetAzurePs)
     {
@@ -69,10 +69,9 @@ try
 
     $contents = @()
     $contents += "`$ErrorActionPreference = '$__vsts_input_errorActionPreference'"
-    if ($env:system_debug -eq "true")
-	{
-	    $contents += "`$VerbosePreference = 'continue'"
-	}
+    if ($env:system_debug -eq "true") {
+        $contents += "`$VerbosePreference = 'continue'"
+    }
 
     $contents += ". $PSScriptRoot\UpdatePSModulePath.ps1 $UpdatePSModulePathArgument"
     if ($scriptType -eq "InlineScript") {
@@ -117,7 +116,7 @@ try
     if (!$__vsts_input_failOnStandardError) {
         Invoke-VstsTool @splat
     }
-	else {
+    else {
         $inError = $false
         $errorLines = New-Object System.Text.StringBuilder
         Invoke-VstsTool @splat 2>&1 |
