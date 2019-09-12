@@ -29,13 +29,13 @@
             "name": "Template",
             "displayName": "Template",
             "isExpanded": true,
-            "visibleRule": "action != Delete resource group"
+            "visibleRule": "action = Create Or Update Resource Group || deploymentScope != Resource Group"
         },
         {
             "name": "Advanced",
             "displayName": "Advanced",
             "isExpanded": true,
-            "visibleRule": "action != Delete resource group"
+            "visibleRule": "action = Create Or Update Resource Group || deploymentScope != Resource Group"
         }
     ],
     "inputs": [
@@ -60,7 +60,7 @@
             "defaultValue": "",
             "required": true,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Select the Azure Resource Manager service connection for the deployment.",
+            "helpMarkDown": "Select the Azure Resource Manager service connection having access to the selected deployment scope.",
             "properties": {
                 "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
             }
@@ -71,8 +71,8 @@
             "label": "Subscription",
             "required": true,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Name of the subscription",
-            "visibleRule": "deploymentScope = Resource Group || deploymentScope = Subscription"
+            "helpMarkDown": "Select the Azure subscription",
+            "visibleRule": "deploymentScope != Management Group"
         },
         {
             "name": "action",
@@ -105,7 +105,7 @@
             "type": "pickList",
             "label": "Location",
             "required": true,
-            "helpMarkDown": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
+            "helpMarkDown": "Resource Group deployment scope: Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.\n Other deployment scope: Location to store deployment metadata.",
             "groupName": "AzureDetails",
             "properties": {
                 "EditableOptions": "True"
@@ -206,7 +206,7 @@
             "required": false,
             "defaultValue": "",
             "groupName": "Advanced",
-            "helpMarkDown": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)"
+            "helpMarkDown": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs)"
         },
         {
             "name": "addSpnToEnvironment",
@@ -236,7 +236,7 @@
         {
             "target": "location",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureLocationsByDeploymentScope",
+            "dataSourceName": "AzureLocationsByDeploymentScopes",
             "parameters": {
                 "subscriptionId": "$(subscriptionName)",
                 "deploymentScope": "$(deploymentScope)"
@@ -290,6 +290,8 @@
         "AddedOutputVariable": "Updated output variable '%s', which contains the outputs section of the current deployment object in string format.",
         "UnableToReadResponseBody": "Unable to read response body. Error: %s",
         "MoreInformationOnAzurePortal": "More information on Azure Portal",
-        "LogDeploymentName": "Deployment name is %s"
+        "LogDeploymentName": "Deployment name is %s",
+        "ResourceGroupNameNotProvided": "Resource Group name should be provided",
+        "LocationNotProvided": "Location is required for deployment"
     }
 }

@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -29,13 +29,13 @@
       "name": "Template",
       "displayName": "ms-resource:loc.group.displayName.Template",
       "isExpanded": true,
-      "visibleRule": "action != Delete resource group"
+      "visibleRule": "action = Create Or Update Resource Group || deploymentScope != Resource Group"
     },
     {
       "name": "Advanced",
       "displayName": "ms-resource:loc.group.displayName.Advanced",
       "isExpanded": true,
-      "visibleRule": "action != Delete resource group"
+      "visibleRule": "action = Create Or Update Resource Group || deploymentScope != Resource Group"
     }
   ],
   "inputs": [
@@ -72,7 +72,7 @@
       "required": true,
       "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.subscriptionName",
-      "visibleRule": "deploymentScope = Resource Group || deploymentScope = Subscription"
+      "visibleRule": "deploymentScope != Management Group"
     },
     {
       "name": "action",
@@ -236,7 +236,7 @@
     {
       "target": "location",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureLocationsByDeploymentScope",
+      "dataSourceName": "AzureLocationsByDeploymentScopes",
       "parameters": {
         "subscriptionId": "$(subscriptionName)",
         "deploymentScope": "$(deploymentScope)"
@@ -290,6 +290,8 @@
     "AddedOutputVariable": "ms-resource:loc.messages.AddedOutputVariable",
     "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
     "MoreInformationOnAzurePortal": "ms-resource:loc.messages.MoreInformationOnAzurePortal",
-    "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName"
+    "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName",
+    "ResourceGroupNameNotProvided": "ms-resource:loc.messages.ResourceGroupNameNotProvided",
+    "LocationNotProvided": "ms-resource:loc.messages.LocationNotProvided"
   }
 }

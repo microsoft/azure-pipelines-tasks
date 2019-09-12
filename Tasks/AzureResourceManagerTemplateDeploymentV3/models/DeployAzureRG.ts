@@ -33,14 +33,43 @@ export class AzureRGTaskParameters {
     public async getAzureRGTaskParameters() : Promise<AzureRGTaskParameters>
     {
         try {
+
+            //Deployment Scope
+            this.deploymentScope = tl.getInput("deploymentScope");
+            if(!this.deploymentScope){
+                this.deploymentScope = "Resource Group";
+            }
+
             this.connectedService = tl.getInput("ConnectedServiceName", true);
             var endpointTelemetry = '{"endpointId":"' + this.connectedService + '"}';
-            console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureResourceGroupDeployment]" + endpointTelemetry);
-
+            console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureResourceManagerTemplateDeployment]" + endpointTelemetry);
             this.endpointPortalUrl = tl.getEndpointDataParameter(this.connectedService, "armManagementPortalUrl", true);
             this.action = tl.getInput("action");
-            this.managementGroupId = tl.getEndpointDataParameter(this.connectedService, "ManagementGroupId", true);
+
+            //Management Group Id
+            if(this.deploymentScope === "Management Group"){
+                this.managementGroupId = tl.getEndpointDataParameter(this.connectedService, "ManagementGroupId", false);
+            }
+
+            //Subscripion Id
+            this.subscriptionId = tl.getInput("subscriptionName");
+            if(!this.subscriptionId && this.deploymentScope != "Management Group") {
+                this.subscriptionId = tl.getEndpointDataParameter(this.connectedService, "SubscriptionId", false);
+            }
+
+            //Resource group name
+            this.resourceGroupName = tl.getInput("resourceGroupName");
+            if(!this.resourceGroupName && this.deploymentScope === "Resource Group"){
+                throw new Error(tl.loc("ResourceGroupNameNotProvided"));
+            }
+
+            //Location
             this.location = tl.getInput("location");
+            if(!this.location && this.deploymentScope === "Resource Group" && this.action != "DeleteRG"){
+                throw new Error(tl.loc("LocationNotProvided"));
+            }
+
+
             this.templateLocation = tl.getInput("templateLocation");
             if (this.templateLocation === "Linked artifact") {
                 this.csmFile = tl.getPathInput("csmFile");
@@ -50,35 +79,12 @@ export class AzureRGTaskParameters {
                 this.csmParametersFileLink = tl.getInput("csmParametersFileLink");
             }
             this.overrideParameters = tl.getInput("overrideParameters");
-
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentName = tl.getInput("deploymentName");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = await this.getARMCredentials(this.connectedService);
             this.deploymentOutputs = tl.getInput("deploymentOutputs");
             this.addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
-
-            //Deployment Scope
-            this.deploymentScope = tl.getInput("deploymentScope");
-            if(!this.deploymentScope){
-                this.deploymentScope = "Resource Group";
-            }
-
-            //Subscripion Id
-            this.subscriptionId = tl.getInput("subscriptionName");
-            if(!this.subscriptionId) {
-                this.subscriptionId = tl.getEndpointDataParameter(this.connectedService, "SubscriptionId", true);
-
-                if(!this.subscriptionId && this.deploymentScope != "Management Group"){
-                    throw new Error(tl.loc("ARGD_ConstructorFailed"));
-                }
-            }
-
-            //Resource group name
-            this.resourceGroupName = tl.getInput("resourceGroupName");
-            if(!this.resourceGroupName && this.deploymentScope === "Resource Group"){
-                throw new Error(tl.loc("ARGD_ConstructorFailed"));
-            }
 
             return this;
         } catch (error) {

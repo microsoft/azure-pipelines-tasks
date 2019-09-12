@@ -37,20 +37,20 @@ The parameters of the task are described in details, including examples, to show
  * **Deployment Scope**\*: Select the scope of deployment fom the options: Resource Group, Subscription and Mangement Group.
 
  * **Azure Resource Manager connection**\*: Select the ARM service connection of appropriate deployment scope i.e. Deployment Scope selected above should be of lower or same level to the deployment scope of service connection. To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Manage' link.
- 
+
  * **Action**\*: For deployment scope of 'Resource Group', elect the action to be performed on the resource group. Following actions are available:
     - Create or Update Resource Group: creates a new resource group or to update an existing one (using [Azure Resource Manager templates](https://azure.microsoft.com/en-in/documentation/articles/resource-group-template-deploy/)).
     - Delete Resource Group
 
  * **Resource Group**\*: Enter the name of the resource group. If this is an existing resource group, and the selected action is to create or update the resource group, then the task will update the resource group with the resources specified in the Azure template. If no Resource Group with the name exists in the subscription, then a new one will be created.
- 
- * **Location**\*: For deployment scope as 'Resource Group', select the location where the resource group will be created. If an existing resource group is updated, then this parameter will be ignored. For all other deployment scope, select the location to store the deployment metadata.
+
+ * **Location**\*: Resource Group deployment scope: Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored. Other deployment scope: Location to store deployment metadata.
 
 The following parameters are shown when the selected action is to create or update a resource group:
 
  * **Template location**: The location of the Template & the Parameters JSON files. Select "Linked Artifact" if the files are part of the linked code/build artifacts. Select "URL of the file" if the JSON files are located at any publicly accessible http/https URLs. To use a file stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: <blob_storage_url>/template.json?<SAStoken>. To upload a parameters file to a storage account and generate a SAS token, you could use [Azure file copy task](https://aka.ms/azurefilecopyreadme) or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).
- 
- * **Template and its Parameters**: The templates and the templates parameters file are the Azure templates available at [GitHub](https://github.com/Azure/azure-quickstart-templates) or in the [Azure gallery](https://azure.microsoft.com/en-in/documentation/articles/powershell-azure-resource-manager/). To get started immediately use [this](https://aka.ms/sampletemplate) template that is available on GitHub. 
+
+ * **Template and its Parameters**: The templates and the templates parameters file are the Azure templates available at [GitHub](https://github.com/Azure/azure-quickstart-templates) or in the [Azure gallery](https://azure.microsoft.com/en-in/documentation/articles/powershell-azure-resource-manager/). To get started immediately use [this](https://aka.ms/sampletemplate) template that is available on GitHub.
 	- These files can be either be located at any publicly accessible http/https URLs or be in a checked in the Version Control or they can be part of the build itself. If the files are part of the Build, use the pre-defined [system variables](https://msdn.microsoft.com/Library/vs/alm/Build/scripts/variables) provided by the Build to specify their location. The variables to use are $(Build.Repository.LocalPath), if the templates are checked-in but are not built, or $(Agent.BuildDirectory), if the templates are built as part of the solution. Be sure to specify the full path like $(Build.Repository.LocalPath)\Azure Templates\AzureRGDeploy.json. Wildcards like \*\*\\\*.json or \*\*\\*.param.json are also supported and there needs to be only one file that matches the search pattern at the location. If more than one file matches the search pattern, then the task will error out.
 
  **NOTE**: Follow the Azure Naming guidelines while specifying parameters, few important one mentioned in below table_
@@ -63,9 +63,9 @@ The following parameters are shown when the selected action is to create or upda
 | Azure DNS Name       | 3-63   | lowercase        | alphanumeric and hyphens                                                              | Yes             |
 
  * **Override Template Parameters**: The Override template parameters is used to override the parameters, like `-storageAcctName azurerg -Username $(vmusername) -azureKeyVaultName $(fabrikamFibre)`. To avoid storing "secureString" parameters in plain text, it is recommended that you use secret variables, for example `$(variableName)`. By clicking on “…” next to Override template parameters textbox, template parameters can be viewed/overridden in a grid.  This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.
- 
- * **Deployment Mode**: This specifies the [deployment mode](https://azure.microsoft.com/en-us/documentation/articles/resource-group-template-deploy) in which the Azure resources specified in the template have to be deployed. Incremental mode handles deployments as incremental updates to the resource group . It leaves unchanged resources that exist in the resource group but are not specified in the template. Complete mode deletes resources that are not in your template. [Validate mode](https://msdn.microsoft.com/en-us/library/azure/dn790547.aspx) enables you to find syntactical problems with the template before creating actual resources. By default, incremental mode is used. 
- 
+
+ * **Deployment Mode**: This specifies the [deployment mode](https://azure.microsoft.com/en-us/documentation/articles/resource-group-template-deploy) in which the Azure resources specified in the template have to be deployed. Incremental mode handles deployments as incremental updates to the resource group . It leaves unchanged resources that exist in the resource group but are not specified in the template. Complete mode deletes resources that are not in your template. [Validate mode](https://msdn.microsoft.com/en-us/library/azure/dn790547.aspx) enables you to find syntactical problems with the template before creating actual resources. By default, incremental mode is used.
+
  ### Deployment Outputs:
   Outputs created by Azure Resource Manager template deployment. It can be used in the subsequent tasks (like Powershell and Azure CLI) for further processing.
 
