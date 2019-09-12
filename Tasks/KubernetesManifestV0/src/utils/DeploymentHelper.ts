@@ -77,8 +77,10 @@ async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): 
         }
         if(isEqual(resource.type, constants.KubernetesWorkload.service, StringComparer.OrdinalIgnoreCase)) {
             try {
-                const spec = getServiceSpec(kubectl, resource.name);
-                if(isEqual(spec.type, "LoadBalancer", StringComparer.OrdinalIgnoreCase)) {
+                const service = getService(kubectl, resource.name);
+                const spec = service.spec;
+                const status = service.status;
+                if(isEqual(spec.type, "LoadBalancer", StringComparer.OrdinalIgnoreCase) && !isLoadBalancerIpAssigned(status)) {
                     await waitForServiceExternalIpAssignment(kubectl, resource.name);
                 }
             } catch (ex) {
@@ -216,38 +218,33 @@ function isPodReady(podStatus: any): boolean {
     return allContainersAreReady;
 }
 
+function getService(kubectl: Kubectl, serviceName) {
+    const serviceResult = kubectl.getResource('service', serviceName);
+    utils.checkForErrors([serviceResult]);
+    return JSON.parse(serviceResult.stdout)
+}
+
 async function waitForServiceExternalIpAssignment(kubectl: Kubectl, serviceName: string): Promise<void> {
     const sleepTimeout = 10 * 1000; // 10 seconds
     const iterations = 30; // 30 * 10 seconds timeout = 5 minutes max timeout
 
     for (let i = 0; i < iterations; i++) {
         await sleep(sleepTimeout);
-        tl.debug(`Polling for service Ip assignmesnt: ${serviceName}`);
-        let status = getServiceStatus(kubectl, serviceName);
-        console.log("Service status " + JSON.stringify(status));
-        if(status.loadBalancer && status.loadBalancer.ingress &&  status.loadBalancer.ingress.length > 0 ) {
-           console.log(`service/${serviceName} External Ip: ${status.loadBalancer.ingress[0].ip}`);
+        tl.debug(`Waiting for service ${serviceName} Ip assignment`);
+        let status = getService(kubectl, serviceName).status;
+        tl.debug(`Service Status: ${JSON.stringify(status)}`);
+        if(isLoadBalancerIpAssigned(status) ) {
            return;
         }
     }
     tl.warning(`wait for service/${serviceName} external ip assignement timedout`);
 }
 
-function getServiceSpec(kubectl: Kubectl, serviceName) {
-    const serviceResult = kubectl.getResource('service', serviceName);
-    utils.checkForErrors([serviceResult]);
-    const serviceSpec = JSON.parse(serviceResult.stdout).spec;
-    tl.debug(`Service Spec: ${JSON.stringify(serviceSpec)}`);
-    return serviceSpec;
-}
-
-
-function getServiceStatus(kubectl: Kubectl, serviceName: string): any {
-    const serviceResult = kubectl.getResource('service', serviceName);
-    utils.checkForErrors([serviceResult]);
-    const serviceStatus = JSON.parse(serviceResult.stdout).status;
-    tl.debug(`Service Status: ${JSON.stringify(serviceStatus)}`);
-    return serviceStatus;
+function isLoadBalancerIpAssigned(status: any) {
+    if(status.loadBalancer && status.loadBalancer.ingress &&  status.loadBalancer.ingress.length > 0 ) {
+        return true;
+    }
+    return false;
 }
 
 function getIngressResource(kubectl: Kubectl, ingressName: string) {
