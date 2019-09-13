@@ -14,28 +14,28 @@ export async function run() {
       util.setTaskRootPath(path.dirname(templateFilePath));
     
       util.setupIotedgedev();
-    
-      let envList = {
-        [Constants.iotedgedevEnv.deploymentFileOutputFolder]: tl.getVariable(Constants.outputFileFolder),
-      };
-    
-      // Pass task variable to sub process
-      let tlVariables = tl.getVariables();
-      for (let v of tlVariables) {
-        // The variables in VSTS build contains dot, need to convert to underscore.
-        let name = v.name.replace('.', '_').toUpperCase();
-        if (!envList[name]) {
-          envList[name] = v.value;
-        }
-      }
+
+      let outputPath = tl.getInput('deploymentManifestOutputPath', true);
+      let outputFileFolder = path.dirname(outputPath);
+      let outputFileName = path.basename(outputPath);
+      
+      let envList = process.env;
+      //Set output path of iotedgedev genconfig command
+      tl.debug(`Setting deployment manifest output folder to ${outputFileFolder}`);
+      util.setCliVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputFolder, outputFileFolder);
+      tl.debug(`Setting deployment manifest output file name to ${outputFileName}`)
+      util.setCliVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputName, outputFileName)
+
+      // Pass secrets to sub process
+      util.populateSecretToEnvironmentVariable(envList);
 
       let execOptions: IExecOptions = {
         cwd: tl.cwd(),
         env: envList
       } as IExecOptions;
       let defaultPlatform = tl.getInput('defaultPlatform', true);
-      let command: string = `genconfig`;
-      command += ` --file "${templateFilePath}"`;
-      command += ` --platform "${defaultPlatform}"`;
-      await tl.exec(`${Constants.iotedgedev}`, command, execOptions);
+      await tl.exec(`${Constants.iotedgedev}`, ["genconfig", "--file", templateFilePath, "--platform", defaultPlatform], execOptions);
+
+      tl.setVariable(Constants.outputVariableDeploymentPathKey, outputPath);
+      tl.debug(`Set ${Constants.outputVariableDeploymentPathKey} to ${outputPath}`);
 }

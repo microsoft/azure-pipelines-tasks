@@ -1,13 +1,13 @@
 "use strict";
 
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as fs from 'fs';
-import ContainerConnection from "docker-common/containerconnection";
-import * as dockerCommandUtils from "docker-common/dockercommandutils";
+import ContainerConnection from "docker-common-v2/containerconnection";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 import * as utils from "./utils";
-import { findDockerFile } from "docker-common/fileutils";
-import { WebRequest, WebResponse, sendRequest } from 'utility-common/restutilities';
-import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "docker-common/containerimageutils";
+import { findDockerFile } from "docker-common-v2/fileutils";
+import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
+import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "docker-common-v2/containerimageutils";
 
 import Q = require('q');
 
@@ -124,16 +124,22 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
     const imageUri = getResourceName(imageName, digest);
     const baseImageName = dockerFilePath ? getBaseImageNameFromDockerFile(dockerFilePath) : "NA";
     const layers = await dockerCommandUtils.getLayers(connection, imageName);
+    if (!layers) {
+        return null;
+    }
+    
     const imageSize = dockerCommandUtils.getImageSize(layers);
+
+    const addPipelineData = tl.getBoolInput("addPipelineData");
 
     // Getting pipeline variables
     const build = "build";
     const hostType = tl.getVariable("System.HostType").toLowerCase();
     const runId = hostType === build ? parseInt(tl.getVariable("Build.BuildId")) : parseInt(tl.getVariable("Release.ReleaseId"));
-    const pipelineVersion = hostType === build ? tl.getVariable("Build.BuildNumber") : tl.getVariable("Release.ReleaseName");
-    const pipelineName = tl.getVariable("System.DefinitionName");
-    const pipelineId = tl.getVariable("System.DefinitionId");
-    const jobName = tl.getVariable("System.PhaseDisplayName");
+    const pipelineVersion = addPipelineData ? hostType === build ? tl.getVariable("Build.BuildNumber") : tl.getVariable("Release.ReleaseName") : '';
+    const pipelineName = addPipelineData ? tl.getVariable("System.DefinitionName") : '';
+    const pipelineId = addPipelineData ? tl.getVariable("System.DefinitionId") : '';
+    const jobName = addPipelineData ? tl.getVariable("System.PhaseDisplayName") : '';
 
     const requestUrl = tl.getVariable("System.TeamFoundationCollectionUri") + tl.getVariable("System.TeamProject") + "/_apis/deployment/imagedetails?api-version=5.0-preview.1";
     const requestBody: string = JSON.stringify(

@@ -28,15 +28,10 @@ export function applyXdtTransformation(sourceFile: string, transformFile: string
         "t:" + transformFile,
         "d:" + (destinationFile ? destinationFile : sourceFile),
         "pw",
-        "i"
+        "i",
+        "verbose"
     ];
     
-    var debugModeEnabled = tl.getVariable('system.debug');
-    if(debugModeEnabled && debugModeEnabled.toLowerCase() == 'true') {
-        cttArgsArray.push("verbose");
-        tl.debug('Enabled debug mode for ctt.exe');
-    }
-
     tl.debug("Running command: " + cttPath + ' ' + cttArgsArray.join(' '));
     var cttExecutionResult = tl.execSync(cttPath, cttArgsArray);
     if(cttExecutionResult.stderr) {
@@ -77,7 +72,7 @@ export function basicXdtTransformation(rootFolder, transformConfigs): boolean {
 
 
 /**
-* Performs XDT transformations ousing ctt.exe
+* Performs XDT transformations using ctt.exe
 * 
 */
 export function specialXdtTransformation(rootFolder, transformConfig, sourceConfig, destinationConfig?: string): boolean {
@@ -121,15 +116,11 @@ export function specialXdtTransformation(rootFolder, transformConfig, sourceConf
         
         for(var transformXmlFile in transformXmlFiles) {                
             if(sourceXmlFiles[transformXmlFile.toLowerCase()] || tl.exist(transformXmlFile)) {
-                tl.debug('Applying XDT Transformation : ' + transformXmlFile + ' -> ' + sourceXmlFile);
+                console.log(tl.loc('ApplyingXDTtransformation' , transformXmlFile , sourceXmlFile));
                 applyXdtTransformation(sourceXmlFile, transformXmlFile, destinationXmlFile);
                 isTransformationApplied = true;
             }
         }
-    }
-    
-    if(!isTransformationApplied) {
-        tl.warning(tl.loc('FailedToApplyTransformation'));
     }
 
     return isTransformationApplied;

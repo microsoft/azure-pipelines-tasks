@@ -54,7 +54,7 @@
   "loc.input.label.externalEndpoint": "NuGet 服务器",
   "loc.input.help.externalEndpoint": "包含外部 NuGet 服务器凭据的 NuGet 服务连接。",
   "loc.input.label.searchPatternPack": "要打包的 csproj 或 nuspec 文件的路径",
-  "loc.input.help.searchPatternPack": "要打包的 csproj 或 nuspec 文件的搜索模式。\n\n可以使用分号分隔多个模式，并可通过在模式前加上 \"-:\" 使其变负。示例: \"**/*.csproj;-:**/*.Tests.csproj\"",
+  "loc.input.help.searchPatternPack": "要打包的 csproj 或 nuspec 文件的搜索模式。\n\n可以使用分号分隔多个模式，并可通过在模式前加上 \"!\" 使其变负。示例: \"**/*.csproj;!**/*.Tests.csproj\"",
   "loc.input.label.configurationToPack": "包的配置",
   "loc.input.help.configurationToPack": "使用 csproj 文件时，这指定包的配置",
   "loc.input.label.outputDir": "包文件夹",

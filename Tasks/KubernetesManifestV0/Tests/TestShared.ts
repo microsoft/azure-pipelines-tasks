@@ -12,6 +12,8 @@ export let TestEnvVars = {
     manifests: "__manifests__",
     containers: "__containers__",
     imagePullSecrets: "__imagePullSecrets__",
+    dockerComposeFile: "__dockerComposeFile__",
+    kustomizationPath: "__kustomizationPath__",
     renderType: "__renderType__",
     releaseName: "__releaseName__",
     helmChart: "__helmChart__",

@@ -9,9 +9,11 @@ import {
 } from './azureModels';
 
 import {
-    ServiceClient,
-    ToError
+    ServiceClient
 } from './AzureServiceClient';
+import {
+    ToError
+} from './AzureServiceClientBase';
 import { Kudu } from './azure-arm-app-service-kudu';
 import constants = require('./constants');
 var parseString = require('xml2js').parseString;
@@ -103,6 +105,29 @@ export class AzureAppService {
         }
     }
 
+    public async delete(): Promise<void> {
+        try {
+            var webRequest = new webClient.WebRequest();
+            webRequest.method = 'DELETE';
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            webRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}`, {
+                '{ResourceGroupName}': this._resourceGroup,
+                '{name}': this._name
+            }, null, '2016-08-01');
+
+            console.log(tl.loc('DeletingAppServiceSlot', this._getFormattedName()));
+            var response = await this._client.beginRequest(webRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            console.log(tl.loc('DeletedAppServiceSlot', this._getFormattedName()));
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToDeleteAppServiceSlot', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+    }
+    
     public async swap(slotName: string, preserveVNet?: boolean): Promise<void> {
         try {
             var webRequest = new webClient.WebRequest();
@@ -133,6 +158,62 @@ export class AzureAppService {
         }
         catch(error) {
             throw Error(tl.loc('FailedToSwapAppServiceSlotSlots', this._name, this.getSlot(), slotName, this._client.getFormattedError(error)));
+        }
+    }
+
+    public async swapSlotWithPreview(slotName: string, preserveVNet?: boolean): Promise<void> {
+        try {
+            var webRequest = new webClient.WebRequest();
+            webRequest.method = 'POST';
+            webRequest.body = JSON.stringify({
+                targetSlot: slotName,
+                preserveVnet: preserveVNet
+            });
+
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            webRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/applySlotConfig`, {
+            '{ResourceGroupName}': this._resourceGroup,
+            '{name}': this._name,
+            '{slotUrl}': slotUrl
+            }, null, '2016-08-01');
+
+            console.log(tl.loc('SwappingAppServiceSlotSlotsPhase1', this._name, this.getSlot(), slotName));
+            var response = await this._client.beginRequest(webRequest);
+            
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            console.log(tl.loc('SwappedAppServiceSlotSlotsPhase1', this._name, this.getSlot(), slotName));
+            console.log(tl.loc('PreviewSwapPhase1', this._name, this.getSlot()));
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToSwapAppServiceSlotSlotsPhase1', this._name, this.getSlot(), slotName, this._client.getFormattedError(error)));
+        }
+    }
+
+    public async cancelSwapSlotWithPreview(): Promise<void> {
+        try {
+            var webRequest = new webClient.WebRequest();
+            webRequest.method = 'POST';
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            webRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/resetSlotConfig`, {
+            '{ResourceGroupName}': this._resourceGroup,
+            '{name}': this._name,
+            '{slotUrl}': slotUrl
+            }, null, '2016-08-01');
+
+            console.log(tl.loc('CancelSwapAppServiceSlotSlotsPhase1', this._name, this.getSlot()));
+            var response = await this._client.beginRequest(webRequest);
+            
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            console.log(tl.loc('CancelledSwapAppServiceSlotSlotsPhase1', this._name, this.getSlot()));
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToCancelSwapAppServiceSlotSlotsPhase1', this._name, this.getSlot(), this._client.getFormattedError(error)));
         }
     }
 
@@ -266,7 +347,7 @@ export class AzureAppService {
             {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
-            }, null, '2016-08-01');
+            }, null, '2018-02-01');
             
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {

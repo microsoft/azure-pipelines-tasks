@@ -2,11 +2,11 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
-import ContainerConnection from "docker-common/containerconnection";
-import * as dockerCommandUtils from "docker-common/dockercommandutils";
-import * as fileUtils from "docker-common/fileutils";
-import * as pipelineUtils from "docker-common/pipelineutils";
+import * as tl from "azure-pipelines-task-lib/task";
+import ContainerConnection from "docker-common-v2/containerconnection";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
+import * as fileUtils from "docker-common-v2/fileutils";
+import * as pipelineUtils from "docker-common-v2/pipelineutils";
 import * as utils from "./utils";
 
 function useDefaultBuildContext(buildContext: string): boolean {
@@ -43,8 +43,9 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName, true);
     }
 
+    const addPipelineData = tl.getBoolInput("addPipelineData");
     // get label arguments
-    let labelArguments = pipelineUtils.getDefaultLabels();
+    let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
 
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");
