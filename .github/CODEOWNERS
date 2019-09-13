@@ -1,5 +1,5 @@
 
-ci/*  @damccorm   @stephenmichaelf  @bryanmacfarlane
+ci/*  @damccorm   @stephenmichaelf  @zachariahcox
 
 Tasks/AndroidSigningV2/*    @madhurig
 
@@ -15,7 +15,7 @@ Tasks/AppCenterDistributeV3/*   @DennisPan    @turanuk
 
 Tasks/AppCenterTestV1/*   @owenniblock
 
-Tasks/ArchiveFilesV2/*  @bryanmacfarlane
+Tasks/ArchiveFilesV2/*  @zachariahcox
 
 Tasks/AzureAppServiceManageV0/*     @kmkumaran      @SumiranAgg     @vincentdass
 
@@ -71,9 +71,9 @@ Tasks/AzureWebAppContainerV1/*   @kmkumaran    @SumiranAgg     @vincentdass
 
 Tasks/AzureVmssDeploymentV0/*       @bishal-pdmsft
 
-Tasks/BashV3/*  @bryanmacfarlane
+Tasks/BashV3/*  @zachariahcox
 
-Tasks/BatchScriptV1/*   @bryanmacfarlane
+Tasks/BatchScriptV1/*   @zachariahcox
 
 Tasks/ChefV1/*      @kmkumaran
 
@@ -81,7 +81,7 @@ Tasks/ChefKnifeV1/*     @kmkumaran
 
 Tasks/CMakeV1/*  @daveken
 
-Tasks/CmdLineV2/*   @bryanmacfarlane
+Tasks/CmdLineV2/*   @zachariahcox
 
 Tasks/CocoaPodsV0/*     @madhurig
 
@@ -135,7 +135,7 @@ Tasks/CondaEnvironmentV0/*      @madhurig
 
 Tasks/CondaEnvironmentV1/*      @madhurig
 
-Tasks/CopyFilesV2/*     @bryanmacfarlane
+Tasks/CopyFilesV2/*     @zachariahcox
 
 Tasks/CopyFilesOverSSHV0/*      @madhurig
 
@@ -145,7 +145,7 @@ Tasks/DecryptFileV1/*   @madhurig
 
 Tasks/DelayV1/*     @bansalaseem
 
-Tasks/DeleteFilesV1/*   @bryanmacfarlane
+Tasks/DeleteFilesV1/*   @zachariahcox
 
 Tasks/DeployVisualStudioTestAgentV2/*       @cltshivash
 
@@ -179,7 +179,7 @@ Tasks/DownloadSecureFileV1/*    @madhurig
 
 Tasks/DuffleInstallerV0/*   @bansalaseem     @vithati
 
-Tasks/ExtractFilesV1/*      @bryanmacfarlane
+Tasks/ExtractFilesV1/*      @zachariahcox
 
 Tasks/FileTransformV1/*     @kmkumaran      @SumiranAgg     @vincentdass
 
@@ -273,7 +273,7 @@ Tasks/PipAuthenticateV0/*     @zjrunner @shubham90
 
 Tasks/PipAuthenticateV1/*     @zjrunner @shubham90
 
-Tasks/PowerShellV2/*    @bryanmacfarlane
+Tasks/PowerShellV2/*    @zachariahcox
 
 Tasks/PowerShellOnTargetMachinesV1/*    @kmkumaran
 
