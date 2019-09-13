@@ -1,6 +1,6 @@
 import path = require('path');
 import fs = require('fs');
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as os from "os";
 import * as util from "util";
 import { WebRequest, sendRequest } from "./restutilities";

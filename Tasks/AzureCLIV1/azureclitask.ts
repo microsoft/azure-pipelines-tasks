@@ -1,6 +1,6 @@
-import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import path = require("path");
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 import os = require("os");
