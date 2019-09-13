@@ -30,8 +30,12 @@ export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], depl
     const deployedManifestFiles = deployManifests(inputManifestFiles, kubectl, isCanaryDeploymentStrategy(deploymentStrategy));
 
     // check manifest stability
-    const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.deploymentTypes);
+    const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.deploymentTypes.concat([constants.DiscoveryAndLoadBalancerResource.service]) );
     await checkManifestStability(kubectl, resourceTypes);
+
+    // print ingress resources
+    const ingressResources: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, [constants.DiscoveryAndLoadBalancerResource.ingress]);
+    getIngressResources(kubectl, ingressResources);
 
     // annotate resources
     annotateResources(deployedManifestFiles, kubectl, resourceTypes);
@@ -63,7 +67,7 @@ function deployManifests(files: string[], kubectl: Kubectl, isCanaryDeploymentSt
 async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): Promise<void> {
     const rolloutStatusResults = [];
     const numberOfResources = resources.length;
-    for (let i = 0; i< numberOfResources; i++) {
+    for (let i = 0; i < numberOfResources; i++) {
         const resource = resources[i];
         if (models.workloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
             rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
@@ -75,20 +79,17 @@ async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): 
                 tl.warning(tl.loc('CouldNotDeterminePodStatus', JSON.stringify(ex)));
             }
         }
-        if(isEqual(resource.type, constants.KubernetesWorkload.service, StringComparer.OrdinalIgnoreCase)) {
+        if (isEqual(resource.type, constants.DiscoveryAndLoadBalancerResource.service, StringComparer.OrdinalIgnoreCase)) {
             try {
                 const service = getService(kubectl, resource.name);
                 const spec = service.spec;
                 const status = service.status;
-                if(isEqual(spec.type, "LoadBalancer", StringComparer.OrdinalIgnoreCase) && !isLoadBalancerIpAssigned(status)) {
-                    await waitForServiceExternalIpAssignment(kubectl, resource.name);
+                if (isEqual(spec.type, "LoadBalancer", StringComparer.OrdinalIgnoreCase) && !isLoadBalancerIPAssigned(status)) {
+                    await waitForServiceExternalIPAssignment(kubectl, resource.name);
                 }
             } catch (ex) {
                 tl.warning(tl.loc('CouldNotDetermineServiceStatus', JSON.stringify(ex)));
             }
-        }
-        if(isEqual(resource.type, constants.KubernetesWorkload.ingress, StringComparer.OrdinalIgnoreCase)) {
-            getIngressResource(kubectl,resource.name);
         }
     }
     utils.checkForErrors(rolloutStatusResults);
@@ -219,37 +220,38 @@ function isPodReady(podStatus: any): boolean {
 }
 
 function getService(kubectl: Kubectl, serviceName) {
-    const serviceResult = kubectl.getResource('service', serviceName);
+    const serviceResult = kubectl.getResource(constants.DiscoveryAndLoadBalancerResource.service, serviceName);
     utils.checkForErrors([serviceResult]);
     return JSON.parse(serviceResult.stdout)
 }
 
-async function waitForServiceExternalIpAssignment(kubectl: Kubectl, serviceName: string): Promise<void> {
+async function waitForServiceExternalIPAssignment(kubectl: Kubectl, serviceName: string): Promise<void> {
     const sleepTimeout = 10 * 1000; // 10 seconds
-    const iterations = 30; // 30 * 10 seconds timeout = 5 minutes max timeout
+    const iterations = 18; // 18 * 10 seconds timeout = 3 minutes max timeout
 
     for (let i = 0; i < iterations; i++) {
         await sleep(sleepTimeout);
-        tl.debug(`Waiting for service ${serviceName} Ip assignment`);
+        tl.debug(`Waiting for service ${serviceName} IP assignment`);
         let status = getService(kubectl, serviceName).status;
-        tl.debug(`Service Status: ${JSON.stringify(status)}`);
-        if(isLoadBalancerIpAssigned(status) ) {
-           return;
+        if (isLoadBalancerIPAssigned(status)) {
+            return;
         }
     }
-    tl.warning(`wait for service/${serviceName} external ip assignement timedout`);
+    tl.warning(`wait for service/${serviceName} external IP assignment timedout`);
 }
 
-function isLoadBalancerIpAssigned(status: any) {
-    if(status.loadBalancer && status.loadBalancer.ingress &&  status.loadBalancer.ingress.length > 0 ) {
+function isLoadBalancerIPAssigned(status: any) {
+    if (status.loadBalancer && status.loadBalancer.ingress && status.loadBalancer.ingress.length > 0) {
         return true;
     }
     return false;
 }
 
-function getIngressResource(kubectl: Kubectl, ingressName: string) {
-    const ingressResult = kubectl.getResource('ingress', ingressName);
-    utils.checkForErrors([ingressResult]);
+function getIngressResources(kubectl: Kubectl, ingressResources: Resource[]) {
+    const numberOfResources = ingressResources.length;
+    for (let i = 0; i < numberOfResources; i++) {
+        kubectl.getResource(constants.DiscoveryAndLoadBalancerResource.ingress, ingressResources[i].name);
+    }
 }
 
 function sleep(timeout: number) {
