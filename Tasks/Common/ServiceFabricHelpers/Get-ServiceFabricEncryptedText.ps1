@@ -12,13 +12,21 @@ function Get-ServiceFabricEncryptedText
 
     $defaultCertStoreName = "My"
     $defaultCertStoreLocation = "CurrentUser"
-    $serverCertThumbprints = $ClusterConnectionParameters["ServerCertThumbprint"]
 
-    if ($serverCertThumbprints -is [array])
+    if ($ClusterConnectionParameters["CertLookUp"] -eq "CommonName" -and $clusterConnectionParameters["ServerCertCommonName"] )
     {
-        foreach ($serverCertThumbprint in $serverCertThumbprints)
+        $serverCertValues = $ClusterConnectionParameters["ServerCertCommonName"]
+    }
+    elseif ($ClusterConnectionParameters["ServerCertThumbprint"])
+    {
+        $serverCertValues = $ClusterConnectionParameters["ServerCertThumbprint"];
+    }
+
+    if ($serverCertValues -is [array])
+    {
+        foreach ($serverCertValue in $serverCertValues)
         {
-            $cert = Get-Item "Cert:\$defaultCertStoreLocation\$defaultCertStoreName\$serverCertThumbprint" -ErrorAction SilentlyContinue
+            $cert = Get-Item "Cert:\$defaultCertStoreLocation\$defaultCertStoreName\$serverCertValue" -ErrorAction SilentlyContinue
             if ($cert)
             {
                 break
@@ -27,12 +35,12 @@ function Get-ServiceFabricEncryptedText
     }
     else
     {
-        $cert = Get-Item "Cert:\$defaultCertStoreLocation\$defaultCertStoreName\$serverCertThumbprints" -ErrorAction SilentlyContinue
+        $cert = Get-Item "Cert:\$defaultCertStoreLocation\$defaultCertStoreName\$serverCertValues" -ErrorAction SilentlyContinue
     }
 
     if (-not $cert)
     {
-        Write-Warning (Get-VstsLocString -Key ServerCertificateNotFoundForTextEncrypt -ArgumentList $serverCertThumbprints)
+        Write-Warning (Get-VstsLocString -Key ServerCertificateNotFoundForTextEncrypt -ArgumentList $serverCertValues)
         return $null
     }
 
