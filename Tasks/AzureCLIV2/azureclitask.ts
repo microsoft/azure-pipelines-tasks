@@ -1,4 +1,4 @@
-import {IExecSyncResult} from "azure-pipelines-task-lib/ToolRunner";
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
