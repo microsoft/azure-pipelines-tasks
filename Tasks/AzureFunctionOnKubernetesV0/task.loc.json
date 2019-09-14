@@ -1,0 +1,122 @@
+{
+  "id": "FD1AA5B9-400C-4F4B-9C0B-069BA74E53C6",
+  "name": "AzureFunctionsOnKubernetes",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/az-functions-k8s",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "preview": true,
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 158,
+    "Patch": 0
+  },
+  "demands": [],
+  "groups": [
+    {
+      "name": "serviceConnections",
+      "displayName": "ms-resource:loc.group.displayName.serviceConnections",
+      "isExpanded": true
+    },
+    {
+      "name": "commands",
+      "displayName": "ms-resource:loc.group.displayName.commands",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "dockerRegistryServiceConnection",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryServiceConnection",
+      "groupName": "serviceConnections",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryServiceConnection"
+    },
+    {
+      "name": "kubernetesServiceConnection",
+      "type": "connectedService:kubernetes",
+      "label": "ms-resource:loc.input.label.kubernetesServiceConnection",
+      "required": true,
+      "groupName": "serviceConnections",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceConnection"
+    },
+    {
+      "name": "secretName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.secretName",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.secretName"
+    },
+    {
+      "name": "namespace",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.namespace",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.namespace"
+    },
+    {
+      "name": "appName",
+      "type": "string",
+      "required": true,
+      "label": "ms-resource:loc.input.label.appName",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.appName"
+    },
+    {
+      "name": "imageName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageName",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.imageName"
+    },
+    {
+      "name": "registry",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.registry",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.registry"
+    },
+    {
+      "name": "functionRootDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.functionRootDirectory",
+      "required": false,
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.functionRootDirectory"
+    },
+    {
+      "name": "waitForStability",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.waitForStability",
+      "groupName": "commands",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.waitForStability"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    }
+  ],
+  "dataSourceBindings": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "src//run.js"
+    }
+  },
+  "messages": {
+    "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
+    "CouldNotDeterminePodStatus": "ms-resource:loc.messages.CouldNotDeterminePodStatus",
+    "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+  }
+}

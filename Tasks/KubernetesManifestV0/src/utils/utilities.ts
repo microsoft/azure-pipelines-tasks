@@ -4,7 +4,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import * as kubectlutility from 'kubernetes-common-v2/kubectlutility';
 import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
-import { pipelineAnnotations } from '../models/constants';
+import { pipelineAnnotations } from 'kubernetes-common-v2/kubernetesconstants';
 
 export function getManifestFiles(manifestFilePaths: string | string[]): string[] {
     if (!manifestFilePaths) {
