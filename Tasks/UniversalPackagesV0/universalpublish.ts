@@ -92,7 +92,7 @@ export async function run(artifactToolPath: string): Promise<void> {
 
             serviceUri = externalAuthInfo.packageSource.accountUrl;
 
-            const feedProject = tl.getProjectAndFeedIdFromInputParam("feedPublishExternal");
+            const feedProject = getProjectAndFeedIdFromInputParam("feedPublishExternal");
             feedId = feedProject.feedId;
             projectId = feedProject.projectId;
 
