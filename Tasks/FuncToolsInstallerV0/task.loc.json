@@ -1,0 +1,47 @@
+{
+  "id": "A22A6EB4-FE21-442E-ABCE-5B2B09CFECE3",
+  "name": "FuncToolsInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/func-tools-installer",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 159,
+    "Patch": 0
+  },
+  "preview": true,
+  "demands": [],
+  "satisfies": [
+    "Func"
+  ],
+  "groups": [],
+  "inputs": [
+    {
+      "name": "versionSpec",
+      "label": "ms-resource:loc.input.label.versionSpec",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.versionSpec",
+      "defaultValue": "latest"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "src//functoolsinstaller.js"
+    }
+  },
+  "messages": {
+    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
+    "VerifyingFuncToolsInstallation": "ms-resource:loc.messages.VerifyingFuncToolsInstallation",
+    "FindingLatestFuncToolsVersion": "ms-resource:loc.messages.FindingLatestFuncToolsVersion",
+    "DownloadingFuncTools": "ms-resource:loc.messages.DownloadingFuncTools",
+    "ErrorFetchingLatestVersion": "ms-resource:loc.messages.ErrorFetchingLatestVersion"
+  }
+}
