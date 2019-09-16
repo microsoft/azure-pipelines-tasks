@@ -290,8 +290,8 @@ async function waitForServiceExternalIPAssignment(kubectl: Kubectl, serviceName:
     const iterations = 18; // 18 * 10 seconds timeout = 3 minutes max timeout
 
     for (let i = 0; i < iterations; i++) {
-        await sleep(sleepTimeout);
         console.log(tl.loc('waitForServiceIpAssignment', serviceName));
+        await sleep(sleepTimeout);
         let status = getService(kubectl, serviceName).status;
         if (isLoadBalancerIPAssigned(status)) {
             return;
@@ -308,10 +308,9 @@ function isLoadBalancerIPAssigned(status: any) {
 }
 
 function getIngressResources(kubectl: Kubectl, ingressResources: Resource[]) {
-    const numberOfResources = ingressResources.length;
-    for (let i = 0; i < numberOfResources; i++) {
-        kubectl.getResource(constants.DiscoveryAndLoadBalancerResource.ingress, ingressResources[i].name);
-    }
+    ingressResources.forEach(ingressResource => {
+        kubectl.getResource(constants.DiscoveryAndLoadBalancerResource.ingress, ingressResource.name);
+    });
 }
 
 function sleep(timeout: number) {

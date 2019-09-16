@@ -336,6 +336,6 @@
         "KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features.",
         "CouldNotDetermineServiceStatus":  "Could not determine the service's status due to the error: %s",
         "waitForServiceIpAssignment": "Waiting for service %s external IP assignment",
-        "waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timedout"
+        "waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timed out"
     }
 }
