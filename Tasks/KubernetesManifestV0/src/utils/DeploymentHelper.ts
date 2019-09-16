@@ -30,7 +30,7 @@ export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], depl
     const deployedManifestFiles = deployManifests(inputManifestFiles, kubectl, isCanaryDeploymentStrategy(deploymentStrategy));
 
     // check manifest stability
-    const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.deploymentTypes.concat([constants.DiscoveryAndLoadBalancerResource.service]) );
+    const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.deploymentTypes.concat([constants.DiscoveryAndLoadBalancerResource.service]));
     await checkManifestStability(kubectl, resourceTypes);
 
     // print ingress resources
@@ -231,13 +231,13 @@ async function waitForServiceExternalIPAssignment(kubectl: Kubectl, serviceName:
 
     for (let i = 0; i < iterations; i++) {
         await sleep(sleepTimeout);
-        tl.debug(`Waiting for service ${serviceName} IP assignment`);
+        console.log(tl.loc('waitForServiceIpAssignment', serviceName));
         let status = getService(kubectl, serviceName).status;
         if (isLoadBalancerIPAssigned(status)) {
             return;
         }
     }
-    tl.warning(`wait for service/${serviceName} external IP assignment timedout`);
+    tl.warning(tl.loc('waitForServiceIpAssignmentTimedOut', serviceName));
 }
 
 function isLoadBalancerIPAssigned(status: any) {

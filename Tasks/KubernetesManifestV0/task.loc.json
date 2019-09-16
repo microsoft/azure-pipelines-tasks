@@ -334,6 +334,8 @@
     "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
     "CouldNotDeterminePodStatus": "ms-resource:loc.messages.CouldNotDeterminePodStatus",
     "KubectlShouldBeUpgraded": "ms-resource:loc.messages.KubectlShouldBeUpgraded",
-    "CouldNotDetermineServiceStatus": "ms-resource:loc.messages.CouldNotDetermineServiceStatus"
+    "CouldNotDetermineServiceStatus": "ms-resource:loc.messages.CouldNotDetermineServiceStatus",
+    "waitForServiceIpAssignment": "ms-resource:loc.messages.waitForServiceIpAssignment",
+    "waitForServiceIpAssignmentTimedOut": "ms-resource:loc.messages.waitForServiceIpAssignmentTimedOut"
   }
 }
