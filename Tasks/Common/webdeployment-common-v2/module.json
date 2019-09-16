@@ -11,6 +11,7 @@
         "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
         "FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
         "MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.",
+        "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern: %s. Please restrain the search pattern.",
         "JSONvariableSubstitution" : "Applying JSON variable substitution for %s",
         "SubstitutingValueonKey" : "Substituting value on key: %s",
         "SubstitutingValueonKeyWithNumber" : "Substituting value on key %s with (number) value: %s",

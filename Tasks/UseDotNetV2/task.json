@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 16
+        "Patch": 19
     },
    "satisfies": [
         "DotNetCore"
@@ -163,6 +163,7 @@
         "InvalidChannelObject": "Object cannot be used as Channel, required properties such as channel-version, releases.json is missing.",
         "ReleasesIndexBodyIncorrect": "Parsed releases index body is not correct. Kindly see if the releases-index section is not empty in the file.",
         "InvalidVersionObject": "Releases.json has a release with invalid %s object: %s",
+        "InvalidVersion": "Invalid version specified %s",
         "FilesDataIsIncorrectInVersion": "In release %s for version %s, File data is incorrect (might have missing required fields, such as name, rid and url): %s",
         "VersionFilesDataIncorrect": "Version's files data is missing or has missing required fields.",
         "VersionInformationNotComplete": "Version: %s required information is not complete in releases.json file. Error: %s",
