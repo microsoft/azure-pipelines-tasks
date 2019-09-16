@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 158,
+    "Minor": 159,
     "Patch": 0
   },
   "demands": [],
@@ -116,6 +116,7 @@
   "messages": {
     "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
     "CouldNotDeterminePodStatus": "ms-resource:loc.messages.CouldNotDeterminePodStatus",
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   }

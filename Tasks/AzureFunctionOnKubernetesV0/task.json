@@ -14,7 +14,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 158,
+        "Minor": 159,
         "Patch": 0
     },
     "demands": [],
@@ -51,7 +51,7 @@
             "type": "string",
             "label": "Secret Name",
             "groupName": "commands",
-            "helpMarkDown": "Secret containing function config data (for ex. AzureWebJobsStorage for Azure Storage connection string)"
+            "helpMarkDown": "Kubernetes secret containing function config data (for ex. AzureWebJobsStorage: <Azure storage connection string>)"
         },
         {
             "name": "namespace",
@@ -80,7 +80,7 @@
             "type": "string",
             "label": "Registry",
             "groupName": "commands",
-            "helpMarkDown": "Docker Hub namespace for private Docker repository / Registry name for other registries. (Registry input is mandatory for private Docker Hub repository. For other registries, not required if the Docker service connection is provided)."
+            "helpMarkDown": "Docker Hub namespace for private Docker repository / Registry url for other registries. Ex:<br><br>Docker Hub: billuser<br>ACR: contoso.azurecr.io<br><br>(Registry input is mandatory for private Docker Hub repository. For other registries, it's not required if the Docker service connection is provided)."
         },
         {
             "name": "functionRootDirectory",
@@ -116,6 +116,7 @@
     "messages": {
         "AllContainersNotInReadyState": "All the containers are not in a ready state.",
         "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
+        "FileContentSynced": "Synced the file content to the disk. The content is %s.",
         "NoDataWrittenOnFile": "No data was written into the file %s",
         "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
     }

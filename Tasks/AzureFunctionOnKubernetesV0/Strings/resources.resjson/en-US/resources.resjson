@@ -10,7 +10,7 @@
   "loc.input.label.kubernetesServiceConnection": "Kubernetes service connection",
   "loc.input.help.kubernetesServiceConnection": "Select a Kubernetes service connection.",
   "loc.input.label.secretName": "Secret Name",
-  "loc.input.help.secretName": "Secret containing function config data (for ex. AzureWebJobsStorage for Azure Storage connection string)",
+  "loc.input.help.secretName": "Kubernetes secret containing function config data (for ex. AzureWebJobsStorage: <Azure storage connection string>)",
   "loc.input.label.namespace": "Kubernetes namespace",
   "loc.input.help.namespace": "Kubernetes namespace",
   "loc.input.label.appName": "Application Name",
@@ -18,7 +18,7 @@
   "loc.input.label.imageName": "Image Name",
   "loc.input.help.imageName": "Image Name. If provided, the image is used for deployment. Otherwise, build and push (from the Dockerfile in the function root directory) and use that image.",
   "loc.input.label.registry": "Registry",
-  "loc.input.help.registry": "Docker Hub namespace for private Docker repository / Registry name for other registries. (Registry input is mandatory for private Docker Hub repository. For other registries, not required if the Docker service connection is provided).",
+  "loc.input.help.registry": "Docker Hub namespace for private Docker repository / Registry url for other registries. Ex:<br><br>Docker Hub: billuser<br>ACR: contoso.azurecr.io<br><br>(Registry input is mandatory for private Docker Hub repository. For other registries, it's not required if the Docker service connection is provided).",
   "loc.input.label.functionRootDirectory": "Function root directory",
   "loc.input.help.functionRootDirectory": "Function root directory. Should contain host.json. When image name is not provided, Docker build and push is performed from this directory.",
   "loc.input.label.waitForStability": "Wait for stability",
@@ -27,6 +27,7 @@
   "loc.input.help.arguments": "Pass arguments to command. Ex:<br>--no-docker --service-type NodePort",
   "loc.messages.AllContainersNotInReadyState": "All the containers are not in a ready state.",
   "loc.messages.CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
+  "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s.",
   "loc.messages.NoDataWrittenOnFile": "No data was written into the file %s",
   "loc.messages.WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
 }

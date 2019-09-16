@@ -9,6 +9,15 @@ import { CommandHelper } from './utils/commandHelper';
 
 tl.setResourcePath(path.join(__dirname, "..", 'task.json'));
 
+let telemetry = {
+    jobId: tl.getVariable('SYSTEM_JOBID')
+};
+
+console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
+    "TaskEndpointId",
+    "AzureFunctionOnKubernetesV0",
+    JSON.stringify(telemetry));
+
 async function run() {
     const commandHelper = new CommandHelper();
     const kubernetesConnection = new KubernetesConnection();
@@ -25,9 +34,5 @@ async function run() {
     }
 }
 
-try {
-    run();
-}
-catch(error) {
-    tl.setResult(tl.TaskResult.Failed, !!error.message ? error.message : error);
-}
+run()
+    .catch((error) => tl.setResult(tl.TaskResult.Failed, !!error.message ? error.message : error));

@@ -1,7 +1,8 @@
 import * as url from "url";
 import * as tl from 'azure-pipelines-task-lib/task';
-import RegistryAuthenticationToken from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
+import * as ImageUtils from "docker-common-v2/containerimageutils";
 import ContainerConnection from "docker-common-v2/containerconnection";
+import RegistryAuthenticationToken from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
 import { getDockerRegistryEndpointAuthenticationToken } from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
 
 export class DockerConnection {
@@ -16,6 +17,16 @@ export class DockerConnection {
             this.connection = new ContainerConnection();
             this.connection.open(null, this.registryAuthenticationToken);
         }
+    }
+
+    public getQualifiedImageName(imageName): string {
+        if (!imageName) {
+            return '';
+        }
+
+        let qualifiedName = this.connection.getQualifiedImageNameIfRequired(imageName);
+        qualifiedName = ImageUtils.generateValidImageName(qualifiedName);
+        return qualifiedName;
     }
 
     public getRegistry() {

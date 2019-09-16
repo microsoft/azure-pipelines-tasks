@@ -4,17 +4,17 @@ import * as yaml from 'js-yaml';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from "azure-pipelines-task-lib/toolrunner";
 import { CommandHelper } from './utils/commandHelper';
-import * as FileHelper from './utils/fileHelper';
 import { DockerConnection } from './dockerConnection';
 import { Kubectl, Resource } from 'kubernetes-common-v2/kubectl-object-model';
+import * as FileHelper from './utils/fileHelper';
 import * as KubernetesConstants from 'kubernetes-common-v2/kubernetesconstants';
 import * as KubernetesManifestUtility from 'kubernetes-common-v2/kubernetesmanifestutility';
 
 const secretName = tl.getInput('secretName');
 const appName = tl.getInput('appName', true);
-const namespace = tl.getInput('namespace', true);
-const imageName = tl.getInput('imageName');
-const registry = tl.getInput('imageName');
+const namespace = getKubernetesNamespace();
+let imageName = tl.getInput('imageName');
+const registry = tl.getInput('registry');
 const args = tl.getInput('arguments');
 const funcRootDir = tl.getInput('functionRootDirectory', true);
 const waitForStability = tl.getBoolInput('waitForStability');
@@ -27,6 +27,8 @@ export async function deploy(commandHelper: CommandHelper, dockerConnection: Doc
         // create pull secret if it is not dry-run
         createImagePullSecret(commandHelper);
     }
+
+    imageName = getQualifiedImageName(dockerConnection);
 
     // invoke func kubernetes deploy
     funcDeploy(commandHelper, dockerConnection);
@@ -105,4 +107,20 @@ function getResourcesFromYaml(yamlContent: string, filterResourceTypes: string[]
     });
 
     return resources;
+}
+
+function getQualifiedImageName(dockerConnection: DockerConnection): string {
+    return dockerConnection.getQualifiedImageName(imageName);
+}
+
+function getKubernetesNamespace(): string {
+    let namespace = tl.getInput('namespace');
+    if (!namespace) {
+        const kubeConnection = tl.getInput('kubernetesServiceConnection', false);
+        if (kubeConnection) {
+            namespace = tl.getEndpointDataParameter(kubeConnection, 'namespace', true);
+        }
+    }
+
+    return namespace;
 }
