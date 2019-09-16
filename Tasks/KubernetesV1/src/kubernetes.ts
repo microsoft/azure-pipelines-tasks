@@ -9,7 +9,7 @@ import * as kubectlConfigMap from "./kubernetesconfigmap";
 import * as kubectlSecret from "./kubernetessecret";
 import { getNameSpace, isJsonOrYamlOutputFormatSupported } from "./kubernetescommand";
 import trm = require('azure-pipelines-task-lib/toolrunner');
-import { getDeploymentMetadata, IsJsonString, getPublishDeploymentRequestUrl, isDeploymentEntity, getManifestFilePathsFromArgumentsInput } from 'kubernetes-common-v2/image-metadata-helper';
+import { getDeploymentMetadata, IsJsonString, getPublishDeploymentRequestUrl, isDeploymentEntity, getManifestFileUrlsFromArgumentsInput } from 'kubernetes-common-v2/image-metadata-helper';
 import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
@@ -120,7 +120,7 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
             if (publishPipelineMetadata && publishPipelineMetadata.toLowerCase() == "true" && isOutputFormatSpecified && isJsonOrYamlOutputFormatSupported(command)) {
                 const allPods = JSON.parse(getAllPods(clusterConnection).stdout);
                 const clusterInfo = getClusterInfo(clusterConnection).stdout;
-                const manifestPaths = getManifestFilePathsFromArgumentsInput();
+                const manifestUrls = getManifestFileUrlsFromArgumentsInput();
                 // For each output, check if it contains a JSON object
                 result.forEach(res => {
                     let parsedObject: any;
@@ -133,7 +133,7 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
                     // Check if the output contains a deployment
                     if (parsedObject.kind && isDeploymentEntity(parsedObject.kind)) {
                         try {
-                            pushDeploymentDataToEvidenceStore(clusterConnection, parsedObject, allPods, clusterInfo, manifestPaths).then((result) => {
+                            pushDeploymentDataToEvidenceStore(clusterConnection, parsedObject, allPods, clusterInfo, manifestUrls).then((result) => {
                                 tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
                             }, (error) => {
                                 tl.warning("publishToImageMetadataStore failed with error: " + error);
@@ -148,8 +148,8 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
         });
 }
 
-async function pushDeploymentDataToEvidenceStore(clusterConnection: ClusterConnection, deploymentObject: any, allPods: any, clusterInfo: string, manifestPaths: string[]): Promise<any> {
-    const metadata = getDeploymentMetadata(deploymentObject, allPods, "None", clusterInfo, manifestPaths);
+async function pushDeploymentDataToEvidenceStore(clusterConnection: ClusterConnection, deploymentObject: any, allPods: any, clusterInfo: string, manifestUrls: string[]): Promise<any> {
+    const metadata = getDeploymentMetadata(deploymentObject, allPods, "None", clusterInfo, manifestUrls);
     const requestUrl = getPublishDeploymentRequestUrl();
     const request = new WebRequest();
     const accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);

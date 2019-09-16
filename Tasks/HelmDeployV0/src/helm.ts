@@ -5,7 +5,7 @@ import path = require('path');
 import { AzureAksService } from 'azure-arm-rest-v2/azure-arm-aks-service';
 import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
 import { AzureEndpoint, AKSCluster, AKSClusterAccessProfile } from 'azure-arm-rest-v2/azureModels';
-import { getDeploymentMetadata, getPublishDeploymentRequestUrl, isDeploymentEntity, extractManifestsFromHelmOutput, getManifestFilePathsFromHelmOutput } from 'kubernetes-common-v2/image-metadata-helper';
+import { getDeploymentMetadata, getPublishDeploymentRequestUrl, isDeploymentEntity, extractManifestsFromHelmOutput, getManifestFileUrlsFromHelmOutput } from 'kubernetes-common-v2/image-metadata-helper';
 import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
 
 import helmcli from "./helmcli";
@@ -128,12 +128,12 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli) {
         let output = execResult.stdout;
         let manifests = extractManifestsFromHelmOutput(output);
         if (manifests && manifests.length > 0) {
-            const manifestPaths = getManifestFilePathsFromHelmOutput(output);
+            const manifestUrls = getManifestFileUrlsFromHelmOutput(output);            
             manifests.forEach(manifest => {
                 //Check if the manifest object contains a deployment entity
                 if (manifest.kind && isDeploymentEntity(manifest.kind)) {
                     try {
-                        pushDeploymentDataToEvidenceStore(kubectlCli, manifest, manifestPaths).then((result) => {
+                        pushDeploymentDataToEvidenceStore(kubectlCli, manifest, manifestUrls).then((result) => {
                             tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
                         }, (error) => {
                             tl.warning("publishToImageMetadataStore failed with error: " + error);
@@ -154,10 +154,10 @@ run().then(() => {
     tl.setResult(tl.TaskResult.Failed, reason);
 });
 
-async function pushDeploymentDataToEvidenceStore(kubectlCli: kubernetescli, deploymentObject: any, manifestPaths: string[]): Promise<any> {
+async function pushDeploymentDataToEvidenceStore(kubectlCli: kubernetescli, deploymentObject: any, manifestUrls: string[]): Promise<any> {
     const allPods = JSON.parse(kubectlCli.getAllPods().stdout);
     const clusterInfo = kubectlCli.getClusterInfo().stdout;
-    const metadata = getDeploymentMetadata(deploymentObject, allPods, "None", clusterInfo, manifestPaths);
+    const metadata = getDeploymentMetadata(deploymentObject, allPods, "None", clusterInfo, manifestUrls);
     const requestUrl = getPublishDeploymentRequestUrl();
     const request = new WebRequest();
     const accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);

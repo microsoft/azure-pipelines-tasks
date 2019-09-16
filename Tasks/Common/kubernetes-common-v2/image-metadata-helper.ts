@@ -13,9 +13,13 @@ const build = "build";
 const hostType = tl.getVariable("System.HostType").toLowerCase();
 const isBuild = hostType === build;
 const deploymentTypes: string[] = ["deployment", "replicaset", "daemonset", "pod", "statefulset"];
+const workingDirectory = tl.getVariable("System.DefaultWorkingDirectory");
+const branch = tl.getVariable("Build.SourceBranchName") || tl.getVariable("Build.SourceBranch");
+const repositoryProvider = tl.getVariable("Build.Repository.Provider");
+const repositoryUrl = tl.getVariable("Build.Repository.Uri");
 
 // ToDo: Add UTs for public methods
-export function getDeploymentMetadata(deploymentObject: any, allPods: any, deploymentStrategy: string, clusterInfo: any, manifestFilePaths: string[]): any {
+export function getDeploymentMetadata(deploymentObject: any, allPods: any, deploymentStrategy: string, clusterInfo: any, manifestUrls: string[]): any {
     let imageIds: string[] = [];
     let containers = [];
     let kind: string = deploymentObject.kind;
@@ -47,8 +51,8 @@ export function getDeploymentMetadata(deploymentObject: any, allPods: any, deplo
         relatedUrls.push(clusterUrl);
     }
 
-    if (manifestFilePaths.length > 0) {
-        relatedUrls.push(...getManifestUrls(manifestFilePaths));
+    if (manifestUrls.length > 0) {
+        relatedUrls.push(...manifestUrls);
     }
 
     const metadataDetails = {
@@ -218,22 +222,36 @@ export function extractManifestsFromHelmOutput(helmOutput: string): any {
     return manifestObjects;
 }
 
-export function getManifestFilePathsFromArgumentsInput(): string[] {
-    let manifestFilePaths: string[] = [];
+export function getManifestFileUrlsFromArgumentsInput(): string[] {
+    let manifestFileUrls: string[] = [];
     const commandArguments = tl.getInput("arguments", false);
     const filePathMatch: string[] = commandArguments.split(matchPatternForFileArgument);
     if (filePathMatch && filePathMatch.length >= 0) {
         filePathMatch.forEach(manifestPath => {
             if (!!manifestPath) {
-                manifestFilePaths.push(manifestPath.trim());
+                if (manifestPath.indexOf("http") > 0) {
+                    manifestFileUrls.push(manifestPath);
+                }
+                else {
+                    manifestFileUrls.push(...getManifestUrls([manifestPath]));
+                }
             }
         });
     }
 
-    return manifestFilePaths;
+    return manifestFileUrls;
 }
 
-export function getManifestFilePathsFromHelmOutput(helmOutput: string): string[] {
+export function getManifestFileUrlsFromHelmOutput(helmOutput: string): string[] {
+    const chartType = tl.getInput("chartType", true);
+    // Raw github links are supported only for chart names not chart paths
+    if (chartType === "Name") {
+        const chartName = tl.getInput("chartName", true);
+        if (chartName.indexOf("http") >= 0) {
+            return [chartName];
+        }
+    }
+
     let manifestFilePaths: string[] = [];
     // Extract the chart directory
     const directoryName = getChartDirectoryName(helmOutput);
@@ -248,7 +266,7 @@ export function getManifestFilePathsFromHelmOutput(helmOutput: string): string[]
         });
     }
 
-    return manifestFilePaths;
+    return getManifestUrls(manifestFilePaths);
 }
 
 export function getChartDirectoryName(helmOutput: string): string {
@@ -266,12 +284,40 @@ export function getChartDirectoryName(helmOutput: string): string {
 
 export function getManifestUrls(manifestFilePaths: string[]): string[] {
     let manifestUrls = [];
+    const branchName = getBranchName(branch);
     for (const path of manifestFilePaths) {
-        let manifestUrl = orgUrl + "_git/" + tl.getVariable("System.TeamProject") + "?path=" + path;
+        let manifestUrl = "";
+        let normalisedPath = path.indexOf(workingDirectory) === 0 ? path.substr(workingDirectory.length) : path;
+        normalisedPath = normalisedPath.replace(/\\/g, "/");
+
+        if (repositoryProvider && repositoryProvider.toLowerCase() === "githubenterprise") {
+            if (normalisedPath.indexOf("/") != 0) {
+                normalisedPath = "/" + normalisedPath;
+            }
+
+            manifestUrl = repositoryUrl + "/blob/" + branchName + normalisedPath;
+        }
+        else if (repositoryProvider && repositoryProvider.toLowerCase() === "tfsgit") {
+            if (normalisedPath.indexOf("/") === 0) {
+                normalisedPath = normalisedPath.substr(1);
+            }
+
+            manifestUrl = repositoryUrl + "?path=" + normalisedPath;
+        }
+
         manifestUrls.push(manifestUrl);
     }
 
     return manifestUrls;
+}
+
+function getBranchName(ref: string): string {
+    const gitRefsHeadsPrefix = "refs/heads/";
+    if (ref && ref.indexOf(gitRefsHeadsPrefix) === 0) {
+        return ref.substr(gitRefsHeadsPrefix.length);
+    }
+
+    return ref;
 }
 
 function getPlatform(): string {

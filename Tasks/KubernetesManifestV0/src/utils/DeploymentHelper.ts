@@ -14,7 +14,7 @@ import * as utils from '../utils/utilities';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { Kubectl, Resource } from 'kubernetes-common-v2/kubectl-object-model';
 import { isEqual, StringComparer } from './StringComparison';
-import { getDeploymentMetadata, getPublishDeploymentRequestUrl, isDeploymentEntity } from 'kubernetes-common-v2/image-metadata-helper';
+import { getDeploymentMetadata, getPublishDeploymentRequestUrl, isDeploymentEntity, getManifestUrls } from 'kubernetes-common-v2/image-metadata-helper';
 import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
 
 const publishPipelineMetadata = tl.getVariable("PUBLISH_PIPELINE_METADATA");
@@ -167,7 +167,7 @@ function captureAndPushDeploymentMetadata(filePaths: string[], allPods: any, dep
         const fileContents = fs.readFileSync(filePath).toString();
         yaml.safeLoadAll(fileContents, function (inputObject: any) {
             if (!!inputObject && inputObject.kind && isDeploymentEntity(inputObject.kind)) {
-                metadata = getDeploymentMetadata(inputObject, allPods, deploymentStrategy, clusterInfo, manifestFilePaths);
+                metadata = getDeploymentMetadata(inputObject, allPods, deploymentStrategy, clusterInfo, getManifestUrls(manifestFilePaths));
                 pushDeploymentDataToEvidenceStore(JSON.stringify(metadata), requestUrl).then((result) => {
                     tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
                 }, (error) => {
