@@ -116,6 +116,7 @@
         "NuGetPublisherV0",
         "NuGetToolInstallerV0",
         "NuGetToolInstallerV1",
+        "OpenPolicyAgentInstallerV0",
         "PackerBuildV0",
         "PackerBuildV1",
         "PipAuthenticateV0",
