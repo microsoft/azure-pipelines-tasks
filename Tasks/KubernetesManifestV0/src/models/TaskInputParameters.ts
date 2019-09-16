@@ -15,8 +15,10 @@ export const secretName: string = tl.getInput('secretName', false);
 export const dockerRegistryEndpoint: string = tl.getInput('dockerRegistryEndpoint', false);
 
 if (!namespace) {
-    const kubConnection = tl.getInput('kubernetesServiceConnection', true);
-    namespace = tl.getEndpointDataParameter(kubConnection, 'namespace', true);
+    const kubConnection = tl.getInput('kubernetesServiceConnection', false);
+    if (kubConnection) {
+        namespace = tl.getEndpointDataParameter(kubConnection, 'namespace', true);
+    }
 }
 
 if (!namespace) {
