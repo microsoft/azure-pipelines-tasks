@@ -185,22 +185,10 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         # Configure cluster connection pre-reqs
         if ($ConnectedServiceEndpoint.Auth.Scheme -ne "None")
         {
-
-            # Determine what's the server cert look up value
-            if ($ConnectedServiceEndpoint.Auth.Parameters.CertLookUp) 
-            {
-                $ClusterConnectionParameters["CertLookUp"] = $ConnectedServiceEndpoint.Auth.Parameters.CertLookUp
-            } 
-            else
-            {
-                # For old connections default it to Thumbprint
-                $ClusterConnectionParameters["CertLookUp"] = "Thumbprint"
-            }
-
             # Add server cert thumbprint(s)/commonname(s) (common to both auth-types)
-            if ($ClusterConnectionParameters["CertLookUp"] -eq "CommonName" -and $ConnectedServiceEndpoint.Auth.Parameters.ServerCertCommonName) 
+            if ($ConnectedServiceEndpoint.Auth.Parameters.CertLookUp -and $ConnectedServiceEndpoint.Auth.Parameters.CertLookUp -eq "CommonName" -and $ConnectedServiceEndpoint.Auth.Parameters.ServerCertCommonName) 
             {
-                $clusterConnectionParameters["ServerCertCommonName"] = $ConnectedServiceEndpoint.Auth.Parameters.ServerCertCommonName -split ',' | ForEach-Object { $_.Trim() }
+                $clusterConnectionParameters["ServerCommonName"] = $ConnectedServiceEndpoint.Auth.Parameters.ServerCertCommonName -split ',' | ForEach-Object { $_.Trim() }
             } 
             elseif ($ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint) 
             {

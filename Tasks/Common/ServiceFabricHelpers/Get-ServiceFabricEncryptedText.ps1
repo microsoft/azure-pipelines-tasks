@@ -13,9 +13,9 @@ function Get-ServiceFabricEncryptedText
     $defaultCertStoreName = "My"
     $defaultCertStoreLocation = "CurrentUser"
 
-    if ($ClusterConnectionParameters["CertLookUp"] -eq "CommonName" -and $clusterConnectionParameters["ServerCertCommonName"] )
+    if ($clusterConnectionParameters["ServerCommonName"] )
     {
-        $serverCertValues = $ClusterConnectionParameters["ServerCertCommonName"]
+        $serverCertValues = $ClusterConnectionParameters["ServerCommonName"]
     }
     elseif ($ClusterConnectionParameters["ServerCertThumbprint"])
     {
