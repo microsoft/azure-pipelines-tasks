@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Copy files",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.description": "Copy files from a source folder to a target folder using patterns matching file paths (not folder paths)",
   "loc.instanceNameFormat": "Copy Files to: $(TargetFolder)",
   "loc.releaseNotes": "Match pattern consistency.",
