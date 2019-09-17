@@ -7,7 +7,7 @@ import * as yaml from 'js-yaml';
 import ClusterConnection from "./clusterconnection";
 import * as kubectlConfigMap from "./kubernetesconfigmap";
 import * as kubectlSecret from "./kubernetessecret";
-import { getNameSpace, isJsonOrYamlOutputFormatSupported } from "./kubernetescommand";
+import { getNameSpace, isJsonOrYamlOutputFormatSupported, getCommandConfigurationFile } from "./kubernetescommand";
 import trm = require('azure-pipelines-task-lib/toolrunner');
 import { getDeploymentMetadata, IsJsonString, getPublishDeploymentRequestUrl, isDeploymentEntity, getManifestFileUrlsFromArgumentsInput } from 'kubernetes-common-v2/image-metadata-helper';
 import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
@@ -120,7 +120,17 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
             if (publishPipelineMetadata && publishPipelineMetadata.toLowerCase() == "true" && isOutputFormatSpecified && isJsonOrYamlOutputFormatSupported(command)) {
                 const allPods = JSON.parse(getAllPods(clusterConnection).stdout);
                 const clusterInfo = getClusterInfo(clusterConnection).stdout;
-                const manifestUrls = getManifestFileUrlsFromArgumentsInput();
+
+                let fileArgs = "";
+                const configFilePathArgs = getCommandConfigurationFile();
+                if (configFilePathArgs.length > 0) {
+                    fileArgs = configFilePathArgs.join(" ");
+                }
+                else {
+                    fileArgs = tl.getInput("arguments", false);
+                }
+
+                const manifestUrls = getManifestFileUrlsFromArgumentsInput(fileArgs);
                 // For each output, check if it contains a JSON object
                 result.forEach(res => {
                     let parsedObject: any;

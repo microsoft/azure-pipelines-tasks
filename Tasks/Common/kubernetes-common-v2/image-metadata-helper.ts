@@ -222,10 +222,9 @@ export function extractManifestsFromHelmOutput(helmOutput: string): any {
     return manifestObjects;
 }
 
-export function getManifestFileUrlsFromArgumentsInput(): string[] {
+export function getManifestFileUrlsFromArgumentsInput(fileArgs: string): string[] {
     let manifestFileUrls: string[] = [];
-    const commandArguments = tl.getInput("arguments", false);
-    const filePathMatch: string[] = commandArguments.split(matchPatternForFileArgument);
+    const filePathMatch: string[] = fileArgs.split(matchPatternForFileArgument);
     if (filePathMatch && filePathMatch.length >= 0) {
         filePathMatch.forEach(manifestPath => {
             if (!!manifestPath) {
