@@ -161,6 +161,8 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
     else {
         console.log(tl.loc('SkippedUpdatingFile' , configFile));
     }
+    
+    return isSubstitutionApplied;
 }
 
 function updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replacableTokenValues, ltxDomUtiltiyInstance): boolean {
