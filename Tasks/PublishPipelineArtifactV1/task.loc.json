@@ -15,7 +15,11 @@
   "groups": [],
   "demands": [],
   "preview": true,
+<<<<<<< HEAD
   "minimumAgentVersion": "2.155.1",
+=======
+  "minimumAgentVersion": "2.151.2",
+>>>>>>> update min agent version
   "inputs": [
     {
       "name": "path",
