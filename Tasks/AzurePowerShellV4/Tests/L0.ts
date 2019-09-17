@@ -27,11 +27,11 @@ describe('AzurePowerShell Suite', function () {
     });
 
     if (psm.testSupported()) {
+        it('checks for powershell core', (done) => {
+            psr.run(path.join(__dirname, 'ChecksForPowerShellCore.ps1'), done);
+        })
         it('performs basic flow', (done) => {
             psr.run(path.join(__dirname, 'PerformsBasicFlow.ps1'), done);
-        })
-        it('removes functions and variables', (done) => {
-            psr.run(path.join(__dirname, 'RemovesFunctionsAndVariables.ps1'), done);
         })
         it('throws when otherversion is specified in a wrong format', (done) => {
             psr.run(path.join(__dirname, 'ThrowsForInvalidVersion.ps1'), done);

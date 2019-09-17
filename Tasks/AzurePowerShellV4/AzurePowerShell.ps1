@@ -10,7 +10,7 @@ $__vsts_input_errorActionPreference = Get-VstsInput -Name errorActionPreference
 $__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
-$input_pwsh = Get-VstsInput -Name 'pwsh' -AsBool
+$input_pwsh = Get-VstsInput -Name 'pwsh'
 $input_workingDirectory = Get-VstsInput -Name 'workingDirectory' -Require
 
 # Validate the script path and args do not contains new-lines. Otherwise, it will
