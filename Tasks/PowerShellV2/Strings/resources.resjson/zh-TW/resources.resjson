@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "PowerShell",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613736)",
-  "loc.description": "在 Windows、macOS 或 Linux 上執行 PowerShell 指令碼。",
+  "loc.description": "在 Linux、macOS 或 Windows 執行 PowerShell 指令碼",
   "loc.instanceNameFormat": "PowerShell 指令碼",
   "loc.releaseNotes": "指令碼工作一致性。已新增 macOS 與 Linux 的支援。",
   "loc.group.displayName.advanced": "進階",

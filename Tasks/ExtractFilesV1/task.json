@@ -1,11 +1,11 @@
 {
     "id": "5e1e3830-fbfb-11e5-aab1-090c92bc4988",
     "name": "ExtractFiles",
-    "friendlyName": "Extract Files",
-    "description": "Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip.",
+    "friendlyName": "Extract files",
+    "description": "Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=800269",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/extract-files",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=800269)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -18,8 +18,8 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 142,
-        "Patch": 2
+        "Minor": 151,
+        "Patch": 1
     },
     "instanceNameFormat": "Extract files $(message)",
     "inputs": [

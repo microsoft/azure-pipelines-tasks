@@ -5,7 +5,7 @@
             "type": "ps"
         },
         {
-            "module": "../Common/azure-arm-rest",
+            "module": "../Common/azure-arm-rest-v2",
             "type": "node",
             "dest": "./",
             "compile" : true
@@ -19,7 +19,7 @@
         "nugetv2": [
             {
                 "name": "VstsTaskSdk",
-                "version": "0.8.2",
+                "version": "0.10.0",
                 "repository": "https://www.powershellgallery.com/api/v2/",
                 "cp": [
                     {

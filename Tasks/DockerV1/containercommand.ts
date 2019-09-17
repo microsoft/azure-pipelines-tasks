@@ -2,6 +2,7 @@
 
 import * as tl from "vsts-task-lib/task";
 import ContainerConnection from "docker-common/containerconnection";
+import * as dockerCommandUtils from "docker-common/dockercommandutils";
 
 export function run(connection: ContainerConnection,  outputUpdate: (data: string) => any): any {
     var command = connection.createCommand();
@@ -12,7 +13,8 @@ export function run(connection: ContainerConnection,  outputUpdate: (data: strin
     var dockerCommand = tl.getInput("command", true);
     command.arg(dockerCommand);
     
-    var commandArguments = tl.getInput("arguments", false); 
+    var commandArguments = dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
+
     command.line(commandArguments);
     return connection.execCommand(command);
 }

@@ -1,7 +1,7 @@
 import * as path from 'path';
 
-import {IExecSyncResult} from 'vsts-task-lib/toolrunner';
-import * as tl from 'vsts-task-lib/task';
+import {IExecSyncResult} from 'azure-pipelines-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import { NpmCommand, NpmTaskInput } from './constants';
 import * as npmCustom from './npmcustom';
@@ -37,6 +37,8 @@ async function main(): Promise<void> {
     switch (command) {
         case NpmCommand.Install:
             return npmCustom.run(packagingLocation, NpmCommand.Install);
+        case NpmCommand.ContinuousIntegration:
+            return npmCustom.run(packagingLocation, NpmCommand.ContinuousIntegration);
         case NpmCommand.Publish:
             return npmPublish.run(packagingLocation);
         case NpmCommand.Custom:

@@ -28,5 +28,6 @@
   "loc.messages.Couldnotfetchaccesstoken": "No se pudo capturar el token de acceso para Azure. Código de estado: %s (%s) %s.",
   "loc.messages.SPNExpiredCheck": "Compruebe que el SPN es válido y que no ha expirado.",
   "loc.messages.FailedToGetAzureMetricAlerts": "No se pudo obtener la regla de alertas de Application Insights: %s. Error: %s",
-  "loc.messages.FailedToUpdateAzureMetricAlerts": "No se pudo actualizar el recurso de regla de alerta de métrica de Azure \"%s\". Error: %s"
+  "loc.messages.FailedToUpdateAzureMetricAlerts": "No se pudo actualizar el recurso de regla de alerta de métrica de Azure \"%s\". Error: %s",
+  "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado."
 }

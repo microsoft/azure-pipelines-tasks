@@ -3,20 +3,21 @@
   "name": "SqlDacpacDeploymentOnMachineGroup",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/sqldacpacmachinegroupreadme",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/sql-dacpac-deployment-on-machine-group",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Release"
   ],
   "runsOn": [
+    "Agent",
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 15
+    "Patch": 20
   },
   "demands": [],
   "minimumAgentVersion": "1.102.0",

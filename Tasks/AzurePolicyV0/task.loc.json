@@ -3,7 +3,7 @@
   "name": "AzurePolicyCheckGate",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-policy-check-gate",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -15,10 +15,9 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 153,
+    "Patch": 0
   },
-  "preview": "true",
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -34,7 +33,6 @@
       "name": "ResourceGroupName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ResourceGroupName",
-      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
       "properties": {
         "EditableOptions": "True"
@@ -76,7 +74,7 @@
         {
           "RequestInputs": {
             "EndpointId": "$(connectedServiceName)",
-            "EndpointUrl": "$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/triggerEvaluation?api-version=2018-07-01-preview",
+            "EndpointUrl": "{{#if ResourceGroupName}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/triggerEvaluation?api-version=2018-07-01-preview{{else}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/providers/Microsoft.PolicyInsights/policyStates/latest/triggerEvaluation?api-version=2018-07-01-preview{{/if}}",
             "Method": "POST"
           },
           "ExecutionOptions": {
@@ -97,7 +95,14 @@
         {
           "RequestInputs": {
             "EndpointId": "$(connectedServiceName)",
-            "EndpointUrl": "$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/queryResults?api-version=2018-04-04&$filter=IsCompliant eq false",
+            "EndpointUrl": "{{#if ResourceGroupName}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/summarize?api-version=2018-04-04{{else}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/providers/Microsoft.PolicyInsights/policyStates/latest/summarize?api-version=2018-04-04{{/if}}",
+            "Method": "POST"
+          }
+        },
+        {
+          "RequestInputs": {
+            "EndpointId": "$(connectedServiceName)",
+            "EndpointUrl": "{{#if ResourceGroupName}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/queryResults?api-version=2018-04-04&$filter=IsCompliant eq false{{else}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/providers/Microsoft.PolicyInsights/policyStates/latest/queryResults?api-version=2018-04-04&$filter=IsCompliant eq false{{/if}}",
             "Method": "POST",
             "Expression": "or(and(eq(isNullOrEmpty(taskInputs['resources']), true), eq(count(jsonpath('value[*].resourceId')), 0)), and(eq(isNullOrEmpty(taskInputs['resources']), false), eq(count(intersect(split(taskInputs['resources'], ','), jsonpath('value[*].resourceId'))) ,0)))"
           }

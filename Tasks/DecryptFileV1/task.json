@@ -1,9 +1,9 @@
 {
     "id": "7C6A6b71-4355-4AFC-A274-480EAB5678E9",
     "name": "DecryptFile",
-    "friendlyName": "Decrypt File (OpenSSL)",
-    "description": "A thin utility task for file decryption using OpenSSL.",
-    "helpUrl": "",
+    "friendlyName": "Decrypt file (OpenSSL)",
+    "description": "Decrypt a file using OpenSSL",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/decrypt-file",
     "helpMarkDown": "",
     "category": "Utility",
     "visibility": [
@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 142,
-        "Patch": 2
+        "Minor": 151,
+        "Patch": 1
     },
     "groups": [
         {

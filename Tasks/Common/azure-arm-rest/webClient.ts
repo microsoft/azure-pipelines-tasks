@@ -35,11 +35,11 @@ export class WebResponse {
 }
 
 export class WebRequestOptions {
-    public retriableErrorCodes: string[];
-    public retryCount: number;
-    public retryIntervalInSeconds: number;
-    public retriableStatusCodes: number[];
-    public retryRequestTimedout: boolean;
+    public retriableErrorCodes?: string[];
+    public retryCount?: number;
+    public retryIntervalInSeconds?: number;
+    public retriableStatusCodes?: number[];
+    public retryRequestTimedout?: boolean;
 }
 
 export async function sendRequest(request: WebRequest, options?: WebRequestOptions): Promise<WebResponse> {

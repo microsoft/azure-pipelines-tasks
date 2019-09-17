@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import * as Q from "q";
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import * as javacommons from 'java-common/java-common';
 import * as ccUtils from 'codecoverage-tools/codecoverageutilities';
@@ -37,7 +37,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
         }
 
         if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
-            tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
+            console.log(tl.loc('NoTestResults', testResultsFiles));
             return 0;
         }
 

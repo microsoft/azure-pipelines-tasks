@@ -24,6 +24,7 @@ export interface TestReportingSettings {
     TestRunTitle : string;
     TestResultsDirectory : string;
     TestRunSystem : string;
+    TestSourceSettings : TestSourceSettings;
 }
 
 export interface TestSelectionSettings {
@@ -50,6 +51,12 @@ export interface TfsSpecificSettings {
     ReleaseUri : string;
     ReleaseEnvironmentUri : string;
     WorkFolder : string;
+    PhaseName : string;
+    PhaseAttempt : number;
+    StageName : string;
+    StageAttempt : number;
+    JobName : string;
+    JobAttempt : number;
 }
 
 export interface TestSpecificSettings {
@@ -100,6 +107,10 @@ export interface ExecutionSettings {
     TempFolder : string;
     VideoDataCollectorEnabled : boolean;
     DiagnosticsSettings : DiagnosticsSettings;
+}
+
+export interface TestSourceSettings {
+    PullRequestTargetBranchName : string;
 }
 
 export interface DiagnosticsSettings {

@@ -1,11 +1,11 @@
 import path = require("path");
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 
 import env = require("./Environment");
 import deployAzureRG = require("../models/DeployAzureRG");
-import armResource = require("azure-arm-rest/azure-arm-resource");
+import armResource = require("azure-arm-rest-v2/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
 import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
 import { PowerShellParameters, NameValuePair } from "./ParameterParser";
@@ -13,6 +13,7 @@ import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
+import { sleepFor } from 'azure-arm-rest-v2/webClient';
 
 var hm = require("typed-rest-client/HttpClient");
 var uuid = require("uuid");
@@ -127,7 +128,7 @@ export class ResourceGroup {
     }
 
     public async createOrUpdateResourceGroup(): Promise<void> {
-        var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.resourceGroupName, this.taskParameters.subscriptionId);
         await this.createResourceGroupIfRequired(armClient);
         await this.createTemplateDeployment(armClient);
         await this.enableDeploymentPrerequestiesIfRequired(armClient);
@@ -138,9 +139,9 @@ export class ResourceGroup {
         return new Promise<void>((resolve, reject) => {
             var extDelPromise = this.deploymentGroupExtensionHelper.deleteExtensionFromResourceGroup();
             var deleteRG = (val) => {
-                var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+                var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.resourceGroupName, this.taskParameters.subscriptionId);
                 console.log(tl.loc("DeletingResourceGroup", this.taskParameters.resourceGroupName));
-                armClient.resourceGroups.deleteMethod(this.taskParameters.resourceGroupName, (error, result, request, response) => {
+                armClient.resourceGroup.deleteMethod((error, result, request, response) => {
                     if (error) {
                         return reject(tl.loc("CouldNotDeletedResourceGroup", this.taskParameters.resourceGroupName, utils.getError(error)));
                     }
@@ -159,7 +160,7 @@ export class ResourceGroup {
             throw tl.loc("OutputVariableShouldNotBeEmpty");
         }
 
-        var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.resourceGroupName, this.taskParameters.subscriptionId);
         await this.enableDeploymentPrerequestiesIfRequired(armClient);
         await this.registerEnvironmentIfRequired(armClient);
     }
@@ -180,7 +181,14 @@ export class ResourceGroup {
                         policyLink = this.getPolicyHelpLink(error.details[i]);
                         errorMessage = this.getPolicyErrorMessage(error.details[i]);
                     } else {
-                        errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
+                        errorMessage = util.format("%s: %s", error.details[i].code, error.details[i].message);
+                        if(error.details[i].details) {
+                            if(typeof error.details[i].details == 'object') {
+                                errorMessage += " " + JSON.stringify(error.details[i].details);
+                            } else {
+                                errorMessage += " " + String(error.details[i].details);
+                            }
+                        }
                     }
 
                     tl.error(errorMessage);
@@ -257,7 +265,7 @@ export class ResourceGroup {
     private checkResourceGroupExistence(armClient: armResource.ResourceManagementClient): Promise<boolean> {
         console.log(tl.loc("CheckResourceGroupExistence", this.taskParameters.resourceGroupName));
         return new Promise<boolean>((resolve, reject) => {
-            armClient.resourceGroups.checkExistence(this.taskParameters.resourceGroupName, (error, exists, request, response) => {
+            armClient.resourceGroup.checkExistence((error, exists, request, response) => {
                 if (error) {
                     return reject(tl.loc("ResourceGroupStatusFetchFailed", utils.getError(error)));
                 }
@@ -340,7 +348,7 @@ export class ResourceGroup {
     private createResourceGroup(armClient: armResource.ResourceManagementClient): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             console.log(tl.loc("CreatingNewRG", this.taskParameters.resourceGroupName));
-            armClient.resourceGroups.createOrUpdate(this.taskParameters.resourceGroupName, { "name": this.taskParameters.resourceGroupName, "location": this.taskParameters.location }, (error, result, request, response) => {
+            armClient.resourceGroup.createOrUpdate({ "name": this.taskParameters.resourceGroupName, "location": this.taskParameters.location }, (error, result, request, response) => {
                 if (error) {
                     return reject(tl.loc("ResourceGroupCreationFailed", utils.getError(error)));
                 }
@@ -500,7 +508,7 @@ export class ResourceGroup {
             deployment.properties["mode"] = "Incremental";
             this.taskParameters.deploymentName = this.taskParameters.deploymentName || this.createDeploymentName();
             console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
-            armClient.deployments.validate(this.taskParameters.resourceGroupName, this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
+            armClient.deployments.validate(this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
                 if (error) {
                     return reject(tl.loc("CreateTemplateDeploymentValidationFailed", utils.getError(error)));
                 }
@@ -515,7 +523,7 @@ export class ResourceGroup {
         });
     }
 
-    private async performAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment): Promise<void> {
+    private async performAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount = 0): Promise<void> {
         if (deployment.properties["mode"] === "Validation") {
             return this.validateDeployment(armClient, deployment);
         } else {
@@ -523,8 +531,11 @@ export class ResourceGroup {
             return new Promise<void>((resolve, reject) => {
                 this.taskParameters.deploymentName = this.taskParameters.deploymentName || this.createDeploymentName();
                 console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
-                armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
+                armClient.deployments.createOrUpdate(this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
                     if (error) {
+                        if(error.code == "ResourceGroupNotFound" && retryCount > 0){
+                            return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount);
+                        }
                         this.writeDeploymentErrors(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
@@ -540,6 +551,11 @@ export class ResourceGroup {
         }
     }
 
+    private async waitAndPerformAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount): Promise<void> {
+        await sleepFor(3);
+        return this.performAzureDeployment(armClient, deployment, retryCount - 1);
+    }
+
     private async createTemplateDeployment(armClient: armResource.ResourceManagementClient) {
         console.log(tl.loc("CreatingTemplateDeployment"));
         var deployment: Deployment;
@@ -550,7 +566,7 @@ export class ResourceGroup {
         } else {
             throw new Error(tl.loc("InvalidTemplateLocation"));
         }
-        await this.performAzureDeployment(armClient, deployment);
+        await this.performAzureDeployment(armClient, deployment, 3);
     }
 
     private enablePrereqDG = "ConfigureVMWithDGAgent";

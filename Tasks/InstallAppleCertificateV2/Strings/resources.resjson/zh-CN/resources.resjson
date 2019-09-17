@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "安装 Apple 证书",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=862067)",
-  "loc.description": "安装在 macOS 代理上生成所需的 Apple 证书",
+  "loc.description": "将生成所需的 Apple 证书安装到 macOS 代理计算机上",
   "loc.instanceNameFormat": "安装 Apple 证书",
-  "loc.releaseNotes": "修复程序 codesign 在自托管代理上挂起。密钥链密码现在需要使用“默认密钥链”或“自定义密钥链”。Microsoft 托管生成应使用“临时密钥链”。",
+  "loc.releaseNotes": "修复程序 codesign 在自托管代理上挂起。密钥链密码现在需要使用 `Default Keychain` 或 `Custom Keychain`。Microsoft 托管生成应使用 `Temporary Keychain`。",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.certSecureFile": "证书(P12)",
   "loc.input.help.certSecureFile": "选择已上传至“安全文件”的证书(.p12)以在 macOS 代理上进行安装。",
@@ -26,5 +26,7 @@
   "loc.messages.P12PrivateKeyNameNotFound": "无法标识私钥名称: %s",
   "loc.messages.SetKeyPartitionListCommandNotFound": "正在跳过此较早的 OS 上不需要的密钥链 partition_id ACL 分配。macOS Sierra (10.12)中引入了安全命令 \"set-key-partition-list\"。 ",
   "loc.messages.SetKeyPartitionListCommandFailed": "设置私钥的 partition_id ACL 时出错。验证“密钥链密码”是否正确，或改用“临时密钥链”。",
-  "loc.messages.InstallRequiresMac": "安装 Apple 证书需要 macOS 代理。Apple 不支持在 Linux 或 Windows 上安装 Apple 证书。"
+  "loc.messages.InstallRequiresMac": "安装 Apple 证书需要 macOS 代理。Apple 不支持在 Linux 或 Windows 上安装 Apple 证书。",
+  "loc.messages.CertNotValidYetError": "证书“%s”(指纹: %s)在 %s之前无效",
+  "loc.messages.CertExpiredError": "证书“%s”(指纹: %s)已在 %s过期"
 }

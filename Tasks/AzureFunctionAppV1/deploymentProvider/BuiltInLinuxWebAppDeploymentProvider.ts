@@ -1,5 +1,5 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import path = require('path');
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
@@ -12,7 +12,8 @@ const linuxFunctionRuntimeSettingName: string = '-FUNCTIONS_WORKER_RUNTIME ';
 
 const linuxFunctionRuntimeSettingValue = new Map([
     [ 'DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0', 'dotnet ' ],
-    [ 'DOCKER|microsoft/azure-functions-node8:2.0', 'node ' ]
+    [ 'DOCKER|microsoft/azure-functions-node8:2.0', 'node ' ],
+    [ 'DOCKER|microsoft/azure-functions-python3.6:2.0', 'python ']
 ]);
 
 export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {
@@ -27,7 +28,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
         var isNewValueUpdated: boolean = false;
         
         var linuxFunctionRuntimeSetting = "";
-        if(this.taskParams.RuntimeStack){
+        if(this.taskParams.RuntimeStack && linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack)) {
             linuxFunctionRuntimeSetting = linuxFunctionRuntimeSettingName + linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack);
         }
         var linuxFunctionAppSetting = linuxFunctionRuntimeSetting + linuxFunctionStorageSetting;

@@ -3,6 +3,7 @@
 // If its a PR build, all tasks that have been changed will be built.
 // Any other type of build will build all tasks.
 var fs = require('fs');
+var os = require('os');
 var path = require('path');
 var semver = require('semver');
 var restClient = require('typed-rest-client/RestClient');
@@ -116,7 +117,15 @@ var getTasksToBuildForPR = function() {
     var prId = process.env['SYSTEM_PULLREQUEST_PULLREQUESTNUMBER'];
     var targetBranch = process.env['SYSTEM_PULLREQUEST_TARGETBRANCH'];
     var commonChanges = [];
+    var commonTestChanges = [];
     var toBeBuilt = [];
+
+    // We need to escape # on Unix platforms since that turns the rest of the string into a comment
+    if (os.platform() != 'win32') {
+        sourceBranch = sourceBranch.replace(/#/gi, "\\#");
+        targetBranch = targetBranch.replace(/#/gi, "\\#");
+    }
+
     try {
         if (sourceBranch.includes(':')) {
             // We only care about the branch name, not the source repo
@@ -137,7 +146,12 @@ var getTasksToBuildForPR = function() {
             var taskPath = filePath.slice(6);
             if(taskPath.slice(0, 6) == 'Common') {
                 var commonName = taskPath.slice(7);
-                commonChanges.push('../common/' + commonName.slice(0, commonName.indexOf('/')).toLowerCase());
+                if (taskPath.toLowerCase().indexOf('test') > -1) {
+                    commonTestChanges.push('../common/' + commonName.slice(0, commonName.indexOf('/')).toLowerCase());
+                }
+                else {
+                    commonChanges.push('../common/' + commonName.slice(0, commonName.indexOf('/')).toLowerCase());
+                }
             }
             else {
                 var taskName = taskPath.slice(0, taskPath.indexOf('/'));
@@ -148,6 +162,7 @@ var getTasksToBuildForPR = function() {
         }
     });
     var changedTasks = getTasksDependentOnChangedCommonFiles(commonChanges);
+    var changedTests = getTasksDependentOnChangedCommonFiles(commonTestChanges);
     var shouldBeBumped = [];
     changedTasks.forEach(task => {
         if (!toBeBuilt.includes(task)) {
@@ -156,10 +171,14 @@ var getTasksToBuildForPR = function() {
         }
     });
     if (shouldBeBumped.length > 0) {
-        // TODO - change this to an error once its proven to be working.
-        console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=160;]The following tasks should have their versions bumped due to changes in common:', shouldBeBumped);
-        // throw new Error('The following tasks should have their versions bumped due to changes in common: ' + shouldBeBumped);
+        throw new Error('The following tasks should have their versions bumped due to changes in common: ' + shouldBeBumped);
     }
+    
+    changedTests.forEach(task => {
+        if (!toBeBuilt.includes(task)) {
+            toBeBuilt.push(task);
+        }
+    });
 
     return toBeBuilt;
 }

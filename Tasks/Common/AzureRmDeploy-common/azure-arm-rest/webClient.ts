@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import util = require("util");
 import fs = require('fs');
 import httpClient = require("typed-rest-client/HttpClient");
@@ -35,11 +35,11 @@ export class WebResponse {
 }
 
 export class WebRequestOptions {
-    public retriableErrorCodes: string[];
-    public retryCount: number;
-    public retryIntervalInSeconds: number;
-    public retriableStatusCodes: number[];
-    public retryRequestTimedout: boolean;
+    public retriableErrorCodes?: string[];
+    public retryCount?: number;
+    public retryIntervalInSeconds?: number;
+    public retriableStatusCodes?: number[];
+    public retryRequestTimedout?: boolean;
 }
 
 export async function sendRequest(request: WebRequest, options?: WebRequestOptions): Promise<WebResponse> {

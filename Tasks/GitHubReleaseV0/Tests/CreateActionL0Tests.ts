@@ -1,4 +1,4 @@
-import tmrm = require('vsts-task-lib/mock-run');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import * as path from 'path';
 import { Inputs } from '../operations/Constants';
 import * as sinon from 'sinon';
@@ -12,7 +12,10 @@ export class CreateActionL0Tests {
         tr.setInput(Inputs.gitHubConnection, "connection");
         tr.setInput(Inputs.repositoryName, "repo");
         tr.setInput(Inputs.action, "create");
+        tr.setInput(Inputs.tagSource, "manual");
+        tr.setInput(Inputs.tag, "tag");
         tr.setInput(Inputs.target, "master");
+        tr.setInput(Inputs.releaseNotesSource, "input");
         
         this.stub(tr);
         tr.run();

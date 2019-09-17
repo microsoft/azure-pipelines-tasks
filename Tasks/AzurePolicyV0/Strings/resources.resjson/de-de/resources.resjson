@@ -1,7 +1,8 @@
 {
-  "loc.friendlyName": "Sicherheits- und Konformitätsbewertung",
-  "loc.description": "Sicherheits- und Konformitätsbewertung mit Azure-Richtlinien für Ressourcen, die der Ressourcengruppe und dem Azure-Abonnement angehören",
-  "loc.instanceNameFormat": "Azure Policy-Konformitätsbewertung für $(ResourceGroupName)",
+  "loc.friendlyName": "Azure Policy-Konformität überprüfen",
+  "loc.helpMarkDown": "",
+  "loc.description": "Sicherheits- und Konformitätsbewertung für Azure Policy",
+  "loc.instanceNameFormat": "Richtlinienkonformität überprüfen",
   "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
   "loc.input.help.ConnectedServiceName": "Wählen Sie das Azure Resource Manager-Abonnement zum Erzwingen der Richtlinien aus.",
   "loc.input.label.ResourceGroupName": "Ressourcengruppe",

@@ -3,12 +3,13 @@ import * as auth from 'packaging-common/nuget/Authentication';
 import * as commandHelper from 'packaging-common/nuget/CommandHelper';
 import * as nutil from 'packaging-common/nuget/Utility';
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
-import { IExecOptions } from 'vsts-task-lib/toolrunner';
+import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 import { NuGetConfigHelper2 } from 'packaging-common/nuget/NuGetConfigHelper2';
 import * as ngRunner from 'packaging-common/nuget/NuGetToolRunner2';
 import * as pkgLocationUtils from 'packaging-common/locationUtilities';
+import { getProjectAndFeedIdFromInputParam } from 'packaging-common/util';
 
 export async function run(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
@@ -99,9 +100,10 @@ export async function run(): Promise<void> {
                 tempNuGetPath,
                 false /* useNugetToModifyConfigFile */);
 
-            const internalFeedId = tl.getInput('feedPublish');
-            feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, internalFeedId, null, accessToken, /* useSession */ true);
-            nuGetConfigHelper.addSourcesToTempNuGetConfig([<auth.IPackageSource>{ feedName: internalFeedId, feedUri: feedUri, isInternal: true }]);
+            const feed = getProjectAndFeedIdFromInputParam('feedPublish');
+
+            feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed.feedId, feed.projectId, null, accessToken, /* useSession */ true);
+            nuGetConfigHelper.addSourcesToTempNuGetConfig([<auth.IPackageSource>{ feedName: feed.feedId, feedUri: feedUri, isInternal: true }]);
             configFile = nuGetConfigHelper.tempNugetConfigPath;
             credCleanup = () => { tl.rmRF(tempNuGetConfigDirectory); };
 

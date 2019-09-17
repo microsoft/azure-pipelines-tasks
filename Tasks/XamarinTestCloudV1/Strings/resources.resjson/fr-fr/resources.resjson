@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613744)",
-  "loc.description": "[Déprécié] Test des applications mobiles avec Xamarin Test Cloud à l'aide de Xamarin.UITest - Tâche recommandée : AppCenterTest",
+  "loc.description": "[Déprécié] Les tests d'applications mobiles avec Xamarin Test Cloud via Xamarin.UITest sont dépréciés. Utilisez la tâche 'Test App Center' à la place.",
   "loc.instanceNameFormat": "Tester $(app) avec Xamarin.UITest dans Xamarin Test Cloud",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.app": "Fichier d'application",
@@ -27,6 +27,6 @@
   "loc.input.help.testCloudLocation": "Chemin de test-cloud.exe. Les caractères génériques sont autorisés. Dans ce cas, la première occurrence de test-cloud.exe est utilisée ([Plus d'informations](https://go.microsoft.com/fwlink/?linkid=856077)).",
   "loc.input.label.optionalArgs": "Arguments facultatifs",
   "loc.input.help.optionalArgs": "Arguments supplémentaires passés à test-cloud.exe.",
-  "loc.input.label.publishNUnitResults": "Publier les résultats sur Azure Pipelines/TFS",
-  "loc.input.help.publishNUnitResults": "Quand elle est sélectionnée, l'option --nunit-xml est passée à test-cloud.exe. Les résultats du fichier xml NUnit sont publiés dans Azure Pipelines/TFS."
+  "loc.input.label.publishNUnitResults": "Publier les résultats sur Azure Pipelines",
+  "loc.input.help.publishNUnitResults": "Quand elle est sélectionnée, l'option --nunit-xml est passée à test-cloud.exe. Les résultats du fichier xml NUnit sont publiés dans Azure Pipelines."
 }

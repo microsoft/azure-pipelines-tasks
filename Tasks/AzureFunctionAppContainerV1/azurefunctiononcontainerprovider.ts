@@ -6,10 +6,11 @@ import { Kudu } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service-k
 import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
 import { AzureAppServiceUtility } from 'azurermdeploycommon/operations/AzureAppServiceUtility';
 import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/AzureResourceFilterUtility';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
 import { ContainerBasedDeploymentUtility } from 'azurermdeploycommon/operations/ContainerBasedDeploymentUtility';
 const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE false';
+import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility';
 
 export class AzureFunctionOnContainerDeploymentProvider{
     protected taskParams:TaskParameters;
@@ -28,26 +29,29 @@ export class AzureFunctionOnContainerDeploymentProvider{
         this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppName));
         
-        if(!this.taskParams.ResourceGroupName){
-            var appDetails = await AzureResourceFilterUtility.getAppDetails(this.azureEndpoint, this.taskParams.WebAppName);
+        if(!this.taskParams.ResourceGroupName) {
+            let appDetails = await AzureResourceFilterUtility.getAppDetails(this.azureEndpoint, this.taskParams.WebAppName);
             this.taskParams.ResourceGroupName = appDetails["resourceGroupName"];
         }
 
         this.appService = new AzureAppService(this.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, this.taskParams.SlotName);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
-
+        this.taskParams.isLinuxContainerApp = true;
         this.kuduService = await this.appServiceUtility.getKuduService();
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
         tl.debug(`Resource Group: ${this.taskParams.ResourceGroupName}`);
+        tl.debug(`is Linux container web app: ${this.taskParams.isLinuxContainerApp}`);
     }
 
     public async DeployWebAppStep() {
         tl.debug("Performing container based deployment.");
 
-        this.taskParams.AppSettings = this.taskParams.AppSettings ? this.taskParams.AppSettings.trim() + " " + linuxFunctionStorageSetting : linuxFunctionStorageSetting;
-
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
         await containerDeploymentUtility.deployWebAppImage(this.taskParams);
+
+        this.taskParams.AppSettings = this.taskParams.AppSettings ? this.taskParams.AppSettings.trim() + " " + linuxFunctionStorageSetting : linuxFunctionStorageSetting;
+        let customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
+        await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
         
         await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
     }

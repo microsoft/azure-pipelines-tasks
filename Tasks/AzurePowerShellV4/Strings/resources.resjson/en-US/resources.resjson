@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure PowerShell",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Run a PowerShell script within an Azure environment",
   "loc.instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
   "loc.releaseNotes": "Added support for Az Module and cross platform agents.",
@@ -23,9 +23,12 @@
   "loc.input.help.TargetAzurePs": "In case of hosted agents, the supported Azure PowerShell Version is: 1.0.0(Hosted VS2017 Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\"",
   "loc.input.label.CustomTargetAzurePs": "Preferred Azure PowerShell Version",
   "loc.input.help.CustomTargetAzurePs": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0",
+  "loc.messages.GeneratingScript": "Generating script.",
+  "loc.messages.JS_FormattedCommand": "Formatted command: %s",
   "loc.messages.InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
   "loc.messages.InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
   "loc.messages.InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1",
   "loc.messages.JS_ExitCode": "PowerShell exited with code '%s'.",
-  "loc.messages.JS_Stderr": "PowerShell wrote one or more lines to the standard error stream."
+  "loc.messages.JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
 }

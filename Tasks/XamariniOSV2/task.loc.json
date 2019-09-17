@@ -3,7 +3,7 @@
   "name": "XamariniOS",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613729",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/xamarin-ios",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 142,
-    "Patch": 2
+    "Minor": 151,
+    "Patch": 3
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [

@@ -2,9 +2,9 @@
     "id": "049918CB-1488-48EB-85E8-C318ECCAAA74",
     "name": "XamarinTestCloud",
     "friendlyName": "Xamarin Test Cloud",
-    "description": "[Deprecated] Testing mobile apps with Xamarin Test Cloud using Xamarin.UITest - recommended task is now AppCenterTest",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613744",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613744)",
+    "description": "[Deprecated] Test mobile apps with Xamarin Test Cloud using Xamarin.UITest. Instead, use the 'App Center test' task.",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/xamarin-test-cloud",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613744)",
     "category": "Test",
     "visibility": [
         "Build",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 141,
-        "Patch": 2
+        "Minor": 151,
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",
@@ -170,10 +170,10 @@
         {
             "name": "publishNUnitResults",
             "type": "boolean",
-            "label": "Publish results to Azure Pipelines/TFS",
+            "label": "Publish results to Azure Pipelines",
             "groupName": "advanced",
             "defaultValue": "true",
-            "helpMarkDown": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to Azure Pipelines/TFS."
+            "helpMarkDown": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to Azure Pipelines."
         }
     ],
     "instanceNameFormat": "Test $(app) with Xamarin.UITest in Xamarin Test Cloud",

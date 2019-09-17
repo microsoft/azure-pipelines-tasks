@@ -1,6 +1,7 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import utility = require('./utility');
 import zipUtility = require('./ziputility.js');
+import path = require('path');
 
 export enum PackageType {
     war,
@@ -22,6 +23,36 @@ export class PackageUtility {
 
         return availablePackages[0];
     }
+
+    public static getArtifactAlias(packagePath: string): string {
+        let artifactAlias = null;
+        if (tl.getVariable('release.releaseId')) {
+            // Determine artifact alias from package path if task is running in release.
+            let workingDirectory = tl.getVariable("system.defaultworkingdirectory");
+            try {
+                if (workingDirectory && packagePath.indexOf(workingDirectory) == 0) {
+                    let relativePackagePath = packagePath.substring(workingDirectory.length);
+                    if (relativePackagePath.indexOf(path.sep) == 0) {
+                        relativePackagePath = relativePackagePath.substring(1);
+                    }
+                    let endIndex = relativePackagePath.indexOf(path.sep);
+                    endIndex = endIndex >= 0 ? endIndex : relativePackagePath.length;
+                    artifactAlias = relativePackagePath.substring(0, endIndex);
+                    if(!tl.getVariable(`release.artifacts.${artifactAlias}.definitionId`)) {
+                        // Artifact alias determined is not correct, set it to null
+                        tl.debug(`Incorrect artifact alias ${artifactAlias} determined for package path ${packagePath}`);
+                        artifactAlias = null;
+                    }
+                }
+            }
+            catch (error) {
+                artifactAlias = null;
+                tl.debug(`Error in determining artifact alias of package. Error: ${error}`);
+            }
+        }
+        tl.debug("Artifact alias of package is: " + artifactAlias);
+        return artifactAlias;
+    }
 }
 
 export class Package {
@@ -36,19 +67,9 @@ export class Package {
 
     public async isMSBuildPackage(): Promise<boolean> {
         if(this._isMSBuildPackage == undefined) {
-            this._isMSBuildPackage = false;
-            if(this.getPackageType() != PackageType.folder) {
-                var pacakgeComponent = await zipUtility.getArchivedEntries(this._path);
-                if (((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) && 
-                    ((pacakgeComponent["entries"].indexOf("systemInfo.xml") > -1) || (pacakgeComponent["entries"].indexOf("systeminfo.xml") > -1)
-                    || (pacakgeComponent["entries"].indexOf("SystemInfo.xml") > -1))) {
-                    this._isMSBuildPackage = true;
-                }
-            }
-            
+            this._isMSBuildPackage = this.getPackageType() != PackageType.folder && await zipUtility.checkIfFilesExistsInZip(this._path, ["parameters.xml", "systeminfo.xml"]);
             tl.debug("Is the package an msdeploy package : " + this._isMSBuildPackage);
         }
-
         return this._isMSBuildPackage;
     }
 

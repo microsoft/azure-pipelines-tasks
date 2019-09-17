@@ -1,4 +1,4 @@
-import tmrm = require('vsts-task-lib/mock-run');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 
 export function registerArtifactToolUtilitiesMock(tmr: tmrm.TaskMockRunner, toolPath: string) {
     tmr.registerMock('packaging-common/universal/ArtifactToolUtilities', {
@@ -12,7 +12,7 @@ export function registerArtifactToolUtilitiesMock(tmr: tmrm.TaskMockRunner, tool
 }
 
 export function registerArtifactToolRunnerMock(tmr: tmrm.TaskMockRunner) {
-    var mtt = require('vsts-task-lib/mock-toolrunner');
+    var mtt = require('azure-pipelines-task-lib/mock-toolrunner');
     tmr.registerMock('packaging-common/universal/ArtifactToolRunner', {
         getOptions: function() {
             return {
