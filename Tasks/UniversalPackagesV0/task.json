@@ -1,15 +1,15 @@
 {
     "id": "e0b79640-8625-11e8-91be-db2878ff888a",
     "name": "UniversalPackages",
-    "friendlyName": "Universal Packages",
-    "description": "Download or publish Universal Packages.",
+    "friendlyName": "Universal packages",
+    "description": "Download or publish Universal Packages",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://aka.ms/universalpackagesannounce",
-    "helpMarkDown": "[More Information](https://aka.ms/universalpackagesannounce)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/universalpackagesannounce)",
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 151,
+        "Minor": 158,
         "Patch": 0
     },
     "runsOn": [
@@ -146,7 +146,7 @@
             "type": "pickList",
             "label": "Version",
             "defaultValue": "",
-            "helpMarkDown": "Select the package version or use a variable containing the version to download.",
+            "helpMarkDown": "Select the package version or use a variable containing the version to download. This can also be a wildcard expression such as * to get the highest version, 1.* to get the highest version with major version 1, or 1.2.* to get the highest patch release with major version 1 and minor version 2.",
             "required": "true",
             "groupName": "packageDownloadDetails",
             "visibleRule": "internalOrExternalDownload = internal",
@@ -180,7 +180,7 @@
             "type": "string",
             "label": "Version",
             "defaultValue": "",
-            "helpMarkDown": "Package version to download",
+            "helpMarkDown": "Select the package version or use a variable containing the version to download. This can also be a wildcard expression such as * to get the highest version, 1.* to get the highest version with major version 1, or 1.2.* to get the highest patch release with major version 1 and minor version 2.",
             "required": "true",
             "groupName": "packageDownloadDetails",
             "visibleRule": "internalOrExternalDownload = external"
@@ -347,7 +347,7 @@
                 "Information": "Information",
                 "Warning": "Warning",
                 "Error": "Error",
-                "Critical": "Citical"
+                "Critical": "Critical"
             }
         },
         {
@@ -406,9 +406,9 @@
     "messages": {
         "PackagesDownloadedSuccessfully": "Package were downloaded successfully",
         "PackagesFailedToDownload": "Packages failed to download",
-        "ConnectingAs": "Connecting to feeds in your Azure Pipelines/TFS project collection as '%s' [%s]",
+        "ConnectingAs": "Connecting to feeds in your Azure DevOps organization as '%s' [%s]",
         "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
-        "CouldNotFindUniversalPackagesService": "Could not find the Universal Packages service. This task will not be able to authenticate to feeds hosted in your Azure Pipelines/TFS project collection.",
+        "CouldNotFindUniversalPackagesService": "Could not find the Universal Packages service. This task will not be able to authenticate to feeds hosted in your Azure DevOps organization.",
         "Error_NoValueFoundForEnvVar": "No value was found for the provided environment variable.",
         "PackagesPublishedSuccessfully": "Packages were published successfully",
         "PackagesFailedToPublish": "Packages failed to publish",
@@ -435,6 +435,7 @@
         "Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",
         "FailedToGetLatestPackageVersion": "Failed to get package versions",
         "Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages",
+        "Warning_SessionCreationFailed": "Could not create provenance session: %s",
         "Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server.",
         "Error_ProcessorArchitectureNotSupported": "Universal Packages require an x64 agent."
     }

@@ -32,10 +32,11 @@ export async function getPublishRegistry(packagingLocation: PackagingLocation): 
     switch (registryLocation) {
         case RegistryLocation.Feed:
             tl.debug(tl.loc('PublishFeed'));
-            const feedId = tl.getInput(NpmTaskInput.PublishFeed, true);
+            const feed = util.getProjectAndFeedIdFromInputParam(NpmTaskInput.PublishFeed);
             npmRegistry = await NpmRegistry.FromFeedId(
                 packagingLocation.DefaultPackagingUri,
-                feedId,
+                feed.feedId,
+                feed.projectId,
                 false /* authOnly */,
                 true /* useSession */);
             break;

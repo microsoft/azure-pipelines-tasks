@@ -1,23 +1,24 @@
 {
     "id": "1b2aec60-dc49-11e6-9b76-63056e018cac",
     "name": "IISWebAppManagementOnMachineGroup",
-    "friendlyName": "IIS Web App Manage",
-    "description": "Create or update a Website, Web App, Virtual Directories, and Application Pool",
+    "friendlyName": "IIS web app manage",
+    "description": "Create or update websites, web apps, virtual directories, or application pools",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://aka.ms/iis-webapp-management-readme",
-    "helpMarkDown": "[More Information](https://aka.ms/iis-webapp-management-readme)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/iis-web-app-management-on-machine-group",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/iis-webapp-management-readme)",
     "category": "Deploy",
     "visibility": [
         "Release"
     ],
     "runsOn": [
+        "Agent",
         "DeploymentGroup"
     ],
     "demands": [],
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 10
+        "Patch": 13
     },
     "minimumAgentVersion": "2.111.0",
     "instanceNameFormat": "Manage $(IISDeploymentType)",

@@ -3,7 +3,7 @@
   "name": "UseNode",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "preview": true,
@@ -16,11 +16,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 158,
+    "Patch": 0
   },
   "satisfies": [
-    "Node"
+    "Node",
+    "npm",
+    "node.js"
   ],
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

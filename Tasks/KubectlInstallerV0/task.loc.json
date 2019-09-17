@@ -3,18 +3,17 @@
   "name": "KubectlInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "visibility": [
     "Build",
     "Release"
   ],
-  "preview": true,
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 151,
+    "Minor": 158,
     "Patch": 0
   },
   "demands": [],

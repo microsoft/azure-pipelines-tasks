@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Invocar función de Azure",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=870235)",
-  "loc.description": "Invoca una función de Azure como parte de la canalización.",
+  "loc.description": "Invoca una función de Azure.",
   "loc.instanceNameFormat": "Función de Azure: $(function)",
   "loc.group.displayName.completionOptions": "Avanzado",
   "loc.input.label.function": "Dirección URL de la función de Azure",

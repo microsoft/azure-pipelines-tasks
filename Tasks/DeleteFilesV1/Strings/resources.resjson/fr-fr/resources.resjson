@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Supprimer les fichiers",
+  "loc.friendlyName": "Supprimer des fichiers",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=722333)",
-  "loc.description": "Supprimez des fichiers ou des dossiers. (Les modèles minimatch correspondent uniquement aux chemins de fichiers, pas aux chemins de dossiers)",
+  "loc.description": "Supprimer des dossiers ou des fichiers correspondant à un modèle",
   "loc.instanceNameFormat": "Supprimer les fichiers de $(SourceFolder)",
   "loc.input.label.SourceFolder": "Dossier source",
   "loc.input.help.SourceFolder": "Dossier source à partir duquel la ou les suppressions sont exécutées. La racine du dépôt est vide. Utilisez des [variables](https://go.microsoft.com/fwlink/?LinkID=550988), si les fichiers ne sont pas dans le dépôt. Exemple : $(agent.builddirectory)",

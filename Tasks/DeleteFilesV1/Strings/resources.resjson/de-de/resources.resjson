@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Dateien löschen",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=722333)",
-  "loc.description": "Löschen Sie Dateien oder Ordner. (Die Minimatchmuster ordnen nur Dateipfade zu, keine Ordnerpfade.)",
+  "loc.description": "Hiermit werden Ordner oder Dateien gelöscht, die einem Muster entsprechen.",
   "loc.instanceNameFormat": "Dateien aus \"$(SourceFolder)\" löschen",
   "loc.input.label.SourceFolder": "Quellordner",
   "loc.input.help.SourceFolder": "Der Quellordner, aus dem mindestens ein Löschvorgang ausgeführt wird. \"Empty\" ist der Stamm des Repositorys. Verwenden Sie [Variablen](https://go.microsoft.com/fwlink/?LinkID=550988), wenn sich Dateien nicht im Repository befinden, z. B. \"$(agent.builddirectory)\".",

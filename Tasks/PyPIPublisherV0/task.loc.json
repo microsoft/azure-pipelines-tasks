@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=875289",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/pypi-publisher",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "visibility": [
@@ -14,8 +14,8 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 142,
-    "Patch": 2
+    "Minor": 151,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

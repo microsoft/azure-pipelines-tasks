@@ -1,11 +1,11 @@
 {
     "id": "99A72E7F-25E4-4576-BF38-22A42B995ED8",
     "name": "AzureMonitor",
-    "friendlyName": "Query Classic Azure Monitor Alerts",
-    "description": "Observe the configured classic Azure monitor rules for active alerts.",
+    "friendlyName": "Query Classic Azure Monitor alerts",
+    "description": "Observe the configured classic Azure Monitor rules for active alerts",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870240",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-monitor",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 14
     },
     "instanceNameFormat": "Query Azure Monitor alerts",
     "groups": [],

@@ -14,6 +14,7 @@ Register-Mock Initialize-AzModule
 Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
 Register-Mock Get-VstsEndpoint
+Register-Mock Get-VstsTaskVariable { $env:PSModulePath } -- -Name 'AZ_PS_MODULE_PATH' -Require
 
 # Act.
 $actual = @( & $PSScriptRoot\..\AzurePowerShell.ps1 )
@@ -29,3 +30,6 @@ Assert-AreEqual 'item 2' $actual[0][1]
 
 # Assert item 3 is separate.
 Assert-AreEqual 'item 3' $actual[1]
+
+# Clean Up
+Unregister-Mock Get-VstsTaskVariable

@@ -2,6 +2,7 @@ import tl = require("azure-pipelines-task-lib/task");
 import tr = require("azure-pipelines-task-lib/toolrunner");
 import path = require("path");
 import fs = require("fs");
+import ltx = require("ltx");
 var archiver = require('archiver');
 
 import * as packCommand from './packcommand';
@@ -87,7 +88,14 @@ export class dotNetExe {
             var projectFile = projectFiles[fileIndex];
             var dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
-            dotnet.arg(projectFile);
+            if (this.isRunCommand()) {
+                if (!!projectFile) {
+                    dotnet.arg("--project");
+                    dotnet.arg(projectFile);
+                }
+            } else {
+                dotnet.arg(projectFile);
+            }
             var dotnetArguments = this.arguments;
             if (this.isPublishCommand() && this.outputArgument && tl.getBoolInput("modifyOutputPath")) {
                 var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
@@ -325,24 +333,56 @@ export class dotNetExe {
         }
 
         var projectFiles = utility.getProjectFiles(projectPattern);
+        var resolvedProjectFiles: string[] = [];
 
         if (searchWebProjects) {
-            projectFiles = projectFiles.filter(function (file, index, files): boolean {
+            resolvedProjectFiles = projectFiles.filter(function (file, index, files): boolean {
                 var directory = path.dirname(file);
                 return tl.exist(path.join(directory, "web.config"))
                     || tl.exist(path.join(directory, "wwwroot"));
             });
 
-            if (!projectFiles.length) {
-                tl.error(tl.loc("noWebProjctFound"));
-            }
+            if (!resolvedProjectFiles.length) {
+                var projectFilesUsingWebSdk = projectFiles.filter(this.isWebSdkUsed);
+                if(!projectFilesUsingWebSdk.length) {
+                    tl.error(tl.loc("noWebProjectFound"));
+                }
+                return projectFilesUsingWebSdk;
+            } 
+            return resolvedProjectFiles;
         }
-
         return projectFiles;
+    }
+
+    private isWebSdkUsed(projectfile: string): boolean {
+        if (projectfile.endsWith('.vbproj')) return false
+
+        try {
+            var fileBuffer: Buffer = fs.readFileSync(projectfile);
+            var webConfigContent: string;
+            
+            var fileEncodings = ['utf8', 'utf16le'];
+
+            for(var i = 0; i < fileEncodings.length; i++) {
+                tl.debug("Trying to decode with " + fileEncodings[i]);
+                webConfigContent = fileBuffer.toString(fileEncodings[i]);
+                try {
+                    var projectSdkUsed: string = ltx.parse(webConfigContent).getAttr("sdk") || ltx.parse(webConfigContent).getAttr("Sdk");
+                    return projectSdkUsed && projectSdkUsed.toLowerCase() == "microsoft.net.sdk.web";
+                } catch (error) {}
+            }
+        } catch(error) {
+            tl.warning(error);
+        }
+        return false;
     }
 
     private isPublishCommand(): boolean {
         return this.command === "publish";
+    }
+
+    private isRunCommand(): boolean {
+        return this.command === "run";
     }
 
     private static getModifiedOutputForProjectFile(outputBase: string, projectFile: string): string {

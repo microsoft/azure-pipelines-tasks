@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Distribuzione di Database di Azure per MySQL",
   "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/mysqlazuredeployreadme)",
-  "loc.description": "Consente di eseguire gli script e di apportare modifiche all'istanza di Database di Azure per MySQL.",
+  "loc.description": "Consente di eseguire gli script e di apportare modifiche all'istanza di Database di Azure per MySQL",
   "loc.instanceNameFormat": "Esegui attività MySQL di Azure: $(TaskNameSelector)",
   "loc.group.displayName.target": "Dettagli del database",
   "loc.group.displayName.taskDetails": "Pacchetto di distribuzione",
@@ -60,6 +60,8 @@
   "loc.messages.WindowMysqlClientMissingError": "Il client MySQL non è presente nel computer agente Windows. Per installarlo, eseguire il file di script 'https://aka.ms/window-mysqlcli-installer' del programma di installazione del client MySQL nel computer agente.",
   "loc.messages.LinuxMysqlClientMissingError": "Il client MySQL non è presente nel computer agente Linux. Per installarlo, eseguire 'sudo apt-get install mysql-client'.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Non è stato possibile recuperare un token di accesso per Azure. Codice di stato: %s. Messaggio di stato: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Non è stato possibile recuperare un token di accesso per l'entità servizio gestita. Configurare l'identità del servizio gestita per la macchina virtuale. Vedere 'https://aka.ms/azure-msi-docs'. Codice di stato: %s. Messaggio di stato: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Non è stato possibile recuperare un token di accesso per l'entità servizio gestita. Codice di stato: %s. Messaggio di stato: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Non è stato possibile recuperare un token di accesso per l'entità servizio gestita. Configurare l'identità del servizio gestita per la macchina virtuale. Vedere 'https://aka.ms/azure-msi-docs'. Assegnare il ruolo all'identità del servizio gestita creata. Vedere 'https://aka.ms/assign-role-msi'. Codice di stato: %s. Messaggio di stato: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Non è stato possibile recuperare un token di accesso per l'entità servizio gestita. Codice di stato: %s. Messaggio di stato: %s",
+  "loc.messages.NotAbleToCreateFirewallRule": "Si è verificato un errore durante l'aggiunta della regola del firewall al server MySQL di Azure. Errore: %s",
+  "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta."
 }

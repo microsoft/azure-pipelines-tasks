@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 
 export let TestEnvVars = {
     operatingSystem: "__operating_system__",
@@ -21,7 +21,7 @@ export let TestEnvVars = {
     configMapFile: "__configMapFile__",
     configMapArguments: "__configMapArguments__",
     versionOrLocation: "__versionOrLocation__",
-    versionSpec: "__versionSpec__",
+    versionSpec: "__versionspec__",
     checkLatest: "__checkLatest__",
     specifyLocation: "__specifyLocation__",
     outputFormat: "__outputFormat__",

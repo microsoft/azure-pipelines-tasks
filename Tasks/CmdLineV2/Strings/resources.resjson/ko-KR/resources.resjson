@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "명령줄",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613735)",
-  "loc.description": "Windows의 cmd.exe와 macOS 및 Linux의 bash를 사용하여 명령줄 스크립트를 실행합니다.",
+  "loc.description": "Linux 및 macOS에서는 Bash, Windows에서는 cmd.exe를 사용하여 명령줄 스크립트를 실행합니다.",
   "loc.instanceNameFormat": "명령줄 스크립트",
   "loc.releaseNotes": "스크립트 작업 일관성입니다. 여러 줄에 대한 지원이 추가되었습니다.",
   "loc.group.displayName.advanced": "고급",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet 包装程序",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=627416)",
-  "loc.description": "已弃用: 改为使用 \"NuGet\" 任务。它与新的工具安装程序框架协同工作，以便你可轻松使用新版本的 NuGet 而无需等待任务更新，为此帐户/集合外的已经过身份验证的源提供更好的支持，并默认使用 NuGet 4。",
+  "loc.description": "已弃用: 改为使用 \"NuGet\" 任务。它与新的工具安装程序框架协同工作，以便你可轻松使用新版本的 NuGet 而无需等待任务更新，为此组织/集合外的已经过身份验证的源提供更好的支持，并默认使用 NuGet 4。 ",
   "loc.instanceNameFormat": "NuGet 包装程序 $(solution)",
   "loc.group.displayName.versioning": "包选项",
   "loc.group.displayName.advanced": "高级",

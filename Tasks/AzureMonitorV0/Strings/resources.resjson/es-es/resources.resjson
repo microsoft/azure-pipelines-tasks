@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Consultar las alertas de Azure Monitor",
+  "loc.friendlyName": "Alertas de Azure Monitor clásico para consultas",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=870240)",
-  "loc.description": "Sigue las reglas de Azure Monitor configuradas para las alertas activas.",
+  "loc.description": "Sigue las reglas de Azure Monitor clásico configuradas para las alertas activas.",
   "loc.instanceNameFormat": "Consultar las alertas de Azure Monitor",
   "loc.input.label.connectedServiceNameARM": "Suscripción de Azure",
   "loc.input.help.connectedServiceNameARM": "Seleccione una suscripción de Azure Resource Manager para supervisarla.",

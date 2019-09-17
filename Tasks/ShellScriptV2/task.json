@@ -1,10 +1,10 @@
 {
     "id": "6C731C3C-3C68-459A-A5C9-BDE6E6595B5B",
     "name": "ShellScript",
-    "friendlyName": "Shell Script",
-    "description": "Run a shell script using bash",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613738",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613738)",
+    "friendlyName": "Shell script",
+    "description": "Run a shell script using Bash",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/shell-script",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [
         "sh"

@@ -1,7 +1,8 @@
-import msRestAzure = require('azure-arm-rest/azure-arm-common');
-import azureServiceClient = require("azure-arm-rest/AzureServiceClient");
-import tl = require('vsts-task-lib/task');
-import webClient = require("azure-arm-rest/webClient");
+import msRestAzure = require('azure-arm-rest-v2/azure-arm-common');
+import azureServiceClient = require("azure-arm-rest-v2/AzureServiceClient");
+import azureServiceClientBase = require("azure-arm-rest-v2/AzureServiceClientBase");
+import tl = require('azure-pipelines-task-lib/task');
+import webClient = require("azure-arm-rest-v2/webClient");
 
 export class AzureKeyVaultSecret {
     name: string;
@@ -64,7 +65,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         return null;
     }
 
-    public getSecrets(nextLink: string, callback: azureServiceClient.ApiCallback) {
+    public getSecrets(nextLink: string, callback: azureServiceClientBase.ApiCallback) {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
@@ -97,26 +98,26 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
                 if (response.body.nextLink) {
                     var nextResult = await this.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
-                        return new azureServiceClient.ApiResult(nextResult.error);
+                        return new azureServiceClientBase.ApiResult(nextResult.error);
                     }
                     result = result.concat(nextResult.result);
 
                     var listOfSecrets = this.convertToAzureKeyVaults(result);
-                    return new azureServiceClient.ApiResult(null, listOfSecrets);
+                    return new azureServiceClientBase.ApiResult(null, listOfSecrets);
                 }
                 else {
                     var listOfSecrets = this.convertToAzureKeyVaults(result);
-                    return new azureServiceClient.ApiResult(null, listOfSecrets);
+                    return new azureServiceClientBase.ApiResult(null, listOfSecrets);
                 }
             }
             else {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response));
             }
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
-    public getSecretValue(secretName: string, callback: azureServiceClient.ApiCallback) {
+    public getSecretValue(secretName: string, callback: azureServiceClientBase.ApiCallback) {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
@@ -137,15 +138,15 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         this.invokeRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             if (response.statusCode == 200) {
                 var result = response.body.value;
-                return new azureServiceClient.ApiResult(null, result);
+                return new azureServiceClientBase.ApiResult(null, result);
             }
             else if (response.statusCode == 400) {
-                return new azureServiceClient.ApiResult(tl.loc('GetSecretFailedBecauseOfInvalidCharacters', secretName));
+                return new azureServiceClientBase.ApiResult(tl.loc('GetSecretFailedBecauseOfInvalidCharacters', secretName));
             }
             else {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response));
             }
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 

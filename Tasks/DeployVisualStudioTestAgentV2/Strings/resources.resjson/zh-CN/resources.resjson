@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Visual Studio 测试代理部署",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=838890)",
-  "loc.description": "已弃用: 已弃用此任务及其配套任务(运行功能测试)。请改用 \"Visual Studio Test\" 任务。VSTest 任务可以运行单元和功能测试。使用多个代理作业设置在一个或多个代理上运行测试。使用“Visual Studio 测试平台”任务运行测试，而无需在代理上使用 Visual Studio。VSTest 任务还引入了新功能，例如自动重新运行失败的测试。",
+  "loc.description": "已弃用: 请改用“Visual Studio 测试”任务运行单元和功能测试",
   "loc.instanceNameFormat": "在 $(testMachineGroup) 上部署测试代理",
   "loc.releaseNotes": "<ul><li>支持 Visual Studio Test Agent 2017: 现可使用多个版本的 Visual Studio Test Agent 部署和运行测试。支持版本 2015 和 2017。</li><li>通过测试中心创建的计算机组不再受支持。可继续使用计算机或 Azure 资源组列表。</li></ul>",
   "loc.group.displayName.testMachineGroups": "测试计算机",

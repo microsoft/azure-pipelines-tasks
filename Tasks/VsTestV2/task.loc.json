@@ -3,7 +3,7 @@
   "name": "VSTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=835764",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/vstest",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [
@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 151,
-    "Patch": 4
+    "Minor": 157,
+    "Patch": 3
   },
   "demands": [
     "vstest"
@@ -411,7 +411,7 @@
       "name": "diagnosticsEnabled",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.diagnosticsEnabled",
-      "defaultValue": "True",
+      "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.diagnosticsEnabled",
       "groupName": "executionOptions"

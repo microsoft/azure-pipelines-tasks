@@ -22,7 +22,8 @@ const findOptions: tl.FindOptions = <tl.FindOptions>{allowBrokenSymbolicLinks: t
                                                      followSpecifiedSymbolicLink: true,
                                                      followSymbolicLinks: true };
 let allPaths: string[] = tl.find(sourceFolder, findOptions);
-let matchedPaths: string[] = tl.match(allPaths, contents, sourceFolder); // default match options
+let sourceFolderPattern = sourceFolder.replace('[','[[]'); // directories can have [] in them, and they have special meanings as a pattern, so escape them
+let matchedPaths: string[] = tl.match(allPaths, contents, sourceFolderPattern); // default match options
 let matchedFiles: string[] = matchedPaths.filter((itemPath: string) => !tl.stats(itemPath).isDirectory()); // filter-out directories
 
 // copy the files to the target folder

@@ -3,7 +3,7 @@
   "name": "AzureResourceGroupDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/argtaskreadme",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 147,
-    "Patch": 4
+    "Minor": 157,
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -432,7 +432,6 @@
     "AdditionFailed": "ms-resource:loc.messages.AdditionFailed",
     "DeletionFailed": "ms-resource:loc.messages.DeletionFailed",
     "DeleteAgentManually": "ms-resource:loc.messages.DeleteAgentManually",
-    "DGAgentOperationOnAllVMsFailed": "ms-resource:loc.messages.DGAgentOperationOnAllVMsFailed",
     "DGAgentAddedOnAllVMs": "ms-resource:loc.messages.DGAgentAddedOnAllVMs",
     "DGAgentDeletedFromAllVMs": "ms-resource:loc.messages.DGAgentDeletedFromAllVMs",
     "DGAgentHandlerMajorVersion": "ms-resource:loc.messages.DGAgentHandlerMajorVersion",
@@ -479,6 +478,8 @@
     "MoreInformationOnAzurePortal": "ms-resource:loc.messages.MoreInformationOnAzurePortal",
     "ResponseNotValid": "ms-resource:loc.messages.ResponseNotValid",
     "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "DeploymentGroupConfigurationNotSucceeded": "ms-resource:loc.messages.DeploymentGroupConfigurationNotSucceeded",
+    "DeploymentGroupConfigurationFailedOnVM": "ms-resource:loc.messages.DeploymentGroupConfigurationFailedOnVM"
   }
 }

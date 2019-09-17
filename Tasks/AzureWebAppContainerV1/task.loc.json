@@ -3,7 +3,7 @@
   "name": "AzureWebAppContainer",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/azurewebapponcontainerdeployreadme",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-web-app-containers",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 10
+    "Minor": 158,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -104,7 +104,8 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.containerCommand",
       "defaultValue": "",
-      "required": false
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.containerCommand"
     },
     {
       "name": "appSettings",
@@ -290,7 +291,6 @@
     "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
     "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
-    "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",

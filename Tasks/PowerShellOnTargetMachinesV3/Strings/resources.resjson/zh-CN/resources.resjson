@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "目标计算机上的 PowerShell",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=873465)",
-  "loc.description": "在远程计算机上执行 PowerShell 脚本。此版本的任务使用 PSSession 和 Invoke-Command 进行远程处理。",
+  "loc.description": "使用 PSSession 和 Invoke-Command 进行远程处理，在远程计算机上执行 PowerShell 脚本",
   "loc.instanceNameFormat": "在目标计算机上运行 PowerShell",
   "loc.releaseNotes": "使用 PSSession 和 invoke-command 在目标计算机上执行远程操作。<br/><br/>* 添加了对内联脚本执行的支持。<br/><br/>* 支持默认身份验证和 Credssp 身份验证。<br/><br/>* 添加了错误处理选项: ErrorActionPreference、ignoreLASTEXITCODE 和 Fail on Standard Error。",
   "loc.group.displayName.ScriptOptions": "脚本选项",

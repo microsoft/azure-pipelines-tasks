@@ -1,48 +1,44 @@
-"use strict";
+'use strict';
 
-import * as tl from "vsts-task-lib/task";
-import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
-import kubectlutility = require("utility-common/kubectlutility");
-import { Kubectl } from "kubernetes-common/kubectl-object-model";
-import { pipelineAnnotations } from "../models/constants"
+import * as tl from 'azure-pipelines-task-lib/task';
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
+import * as kubectlutility from 'kubernetes-common-v2/kubectlutility';
+import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
+import { pipelineAnnotations } from '../models/constants';
 
-export enum StringComparer {
-    Ordinal, OrdinalIgnoreCase
-}
-
-export function getManifestFiles(manifestFilesPath: string): string[] {
-    if (!manifestFilesPath || manifestFilesPath.trim().length == 0) {
-        tl.debug("file input is not present");
+export function getManifestFiles(manifestFilePaths: string | string[]): string[] {
+    if (!manifestFilePaths) {
+        tl.debug('file input is not present');
         return null;
     }
 
-    var files = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), manifestFilesPath.trim());
+    const files = tl.findMatch(tl.getVariable('System.DefaultWorkingDirectory') || process.cwd(), manifestFilePaths);
     return files;
 }
 
 export async function getKubectl(): Promise<string> {
     try {
-        return Promise.resolve(tl.which("kubectl", true));
+        return Promise.resolve(tl.which('kubectl', true));
     } catch (ex) {
         return kubectlutility.downloadKubectl(await kubectlutility.getStableKubectlVersion());
     }
 }
 
 export function createKubectlArgs(kinds: Set<string>, names: Set<string>): string {
-    let args = "";
+    let args = '';
     if (!!kinds && kinds.size > 0) {
         args = args + createInlineArray(Array.from(kinds.values()));
     }
 
     if (!!names && names.size > 0) {
-        args = args + " " + Array.from(names.values()).join(" ")
+        args = args + ' ' + Array.from(names.values()).join(' ');
     }
 
     return args;
 }
 
 export function getDeleteCmdArgs(argsPrefix: string, inputArgs: string): string {
-    let args = "";
+    let args = '';
 
     if (!!argsPrefix && argsPrefix.length > 0) {
         args = argsPrefix;
@@ -50,7 +46,7 @@ export function getDeleteCmdArgs(argsPrefix: string, inputArgs: string): string 
 
     if (!!inputArgs && inputArgs.length > 0) {
         if (args.length > 0) {
-            args = args + " ";
+            args = args + ' ';
         }
 
         args = args + inputArgs;
@@ -60,17 +56,21 @@ export function getDeleteCmdArgs(argsPrefix: string, inputArgs: string): string 
 }
 
 export function checkForErrors(execResults: IExecSyncResult[], warnIfError?: boolean) {
-    if (execResults.length != 0) {
-        var stderr = "";
+    if (execResults.length !== 0) {
+        let stderr = '';
         execResults.forEach(result => {
             if (result.stderr) {
-                stderr += result.stderr + "\n";
+                if (result.code !== 0) {
+                    stderr += result.stderr + '\n';
+                } else {
+                    tl.warning(result.stderr);
+                }
             }
         });
         if (stderr.length > 0) {
-            if (!!warnIfError)
+            if (!!warnIfError) {
                 tl.warning(stderr.trim());
-            else {
+            } else {
                 throw new Error(stderr.trim());
             }
         }
@@ -78,19 +78,19 @@ export function checkForErrors(execResults: IExecSyncResult[], warnIfError?: boo
 }
 
 export function annotateChildPods(kubectl: Kubectl, resourceType: string, resourceName: string, allPods): IExecSyncResult[] {
-    let commandExecutionResults = [];
-    var owner = resourceName;
-    if (resourceType.toLowerCase().indexOf("deployment") > -1) {
+    const commandExecutionResults = [];
+    let owner = resourceName;
+    if (resourceType.toLowerCase().indexOf('deployment') > -1) {
         owner = kubectl.getNewReplicaSet(resourceName);
     }
 
-    if (!!allPods && !!allPods["items"] && allPods["items"].length > 0) {
-        allPods["items"].forEach((pod) => {
-            let owners = pod["metadata"]["ownerReferences"];
+    if (!!allPods && !!allPods.items && allPods.items.length > 0) {
+        allPods.items.forEach((pod) => {
+            const owners = pod.metadata.ownerReferences;
             if (!!owners) {
                 owners.forEach(ownerRef => {
-                    if (ownerRef["name"] == owner) {
-                        commandExecutionResults.push(kubectl.annotate("pod", pod["metadata"]["name"], pipelineAnnotations, true));
+                    if (ownerRef.name === owner) {
+                        commandExecutionResults.push(kubectl.annotate('pod', pod.metadata.name, pipelineAnnotations, true));
                     }
                 });
             }
@@ -101,65 +101,44 @@ export function annotateChildPods(kubectl: Kubectl, resourceType: string, resour
 }
 
 /*
-    For example, 
+    For example,
         currentString: `image: "example/example-image"`
         imageName: `example/example-image`
         imageNameWithNewTag: `example/example-image:identifiertag`
-    
+
     This substituteImageNameInSpecFile function would return
         return Value: `image: "example/example-image:identifiertag"`
 */
 
 export function substituteImageNameInSpecFile(currentString: string, imageName: string, imageNameWithNewTag: string) {
-    let i = currentString.indexOf(imageName);
-    if (i < 0) {
+    if (currentString.indexOf(imageName) < 0) {
         tl.debug(`No occurence of replacement token: ${imageName} found`);
         return currentString;
     }
 
-    let newString = "";
-    currentString.split("\n")
-        .forEach((line) => {
-            if (line.indexOf(imageName) > 0 && line.toLocaleLowerCase().indexOf("image") > 0) {
-                let i = line.indexOf(imageName);
-                newString += line.substring(0, i);
-                let leftOverString = line.substring(i);
-                if (leftOverString.endsWith("\"")) {
-                    newString += imageNameWithNewTag + "\"" + "\n";
-                } else {
-                    newString += imageNameWithNewTag + "\n";
-                }
+    return currentString.split('\n').reduce((acc, line) => {
+        const imageKeyword = line.match(/^ *image:/);
+        if (imageKeyword) {
+            let [currentImageName, currentImageTag] = line
+                .substring(imageKeyword[0].length) // consume the line from keyword onwards
+                .trim()
+                .replace(/[',"]/g, '') // replace allowed quotes with nothing
+                .split(':');
+
+            if (!currentImageTag && currentImageName.indexOf(' ') > 0) {
+                currentImageName = currentImageName.split(' ')[0]; // Stripping off comments
             }
-            else {
-                newString += line + "\n";
+
+            if (currentImageName === imageName) {
+                return acc + `${imageKeyword[0]} ${imageNameWithNewTag}\n`;
             }
-        });
+        }
 
-    return newString;
-}
-
-export function isEqual(str1: string, str2: string, stringComparer: StringComparer): boolean {
-
-    if (str1 == null && str2 == null) {
-        return true;
-    }
-
-    if (str1 == null) {
-        return false;
-    }
-
-    if (str2 == null) {
-        return false;
-    }
-
-    if (stringComparer == StringComparer.OrdinalIgnoreCase) {
-        return str1.toUpperCase() === str2.toUpperCase();
-    } else {
-        return str1 === str2;
-    }
+        return acc + line + '\n';
+    }, '');
 }
 
 function createInlineArray(str: string | string[]): string {
-    if (typeof str === "string") return str;
-    return str.join(",");
+    if (typeof str === 'string') { return str; }
+    return str.join(',');
 }

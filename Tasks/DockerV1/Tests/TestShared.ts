@@ -11,7 +11,8 @@ export let TestEnvVars = {
     memoryLimit: "__memoryLimit__",
     pushMultipleImages: "__pushMultipleImages__",
     tagMultipleImages: "__tagMultipleImages__",
-    arguments: "__arguments__"
+    arguments: "__arguments__",
+    qualifySourceImageName: "__qualifySourceImageName__"
 };
 
 export let OperatingSystems = {

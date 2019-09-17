@@ -3,7 +3,7 @@
   "name": "Maven",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613723",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/maven",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 150,
+    "Minor": 158,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",

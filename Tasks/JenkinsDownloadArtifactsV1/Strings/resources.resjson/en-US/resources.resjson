@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Jenkins Download Artifacts",
+  "loc.friendlyName": "Jenkins download artifacts",
   "loc.helpMarkDown": "Download artifacts produced by a [Jenkins](https://jenkins.io/) job.",
   "loc.description": "Download artifacts produced by a Jenkins job",
   "loc.instanceNameFormat": "Download artifacts produced by $(jobName)",

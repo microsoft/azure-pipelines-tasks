@@ -3,7 +3,7 @@
   "name": "Docker",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=848006",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [
@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 150,
-    "Patch": 6
+    "Minor": 157,
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -166,6 +166,15 @@
       "visibleRule": "command = Build an image || command = build || command = Tag image || command = tag || command = Push an image || command = push || command = Run an image || command = run",
       "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.qualifyImageName"
+    },
+    {
+      "name": "qualifySourceImageName",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.qualifySourceImageName",
+      "defaultValue": "false",
+      "visibleRule": "command = Tag image || command = tag",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.qualifySourceImageName"
     },
     {
       "name": "includeSourceTags",
@@ -366,9 +375,11 @@
     }
   },
   "messages": {
+    "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
+    "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning",
     "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",

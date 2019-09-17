@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870236",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/http-rest-api",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -17,8 +17,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 6
+    "Minor": 152,
+    "Patch": 1
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -47,7 +47,8 @@
     {
       "name": "connectedServiceName",
       "aliases": [
-        "serviceConnection"
+        "serviceConnection",
+        "genericService"
       ],
       "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.connectedServiceName",
@@ -59,7 +60,8 @@
     {
       "name": "connectedServiceNameARM",
       "aliases": [
-        "azureServiceConnection"
+        "azureServiceConnection",
+        "azureSubscription"
       ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.connectedServiceNameARM",

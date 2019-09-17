@@ -69,10 +69,7 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
 
     const blobstoreConnection = pkgLocationUtils.getWebApiWithProxy(serviceUri, accessToken);
 
-    const artifactToolGetUrl = await pkgLocationUtils.Retry(async () => {
-        return await blobstoreConnection.vsoClient.getVersioningData(ApiVersion,
-        blobstoreAreaName, blobstoreAreaId, { toolName }, {osName, arch});
-    }, 4, 100);
+    const artifactToolGetUrl = await blobstoreConnection.vsoClient.getVersioningData(ApiVersion, blobstoreAreaName, blobstoreAreaId, { toolName }, {osName, arch});
 
     const artifactToolUri =  await blobstoreConnection.rest.get(artifactToolGetUrl.requestUrl);
 
@@ -85,7 +82,7 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
     if (!artifactToolPath) {
         tl.debug(tl.loc("Info_DownloadingArtifactTool", artifactToolUri.result['uri']));
 
-        const zippedToolsDir: string = await toollib.downloadTool(artifactToolUri.result['uri']);
+        const zippedToolsDir: string = await pkgLocationUtils.retryOnExceptionHelper(() => toollib.downloadTool(artifactToolUri.result['uri']), 3, 1000);
 
         tl.debug("Downloaded zipped artifact tool to " + zippedToolsDir);
         const unzippedToolsDir = await extractZip(zippedToolsDir);

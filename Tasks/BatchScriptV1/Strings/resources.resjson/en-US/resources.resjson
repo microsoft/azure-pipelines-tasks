@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Batch Script",
+  "loc.friendlyName": "Batch script",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613733)",
-  "loc.description": "Run a windows cmd or bat script and optionally allow it to change the environment",
+  "loc.description": "Run a Windows command or batch script and optionally allow it to change the environment",
   "loc.instanceNameFormat": "Run script $(filename)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.filename": "Path",

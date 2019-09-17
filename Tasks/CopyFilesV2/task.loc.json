@@ -3,7 +3,7 @@
   "name": "CopyFiles",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=708389",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/copy-files",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 148,
+    "Minor": 159,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -79,6 +79,15 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.flattenFolders",
+      "groupName": "advanced"
+    },
+    {
+      "name": "preserveTimestamp",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.preserveTimestamp",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.preserveTimestamp",
       "groupName": "advanced"
     }
   ],

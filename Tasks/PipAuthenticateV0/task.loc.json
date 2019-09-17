@@ -4,12 +4,12 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://pip.pypa.io/en/stable/reference/pip_install/",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/pip-authenticate",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 151,
+    "Minor": 158,
     "Patch": 0
   },
   "runsOn": [
@@ -64,7 +64,7 @@
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.name}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "execution": {
@@ -84,6 +84,6 @@
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
     "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable",
     "Warn_TooManyFeedEntries": "ms-resource:loc.messages.Warn_TooManyFeedEntries",
-    "Error_PythonInternalFeedsNotSupportedOnprem": "ms-resource:loc.messages.Error_PythonInternalFeedsNotSupportedOnprem"
+    "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   }
 }

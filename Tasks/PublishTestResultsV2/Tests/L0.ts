@@ -1,13 +1,13 @@
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as constants from './Constants';
-import * as tl from 'vsts-task-lib';
+import * as tl from 'azure-pipelines-task-lib';
 
-import * as mt from 'vsts-task-lib/mock-task';
-import * as mtm from 'vsts-task-lib/mock-test';
-import * as mtr from 'vsts-task-lib/mock-toolrunner';
-import * as ma from 'vsts-task-lib/mock-answer';
+import * as mt from 'azure-pipelines-task-lib/mock-task';
+import * as mtm from 'azure-pipelines-task-lib/mock-test';
+import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner';
+import * as ma from 'azure-pipelines-task-lib/mock-answer';
 
 describe('PublishTestResults Suite', function() {
     this.timeout(10000);
