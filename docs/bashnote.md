@@ -1,6 +1,6 @@
 # BashV3 Note
 
-As of February 2019, the BashV3 task has started executing scripts with a target script type of "File Path" instead of sourcing them in the default case.
+As of August 2019, the BashV3 task has started executing scripts with a target script type of "File Path" instead of sourcing them in the default case.
 This does not work for scripts that do not have the executable bit set.
 For backwards compatibility, we will continue to source scripts that don't have the executable bit set. This will throw a warning.
 
