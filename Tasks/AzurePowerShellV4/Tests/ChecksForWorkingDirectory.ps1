@@ -11,7 +11,7 @@ Register-Mock Get-VstsInput { $targetAzurePs } -- -Name TargetAzurePs
 Register-Mock Get-VstsInput { 'arg1 arg2' } -- -Name ScriptArguments
 Register-Mock Get-VstsInput { "continue" } -- -Name errorActionPreference
 Register-Mock Get-VstsInput { $true } -- -Name FailOnStandardError
-Register-Mock Get-VstsInput { $true } -- -Name pwsh
+Register-Mock Get-VstsInput { $true } -- -Name pwsh -AsBool
 Register-Mock Get-VstsInput { $input_workingDirectory } -- -Name workingDirectory -Require
 Register-Mock Update-PSModulePathForHostedAgent
 Register-Mock Get-Module
