@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Script de commandes",
+  "loc.friendlyName": "Script de commandes par lot",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613733)",
-  "loc.description": "Exécuter un script cmd ou bat Windows, et lui permettre éventuellement de changer l'environnement",
+  "loc.description": "Exécuter une commande ou un script de commandes par lot Windows, et lui permettre éventuellement de changer l'environnement",
   "loc.instanceNameFormat": "Exécuter le script $(filename)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.filename": "Chemin",

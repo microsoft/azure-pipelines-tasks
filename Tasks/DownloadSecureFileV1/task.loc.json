@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 151,
+    "Minor": 156,
     "Patch": 1
   },
   "runsOn": [
@@ -31,6 +31,14 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.secureFile"
+    },
+    {
+      "name": "retryCount",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.retryCount",
+      "defaultValue": "5",
+      "required": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.retryCount"
     }
   ],
   "outputVariables": [

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "建置機器映像",
   "loc.helpMarkDown": "[更多資訊](https://go.microsoft.com/fwlink/?linkid=845329)",
-  "loc.description": "使用 Packer 建置機器映像。此映像可用於 Azure 虛擬機器擴展集部署",
+  "loc.description": "使用 Packer 建置機器映像，其可用於 Azure 虛擬機器擴展集部署",
   "loc.instanceNameFormat": "建置不可變的映像",
   "loc.releaseNotes": "- 使用跨平台代理程式 (Linux、macOS 或 Windows)\n- 支援為 Windows 及 Linux 建置映像。這些映像可用於部署 Azure 虛擬機器擴展集。",
   "loc.group.displayName.AzureDetails": "Azure 詳細資料",
@@ -30,7 +30,7 @@
   "loc.input.help.customImageUrl": "指定基底映像的 URL。在擷取機器映像前，這會用來安裝必要條件與應用程式。",
   "loc.input.label.customImageOSType": "基底映像 OS",
   "loc.input.label.packagePath": "部署套件",
-  "loc.input.help.packagePath": "為部署套件目錄指定相對於 $(System.DefaultWorkingDirectory) 的路徑。支援 minimatch 模式。範例路徑: FrontendWebApp/**/GalleryApp",
+  "loc.input.help.packagePath": "請指定相對於 $(System.DefaultWorkingDirectory) 的部署套件目錄路徑。支援 minimatch 模式。範例路徑: FrontendWebApp/**/GalleryApp <br/> 請注意，此套件將複製到暫存虛擬機器，Packer 會建立於其中。如果套件包含大量檔案且 (或) 檔案大小過大，則上傳可能會花費大量時間 (可能會執行數個小時)。如果要將上傳時間降至最低，請確認是否可有意義地減少套件的大小。另一項方法則是使用中繼 Azure 儲存體帳戶，即在執行此工作前將套件上傳至儲存體帳戶。針對這項工作，請使用包含會從儲存體帳戶下載必要套件之指令碼的套件。",
   "loc.input.label.deployScriptPath": "部署指令碼",
   "loc.input.help.deployScriptPath": "指定用以部署套件之 PowerShell 指令碼 (適用於 Windows) 或 Shell 指令碼 (適用於 Linux) 的相對路徑。此指令碼應該包含在上列選取的套件路徑中。支援 minimatch 模式。範例路徑: deploy/**/scripts/windows/deploy.ps1",
   "loc.input.label.deployScriptArguments": "部署指令碼引數",
@@ -82,5 +82,6 @@
   "loc.messages.FailedToFetchSPNDetailsRemotely": "無法從圖形服務連線擷取 SPN 詳細資料。錯誤: %s。",
   "loc.messages.GetArtifactItemsNotSupported": "不支援取得成品項目，程式碼路徑無效",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "無法擷取受控服務主體的存取權杖。請設定虛擬機器的受控服務識別 (MSI) (https://aka.ms/azure-msi-docs)。狀態碼: %s，狀態訊息: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "無法擷取受控服務主體的存取權杖。狀態碼: %s，狀態訊息: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "無法擷取受控服務主體的存取權杖。狀態碼: %s，狀態訊息: %s",
+  "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。"
 }

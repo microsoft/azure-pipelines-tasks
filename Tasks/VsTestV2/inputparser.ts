@@ -145,9 +145,11 @@ function getTfsSpecificSettings(inputDataContract : idc.InputDataContract) : idc
         inputDataContract.TfsSpecificSettings.ReleaseEnvironmentUri = tl.getVariable('Release.EnvironmentUri');
         inputDataContract.TfsSpecificSettings.WorkFolder = tl.getVariable('System.DefaultWorkingDirectory');
         inputDataContract.TfsSpecificSettings.PhaseName = tl.getVariable('System.PhaseName');
+        inputDataContract.TfsSpecificSettings.PhaseAttempt = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('System.PhaseAttempt')) ? null : Number(tl.getVariable('System.PhaseAttempt'));
         inputDataContract.TfsSpecificSettings.StageName = tl.getVariable('System.StageName');
+        inputDataContract.TfsSpecificSettings.StageAttempt = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('System.StageAttempt')) ? null : Number(tl.getVariable('System.StageAttempt'));
         inputDataContract.TfsSpecificSettings.JobName = tl.getVariable('System.JobName');
-        inputDataContract.TfsSpecificSettings.JobAttempt = tl.getVariable('System.JobAttempt');
+        inputDataContract.TfsSpecificSettings.JobAttempt = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('System.JobAttempt')) ? null : Number(tl.getVariable('System.JobAttempt'));
 
         return inputDataContract;
 }
@@ -542,7 +544,7 @@ function getTestPlatformPath(inputDataContract : idc.InputDataContract) {
 function getVSTestConsolePath(versionLowerLimit : string, versionUpperLimit : string): string {
     let vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
 
-    console.log(tl.loc('LookingForVsInstalltion'));
+    console.log(tl.loc('LookingForVsInstalltion', `[${versionLowerLimit},${versionUpperLimit})`));
     vswhereTool.line(`-version [${versionLowerLimit},${versionUpperLimit}) -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath`);
     let vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
     vsPath = utils.Helper.trimString(vsPath);
@@ -553,7 +555,7 @@ function getVSTestConsolePath(versionLowerLimit : string, versionUpperLimit : st
     }
 
     // Look for build tool installation if full VS not present
-    console.log(tl.loc('LookingForBuildToolsInstalltion'));
+    console.log(tl.loc('LookingForBuildToolsInstalltion', `[${versionLowerLimit},${versionUpperLimit})`));
     vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
     vswhereTool.line(`-version [${versionLowerLimit},${versionUpperLimit}) -latest -products * -requires Microsoft.VisualStudio.Component.TestTools.BuildTools -property installationPath`);
     vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;

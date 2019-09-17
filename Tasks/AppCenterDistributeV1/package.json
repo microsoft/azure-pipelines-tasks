@@ -17,8 +17,9 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks",
   "dependencies": {
-    "vsts-task-lib": "2.0.5",
+    "azure-storage": "^2.10.3",
     "jszip": "^3.1.2",
-    "request": "2.87.0"
+    "request": "2.87.0",
+    "vsts-task-lib": "2.0.5"
   }
 }

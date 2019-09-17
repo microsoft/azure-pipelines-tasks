@@ -57,8 +57,12 @@ export function registerNugetUtilityMock(tmr: tmrm.TaskMockRunner, projectFile: 
         getNuGetFeedRegistryUrl(
             packagingCollectionUrl: string,
             feedId: string,
+            project: string,
             nuGetVersion: VersionInfo,
             accessToken?: string) {
+            if(project) {
+                return 'https://vsts/' + project + '/packagesource';
+            }
             return 'https://vsts/packagesource';
         }
     } );
@@ -91,6 +95,7 @@ export function registerNugetUtilityMockUnix(tmr: tmrm.TaskMockRunner, projectFi
         getNuGetFeedRegistryUrl(
             packagingCollectionUrl: string,
             feedId: string,
+            project: string,
             nuGetVersion: VersionInfo,
             accessToken?: string) {
             return 'https://vsts/packagesource';

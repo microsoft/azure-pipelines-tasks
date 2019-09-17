@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Java tool installer",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=875287)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875287) or [see the Java documentation](https://docs.oracle.com/java/)",
   "loc.description": "Acquire a specific version of Java from a user-supplied Azure blob or the tool cache and sets JAVA_HOME",
   "loc.instanceNameFormat": "Use Java $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "Download Java from an Azure blob",

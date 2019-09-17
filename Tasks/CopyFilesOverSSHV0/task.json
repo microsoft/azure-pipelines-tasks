@@ -4,7 +4,7 @@
     "friendlyName": "Copy files over SSH",
     "description": "Copy files or build artifacts to a remote machine over SSH",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/copy-files-over-ssh",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=821894)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=821894)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.102.0",

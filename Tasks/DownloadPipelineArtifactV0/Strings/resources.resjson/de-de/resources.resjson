@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Pipelineartefakt herunterladen",
   "loc.helpMarkDown": "Laden Sie ein benanntes Artefakt aus einer Pipeline in einen lokalen Pfad herunter.",
-  "loc.description": "Pipelineartefakt herunterladen",
+  "loc.description": "Hiermit wird ein Artefakt heruntergeladen, das einer Pipeline zugeordnet ist.",
   "loc.instanceNameFormat": "Pipelineartefakt herunterladen",
   "loc.input.label.pipelineId": "Die Pipeline, die als Downloadquelle verwendet werden soll",
   "loc.input.help.pipelineId": "Die Pipeline, aus der der Download erfolgen soll. Sofern nicht angegeben, wird die aktuelle Pipeline verwendet.",

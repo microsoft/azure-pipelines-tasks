@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "Scarica versione di GitHub",
+  "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/AA3x715)",
+  "loc.description": "Scarica una versione di GitHub da un repository",
+  "loc.instanceNameFormat": "Scarica versione di GitHub",
+  "loc.input.label.connection": "Connessione GitHub",
+  "loc.input.help.connection": "Connessione al servizio GitHub",
+  "loc.input.label.userRepository": "Repository",
+  "loc.input.help.userRepository": "Nome completo del repository GitHub",
+  "loc.input.label.defaultVersionType": "Versione predefinita",
+  "loc.input.help.defaultVersionType": "Consente di scaricare gli asset dalla versione più recente o da una versione/tag di versione specifica",
+  "loc.input.label.version": "Rilascio",
+  "loc.input.help.version": "Versione/tag di versione da scaricare",
+  "loc.input.label.itemPattern": "Criterio elemento",
+  "loc.input.help.itemPattern": "Criterio di corrispondenza minima per filtrare i file da scaricare. Per scaricare tutti i file nella versione, usare **",
+  "loc.input.label.downloadPath": "Directory di destinazione",
+  "loc.input.help.downloadPath": "Percorso nel computer agente in cui verranno scaricati gli asset della versione",
+  "loc.messages.DownloadArtifacts": "Download degli asset della versione '%s' da %s",
+  "loc.messages.ArtifactsSuccessfullyDownloaded": "Gli asset della versione sono stati scaricati in '%s'",
+  "loc.messages.InvalidRelease": "Il valore di input '%s' della versione/tag di versione non è valido"
+}

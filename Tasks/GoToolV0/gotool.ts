@@ -1,5 +1,5 @@
-import * as toolLib from 'vsts-task-tool-lib/tool';
-import * as tl from 'vsts-task-lib/task';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
 import * as path from 'path';
 import * as util from 'util';
@@ -51,7 +51,7 @@ async function acquireGo(version: string): Promise<string> {
         tl.debug(error);
 
         // cannot localized the string here because to localize we need to set the resource file.
-        // which can be set only once. vsts-task-tool-lib/tool, is already setting it to different file.
+        // which can be set only once. azure-pipelines-tool-lib/tool, is already setting it to different file.
         // So left with no option but to hardcode the string. Other tasks are doing the same.
         throw (util.format("Failed to download version %s. Please verify that the version is valid and resolve any other issues. %s", version, error));
     }
