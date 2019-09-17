@@ -16,10 +16,14 @@
     "demands": [],
     "preview": true,
 <<<<<<< HEAD
+<<<<<<< HEAD
     "minimumAgentVersion": "2.155.1",
 =======
     "minimumAgentVersion": "2.151.2",
 >>>>>>> update min agent version
+=======
+    "minimumAgentVersion": "2.158.0",
+>>>>>>> agent min version update
     "inputs": [
         {
             "name": "path",

@@ -9,17 +9,21 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
+    "Minor": 5,
     "Patch": 0
   },
   "groups": [],
   "demands": [],
   "preview": true,
 <<<<<<< HEAD
+<<<<<<< HEAD
   "minimumAgentVersion": "2.155.1",
 =======
   "minimumAgentVersion": "2.151.2",
 >>>>>>> update min agent version
+=======
+  "minimumAgentVersion": "2.158.0",
+>>>>>>> agent min version update
   "inputs": [
     {
       "name": "path",
