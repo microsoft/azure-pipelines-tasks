@@ -312,7 +312,7 @@ class Util {
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let scriptPath: string = path.join(tempDirectory, `azureclitaskscript${new Date().getTime()}.${fileExtension}`);
 
-        await Util.createFile(scriptPath,'\ufeff' + contents.join(os.EOL), 'utf8' );
+        await Util.createFile(scriptPath,'\ufeff' + contents.join(os.EOL), { encoding : 'utf8'} );
         return scriptPath;
     }
 
@@ -330,7 +330,7 @@ class Util {
         }
     }
 
-    public static async createFile(filePath: string, data: string, options?:string): Promise<void> {
+    public static async createFile(filePath: string, data: string, options?:any): Promise<void> {
         try {
             fs.writeFileSync(filePath, data, options);
         }

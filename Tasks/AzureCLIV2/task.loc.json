@@ -19,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 1,
+    "Minor": 0,
     "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
@@ -56,8 +56,8 @@
       "options": {
         "batch": "Batch script",
         "bash": "Shell script",
-        "ps": "Powershell 5 script",
-        "pscore": "Powershell Core 6 script"
+        "ps": "Powershell script",
+        "pscore": "Powershell Core script"
       }
     },
     {
@@ -96,20 +96,6 @@
       }
     },
     {
-      "name": "powerShellErrorActionPreference",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.powerShellErrorActionPreference",
-      "required": false,
-      "defaultValue": "stop",
-      "options": {
-        "stop": "Stop",
-        "continue": "Continue",
-        "silentlyContinue": "SilentlyContinue"
-      },
-      "visibleRule": "scriptType = ps || scriptType = pscore",
-      "helpMarkDown": "ms-resource:loc.input.help.powerShellErrorActionPreference"
-    },
-    {
       "name": "scriptArguments",
       "aliases": [
         "arguments"
@@ -122,6 +108,20 @@
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
+    },
+    {
+      "name": "powerShellErrorActionPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.powerShellErrorActionPreference",
+      "required": false,
+      "defaultValue": "stop",
+      "options": {
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "visibleRule": "scriptType = ps || scriptType = pscore",
+      "helpMarkDown": "ms-resource:loc.input.help.powerShellErrorActionPreference"
     },
     {
       "name": "addSpnToEnvironment",

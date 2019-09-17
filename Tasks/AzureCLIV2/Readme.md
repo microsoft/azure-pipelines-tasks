@@ -4,11 +4,9 @@
 This task supports running [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/overview) commands on Cross platform agents running Windows, Linux or Mac.
 
 ### What's new in Version 2.0
-- Supports the PowerShell scripts.
-- Works with Xplat agents  (Windows, Linux or OSX)
-- For working with [Azure CLI 1.0](https://docs.microsoft.com/en-us/azure/cli-install-nodejs) which is node based, switch to task version 0.0
-- Limitations:
-	- No support for Classic subscriptions. AZ CLI 2.0 supports only Azure Resource Manager (ARM) subscriptions
+- Supports the PowerShell and PowerShell Core script.
+- PowerShell Core script works with Xplat agents  (Windows, Linux or OSX), make sure the agent has PowerShell version 6 or more.
+- Powershell script works only with Windows agent, make sure the agent has PowerShell version 5 or below.
 
 ## Contact Information
 Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work.  You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.
@@ -32,15 +30,15 @@ The task is used to run Azure CLI commands on Cross platform agents running Wind
 
 * **Azure Subscription**\*: Select the Azure Subscription where the Azure CLI commands have to be executed. If none exists, then click on the **Manage** link, to navigate to the Services tab in the Administrators panel. In the tab click on **New Service Endpoint** and select **Azure Resource Manager** from the dropdown.
 
-* **Script Type**\*: Select the type of script to be executed on the agent. Task supports four types: Batch / Shell / PowerShell 5 / PowerShell Core 6 scripts, default selection being empty.
+* **Script Type**\*: Select the type of script to be executed on the agent. Task supports four types: Batch / Shell / PowerShell / PowerShell Core scripts, default selection being empty. Select Shell/PowerShell Core script when running on Linux agent or Batch/PowerShell/PowerShell Core script when running on Windows agent. PowerShell Core script can run on cross-platform agents (Linux, macOS, or Windows) 
 
 * **Script Location**\*: Select the mode of providing the script. Task supports two modes: one as a Script Path to a linked artifact and another as an inline script, default selection being the "Script Path"
 
-* **Script Path**\*: When using Windows based agent, specify the path to the .bat , .cmd , .ps1 script whereas when using Linux based agent, specify the path to the .sh , .ps1 , .pwsh script you want to run. The path must be a fully qualified path or a valid path relative to the default working directory. Note: You must also specify the respective script type in above field.
+* **Script Path**\*: When using Windows based agent, specify the path to the .bat , .cmd , .ps1 script whereas when using Linux based agent, specify the path to the .sh , .ps1 script you want to run. The path must be a fully qualified path or a valid path relative to the default working directory. Note: You must also specify the respective script type in above field.
 
-* **Inline Script**\*: Specify the script inline here. When using Windows based agent use batch or PowerShell scripting whereas use shell or PowerShell Core 6 scripting when using Linux based agents. Note: You must also specify the respective script type in above field.
+* **Inline Script**\*: Specify the script inline here. When using Windows based agent use batch or PowerShell or PowerShell Core scripting whereas use shell or PowerShell Core scripting when using Linux based agents. Note: You must also specify the respective script type in above field.
 
-* **Arguments**: Specify arguments to pass to the script.
+* **Script Arguments**: Specify arguments to pass to the script.
 
 * **Working folder**: Specify the working directory in which you want to run the script. If you leave it empty, the working directory is the folder where the script is located.
 
