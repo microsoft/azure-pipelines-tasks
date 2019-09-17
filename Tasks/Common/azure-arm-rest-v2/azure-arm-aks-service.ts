@@ -10,9 +10,12 @@ import {
 } from './azureModels';
 
 import {
-    ServiceClient,
-    ToError
+    ServiceClient
 } from './AzureServiceClient';
+
+import {
+    ToError
+} from './AzureServiceClientBase';
 
 export class AzureAksService {
 
