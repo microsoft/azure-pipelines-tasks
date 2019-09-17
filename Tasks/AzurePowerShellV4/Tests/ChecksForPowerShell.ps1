@@ -10,7 +10,7 @@ Register-Mock Get-VstsInput { $targetAzurePs } -- -Name TargetAzurePs
 Register-Mock Get-VstsInput { 'arg1 arg2' } -- -Name ScriptArguments
 Register-Mock Get-VstsInput { "continue" } -- -Name errorActionPreference
 Register-Mock Get-VstsInput { $true } -- -Name FailOnStandardError
-Register-Mock Get-VstsInput { $true } -- -Name pwsh
+Register-Mock Get-VstsInput { $false } -- -Name pwsh
 Register-Mock Update-PSModulePathForHostedAgent
 Register-Mock Get-Module
 Register-Mock Initialize-AzModule
@@ -24,4 +24,4 @@ Register-Mock Invoke-VstsTool { }
 $actual = & $PSScriptRoot\..\AzurePowerShell.ps1
 
 Assert-WasCalled Invoke-VstsTool -Times 1
-Assert-WasCalled Invoke-VstsTool -ArgumentsEvaluator {($args | ConvertTo-Json) -like '*pwsh.exe*'}
+Assert-WasCalled Invoke-VstsTool -ArgumentsEvaluator {($args | ConvertTo-Json) -like '*powershell.exe*'}

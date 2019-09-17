@@ -4,6 +4,7 @@ param()
 # Arrange.
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 $targetAzurePs = "4.1.0"
+$input_workingDirectory = "C:\Users"
 Register-Mock Get-VstsInput { "FilePath" } -- -Name ScriptType -Require
 Register-Mock Get-VstsInput { "$PSScriptRoot/PerformsBasicFlow_TargetScript.ps1" } -- -Name ScriptPath
 Register-Mock Get-VstsInput { $targetAzurePs } -- -Name TargetAzurePs
@@ -11,6 +12,7 @@ Register-Mock Get-VstsInput { 'arg1 arg2' } -- -Name ScriptArguments
 Register-Mock Get-VstsInput { "continue" } -- -Name errorActionPreference
 Register-Mock Get-VstsInput { $true } -- -Name FailOnStandardError
 Register-Mock Get-VstsInput { $true } -- -Name pwsh
+Register-Mock Get-VstsInput { $input_workingDirectory } -- -Name workingDirectory -Require
 Register-Mock Update-PSModulePathForHostedAgent
 Register-Mock Get-Module
 Register-Mock Initialize-AzModule
@@ -24,4 +26,4 @@ Register-Mock Invoke-VstsTool { }
 $actual = & $PSScriptRoot\..\AzurePowerShell.ps1
 
 Assert-WasCalled Invoke-VstsTool -Times 1
-Assert-WasCalled Invoke-VstsTool -ArgumentsEvaluator {($args | ConvertTo-Json) -like '*pwsh.exe*'}
+Assert-WasCalled Invoke-VstsTool -ArgumentsEvaluator {($args | ConvertTo-Json) -like '*C:\\Users*'}
