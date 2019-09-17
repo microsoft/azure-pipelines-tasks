@@ -3,8 +3,8 @@
     "name": "Ant",
     "friendlyName": "Ant",
     "description": "Build with Apache Ant",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613718",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613718)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/ant",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613718) or [see the Ant documentation](http://ant.apache.org/)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 149,
+        "Minor": 158,
         "Patch": 0
     },
     "demands": [
@@ -73,11 +73,11 @@
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish to Azure Pipelines/TFS",
+            "label": "Publish to Azure Pipelines",
             "required": true,
             "defaultValue": "true",
             "groupName": "junitTestResults",
-            "helpMarkDown": "Select this option to publish JUnit test results produced by the Ant build to Azure Pipelines/TFS. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines/TFS."
+            "helpMarkDown": "Select this option to publish JUnit test results produced by the Ant build to Azure Pipelines. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines."
         },
         {
             "name": "testResultsFiles",

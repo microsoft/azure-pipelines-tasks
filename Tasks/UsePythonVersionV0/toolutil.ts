@@ -1,10 +1,10 @@
 import * as path from 'path';
 
-import * as task from 'vsts-task-lib/task';
+import * as task from 'azure-pipelines-task-lib/task';
 
 /**
- * Like `prependPath` from vsts-task-tool-lib, but does not check whether the directory exists.
- * TODO move this to vsts-task-tool-lib
+ * Like `prependPath` from azure-pipelines-tool-lib, but does not check whether the directory exists.
+ * TODO move this to azure-pipelines-tool-lib
  */
 export function prependPathSafe(toolPath: string) {
     task.assertAgent('2.115.0');

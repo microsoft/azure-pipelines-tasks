@@ -4,20 +4,21 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://aka.ms/iis-webapp-management-readme",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/iis-web-app-management-on-machine-group",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Release"
   ],
   "runsOn": [
+    "Agent",
     "DeploymentGroup"
   ],
   "demands": [],
   "version": {
     "Major": 0,
     "Minor": 5,
-    "Patch": 10
+    "Patch": 13
   },
   "minimumAgentVersion": "2.111.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

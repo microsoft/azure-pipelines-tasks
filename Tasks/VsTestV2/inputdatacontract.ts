@@ -51,6 +51,12 @@ export interface TfsSpecificSettings {
     ReleaseUri : string;
     ReleaseEnvironmentUri : string;
     WorkFolder : string;
+    PhaseName : string;
+    PhaseAttempt : number;
+    StageName : string;
+    StageAttempt : number;
+    JobName : string;
+    JobAttempt : number;
 }
 
 export interface TestSpecificSettings {

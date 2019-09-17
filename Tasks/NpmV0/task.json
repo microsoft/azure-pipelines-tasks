@@ -3,13 +3,13 @@
     "name": "Npm",
     "friendlyName": "npm",
     "description": "Run an npm command",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613746",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 148,
+        "Minor": 151,
         "Patch": 0
     },
     "runsOn": [

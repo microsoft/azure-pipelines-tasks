@@ -143,7 +143,10 @@ export class ServiceClient {
 
             throw exception;
         }
-
+        
+        if(httpResponse.headers["azure-asyncoperation"] || httpResponse.headers["location"])
+            tl.debug(request.uri + " ==> " + httpResponse.headers["azure-asyncoperation"] || httpResponse.headers["location"])
+        
         return httpResponse;
     }
 
@@ -157,7 +160,6 @@ export class ServiceClient {
         if (!request.uri) {
             throw new Error(tl.loc("InvalidResponseLongRunningOperation"));
         }
-
         while (true) {
             response = await this.beginRequest(request);
             tl.debug(`Response status code : ${response.statusCode}`);

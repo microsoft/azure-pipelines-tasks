@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import util = require('util');
 import webClient = require('./webClient');
@@ -87,7 +87,7 @@ export class Kudu {
         httpRequest.uri = this._client.getRequestUri(`/api/deployments/${requestBody.id}`);
 
         try {
-            let webRequestOptions: webClient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true};
+            let webRequestOptions: webClient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: null, retryCount: 5, retryIntervalInSeconds: 5, retryRequestTimedout: true};
             var response = await this._client.beginRequest(httpRequest, webRequestOptions);
             tl.debug(`updateDeployment. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
@@ -488,7 +488,7 @@ export class Kudu {
         httpRequest.body = fs.createReadStream(webPackage);
 
         try {
-            let response = await this._client.beginRequest(httpRequest);
+            let response = await this._client.beginRequest(httpRequest, null, 'application/octet-stream');
             tl.debug(`War Deploy response: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 tl.debug('Deployment passed');

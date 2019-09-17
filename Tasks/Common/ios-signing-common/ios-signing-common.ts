@@ -1,7 +1,6 @@
 import path = require('path');
-import Q = require('q');
-import tl = require('vsts-task-lib/task');
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 /**
  * Creates a temporary keychain and installs the P12 cert in the temporary keychain
@@ -27,9 +26,9 @@ export async function installCertInTemporaryKeychain(keychainPath: string, keych
         createKeychainCommand.arg(['create-keychain', '-p', keychainPwd, keychainPath]);
         await createKeychainCommand.exec();
 
-        //update keychain settings
+        //update keychain settings, keep keychain unlocked for 6h = 21600 sec, which is the job timeout for paid hosted VMs
         let keychainSettingsCommand: ToolRunner = tl.tool(tl.which('security', true));
-        keychainSettingsCommand.arg(['set-keychain-settings', '-lut', '7200', keychainPath]);
+        keychainSettingsCommand.arg(['set-keychain-settings', '-lut', '21600', keychainPath]);
         await keychainSettingsCommand.exec();
     }
 

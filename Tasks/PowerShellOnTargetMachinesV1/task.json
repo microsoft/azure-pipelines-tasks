@@ -1,10 +1,10 @@
 {
     "id": "3B5693D4-5777-4FEE-862A-BD2B7A374C68",
     "name": "PowerShellOnTargetMachines",
-    "friendlyName": "PowerShell on Target Machines",
-    "description": "Execute PowerShell scripts on remote machine(s)",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=627414",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627414)",
+    "friendlyName": "PowerShell on target machines",
+    "description": "Execute PowerShell scripts on remote machines",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/powershell-on-target-machines",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627414)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 52
+        "Patch": 53
     },
     "minimumAgentVersion": "1.104.0",
     "groups": [

@@ -3,7 +3,7 @@
   "name": "CondaEnvironment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=873466",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/conda-environment",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "runsOn": [
@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 139,
-    "Patch": 2
+    "Minor": 151,
+    "Patch": 1
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=848006)",
-  "loc.description": "Hiermit werden Docker-Images erstellt, markiert oder mithilfe von Push übertragen oder Docker-Images oder Docker-Befehle ausgeführt. Die Aufgabe kann mit Docker oder Azure Container Registry verwendet werden.",
+  "loc.description": "Hiermit werden Docker-Images erstellt, markiert, mithilfe von Push übertragen oder ausgeführt oder ein Docker-Befehl ausgeführt.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Erweiterte Optionen",
   "loc.input.label.containerregistrytype": "Containerregistrierungstyp",
@@ -69,8 +69,12 @@
   "loc.messages.ContainerPatternFound": "Muster in Docker-Dateipfadparameter gefunden.",
   "loc.messages.ContainerPatternNotFound": "Kein Muster im Docker-Parameter \"filepath\" gefunden.",
   "loc.messages.ContainerDockerFileNotFound": "Es wurde keine Docker-Datei gefunden, die %s entspricht.",
+  "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
+  "loc.messages.DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
   "loc.messages.NoImagesInImageNamesFile": "In der Datei \"%s\" wird mindestens ein Imagename erwartet.",
   "loc.messages.CantWriteDataToFile": "In die Datei \"%s\" können keine Daten geschrieben werden. Fehler: %s",
   "loc.messages.NoDataWrittenOnFile": "In die Datei \"%s\" wurden keine Daten geschrieben. ",
-  "loc.messages.FileContentSynced": "Der Inhalt der Datei wurde auf dem Datenträger synchronisiert. Der Inhalt ist \"%s\"."
+  "loc.messages.FileContentSynced": "Der Inhalt der Datei wurde auf dem Datenträger synchronisiert. Der Inhalt ist \"%s\".",
+  "loc.messages.OutputVariableDataSizeExceeded": "Die Ausgabevariable wurde nicht festgelegt, weil die Docker-Befehlsausgabe die maximal unterstützte Länge überschritten hat. Ausgabelänge: %s, maximal unterstützte Länge: %s",
+  "loc.messages.WritingDockerConfigToTempFile": "Die Docker-Konfiguration wird in eine temporäre Datei geschrieben. Dateipfad: %s, Docker-Konfiguration: %s"
 }

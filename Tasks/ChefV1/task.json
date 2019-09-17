@@ -3,8 +3,8 @@
     "name": "Chef",
     "friendlyName": "Chef",
     "description": "Deploy to Chef environments by editing environment attributes",
-    "helpUrl": "https://aka.ms/chef-readme",
-    "helpMarkDown": "[More Information](https://aka.ms/chef-readme)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/chef",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/chef-readme)",
     "category": "Deploy",
     "visibility": [
         "Preview",
@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 20
+        "Patch": 22
     },
     "deprecated": true,
     "demands": [

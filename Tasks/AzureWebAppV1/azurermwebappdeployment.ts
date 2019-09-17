@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import { TaskParameters, TaskParametersUtility } from './taskparameters';
 import { DeploymentFactory } from './deploymentProvider/DeploymentFactory';
@@ -9,6 +9,7 @@ async function main() {
 
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
+        tl.setResourcePath(path.join( __dirname, 'node_modules/azurermdeploycommon/module.json'));
         var taskParams: TaskParameters = await TaskParametersUtility.getParameters();
         var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParams);
         var deploymentProvider = await deploymentFactory.GetDeploymentProvider();
@@ -30,7 +31,7 @@ async function main() {
         }
         
         Endpoint.dispose();
-        tl.debug(isDeploymentSuccess ? "Deployment Succeded" : "Deployment failed");
+        tl.debug(isDeploymentSuccess ? "Deployment Succeeded" : "Deployment failed");
 
     }
 }

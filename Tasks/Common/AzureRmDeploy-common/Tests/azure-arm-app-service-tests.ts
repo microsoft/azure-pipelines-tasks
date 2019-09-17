@@ -1,6 +1,6 @@
 import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';
 import { getMockEndpoint, mockAzureAppServiceTests } from './mock_utils';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 var endpoint = getMockEndpoint();
 
 mockAzureAppServiceTests();

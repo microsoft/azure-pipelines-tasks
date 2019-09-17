@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Ir",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=867582)",
-  "loc.description": "Obtenga, compile o pruebe una aplicación Go, o ejecute un comando Go personalizado.",
+  "loc.description": "Obtenga, compile o pruebe una aplicación Go o ejecute un comando Go personalizado.",
   "loc.instanceNameFormat": "go $(comando)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.command": "Comando",

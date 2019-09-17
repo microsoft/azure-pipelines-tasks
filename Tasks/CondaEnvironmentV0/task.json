@@ -1,10 +1,10 @@
 {
     "id": "03DD16C3-43E0-4667-BA84-40515D27A410",
     "name": "CondaEnvironment",
-    "friendlyName": "Conda Environment",
-    "description": "Create and activate a Conda environment.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=873466",
-    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=873466)",
+    "friendlyName": "Conda environment",
+    "description": "Create and activate a Conda environment",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/conda-environment",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=873466)",
     "category": "Package",
     "runsOn": [
         "Agent",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 139,
-        "Patch": 2
+        "Minor": 151,
+        "Patch": 1
     },
     "demands": [],
     "instanceNameFormat": "Conda Environment $(environmentName)",

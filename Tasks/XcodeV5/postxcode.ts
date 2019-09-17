@@ -1,10 +1,8 @@
 import os = require('os');
 import path = require('path');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import sign = require('ios-signing-common/ios-signing-common');
 import utils = require('./xcodeutils');
-
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 async function run() {
     try {

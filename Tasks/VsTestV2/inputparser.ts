@@ -1,6 +1,6 @@
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
-import * as tr from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import * as utils from './helpers';
 import * as constants from './constants';
 import * as ci from './cieventlogger';
@@ -144,6 +144,12 @@ function getTfsSpecificSettings(inputDataContract : idc.InputDataContract) : idc
         inputDataContract.TfsSpecificSettings.ReleaseUri = tl.getVariable('Release.ReleaseUri');
         inputDataContract.TfsSpecificSettings.ReleaseEnvironmentUri = tl.getVariable('Release.EnvironmentUri');
         inputDataContract.TfsSpecificSettings.WorkFolder = tl.getVariable('System.DefaultWorkingDirectory');
+        inputDataContract.TfsSpecificSettings.PhaseName = tl.getVariable('System.PhaseName');
+        inputDataContract.TfsSpecificSettings.PhaseAttempt = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('System.PhaseAttempt')) ? null : Number(tl.getVariable('System.PhaseAttempt'));
+        inputDataContract.TfsSpecificSettings.StageName = tl.getVariable('System.StageName');
+        inputDataContract.TfsSpecificSettings.StageAttempt = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('System.StageAttempt')) ? null : Number(tl.getVariable('System.StageAttempt'));
+        inputDataContract.TfsSpecificSettings.JobName = tl.getVariable('System.JobName');
+        inputDataContract.TfsSpecificSettings.JobAttempt = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('System.JobAttempt')) ? null : Number(tl.getVariable('System.JobAttempt'));
 
         return inputDataContract;
 }
@@ -536,14 +542,26 @@ function getTestPlatformPath(inputDataContract : idc.InputDataContract) {
 }
 
 function getVSTestConsolePath(versionLowerLimit : string, versionUpperLimit : string): string {
-    const vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
+    let vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
 
+    console.log(tl.loc('LookingForVsInstalltion', `[${versionLowerLimit},${versionUpperLimit})`));
     vswhereTool.line(`-version [${versionLowerLimit},${versionUpperLimit}) -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath`);
     let vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
     vsPath = utils.Helper.trimString(vsPath);
-    tl.debug('Visual Studio 15.0 or higher installed path: ' + vsPath);
 
     if (!utils.Helper.isNullOrWhitespace(vsPath)) {
+        tl.debug('Visual Studio 15.0 or higher installed path: ' + vsPath);
+        return vsPath;
+    }
+
+    // Look for build tool installation if full VS not present
+    console.log(tl.loc('LookingForBuildToolsInstalltion', `[${versionLowerLimit},${versionUpperLimit})`));
+    vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
+    vswhereTool.line(`-version [${versionLowerLimit},${versionUpperLimit}) -latest -products * -requires Microsoft.VisualStudio.Component.TestTools.BuildTools -property installationPath`);
+    vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+    vsPath = utils.Helper.trimString(vsPath);
+    if (!utils.Helper.isNullOrWhitespace(vsPath)) {
+        tl.debug('Build tools installed path: ' + vsPath);
         return vsPath;
     }
 

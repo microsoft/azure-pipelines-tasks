@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Maven",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613723)",
-  "loc.description": "Compilar con Apache Maven",
+  "loc.description": "Compila, prueba e implementa con Apache Maven.",
   "loc.instanceNameFormat": "$(mavenPOMFile) de Maven",
   "loc.releaseNotes": "La configuración del análisis de SonarQube se movió a las extensiones de [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) o [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud), en la tarea \"Prepare Analysis Configuration\"",
   "loc.group.displayName.junitTestResults": "Resultados de pruebas JUnit",
@@ -12,8 +12,8 @@
   "loc.input.help.mavenPOMFile": "Ruta de acceso relativa de la raíz del repositorio al archivo POM de Maven.",
   "loc.input.label.goals": "Objetivos",
   "loc.input.label.options": "Opciones",
-  "loc.input.label.publishJUnitResults": "Publicar en Azure Pipelines/TFS",
-  "loc.input.help.publishJUnitResults": "Seleccione esta opción para publicar en Azure Pipelines/TFS los resultados de pruebas JUnit generados por la compilación de Maven. Cada archivo de resultados de pruebas que coincida con \"Archivos de resultados de pruebas\" se publicará como una serie de pruebas en Azure Pipelines/TFS.",
+  "loc.input.label.publishJUnitResults": "Publicar en Azure Pipelines",
+  "loc.input.help.publishJUnitResults": "Seleccione esta opción para publicar en Azure Pipelines los resultados de pruebas JUnit generados por la compilación de Maven. Cada archivo de resultados de pruebas que coincida con \"Archivos de resultados de pruebas\" se publicará como una serie de pruebas en Azure Pipelines.",
   "loc.input.label.testResultsFiles": "Archivos de resultados de pruebas",
   "loc.input.help.testResultsFiles": "Especifique la ruta de acceso y el patrón de los archivos de resultados de las pruebas que deben publicarse. Se pueden usar caracteres comodín ([más información](https://go.microsoft.com/fwlink/?linkid=856077)). Por ejemplo, \"**/TEST-*.xml\" para todos los archivos XML cuyo nombre comience con \"TEST-\". Si no se especifica una ruta de acceso raíz, los archivos se buscan en el directorio de trabajo predeterminado, cuyo valor está disponible en la variable: $(System.DefaultWorkingDirectory). Por ejemplo, un valor de \"**/TEST-*.xml\" dará lugar a que se busquen los archivos de \"$(System.DefaultWorkingDirectory)/**/TEST-*.xml\".",
   "loc.input.label.testRunTitle": "Título de la serie de pruebas",
@@ -45,7 +45,7 @@
   "loc.input.label.mavenOpts": "Establecer MAVEN_OPTS en",
   "loc.input.help.mavenOpts": "Establece la variable de entorno MAVEN_OPTS, que se utiliza para enviar argumentos de la línea de comandos para iniciar JVM. La marca -Xmx especifica la cantidad de memoria máxima disponible para JVM.",
   "loc.input.label.mavenFeedAuthenticate": "Autenticar fuentes de Maven integradas",
-  "loc.input.help.mavenFeedAuthenticate": "Autentique automáticamente las fuentes de Maven integradas de la extensión de Azure Artifacts/TFS [Administración de paquetes](https://marketplace.visualstudio.com/items?itemName=ms.feed). Si no se usan las fuentes de Maven integradas, anule la selección de esta opción para que las compilaciones se ejecuten más rápido.",
+  "loc.input.help.mavenFeedAuthenticate": "Autentique automáticamente las fuentes de Maven de Azure Artifacts. Si no se usan las fuentes de Maven integradas, anule la selección de esta opción para que las compilaciones se ejecuten más rápido.",
   "loc.input.label.sqAnalysisEnabled": "Ejecutar el análisis de SonarQube o SonarCloud",
   "loc.input.help.sqAnalysisEnabled": "Esta opción ha cambiado desde la versión 1 de la tarea de **Maven** para usar las extensiones de Marketplace de [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) y [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud). Habilite esta opción para ejecutar el [análisis de SonarQube o SonarCloud](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) después de ejecutar los objetivos en el campo **Goals**. El objetivo **install** o **package** debe ejecutarse primero. También debe agregar una tarea **Prepare Analysis Configuration** de una de las extensiones a la canalización de compilación antes de esta tarea de Maven.",
   "loc.input.label.sqMavenPluginVersionChoice": "Escáner de SonarQube para la versión de Maven",
@@ -85,11 +85,12 @@
   "loc.messages.codeAnalysisArtifactSummaryTitle": "Resultados del análisis de código",
   "loc.messages.codeAnalysisDisabled": "El análisis de código está deshabilitado fuera del entorno de compilación. No se encuentra ningún valor para: %s",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Buscar JAVA_HOME para Java %s %s",
-  "loc.messages.UnsupportedJdkWarning": "JDK 9 and JDK 10 are out of support. Please switch to a later version in your project and pipeline. Attempting to build with JDK 11...",
+  "loc.messages.UnsupportedJdkWarning": "JDK 9 y JDK 10 no tienen soporte técnico. Cambie a una versión posterior del proyecto y la canalización. Intentando compilar con JDK 11...",
   "loc.messages.FailedToLocateSpecifiedJVM": "No se encontró la versión de JDK especificada. Asegúrese de que dicha versión está instalada en el agente y de que la variable de entorno \"%s\" existe y está establecida en la ubicación de un JDK correspondiente. En caso contrario, use la tarea de [Instalador de herramientas de Java](https://go.microsoft.com/fwlink/?linkid=875287) para instalar el JDK deseado.",
   "loc.messages.NoCodeCoverage": "No se encontraron resultados de cobertura de código para publicar.",
   "loc.messages.EntryAlreadyExists": "La configuración de fuente o repositorio ya existe en el archivo XML.",
   "loc.messages.EffectivePomInvalid": "No se puede analizar el archivo POM efectivo.",
   "loc.messages.AuthenticationNotNecessary": "No se han encontrado fuentes de Maven integradas que requieran autenticación. Deshabilite la opción \"Autenticar fuentes de Maven integradas\" para que las compilaciones se ejecuten más rápido.",
-  "loc.messages.UsingAuthFeed": "Usando la fuente integrada: "
+  "loc.messages.UsingAuthFeed": "Usando la fuente integrada: ",
+  "loc.messages.NoTestResults": "No se encontraron archivos de resultados de pruebas que coincidan con %s, por lo que se omite la publicación de los resultados de las pruebas JUnit."
 }

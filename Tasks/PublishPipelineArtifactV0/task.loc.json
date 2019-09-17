@@ -3,7 +3,7 @@
   "name": "PublishPipelineArtifact",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-pipeline-artifact",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "Microsoft Corporation",
@@ -15,7 +15,7 @@
   "groups": [],
   "demands": [],
   "preview": true,
-  "minimumAgentVersion": "2.140.1",
+  "minimumAgentVersion": "2.155.1",
   "inputs": [
     {
       "name": "artifactName",

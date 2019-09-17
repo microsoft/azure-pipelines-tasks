@@ -1,9 +1,9 @@
 {
     "id": "F20661EB-E0F7-4AFD-9A86-9FE9D1A93382",
     "name": "ApacheJMeterLoadTest",
-    "friendlyName": "Cloud-based Apache JMeter Load Test",
-    "description": "Runs the Apache JMeter load test in cloud",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkId=784929",
+    "friendlyName": "Cloud-based Apache JMeter load test",
+    "description": "Run an Apache JMeter load test in the cloud",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/run-jmeter-load-test",
     "helpMarkDown": "This task can be used to trigger an Apache JMeter load test in cloud using Azure Pipelines. [Learn more](https://go.microsoft.com/fwlink/?LinkId=784929)",
     "category": "Test",
     "visibility": [
@@ -14,8 +14,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 28
+        "Patch": 31
     },
+    "deprecated": true,
     "demands": [
         "azureps"
     ],

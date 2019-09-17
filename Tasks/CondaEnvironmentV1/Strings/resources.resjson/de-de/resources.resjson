@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Conda-Umgebung",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=873466)",
-  "loc.description": "Hiermit erstellen und aktivieren Sie eine Conda-Umgebung.",
+  "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/pipelines-anaconda-guide)<br>[Aufgabendokumentation](https://go.microsoft.com/fwlink/?linkid=873466)",
+  "loc.description": "Diese Aufgabe ist veraltet. Verwenden Sie \"conda\" direkt im Skript, um mit Anaconda-Umgebungen zu arbeiten.",
   "loc.instanceNameFormat": "Conda-Umgebung $(environmentName)",
   "loc.input.label.createCustomEnvironment": "Benutzerdefinierte Umgebung erstellen",
   "loc.input.help.createCustomEnvironment": "Erstellen oder reaktivieren Sie eine Conda-Umgebung, statt die base-Umgebung zu verwenden (empfohlen für selbstgehostete Agents).",

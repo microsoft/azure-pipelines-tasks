@@ -2,11 +2,11 @@ import { AnalysisResult } from './AnalysisResult';
 import { IAnalysisTool } from './IAnalysisTool';
 import { CodeAnalysisResultPublisher } from './CodeAnalysisResultPublisher';
 
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 import path = require('path');
 
-import tl = require('vsts-task-lib/task');
+import * as tl from 'azure-pipelines-task-lib/task';
 
 /**
  * Orcheestrates the processing and publishing of code analysis data and artifacts (PMD, FindBugs etc. but not SonarQube)

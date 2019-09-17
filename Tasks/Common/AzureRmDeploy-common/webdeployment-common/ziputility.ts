@@ -1,8 +1,8 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import Q = require('q');
 import fs = require('fs');
-
+import StreamZip = require('node-stream-zip');
 var DecompressZip = require('decompress-zip');
 var archiver = require('archiver');
 
@@ -67,3 +67,33 @@ export async function getArchivedEntries(archivedPackage: string)  {
     return deferred.promise;
 }
 
+export function checkIfFilesExistsInZip(archivedPackage: string, files: string[]) {
+    let deferred = Q.defer<boolean>();
+    for(let i=0; i < files.length ; i++) {
+        files[i] = files[i].toLowerCase();
+    }
+
+    const zip = new StreamZip({
+        file: archivedPackage,
+        storeEntries: true,
+        skipEntryNameValidation: true
+    });
+
+    zip.on('ready', () => {
+        let fileCount: number = 0;
+        for (let entry in zip.entries()) {
+            if(files.indexOf(entry.toLowerCase()) != -1) {
+                fileCount += 1;
+            }
+        }
+
+        zip.close();
+        deferred.resolve(fileCount == files.length);
+    });
+
+    zip.on('error', error => {
+        deferred.reject(error);
+    });
+
+    return deferred.promise;
+}

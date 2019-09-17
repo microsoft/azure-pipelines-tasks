@@ -1,9 +1,9 @@
 {
     "id": "2C65196A-54FD-4A02-9BE8-D9D1837B7111",
     "name": "VisualStudioTestPlatformInstaller",
-    "friendlyName": "Visual Studio Test Platform Installer",
-    "description": "Acquires the test platform from nuget.org or the tools cache. Satisfies the ‘vstest’ demand and can be used for running tests and collecting diagnostic data using the Visual Studio Test task.",
-    "helpUrl": "https://www.nuget.org/packages/Microsoft.TestPlatform/",
+    "friendlyName": "Visual Studio test platform installer",
+    "description": "Acquire the test platform from nuget.org or the tool cache. Satisfies the ‘vstest’ demand and can be used for running tests and collecting diagnostic data using the Visual Studio Test task.",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/vstest-platform-tool-installer",
     "helpMarkDown": "[Test platform package on NuGet](https://www.nuget.org/packages/Microsoft.TestPlatform/)",
     "category": "Tool",
     "runsOn": [
@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 5
+        "Minor": 151,
+        "Patch": 1
     },
     "satisfies": [
         "VsTest"
@@ -51,7 +51,7 @@
             "defaultValue": "latestPreRelease",
             "required": true,
             "groupName": "packageSettings",
-            "helpMarkDown": "Pick whether to install the latest version or a specific version of the Visual Studio Test Platform.",
+            "helpMarkDown": "Pick whether to install the latest version or a specific version of the Visual Studio Test Platform. <br>If you use the test platform installer to run Coded UI tests, ensure that the version you choose matches the major version of Visual Studio with which the test binaries were built. For e.g., if the Coded UI test project was built using Visual Studio 2017 (version 15.x), you must use test platform version 15.x.",
             "options": {
                 "latestPreRelease": "Latest (Includes Pre-Release)",
                 "latestStable": "Latest Stable",

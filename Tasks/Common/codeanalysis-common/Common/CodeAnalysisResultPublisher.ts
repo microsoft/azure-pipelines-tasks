@@ -4,7 +4,7 @@ import { FileSystemInteractions } from './FileSystemInteractions';
 import path = require('path');
 import fs = require('fs');
 
-import tl = require('vsts-task-lib/task');
+import * as tl from 'azure-pipelines-task-lib/task';;
 
 export class CodeAnalysisResultPublisher {
     constructor(private analysisResults: AnalysisResult[], private stagingDir: string) {

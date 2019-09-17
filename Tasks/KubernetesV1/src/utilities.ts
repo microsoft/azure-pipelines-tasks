@@ -3,13 +3,13 @@
 var https   = require('https');
 var fs      = require('fs');
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as os from "os";
 import * as util from "util";
 import * as toolLib from 'vsts-task-tool-lib/tool';
 
-import kubectlutility = require("utility-common/kubectlutility");
-import downloadutility = require("utility-common/downloadutility");
+import kubectlutility = require("kubernetes-common-v2/kubectlutility");
+import downloadutility = require("utility-common-v2/downloadutility");
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
@@ -47,9 +47,19 @@ export async function getKubectlVersion(versionSpec: string, checkLatest: boolea
             tl.warning(tl.loc("UsingLatestStableVersion"));
             return kubectlutility.getStableKubectlVersion();
         } 
+        else if ("v".concat(versionSpec) === kubectlutility.stableKubectlVersion) {
+            tl.debug(util.format("Using default versionSpec:%s.", versionSpec));
+            return kubectlutility.stableKubectlVersion;
+        }
         else {
-            let versions = await kubectlutility.getAvailableKubectlVersions();
-            return sanitizeVersionString(versions, versionSpec);
+            // Do not check for validity of the version here,
+            // We'll return proper error message when the download fails
+            if(!versionSpec.startsWith("v")) {
+                return "v".concat(versionSpec);
+            }
+            else{
+                return versionSpec;
+            }
         } 
      }
  

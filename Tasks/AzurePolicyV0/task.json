@@ -1,106 +1,113 @@
 {
-  "id": "8BA74703-E94F-4A35-814E-FC21F44578A2",
-  "name": "AzurePolicyCheckGate",
-  "friendlyName": "Azure Policy Check Gate",
-  "description": "Security and compliance assessment with Azure policies on resources that belong to the resource group and Azure subscription.",
-  "helpUrl": "",
-  "helpMarkDown": "",
-  "category": "Deploy",
-  "visibility": [
-    "Release"
-  ],
-  "runsOn": [
-    "ServerGate"
-  ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 0,
-    "Minor": 0,
-    "Patch": 1
-  },
-  "preview": "true",
-  "inputs": [
-    {
-      "name": "ConnectedServiceName",
-      "aliases": [
-        "azureSubscription"
-      ],
-      "type": "connectedService:AzureRM",
-      "label": "Azure subscription",
-      "required": true,
-      "helpMarkDown": "Select the Azure Resource Manager subscription to enforce the policies."
+    "id": "8BA74703-E94F-4A35-814E-FC21F44578A2",
+    "name": "AzurePolicyCheckGate",
+    "friendlyName": "Check Azure Policy compliance",
+    "description": "Security and compliance assessment for Azure Policy",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-policy-check-gate",
+    "helpMarkDown": "",
+    "category": "Deploy",
+    "visibility": [
+        "Release"
+    ],
+    "runsOn": [
+        "ServerGate"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 153,
+        "Patch": 0
     },
-    {
-      "name": "ResourceGroupName",
-      "type": "pickList",
-      "label": "Resource group",
-      "required": true,
-      "helpMarkDown": "Provide name of a resource group.",
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "Resources",
-      "type": "pickList",
-      "label": "Resource name",
-      "helpMarkDown": "Select name of Azure resources for which you want to check the policy compliance.",
-      "defaultValue": "",
-      "properties": {
-        "MultiSelectFlatList": "True",
-        "DisableManageLink": "True",
-        "EditableOptions": "False"
-      }
-    }
-  ],
-  "dataSourceBindings": [
-    {
-      "target": "ResourceGroupName",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureResourceGroups"
-    },
-    {
-      "target": "Resources",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMResourcesInRG",
-      "parameters": {
-        "ResourceGroupName": "$(ResourceGroupName)"  
-      },
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
-    }
-  ],
-  "instanceNameFormat": "Azure Policy compliance assessment for $(ResourceGroupName)",
-  "execution": {
-    "HttpRequestChain": {
-      "Execute": [
+    "inputs": [
         {
-          "RequestInputs": {
-            "EndpointId": "$(connectedServiceName)",
-            "EndpointUrl": "$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/triggerEvaluation?api-version=2018-07-01-preview",
-            "Method": "POST"
-          },
-          "ExecutionOptions": {
-            "OutputVariables": {"locationUrl" : "response['headers']['location']"},
-            "SkipSectionExpression": "isUrl(variables['locationUrl'])"
-          }
+            "name": "ConnectedServiceName",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "required": true,
+            "helpMarkDown": "Select the Azure Resource Manager subscription to enforce the policies."
         },
         {
-          "RequestInputs": {
-            "EndpointId": "$(connectedServiceName)",
-            "EndpointUrl": "$(locationUrl)",
-            "Method": "GET",
-            "Expression": "and(eq(response['statuscode'], 'OK'), eq(response['content']['status'], 'Succeeded'))"
-          }
+            "name": "ResourceGroupName",
+            "type": "pickList",
+            "label": "Resource group",
+            "helpMarkDown": "Provide name of a resource group.",
+            "properties": {
+                "EditableOptions": "True"
+            }
         },
         {
-          "RequestInputs": {
-            "EndpointId": "$(connectedServiceName)",
-            "EndpointUrl": "$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/queryResults?api-version=2018-04-04&$filter=IsCompliant eq false",
-            "Method": "POST",
-            "Expression": "or(and(eq(isNullOrEmpty(taskInputs['resources']), true), eq(count(jsonpath('value[*].resourceId')), 0)), and(eq(isNullOrEmpty(taskInputs['resources']), false), eq(count(intersect(split(taskInputs['resources'], ','), jsonpath('value[*].resourceId'))) ,0)))"
-          }
+            "name": "Resources",
+            "type": "pickList",
+            "label": "Resource name",
+            "helpMarkDown": "Select name of Azure resources for which you want to check the policy compliance.",
+            "defaultValue": "",
+            "properties": {
+                "MultiSelectFlatList": "True",
+                "DisableManageLink": "True",
+                "EditableOptions": "False"
+            }
         }
-      ]
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "ResourceGroupName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureResourceGroups"
+        },
+        {
+            "target": "Resources",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMResourcesInRG",
+            "parameters": {
+                "ResourceGroupName": "$(ResourceGroupName)"
+            },
+            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        }
+    ],
+    "instanceNameFormat": "Check Policy Compliance",
+    "execution": {
+        "HttpRequestChain": {
+            "Execute": [
+                {
+                    "RequestInputs": {
+                        "EndpointId": "$(connectedServiceName)",
+                        "EndpointUrl": "{{#if ResourceGroupName}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/triggerEvaluation?api-version=2018-07-01-preview{{else}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/providers/Microsoft.PolicyInsights/policyStates/latest/triggerEvaluation?api-version=2018-07-01-preview{{/if}}",
+                        "Method": "POST"
+                    },
+                    "ExecutionOptions": {
+                        "OutputVariables": {
+                            "locationUrl": "response['headers']['location']"
+                        },
+                        "SkipSectionExpression": "isUrl(variables['locationUrl'])"
+                    }
+                },
+                {
+                    "RequestInputs": {
+                        "EndpointId": "$(connectedServiceName)",
+                        "EndpointUrl": "$(locationUrl)",
+                        "Method": "GET",
+                        "Expression": "and(eq(response['statuscode'], 'OK'), eq(response['content']['status'], 'Succeeded'))"
+                    }
+                },
+                {
+                    "RequestInputs": {
+                        "EndpointId": "$(connectedServiceName)",
+                        "EndpointUrl": "{{#if ResourceGroupName}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/summarize?api-version=2018-04-04{{else}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/providers/Microsoft.PolicyInsights/policyStates/latest/summarize?api-version=2018-04-04{{/if}}",
+                        "Method": "POST"
+                    }
+                },
+                {
+                    "RequestInputs": {
+                        "EndpointId": "$(connectedServiceName)",
+                        "EndpointUrl": "{{#if ResourceGroupName}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/queryResults?api-version=2018-04-04&$filter=IsCompliant eq false{{else}}$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/providers/Microsoft.PolicyInsights/policyStates/latest/queryResults?api-version=2018-04-04&$filter=IsCompliant eq false{{/if}}",
+                        "Method": "POST",
+                        "Expression": "or(and(eq(isNullOrEmpty(taskInputs['resources']), true), eq(count(jsonpath('value[*].resourceId')), 0)), and(eq(isNullOrEmpty(taskInputs['resources']), false), eq(count(intersect(split(taskInputs['resources'], ','), jsonpath('value[*].resourceId'))) ,0)))"
+                    }
+                }
+            ]
+        }
     }
-  }
 }

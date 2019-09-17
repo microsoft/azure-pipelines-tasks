@@ -1,16 +1,17 @@
 import { PackageUrlsBuilder } from "./packagebuilder";
 import { Package, PackageFileResult } from "./package";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 
 export class SingleFilePackage extends Package {
     constructor(builder: PackageUrlsBuilder) {
         super(builder);
     }
 
-    async getDownloadUrls(feedId: string, packageId: string, packageVersion: string): Promise<Map<string, PackageFileResult>> {
+    async getDownloadUrls(feedId: string, project: string, packageId: string, packageVersion: string): Promise<Map<string, PackageFileResult>> {
         return new Promise<Map<string, PackageFileResult>>((resolve, reject) => {
             return this.getPackageMetadata(this.feedConnection, {
                 feedId: feedId,
+                project: project,
                 packageId: packageId
             })
                 .then(packageMetadata => {
@@ -22,6 +23,7 @@ export class SingleFilePackage extends Package {
                         this.packageProtocolDownloadAreadId,
                         {
                             feedId: feedId,
+                            project: project,
                             packageName: packageName,
                             packageVersion: packageVersion
                         }

@@ -14,6 +14,7 @@ Register-Mock Initialize-AzModule
 Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
 Register-Mock Get-VstsEndpoint
+Register-Mock Get-VstsTaskVariable { $env:PSModulePath } -- -Name 'AZ_PS_MODULE_PATH' -Require
 
 # Act.
 $actual = @( & $PSScriptRoot\..\AzurePowerShell.ps1 )
@@ -27,3 +28,6 @@ Assert-AreEqual '##vso[task.complete result=Failed]' $actual[2]
 Assert-AreEqual 'NativeCommandErrorMessage' $actual[3].FullyQualifiedErrorId
 Assert-AreEqual '##vso[task.complete result=Failed]' $actual[4]
 Assert-AreEqual 'output 2' $actual[5]
+
+# Clean Up
+Unregister-Mock Get-VstsTaskVariable

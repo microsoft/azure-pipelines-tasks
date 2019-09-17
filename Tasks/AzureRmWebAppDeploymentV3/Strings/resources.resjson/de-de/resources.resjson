@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure App Service-Bereitstellung",
   "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/azurermwebdeployreadme)",
-  "loc.description": "Aktualisieren Sie Azure App Services unter Windows, Web-App unter Linux durch integrierte Images oder Docker-Container, ASP.NET-, .NET Core-, PHP-, Python- oder Node.js-basierte Webanwendungen, Funktions-Apps, mobile Apps, API-Anwendungen oder Webaufträge über Web Deploy/Kudu-REST-APIs.",
+  "loc.description": "Hiermit wird eine Web-, Mobil- oder API-App mithilfe von Docker, Java, .NET, .NET Core, Node.js, PHP, Python oder Ruby für Azure App Service bereitgestellt.",
   "loc.instanceNameFormat": "Azure App Service bereitstellen: $(WebAppName)",
   "loc.releaseNotes": "Neues in Version 3.0: <br/>&nbsp;&nbsp;Unterstützt Dateiumwandlungen (XDT) <br/>&nbsp;&nbsp;Unterstützt Variablenersetzungen (XML, JSON) <br/>Klicken Sie [hier](https://aka.ms/azurermwebdeployreadme), um weitere Informationen zu erhalten.",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "Optionen für Dateitransformationen und Variablenersetzungen",
@@ -22,7 +22,7 @@
   "loc.input.label.SlotName": "Platz",
   "loc.input.help.SlotName": "Geben Sie einen anderen vorhandenen Slot als den Produktionsslot ein, oder wählen Sie ihn aus.",
   "loc.input.label.ImageSource": "Imagequelle",
-  "loc.input.help.ImageSource": "App Service unter Linux bietet zwei verschiedene Optionen, um Ihre Anwendung zu veröffentlichen.<br/> Sie können benutzerdefinierte Images bereitstellen oder eine App-Bereitstellung mithilfe eines integrierten Plattformimages durchführen. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=862490)",
+  "loc.input.help.ImageSource": "App Service für Linux bietet zwei verschiedene Optionen, um Ihre Anwendung zu veröffentlichen.<br/> Sie können benutzerdefinierte Images bereitstellen oder eine App-Bereitstellung mithilfe eines integrierten Plattformimages durchführen. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=862490)",
   "loc.input.label.AzureContainerRegistry": "Registrierung",
   "loc.input.help.AzureContainerRegistry": "Ein global eindeutiger Name einer Domäne der obersten Ebene für Ihre spezifische Registrierung.<br/> Hinweis: Vollqualifizierte Imagenamen erhalten das folgende Format: \"'<b>`<registry`></b>/`<repository`>:`<tag`>'\". Beispiel: \"<b>myregistry.azurecr.io</b>/nginx:latest\".",
   "loc.input.label.AzureContainerRegistryLoginServer": "Name des Anmeldeservers für die Registrierung",
@@ -222,5 +222,6 @@
   "loc.messages.ASE_SSLIssueRecommendation": "Um ein Zertifikat in App Service zu verwenden, muss das Zertifikat von einer vertrauenswürdigen Zertifizierungsstelle signiert sein. Werden von Ihrer Web-App Zertifikatüberprüfungsfehler zurückgegeben, verwenden Sie wahrscheinlich ein selbstsigniertes Zertifikat. Um den Fehler zu beheben, müssen Sie in der Build- oder Releasepipeline eine Variable mit dem Namen VSTS_ARM_REST_IGNORE_SSL_ERRORS auf den Wert TRUE festlegen.",
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "Um ein Zertifikat in App Service zu verwenden, muss das Zertifikat von einer vertrauenswürdigen Zertifizierungsstelle signiert sein. Werden von Ihrer Web-App Zertifikatüberprüfungsfehler zurückgegeben, verwenden Sie wahrscheinlich ein selbstsigniertes Zertifikat. Um den Fehler zu beheben, müssen Sie \"-allowUntrusted\" in zusätzlichen Argumenten der Web Deploy-Option übergeben.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Fehler beim Aktualisieren der Application Insights-Ressource \"%s\". Fehler: %s",
-  "loc.messages.JarNotSupported": "Die JAR-Bereitstellung wird in dieser Version nicht unterstützt. Ändern Sie die Aufgabenversion in \"4.*\", d. h. in den Vorschaumodus."
+  "loc.messages.JarNotSupported": "Die JAR-Bereitstellung wird in dieser Version nicht unterstützt. Ändern Sie die Aufgabenversion in \"4.*\", d. h. in den Vorschaumodus.",
+  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist."
 }

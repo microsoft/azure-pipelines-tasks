@@ -1,4 +1,4 @@
-import tmrm = require("vsts-task-lib/mock-run");
+import tmrm = require("azure-pipelines-task-lib/mock-run");
 import path = require("path");
 import { WebApiMock } from "./helpers/webapimock";
 
@@ -10,9 +10,9 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs
 tr.setInput("packageType", "nuget");
-tr.setInput("feed", "feedId");
+tr.setInput("feed", "/feedId");
 tr.setInput("view", "viewId");
-tr.setInput("definition", "packageId");
+tr.setInput("definition", "6f598cbe-a5e2-4f75-aa78-e0fd08301a15");
 tr.setInput("version", "versionId");
 tr.setInput("downloadPath", outputPath);
 tr.setInput("extract", "true");
