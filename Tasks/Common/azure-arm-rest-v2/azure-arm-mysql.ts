@@ -3,6 +3,7 @@ import webClient = require("./webClient");
 import tl = require('azure-pipelines-task-lib/task');
 import util = require("util");
 import azureServiceClient = require("./AzureServiceClient");
+import azureServiceClientBase = require("./AzureServiceClientBase");
 import Q = require("q");
 import constants = require('./constants');
 
@@ -56,7 +57,7 @@ export class FirewallRules {
      * @param parameters            optional parameter like start and end ip address
      * @param callback              response callback 
      */
-    public createOrUpdate(resourceGroupName: string, serverName: string, firewallRuleName: string, parameters, callback?:  azureServiceClient.ApiCallback) {
+    public createOrUpdate(resourceGroupName: string, serverName: string, firewallRuleName: string, parameters, callback?:  azureServiceClientBase.ApiCallback) {
         var client = this.client;
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
@@ -92,26 +93,26 @@ export class FirewallRules {
         }
 
         this.client.beginRequest(httpRequest).then(async (response) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
             var statusCode = response.statusCode;
             tl.debug("Response for add firewall rule " +statusCode);
             if (statusCode != 200 && statusCode != 201 && statusCode != 202) {
                 // Generate Error
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                deferred.reject(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
             }
             else if(statusCode === 202){
                 this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, 5, 0).then((response) => {
-                    deferred.resolve(new azureServiceClient.ApiResult(null, response));
+                    deferred.resolve(new azureServiceClientBase.ApiResult(null, response));
                 },(error) => {
                     deferred.reject(error);
                 });
             }
             else {
                 // Generate Response
-                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
+                deferred.resolve(new azureServiceClientBase.ApiResult(null, response.body));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
@@ -122,7 +123,7 @@ export class FirewallRules {
      * @param firewallRuleName      firewall rule name to be deleted 
      * @param callback              response callback 
      */
-    public delete(resourceGroupName: string, serverName: string, firewallRuleName: string, callback?:  azureServiceClient.ApiCallback) {
+    public delete(resourceGroupName: string, serverName: string, firewallRuleName: string, callback?:  azureServiceClientBase.ApiCallback) {
         var client = this.client;
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
@@ -154,19 +155,19 @@ export class FirewallRules {
             });
 
         this.client.beginRequest(httpRequest).then(async (response) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
             var statusCode = response.statusCode;
             tl.debug("Response for delete firewall rule " +statusCode);
             if (statusCode != 200 && statusCode != 202 && statusCode !=204) {
                 // Generate Error
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                deferred.reject(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
             }
             else {
                 // Generate Response
-                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
+                deferred.resolve(new azureServiceClientBase.ApiResult(null, response.body));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
@@ -177,7 +178,7 @@ export class FirewallRules {
      * @param firewallRuleName      firewall rule name to be deleted 
      * @param callback              response callback 
      */
-    public get(resourceGroupName: string, serverName: string, firewallRuleName: string, callback?:  azureServiceClient.ApiCallback) {
+    public get(resourceGroupName: string, serverName: string, firewallRuleName: string, callback?:  azureServiceClientBase.ApiCallback) {
         var client = this.client;
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
@@ -209,19 +210,19 @@ export class FirewallRules {
             });
         tl.debug("Calling get firewall ");
         this.client.beginRequest(httpRequest).then(async (response) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
             var statusCode = response.statusCode;
             tl.debug("Response for get firewall rule " + JSON.stringify(response));
             if (statusCode === 200) {
                 // Generate Response
-                deferred.resolve(new azureServiceClient.ApiResult(null, response));
+                deferred.resolve(new azureServiceClientBase.ApiResult(null, response));
             }
             else {
                 // Generate exception
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                deferred.reject(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
@@ -233,8 +234,8 @@ export class FirewallRules {
      * @param firewallRuleName      firewall rule name to be deleted 
      * @param retryOption           no of time to retry
      */
-    private _recursiveGetCall(resourceGroupName: string, serverName: string, firewallRuleName: string, retryOption: number, timeToWait: number) : Q.Promise<azureServiceClient.ApiResult>{
-        var deferred = Q.defer<azureServiceClient.ApiResult>();
+    private _recursiveGetCall(resourceGroupName: string, serverName: string, firewallRuleName: string, retryOption: number, timeToWait: number) : Q.Promise<azureServiceClientBase.ApiResult>{
+        var deferred = Q.defer<azureServiceClientBase.ApiResult>();
         let waitedTime = 2000 + timeToWait * 2;
         setTimeout(() => {
             this.get(resourceGroupName, serverName, firewallRuleName, (error, result, request, response) => {
@@ -246,7 +247,7 @@ export class FirewallRules {
                     }
                 }
                 else{
-                    deferred.resolve(new azureServiceClient.ApiResult(null, result));
+                    deferred.resolve(new azureServiceClientBase.ApiResult(null, result));
                 }
             });
         }, waitedTime); 
@@ -267,7 +268,7 @@ export class  MysqlServers {
      * Get all the mysql server belongs to one subscription
      * @param callback  Response callback
      */
-    public list(callback?: azureServiceClient.ApiCallback): void {
+    public list(callback?: azureServiceClientBase.ApiCallback): void {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
@@ -295,17 +296,17 @@ export class  MysqlServers {
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
-                        return new azureServiceClient.ApiResult(nextResult.error);
+                        return new azureServiceClientBase.ApiResult(nextResult.error);
                     }
                     result.concat(nextResult.result);
                 }
                 
-                return new azureServiceClient.ApiResult(null, result);
+                return new azureServiceClientBase.ApiResult(null, result);
             }
             else {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response));
             }
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 }
