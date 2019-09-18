@@ -11,6 +11,7 @@
         "AzureAppServiceManageV0",
         "AzureAppServiceSettingsV1",
         "AzureCLIV1",
+        "AzureCLIV2",
         "AzureCloudPowerShellDeploymentV1",
         "AzureFileCopyV2",
         "AzureFileCopyV3",
