@@ -2,7 +2,7 @@
 
 ### Overview
 
-This task is used to deploy [Azure Resource Manager templates](https://azure.microsoft.com/en-in/documentation/articles/resource-group-template-deploy/) at all the deployment scopes. The task is also used to create or update a resource group in Azure.
+This task is used to deploy [Azure Resource Manager templates](https://azure.microsoft.com/en-in/documentation/articles/resource-group-template-deploy/). it support template deployment as three scopes - Resource group, Subscription and Management group The task is also used to create or update a resource group.
 
 ### What's new in Version 3.0
  - Added support for deployment scope at Subscription and Management group scope.
