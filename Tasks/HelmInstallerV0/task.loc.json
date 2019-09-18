@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 151,
+    "Minor": 155,
     "Patch": 1
   },
   "demands": [],
@@ -35,7 +35,7 @@
       "type": "string",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.helmVersion",
-      "defaultValue": "2.9.1"
+      "defaultValue": "2.14.1"
     },
     {
       "name": "checkLatestHelmVersion",

@@ -1,7 +1,7 @@
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import path = require("path");
 import { Action } from "./operations/Action";
-import { Utility, ActionType, Delimiters, TagSelectionMode} from "./operations/Utility";
+import { Utility, ActionType, Delimiters, ChangeLogStartCommit, ChangeLogType } from './operations/Utility';
 import { Inputs} from "./operations/Constants";
 import { ChangeLog } from "./operations/ChangeLog";
 import { Helper } from "./operations/Helper";
@@ -46,9 +46,12 @@ class Main {
                 const githubReleaseAssetInputPatterns = tl.getDelimitedInput(Inputs.assets, Delimiters.newLine);
 
                 if (action === ActionType.create) {
+                    //Get task inputs specific to create release
+                    const tagPattern = tl.getInput(Inputs.tagPattern) || undefined;
+
                     // Get tag to create release if tag source is gitTag/auto
                     if (Utility.isTagSourceAuto(tagSource)) {
-                        tag = await helper.getTagForCommitTarget(githubEndpointToken, repositoryName, target);
+                        tag = await helper.getTagForCommitTarget(githubEndpointToken, repositoryName, target, tagPattern);
                     }
 
                     if (!!tag) {
@@ -94,15 +97,32 @@ class Main {
     private static async _getReleaseNote(githubEndpointToken: string, repositoryName: string, target: string): Promise<string> {
         const releaseNotesSource = tl.getInput(Inputs.releaseNotesSource, true);
         Utility.validateReleaseNotesSource(releaseNotesSource);
-
         const releaseNotesFile = tl.getPathInput(Inputs.releaseNotesFile, false, true);
         const releaseNoteInput = tl.getInput(Inputs.releaseNotes);
         const showChangeLog: boolean = tl.getBoolInput(Inputs.addChangeLog);
+        let changeLog: string = "";
+        if (showChangeLog){
+            let changeLogLabels: any = null;
+            const changeLogCompareToRelease = tl.getInput(Inputs.changeLogCompareToRelease);
+            Utility.validateStartCommitSpecification(changeLogCompareToRelease);
+            const changeLogType = tl.getInput(Inputs.changeLogType);
+            Utility.validateChangeLogType(changeLogType);
+            if (changeLogType === ChangeLogType.issueBased){
+                const changeLogLabelsInput = tl.getInput(Inputs.changeLogLabels);
+                try{
+                    changeLogLabels = JSON.parse(changeLogLabelsInput);
+                }
+                catch(error){
+                    changeLogLabels = [];
+                    tl.warning(tl.loc("LabelsSyntaxError"));
+                }
+            }
 
-        // Generate the change log 
-        // Get change log for top 250 commits only
-        const changeLog: string = showChangeLog ? await new ChangeLog().getChangeLog(githubEndpointToken, repositoryName, target, 250) : "";
-
+            const changeLogCompareToReleaseTag = tl.getInput(Inputs.changeLogCompareToReleaseTag) || undefined;
+            // Generate the change log 
+            // Get change log for top 250 commits only
+            changeLog = await new ChangeLog().getChangeLog(githubEndpointToken, repositoryName, target, 250, ChangeLogStartCommit[changeLogCompareToRelease], changeLogType, changeLogCompareToReleaseTag, changeLogLabels);
+        }
         // Append change log to release note
         const releaseNote: string = Utility.getReleaseNote(releaseNotesSource, releaseNotesFile, releaseNoteInput, changeLog) || undefined;
 

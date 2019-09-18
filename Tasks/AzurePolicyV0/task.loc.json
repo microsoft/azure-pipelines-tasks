@@ -15,10 +15,9 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 152,
+    "Minor": 153,
     "Patch": 0
   },
-  "preview": "true",
   "inputs": [
     {
       "name": "ConnectedServiceName",

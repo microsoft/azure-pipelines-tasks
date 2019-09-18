@@ -2,8 +2,8 @@
 
 import * as path from "path";
 import * as util from "util";
-import * as tl from "vsts-task-lib/task";
-import * as tr from "vsts-task-lib/toolrunner";
+import * as tl from "azure-pipelines-task-lib/task";
+import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as utils from "./utilities";
 import * as constants from "./constants";
 import * as definitions from "./definitions"
@@ -101,12 +101,22 @@ export default class PackerHost implements definitions.IPackerHost {
         var installedPackerPath = tl.which("packer", false);
         var installedPackerVersion = this._getPackerVersion(installedPackerPath);
         console.log(tl.loc("InstalledPackerVersion", installedPackerVersion));
-        if(!installedPackerVersion || 
-            utils.isGreaterVersion(utils.PackerVersion.convertFromString(constants.CurrentSupportedPackerVersionString), utils.PackerVersion.convertFromString(installedPackerVersion))) {
+        var packerVersionString = constants.CurrentSupportedPackerVersionString;
+        var explicitPackerVersion : boolean= false ;
 
-            console.log(tl.loc("DownloadingPackerRequired", constants.CurrentSupportedPackerVersionString, constants.CurrentSupportedPackerVersionString));
+        if(this._taskParameters.templateType == constants.TemplateTypeCustom && this._taskParameters.packerVersionString && installedPackerVersion != this._taskParameters.packerVersionString) {
+            packerVersionString = this._taskParameters.packerVersionString;
+            explicitPackerVersion = true;
+        }
+
+        if(explicitPackerVersion || !installedPackerVersion || utils.isGreaterVersion(utils.PackerVersion.convertFromString(packerVersionString), utils.PackerVersion.convertFromString(installedPackerVersion))) {
+            if(explicitPackerVersion){
+                console.log(tl.loc("InstallExplicitPackerVersion", packerVersionString))
+            } else {
+                console.log(tl.loc("DownloadingPackerRequired", packerVersionString, packerVersionString));
+            }
             var downloadPath = path.join(this.getStagingDirectory(), "packer.zip");
-            var packerDownloadUrl = util.format(constants.PackerDownloadUrlFormat, constants.CurrentSupportedPackerVersionString, constants.CurrentSupportedPackerVersionString, this._getPackerZipNamePrefix());
+            var packerDownloadUrl = util.format(constants.PackerDownloadUrlFormat, packerVersionString, packerVersionString, this._getPackerZipNamePrefix());
             tl.debug("Downloading packer from url: " + packerDownloadUrl);
             await utils.download(packerDownloadUrl, downloadPath);
             console.log(tl.loc("DownloadingPackerCompleted", downloadPath));

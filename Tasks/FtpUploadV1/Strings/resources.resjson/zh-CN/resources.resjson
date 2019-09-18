@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "FTP 上传",
   "loc.helpMarkDown": "使用文件传输协议(FTP)将文件上传到远程计算机，或使用 FTPS 安全上传。[详细信息](http://go.microsoft.com/fwlink/?LinkId=809084)。",
-  "loc.description": "FTP 上传",
+  "loc.description": "使用 FTP 上传文件",
   "loc.instanceNameFormat": "FTP 上传: $(rootFolder)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.credsType": "身份验证方法",

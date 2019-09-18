@@ -13,7 +13,12 @@ import { VersionInfo, Channel, VersionFilesData, VersionParts } from "./models"
 import * as utils from "./versionutilities";
 
 export class DotNetCoreVersionFetcher {
-    constructor() {
+    private explicitVersioning: boolean = false;
+    private channels: Channel[];
+    private httpCallbackClient: httpClient.HttpClient;
+    private machineOsSuffixes: string[];
+    constructor(explicitVersioning: boolean = false) {
+        this.explicitVersioning = explicitVersioning;
         let proxyUrl: string = tl.getVariable("agent.proxyurl");
         var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
             proxy: {
@@ -56,9 +61,9 @@ export class DotNetCoreVersionFetcher {
     public getDownloadUrl(versionInfo: VersionInfo): string {
         console.log(tl.loc("GettingDownloadUrl", versionInfo.getPackageType(), versionInfo.getVersion()));
 
-        let osSuffixes = this.detectMachineOS();
+        this.detectMachineOS();
         let downloadPackageInfoObject: VersionFilesData = null;
-        osSuffixes.find((osSuffix) => {
+        this.machineOsSuffixes.find((osSuffix) => {
             downloadPackageInfoObject = versionInfo.getFiles().find((downloadPackageInfo: VersionFilesData) => {
                 if (downloadPackageInfo.rid && osSuffix && downloadPackageInfo.rid.toLowerCase() == osSuffix.toLowerCase()) {
                     if ((osSuffix.split("-")[0] == "win" && downloadPackageInfo.name.endsWith(".zip")) || (osSuffix.split("-")[0] != "win" && downloadPackageInfo.name.endsWith("tar.gz"))) {
@@ -77,7 +82,7 @@ export class DotNetCoreVersionFetcher {
             return downloadPackageInfoObject.url;
         }
 
-        throw tl.loc("DownloadUrlForMatchingOsNotFound", versionInfo.getPackageType(), versionInfo.getVersion(), osSuffixes.toString());
+        throw tl.loc("DownloadUrlForMatchingOsNotFound", versionInfo.getPackageType(), versionInfo.getVersion(), this.machineOsSuffixes.toString());
     }
 
     private setReleasesIndex(): Promise<void> {
@@ -109,7 +114,7 @@ export class DotNetCoreVersionFetcher {
     }
 
     private getVersionChannel(versionSpec: string): Channel {
-        let versionParts = new VersionParts(versionSpec);
+        let versionParts = new VersionParts(versionSpec, this.explicitVersioning);
 
         let requiredChannelVersion = `${versionParts.majorVersion}.${versionParts.minorVersion}`;
         if (versionParts.minorVersion == "x") {
@@ -149,7 +154,18 @@ export class DotNetCoreVersionFetcher {
 
                     let versionInfoList: VersionInfo[] = [];
                     channelReleases.forEach((release) => {
-                        if (release && release[packageType] && release[packageType].version) {
+                        if (release && packageType === 'sdk' && release.sdks) {
+                            try {
+                                release.sdks.forEach((sdk) => {
+                                    let versionInfo: VersionInfo = new VersionInfo(sdk, packageType);
+                                    versionInfoList.push(versionInfo);
+                                });
+                            }
+                            catch (err) {
+                                tl.debug(tl.loc("VersionInformationNotComplete", release[packageType].version, err));
+                            }
+                        }
+                        if (release && release[packageType] && release[packageType].version && !versionInfoList.find((versionInfo) => { return versionInfo.getVersion() === release[packageType].version })) {
                             try {
                                 let versionInfo: VersionInfo = new VersionInfo(release[packageType], packageType);
                                 versionInfoList.push(versionInfo);
@@ -199,7 +215,7 @@ export class DotNetCoreVersionFetcher {
     }
 
     private getChannelsForMajorVersion(version: string): Channel[] {
-        var versionParts = new VersionParts(version);
+        var versionParts = new VersionParts(version, this.explicitVersioning);
         let adjacentChannels: Channel[] = [];
         this.channels.forEach(channel => {
             if (channel.channelVersion.startsWith(`${versionParts.majorVersion}`)) {
@@ -210,58 +226,60 @@ export class DotNetCoreVersionFetcher {
         return adjacentChannels;
     }
 
-    private detectMachineOS(): string[] {
-        let osSuffix = [];
-        let scriptRunner: trm.ToolRunner;
+    private detectMachineOS(): void {
+        if (!this.machineOsSuffixes) {
+            let osSuffix = [];
+            let scriptRunner: trm.ToolRunner;
 
-        try {
-            console.log(tl.loc("DetectingPlatform"));
-            if (tl.osType().match(/^Win/)) {
-                let escapedScript = path.join(this.getCurrentDir(), 'externals', 'get-os-platform.ps1').replace(/'/g, "''");
-                let command = `& '${escapedScript}'`
+            try {
+                console.log(tl.loc("DetectingPlatform"));
+                if (tl.osType().match(/^Win/)) {
+                    let escapedScript = path.join(this.getCurrentDir(), 'externals', 'get-os-platform.ps1').replace(/'/g, "''");
+                    let command = `& '${escapedScript}'`;
 
-                let powershellPath = tl.which('powershell', true);
-                scriptRunner = tl.tool(powershellPath)
-                    .line('-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command')
-                    .arg(command);
+                    let powershellPath = tl.which('powershell', true);
+                    scriptRunner = tl.tool(powershellPath)
+                        .line('-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command')
+                        .arg(command);
+                }
+                else {
+                    let scriptPath = path.join(this.getCurrentDir(), 'externals', 'get-os-distro.sh');
+                    this.setFileAttribute(scriptPath, "777");
+
+                    scriptRunner = tl.tool(tl.which(scriptPath, true));
+                }
+
+                let result: trm.IExecSyncResult = scriptRunner.execSync();
+
+                if (result.code != 0) {
+                    throw tl.loc("getMachinePlatformFailed", result.error ? result.error.message : result.stderr);
+                }
+
+                let output: string = result.stdout;
+
+                let index;
+                if ((index = output.indexOf("Primary:")) >= 0) {
+                    let primary = output.substr(index + "Primary:".length).split(os.EOL)[0];
+                    osSuffix.push(primary);
+                    console.log(tl.loc("PrimaryPlatform", primary));
+                }
+
+                if ((index = output.indexOf("Legacy:")) >= 0) {
+                    let legacy = output.substr(index + "Legacy:".length).split(os.EOL)[0];
+                    osSuffix.push(legacy);
+                    console.log(tl.loc("LegacyPlatform", legacy));
+                }
+
+                if (osSuffix.length == 0) {
+                    throw tl.loc("CouldNotDetectPlatform");
+                }
             }
-            else {
-                let scriptPath = path.join(this.getCurrentDir(), 'externals', 'get-os-distro.sh');
-                this.setFileAttribute(scriptPath, "777");
-
-                scriptRunner = tl.tool(tl.which(scriptPath, true));
+            catch (ex) {
+                throw tl.loc("FailedInDetectingMachineArch", JSON.stringify(ex));
             }
 
-            let result: trm.IExecSyncResult = scriptRunner.execSync();
-
-            if (result.code != 0) {
-                throw tl.loc("getMachinePlatformFailed", result.error ? result.error.message : result.stderr);
-            }
-
-            let output: string = result.stdout;
-
-            let index;
-            if ((index = output.indexOf("Primary:")) >= 0) {
-                let primary = output.substr(index + "Primary:".length).split(os.EOL)[0];
-                osSuffix.push(primary);
-                console.log(tl.loc("PrimaryPlatform", primary));
-            }
-
-            if ((index = output.indexOf("Legacy:")) >= 0) {
-                let legacy = output.substr(index + "Legacy:".length).split(os.EOL)[0];
-                osSuffix.push(legacy);
-                console.log(tl.loc("LegacyPlatform", legacy));
-            }
-
-            if (osSuffix.length == 0) {
-                throw tl.loc("CouldNotDetectPlatform");
-            }
+            this.machineOsSuffixes = osSuffix;
         }
-        catch (ex) {
-            throw tl.loc("FailedInDetectingMachineArch", JSON.stringify(ex));
-        }
-
-        return osSuffix;
     }
 
     private setFileAttribute(file: string, mode: string): void {
@@ -271,9 +289,6 @@ export class DotNetCoreVersionFetcher {
     private getCurrentDir(): string {
         return __dirname;
     }
-
-    private channels: Channel[];
-    private httpCallbackClient: httpClient.HttpClient;
 }
 
 const DotNetCoreReleasesIndexUrl: string = "https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases-index.json";

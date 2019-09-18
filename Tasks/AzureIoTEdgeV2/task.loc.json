@@ -13,10 +13,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 6
+    "Minor": 3,
+    "Patch": 0
   },
-  "preview": true,
+  "preview": false,
+  "showEnvironmentVariables": true,
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -42,6 +43,7 @@
       "options": {
         "Build module images": "Build module images",
         "Push module images": "Push module images",
+        "Generate deployment manifest": "Generate deployment manifest",
         "Deploy to IoT Edge devices": "Deploy to IoT Edge devices"
       },
       "helpMarkDown": "ms-resource:loc.input.help.action"
@@ -50,7 +52,7 @@
       "name": "deploymentFilePath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.deploymentFilePath",
-      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.json",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
       "required": true,
       "visibleRule": "action == Deploy to IoT Edge devices",
       "helpMarkDown": "ms-resource:loc.input.help.deploymentFilePath"
@@ -165,7 +167,7 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.templateFilePath",
       "defaultValue": "deployment.template.json",
-      "visibleRule": "action = Build module images || action = Push module images",
+      "visibleRule": "action = Build module images || action = Push module images || action = Generate deployment manifest",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.templateFilePath"
     },
@@ -175,7 +177,7 @@
       "label": "ms-resource:loc.input.label.defaultPlatform",
       "defaultValue": "amd64",
       "required": true,
-      "visibleRule": "action = Build module images || action = Push module images",
+      "visibleRule": "action = Build module images || action = Push module images || action = Generate deployment manifest",
       "options": {
         "amd64": "amd64",
         "windows-amd64": "windows-amd64",
@@ -185,6 +187,28 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.defaultPlatform"
+    },
+    {
+      "name": "fillRegistryCredential",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.fillRegistryCredential",
+      "defaultValue": "true",
+      "required": true,
+      "visibleRule": "action = Push module images",
+      "options": {
+        "true": "true",
+        "false": "false"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.fillRegistryCredential"
+    },
+    {
+      "name": "deploymentManifestOutputPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.deploymentManifestOutputPath",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
+      "visibleRule": "action == Generate deployment manifest",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentManifestOutputPath"
     },
     {
       "name": "bypassModules",
@@ -233,14 +257,18 @@
     "DependencyInstallSuccess": "ms-resource:loc.messages.DependencyInstallSuccess",
     "DependencyInstallFail": "ms-resource:loc.messages.DependencyInstallFail",
     "TemplateFileInvalid": "ms-resource:loc.messages.TemplateFileInvalid",
-    "ContainerRegistryInvalid": "ms-resource:loc.messages.ContainerRegistryInvalid",
+    "InvalidContainerRegistry": "ms-resource:loc.messages.InvalidContainerRegistry",
     "DeploymentFileNotFound": "ms-resource:loc.messages.DeploymentFileNotFound",
     "ValidDeploymentFileNotFound": "ms-resource:loc.messages.ValidDeploymentFileNotFound",
     "AzureSdkNotFound": "ms-resource:loc.messages.AzureSdkNotFound",
     "RootPathNotExist": "ms-resource:loc.messages.RootPathNotExist",
     "SkipModuleImageValidation": "ms-resource:loc.messages.SkipModuleImageValidation",
     "InvalidRegistryCredentialWarning": "ms-resource:loc.messages.InvalidRegistryCredentialWarning",
-    "CheckModuleImageExistenceError": "ms-resource:loc.messages.CheckModuleImageExistenceError"
+    "CheckModuleImageExistenceError": "ms-resource:loc.messages.CheckModuleImageExistenceError",
+    "StartGenerateDeploymentManifest": "ms-resource:loc.messages.StartGenerateDeploymentManifest",
+    "FinishGenerateDeploymentManifest": "ms-resource:loc.messages.FinishGenerateDeploymentManifest",
+    "LoginRegistrySucess": "ms-resource:loc.messages.LoginRegistrySucess",
+    "SkipSettingEnvironmentVariableForSecret": "ms-resource:loc.messages.SkipSettingEnvironmentVariableForSecret"
   },
   "OutputVariables": [
     {

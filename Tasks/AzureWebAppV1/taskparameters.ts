@@ -1,5 +1,5 @@
 import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { Package, PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
@@ -24,7 +24,8 @@ export class TaskParametersUtility {
             ConfigurationSettings: tl.getInput('configurationStrings', false),
             ResourceGroupName: tl.getInput('resourceGroupName', false),
             SlotName: tl.getInput('slotName', false),
-            WebAppName: tl.getInput('appName', true)
+            WebAppName: tl.getInput('appName', true),
+            CustomWarName: tl.getInput('customDeployFolder', false)
         }  
         
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
@@ -120,6 +121,7 @@ export interface TaskParameters {
     StartupCommand?: string;
     RuntimeStack?: string;
     ConfigurationSettings?: string;
+    CustomWarName?: string;
     /** Additional parameters */
     azureEndpoint?: AzureEndpoint;
     isLinuxApp?: boolean;

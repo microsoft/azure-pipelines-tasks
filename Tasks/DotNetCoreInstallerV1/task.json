@@ -4,7 +4,7 @@
     "friendlyName": ".NET Core sdk/runtime installer",
     "description": "Acquire a specific version of the .NET Core SDK from the internet or local cache and add it to the PATH",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer",
-    "helpMarkDown": "[More Information](https://aka.ms/AA4ihfi)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/AA4ihfi)",
     "category": "Tool",
     "runsOn": [
         "Agent",
@@ -13,9 +13,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 2
+        "Minor": 1,
+        "Patch": 0
     },
+    "deprecated": true,
     "preview": "true",
     "satisfies": [
         "DotNetCore"
@@ -107,16 +108,16 @@
         "PrependGlobalToolPath": "Creating global tool path and pre-pending to PATH.",
         "VersionsFileMalformed": "The specified version's download links are not correctly formed in the supported versions document => %s/",
         "MatchingVersionNotFound": "No matching %s version could be found for specified version: %s Kindly note the preview versions are only considered in latest version searches if Include Preview Versions checkbox is checked.",
-        "UnableToAccessPath": "Unable to access path: %s. Error: %s \n please make sure that agent process has path to the path.",
+        "UnableToAccessPath": "Unable to access path: %s. Error: %s. Please make sure that agent process has access to the path.",
         "VersionCanNotBeDownloadedFromUrl": "Version: %s cannot be downloaded from URL: %s. Either the URL or version is incorrect.",
         "CopyingFoldersIntoPath": "Copying all root folders into installation path: %s",
         "CopyingFilesIntoPath": "Copying root files (such as dotnet.exe) into installation path: %s",
         "FailedToCopyTopLevelFiles": "Failed to copy root files into installation path: %s. Error: %s",
-        "FailedWhileInstallingVersionAtPath" : "Failed while installing version: %s at path: %s with error: %s",
+        "FailedWhileInstallingVersionAtPath": "Failed while installing version: %s at path: %s with error: %s",
         "ExplicitVersionRequired": "Version: %s is not allowed. Versions to be installed should be of format: major.minor.patchversion. For example: 2.2.1",
         "VersionFoundInCache": "Version: %s was found in cache.",
         "VersionNotFoundInCache": "Version %s was not found in cache.",
-        "CreatingInstallationCompeleteFile": "Creating installation complete file for .Net core %s version %s",
+        "CreatingInstallationCompeleteFile": "Creating installation complete marker file for .Net core %s version %s",
         "CannotFindRuntimeVersionForCompletingInstallation": "Cannot find runtime version for package type: %s with version: %s",
         "PathNotFoundException": "Path: %s could not be located/found. Make sure the path exists.",
         "VersionIsLocalLatest": "Version: %s is the latest among the versions present at path: %s",
@@ -132,7 +133,7 @@
         "VersionNotFound": "%s version matching: %s could not be found",
         "VersionNotAllowed": "Version %s is not allowed. Allowed version types are: majorVersion.x, majorVersion.minorVersion.x, majorVersion.minorVersion.patchVersion",
         "VersionsCanNotBeCompared": "Versions %s and %s cannot be compared. Both versions should be explicit.",
-        "FileNameNotCorrectCompleteFileName": "File name %s is not correct version.complete file name.",
+        "FileNameNotCorrectCompleteFileName": "File name %s is not a correct '.complete' file.",
         "ChannelVersionsNotComparable": "Channel versions %s and %s can not be compared. They both must have numeric major and minor versions.",
         "LookingForVersionInChannel": "Searching for version in channel %s",
         "FallingBackToAdjacentChannels": "Version %s could not be found in its channel, will now search in adjacent channels.",

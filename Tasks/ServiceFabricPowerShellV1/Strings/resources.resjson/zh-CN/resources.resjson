@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Service Fabric PowerShell",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=841538)",
-  "loc.description": "在 Azure Service Fabric 群集连接的上下文中运行 PowerShell 脚本。",
+  "loc.description": "在 Azure Service Fabric 群集连接的上下文中运行 PowerShell 脚本",
   "loc.instanceNameFormat": "Service Fabric PowerShell 脚本: $(ScriptType)",
   "loc.input.label.serviceConnectionName": "群集服务连接",
   "loc.input.help.serviceConnectionName": "执行指定的 PowerShell 脚本时，将具有已建立的服务连接的 Azure Service Fabric 群集。",
@@ -13,7 +13,7 @@
   "loc.input.help.Inline": "输入要执行的脚本。",
   "loc.input.label.ScriptArguments": "脚本参数",
   "loc.input.help.ScriptArguments": "要传递给 PowerShell 的其他参数。可以是序号或命名参数。",
-  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "具有指纹 {0} 的证书在本地证书存储中不存在。这可能会导致错误。如果发布/生成失败，请重试此操作，或确保多个代理未在同一计算机上同时使用同一服务终结点运行生成/发布。",
   "loc.messages.InvalidScriptArguments0": "脚本参数“{0}”无效。不允许换行。",
   "loc.messages.InvalidScriptPath0": "脚本路径“{0}”无效。指定的路径字符无效。"
 }

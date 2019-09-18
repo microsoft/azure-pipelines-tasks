@@ -4,7 +4,7 @@
     "friendlyName": "Xamarin Test Cloud",
     "description": "[Deprecated] Test mobile apps with Xamarin Test Cloud using Xamarin.UITest. Instead, use the 'App Center test' task.",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/xamarin-test-cloud",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613744)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613744)",
     "category": "Test",
     "visibility": [
         "Build",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 151,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",

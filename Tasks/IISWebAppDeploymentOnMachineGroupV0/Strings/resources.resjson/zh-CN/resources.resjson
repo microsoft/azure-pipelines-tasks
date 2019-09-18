@@ -73,5 +73,6 @@
   "loc.messages.FailedToApplyTransformationReason2": "2. 确保配置文件和转换文件位于包内的同一个文件夹中。",
   "loc.messages.AutoParameterizationMessage": "默认情况下，Web.config 中的 connectionString 属性已参数化。请注意，转换对 connectionString 属性无影响，因为在通过 \"Parameters.xml\" 或 \"SetParameters.xml\" 文件进行部署期间，该值将被重写。可通过在 MSBuild 包生成期间设置 /p:AutoParameterizationWebConfigConnectionStrings=False 来禁用自动参数化。",
   "loc.messages.PackageDeploymentFailed": "未能将 Web 程序包部署到 IIS 网站。",
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "请确保计算机使用的是 TLS 1.2 协议或更高版本。请访问 https://aka.ms/enableTlsv2 获取有关如何在计算机中启用 TLS 的详细信息。"
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "请确保计算机使用的是 TLS 1.2 协议或更高版本。请访问 https://aka.ms/enableTlsv2 获取有关如何在计算机中启用 TLS 的详细信息。",
+  "loc.messages.RetryToDeploy": "正在重新尝试部署包。"
 }

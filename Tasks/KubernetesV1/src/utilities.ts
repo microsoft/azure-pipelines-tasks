@@ -3,13 +3,13 @@
 var https   = require('https');
 var fs      = require('fs');
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as os from "os";
 import * as util from "util";
 import * as toolLib from 'vsts-task-tool-lib/tool';
 
-import kubectlutility = require("utility-common/kubectlutility");
-import downloadutility = require("utility-common/downloadutility");
+import kubectlutility = require("kubernetes-common-v2/kubectlutility");
+import downloadutility = require("utility-common-v2/downloadutility");
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
