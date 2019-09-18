@@ -34,10 +34,7 @@ export async function run() {
         env: envList
       } as IExecOptions;
       let defaultPlatform = tl.getInput('defaultPlatform', true);
-      let command: string = `genconfig`;
-      command += ` --file "${templateFilePath}"`;
-      command += ` --platform "${defaultPlatform}"`;
-      await tl.exec(`${Constants.iotedgedev}`, command, execOptions);
+      await tl.exec(`${Constants.iotedgedev}`, ["genconfig", "--file", templateFilePath, "--platform", defaultPlatform], execOptions);
 
       tl.setVariable(Constants.outputVariableDeploymentPathKey, outputPath);
       tl.debug(`Set ${Constants.outputVariableDeploymentPathKey} to ${outputPath}`);
