@@ -2,7 +2,7 @@
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
     "name": "AzureResourceManagerTemplateDeployment",
     "friendlyName": "ARM template deployment",
-    "description": "Deploy an Azure Resource Manager (ARM) template to all the deployment scopes",
+    "description": "Deploy an Azure Resource Manager (ARM) template to all the [deployment scopes](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/armdeploymenttaskreadme)",
     "category": "Deploy",
@@ -15,7 +15,7 @@
     "version": {
         "Major": 3,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "preview": "true",
     "demands": [],
@@ -47,7 +47,7 @@
             "defaultValue": "Resource Group",
             "required": "true",
             "groupName": "AzureDetails",
-            "helpMarkDown": "Deployment scope of the deployment. Refer this [link](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)",
+            "helpMarkDown": "Deployment scope of the deployment. To know more abour deployment scopes, refer this [link](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)",
             "options": {
                 "Management Group": "Management Group",
                 "Subscription" : "Subscription",
@@ -237,7 +237,7 @@
         {
             "target": "location",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureLocationsByDeploymentScopes",
+            "dataSourceName": "AzureLocationsByDeploymentScope",
             "parameters": {
                 "subscriptionId": "$(subscriptionName)",
                 "deploymentScope": "$(deploymentScope)"
@@ -293,6 +293,7 @@
         "MoreInformationOnAzurePortal": "More information on Azure Portal",
         "LogDeploymentName": "Deployment name is %s",
         "ResourceGroupNameNotProvided": "Resource Group name should be provided",
-        "LocationNotProvided": "Location is required for deployment"
+        "LocationNotProvided": "Location is required for deployment",
+        "ARMServiceConnectionScope": "ARM Service Conection deployment scope - %s"
     }
 }

@@ -10,8 +10,8 @@ import { DeploymentParameters } from "./operations/DeploymentParameters";
 import { DeploymentScopeBase } from "./operations/DeploymentScopeBase";
 
 function run(): Promise<void> {
-    var azureRGTaskParameters = new armDeployTaskParameters.ARMDeployTaskParameters();
-    return azureRGTaskParameters.getAzureRGTaskParameters().then((taskParameters) => {
+    var armTemplateDeploymentTaskParameters = new armDeployTaskParameters.ARMDeployTaskParameters();
+    return armTemplateDeploymentTaskParameters.getARMTemplateDeploymentTaskParameters().then((taskParameters) => {
         if(taskParameters.deploymentScope === "Management Group"){
             var deploymentParameters = new DeploymentParameters({}, taskParameters.location);
             var managementGroupOperationsController = new DeploymentScopeBase(new armManagementGroup.ManagementGroupManagementClient(taskParameters.credentials, taskParameters.managementGroupId), taskParameters, deploymentParameters);

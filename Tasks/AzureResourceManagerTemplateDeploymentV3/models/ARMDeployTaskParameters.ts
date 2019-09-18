@@ -30,7 +30,7 @@ export class ARMDeployTaskParameters {
         return azureEndpoint.applicationTokenCredentials;
     }
 
-    public async getAzureRGTaskParameters() : Promise<ARMDeployTaskParameters>
+    public async getARMTemplateDeploymentTaskParameters() : Promise<ARMDeployTaskParameters>
     {
         try {
 
@@ -40,11 +40,22 @@ export class ARMDeployTaskParameters {
                 this.deploymentScope = "Resource Group";
             }
 
+            //Service Connection
             this.connectedService = tl.getInput("ConnectedServiceName", true);
             var endpointTelemetry = '{"endpointId":"' + this.connectedService + '"}';
             console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureResourceManagerTemplateDeployment]" + endpointTelemetry);
             this.endpointPortalUrl = tl.getEndpointDataParameter(this.connectedService, "armManagementPortalUrl", true);
-            this.action = tl.getInput("action");
+            var armServiceConnectionScope = tl.getEndpointDataParameter(this.connectedService, 'ScopeLevel', true);
+            if(!!armServiceConnectionScope && armServiceConnectionScope === "Subscription"){
+                var armServiceConnectionAuthScope = tl.getEndpointAuthorizationParameter(this.connectedService, 'scope', true);
+                if(!!armServiceConnectionAuthScope){
+                    var armServiceConnectionAuthScopeSplit = armServiceConnectionAuthScope.split("/");
+                    if(!!armServiceConnectionAuthScopeSplit[4]){
+                        armServiceConnectionScope = "Resource Group";
+                    }
+                }
+            }
+            console.log(tl.loc("ARMServiceConnectionScope", armServiceConnectionScope));
 
             //Management Group Id
             if(this.deploymentScope === "Management Group"){
@@ -85,6 +96,7 @@ export class ARMDeployTaskParameters {
             this.credentials = await this.getARMCredentials(this.connectedService);
             this.deploymentOutputs = tl.getInput("deploymentOutputs");
             this.addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
+            this.action = tl.getInput("action");
 
             return this;
         } catch (error) {

@@ -16,7 +16,7 @@ export class ResourceGroup extends DeploymentScopeBase {
 
     public async createOrUpdateResourceGroup(): Promise<void> {
         await this.createResourceGroupIfRequired();
-        super.deploy();
+        await this.createTemplateDeployment();
     }
 
     public deleteResourceGroup(): Promise<void> {
