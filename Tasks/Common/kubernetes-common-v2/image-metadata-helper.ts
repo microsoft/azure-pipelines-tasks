@@ -225,10 +225,10 @@ export function extractManifestsFromHelmOutput(helmOutput: string): any {
 export function getManifestFileUrlsFromArgumentsInput(fileArgs: string): string[] {
     let manifestFileUrls: string[] = [];
     const filePathMatch: string[] = fileArgs.split(matchPatternForFileArgument);
-    if (filePathMatch && filePathMatch.length >= 0) {
+    if (filePathMatch && filePathMatch.length > 0) {
         filePathMatch.forEach(manifestPath => {
             if (!!manifestPath) {
-                if (manifestPath.indexOf("http") > 0) {
+                if (manifestPath.startsWith("http") || manifestPath.startsWith("https:")) {
                     manifestFileUrls.push(manifestPath);
                 }
                 else {
@@ -246,7 +246,7 @@ export function getManifestFileUrlsFromHelmOutput(helmOutput: string): string[] 
     // Raw github links are supported only for chart names not chart paths
     if (chartType === "Name") {
         const chartName = tl.getInput("chartName", true);
-        if (chartName.indexOf("http") >= 0) {
+        if (chartName.startsWith("http:") || chartName.startsWith("https:")) {
             return [chartName];
         }
     }
@@ -289,8 +289,9 @@ export function getManifestUrls(manifestFilePaths: string[]): string[] {
         let normalisedPath = path.indexOf(workingDirectory) === 0 ? path.substr(workingDirectory.length) : path;
         normalisedPath = normalisedPath.replace(/\\/g, "/");
 
-        if (repositoryProvider && repositoryProvider.toLowerCase() === "githubenterprise") {
+        if (repositoryProvider && (repositoryProvider.toLowerCase() === "githubenterprise" || repositoryProvider.toLowerCase() === "github")) {
             if (normalisedPath.indexOf("/") != 0) {
+                // Prepend "/" if not present in path beginning as the path is appended as it is in manifest url to access github repo
                 normalisedPath = "/" + normalisedPath;
             }
 
@@ -298,6 +299,7 @@ export function getManifestUrls(manifestFilePaths: string[]): string[] {
         }
         else if (repositoryProvider && repositoryProvider.toLowerCase() === "tfsgit") {
             if (normalisedPath.indexOf("/") === 0) {
+                // Remove "/" from path if present in the beginning as we need to append path as a query string in manifest url to access tfs repo
                 normalisedPath = normalisedPath.substr(1);
             }
 
