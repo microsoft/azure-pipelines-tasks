@@ -4,8 +4,8 @@
     "friendlyName": "Use .NET Core",
     "description": "Acquires a specific version of the .NET Core SDK from the internet or the local cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks. Additionally provides proxy support.",
     "category": "Tool",
-    "helpUrl": "https://aka.ms/AA4xgy0",
-    "helpMarkDown": "[Learn more about this task](https://aka.ms/AA4xgy0)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer",
+    "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer)",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
