@@ -17,6 +17,7 @@
         "Minor": 0,
         "Patch": 0
     },
+    "preview": "true",
     "demands": [],
     "minimumAgentVersion": "2.119.1",
     "groups": [
@@ -46,7 +47,7 @@
             "defaultValue": "Resource Group",
             "required": "true",
             "groupName": "AzureDetails",
-            "helpMarkDown": "Deployment scope of the deployment",
+            "helpMarkDown": "Deployment scope of the deployment. Refer this [link](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)",
             "options": {
                 "Management Group": "Management Group",
                 "Subscription" : "Subscription",

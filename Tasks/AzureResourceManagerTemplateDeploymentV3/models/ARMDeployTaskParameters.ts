@@ -2,7 +2,7 @@ import tl = require("azure-pipelines-task-lib/task");
 import msRestAzure = require('azure-arm-rest-v2/azure-arm-common');
 import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
 
-export class AzureRGTaskParameters {
+export class ARMDeployTaskParameters {
 
     public action: string;
     public resourceGroupName: string;
@@ -30,7 +30,7 @@ export class AzureRGTaskParameters {
         return azureEndpoint.applicationTokenCredentials;
     }
 
-    public async getAzureRGTaskParameters() : Promise<AzureRGTaskParameters>
+    public async getAzureRGTaskParameters() : Promise<ARMDeployTaskParameters>
     {
         try {
 
@@ -53,7 +53,7 @@ export class AzureRGTaskParameters {
 
             //Subscripion Id
             this.subscriptionId = tl.getInput("subscriptionName");
-            if(!this.subscriptionId && this.deploymentScope != "Management Group") {
+            if(!this.subscriptionId && (this.deploymentScope === "Subscription" || this.deploymentScope === "Resource Group")) {
                 this.subscriptionId = tl.getEndpointDataParameter(this.connectedService, "SubscriptionId", false);
             }
 

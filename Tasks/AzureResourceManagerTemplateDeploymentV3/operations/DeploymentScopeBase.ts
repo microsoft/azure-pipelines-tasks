@@ -1,6 +1,6 @@
 import tl = require("azure-pipelines-task-lib/task");
 
-import deployAzureRG = require("../models/DeployAzureRG");
+import armDeployTaskParameters = require("../models/ARMDeployTaskParameters");
 import armResource = require("azure-arm-rest-v2/AzureServiceClientBase");
 import utils = require("./Utils");
 import { sleepFor } from 'azure-arm-rest-v2/webClient';
@@ -8,13 +8,17 @@ import { DeploymentParameters } from "./DeploymentParameters";
 
 export class DeploymentScopeBase {
     protected deploymentParameters: DeploymentParameters;
-    protected taskParameters: deployAzureRG.AzureRGTaskParameters;
+    protected taskParameters: armDeployTaskParameters.ARMDeployTaskParameters;
     protected armClient: armResource.AzureServiceClientBase;
 
-    constructor(armClient: armResource.AzureServiceClientBase, taskParameters: deployAzureRG.AzureRGTaskParameters, deploymentParameters?: DeploymentParameters) {
+    constructor(armClient: armResource.AzureServiceClientBase, taskParameters: armDeployTaskParameters.ARMDeployTaskParameters, deploymentParameters?: DeploymentParameters) {
         this.taskParameters = taskParameters;
         this.armClient = armClient;
         this.deploymentParameters = deploymentParameters;
+    }
+
+    public async deploy(): Promise<void> {
+        await this.createTemplateDeployment();
     }
 
     protected async createTemplateDeployment() {
@@ -46,7 +50,7 @@ export class DeploymentScopeBase {
                 console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
                 this.armClient.deployments.createOrUpdate(this.taskParameters.deploymentName, this.deploymentParameters, (error, result, request, response) => {
                     if (error) {
-                        if(error.code == "ResourceGroupNotFound" && retryCount > 0){
+                        if(this.taskParameters.deploymentScope === "Resource Group" && error.code == "ResourceGroupNotFound" && retryCount > 0){
                             return this.waitAndPerformAzureDeployment(retryCount);
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);

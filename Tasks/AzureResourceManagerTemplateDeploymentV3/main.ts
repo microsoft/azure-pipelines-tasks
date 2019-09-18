@@ -1,23 +1,25 @@
 import tl = require("azure-pipelines-task-lib/task");
 import path = require("path");
 
-import deployAzureRG = require("./models/DeployAzureRG");
+import armDeployTaskParameters = require("./models/ARMDeployTaskParameters");
 import resourceGroup = require("./operations/ResourceGroup");
-import managementGroup = require("./operations/ManagementGroup");
-import subscription = require("./operations/Subscription");
 import armResource = require("azure-arm-rest-v2/azure-arm-resource");
 import armManagementGroup = require("azure-arm-rest-v2/azure-arm-management-group");
 import armSubscription = require("azure-arm-rest-v2/azure-arm-subscription");
+import { DeploymentParameters } from "./operations/DeploymentParameters";
+import { DeploymentScopeBase } from "./operations/DeploymentScopeBase";
 
 function run(): Promise<void> {
-    var azureRGTaskParameters = new deployAzureRG.AzureRGTaskParameters();
+    var azureRGTaskParameters = new armDeployTaskParameters.ARMDeployTaskParameters();
     return azureRGTaskParameters.getAzureRGTaskParameters().then((taskParameters) => {
         if(taskParameters.deploymentScope === "Management Group"){
-            var managementGroupOperationsController = new managementGroup.ManagementGroup(new armManagementGroup.ManagementGroupManagementClient(taskParameters.credentials, taskParameters.managementGroupId), taskParameters);
+            var deploymentParameters = new DeploymentParameters({}, taskParameters.location);
+            var managementGroupOperationsController = new DeploymentScopeBase(new armManagementGroup.ManagementGroupManagementClient(taskParameters.credentials, taskParameters.managementGroupId), taskParameters, deploymentParameters);
             return managementGroupOperationsController.deploy();
         }
         else if(taskParameters.deploymentScope === "Subscription") {
-            var subscriptionOperationsController = new subscription.Subscription(new armSubscription.SubscriptionManagementClient(taskParameters.credentials, taskParameters.subscriptionId), taskParameters);
+            var deploymentParameters = new DeploymentParameters({}, taskParameters.location);
+            var subscriptionOperationsController = new DeploymentScopeBase(new armSubscription.SubscriptionManagementClient(taskParameters.credentials, taskParameters.subscriptionId), taskParameters, deploymentParameters);
             return subscriptionOperationsController.deploy();
         }
         var resourceGroupOperationsController = new resourceGroup.ResourceGroup(new armResource.ResourceManagementClient(taskParameters.credentials, taskParameters.resourceGroupName, taskParameters.subscriptionId), taskParameters);
@@ -30,7 +32,6 @@ function run(): Promise<void> {
                 throw tl.loc("InvalidAction", taskParameters.action);
         }
     });
-
 }
 
 var taskManifestPath = path.join(__dirname, "task.json");

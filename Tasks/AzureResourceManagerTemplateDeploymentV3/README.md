@@ -34,17 +34,17 @@ The task needs the Azure PowerShell version to be installed on the automation ag
 
 The parameters of the task are described in details, including examples, to show how to input the parameters. The parameters listed with a \* are required parameters for the task:
 
- * **Deployment Scope**\*: Select the scope of deployment fom the options: Resource Group, Subscription and Mangement Group.
+ * **Deployment Scope**\*: Select the scope of deployment from the options: Resource Group, Subscription and Mangement Group. For more info refer this [link](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)
 
  * **Azure Resource Manager connection**\*: Select the ARM service connection of appropriate deployment scope i.e. Deployment Scope selected above should be of lower or same level to the deployment scope of service connection. To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Manage' link.
 
- * **Action**\*: For deployment scope of 'Resource Group', elect the action to be performed on the resource group. Following actions are available:
+ * **Action**\*: For deployment scope of 'Resource Group', select the action to be performed on the resource group. Following actions are available:
     - Create or Update Resource Group: creates a new resource group or to update an existing one (using [Azure Resource Manager templates](https://azure.microsoft.com/en-in/documentation/articles/resource-group-template-deploy/)).
     - Delete Resource Group
 
  * **Resource Group**\*: Enter the name of the resource group. If this is an existing resource group, and the selected action is to create or update the resource group, then the task will update the resource group with the resources specified in the Azure template. If no Resource Group with the name exists in the subscription, then a new one will be created.
 
- * **Location**\*: Resource Group deployment scope: Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored. Other deployment scope: Location to store deployment metadata.
+ * **Location**\*: For Resource Group deployment scope: Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored. For other deployment scopes: Location to store deployment metadata.
 
 The following parameters are shown when the selected action is to create or update a resource group:
 

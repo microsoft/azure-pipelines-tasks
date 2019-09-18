@@ -8,7 +8,7 @@
   "loc.group.displayName.Template": "Template",
   "loc.group.displayName.Advanced": "Advanced",
   "loc.input.label.deploymentScope": "Deployment Scope",
-  "loc.input.help.deploymentScope": "Deployment scope of the deployment",
+  "loc.input.help.deploymentScope": "Deployment scope of the deployment. Refer this [link](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)",
   "loc.input.label.ConnectedServiceName": "Azure Resource Manager connection",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager service connection having access to the selected deployment scope.",
   "loc.input.label.subscriptionName": "Subscription",
