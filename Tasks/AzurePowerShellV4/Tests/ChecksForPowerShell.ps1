@@ -10,6 +10,7 @@ Register-Mock Get-VstsInput { $targetAzurePs } -- -Name TargetAzurePs
 Register-Mock Get-VstsInput { 'arg1 arg2' } -- -Name ScriptArguments
 Register-Mock Get-VstsInput { "continue" } -- -Name errorActionPreference
 Register-Mock Get-VstsInput { $true } -- -Name FailOnStandardError
+Register-Mock Get-VstsInput { $false } -- -Name pwsh -AsBool
 Register-Mock Update-PSModulePathForHostedAgent
 Register-Mock Get-Module
 Register-Mock Initialize-AzModule
@@ -22,10 +23,5 @@ Register-Mock Invoke-VstsTool { }
 # Act.
 $actual = & $PSScriptRoot\..\AzurePowerShell.ps1
 
-# Assert the error action preference was set to Continue.
-Assert-AreEqual "Continue" $global:ErrorActionPreference
-$global:ErrorActionPreference = 'Stop' # Reset to stop.
-
-# Assert the Azure helpers module was imported and invoked.
-Assert-WasCalled Import-Module -- ([System.IO.Path]::GetFullPath("$PSScriptRoot\..\ps_modules\VstsAzureHelpers_"))
-Assert-WasCalled Initialize-AzModule
+Assert-WasCalled Invoke-VstsTool -Times 1
+Assert-WasCalled Invoke-VstsTool -ArgumentsEvaluator {($args | ConvertTo-Json) -like '*powershell.exe*'}
