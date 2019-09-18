@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 152,
-    "Patch": 1
+    "Minor": 159,
+    "Patch": 0
   },
   "demands": [],
   "groups": [
@@ -95,6 +95,15 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "useClusterAdmin",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useClusterAdmin",
+      "defaultValue": "false",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "groupName": "cluster",
+      "helpMarkDown": "ms-resource:loc.input.help.useClusterAdmin"
     },
     {
       "name": "kubernetesServiceEndpoint",

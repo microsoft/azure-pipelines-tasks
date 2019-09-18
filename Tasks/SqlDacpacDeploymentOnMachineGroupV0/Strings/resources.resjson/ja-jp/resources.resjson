@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "SQL Server データベースの配置",
   "loc.helpMarkDown": "[詳細情報](https://aka.ms/sqldacpacmachinegroupreadme)",
-  "loc.description": "DACPAC または SQL スクリプトを使用して SQL Server データベースに配置します",
+  "loc.description": "DACPAC または SQL スクリプトを使用して SQL Server データベースを配置します",
   "loc.instanceNameFormat": "配置時に次を使用: $(TaskType)",
   "loc.input.label.TaskType": "SQL の配置時に使用 ",
   "loc.input.help.TaskType": "DB を配置する方法を、Dacpac を使用するか SQL スクリプトを使用するように指定します。",
@@ -24,7 +24,7 @@
   "loc.input.label.DatabaseName": "データベース名　",
   "loc.input.help.DatabaseName": "SQL Server データベースの名前を指定します。",
   "loc.input.label.AuthScheme": "認証",
-  "loc.input.help.AuthScheme": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the account used to configure deployment agent, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below.",
+  "loc.input.help.AuthScheme": "SQL Server に接続する際の認証モードを選択します。Windows 認証モードでは、配置エージェントの構成に使用されるアカウントを使用して、SQL Server に接続します。SQL Server 認証モードでは、以下のパラメーターで SQL ログインとパスワードを指定する必要があります。",
   "loc.input.label.SqlUsername": "SQL ユーザー名",
   "loc.input.help.SqlUsername": "SQL Server に接続するための SQL ログインを指定します。このオプションは、SQL Server 認証モードが選択されている場合のみ利用できます。",
   "loc.input.label.SqlPassword": "SQL パスワード ",

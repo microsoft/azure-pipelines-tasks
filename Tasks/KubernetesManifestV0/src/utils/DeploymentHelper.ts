@@ -2,7 +2,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as yaml from 'js-yaml';
 import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
 import * as KubernetesObjectUtility from '../utils/KubernetesObjectUtility';
@@ -11,10 +11,15 @@ import * as TaskInputParameters from '../models/TaskInputParameters';
 import * as models from '../models/constants';
 import * as fileHelper from '../utils/FileHelper';
 import * as utils from '../utils/utilities';
-import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
-import { Kubectl, Resource } from 'kubernetes-common/kubectl-object-model';
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
+import { Kubectl, Resource } from 'kubernetes-common-v2/kubectl-object-model';
+import { isEqual, StringComparer } from './StringComparison';
+import { getDeploymentMetadata, getPublishDeploymentRequestUrl, isDeploymentEntity, getManifestUrls } from 'kubernetes-common-v2/image-metadata-helper';
+import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
 
-export function deploy(kubectl: Kubectl, manifestFilePaths: string[], deploymentStrategy: string) {
+const publishPipelineMetadata = tl.getVariable("PUBLISH_PIPELINE_METADATA");
+
+export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], deploymentStrategy: string) {
 
     // get manifest files
     let inputManifestFiles: string[] = getManifestFiles(manifestFilePaths);
@@ -29,18 +34,31 @@ export function deploy(kubectl: Kubectl, manifestFilePaths: string[], deployment
     const deployedManifestFiles = deployManifests(inputManifestFiles, kubectl, isCanaryDeploymentStrategy(deploymentStrategy));
 
     // check manifest stability
-    const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.recognizedWorkloadTypes);
-    checkManifestStability(kubectl, resourceTypes);
+    const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.deploymentTypes);
+    await checkManifestStability(kubectl, resourceTypes);
 
     // annotate resources
-    annotateResources(deployedManifestFiles, kubectl, resourceTypes);
+    const allPods = JSON.parse((kubectl.getAllPods()).stdout);
+    annotateResources(deployedManifestFiles, kubectl, resourceTypes, allPods);
+
+    // Capture and push deployment metadata only if the variable 'PUBLISH_PIPELINE_METADATA' is set to true,
+    // and deployment strategy is not specified (because for Canary/SMI we do not replace actual deployment objects)
+    if (publishPipelineMetadata && publishPipelineMetadata.toLowerCase() == "true" && !isCanaryDeploymentStrategy(deploymentStrategy)) {
+        try {
+            const clusterInfo = kubectl.getClusterInfo().stdout;
+            captureAndPushDeploymentMetadata(inputManifestFiles, allPods, deploymentStrategy, clusterInfo, manifestFilePaths);
+        }
+        catch (e) {
+            tl.warning("Capturing deployment metadata failed with error: " + e);
+        }
+    }
 }
 
 function getManifestFiles(manifestFilePaths: string[]): string[] {
     const files: string[] = utils.getManifestFiles(manifestFilePaths);
 
     if (files == null || files.length === 0) {
-        throw (tl.loc('ManifestFileNotFound'));
+        throw (tl.loc('ManifestFileNotFound', manifestFilePaths));
     }
 
     return files;
@@ -59,22 +77,30 @@ function deployManifests(files: string[], kubectl: Kubectl, isCanaryDeploymentSt
     return files;
 }
 
-function checkManifestStability(kubectl: Kubectl, resourceTypes: Resource[]) {
+async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): Promise<void> {
     const rolloutStatusResults = [];
-    resourceTypes.forEach(resource => {
-        if (models.recognizedWorkloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
+    const numberOfResources = resources.length;
+    for (let i = 0; i < numberOfResources; i++) {
+        const resource = resources[i];
+        if (models.workloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
             rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
         }
-    });
+        if (isEqual(resource.type, constants.KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase)) {
+            try {
+                await checkPodStatus(kubectl, resource.name);
+            } catch (ex) {
+                tl.warning(tl.loc('CouldNotDeterminePodStatus', JSON.stringify(ex)));
+            }
+        }
+    }
     utils.checkForErrors(rolloutStatusResults);
 }
 
-function annotateResources(files: string[], kubectl: Kubectl, resourceTypes: Resource[]) {
+function annotateResources(files: string[], kubectl: Kubectl, resourceTypes: Resource[], allPods: any) {
     const annotateResults: IExecSyncResult[] = [];
-    const allPods = JSON.parse((kubectl.getAllPods()).stdout);
     annotateResults.push(kubectl.annotateFiles(files, constants.pipelineAnnotations, true));
     resourceTypes.forEach(resource => {
-        if (resource.type.toUpperCase() != models.KubernetesWorkload.Pod.toUpperCase()) {
+        if (resource.type.toUpperCase() !== models.KubernetesWorkload.pod.toUpperCase()) {
             utils.annotateChildPods(kubectl, resource.type, resource.name, allPods)
                 .forEach(execResult => annotateResults.push(execResult));
         }
@@ -120,7 +146,7 @@ function updateImagePullSecretsInManifestFiles(filePaths: string[], imagePullSec
             yaml.safeLoadAll(fileContents, function (inputObject: any) {
                 if (!!inputObject && !!inputObject.kind) {
                     const kind = inputObject.kind;
-                    if (KubernetesObjectUtility.isDeploymentEntity(kind)) {
+                    if (KubernetesObjectUtility.isWorkloadEntity(kind)) {
                         KubernetesObjectUtility.updateImagePullSecrets(inputObject, imagePullSecrets, false);
                     }
                     newObjectsList.push(inputObject);
@@ -134,6 +160,109 @@ function updateImagePullSecretsInManifestFiles(filePaths: string[], imagePullSec
     return filePaths;
 }
 
+function captureAndPushDeploymentMetadata(filePaths: string[], allPods: any, deploymentStrategy: string, clusterInfo: any, manifestFilePaths: string[]) {
+    const requestUrl = getPublishDeploymentRequestUrl();
+    let metadata = {};
+    filePaths.forEach((filePath: string) => {
+        const fileContents = fs.readFileSync(filePath).toString();
+        yaml.safeLoadAll(fileContents, function (inputObject: any) {
+            if (!!inputObject && inputObject.kind && isDeploymentEntity(inputObject.kind)) {
+                metadata = getDeploymentMetadata(inputObject, allPods, deploymentStrategy, clusterInfo, getManifestUrls(manifestFilePaths));
+                pushDeploymentDataToEvidenceStore(JSON.stringify(metadata), requestUrl).then((result) => {
+                    tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
+                }, (error) => {
+                    tl.warning("publishToImageMetadataStore failed with error: " + error);
+                });
+            }
+        });
+    });
+}
+
+async function pushDeploymentDataToEvidenceStore(requestBody: string, requestUrl: string): Promise<any> {
+    const request = new WebRequest();
+    const accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
+    request.uri = requestUrl;
+    request.method = 'POST';
+    request.body = requestBody;
+    request.headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + accessToken
+    };
+
+    tl.debug("requestUrl: " + requestUrl);
+    tl.debug("requestBody: " + requestBody);
+
+    try {
+        tl.debug("Sending request for pushing deployment data to Image meta data store");
+        const response = await sendRequest(request);
+        return response;
+    }
+    catch (error) {
+        tl.debug("Unable to push to deployment details to Artifact Store, Error: " + error);
+    }
+
+    return Promise.resolve();
+}
+
 function isCanaryDeploymentStrategy(deploymentStrategy: string): boolean {
-    return deploymentStrategy != null && deploymentStrategy.toUpperCase() == canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY.toUpperCase();
+    return deploymentStrategy != null && deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY.toUpperCase();
+}
+
+async function checkPodStatus(kubectl: Kubectl, podName: string): Promise<void> {
+    const sleepTimeout = 10 * 1000; // 10 seconds
+    const iterations = 60; // 60 * 10 seconds timeout = 10 minutes max timeout
+    let podStatus;
+    for (let i = 0; i < iterations; i++) {
+        await sleep(sleepTimeout);
+        tl.debug(`Polling for pod status: ${podName}`);
+        podStatus = getPodStatus(kubectl, podName);
+        if (podStatus.phase && podStatus.phase !== 'Pending' && podStatus.phase !== 'Unknown') {
+            break;
+        }
+    }
+    podStatus = getPodStatus(kubectl, podName);
+    switch (podStatus.phase) {
+        case 'Succeeded':
+        case 'Running':
+            if (isPodReady(podStatus)) {
+                console.log(`pod/${podName} is successfully rolled out`);
+            }
+            break;
+        case 'Pending':
+            if (!isPodReady(podStatus)) {
+                tl.warning(`pod/${podName} rollout status check timedout`);
+            }
+            break;
+        case 'Failed':
+            tl.error(`pod/${podName} rollout failed`);
+            break;
+        default:
+            tl.warning(`pod/${podName} rollout status: ${podStatus.phase}`);
+    }
+}
+
+function getPodStatus(kubectl: Kubectl, podName: string): any {
+    const podResult = kubectl.getResource('pod', podName);
+    utils.checkForErrors([podResult]);
+    const podStatus = JSON.parse(podResult.stdout).status;
+    tl.debug(`Pod Status: ${JSON.stringify(podStatus)}`);
+    return podStatus;
+}
+
+function isPodReady(podStatus: any): boolean {
+    let allContainersAreReady = true;
+    podStatus.containerStatuses.forEach(container => {
+        if (container.ready === false) {
+            console.log(`'${container.name}' status: ${JSON.stringify(container.state)}`);
+            allContainersAreReady = false;
+        }
+    });
+    if (!allContainersAreReady) {
+        tl.warning(tl.loc('AllContainersNotInReadyState'));
+    }
+    return allContainersAreReady;
+}
+
+function sleep(timeout: number) {
+    return new Promise(resolve => setTimeout(resolve, timeout));
 }

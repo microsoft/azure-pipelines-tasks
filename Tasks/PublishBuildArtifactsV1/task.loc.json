@@ -12,11 +12,18 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 151,
-    "Patch": 0
+    "Minor": 158,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "PathtoPublish",
@@ -75,6 +82,16 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.ParallelCount",
       "visibleRule": "ArtifactType = FilePath && Parallel = true"
+    },
+    {
+      "name": "FileCopyOptions",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.FileCopyOptions",
+      "defaultValue": "",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.FileCopyOptions",
+      "visibleRule": "ArtifactType = FilePath"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

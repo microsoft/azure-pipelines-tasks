@@ -1,9 +1,8 @@
-import computeManagementClient = require("azure-arm-rest/azure-arm-compute");
-import util = require("util");
-import tl = require("vsts-task-lib/task");
+import computeManagementClient = require("azure-arm-rest-v2/azure-arm-compute");
+import tl = require("azure-pipelines-task-lib/task");
 import azure_utils = require("./AzureUtil");
 import deployAzureRG = require("../models/DeployAzureRG");
-import az = require("azure-arm-rest/azureModels");
+import az = require("azure-arm-rest-v2/azureModels");
 import utils = require("./Utils");
 
 export class DeploymentGroupExtensionHelper {
@@ -28,11 +27,20 @@ export class DeploymentGroupExtensionHelper {
     public async addExtensionOnResourceGroup(): Promise<any> {
         console.log(tl.loc("AddingDGAgentOnVMs"));
         var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
-        var extensionAddedOnVMsPromises: Promise<any>[] = [];
+        var extensionAddedOnVMsPromises: Promise<string>[] = [];
         for (var vm of listOfVms) {
-            extensionAddedOnVMsPromises.push(this.addExtensionOnSingleVM(vm));
+            extensionAddedOnVMsPromises.push(
+                this.addExtensionOnSingleVM(vm)
+                    .then(result => null) // suppress result as we are only interested in failures
+                    .catch(err => tl.loc("DeploymentGroupConfigurationFailedOnVM", vm.name, utils.getError(err))));
         }
-        await Promise.all(extensionAddedOnVMsPromises);
+
+        var extensionErrorForVMs: string[] = await Promise.all(extensionAddedOnVMsPromises);
+        var errorString: string = utils.buildErrorString(extensionErrorForVMs);
+        if (!!errorString) {
+            throw new Error(tl.loc("DeploymentGroupConfigurationNotSucceeded", errorString));
+        }
+
         if (listOfVms.length > 0) {
             console.log(tl.loc("DGAgentAddedOnAllVMs"));
         }
@@ -132,7 +140,7 @@ export class DeploymentGroupExtensionHelper {
                     }
                 }
                 console.log(tl.loc("VMStarted", vmName));
-                resolve(result);
+                resolve();
             });
         });
     }
@@ -161,7 +169,7 @@ export class DeploymentGroupExtensionHelper {
                     if (error) {
                         console.log(tl.loc("AddingExtensionFailed", extensionName, vmName, utils.getError(error)));
                         await this.tryDeleteFailedExtension(vm);
-                        return reject(tl.loc("DGAgentOperationOnAllVMsFailed", "addition", ""));
+                        return reject(error);
                     }
                     console.log(tl.loc("AddingExtensionSucceeded", extensionName, vmName));
                     resolve();

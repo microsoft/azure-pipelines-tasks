@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "下載安全檔案",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=862069)",
-  "loc.description": "請將安全檔案下載到組建或版本代理程式上的暫存位置",
+  "loc.description": "將安全檔案下載至代理程式電腦上的暫存位置",
   "loc.instanceNameFormat": "下載安全檔案",
   "loc.input.label.secureFile": "安全檔案",
-  "loc.input.help.secureFile": "選取要下載到代理程式暫存位置的安全檔案。檔案會在建置或發行後清除。"
+  "loc.input.help.secureFile": "請選取要下載至代理程式上暫存位置的安全檔案。檔案會在管線執行後清除。"
 }

@@ -1,12 +1,12 @@
 'use strict';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import * as deploymentHelper from '../utils/DeploymentHelper';
 import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
 import * as utils from '../utils/utilities';
 import * as TaskInputParameters from '../models/TaskInputParameters';
 
-import { Kubectl } from 'kubernetes-common/kubectl-object-model';
+import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
 
 export async function promote(ignoreSslErrors?: boolean) {
 
@@ -14,7 +14,7 @@ export async function promote(ignoreSslErrors?: boolean) {
 
     if (canaryDeploymentHelper.isCanaryDeploymentStrategy()) {
         tl.debug('Deploying input manifests');
-        deploymentHelper.deploy(kubectl, TaskInputParameters.manifests, 'None');
+        await deploymentHelper.deploy(kubectl, TaskInputParameters.manifests, 'None');
         tl.debug('Deployment strategy selected is Canary. Deleting canary and baseline workloads.');
         try {
             canaryDeploymentHelper.deleteCanaryDeployment(kubectl, TaskInputParameters.manifests);

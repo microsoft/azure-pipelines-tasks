@@ -1,12 +1,11 @@
 {
     "id": "DEE316A2-586F-4DEF-BE79-488A1F503DFE",
     "name": "KubernetesManifest",
-    "friendlyName": "Deploy Kubernetes manifests",
+    "friendlyName": "Deploy to Kubernetes",
     "description": "Use Kubernetes manifest files to deploy to clusters or even bake the manifest files to be used for deployments using Helm charts",
     "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/kubernetes-manifest",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
     "category": "Deploy",
-    "preview": true,
     "visibility": [
         "Build",
         "Release"
@@ -14,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 152,
-        "Patch": 5
+        "Minor": 159,
+        "Patch": 0
     },
     "demands": [],
     "groups": [],
@@ -51,8 +50,7 @@
             "type": "string",
             "label": "Namespace",
             "required": true,
-            "defaultValue": "default",
-            "visibleRule": "action != bake",
+            "defaultValue": "",
             "helpMarkDown": "Sets the namespace for the commands by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
         },
         {
@@ -116,9 +114,20 @@
             "defaultValue": "helm2",
             "visibleRule": "action = bake",
             "options": {
-                "helm2": "Helm 2"
+                "helm2": "Helm 2",
+                "kompose": "Kompose",
+                "kustomize": "Kustomize"
             },
-            "helpMarkDown": "Tool to generate manifest"
+            "helpMarkDown": "Tool to use for generating manifest files."
+        },
+        {
+            "name": "dockerComposeFile",
+            "type": "filePath",
+            "label": "Path to docker compose file",
+            "required": true,
+            "defaultValue": "",
+            "visibleRule": "action = bake && renderType = kompose",
+            "helpMarkDown": "docker-compose file path"
         },
         {
             "name": "helmChart",
@@ -155,6 +164,15 @@
             "defaultValue": "",
             "helpMarkDown": "Override values to set",
             "visibleRule": "action = bake && renderType = helm2"
+        },
+        {
+            "name": "kustomizationPath",
+            "type": "filePath",
+            "label": "Kustomization Path",
+            "required": false,
+            "visibleRule": "action = bake && renderType = kustomize",
+            "defaultValue": "",
+            "helpMarkDown": "The argument must be the path to the directory containing the file, or a git repository URL with a path suffix specifying same with respect to the repository root."
         },
         {
             "name": "resourceToPatch",
@@ -300,6 +318,7 @@
         "DownloadPathForStableTxt": "Download path for stable.txt: %s",
         "DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
         "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
+        "DockerComposeFilePathNotSupplied": "docker-compose file path not supplied",
         "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
         "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
         "ManifestFileNotFound": "No manifest file(s) matching %s was found.",
@@ -311,6 +330,9 @@
         "NullInputObjectMetadata": "Input object metadata is null.",
         "CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
         "InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
-        "InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary"
+        "InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
+        "AllContainersNotInReadyState": "All the containers are not in a ready state.",
+        "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
+        "KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features."
     }
 }

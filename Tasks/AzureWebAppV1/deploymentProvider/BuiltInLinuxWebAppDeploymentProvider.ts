@@ -1,5 +1,5 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 
@@ -45,8 +45,8 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
 
             case PackageType.war:
                 tl.debug("Initiated deployment via kudu service for webapp war package : "+ this.taskParams.Package.getPath());
-                let warName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".war");
-                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), 
+                let warName = this.taskParams.CustomWarName || webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".war");
+                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(),
                 { slotName: this.appService.getSlot() }, warName);
             break;
 

@@ -60,8 +60,32 @@ if (process.env["__invalid_versionparts__"] == "true") {
     catch (ex) {
         throwCount++;
     }
+    try{
+        new VersionParts("2.2.x", true);
+    }
+    catch(ex){
+        throwCount++;
+    }
+    try{
+        new VersionParts("2.x.x", true);
+    }
+    catch(ex){
+        throwCount++;
+    }
+    try{
+        new VersionParts("2.2.2.2", true);
+    }
+    catch(ex){
+        throwCount++;
+    }
+    try{
+        new VersionParts("2.2.2fs", true);
+    }
+    catch(ex){
+        throwCount++;
+    }
 
-    if (throwCount == 8) {
+    if (throwCount == 12) {
         throw tl.loc("FunctionThrewAsExpected");
     }
 }

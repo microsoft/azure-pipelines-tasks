@@ -1,7 +1,7 @@
 import keyVaultTaskParameters = require("../models/KeyVaultTaskParameters");
 import armKeyVault = require("./azure-arm-keyvault");
 import util = require("util");
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 
 import * as path from 'path';
 import * as fs from 'fs';
@@ -192,14 +192,19 @@ export class KeyVault {
             return;
         }
 
+        // Support multiple stages using different key vaults with the same secret name but with different version identifiers
+        let secretNameWithoutVersion = secretName.split("/")[0];
+
         let doNotMaskMultilineSecrets = tl.getVariable("SYSTEM_DONOTMASKMULTILINESECRETS");
         if (doNotMaskMultilineSecrets && doNotMaskMultilineSecrets.toUpperCase() === "TRUE") {
+            tl.setVariable(secretNameWithoutVersion, secretValue, true);
             tl.setVariable(secretName, secretValue, true);
             return;
         }
 
         if (secretValue.indexOf('\n') < 0) {
             // single-line case
+            tl.setVariable(secretNameWithoutVersion, secretValue, true);
             tl.setVariable(secretName, secretValue, true);
         }
         else {
@@ -207,6 +212,7 @@ export class KeyVault {
             let strVal = this.tryFlattenJson(secretValue);
             if (strVal) {
                 console.log(util.format("Value of secret %s has been converted to single line.", secretName));
+                tl.setVariable(secretNameWithoutVersion, strVal, true);
                 tl.setVariable(secretName, strVal, true);
             }
             else {
@@ -214,6 +220,7 @@ export class KeyVault {
                 lines.forEach((line: string, index: number) => {
                     this.trySetSecret(secretName, line);
                 });
+                tl.setVariable(secretNameWithoutVersion, secretValue, true);
                 tl.setVariable(secretName, secretValue, true);
             }
         }

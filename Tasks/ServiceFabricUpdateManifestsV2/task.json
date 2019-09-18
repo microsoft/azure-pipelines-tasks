@@ -5,7 +5,7 @@
     "description": "Automatically update portions of application and service manifests in a packaged Azure Service Fabric application",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/service-fabric-versioning",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820529)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820529)",
     "category": "Utility",
     "visibility": [
         "Build"
@@ -19,8 +19,8 @@
     ],
     "version": {
         "Major": 2,
-        "Minor": 4,
-        "Patch": 3
+        "Minor": 5,
+        "Patch": 0
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Update Service Fabric Manifests ($(updateType))",

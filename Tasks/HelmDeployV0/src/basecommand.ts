@@ -1,9 +1,9 @@
 import path = require("path");
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 import os = require("os");
-import tr = require('vsts-task-lib/toolrunner');
+import tr = require('azure-pipelines-task-lib/toolrunner');
 
 abstract class basecommand {
     private toolPath: string;
@@ -40,8 +40,8 @@ abstract class basecommand {
         });
     }
 
-    public execCommandSync(command: tr.ToolRunner, options?: tr.IExecOptions) {
-        basecommand.handleExecResult(command.execSync(options));
+    public execCommandSync(command: tr.ToolRunner, options?: tr.IExecOptions): tr.IExecSyncResult {
+        return command.execSync(options);
     }
 
     public IsInstalled(): boolean {

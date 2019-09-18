@@ -11,13 +11,14 @@
     "Release"
   ],
   "runsOn": [
+    "Agent",
     "DeploymentGroup"
   ],
   "demands": [],
   "version": {
     "Major": 0,
     "Minor": 5,
-    "Patch": 11
+    "Patch": 13
   },
   "minimumAgentVersion": "2.111.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

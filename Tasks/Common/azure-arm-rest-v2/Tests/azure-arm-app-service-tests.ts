@@ -41,8 +41,6 @@ class AzureAppServiceTests {
         }).catch((error) => {
             console.log(error);
         });
-
-        
     }
 
     public static async restart() {
@@ -60,6 +58,14 @@ class AzureAppServiceTests {
         });
     }
 
+    public static async delete() {       
+        var appSerivce: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME", "MOCK_SLOT_NAME");
+        
+        appSerivce.delete().catch((error) => {
+            tl.setResult(tl.TaskResult.Failed, 'AzureAppServiceTests.delete() should have passed but failed');
+        });
+    }
+
     public static async swap() {
         var appSerivce: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME");
         
@@ -74,7 +80,38 @@ class AzureAppServiceTests {
         }).catch((error) => {
             console.log(error);
         });
+    }
+
+    public static async swapSlotWithPreview() {
+        var appSerivce: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME");
         
+        appSerivce.swapSlotWithPreview("MOCK_TARGET_SLOT", false).catch((error) => {
+            console.log(error);
+            tl.setResult(tl.TaskResult.Failed, 'AzureAppServiceTests.swapSlotWithPreview() should have passed but failed');
+        });
+        
+        var appSerivceSlot: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME", "MOCK_SLOT_NAME");
+        appSerivceSlot.swapSlotWithPreview("MOCK_TARGET_SLOT", true).then((value) => {
+            tl.setResult(tl.TaskResult.Failed, 'AzureAppServiceTests.swapSlotWithPreview() should have failed but passed');
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
+    public static async cancelSwapSlotWithPreview() {
+        var appSerivce: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME");
+        
+        appSerivce.cancelSwapSlotWithPreview().catch((error) => {
+            console.log(error);
+            tl.setResult(tl.TaskResult.Failed, 'AzureAppServiceTests.cancelSwapSlotWithPreview() should have passed but failed');
+        });
+        
+        var appSerivceSlot: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME", "MOCK_SLOT_NAME");
+        appSerivceSlot.cancelSwapSlotWithPreview().then((value) => {
+            tl.setResult(tl.TaskResult.Failed, 'AzureAppServiceTests.cancelSwapSlotWithPreview() should have failed but passed');
+        }).catch((error) => {
+            console.log(error);
+        });
     }
 
     public static async get() {
@@ -327,7 +364,10 @@ async function RUNTESTS() {
     await AzureAppServiceTests.start();
     await AzureAppServiceTests.stop();
     await AzureAppServiceTests.restart();
+    await AzureAppServiceTests.delete();
     await AzureAppServiceTests.swap();
+    await AzureAppServiceTests.swapSlotWithPreview();
+    await AzureAppServiceTests.cancelSwapSlotWithPreview();
     await AzureAppServiceTests.get();
     await AzureAppServiceTests.getPublishingProfileWithSecrets();
     await AzureAppServiceTests.getPublishingCredentials();

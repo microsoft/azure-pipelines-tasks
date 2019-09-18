@@ -4,7 +4,7 @@
     "friendlyName": "Go tool installer",
     "description": "Find in cache or download a specific version of Go and add it to the PATH",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/go-tool",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867581)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=867581) or [see the Go documentation](https://golang.org/doc/)",
     "category": "Tool",
     "runsOn": [
         "Agent",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 2,
-        "Patch": 5
+        "Minor": 3,
+        "Patch": 0
     },
     "satisfies": [
         "GO"

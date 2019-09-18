@@ -299,7 +299,7 @@ function publishPackageNuGet(
     if (execResult.code !== 0) {
         telemetry.logResult("Packaging", "NuGetCommand", execResult.code);
         if(continueOnConflict && execResult.stderr.indexOf("The feed already contains")>0){
-            tl.debug(`A conflict ocurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`);
+            tl.debug(`A conflict occurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`);
             return {
                 code: 0,
                 stdout: execResult.stderr,
@@ -336,7 +336,7 @@ function publishPackageVstsNuGetPush(packageFile: string, options: IVstsNuGetPus
 
     // ExitCode 2 means a push conflict occurred
     if (execResult.code === 2 && options.settings.continueOnConflict) {
-        tl.debug(`A conflict ocurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`);
+        tl.debug(`A conflict occurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`);
         return;
     }
 
@@ -397,5 +397,10 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
         return false;
     }
 
-    return true;
+    // Use VstsNugetPush only if conflictsAllowed is checked. Otherwise use Nuget as default.
+    if (conflictsAllowed){
+        return true;
+    }
+
+    return false;
 }

@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "SQL Server Database 部署",
+  "loc.friendlyName": "SQL Server 資料庫部署",
   "loc.helpMarkDown": "[詳細資訊](https://aka.ms/sqldacpacmachinegroupreadme)",
   "loc.description": "使用 DACPAC 或 SQL 指令碼部署 SQL Server Database",
   "loc.instanceNameFormat": "使用下項進行部署: $(TaskType)",
@@ -24,7 +24,7 @@
   "loc.input.label.DatabaseName": "資料庫名稱",
   "loc.input.help.DatabaseName": "提供 SQL Server 資料庫的名稱。",
   "loc.input.label.AuthScheme": "驗證",
-  "loc.input.help.AuthScheme": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the account used to configure deployment agent, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below.",
+  "loc.input.help.AuthScheme": "請選取連線至 SQL Server 的驗證模式。在 Windows 驗證模式中，會將用於設定部署代理程式的帳戶用來連線至 SQL Server。在 SQL Server 驗證模式中，必須於以下參數內提供 SQL 登入和密碼。",
   "loc.input.label.SqlUsername": "SQL 使用者名稱",
   "loc.input.help.SqlUsername": "提供 SQL 登入以連線到 SQL Server。選取 SQL Server 驗證模式後才可使用該選項。",
   "loc.input.label.SqlPassword": "SQL 密碼",

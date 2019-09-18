@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Gestion d'application web IIS",
   "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/iis-webapp-management-readme)",
-  "loc.description": "Créer ou mettre à jour un site web, une application web, des répertoires virtuels et un pool d'applications",
+  "loc.description": "Créer ou mettre à jour des sites web, des applications web, des répertoires virtuels ou des pools d'applications",
   "loc.instanceNameFormat": "Gérer $(IISDeploymentType)",
   "loc.group.displayName.Website": "Site web IIS",
   "loc.group.displayName.IISBindings": "Liaisons IIS",
