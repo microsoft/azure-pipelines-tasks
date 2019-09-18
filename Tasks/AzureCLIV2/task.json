@@ -2,7 +2,7 @@
     "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
     "name": "AzureCLI",
     "friendlyName": "Azure CLI",
-    "description": "Run Azure CLI commands against an Azure subscription in a Shell/PowerShell script when running on Linux agent or Batch/PowerShell/PowerSheell Core script when running on Windows agent.",
+    "description": "Run Azure CLI commands against an Azure subscription in a PowerShell Core/Shell script when running on Linux agent or PowerShell/PowerSheell Core/Batch script when running on Windows agent.",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
     "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV2/Readme.md) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
@@ -39,7 +39,7 @@
                 "azureSubscription"
             ],
             "type": "connectedService:AzureRM",
-            "label": "Azure temp subscription",
+            "label": "Azure subscription",
             "required": true,
             "helpMarkDown": "Select an Azure resource manager subscription for the deployment",
             "properties": {
@@ -52,12 +52,12 @@
             "label": "Script Type",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Type of script: Bat/Shell/PowerShell/PowerShell Core script. Select Shell/PowerShell Core script when running on Linux agent or Batch/PowerShell/PowerShell Core script when running on Windows agent. PowerShell Core script can run on cross-platform agents (Linux, macOS, or Windows).",
+            "helpMarkDown": "Type of script: PowerShell/PowerShell Core/Bat/Shell script. Select Shell/PowerShell Core script when running on Linux agent or Batch/PowerShell/PowerShell Core script when running on Windows agent. PowerShell Core script can run on cross-platform agents (Linux, macOS, or Windows).",
             "options": {
-                "batch": "Batch script",
-                "bash": "Shell script",
-                "ps": "Powershell script",
-                "pscore": "Powershell Core script"
+                "ps": "Powershell",
+                "pscore": "Powershell Core",
+                "batch": "Batch",
+                "bash": "Shell"
             }
         },
         {
@@ -79,7 +79,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "scriptLocation = scriptPath",
-            "helpMarkDown": "Fully qualified path of the script(.bat or .cmd or .ps1 when using Windows based agent else .sh or .ps1 when using linux based agent) or a path relative to the the default working directory"
+            "helpMarkDown": "Fully qualified path of the script(.ps1 or .bat or .cmd when using Windows based agent else .ps1 or .sh when using linux based agent) or a path relative to the the default working directory"
         },
         {
             "name": "inlineScript",
@@ -88,7 +88,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "scriptLocation = inlineScript",
-            "helpMarkDown": "You can write your scripts inline here. When using Windows agent, use batch or PowerShell or PowerShell Core scripting whereas use shell or PowerShell Core scripting when using Linux based agents. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: \naz --version \naz account show \n\n example for batch:\ncall  az --version \ncall az account show",
+            "helpMarkDown": "You can write your scripts inline here. When using Windows agent, use PowerShell or PowerShell Core or batch scripting whereas use PowerShell Core or shell scripting when using Linux based agents. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for PowerShell/PowerShellCore/shell: \naz --version \naz account show \n\n example for batch:\ncall  az --version \ncall az account show",
             "properties": {
                 "resizable": "true",
                 "rows": "10",

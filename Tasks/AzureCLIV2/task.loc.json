@@ -54,10 +54,10 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.scriptType",
       "options": {
-        "batch": "Batch script",
-        "bash": "Shell script",
-        "ps": "Powershell script",
-        "pscore": "Powershell Core script"
+        "ps": "Powershell",
+        "pscore": "Powershell Core",
+        "batch": "Batch",
+        "bash": "Shell"
       }
     },
     {

@@ -4,7 +4,7 @@
 This task supports running [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/overview) commands on Cross platform agents running Windows, Linux or Mac.
 
 ### What's new in Version 2.0
-- Supports the PowerShell and PowerShell Core script.
+- Supports running PowerShell and PowerShell Core script.
 - PowerShell Core script works with Xplat agents  (Windows, Linux or OSX), make sure the agent has PowerShell version 6 or more.
 - Powershell script works only with Windows agent, make sure the agent has PowerShell version 5 or below.
 
