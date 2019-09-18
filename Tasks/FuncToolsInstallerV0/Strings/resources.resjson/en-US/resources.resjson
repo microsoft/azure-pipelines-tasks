@@ -2,12 +2,15 @@
   "loc.friendlyName": "Install Azure Func Core Tools",
   "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/func-tools-installer)",
   "loc.description": "Install Azure Func Core Tools",
-  "loc.instanceNameFormat": "Install func tools - $(versionSpec)",
-  "loc.input.label.versionSpec": "Version",
-  "loc.input.help.versionSpec": "Specify the version of Azure func tools to install. (Ex:<br>2.7.1575<br>v2.7.1575.)",
-  "loc.messages.NotAValidSemverVersion": "Version not specified in correct format. Ex: 2.7.1575, v2.7.1575.",
-  "loc.messages.VerifyingFuncToolsInstallation": "Verifying func tools installation...",
+  "loc.instanceNameFormat": "Install func tools - $(version)",
+  "loc.input.label.version": "Version",
+  "loc.input.help.version": "Specify the version of Azure func tools to install. Ex:<br><br>2.7.1575<br>v2.7.1575<br>latest",
+  "loc.messages.ErrorFetchingLatestVersion": "An error occured while fetching the latest version info from %s. Error: %s. Downloading default stable version: %s.",
   "loc.messages.FindingLatestFuncToolsVersion": "Finding latest func tools version...",
-  "loc.messages.DownloadingFuncTools": "Downloading func tools (Version: %s)...",
-  "loc.messages.ErrorFetchingLatestVersion": "An error occured while fetching the latest version info from %s. Error: %s. Using func tools version: %s."
+  "loc.messages.FuncDownloadFailed": "Failed to download func tools from location %s. Error %s.",
+  "loc.messages.LatestFuncToolsVersion": "Latest version is %s",
+  "loc.messages.NotAValidSemverVersion": "Version not specified in correct format. Ex: 2.7.1575, v2.7.1575, latest",
+  "loc.messages.SuccessfullyDownloaded": "Successfully downloaded func tools %s. Download path: %s.",
+  "loc.messages.VerifyingFuncToolsInstallation": "Verifying func tools installation...",
+  "loc.messages.VersionAlreadyInstalled": "Func tool version %s is already installed. Installation path: %s."
 }

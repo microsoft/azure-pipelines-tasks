@@ -7,6 +7,8 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as path from "path";
 
+const funcToolName = 'func';
+
 function getExecutableExtension(): string {
     if (os.type().match(/^Win/)) {
         return '.exe';
@@ -50,15 +52,28 @@ export async function getLatestFuncToolsVersion(): Promise<string> {
 }
 
 export async function downloadFuncTools(version: string): Promise<string> {
-        tl.debug(util.format('Downloading the func tool version: %s..', version));
-        const downloadUrl = getDownloadUrl(version);
-        const downloadPath = await toolLib.downloadTool(downloadUrl);
-
-        tl.debug('Extracting the downloaded zip..');
-        const funcCliDirTmp = await toolLib.extractZip(downloadPath);
-        const funcCliToolName = 'func' + getExecutableExtension();
-        const funcCliPathTmp = path.join(funcCliDirTmp, funcCliToolName);
+        let cachedToolpath = toolLib.findLocalTool(funcToolName, version);
         
-        fs.chmodSync(funcCliPathTmp, '777');
-        return funcCliPathTmp;
+        if (!cachedToolpath) {
+            const downloadUrl = getDownloadUrl(version);
+            let downloadPath;
+            try {
+                downloadPath = await toolLib.downloadTool(downloadUrl);
+            }
+            catch (ex) {
+                throw new Error(tl.loc('FuncDownloadFailed', downloadUrl, ex));
+            }
+            
+            tl.debug('Extracting the downloaded func tool zip..');
+            const unzippedFuncPath = await toolLib.extractZip(downloadPath);
+            cachedToolpath = await toolLib.cacheDir(unzippedFuncPath, funcToolName, version);
+            console.log(tl.loc("SuccessfullyDownloaded", version, cachedToolpath));
+        }
+        else {
+            console.log(tl.loc("VersionAlreadyInstalled", version, cachedToolpath));
+        }
+
+        const funcPath = path.join(cachedToolpath, funcToolName + getExecutableExtension());
+        fs.chmodSync(funcPath, '777');
+        return funcPath;
 }

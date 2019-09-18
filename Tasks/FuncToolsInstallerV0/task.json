@@ -24,24 +24,27 @@
     "groups": [],
     "inputs": [
         {
-            "name": "versionSpec",
+            "name": "version",
             "label": "Version",
             "type": "string",
-            "helpMarkDown": "Specify the version of Azure func tools to install. (Ex:<br>2.7.1575<br>v2.7.1575.)",
+            "helpMarkDown": "Specify the version of Azure func tools to install. Ex:<br><br>2.7.1575<br>v2.7.1575<br>latest",
             "defaultValue": "latest"
         }
     ],
-    "instanceNameFormat": "Install func tools - $(versionSpec)",
+    "instanceNameFormat": "Install func tools - $(version)",
     "execution": {
         "Node": {
             "target": "src//functoolsinstaller.js"
         }
     },
     "messages": {
-        "NotAValidSemverVersion": "Version not specified in correct format. Ex: 2.7.1575, v2.7.1575.",
-        "VerifyingFuncToolsInstallation": "Verifying func tools installation...",
+        "ErrorFetchingLatestVersion": "An error occured while fetching the latest version info from %s. Error: %s. Downloading default stable version: %s.",
         "FindingLatestFuncToolsVersion": "Finding latest func tools version...",
-        "DownloadingFuncTools": "Downloading func tools (Version: %s)...",
-        "ErrorFetchingLatestVersion": "An error occured while fetching the latest version info from %s. Error: %s. Using func tools version: %s."
+        "FuncDownloadFailed": "Failed to download func tools from location %s. Error %s.",
+        "LatestFuncToolsVersion": "Latest version is %s",
+        "NotAValidSemverVersion": "Version not specified in correct format. Ex: 2.7.1575, v2.7.1575, latest",
+        "SuccessfullyDownloaded": "Successfully downloaded func tools %s. Download path: %s.",
+        "VerifyingFuncToolsInstallation": "Verifying func tools installation...",
+        "VersionAlreadyInstalled": "Func tool version %s is already installed. Installation path: %s."
     }
 }

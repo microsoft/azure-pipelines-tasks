@@ -8,8 +8,8 @@ import * as utils from './utils';
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
 async function downloadFuncTools() {
-    var version = await utils.getFuncToolsVersion();
-    var funcToolsPath = await utils.downloadFuncTools(version);
+    const version = await utils.getFuncToolsVersion();
+    const funcToolsPath = await utils.downloadFuncTools(version);
 
     // prepend the tools path. instructs the agent to prepend for future tasks
     if (!process.env['PATH'].startsWith(path.dirname(funcToolsPath))) {

@@ -24,10 +24,10 @@
   "groups": [],
   "inputs": [
     {
-      "name": "versionSpec",
-      "label": "ms-resource:loc.input.label.versionSpec",
+      "name": "version",
+      "label": "ms-resource:loc.input.label.version",
       "type": "string",
-      "helpMarkDown": "ms-resource:loc.input.help.versionSpec",
+      "helpMarkDown": "ms-resource:loc.input.help.version",
       "defaultValue": "latest"
     }
   ],
@@ -38,10 +38,13 @@
     }
   },
   "messages": {
-    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
-    "VerifyingFuncToolsInstallation": "ms-resource:loc.messages.VerifyingFuncToolsInstallation",
+    "ErrorFetchingLatestVersion": "ms-resource:loc.messages.ErrorFetchingLatestVersion",
     "FindingLatestFuncToolsVersion": "ms-resource:loc.messages.FindingLatestFuncToolsVersion",
-    "DownloadingFuncTools": "ms-resource:loc.messages.DownloadingFuncTools",
-    "ErrorFetchingLatestVersion": "ms-resource:loc.messages.ErrorFetchingLatestVersion"
+    "FuncDownloadFailed": "ms-resource:loc.messages.FuncDownloadFailed",
+    "LatestFuncToolsVersion": "ms-resource:loc.messages.LatestFuncToolsVersion",
+    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
+    "SuccessfullyDownloaded": "ms-resource:loc.messages.SuccessfullyDownloaded",
+    "VerifyingFuncToolsInstallation": "ms-resource:loc.messages.VerifyingFuncToolsInstallation",
+    "VersionAlreadyInstalled": "ms-resource:loc.messages.VersionAlreadyInstalled"
   }
 }
