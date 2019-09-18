@@ -39,7 +39,9 @@ export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], depl
 
     // print ingress resources
     const ingressResources: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, [constants.DiscoveryAndLoadBalancerResource.ingress]);
-    getIngressResources(kubectl, ingressResources);
+    ingressResources.forEach(ingressResource => {
+        kubectl.getResource(constants.DiscoveryAndLoadBalancerResource.ingress, ingressResource.name);
+    });
 
     // annotate resources
     const allPods = JSON.parse((kubectl.getAllPods()).stdout);
@@ -101,11 +103,14 @@ async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): 
                 const service = getService(kubectl, resource.name);
                 const spec = service.spec;
                 const status = service.status;
-                if (isEqual(spec.type, "LoadBalancer", StringComparer.OrdinalIgnoreCase) && !isLoadBalancerIPAssigned(status)) {
-                    await waitForServiceExternalIPAssignment(kubectl, resource.name);
+                if (isEqual(spec.type, constants.ServiceTypes.loadBalancer, StringComparer.OrdinalIgnoreCase)) {
+                    if(!isLoadBalancerIPAssigned(status)) {
+                        await waitForServiceExternalIPAssignment(kubectl, resource.name);
+                    }
+                    console.log(tl.loc('ServiceExternalIP', resource.name, status.loadBalancer.ingress[0].ip));
                 }
             } catch (ex) {
-                tl.warning(tl.loc('CouldNotDetermineServiceStatus', JSON.stringify(ex)));
+                tl.warning(tl.loc('CouldNotDetermineServiceStatus', resource.name, JSON.stringify(ex)));
             }
         }
     }
@@ -282,7 +287,7 @@ function isPodReady(podStatus: any): boolean {
 function getService(kubectl: Kubectl, serviceName) {
     const serviceResult = kubectl.getResource(constants.DiscoveryAndLoadBalancerResource.service, serviceName);
     utils.checkForErrors([serviceResult]);
-    return JSON.parse(serviceResult.stdout)
+    return JSON.parse(serviceResult.stdout);
 }
 
 async function waitForServiceExternalIPAssignment(kubectl: Kubectl, serviceName: string): Promise<void> {
@@ -301,16 +306,10 @@ async function waitForServiceExternalIPAssignment(kubectl: Kubectl, serviceName:
 }
 
 function isLoadBalancerIPAssigned(status: any) {
-    if (status.loadBalancer && status.loadBalancer.ingress && status.loadBalancer.ingress.length > 0) {
+    if (status && status.loadBalancer && status.loadBalancer.ingress && status.loadBalancer.ingress.length > 0) {
         return true;
     }
     return false;
-}
-
-function getIngressResources(kubectl: Kubectl, ingressResources: Resource[]) {
-    ingressResources.forEach(ingressResource => {
-        kubectl.getResource(constants.DiscoveryAndLoadBalancerResource.ingress, ingressResource.name);
-    });
 }
 
 function sleep(timeout: number) {

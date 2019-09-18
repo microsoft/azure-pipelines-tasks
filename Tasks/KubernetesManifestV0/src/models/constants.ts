@@ -18,6 +18,12 @@ export class DiscoveryAndLoadBalancerResource {
     public static ingress: string = 'ingress';
 }
 
+export class ServiceTypes {
+    public static loadBalancer: string = 'LoadBalancer';
+    public static nodePort: string = 'NodePort';
+    public static clusterIP: string = 'ClusterIP'
+}
+
 export const deploymentTypes: string[] = ['deployment', 'replicaset', 'daemonset', 'pod', 'statefulset'];
 export const workloadTypes: string[] = ['deployment', 'replicaset', 'daemonset', 'pod', 'statefulset', 'job', 'cronjob'];
 export const workloadTypesWithRolloutStatus: string[] = ['deployment', 'daemonset', 'statefulset'];

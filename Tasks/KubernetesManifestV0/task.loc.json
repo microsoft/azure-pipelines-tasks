@@ -336,6 +336,7 @@
     "KubectlShouldBeUpgraded": "ms-resource:loc.messages.KubectlShouldBeUpgraded",
     "CouldNotDetermineServiceStatus": "ms-resource:loc.messages.CouldNotDetermineServiceStatus",
     "waitForServiceIpAssignment": "ms-resource:loc.messages.waitForServiceIpAssignment",
-    "waitForServiceIpAssignmentTimedOut": "ms-resource:loc.messages.waitForServiceIpAssignmentTimedOut"
+    "waitForServiceIpAssignmentTimedOut": "ms-resource:loc.messages.waitForServiceIpAssignmentTimedOut",
+    "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP"
   }
 }
