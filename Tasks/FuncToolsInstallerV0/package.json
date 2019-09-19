@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@types/node": "^6.0.101",
     "azure-pipelines-task-lib": "2.8.0",
     "azure-pipelines-tool-lib": "0.12.0",
     "func-tools-common": "file:../../_build/Tasks/Common/func-tools-common-1.0.0.tgz"
