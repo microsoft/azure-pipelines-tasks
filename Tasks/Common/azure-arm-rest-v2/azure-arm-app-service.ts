@@ -9,9 +9,11 @@ import {
 } from './azureModels';
 
 import {
-    ServiceClient,
-    ToError
+    ServiceClient
 } from './AzureServiceClient';
+import {
+    ToError
+} from './AzureServiceClientBase';
 import { Kudu } from './azure-arm-app-service-kudu';
 import constants = require('./constants');
 var parseString = require('xml2js').parseString;

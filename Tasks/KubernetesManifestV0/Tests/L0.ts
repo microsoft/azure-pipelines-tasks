@@ -45,6 +45,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.imagePullSecrets] = 'test-key1\ntest-key2';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('nginx-service 104.211.243.77') != -1, 'nginx-service external IP is 104.211.243.77')
         done();
     });
 
