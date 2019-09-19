@@ -142,6 +142,7 @@
         "ServiceFabricPowerShellV1",
         "ServiceFabricUpdateManifestsV2",
         "SqlAzureDacpacDeploymentV1",
+        "SqlAzureDataWarehouseDacpacDeploymentV0",
         "SqlDacpacDeploymentOnMachineGroupV0",
         "SqlServerDacpacDeployment",
         "SshV0",
