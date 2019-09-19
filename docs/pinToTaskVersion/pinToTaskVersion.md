@@ -1,3 +1,5 @@
+# Pin to a Task Version
+
 By default, our in the box tasks (those in this repo) automatically slide on minor and patch updates. Sometimes this behavior is undesirable (e.g. for Security/Compliance reasons).
 
 To avoid this behavior, we allow you to install a specific version of a task that you can pin to. Simply follow these steps.
