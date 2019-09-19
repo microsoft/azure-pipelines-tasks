@@ -80,7 +80,7 @@ async function run() {
                 // Check if executable bit is set
                 let stats: fs.Stats = fs.statSync(targetFilePath);
                 if ((stats.mode & 1) > 0) {
-                    contents = `sh '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
+                    contents = `bash '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
                 }
                 else {
                     tl.warning('Executable bit is not set on target script, sourcing instead of executing. More info at https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/bashnote.md');
