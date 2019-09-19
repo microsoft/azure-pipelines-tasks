@@ -1,4 +1,4 @@
-By default, our in the box tasks (those in this repo) automatically slide on minor and patch updates. Sometimes this behavior is undesirable (e.g. for Security/Compliance reasons), this behavior is undesirable.
+By default, our in the box tasks (those in this repo) automatically slide on minor and patch updates. Sometimes this behavior is undesirable (e.g. for Security/Compliance reasons).
 
 To avoid this behavior, we allow you to install a specific version of a task that you can pin to. Simply follow these steps.
 
@@ -6,7 +6,7 @@ To avoid this behavior, we allow you to install a specific version of a task tha
 
 2. Clone this repo and checkout the branch containing the version you want.
 
-3. On one your TFS Application Tiers, open a PowerShell console, and then change the current location to the root of this repo.
+3. On one of your TFS Application Tiers, open a PowerShell console, and then change the current location to the root of this repo.
 
 4. To verify that your execution policy allows for the execution of installation scripts, run the following command line:
 
@@ -18,5 +18,5 @@ Set-ExecutionPolicy Unrestricted -Scope Process -Force
 
 ```powershell
 $taskDir = Tasks\BashV3 # Replace BashV3 with the name of the task you would like to install.
-.docs\pinToTaskVersion\New-TaskInstallScript.ps1 -CollectionUrl http://myserver:8080/tfs/DefaultCollection -taskDir 
+.docs\pinToTaskVersion\New-TaskInstallScript.ps1 -CollectionUrl http://myserver:8080/tfs/DefaultCollection -taskDir $taskDir
 ```
