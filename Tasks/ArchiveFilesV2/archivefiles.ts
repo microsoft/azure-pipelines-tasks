@@ -1,6 +1,7 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
+import utils = require('./utils.js');
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 
@@ -293,7 +294,11 @@ function doWork() {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         // Find matching archive files
         var files: string[] = findFiles();
-        tl.debug('Found: ' + files.length + ' files to archive:');
+        utils.reportArchivePlan(files).forEach(function(line) {
+            console.log(line);
+        });
+
+        tl.debug('Listing all ' + files.length + ' files to archive:');
         for (var i = 0; i < files.length; i++) {
             tl.debug(files[i]);
         }
