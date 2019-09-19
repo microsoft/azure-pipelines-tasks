@@ -95,7 +95,7 @@
             "type": "boolean",
             "label": "Wait for stability",
             "groupName": "commands",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "helpMarkDown": "Wait for the Kubernetes objects to reach the desired state."
         },
         {
