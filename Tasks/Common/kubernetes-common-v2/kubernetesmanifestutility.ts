@@ -108,7 +108,7 @@ async function waitForServiceExternalIPAssignment(kubectl: Kubectl, serviceName:
 
     for (let i = 0; i < iterations; i++) {
         console.log(tl.loc('waitForServiceIpAssignment', serviceName));
-        await sleep(sleepTimeout);
+        await utils.sleep(sleepTimeout);
         let status = getService(kubectl, serviceName).status;
         if (isLoadBalancerIPAssigned(status)) {
             return;

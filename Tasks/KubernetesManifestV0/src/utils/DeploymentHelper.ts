@@ -12,10 +12,11 @@ import * as models from 'kubernetes-common-v2/kubernetesconstants';
 import * as fileHelper from '../utils/FileHelper';
 import * as utils from '../utils/utilities';
 import * as KubernetesManifestUtility from 'kubernetes-common-v2/kubernetesmanifestutility';
+import * as KubernetesConstants from 'kubernetes-common-v2/kubernetesconstants';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { Kubectl, Resource } from 'kubernetes-common-v2/kubectl-object-model';
 import { isEqual, StringComparer } from './StringComparison';
-import { getDeploymentMetadata, getPublishDeploymentRequestUrl, isDeploymentEntity } from 'kubernetes-common-v2/image-metadata-helper';
+import { getDeploymentMetadata, getPublishDeploymentRequestUrl, isDeploymentEntity, getManifestUrls } from 'kubernetes-common-v2/image-metadata-helper';
 import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
 
 const publishPipelineMetadata = tl.getVariable("PUBLISH_PIPELINE_METADATA");
@@ -35,13 +36,13 @@ export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], depl
     const deployedManifestFiles = deployManifests(inputManifestFiles, kubectl, isCanaryDeploymentStrategy(deploymentStrategy));
 
     // check manifest stability
-    const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.deploymentTypes.concat([constants.DiscoveryAndLoadBalancerResource.service]));
+    const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.deploymentTypes.concat([KubernetesConstants.DiscoveryAndLoadBalancerResource.service]));
     await checkManifestStability(kubectl, resourceTypes);
 
     // print ingress resources
-    const ingressResources: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, [constants.DiscoveryAndLoadBalancerResource.ingress]);
+    const ingressResources: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, [KubernetesConstants.DiscoveryAndLoadBalancerResource.ingress]);
     ingressResources.forEach(ingressResource => {
-        kubectl.getResource(constants.DiscoveryAndLoadBalancerResource.ingress, ingressResource.name);
+        kubectl.getResource(KubernetesConstants.DiscoveryAndLoadBalancerResource.ingress, ingressResource.name);
     });
 
     // annotate resources
