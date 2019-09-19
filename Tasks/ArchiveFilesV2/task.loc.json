@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 151,
-    "Patch": 2
+    "Minor": 158,
+    "Patch": 0
   },
   "groups": [
     {
@@ -127,6 +127,9 @@
     "AlreadyExists": "ms-resource:loc.messages.AlreadyExists",
     "ArchiveCreationFailedWithError": "ms-resource:loc.messages.ArchiveCreationFailedWithError",
     "ArchiveFileExistsButNotAFile": "ms-resource:loc.messages.ArchiveFileExistsButNotAFile",
-    "FailedArchiveFile": "ms-resource:loc.messages.FailedArchiveFile"
+    "FailedArchiveFile": "ms-resource:loc.messages.FailedArchiveFile",
+    "FoundNFiles": "ms-resource:loc.messages.FoundNFiles",
+    "ArchivingFile": "ms-resource:loc.messages.ArchivingFile",
+    "MoreFiles": "ms-resource:loc.messages.MoreFiles"
   }
 }
