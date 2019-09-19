@@ -6,7 +6,7 @@ import * as utils from './utility';
 import * as KubernetesConstants from './kubernetesconstants';
 import { Kubectl, Resource } from './kubectl-object-model';
 
-export async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): Promise<IExecSyncResult[]> {
+export async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): Promise<void> {
     const rolloutStatusResults = [];
     const numberOfResources = resources.length;
     for (let i = 0; i< numberOfResources; i++) {
@@ -38,7 +38,7 @@ export async function checkManifestStability(kubectl: Kubectl, resources: Resour
         }
     }
     
-    return rolloutStatusResults;
+    utils.checkForErrors(rolloutStatusResults);
 }
 
 export async function checkPodStatus(kubectl: Kubectl, podName: string): Promise<void> {
@@ -46,7 +46,7 @@ export async function checkPodStatus(kubectl: Kubectl, podName: string): Promise
     const iterations = 60; // 60 * 10 seconds timeout = 10 minutes max timeout
     let podStatus;
     for (let i = 0; i < iterations; i++) {
-        await sleep(sleepTimeout);
+        await utils.sleep(sleepTimeout);
         tl.debug(`Polling for pod status: ${podName}`);
         podStatus = getPodStatus(kubectl, podName);
         if (podStatus.phase && podStatus.phase !== 'Pending' && podStatus.phase !== 'Unknown') {
@@ -122,8 +122,4 @@ function isLoadBalancerIPAssigned(status: any) {
         return true;
     }
     return false;
-}
-
-function sleep(timeout: number) {
-    return new Promise(resolve => setTimeout(resolve, timeout));
 }

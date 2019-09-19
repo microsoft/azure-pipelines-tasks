@@ -1,10 +1,10 @@
 "use strict";
 
-import path = require('path');
-import * as tl from "azure-pipelines-task-lib/task";
+import * as path from 'path';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as utils from './utils/utilities';
 import { deploy } from './deploy';
 import { DockerConnection } from './dockerConnection';
-import { KubernetesConnection } from './kubernetesConnection';
 import { CommandHelper } from './utils/commandHelper';
 
 tl.setResourcePath(path.join(__dirname, "..", 'task.json'));
@@ -20,7 +20,7 @@ console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
 
 async function run() {
     const commandHelper = new CommandHelper();
-    const kubernetesConnection = new KubernetesConnection();
+    const kubernetesConnection = utils.getKubernetesConnection();
     const dockerConnection = new DockerConnection();
     dockerConnection.open();
     kubernetesConnection.open();

@@ -80,7 +80,7 @@
             "type": "string",
             "label": "Registry",
             "groupName": "commands",
-            "helpMarkDown": "Docker Hub namespace for private Docker repository / Registry url for other registries. Ex:<br><br>Docker Hub: billuser<br>ACR: contoso.azurecr.io<br><br>(Registry input is mandatory for private Docker Hub repository. For other registries, it's not required if the Docker service connection is provided)."
+            "helpMarkDown": "Docker Hub namespace for private Docker repository / Registry url for other registries. Example:<br><br>Docker Hub: billuser<br>ACR: contoso.azurecr.io<br><br>(Registry input is mandatory for private Docker Hub repository. For other registries, it's not required if the Docker service connection is provided)."
         },
         {
             "name": "functionRootDirectory",

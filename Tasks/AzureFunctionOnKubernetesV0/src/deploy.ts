@@ -9,6 +9,7 @@ import { Kubectl, Resource } from 'kubernetes-common-v2/kubectl-object-model';
 import * as FileHelper from './utils/fileHelper';
 import * as KubernetesConstants from 'kubernetes-common-v2/kubernetesconstants';
 import * as KubernetesManifestUtility from 'kubernetes-common-v2/kubernetesmanifestutility';
+import * as CommonUtils from 'kubernetes-common-v2/utility';
 
 const secretName = tl.getInput('secretName');
 const appName = tl.getInput('appName', true);
@@ -74,13 +75,12 @@ function annotateKubernetesResources(commandHelper: CommandHelper, resourcesYaml
     FileHelper.writeContentToFile(funcKubernetesTemplatesPath, resourcesYaml);
     const kubectl = new Kubectl(commandHelper.kubectlPath, namespace);
     const annotateResults = kubectl.annotateFiles(funcKubernetesTemplatesPath, KubernetesConstants.pipelineAnnotations, true);
-    commandHelper.checkForErrors([annotateResults]);
+    CommonUtils.checkForErrors([annotateResults]);
 }
 
 async function checkManifestStability(commandHelper: CommandHelper, resources: Resource[]) {
     const kubectl = new Kubectl(commandHelper.kubectlPath, namespace);
-    const rolloutStatusResults = await KubernetesManifestUtility.checkManifestStability(kubectl, resources);
-    commandHelper.checkForErrors(rolloutStatusResults);
+    await KubernetesManifestUtility.checkManifestStability(kubectl, resources);
 }
 
 function getKubernetesResourcesYaml(commandHelper: CommandHelper, dockerConnection): string {

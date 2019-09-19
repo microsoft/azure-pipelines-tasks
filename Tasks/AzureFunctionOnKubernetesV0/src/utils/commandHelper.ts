@@ -1,6 +1,8 @@
+import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as tr from "azure-pipelines-task-lib/toolrunner";
-import * as path from "path";
+import * as FuncKubernetesUtility from 'kubernetes-common-v2/funckubernetesutility';
+import * as CommonUtils from 'kubernetes-common-v2/utility';
 import { DockerConnection } from "../dockerConnection";
 
 export class CommandHelper {
@@ -14,69 +16,22 @@ export class CommandHelper {
         this.kubectlPath = tl.which('kubectl', true);
     }
 
-    public checkForErrors(execResults: tr.IExecSyncResult[], warnIfError?: boolean) {
-        if (execResults.length !== 0) {
-            let stderr = '';
-            execResults.forEach(result => {
-                if (result.stderr) {
-                    if (result.code !== 0) {
-                        stderr += result.stderr + '\n';
-                    } else {
-                        tl.warning(result.stderr);
-                    }
-                }
-            });
-            if (stderr.length > 0) {
-                if (!!warnIfError) {
-                    tl.warning(stderr.trim());
-                } else {
-                    throw new Error(stderr.trim());
-                }
-            }
-        }
-    }
-
     public execCommand(command: tr.ToolRunner, options?: tr.IExecOptions, warnIfError?: boolean) {
         const result: tr.IExecSyncResult = command.execSync(options);
-        this.checkForErrors([result], warnIfError);
+        CommonUtils.checkForErrors([result], warnIfError);
         return result;
     }
     
     public getFuncDeployCommand(dockerConnection: DockerConnection, secretName: string, appName: string, namespace: string, imageName: string, registry: string, pullSecretName: string, args: string): tr.ToolRunner {
-        const command = tl.tool(this.funcPath);
-        command.arg(['kubernetes', 'deploy']);
-        command.arg(['--name', appName]);
-
-        if (namespace) {
-            command.arg(['--namespace', namespace]);
+        if (!registry) {
+            registry = dockerConnection.getRegistry();
         }
 
-        if (imageName) {
-            command.arg(['--image-name', imageName]);
-        }
-        else {
-            if (!registry) {
-                registry = dockerConnection.getRegistry();
-            }
-
-            if (registry) {
-                command.arg(['--registry', registry]);
-            }
-            else {
-                tl.debug('Neither image-name nor registry input is provided. The deployment will fail if one of these is not specified in arguments');
-            }
+        if (!imageName && !registry) {
+            tl.debug('Neither image-name nor registry input is provided. The deployment will fail.');
         }
 
-        if (pullSecretName) {
-            command.arg(['--pull-secret', pullSecretName]);
-        }
-
-        if (secretName) {
-            command.arg(['--secret-name', secretName]);
-        }
-
-        command.line(args);
-        return command;
+        return FuncKubernetesUtility.getFuncDeployCommand(this.funcPath, secretName, appName, namespace, imageName, registry, pullSecretName, args);
     }
 
     public getCreateDockerRegistrySecretCommand(secretName: string, namespace: string): tr.ToolRunner {
