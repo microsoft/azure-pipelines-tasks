@@ -101,7 +101,7 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
         "KubernetesV1",
         JSON.stringify(telemetry));
 
-    // The output result can contain more than one Json objects
+    // The output result can contain more than one Json objects somechange
     // We want to parse each of the objects separately, hence push the output in JSON array form    
     var result = [];
     return commandImplementation.run(clusterConnection, command, (data) => result.push(data))
