@@ -18,8 +18,8 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 151,
-        "Patch": 2
+        "Minor": 158,
+        "Patch": 0
     },
     "groups": [
         {
@@ -127,6 +127,9 @@
         "AlreadyExists": "Archive file: %s already exists.  Attempting to add files to it.",
         "ArchiveCreationFailedWithError": "Archive creation failed for archive file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
         "ArchiveFileExistsButNotAFile": "Specified archive file: %s already exists and is not a file.",
-        "FailedArchiveFile": "Specified archive file: %s cannot be created because it cannot be accessed: %s"
+        "FailedArchiveFile": "Specified archive file: %s cannot be created because it cannot be accessed: %s",
+        "FoundNFiles": "Found %d files",
+        "ArchivingFile": "Archiving file: %s",
+        "MoreFiles": "... %d more ..."
     }
 }
