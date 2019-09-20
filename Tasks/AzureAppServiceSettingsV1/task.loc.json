@@ -17,9 +17,10 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
+    "Minor": 158,
     "Patch": 0
   },
+  "preview": "true",
   "minimumAgentVersion": "2.104.1",
   "groups": [
     {
@@ -41,26 +42,26 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
-      "name": "WebAppName",
+      "name": "appName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.WebAppName",
+      "label": "ms-resource:loc.input.label.appName",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
+      "helpMarkDown": "ms-resource:loc.input.help.appName"
     },
     {
-      "name": "ResourceGroupName",
+      "name": "resourceGroupName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "label": "ms-resource:loc.input.label.resourceGroupName",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName"
+      "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName"
     },
     {
       "name": "slotName",
@@ -118,16 +119,16 @@
   ],
   "dataSourceBindings": [
     {
-      "target": "WebAppName",
+      "target": "appName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureRMWebAppNames"
     },
     {
-      "target": "ResourceGroupName",
+      "target": "resourceGroupName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureRMWebAppResourceGroup",
       "parameters": {
-        "WebAppName": "$(WebAppName)"
+        "WebAppName": "$(appName)"
       }
     },
     {
@@ -135,8 +136,8 @@
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureRMWebAppSlotsId",
       "parameters": {
-        "WebAppName": "$(WebAppName)",
-        "ResourceGroupName": "$(ResourceGroupName)"
+        "WebAppName": "$(appName)",
+        "ResourceGroupName": "$(resourceGroupName)"
       },
       "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
     }
@@ -154,7 +155,6 @@
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
-    "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
     "UpdatingAppServiceConnectionStrings": "ms-resource:loc.messages.UpdatingAppServiceConnectionStrings",
     "UpdatedAppServiceConnectionStrings": "ms-resource:loc.messages.UpdatedAppServiceConnectionStrings",
@@ -169,6 +169,7 @@
     "FailedToUpdateAppServiceConfiguration": "ms-resource:loc.messages.FailedToUpdateAppServiceConfiguration",
     "FailedToGetAppServiceConfiguration": "ms-resource:loc.messages.FailedToGetAppServiceConfiguration",
     "FailedToGetAppServicePublishingCredentials": "ms-resource:loc.messages.FailedToGetAppServicePublishingCredentials",
-    "FailedToGetAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettings"
+    "FailedToGetAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettings",
+    "AppServiceSettingsNotEnabled": "ms-resource:loc.messages.AppServiceSettingsNotEnabled"
   }
 }

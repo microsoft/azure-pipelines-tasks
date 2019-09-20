@@ -152,7 +152,6 @@
   "loc.messages.FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
   "loc.messages.UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
   "loc.messages.UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
-  "loc.messages.UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
   "loc.messages.UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
   "loc.messages.UpdatedOnlyAppServiceApplicationSettings": "Updated App Service Application settings.",
   "loc.messages.MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",

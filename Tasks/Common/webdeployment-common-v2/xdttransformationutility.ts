@@ -84,13 +84,22 @@ export function specialXdtTransformation(rootFolder, transformConfig, sourceConf
         var sourceBasename = "", transformXmlFiles = {};
 
         if(sourceConfig.indexOf("*") != -1){
-            var sourceConfigSuffix = sourceConfig.substr(sourceConfig.lastIndexOf("*")+1);
+            var sourceConfigSuffix = sourceConfig.substr(sourceConfig.lastIndexOf("*") + 1);
+            if(sourceConfigSuffix.indexOf("\\") != -1) {
+                sourceConfigSuffix = sourceConfigSuffix.substr(sourceConfigSuffix.lastIndexOf("\\") + 1);
+            }
             sourceBasename = path.win32.basename(sourceXmlFile.replace(/\.config/ig,'\.config'), sourceConfigSuffix);
+            if(JSON.stringify(sourceBasename) == JSON.stringify(sourceConfigSuffix)) {
+                sourceBasename = "";
+            }
         }
 
         if(transformConfig.indexOf("*") != -1){
             if(sourceBasename) {
                 var transformConfigSuffix = transformConfig.substr(transformConfig.lastIndexOf("*") + 1);
+                if(transformConfigSuffix.indexOf("\\") != -1) {
+                    transformConfigSuffix = transformConfigSuffix.substr(transformConfigSuffix.lastIndexOf("\\") + 1);
+                }
                 var transformXmlFile = path.join(path.dirname(sourceXmlFile), sourceBasename + transformConfigSuffix);
                 transformXmlFiles[transformXmlFile.toLowerCase()] = transformXmlFile;
             }
@@ -121,10 +130,6 @@ export function specialXdtTransformation(rootFolder, transformConfig, sourceConf
                 isTransformationApplied = true;
             }
         }
-    }
-    
-    if(!isTransformationApplied) {
-        tl.warning(tl.loc('FailedToApplyTransformation'));
     }
 
     return isTransformationApplied;

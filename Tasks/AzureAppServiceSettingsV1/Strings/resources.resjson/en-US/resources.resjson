@@ -1,15 +1,15 @@
 {
   "loc.friendlyName": "Azure App Service Settings",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebappdeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/AA5wsgy)",
   "loc.description": "Update/Add App settings an Azure Web App for Linux or Windows",
-  "loc.instanceNameFormat": "Azure App Service Settings: $(WebAppName)",
+  "loc.instanceNameFormat": "Azure App Service Settings: $(appName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription",
-  "loc.input.label.WebAppName": "App Service name",
-  "loc.input.help.WebAppName": "Enter or Select the name of an existing Azure App Service",
-  "loc.input.label.ResourceGroupName": "Resource group",
-  "loc.input.help.ResourceGroupName": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above",
+  "loc.input.label.appName": "App Service name",
+  "loc.input.help.appName": "Enter or Select the name of an existing Azure App Service",
+  "loc.input.label.resourceGroupName": "Resource group",
+  "loc.input.help.resourceGroupName": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above",
   "loc.input.label.slotName": "Slot",
   "loc.input.help.slotName": "Enter or Select an existing Slot. If no slot is selected, changes will be made to production.",
   "loc.input.label.appSettings": "App settings",
@@ -24,7 +24,6 @@
   "loc.messages.MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
   "loc.messages.UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
   "loc.messages.UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
-  "loc.messages.UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
   "loc.messages.UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
   "loc.messages.UpdatingAppServiceConnectionStrings": "Updating App Service Connection Strings. Data: %s",
   "loc.messages.UpdatedAppServiceConnectionStrings": "Updated App Service Connection Strings. Data: %s",
@@ -39,5 +38,6 @@
   "loc.messages.FailedToUpdateAppServiceConfiguration": "Failed to update App service '%s' configuration. Error: %s",
   "loc.messages.FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",
   "loc.messages.FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
-  "loc.messages.FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s"
+  "loc.messages.FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
+  "loc.messages.AppServiceSettingsNotEnabled": "App Service Settings is not enabled. Please provide one of the following : App Settings or General Settings or Connection Strings."
 }

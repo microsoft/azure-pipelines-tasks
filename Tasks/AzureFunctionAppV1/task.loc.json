@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 157,
-    "Patch": 1
+    "Patch": 4
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -346,7 +346,6 @@
     "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
     "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
-    "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
     "UpdatedOnlyAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedOnlyAppServiceApplicationSettings",
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
