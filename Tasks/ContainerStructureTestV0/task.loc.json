@@ -18,12 +18,20 @@
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
+  "groups": [
+    {
+      "name": "containerRepository",
+      "displayName": "ms-resource:loc.group.displayName.containerRepository",
+      "isExpanded": true
+    }
+  ],
   "inputs": [
     {
       "name": "dockerRegistryServiceConnection",
       "type": "connectedService:dockerregistry",
       "label": "ms-resource:loc.input.label.dockerRegistryServiceConnection",
       "groupName": "containerRepository",
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryServiceConnection"
     },
     {
@@ -32,8 +40,8 @@
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.repository",
       "defaultValue": "",
-      "visibleRule": "command != login && command != logout",
       "groupName": "containerRepository",
+      "required": true,
       "properties": {
         "EditableOptions": "True"
       }
@@ -46,17 +54,9 @@
         "resizable": "true",
         "rows": "2"
       },
-      "visibleRule": "command = build || command = push || command = buildAndPush",
       "label": "ms-resource:loc.input.label.tags",
-      "groupName": "commands",
+      "groupName": "containerRepository",
       "helpMarkDown": "ms-resource:loc.input.help.tags"
-    },
-    {
-      "name": "image",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.image",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.image"
     },
     {
       "name": "configFile",
@@ -87,6 +87,10 @@
     "ErrorFailTaskOnFailedTests": "ms-resource:loc.messages.ErrorFailTaskOnFailedTests",
     "FileNotFoundException": "ms-resource:loc.messages.FileNotFoundException",
     "DownloadException": "ms-resource:loc.messages.DownloadException",
-    "ErrorInExecutingCommand": "ms-resource:loc.messages.ErrorInExecutingCommand"
+    "ErrorInExecutingCommand": "ms-resource:loc.messages.ErrorInExecutingCommand",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
+    "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning"
   }
 }

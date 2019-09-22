@@ -18,12 +18,20 @@
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
+    "groups": [
+        {
+            "name": "containerRepository",
+            "displayName": "Container Repository",
+            "isExpanded": true
+        }
+    ],
     "inputs": [
         {
             "name": "dockerRegistryServiceConnection",
             "type": "connectedService:dockerregistry",
-            "label": "Container registry",
+            "label": "Docker registry service connection",
             "groupName": "containerRepository",
+            "required": true,
             "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry."
         },
         {
@@ -32,8 +40,8 @@
             "type": "string",
             "helpMarkDown": "Name of the repository.",
             "defaultValue": "",
-            "visibleRule": "command != login && command != logout",
             "groupName": "containerRepository",
+            "required": true,
             "properties": {
                 "EditableOptions": "True"
             }
@@ -46,29 +54,21 @@
                 "resizable": "true",
                 "rows": "2"
             },
-            "visibleRule": "command = build || command = push || command = buildAndPush",
             "label": "Tags",
-            "groupName": "commands",
+            "groupName": "containerRepository",
             "helpMarkDown": "A list of tags in separate lines. These tags are used in build, push and buildAndPush commands. Ex:<br><br>beta1.1<br>latest"
-        },
-        {
-            "name": "image",
-            "type": "string",
-            "label": "Image",
-            "required": true,
-            "helpMarkDown": "Image to be tested"
         },
         {
             "name": "configFile",
             "type": "filePath",
-            "label": "Config Files",
+            "label": "Config file path",
             "required": true,
             "helpMarkDown": "Config files path, that contains container structure tests. Either .yaml or .json files"
         },
         {
             "name": "failTaskOnFailedTests",
             "type": "boolean",
-            "label": "Fail if there are test failures",
+            "label": "Fail task if there are test failures",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected."
@@ -87,7 +87,10 @@
         "ErrorFailTaskOnFailedTests": "There are one or more test failures detected in test. Detailed summary of published test results can be viewed in the Tests tab.",
         "FileNotFoundException": "Unable to find the file: %s.",
         "DownloadException": "Unable to download the file: %s",
-        "ErrorInExecutingCommand": "Error in executing the command: %s"
-
+        "ErrorInExecutingCommand": "Error in executing the command: %s",
+        "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
+        "FileContentSynced": "Synced the file content to the disk. The content is %s.",
+        "ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
+        "DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s"
     }
 }

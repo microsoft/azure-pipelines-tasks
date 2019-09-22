@@ -2,6 +2,10 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { chmodSync, writeFileSync, existsSync } from 'fs';
 import * as path from "path";
 import downloadutility = require("utility-common/downloadutility");
+import RegistryAuthenticationToken from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
+import ContainerConnection from "docker-common-v2/containerconnection";
+import { getDockerRegistryEndpointAuthenticationToken } from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 let uuid = require('uuid');
 
 interface TestSummary {
@@ -30,15 +34,31 @@ async function run() {
         tl.debug(`Os Type: ${osType}`);
         telemetryData["OsType"] = osType;
 
-        const testFilePath = tl.getInput('testFile', true);
-        const image = tl.getInput('image', true);
+        const testFilePath = tl.getInput('configFile', true);
+        const repository = tl.getInput('repository', true);
+        let tagsInput = tl.getInput('tags');
+        const tag = tagsInput == null || tagsInput == "" ? "latest" : tagsInput;
+
+        const image = `${repository}:${tag}`;
+        let endpointId = tl.getInput("dockerRegistryServiceConnection");
         const failTaskOnFailedTests: boolean = tl.getInput('failTaskOnFailedTests').toLowerCase() == 'true' ? true : false;
+
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
+        let registryAuthenticationToken: RegistryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
+        let connection = new ContainerConnection();
+        connection.open(null, registryAuthenticationToken, true, false);
+
+        await dockerLogin(connection);
+        tl.debug(`Successfully finished docker login`);
+        await dockerPull(connection, image);
+        tl.debug(`Successfully finished docker pull`);
 
         const downloadUrl = getContainerStructureTestRunnerDownloadPath(osType);
         if (!downloadUrl) {
             return;
         }
 
+        tl.debug(`Successfully downloaded : ${downloadUrl}`);
         const runnerPath = await downloadTestRunner(downloadUrl);
         const output: string = runContainerStructureTest(runnerPath, testFilePath, image);
 
@@ -46,6 +66,7 @@ async function run() {
             throw new Error("No output from runner");
         }
 
+        tl.debug(`Successfully finished testing`);
         let resultObj: TestSummary = JSON.parse(output);
         tl.debug(`Total Tests: ${resultObj.Total}, Pass: ${resultObj.Pass}, Fail: ${resultObj.Fail}`);
 
@@ -65,6 +86,29 @@ async function run() {
         publishTelemetry();
         tl.debug("Finished Execution");
     }
+}
+
+async function dockerLogin(connection: ContainerConnection): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+        try {
+            connection.setDockerConfigEnvVariable();
+            resolve("done");
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+async function dockerPull(connection: ContainerConnection, imageName: string): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+        try {
+            dockerCommandUtils.command(connection, "pull", imageName, (output: any) => {
+                resolve(output);
+            })
+        } catch (error) {
+            reject(error);
+        }
+    });
 }
 
 function createResultsFile(fileContent: string): string {
