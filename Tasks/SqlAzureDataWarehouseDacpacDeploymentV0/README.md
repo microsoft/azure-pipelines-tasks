@@ -35,11 +35,8 @@ There should be an Azure SQL Server that is already pre-created in the [Azure po
 
 The task runs on the automation agent machine and the following needs to be installed on the machine:
 
-1. For deploying DACPACs, SqlPackage.exe is used, and can be installed by using any one of the following -
-    * Visual Studio 2019 installs the SqlPackage.exe at - C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\150. 
-    * Install it by using the [Microsoft Web Platform Installer](https://www.microsoft.com/web/gallery/install.aspx?appid=DACFX) (Web PI). Note that the link will open Web PI with the DACFX showing-up ready to install, where the DACFX download represents all the MSIs that need to be installed for SqlPackage.exe.
-    * [SQL Server Management Studio](https://www.microsoft.com/en-in/download/details.aspx?id=42299) for SQL Server 2014 or SQL Server Express or SQL Server 2012 and SQL Server 2014 and [DAC Framework](https://www.microsoft.com/en-us/download/details.aspx?id=42293) MSIs install SqlPackage.exe at C:\Program Files (x86)\Microsoft SQL Server\120\DAC\bin.
-
+1. For deploying DACPACs, SqlPackage.exe is used and can be installed with Visual Studio 2019. Visual Studio 2019 installs the SqlPackage.exe at: C:\Program Files (x86)\Microsoft Visual Studio\2019\ {Your VS Version} \Common7\IDE\Extensions\Microsoft\SQLDB\DAC\150. 
+  
 2. For deploying SQL Scripts, [Invoke-Sqlcmd cmdlet](https://msdn.microsoft.com/en-IN/library/cc281720.aspx) is used, and can be installed by the following -
     * Download and install the following components of [Microsoft SQL Server 2016 Feature Pack ](https://www.microsoft.com/en-us/download/details.aspx?id=52676). On an x86 machine, only install the x86 version of the MSIs, and on an x64 machine, install both the x86 and the x64 versions of the MSIs.
       - Microsoft® System CLR Types for Microsoft SQL Server® 2016 (SQLSysClrTypes.msi).
