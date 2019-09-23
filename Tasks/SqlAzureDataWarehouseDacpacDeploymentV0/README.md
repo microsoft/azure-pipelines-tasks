@@ -64,7 +64,7 @@ The parameters of the task are described in details, including examples, to show
 
 - **Azure SQL Server Name\*:** The connection string for Azure SQL Server - the format is the same as SQL Server Management Studio. For example, FabrikamSQL.database.windows.net, 1433 or FabrikamSQL.database.windows.net are both valid Azure SQL Server names.
 
-- **Database Name\*:** The name of the Azure SQL data warehouse like FabrikanDB. The database will be created new if it does not exist, else it will be updated if it already exists.
+- **Data Warehouse Name\*:** The name of the Azure SQL data warehouse like FabrikanDB. The database will be created new if it does not exist, else it will be updated if it already exists.
 
 - **SQL Username\*:** The Azure SQL Data Warehouse task uses SQL Authentication to authenticate with the Azure SQL Server and this parameter specifies the Azure SQL Data Warehouse administrator login.
 
