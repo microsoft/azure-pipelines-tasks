@@ -39,7 +39,7 @@ function getCommandOutputFormat(kubecommand: string): string[] {
     return args;
 }
 
-function getCommandConfigurationFile(): string[] {
+export function getCommandConfigurationFile(): string[] {
     var args: string[] = [];
     var useConfigurationFile: boolean = tl.getBoolInput("useConfigurationFile", false);
     if (useConfigurationFile) {

@@ -16,7 +16,8 @@ Register-Mock Initialize-AzModule
 Register-Mock Get-VstsEndpoint { @{auth = @{ scheme = "ServicePrincipal" }} }
 Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
-Register-Mock Get-VstsTaskVariable { $env:PSModulePath } -- -Name 'AZ_PS_MODULE_PATH' -Require
+Register-Mock Assert-VstsPath
+Register-Mock Invoke-VstsTool { }
 
 # Act.
 $actual = & $PSScriptRoot\..\AzurePowerShell.ps1
@@ -28,9 +29,3 @@ $global:ErrorActionPreference = 'Stop' # Reset to stop.
 # Assert the Azure helpers module was imported and invoked.
 Assert-WasCalled Import-Module -- ([System.IO.Path]::GetFullPath("$PSScriptRoot\..\ps_modules\VstsAzureHelpers_"))
 Assert-WasCalled Initialize-AzModule
-
-# Assert the target script was invoked with the specified args.
-Assert-AreEqual @('arg1', 'arg2') $actual.Args
-
-# Clean Up
-Unregister-Mock Get-VstsTaskVariable
