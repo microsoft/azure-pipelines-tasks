@@ -89,7 +89,7 @@ export class ApplicationTokenCredentials {
     }
 
     public getToken(force?: boolean): Q.Promise<string> {
-        if (this.accessToken !== null && !force) {
+        if (!!this.accessToken && !force) {
             tl.debug("==================== USING ENDPOINT PROVIDED ACCESS TOKEN ====================");
             let deferred = Q.defer<string>();
             deferred.resolve(this.accessToken);
