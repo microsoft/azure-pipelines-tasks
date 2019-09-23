@@ -76,7 +76,7 @@ export class Kubectl {
         if (args) {
             command.line(args);
         }
-        
+
         return this.execute(command);
     }
 
@@ -107,6 +107,12 @@ export class Kubectl {
         command.arg('get');
         command.arg('pods');
         command.arg(['-o', 'json']);
+        return this.execute(command, true);
+    }
+
+    public getClusterInfo(): IExecSyncResult {
+        const command = tl.tool(this.kubectlPath);
+        command.arg('cluster-info');
         return this.execute(command, true);
     }
 

@@ -238,8 +238,7 @@ export async function getFeedRegistryUrl(
             [vssConnection.authHandler],
             vssConnection.options);
     }
-
-    const data = await vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: sessionId, project: project });
+    const data = await retryOnExceptionHelper(() =>  vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: sessionId, project: project }), 3, 1000);
 
     tl.debug("Feed registry url: " + data.requestUrl);
     return data.requestUrl;
