@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 156,
+        "Minor": 157,
         "Patch": 0
     },
     "releaseNotes": "Added support for forwarding Android mapping to App Center Diagnostics. Added missing descriptions.",
@@ -51,6 +51,13 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Relative path from the repo root to the APK/AAB or IPA file you want to publish"
+        },
+        {
+            "name": "buildVersion",
+            "type": "string",
+            "label": "Build version",
+            "required": false,
+            "helpMarkDown": "The free form string which needs to be specified for `*.zip` and `*.msi` binaries."
         },
         {
             "name": "symbolsType",

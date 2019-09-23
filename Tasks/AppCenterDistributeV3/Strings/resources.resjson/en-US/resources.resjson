@@ -11,6 +11,8 @@
   "loc.input.help.appSlug": "The app slug is in the format of **{username}/{app_identifier}**.  To locate **{username}** and **{app_identifier}** for an app, click on its name from https://appcenter.ms/apps, and the resulting URL is in the format of [https://appcenter.ms/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://appcenter.ms/users/{username}/apps/{app_identifier}). If you are using orgs, the app slug is of the format **{orgname}/{app_identifier}**.",
   "loc.input.label.app": "Binary file path",
   "loc.input.help.app": "Relative path from the repo root to the APK/AAB or IPA file you want to publish",
+  "loc.input.label.buildVersion": "Build version",
+  "loc.input.help.buildVersion": "The free form string which needs to be specified for `*.zip` and `*.msi` binaries.",
   "loc.input.label.symbolsType": "Symbols type",
   "loc.input.help.symbolsType": "Include symbol files to receive symbolicated stack traces in App Center Diagnostics.",
   "loc.input.label.symbolsPath": "Symbols path",
