@@ -1,6 +1,6 @@
 import tl = require("azure-pipelines-task-lib/task");
 
-import armDeployTaskParameters = require("../models/ARMDeployTaskParameters");
+import armDeployTaskParameters = require("../models/TaskParameters");
 import armResource = require("azure-arm-rest-v2/AzureServiceClientBase");
 import utils = require("./Utils");
 import { sleepFor } from 'azure-arm-rest-v2/webClient';
@@ -8,10 +8,10 @@ import { DeploymentParameters } from "./DeploymentParameters";
 
 export class DeploymentScopeBase {
     protected deploymentParameters: DeploymentParameters;
-    protected taskParameters: armDeployTaskParameters.ARMDeployTaskParameters;
+    protected taskParameters: armDeployTaskParameters.TaskParameters;
     protected armClient: armResource.AzureServiceClientBase;
 
-    constructor(armClient: armResource.AzureServiceClientBase, taskParameters: armDeployTaskParameters.ARMDeployTaskParameters, deploymentParameters?: DeploymentParameters) {
+    constructor(armClient: armResource.AzureServiceClientBase, taskParameters: armDeployTaskParameters.TaskParameters, deploymentParameters?: DeploymentParameters) {
         this.taskParameters = taskParameters;
         this.armClient = armClient;
         this.deploymentParameters = deploymentParameters;

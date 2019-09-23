@@ -1,6 +1,6 @@
 import tl = require("azure-pipelines-task-lib/task");
 
-import armDeployTaskParameters = require("../models/ARMDeployTaskParameters");
+import armDeployTaskParameters = require("../models/TaskParameters");
 import armResource = require("azure-arm-rest-v2/azure-arm-resource");
 import utils = require("./Utils");
 import { DeploymentScopeBase } from "./DeploymentScopeBase";
@@ -9,12 +9,12 @@ export class ResourceGroup extends DeploymentScopeBase {
 
     public resourceManagementClient: armResource.ResourceManagementClient;
 
-    constructor(resourceManagementClient: armResource.ResourceManagementClient, taskParameters: armDeployTaskParameters.ARMDeployTaskParameters) {
+    constructor(resourceManagementClient: armResource.ResourceManagementClient, taskParameters: armDeployTaskParameters.TaskParameters) {
         super(resourceManagementClient, taskParameters);
         this.resourceManagementClient = resourceManagementClient;
     }
 
-    public async createOrUpdateResourceGroup(): Promise<void> {
+    public async deploy(): Promise<void> {
         await this.createResourceGroupIfRequired();
         await this.createTemplateDeployment();
     }

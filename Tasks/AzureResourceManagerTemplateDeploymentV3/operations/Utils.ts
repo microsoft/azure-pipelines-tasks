@@ -3,7 +3,7 @@ import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 
-import armDeployTaskParameters = require("../models/ARMDeployTaskParameters");
+import armDeployTaskParameters = require("../models/TaskParameters");
 import { PowerShellParameters, NameValuePair } from "./ParameterParser";
 import fileEncoding = require('./FileEncoding');
 import { TemplateObject, ParameterValue } from "../models/Types";
@@ -118,7 +118,7 @@ class Utils {
         return contentWithoutComments;
     }
 
-    public static writeDeploymentErrors(taskParameters: armDeployTaskParameters.ARMDeployTaskParameters, error): void {
+    public static writeDeploymentErrors(taskParameters: armDeployTaskParameters.TaskParameters, error): void {
         console.log(tl.loc("ErrorsInYourDeployment", error.code));
         if (error.message) {
             tl.error(error.message);
@@ -157,7 +157,7 @@ class Utils {
         }
     }
 
-    public static async getDeploymentObjectForPublicURL(taskParameters: armDeployTaskParameters.ARMDeployTaskParameters): Promise<DeploymentParameters> {
+    public static async getDeploymentObjectForPublicURL(taskParameters: armDeployTaskParameters.TaskParameters): Promise<DeploymentParameters> {
         var properties = {};
         properties["templateLink"] = {
             uri: taskParameters.csmFileLink
@@ -197,7 +197,7 @@ class Utils {
         return deploymentParameters;
     }
 
-    public static createDeploymentName(taskParameters: armDeployTaskParameters.ARMDeployTaskParameters): string {
+    public static createDeploymentName(taskParameters: armDeployTaskParameters.TaskParameters): string {
         var name: string;
         if (taskParameters.templateLocation == "Linked artifact") {
             name = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), taskParameters.csmFile)[0];
@@ -222,7 +222,7 @@ class Utils {
         return deploymentName;
     }
 
-    public static getDeploymentDataForLinkedArtifact(taskParameters: armDeployTaskParameters.ARMDeployTaskParameters): DeploymentParameters {
+    public static getDeploymentDataForLinkedArtifact(taskParameters: armDeployTaskParameters.TaskParameters): DeploymentParameters {
         var template: TemplateObject;
         var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), taskParameters.csmFile);
         if (fileMatches.length > 1) {
@@ -285,7 +285,7 @@ class Utils {
         return deploymentParameters;
     }
 
-    private static getPolicyHelpLink(taskParameters: armDeployTaskParameters.ARMDeployTaskParameters, errorDetail) {
+    private static getPolicyHelpLink(taskParameters: armDeployTaskParameters.TaskParameters, errorDetail) {
         var additionalInfo = errorDetail.additionalInfo;
         if (!!additionalInfo) {
             for (var i = 0; i < additionalInfo.length; i++) {
@@ -336,7 +336,7 @@ class Utils {
         return value;
     }
 
-    private static updateOverrideParameters(taskParameters: armDeployTaskParameters.ARMDeployTaskParameters, template: TemplateObject, parameters: Map<string, ParameterValue>): Map<string, ParameterValue> {
+    private static updateOverrideParameters(taskParameters: armDeployTaskParameters.TaskParameters, template: TemplateObject, parameters: Map<string, ParameterValue>): Map<string, ParameterValue> {
         tl.debug("Overriding Parameters..");
 
         var overrideParameters: NameValuePair[] = PowerShellParameters.parse(taskParameters.overrideParameters, true, "\\");

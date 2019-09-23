@@ -2,7 +2,7 @@ import tl = require("azure-pipelines-task-lib/task");
 import msRestAzure = require('azure-arm-rest-v2/azure-arm-common');
 import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
 
-export class ARMDeployTaskParameters {
+export class TaskParameters {
 
     public action: string;
     public resourceGroupName: string;
@@ -30,7 +30,7 @@ export class ARMDeployTaskParameters {
         return azureEndpoint.applicationTokenCredentials;
     }
 
-    public async getARMTemplateDeploymentTaskParameters() : Promise<ARMDeployTaskParameters>
+    public async getTaskParameters() : Promise<TaskParameters>
     {
         try {
 
