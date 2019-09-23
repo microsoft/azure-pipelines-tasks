@@ -2,9 +2,9 @@
     "id": "2D429209-58FB-4A53-83AD-9CF58807B56C",
     "name": "SqlAzureDataWarehouseDacpacDeployment",
     "friendlyName": "Azure SQL Data Warehouse deployment",
-    "description": "Deploy an Azure SQL Data Warehouse using DACPAC or run scripts using SQLCMD",
+    "description": "Deploy Azure SQL Data Warehouse using DACPACs or run SQL scripts using SQLCMD",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment",
-    "helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/sqldwdeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -26,7 +26,7 @@
     "groups": [
         {
             "name": "target",
-            "displayName": "SQL Database",
+            "displayName": "SQL Data Warehouse",
             "isExpanded": true
         },
         {
@@ -93,7 +93,7 @@
                 "aadAuthenticationIntegrated": "Active Directory - Integrated",
                 "connectionString": "Connection String"
             },
-            "helpMarkDown": "Specify the option to connect to the Azure SQL Server Database. The options are either to provide the Azure SQL Server Database details, or the SQL Server connection string, or AAD Authentication password or integrated. For SQL server authentication, use SQL server's user credentials and for AD authentication, use credentials of AD user configured to SQL server."
+            "helpMarkDown": "Specify the option to connect to Azure SQL Data Warehouse. The options are either to provide the Azure SQL Data Warehouse connection details, the SQL Server connection string, or AAD Authentication password or integrated. For SQL server authentication, use SQL server's user credentials and for AD authentication, use credentials of AD user configured to SQL server."
         },
         {
             "name": "ServerName",
@@ -106,9 +106,9 @@
             "helpMarkDown": "Azure SQL Server name, like Fabrikam.database.windows.net,1433 or Fabrikam.database.windows.net."
         },
         {
-            "name": "DatabaseName",
+            "name": "DataWarehouseName",
             "type": "string",
-            "label": "Database",
+            "label": "DataWarehouse",
             "required": true,
             "groupName": "target",
             "defaultValue": "",
@@ -197,7 +197,7 @@
                 "DeployReport": "Deploy Report"
             },
             "visibleRule": "TaskNameSelector = DacpacTask",
-            "helpMarkDown": "Choose one of the SQL Actions from the list. For more details refer <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">link</a>.​"
+            "helpMarkDown": "Choose one of the SQL Actions from the list. For more details refer <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">link</a>."
         },
         {
             "name": "DacpacFile",
@@ -226,7 +226,7 @@
             "required": true,
             "groupName": "taskDetails",
             "defaultValue": "",
-            "helpMarkDown": "Enter the SQL script to execute on the Database selected above.",
+            "helpMarkDown": "Enter the SQL script to execute on the Data Warehouse selected above.",
             "visibleRule": "TaskNameSelector = InlineSqlTask",
             "properties": {
                 "resizable": "true",
@@ -329,8 +329,8 @@
         }
     },
     "messages": {
-        "SAD_InvalidServerAddress": "Either the IP address mentioned is not a valid IPv4 address or SQL database server '{0}' does not exist.",
-        "SAD_ServerNotFound": "SQL database server '{0}' was not found.",
+        "SAD_InvalidServerAddress": "Either the IP address mentioned is not a valid IPv4 address or the SQL server '{0}' does not exist.",
+        "SAD_ServerNotFound": "SQL server '{0}' was not found.",
         "SAD_InvalidIPv4Address": "The IP address mentioned is not a valid IPv4 address.",
         "SAD_FoundMoreFiles": "Found more than one file to deploy with search pattern {0}. There can be only one.",
         "SAD_NoFilesMatch": "No files were found to deploy with search pattern {0}",
