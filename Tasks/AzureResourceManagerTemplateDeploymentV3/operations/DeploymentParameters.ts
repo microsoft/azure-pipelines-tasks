@@ -1,5 +1,3 @@
-import { runInThisContext } from "vm";
-
 export class DeploymentParameters {
     public properties: Object;
     public location: string;

@@ -2,10 +2,10 @@
 
 ### Overview
 
-This task is used to deploy [Azure Resource Manager templates](https://azure.microsoft.com/en-in/documentation/articles/resource-group-template-deploy/). it support template deployment as three scopes - Resource group, Subscription and Management group The task is also used to create or update a resource group.
+This task is used to deploy [Azure Resource Manager templates](https://azure.microsoft.com/en-in/documentation/articles/resource-group-template-deploy/) at resource group deployment scope, subscription deployment scope and management group [deployment scopes](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope). The task is also used to create or update a resource group in Azure.
 
 ### What's new in Version 3.0
- - Added support for deployment scope at Subscription and Management group scope.
+ - Added support for Subscription and Management Group deployment scopes.
  - Removed all the VM related actions.
 
 
@@ -34,19 +34,21 @@ The task needs the Azure PowerShell version to be installed on the automation ag
 
 The parameters of the task are described in details, including examples, to show how to input the parameters. The parameters listed with a \* are required parameters for the task:
 
- * **Deployment Scope**\*: Select the scope of deployment fom the options: Resource Group, Subscription and Mangement Group.
+ * **Deployment Scope**\*: Select the scope of deployment from the options: Resource Group, Subscription and Mangement Group. For more info refer this [link](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)
 
- * **Azure Resource Manager connection**\*: Select the ARM service connection of appropriate deployment scope i.e. Deployment Scope selected above should be of lower or same level to the deployment scope of service connection. To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Manage' link.
+ * **Azure Resource Manager connection**\*: Select the ARM service connection with appropriate access i.e. the ARM service connection should have access to the resource group, subscription or the management group where the ARM template is targetted. To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Manage' link.
 
- * **Action**\*: For deployment scope of 'Resource Group', elect the action to be performed on the resource group. Following actions are available:
+ * **Subscription**\*: Select the subscripton to which the deployment is targetted.
+
+ * **Action**\*: If the deployment scope is 'Resource Group', select the action to be performed on the resource group. Following actions are available:
     - Create or Update Resource Group: creates a new resource group or to update an existing one (using [Azure Resource Manager templates](https://azure.microsoft.com/en-in/documentation/articles/resource-group-template-deploy/)).
     - Delete Resource Group
 
  * **Resource Group**\*: Enter the name of the resource group. If this is an existing resource group, and the selected action is to create or update the resource group, then the task will update the resource group with the resources specified in the Azure template. If no Resource Group with the name exists in the subscription, then a new one will be created.
 
- * **Location**\*: Resource Group deployment scope: Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored. Other deployment scope: Location to store deployment metadata.
-
-The following parameters are shown when the selected action is to create or update a resource group:
+ * **Location**\*:
+     - For Resource Group deployment scope: Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.
+    - For other deployment scopes: Location for storing the deployment metadata.
 
  * **Template location**: The location of the Template & the Parameters JSON files. Select "Linked Artifact" if the files are part of the linked code/build artifacts. Select "URL of the file" if the JSON files are located at any publicly accessible http/https URLs. To use a file stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: <blob_storage_url>/template.json?<SAStoken>. To upload a parameters file to a storage account and generate a SAS token, you could use [Azure file copy task](https://aka.ms/azurefilecopyreadme) or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).
 

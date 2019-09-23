@@ -15,8 +15,9 @@
   "version": {
     "Major": 3,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 0
   },
+  "preview": "true",
   "demands": [],
   "minimumAgentVersion": "2.119.1",
   "groups": [
@@ -223,7 +224,7 @@
       "target": "subscriptionName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureSubscriptions",
-      "resultTemplate": "{ \"Value\" : \"{{{subscriptionId}}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{{subscriptionId}}}\", \"DisplayValue\" : \"{{{displayName}}} ({{{subscriptionId}}})\" }"
     },
     {
       "target": "resourceGroupName",
@@ -236,7 +237,7 @@
     {
       "target": "location",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureLocationsByDeploymentScopes",
+      "dataSourceName": "AzureLocationsByDeploymentScope",
       "parameters": {
         "subscriptionId": "$(subscriptionName)",
         "deploymentScope": "$(deploymentScope)"
@@ -292,6 +293,7 @@
     "MoreInformationOnAzurePortal": "ms-resource:loc.messages.MoreInformationOnAzurePortal",
     "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName",
     "ResourceGroupNameNotProvided": "ms-resource:loc.messages.ResourceGroupNameNotProvided",
-    "LocationNotProvided": "ms-resource:loc.messages.LocationNotProvided"
+    "LocationNotProvided": "ms-resource:loc.messages.LocationNotProvided",
+    "ARMServiceConnectionScope": "ms-resource:loc.messages.ARMServiceConnectionScope"
   }
 }

@@ -2,9 +2,9 @@
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
     "name": "AzureResourceManagerTemplateDeployment",
     "friendlyName": "ARM template deployment",
-    "description": "Deploy an Azure Resource Manager (ARM) template",
+    "description": "Deploy an Azure Resource Manager (ARM) template to all the deployment scopes",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
-    "helpMarkDown": "[Learn more about this task](https://aka.ms/armdeploymenttaskreadme)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/armtaskreadme)",
     "category": "Deploy",
     "releaseNotes": "- Added support for deployment at all the deployment scopes.\n- Removed all the VM related actions.",
     "visibility": [
@@ -17,6 +17,7 @@
         "Minor": 0,
         "Patch": 0
     },
+    "preview": "true",
     "demands": [],
     "minimumAgentVersion": "2.119.1",
     "groups": [
@@ -42,11 +43,11 @@
         {
             "name": "deploymentScope",
             "type": "pickList",
-            "label": "Deployment Scope",
+            "label": "Deployment scope",
             "defaultValue": "Resource Group",
             "required": "true",
             "groupName": "AzureDetails",
-            "helpMarkDown": "Deployment scope of the deployment",
+            "helpMarkDown": "Deployment scope of the deployment. To know more abour deployment scopes, refer this [link](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope)",
             "options": {
                 "Management Group": "Management Group",
                 "Subscription" : "Subscription",
@@ -105,7 +106,7 @@
             "type": "pickList",
             "label": "Location",
             "required": true,
-            "helpMarkDown": "Resource Group deployment scope: Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.\n Other deployment scope: Location to store deployment metadata.",
+            "helpMarkDown": "For Resource Group deployment scope: Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.\n For other deployment scope: Location to store deployment metadata.",
             "groupName": "AzureDetails",
             "properties": {
                 "EditableOptions": "True"
@@ -183,7 +184,7 @@
             "defaultValue": "Incremental",
             "required": true,
             "groupName": "Template",
-            "helpMarkDown": "Refer to [this](https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes) for more details. \n\n Incremental mode handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. Complete mode takes relatively more time than incremental mode. If the task times out, consider increasing the timeout, or changing the mode to 'Incremental'. \n [Warning] This action will delete all the existing resources in the resource group that are not specified in the template. \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
+            "helpMarkDown": "Refer to [this](https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes) for more details. \n\n Incremental mode handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. Complete mode takes relatively more time than incremental mode. If the task times out, consider increasing the timeout, or changing the mode to 'Incremental'. \n [Warning] This action will delete all the existing resources in the resource group that are not specified in the template. \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used. \n\n 'Complete' mode is supported for 'Resource Group' Deployment scope only.",
             "options": {
                 "Incremental": "Incremental",
                 "Complete": "Complete",
@@ -223,7 +224,7 @@
             "target": "subscriptionName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureSubscriptions",
-            "resultTemplate": "{ \"Value\" : \"{{{subscriptionId}}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{{subscriptionId}}}\", \"DisplayValue\" : \"{{{displayName}}} ({{{subscriptionId}}})\" }"
         },
         {
             "target": "resourceGroupName",
@@ -236,7 +237,7 @@
         {
             "target": "location",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureLocationsByDeploymentScopes",
+            "dataSourceName": "AzureLocationsByDeploymentScope",
             "parameters": {
                 "subscriptionId": "$(subscriptionName)",
                 "deploymentScope": "$(deploymentScope)"
@@ -292,6 +293,7 @@
         "MoreInformationOnAzurePortal": "More information on Azure Portal",
         "LogDeploymentName": "Deployment name is %s",
         "ResourceGroupNameNotProvided": "Resource Group name should be provided",
-        "LocationNotProvided": "Location is required for deployment"
+        "LocationNotProvided": "Location is required for deployment",
+        "ARMServiceConnectionScope": "ARM Service Conection deployment scope - %s"
     }
 }
