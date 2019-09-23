@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Archive files",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=809083)",
+  "loc.helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=809083)",
   "loc.description": "Compress files into .7z, .tar.gz, or .zip",
   "loc.instanceNameFormat": "Archive $(rootFolderOrFile)",
   "loc.group.displayName.archive": "Archive",
@@ -26,5 +26,8 @@
   "loc.messages.AlreadyExists": "Archive file: %s already exists.  Attempting to add files to it.",
   "loc.messages.ArchiveCreationFailedWithError": "Archive creation failed for archive file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
   "loc.messages.ArchiveFileExistsButNotAFile": "Specified archive file: %s already exists and is not a file.",
-  "loc.messages.FailedArchiveFile": "Specified archive file: %s cannot be created because it cannot be accessed: %s"
+  "loc.messages.FailedArchiveFile": "Specified archive file: %s cannot be created because it cannot be accessed: %s",
+  "loc.messages.FoundNFiles": "Found %d files",
+  "loc.messages.ArchivingFile": "Archiving file: %s",
+  "loc.messages.MoreFiles": "... %d more ..."
 }

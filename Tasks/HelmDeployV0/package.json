@@ -8,6 +8,7 @@
     "kubernetes-common-v2": "file:../../_build/Tasks/Common/kubernetes-common-v2-1.0.0.tgz",
     "moment": "2.21.0",
     "securefiles-common": "file:../../_build/Tasks/Common/securefiles-common-1.0.0.tgz",
+    "utility-common-v2": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz",
     "vsts-task-tool-lib": "0.4.0"
   }
 }
