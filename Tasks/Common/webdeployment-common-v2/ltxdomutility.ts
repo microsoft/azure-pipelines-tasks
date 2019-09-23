@@ -1,5 +1,6 @@
 var ltx = require("ltx");
 var varUtility = require("./variableutility.js");
+var DOMParser = require('xmldom').DOMParser;
 var Q = require('q');
 
 export class LtxDomUtility  {
@@ -11,7 +12,7 @@ export class LtxDomUtility  {
     public constructor(xmlContent) {
         this.xmlDomLookUpTable = {};
         this.headerContent = null;
-        this.xmlDom = ltx.parse(xmlContent);
+        this.xmlDom = new DOMParser().parseFromString(xmlContent,"text/xml");
         this.readHeader(xmlContent);
         this.buildLookUpTable(this.xmlDom);
     }
@@ -31,7 +32,7 @@ export class LtxDomUtility  {
     }
 
     public getContentWithHeader(xmlDom) {
-        return xmlDom ? (this.headerContent ? this.headerContent + "\n" : "") + xmlDom.root().toString() : "";
+        return xmlDom ? xmlDom.toString() : "";
     }
 
     /**

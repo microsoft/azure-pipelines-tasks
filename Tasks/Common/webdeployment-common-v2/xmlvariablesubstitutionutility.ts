@@ -1,28 +1,30 @@
-import Q = require('q');
 import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 
-var ltx = require("ltx");
 var varUtility = require ('./variableutility.js');
 var ltxdomutility = require("./ltxdomutility.js");
 var fileEncoding = require('./fileencoding.js');
 
 function getReplacableTokenFromTags(xmlNode, variableMap) {
     var parameterSubValue = {};
-    for (var childNode of xmlNode.children) {
-        if(!varUtility.isObject(childNode)) {
-            continue;
-        }
-        for(var nodeAttribute in childNode.attrs) {
-            if (childNode.attrs[nodeAttribute].startsWith('$(ReplacableToken_') && variableMap[childNode.attrs['name']]) {
-                var indexOfReplaceToken = '$(ReplacableToken_'.length;
-                var lastIndexOf_ = childNode.attrs[nodeAttribute].lastIndexOf('_');
-                if(lastIndexOf_ <= indexOfReplaceToken) {
-                    tl.debug('Attribute value is in incorrect format ! ' + childNode.attrs[nodeAttribute]);
-                    continue;
+    var children = xmlNode.childNodes;
+    if(children) {
+        for (var childs = 0; childs < children.length; childs ++) {
+            var childNode = children[childs];
+            if(!varUtility.isObject(childNode)) {
+                continue;
+            }
+            for(var nodeAttribute in childNode.attributes) {
+                if (childNode.attributes[nodeAttribute].startsWith('$(ReplacableToken_') && variableMap[childNode.attributes['name']]) {
+                    var indexOfReplaceToken = '$(ReplacableToken_'.length;
+                    var lastIndexOf_ = childNode.attributes[nodeAttribute].lastIndexOf('_');
+                    if(lastIndexOf_ <= indexOfReplaceToken) {
+                        tl.debug('Attribute value is in incorrect format ! ' + childNode.attributes[nodeAttribute]);
+                        continue;
+                    }
+                    parameterSubValue[childNode.attributes[nodeAttribute].substring(indexOfReplaceToken, lastIndexOf_)] = variableMap[childNode.attributes['name']].replace(/"/g, "'");
                 }
-                parameterSubValue[childNode.attrs[nodeAttribute].substring(indexOfReplaceToken, lastIndexOf_)] = variableMap[childNode.attrs['name']].replace(/"/g, "'");
             }
         }
     }
@@ -47,15 +49,19 @@ function substituteValueinParameterFile(parameterFilePath, parameterSubValue) {
     try {
         var ltxDomUtiltiyInstance = new ltxdomutility.LtxDomUtility(webConfigContent);
         xmlDocument = ltxDomUtiltiyInstance.getXmlDom();
-        for(var xmlChildNode of xmlDocument.children) {
-            if(!varUtility.isObject(xmlChildNode)) {
-                continue;
-            }
-            if(parameterSubValue[ xmlChildNode.attrs.name ]) {
-                var paramFileReplacableTokenName = paramFileReplacableToken + '(' + xmlChildNode.attrs.name + ')';
-                xmlChildNode.attrs.defaultValue = paramFileReplacableTokenName;
-                tl.debug('Parameters file - Replacing value for name: ' + xmlChildNode.attrs.name + ' with : ' + paramFileReplacableTokenName);
-                paramFileReplacableValues[paramFileReplacableTokenName] = parameterSubValue[ xmlChildNode.attrs.name ];
+        var children = xmlDocument.childNodes;
+        if(children) {
+            for (var childs = 0; childs < children.length; childs ++) {
+                var xmlChildNode = children[childs];
+                if(!varUtility.isObject(xmlChildNode)) {
+                    continue;
+                }
+                if(parameterSubValue[ xmlChildNode.attributes.nodeName ]) {
+                    var paramFileReplacableTokenName = paramFileReplacableToken + '(' + xmlChildNode.attributes.nodeName + ')';
+                    xmlChildNode.attributes.defaultValue = paramFileReplacableTokenName;
+                    tl.debug('Parameters file - Replacing value for name: ' + xmlChildNode.attributes.nodeName + ' with : ' + paramFileReplacableTokenName);
+                    paramFileReplacableValues[paramFileReplacableTokenName] = parameterSubValue[ xmlChildNode.attributes.nodeName ];
+                }
             }
         }
     }
@@ -125,12 +131,12 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
         }
         for(var xmlNode of nodes) {
             if(varUtility.isObject(xmlNode)){
-                console.log(tl.loc('SubstitutionForXmlNode' , xmlNode.name));
+                console.log(tl.loc('SubstitutionForXmlNode' , xmlNode.nodeName));
                 try {
-                    if(xmlNode.name == "configSections") {
+                    if(xmlNode.nodeName == "configSections") {
                         isSubstitutionApplied = updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replacableTokenValues, ltxDomUtiltiyInstance) || isSubstitutionApplied;
                     }
-                    else if(xmlNode.name == "connectionStrings") {
+                    else if(xmlNode.nodeName == "connectionStrings") {
                         if(parameterFilePath) {
                             var parameterSubValue = getReplacableTokenFromTags(xmlNode, variableMap);
                             substituteValueinParameterFile(parameterFilePath, parameterSubValue);
@@ -141,7 +147,7 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
                         isSubstitutionApplied = updateXmlNodeAttribute(xmlNode, variableMap, replacableTokenValues) || isSubstitutionApplied;
                     }
                 } catch (error){
-                    tl.debug("Error occurred while processing xml node : " + xmlNode.name);
+                    tl.debug("Error occurred while processing xml node : " + xmlNode.nodeName);
                     tl.debug(error);
                 }
             }  
@@ -170,7 +176,7 @@ function updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replaca
     var sections = ltxDomUtiltiyInstance.getChildElementsByTagName(xmlNode, "section");
     for(var section of sections) {
         if(varUtility.isObject(section)) {
-            var sectionName = section.attr('name');
+            var sectionName = section.setAttribute('name');
             if(!varUtility.isEmpty(sectionName)) {
                 var customSectionNodes = ltxDomUtiltiyInstance.getElementsByTagName(sectionName);
                 if( customSectionNodes.length != 0) {
@@ -186,48 +192,58 @@ function updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replaca
 function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues): boolean {
 
     var isSubstitutionApplied: boolean = false;
-    if (varUtility.isEmpty(xmlDomNode) || !varUtility.isObject(xmlDomNode) || xmlDomNode.name == "#comment") {
+    if (varUtility.isEmpty(xmlDomNode) || !varUtility.isObject(xmlDomNode) || xmlDomNode.nodeName == "#comment") {
         tl.debug("Provided node is empty or a comment.");
         return isSubstitutionApplied;
     }
 
-    var xmlDomNodeAttributes = xmlDomNode.attrs;
+    var xmlDomNodeAttributes = xmlDomNode.attributes;
     const ConfigFileAppSettingsToken = 'CONFIG_FILE_SETTINGS_TOKEN';
 
-    for(var attributeName in xmlDomNodeAttributes) {
-        var attributeNameValue = (attributeName === "key" || attributeName == "name") ? xmlDomNodeAttributes[attributeName] : attributeName;
-        var attributeName = (attributeName === "key" || attributeName == "name") ? "value" : attributeName;
+    if(xmlDomNodeAttributes) {
+        var attributeNameValue = "key";
+        for ( var i = 0; i < xmlDomNodeAttributes.length; i ++) {
+            var attribute = xmlDomNodeAttributes[i];
+            attributeNameValue = (attribute.nodeName === "key" || attribute.nodeName == "name") ? attribute.nodeValue : attributeName;
+            var attributeName = (attribute.nodeName === "key" || attribute.nodeName == "name") ? "value" : attributeName;
 
-        if(variableMap[attributeNameValue] != undefined) {
-            var ConfigFileAppSettingsTokenName = ConfigFileAppSettingsToken + '(' + attributeNameValue + ')';
-            let isValueReplaced: boolean = false;
-            if(xmlDomNode.getAttr(attributeName) != undefined) {
-                console.log(tl.loc('UpdatingKeyWithTokenValue' , attributeNameValue , ConfigFileAppSettingsTokenName));
-                xmlDomNode.attr(attributeName, ConfigFileAppSettingsTokenName);
-                isValueReplaced = true;
-            } else {
-                var children = xmlDomNode.children;
-                for(var childNode of children) {
-                    if(varUtility.isObject(childNode) && childNode.name == attributeName) {
-                        if (childNode.children.length === 1) {
-                            console.log(tl.loc('UpdatingKeyWithTokenValue' , attributeNameValue , ConfigFileAppSettingsTokenName));
-                            childNode.children[0] = ConfigFileAppSettingsTokenName;
-                            isValueReplaced = true;
+            if(variableMap[attributeNameValue] != undefined) {
+                var ConfigFileAppSettingsTokenName = ConfigFileAppSettingsToken + '(' + attributeNameValue + ')';
+                let isValueReplaced: boolean = false;
+                if(xmlDomNode.getAttribute(attributeName) != undefined) {
+                    console.log(tl.loc('UpdatingKeyWithTokenValue' , attributeNameValue , ConfigFileAppSettingsTokenName));
+                    xmlDomNode.setAttribute(attributeName, ConfigFileAppSettingsTokenName);
+                    isValueReplaced = true;
+                } else {
+                    var children = xmlDomNode.childNodes;
+                    if(children) {
+                        for (var childs = 0; childs < children.length; childs ++) {
+                            var childNode = children[childs];
+                            if(varUtility.isObject(childNode) && childNode.nodeName == attributeName) {
+                                if (childNode.childNodes.length === 1) {
+                                    console.log(tl.loc('UpdatingKeyWithTokenValue' , attributeNameValue , ConfigFileAppSettingsTokenName));
+                                    childNode.childNodes[0] = ConfigFileAppSettingsTokenName;
+                                    isValueReplaced = true;
+                                }
+                            }
                         }
                     }
                 }
-            }
 
-            if(isValueReplaced) {
-                replacableTokenValues[ConfigFileAppSettingsTokenName] =  variableMap[attributeNameValue].replace(/"/g, "'");
-                isSubstitutionApplied = true;
+                if(isValueReplaced) {
+                    replacableTokenValues[ConfigFileAppSettingsTokenName] =  variableMap[attributeNameValue].replace(/"/g, "'");
+                    isSubstitutionApplied = true;
+                }
             }
         }
     }
-    var children = xmlDomNode.children;
-    for(var childNode of children) {
-        if(varUtility.isObject(childNode)) {
-            isSubstitutionApplied = updateXmlNodeAttribute(childNode, variableMap, replacableTokenValues) || isSubstitutionApplied;
+    var children = xmlDomNode.childNodes;
+    if(children) {
+        for (var childs = 0; childs < children.length; childs ++) {
+            var childNode = children[childs];
+            if(varUtility.isObject(childNode)) {
+                isSubstitutionApplied = updateXmlNodeAttribute(childNode, variableMap, replacableTokenValues) || isSubstitutionApplied;
+            }
         }
     }
     return isSubstitutionApplied;
@@ -237,36 +253,40 @@ function updateXmlConnectionStringsNodeAttribute(xmlDomNode, variableMap, replac
 
     var isSubstitutionApplied: boolean = false;
     const ConfigFileConnStringToken = 'CONFIG_FILE_CONN_STRING_TOKEN';
-    if (varUtility.isEmpty(xmlDomNode) || !varUtility.isObject(xmlDomNode) || xmlDomNode.name == "#comment") {
+    if (varUtility.isEmpty(xmlDomNode) || !varUtility.isObject(xmlDomNode) || xmlDomNode.nodeName == "#comment") {
         tl.debug("Provided node is empty or a comment.");
         return isSubstitutionApplied;
     }
-    var xmlDomNodeAttributes = xmlDomNode.attrs;
+    var xmlDomNodeAttributes = xmlDomNode.attributes;
 
-    if(xmlDomNodeAttributes.hasOwnProperty("connectionString")) {
-        if(xmlDomNodeAttributes.hasOwnProperty("name") && variableMap[xmlDomNodeAttributes.name]) {
-            var ConfigFileConnStringTokenName = ConfigFileConnStringToken + '(' + xmlDomNodeAttributes.name + ')';
-            tl.debug(tl.loc('SubstitutingConnectionStringValue' , xmlDomNodeAttributes.name , ConfigFileConnStringTokenName));
-            xmlDomNode.attr("connectionString", ConfigFileConnStringTokenName);
-            replacableTokenValues[ConfigFileConnStringTokenName] = variableMap[xmlDomNodeAttributes.name].replace(/"/g, "'");
-            isSubstitutionApplied = true;
-        }
-        else if(variableMap["connectionString"] != undefined) {
-            var ConfigFileConnStringTokenName = ConfigFileConnStringToken + '(connectionString)';
-            tl.debug(tl.loc('SubstitutingConnectionStringValue' , xmlDomNodeAttributes.name , ConfigFileConnStringTokenName));
-            xmlDomNode.attr("connectionString", ConfigFileConnStringTokenName);
-            replacableTokenValues[ConfigFileConnStringTokenName] = variableMap["connectionString"].replace(/"/g, "'");
-            isSubstitutionApplied = true
-        }
-    }
-
-    var children = xmlDomNode.children;
-    for(var childNode of children) {
-        if(varUtility.isObject(childNode)) {
-            isSubstitutionApplied =  updateXmlConnectionStringsNodeAttribute(childNode, variableMap, replacableTokenValues) || isSubstitutionApplied;
+    if(xmlDomNodeAttributes) {
+        if(xmlDomNodeAttributes.hasOwnProperty("connectionString")) {
+            if(xmlDomNodeAttributes.hasOwnProperty("name") && variableMap[xmlDomNodeAttributes.nodeName]) {
+                var ConfigFileConnStringTokenName = ConfigFileConnStringToken + '(' + xmlDomNodeAttributes.nodeName + ')';
+                tl.debug(tl.loc('SubstitutingConnectionStringValue' , xmlDomNodeAttributes.nodeName , ConfigFileConnStringTokenName));
+                xmlDomNode.setAttribute("connectionString", ConfigFileConnStringTokenName);
+                replacableTokenValues[ConfigFileConnStringTokenName] = variableMap[xmlDomNodeAttributes.nodeName].replace(/"/g, "'");
+                isSubstitutionApplied = true;
+            }
+            else if(variableMap["connectionString"] != undefined) {
+                var ConfigFileConnStringTokenName = ConfigFileConnStringToken + '(connectionString)';
+                tl.debug(tl.loc('SubstitutingConnectionStringValue' , xmlDomNodeAttributes.nodeName , ConfigFileConnStringTokenName));
+                xmlDomNode.setAttribute("connectionString", ConfigFileConnStringTokenName);
+                replacableTokenValues[ConfigFileConnStringTokenName] = variableMap["connectionString"].replace(/"/g, "'");
+                isSubstitutionApplied = true
+            }
         }
     }
 
+    var children = xmlDomNode.childNodes;
+    if(children) {
+        for (var childs = 0; childs < children.length; childs ++) {
+            var childNode = children[childs];
+            if(varUtility.isObject(childNode)) {
+                isSubstitutionApplied =  updateXmlConnectionStringsNodeAttribute(childNode, variableMap, replacableTokenValues) || isSubstitutionApplied;
+            }
+        }
+    }
     return isSubstitutionApplied;
 }
 
@@ -275,11 +295,21 @@ function replaceEscapeXMLCharacters(xmlDOMNode) {
         return;
     }
 
-    for(var xmlAttribute in xmlDOMNode.attrs) {
-        xmlDOMNode.attrs[xmlAttribute] = xmlDOMNode.attrs[xmlAttribute].replace(/'/g, "APOS_CHARACTER_TOKEN");
+    var xmlDomNodeAttributes = xmlDOMNode.attributes;
+    if(xmlDomNodeAttributes) {
+        for(var xmlAttribute = 0 ; xmlAttribute < xmlDomNodeAttributes.length; xmlAttribute ++) {
+            if(xmlDomNodeAttributes[xmlAttribute]) {
+                (xmlDomNodeAttributes[xmlAttribute]).nodeValue = ((xmlDomNodeAttributes[xmlAttribute]).nodeValue).replace(/'/g, "APOS_CHARACTER_TOKEN");
+            }
+        }
     }
 
-    for(var xmlChild of xmlDOMNode.children) {
-        replaceEscapeXMLCharacters(xmlChild);
+    var xmlDOMchildNodes = xmlDOMNode.childNodes;
+    if(xmlDOMchildNodes)
+    {
+        for (var i = 0; i <xmlDOMchildNodes.length; i++) {
+            var xmlChild = xmlDOMchildNodes[i];
+            replaceEscapeXMLCharacters(xmlChild);
+        }
     }
 }
