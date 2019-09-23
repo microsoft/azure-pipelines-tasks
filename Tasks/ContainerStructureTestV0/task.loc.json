@@ -47,16 +47,12 @@
       }
     },
     {
-      "name": "tags",
-      "type": "multiLine",
+      "name": "tag",
+      "type": "string",
       "defaultValue": "$(Build.BuildId)",
-      "properties": {
-        "resizable": "true",
-        "rows": "2"
-      },
-      "label": "ms-resource:loc.input.label.tags",
+      "label": "ms-resource:loc.input.label.tag",
       "groupName": "containerRepository",
-      "helpMarkDown": "ms-resource:loc.input.help.tags"
+      "helpMarkDown": "ms-resource:loc.input.help.tag"
     },
     {
       "name": "configFile",

@@ -36,7 +36,7 @@ async function run() {
 
         const testFilePath = tl.getInput('configFile', true);
         const repository = tl.getInput('repository', true);
-        let tagsInput = tl.getInput('tags');
+        let tagsInput = tl.getInput('tag');
         const tag = tagsInput == null || tagsInput == "" ? "latest" : tagsInput;
 
         const image = `${repository}:${tag}`;

@@ -47,16 +47,12 @@
             }
         },
         {
-            "name": "tags",
-            "type": "multiLine",
+            "name": "tag",
+            "type": "string",
             "defaultValue": "$(Build.BuildId)",
-            "properties": {
-                "resizable": "true",
-                "rows": "2"
-            },
-            "label": "Tags",
+            "label": "Tag",
             "groupName": "containerRepository",
-            "helpMarkDown": "A list of tags in separate lines. These tags are used in build, push and buildAndPush commands. Ex:<br><br>beta1.1<br>latest"
+            "helpMarkDown": "The tag is used in pulling the image from docker registry service connection"
         },
         {
             "name": "configFile",
