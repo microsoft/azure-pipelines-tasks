@@ -40,6 +40,8 @@ export class ARMDeployTaskParameters {
                 this.deploymentScope = "Resource Group";
             }
 
+            var resourceGroupNameInServiceConnection;
+
             //Service Connection
             this.connectedService = tl.getInput("ConnectedServiceName", true);
             var endpointTelemetry = '{"endpointId":"' + this.connectedService + '"}';
@@ -52,6 +54,7 @@ export class ARMDeployTaskParameters {
                     var armServiceConnectionAuthScopeSplit = armServiceConnectionAuthScope.split("/");
                     if(!!armServiceConnectionAuthScopeSplit[4]){
                         armServiceConnectionScope = "Resource Group";
+                        resourceGroupNameInServiceConnection = armServiceConnectionAuthScopeSplit[4];
                     }
                 }
             }
@@ -71,7 +74,10 @@ export class ARMDeployTaskParameters {
             //Resource group name
             this.resourceGroupName = tl.getInput("resourceGroupName");
             if(!this.resourceGroupName && this.deploymentScope === "Resource Group"){
-                throw new Error(tl.loc("ResourceGroupNameNotProvided"));
+                this.resourceGroupName = resourceGroupNameInServiceConnection;
+                if(!this.resourceGroupName){
+                    throw new Error(tl.loc("ResourceGroupNameNotProvided"));
+                }
             }
 
             //Location

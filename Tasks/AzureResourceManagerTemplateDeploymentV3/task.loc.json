@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 0
   },
   "preview": "true",
   "demands": [],
@@ -224,7 +224,7 @@
       "target": "subscriptionName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureSubscriptions",
-      "resultTemplate": "{ \"Value\" : \"{{{subscriptionId}}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{{subscriptionId}}}\", \"DisplayValue\" : \"{{{displayName}}} ({{{subscriptionId}}})\" }"
     },
     {
       "target": "resourceGroupName",
