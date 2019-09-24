@@ -8,7 +8,7 @@ function setResponseFile(name) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
-describe('Azure Resource Group Deployment', function () {
+describe('Azure Resource Manager Template Deployment', function () {
     this.timeout(30000);
     before((done) => {
         done();
@@ -21,10 +21,10 @@ describe('Azure Resource Group Deployment', function () {
 	process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] || "C:\\temp\\agent\\home";
 	process.env["AGENT_TEMPDIRECTORY"] = process.env["AGENT_TEMPDIRECTORY"] || "C:\\temp\\agent\\home\\temp";
 
-// uncomment to get test traces
+//  uncomment to get test traces
 //	process.env['TASK_TEST_TRACE'] = "1";
 
-    it('Successfully triggered createOrUpdate deployment', (done) => {
+    /*it('Successfully triggered createOrUpdate deployment', (done) => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
@@ -42,7 +42,7 @@ describe('Azure Resource Group Deployment', function () {
             console.log("STDOUT", tr.stdout);
             done(error);
         }
-    });
+    });*/
     it('Successfully triggered createOrUpdate deployment and updated deploymentOutputs', (done) => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSM.json";
