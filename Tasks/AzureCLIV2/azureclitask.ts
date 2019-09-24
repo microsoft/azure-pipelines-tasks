@@ -2,7 +2,7 @@ import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import { Utility } from "./src/Utility";
-import {ScriptType, ScriptTypeFactory} from "./src/AzureCLIV2";
+import {ScriptType, ScriptTypeFactory} from "./src/ScriptType";
 
 export class azureclitask {
 
