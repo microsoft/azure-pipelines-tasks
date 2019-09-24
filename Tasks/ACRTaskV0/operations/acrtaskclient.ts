@@ -7,6 +7,7 @@ import * as yaml from "js-yaml";
 import * as AcrTaskRequest from "../models/acrtaskrequestbody";
 import { TaskUtil } from "../utilities/utils";
 import { AcrTask } from "../models/acrtaskparameters";
+import * as semver from 'semver';
 
 const acrTaskbaseUri : string = "//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}" ;
 const dummyContextUrl : string = "https://dev.azure.com/";
@@ -94,7 +95,7 @@ export class AcrTaskClient extends ServiceClient {
                 // Generate Response
                 this.updateTask = true;
                 console.log(tl.loc("UpdateAcrTask", this.acrTask.name));
-                return new ApiResult(null);
+                return new ApiResult(null, response.body);
             }
             else if (statusCode === 404)
             {
@@ -210,6 +211,7 @@ export class AcrTaskClient extends ServiceClient {
         } as AcrTaskRequest.ITaskRunRequest;
 
         httpRequest.body = JSON.stringify(requestbody);
+        tl.debug("Request body for run Acr task " + JSON.stringify(requestbody));
         console.log(tl.loc("RunAcrTask", acrTaskName));
         this.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             var statusCode = response.statusCode;
@@ -357,6 +359,7 @@ export class AcrTaskClient extends ServiceClient {
     private  _getRequestBodyForAddOrUpdateTask() : AcrTaskRequest.IAcrTaskRequestBody
     {
         let tags: {[key: string]: string} = {};
+        tags["taskVersion"] = this._getTaskVersion();
         let platform = {
             os : tl.getInput("os"),
             architecture : tl.getInput("architecture") 
@@ -458,5 +461,15 @@ export class AcrTaskClient extends ServiceClient {
         catch (error) {
             throw Error(error);
         }
+    }
+
+    private _getTaskVersion() {
+        var version = this.acrTask.version;
+        if(this.updateTask)
+        {
+            version  = semver.inc(this.acrTask.version, 'patch');
+        }
+
+        return version
     }
 }

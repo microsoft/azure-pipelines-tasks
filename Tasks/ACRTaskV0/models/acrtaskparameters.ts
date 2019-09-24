@@ -14,6 +14,7 @@ class AcrRegistry {
 }
 
 export class AcrTask {
+    version: string;
     name: string;
     imageNames: string[];
     registry: AcrRegistry;

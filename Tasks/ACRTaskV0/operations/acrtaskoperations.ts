@@ -8,7 +8,7 @@ import { ArchiveUtil } from "../utilities/utils";
 import { AzureBlobUploadHelper } from "./azure-blob-upload-helper";
 
 export default class AcrTaskOperations {
-    private taskParameters: AcrTaskParameters ;
+    public taskParameters: AcrTaskParameters ;
     private acrTaskClient: AcrTaskClient;
 
     constructor(taskParameters: AcrTaskParameters) {
@@ -79,7 +79,20 @@ export default class AcrTaskOperations {
                 defer.reject(new Error(tl.loc("FailedToFetchTask", this.taskParameters.acrTask.name, this.acrTaskClient.getFormattedError(error))));
             }
             else{
-                defer.resolve();
+                var taskVersion = "1.0.0"
+                if(!!result)
+                {
+                    try
+                    {
+                        taskVersion = result.tags["taskVersion"]
+                    }
+                    catch(error)
+                    {
+                        defer.reject(error);
+                    }
+                }
+
+                defer.resolve(taskVersion);
             }
         });
     

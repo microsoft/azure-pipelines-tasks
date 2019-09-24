@@ -19,8 +19,9 @@ async function run() {
         await taskOperations.populateContextPath();
 
         //check whether task exists
-        await taskOperations.getTask();
-        
+        var taskVersion = await taskOperations.getTask();
+
+        taskOperations.taskParameters.acrTask.version = taskVersion
         var taskId = await taskOperations.createOrUpdateTask();
 
         if(!taskId)
