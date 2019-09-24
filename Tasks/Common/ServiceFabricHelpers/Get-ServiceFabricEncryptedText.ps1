@@ -13,20 +13,60 @@ function Get-ServiceFabricEncryptedText
     $defaultCertStoreName = "My"
     $defaultCertStoreLocation = "CurrentUser"
 
-    if ($clusterConnectionParameters["ServerCommonName"] )
+    if ($ClusterConnectionParameters["ServerCertThumbprint"])
     {
-        $serverCertValues = $ClusterConnectionParameters["ServerCommonName"]
+        $serverCertThumbprints = $ClusterConnectionParameters["ServerCertThumbprint"];
     }
-    elseif ($ClusterConnectionParameters["ServerCertThumbprint"])
+    else 
     {
-        $serverCertValues = $ClusterConnectionParameters["ServerCertThumbprint"];
+        try
+        {
+            $manifest = [xml](Get-ServiceFabricClusterManifest)
+            $securityInfo = $manifest.ClusterManifest.FabricSettings.Section | Where-Object {$_.Name -eq 'Security'}
+            $serverCertsParameter = $securityInfo.Parameter | Where-Object { $_.Name -eq 'ServerCertThumbprints' }
+            $serverCertThumbprints = $serverCertsParameter.Value.Split(',').trim()
+        }
+        catch 
+        {
+            if ($clusterConnectionParameters["ServerCommonName"])
+            {
+                $serverCertValues = $ClusterConnectionParameters["ServerCommonName"]
+                
+                # Get server cert thumbprints of valid certificates
+                if ($serverCertValues -is [array])
+                {
+                    foreach ($serverCertValue in $serverCertValues)
+                    {
+                        $serverCerts = Get-ChildItem -Path "Cert:\$defaultCertStoreLocation\$defaultCertStoreName" | Where-Object {$_.Subject -like $serverCertValue -and ($_.NotAfter -gt (Get-Date))}
+
+                        if ($serverCerts -is [array] -and $serverCerts.Length -gt 1) 
+                        {
+                            Write-Warning (Get-VstsLocString -Key MultipleCertPresentInLocalStoreWarningMsg -ArgumentList $serverCertValue)
+                            break
+                        }
+                        else 
+                        {
+                            $serverCertThumbprints = $serverCerts.Thumbprint
+                            if ($serverCertThumbprints)
+                            {
+                                break
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    $serverCertThumbprints = (Get-ChildItem -Path "Cert:\$defaultCertStoreLocation\$defaultCertStoreName" | Where-Object {$_.Subject -like $serverCertValues}).Thumbprint
+                }
+            }
+        }
     }
 
-    if ($serverCertValues -is [array])
+    if ($serverCertThumbprints -is [array])
     {
-        foreach ($serverCertValue in $serverCertValues)
+        foreach ($serverCertThumbprint in $serverCertThumbprints)
         {
-            $cert = Get-Item "Cert:\$defaultCertStoreLocation\$defaultCertStoreName\$serverCertValue" -ErrorAction SilentlyContinue
+            $cert = Get-Item "Cert:\$defaultCertStoreLocation\$defaultCertStoreName\$serverCertThumbprint" -ErrorAction SilentlyContinue
             if ($cert)
             {
                 break
@@ -35,12 +75,12 @@ function Get-ServiceFabricEncryptedText
     }
     else
     {
-        $cert = Get-Item "Cert:\$defaultCertStoreLocation\$defaultCertStoreName\$serverCertValues" -ErrorAction SilentlyContinue
+        $cert = Get-Item "Cert:\$defaultCertStoreLocation\$defaultCertStoreName\$serverCertThumbprints" -ErrorAction SilentlyContinue
     }
 
     if (-not $cert)
     {
-        Write-Warning (Get-VstsLocString -Key ServerCertificateNotFoundForTextEncrypt -ArgumentList $serverCertValues)
+        Write-Warning (Get-VstsLocString -Key ServerCertificateNotFoundForTextEncrypt -ArgumentList $serverCertThumbprints)
         return $null
     }
 
