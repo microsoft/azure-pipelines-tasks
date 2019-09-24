@@ -3,7 +3,7 @@
     "name": "SqlAzureDataWarehouseDacpacDeployment",
     "friendlyName": "Azure SQL Data Warehouse deployment",
     "description": "Deploy Azure SQL Data Warehouse using DACPACs or run SQL scripts using SQLCMD",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment",
+    "helpUrl": "https://aka.ms/sqldwdeployreadmehelp",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/sqldwdeployreadme)",
     "category": "Deploy",
     "visibility": [
