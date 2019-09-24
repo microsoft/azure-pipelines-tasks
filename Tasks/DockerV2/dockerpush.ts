@@ -8,6 +8,7 @@ import * as utils from "./utils";
 import { findDockerFile } from "docker-common-v2/fileutils";
 import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
 import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "docker-common-v2/containerimageutils";
+import * as pipelineUtils from "docker-common-v2/pipelineutils";
 
 import Q = require('q');
 
@@ -136,10 +137,22 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
     const build = "build";
     const hostType = tl.getVariable("System.HostType").toLowerCase();
     const runId = hostType === build ? parseInt(tl.getVariable("Build.BuildId")) : parseInt(tl.getVariable("Release.ReleaseId"));
-    const pipelineVersion = addPipelineData ? hostType === build ? tl.getVariable("Build.BuildNumber") : tl.getVariable("Release.ReleaseName") : '';
-    const pipelineName = addPipelineData ? tl.getVariable("System.DefinitionName") : '';
-    const pipelineId = addPipelineData ? tl.getVariable("System.DefinitionId") : '';
-    const jobName = addPipelineData ? tl.getVariable("System.PhaseDisplayName") : '';
+    const pipelineVersion = addPipelineData ? hostType === build ? tl.getVariable("Build.BuildNumber") : tl.getVariable("Release.ReleaseName") : "";
+    const pipelineName = addPipelineData ? tl.getVariable("System.DefinitionName") : "";
+    const pipelineId = addPipelineData ? tl.getVariable("System.DefinitionId") : "";
+    const jobName = addPipelineData ? tl.getVariable("System.PhaseDisplayName") : "";
+    const creator = addPipelineData ? dockerCommandUtils.getCreatorEmail() : "";
+    const logsUri = addPipelineData ? dockerCommandUtils.getPipelineLogsUrl() : "";
+    const artifactStorageSourceUri = addPipelineData ? dockerCommandUtils.getPipelineUrl() : "";
+
+    const repoUrl = tl.getVariable("Build.Repository.Uri");
+    const contextUrl = addPipelineData && repoUrl ? repoUrl : "";
+
+    const commitId = tl.getVariable("Build.SourceVersion");
+    const revisionId = addPipelineData && commitId ? commitId : "";
+
+    const labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
+    const buildOptions = dockerCommandUtils.getBuildAndPushArguments(dockerFilePath, labelArguments, tags);
 
     const requestUrl = tl.getVariable("System.TeamFoundationCollectionUri") + tl.getVariable("System.TeamProject") + "/_apis/deployment/imagedetails?api-version=5.0-preview.1";
     const requestBody: string = JSON.stringify(
@@ -148,7 +161,7 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
             "imageUri": imageUri,
             "hash": digest,
             "baseImageName": baseImageName,
-            "distance": 0,
+            "distance": layers.length,
             "imageType": "",
             "mediaType": "",
             "tags": tags,
@@ -158,7 +171,13 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
             "pipelineName": pipelineName,
             "pipelineId": pipelineId,
             "jobName": jobName,
-            "imageSize": imageSize
+            "imageSize": imageSize,
+            "creator": creator,
+            "logsUri": logsUri,
+            "artifactStorageSourceUri": artifactStorageSourceUri,
+            "contextUrl": contextUrl,
+            "revisionId": revisionId,
+            "buildOptions": buildOptions
         }
     );
 
