@@ -15,7 +15,7 @@
     "version": {
         "Major": 3,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "preview": "true",
     "demands": [],
@@ -294,6 +294,7 @@
         "LogDeploymentName": "Deployment name is %s",
         "ResourceGroupNameNotProvided": "Resource Group name should be provided",
         "LocationNotProvided": "Location is required for deployment",
-        "ARMServiceConnectionScope": "ARM Service Conection deployment scope - %s"
+        "ARMServiceConnectionScope": "ARM Service Conection deployment scope - %s",
+        "CompleteDeploymentModeNotSupported": "Deployment mode 'Complete' is not supported for deployment at '%s' scope"
     }
 }
