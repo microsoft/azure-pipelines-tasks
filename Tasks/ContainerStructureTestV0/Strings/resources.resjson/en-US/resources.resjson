@@ -23,5 +23,6 @@
   "loc.messages.WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
   "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s.",
   "loc.messages.ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
-  "loc.messages.DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s"
+  "loc.messages.DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
+  "loc.messages.NotSupportedOS": "Container Structure test task is not supported in OS: %s"
 }

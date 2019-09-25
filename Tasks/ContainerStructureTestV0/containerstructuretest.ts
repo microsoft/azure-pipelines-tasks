@@ -34,10 +34,14 @@ async function run() {
         tl.debug(`Os Type: ${osType}`);
         telemetryData["OsType"] = osType;
 
+        if(osType == "windows_nt") {
+            throw new Error(tl.loc('NotSupportedOS', osType));
+        }
+
         const testFilePath = tl.getInput('configFile', true);
         const repository = tl.getInput('repository', true);
-        let tagsInput = tl.getInput('tag');
-        const tag = tagsInput == null || tagsInput == "" ? "latest" : tagsInput;
+        let tagInput = tl.getInput('tag');
+        const tag = tagInput ? tagInput : "latest";
 
         const image = `${repository}:${tag}`;
         let endpointId = tl.getInput("dockerRegistryServiceConnection");
@@ -46,10 +50,10 @@ async function run() {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
         let registryAuthenticationToken: RegistryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
         let connection = new ContainerConnection();
-        connection.open(null, registryAuthenticationToken, true, false);
 
-        await dockerLogin(connection);
+        connection.open(null, registryAuthenticationToken, true, false);
         tl.debug(`Successfully finished docker login`);
+
         await dockerPull(connection, image);
         tl.debug(`Successfully finished docker pull`);
 

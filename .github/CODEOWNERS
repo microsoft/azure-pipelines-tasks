@@ -291,6 +291,8 @@ Tasks/PublishTestResultsV1/*    @smalpani
 
 Tasks/PublishTestResultsV2/*    @SadagopanRajaram
 
+Tasks/ContainerStructureTestV0/*    @SadagopanRajaram
+
 Tasks/PublishToAzureServiceBusV1/*      @bansalaseem
 
 Tasks/PyPIPublisherV0/*     @bishal-pdmsft   @madhurig

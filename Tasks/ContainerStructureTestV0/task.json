@@ -16,6 +16,7 @@
         "Minor": 1,
         "Patch": 0
     },
+    "preview": true,
     "demands": [],
     "minimumAgentVersion": "2.0.0",
     "groups": [
@@ -87,6 +88,7 @@
         "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
         "FileContentSynced": "Synced the file content to the disk. The content is %s.",
         "ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
-        "DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s"
+        "DockerHostVariableWarning": "DOCKER_HOST variable is set. Please ensure that the Docker daemon is running on: %s",
+        "NotSupportedOS": "Container Structure test task is not supported in OS: %s"
     }
 }
