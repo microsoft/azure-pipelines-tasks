@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 2
+    "Minor": 158,
+    "Patch": 0
   },
   "preview": "true",
   "minimumAgentVersion": "2.104.1",
@@ -155,7 +155,6 @@
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
-    "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
     "UpdatingAppServiceConnectionStrings": "ms-resource:loc.messages.UpdatingAppServiceConnectionStrings",
     "UpdatedAppServiceConnectionStrings": "ms-resource:loc.messages.UpdatedAppServiceConnectionStrings",

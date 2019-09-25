@@ -74,8 +74,9 @@ export class AzureRMEndpoint {
                 this.endpoint.activeDirectoryResourceID = this.endpoint.url;
             }
 
+            let access_token: string = tl.getEndpointAuthorizationParameter(this._connectedServiceName, "apitoken", true);
             this.endpoint.applicationTokenCredentials = new ApplicationTokenCredentials(this.endpoint.servicePrincipalClientID, this.endpoint.tenantID, this.endpoint.servicePrincipalKey, 
-                this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, !!this.endpoint.environment && this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, this.endpoint.scheme, this.endpoint.msiClientId, this.endpoint.authenticationType, this.endpoint.servicePrincipalCertificatePath, this.endpoint.isADFSEnabled);
+                this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, !!this.endpoint.environment && this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, this.endpoint.scheme, this.endpoint.msiClientId, this.endpoint.authenticationType, this.endpoint.servicePrincipalCertificatePath, this.endpoint.isADFSEnabled, access_token);
         }
 
         tl.debug(JSON.stringify(this.endpoint));
