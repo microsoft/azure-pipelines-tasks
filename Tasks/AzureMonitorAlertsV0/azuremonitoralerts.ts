@@ -6,8 +6,10 @@ import { AzureEndpoint, IAzureMetricAlertRulesList } from 'azure-arm-rest-v2/azu
 import { AzureMonitorAlertsUtility } from './operations/AzureMonitorAlertsUtility'
 
 async function run() {
-	try {
+	 try {
 		tl.setResourcePath(path.join(__dirname, "task.json"));
+
+		console.log("##vso[task.logissue type=warning]" + tl.loc("DeprecatedTask"));
 
 		let connectedServiceName: string = tl.getInput("ConnectedServiceName", true);
 		let resourceGroupName: string = tl.getInput("ResourceGroupName", true);
