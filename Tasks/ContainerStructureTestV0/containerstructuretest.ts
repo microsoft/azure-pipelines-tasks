@@ -92,17 +92,6 @@ async function run() {
     }
 }
 
-async function dockerLogin(connection: ContainerConnection): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-        try {
-            connection.setDockerConfigEnvVariable();
-            resolve("done");
-        } catch (error) {
-            reject(error);
-        }
-    });
-}
-
 async function dockerPull(connection: ContainerConnection, imageName: string): Promise<any> {
     return new Promise<any>((resolve, reject) => {
         try {
