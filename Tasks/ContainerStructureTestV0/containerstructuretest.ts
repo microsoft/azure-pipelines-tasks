@@ -170,23 +170,26 @@ function runContainerStructureTest(runnerPath: string, testFilePath: string, ima
     return jsonOutput;
 }
 
-function publishTheTestResultsToTCM(jsonResutlsString: string) {
-    let resultsFile = createResultsFile(jsonResutlsString);
+function publishTheTestResultsToTCM(jsonResultsString: string) {
+    let resultsFile = createResultsFile(jsonResultsString);
 
     if (!resultsFile) {
-        tl.warning("Unable to create the resutls file, hence not publishg the test results");
+        tl.warning("Unable to create the results file, hence not publishing the test results");
         return;
     }
-
-    var properties = <{ [key: string]: string }>{};
-    properties['type'] = "ContainerStructure";
-    properties['mergeResults'] = "false";
-    properties['runTitle'] = "Container Structure Tests";
-    properties['resultFiles'] = resultsFile;
-    properties['testRunSystem'] = "VSTS-PTR";
-
-    tl.command('results.publish', properties, '');
-    telemetryData["TCMPublishStatus"] = true;
+    try {
+        var properties = <{ [key: string]: string }>{};
+        properties['type'] = "ContainerStructure";
+        properties['mergeResults'] = "false";
+        properties['runTitle'] = "Container Structure Tests";
+        properties['resultFiles'] = resultsFile;
+        properties['testRunSystem'] = "VSTS-PTR";
+    
+        tl.command('results.publish', properties, '');
+        telemetryData["TCMPublishStatus"] = true;
+    } catch(error) {
+        tl.debug(`Unable to publish the test results because of ${error}`);
+    }
 }
 
 function publishTestResultsToMetadataStore(testSummary: TestSummary) {
