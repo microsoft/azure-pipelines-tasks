@@ -31,13 +31,13 @@ Tasks/AzureFileCopyV2/*    @kmkumaran
 
 Tasks/AzureFileCopyV3/*    @kmkumaran
 
-Tasks/AzureFunctionAppV1/*    @kmkumaran      @SumiranAgg     @vincentdass
+Tasks/AzureFunctionAppV1/*    @kmkumaran      @SumiranAgg
 
-Tasks/AzureFunctionAppContainerV1/*    @kmkumaran      @SumiranAgg     @vincentdass
+Tasks/AzureFunctionAppContainerV1/*    @kmkumaran      @SumiranAgg
 
 Tasks/AzureFunctionV1/*     @bansalaseem
 
-Tasks/AzureIoTEdgeV2/*      @prativen   @michaeljqzq    @shyama1208
+Tasks/AzureIoTEdgeV2/*      @prativen  @blackchoey  @michaeljqzq
 
 Tasks/AzureKeyVaultV1/*     @bansalaseem
 
