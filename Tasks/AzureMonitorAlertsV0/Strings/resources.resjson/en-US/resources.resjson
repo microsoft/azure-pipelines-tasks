@@ -30,5 +30,5 @@
   "loc.messages.FailedToGetAzureMetricAlerts": "Failed to get Application Insights Alert rule: %s. Error: %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Failed to update Azure metric alert rule '%s' Resource. Error: %s",
   "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
-  "loc.messages.DeprecatedTask": "As part of classic alerts retirement, we are deprecating the Azure Monitor Alerts task which is currently based on classic alerts API. Please use the Azure CLI task to manage new alerts. Refer this: https://docs.microsoft.com/en-us/cli/azure/monitor/metrics/alert?view=azure-cli-latest"
+  "loc.messages.DeprecatedTask": "As part of classic alerts retirement, we are deprecating the Azure Monitor Alerts task which is currently based on classic alerts API. Please use the Azure CLI task to manage new alerts. Refer this: https://aka.ms/deprecateazuremonitoralertstask"
 }
