@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Deploy to Kubernetes",
+  "loc.friendlyName": "Kubectl",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running kubectl commands",
   "loc.instanceNameFormat": "kubectl $(command)",
