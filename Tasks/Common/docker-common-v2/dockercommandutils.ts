@@ -11,6 +11,7 @@ const orgUrl = tl.getVariable('System.TeamFoundationCollectionUri');
 const buildString = "build";
 const hostType = tl.getVariable("System.HostType").toLowerCase();
 const isBuild = hostType === buildString;
+const matchPatternForDigest = new RegExp(/sha256\:(.+)/);
 
 export function build(connection: ContainerConnection, dockerFile: string, commandArguments: string, labelArguments: string[], tagArguments: string[], onCommandOut: (output) => any): any {
     var command = connection.createCommand();
@@ -86,11 +87,10 @@ export function getCommandArguments(args: string): string {
 }
 
 export function getCreatorEmail(): string {
-    const build = "build";
-    const scheduleBuildReason = "schedule";
-    const hostType = tl.getVariable("System.HostType").toLowerCase();
+    const schedule = "schedule";
+    const buildReason = tl.getVariable("Build.Reason");
     let userEmail: string = "";
-    if (hostType === build && tl.getVariable("Build.Reason").toLowerCase() !== scheduleBuildReason) {
+    if (isBuild && (!buildReason || (buildReason && tl.getVariable("Build.Reason").toLowerCase() !== schedule))) {
         userEmail = tl.getVariable("Build.RequestedForEmail");
     }
     else {
@@ -123,7 +123,7 @@ export function getBuildAndPushArguments(dockerFile: string, labelArguments: str
     return buildArguments;
 }
 
-export function getBuildContext(dockerFile : string): string {
+export function getBuildContext(dockerFile: string): string {
     let buildContext = tl.getPathInput("buildContext");
     if (useDefaultBuildContext(buildContext)) {
         buildContext = path.dirname(dockerFile);
@@ -151,23 +151,35 @@ export function getPipelineUrl(): string {
     return pipelineUrl;
 }
 
-export async function getLayers(connection: ContainerConnection, imageId: string): Promise<any> {
+export function getLayers(history: string): { [key: string]: string }[] {
     var layers = [];
-    var history = await getHistory(connection, imageId);
     if (!history) {
         return null;
     }
 
     var lines = history.split(/[\r?\n]/);
-
     lines.forEach(line => {
         line = line.trim();
         if (line.length != 0) {
-            layers.push(parseHistory(line));
+            layers.push(parseHistoryForLayers(line));
         }
     });
 
     return layers.reverse();
+}
+
+export function getImageFingerPrintV1Name(history: string): string {
+    let v1Name = "";
+    if (!history) {
+        return null;
+    }
+
+    const lines = history.split(/[\r?\n]/);
+    if (lines && lines.length > 0) {
+        v1Name = parseHistoryForV1Name(lines[0]);
+    }
+
+    return v1Name;
 }
 
 export function getImageSize(layers: { [key: string]: string }[]): string {
@@ -202,7 +214,7 @@ export function extractSizeInBytes(size: string): number {
     return 0;
 }
 
-function parseHistory(input: string) {
+function parseHistoryForLayers(input: string) {
     const NOP = '#(nop)';
     let directive = "UNSPECIFIED";
     let argument = "";
@@ -233,10 +245,21 @@ function parseHistory(input: string) {
     return { "directive": directive, "arguments": argument, "createdOn": createdAt, "size": layerSize };
 }
 
-async function getHistory(connection: ContainerConnection, image: string): Promise<string> {
+function parseHistoryForV1Name(topHistoryLayer: string): string {
+    let v1Name = "";
+    const layerIdString = "layerId:";
+    const indexOfLayerId = topHistoryLayer.indexOf(layerIdString);
+    if (indexOfLayerId >= 0) {
+        v1Name = topHistoryLayer.substring(indexOfLayerId + layerIdString.length);
+    }
+
+    return v1Name;
+}
+
+export async function getHistory(connection: ContainerConnection, image: string): Promise<string> {
     var command = connection.createCommand();
     command.arg("history");
-    command.arg(["--format", "createdAt:{{.CreatedAt}}; layerSize:{{.Size}}; createdBy:{{.CreatedBy}}"]);
+    command.arg(["--format", "createdAt:{{.CreatedAt}}; layerSize:{{.Size}}; createdBy:{{.CreatedBy}}; layerId:{{.ID}}"]);
     command.arg("--no-trunc");
     command.arg(image);
 
@@ -262,4 +285,75 @@ async function getHistory(connection: ContainerConnection, image: string): Promi
 
     await defer.promise;
     return output;
+}
+
+export async function getImageRootfsLayers(connection: ContainerConnection, imageDigest: string): Promise<string[]> {
+    var command = connection.createCommand();
+    command.arg("inspect");
+    command.arg(imageDigest);
+    command.arg(["-f", "{{.RootFS.Layers}}"]);
+
+    const defer = Q.defer();
+    // setup variable to store the command output
+    let output = "";
+    command.on("stdout", data => {
+        output += data;
+    });
+
+    try {
+        connection.execCommand(command).then(() => {
+            defer.resolve();
+        });
+    }
+    catch (e) {
+        // Swallow any exceptions encountered in executing command
+        output = null;
+        defer.resolve();
+        tl.warning("get image inspect failed with error " + e);
+    }
+
+    await defer.promise;
+
+    // Remove '[' and ']' from output
+    output = output.replace("[", "");
+    output = output.replace("]","");
+    
+    // Return array of rootLayers in the form -> [sha256:2c833f307fd8f18a378b71d3c43c575fabdb88955a2198662938ac2a08a99928,sha256:5f349fdc9028f7edde7f8d4c487d59b3e4b9d66a367dc85492fc7a81abf57b41, ...]
+    let rootLayers = output.split(" ");
+    return rootLayers;
+}
+
+export function getImageFingerPrint(rootLayers: string[], v1Name: string): { [key: string]: string | string[] } {
+    let v2_blobs: string[] = [];
+    let v2Name: string = "";
+    if (rootLayers && rootLayers.length > 0) {
+        rootLayers.forEach(layer => {
+            // remove sha256 from layerIds
+            const digest = getDigest(layer);
+            v2_blobs.push(digest);
+
+            // As per grafeas spec, the name of the image's v2 blobs computed via:
+            //   [bottom] := v2_blob[bottom]
+            //   [N] := sha256(v2_blob[N] + " " + v2_name[N+1])
+            // Only the name of the final blob is kept.
+            v2Name = v2Name + digest + " ";
+        });
+
+        v2Name = "sha256(" + v2Name.trim() + ")";
+    }
+
+    return {
+        "v1Name": v1Name,
+        "v2Blobs": v2_blobs,
+        "v2Name": v2Name
+    };
+}
+
+function getDigest(imageId: string): string {
+    const imageMatch = imageId.match(matchPatternForDigest);
+    if (imageMatch && imageMatch.length >= 1) {
+        return imageMatch[1];
+    }
+
+    return "";
 }
