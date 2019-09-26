@@ -140,7 +140,7 @@ try
 
     if ($registryCredentials -ne "None")
     {
-        if (-not $isEncrypted -and $connectedServiceEndpoint.Auth.Parameters.CertLookUp -and ($clusterConnectionParameters["ServerCertThumbprint"] -or $clusterConnectionParameters["ServerCommonName"]))
+        if (-not $isEncrypted -and ($clusterConnectionParameters["ServerCertThumbprint"] -or $clusterConnectionParameters["ServerCommonName"]))
         {
             Write-Host (Get-VstsLocString -Key EncryptingPassword)
             $encryptedPassword = Get-ServiceFabricEncryptedText -Text $password -ClusterConnectionParameters $clusterConnectionParameters

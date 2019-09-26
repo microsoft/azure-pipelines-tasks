@@ -186,7 +186,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         if ($ConnectedServiceEndpoint.Auth.Scheme -ne "None")
         {
             # Add server cert thumbprint(s)/commonname(s) (common to both auth-types)
-            if ($ConnectedServiceEndpoint.Auth.Parameters.CertLookUp -and $ConnectedServiceEndpoint.Auth.Parameters.CertLookUp -eq "CommonName" -and $ConnectedServiceEndpoint.Auth.Parameters.ServerCertCommonName) 
+            if ($ConnectedServiceEndpoint.Auth.Parameters.ServerCertCommonName) 
             {
                 $clusterConnectionParameters["ServerCommonName"] = $ConnectedServiceEndpoint.Auth.Parameters.ServerCertCommonName -split ',' | ForEach-Object { $_.Trim() }
             } 

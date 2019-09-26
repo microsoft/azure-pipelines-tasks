@@ -37,7 +37,7 @@ function Get-ServiceFabricEncryptedText
                 {
                     foreach ($serverCertValue in $serverCertValues)
                     {
-                        $serverCerts = Get-ChildItem -Path "Cert:\$defaultCertStoreLocation\$defaultCertStoreName" | Where-Object {$_.Subject -like $serverCertValue -and ($_.NotAfter -gt (Get-Date))}
+                        $serverCerts = Get-ChildItem -Path "Cert:\$defaultCertStoreLocation\$defaultCertStoreName" | Where-Object {(($_.Subject -like $serverCertValue) -or ($serverCertValue -like $_.Subject)) -and ($_.NotAfter -gt (Get-Date))}
 
                         if ($serverCerts -is [array] -and $serverCerts.Length -gt 1) 
                         {
@@ -56,7 +56,7 @@ function Get-ServiceFabricEncryptedText
                 }
                 else
                 {
-                    $serverCertThumbprints = (Get-ChildItem -Path "Cert:\$defaultCertStoreLocation\$defaultCertStoreName" | Where-Object {$_.Subject -like $serverCertValues}).Thumbprint
+                    $serverCertThumbprints = (Get-ChildItem -Path "Cert:\$defaultCertStoreLocation\$defaultCertStoreName" | Where-Object {($_.Subject -like $serverCertValue) -or ($serverCertValue -like $_.Subject)}).Thumbprint
                 }
             }
         }
