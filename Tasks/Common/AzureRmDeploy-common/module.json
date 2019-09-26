@@ -145,6 +145,7 @@
         "UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
         "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
+        "DeletingAppServiceApplicationSettings": "Deleting App Service Application settings. Data: %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
         "UpdatingAppServiceConnectionStrings" : "Updating App Service Connection Strings. Data: %s",
         "UpdatedAppServiceConnectionStrings" : "Updated App Service Connection Strings. Data: %s",

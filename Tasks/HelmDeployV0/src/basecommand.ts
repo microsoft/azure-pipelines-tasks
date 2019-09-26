@@ -40,8 +40,8 @@ abstract class basecommand {
         });
     }
 
-    public execCommandSync(command: tr.ToolRunner, options?: tr.IExecOptions) {
-        basecommand.handleExecResult(command.execSync(options));
+    public execCommandSync(command: tr.ToolRunner, options?: tr.IExecOptions): tr.IExecSyncResult {
+        return command.execSync(options);
     }
 
     public IsInstalled(): boolean {
