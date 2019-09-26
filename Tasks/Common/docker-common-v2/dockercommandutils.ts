@@ -5,6 +5,7 @@ import * as Q from "q";
 import ContainerConnection from "./containerconnection";
 import * as pipelineUtils from "./pipelineutils";
 import * as path from "path";
+import * as crypto from "crypto";
 
 const matchPatternForSize = new RegExp(/[\d\.]+/);
 const orgUrl = tl.getVariable('System.TeamFoundationCollectionUri');
@@ -247,7 +248,7 @@ function parseHistoryForLayers(input: string) {
 
 function parseHistoryForV1Name(topHistoryLayer: string): string {
     let v1Name = "";
-    const layerIdString = "layerId:";
+    const layerIdString = "layerId:sha256:";
     const indexOfLayerId = topHistoryLayer.indexOf(layerIdString);
     if (indexOfLayerId >= 0) {
         v1Name = topHistoryLayer.substring(indexOfLayerId + layerIdString.length);
@@ -316,8 +317,8 @@ export async function getImageRootfsLayers(connection: ContainerConnection, imag
 
     // Remove '[' and ']' from output
     output = output.replace("[", "");
-    output = output.replace("]","");
-    
+    output = output.replace("]", "");
+
     // Return array of rootLayers in the form -> [sha256:2c833f307fd8f18a378b71d3c43c575fabdb88955a2198662938ac2a08a99928,sha256:5f349fdc9028f7edde7f8d4c487d59b3e4b9d66a367dc85492fc7a81abf57b41, ...]
     let rootLayers = output.split(" ");
     return rootLayers;
@@ -339,7 +340,7 @@ export function getImageFingerPrint(rootLayers: string[], v1Name: string): { [ke
             v2Name = v2Name + digest + " ";
         });
 
-        v2Name = "sha256(" + v2Name.trim() + ")";
+        v2Name = generateV2Name(v2Name.trim());
     }
 
     return {
@@ -356,4 +357,8 @@ function getDigest(imageId: string): string {
     }
 
     return "";
+}
+
+function generateV2Name(input: string): string {
+    return crypto.createHash("sha256").update(input).digest("hex");
 }
