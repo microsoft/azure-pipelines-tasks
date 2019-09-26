@@ -104,7 +104,7 @@ try
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption
                 }
                 else {
-                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunSystem;]"
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;config=$configuration;testRunSystem=$testRunSystem;]"
                 }
             }
             else 
@@ -117,7 +117,7 @@ try
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
                 }
                 else {
-                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunSystem;]"
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;config=$configuration;testRunSystem=$testRunSystem;]"
                 }
             }
         }
@@ -129,7 +129,7 @@ try
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption -RunTitle $testRunTitle
                 }
                 else {
-                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunSystem;runTitle=$testRunTitle;]"
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;config=$configuration;testRunSystem=$testRunSystem;runTitle=$testRunTitle;]"
                 }
             }
             else 
@@ -142,7 +142,7 @@ try
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
                 }
                 else {
-                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunSystem;runTitle=$testRunTitle;]"
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;config=$configuration;testRunSystem=$testRunSystem;runTitle=$testRunTitle;]"
                 }
             }
         }
