@@ -1,0 +1,89 @@
+{
+    "id": "26163a08-df12-4fb4-ac24-63c0f2b2da2b",
+    "name": "ProvisionExperiment",
+    "friendlyName": "Provision Experiment",
+    "description": "Provision Experiments in Control Tower",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=837723)",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "version": {
+        "Major": 2,
+        "Minor": 0,
+        "Patch": 5
+    },
+    "minimumAgentVersion": "1.95.0",
+    "instanceNameFormat": "Provision Experiment",
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "aliases": ["azureSubscription"],
+            "type": "connectedService:AzureRM",
+            "label": "Azure Subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+        },
+        {
+            "name": "Action",
+            "type": "pickList",
+            "label": "Action",
+            "defaultValue": "",
+            "required": true,
+            "options": {
+			    "CreateFeature": "Create Feature Rollout",
+				"CreateProgression": "Create progression"
+            },
+            "helpMarkDown": "Select the action you want to perform"
+        },
+        {
+            "name": "FeatureId",
+            "type": "string",
+            "label": "Feaure Id",
+            "required": true,
+            "defaultValue": "",
+			"visibleRule": "Action = CreateProgression",
+            "helpMarkDown": "Select the feature you want to edit."
+        },
+	    {
+            "name": "FeatureBody",
+            "type": "filePath",
+            "label": "Feature template file",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "Action = CreateFeature",
+            "helpMarkDown": "Json file for feature object"
+        },
+	    {
+            "name": "ProgressionBody",
+            "type": "filePath",
+            "label": "Progression template file",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "Action = CreateProgression",
+            "helpMarkDown": "Json file for progression object"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "provisionexperiment.js"
+        }
+    },
+    "messages": {
+        "CouldNotFetchNicDetails": "Could not fetch primary network interface configuration for the Azure Virtual Machine : %s",
+        "ConnectingVMtoLB": "Connecting the Azure Virtual Machine to the Load Balancer - %s's backend pool.",
+        "DisconnectingVMfromLB": "Disconnecting the Azure Virtual Machine from the Load Balancer - %s's backend pool.",
+        "setNICStatusSuccess": "Network interface %s set successfully",
+        "MaxRetriesExceededForSettingNetworkInterface": "Maximum retries exceeded for setting the Network Interface : %s",
+        "ActionCompletedSuccefully": "The Action - %s completed successfully for the virtual machine %s and load balancer %s",
+        "CouldNotFetchAcessToken": "Could not fetch access token.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "CouldNotFetchNetworkInterfacesInRg": "Could not fetch Network Interfaces in the resource group %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "CouldNotFetchLoadBalancer": "Could not fetch Load Balancer %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "CouldNotFetchNetworkInterface": "Could not fetch Network Interface %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "FailedSettingNetworkInterface": "Failed setting the Network Interface %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "SettingTheNetworkInterface": "Setting the network interface %s"
+    }
+}

@@ -1,0 +1,91 @@
+{
+  "id": "26163a08-df12-4fb4-ac24-63c0f2b2da2b",
+  "name": "ProvisionExperiment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 2
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "Action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Action",
+      "defaultValue": "",
+      "required": true,
+      "options": {
+        "CreateFeature": "Create Feature Rollout",
+        "CreateProgression": "Create progression"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.Action"
+    },
+    {
+      "name": "FeatureId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.FeatureId",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "Action = CreateProgression",
+      "helpMarkDown": "ms-resource:loc.input.help.FeatureId"
+    },
+    {
+      "name": "FeatureBody",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.FeatureBody",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "Action = CreateFeature",
+      "helpMarkDown": "ms-resource:loc.input.help.FeatureBody"
+    },
+    {
+      "name": "ProgressionBody",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ProgressionBody",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "Action = CreateProgression",
+      "helpMarkDown": "ms-resource:loc.input.help.ProgressionBody"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "provisionexperiment.js"
+    }
+  },
+  "messages": {
+    "CouldNotFetchNicDetails": "ms-resource:loc.messages.CouldNotFetchNicDetails",
+    "ConnectingVMtoLB": "ms-resource:loc.messages.ConnectingVMtoLB",
+    "DisconnectingVMfromLB": "ms-resource:loc.messages.DisconnectingVMfromLB",
+    "setNICStatusSuccess": "ms-resource:loc.messages.setNICStatusSuccess",
+    "MaxRetriesExceededForSettingNetworkInterface": "ms-resource:loc.messages.MaxRetriesExceededForSettingNetworkInterface",
+    "ActionCompletedSuccefully": "ms-resource:loc.messages.ActionCompletedSuccefully",
+    "CouldNotFetchAcessToken": "ms-resource:loc.messages.CouldNotFetchAcessToken",
+    "CouldNotFetchNetworkInterfacesInRg": "ms-resource:loc.messages.CouldNotFetchNetworkInterfacesInRg",
+    "CouldNotFetchLoadBalancer": "ms-resource:loc.messages.CouldNotFetchLoadBalancer",
+    "CouldNotFetchNetworkInterface": "ms-resource:loc.messages.CouldNotFetchNetworkInterface",
+    "FailedSettingNetworkInterface": "ms-resource:loc.messages.FailedSettingNetworkInterface",
+    "SettingTheNetworkInterface": "ms-resource:loc.messages.SettingTheNetworkInterface"
+  }
+}
