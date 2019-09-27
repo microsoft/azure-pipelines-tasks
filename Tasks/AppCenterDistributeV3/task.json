@@ -57,7 +57,7 @@
             "type": "string",
             "label": "Build version",
             "required": false,
-            "helpMarkDown": "The build version of the uploading binary which needs to be specified for `.zip` and `.msi` this value will be ignored unless the platform is WPF or WinForms"
+            "helpMarkDown": "The build version of the uploading binary which needs to be specified for `.zip` and `.msi`. This value will be ignored unless the platform is WPF or WinForms."
         },
         {
             "name": "symbolsType",
