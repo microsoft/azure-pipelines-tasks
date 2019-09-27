@@ -175,11 +175,12 @@ function getEnvironmentResourceAddress(): string {
 
 function getPipelineUrl(): string {
     let pipelineUrl = "";
+    const pipelineId = tl.getVariable("System.DefinitionId");
     if (isBuild) {
-        pipelineUrl = orgUrl + tl.getVariable("System.TeamProject") + "/_build/results?buildId=" + tl.getVariable("Build.BuildId");
+        pipelineUrl = orgUrl + tl.getVariable("System.TeamProject") + "/_build?definitionId=" + pipelineId;
     }
     else {
-        pipelineUrl = orgUrl + tl.getVariable("System.TeamProject") + "/_releaseProgress?releaseId=" + tl.getVariable("Release.ReleaseId");
+        pipelineUrl = orgUrl + tl.getVariable("System.TeamProject") + "/_release?definitionId=" + pipelineId;
     }
 
     return pipelineUrl;
