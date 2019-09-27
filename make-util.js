@@ -161,7 +161,7 @@ var buildNodeTask = function (taskPath, outDir) {
             fail('The package.json should not contain dev dependencies. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
         }
 
-        # This will be populated if its a Pipelines build
+        // This will be populated if its a Pipelines build
         if (process.env['BUILD_BUILDID']) {
             run('npm ci');
         }
@@ -173,7 +173,7 @@ var buildNodeTask = function (taskPath, outDir) {
     if (test('-f', rp(path.join('Tests', 'package.json')))) {
         cd(rp('Tests'));
         
-        # This will be populated if its a Pipelines build
+        // This will be populated if its a Pipelines build
         if (process.env['BUILD_BUILDID']) {
             run('npm ci');
         }
