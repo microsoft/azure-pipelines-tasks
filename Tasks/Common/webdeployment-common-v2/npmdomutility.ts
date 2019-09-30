@@ -24,7 +24,7 @@ export class NpmDomUtility  {
         if(index > -1) {
             var firstLine = xmlContent.substring(0,index).trim();
             if(firstLine.startsWith("<?") && firstLine.endsWith("?>")) {
-                this.headerContent = firstLine;
+                this.headerContent = firstLine; 
             }
         }
     }
