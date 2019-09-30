@@ -9,8 +9,8 @@ var fileEncoding = require('./fileencoding.js');
 
 function getReplacableTokenFromTags(xmlNode, variableMap) {
     var parameterSubValue = {};
-    var children = xmlNode.childNodes;
-    if(children) {
+    if(xmlNode.hasChildNodes()) {
+        var children = xmlNode.childNodes;
         for (var childs = 0; childs < children.length; childs ++) {
             var childNode = children[childs];
             if ((varUtility.isObject(childNode)) && (!varUtility.isEmpty(childNode))) {
@@ -218,8 +218,8 @@ function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues):
                     xmlDomNode.setAttribute(attributeName, ConfigFileAppSettingsTokenName);
                     isValueReplaced = true;
                 } else {
-                    var children = xmlDomNode.childNodes;
-                    if(children) {
+                    if(xmlDomNode.hasChildNodes()) {
+                        var children = xmlDomNode.childNodes;
                         for (var childs = 0; childs < children.length; childs ++) {
                             var childNode = children[childs];
                             if(varUtility.isObject(childNode) && childNode.nodeName == attributeName) {
@@ -241,8 +241,8 @@ function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues):
             }
         }
     }
-    var children = xmlDomNode.childNodes;
-    if(children) {
+    if(xmlDomNode.hasChildNodes()) {
+        var children = xmlDomNode.childNodes;
         for (var childs = 0; childs < children.length; childs ++) {
             var childNode = children[childs];
             if(varUtility.isObject(childNode)) {
@@ -308,9 +308,9 @@ function replaceEscapeXMLCharacters(xmlDOMNode) {
         }
     }
 
-    var xmlDOMchildNodes = xmlDOMNode.childNodes;
-    if(xmlDOMchildNodes)
+    if(xmlDOMNode.hasChildNodes())
     {
+        var xmlDOMchildNodes = xmlDOMNode.childNodes;
         for (var i = 0; i <xmlDOMchildNodes.length; i++) {
             var xmlChild = xmlDOMchildNodes[i];
             replaceEscapeXMLCharacters(xmlChild);
