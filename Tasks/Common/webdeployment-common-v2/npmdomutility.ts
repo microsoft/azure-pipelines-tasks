@@ -1,8 +1,7 @@
-var ltx = require("ltx");
 var varUtility = require("./variableutility.js");
-var Q = require('q');
+var DOMParser = require('xmldom').DOMParser;
 
-export class LtxDomUtility  {
+export class NpmDomUtility  {
 
     private xmlDomLookUpTable = {};
     private headerContent;
@@ -11,7 +10,7 @@ export class LtxDomUtility  {
     public constructor(xmlContent) {
         this.xmlDomLookUpTable = {};
         this.headerContent = null;
-        this.xmlDom = ltx.parse(xmlContent);
+        this.xmlDom = new DOMParser().parseFromString(xmlContent,"text/xml");
         this.readHeader(xmlContent);
         this.buildLookUpTable(this.xmlDom);
     }
@@ -31,7 +30,7 @@ export class LtxDomUtility  {
     }
 
     public getContentWithHeader(xmlDom) {
-        return xmlDom ? (this.headerContent ? this.headerContent + "\n" : "") + xmlDom.root().toString() : "";
+        return xmlDom ? xmlDom.toString() : "";
     }
 
     /**
@@ -39,7 +38,7 @@ export class LtxDomUtility  {
      */
     private buildLookUpTable(node) {
         if(node){
-            var nodeName = node.name;
+            var nodeName = node.nodeName;
             if(nodeName){
                 nodeName = nodeName.toLowerCase();
                 var listOfNodes = this.xmlDomLookUpTable[nodeName];
@@ -48,11 +47,13 @@ export class LtxDomUtility  {
                     this.xmlDomLookUpTable[nodeName] = listOfNodes;
                 }
                 listOfNodes.push(node);
-                var childNodes = node.children;
-                for(var i=0 ; i < childNodes.length; i++){
-                    var childNodeName = childNodes[i].name;
-                    if(childNodeName) {
-                        this.buildLookUpTable(childNodes[i]);
+                var children = node.childNodes;
+                if(children) {
+                    for(var i=0 ; i < children.length; i++){
+                        var childNodeName = children[i].nodeName;
+                        if(childNodeName) {
+                            this.buildLookUpTable(children[i]);
+                        }
                     }
                 }
             }
@@ -78,11 +79,11 @@ export class LtxDomUtility  {
     public getChildElementsByTagName(node, tagName) {
         if(!varUtility.isObject(node) )
             return [];
-        var children = node.children;
+        var children = node.childNodes;
         var liveNodes = [];
         if(children){
             for( var i=0; i < children.length; i++ ){
-                var childName = children[i].name;
+                var childName = children[i].nodeName;
                 if( !varUtility.isEmpty(childName) && tagName == childName){
                     liveNodes.push(children[i]);
                 }
