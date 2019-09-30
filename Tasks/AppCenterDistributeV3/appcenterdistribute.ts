@@ -91,7 +91,7 @@ function responseHandler(defer, err, res, body, handler: () => void) {
     handler();
 }
 
-function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string): Q.Promise<UploadInfo> {
+function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string, buildVersion: string): Q.Promise<UploadInfo> {
     tl.debug("-- Prepare for uploading release.");
     let defer = Q.defer<UploadInfo>();
     let beginUploadUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads`;
@@ -103,7 +103,15 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    request.post({ url: beginUploadUrl, headers: headers }, (err, res, body) => {
+
+    const requestOptions: request.UrlOptions & request.CoreOptions = { url: beginUploadUrl, headers };
+    if (buildVersion) {
+        requestOptions.body = JSON.stringify({
+            "build_version": buildVersion
+        });
+    }
+
+    request.post(requestOptions, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             let response = JSON.parse(body);
             let uploadInfo: UploadInfo = {
@@ -494,6 +502,7 @@ async function run() {
                 symbolVariableName = "symbolsPath";
         }
         let symbolsPathPattern: string = tl.getInput(symbolVariableName, false);
+        let buildVersion: string = tl.getInput('buildVersion', false);
         let packParentFolder: boolean = tl.getBoolInput('packParentFolder', false);
 
         let releaseNotesSelection = tl.getInput('releaseNotesSelection', true);
@@ -544,7 +553,7 @@ async function run() {
         let symbolsFile = await prepareSymbols(symbolsPaths);
 
         // Begin release upload
-        let uploadInfo: UploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent);
+        let uploadInfo: UploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent, buildVersion);
 
         // Perform the upload
         await uploadRelease(uploadInfo.upload_url, app, userAgent);
