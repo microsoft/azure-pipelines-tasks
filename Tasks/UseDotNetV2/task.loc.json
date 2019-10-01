@@ -14,12 +14,13 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 19
+    "Patch": 20
   },
   "satisfies": [
     "DotNetCore"
   ],
   "demands": [],
+  "minimumAgentVersion": "2.144.0",
   "ecosystem": "dotnet",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "releaseNotes": "ms-resource:loc.releaseNotes",
