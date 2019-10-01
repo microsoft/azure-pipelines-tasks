@@ -6,10 +6,10 @@ import fs = require("fs");
 
 export class Utility {
 
-    public static async getScriptPath(scriptLocation:string, fileExtensions:string[]): Promise<string> {
+    public static async getScriptPath(scriptLocation: string, fileExtensions: string[]): Promise<string> {
         if (scriptLocation === "scriptPath") {
             let filePath: string = tl.getPathInput("scriptPath", true, true);
-            if(Utility.checkIfFileExists(filePath, fileExtensions)){
+            if (Utility.checkIfFileExists(filePath, fileExtensions)) {
                 return filePath;
             }
             throw new Error(tl.loc('JS_InvalidFilePath', filePath));
@@ -33,18 +33,18 @@ export class Utility {
         }
 
         let contents: string[] = [];
-        contents.push(`$ErrorActionPreference = '${powerShellErrorActionPreference}'`); 
+        contents.push(`$ErrorActionPreference = '${powerShellErrorActionPreference}'`);
 
         if (scriptLocation === "scriptPath") {
             let filePath: string = tl.getPathInput("scriptPath", true, true);
-            if (Utility.checkIfFileExists(filePath, fileExtensions)){
-                let content:string = `. '${filePath.replace("'", "''")}' `;
-                if (scriptArguments){
-                    content +=scriptArguments;
+            if (Utility.checkIfFileExists(filePath, fileExtensions)) {
+                let content: string = `. '${filePath.replace("'", "''")}' `;
+                if (scriptArguments) {
+                    content += scriptArguments;
                 }
                 contents.push(content.trim());
             }
-            else{
+            else {
                 throw new Error(tl.loc('JS_InvalidFilePath', filePath));
             }
         }
@@ -68,7 +68,7 @@ export class Utility {
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let scriptPath: string = path.join(tempDirectory, `azureclitaskscript${new Date().getTime()}.${fileExtensions[0]}`);
 
-        await Utility.createFile(scriptPath,'\ufeff' + contents.join(os.EOL), { encoding : 'utf8'} );
+        await Utility.createFile(scriptPath, '\ufeff' + contents.join(os.EOL), { encoding: 'utf8' });
         return scriptPath;
     }
 
@@ -86,7 +86,7 @@ export class Utility {
         }
     }
 
-    public static async createFile(filePath: string, data: string, options?:any): Promise<void> {
+    public static async createFile(filePath: string, data: string, options?: any): Promise<void> {
         try {
             fs.writeFileSync(filePath, data, options);
         }
@@ -97,12 +97,12 @@ export class Utility {
     }
 
     public static checkIfFileExists(filePath: string, fileExtensions: string[]): boolean {
-        let matchingFiles:string[] = fileExtensions.filter((fileExtension:string) => {
+        let matchingFiles: string[] = fileExtensions.filter((fileExtension: string) => {
             if (tl.stats(filePath).isFile() && filePath.toUpperCase().match(new RegExp(`\.${fileExtension.toUpperCase()}$`))) {
                 return true;
             }
         });
-        if (matchingFiles.length > 0){
+        if (matchingFiles.length > 0) {
             return true;
         }
         return false;
