@@ -41,11 +41,6 @@
       "resolved": "https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz",
       "integrity": "sha1-2Klr13/Wjfd5OnMDajug1UBdR3s="
     },
-    "core-util-is": {
-      "version": "1.0.2",
-      "resolved": "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.2.tgz",
-      "integrity": "sha1-tf1UIgqivFq1eqtxQMlAdUUDwac="
-    },
     "fs.realpath": {
       "version": "1.0.0",
       "resolved": "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz",
@@ -77,11 +72,6 @@
       "version": "2.0.3",
       "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.3.tgz",
       "integrity": "sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4="
-    },
-    "isarray": {
-      "version": "0.0.1",
-      "resolved": "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz",
-      "integrity": "sha1-ihis/Kmo9Bd+Cav8YDiTmwXR7t8="
     },
     "lodash": {
       "version": "4.11.2",
@@ -124,17 +114,6 @@
       "resolved": "https://registry.npmjs.org/q/-/q-1.5.1.tgz",
       "integrity": "sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc="
     },
-    "readable-stream": {
-      "version": "1.0.34",
-      "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.34.tgz",
-      "integrity": "sha1-Elgg40vIQtLyqq+v5MKRbuMsFXw=",
-      "requires": {
-        "core-util-is": "~1.0.0",
-        "inherits": "~2.0.1",
-        "isarray": "0.0.1",
-        "string_decoder": "~0.10.x"
-      }
-    },
     "scp2": {
       "version": "0.5.0",
       "resolved": "https://registry.npmjs.org/scp2/-/scp2-0.5.0.tgz",
@@ -143,17 +122,57 @@
         "async": "~0.9.0",
         "glob": "~7.0.3",
         "lodash": "~4.11.1",
-        "ssh2": "~0.4.10"
+        "ssh2": "^0.8.2"
       },
       "dependencies": {
-        "ssh2": {
-          "version": "0.4.15",
-          "resolved": "https://registry.npmjs.org/ssh2/-/ssh2-0.4.15.tgz",
-          "integrity": "sha1-B8b0EG2fe26m5N9jbGxT8fmBf/g=",
+        "asn1": {
+          "version": "0.2.4",
+          "resolved": "https://registry.npmjs.org/asn1/-/asn1-0.2.4.tgz",
+          "integrity": "sha512-jxwzQpLQjSmWXgwaCZE9Nz+glAG01yF1QnWgbhGwHI5A6FRIEY6IVqtHhIepHqI7/kyEyQEagBC5mBEFlIYvdg==",
           "requires": {
-            "readable-stream": "~1.0.0",
-            "ssh2-streams": "~0.0.22"
+            "safer-buffer": "~2.1.0"
           }
+        },
+        "bcrypt-pbkdf": {
+          "version": "1.0.2",
+          "resolved": "https://registry.npmjs.org/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.2.tgz",
+          "integrity": "sha1-pDAdOJtqQ/m2f/PKEaP2Y342Dp4=",
+          "requires": {
+            "tweetnacl": "^0.14.3"
+          }
+        },
+        "safer-buffer": {
+          "version": "2.1.2",
+          "resolved": "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz",
+          "integrity": "sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg=="
+        },
+        "ssh2": {
+          "version": "0.8.2",
+          "resolved": "https://registry.npmjs.org/ssh2/-/ssh2-0.8.2.tgz",
+          "integrity": "sha512-oaXu7faddvPFGavnLBkk0RFwLXvIzCPq6KqAC3ExlnFPAVIE1uo7pWHe9xmhNHXm+nIe7yg9qsssOm+ip2jijw==",
+          "requires": {
+            "ssh2-streams": "~0.4.2"
+          }
+        },
+        "ssh2-streams": {
+          "version": "0.4.6",
+          "resolved": "https://registry.npmjs.org/ssh2-streams/-/ssh2-streams-0.4.6.tgz",
+          "integrity": "sha512-jXq/nk2K82HuueO9CTCdas/a0ncX3fvYzEPKt1+ftKwE5RXTX25GyjcpjBh2lwVUYbk0c9yq6cBczZssWmU3Tw==",
+          "requires": {
+            "asn1": "~0.2.0",
+            "bcrypt-pbkdf": "^1.0.2",
+            "streamsearch": "~0.1.2"
+          }
+        },
+        "streamsearch": {
+          "version": "0.1.2",
+          "resolved": "https://registry.npmjs.org/streamsearch/-/streamsearch-0.1.2.tgz",
+          "integrity": "sha1-gIudDlb8Jz2Am6VzOOkpkZoanxo="
+        },
+        "tweetnacl": {
+          "version": "0.14.5",
+          "resolved": "https://registry.npmjs.org/tweetnacl/-/tweetnacl-0.14.5.tgz",
+          "integrity": "sha1-WuaBd/GS1EViadEIr6k/+HQ/T2Q="
         }
       }
     },
@@ -187,25 +206,10 @@
         }
       }
     },
-    "ssh2-streams": {
-      "version": "0.0.23",
-      "resolved": "https://registry.npmjs.org/ssh2-streams/-/ssh2-streams-0.0.23.tgz",
-      "integrity": "sha1-ru8wgxu1/Er2qj9tCiYaQTUxYSs=",
-      "requires": {
-        "asn1": "~0.2.0",
-        "readable-stream": "~1.0.0",
-        "streamsearch": "~0.1.2"
-      }
-    },
     "streamsearch": {
       "version": "0.1.2",
       "resolved": "https://registry.npmjs.org/streamsearch/-/streamsearch-0.1.2.tgz",
       "integrity": "sha1-gIudDlb8Jz2Am6VzOOkpkZoanxo="
-    },
-    "string_decoder": {
-      "version": "0.10.31",
-      "resolved": "https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz",
-      "integrity": "sha1-YuIDvEF2bGwoyfyEMB2rHFMQ+pQ="
     },
     "tweetnacl": {
       "version": "0.14.5",
