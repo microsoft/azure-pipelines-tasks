@@ -140,6 +140,7 @@ export class AzureServiceClientBase {
         timeoutInMinutes = timeoutInMinutes || this.longRunningOperationRetryTimeout;
         var timeout = new Date().getTime() + timeoutInMinutes * 60 * 1000;
         var waitIndefinitely = timeoutInMinutes == 0;
+        var ignoreTimeoutErrorThreshold = 5;
         var request = new webClient.WebRequest();
         request.method = "GET";
         request.uri = response.headers["azure-asyncoperation"] || response.headers["location"];
@@ -171,9 +172,10 @@ export class AzureServiceClientBase {
             }
             catch (error) {
                 let errorString: string = (error && error.toString()) || "";
-                if(errorString && errorString.toLowerCase().indexOf("request timeout") >= 0) {
+                if(errorString && errorString.toLowerCase().indexOf("request timeout") >= 0 && ignoreTimeoutErrorThreshold > 0) {
                     // Ignore Request Timeout error and continue polling operation
                     tl.debug(`Request Timeout: ${request.uri}`);
+                    ignoreTimeoutErrorThreshold--;
                 }
                 else {
                     throw error;
