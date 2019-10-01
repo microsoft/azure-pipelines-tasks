@@ -49,7 +49,7 @@ abstract class basecommand {
     }
 
     public static handleExecResult(execResult: tr.IExecSyncResult) {
-        if (execResult.code != tl.TaskResult.Succeeded ) {
+        if (execResult.code != tl.TaskResult.Succeeded) {
 
             tl.debug('execResult: ' + JSON.stringify(execResult));
             if(!!execResult.error || !!execResult.stderr) {
