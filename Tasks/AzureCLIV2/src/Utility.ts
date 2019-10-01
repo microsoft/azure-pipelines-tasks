@@ -38,7 +38,11 @@ export class Utility {
         if (scriptLocation === "scriptPath") {
             let filePath: string = tl.getPathInput("scriptPath", true, true);
             if (Utility.checkIfFileExists(filePath, fileExtensions)){
-                contents.push(`. '${filePath.replace("'", "''")}' ${scriptArguments}`.trim());
+                let content:string = `. '${filePath.replace("'", "''")}' `;
+                if (scriptArguments){
+                    content +=scriptArguments;
+                }
+                contents.push(content.trim());
             }
             else{
                 throw new Error(tl.loc('JS_InvalidFilePath', filePath));
