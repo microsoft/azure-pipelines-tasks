@@ -83,6 +83,7 @@ try
         }
         else {
             Write-Verbose "Using Agent Command to publish test results"
+            $matchingTestResultsFiles = [string]::Join(",", $matchingTestResultsFiles);
         }
 
         $testRunSystem = "VSTS - PTR";
@@ -98,6 +99,7 @@ try
             {
                 Write-Warning "Update the build agent to be able to use the custom run title feature."
             }
+
             if($publishRunLevelAttachmentsExists)
             {
                 if ($switchToPowerShell -ieq "true") {
