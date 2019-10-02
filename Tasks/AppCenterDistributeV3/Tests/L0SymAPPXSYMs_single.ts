@@ -16,7 +16,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
-tmr.setInput('app', 'C:/path/to/my.appxbundle');
+tmr.setInput('app', '/test/path/to/my.appxbundle');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
 tmr.setInput('symbolsType', 'UWP');
@@ -81,15 +81,15 @@ nock('https://example.test')
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'checkPath' : {
-        'C:/path/to/my.appxbundle': true,
+        '/test/path/to/my.appxbundle': true,
         'a/my.appxsym': true
     },
     'findMatch' : {
         'a/my.appxsym': [
             'a/my.appxsym'
         ],
-        'C:/path/to/my.appxbundle': [
-            'C:/path/to/my.appxbundle'
+        '/test/path/to/my.appxbundle': [
+            '/test/path/to/my.appxbundle'
         ]
     }
 };
