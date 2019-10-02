@@ -171,21 +171,10 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: a single PDB', function () {
+    it('Positive path: a single APPXSYM', function () {
         this.timeout(4000);
 
-        let tp = path.join(__dirname, 'L0SymPDBs_single.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
-    });
-
-
-    it('Positive path: multiple PDBs', function () {
-        this.timeout(4000);
-
-        let tp = path.join(__dirname, 'L0SymPDBs_multiple.js');
+        let tp = path.join(__dirname, 'L0SymAPPXSYMs_single.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
