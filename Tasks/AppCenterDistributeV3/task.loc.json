@@ -87,9 +87,6 @@
     },
     {
       "name": "appxsymPath",
-      "aliases": [
-        "symbolsAppxsymFiles"
-      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.appxsymPath",
       "groupName": "symbols",

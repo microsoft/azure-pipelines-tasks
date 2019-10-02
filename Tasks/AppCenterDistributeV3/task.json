@@ -87,9 +87,6 @@
         },
         {
             "name": "appxsymPath",
-            "aliases": [
-                "symbolsAppxsymFiles"
-            ],
             "type": "filePath",
             "label": "Symbols path (*.appxsym)",
             "groupName": "symbols",
