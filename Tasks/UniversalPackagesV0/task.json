@@ -112,7 +112,7 @@
                 "vstsFeed"
             ],
             "type": "pickList",
-            "label": "Feed2",
+            "label": "Feed",
             "defaultValue": "",
             "required": "true",
             "groupName": "packageDownloadDetails",
@@ -371,14 +371,21 @@
         {
             "target": "packageListDownload",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feedListDownload }}_apis/packaging/feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feedListDownload }}/packages?includeUrls=false&protocolType=UPack",
+            "parameters": {
+                "feed": "$(feedListDownload)"
+            },
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}/packages?includeUrls=false&protocolType=UPack",
             "resultSelector": "jsonpath:$.value[?(@.protocolType=='UPack')]",
             "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "versionListDownload",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feedListDownload }}_apis/packaging/feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feedListDownload }}/packages/$(packageListDownload)/versions?includeUrls=false&isDeleted=false",
+            "parameters": {
+                "feed": "$(feedListDownload)",
+                "packageName": "$(packageListDownload)"
+            },
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}/packages/{{{packageName}}}/versions?includeUrls=false&isDeleted=false",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{normalizedVersion}}}\" }"
         },
@@ -392,7 +399,10 @@
         {
             "target": "packageListPublish",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feedListPublish }}_apis/packaging/feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feedListPublish }}/packages?includeUrls=false&includeDeleted=false",
+            "parameters": {
+                "feed": "$(feedListPublish)"
+            },
+            "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/packaging/feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}/packages?includeUrls=false&includeDeleted=false",
             "resultSelector": "jsonpath:$.value[?(@.protocolType=='UPack')]",
             "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
