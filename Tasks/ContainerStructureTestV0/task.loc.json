@@ -63,6 +63,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.configFile"
     },
     {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle"
+    },
+    {
       "name": "failTaskOnFailedTests",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failTaskOnFailedTests",
