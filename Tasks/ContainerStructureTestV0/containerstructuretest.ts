@@ -246,8 +246,8 @@ async function publishTestResultsToMetadataStore(imageName:string, testSummary: 
             const resourceUri = getResourceUri(imageName);
             const testPassPercentage = (testSummary.Pass/testSummary.Total) * 100;
             const testSummaryJson: TestAttestation = {
-                testId: "39bc2c9b-55b7-4835-89cd-6cc699ef7220",
-                testTool: getContainerStructureTestRunnerDownloadPath(osType),
+                testId: "ContainerStructureTestV0",
+                testTool: "Google container-structure-test",
                 testResult: {
                   total: testSummary.Total,
                   passed: testSummary.Pass,
