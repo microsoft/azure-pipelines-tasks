@@ -83,6 +83,13 @@ try
         }
         else {
             Write-Verbose "Using Agent Command to publish test results"
+
+            foreach($file in $matchingTestResultsFiles) {
+                if ($file -match ",") {
+                    Write-Warning "File names containing , are not supported. Please rename the resutls file:$file";
+                }
+            }
+
             $matchingTestResultsFiles = [string]::Join(",", $matchingTestResultsFiles);
         }
 
