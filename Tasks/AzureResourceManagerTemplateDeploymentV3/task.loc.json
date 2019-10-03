@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 2
   },
   "preview": "true",
   "demands": [],
@@ -294,6 +294,7 @@
     "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName",
     "ResourceGroupNameNotProvided": "ms-resource:loc.messages.ResourceGroupNameNotProvided",
     "LocationNotProvided": "ms-resource:loc.messages.LocationNotProvided",
-    "ARMServiceConnectionScope": "ms-resource:loc.messages.ARMServiceConnectionScope"
+    "ARMServiceConnectionScope": "ms-resource:loc.messages.ARMServiceConnectionScope",
+    "CompleteDeploymentModeNotSupported": "ms-resource:loc.messages.CompleteDeploymentModeNotSupported"
   }
 }
