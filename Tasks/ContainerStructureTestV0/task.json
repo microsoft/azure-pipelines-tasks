@@ -3,8 +3,8 @@
     "name": "ContainerStructureTest",
     "friendlyName": "Container Structure Test",
     "description": "Uses container-structure-test (https://github.com/GoogleContainerTools/container-structure-test) to validate the structure of an image based on four categories of tests - command tests, file existence tests, file content tests and metadata tests",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
+    "helpUrl": "https://aka.ms/containerstructuretest",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/containerstructuretest)",
     "category": "Test",
     "visibility": [
         "Build",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 2
     },
     "preview": true,
     "demands": [],
