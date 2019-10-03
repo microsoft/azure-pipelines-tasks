@@ -67,6 +67,19 @@
             "visibleRule": "action = deploy || action = promote || action = reject"
         },
         {
+            "name": "trafficSplitMethod",
+            "type": "pickList",
+            "label": "Traffic split method",
+            "required": false,
+            "defaultValue": "pod",
+            "options": {
+                "pod": "Pod",
+                "smi": "SMI"
+            },
+            "helpMarkDown": "Deployment strategy to be used",
+            "visibleRule": "strategy = canary"
+        },
+        {
             "name": "percentage",
             "type": "string",
             "label": "Percentage",
@@ -77,6 +90,19 @@
             "validation": {
                 "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
                 "message": "Enter valid percentage value i.e between 0 to 100."
+            }
+        },
+        {
+            "name": "baselineAndCanaryReplicas",
+            "type": "string",
+            "label": "Baseline and canary replicas",
+            "required": true,
+            "helpMarkDown": "",
+            "defaultValue": 0,
+            "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
+            "validation": {
+                "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
+                "message": "Enter valid value i.e between 0 to 100."
             }
         },
         {
@@ -334,9 +360,10 @@
         "AllContainersNotInReadyState": "All the containers are not in a ready state.",
         "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
         "KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features.",
-        "CouldNotDetermineServiceStatus":  "Could not determine the service %s status due to the error: %s",
+        "CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
         "waitForServiceIpAssignment": "Waiting for service %s external IP assignment",
         "waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timed out",
-        "ServiceExternalIP": "service %s external IP is %s"
+        "ServiceExternalIP": "service %s external IP is %s",
+        "UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file."        
     }
 }

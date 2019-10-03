@@ -67,6 +67,19 @@
       "visibleRule": "action = deploy || action = promote || action = reject"
     },
     {
+      "name": "trafficSplitMethod",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.trafficSplitMethod",
+      "required": false,
+      "defaultValue": "pod",
+      "options": {
+        "pod": "Pod",
+        "smi": "SMI"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.trafficSplitMethod",
+      "visibleRule": "strategy = canary"
+    },
+    {
       "name": "percentage",
       "type": "string",
       "label": "ms-resource:loc.input.label.percentage",
@@ -77,6 +90,19 @@
       "validation": {
         "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
         "message": "Enter valid percentage value i.e between 0 to 100."
+      }
+    },
+    {
+      "name": "baselineAndCanaryReplicas",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.baselineAndCanaryReplicas",
+      "required": true,
+      "helpMarkDown": "",
+      "defaultValue": 0,
+      "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
+      "validation": {
+        "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
+        "message": "Enter valid value i.e between 0 to 100."
       }
     },
     {
@@ -337,6 +363,7 @@
     "CouldNotDetermineServiceStatus": "ms-resource:loc.messages.CouldNotDetermineServiceStatus",
     "waitForServiceIpAssignment": "ms-resource:loc.messages.waitForServiceIpAssignment",
     "waitForServiceIpAssignmentTimedOut": "ms-resource:loc.messages.waitForServiceIpAssignmentTimedOut",
-    "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP"
+    "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
+    "UnableToCreateTrafficSplitManifestFile": "ms-resource:loc.messages.UnableToCreateTrafficSplitManifestFile"
   }
 }
