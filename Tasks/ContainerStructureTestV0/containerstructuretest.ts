@@ -29,7 +29,7 @@ interface TestAttestation {
     "testResult": TestResultAttestation;
     "testDurationSeconds": number;
     "testPassPercentage": string;
-    "relatedUrls": [RelatedUrls];
+    "relatedUrls": RelatedUrls[];
 }
 
 interface TestResultAttestation {
@@ -247,7 +247,7 @@ async function publishTestResultsToMetadataStore(imageName:string, testSummary: 
             const testPassPercentage = (testSummary.Pass/testSummary.Total) * 100;
             const testSummaryJson: TestAttestation = {
                 testId: "ContainerStructureTestV0",
-                testTool: "Google container-structure-test",
+                testTool: "container-structure-test",
                 testResult: {
                   total: testSummary.Total,
                   passed: testSummary.Pass,
@@ -260,6 +260,14 @@ async function publishTestResultsToMetadataStore(imageName:string, testSummary: 
                   {
                     url: getTestTabUrl(),
                     label: "test-results-url"
+                  },
+                  {
+                      url: dockerCommandUtils.getPipelineLogsUrl(),
+                      label: "pipeline-run-url"
+                  },
+                  {
+                      url: getContainerStructureTestRunnerDownloadPath(osType),
+                      label: "test-runner-url"
                   }
                 ]
               };
@@ -271,7 +279,7 @@ async function publishTestResultsToMetadataStore(imageName:string, testSummary: 
                 kind: "ATTESTATION",
                 relatedUrl: [
                   {
-                    url: dockerCommandUtils.getPipelineLogsUrl(),
+                    url: dockerCommandUtils.getPipelineUrl(),
                     label: "pipeline-url"
                   }
                 ],
