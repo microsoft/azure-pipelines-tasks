@@ -29,8 +29,9 @@ export async function checkManifestStability(kubectl: Kubectl, resources: Resour
                 if (utils.isEqual(spec.type, KubernetesConstants.ServiceTypes.loadBalancer, true)) {
                     if(!isLoadBalancerIPAssigned(status)) {
                         await waitForServiceExternalIPAssignment(kubectl, resource.name);
+                    } else {
+                        console.log(tl.loc('ServiceExternalIP', resource.name, status.loadBalancer.ingress[0].ip));
                     }
-                    console.log(tl.loc('ServiceExternalIP', resource.name, status.loadBalancer.ingress[0].ip));
                 }
             } catch (ex) {
                 tl.warning(tl.loc('CouldNotDetermineServiceStatus', resource.name, JSON.stringify(ex)));
@@ -111,6 +112,7 @@ async function waitForServiceExternalIPAssignment(kubectl: Kubectl, serviceName:
         await utils.sleep(sleepTimeout);
         let status = getService(kubectl, serviceName).status;
         if (isLoadBalancerIPAssigned(status)) {
+            console.log(tl.loc('ServiceExternalIP', serviceName, status.loadBalancer.ingress[0].ip));
             return;
         }
     }

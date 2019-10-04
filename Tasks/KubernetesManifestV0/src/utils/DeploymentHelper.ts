@@ -201,4 +201,3 @@ async function pushDeploymentDataToEvidenceStore(requestBody: string, requestUrl
 function isCanaryDeploymentStrategy(deploymentStrategy: string): boolean {
     return deploymentStrategy != null && deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY.toUpperCase();
 }
-            console.log(tl.loc('ServiceExternalIP', serviceName, status.loadBalancer.ingress[0].ip));

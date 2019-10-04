@@ -25,7 +25,9 @@
   "loc.input.help.arguments": "Pass arguments to command. Ex:<br>--no-docker --service-type NodePort",
   "loc.messages.AllContainersNotInReadyState": "All the containers are not in a ready state.",
   "loc.messages.CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
+  "loc.messages.CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
   "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s.",
   "loc.messages.NoDataWrittenOnFile": "No data was written into the file %s",
+  "loc.messages.ServiceExternalIP": "service %s external IP is %s",
   "loc.messages.WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
 }
