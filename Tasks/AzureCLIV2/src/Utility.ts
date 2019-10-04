@@ -14,9 +14,10 @@ export class Utility {
             }
             throw new Error(tl.loc('JS_InvalidFilePath', filePath));
         }
-        let tmpDir = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
+        let tempDirectory = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
+        tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let inlineScript: string = tl.getInput("inlineScript", true);
-        let scriptPath: string = path.join(tmpDir, `azureclitaskscript${new Date().getTime()}.${fileExtensions[0]}`);
+        let scriptPath: string = path.join(tempDirectory, `azureclitaskscript${new Date().getTime()}.${fileExtensions[0]}`);
         await Utility.createFile(scriptPath, inlineScript);
         return scriptPath;
     }
@@ -32,25 +33,29 @@ export class Utility {
                 throw new Error(tl.loc('JS_InvalidErrorActionPreference', powerShellErrorActionPreference));
         }
 
+        // Write the script to disk.
+        tl.assertAgent('2.115.0');
+        let tempDirectory = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
+        tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
+
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${powerShellErrorActionPreference}'`);
+        let filePath: string = tl.getPathInput("scriptPath", false, true);;
+        if (scriptLocation === "inlineScript") {
+            let inlineScript: string = tl.getInput("inlineScript", true);
+            filePath = path.join(tempDirectory, `azureclitaskscript${new Date().getTime()}_inlinescript.${fileExtensions[0]}`);
+            await Utility.createFile(filePath, inlineScript);
+        }
 
-        if (scriptLocation === "scriptPath") {
-            let filePath: string = tl.getPathInput("scriptPath", true, true);
-            if (Utility.checkIfFileExists(filePath, fileExtensions)) {
-                let content: string = `. '${filePath.replace("'", "''")}' `;
-                if (scriptArguments) {
-                    content += scriptArguments;
-                }
-                contents.push(content.trim());
+        if (Utility.checkIfFileExists(filePath, fileExtensions)) {
+            let content: string = `. '${filePath.replace("'", "''")}' `;
+            if (scriptArguments) {
+                content += scriptArguments;
             }
-            else {
-                throw new Error(tl.loc('JS_InvalidFilePath', filePath));
-            }
+            contents.push(content.trim());
         }
         else {
-            let inlineScript: string = tl.getInput("inlineScript", true);
-            contents.push(inlineScript);
+            throw new Error(tl.loc('JS_InvalidFilePath', filePath));
         }
         let powerShellIgnoreLASTEXITCODE: string = tl.getInput('powerShellIgnoreLASTEXITCODE', false);
         if (!powerShellIgnoreLASTEXITCODE) {
@@ -62,12 +67,7 @@ export class Utility {
             contents.push(`}`);
         }
 
-        // Write the script to disk.
-        tl.assertAgent('2.115.0');
-        let tempDirectory = tl.getVariable('agent.tempDirectory');
-        tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let scriptPath: string = path.join(tempDirectory, `azureclitaskscript${new Date().getTime()}.${fileExtensions[0]}`);
-
         await Utility.createFile(scriptPath, '\ufeff' + contents.join(os.EOL), { encoding: 'utf8' });
         return scriptPath;
     }
