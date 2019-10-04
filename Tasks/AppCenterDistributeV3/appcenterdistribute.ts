@@ -421,25 +421,8 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
                 }
             })
         }
-    } else if (symbolsType === "UWP") {
-        // User can specifay a symbols path pattern that selects
-        // multiple PDB paths for UWP application.
-        let pdbPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
-
-        // Resolved paths can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
-        if (pdbPaths) {
-            pdbPaths.forEach(pdbFile => {
-                if (pdbFile) {
-                    let pdbPath = utils.checkAndFixFilePath(pdbFile, continueOnError);
-                    // The path can be null if continueIfSymbolsNotFound is true and the file does not exist.
-                    if (pdbPath) {
-                        symbolsPaths.push(pdbPath);
-                    }
-                }
-            })
-        }
     } else {
-        // For all other application types user can specifay a symbols path pattern
+        // For all other application types user can specify a symbols path pattern
         // that selects only one file or one folder.
         let symbolsFile = utils.resolveSinglePath(pattern, continueOnError, packParentFolder);
 
@@ -496,7 +479,7 @@ async function run() {
                 symbolVariableName = "mappingTxtPath";
                 break;
             case "UWP":
-                symbolVariableName = "pdbPath";
+                symbolVariableName = "appxsymPath";
                 break;
             default:
                 symbolVariableName = "symbolsPath";
