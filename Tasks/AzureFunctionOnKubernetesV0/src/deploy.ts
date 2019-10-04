@@ -14,8 +14,7 @@ import * as CommonUtils from 'kubernetes-common-v2/utility';
 const secretName = tl.getInput('secretName');
 const appName = tl.getInput('appName', true);
 const namespace = getKubernetesNamespace();
-let imageName = tl.getInput('imageName');
-const registry = tl.getInput('registry');
+const dockerHubNamespace = tl.getInput('dockerHubNamespace');
 const args = tl.getInput('arguments');
 const funcRootDir = tl.getInput('functionRootDirectory', true);
 const waitForStability = tl.getBoolInput('waitForStability');
@@ -28,8 +27,6 @@ export async function deploy(commandHelper: CommandHelper, dockerConnection: Doc
         // create pull secret if it is not dry-run
         createImagePullSecret(commandHelper);
     }
-
-    imageName = getQualifiedImageName(dockerConnection);
 
     // invoke func kubernetes deploy
     funcDeploy(commandHelper, dockerConnection);
@@ -66,7 +63,7 @@ function createImagePullSecret(commandHelper: CommandHelper) {
 }
 
 function funcDeploy(commandHelper: CommandHelper, dockerConnection: DockerConnection) {
-    const funcDeployCommand = commandHelper.getFuncDeployCommand(dockerConnection, secretName, appName, namespace, imageName, registry, pullSecretName, args);
+    const funcDeployCommand = commandHelper.getFuncDeployCommand(dockerConnection, secretName, appName, namespace, dockerHubNamespace, pullSecretName, args);
     commandHelper.execCommand(funcDeployCommand, { cwd: funcRootDir } as tr.IExecOptions);
 }
 
@@ -86,7 +83,7 @@ async function checkManifestStability(commandHelper: CommandHelper, resources: R
 function getKubernetesResourcesYaml(commandHelper: CommandHelper, dockerConnection): string {
     let resourcesYaml = null;
     const argsWithDryRun = args ? args.concat(' --dry-run') : '--dry-run';
-    const funcDeployDryRunCommand = commandHelper.getFuncDeployCommand(dockerConnection, secretName, appName, namespace, imageName, registry, pullSecretName, argsWithDryRun);
+    const funcDeployDryRunCommand = commandHelper.getFuncDeployCommand(dockerConnection, secretName, appName, namespace, dockerHubNamespace, pullSecretName, argsWithDryRun);
     const result: tr.IExecSyncResult = commandHelper.execCommand(funcDeployDryRunCommand, { cwd: funcRootDir } as tr.IExecOptions);
     resourcesYaml = result.stdout;
 
@@ -107,10 +104,6 @@ function getResourcesFromYaml(yamlContent: string, filterResourceTypes: string[]
     });
 
     return resources;
-}
-
-function getQualifiedImageName(dockerConnection: DockerConnection): string {
-    return dockerConnection.getQualifiedImageName(imageName);
 }
 
 function getKubernetesNamespace(): string {

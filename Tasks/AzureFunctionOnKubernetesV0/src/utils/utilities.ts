@@ -4,7 +4,6 @@ import * as FileHelper from './fileHelper';
 
 export function getKubernetesConnection(): KubernetesConnection {
     const kubernetesServiceConnection = tl.getInput('kubernetesServiceConnection', true);
-    const tempPath = FileHelper.getTaskTempDir();
-    const connection = new KubernetesConnection(kubernetesServiceConnection, tempPath);
+    const connection = new KubernetesConnection(kubernetesServiceConnection, FileHelper.getTaskTempDir());
     return connection;
 }

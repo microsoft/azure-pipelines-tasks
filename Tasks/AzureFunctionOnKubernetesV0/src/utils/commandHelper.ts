@@ -22,16 +22,14 @@ export class CommandHelper {
         return result;
     }
     
-    public getFuncDeployCommand(dockerConnection: DockerConnection, secretName: string, appName: string, namespace: string, imageName: string, registry: string, pullSecretName: string, args: string): tr.ToolRunner {
+    public getFuncDeployCommand(dockerConnection: DockerConnection, secretName: string, appName: string, namespace: string, dockerHubNamespace: string, pullSecretName: string, args: string): tr.ToolRunner {
+        const registry = dockerHubNamespace ? dockerHubNamespace : dockerConnection.getRegistry();
+
         if (!registry) {
-            registry = dockerConnection.getRegistry();
+            tl.debug('Neither dockerHubNamespace is provided nor found registry info from Docker login. The deployment will fail.');
         }
 
-        if (!imageName && !registry) {
-            tl.debug('Neither image-name nor registry input is provided. The deployment will fail.');
-        }
-
-        return FuncKubernetesUtility.getFuncDeployCommand(this.funcPath, secretName, appName, namespace, imageName, registry, pullSecretName, args);
+        return FuncKubernetesUtility.getFuncDeployCommand(this.funcPath, secretName, appName, namespace, null, registry, pullSecretName, args);
     }
 
     public getCreateDockerRegistrySecretCommand(secretName: string, namespace: string): tr.ToolRunner {

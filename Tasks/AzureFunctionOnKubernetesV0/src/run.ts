@@ -20,8 +20,8 @@ console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
 
 async function run() {
     const commandHelper = new CommandHelper();
-    const kubernetesConnection = utils.getKubernetesConnection();
     const dockerConnection = new DockerConnection();
+    const kubernetesConnection = utils.getKubernetesConnection();
     dockerConnection.open();
     kubernetesConnection.open();
 

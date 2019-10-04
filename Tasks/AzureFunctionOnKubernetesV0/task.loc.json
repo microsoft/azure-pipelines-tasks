@@ -3,7 +3,7 @@
   "name": "AzureFunctionsOnKubernetes",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/az-functions-k8s",
+  "helpUrl": "https://aka.ms/func-k8s",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "preview": true,
@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 159,
+    "Minor": 160,
     "Patch": 0
   },
   "demands": [],
@@ -35,6 +35,7 @@
       "name": "dockerRegistryServiceConnection",
       "type": "connectedService:dockerregistry",
       "label": "ms-resource:loc.input.label.dockerRegistryServiceConnection",
+      "required": true,
       "groupName": "serviceConnections",
       "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryServiceConnection"
     },
@@ -47,6 +48,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceConnection"
     },
     {
+      "name": "namespace",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.namespace",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.namespace"
+    },
+    {
       "name": "secretName",
       "type": "string",
       "label": "ms-resource:loc.input.label.secretName",
@@ -54,11 +62,11 @@
       "helpMarkDown": "ms-resource:loc.input.help.secretName"
     },
     {
-      "name": "namespace",
+      "name": "dockerHubNamespace",
       "type": "string",
-      "label": "ms-resource:loc.input.label.namespace",
+      "label": "ms-resource:loc.input.label.dockerHubNamespace",
       "groupName": "commands",
-      "helpMarkDown": "ms-resource:loc.input.help.namespace"
+      "helpMarkDown": "ms-resource:loc.input.help.dockerHubNamespace"
     },
     {
       "name": "appName",
@@ -67,20 +75,6 @@
       "label": "ms-resource:loc.input.label.appName",
       "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.appName"
-    },
-    {
-      "name": "imageName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.imageName",
-      "groupName": "commands",
-      "helpMarkDown": "ms-resource:loc.input.help.imageName"
-    },
-    {
-      "name": "registry",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.registry",
-      "groupName": "commands",
-      "helpMarkDown": "ms-resource:loc.input.help.registry"
     },
     {
       "name": "functionRootDirectory",

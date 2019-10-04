@@ -10,23 +10,10 @@ export class DockerConnection {
     private registryAuthenticationToken: RegistryAuthenticationToken;
 
     public open() {      
-        const endpointId = tl.getInput("dockerRegistryServiceConnection", false);
-        if (endpointId) {
-            this.registryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
-            
-            this.connection = new ContainerConnection();
-            this.connection.open(null, this.registryAuthenticationToken);
-        }
-    }
-
-    public getQualifiedImageName(imageName): string {
-        if (!imageName) {
-            return '';
-        }
-
-        let qualifiedName = this.connection.getQualifiedImageNameIfRequired(imageName);
-        qualifiedName = ImageUtils.generateValidImageName(qualifiedName);
-        return qualifiedName;
+        const endpointId = tl.getInput("dockerRegistryServiceConnection", true);
+        this.registryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);        
+        this.connection = new ContainerConnection();
+        this.connection.open(null, this.registryAuthenticationToken);
     }
 
     public getRegistry() {
