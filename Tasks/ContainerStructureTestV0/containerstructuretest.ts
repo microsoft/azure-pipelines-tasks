@@ -6,6 +6,7 @@ import RegistryAuthenticationToken from "docker-common-v2/registryauthentication
 import ContainerConnection from "docker-common-v2/containerconnection";
 import { getDockerRegistryEndpointAuthenticationToken } from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
 import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
+import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
 let uuid = require('uuid');
 
 interface TestSummary {
@@ -13,7 +14,7 @@ interface TestSummary {
     "Pass": number;
     "Fail": number;
     "Results": TestResult[];
-
+    "Duration": number;
 }
 
 interface TestResult {
@@ -22,15 +23,41 @@ interface TestResult {
     "Errors": string[] | undefined;
 }
 
+interface TestAttestation {
+    "testId": string;
+    "testTool": string;
+    "testResult": TestResultAttestation;
+    "testDurationSeconds": number;
+    "testPassPercentage": string;
+    "relatedUrls": [RelatedUrls];
+}
+
+interface TestResultAttestation {
+    "total": number;
+    "passed": number;
+    "failed": number;
+    "skipped": number;
+}
+
+interface RelatedUrls {
+    "url": string;
+    "label": string;
+}
+
 const telemetryArea: string = 'TestExecution';
 const telemetryFeature: string = 'PublishTestResultsTask';
 const telemetryData: { [key: string]: any; } = <{ [key: string]: any; }>{};
-
+const defaultRunTitlePrefix: string = 'ContainerStructureTest_TestResults_';
+const testTabViewIdInBuild = "ms.vss-test-web.build-test-results-tab";
+const testTabViewIdInRelease = "ms.vss-test-web.test-result-in-release-environment-editor-tab";
+const buildString = "build";
+const hostType = tl.getVariable("System.HostType").toLowerCase();
+const isBuild = hostType === buildString;
+const osType = tl.osType().toLowerCase();
 
 async function run() {
     let taskResult = true;
     try {
-        const osType = tl.osType().toLowerCase();
         tl.debug(`Os Type: ${osType}`);
         telemetryData["OsType"] = osType;
 
@@ -38,12 +65,14 @@ async function run() {
             throw new Error(tl.loc('NotSupportedOS', osType));
         }
 
+        const artifactId = isBuild ? parseInt(tl.getVariable("Build.BuildId")) : parseInt(tl.getVariable("Release.ReleaseId"));
         const testFilePath = tl.getInput('configFile', true);
         const repository = tl.getInput('repository', true);
+        const testRunTitleInput = tl.getInput('testRunTitle');
         let tagInput = tl.getInput('tag');
         const tag = tagInput ? tagInput : "latest";
+        const testRunTitle = testRunTitleInput ? testRunTitleInput : `${defaultRunTitlePrefix}${artifactId}`;
 
-        const image = `${repository}:${tag}`;
         let endpointId = tl.getInput("dockerRegistryServiceConnection");
         const failTaskOnFailedTests: boolean = tl.getInput('failTaskOnFailedTests').toLowerCase() == 'true' ? true : false;
 
@@ -54,6 +83,8 @@ async function run() {
         connection.open(null, registryAuthenticationToken, true, false);
         tl.debug(`Successfully finished docker login`);
 
+        const image = `${connection.getQualifiedImageName(repository, true)}:${tag}`;
+        tl.debug(`Image: ${image}`)
         await dockerPull(connection, image);
         tl.debug(`Successfully finished docker pull`);
 
@@ -64,7 +95,10 @@ async function run() {
 
         tl.debug(`Successfully downloaded : ${downloadUrl}`);
         const runnerPath = await downloadTestRunner(downloadUrl);
+
+        var start = _getCurrentTime();
         const output: string = runContainerStructureTest(runnerPath, testFilePath, image);
+        var end = _getCurrentTime();
 
         if (!output || output.length <= 0) {
             throw new Error("No output from runner");
@@ -72,10 +106,14 @@ async function run() {
 
         tl.debug(`Successfully finished testing`);
         let resultObj: TestSummary = JSON.parse(output);
-        tl.debug(`Total Tests: ${resultObj.Total}, Pass: ${resultObj.Pass}, Fail: ${resultObj.Fail}`);
+        resultObj.Duration = end-start;
+        console.log(`Total Tests: ${resultObj.Total}, Pass: ${resultObj.Pass}, Fail: ${resultObj.Fail}`);
 
-        publishTheTestResultsToTCM(output);
-        publishTestResultsToMetadataStore(resultObj);
+        publishTheTestResultsToTCM(output, testRunTitleInput);
+
+        var response:WebResponse = await publishTestResultsToMetadataStore(image, resultObj, testRunTitle);
+        console.log(`Publishing test data to metadata store. Status: ${response.statusCode} and Message : ${response.statusMessage}`)
+        tl.debug(`Response from publishing the test details to MetaData store: ${JSON.stringify(response)}`);
 
         if (failTaskOnFailedTests && resultObj && resultObj.Fail > 0) {
             taskResult = false;
@@ -90,6 +128,10 @@ async function run() {
         publishTelemetry();
         tl.debug("Finished Execution");
     }
+}
+
+function _getCurrentTime() {
+    return new Date().getTime();
 }
 
 async function dockerPull(connection: ContainerConnection, imageName: string): Promise<any> {
@@ -170,26 +212,125 @@ function runContainerStructureTest(runnerPath: string, testFilePath: string, ima
     return jsonOutput;
 }
 
-function publishTheTestResultsToTCM(jsonResutlsString: string) {
-    let resultsFile = createResultsFile(jsonResutlsString);
+function publishTheTestResultsToTCM(jsonResultsString: string, runTitle: string) {
+    let resultsFile = createResultsFile(jsonResultsString);
 
     if (!resultsFile) {
-        tl.warning("Unable to create the resutls file, hence not publishg the test results");
+        tl.warning("Unable to create the results file, hence not publishing the test results");
         return;
     }
-
-    var properties = <{ [key: string]: string }>{};
-    properties['type'] = "ContainerStructure";
-    properties['mergeResults'] = "false";
-    properties['runTitle'] = "Container Structure Tests";
-    properties['resultFiles'] = resultsFile;
-    properties['testRunSystem'] = "VSTS-PTR";
-
-    tl.command('results.publish', properties, '');
-    telemetryData["TCMPublishStatus"] = true;
+    try {
+        var properties = <{ [key: string]: string }>{};
+        properties['type'] = "ContainerStructure";
+        properties['mergeResults'] = "false";
+        properties['runTitle'] = runTitle;
+        properties['resultFiles'] = resultsFile;
+        properties['testRunSystem'] = "VSTS-PTR";
+    
+        tl.command('results.publish', properties, '');
+        telemetryData["TCMPublishStatus"] = true;
+        tl.debug("Finished publishing the test results to TCM");
+    } catch(error) {
+        tl.debug(`Unable to publish the test results because of ${error}`);
+        telemetryData["TCMPublishError"] = error;
+    }
 }
 
-function publishTestResultsToMetadataStore(testSummary: TestSummary) {
+async function publishTestResultsToMetadataStore(imageName:string, testSummary: TestSummary, testRunTitle: string):Promise<any> {
+
+    return new Promise(async (resolve, reject) => {
+        try{
+            const request = new WebRequest();
+            const accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
+            const requestUrl = tl.getVariable("System.TeamFoundationCollectionUri") + tl.getVariable("System.TeamProject") + "/_apis/deployment/attestationdetails?api-version=5.2-preview.1";
+            const resourceUri = getResourceUri(imageName);
+            const testPassPercentage = (testSummary.Pass/testSummary.Total) * 100;
+            const testSummaryJson: TestAttestation = {
+                testId: "ContainerStructureTestV0",
+                testTool: "Google container-structure-test",
+                testResult: {
+                  total: testSummary.Total,
+                  passed: testSummary.Pass,
+                  failed: testSummary.Fail,
+                  skipped: 0
+                } as TestResultAttestation,
+                testDurationSeconds: testSummary.Duration,
+                testPassPercentage: testPassPercentage.toString(),
+                relatedUrls: [
+                  {
+                    url: getTestTabUrl(),
+                    label: "test-results-url"
+                  }
+                ]
+              };
+            tl.debug(`Resource URI: ${resourceUri}`);
+            const requestBody = {
+                name: testRunTitle,
+                description: "Test Results from Container structure test",
+                resourceUri:[resourceUri],
+                kind: "ATTESTATION",
+                relatedUrl: [
+                  {
+                    url: dockerCommandUtils.getPipelineLogsUrl(),
+                    label: "pipeline-url"
+                  }
+                ],
+                humanReadableName: "Container Structure test results",
+                serializedPayload: JSON.stringify(testSummaryJson)
+            };
+
+            request.uri = requestUrl;
+            request.method = 'POST';
+            request.body = JSON.stringify(requestBody);
+            request.headers = {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + accessToken
+            };
+
+            tl.debug("requestUrl: " + requestUrl);
+            tl.debug("requestBody: " + JSON.stringify(requestBody));
+            tl.debug("accessToken: " + accessToken);
+
+            try {
+                tl.debug("Sending request for pushing image to Image meta data store");
+                const response = await sendRequest(request);
+                tl.debug("Finished publishing the test results to TCM");
+                telemetryData["MetaDataPublishStatus"] = true;
+                resolve(response);
+            }
+            catch (error) {
+                tl.debug(`Unable to push to attestation Details Artifact Store, Error:  ${error}`);
+                telemetryData["MetaDataPublishError"] = error;
+                reject(error);
+            }
+
+        } catch(error) {
+            tl.debug(`Unable to push the attestation details ${error}`)
+            reject(error);
+        }
+    });
+}
+
+function getTestTabUrl(): string {
+  var pipeLineUrl = dockerCommandUtils.getPipelineLogsUrl();
+  var testTabUrl = "";
+  if (isBuild) {
+    testTabUrl = pipeLineUrl + `&view=${testTabViewIdInBuild}`;
+  } else {
+      pipeLineUrl = pipeLineUrl + `&environmentId=${tl.getVariable("Release.EnvironmentId")}`;
+      testTabUrl = pipeLineUrl + `&extensionId=${testTabViewIdInRelease}&_a=release-environment-extension`
+  }
+
+  return testTabUrl;
+}
+
+function getResourceUri(imageName: string): string {
+    let inspectOutput = tl.execSync("docker", ["image", "inspect", imageName]);
+    let imageDetails = JSON.parse(inspectOutput.stdout);
+    let repoDigest = imageDetails[0].RepoDigests[0] as string;
+    let digest = repoDigest.split(":")[1];
+    let resourceName = getResourceName(imageName, digest);
+    return resourceName
 }
 
 function publishTelemetry() {
@@ -200,5 +341,32 @@ function publishTelemetry() {
         tl.debug(`Error in writing telemetry : ${err}`);
     }
 }
+
+function getResourceName(image: string, digest: string): string {
+    var match = image.match(/^(?:([^\/]+)\/)?(?:([^\/]+)\/)?([^@:\/]+)(?:[@:](.+))?$/);
+    if (!match) {
+        return null;
+    }
+
+    var registry = match[1];
+    var namespace = match[2];
+    var repository = match[3];
+    var tag = match[4];
+  
+    if (!namespace && registry && !/[:.]/.test(registry)) {
+      namespace = registry
+      registry = 'docker.io'
+    }
+
+    if (!namespace && !registry) {
+      registry = 'docker.io'
+      namespace = 'library'
+    }
+
+    registry = registry ? registry + '/' : '';
+    namespace = namespace ? namespace + '/' : '';
+    
+    return "https://" + registry  + namespace  + repository + "@sha256:" + digest;
+  }
 
 run();
