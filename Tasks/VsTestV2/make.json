@@ -5,10 +5,10 @@
                 "url": "https://testselectorv2.blob.core.windows.net/testselector/7841796/TestSelector.zip",
                 "dest": "./"
             },
-            {
-                "url": "https://testexecution.blob.core.windows.net/testexecution/10525576/TestAgent.zip",
-                "dest": "./Modules"
-            },
+          {
+            "url": "https://testexecution.blob.core.windows.net/testexecution/10597595/TestAgent.zip",
+            "dest": "./Modules"
+          },
             {
                 "url": "https://testselectorv2.blob.core.windows.net/testselector/InputDataContractParityTool/InputDataContractParityTool.zip",
                 "dest": "./Tests"
