@@ -16,24 +16,11 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
-tmr.setInput('app', '/test/path/to/my.ipa');
+tmr.setInput('app', '/test/path/to/my.appxbundle');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
 tmr.setInput('symbolsType', 'UWP');
-tmr.setInput('pdbPath', 'a/**/*.pdb');
-
-/*
-  dSyms folder structure:
-  a
-    f.txt
-    b
-      f.txt
-      c
-        d
-          f.txt
-        f.txt
-        x.pdb
-*/
+tmr.setInput('appxsymPath', 'a/my.appxsym');
 
 //prepare upload
 nock('https://example.test')
@@ -94,23 +81,15 @@ nock('https://example.test')
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'checkPath' : {
-        '/test/path/to/my.ipa': true,
-        'a': true,
-        'a/f.txt': true,
-        'a/b': true,
-        'a/b/f.txt': true,
-        'a/b/c': true,
-        'a/b/c/f.txt': true,
-        'a/b/c/d': true,
-        'a/b/c/d/f.txt': true,
-        'a/b/c/x.pdb': true
+        '/test/path/to/my.appxbundle': true,
+        'a/my.appxsym': true
     },
     'findMatch' : {
-        'a/**/*.pdb': [
-            'a/b/c/x.pdb'
+        'a/my.appxsym': [
+            'a/my.appxsym'
         ],
-        '/test/path/to/my.ipa': [
-            '/test/path/to/my.ipa'
+        '/test/path/to/my.appxbundle': [
+            '/test/path/to/my.appxbundle'
         ]
     }
 };
@@ -132,53 +111,12 @@ fs.createWriteStream = (s: string) => {
     return stream;
 };
 
-fs.readdirSync = (folder: string) => {
-    let files: string[] = [];
-
-    if (folder === 'a') {
-        files = [
-            'f.txt',
-            'b'
-        ]
-    } else if (folder === 'a/b') {
-        files = [
-            'f.txt',
-            'c',
-            'd'
-        ]
-    } else if (folder === 'a/b/c') {
-        files = [
-            'f.txt',
-            'd',
-            'x.pdb'
-        ]
-    } else if (folder === 'a/b/c/d') {
-        files = [
-            'f.txt'
-        ]
-    }
-
-    return files;
-};
-
 fs.statSync = (s: string) => {
     let stat = new Stats;
 
-    stat.isFile = () => {
-        if (s.endsWith('.txt') || s.endsWith('.pdb')) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    stat.isFile = () => s.endsWith('.appxsym');
 
-    stat.isDirectory = () => {
-        if (s.endsWith('.txt') || s.endsWith('.pdb')) {
-            return false;
-        } else {
-            return true;
-        }
-    }
+    stat.isDirectory = () => !s.endsWith('.appxsym')
 
     stat.size = 100;
 
