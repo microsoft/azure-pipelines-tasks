@@ -107,11 +107,12 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
     return commandImplementation.run(clusterConnection, command, (data) => result.push(data))
         .fin(function cleanup() {
             console.log("commandOutput" + result);
-            var commandOutputLength = result.length;
+            const resultString = result.toString();
+            const commandOutputLength = resultString.length;
             if (commandOutputLength > environmentVariableMaximumSize) {
                 tl.warning(tl.loc("OutputVariableDataSizeExceeded", commandOutputLength, environmentVariableMaximumSize));
             } else {
-                tl.setVariable('KubectlOutput', result.toString());
+                tl.setVariable('KubectlOutput', resultString);
             }
 
             const outputFormat: string = tl.getInput("outputFormat", false);
