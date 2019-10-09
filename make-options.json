@@ -73,6 +73,7 @@
         "DownloadPipelineArtifactV2",
         "DownloadSecureFileV1",
         "DuffleInstallerV0",
+        "DynamicResourceV0",
         "ExtractFilesV1",
         "FileTransformV1",
         "FileTransformV2",

@@ -1,0 +1,9 @@
+{
+  "loc.friendlyName": "Dynamic Resource",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "Use this task under deploy phase provider to create a resource dynamically",
+  "loc.instanceNameFormat": "Dynamic Resource - $(source)",
+  "loc.releaseNotes": "Use this task under deploy phase provider to create a resource dynamically",
+  "loc.input.label.source": "Source",
+  "loc.messages.CreatedDynamicResource": "A dynamic resource is created using %s"
+}
