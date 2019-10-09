@@ -1,8 +1,8 @@
 {
-  "name": "vsts-cmdline-task",
+  "name": "dynamic-resource-task",
   "version": "1.0.0",
-  "description": "Azure Pipelines Command Line Task",
-  "main": "cmdline.js",
+  "description": "Azure Pipelines Dynamic Resource Task",
+  "main": "run.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "uuid": "^3.0.1",
     "azure-pipelines-task-lib": "2.9.3"
   }
 }
