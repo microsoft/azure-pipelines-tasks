@@ -70,6 +70,10 @@ export class NuGetXmlHelper implements INuGetXmlHelper {
                 key: "ClearTextPassword",
                 value: password
             });
+            xmlFeedName.c("add", {
+                key: "ValidAuthenticationTypes",
+                value: "basic"
+            });
         }
 
         return xml;
