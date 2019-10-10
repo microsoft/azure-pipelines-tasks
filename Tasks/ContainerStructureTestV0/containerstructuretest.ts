@@ -273,7 +273,7 @@ async function publishTestResultsToMetadataStore(imageName:string, testSummary: 
               };
             tl.debug(`Resource URI: ${resourceUri}`);
             const requestBody = {
-                name: testRunTitle,
+                name: getAttestationName(),
                 description: "Test Results from Container structure test",
                 resourceUri:[resourceUri],
                 kind: "ATTESTATION",
@@ -317,6 +317,10 @@ async function publishTestResultsToMetadataStore(imageName:string, testSummary: 
             reject(error);
         }
     });
+}
+
+function getAttestationName(): string {
+    return `projects/${tl.getVariable("System.TeamProject")}/notes/${uuid.v1()}`
 }
 
 function getTestTabUrl(): string {
