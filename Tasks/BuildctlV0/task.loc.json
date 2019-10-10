@@ -1,0 +1,61 @@
+{
+  "id": "8413C881-4959-43D5-8840-B4EA0FFC5CFE",
+  "name": "BuildKitInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 160,
+    "Patch": 1
+  },
+  "demands": [],
+  "satisfies": [
+    "Buildctl"
+  ],
+  "groups": [],
+  "inputs": [
+    {
+      "name": "buildctlVersion",
+      "label": "ms-resource:loc.input.label.buildctlVersion",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.buildctlVersion",
+      "defaultValue": "latest"
+    },
+    {
+      "name": "Dockerfile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.Dockerfile",
+      "defaultValue": ".",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Dockerfile"
+    },
+    {
+      "name": "localContext",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.localContext",
+      "defaultValue": ".",
+      "helpMarkDown": "ms-resource:loc.input.help.localContext"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "src//buildctl.js"
+    }
+  },
+  "messages": {
+    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
+    "VerifyBuildctlInstallation": "ms-resource:loc.messages.VerifyBuildctlInstallation",
+    "BuildctlLatestNotKnown": "ms-resource:loc.messages.BuildctlLatestNotKnown",
+    "BuildctlDownloadFailed": "ms-resource:loc.messages.BuildctlDownloadFailed",
+    "BuildctlNotFoundInFolder": "ms-resource:loc.messages.BuildctlNotFoundInFolder"
+  }
+}
