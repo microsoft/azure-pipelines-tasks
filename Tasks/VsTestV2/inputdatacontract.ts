@@ -98,6 +98,8 @@ export interface ExecutionSettings {
     PathToCustomTestAdapters : string;
     IgnoreTestFailures : boolean;
     ProceedAfterAbortedTestCase : boolean;
+    PathToCustomVsTestConsoleWrapperAssembly : string;
+    CustomVsTestConsoleWrapperType : string;
     SettingsFile : string;
     AdditionalConsoleParameters : string;
     OverridenParameters : string;
