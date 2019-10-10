@@ -15,11 +15,7 @@ export function isEqual(str1: string, str2: string, ignoreCase?: boolean): boole
         return true;
     }
 
-    if (str1 == null) {
-        return false;
-    }
-
-    if (str2 == null) {
+    if (str1 == null || str2 == null) {
         return false;
     }
 

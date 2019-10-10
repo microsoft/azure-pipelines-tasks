@@ -33,9 +33,9 @@ export class CommandHelper {
     }
 
     public getCreateDockerRegistrySecretCommand(secretName: string, namespace: string): tr.ToolRunner {
-        const command = tl.tool(this.kubectlPath);
         const dockerConfigDir = tl.getVariable('DOCKER_CONFIG');
         if (dockerConfigDir) {
+            const command = tl.tool(this.kubectlPath);
             const dockerConfigPath = path.join(dockerConfigDir, 'config.json');
             command.arg(['create', 'secret', 'generic']);
             command.arg(secretName);

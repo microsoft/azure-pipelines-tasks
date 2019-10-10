@@ -20,20 +20,19 @@ const funcRootDir = tl.getInput('functionRootDirectory', true);
 const waitForStability = tl.getBoolInput('waitForStability');
 const isDryRun = (args && args.includes('--dry-run')) ? true : false;
 
-let pullSecretName = `${appName}-imagepullsecret`;
-
 export async function deploy(commandHelper: CommandHelper, dockerConnection: DockerConnection) {
+    let pullSecretName: string = '';
     if (!isDryRun) {
         // create pull secret if it is not dry-run
-        createImagePullSecret(commandHelper);
+        pullSecretName = createImagePullSecret(commandHelper);
     }
 
     // invoke func kubernetes deploy
-    funcDeploy(commandHelper, dockerConnection);
+    funcDeploy(commandHelper, dockerConnection, pullSecretName);
 
     if (!isDryRun) {
         // get Kubernetes resources (as YAML) created by deployment
-        const kubernetesResourcesYaml = getKubernetesResourcesYaml(commandHelper, dockerConnection);
+        const kubernetesResourcesYaml = getKubernetesResourcesYaml(commandHelper, dockerConnection, pullSecretName);
 
         // annotate the resources
         annotateKubernetesResources(commandHelper, kubernetesResourcesYaml);
@@ -46,7 +45,8 @@ export async function deploy(commandHelper: CommandHelper, dockerConnection: Doc
     }
 }
 
-function createImagePullSecret(commandHelper: CommandHelper) {
+function createImagePullSecret(commandHelper: CommandHelper): string {
+    let pullSecretName = `${appName}-imagepullsecret`;
     const createPullSecretCommand = commandHelper.getCreateDockerRegistrySecretCommand(pullSecretName, namespace);
     if (createPullSecretCommand) {
         const deleteSecretCommand = commandHelper.getDeleteSecretCommand(pullSecretName, namespace);
@@ -60,9 +60,11 @@ function createImagePullSecret(commandHelper: CommandHelper) {
         // no secret created if no Docker login is found. Case when user wants to use a public image.
         pullSecretName = '';
     }
+
+    return pullSecretName;
 }
 
-function funcDeploy(commandHelper: CommandHelper, dockerConnection: DockerConnection) {
+function funcDeploy(commandHelper: CommandHelper, dockerConnection: DockerConnection, pullSecretName: string) {
     const funcDeployCommand = commandHelper.getFuncDeployCommand(dockerConnection, secretName, appName, namespace, dockerHubNamespace, pullSecretName, args);
     commandHelper.execCommand(funcDeployCommand, { cwd: funcRootDir } as tr.IExecOptions);
 }
@@ -80,7 +82,7 @@ async function checkManifestStability(commandHelper: CommandHelper, resources: R
     await KubernetesManifestUtility.checkManifestStability(kubectl, resources);
 }
 
-function getKubernetesResourcesYaml(commandHelper: CommandHelper, dockerConnection): string {
+function getKubernetesResourcesYaml(commandHelper: CommandHelper, dockerConnection, pullSecretName: string): string {
     let resourcesYaml = null;
     const argsWithDryRun = args ? args.concat(' --dry-run') : '--dry-run';
     const funcDeployDryRunCommand = commandHelper.getFuncDeployCommand(dockerConnection, secretName, appName, namespace, dockerHubNamespace, pullSecretName, argsWithDryRun);
