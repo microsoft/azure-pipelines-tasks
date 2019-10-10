@@ -1,0 +1,19 @@
+{
+    "common": [
+        {
+            "module": "../Common/azure-arm-rest-v2",
+            "type": "node",
+            "dest": "./",
+            "compile": true
+        }
+    ],
+    "rm": [
+        {
+            "items": [
+                "node_modules/azure-arm-rest/node_modules/vsts-task-lib",
+                "node_modules/buildctl-common/node_modules/azure-pipelines-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
+}
