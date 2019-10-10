@@ -4,29 +4,16 @@ var DOMParser = require('xmldom').DOMParser;
 export class NpmDomUtility  {
 
     private xmlDomLookUpTable = {};
-    private headerContent;
     private xmlDom;
 
     public constructor(xmlContent) {
         this.xmlDomLookUpTable = {};
-        this.headerContent = null;
         this.xmlDom = new DOMParser().parseFromString(xmlContent,"text/xml");
-        this.readHeader(xmlContent);
         this.buildLookUpTable(this.xmlDom);
     }
 
     public getXmlDom() {
         return this.xmlDom;
-    }
-
-    private readHeader(xmlContent) {
-        var index = xmlContent.indexOf('\n');
-        if(index > -1) {
-            var firstLine = xmlContent.substring(0,index).trim();
-            if(firstLine.startsWith("<?") && firstLine.endsWith("?>")) {
-                this.headerContent = firstLine; 
-            }
-        }
     }
 
     public getContentWithHeader(xmlDom) {
@@ -38,7 +25,7 @@ export class NpmDomUtility  {
      */
     private buildLookUpTable(node) {
         if(node){
-            var nodeName = node.nodeName;
+            let nodeName = node.nodeName;
             if(nodeName){
                 nodeName = nodeName.toLowerCase();
                 var listOfNodes = this.xmlDomLookUpTable[nodeName];
@@ -47,10 +34,10 @@ export class NpmDomUtility  {
                     this.xmlDomLookUpTable[nodeName] = listOfNodes;
                 }
                 listOfNodes.push(node);
-                var children = node.childNodes;
-                if(children) {
-                    for(var i=0 ; i < children.length; i++){
-                        var childNodeName = children[i].nodeName;
+                if(node.hasChildNodes()) {
+                    let children = node.childNodes;
+                    for(let i=0 ; i < children.length; i++){
+                        let childNodeName = children[i].nodeName;
                         if(childNodeName) {
                             this.buildLookUpTable(children[i]);
                         }
@@ -66,7 +53,7 @@ export class NpmDomUtility  {
     public getElementsByTagName(nodeName) {
         if(varUtility.isEmpty(nodeName))
             return [];
-        var selectedElements = this.xmlDomLookUpTable[nodeName.toLowerCase()];
+        let selectedElements = this.xmlDomLookUpTable[nodeName.toLowerCase()];
         if(!selectedElements){
             selectedElements = [];
         }
@@ -79,15 +66,15 @@ export class NpmDomUtility  {
     public getChildElementsByTagName(node, tagName) {
         if(!varUtility.isObject(node) )
             return [];
-        var children = node.childNodes;
         var liveNodes = [];
-        if(children){
-            for( var i=0; i < children.length; i++ ){
-                var childName = children[i].nodeName;
+        if(node.hasChildNodes()){
+            var children = node.childNodes;
+            for(let i=0; i < children.length; i++ ){
+                let childName = children[i].nodeName;
                 if( !varUtility.isEmpty(childName) && tagName == childName){
                     liveNodes.push(children[i]);
                 }
-                var liveChildNodes = this.getChildElementsByTagName(children[i], tagName);
+                let liveChildNodes = this.getChildElementsByTagName(children[i], tagName);
                 if(liveChildNodes && liveChildNodes.length > 0){
                     liveNodes = liveNodes.concat(liveChildNodes);
                 }
