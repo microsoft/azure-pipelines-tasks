@@ -16,16 +16,20 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 157,
-        "Patch": 5
+        "Minor": 159,
+        "Patch": 2
     },
-    "preview": true,
     "releaseNotes": "Added support for Az Module and cross platform agents.",
     "groups": [
         {
             "name": "AzurePowerShellVersionOptions",
             "displayName": "Azure PowerShell version options",
             "isExpanded": true
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "minimumAgentVersion": "2.115.0",
@@ -140,6 +144,24 @@
             "visibleRule": "TargetAzurePs = OtherVersion",
             "groupName": "AzurePowerShellVersionOptions",
             "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0"
+        },
+        {
+            "name": "pwsh",
+            "type": "boolean",
+            "label": "Use PowerShell Core",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "If this is true, then on Windows the task will use pwsh.exe from your PATH instead of powershell.exe.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "workingDirectory",
+            "type": "filePath",
+            "label": "Working Directory",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Working directory where the script is run.",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
