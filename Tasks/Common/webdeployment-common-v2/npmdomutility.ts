@@ -28,19 +28,15 @@ export class NpmDomUtility  {
             let nodeName = node.nodeName;
             if(nodeName){
                 nodeName = nodeName.toLowerCase();
-                var listOfNodes = this.xmlDomLookUpTable[nodeName];
+                let listOfNodes = this.xmlDomLookUpTable[nodeName];
                 if(listOfNodes == null || !(Array.isArray(listOfNodes))) {
-                    listOfNodes = [];
-                    this.xmlDomLookUpTable[nodeName] = listOfNodes;
+                    this.xmlDomLookUpTable[nodeName] = [];
                 }
-                listOfNodes.push(node);
+                (this.xmlDomLookUpTable[nodeName]).push(node);
                 if(node.hasChildNodes()) {
                     let children = node.childNodes;
-                    for(let i=0 ; i < children.length; i++){
-                        let childNodeName = children[i].nodeName;
-                        if(childNodeName) {
-                            this.buildLookUpTable(children[i]);
-                        }
+                    for(let i=0 ; i < children.length; i++) {
+                        this.buildLookUpTable(children[i]);
                     }
                 }
             }
