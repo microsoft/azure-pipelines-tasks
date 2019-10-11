@@ -26,8 +26,21 @@ async function verifyBuildctl() {
     buildctlTool.exec();
 }
     
+async function buildContainer() {
+    if(process.env["RUNNING_AS_K8_POOLPROVIDER"] == "1") {
+        tl.debug("Container building using buildctl");
+        return buildUsingBuildctl();
+    }
+    else {
+        tl.debug("Container building using docker frontend");
+        return buildUsingDocker();
+    }
+
+}
+
 async function buildUsingBuildctl() {
 
+    await verifyBuildctl();
     const dockerfilepath = tl.getInput("dockerFile", true);
     const contextpath = tl.getInput("localContext", true);
     var podname = await utils.getBuildKitPod();
@@ -45,9 +58,32 @@ async function buildUsingBuildctl() {
     return buildctlTool.exec();
 }
 
+async function buildUsingDocker() {
+
+    const dockerfilepath = tl.getInput("dockerFile", true);
+    const contextpath = tl.getInput("localContext", true);
+    var dockerToolPath = tl.which("docker", true);
+    var command = tl.tool(dockerToolPath);
+    command.arg("build");
+    command.arg(["-f", dockerfilepath]);
+
+    command.arg(contextpath);
+
+    // setup variable to store the command output
+    let output = "";
+    command.on("stdout", data => {
+        output += data;
+    });
+
+    let dockerHostVar = tl.getVariable("DOCKER_HOST");
+    if (dockerHostVar) {
+        tl.debug(tl.loc('ConnectingToDockerHost', dockerHostVar));
+    }
+    return command.exec();
+}
+
 configureBuildctl()
-    .then(() => verifyBuildctl())
-    .then(() => buildUsingBuildctl())
+    .then(() => buildContainer())
     .then(() => {
         tl.setResult(tl.TaskResult.Succeeded, "");
     }).catch((error) => {
