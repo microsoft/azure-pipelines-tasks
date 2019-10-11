@@ -374,7 +374,6 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
     console.log(tl.loc('diagnosticsInput', inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled));    
 
     // Custom console wrapper settings
-    inputDataContract.ExecutionSettings.CustomVsTestConsoleWrapperType = tl.getVariable('vstest.customConsoleWrapperType');
     inputDataContract.ExecutionSettings.PathToCustomVsTestConsoleWrapperAssembly = tl.getVariable('vstest.customConsoleWrapperAssemblyLocation');
 
     inputDataContract = getTiaSettings(inputDataContract);
