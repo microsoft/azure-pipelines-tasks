@@ -15,7 +15,6 @@ export class Utility {
             throw new Error(tl.loc('JS_InvalidFilePath', filePath));
         }
         let tempDirectory = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
-        tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let inlineScript: string = tl.getInput("inlineScript", true);
         let scriptPath: string = path.join(tempDirectory, `azureclitaskscript${new Date().getTime()}.${fileExtensions[0]}`);
         await Utility.createFile(scriptPath, inlineScript);
@@ -36,7 +35,6 @@ export class Utility {
         // Write the script to disk.
         tl.assertAgent('2.115.0');
         let tempDirectory = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
-        tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
 
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${powerShellErrorActionPreference}'`);
@@ -46,17 +44,18 @@ export class Utility {
             filePath = path.join(tempDirectory, `azureclitaskscript${new Date().getTime()}_inlinescript.${fileExtensions[0]}`);
             await Utility.createFile(filePath, inlineScript);
         }
-
-        if (Utility.checkIfFileExists(filePath, fileExtensions)) {
-            let content: string = `. '${filePath.replace("'", "''")}' `;
-            if (scriptArguments) {
-                content += scriptArguments;
+        else{
+            if (!Utility.checkIfFileExists(filePath, fileExtensions)) {
+                throw new Error(tl.loc('JS_InvalidFilePath', filePath));
             }
-            contents.push(content.trim());
         }
-        else {
-            throw new Error(tl.loc('JS_InvalidFilePath', filePath));
+
+        let content: string = `. '${filePath.replace("'", "''")}' `;
+        if (scriptArguments) {
+            content += scriptArguments;
         }
+        contents.push(content.trim());
+
         let powerShellIgnoreLASTEXITCODE: string = tl.getInput('powerShellIgnoreLASTEXITCODE', false);
         if (!powerShellIgnoreLASTEXITCODE) {
             contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);
