@@ -3,6 +3,7 @@ import Q = require('q');
 import path = require('path');
 import { AzureRMEndpoint, dispose } from 'azure-arm-rest-v2/azure-arm-endpoint';
 import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
+import { AzureRmEndpointAuthenticationScheme } from 'azure-arm-rest-v2/constants';
 import {AzureAppService  } from 'azure-arm-rest-v2/azure-arm-app-service';
 import { AzureApplicationInsights } from 'azure-arm-rest-v2/azure-arm-appinsights';
 import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
@@ -12,6 +13,14 @@ import { AzureAppServiceUtils } from './operations/AzureAppServiceUtils';
 import { KuduServiceUtils } from './operations/KuduServiceUtils';
 import { AzureResourceFilterUtils } from './operations/AzureResourceFilterUtils';
 import { enableContinuousMonitoring } from './operations/ContinuousMonitoringUtils';
+
+var parseString = require('xml2js').parseString;
+
+interface scmCredentials {
+    uri: string;
+    username: string;
+    password: string;
+}
 
 const webAppKindMap = new Map([
     [ 'app', 'webApp' ],
@@ -64,6 +73,11 @@ async function run() {
         var endpointTelemetry = '{"endpointId":"' + connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureAppServiceManage]" + endpointTelemetry);
         
+        if (azureEndpoint.scheme && azureEndpoint.scheme.toLowerCase() === AzureRmEndpointAuthenticationScheme.PublishProfile) {
+            await handleActionWithPublishProfileEndpoint(azureEndpoint, action, extensionList, extensionOutputVariables);
+            return;
+        }
+
         if(action != "Swap Slots" && !slotName) {
             resourceGroupName = await AzureResourceFilterUtils.getResourceGroupName(azureEndpoint, 'Microsoft.Web/Sites', webAppName);
         }
@@ -200,6 +214,86 @@ async function run() {
     if (!taskResult) {
         tl.setResult(tl.TaskResult.Failed, errorMessage);
     }
+}
+
+async function handleActionWithPublishProfileEndpoint(publishProfileEndpoint: AzureEndpoint, action: string, extensionList: string, extensionOutputVariables: string) {
+    let scmCreds: scmCredentials = await getSCMCredentialsFromPublishProfile(publishProfileEndpoint.PublishProfile);
+    let kuduService = new Kudu(scmCreds.uri, scmCreds.username, scmCreds.password);
+    let kuduServiceUtils = new KuduServiceUtils(kuduService);
+    let taskResult = true;
+    let errorMessage: string = "";
+
+    try {
+        switch(action) {
+            case "Start all continuous webjobs": {
+                await kuduServiceUtils.startContinuousWebJobs();
+                break;
+            }
+            case "Stop all continuous webjobs": {
+                await kuduServiceUtils.stopContinuousWebJobs();
+                break;
+            }
+            case "Install Extensions": {
+                var extensionOutputVariablesArray = (extensionOutputVariables) ? extensionOutputVariables.split(',') : [];
+                await kuduServiceUtils.installSiteExtensions(extensionList.split(','), extensionOutputVariablesArray);
+                break;
+            }
+            default: {
+                throw Error(tl.loc('InvalidActionForPublishProfileEndpoint'));
+            }
+        }
+    }
+     catch(exception) {
+        taskResult = false;
+        errorMessage = exception;
+    }
+
+    tl.debug('Completed action');
+    try {
+        switch(action) {
+            case "Install Extensions": {
+                if(kuduServiceUtils) {
+                    await kuduServiceUtils.updateDeploymentStatus(taskResult, null, { "type" : action });
+                }
+                break;
+            }
+            default: {
+                tl.debug(`deployment status not updated for action: ${action}`);
+            }
+        }
+    }
+    catch(error) {
+        tl.debug(error);
+    }
+    finally {
+        dispose();
+    }
+
+    if (!taskResult) {
+        tl.setResult(tl.TaskResult.Failed, errorMessage);
+    }
+}
+
+async function getSCMCredentialsFromPublishProfile(pubxmlFile: string): Promise<scmCredentials> {
+    let res;
+    await parseString(pubxmlFile, (error, result) => {
+        if(!!error) {
+            throw new Error("Failed XML parsing " + error);
+        }
+        res = result.publishData.publishProfile[0].$;
+    });
+    let credentials: scmCredentials = {
+        uri: res.publishUrl.split(":")[0],
+        username: res.userName,
+        password: res.userPWD
+    };
+    console.log(`${credentials.username}`);
+    console.log(`${credentials.uri}`);
+    if(credentials.uri.indexOf("scm") < 0) {
+        throw new Error("Publish profile does not contain kudu URL");
+    }
+    credentials.uri = `https://${credentials.username}:${credentials.password}@${credentials.uri}`;
+    return credentials;
 }
 
 run();
