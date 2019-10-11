@@ -1,6 +1,6 @@
 {
   "name": "azurermdeploycommon",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Common Lib for Azure ARM REST apis",
   "repository": {
     "type": "git",

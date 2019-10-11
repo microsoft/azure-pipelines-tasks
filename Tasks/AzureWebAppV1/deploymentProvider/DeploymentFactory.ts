@@ -6,6 +6,8 @@ import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvid
 import tl = require('azure-pipelines-task-lib/task');
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
+import { AzureRmEndpointAuthenticationScheme } from 'azurermdeploycommon/azure-arm-rest/constants';
+import { AzurePublishProfileDeploymentProvider } from './AzurePublishProfileDeploymentProvider';
 
 export class DeploymentFactory {
 
@@ -16,7 +18,10 @@ export class DeploymentFactory {
     }
 
     public async GetDeploymentProvider(): Promise<IWebAppDeploymentProvider> {
-        if(this._taskParams.isLinuxApp) {
+        if (this._taskParams.azureEndpoint.scheme && this._taskParams.azureEndpoint.scheme.toLowerCase() === AzureRmEndpointAuthenticationScheme.PublishProfile) {
+            tl.debug("Deployment started for app-service using Azure publish profile endpoint");
+            return new AzurePublishProfileDeploymentProvider(this._taskParams);
+        } else if(this._taskParams.isLinuxApp) {
             tl.debug("Deployment started for linux app service");
             return new BuiltInLinuxWebAppDeploymentProvider(this._taskParams);
         } else {

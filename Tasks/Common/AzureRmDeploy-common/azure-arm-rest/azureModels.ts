@@ -205,7 +205,7 @@ export interface StorageAccount extends AzureBaseObject {
 }
 
 export interface AzureEndpoint {
-    subscriptionID: string;
+    subscriptionID?: string;
     subscriptionName: string;
     servicePrincipalClientID?: string;
     authenticationType?: string;
@@ -227,6 +227,7 @@ export interface AzureEndpoint {
     scheme?: string;
     applicationTokenCredentials: ApplicationTokenCredentials;
     isADFSEnabled?: boolean;
+    PublishProfile?: string;
 }
 
 export interface AzureAppServiceConfigurationDetails {
