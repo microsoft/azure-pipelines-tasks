@@ -1,8 +1,8 @@
 {
     "id": "8413C881-4959-43D5-8840-B4EA0FFC5CFE",
     "name": "BuildKitInstaller",
-    "friendlyName": "BuildKit",
-    "description": "Build with BuildKit",
+    "friendlyName": "Container Build Task",
+    "description": "Build Task",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
     "category": "Tool",
@@ -40,12 +40,12 @@
         {
             "name": "localContext",
             "type": "filePath",
-            "label": "Local context",
+            "label": "Build context",
             "defaultValue": ".",
-            "helpMarkDown": "Path to the local context."
+            "helpMarkDown": "Path to the Build context."
         }
     ],
-    "instanceNameFormat": "Build with Buildctl",
+    "instanceNameFormat": "Container Build Task",
     "execution": {
         "Node": {
             "target": "src//buildctl.js"
