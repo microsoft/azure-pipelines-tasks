@@ -12,16 +12,12 @@ const buildctlToolName = "buildctl"
 const uuidV4 = require('uuid/v4');
 const buildctlLatestReleaseUrl = "https://api.github.com/repos/moby/buildkit/releases/latest";
 const stableBuildctlVersion = "v0.5.1"
+const serviceidentifier = "k8loadbalancer"
+var namespace = "azuredevops"
+var port = "8082"
+var clusteruri = ""
 
-export async function getBuildctlVersion(): Promise<string> {
-    let buildctlVersion = tl.getInput("buildctlVersion");
-    if(buildctlVersion && buildctlVersion != "latest") {
-        return sanitizeVersionString(buildctlVersion.trim());
-    }
-    return await getStableBuildctlVersion();
-}
-
-async function getStableBuildctlVersion(): Promise<string> {
+export async function getStableBuildctlVersion(): Promise<string> {
     var request = new webclient.WebRequest();
     request.uri = buildctlLatestReleaseUrl;
     request.method = "GET";
@@ -36,8 +32,10 @@ async function getStableBuildctlVersion(): Promise<string> {
     return stableBuildctlVersion;
 }
 export async function downloadBuildctl(version: string): Promise<string> {
-    var cachedToolpath = toolLib.findLocalTool(buildctlToolName, version);
+
     let buildctlDownloadPath: string = null;
+    var cachedToolpath = toolLib.findLocalTool(buildctlToolName, version);
+    
     if (!cachedToolpath) {
         try {
             buildctlDownloadPath = await toolLib.downloadTool(getBuildctlDownloadURL(version), buildctlToolName + "-" + version + "-" + uuidV4() + getArchiveExtension());
@@ -47,8 +45,11 @@ export async function downloadBuildctl(version: string): Promise<string> {
 
         var unzipedBuildctlPath = await toolLib.extractTar(buildctlDownloadPath);
         unzipedBuildctlPath = path.join(unzipedBuildctlPath, "bin", buildctlToolName);
+        
         tl.debug('Extracting archive: ' + unzipedBuildctlPath+' download path: '+buildctlDownloadPath);
+        
         var cachedToolpath = await toolLib.cacheFile(unzipedBuildctlPath, buildctlToolName, buildctlToolName, version);
+        
         tl.debug('CachedTool path: ' + cachedToolpath);    
     }
 
@@ -56,7 +57,9 @@ export async function downloadBuildctl(version: string): Promise<string> {
     if (!buildctlpath) {
         throw new Error(tl.loc("BuildctlNotFoundInFolder", cachedToolpath))
     }
+    
     tl.debug('Buildctl path: ' + buildctlpath);
+    
     fs.chmodSync(buildctlpath, "777");
     return buildctlpath;
 }
@@ -76,54 +79,55 @@ function getBuildctlDownloadURL(version: string): string {
     }
 }
 
-export async function getBuildKitPod(): Promise<string> {
+export async function getServiceDetails() {
 
-    var consistenthashkey = tl.getVariable('Build.Repository.Name')+tl.getInput("dockerFile", true);
     var kubectlToolPath = tl.which("kubectl", true);
     var kubectlTool = tl.tool(kubectlToolPath);
+    
     kubectlTool.arg('get');
-    kubectlTool.arg('services');
-    kubectlTool.arg('k8s-poolprovider');
-    kubectlTool.arg('-n=azuredevops');
+    kubectlTool.arg('service');
+    kubectlTool.arg(`--selector=identifier=${serviceidentifier}`);
     kubectlTool.arg('-o=json');
+
     var serviceResponse= kubectlTool.execSync();
-        
-    //console.log("PodName: "+ JSON.parse(serviceResponse.stdout).status.loadBalancer.ingress[0].ip);
-    var clusteruri = "http://"+JSON.parse(serviceResponse.stdout).status.loadBalancer.ingress[0].ip+":8082/consistenthash";
+
+    namespace = JSON.parse(serviceResponse.stdout).items[0].metadata.namespace;
+    port = JSON.parse(serviceResponse.stdout).items[0].spec.ports[0].port;
+    clusteruri = JSON.parse(serviceResponse.stdout).items[0].status.loadBalancer.ingress[0].ip;
+}
+
+export async function getBuildKitPod() {
+
+    await getServiceDetails();
+
     let request = new webclient.WebRequest();
-        
-    request.uri = clusteruri;
     let headers = {
-        "key": consistenthashkey
+        "key": tl.getVariable('Build.Repository.Name')+tl.getInput("dockerFile", true)
     };
+    let webRequestOptions:webclient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true};
+
+    request.uri = `http://${clusteruri}:${port}/getBuildPod`;
     request.headers = headers
     request.method = "GET";
-        
-    //console.log("Get releases request: " + JSON.stringify(request));
 
-    let webRequestOptions:webclient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true};
     var response = await webclient.sendRequest(request, webRequestOptions);
-    //console.log(response.body);
     var podname = response.body.Message;
-    return podname;
+
+    tl.debug("Podname " +podname);
+
+    // set the environment variable
+    process.env["BUILDKIT_HOST"] = "kube-pod://"+podname+"?namespace="+namespace;
 }
 
 function findBuildctl(rootFolder: string) {
-    var DockerPath = path.join(rootFolder,  buildctlToolName);
-    tl.debug('inside findBuildctl path: ' + DockerPath);   
-    var allPaths = tl.find(rootFolder);
-    var matchingResultsFiles = tl.match(allPaths, DockerPath, rootFolder);
-    return matchingResultsFiles[0];
-}
 
-// handle user input scenerios
-export function sanitizeVersionString(inputVersion: string) : string{
-    var version = toolLib.cleanVersion(inputVersion);
-    if(!version) {
-        throw new Error(tl.loc("NotAValidSemverVersion"));
-    }
+    var BuildctlPath = path.join(rootFolder,  buildctlToolName);
+    var allPaths = tl.find(rootFolder);
+    var matchingResultsFiles = tl.match(allPaths, BuildctlPath, rootFolder);
+
+    tl.debug('inside findBuildctl path: ' + BuildctlPath);   
     
-    return "v"+version;
+    return matchingResultsFiles[0];
 }
 
 function getArchiveExtension(): string {

@@ -1,0 +1,111 @@
+{
+    "id": "8413C881-4959-43D5-8840-B4EA0FFC5CFE",
+    "name": "ContainerBuild",
+    "friendlyName": "Container Build",
+    "description": "Build Task",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
+    "category": "Build",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 160,
+        "Patch": 1
+    },
+    "demands": [],
+    "satisfies": [
+        "Buildctl"
+    ],
+    "groups": [
+        {
+            "name": "containerRepository",
+            "displayName": "Container Repository",
+            "isExpanded": true
+        },
+        {
+            "name": "commands",
+            "displayName": "Commands",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "dockerRegistryServiceConnection",
+            "type": "connectedService:dockerregistry",
+            "label": "Docker registry service connection",
+            "groupName": "containerRepository",
+            "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry."
+        },
+        {
+            "name": "repository",
+            "label": "Container repository",
+            "type": "string",
+            "helpMarkDown": "Name of the repository.",
+            "defaultValue": "",
+            "visibleRule": "command != login && command != logout",
+            "groupName": "containerRepository",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "Dockerfile",
+            "type": "filePath",
+            "label": "Dockerfile",
+            "defaultValue": ".",
+            "required": true,
+            "helpMarkDown": "Path to the Dockerfile."
+        },
+        {
+            "name": "buildContext",
+            "type": "filePath",
+            "label": "Build context",
+            "defaultValue": ".",
+            "helpMarkDown": "Path to the Build context."
+        },
+        {
+            "name": "tags",
+            "type": "multiLine",
+            "defaultValue": "$(Build.BuildId)",
+            "properties": {
+                "resizable": "true",
+                "rows": "2"
+            },
+            "label": "Tags",
+            "groupName": "commands",
+            "helpMarkDown": "A list of tags in separate lines. These tags are used in build, push and buildAndPush commands. Ex:<br><br>beta1.1<br>latest"
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Arguments",
+            "groupName": "commands",
+            "helpMarkDown": "Docker command options. Ex:<br> For build command,<br>--build-arg HTTP_PROXY=http://10.20.30.2:1234 --quiet"
+        },
+        {
+            "name": "addPipelineData",
+            "type": "boolean",
+            "label": "Add Pipeline metadata to image(s)",
+            "groupName": "commands",
+            "defaultValue": "true",
+            "helpMarkDown": "By default pipeline data like source branch name, build id are added which helps with traceability. For example you can inspect an image to find out which pipeline built the image. You can opt out of this default behavior by using this input."
+        }
+    ],
+    "instanceNameFormat": "Container Build Task",
+    "execution": {
+        "Node": {
+            "target": "src//buildctl.js"
+        }
+    },
+    "messages": {
+        "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+        "VerifyBuildctlInstallation": "Verifying Buildctl installation...",
+        "BuildctlLatestNotKnown": "Cannot get the latest Buildctl info from %s. Error %s. Using default Buildctl version %s.",
+        "BuildctlDownloadFailed": "Failed to download Buildctl from location %s. Error %s",
+        "BuildctlNotFoundInFolder": "Buildctl executable not found in path %s"
+    }
+}
