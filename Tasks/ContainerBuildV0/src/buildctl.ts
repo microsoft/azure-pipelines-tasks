@@ -5,11 +5,10 @@ import path = require('path');
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import utils = require("./utils");
 
-
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
 async function configureBuildctl() {
-    var stableBuildKitVersion = await utils.getBuildctlVersion();
+    var stableBuildKitVersion = await utils.getStableBuildctlVersion();
     var buildctlPath = await utils.downloadBuildctl(stableBuildKitVersion);
 
     // prepend the tools path. instructs the agent to prepend for future tasks
@@ -20,41 +19,45 @@ async function configureBuildctl() {
 
 async function verifyBuildctl() {
     tl.debug(tl.loc("VerifyBuildctlInstallation"));
+    
     var buildctlToolPath = tl.which("buildctl", true);
     var buildctlTool = tl.tool(buildctlToolPath);
+    
     buildctlTool.arg("--help");
     buildctlTool.exec();
 }
     
 async function buildContainer() {
-    if(process.env["RUNNING_AS_K8_POOLPROVIDER"] == "1") {
+    if(process.env["RUNNING_ON"] == "KUBERNETES") {
+        
         tl.debug("Container building using buildctl");
         return buildUsingBuildctl();
+
     }
     else {
+        
         tl.debug("Container building using docker frontend");
         return buildUsingDocker();
-    }
 
+    }
 }
 
 async function buildUsingBuildctl() {
 
     await verifyBuildctl();
-    const dockerfilepath = tl.getInput("dockerFile", true);
-    const contextpath = tl.getInput("localContext", true);
-    var podname = await utils.getBuildKitPod();
-    tl.debug("Podname " +podname);
-    process.env["BUILDKIT_HOST"] = "kube-pod://"+podname+"?namespace=azuredevops";
+
+    await utils.getBuildKitPod();
+
+    var contextarg = "--local=context="+tl.getInput("buildContext", true);
+    var dockerfilearg = "--local=dockerfile="+tl.getInput("dockerFile", true);
     var buildctlToolPath = tl.which("buildctl", true);
     var buildctlTool = tl.tool(buildctlToolPath);
+
     buildctlTool.arg("build");
     buildctlTool.arg('--frontend=dockerfile.v0');
-        
-    var contextarg = "--local=context="+contextpath;
-    var dockerfilearg = "--local=dockerfile="+dockerfilepath;
     buildctlTool.arg(contextarg);
     buildctlTool.arg(dockerfilearg);
+
     return buildctlTool.exec();
 }
 
@@ -62,11 +65,12 @@ async function buildUsingDocker() {
 
     const dockerfilepath = tl.getInput("dockerFile", true);
     const contextpath = tl.getInput("localContext", true);
+
     var dockerToolPath = tl.which("docker", true);
     var command = tl.tool(dockerToolPath);
+
     command.arg("build");
     command.arg(["-f", dockerfilepath]);
-
     command.arg(contextpath);
 
     // setup variable to store the command output
