@@ -64,7 +64,7 @@ async function buildUsingBuildctl() {
 async function buildUsingDocker() {
 
     const dockerfilepath = tl.getInput("dockerFile", true);
-    const contextpath = tl.getInput("localContext", true);
+    const contextpath = tl.getInput("buildContext", true);
 
     var dockerToolPath = tl.which("docker", true);
     var command = tl.tool(dockerToolPath);
