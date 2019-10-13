@@ -4,8 +4,9 @@ import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import utils = require("./utils");
-
-tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+import RegistryAuthenticationToken from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
+import ContainerConnection from "docker-common-v2/containerconnection";
+import { getDockerRegistryEndpointAuthenticationToken } from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
 
 async function configureBuildctl() {
     var stableBuildKitVersion = await utils.getStableBuildctlVersion();
@@ -18,6 +19,7 @@ async function configureBuildctl() {
 }
 
 async function verifyBuildctl() {
+    await configureBuildctl();
     tl.debug(tl.loc("VerifyBuildctlInstallation"));
     
     var buildctlToolPath = tl.which("buildctl", true);
@@ -26,30 +28,38 @@ async function verifyBuildctl() {
     buildctlTool.arg("--help");
     buildctlTool.exec();
 }
-    
-async function buildContainer() {
-    if(process.env["RUNNING_ON"] == "KUBERNETES") {
-        
-        tl.debug("Container building using buildctl");
-        return buildUsingBuildctl();
 
-    }
-    else {
-        
-        tl.debug("Container building using docker frontend");
-        return buildUsingDocker();
-
-    }
-}
-
-async function buildUsingBuildctl() {
+export async function buildctlBuildAndPush() {
 
     await verifyBuildctl();
 
     await utils.getBuildKitPod();
 
+    let tags = tl.getDelimitedInput("tags", "\n");
+    let endpointId = tl.getInput("dockerRegistryServiceConnection");
+    let registryAuthenticationToken: RegistryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
+
+    // Connect to any specified container registry
+    let connection = new ContainerConnection();
+    connection.open(null, registryAuthenticationToken, true, false);
+    let repositoryName = tl.getInput("repository");
+    if (!repositoryName) {
+        tl.warning("No repository is specified. Nothing will be pushed.");
+    }
+
+    let imageNames: string[] = [];
+    if (tl.getInput("dockerRegistryServiceConnection")) {
+        let imageName = connection.getQualifiedImageName(repositoryName, true);
+        if (imageName) {
+            imageNames.push(imageName);
+        }
+    }
+    else {
+        imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName, true);
+    }
+
     var contextarg = "--local=context="+tl.getInput("buildContext", true);
-    var dockerfilearg = "--local=dockerfile="+tl.getInput("dockerFile", true);
+    var dockerfilearg = "--local=dockerfile="+tl.getInput("Dockerfile", true);
     var buildctlToolPath = tl.which("buildctl", true);
     var buildctlTool = tl.tool(buildctlToolPath);
 
@@ -57,39 +67,14 @@ async function buildUsingBuildctl() {
     buildctlTool.arg('--frontend=dockerfile.v0');
     buildctlTool.arg(contextarg);
     buildctlTool.arg(dockerfilearg);
-
-    return buildctlTool.exec();
-}
-
-async function buildUsingDocker() {
-
-    const dockerfilepath = tl.getInput("dockerFile", true);
-    const contextpath = tl.getInput("buildContext", true);
-
-    var dockerToolPath = tl.which("docker", true);
-    var command = tl.tool(dockerToolPath);
-
-    command.arg("build");
-    command.arg(["-f", dockerfilepath]);
-    command.arg(contextpath);
-
-    // setup variable to store the command output
-    let output = "";
-    command.on("stdout", data => {
-        output += data;
-    });
-
-    let dockerHostVar = tl.getVariable("DOCKER_HOST");
-    if (dockerHostVar) {
-        tl.debug(tl.loc('ConnectingToDockerHost', dockerHostVar));
+    if (imageNames && imageNames.length > 0) {
+        imageNames.forEach(imageName => {
+            if (tags && tags.length > 0) {
+                tags.forEach(async tag => {
+                    buildctlTool.arg(`--output=type=image,name=${imageName}:${tag},push=true`);
+                    await buildctlTool.exec();
+                })
+            }
+        })
     }
-    return command.exec();
 }
-
-configureBuildctl()
-    .then(() => buildContainer())
-    .then(() => {
-        tl.setResult(tl.TaskResult.Succeeded, "");
-    }).catch((error) => {
-        tl.setResult(tl.TaskResult.Failed, error)
-    });

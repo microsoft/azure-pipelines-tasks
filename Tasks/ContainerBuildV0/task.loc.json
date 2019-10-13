@@ -20,24 +20,12 @@
   "satisfies": [
     "Buildctl"
   ],
-  "groups": [
-    {
-      "name": "containerRepository",
-      "displayName": "ms-resource:loc.group.displayName.containerRepository",
-      "isExpanded": true
-    },
-    {
-      "name": "commands",
-      "displayName": "ms-resource:loc.group.displayName.commands",
-      "isExpanded": true
-    }
-  ],
+  "groups": [],
   "inputs": [
     {
       "name": "dockerRegistryServiceConnection",
       "type": "connectedService:dockerregistry",
       "label": "ms-resource:loc.input.label.dockerRegistryServiceConnection",
-      "groupName": "containerRepository",
       "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryServiceConnection"
     },
     {
@@ -47,7 +35,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.repository",
       "defaultValue": "",
       "visibleRule": "command != login && command != logout",
-      "groupName": "containerRepository",
       "properties": {
         "EditableOptions": "True"
       }
@@ -76,36 +63,35 @@
         "rows": "2"
       },
       "label": "ms-resource:loc.input.label.tags",
-      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.tags"
     },
     {
       "name": "arguments",
       "type": "string",
       "label": "ms-resource:loc.input.label.arguments",
-      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.arguments"
     },
     {
-      "name": "addPipelineData",
+      "name": "addPipelineMetadata",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.addPipelineData",
-      "groupName": "commands",
+      "label": "ms-resource:loc.input.label.addPipelineMetadata",
       "defaultValue": "true",
-      "helpMarkDown": "ms-resource:loc.input.help.addPipelineData"
+      "helpMarkDown": "ms-resource:loc.input.help.addPipelineMetadata"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "src//buildctl.js"
+      "target": "src//buildcontainer.js"
     }
   },
   "messages": {
-    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
-    "VerifyBuildctlInstallation": "ms-resource:loc.messages.VerifyBuildctlInstallation",
+    "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "BuildctlLatestNotKnown": "ms-resource:loc.messages.BuildctlLatestNotKnown",
     "BuildctlDownloadFailed": "ms-resource:loc.messages.BuildctlDownloadFailed",
-    "BuildctlNotFoundInFolder": "ms-resource:loc.messages.BuildctlNotFoundInFolder"
+    "BuildctlNotFoundInFolder": "ms-resource:loc.messages.BuildctlNotFoundInFolder",
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "VerifyBuildctlInstallation": "ms-resource:loc.messages.VerifyBuildctlInstallation",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   }
 }

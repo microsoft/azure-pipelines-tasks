@@ -4,7 +4,7 @@
     "friendlyName": "Container Build",
     "description": "Build Task",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2107300)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -20,34 +20,21 @@
     "satisfies": [
         "Buildctl"
     ],
-    "groups": [
-        {
-            "name": "containerRepository",
-            "displayName": "Container Repository",
-            "isExpanded": true
-        },
-        {
-            "name": "commands",
-            "displayName": "Commands",
-            "isExpanded": true
-        }
-    ],
+    "groups": [],
     "inputs": [
         {
             "name": "dockerRegistryServiceConnection",
             "type": "connectedService:dockerregistry",
             "label": "Docker registry service connection",
-            "groupName": "containerRepository",
-            "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry."
+            "helpMarkDown": "Select a Docker registry service connection."
         },
         {
             "name": "repository",
             "label": "Container repository",
             "type": "string",
-            "helpMarkDown": "Name of the repository.",
+            "helpMarkDown": "Name of the repository within the container registry.",
             "defaultValue": "",
             "visibleRule": "command != login && command != logout",
-            "groupName": "containerRepository",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -58,14 +45,14 @@
             "label": "Dockerfile",
             "defaultValue": ".",
             "required": true,
-            "helpMarkDown": "Path to the Dockerfile."
+            "helpMarkDown": "Path to Dockerfile."
         },
         {
             "name": "buildContext",
             "type": "filePath",
             "label": "Build context",
             "defaultValue": ".",
-            "helpMarkDown": "Path to the Build context."
+            "helpMarkDown": "Path to Build context."
         },
         {
             "name": "tags",
@@ -76,21 +63,18 @@
                 "rows": "2"
             },
             "label": "Tags",
-            "groupName": "commands",
-            "helpMarkDown": "A list of tags in separate lines. These tags are used in build, push and buildAndPush commands. Ex:<br><br>beta1.1<br>latest"
+            "helpMarkDown": "A list of tags in separate lines. Tags are used while building and pushing the image to container registry."
         },
         {
             "name": "arguments",
             "type": "string",
             "label": "Arguments",
-            "groupName": "commands",
-            "helpMarkDown": "Docker command options. Ex:<br> For build command,<br>--build-arg HTTP_PROXY=http://10.20.30.2:1234 --quiet"
+            "helpMarkDown": "Arguments used while building the image."
         },
         {
-            "name": "addPipelineData",
+            "name": "addPipelineMetadata",
             "type": "boolean",
             "label": "Add Pipeline metadata to image(s)",
-            "groupName": "commands",
             "defaultValue": "true",
             "helpMarkDown": "By default pipeline data like source branch name, build id are added which helps with traceability. For example you can inspect an image to find out which pipeline built the image. You can opt out of this default behavior by using this input."
         }
@@ -98,14 +82,16 @@
     "instanceNameFormat": "Container Build Task",
     "execution": {
         "Node": {
-            "target": "src//buildctl.js"
+            "target": "src//buildcontainer.js"
         }
     },
     "messages": {
-        "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
-        "VerifyBuildctlInstallation": "Verifying Buildctl installation...",
+        "ContainerPatternNotFound": "No pattern found in Docker filepath parameter",
         "BuildctlLatestNotKnown": "Cannot get the latest Buildctl info from %s. Error %s. Using default Buildctl version %s.",
         "BuildctlDownloadFailed": "Failed to download Buildctl from location %s. Error %s",
-        "BuildctlNotFoundInFolder": "Buildctl executable not found in path %s"
+        "BuildctlNotFoundInFolder": "Buildctl executable not found in path %s",
+        "FileContentSynced": "Synced the file content to the disk. The content is %s.",
+        "VerifyBuildctlInstallation": "Verifying Buildctl installation...",
+        "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
     }
 }

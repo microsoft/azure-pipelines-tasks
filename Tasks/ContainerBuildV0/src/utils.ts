@@ -7,6 +7,7 @@ import fs = require('fs');
 import webclient = require("azure-arm-rest-v2/webClient");
 import * as os from "os";
 import * as util from "util";
+import * as fileutils from "docker-common-v2/fileutils";
 
 const buildctlToolName = "buildctl"
 const uuidV4 = require('uuid/v4');
@@ -31,6 +32,7 @@ export async function getStableBuildctlVersion(): Promise<string> {
 
     return stableBuildctlVersion;
 }
+
 export async function downloadBuildctl(version: string): Promise<string> {
 
     let buildctlDownloadPath: string = null;
@@ -102,7 +104,7 @@ export async function getBuildKitPod() {
 
     let request = new webclient.WebRequest();
     let headers = {
-        "key": tl.getVariable('Build.Repository.Name')+tl.getInput("dockerFile", true)
+        "key": tl.getVariable('Build.Repository.Name')+tl.getInput("Dockerfile", true)
     };
     let webRequestOptions:webclient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true};
 
@@ -135,4 +137,25 @@ function getArchiveExtension(): string {
         return ".zip";
     }
     return ".tar.gz";
+}
+
+function getTaskOutputDir(command: string): string {
+    let tempDirectory = tl.getVariable('agent.tempDirectory') || os.tmpdir();
+    let taskOutputDir = path.join(tempDirectory, "task_outputs");
+    return taskOutputDir;
+}
+
+export function writeTaskOutput(commandName: string, output: string): string {
+    let taskOutputDir = getTaskOutputDir(commandName);
+    if (!fs.existsSync(taskOutputDir)) {
+        fs.mkdirSync(taskOutputDir);
+    }
+
+    let outputFileName = commandName + "_" + Date.now() + ".txt";
+    let taskOutputPath = path.join(taskOutputDir, outputFileName);
+    if (fileutils.writeFileSync(taskOutputPath, output) == 0) {
+        tl.warning(tl.loc('NoDataWrittenOnFile', taskOutputPath));
+    }
+    
+    return taskOutputPath;
 }
