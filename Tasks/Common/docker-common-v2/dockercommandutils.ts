@@ -232,6 +232,12 @@ function parseHistoryForLayers(input: string) {
         argument = input.substring(indexCreatedBy + createdByMatch.length, input.length - 1);
     }
 
+    const layerIdMatch = "; layerId:";
+    const indexLayerId = argument.indexOf(layerIdMatch);
+    if (indexLayerId >= 0) {
+        argument = argument.substring(0, indexLayerId);
+    }
+
     let createdAt: string = "";
     let layerSize: string = "";
     const createdAtMatch = "createdAt:";
