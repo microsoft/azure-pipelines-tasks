@@ -44,7 +44,7 @@ async function run() {
         await containerRegistry.pull(repository, tag);
         tl.debug(`Successfully finished docker pull`);
 
-        // Running the container structure on the above pulled container.
+        // Running the container structure test on the above pulled container.
         const testRunner = new TestRunner(testFilePath, image);
         let resultObj: TestSummary = await testRunner.Run();
 

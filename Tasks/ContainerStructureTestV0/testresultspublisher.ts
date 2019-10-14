@@ -57,7 +57,8 @@ export class TestResultPublisher {
             properties['runTitle'] = testRunTitle;
             properties['resultFiles'] = resultsFile;
             properties['testRunSystem'] = this.testRunSystem;
-        
+            properties['publishRunAttachments'] = "true";
+
             tl.command('results.publish', properties, '');
             tl.debug("Finished publishing the test results to TCM");
         } catch(error) {
@@ -84,20 +85,19 @@ export class TestResultPublisher {
     
                 tl.debug("requestUrl: " + requestUrl);
                 tl.debug("requestBody: " + JSON.stringify(requestBody));
-                tl.debug("accessToken: " + accessToken);
-    
+
                 try {
                     const response = await sendRequest(request);
                     tl.debug("Finished publishing the test results to MetaData Store");
                     resolve(response);
                 }
                 catch (error) {
-                    tl.debug(`Unable to push to attestation Details Artifact Store, Error:  ${error}`);
+                    tl.debug(`Unable to push to attestation Details to MetaData Store, Error:  ${error}`);
                     reject(error);
                 }
     
             } catch(error) {
-                tl.debug(`Unable to push the attestation details ${error}`)
+                tl.debug(`Unable to push the attestation details to MetaData Store: ${error}`)
                 reject(error);
             }
         });
