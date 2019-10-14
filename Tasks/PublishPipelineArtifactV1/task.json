@@ -9,7 +9,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
+<<<<<<< HEAD
         "Minor": 0,
+=======
+        "Minor": 1,
+>>>>>>> update minor version
         "Patch": 0
     },
     "groups": [],
