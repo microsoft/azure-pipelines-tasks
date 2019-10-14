@@ -1,7 +1,7 @@
 {
     "id": "DEE316A2-586F-4DEF-BE79-488A1F503DFE",
     "name": "KubernetesManifest",
-    "friendlyName": "Deploy Kubernetes manifests",
+    "friendlyName": "Deploy to Kubernetes",
     "description": "Use Kubernetes manifest files to deploy to clusters or even bake the manifest files to be used for deployments using Helm charts",
     "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/kubernetes-manifest",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 156,
+        "Minor": 160,
         "Patch": 0
     },
     "demands": [],
@@ -333,6 +333,10 @@
         "InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
         "AllContainersNotInReadyState": "All the containers are not in a ready state.",
         "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
-        "KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features."
+        "KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features.",
+        "CouldNotDetermineServiceStatus":  "Could not determine the service %s status due to the error: %s",
+        "waitForServiceIpAssignment": "Waiting for service %s external IP assignment",
+        "waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timed out",
+        "ServiceExternalIP": "service %s external IP is %s"
     }
 }

@@ -3,7 +3,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 
 import * as utils from '../utils/utilities';
-import * as constants from '../models/constants';
+import * as constants from 'kubernetes-common-v2/kubernetesconstants';
 import * as TaskInputParameters from '../models/TaskInputParameters';
 
 import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';

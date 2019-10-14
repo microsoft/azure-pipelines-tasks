@@ -3,7 +3,7 @@
   "name": "GitHubRelease",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/github-release",
+  "helpUrl": "https://aka.ms/AA5vv5o",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
@@ -14,8 +14,8 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 156,
-    "Patch": 0
+    "Minor": 157,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -219,6 +219,30 @@
       "groupName": "changeLogConfiguration",
       "visibleRule": "changeLogCompareToRelease = lastNonDraftReleaseByTag",
       "helpMarkDown": "ms-resource:loc.input.help.changeLogCompareToReleaseTag"
+    },
+    {
+      "name": "changeLogType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.changeLogType",
+      "required": true,
+      "defaultValue": "commitBased",
+      "groupName": "changeLogConfiguration",
+      "visibleRule": "addChangeLog = true",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogType",
+      "options": {
+        "commitBased": "Commit based",
+        "issueBased": "Issue based"
+      }
+    },
+    {
+      "name": "changeLogLabels",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.changeLogLabels",
+      "required": false,
+      "visibleRule": "changeLogType = issueBased",
+      "defaultValue": "[{ \"label\" : \"bug\", \"displayName\" : \"Bugs\", \"state\" : \"closed\" }]",
+      "groupName": "changeLogConfiguration",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogLabels"
     }
   ],
   "dataSourceBindings": [
@@ -308,6 +332,13 @@
     "TagRequiredCreateAction": "ms-resource:loc.messages.TagRequiredCreateAction",
     "NoFileFoundMatchingPattern": "ms-resource:loc.messages.NoFileFoundMatchingPattern",
     "PatternIsADirectory": "ms-resource:loc.messages.PatternIsADirectory",
-    "SearchingFileMatchingPattern": "ms-resource:loc.messages.SearchingFileMatchingPattern"
+    "SearchingFileMatchingPattern": "ms-resource:loc.messages.SearchingFileMatchingPattern",
+    "IssuesFetchError": "ms-resource:loc.messages.IssuesFetchError",
+    "NoIssuesLinkedError": "ms-resource:loc.messages.NoIssuesLinkedError",
+    "LabelsSyntaxError": "ms-resource:loc.messages.LabelsSyntaxError",
+    "InvalidChangeLogTypeAttribute": "ms-resource:loc.messages.InvalidChangeLogTypeAttribute",
+    "ChangeLogTitle": "ms-resource:loc.messages.ChangeLogTitle",
+    "DefaultCategory": "ms-resource:loc.messages.DefaultCategory",
+    "SeeMoreText": "ms-resource:loc.messages.SeeMoreText"
   }
 }
