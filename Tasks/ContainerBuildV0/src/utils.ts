@@ -12,8 +12,9 @@ import * as fileutils from "docker-common-v2/fileutils";
 const buildctlToolName = "buildctl"
 const uuidV4 = require('uuid/v4');
 const buildctlLatestReleaseUrl = "https://api.github.com/repos/moby/buildkit/releases/latest";
+const buildctlToolNameWithExtension = buildctlToolName + getExecutableExtension();
 const stableBuildctlVersion = "v0.5.1"
-const serviceidentifier = "k8loadbalancer"
+var serviceName = "k8s-poolprovider"
 var namespace = "azuredevops"
 var port = "8082"
 var clusteruri = ""
@@ -46,11 +47,11 @@ export async function downloadBuildctl(version: string): Promise<string> {
         }
 
         var unzipedBuildctlPath = await toolLib.extractTar(buildctlDownloadPath);
-        unzipedBuildctlPath = path.join(unzipedBuildctlPath, "bin", buildctlToolName);
+        unzipedBuildctlPath = path.join(unzipedBuildctlPath, "bin", buildctlToolNameWithExtension);
         
         tl.debug('Extracting archive: ' + unzipedBuildctlPath+' download path: '+buildctlDownloadPath);
         
-        var cachedToolpath = await toolLib.cacheFile(unzipedBuildctlPath, buildctlToolName, buildctlToolName, version);
+        var cachedToolpath = await toolLib.cacheFile(unzipedBuildctlPath, buildctlToolNameWithExtension, buildctlToolName, version);
         
         tl.debug('CachedTool path: ' + cachedToolpath);    
     }
@@ -85,17 +86,20 @@ export async function getServiceDetails() {
 
     var kubectlToolPath = tl.which("kubectl", true);
     var kubectlTool = tl.tool(kubectlToolPath);
-    
+    var serviceNameInput = tl.getInput('poolService', false);
+    if (serviceNameInput != null) {
+        serviceName = serviceNameInput;
+    }
     kubectlTool.arg('get');
     kubectlTool.arg('service');
-    kubectlTool.arg(`--selector=identifier=${serviceidentifier}`);
+    kubectlTool.arg(`${serviceName}`);
     kubectlTool.arg('-o=json');
 
     var serviceResponse= kubectlTool.execSync();
 
-    namespace = JSON.parse(serviceResponse.stdout).items[0].metadata.namespace;
-    port = JSON.parse(serviceResponse.stdout).items[0].spec.ports[0].port;
-    clusteruri = JSON.parse(serviceResponse.stdout).items[0].status.loadBalancer.ingress[0].ip;
+    namespace = JSON.parse(serviceResponse.stdout).metadata.namespace;
+    port = JSON.parse(serviceResponse.stdout).spec.ports[0].port;
+    clusteruri = JSON.parse(serviceResponse.stdout).status.loadBalancer.ingress[0].ip;
 }
 
 export async function getBuildKitPod() {
@@ -123,7 +127,7 @@ export async function getBuildKitPod() {
 
 function findBuildctl(rootFolder: string) {
 
-    var BuildctlPath = path.join(rootFolder,  buildctlToolName);
+    var BuildctlPath = path.join(rootFolder,  buildctlToolNameWithExtension);
     var allPaths = tl.find(rootFolder);
     var matchingResultsFiles = tl.match(allPaths, BuildctlPath, rootFolder);
 
@@ -137,6 +141,13 @@ function getArchiveExtension(): string {
         return ".zip";
     }
     return ".tar.gz";
+}
+
+function getExecutableExtension(): string {
+    if (os.type() == 'Windows_NT') {
+        return ".exe";
+    }
+    return "";
 }
 
 function getTaskOutputDir(command: string): string {

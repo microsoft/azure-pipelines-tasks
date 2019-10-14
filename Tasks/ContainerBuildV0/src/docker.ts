@@ -10,10 +10,6 @@ export async function dockerBuildAndPush() {
     let endpointId = tl.getInput("dockerRegistryServiceConnection");
     let registryAuthenticationToken: RegistryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
 
-    // Take the specified command
-    /*let command = tl.getInput("command", true).toLowerCase();
-    let isLogout = (command === "logout");*/
-
     // Connect to any specified container registry
     let connection = new ContainerConnection();
     connection.open(null, registryAuthenticationToken, true, false);
@@ -25,8 +21,10 @@ export async function dockerBuildAndPush() {
         resultPaths += pathToResult;    
     })
 
-    commandImplementation = require("./dockerpush")
-    await commandImplementation.run(connection, (pathToResult) => {
-        resultPaths += pathToResult;    
-    })
+    if (tl.getInput("dockerRegistryServiceConnection")) {
+        commandImplementation = require("./dockerpush")
+        await commandImplementation.run(connection, (pathToResult) => {
+            resultPaths += pathToResult;    
+        })
+    }
 }

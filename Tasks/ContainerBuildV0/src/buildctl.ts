@@ -9,6 +9,8 @@ import ContainerConnection from "docker-common-v2/containerconnection";
 import { getDockerRegistryEndpointAuthenticationToken } from "docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
 
 async function configureBuildctl() {
+
+    tl.debug("configuring buildctl");
     var stableBuildKitVersion = await utils.getStableBuildctlVersion();
     var buildctlPath = await utils.downloadBuildctl(stableBuildKitVersion);
 
@@ -19,10 +21,11 @@ async function configureBuildctl() {
 }
 
 async function verifyBuildctl() {
-    await configureBuildctl();
+    var buildctlToolPath = tl.which("buildctl", true);
+    if(buildctlToolPath == "")
+        await configureBuildctl();
     tl.debug(tl.loc("VerifyBuildctlInstallation"));
     
-    var buildctlToolPath = tl.which("buildctl", true);
     var buildctlTool = tl.tool(buildctlToolPath);
     
     buildctlTool.arg("--help");
@@ -54,9 +57,6 @@ export async function buildctlBuildAndPush() {
             imageNames.push(imageName);
         }
     }
-    else {
-        imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName, true);
-    }
 
     var contextarg = "--local=context="+tl.getInput("buildContext", true);
     var dockerfilearg = "--local=dockerfile="+tl.getInput("Dockerfile", true);
@@ -72,9 +72,17 @@ export async function buildctlBuildAndPush() {
             if (tags && tags.length > 0) {
                 tags.forEach(async tag => {
                     buildctlTool.arg(`--output=type=image,name=${imageName}:${tag},push=true`);
-                    await buildctlTool.exec();
+                    buildctlTool.exec();
                 })
             }
+            else {
+                buildctlTool.arg(`--output=type=image,name=${imageName}:latest,push=true`);
+                buildctlTool.exec();
+            }
         })
+    }
+    else {
+        // only build the image
+        await buildctlTool.exec();
     }
 }
