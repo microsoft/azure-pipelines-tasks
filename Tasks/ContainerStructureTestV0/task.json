@@ -63,6 +63,14 @@
             "helpMarkDown": "Config files path, that contains container structure tests. Either .yaml or .json files"
         },
         {
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test run title",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide a name for the Test Run."
+        },
+        {
             "name": "failTaskOnFailedTests",
             "type": "boolean",
             "label": "Fail task if there are test failures",
