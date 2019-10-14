@@ -19,7 +19,7 @@
   "loc.input.label.keyPass": "密钥密码",
   "loc.input.help.keyPass": "输入别名和密钥存储文件的密钥密码。对“变量”选项卡使用已启用锁定的新变量来加密该值。",
   "loc.input.label.apksignerArguments": "apksigner 参数",
-  "loc.input.help.apksignerArguments": "提供要传递到 apksigner 命令行的任何选项。默认值是: -verbose -sigalg MD5withRSA -digestalg SHA1",
+  "loc.input.help.apksignerArguments": "提供要传递到 apksigner 命令行的任何选项。默认值是: --verbose",
   "loc.input.label.apksignerLocation": "apksigner 位置",
   "loc.input.help.apksignerLocation": "可以选择指定签名期间使用的 apksigner 可执行文件的位置。默认为应用程序生成所定向的 Android SDK 版本文件夹中的 apksigner。",
   "loc.input.label.zipalign": "Zipalign",

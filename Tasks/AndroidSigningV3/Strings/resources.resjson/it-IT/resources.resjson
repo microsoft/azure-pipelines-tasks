@@ -19,7 +19,7 @@
   "loc.input.label.keyPass": "Password della chiave",
   "loc.input.help.keyPass": "Immettere la password chiave per il file dell'archivio chiavi e l'alias. Per crittografare questo valore, usare una nuova variabile con il blocco abilitato nella scheda Variabili.",
   "loc.input.label.apksignerArguments": "Argomenti di apksigner",
-  "loc.input.help.apksignerArguments": "Consente di specificare le eventuali opzioni da passare alla riga di comando di apksigner. Impostazione predefinita: -verbose -sigalg MD5withRSA -digestalg SHA1",
+  "loc.input.help.apksignerArguments": "Consente di specificare le eventuali opzioni da passare alla riga di comando di apksigner. Impostazione predefinita: --verbose",
   "loc.input.label.apksignerLocation": "Percorso di apksigner",
   "loc.input.help.apksignerLocation": "Consente facoltativamente di specificare il percorso dell'eseguibile di apksigner usato durante la firma. Per impostazione predefinita viene usato l'eseguibile di apksigner trovato nella cartella della versione di Android SDK usata per la compilazione dell'applicazione.",
   "loc.input.label.zipalign": "Zipalign",

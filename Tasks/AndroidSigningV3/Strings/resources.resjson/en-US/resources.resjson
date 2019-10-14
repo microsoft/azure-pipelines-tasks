@@ -19,7 +19,7 @@
   "loc.input.label.keyPass": "Key password",
   "loc.input.help.keyPass": "Enter the key password for the alias and keystore file. Use a new variable with its lock enabled on the Variables tab to encrypt this value.",
   "loc.input.label.apksignerArguments": "apksigner arguments",
-  "loc.input.help.apksignerArguments": "Provide any options to pass to the apksigner command line. Default is: -verbose -sigalg MD5withRSA -digestalg SHA1",
+  "loc.input.help.apksignerArguments": "Provide any options to pass to the apksigner command line. Default is: --verbose",
   "loc.input.label.apksignerLocation": "apksigner location",
   "loc.input.help.apksignerLocation": "Optionally specify the location of the apksigner executable used during signing. This defaults to the apksigner found in the Android SDK version folder that your application builds against.",
   "loc.input.label.zipalign": "Zipalign",

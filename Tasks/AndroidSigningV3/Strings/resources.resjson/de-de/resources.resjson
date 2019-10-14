@@ -19,7 +19,7 @@
   "loc.input.label.keyPass": "Schlüsselkennwort",
   "loc.input.help.keyPass": "Geben Sie das Schlüsselkennwort für den Alias und die KeyStore-Datei an. Verwenden Sie eine neue Variable, deren Sperre auf der Registerkarte \"Variablen\" aktiviert ist, um den Wert zu verschlüsseln.",
   "loc.input.label.apksignerArguments": "apksigner-Argumente",
-  "loc.input.help.apksignerArguments": "Geben Sie alle Optionen an, die an die apksigner-Befehlszeile übergeben werden sollen. Die Standardoptionen lauten: -verbose -sigalg MD5withRSA -digestalg SHA1",
+  "loc.input.help.apksignerArguments": "Geben Sie alle Optionen an, die an die apksigner-Befehlszeile übergeben werden sollen. Die Standardoptionen lauten: --verbose",
   "loc.input.label.apksignerLocation": "apksigner-Speicherort",
   "loc.input.help.apksignerLocation": "Geben Sie optional den Pfad zu der beim Signieren verwendeten ausführbaren apksigner-Datei an. Standardmäßig handelt es sich hierbei um die apksigner-Datei, die sich in dem für Ihren Anwendungsbuild verwendeten Android SDK-Versionsordner befindet.",
   "loc.input.label.zipalign": "Zipalign",

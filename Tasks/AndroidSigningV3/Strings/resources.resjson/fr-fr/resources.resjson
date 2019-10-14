@@ -19,7 +19,7 @@
   "loc.input.label.keyPass": "Mot de passe de la clé",
   "loc.input.help.keyPass": "Entrez le mot de passe de clé pour l'alias et le fichier de magasin de clés. Pour chiffrer cette valeur, utilisez une nouvelle variable en activant son verrou sous l'onglet Variables.",
   "loc.input.label.apksignerArguments": "arguments d'apksigner",
-  "loc.input.help.apksignerArguments": "Indiquez les options à passer à la ligne de commande apksigner. Valeur par défaut : -verbose -sigalg MD5withRSA -digestalg SHA1",
+  "loc.input.help.apksignerArguments": "Indiquez les options à passer à la ligne de commande apksigner. Valeur par défaut : --verbose",
   "loc.input.label.apksignerLocation": "emplacement d'apksigner",
   "loc.input.help.apksignerLocation": "Spécifiez éventuellement l'emplacement de l'exécutable apksigner utilisé durant la signature. Par défaut, il s'agit du fichier apksigner situé dans le dossier de version du kit Android SDK à partir duquel votre application est générée.",
   "loc.input.label.zipalign": "Zipalign",

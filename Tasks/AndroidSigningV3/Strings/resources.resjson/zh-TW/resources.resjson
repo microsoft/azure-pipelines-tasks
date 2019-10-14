@@ -19,7 +19,7 @@
   "loc.input.label.keyPass": "金鑰密碼",
   "loc.input.help.keyPass": "請輸入別名與金鑰儲存區檔案的金鑰密碼。請使用新的變數，並在 [變數] 索引標籤上啟用其鎖定，以加密此變數。",
   "loc.input.label.apksignerArguments": "apksigner 引數",
-  "loc.input.help.apksignerArguments": "提供要傳遞至 apksigner 命令列的任何選項。預設為: -verbose -sigalg MD5withRSA -digestalg SHA1",
+  "loc.input.help.apksignerArguments": "提供要傳遞至 apksigner 命令列的任何選項。預設為: --verbose",
   "loc.input.label.apksignerLocation": "apksigner 位置",
   "loc.input.help.apksignerLocation": "選擇性地指定在登入期間所使用的 apksigner 可執行檔位置。這會預設為在您應用程式對其建置的 Android SDK 版本資料夾中找到的 apksigner。",
   "loc.input.label.zipalign": "Zipalign",

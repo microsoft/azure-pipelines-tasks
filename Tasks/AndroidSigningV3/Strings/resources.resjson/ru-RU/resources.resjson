@@ -19,7 +19,7 @@
   "loc.input.label.keyPass": "Пароль ключа",
   "loc.input.help.keyPass": "Введите пароль ключа для псевдонима и файла хранилища ключей. Чтобы зашифровать это значение, используйте новую переменную сборки с включенной блокировкой на вкладке \"Переменные\".",
   "loc.input.label.apksignerArguments": "Аргументы apksigner",
-  "loc.input.help.apksignerArguments": "Укажите параметры для передачи в командную строку apksigner. По умолчанию: -verbose -sigalg MD5withRSA -digestalg SHA1",
+  "loc.input.help.apksignerArguments": "Укажите параметры для передачи в командную строку apksigner. По умолчанию: --verbose",
   "loc.input.label.apksignerLocation": "Расположение apksigner",
   "loc.input.help.apksignerLocation": "При необходимости укажите путь к исполняемому файлу apksigner, используемому при подписывании. По умолчанию применяется файл apksigner, найденный в папке той версии Android SDK, с которой собрано ваше приложение.",
   "loc.input.label.zipalign": "Zipalign",

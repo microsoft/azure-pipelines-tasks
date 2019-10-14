@@ -19,7 +19,7 @@
   "loc.input.label.keyPass": "Contraseña de clave",
   "loc.input.help.keyPass": "Escriba la contraseña de clave del alias y el archivo de almacén de claves. Utilice una variable nueva con el bloqueo habilitado en la ficha Variables para cifrar este valor.",
   "loc.input.label.apksignerArguments": "argumentos de apksigner",
-  "loc.input.help.apksignerArguments": "Proporcione cualquier opción para pasar a la línea de comandos de apksigner. El valor predeterminado es: -verbose -sigalg MD5withRSA -digestalg SHA1",
+  "loc.input.help.apksignerArguments": "Proporcione cualquier opción para pasar a la línea de comandos de apksigner. El valor predeterminado es: --verbose",
   "loc.input.label.apksignerLocation": "ubicación de apksigner",
   "loc.input.help.apksignerLocation": "Especifique opcionalmente la ubicación del ejecutable apksigner usado durante la firma. Se establece como valor predeterminado el ejecutable apksigner que se encuentra en la carpeta de la versión de Android SDK en que se compila la aplicación.",
   "loc.input.label.zipalign": "Zipalign",

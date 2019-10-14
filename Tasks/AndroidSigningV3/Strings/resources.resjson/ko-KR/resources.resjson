@@ -19,7 +19,7 @@
   "loc.input.label.keyPass": "키 암호",
   "loc.input.help.keyPass": "별칭 및 키 저장소 파일에 대한 키 암호를 입력합니다. 이 값을 암호화하려면 [변수] 탭에서 잠금이 사용 설정된 새 변수를 사용하세요.",
   "loc.input.label.apksignerArguments": "apksigner 인수",
-  "loc.input.help.apksignerArguments": "apksigner 명령줄에 전달할 옵션을 지정합니다. 기본값: -verbose -sigalg MD5withRSA -digestalg SHA1",
+  "loc.input.help.apksignerArguments": "apksigner 명령줄에 전달할 옵션을 지정합니다. 기본값: --verbose",
   "loc.input.label.apksignerLocation": "apksigner 위치",
   "loc.input.help.apksignerLocation": "서명할 때 사용되는 apksigner 실행 파일의 위치를 선택적으로 지정합니다. 기본적으로 애플리케이션이 빌드되는 Android SDK 버전 폴더에 있는 apksigner를 사용합니다.",
   "loc.input.label.zipalign": "Zipalign",

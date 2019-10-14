@@ -19,7 +19,7 @@
   "loc.input.label.keyPass": "キー パスワード",
   "loc.input.help.keyPass": "エイリアスとキーストア ファイルのキー パスワードを入力します。この値を暗号化するには、[変数] タブで新しい変数のロックを有効にします。",
   "loc.input.label.apksignerArguments": "apksigner の引数",
-  "loc.input.help.apksignerArguments": "apksigner コマンド ラインに渡すオプションを指定します。既定値: -verbose -sigalg MD5withRSA -digestalg SHA1",
+  "loc.input.help.apksignerArguments": "apksigner コマンド ラインに渡すオプションを指定します。既定値: --verbose",
   "loc.input.label.apksignerLocation": "apksigner の場所",
   "loc.input.help.apksignerLocation": "必要に応じて、署名中に使用する apksigner 実行可能ファイルの場所を指定します。既定では、アプリケーションのビルドが実行される Android SDK バージョンのフォルダーにある apksigner が使用されます。",
   "loc.input.label.zipalign": "Zipalign",
