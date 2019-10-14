@@ -4,6 +4,9 @@
   "loc.description": "Use this task under deploy phase provider to create a resource dynamically",
   "loc.instanceNameFormat": "Dynamic Resource - $(source)",
   "loc.releaseNotes": "Use this task under deploy phase provider to create a resource dynamically",
-  "loc.input.label.source": "Source",
+  "loc.input.label.baseEnvironmentName": "Environment name",
+  "loc.input.label.resourceName": "Resource name",
+  "loc.input.help.resourceName": "name of an existing resource in the environment which will be used for resource type information",
+  "loc.input.label.reviewResourceName": "Review Resource Name",
   "loc.messages.CreatedDynamicResource": "A dynamic resource is created using %s"
 }
