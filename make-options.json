@@ -17,6 +17,7 @@
         "AzureFileCopyV3",
         "AzureFunctionAppV1",
         "AzureFunctionAppContainerV1",
+        "AzureFunctionOnKubernetesV0",
         "AzureFunctionV1",
         "AzureIoTEdgeV2",
         "AzureKeyVaultV1",
