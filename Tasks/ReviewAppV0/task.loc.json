@@ -5,9 +5,9 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
+  "preview": true,
   "visibility": [
-    "Build",
-    "Release"
+    "Build"
   ],
   "runsOn": [
     "Agent",
@@ -22,14 +22,6 @@
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "inputs": [
     {
-      "name": "baseEnvironmentName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.baseEnvironmentName",
-      "required": false,
-      "defaultValue": "",
-      "helpMarkDown": ""
-    },
-    {
       "name": "resourceName",
       "type": "string",
       "label": "ms-resource:loc.input.label.resourceName",
@@ -38,12 +30,18 @@
       "helpMarkDown": "ms-resource:loc.input.help.resourceName"
     },
     {
+      "name": "baseEnvironmentName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.baseEnvironmentName",
+      "required": false,
+      "defaultValue": ""
+    },
+    {
       "name": "reviewResourceName",
       "type": "string",
       "label": "ms-resource:loc.input.label.reviewResourceName",
       "required": false,
-      "defaultValue": "",
-      "helpMarkDown": ""
+      "defaultValue": ""
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

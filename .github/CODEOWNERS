@@ -309,6 +309,8 @@ Tasks/QueryWorkItemsV0/*    @bansalaseem
 
 Tasks/QuickPerfTestV1/*     @smalpani
 
+Tasks/ReviewAppV0/*   @ds-ms
+
 Tasks/RunDistributedTestsV1/*   @smalpani
 
 Tasks/RunJMeterLoadTestV1/*     @smalpani
