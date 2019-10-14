@@ -37,9 +37,8 @@ export async function runBuild(connection: ContainerConnection, outputUpdate: (d
         imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName, true);
     }
 
-    const addPipelineData = tl.getBoolInput("addPipelineMetadata");
     // get label arguments
-    let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
+    let labelArguments: string[] = [];
 
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");

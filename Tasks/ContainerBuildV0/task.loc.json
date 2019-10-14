@@ -23,6 +23,16 @@
   "groups": [],
   "inputs": [
     {
+      "name": "poolService",
+      "label": "ms-resource:loc.input.label.poolService",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.poolService",
+      "defaultValue": "",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
       "name": "dockerRegistryServiceConnection",
       "type": "connectedService:dockerregistry",
       "label": "ms-resource:loc.input.label.dockerRegistryServiceConnection",
@@ -64,19 +74,6 @@
       },
       "label": "ms-resource:loc.input.label.tags",
       "helpMarkDown": "ms-resource:loc.input.help.tags"
-    },
-    {
-      "name": "arguments",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.arguments",
-      "helpMarkDown": "ms-resource:loc.input.help.arguments"
-    },
-    {
-      "name": "addPipelineMetadata",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.addPipelineMetadata",
-      "defaultValue": "true",
-      "helpMarkDown": "ms-resource:loc.input.help.addPipelineMetadata"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -87,6 +84,7 @@
   },
   "messages": {
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
+    "CouldNotFindDockerConfig": "ms-resource:loc.messages.CouldNotFindDockerConfig",
     "BuildctlLatestNotKnown": "ms-resource:loc.messages.BuildctlLatestNotKnown",
     "BuildctlDownloadFailed": "ms-resource:loc.messages.BuildctlDownloadFailed",
     "BuildctlNotFoundInFolder": "ms-resource:loc.messages.BuildctlNotFoundInFolder",
