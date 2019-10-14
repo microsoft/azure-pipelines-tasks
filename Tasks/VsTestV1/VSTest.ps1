@@ -250,6 +250,7 @@ finally
                 }
                 else {
                     Write-Verbose "Using Agent Command to publish test results"
+                    $resultFiles = [string]::Join(",", $resultFiles);
                 }
 
                 # Remove the below hack once the min agent version is updated to S91 or above
