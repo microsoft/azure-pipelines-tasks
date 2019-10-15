@@ -25,7 +25,7 @@
     "inputs": [
         {
             "name": "poolService",
-            "label": "Pool Service (applicable when running on kubernetes)",
+            "label": "Pool Service (applicable when running on Kubernetes)",
             "type": "string",
             "helpMarkDown": "Name of the service applicable when running on kubernetes.",
             "defaultValue": ""

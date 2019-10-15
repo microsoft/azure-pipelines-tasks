@@ -14,7 +14,6 @@ export async function dockerBuildAndPush() {
     let connection = new ContainerConnection();
     connection.open(null, registryAuthenticationToken, true, false);
 
-    let resultPaths = "";
     /* tslint:disable:no-var-requires */
     let commandImplementation = require("./dockerbuild");
     await commandImplementation.runBuild(connection)

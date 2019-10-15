@@ -1,12 +1,9 @@
 "use strict";
 
-import * as fs from "fs";
-import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "docker-common-v2/containerconnection";
 import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 import * as fileUtils from "docker-common-v2/fileutils";
-import * as utils from "./utils";
 
 export async function runBuild(connection: ContainerConnection) {
     // find dockerfile path

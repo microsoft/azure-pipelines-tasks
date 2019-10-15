@@ -15,9 +15,9 @@ const uuidV4 = require('uuid/v4');
 const buildctlLatestReleaseUrl = "https://api.github.com/repos/moby/buildkit/releases/latest";
 const buildctlToolNameWithExtension = buildctlToolName + getExecutableExtension();
 const stableBuildctlVersion = "v0.5.1"
-var serviceName = "k8s-poolprovider"
+var serviceName = "azure-pipelines-pool"
 var namespace = "azuredevops"
-var port = "8082"
+var port = "8080"
 var clusteruri = ""
 
 export async function getStableBuildctlVersion(): Promise<string> {
@@ -116,7 +116,7 @@ export async function getBuildKitPod() {
     };
     let webRequestOptions:webclient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true};
 
-    request.uri = `http://${clusteruri}:${port}/getBuildPod`;
+    request.uri = `http://${clusteruri}:${port}/buildPod`;
     request.headers = headers
     request.method = "GET";
 
