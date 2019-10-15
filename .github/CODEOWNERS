@@ -187,6 +187,8 @@ Tasks/FileTransformV1/*     @kmkumaran      @SumiranAgg     @vincentdass
 
 Tasks/FtpUploadV1/*     @leantk
 
+Tasks/GithubCommentV0/*     @ds-ms
+
 Tasks/GithubReleaseV0/*     @prativen   @mdmdakbar
 
 Tasks/GoV0/*    @bishal-pdmsft
