@@ -17,14 +17,10 @@ export async function dockerBuildAndPush() {
     let resultPaths = "";
     /* tslint:disable:no-var-requires */
     let commandImplementation = require("./dockerbuild");
-    await commandImplementation.runBuild(connection, (pathToResult) => {
-        resultPaths += pathToResult;    
-    })
+    await commandImplementation.runBuild(connection)
 
     if (tl.getInput("dockerRegistryServiceConnection")) {
         commandImplementation = require("./dockerpush")
-        await commandImplementation.run(connection, (pathToResult) => {
-            resultPaths += pathToResult;    
-        })
+        await commandImplementation.run(connection)
     }
 }

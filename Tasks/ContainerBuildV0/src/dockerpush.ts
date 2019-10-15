@@ -3,13 +3,12 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "docker-common-v2/containerconnection";
 import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
-import * as utils from "./utils";
-import { findDockerFile } from "docker-common-v2/fileutils";
 
 import Q = require('q');
 
-function pushMultipleImages(connection: ContainerConnection, imageNames: string[], tags: string[], commandArguments: string, onCommandOut: (image, output) => any): any {
+function pushMultipleImages(connection: ContainerConnection, imageNames: string[], tags: string[], commandArguments: string): any {
     let promise: Q.Promise<void>;
+    let output = "";
     // create chained promise of push commands
     if (imageNames && imageNames.length > 0) {
         imageNames.forEach(imageName => {
@@ -19,11 +18,11 @@ function pushMultipleImages(connection: ContainerConnection, imageNames: string[
                     tl.debug("Pushing ImageNameWithTag: " + imageNameWithTag);
                     if (promise) {
                         promise = promise.then(() => {
-                            return dockerCommandUtils.push(connection, imageNameWithTag, commandArguments, onCommandOut)
+                            return dockerCommandUtils.push(connection, imageNameWithTag, commandArguments, (data) => output += data)
                         });
                     }
                     else {
-                        promise = dockerCommandUtils.push(connection, imageNameWithTag, commandArguments, onCommandOut);
+                        promise = dockerCommandUtils.push(connection, imageNameWithTag, commandArguments, (data) => output += data);
                     }
                 });
             }
@@ -31,11 +30,11 @@ function pushMultipleImages(connection: ContainerConnection, imageNames: string[
                 tl.debug("Pushing ImageName: " + imageName);
                 if (promise) {
                     promise = promise.then(() => {
-                        return dockerCommandUtils.push(connection, imageName, commandArguments, onCommandOut)
+                        return dockerCommandUtils.push(connection, imageName, commandArguments, (data) => output += data)
                     });
                 }
                 else {
-                    promise = dockerCommandUtils.push(connection, imageName, commandArguments, onCommandOut);
+                    promise = dockerCommandUtils.push(connection, imageName, commandArguments, (data) => output += data);
                 }
             }
         });
@@ -45,9 +44,7 @@ function pushMultipleImages(connection: ContainerConnection, imageNames: string[
     return promise;
 }
 
-export async function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean) {
-    // ignore the arguments input if the command is buildAndPush, as it is ambiguous
-    let commandArguments = isBuildAndPushCommand ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
+export async function run(connection: ContainerConnection) {
 
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");
@@ -71,36 +68,5 @@ export async function run(connection: ContainerConnection, outputUpdate: (data: 
         imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName, true);
     }
 
-    const dockerfilepath = tl.getInput("Dockerfile", true);
-    let dockerFile = "";
-    if (isBuildAndPushCommand) {
-        // For buildAndPush command, to find out the base image name, we can use the
-        // Dockerfile returned by findDockerfile as we are sure that this is used
-        // for building.
-        dockerFile = findDockerFile(dockerfilepath);
-        if (!tl.exist(dockerFile)) {
-            throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
-        }
-    }
-
-    // push all tags
-    let output = "";
-    let outputImageName = "";
-    let promise = pushMultipleImages(connection, imageNames, tags, commandArguments, (image, commandOutput) => {
-        output += commandOutput;
-        outputImageName = image;
-    });
-
-    if (promise) {
-        promise = promise.then(() => {
-            let taskOutputPath = utils.writeTaskOutput("push", output);
-            outputUpdate(taskOutputPath);
-        });
-    }
-    else {
-        tl.debug(tl.loc('NotPushingAsNoLoginFound'));
-        promise = Q.resolve(null);
-    }
-
-    return promise;
+    await pushMultipleImages(connection, imageNames, tags, "");
 }

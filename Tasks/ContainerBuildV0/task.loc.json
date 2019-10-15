@@ -20,6 +20,7 @@
   "satisfies": [
     "Buildctl"
   ],
+  "preview": "true",
   "groups": [],
   "inputs": [
     {
@@ -27,10 +28,7 @@
       "label": "ms-resource:loc.input.label.poolService",
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.poolService",
-      "defaultValue": "",
-      "properties": {
-        "EditableOptions": "True"
-      }
+      "defaultValue": ""
     },
     {
       "name": "dockerRegistryServiceConnection",
@@ -43,11 +41,7 @@
       "label": "ms-resource:loc.input.label.repository",
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.repository",
-      "defaultValue": "",
-      "visibleRule": "command != login && command != logout",
-      "properties": {
-        "EditableOptions": "True"
-      }
+      "defaultValue": ""
     },
     {
       "name": "Dockerfile",

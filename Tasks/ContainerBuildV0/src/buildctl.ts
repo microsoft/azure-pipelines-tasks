@@ -1,6 +1,7 @@
 "use strict";
 
 import tl = require('azure-pipelines-task-lib/task');
+import * as tr from "azure-pipelines-task-lib/toolrunner";
 import path = require('path');
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import utils = require("./utils");
@@ -27,9 +28,12 @@ async function verifyBuildctl() {
     tl.debug(tl.loc("VerifyBuildctlInstallation"));
     
     var buildctlTool = tl.tool(buildctlToolPath);
-    
+    var executionOption : tr.IExecOptions = <any> {
+        silent: true
+    };
+
     buildctlTool.arg("--help");
-    buildctlTool.exec();
+    buildctlTool.exec(executionOption);
 }
 
 export async function buildctlBuildAndPush() {
@@ -58,8 +62,19 @@ export async function buildctlBuildAndPush() {
         }
     }
 
+    var dockerfilefolder = tl.getInput("Dockerfile", true);
+    if(dockerfilefolder == "Dockerfile")
+    {
+        dockerfilefolder = ".";
+    }
+    else {
+        var index = dockerfilefolder.lastIndexOf("Dockerfile");
+        dockerfilefolder = dockerfilefolder.substring(0,index);
+        tl.debug("Dockerfilefolder path: "+dockerfilefolder);
+
+    }
     var contextarg = "--local=context="+tl.getInput("buildContext", true);
-    var dockerfilearg = "--local=dockerfile="+tl.getInput("Dockerfile", true);
+    var dockerfilearg = "--local=dockerfile="+dockerfilefolder;
     var buildctlToolPath = tl.which("buildctl", true);
     var buildctlTool = tl.tool(buildctlToolPath);
 

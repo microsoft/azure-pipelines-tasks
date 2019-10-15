@@ -6,10 +6,9 @@ import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "docker-common-v2/containerconnection";
 import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 import * as fileUtils from "docker-common-v2/fileutils";
-import * as pipelineUtils from "docker-common-v2/pipelineutils";
 import * as utils from "./utils";
 
-export async function runBuild(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean) {
+export async function runBuild(connection: ContainerConnection) {
     // find dockerfile path
     let dockerfilepath = tl.getInput("Dockerfile", true);
     let dockerFile = fileUtils.findDockerFile(dockerfilepath);
@@ -17,11 +16,7 @@ export async function runBuild(connection: ContainerConnection, outputUpdate: (d
     if(!tl.exist(dockerFile)) {
         throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
     }
-
-    // get command arguments
-    // ignore the arguments input if the command is buildAndPush, as it is ambiguous
-    let commandArguments = isBuildAndPushCommand ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
-    
+  
     // get qualified image names by combining container registry(s) and repository
     let repositoryName = tl.getInput("repository");
     let imageNames: string[] = [];    
@@ -36,9 +31,6 @@ export async function runBuild(connection: ContainerConnection, outputUpdate: (d
     else {
         imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName, true);
     }
-
-    // get label arguments
-    let labelArguments: string[] = [];
 
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");
@@ -62,8 +54,5 @@ export async function runBuild(connection: ContainerConnection, outputUpdate: (d
     }
 
     let output = "";
-    return dockerCommandUtils.build(connection, dockerFile, commandArguments, labelArguments, tagArguments, (data) => output += data).then(() => {
-        let taskOutputPath = utils.writeTaskOutput("build", output);
-        outputUpdate(taskOutputPath);
-    });
+    return dockerCommandUtils.build(connection, dockerFile, "", [], tagArguments, (data) => output += data);
 }
