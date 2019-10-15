@@ -2,6 +2,7 @@
 
 import tl = require("azure-pipelines-task-lib/task");
 import toolLib = require("azure-pipelines-tool-lib/tool");
+import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as path from 'path';
 import fs = require('fs');
 import webclient = require("azure-arm-rest-v2/webClient");
@@ -87,7 +88,7 @@ export async function getServiceDetails() {
     var kubectlToolPath = tl.which("kubectl", true);
     var kubectlTool = tl.tool(kubectlToolPath);
     var serviceNameInput = tl.getInput('poolService', false);
-    if (serviceNameInput != null) {
+    if (serviceNameInput) {
         serviceName = serviceNameInput;
     }
     kubectlTool.arg('get');
@@ -95,7 +96,10 @@ export async function getServiceDetails() {
     kubectlTool.arg(`${serviceName}`);
     kubectlTool.arg('-o=json');
 
-    var serviceResponse= kubectlTool.execSync();
+    var executionOption : tr.IExecOptions = <any> {
+        silent: true
+    };
+    var serviceResponse= kubectlTool.execSync(executionOption);
 
     namespace = JSON.parse(serviceResponse.stdout).metadata.namespace;
     port = JSON.parse(serviceResponse.stdout).spec.ports[0].port;
@@ -131,7 +135,7 @@ function findBuildctl(rootFolder: string) {
     var allPaths = tl.find(rootFolder);
     var matchingResultsFiles = tl.match(allPaths, BuildctlPath, rootFolder);
 
-    tl.debug('inside findBuildctl path: ' + BuildctlPath);   
+    tl.debug('findBuildctl path: ' + BuildctlPath);   
     
     return matchingResultsFiles[0];
 }
@@ -148,25 +152,4 @@ function getExecutableExtension(): string {
         return ".exe";
     }
     return "";
-}
-
-function getTaskOutputDir(command: string): string {
-    let tempDirectory = tl.getVariable('agent.tempDirectory') || os.tmpdir();
-    let taskOutputDir = path.join(tempDirectory, "task_outputs");
-    return taskOutputDir;
-}
-
-export function writeTaskOutput(commandName: string, output: string): string {
-    let taskOutputDir = getTaskOutputDir(commandName);
-    if (!fs.existsSync(taskOutputDir)) {
-        fs.mkdirSync(taskOutputDir);
-    }
-
-    let outputFileName = commandName + "_" + Date.now() + ".txt";
-    let taskOutputPath = path.join(taskOutputDir, outputFileName);
-    if (fileutils.writeFileSync(taskOutputPath, output) == 0) {
-        tl.warning(tl.loc('NoDataWrittenOnFile', taskOutputPath));
-    }
-    
-    return taskOutputPath;
 }

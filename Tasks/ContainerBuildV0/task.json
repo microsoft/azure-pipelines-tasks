@@ -2,7 +2,7 @@
     "id": "8413C881-4959-43D5-8840-B4EA0FFC5CFE",
     "name": "ContainerBuild",
     "friendlyName": "Container Build",
-    "description": "Build Task",
+    "description": "Container Build Task",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2107300)",
     "category": "Build",
@@ -20,6 +20,7 @@
     "satisfies": [
         "Buildctl"
     ],
+    "preview": "true",
     "groups": [],
     "inputs": [
         {
@@ -27,10 +28,7 @@
             "label": "Pool Service (applicable when running on kubernetes)",
             "type": "string",
             "helpMarkDown": "Name of the service applicable when running on kubernetes.",
-            "defaultValue": "",
-            "properties": {
-                "EditableOptions": "True"
-            }
+            "defaultValue": ""
         },
         {
             "name": "dockerRegistryServiceConnection",
@@ -43,11 +41,7 @@
             "label": "Container repository",
             "type": "string",
             "helpMarkDown": "Name of the repository within the container registry.",
-            "defaultValue": "",
-            "visibleRule": "command != login && command != logout",
-            "properties": {
-                "EditableOptions": "True"
-            }
+            "defaultValue": ""
         },
         {
             "name": "Dockerfile",
