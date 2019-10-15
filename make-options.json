@@ -49,6 +49,7 @@
         "CondaEnvironmentV0",
         "CondaEnvironmentV1",
         "ContainerStructureTestV0",
+        "ContainerBuildV0",
         "CopyFilesV2",
         "CopyFilesOverSSHV0",
         "CUrlUploaderV2",

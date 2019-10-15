@@ -91,7 +91,7 @@ export async function buildctlBuildAndPush() {
                 })
             }
             else {
-                buildctlTool.arg(`--output=type=image,name=${imageName}:latest,push=true`);
+                buildctlTool.arg(`--output=type=image,name=${imageName},push=true`);
                 buildctlTool.exec();
             }
         })
