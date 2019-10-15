@@ -309,6 +309,8 @@ Tasks/QueryWorkItemsV0/*    @bansalaseem
 
 Tasks/QuickPerfTestV1/*     @SadagopanRajaram @ShreyasRmsft
 
+Tasks/ReviewAppV0/*   @ds-ms
+
 Tasks/RunDistributedTestsV1/*   @SadagopanRajaram @ShreyasRmsft
 
 Tasks/RunJMeterLoadTestV1/*     @SadagopanRajaram @ShreyasRmsft
