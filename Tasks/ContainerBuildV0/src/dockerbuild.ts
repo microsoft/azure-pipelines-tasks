@@ -9,14 +9,14 @@ export async function runBuild(connection: ContainerConnection) {
     // find dockerfile path
     let dockerfilepath = tl.getInput("Dockerfile", true);
     let dockerFile = fileUtils.findDockerFile(dockerfilepath);
-    
-    if(!tl.exist(dockerFile)) {
+
+    if (!tl.exist(dockerFile)) {
         throw new Error(tl.loc('ContainerDockerFileNotFound', dockerfilepath));
     }
-  
+
     // get qualified image names by combining container registry(s) and repository
     let repositoryName = tl.getInput("repository");
-    let imageNames: string[] = [];    
+    let imageNames: string[] = [];
     // if container registry is provided, use that
     // else, use the currently logged in registries
     if (tl.getInput("dockerRegistryServiceConnection")) {

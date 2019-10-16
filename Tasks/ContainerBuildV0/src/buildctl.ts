@@ -23,12 +23,14 @@ async function configureBuildctl() {
 
 async function verifyBuildctl() {
     var buildctlToolPath = tl.which("buildctl", true);
-    if(buildctlToolPath == "")
+
+    if (!buildctlToolPath)
         await configureBuildctl();
-    tl.debug(tl.loc("VerifyBuildctlInstallation"));
     
+    tl.debug(tl.loc("VerifyBuildctlInstallation"));
+
     var buildctlTool = tl.tool(buildctlToolPath);
-    var executionOption : tr.IExecOptions = <any> {
+    var executionOption: tr.IExecOptions = <any>{
         silent: true
     };
 
@@ -63,18 +65,17 @@ export async function buildctlBuildAndPush() {
     }
 
     var dockerfilefolder = tl.getInput("Dockerfile", true);
-    if(dockerfilefolder == "Dockerfile")
-    {
+    if (dockerfilefolder == "Dockerfile") {
         dockerfilefolder = ".";
     }
     else {
         var index = dockerfilefolder.lastIndexOf("Dockerfile");
-        dockerfilefolder = dockerfilefolder.substring(0,index);
-        tl.debug("Dockerfilefolder path: "+dockerfilefolder);
+        dockerfilefolder = dockerfilefolder.substring(0, index);
+        tl.debug("Dockerfilefolder path: " + dockerfilefolder);
 
     }
-    var contextarg = "--local=context="+tl.getInput("buildContext", true);
-    var dockerfilearg = "--local=dockerfile="+dockerfilefolder;
+    var contextarg = "--local=context=" + tl.getInput("buildContext", true);
+    var dockerfilearg = "--local=dockerfile=" + dockerfilefolder;
     var buildctlToolPath = tl.which("buildctl", true);
     var buildctlTool = tl.tool(buildctlToolPath);
 

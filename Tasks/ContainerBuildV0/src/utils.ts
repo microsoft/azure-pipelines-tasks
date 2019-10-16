@@ -8,7 +8,6 @@ import fs = require('fs');
 import webclient = require("azure-arm-rest-v2/webClient");
 import * as os from "os";
 import * as util from "util";
-import * as fileutils from "docker-common-v2/fileutils";
 
 const buildctlToolName = "buildctl"
 const uuidV4 = require('uuid/v4');
@@ -39,7 +38,7 @@ export async function downloadBuildctl(version: string): Promise<string> {
 
     let buildctlDownloadPath: string = null;
     var cachedToolpath = toolLib.findLocalTool(buildctlToolName, version);
-    
+
     if (!cachedToolpath) {
         try {
             buildctlDownloadPath = await toolLib.downloadTool(getBuildctlDownloadURL(version), buildctlToolName + "-" + version + "-" + uuidV4() + getArchiveExtension());
@@ -49,21 +48,21 @@ export async function downloadBuildctl(version: string): Promise<string> {
 
         var unzipedBuildctlPath = await toolLib.extractTar(buildctlDownloadPath);
         unzipedBuildctlPath = path.join(unzipedBuildctlPath, "bin", buildctlToolNameWithExtension);
-        
-        tl.debug('Extracting archive: ' + unzipedBuildctlPath+' download path: '+buildctlDownloadPath);
-        
+
+        tl.debug('Extracting archive: ' + unzipedBuildctlPath + ' download path: ' + buildctlDownloadPath);
+
         var cachedToolpath = await toolLib.cacheFile(unzipedBuildctlPath, buildctlToolNameWithExtension, buildctlToolName, version);
-        
-        tl.debug('CachedTool path: ' + cachedToolpath);    
+
+        tl.debug('CachedTool path: ' + cachedToolpath);
     }
 
     var buildctlpath = findBuildctl(cachedToolpath);
     if (!buildctlpath) {
         throw new Error(tl.loc("BuildctlNotFoundInFolder", cachedToolpath))
     }
-    
+
     tl.debug('Buildctl path: ' + buildctlpath);
-    
+
     fs.chmodSync(buildctlpath, "777");
     return buildctlpath;
 }
@@ -77,8 +76,8 @@ function getBuildctlDownloadURL(version: string): string {
             return util.format("https://github.com/moby/buildkit/releases/download/%s/buildkit-%s.darwin-amd64.tar.gz", version, version);
 
         default:
-            case 'Linux':
-                return util.format("https://github.com/moby/buildkit/releases/download/%s/buildkit-%s.linux-amd64.tar.gz", version, version);
+        case 'Linux':
+            return util.format("https://github.com/moby/buildkit/releases/download/%s/buildkit-%s.linux-amd64.tar.gz", version, version);
 
     }
 }
@@ -96,14 +95,16 @@ export async function getServiceDetails() {
     kubectlTool.arg(`${serviceName}`);
     kubectlTool.arg('-o=json');
 
-    var executionOption : tr.IExecOptions = <any> {
+    var executionOption: tr.IExecOptions = <any>{
         silent: true
     };
-    var serviceResponse= kubectlTool.execSync(executionOption);
+    var serviceResponse = kubectlTool.execSync(executionOption);
 
-    namespace = JSON.parse(serviceResponse.stdout).metadata.namespace;
-    port = JSON.parse(serviceResponse.stdout).spec.ports[0].port;
-    clusteruri = JSON.parse(serviceResponse.stdout).status.loadBalancer.ingress[0].ip;
+    if (serviceResponse && serviceResponse.stdout) {
+        namespace = JSON.parse(serviceResponse.stdout).metadata.namespace ? JSON.parse(serviceResponse.stdout).metadata.namespace : namespace;
+        port = JSON.parse(serviceResponse.stdout).spec.ports[0].port ? JSON.parse(serviceResponse.stdout).spec.ports[0].port : port;
+        clusteruri = JSON.parse(serviceResponse.stdout).status.loadBalancer.ingress[0].ip ? JSON.parse(serviceResponse.stdout).status.loadBalancer.ingress[0].ip : clusteruri;
+    }
 }
 
 export async function getBuildKitPod() {
@@ -112,9 +113,9 @@ export async function getBuildKitPod() {
 
     let request = new webclient.WebRequest();
     let headers = {
-        "key": tl.getVariable('Build.Repository.Name')+tl.getInput("Dockerfile", true)
+        "key": tl.getVariable('Build.Repository.Name') + tl.getInput("Dockerfile", true)
     };
-    let webRequestOptions:webclient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true};
+    let webRequestOptions: webclient.WebRequestOptions = { retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true };
 
     request.uri = `http://${clusteruri}:${port}/buildPod`;
     request.headers = headers
@@ -123,25 +124,25 @@ export async function getBuildKitPod() {
     var response = await webclient.sendRequest(request, webRequestOptions);
     var podname = response.body.Message;
 
-    tl.debug("Podname " +podname);
+    tl.debug("Podname " + podname);
 
     // set the environment variable
-    process.env["BUILDKIT_HOST"] = "kube-pod://"+podname+"?namespace="+namespace;
+    process.env["BUILDKIT_HOST"] = "kube-pod://" + podname + "?namespace=" + namespace;
 }
 
 function findBuildctl(rootFolder: string) {
 
-    var BuildctlPath = path.join(rootFolder,  buildctlToolNameWithExtension);
+    var BuildctlPath = path.join(rootFolder, buildctlToolNameWithExtension);
     var allPaths = tl.find(rootFolder);
     var matchingResultsFiles = tl.match(allPaths, BuildctlPath, rootFolder);
 
-    tl.debug('findBuildctl path: ' + BuildctlPath);   
-    
+    tl.debug('findBuildctl path: ' + BuildctlPath);
+
     return matchingResultsFiles[0];
 }
 
 function getArchiveExtension(): string {
-    if(os.type() == 'Windows_NT') {
+    if (os.type() == 'Windows_NT') {
         return ".zip";
     }
     return ".tar.gz";
