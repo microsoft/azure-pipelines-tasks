@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "Automated Analysis",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.description": "Observe the configured Azure Monitor rules for active alerts",
+  "loc.instanceNameFormat": "Automated Analysis",
+  "loc.releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added support for query unified Azure monitor alerts.",
+  "loc.input.label.connectedServiceNameARM": "Azure subscription",
+  "loc.input.help.connectedServiceNameARM": "Select an Azure Resource Manager subscription",
+  "loc.input.label.ResourceGroupName": "Resource group",
+  "loc.input.help.ResourceGroupName": "Provide the name of a resource group",
+  "loc.input.label.containerGroupName": "Container group name",
+  "loc.input.help.containerGroupName": "Provide the name of a container group that will be created."
+}

@@ -1,0 +1,89 @@
+{
+  "id": "6B519857-1A20-4248-BAE8-AAD039015AFB",
+  "name": "AutomatedAnalysis",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-monitor",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Server"
+  ],
+  "version": {
+    "Major": 1,
+    "Minor": 156,
+    "Patch": 52
+  },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [],
+  "inputs": [
+    {
+      "name": "connectedServiceNameARM",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.connectedServiceNameARM",
+      "defaultValue": "",
+      "required": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM"
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName"
+    },
+    {
+      "name": "containerGroupName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.containerGroupName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.containerGroupName"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "ResourceGroupName",
+      "endpointId": "$(connectedServiceNameARM)",
+      "dataSourceName": "AzureResourceGroups"
+    }
+  ],
+  "execution": {
+    "HttpRequestChain": {
+      "Execute": [
+        {
+          "RequestInputs": {
+            "EndpointId": "",
+            "EndpointUrl": "$(system.collectionUri)$(system.teamProject)/_apis/distributedtask/hubs/$(system.hostType)/plans/$(system.planId)/logs?api-version=4.1",
+            "Method": "POST",
+            "Headers": "{\n\"Content-Type\":\"application/json\", \"PlanUrl\": \"$(system.CollectionUri)\", \"ProjectId\": \"$(system.TeamProjectId)\", \"HubName\": \"$(system.HostType)\", \"PlanId\": \"$(system.PlanId)\", \"JobId\": \"$(system.JobId)\", \"TimelineId\": \"$(system.TimelineId)\", \"TaskInstanceId\": \"$(system.TaskInstanceId)\", \"AuthToken\": \"$(system.AccessToken)\"\n}",
+            "Body": "{\"path\":\"logs\\\\$(system.TaskInstanceId)\"}"
+          },
+          "ExecutionOptions": {
+            "OutputVariables": {
+              "tasklogid": "response['content']['id']"
+            }
+          }
+        },
+        {
+          "RequestInputs": {
+            "EndpointId": "$(connectedServiceNameARM)",
+            "EndpointUrl": "$(endpoint.url)subscriptions/{{subscriptionId}}/resourceGroups/$(ResourceGroupName)/providers/Microsoft.ContainerInstance/containerGroups/$(containerGroupName)?api-version=2018-10-01",
+            "Method": "PUT",
+            "Headers": "{\"Content-Type\":\"application/json\", \"Accept\":\"application/json\"}",
+            "Body": "{\"id\":\"/subscriptions/{{subscriptionId}}/resourceGroups/$(ResourceGroupName)/providers/Microsoft.ContainerInstance/containerGroups/$(containerGroupName)\",\"location\":\"southcentralus\",\"name\":\"{{containerGroupName}}\",\"identity\":{\"type\":\"SystemAssigned\"},\"properties\":{\"osType\":\"Linux\", \"restartPolicy\": \"OnFailure\", \"volumes\":[{\"name\":\"varlog\", \"emptyDir\": {}}], \"imageRegistryCredentials\": [{\"server\" : \"docker.io\", \"username\":\"ansheno\", \"password\":\"rsls@anuD\"}], \"containers\":[{\"name\":\"aa-app\",\"properties\":{\"command\":[],\"environmentVariables\":[],\"image\":\"ansheno/bootcamp-demo2:ex8\",\"ports\":[{\"port\": 8080}], \"volumeMounts\":[{\"name\":\"varlog\", \"mountPath\":\"/var/log\", \"readOnly\": \"false\"}], \"resources\": {\"requests\": {\"cpu\": 1,\"memoryInGB\": 1.5, \"gpu\": {\"count\": 1,\"sku\": \"K80\"}}}}}, {\"name\":\"aa-sidecar\",\"properties\":{\"volumeMounts\":[{\"name\":\"varlog\", \"mountPath\":\"/var/log\", \"readOnly\": \"false\"}], \"resources\": {\"requests\": {\"cpu\": 1,\"memoryInGB\": 1.5,\"gpu\": {\"count\": 1,\"sku\": \"K80\"}}}, \"command\":[\"sh\", \"-c\", \"echo -e '<source>\n@type tail\nformat none\npath /var/log/out.log\npos_file /var/log/out.log.pos\ntag aa.logs\nread_from_head true\n</source>\n<match aa.**>\n@type stdout\n</match>' > ~/fluent.conf ;  fluentd -c ~/fluent.conf \"], \"image\":\"fluent/fluentd:v0.12.43-2.0\", \"ports\":[{\"port\": 80}]}}]},\"type\":\"Microsoft.ContainerInstance/containerGroups\"}",
+            "WaitForCompletion": "true"
+          }
+        }
+      ]
+    }
+  }
+}

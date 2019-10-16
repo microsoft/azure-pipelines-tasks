@@ -1,0 +1,89 @@
+{
+    "id": "6B519857-1A20-4248-BAE8-AAD039015AFB",
+    "name": "AutomatedAnalysis",
+    "friendlyName": "Automated Analysis",
+    "description": "Observe the configured Azure Monitor rules for active alerts",
+    "author": "Microsoft Corporation",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-monitor",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
+    "category": "Utility",
+    "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added support for query unified Azure monitor alerts.",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Server"
+    ],
+    "version": {
+        "Major": 1,
+        "Minor": 156,
+        "Patch": 52
+    },
+    "instanceNameFormat": "Automated Analysis",
+    "groups": [],
+    "inputs": [
+        {
+            "name": "connectedServiceNameARM",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "defaultValue": "",
+            "required": "true",
+            "helpMarkDown": "Select an Azure Resource Manager subscription"
+        },
+        {
+            "name": "ResourceGroupName",
+            "type": "pickList",
+            "label": "Resource group",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Provide the name of a resource group"
+        },
+        {
+            "name": "containerGroupName",
+            "type": "string",
+            "label": "Container group name",
+            "required": true,
+            "helpMarkDown": "Provide the name of a container group that will be created."
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "ResourceGroupName",
+            "endpointId": "$(connectedServiceNameARM)",
+            "dataSourceName": "AzureResourceGroups"
+        }
+    ],
+    "execution": {
+        "HttpRequestChain": {
+            "Execute": [
+                {
+                    "RequestInputs": {
+                        "EndpointId": "",
+                        "EndpointUrl": "$(system.collectionUri)$(system.teamProject)/_apis/distributedtask/hubs/$(system.hostType)/plans/$(system.planId)/logs?api-version=4.1",
+                        "Method": "POST",
+                        "Headers": "{\n\"Content-Type\":\"application/json\", \"PlanUrl\": \"$(system.CollectionUri)\", \"ProjectId\": \"$(system.TeamProjectId)\", \"HubName\": \"$(system.HostType)\", \"PlanId\": \"$(system.PlanId)\", \"JobId\": \"$(system.JobId)\", \"TimelineId\": \"$(system.TimelineId)\", \"TaskInstanceId\": \"$(system.TaskInstanceId)\", \"AuthToken\": \"$(system.AccessToken)\"\n}",
+                        "Body": "{\"path\":\"logs\\\\$(system.TaskInstanceId)\"}"    
+                    },
+                    "ExecutionOptions": {
+                        "OutputVariables": {
+                            "tasklogid": "response['content']['id']"
+                          }
+                      }
+                },
+                {
+                    "RequestInputs": {
+                        "EndpointId": "$(connectedServiceNameARM)",
+                        "EndpointUrl": "$(endpoint.url)subscriptions/{{subscriptionId}}/resourceGroups/$(ResourceGroupName)/providers/Microsoft.ContainerInstance/containerGroups/$(containerGroupName)?api-version=2018-10-01",
+                        "Method": "PUT",
+                        "Headers": "{\"Content-Type\":\"application/json\", \"Accept\":\"application/json\"}",
+                        "Body": "{\"id\":\"/subscriptions/{{subscriptionId}}/resourceGroups/$(ResourceGroupName)/providers/Microsoft.ContainerInstance/containerGroups/$(containerGroupName)\",\"location\":\"southcentralus\",\"name\":\"{{containerGroupName}}\",\"identity\":{\"type\":\"SystemAssigned\"},\"properties\":{\"osType\":\"Linux\", \"restartPolicy\": \"OnFailure\", \"volumes\":[{\"name\":\"varlog\", \"emptyDir\": {}}], \"imageRegistryCredentials\": [{\"server\" : \"docker.io\", \"username\":\"ansheno\", \"password\":\"rsls@anuD\"}], \"containers\":[{\"name\":\"aa-app\",\"properties\":{\"command\":[],\"environmentVariables\":[],\"image\":\"ansheno/bootcamp-demo2:ex8\",\"ports\":[{\"port\": 8080}], \"volumeMounts\":[{\"name\":\"varlog\", \"mountPath\":\"/var/log\", \"readOnly\": \"false\"}], \"resources\": {\"requests\": {\"cpu\": 1,\"memoryInGB\": 1.5, \"gpu\": {\"count\": 1,\"sku\": \"K80\"}}}}}, {\"name\":\"aa-sidecar\",\"properties\":{\"volumeMounts\":[{\"name\":\"varlog\", \"mountPath\":\"/var/log\", \"readOnly\": \"false\"}], \"resources\": {\"requests\": {\"cpu\": 1,\"memoryInGB\": 1.5,\"gpu\": {\"count\": 1,\"sku\": \"K80\"}}}, \"command\":[\"sh\", \"-c\", \"echo -e '<source>\n@type tail\nformat none\npath /var/log/out.log\npos_file /var/log/out.log.pos\ntag aa.logs\nread_from_head true\n</source>\n<match aa.**>\n@type stdout\n</match>' > ~/fluent.conf ;  fluentd -c ~/fluent.conf \"], \"image\":\"fluent/fluentd:v0.12.43-2.0\", \"ports\":[{\"port\": 80}]}}]},\"type\":\"Microsoft.ContainerInstance/containerGroups\"}",
+                        "WaitForCompletion" : "true"
+                    }
+                }
+            ] 
+        }
+    }
+}
