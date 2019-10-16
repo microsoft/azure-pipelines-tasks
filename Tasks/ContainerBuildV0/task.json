@@ -27,7 +27,7 @@
             "name": "poolService",
             "label": "Pool Service (applicable when running on Kubernetes)",
             "type": "string",
-            "helpMarkDown": "Name of the service applicable when running on kubernetes.",
+            "helpMarkDown": "Name of the service applicable when running on Kubernetes.",
             "defaultValue": ""
         },
         {
