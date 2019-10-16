@@ -1,7 +1,7 @@
 'use strict';
 
 import * as tl from 'azure-pipelines-task-lib/task';
-import { StringComparer, isEqual } from '../utils/StringComparison';
+import { isEqual } from './utility';
 
 export class KubernetesWorkload {
     public static pod: string = 'Pod';
@@ -13,11 +13,22 @@ export class KubernetesWorkload {
     public static cronjob: string = 'cronjob';
 }
 
+export class DiscoveryAndLoadBalancerResource {
+    public static service: string = 'service';
+    public static ingress: string = 'ingress';
+}
+
+export class ServiceTypes {
+    public static loadBalancer: string = 'LoadBalancer';
+    public static nodePort: string = 'NodePort';
+    public static clusterIP: string = 'ClusterIP'
+}
+
 export const deploymentTypes: string[] = ['deployment', 'replicaset', 'daemonset', 'pod', 'statefulset'];
 export const workloadTypes: string[] = ['deployment', 'replicaset', 'daemonset', 'pod', 'statefulset', 'job', 'cronjob'];
 export const workloadTypesWithRolloutStatus: string[] = ['deployment', 'daemonset', 'statefulset'];
 
-const isRelease = isEqual(tl.getVariable('SYSTEM_HOSTTYPE'), 'release', StringComparer.OrdinalIgnoreCase);
+const isRelease = isEqual(tl.getVariable('SYSTEM_HOSTTYPE'), 'release', true);
 const orgUrl = tl.getVariable('System.TeamFoundationCollectionUri');
 
 export let pipelineAnnotations: string[] = [];
