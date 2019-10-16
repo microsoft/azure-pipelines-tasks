@@ -6,9 +6,9 @@ import docker = require("./docker");
 import buildctl = require("./buildctl");
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
-   
+
 async function buildContainer() {
-    if(process.env["RUNNING_ON"] == "KUBERNETES") {
+    if (process.env["RUNNING_ON"] == "KUBERNETES") {
         tl.debug("Building image using buildctl");
         buildctl.buildctlBuildAndPush();
     }
