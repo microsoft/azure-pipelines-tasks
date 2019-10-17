@@ -32,7 +32,7 @@
             "label": "Repository",
             "defaultValue": "$(Build.Repository.Name)",
             "required": true,
-            "helpMarkDown": "Specify the name of the GitHub repository in which the GitHub release will be created, edited, or deleted.",
+            "helpMarkDown": "Specify the name of the GitHub repository in which the GitHub comment will be created",
             "properties": {
                 "DisableManageLink": "True",
                 "EditableOptions": "True"
