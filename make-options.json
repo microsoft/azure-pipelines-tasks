@@ -79,6 +79,7 @@
         "FileTransformV2",
         "FtpUploadV1",
         "FtpUploadV2",
+        "GitHubCommentV0",
         "GitHubReleaseV0",
         "GitHubReleaseV1",
         "GoV0",
