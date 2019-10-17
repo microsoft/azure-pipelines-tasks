@@ -9,7 +9,7 @@ $directory2 = 'Some drive:\Some directory 2'
 $file1 = "$directory1\Some solution 1"
 $file2 = "$directory2\Some solution 2"
 $msBuildLocation = 'Some MSBuild location'
-$msBuildArguments = 'Some MSBuild arguments'
+$msBuildArguments = 'Some MSBuild with /t:arguments'
 Register-Mock Invoke-NuGetRestore { 'NuGet output 1' } -- -File $file1
 Register-Mock Invoke-NuGetRestore { 'NuGet output 2' } -- -File $file2
 Register-Mock Invoke-MSBuild { 'MSBuild output 1' } -- -ProjectFile $file1 -MSBuildPath $msBuildLocation -AdditionalArguments $msBuildArguments -NoTimelineLogger: $true -LogFile: "$file1.log"
@@ -24,8 +24,6 @@ $actual = Invoke-BuildTools -NuGetRestore -SolutionFiles $file1, $file2 -MSBuild
 Assert-AreEqual -Expected @(
         'NuGet output 1'
         'MSBuild clean output 1'
-        'MSBuild output 1'
         'NuGet output 2'
         'MSBuild clean output 2'
-        'MSBuild output 2'
     ) -Actual $actual
