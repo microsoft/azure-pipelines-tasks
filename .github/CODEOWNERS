@@ -189,6 +189,8 @@ Tasks/FileTransformV1/*     @kmkumaran      @SumiranAgg     @vincentdass
 
 Tasks/FtpUploadV1/*     @leantk
 
+Tasks/GithubCommentV0/*     @ds-ms
+
 Tasks/GithubReleaseV0/*     @prativen   @mdmdakbar
 
 Tasks/GoV0/*    @bishal-pdmsft
@@ -310,6 +312,8 @@ Tasks/PythonScriptV0/*      @leantk
 Tasks/QueryWorkItemsV0/*    @bansalaseem
 
 Tasks/QuickPerfTestV1/*     @SadagopanRajaram @ShreyasRmsft
+
+Tasks/ReviewAppV0/*   @ds-ms
 
 Tasks/RunDistributedTestsV1/*   @SadagopanRajaram @ShreyasRmsft
 
