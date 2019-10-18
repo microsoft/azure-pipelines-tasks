@@ -113,11 +113,21 @@ export function getPipelineLogsUrl(): string {
     return pipelineUrl;
 }
 
-export function getBuildAndPushArguments(dockerFile: string, labelArguments: string[], tagArguments: string[]): Object {
+export function getBuildAndPushArguments(dockerFile: string, labelArguments: string[], tagArguments: string[]): { [key: string]: string } {
+    let labelArgumentsString = "";
+    let tagArgumentsString = "";
+    if (labelArguments && labelArguments.length > 0) {
+        labelArgumentsString = labelArguments.join(", ");
+    }
+
+    if (tagArguments && tagArguments.length > 0) {
+        tagArgumentsString = tagArguments.join(", ");
+    }
+
     let buildArguments = {
         "dockerFilePath": dockerFile,
-        "labels": labelArguments,
-        "tags": tagArguments,
+        "labels": labelArgumentsString,
+        "tags": tagArgumentsString,
         "context": getBuildContext(dockerFile)
     };
 
