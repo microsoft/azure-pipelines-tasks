@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 0,
-        "Patch": 2
+        "Minor": 1,
+        "Patch": 0
     },
     "preview": "true",
     "demands": [],
@@ -56,6 +56,9 @@
         },
         {
             "name": "ConnectedServiceName",
+            "aliases": [
+                "azureResourceManagerConnection"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure Resource Manager connection",
             "defaultValue": "",
@@ -68,6 +71,9 @@
         },
         {
             "name": "subscriptionName",
+            "aliases": [
+                "subscriptionId"
+            ],
             "type": "pickList",
             "label": "Subscription",
             "required": true,
