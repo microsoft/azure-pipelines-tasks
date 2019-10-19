@@ -188,6 +188,7 @@ function unzipExtract(file, destinationFolder) {
         xpUnzipLocation = tl.which('unzip', true);
     }
     var unzip = tl.tool(xpUnzipLocation);
+    unzip.arg('-o');
     unzip.arg(file);
     unzip.arg('-d');
     unzip.arg(destinationFolder);
@@ -198,6 +199,7 @@ function sevenZipExtract(file, destinationFolder) {
     console.log(tl.loc('SevenZipExtractFile', file));
     var sevenZip = tl.tool(getSevenZipLocation());
     sevenZip.arg('x');
+    sevenZip.arg('-aoa');
     sevenZip.arg('-o' + destinationFolder);
     sevenZip.arg(file);
     return handleExecResult(sevenZip.execSync(), file);
