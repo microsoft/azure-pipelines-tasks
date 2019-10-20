@@ -18,16 +18,17 @@ function getExecutableExtension(): string {
 }
 
 function getDownloadUrl(version: string) {
+    let downloadUrlFormat = 'https://github.com/Azure/azure-functions-core-tools/releases/download/%s/Azure.Functions.Cli.%s.%s.zip';
     switch (os.type()) {
         case 'Linux':
-            return util.format('https://github.com/Azure/azure-functions-core-tools/releases/download/%s/Azure.Functions.Cli.linux-x64.%s.zip', version, version);
+            return util.format(downloadUrlFormat, version, 'linux-x64', version);
 
         case 'Darwin':
-            return util.format('https://github.com/Azure/azure-functions-core-tools/releases/download/%s/Azure.Functions.Cli.osx-x64.%s.zip', version, version);
+            return util.format(downloadUrlFormat, version, 'osx-x64', version);
 
         case 'Windows_NT':
         default:
-            return util.format('https://github.com/Azure/azure-functions-core-tools/releases/download/%s/Azure.Functions.Cli.win-x86.%s.zip', version, version);
+            return util.format(downloadUrlFormat, version, 'win-x86', version);
 
     }
 }
@@ -40,8 +41,7 @@ export async function getLatestFuncToolsVersion(): Promise<string> {
     try {
         const downloadPath = await toolLib.downloadTool(funcToolsLatestReleaseUrl);
         const response = JSON.parse(fs.readFileSync(downloadPath, 'utf8').toString().trim());
-        if (response.tag_name)
-        {
+        if (response.tag_name) {
             latestVersion = response.tag_name;
         }
     } catch (error) {
@@ -68,8 +68,7 @@ export async function downloadFuncTools(version: string): Promise<string> {
             const unzippedFuncPath = await toolLib.extractZip(downloadPath);
             cachedToolpath = await toolLib.cacheDir(unzippedFuncPath, funcToolName, version);
             console.log(tl.loc("SuccessfullyDownloaded", version, cachedToolpath));
-        }
-        else {
+        } else {
             console.log(tl.loc("VersionAlreadyInstalled", version, cachedToolpath));
         }
 

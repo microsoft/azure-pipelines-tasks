@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Install Azure Func Core Tools",
-  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/func-tools-installer)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/func-tools-installer)",
   "loc.description": "Install Azure Func Core Tools",
   "loc.instanceNameFormat": "Install func tools - $(version)",
   "loc.input.label.version": "Version",

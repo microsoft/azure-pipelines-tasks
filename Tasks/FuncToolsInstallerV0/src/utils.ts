@@ -1,6 +1,6 @@
 "use strict";
 
-import tl = require('azure-pipelines-task-lib/task');
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as functoolsutility from "func-tools-common/functoolsutility";
 

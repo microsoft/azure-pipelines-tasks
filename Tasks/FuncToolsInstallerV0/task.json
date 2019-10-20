@@ -3,8 +3,8 @@
     "name": "FuncToolsInstaller",
     "friendlyName": "Install Azure Func Core Tools",
     "description": "Install Azure Func Core Tools",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/func-tools-installer",
-    "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/func-tools-installer)",
+    "helpUrl": "https://aka.ms/func-tools-installer",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/func-tools-installer)",
     "category": "Tool",
     "visibility": [
         "Build",
@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 159,
+        "Minor": 160,
         "Patch": 0
     },
     "preview": true,
