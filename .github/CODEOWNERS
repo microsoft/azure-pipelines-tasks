@@ -137,6 +137,8 @@ Tasks/CondaEnvironmentV0/*      @leantk
 
 Tasks/CondaEnvironmentV1/*      @leantk
 
+Tasks/ContainerBuildV0/*    @vithati @prebansa
+
 Tasks/CopyFilesV2/*     @jtpetty
 
 Tasks/CopyFilesOverSSHV0/*      @leantk
@@ -149,7 +151,7 @@ Tasks/DelayV1/*     @bansalaseem
 
 Tasks/DeleteFilesV1/*   @jtpetty
 
-Tasks/DeployVisualStudioTestAgentV2/*       @cltshivash
+Tasks/DeployVisualStudioTestAgentV2/*    @SadagopanRajaram @ShreyasRmsft
 
 Tasks/DockerV0/*    @bansalaseem
 
@@ -186,6 +188,8 @@ Tasks/ExtractFilesV1/*      @jtpetty
 Tasks/FileTransformV1/*     @kmkumaran      @SumiranAgg     @vincentdass
 
 Tasks/FtpUploadV1/*     @leantk
+
+Tasks/GithubCommentV0/*     @ds-ms
 
 Tasks/GithubReleaseV0/*     @prativen   @mdmdakbar
 
@@ -285,7 +289,7 @@ Tasks/PowerShellOnTargetMachinesV3/*    @kmkumaran
 
 Tasks/PublishBuildArtifactsV1/*     @leantk
 
-Tasks/PublishCodeCoverageResultsV1/*    @cltshivash    @nigurr 
+Tasks/PublishCodeCoverageResultsV1/*    @SadagopanRajaram @nigurr 
 
 Tasks/PublishCodeCoverageResultsV2/*    @karanjitsingh @acesiddhu
 
@@ -307,13 +311,15 @@ Tasks/PythonScriptV0/*      @leantk
 
 Tasks/QueryWorkItemsV0/*    @bansalaseem
 
-Tasks/QuickPerfTestV1/*     @smalpani
+Tasks/QuickPerfTestV1/*     @SadagopanRajaram @ShreyasRmsft
 
-Tasks/RunDistributedTestsV1/*   @smalpani
+Tasks/ReviewAppV0/*   @ds-ms
 
-Tasks/RunJMeterLoadTestV1/*     @smalpani
+Tasks/RunDistributedTestsV1/*   @SadagopanRajaram @ShreyasRmsft
 
-Tasks/RunLoadTestV1/*   @cltshivash
+Tasks/RunJMeterLoadTestV1/*     @SadagopanRajaram @ShreyasRmsft
+
+Tasks/RunLoadTestV1/*   @SadagopanRajaram @ShreyasRmsft
 
 Tasks/ServiceFabricComposeDeployV0/*    @bishal-pdmsft
 
@@ -347,11 +353,11 @@ Tasks/UseRubyVersionV0/*    @hross
 
 Tasks/VSBuildV1/*   @daveken
 
-Tasks/VsTestV1/*    @cltshivash
+Tasks/VsTestV1/*    @SadagopanRajaram @ShreyasRmsft
 
-Tasks/VsTestV2/*    @cltshivash
+Tasks/VsTestV2/*    @SadagopanRajaram @ShreyasRmsft
 
-Tasks/VsTestPlatformToolInstallerV1/*   @cltshivash
+Tasks/VsTestPlatformToolInstallerV1/*   @SadagopanRajaram @ShreyasRmsft
 
 Tasks/WindowsMachineFileCopyV1/*    @kmkumaran
 

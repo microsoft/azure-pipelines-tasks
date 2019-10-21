@@ -12,6 +12,14 @@ import { DeploymentScopeBase } from "./operations/DeploymentScopeBase";
 function run(): Promise<void> {
     var taskParameters = new armDeployTaskParameters.TaskParameters();
     return taskParameters.getTaskParameters().then((taskParameters) => {
+
+        //Telemetry
+        var deploymentScopeTelemetry = {
+            deploymentScope: taskParameters.deploymentScope,
+            deploymentMode: taskParameters.deploymentMode
+        };
+        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureResourceManagerTemplateDeployment]" + JSON.stringify(deploymentScopeTelemetry));
+
         if(taskParameters.deploymentScope === "Management Group"){
             var deploymentParameters = new DeploymentParameters({}, taskParameters.location);
             var managementGroupOperationsController = new DeploymentScopeBase(

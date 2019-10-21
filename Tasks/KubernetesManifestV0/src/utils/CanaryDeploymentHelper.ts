@@ -7,7 +7,7 @@ import * as yaml from 'js-yaml';
 
 import * as TaskInputParameters from '../models/TaskInputParameters';
 import * as helper from './KubernetesObjectUtility';
-import { KubernetesWorkload } from '../models/constants';
+import { KubernetesWorkload } from 'kubernetes-common-v2/kubernetesconstants';
 import { StringComparer, isEqual } from './StringComparison';
 import * as utils from './utilities';
 
