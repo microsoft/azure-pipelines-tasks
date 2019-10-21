@@ -118,10 +118,6 @@ export class TestResultPublisher {
         return resultFilePath;
     }
 
-    private getAttestationName(): string {
-        return `projects/${tl.getVariable("System.TeamProject")}/notes/${uuid.v1()}`
-    }
-
     private getTestTabUrl(): string {
       var pipeLineUrl = dockerCommandUtils.getPipelineLogsUrl();
       var testTabUrl = "";
@@ -173,7 +169,7 @@ export class TestResultPublisher {
           };
 
           return {
-            name: this.getAttestationName(),
+            name: uuid.v1(),
             description: "Test Results from Container structure test",
             resourceUri:[resourceUri],
             kind: "ATTESTATION",
