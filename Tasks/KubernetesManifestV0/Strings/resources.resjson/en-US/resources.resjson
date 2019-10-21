@@ -72,7 +72,6 @@
   "loc.messages.NullInputObject": "Input object is null.",
   "loc.messages.ArgumentsInputNotSupplied": "Arguments are not supplied.",
   "loc.messages.NullInputObjectMetadata": "Input object metadata is null.",
-  "loc.messages.CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
   "loc.messages.InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
   "loc.messages.InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
   "loc.messages.AllContainersNotInReadyState": "All the containers are not in a ready state.",
@@ -82,5 +81,6 @@
   "loc.messages.waitForServiceIpAssignment": "Waiting for service %s external IP assignment",
   "loc.messages.waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timed out",
   "loc.messages.ServiceExternalIP": "service %s external IP is %s",
-  "loc.messages.UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file."
+  "loc.messages.UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file.",
+  "loc.messages.StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment."
 }

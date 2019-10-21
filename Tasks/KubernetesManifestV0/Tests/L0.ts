@@ -30,6 +30,7 @@ describe('Kubernetes Manifests Suite', function () {
         delete process.env[shared.TestEnvVars.namespace];
         delete process.env[shared.TestEnvVars.dockerComposeFile];
         delete process.env[shared.TestEnvVars.releaseName];
+        delete process.env[shared.TestEnvVars.baselineAndCanaryReplicas];
         delete process.env.RemoveNamespaceFromEndpoint;
     });
 

@@ -84,8 +84,13 @@ function deployManifests(files: string[], kubectl: Kubectl, isCanaryDeploymentSt
         result = canaryDeploymentOutput.result;
         files = canaryDeploymentOutput.newFilePaths;
     } else {
-        const updatedManifests = appendStableVersionLabelToResource(files, kubectl);
-        result = kubectl.apply(updatedManifests);
+        if (canaryDeploymentHelper.isSMICanaryStrategy()) {
+            const updatedManifests = appendStableVersionLabelToResource(files, kubectl);
+            result = kubectl.apply(updatedManifests);
+        }
+        else {
+            result = kubectl.apply(files);
+        }
     }
     utils.checkForErrors([result]);
     return files;
@@ -98,10 +103,9 @@ function appendStableVersionLabelToResource(files: string[], kubectl: Kubectl): 
     files.forEach((filePath: string) => {
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
-            const name = inputObject.metadata.name;
             const kind = inputObject.kind;
             if (KubernetesObjectUtility.isDeploymentEntity(kind)) {
-                const updatedObject = canaryDeploymentHelper.appendStableVersionLabelToResource(inputObject);
+                const updatedObject = canaryDeploymentHelper.markResourceAsStable(inputObject);
                 newObjectsList.push(updatedObject);
             } else {
                 manifestFiles.push(filePath);

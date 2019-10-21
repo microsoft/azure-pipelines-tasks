@@ -45,18 +45,37 @@ export function deleteCanaryDeployment(kubectl: Kubectl, manifestFilePaths: stri
     }
 }
 
-export function appendStableVersionLabelToResource(inputObject: any): object {
-    const newLabels = new Map<string, string>();
-    newLabels[CANARY_VERSION_LABEL] = STABLE_LABEL_VALUE;
-    helper.updateObjectLabels(inputObject, newLabels, false);
-    return inputObject;
+export function markResourceAsStable(inputObject: any): object {
+    if (isResourceMakredAsStable(inputObject)) {
+        return inputObject;
+    }
+
+    const newObject = JSON.parse(JSON.stringify(inputObject));
+
+    // Adding labels and annotations.
+    addCanaryLabelsAndAnnotations(newObject, STABLE_LABEL_VALUE);
+
+    tl.debug("Added stable label: " + JSON.stringify(newObject));
+    return newObject;
 }
 
-export function getNewBaselineResource(stableObject: any, replicas: number): object {
+export function isResourceMakredAsStable(inputObject: any): boolean {    
+    return inputObject && 
+            inputObject.metadata && 
+            inputObject.metadata.labels &&
+            inputObject.metadata.labels[CANARY_VERSION_LABEL] == STABLE_LABEL_VALUE;
+}
+
+export function getStableResource(inputObject: any): object {
+    var replicaCount = isSpecContainsReplicas(inputObject.kind) ? inputObject.metadata.replicas : 0;
+    return getNewCanaryObject(inputObject, replicaCount, STABLE_LABEL_VALUE);
+}
+
+export function getNewBaselineResource(stableObject: any, replicas?: number): object {
     return getNewCanaryObject(stableObject, replicas, BASELINE_LABEL_VALUE);
 }
 
-export function getNewCanaryResource(inputObject: any, replicas: number): object {
+export function getNewCanaryResource(inputObject: any, replicas?: number): object {
     return getNewCanaryObject(inputObject, replicas, CANARY_LABEL_VALUE);
 }
 
@@ -91,7 +110,7 @@ export function isCanaryDeploymentStrategy() {
 
 export function isSMICanaryStrategy() {
     const deploymentStrategy = TaskInputParameters.trafficSplitMethod;
-    return deploymentStrategy && deploymentStrategy.toUpperCase() === TRAFFIC_SPLIT_STRATEGY;
+    return isCanaryDeploymentStrategy() && deploymentStrategy && deploymentStrategy.toUpperCase() === TRAFFIC_SPLIT_STRATEGY;
 }
 
 export function getCanaryResourceName(name: string) {
@@ -100,6 +119,10 @@ export function getCanaryResourceName(name: string) {
 
 export function getBaselineResourceName(name: string) {
     return name + BASELINE_SUFFIX;
+}
+
+export function getStableResourceName(name: string) {
+    return name + STABLE_SUFFIX;
 }
 
 function UnsetsClusterSpecficDetails(resource: any) {
@@ -133,20 +156,29 @@ function getNewCanaryObject(inputObject: any, replicas: number, type: string): o
     const newObject = JSON.parse(JSON.stringify(inputObject));
 
     // Updating name
-    newObject.metadata.name = type === CANARY_LABEL_VALUE ?
-        getCanaryResourceName(inputObject.metadata.name) :
-        getBaselineResourceName(inputObject.metadata.name);
+    if (type === CANARY_LABEL_VALUE) {
+        newObject.metadata.name = getCanaryResourceName(inputObject.metadata.name)
+    } else if (type === STABLE_LABEL_VALUE) {
+        newObject.metadata.name = getStableResourceName(inputObject.metadata.name)
+    } else {
+        newObject.metadata.name = getBaselineResourceName(inputObject.metadata.name);
+    }
 
     // Adding labels and annotations.
     addCanaryLabelsAndAnnotations(newObject, type);
 
     // Updating no. of replicas
-    if (!isEqual(newObject.kind, KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase) &&
-        !isEqual(newObject.kind, KubernetesWorkload.daemonSet, StringComparer.OrdinalIgnoreCase)) {
+    if (isSpecContainsReplicas(newObject.kind)) {
         newObject.spec.replicas = replicas;
     }
 
     return newObject;
+}
+
+function isSpecContainsReplicas(kind: string) {
+    return !isEqual(kind, KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase) &&
+            !isEqual(kind, KubernetesWorkload.daemonSet, StringComparer.OrdinalIgnoreCase) && 
+            !helper.isServiceEntity(kind)
 }
 
 function addCanaryLabelsAndAnnotations(inputObject: any, type: string) {
@@ -156,7 +188,10 @@ function addCanaryLabelsAndAnnotations(inputObject: any, type: string) {
     helper.updateObjectLabels(inputObject, newLabels, false);
     helper.updateObjectAnnotations(inputObject, newLabels, false);
     helper.updateSelectorLabels(inputObject, newLabels, false);
-    helper.updateSpecLabels(inputObject, newLabels, false);
+
+    if (!helper.isServiceEntity(inputObject.kind)) {
+        helper.updateSpecLabels(inputObject, newLabels, false);
+    }
 }
 
 function createCanaryObjectsArgumentString(files: string[], includeServices: boolean) {

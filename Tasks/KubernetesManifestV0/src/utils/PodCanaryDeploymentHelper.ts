@@ -21,15 +21,10 @@ export function deployPodCanary(kubectl: Kubectl, filePaths: string[]) {
             const name = inputObject.metadata.name;
             const kind = inputObject.kind;
             if (helper.isDeploymentEntity(kind)) {
-                const existingCanaryObject = canaryDeploymentHelper.fetchCanaryResource(kubectl, kind, name);
-
-                if (!!existingCanaryObject) {
-                    throw (tl.loc('CanaryDeploymentAlreadyExistErrorMessage'));
-                }
-
                 tl.debug('Calculating replica count for canary');
                 const canaryReplicaCount = calculateReplicaCountForCanary(inputObject, percentage);
                 tl.debug('Replica count is ' + canaryReplicaCount);
+
                 // Get stable object
                 tl.debug('Querying stable object');
                 const stableObject = canaryDeploymentHelper.fetchResource(kubectl, kind, name);

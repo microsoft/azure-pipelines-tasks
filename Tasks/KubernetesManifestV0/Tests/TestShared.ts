@@ -34,7 +34,8 @@ export let TestEnvVars = {
     endpointAuthorizationType: "__endpointAuthorizationType__",
     isStableDeploymentPresent: "__isStableDeploymentPresent__",
     isCanaryDeploymentPresent: "__isCanaryDeploymentPresent__",
-    isBaselineDeploymentPresent: "__isBaselineDeploymentPresent__"
+    isBaselineDeploymentPresent: "__isBaselineDeploymentPresent__",
+    baselineAndCanaryReplicas: "__baselineAndCanaryReplicas__"
 };
 
 export let OperatingSystems = {

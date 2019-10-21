@@ -18,22 +18,16 @@ const TRAFFIC_SPLIT_OBJECT = 'TrafficSplit';
 export function deploySMICanary(kubectl: Kubectl, filePaths: string[]) {
     const newObjectsList = [];
     const canaryReplicaCount = parseInt(TaskInputParameters.baselineAndCanaryReplicas);
+    tl.debug('Replica count is ' + canaryReplicaCount);
 
     filePaths.forEach((filePath: string) => {
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
-
             const name = inputObject.metadata.name;
             const kind = inputObject.kind;
             if (helper.isDeploymentEntity(kind)) {
-                const existingCanaryObject = canaryDeploymentHelper.fetchCanaryResource(kubectl, kind, name);
-
-                if (!!existingCanaryObject) {
-                    throw (tl.loc('CanaryDeploymentAlreadyExistErrorMessage'));
-                }
-                tl.debug('Replica count is ' + canaryReplicaCount);
                 // Get stable object
-                tl.debug('Querying stable object');
+                tl.debug('Querying stable object');                
                 const stableObject = canaryDeploymentHelper.fetchResource(kubectl, kind, name);
                 if (!stableObject) {
                     tl.debug('Stable object not found. Creating only canary object');
@@ -42,6 +36,10 @@ export function deploySMICanary(kubectl: Kubectl, filePaths: string[]) {
                     tl.debug('New canary object is: ' + JSON.stringify(newCanaryObject));
                     newObjectsList.push(newCanaryObject);
                 } else {
+                    if (!canaryDeploymentHelper.isResourceMakredAsStable(stableObject)) {
+                        throw (tl.loc('StableSpecSelectorNotExist', name));
+                    }
+
                     tl.debug('Stable object found. Creating canary and baseline objects');
                     // If canary object not found, create canary and baseline object.
                     const newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
@@ -75,18 +73,18 @@ function createCanaryService(kubectl: Kubectl, filePaths: string[]) {
             const name = inputObject.metadata.name;
             const kind = inputObject.kind;
             if (helper.isServiceEntity(kind)) {
-                const newCanaryServiceObject = getNewCanaryService(inputObject);
+                const newCanaryServiceObject = canaryDeploymentHelper.getNewCanaryResource(inputObject);
                 tl.debug('New canary service object is: ' + JSON.stringify(newCanaryServiceObject));
                 newObjectsList.push(newCanaryServiceObject);
 
-                const newBaselineServiceObject = getNewBaselineService(inputObject);
+                const newBaselineServiceObject = canaryDeploymentHelper.getNewBaselineResource(inputObject);
                 tl.debug('New baseline object is: ' + JSON.stringify(newBaselineServiceObject));
                 newObjectsList.push(newBaselineServiceObject);
 
                 tl.debug('Querying for stable service object');
-                const stableObject = canaryDeploymentHelper.fetchResource(kubectl, kind, getStableResourceName(name));
+                const stableObject = canaryDeploymentHelper.fetchResource(kubectl, kind, canaryDeploymentHelper.getStableResourceName(name));
                 if (!stableObject) {
-                    const newStableServiceObject = getStableService(inputObject);
+                    const newStableServiceObject = canaryDeploymentHelper.getStableResource(inputObject);
                     tl.debug('New stable service object is: ' + JSON.stringify(newStableServiceObject));
                     newObjectsList.push(newStableServiceObject);
 
@@ -95,8 +93,24 @@ function createCanaryService(kubectl: Kubectl, filePaths: string[]) {
                     tl.debug('Creating the traffic object for service: ' + trafficObject);
                     trafficObjectsList.push(trafficObject);
                 } else {
-                    tl.debug('Stable service object present so updating the traffic object for service: ' + name);
-                    trafficObjectsList.push(updateTrafficSplitObject(name));
+                    let updateTrafficObject = true;
+                    const trafficObject = canaryDeploymentHelper.fetchResource(kubectl, TRAFFIC_SPLIT_OBJECT, getTrafficSplitResourceName(name));
+                    if (trafficObject) {
+                        const trafficJObject = JSON.parse(JSON.stringify(trafficObject));             
+                        if (trafficJObject && trafficJObject.spec && trafficJObject.spec.backends) {
+                            trafficJObject.spec.backends.forEach((s) => {
+                                if (s.service === canaryDeploymentHelper.getCanaryResourceName(name) && s.weight === "1000m") {
+                                    tl.debug('Update traffic objcet not required');
+                                    updateTrafficObject = false;
+                                }
+                            })
+                        }
+                    }
+                    
+                    if (updateTrafficObject) {
+                        tl.debug('Stable service object present so updating the traffic object for service: ' + name);
+                        trafficObjectsList.push(updateTrafficSplitObject(name));
+                    }
                 }
             }
         });
@@ -120,17 +134,13 @@ function getStableService(inputObject: any): object {
     const newObject = JSON.parse(JSON.stringify(inputObject));
 
     // Updating name
-    newObject.metadata.name = getStableResourceName(inputObject.metadata.name);
+    newObject.metadata.name = canaryDeploymentHelper.getStableResourceName(inputObject.metadata.name);
     const newLabels = new Map<string, string>();
     newLabels[canaryDeploymentHelper.CANARY_VERSION_LABEL] = canaryDeploymentHelper.STABLE_LABEL_VALUE;
 
     helper.updateSelectorLabels(newObject, newLabels, false);
 
     return newObject;
-}
-
-function getStableResourceName(name: string) {
-    return name + canaryDeploymentHelper.STABLE_SUFFIX;
 }
 
 function getNewBaselineService(inputObject: any): object {
@@ -151,7 +161,9 @@ function getNewServiceObject(inputObject: any, type: string): object {
     const newLabels = new Map<string, string>();
     newLabels[canaryDeploymentHelper.CANARY_VERSION_LABEL] = type;
 
-    helper.updateSelectorLabels(newObject, newLabels, false);
+    helper.updateObjectLabels(inputObject, newLabels, false);
+    helper.updateObjectAnnotations(inputObject, newLabels, false);
+    helper.updateSelectorLabels(inputObject, newLabels, false);
 
     return newObject;
 }
@@ -229,7 +241,7 @@ function getTrafficSplitObject(name: string, stableWeight: number, baselineWeigh
         }
     }`;
 
-    const trafficSplitObject = util.format(trafficSplitObjectJson, getTrafficSplitResourceName(name), getStableResourceName(name), stableWeight, canaryDeploymentHelper.getBaselineResourceName(name), baselineWeight, canaryDeploymentHelper.getCanaryResourceName(name), canaryWeight, name);
+    const trafficSplitObject = util.format(trafficSplitObjectJson, getTrafficSplitResourceName(name), canaryDeploymentHelper.getStableResourceName(name), stableWeight, canaryDeploymentHelper.getBaselineResourceName(name), baselineWeight, canaryDeploymentHelper.getCanaryResourceName(name), canaryWeight, name);
     return trafficSplitObject;
 }
 

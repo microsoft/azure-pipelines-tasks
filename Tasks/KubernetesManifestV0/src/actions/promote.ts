@@ -19,18 +19,18 @@ export async function promote(ignoreSslErrors?: boolean) {
 
     let includeServices = false;
     if (canaryDeploymentHelper.isSMICanaryStrategy()) {
+        includeServices = true;
         // In case of SMI traffic split strategy when deployment is promoted, first we will redirect traffic to
         // Canary deployment, then update stable deployment and then redirect traffic to stable deployment
         tl.debug('Redirecting traffic to canary deployment');
         SMICanaryDeploymentHelper.redirectTrafficToCanaryDeployment(kubectl, TaskInputParameters.manifests);
 
-        tl.debug('Deploying input manifests');
+        tl.debug('Deploying input manifests with SMI canary strategy');
         await deploymentHelper.deploy(kubectl, TaskInputParameters.manifests, 'None');
 
         tl.debug('Redirecting traffic to stable deployment');
         SMICanaryDeploymentHelper.redirectTrafficToStableDeployment(kubectl, TaskInputParameters.manifests);
     } else {
-        includeServices = true;
         tl.debug('Deploying input manifests');
         await deploymentHelper.deploy(kubectl, TaskInputParameters.manifests, 'None');
     }

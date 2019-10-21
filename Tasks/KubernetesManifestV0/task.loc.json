@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 159,
-    "Patch": 1
+    "Minor": 160,
+    "Patch": 3
   },
   "demands": [],
   "groups": [],
@@ -354,7 +354,6 @@
     "NullInputObject": "ms-resource:loc.messages.NullInputObject",
     "ArgumentsInputNotSupplied": "ms-resource:loc.messages.ArgumentsInputNotSupplied",
     "NullInputObjectMetadata": "ms-resource:loc.messages.NullInputObjectMetadata",
-    "CanaryDeploymentAlreadyExistErrorMessage": "ms-resource:loc.messages.CanaryDeploymentAlreadyExistErrorMessage",
     "InvalidRejectActionDeploymentStrategy": "ms-resource:loc.messages.InvalidRejectActionDeploymentStrategy",
     "InvalidPromotetActionDeploymentStrategy": "ms-resource:loc.messages.InvalidPromotetActionDeploymentStrategy",
     "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
@@ -364,6 +363,7 @@
     "waitForServiceIpAssignment": "ms-resource:loc.messages.waitForServiceIpAssignment",
     "waitForServiceIpAssignmentTimedOut": "ms-resource:loc.messages.waitForServiceIpAssignmentTimedOut",
     "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
-    "UnableToCreateTrafficSplitManifestFile": "ms-resource:loc.messages.UnableToCreateTrafficSplitManifestFile"
+    "UnableToCreateTrafficSplitManifestFile": "ms-resource:loc.messages.UnableToCreateTrafficSplitManifestFile",
+    "StableSpecSelectorNotExist": "ms-resource:loc.messages.StableSpecSelectorNotExist"
   }
 }

@@ -44,6 +44,7 @@ tr.setInput('secretName', process.env[shared.TestEnvVars.secretName] || '');
 tr.setInput('secretType', process.env[shared.TestEnvVars.secretType] || '');
 tr.setInput('dockerComposeFile', process.env[shared.TestEnvVars.dockerComposeFile] || '');
 tr.setInput('kustomizationPath', process.env[shared.TestEnvVars.kustomizationPath] || '');
+tr.setInput('baselineAndCanaryReplicas', process.env[shared.TestEnvVars.baselineAndCanaryReplicas] || '0');
 
 process.env.SYSTEM_DEFAULTWORKINGDIRECTORY = testnamespaceWorkingDirectory;
 process.env.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI = teamFoundationCollectionUri;
@@ -340,7 +341,8 @@ tr.registerMock('../utils/FileHelper', {
     },
     getNewUserDirPath: fh.getNewUserDirPath,
     ensureDirExists: fh.ensureDirExists,
-    assertFileExists: fh.assertFileExists
+    assertFileExists: fh.assertFileExists,
+    writeManifestToFile: fh.writeManifestToFile
 });
 
 tr.registerMock('uuid/v4', function () {
