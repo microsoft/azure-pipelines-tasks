@@ -113,11 +113,21 @@ export function getPipelineLogsUrl(): string {
     return pipelineUrl;
 }
 
-export function getBuildAndPushArguments(dockerFile: string, labelArguments: string[], tagArguments: string[]): Object {
+export function getBuildAndPushArguments(dockerFile: string, labelArguments: string[], tagArguments: string[]): { [key: string]: string } {
+    let labelArgumentsString = "";
+    let tagArgumentsString = "";
+    if (labelArguments && labelArguments.length > 0) {
+        labelArgumentsString = labelArguments.join(", ");
+    }
+
+    if (tagArguments && tagArguments.length > 0) {
+        tagArgumentsString = tagArguments.join(", ");
+    }
+
     let buildArguments = {
         "dockerFilePath": dockerFile,
-        "labels": labelArguments,
-        "tags": tagArguments,
+        "labels": labelArgumentsString,
+        "tags": tagArgumentsString,
         "context": getBuildContext(dockerFile)
     };
 
@@ -230,6 +240,12 @@ function parseHistoryForLayers(input: string) {
     else {
         directive = 'RUN';
         argument = input.substring(indexCreatedBy + createdByMatch.length, input.length - 1);
+    }
+
+    const layerIdMatch = "; layerId:";
+    const indexLayerId = argument.indexOf(layerIdMatch);
+    if (indexLayerId >= 0) {
+        argument = argument.substring(0, indexLayerId);
     }
 
     let createdAt: string = "";
