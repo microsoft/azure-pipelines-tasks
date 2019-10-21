@@ -18,6 +18,7 @@ export class VersionInfo {
         }
 
         this.version = versionInfoObject.version;
+        this.packageType = packageType;
         this.files = [];
         versionInfoObject.files.forEach(fileData => {
             try {
@@ -28,7 +29,6 @@ export class VersionInfo {
             }
         });
 
-        this.packageType = packageType;
         if (this.packageType == utils.Constants.sdk) {
             this.runtimeVersion = versionInfoObject["runtime-version"] || "";
         }
@@ -80,10 +80,20 @@ export class Channel {
 
         this.channelVersion = channelRelease["channel-version"];
         this.releasesJsonUrl = channelRelease["releases.json"];
+
+        if(!channelRelease["support-phase"])
+        {
+            tl.debug(tl.loc("SupportPhaseNotPresentInChannel", this.channelVersion));
+        }
+        else
+        {
+            this.supportPhase = channelRelease["support-phase"];
+        }
     }
 
     public channelVersion: string;
     public releasesJsonUrl: string;
+    public supportPhase: string;
 }
 
 export class VersionParts {

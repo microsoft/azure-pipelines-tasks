@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
     "satisfies": [
         "DotNetCore"
@@ -151,6 +151,7 @@
         "FailedWhileExtractingPacakge": "Failed while extracting downloaded package with error: %s",
         "InstallingNuGetVersion": "Installing NuGet version %s",
         "FailureWhileInstallingNuGetVersion": "Failed while installing NuGet version. Error: %s",
-        "SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet."
+        "SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet.",
+        "SupportPhaseNotPresentInChannel": "support-phase is not present in the channel with channel-version %s."
     }
 }
