@@ -130,27 +130,6 @@ export function redirectTrafficToStableDeployment(kubectl: Kubectl, manifestFile
     adjustTraffic(kubectl, manifestFilePaths, 1000, 0);
 }
 
-function getStableService(inputObject: any): object {
-    const newObject = JSON.parse(JSON.stringify(inputObject));
-
-    // Updating name
-    newObject.metadata.name = canaryDeploymentHelper.getStableResourceName(inputObject.metadata.name);
-    const newLabels = new Map<string, string>();
-    newLabels[canaryDeploymentHelper.CANARY_VERSION_LABEL] = canaryDeploymentHelper.STABLE_LABEL_VALUE;
-
-    helper.updateSelectorLabels(newObject, newLabels, false);
-
-    return newObject;
-}
-
-function getNewBaselineService(inputObject: any): object {
-    return getNewServiceObject(inputObject, canaryDeploymentHelper.BASELINE_LABEL_VALUE);
-}
-
-function getNewCanaryService(inputObject: any): object {
-    return getNewServiceObject(inputObject, canaryDeploymentHelper.CANARY_LABEL_VALUE);
-}
-
 function getNewServiceObject(inputObject: any, type: string): object {
     const newObject = JSON.parse(JSON.stringify(inputObject));
     // Updating name
@@ -202,7 +181,9 @@ function adjustTraffic(kubectl: Kubectl, manifestFilePaths: string[], stableWeig
 function updateTrafficSplitObject(serviceName: string): string {
     const percentage = parseInt(TaskInputParameters.canaryPercentage) * 10;
     const baselineAndCanaryWeight = percentage / 2;
-    return createTrafficSplitManifestFile(serviceName, 1000 - percentage, baselineAndCanaryWeight, baselineAndCanaryWeight);
+    const stableDeploymentWeight = 1000 - percentage;
+    tl.debug('Creating the traffic object with canary weight: ' + baselineAndCanaryWeight + ',baseling weight: ' + baselineAndCanaryWeight + ',stable: ' + stableDeploymentWeight);
+    return createTrafficSplitManifestFile(serviceName, stableDeploymentWeight, baselineAndCanaryWeight, baselineAndCanaryWeight);
 }
 
 function createTrafficSplitManifestFile(serviceName: string, stableWeight: number, baselineWeight: number, canaryWeight: number): string {

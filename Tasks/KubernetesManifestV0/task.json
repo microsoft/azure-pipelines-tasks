@@ -76,7 +76,7 @@
                 "pod": "Pod",
                 "smi": "SMI"
             },
-            "helpMarkDown": "Deployment strategy to be used",
+            "helpMarkDown": "Traffic split method to be used",
             "visibleRule": "strategy = canary"
         },
         {
@@ -84,7 +84,7 @@
             "type": "string",
             "label": "Percentage",
             "required": true,
-            "helpMarkDown": "",
+            "helpMarkDown": "Percentage of traffic redirect to canary deployment",
             "defaultValue": 0,
             "visibleRule": "strategy = Canary && action = deploy",
             "validation": {
@@ -97,7 +97,7 @@
             "type": "string",
             "label": "Baseline and canary replicas",
             "required": true,
-            "helpMarkDown": "",
+            "helpMarkDown": "Baseline and canary replicas count",
             "defaultValue": 0,
             "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
             "validation": {

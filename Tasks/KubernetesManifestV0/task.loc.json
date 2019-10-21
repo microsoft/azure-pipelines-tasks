@@ -84,7 +84,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.percentage",
       "required": true,
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.percentage",
       "defaultValue": 0,
       "visibleRule": "strategy = Canary && action = deploy",
       "validation": {
@@ -97,7 +97,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.baselineAndCanaryReplicas",
       "required": true,
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.baselineAndCanaryReplicas",
       "defaultValue": 0,
       "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
       "validation": {
