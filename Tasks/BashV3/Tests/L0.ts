@@ -43,7 +43,13 @@ describe('Bash Suite', function () {
         runValidations(() => {
             assert(tr.succeeded, 'Bash should have succeeded.');
             assert(tr.stderr.length === 0, 'Bash should not have written to stderr');
-            assert(tr.stdout.indexOf(`Writing . 'temp/path/script' to temp/path/fileName.sh`) > 0, 'Bash should have written the script to a file');
+            if (process.platform === 'win32') {
+                // This is different on windows because we change the script name to make sure the normalization call is happening.
+                assert(tr.stdout.indexOf(`Writing . 'temp/path/script' to temp/path/fileName.sh`) > 0, 'Bash should have written the script to a file');
+            } else {
+                assert(tr.stdout.indexOf(`Writing . 'path/to/script' to temp/path/fileName.sh`) > 0, 'Bash should have written the script to a file');
+            }
+            
             assert(tr.stdout.indexOf('my script output') > 0,'Bash should have correctly run the script');
         }, tr, done);
     });
@@ -59,7 +65,13 @@ describe('Bash Suite', function () {
         runValidations(() => {
             assert(tr.succeeded, 'Bash should have succeeded.');
             assert(tr.stderr.length === 0, 'Bash should not have written to stderr');
-            assert(tr.stdout.indexOf(`Writing . 'temp/path/script' myCustomArg to temp/path/fileName.sh`) > 0, 'Bash should have written the script to a file');
+            if (process.platform === 'win32') {
+                // This is different on windows because we change the script name to make sure the normalization call is happening.
+                assert(tr.stdout.indexOf(`Writing . 'temp/path/script' myCustomArg to temp/path/fileName.sh`) > 0, 'Bash should have written the script to a file');
+            } else {
+                assert(tr.stdout.indexOf(`Writing . 'path/to/script' myCustomArg to temp/path/fileName.sh`) > 0, 'Bash should have written the script to a file');
+            }
+            
             assert(tr.stdout.indexOf('my script output') > 0,'Bash should have correctly run the script');
         }, tr, done);
         console.log(tr.stdout);
