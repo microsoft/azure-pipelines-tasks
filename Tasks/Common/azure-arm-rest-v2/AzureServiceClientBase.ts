@@ -171,8 +171,8 @@ export class AzureServiceClientBase {
                 }
             }
             catch (error) {
-                let errorString: string = (error && error.toString()) || "";
-                if(errorString && errorString.toLowerCase().indexOf("request timeout") >= 0 && ignoreTimeoutErrorThreshold > 0) {
+                let errorString: string = (!!error && error.toString()) || "";
+                if(!!errorString && errorString.toLowerCase().indexOf("request timeout") >= 0 && ignoreTimeoutErrorThreshold > 0) {
                     // Ignore Request Timeout error and continue polling operation
                     tl.debug(`Request Timeout: ${request.uri}`);
                     ignoreTimeoutErrorThreshold--;
