@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "category": "Tool",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer",
+  "helpUrl": "https://aka.ms/AA4xgy0",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "runsOn": [
     "Agent",
@@ -77,7 +77,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.includePreviewVersions",
-      "visibleRule": "useGlobalJson = false"
+      "visibleRule": "useGlobalJson = false  || packageType = runtime"
     },
     {
       "name": "installationPath",
