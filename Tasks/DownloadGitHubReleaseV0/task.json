@@ -19,7 +19,7 @@
     "inputs": [
         {
             "name": "connection",
-            "type": "connectedService:github:OAuth,PersonalAccessToken,Token",
+            "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,Token",
             "label": "GitHub Connection",
             "defaultValue": "",
             "required": true,
