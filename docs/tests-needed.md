@@ -49,8 +49,8 @@ of untested tasks to 0!
 | AzureVmssDeploymentV0 | @bishal-pdmsft | :heavy_check_mark: |
 | AzureWebAppContainerV1 | @kmkumaran    @SumiranAgg     @vincentdass | :heavy_check_mark: |
 | AzureWebAppV1 | @kmkumaran    @SumiranAgg     @vincentdass |  |
-| BashV3 | @jtpetty |  |
-| BatchScriptV1 | @jtpetty |  |
+| BashV3 | @jtpetty | :heavy_check_mark: |
+| BatchScriptV1 | @jtpetty | :heavy_check_mark: |
 | CacheBetaV0 |  |  |
 | CacheBetaV1 |  |  |
 | ChefKnifeV1 | @kmkumaran |  |
