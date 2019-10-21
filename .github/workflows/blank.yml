@@ -1,0 +1,14 @@
+name: Labeler
+on: [issues]
+
+jobs:
+  label:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: damccorm/tag-ur-it@master
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        configuration-path: "./issue-rules.yml"

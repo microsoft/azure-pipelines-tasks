@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Deploy Kubernetes manifests",
+  "loc.friendlyName": "Deploy to Kubernetes",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
   "loc.description": "Use Kubernetes manifest files to deploy to clusters or even bake the manifest files to be used for deployments using Helm charts",
   "loc.instanceNameFormat": "$(action)",
@@ -74,5 +74,9 @@
   "loc.messages.InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
   "loc.messages.AllContainersNotInReadyState": "All the containers are not in a ready state.",
   "loc.messages.CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
-  "loc.messages.KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features."
+  "loc.messages.KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features.",
+  "loc.messages.CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
+  "loc.messages.waitForServiceIpAssignment": "Waiting for service %s external IP assignment",
+  "loc.messages.waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timed out",
+  "loc.messages.ServiceExternalIP": "service %s external IP is %s"
 }
