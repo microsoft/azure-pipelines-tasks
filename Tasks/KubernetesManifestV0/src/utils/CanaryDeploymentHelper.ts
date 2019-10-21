@@ -6,10 +6,10 @@ import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 
 import * as TaskInputParameters from '../models/TaskInputParameters';
-import * as helper from './KubernetesObjectUtility';
+import * as helper from '../utils/KubernetesObjectUtility';
 import { KubernetesWorkload } from 'kubernetes-common-v2/kubernetesconstants';
 import { StringComparer, isEqual } from './StringComparison';
-import * as utils from './utilities';
+import * as utils from '../utils/utilities';
 
 export const CANARY_DEPLOYMENT_STRATEGY = 'CANARY';
 export const TRAFFIC_SPLIT_STRATEGY = 'SMI';

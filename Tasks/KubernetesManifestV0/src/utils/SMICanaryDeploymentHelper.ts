@@ -7,10 +7,10 @@ import * as yaml from 'js-yaml';
 import * as util from 'util';
 
 import * as TaskInputParameters from '../models/TaskInputParameters';
-import * as fileHelper from './FileHelper';
-import * as helper from './KubernetesObjectUtility';
-import * as utils from './utilities';
-import * as canaryDeploymentHelper from './CanaryDeploymentHelper';
+import * as fileHelper from '../utils/FileHelper';
+import * as helper from '../utils/KubernetesObjectUtility';
+import * as utils from '../utils/utilities';
+import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
 
 const TRAFFIC_SPLIT_OBJECT_NAME_SUFFIX = '-azure-pipelines-rollout';
 const TRAFFIC_SPLIT_OBJECT = 'TrafficSplit';

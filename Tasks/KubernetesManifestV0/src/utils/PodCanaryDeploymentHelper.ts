@@ -6,9 +6,9 @@ import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 
 import * as TaskInputParameters from '../models/TaskInputParameters';
-import * as fileHelper from './FileHelper';
-import * as helper from './KubernetesObjectUtility';
-import * as canaryDeploymentHelper from './CanaryDeploymentHelper';
+import * as fileHelper from '../utils/FileHelper';
+import * as helper from '../utils/KubernetesObjectUtility';
+import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
 
 export function deployPodCanary(kubectl: Kubectl, filePaths: string[]) {
     const newObjectsList = [];
