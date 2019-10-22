@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Functions on Kubernetes",
+  "loc.friendlyName": "Azure Function on Kubernetes",
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/func-k8s) or [see Azure Functions on Kubernetes with KEDA](https://docs.microsoft.com/en-us/azure/azure-functions/functions-kubernetes-keda) or [check out sample-hello-world-azure-functions](https://github.com/kedacore/sample-hello-world-azure-functions)",
-  "loc.description": "Deploy Azure functions to Kubernetes cluster.",
+  "loc.description": "Deploy Azure function to Kubernetes cluster.",
   "loc.instanceNameFormat": "Func on K8s - deploy",
   "loc.group.displayName.serviceConnections": "Service Connections",
   "loc.group.displayName.commands": "Commands",
