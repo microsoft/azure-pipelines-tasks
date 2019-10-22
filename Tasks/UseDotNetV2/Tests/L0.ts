@@ -183,7 +183,6 @@ describe('UseDotNet', function () {
         }, tr, done);
     });
 
-
     it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should return correct version info for a correct version spec", (done) => {
         process.env["__versionspec__"] = "2.2.103";
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoTestsCorrect.js"));
