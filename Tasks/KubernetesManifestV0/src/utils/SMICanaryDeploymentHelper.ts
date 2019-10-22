@@ -36,7 +36,7 @@ export function deploySMICanary(kubectl: Kubectl, filePaths: string[]) {
                     tl.debug('New canary object is: ' + JSON.stringify(newCanaryObject));
                     newObjectsList.push(newCanaryObject);
                 } else {
-                    if (!canaryDeploymentHelper.isResourceMakredAsStable(stableObject)) {
+                    if (!canaryDeploymentHelper.isResourceMarkedAsStable(stableObject)) {
                         throw (tl.loc('StableSpecSelectorNotExist', name));
                     }
 
