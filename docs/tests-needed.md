@@ -22,7 +22,7 @@ of untested tasks to 0!
 | AzureAppServiceManageV0 | @kmkumaran      @SumiranAgg     @vincentdass | :heavy_check_mark: |
 | AzureAppServiceSettingsV1 | @eaarora-ms      @SumiranAgg     @vincentdass     @niadak |  |
 | AzureCLIV1 | @bishal-pdmsft |  |
-| AzureCLIV2 |  |  |
+| AzureCLIV2 | @bishal-pdmsft |  |
 | AzureCloudPowerShellDeploymentV1 | @kmkumaran |  |
 | AzureFileCopyV1 | @kmkumaran | :heavy_check_mark: |
 | AzureFileCopyV2 | @kmkumaran | :heavy_check_mark: |
