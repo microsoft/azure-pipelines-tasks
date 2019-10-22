@@ -137,6 +137,8 @@ Tasks/CondaEnvironmentV0/*      @leantk
 
 Tasks/CondaEnvironmentV1/*      @leantk
 
+Tasks/ContainerBuildV0/*    @vithati @prebansa
+
 Tasks/CopyFilesV2/*     @jtpetty
 
 Tasks/CopyFilesOverSSHV0/*      @leantk
