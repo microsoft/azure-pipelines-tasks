@@ -29,6 +29,10 @@ describe('PublishTestResults Suite', function() {
         delete process.env[constants.listPackagesReturnCode];
         delete process.env[constants.osType];
         delete process.env[constants.failTaskOnFailedTests];
+        delete process.env[constants.proxyUrl];
+        delete process.env[constants.proxyUserName];
+        delete process.env[constants.proxyPassword];
+        delete process.env[constants.proxyByPassHosts];
 
         done();
     });
@@ -56,7 +60,11 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = '20000';
         process.env[constants.agentTempDirectory] = __dirname;
-
+        process.env[constants.proxyUrl] = "http://example.org";
+        process.env[constants.proxyUserName] = "1";
+        process.env[constants.proxyPassword] = "1";
+        process.env[constants.proxyByPassHosts] = undefined;
+        
         // Start the run
         tr.run();
         
@@ -88,6 +96,10 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = '20000';
         process.env[constants.agentTempDirectory] = __dirname;        
+        process.env[constants.proxyUrl] = "http://example.org";
+        process.env[constants.proxyUserName] = "1";
+        process.env[constants.proxyPassword] = "1";
+        process.env[constants.proxyByPassHosts] = undefined;
 
         // Start the run
         tr.run();
@@ -119,7 +131,11 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.publishRunAttachments] = 'false';
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = '20000';
-        process.env[constants.agentTempDirectory] = __dirname; 
+        process.env[constants.agentTempDirectory] = __dirname;
+        process.env[constants.proxyUrl] = "http://example.org";
+        process.env[constants.proxyUserName] = "1";
+        process.env[constants.proxyPassword] = "1";
+        process.env[constants.proxyByPassHosts] = undefined;
 
         // Start the run
         tr.run();
@@ -155,7 +171,11 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.publishRunAttachments] = 'false';
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = '0';
-        process.env[constants.agentTempDirectory] = __dirname; 
+        process.env[constants.agentTempDirectory] = __dirname;
+        process.env[constants.proxyUrl] = "http://example.org";
+        process.env[constants.proxyUserName] = "1";
+        process.env[constants.proxyPassword] = "1";
+        process.env[constants.proxyByPassHosts] = undefined;
 
         // Start the run
         tr.run();
