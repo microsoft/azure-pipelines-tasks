@@ -121,7 +121,7 @@ export class VersionParts {
         try {
             let parts = version.split('.');
             // validate version
-            if ((parts.length != 3) || // check if the version has 3 parts
+            if ((parts.length < 3) || // check if the version has at least 3 parts
                 !parts[0] || // The major version must always be set
                 !parts[1] || // The minor version must always be set
                 !parts[2] || // The patch version must always be set
