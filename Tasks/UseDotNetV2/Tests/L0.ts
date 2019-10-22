@@ -170,18 +170,6 @@ describe('UseDotNet', function () {
         }, tr, done);
     });
 
-    it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should throw if includePreviewVersion is false and only 1 channel and is preview", (done) => {
-        process.env["__failat__"] = "versionnotfound";
-        process.env["__versionspec__"] = "3.x";
-        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoFailTests.js"));
-        tr.run();
-        runValidations(() => {
-            assert(tr.succeeded == false, ("Should have failed as channels could not be fetched."));
-            assert(tr.stdout.indexOf("MatchingVersionNotFound") > -1, "Should not have found a matching version.");
-            assert(tr.stdout.indexOf("VersionNotFound") > -1, "Should have thrown with VersionNotFound error.");
-        }, tr, done);
-    });
-
     it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should throw if preview versions included and version not found", (done) => {
         process.env["__failat__"] = "versionnotfound";
         process.env["__versionspec__"] = "4.40.x";
