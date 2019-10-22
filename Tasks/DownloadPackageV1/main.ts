@@ -39,7 +39,7 @@ async function main(): Promise<void> {
         var feed = getProjectAndFeedIdFromInputParam("feed");
 
         if (packageType === "upack") {
-            return await downloadUniversalPackage(downloadPath, feed.feedId, packageId, version, filesPattern);
+            return await downloadUniversalPackage(downloadPath, feed.projectId, feed.feedId, packageId, version, filesPattern);
         }
 
         if (viewId && viewId.replace(/\s/g, "") !== "") {
