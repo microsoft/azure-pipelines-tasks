@@ -17,7 +17,9 @@ import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { Kubectl, Resource } from 'kubernetes-common-v2/kubectl-object-model';
 import { isEqual, StringComparer } from './StringComparison';
 import { getDeploymentMetadata, getPublishDeploymentRequestUrl, isDeploymentEntity, getManifestUrls } from 'kubernetes-common-v2/image-metadata-helper';
-import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
+import { WebRequest, sendRequest } from 'utility-common-v2/restutilities';
+import { deployPodCanary } from './PodCanaryDeploymentHelper';
+import { deploySMICanary } from './SMICanaryDeploymentHelper';
 
 const publishPipelineMetadata = tl.getVariable("PUBLISH_PIPELINE_METADATA");
 
@@ -75,14 +77,47 @@ function getManifestFiles(manifestFilePaths: string[]): string[] {
 function deployManifests(files: string[], kubectl: Kubectl, isCanaryDeploymentStrategy: boolean): string[] {
     let result;
     if (isCanaryDeploymentStrategy) {
-        const canaryDeploymentOutput = canaryDeploymentHelper.deployCanary(kubectl, files);
+        let canaryDeploymentOutput: any;
+        if (canaryDeploymentHelper.isSMICanaryStrategy()) {
+            canaryDeploymentOutput = deploySMICanary(kubectl, files);
+        } else {
+            canaryDeploymentOutput = deployPodCanary(kubectl, files);
+        }
         result = canaryDeploymentOutput.result;
         files = canaryDeploymentOutput.newFilePaths;
     } else {
-        result = kubectl.apply(files);
+        if (canaryDeploymentHelper.isSMICanaryStrategy()) {
+            const updatedManifests = appendStableVersionLabelToResource(files, kubectl);
+            result = kubectl.apply(updatedManifests);
+        }
+        else {
+            result = kubectl.apply(files);
+        }
     }
     utils.checkForErrors([result]);
     return files;
+}
+
+function appendStableVersionLabelToResource(files: string[], kubectl: Kubectl): string[] {
+    const manifestFiles = [];
+    const newObjectsList = [];
+
+    files.forEach((filePath: string) => {
+        const fileContents = fs.readFileSync(filePath);
+        yaml.safeLoadAll(fileContents, function (inputObject) {
+            const kind = inputObject.kind;
+            if (KubernetesObjectUtility.isDeploymentEntity(kind)) {
+                const updatedObject = canaryDeploymentHelper.markResourceAsStable(inputObject);
+                newObjectsList.push(updatedObject);
+            } else {
+                manifestFiles.push(filePath);
+            }
+        });
+    });
+
+    const updatedManifestFiles = fileHelper.writeObjectsToFile(newObjectsList);
+    manifestFiles.push(...updatedManifestFiles);
+    return manifestFiles;
 }
 
 async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): Promise<void> {
