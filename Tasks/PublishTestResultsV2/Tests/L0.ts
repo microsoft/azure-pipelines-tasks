@@ -29,10 +29,6 @@ describe('PublishTestResults Suite', function() {
         delete process.env[constants.listPackagesReturnCode];
         delete process.env[constants.osType];
         delete process.env[constants.failTaskOnFailedTests];
-        delete process.env[constants.proxyUrl];
-        delete process.env[constants.proxyUserName];
-        delete process.env[constants.proxyPassword];
-        delete process.env[constants.proxyByPassHosts];
 
         done();
     });
