@@ -46,7 +46,13 @@ export class TestResultsPublisher {
             return null;
         }
         // Adding '@' because this is a response file argument
-        const args = ['@' + responseFilePath];
+        const args = ['@' + responseFilePath]
+
+        // Sending proxy details to the test result publisher tool
+        args.push(tl.getVariable('agent.proxyurl'));
+        args.push(tl.getVariable('agent.proxyusername'));
+        args.push(tl.getVariable('agent.proxypassword'));
+        args.push(tl.getVariable('agent.proxybypasslist'));
 
         return args;
     }
