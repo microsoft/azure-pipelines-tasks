@@ -19,7 +19,7 @@
   "inputs": [
     {
       "name": "connection",
-      "type": "connectedService:github:OAuth,PersonalAccessToken,Token",
+      "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,Token",
       "label": "ms-resource:loc.input.label.connection",
       "defaultValue": "",
       "required": true,

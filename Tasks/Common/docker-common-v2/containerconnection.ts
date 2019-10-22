@@ -23,7 +23,13 @@ export default class ContainerConnection {
     private oldDockerConfigContent: string;
 
     constructor() {
-        this.dockerPath = tl.which("docker", true);
+        if(process.env["RUNNING_ON"] == "KUBERNETES") {
+            this.dockerPath = tl.which("img", true);
+        }
+        else {
+            this.dockerPath = tl.which("docker", true);
+        }
+        
     }
 
     public createCommand(): tr.ToolRunner {
