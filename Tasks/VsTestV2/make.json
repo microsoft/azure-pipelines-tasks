@@ -6,8 +6,8 @@
                 "dest": "./"
             },
             {
-                "url": "https://testexecution.blob.core.windows.net/testexecution/10525576/TestAgent.zip",
-                "dest": "./Modules"
+              "url": "https://testexecution.blob.core.windows.net/testexecution/10713483/TestAgent.zip",
+              "dest": "./Modules"
             },
             {
                 "url": "https://testselectorv2.blob.core.windows.net/testselector/InputDataContractParityTool/InputDataContractParityTool.zip",
