@@ -8,6 +8,7 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as path from "path";
 
 const funcToolName = 'func';
+const stableFuncToolsVersion = '2.7.1585';
 
 function getExecutableExtension(): string {
     if (os.type().match(/^Win/)) {
@@ -35,7 +36,6 @@ function getDownloadUrl(version: string) {
 
 export async function getLatestFuncToolsVersion(): Promise<string> {
     const funcToolsLatestReleaseUrl = 'https://api.github.com/repos/Azure/azure-functions-core-tools/releases/latest';
-    const stableFuncToolsVersion = '2.7.1585';
     let latestVersion = stableFuncToolsVersion;
 
     try {

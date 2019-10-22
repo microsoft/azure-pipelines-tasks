@@ -34,7 +34,7 @@
     "instanceNameFormat": "Install func tools - $(version)",
     "execution": {
         "Node": {
-            "target": "src//functoolsinstaller.js"
+            "target": "src/functoolsinstaller.js"
         }
     },
     "messages": {

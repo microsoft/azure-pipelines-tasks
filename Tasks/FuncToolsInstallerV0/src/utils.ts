@@ -6,7 +6,7 @@ import * as functoolsutility from "func-tools-common/functoolsutility";
 
 export async function getFuncToolsVersion(): Promise<string> {
     const version = tl.getInput("version");
-    if (version && version != "latest") {
+    if (version && version !== "latest") {
         return sanitizeVersionString(version);
     }
 

@@ -34,7 +34,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "src//functoolsinstaller.js"
+      "target": "src/functoolsinstaller.js"
     }
   },
   "messages": {
