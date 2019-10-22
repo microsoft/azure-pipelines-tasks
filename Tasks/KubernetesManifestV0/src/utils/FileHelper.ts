@@ -65,7 +65,6 @@ export function writeManifestToFile(inputObjectString: string, kind: string, nam
             tl.debug('Exception occurred while writing object to file : ' + inputObjectString + ' . Exception: ' + ex);
         }
     }
-
     return '';
 }
 

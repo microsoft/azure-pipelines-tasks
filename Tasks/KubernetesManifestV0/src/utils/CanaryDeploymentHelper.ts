@@ -46,7 +46,7 @@ export function deleteCanaryDeployment(kubectl: Kubectl, manifestFilePaths: stri
 }
 
 export function markResourceAsStable(inputObject: any): object {
-    if (isResourceMakredAsStable(inputObject)) {
+    if (isResourceMarkedAsStable(inputObject)) {
         return inputObject;
     }
 
@@ -59,7 +59,7 @@ export function markResourceAsStable(inputObject: any): object {
     return newObject;
 }
 
-export function isResourceMakredAsStable(inputObject: any): boolean {    
+export function isResourceMarkedAsStable(inputObject: any): boolean {    
     return inputObject && 
             inputObject.metadata && 
             inputObject.metadata.labels &&
