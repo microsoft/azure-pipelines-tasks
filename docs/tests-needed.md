@@ -56,7 +56,7 @@ of untested tasks to 0!
 | ChefKnifeV1 | @kmkumaran |  |
 | ChefV1 | @kmkumaran |  |
 | CMakeV1 | @daveken |  |
-| CmdLineV2 | @jtpetty |  |
+| CmdLineV2 | @jtpetty | :heavy_check_mark: |
 | CocoaPodsV0 | @leantk |  |
 | CondaEnvironmentV0 | @leantk | :heavy_check_mark: |
 | CondaEnvironmentV1 | @leantk | :heavy_check_mark: |
@@ -144,7 +144,7 @@ of untested tasks to 0!
 | PowerShellOnTargetMachinesV1 | @kmkumaran | :heavy_check_mark: |
 | PowerShellOnTargetMachinesV2 | @kmkumaran | :heavy_check_mark: |
 | PowerShellOnTargetMachinesV3 | @kmkumaran |  |
-| PowerShellV2 | @jtpetty |  |
+| PowerShellV2 | @jtpetty | :heavy_check_mark: |
 | PublishBuildArtifactsV1 | @leantk |  |
 | PublishCodeCoverageResultsV1 | @SadagopanRajaram @nigurr  |  |
 | PublishCodeCoverageResultsV2 | @karanjitsingh @acesiddhu |  |
