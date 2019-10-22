@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 160,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "groups": [],
@@ -67,16 +67,42 @@
       "visibleRule": "action = deploy || action = promote || action = reject"
     },
     {
+      "name": "trafficSplitMethod",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.trafficSplitMethod",
+      "required": false,
+      "defaultValue": "pod",
+      "options": {
+        "pod": "Pod",
+        "smi": "SMI"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.trafficSplitMethod",
+      "visibleRule": "strategy = canary"
+    },
+    {
       "name": "percentage",
       "type": "string",
       "label": "ms-resource:loc.input.label.percentage",
       "required": true,
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.percentage",
       "defaultValue": 0,
       "visibleRule": "strategy = Canary && action = deploy",
       "validation": {
         "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
         "message": "Enter valid percentage value i.e between 0 to 100."
+      }
+    },
+    {
+      "name": "baselineAndCanaryReplicas",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.baselineAndCanaryReplicas",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.baselineAndCanaryReplicas",
+      "defaultValue": 0,
+      "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
+      "validation": {
+        "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
+        "message": "Enter valid value i.e between 0 to 100."
       }
     },
     {
@@ -328,7 +354,6 @@
     "NullInputObject": "ms-resource:loc.messages.NullInputObject",
     "ArgumentsInputNotSupplied": "ms-resource:loc.messages.ArgumentsInputNotSupplied",
     "NullInputObjectMetadata": "ms-resource:loc.messages.NullInputObjectMetadata",
-    "CanaryDeploymentAlreadyExistErrorMessage": "ms-resource:loc.messages.CanaryDeploymentAlreadyExistErrorMessage",
     "InvalidRejectActionDeploymentStrategy": "ms-resource:loc.messages.InvalidRejectActionDeploymentStrategy",
     "InvalidPromotetActionDeploymentStrategy": "ms-resource:loc.messages.InvalidPromotetActionDeploymentStrategy",
     "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
@@ -337,6 +362,8 @@
     "CouldNotDetermineServiceStatus": "ms-resource:loc.messages.CouldNotDetermineServiceStatus",
     "waitForServiceIpAssignment": "ms-resource:loc.messages.waitForServiceIpAssignment",
     "waitForServiceIpAssignmentTimedOut": "ms-resource:loc.messages.waitForServiceIpAssignmentTimedOut",
-    "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP"
+    "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
+    "UnableToCreateTrafficSplitManifestFile": "ms-resource:loc.messages.UnableToCreateTrafficSplitManifestFile",
+    "StableSpecSelectorNotExist": "ms-resource:loc.messages.StableSpecSelectorNotExist"
   }
 }
