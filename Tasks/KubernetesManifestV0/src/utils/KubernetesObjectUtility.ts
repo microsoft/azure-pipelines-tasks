@@ -26,6 +26,14 @@ export function isWorkloadEntity(kind: string): boolean {
     });
 }
 
+export function isServiceEntity(kind: string): boolean {
+    if (!kind) {
+        throw (tl.loc('ResourceKindNotDefined'));
+    }
+
+    return isEqual("Service", kind, StringComparer.OrdinalIgnoreCase);
+}
+
 export function getReplicaCount(inputObject: any): any {
     if (!inputObject) {
         throw (tl.loc('NullInputObject'));
@@ -289,7 +297,11 @@ function setSpecLabels(inputObject: any, newLabels: any) {
 function getSpecSelectorLabels(inputObject: any) {
 
     if (!!inputObject && !!inputObject.spec && !!inputObject.spec.selector) {
-        return inputObject.spec.selector.matchLabels;
+        if (isServiceEntity(inputObject.kind)) {
+            return inputObject.spec.selector;
+        } else {
+            return inputObject.spec.selector.matchLabels;
+        }
     }
 
     return null;

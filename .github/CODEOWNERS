@@ -137,6 +137,8 @@ Tasks/CondaEnvironmentV0/*      @leantk
 
 Tasks/CondaEnvironmentV1/*      @leantk
 
+Tasks/ContainerBuildV0/*    @vithati @prebansa
+
 Tasks/CopyFilesV2/*     @jtpetty
 
 Tasks/CopyFilesOverSSHV0/*      @leantk
@@ -186,6 +188,8 @@ Tasks/ExtractFilesV1/*      @jtpetty
 Tasks/FileTransformV1/*     @kmkumaran      @SumiranAgg     @vincentdass
 
 Tasks/FtpUploadV1/*     @leantk
+
+Tasks/GithubCommentV0/*     @ds-ms
 
 Tasks/GithubReleaseV0/*     @prativen   @mdmdakbar
 
@@ -308,6 +312,8 @@ Tasks/PythonScriptV0/*      @leantk
 Tasks/QueryWorkItemsV0/*    @bansalaseem
 
 Tasks/QuickPerfTestV1/*     @SadagopanRajaram @ShreyasRmsft
+
+Tasks/ReviewAppV0/*   @ds-ms
 
 Tasks/RunDistributedTestsV1/*   @SadagopanRajaram @ShreyasRmsft
 

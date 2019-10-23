@@ -39,14 +39,20 @@ export class DotNetCoreVersionFetcher {
             await this.setReleasesIndex();
         }
 
-        let channelInformation = this.getVersionChannel(versionSpec);
+        let channelInformation = this.getVersionChannel(versionSpec, includePreviewVersions);
         if (channelInformation) {
             requiredVersionInfo = await this.getVersionFromChannel(channelInformation, versionSpec, packageType, includePreviewVersions);
         }
 
-        if (!requiredVersionInfo && !versionSpec.endsWith("x")) {
-            console.log(tl.loc("FallingBackToAdjacentChannels", versionSpec));
-            requiredVersionInfo = await this.getVersionFromOtherChannels(versionSpec, packageType, includePreviewVersions);
+        if (!!requiredVersionInfo) {
+            console.log(tl.loc("MatchingVersionForUserInputVersion", requiredVersionInfo.getVersion(), channelInformation.channelVersion, versionSpec))
+        }
+        else {
+            console.log(tl.loc("MatchingVersionNotFound", packageType, versionSpec));
+            if (!versionSpec.endsWith("x")) {
+                console.log(tl.loc("FallingBackToAdjacentChannels", versionSpec));
+                requiredVersionInfo = await this.getVersionFromOtherChannels(versionSpec, packageType, includePreviewVersions);
+            }
         }
 
         if (!requiredVersionInfo) {
@@ -113,19 +119,20 @@ export class DotNetCoreVersionFetcher {
             });
     }
 
-    private getVersionChannel(versionSpec: string): Channel {
+    private getVersionChannel(versionSpec: string, includePreviewVersions: boolean): Channel {
         let versionParts = new VersionParts(versionSpec, this.explicitVersioning);
 
         let requiredChannelVersion = `${versionParts.majorVersion}.${versionParts.minorVersion}`;
         if (versionParts.minorVersion == "x") {
-            var latestChannelVersion: string = `${versionParts.majorVersion}.0`;
+            var latestChannelVersion: string = "";
             this.channels.forEach(channel => {
-                // todo: should also check if the channel is in preview state, if so then only select the channel if includePreviewVersion should be true.
+                // Checks if the channel is in preview state, if so then only select the channel if includePreviewVersion should be true.
                 // As a channel with state in preview will only have preview releases.
                 // example: versionSpec: 3.x Channels: 3.0 (current), 3.1 (preview).
                 // if (includePreviewVersion == true) select 3.1
                 // else select 3.0
-                if (utils.compareChannelVersion(channel.channelVersion, latestChannelVersion) > 0 && channel.channelVersion.startsWith(versionParts.majorVersion)) {
+                let satisfiesPreviewCheck : boolean = (includePreviewVersions || (!channel.supportPhase || channel.supportPhase.toLowerCase() !== "preview"));
+                if (satisfiesPreviewCheck && channel.channelVersion.startsWith(versionParts.majorVersion) && (!latestChannelVersion || utils.compareChannelVersion(channel.channelVersion, latestChannelVersion) > 0)) {
                     latestChannelVersion = channel.channelVersion;
                 }
             });
@@ -134,11 +141,14 @@ export class DotNetCoreVersionFetcher {
         }
 
         tl.debug(tl.loc("RequiredChannelVersionForSpec", requiredChannelVersion, versionSpec));
-        return this.channels.find(channel => {
-            if (channel.channelVersion == requiredChannelVersion) {
-                return true
-            }
-        });
+        if(!!requiredChannelVersion)
+        {
+            return this.channels.find(channel => {
+                if (channel.channelVersion == requiredChannelVersion) {
+                    return true
+                }
+            });
+        }
     }
 
     private getVersionFromChannel(channelInformation: Channel, versionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
@@ -176,14 +186,7 @@ export class DotNetCoreVersionFetcher {
                         }
                     });
 
-                    let matchedVersionInfo = utils.getMatchingVersionFromList(versionInfoList, versionSpec, includePreviewVersions);
-                    if (!matchedVersionInfo) {
-                        console.log(tl.loc("MatchingVersionNotFound", packageType, versionSpec));
-                        return null;
-                    }
-
-                    console.log(tl.loc("MatchingVersionForUserInputVersion", matchedVersionInfo.getVersion(), channelInformation.channelVersion, versionSpec))
-                    return matchedVersionInfo;
+                    return utils.getMatchingVersionFromList(versionInfoList, versionSpec, includePreviewVersions);
                 })
                 .catch((ex) => {
                     tl.error(tl.loc("ErrorWhileGettingVersionFromChannel", versionSpec, channelInformation.channelVersion, JSON.stringify(ex)));
