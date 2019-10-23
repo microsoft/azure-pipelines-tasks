@@ -26,6 +26,7 @@ describe('DeleteFiles Suite', function () {
         removeFolder(testRoot);
         fs.mkdirSync(testRoot);
         console.log('AAAAAAAAAAAAAA');
+        console.log(path.join(__dirname, '..'));
         console.log(fs.readdirSync(path.join(__dirname, '..')));
     })
 
