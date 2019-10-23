@@ -10,8 +10,8 @@ var cleanDestinationFolder: boolean = tl.getBoolInput('cleanDestinationFolder', 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 tl.debug('repoRoot: ' + repoRoot);
 
-var overwriteDestinationVar: string = tl.getVariable('ExtractFile.OverwriteDestination');
-var overwriteDestination: boolean = overwriteDestinationVar ? overwriteDestinationVar.toLowerCase() === 'true' : true;
+var preventFileOverwriteVar: string = tl.getVariable('EXTRACT_FILES_PREVENT_FILE_OVERWRITE');
+var preventFileOverwrite: boolean = !!preventFileOverwriteVar && preventFileOverwriteVar.toLowerCase() === 'true';
 
 var win = tl.osType().match(/^Win/);
 tl.debug('win: ' + win);
@@ -191,7 +191,7 @@ function unzipExtract(file, destinationFolder) {
         xpUnzipLocation = tl.which('unzip', true);
     }
     var unzip = tl.tool(xpUnzipLocation);
-    if (overwriteDestination) {
+    if (!preventFileOverwrite) {
         unzip.arg('-o');
     }
     unzip.arg(file);
@@ -204,7 +204,7 @@ function sevenZipExtract(file, destinationFolder) {
     console.log(tl.loc('SevenZipExtractFile', file));
     var sevenZip = tl.tool(getSevenZipLocation());
     sevenZip.arg('x');
-    if (overwriteDestination) {
+    if (!preventFileOverwrite) {
         sevenZip.arg('-aoa');
     }
     sevenZip.arg('-o' + destinationFolder);
