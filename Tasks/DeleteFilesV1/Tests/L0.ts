@@ -25,6 +25,8 @@ describe('DeleteFiles Suite', function () {
     before(() => {
         removeFolder(testRoot);
         fs.mkdirSync(testRoot);
+        console.log('AAAAAA');
+        console.log(fs.readDirSync(path.join(__dirname, '..')));
     })
 
     function runValidations(validator: () => void, tr, done) {
