@@ -1,5 +1,4 @@
 import tl = require('azure-pipelines-task-lib/task');
-import Q = require('q');
 import path = require('path');
 import { AzureRMEndpoint, dispose } from 'azure-arm-rest-v2/azure-arm-endpoint';
 import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
@@ -7,20 +6,11 @@ import { AzureRmEndpointAuthenticationScheme } from 'azure-arm-rest-v2/constants
 import {AzureAppService  } from 'azure-arm-rest-v2/azure-arm-app-service';
 import { AzureApplicationInsights } from 'azure-arm-rest-v2/azure-arm-appinsights';
 import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
-import { ApplicationInsightsWebTests } from 'azure-arm-rest-v2/azure-arm-appinsights-webtests';
-import { Resources } from 'azure-arm-rest-v2/azure-arm-resource';
 import { AzureAppServiceUtils } from './operations/AzureAppServiceUtils';
 import { KuduServiceUtils } from './operations/KuduServiceUtils';
 import { AzureResourceFilterUtils } from './operations/AzureResourceFilterUtils';
 import { enableContinuousMonitoring } from './operations/ContinuousMonitoringUtils';
-
-var parseString = require('xml2js').parseString;
-
-interface scmCredentials {
-    uri: string;
-    username: string;
-    password: string;
-}
+import publishProfileUtility = require("utility-common-v2/publishProfileUtility");
 
 const webAppKindMap = new Map([
     [ 'app', 'webApp' ],
@@ -47,61 +37,79 @@ async function advancedSlotSwap(updateDeploymentStatus: boolean, appServiceSourc
 }
 
 async function run() {
+    let kuduService: Kudu;
+    let kuduServiceUtils: KuduServiceUtils;
+    let appService: AzureAppService;
+    let azureAppServiceUtils: AzureAppServiceUtils;
+    let appServiceSourceSlot: AzureAppService;
+    let appServiceTargetSlot: AzureAppService;
+    let appServiceSourceSlotUtils: AzureAppServiceUtils;
+    let appServiceTargetSlotUtils: AzureAppServiceUtils;
+    let taskResult = true;
+    let errorMessage: string = "";
+    let updateDeploymentStatus: boolean = true;
+    let action: string;
+
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         tl.setResourcePath(path.join( __dirname, 'node_modules/azure-arm-rest-v2/module.json'));
-        var connectedServiceName = tl.getInput('ConnectedServiceName', true);
-        var action = tl.getInput('Action', true);
-        var webAppName: string = tl.getInput('WebAppName', true);
-        var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
-        var specifySlotFlag: boolean = tl.getBoolInput('SpecifySlot', false);
-        var slotName: string = specifySlotFlag || (action == "Delete Slot" || action == "Cancel Swap") ? tl.getInput('Slot', false) : null;
-        var appInsightsResourceGroupName: string = tl.getInput('AppInsightsResourceGroupName', false);
-        var appInsightsResourceName: string = tl.getInput('ApplicationInsightsResourceName', false);
-        var sourceSlot: string = tl.getInput('SourceSlot', false);
-        var swapWithProduction = tl.getBoolInput('SwapWithProduction', false);
-        var targetSlot: string = tl.getInput('TargetSlot', false);
-        var preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
-        var extensionList = tl.getInput('ExtensionsList', false);
-        var extensionOutputVariables = tl.getInput('OutputVariable');
-        var appInsightsWebTestName = tl.getInput('ApplicationInsightsWebTestName', false);
-        var taskResult = true;
-        var errorMessage: string = "";
-        var updateDeploymentStatus: boolean = true;
-        var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(connectedServiceName).getEndpoint();
+        action = tl.getInput('Action', true);
+        let connectedServiceName = tl.getInput('ConnectedServiceName', true);
+        let webAppName: string = tl.getInput('WebAppName', true);
+        let resourceGroupName: string = tl.getInput('ResourceGroupName', false);
+        let specifySlotFlag: boolean = tl.getBoolInput('SpecifySlot', false);
+        let slotName: string = specifySlotFlag || (action == "Delete Slot" || action == "Cancel Swap") ? tl.getInput('Slot', false) : null;
+        let appInsightsResourceGroupName: string = tl.getInput('AppInsightsResourceGroupName', false);
+        let appInsightsResourceName: string = tl.getInput('ApplicationInsightsResourceName', false);
+        let sourceSlot: string = tl.getInput('SourceSlot', false);
+        let swapWithProduction = tl.getBoolInput('SwapWithProduction', false);
+        let targetSlot: string = tl.getInput('TargetSlot', false);
+        let preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
+        let extensionList = tl.getInput('ExtensionsList', false);
+        let extensionOutputVariables = tl.getInput('OutputVariable');
+        let appInsightsWebTestName = tl.getInput('ApplicationInsightsWebTestName', false);
+        let azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(connectedServiceName).getEndpoint();
 
-        var endpointTelemetry = '{"endpointId":"' + connectedServiceName + '"}';
+        let endpointTelemetry = '{"endpointId":"' + connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureAppServiceManage]" + endpointTelemetry);
         
         if (azureEndpoint.scheme && azureEndpoint.scheme.toLowerCase() === AzureRmEndpointAuthenticationScheme.PublishProfile) {
-            await handleActionWithPublishProfileEndpoint(azureEndpoint, action, extensionList, extensionOutputVariables);
-            return;
+            if (action !== "Start all continuous webjobs" && action !== "Stop all continuous webjobs" && action !== "Install Extensions") {
+                throw Error(tl.loc('InvalidActionForPublishProfileEndpoint'));
+            }
+            let scmCreds: publishProfileUtility.ScmCredentials = await publishProfileUtility.getSCMCredentialsFromPublishProfile(azureEndpoint.PublishProfile);
+            kuduService = new Kudu(scmCreds.scmUri, scmCreds.username, scmCreds.password);
+            kuduServiceUtils = new KuduServiceUtils(kuduService);
+        } else {
+            if(action != "Swap Slots" && !slotName) {
+                resourceGroupName = await AzureResourceFilterUtils.getResourceGroupName(azureEndpoint, 'Microsoft.Web/Sites', webAppName);
+            }
+
+            tl.debug(`Resource Group: ${resourceGroupName}`);
+            appService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
+            azureAppServiceUtils = new AzureAppServiceUtils(appService);
+            let appServiceKuduService = await azureAppServiceUtils.getKuduService();
+            kuduServiceUtils = new KuduServiceUtils(appServiceKuduService);
+
+            let configSettings = await appService.get(true);
+            let WebAppKind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
+            let isLinuxApp = WebAppKind && WebAppKind.indexOf("linux") !=-1;
+            let isContainerApp = WebAppKind && WebAppKind.indexOf("container") !=-1;
+    
+            if((action == "Start Swap With Preview" || action == "Complete Swap" || action == "Cancel Swap") && (isLinuxApp || isContainerApp))
+            {
+                throw Error(tl.loc('SwapWithPreviewNotsupported'));
+            }
+            if(action == "Swap Slots" || action == "Start Swap With Preview" || action == "Complete Swap")
+            {
+                targetSlot = (swapWithProduction) ? "production" : targetSlot;
+                appServiceSourceSlot = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, sourceSlot);
+                appServiceTargetSlot = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, targetSlot);
+                appServiceSourceSlotUtils = new AzureAppServiceUtils(appServiceSourceSlot);
+                appServiceTargetSlotUtils = new AzureAppServiceUtils(appServiceTargetSlot);
+            }
         }
 
-        if(action != "Swap Slots" && !slotName) {
-            resourceGroupName = await AzureResourceFilterUtils.getResourceGroupName(azureEndpoint, 'Microsoft.Web/Sites', webAppName);
-        }
-
-        tl.debug(`Resource Group: ${resourceGroupName}`);
-        var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
-        var azureAppServiceUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appService);
-        var configSettings = await appService.get(true);
-        var WebAppKind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
-        var isLinuxApp = WebAppKind && WebAppKind.indexOf("linux") !=-1;
-        var isContainerApp = WebAppKind && WebAppKind.indexOf("container") !=-1;
-
-        if((action == "Start Swap With Preview" || action == "Complete Swap" || action == "Cancel Swap") && (isLinuxApp || isContainerApp))
-        {
-            throw Error(tl.loc('SwapWithPreviewNotsupported'));
-        }
-        if(action == "Swap Slots" || action == "Start Swap With Preview" || action == "Complete Swap")
-        {
-            targetSlot = (swapWithProduction) ? "production" : targetSlot;
-            var appServiceSourceSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, sourceSlot);
-            var appServiceTargetSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, targetSlot);
-            var appServiceSourceSlotUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appServiceSourceSlot);
-            var appServiceTargetSlotUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appServiceTargetSlot);
-        }
         switch(action) {
             case "Start Azure App Service": {
                 await appService.start();
@@ -135,31 +143,25 @@ async function run() {
                 break;
             }
             case "Cancel Swap": {
-                var appServiceSourceSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
+                appServiceSourceSlot = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
                 appServiceSourceSlot.cancelSwapSlotWithPreview();
                 break;
             }
             case "Start all continuous webjobs": {
-                var appServiceKuduService: Kudu = await azureAppServiceUtils.getKuduService();
-                var kuduServiceUtils: KuduServiceUtils = new KuduServiceUtils(appServiceKuduService);
                 await kuduServiceUtils.startContinuousWebJobs();
                 break;
             }
             case "Stop all continuous webjobs": {
-                var appServiceKuduService = await azureAppServiceUtils.getKuduService();
-                var kuduServiceUtils: KuduServiceUtils = new KuduServiceUtils(appServiceKuduService);
                 await kuduServiceUtils.stopContinuousWebJobs();
                 break;
             }
             case "Install Extensions": {
-                var appServiceKuduService = await azureAppServiceUtils.getKuduService();
-                var kuduServiceUtils: KuduServiceUtils = new KuduServiceUtils(appServiceKuduService);
-                var extensionOutputVariablesArray = (extensionOutputVariables) ? extensionOutputVariables.split(',') : [];
+                let extensionOutputVariablesArray = (extensionOutputVariables) ? extensionOutputVariables.split(',') : [];
                 await kuduServiceUtils.installSiteExtensions(extensionList.split(','), extensionOutputVariablesArray);
                 break;
             }
             case "Enable Continuous Monitoring": {
-                var appInsights: AzureApplicationInsights = new AzureApplicationInsights(azureEndpoint, appInsightsResourceGroupName, appInsightsResourceName);
+                let appInsights: AzureApplicationInsights = new AzureApplicationInsights(azureEndpoint, appInsightsResourceGroupName, appInsightsResourceName);
                 await enableContinuousMonitoring(azureEndpoint, appService, appInsights, appInsightsWebTestName);
                 break;
             }
@@ -178,16 +180,16 @@ async function run() {
         switch(action) {
             case "Swap Slots": {
                 if(appServiceSourceSlotUtils && appServiceTargetSlotUtils && updateDeploymentStatus) {
-                    var sourceSlotKuduService = await appServiceSourceSlotUtils.getKuduService();
-                    var targetSlotKuduService = await appServiceTargetSlotUtils.getKuduService();
-                    var sourceSlotKuduServiceUtils = new KuduServiceUtils(sourceSlotKuduService);
-                    var targetSlotKuduServiceUtils = new KuduServiceUtils(targetSlotKuduService);
-                    var customMessage = {
+                    let sourceSlotKuduService = await appServiceSourceSlotUtils.getKuduService();
+                    let targetSlotKuduService = await appServiceTargetSlotUtils.getKuduService();
+                    let sourceSlotKuduServiceUtils = new KuduServiceUtils(sourceSlotKuduService);
+                    let targetSlotKuduServiceUtils = new KuduServiceUtils(targetSlotKuduService);
+                    let customMessage = {
                         'type': 'SlotSwap',
                         'sourceSlot': appServiceSourceSlot.getSlot(),
                         'targetSlot': appServiceTargetSlot.getSlot()
                     }
-                    var DeploymentID = await sourceSlotKuduServiceUtils.updateDeploymentStatus(taskResult, null, customMessage);
+                    let DeploymentID = await sourceSlotKuduServiceUtils.updateDeploymentStatus(taskResult, null, customMessage);
                     await targetSlotKuduServiceUtils.updateDeploymentStatus(taskResult, DeploymentID, customMessage);
                 }
                 break;
@@ -201,7 +203,6 @@ async function run() {
             default: {
                 tl.debug(`deployment status not updated for action: ${action}`);
             }
-
         }
     }
     catch(error) {
@@ -214,86 +215,6 @@ async function run() {
     if (!taskResult) {
         tl.setResult(tl.TaskResult.Failed, errorMessage);
     }
-}
-
-async function handleActionWithPublishProfileEndpoint(publishProfileEndpoint: AzureEndpoint, action: string, extensionList: string, extensionOutputVariables: string) {
-    let scmCreds: scmCredentials = await getSCMCredentialsFromPublishProfile(publishProfileEndpoint.PublishProfile);
-    let kuduService = new Kudu(scmCreds.uri, scmCreds.username, scmCreds.password);
-    let kuduServiceUtils = new KuduServiceUtils(kuduService);
-    let taskResult = true;
-    let errorMessage: string = "";
-
-    try {
-        switch(action) {
-            case "Start all continuous webjobs": {
-                await kuduServiceUtils.startContinuousWebJobs();
-                break;
-            }
-            case "Stop all continuous webjobs": {
-                await kuduServiceUtils.stopContinuousWebJobs();
-                break;
-            }
-            case "Install Extensions": {
-                var extensionOutputVariablesArray = (extensionOutputVariables) ? extensionOutputVariables.split(',') : [];
-                await kuduServiceUtils.installSiteExtensions(extensionList.split(','), extensionOutputVariablesArray);
-                break;
-            }
-            default: {
-                throw Error(tl.loc('InvalidActionForPublishProfileEndpoint'));
-            }
-        }
-    }
-     catch(exception) {
-        taskResult = false;
-        errorMessage = exception;
-    }
-
-    tl.debug('Completed action');
-    try {
-        switch(action) {
-            case "Install Extensions": {
-                if(kuduServiceUtils) {
-                    await kuduServiceUtils.updateDeploymentStatus(taskResult, null, { "type" : action });
-                }
-                break;
-            }
-            default: {
-                tl.debug(`deployment status not updated for action: ${action}`);
-            }
-        }
-    }
-    catch(error) {
-        tl.debug(error);
-    }
-    finally {
-        dispose();
-    }
-
-    if (!taskResult) {
-        tl.setResult(tl.TaskResult.Failed, errorMessage);
-    }
-}
-
-async function getSCMCredentialsFromPublishProfile(pubxmlFile: string): Promise<scmCredentials> {
-    let res;
-    await parseString(pubxmlFile, (error, result) => {
-        if(!!error) {
-            throw new Error("Failed XML parsing " + error);
-        }
-        res = result.publishData.publishProfile[0].$;
-    });
-    let credentials: scmCredentials = {
-        uri: res.publishUrl.split(":")[0],
-        username: res.userName,
-        password: res.userPWD
-    };
-    console.log(`${credentials.username}`);
-    console.log(`${credentials.uri}`);
-    if(credentials.uri.indexOf("scm") < 0) {
-        throw new Error("Publish profile does not contain kudu URL");
-    }
-    credentials.uri = `https://${credentials.username}:${credentials.password}@${credentials.uri}`;
-    return credentials;
 }
 
 run();
