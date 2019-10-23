@@ -14,7 +14,7 @@ The following pre-requisites need to be setup in the target machine(s) for the t
 
 ##### Azure App Service
 
-The task is used to manage an existing Azure App Service. The App Service should exist prior to running the task and can be created from the [Azure portal](https://azure.microsoft.com/en-in/documentation/videos/azure-app-service-web-apps-with-yochay-kiriaty/) and [configured](https://azure.microsoft.com/en-us/documentation/articles/web-sites-configure/) there. Alternatively, the [Azure PowerShell task](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/AzurePowerShellV3) can be used to run [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx) to provision and configure the App Service.
+The task is used to manage an existing Azure App Service. The App Service should exist prior to running the task and can be created from the [Azure portal](https://azure.microsoft.com/en-in/documentation/videos/azure-app-service-web-apps-with-yochay-kiriaty/) and [configured](https://azure.microsoft.com/en-us/documentation/articles/web-sites-configure/) there. Alternatively, the [Azure PowerShell task](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks/AzurePowerShellV3) can be used to run [AzureRM PowerShell scripts](https://docs.microsoft.com/en-us/powershell/module/azurerm.websites/) to provision and configure the App Service.
 
 ##### Azure Subscription
 
