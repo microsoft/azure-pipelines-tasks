@@ -61,10 +61,10 @@ describe('DeleteFiles Suite', function () {
         tr.run();
 
         runValidations(() => {
-            // assert(!fs.existsSync(path.join(root, 'A')));
-            // assert(!fs.existsSync(path.join(root, 'B')));
-            // assert(fs.existsSync(path.join(root, 'C')));
-            // assert(fs.existsSync(path.join(root, 'C', 'dontDelete.txt')));
+            assert(!fs.existsSync(path.join(root, 'A')));
+            assert(!fs.existsSync(path.join(root, 'B')));
+            assert(fs.existsSync(path.join(root, 'C')));
+            assert(fs.existsSync(path.join(root, 'C', 'dontDelete.txt')));
         }, tr, done);
     });
 
@@ -86,11 +86,11 @@ describe('DeleteFiles Suite', function () {
         tr.run();
 
         runValidations(() => {
-            // assert(fs.existsSync(path.join(root, 'A')));
-            // assert(!fs.existsSync(path.join(root, 'A', 'test.txt')));
-            // assert(fs.existsSync(path.join(root, 'A', 'A')));
-            // assert(fs.existsSync(path.join(root, 'A', 'A', 'test.txt')));
-            // assert(fs.existsSync(path.join(root, 'A', 'A', 'test2.txt')));
+            assert(fs.existsSync(path.join(root, 'A')));
+            assert(!fs.existsSync(path.join(root, 'A', 'test.txt')));
+            assert(fs.existsSync(path.join(root, 'A', 'A')));
+            assert(fs.existsSync(path.join(root, 'A', 'A', 'test.txt')));
+            assert(fs.existsSync(path.join(root, 'A', 'A', 'test2.txt')));
         }, tr, done);
     });
 
