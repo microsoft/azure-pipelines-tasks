@@ -142,7 +142,7 @@ describe('DeleteFiles Suite', function () {
         const root = path.join(testRoot, 'locked');
         fs.mkdirSync(root);
         fs.mkdir(path.join(root, 'A'));
-        fs.writeFileSync(path.join(root, 'A', 'test.txt'), 'test');
+        fs.appendFileSync(path.join(root, 'A', 'test.txt'), 'test');
         var fd = fs.openSync(path.join(root, 'A', 'test.txt'), 'r');
 
         let tp: string = path.join(__dirname, 'L0Locked.js');
