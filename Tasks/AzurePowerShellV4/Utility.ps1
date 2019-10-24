@@ -63,7 +63,7 @@ function Get-LatestModule {
     $maxVersion = [version] "0.0.0"
 
     try {
-        $moduleFolders = Get-ChildItem -Directory -Path $($env:SystemDrive + "\Modules") | Where-Object { $regexToMatch.IsMatch($_.Name) }
+        $moduleFolders = Get-ChildItem -Directory -Path $($env:SystemDrive + "\Modules") -ErrorAction Stop | Where-Object { $regexToMatch.IsMatch($_.Name) }
         foreach ($moduleFolder in $moduleFolders) {
             $moduleVersion = [version] $($regexToExtract.Match($moduleFolder.Name).Groups[0].Value)
             if($moduleVersion -gt $maxVersion) {
