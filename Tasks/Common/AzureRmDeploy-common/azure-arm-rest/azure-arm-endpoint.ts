@@ -30,11 +30,19 @@ export class AzureRMEndpoint {
         else {
             let endpointAuthScheme = tl.getEndpointAuthorizationScheme(this._connectedServiceName, true);
             if (endpointAuthScheme && endpointAuthScheme.toLowerCase() == constants.AzureRmEndpointAuthenticationScheme.PublishProfile) {
+                let resourceId = tl.getEndpointDataParameter(this._connectedServiceName, 'resourceId', true);
+                resourceId = resourceId.startsWith("/") ? resourceId : "/" + resourceId;
+                let resourceIdSplit = resourceId.split("/");
+                if (resourceIdSplit.length < 9) {
+                    throw new Error(tl.loc('SpecifiedAzureRmEndpointIsInvalid', ''));
+                }
+    
                 this.endpoint = {
                     subscriptionName: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionname', true),
                     tenantID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'tenantid', false),
                     scheme: endpointAuthScheme,
-                    PublishProfile: tl.getEndpointAuthorizationParameter(this._connectedServiceName, "publishProfile", true)
+                    PublishProfile: tl.getEndpointAuthorizationParameter(this._connectedServiceName, "publishProfile", true),
+                    resourceId: resourceId
                 } as AzureEndpoint;
             } else {
                 this.endpoint = {

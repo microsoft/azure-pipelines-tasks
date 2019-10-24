@@ -36,7 +36,6 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
         }
 
         tl.debug("Initiated deployment via kudu service for webapp package : ");
-        let slotName: string;
         if (!this.isPublishProfileAuthSchemeEndpoint) {
             var addCustomApplicationSetting = ParameterParser.parse(runFromZipAppSetting);
             var deleteCustomApplicationSetting = ParameterParser.parse(oldRunFromZipAppSetting);
@@ -45,14 +44,12 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
             if(!isNewValueUpdated) {
                 await this.kuduServiceUtility.warmpUp();
             }
-            slotName = this.appService.getSlot();
         } else {
             await this.kuduServiceUtility.warmpUp();
-            slotName = this.taskParams.SlotName;
         }
 
         await this.kuduServiceUtility.deployUsingRunFromZip(webPackage, 
-            { slotName: slotName });
+            { slotName: this.slotName });
 
         await this.PostDeploymentStep();
     }

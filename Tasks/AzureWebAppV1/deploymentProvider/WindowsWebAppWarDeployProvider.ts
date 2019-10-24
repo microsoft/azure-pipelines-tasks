@@ -17,15 +17,9 @@ export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvi
         await this.kuduServiceUtility.warmpUp();
         
         var warName = this.taskParams.CustomWarName || webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".war");
-        let slotName: string;
-        if (this.isPublishProfileAuthSchemeEndpoint) {
-            slotName = this.taskParams.SlotName;
-        } else {
-            slotName = this.appService.getSlot();
-        }
 
         this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), 
-            { slotName: slotName }, warName);
+            { slotName: this.slotName }, warName);
 
         await this.PostDeploymentStep();
     }

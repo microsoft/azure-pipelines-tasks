@@ -229,6 +229,7 @@ export interface AzureEndpoint {
     isADFSEnabled?: boolean;
     scopeLevel?: string;
     PublishProfile?: string;
+    resourceId?: string;
 }
 
 export interface AzureAppServiceConfigurationDetails {

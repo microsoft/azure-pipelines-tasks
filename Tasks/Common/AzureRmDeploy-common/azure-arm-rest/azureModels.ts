@@ -228,6 +228,7 @@ export interface AzureEndpoint {
     applicationTokenCredentials: ApplicationTokenCredentials;
     isADFSEnabled?: boolean;
     PublishProfile?: string;
+    resourceId?: string;
 }
 
 export interface AzureAppServiceConfigurationDetails {
