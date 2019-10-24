@@ -148,12 +148,12 @@ describe('DeleteFiles Suite', function () {
         let tp: string = path.join(__dirname, 'L0Locked.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        let failed = false;
         try {
             tr.run();
         }
-        catch (err) {
-            failed = true;
+        catch (err) {}
+        finally {
+            fs.closeSync(fd);
         }
 
         // can't remove folder with locked file on windows
@@ -169,7 +169,5 @@ describe('DeleteFiles Suite', function () {
                 assert(tr.succeeded);
             }, tr, done);
         }
-
-        fs.closeSync(fd);
     });
 });
