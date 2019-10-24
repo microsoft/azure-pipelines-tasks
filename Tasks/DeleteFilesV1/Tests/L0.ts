@@ -115,4 +115,61 @@ describe('DeleteFiles Suite', function () {
             assert(!fs.existsSync(root));
         }, tr, done);
     });
+
+    it('Doesnt remove folder outside the root', (done: MochaDone) => {
+        this.timeout(5000);
+
+        const root = path.join(testRoot, 'insideRoot');
+        const outsideRoot = path.join(testRoot, 'outsideRoot');
+        fs.mkdirSync(root);
+        fs.mkdirSync(outsideRoot);
+
+        fs.writeFileSync(path.join(outsideRoot, 'test.txt'), 'test');
+
+        let tp: string = path.join(__dirname, 'L0OutsideRoot.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(fs.existsSync(path.join(outsideRoot, 'test.txt')));
+        }, tr, done);
+    });
+
+    it('Removes folder with locked file', (done: MochaDone) => {
+        this.timeout(5000);
+
+        const root = path.join(testRoot, 'locked');
+        fs.mkdirSync(root);
+        fs.mkdir(path.join(root, 'A'));
+        fs.writeFileSync(path.join(root, 'A', 'test.txt'), 'test');
+        var fd = fs.openSync(path.join(root, 'A', 'test.txt'), 'r');
+
+        let tp: string = path.join(__dirname, 'L0Locked.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        let failed = false;
+        try {
+            tr.run();
+        }
+        catch (err) {
+            failed = true;
+        }
+
+        // can't remove folder with locked file on windows
+        if (process.platform == "win32") {
+            runValidations(() => {
+                assert(fs.existsSync(path.join(root, 'A')));
+                assert(tr.failed);
+            }, tr, done);
+        }
+        else {
+            runValidations(() => {
+                assert(!fs.existsSync(path.join(root, 'A')));
+                assert(tr.succeeded);
+            }, tr, done);
+        }
+
+        fs.closeSync(fd);
+    });
 });
