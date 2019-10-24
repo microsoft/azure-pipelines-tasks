@@ -45,14 +45,9 @@ export class TestResultsPublisher {
         if (responseFilePath == null) {
             return null;
         }
-        // Adding '@' because this is a response file argument
-        const args = ['@' + responseFilePath]
 
-        // Sending proxy details to the test result publisher tool
-        args.push(tl.getVariable('agent.proxyurl'));
-        args.push(tl.getVariable('agent.proxyusername'));
-        args.push(tl.getVariable('agent.proxypassword'));
-        args.push(tl.getVariable('agent.proxybypasslist'));
+        // Adding '@' because this is a response file argument
+        const args = ['@' + responseFilePath];
 
         return args;
     }
@@ -124,6 +119,13 @@ export class TestResultsPublisher {
         envVars = this.addToProcessEnvVars(envVars, 'jobname', tl.getVariable('System.JobName'));
         envVars = this.addToProcessEnvVars(envVars, 'jobattempt', tl.getVariable('System.JobAttempt'));
         envVars = this.addToProcessEnvVars(envVars, 'jobidentifier', tl.getVariable('System.JobIdentifier'));
+
+        // Setting proxy details
+        envVars = this.addToProcessEnvVars(envVars, "proxyurl", tl.getVariable('agent.proxyurl'));
+        envVars = this.addToProcessEnvVars(envVars, "proxyusername", tl.getVariable('agent.proxyusername'));
+        envVars = this.addToProcessEnvVars(envVars, "proxypassword", tl.getVariable('agent.proxypassword'));
+        envVars = this.addToProcessEnvVars(envVars, "proxybypasslist", tl.getVariable('agent.proxybypasslist'));
+
         return envVars;
     }
 

@@ -22,10 +22,6 @@ tr.setInput('failTaskOnFailedTests', process.env[constants.failTaskOnFailedTests
 const PublishExeToolPath = path.join(__dirname, '../modules', 'TestResultsPublisher.exe');
 const newUuid = "1e1faf9e-d9e5-4054-b351-398ac75b62f5";
 const PublishExeArgs = ['@' + path.join(__dirname, newUuid + '.txt')];
-PublishExeArgs.push(process.env[constants.proxyUrl]);
-PublishExeArgs.push(process.env[constants.proxyUserName]);
-PublishExeArgs.push(process.env[constants.proxyPassword]);
-PublishExeArgs.push(process.env[constants.proxyByPassHosts]);
 
 // Construct the answers object
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -37,7 +33,7 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 };
 
-a.exec[`${PublishExeToolPath} ${PublishExeArgs[0]} ${PublishExeArgs[1]} ${PublishExeArgs[2]} ${PublishExeArgs[3]} ${PublishExeArgs[4]}`] = {
+a.exec[`${PublishExeToolPath} ${PublishExeArgs[0]}`] = {
     'code': +process.env[constants.listPackagesReturnCode],
     'stdout': 'tool output',
     'stderr': ''
