@@ -18,7 +18,7 @@
     "showEnvironmentVariables": true,
     "execution": {
         "Node": {
-            "target": "publishMetadata.js"
+            "target": "publishmetadata.js"
         }
     }
 }
