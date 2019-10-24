@@ -56,7 +56,11 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = '20000';
         process.env[constants.agentTempDirectory] = __dirname;
-
+        process.env[constants.proxyUrl] = "http://example.org";
+        process.env[constants.proxyUserName] = "1";
+        process.env[constants.proxyPassword] = "1";
+        process.env[constants.proxyByPassHosts] = undefined;
+        
         // Start the run
         tr.run();
         
@@ -88,6 +92,10 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = '20000';
         process.env[constants.agentTempDirectory] = __dirname;        
+        process.env[constants.proxyUrl] = "http://example.org";
+        process.env[constants.proxyUserName] = "1";
+        process.env[constants.proxyPassword] = "1";
+        process.env[constants.proxyByPassHosts] = undefined;
 
         // Start the run
         tr.run();
@@ -119,7 +127,11 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.publishRunAttachments] = 'false';
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = '20000';
-        process.env[constants.agentTempDirectory] = __dirname; 
+        process.env[constants.agentTempDirectory] = __dirname;
+        process.env[constants.proxyUrl] = "http://example.org";
+        process.env[constants.proxyUserName] = "1";
+        process.env[constants.proxyPassword] = "1";
+        process.env[constants.proxyByPassHosts] = undefined;
 
         // Start the run
         tr.run();
@@ -155,7 +167,11 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.publishRunAttachments] = 'false';
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = '0';
-        process.env[constants.agentTempDirectory] = __dirname; 
+        process.env[constants.agentTempDirectory] = __dirname;
+        process.env[constants.proxyUrl] = "http://example.org";
+        process.env[constants.proxyUserName] = "1";
+        process.env[constants.proxyPassword] = "1";
+        process.env[constants.proxyByPassHosts] = undefined;
 
         // Start the run
         tr.run();
