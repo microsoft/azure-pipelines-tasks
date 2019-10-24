@@ -7,6 +7,7 @@ import {IExecOptions, IExecSyncResult} from "azure-pipelines-task-lib/toolrunner
 
 export interface IArtifactToolOptions {
     artifactToolPath: string;
+    projectId: string;
     feedId: string;
     accountUrl: string;
     packageName: string;
