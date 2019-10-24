@@ -430,6 +430,7 @@
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
     "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
-    "SwapWithPreviewNotsupported": "ms-resource:loc.messages.SwapWithPreviewNotsupported"
+    "SwapWithPreviewNotsupported": "ms-resource:loc.messages.SwapWithPreviewNotsupported",
+    "InvalidActionForPublishProfileEndpoint": "ms-resource:loc.messages.InvalidActionForPublishProfileEndpoint"
   }
 }
