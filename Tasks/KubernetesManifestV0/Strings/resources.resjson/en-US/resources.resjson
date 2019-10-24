@@ -11,7 +11,12 @@
   "loc.input.help.namespace": "Sets the namespace for the commands by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace.",
   "loc.input.label.strategy": "Strategy",
   "loc.input.help.strategy": "Deployment strategy to be used",
+  "loc.input.label.trafficSplitMethod": "Traffic split method",
+  "loc.input.help.trafficSplitMethod": "Traffic split method to be used",
   "loc.input.label.percentage": "Percentage",
+  "loc.input.help.percentage": "Percentage of traffic redirect to canary deployment",
+  "loc.input.label.baselineAndCanaryReplicas": "Baseline and canary replicas",
+  "loc.input.help.baselineAndCanaryReplicas": "Baseline and canary replicas count",
   "loc.input.label.manifests": "Manifests",
   "loc.input.help.manifests": "Manifests to deploy",
   "loc.input.label.containers": "Containers",
@@ -69,7 +74,6 @@
   "loc.messages.NullInputObject": "Input object is null.",
   "loc.messages.ArgumentsInputNotSupplied": "Arguments are not supplied.",
   "loc.messages.NullInputObjectMetadata": "Input object metadata is null.",
-  "loc.messages.CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
   "loc.messages.InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
   "loc.messages.InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
   "loc.messages.AllContainersNotInReadyState": "All the containers are not in a ready state.",
@@ -78,5 +82,7 @@
   "loc.messages.CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
   "loc.messages.waitForServiceIpAssignment": "Waiting for service %s external IP assignment",
   "loc.messages.waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timed out",
-  "loc.messages.ServiceExternalIP": "service %s external IP is %s"
+  "loc.messages.ServiceExternalIP": "service %s external IP is %s",
+  "loc.messages.UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file.",
+  "loc.messages.StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment."
 }
