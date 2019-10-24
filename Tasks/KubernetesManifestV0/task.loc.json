@@ -15,10 +15,14 @@
     "Major": 0,
     "Minor": 160,
 <<<<<<< HEAD
+<<<<<<< HEAD
     "Patch": 1
 =======
     "Patch": 3
 >>>>>>> Added SMI canary deployment strategy to KubernetesManifest task (#11218)
+=======
+    "Patch": 4
+>>>>>>> Added support of Azure Publish profile in WebApp Deploy Task and App Service Manager Task (#11553)
   },
   "demands": [],
   "groups": [],

@@ -14,7 +14,11 @@
     "version": {
         "Major": 0,
         "Minor": 1,
+<<<<<<< HEAD
         "Patch": 4
+=======
+        "Patch": 6
+>>>>>>> Added support of Azure Publish profile in WebApp Deploy Task and App Service Manager Task (#11553)
     },
     "preview": true,
     "demands": [],
