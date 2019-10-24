@@ -16,6 +16,7 @@
         "Minor": 160,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         "Patch": 1
 =======
         "Patch": 3
@@ -23,6 +24,9 @@
 =======
         "Patch": 4
 >>>>>>> Added support of Azure Publish profile in WebApp Deploy Task and App Service Manager Task (#11553)
+=======
+        "Patch": 5
+>>>>>>> Send pipeline run info like deploy phase identifier for artifact traceability. (#11638)
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",

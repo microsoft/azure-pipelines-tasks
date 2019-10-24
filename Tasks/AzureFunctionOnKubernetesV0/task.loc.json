@@ -17,6 +17,7 @@
     "Minor": 160,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "Patch": 2
 =======
     "Patch": 4
@@ -24,6 +25,9 @@
 =======
     "Patch": 5
 >>>>>>> Added support of Azure Publish profile in WebApp Deploy Task and App Service Manager Task (#11553)
+=======
+    "Patch": 6
+>>>>>>> Send pipeline run info like deploy phase identifier for artifact traceability. (#11638)
   },
   "demands": [],
   "groups": [
