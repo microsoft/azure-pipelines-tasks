@@ -17,12 +17,17 @@ interface AttestationRequestPayload {
 }
 
 function getPipelineMetadataObjects(): any {
-    const pipelineMetadataRequestBodyString = "METADATA";
+    const pipelineMetadataRequestBodyString = "metadata";
     const allVariables = tl.getVariables();
     let requestObjects = [];
     allVariables.forEach(v => {
-        if (v.name.startsWith(pipelineMetadataRequestBodyString)) {
-            requestObjects.push(JSON.parse(v.value));
+        if (v.name.toLowerCase().startsWith(pipelineMetadataRequestBodyString)) {
+            try {
+                requestObjects.push(JSON.parse(v.value));
+            }
+            catch (error) {
+                tl.debug("Failed to parse metadata variable; Error: " + error);
+            }
         }
     });
 
