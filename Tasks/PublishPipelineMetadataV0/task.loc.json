@@ -14,6 +14,7 @@
     "Minor": 160,
     "Patch": 0
   },
+  "preview": true,
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,
   "execution": {

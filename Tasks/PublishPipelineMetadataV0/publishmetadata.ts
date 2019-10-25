@@ -31,16 +31,19 @@ function getPipelineMetadataObjects(): any {
 
 function constructMetadataRequestBody(requestObject: any): AttestationRequestPayload {
     if (!requestObject.name) {
-        throw tl.debug("Not pushing metadata as no name found in request payload");
+        tl.debug("Not pushing metadata as no name found in request payload");
+        return;
     }
 
     const metadata = requestObject.metadata;
     if (!metadata) {
-        throw tl.debug("Not pushing metadata as no metadata found");
+        tl.debug("Not pushing metadata as no metadata found");
+        return;
     }
 
     if (!metadata.serializedPayload) {
-        throw tl.debug("Not pushing metadata as no metadata.serializedPayload found");
+        tl.debug("Not pushing metadata as no metadata.serializedPayload found");
+        return;
     }
 
     let resourceUri: string[] = [];
@@ -49,14 +52,16 @@ function constructMetadataRequestBody(requestObject: any): AttestationRequestPay
         if (resourceIds) {
             const resourceIdArray = resourceIds.split(",");
             if (resourceIdArray.length == 0) {
-                throw tl.loc("Not pushing metadata as no resource Ids found");
+                tl.debug("Not pushing metadata as no resource Ids found");
+                return;
             }
             else {
                 resourceUri = resourceIdArray;
             }
         }
         else {
-            throw tl.loc("Not pushing metadata as no resource Ids found");
+            tl.loc("Not pushing metadata as no resource Ids found");
+            return;
         }
     }
     else {
@@ -99,15 +104,18 @@ async function run() {
             sendRequestToImageStore(JSON.stringify(requestObject), requestUrl).then((result) => {
                 tl.debug("ImageDetailsApiResponse: " + JSON.stringify(result));
                 if (result.statusCode < 200 && result.statusCode >= 300) {
-                    throw tl.debug("publishToImageMetadataStore failed with error: " + result.statusMessage);
+                    tl.debug("publishToImageMetadataStore failed with error: " + result.statusMessage);
                 }
             }, (error) => {
-                throw tl.debug("publishToImageMetadataStore failed with error: " + error);
+                tl.debug("publishToImageMetadataStore failed with error: " + error);
             });
         });
+
+        tl.setResult(tl.TaskResult.Succeeded, "Successfully pushed metadata to evidence store");
     }
     catch (error) {
-        tl.setResult(tl.TaskResult.Failed, error);
+        tl.warning("publish metadata task encountered error: " + error);
+        tl.setResult(tl.TaskResult.Succeeded, error);
     }
 }
 
