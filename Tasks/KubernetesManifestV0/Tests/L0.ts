@@ -30,6 +30,8 @@ describe('Kubernetes Manifests Suite', function () {
         delete process.env[shared.TestEnvVars.namespace];
         delete process.env[shared.TestEnvVars.dockerComposeFile];
         delete process.env[shared.TestEnvVars.releaseName];
+        delete process.env[shared.TestEnvVars.baselineAndCanaryReplicas];
+        delete process.env[shared.TestEnvVars.trafficSplitMethod];
         delete process.env.RemoveNamespaceFromEndpoint;
     });
 
@@ -54,13 +56,13 @@ describe('Kubernetes Manifests Suite', function () {
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.deploy;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
+        process.env[shared.TestEnvVars.trafficSplitMethod] = shared.TrafficSplitMethod.pod;
         process.env[shared.TestEnvVars.percentage] = '30';
         process.env[shared.TestEnvVars.isStableDeploymentPresent] = 'true';
         process.env[shared.TestEnvVars.isCanaryDeploymentPresent] = 'false';
         process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'false';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stderr.indexOf('"nginx-deployment-canary" not found') != -1, 'Canary deployment is not present');
         assert(tr.stdout.indexOf('nginx-deployment-canary created') != -1, 'Canary deployment is created');
         assert(tr.stdout.indexOf('nginx-deployment-baseline created') != -1, 'Baseline deployment is created');
         assert(tr.stdout.indexOf('deployment "nginx-deployment-canary" successfully rolled out') != -1, 'Canary deployment is successfully rolled out');
@@ -80,7 +82,7 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.isCanaryDeploymentPresent] = 'true';
         process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'true';
         tr.run();
-        assert(tr.failed, 'task should have failed');
+        assert(tr.succeeded, 'task should have succeeded');
         done();
     });
 
