@@ -99,7 +99,9 @@ export class Channel {
 export class VersionParts {
     constructor(version: string, explicitVersion: boolean = false) {
         if(explicitVersion){
-            VersionParts.ValidateExplicitVersionNumber(version);
+            if(!semver.valid(version)) {
+                throw tl.loc("InvalidVersion", version);
+            }
         }else{
             VersionParts.ValidateVersionSpec(version);
         }
@@ -110,34 +112,6 @@ export class VersionParts {
         this.patchVersion = "";
         if (this.minorVersion != "x") {
             this.patchVersion = parts[2];
-        }
-    }
-
-    /**
-     * Validate the version if this string is a explicit version number. Returns an exception if the version number is not explicit.
-     * @param version the input version number as string
-     */
-    private static ValidateExplicitVersionNumber(version: string): void {
-        try {
-            let parts = version.split('.');
-            // validate version
-            if ((parts.length < 3) || // check if the version has at least 3 parts
-                !parts[0] || // The major version must always be set
-                !parts[1] || // The minor version must always be set
-                !parts[2] || // The patch version must always be set
-                Number.isNaN(Number.parseInt(parts[0])) || // the major version number must be a number
-                Number.isNaN(Number.parseInt(parts[1])) || // the minor version number must be a number
-                Number.isNaN(Number.parseInt(parts[2].split('-')[0])) // the patch version number must be a number. (the patch version can have a '-' because of version numbers like: 1.0.0-beta-50)
-            ) {
-                throw tl.loc("OnlyExplicitVersionAllowed", version);
-            }
-
-            if(!semver.valid(version)) {
-                throw tl.loc("InvalidVersion", version);
-            }
-        }
-        catch (ex) {
-            throw tl.loc("VersionNotAllowed", version, ex);
         }
     }
 
