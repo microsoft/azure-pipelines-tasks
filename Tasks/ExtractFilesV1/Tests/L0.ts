@@ -76,6 +76,7 @@ describe('DeleteFiles Suite', function () {
 
         runValidations(() => {
             assert(tr.stdout.indexOf('extracted zip1') > -1);
+            assert(tr.stdout.indexOf('Removing ' + __dirname) > -1);
         }, tr, done);
     });
 });

@@ -43,17 +43,22 @@ tlClone.rmRF = function(path, flag) {
 };
 tmr.registerMock('vsts-task-lib/mock-task', tlClone);
 
-let sevenZipWinPath = path.join(__dirname, '..', '7zip', '7z.exe');
+let zipExecutable = path.join(__dirname, '..', '7zip', '7z.exe');
+let sevenZip1Command: string = `${zipExecutable} x -o${__dirname} ${path.join(__dirname, 'zip1.zip')}`;
+let sevenZip2Command: string = `${zipExecutable} x -o${__dirname} ${path.join(__dirname, 'zip2.zip')}`;
+let tarCommand = `${zipExecutable} x -o${__dirname} ${path.join(__dirname, 'tar.tar')}`;
 if (!isWindows) {
-    sevenZipWinPath = 'path/to/7zip.exe'
+    zipExecutable = 'path/to/unzip'
+    sevenZip1Command = `${zipExecutable} ${path.join(__dirname, 'zip1.zip')} -d ${__dirname}`;
+    sevenZip2Command = `${zipExecutable} ${path.join(__dirname, 'zip2.zip')} -d ${__dirname}`;
+    tarCommand = `path/to/tar -xvf ${path.join(__dirname, 'tar.tar')} -C ${__dirname}`;
 }
-let sevenZip1Command: string = `${sevenZipWinPath} x -o${__dirname} ${path.join(__dirname, 'zip1.zip')}`;
-let sevenZip2Command: string = `${sevenZipWinPath} x -o${__dirname} ${path.join(__dirname, 'zip2.zip')}`;
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'exec': {},
     'which': {
-        '7zip': 'path/to/7zip.exe'
+        'unzip': 'path/to/unzip',
+        'tar': 'path/to/tar'
     }
 };
 
@@ -66,14 +71,11 @@ a['exec'][sevenZip2Command] = {
     "code": 0,
     "stdout": "extracted zip2"
 }
-if (isWindows) {
-    // Windows untars with 7zip, linux with tar
-    let tarCommand = `${sevenZipWinPath} x -o${__dirname} ${path.join(__dirname, 'tar.tar')}`
-    a['exec'][tarCommand] = {
-        "code": 0,
-        "stdout": "extracted tar"
-    }
+a['exec'][tarCommand] = {
+    "code": 0,
+    "stdout": "extracted tar"
 }
+
 tmr.setAnswers(a);
 
 tmr.run();
