@@ -35,8 +35,12 @@
 >>>>>>> agent min version update
 =======
     "preview": false,
+<<<<<<< HEAD
     "minimumAgentVersion": "2.158.1",
 >>>>>>> make PPAV1 and DPA V2 public; update the min agent version and task version
+=======
+    "minimumAgentVersion": "2.159.2",
+>>>>>>> update min agent version
     "inputs": [
         {
             "name": "path",
