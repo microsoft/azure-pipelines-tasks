@@ -1,0 +1,79 @@
+import ma = require('vsts-task-lib/mock-answer');
+import tmrm = require('vsts-task-lib/mock-run');
+import fs = require('fs');
+import path = require('path');
+import os = require('os');
+
+let taskPath = path.join(__dirname, '..', 'extractfilestask.js');
+let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+
+process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = __dirname;
+
+tmr.setInput('archiveFilePatterns', process.env['archiveFilePatterns']);
+tmr.setInput('destinationFolder', __dirname);
+tmr.setInput('cleanDestinationFolder', process.env['cleanDestinationFolder']);
+const osType = os.type();
+const isWindows = !!osType.match(/^Win/);
+
+//Create osType, stats mocks, support not added in this version of task-lib
+const tl = require('vsts-task-lib/mock-task');
+const tlClone = Object.assign({}, tl);
+tlClone.osType = function() {
+    return osType;
+};
+tlClone.stats = function(path) {
+    return fs.statSync(path);
+};
+tlClone.exist = function(path) {
+    // Copied from task-lib
+    var exist = false;
+    try {
+        exist = !!(path && fs.statSync(path) != null);
+    } catch (err) {
+        if (err && err.code === 'ENOENT') {
+            exist = false;
+        } else {
+            throw err;
+        }
+    }
+    return exist;
+};
+tlClone.rmRF = function(path, flag) {
+    console.log('Removing ' + path);
+};
+tmr.registerMock('vsts-task-lib/mock-task', tlClone);
+
+let sevenZipWinPath = path.join(__dirname, '..', '7zip', '7z.exe');
+if (!isWindows) {
+    sevenZipWinPath = 'path/to/7zip.exe'
+}
+let sevenZip1Command: string = `${sevenZipWinPath} x -o${__dirname} ${path.join(__dirname, 'zip1.zip')}`;
+let sevenZip2Command: string = `${sevenZipWinPath} x -o${__dirname} ${path.join(__dirname, 'zip2.zip')}`;
+
+let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+    'exec': {},
+    'which': {
+        '7zip': 'path/to/7zip.exe'
+    }
+};
+
+// Need to add these as seperate string since they are dynamic
+a['exec'][sevenZip1Command] = {
+    "code": 0,
+    "stdout": "extracted zip1"
+}
+a['exec'][sevenZip2Command] = {
+    "code": 0,
+    "stdout": "extracted zip2"
+}
+if (isWindows) {
+    // Windows untars with 7zip, linux with tar
+    let tarCommand = `${sevenZipWinPath} x -o${__dirname} ${path.join(__dirname, 'tar.tar')}`
+    a['exec'][tarCommand] = {
+        "code": 0,
+        "stdout": "extracted tar"
+    }
+}
+tmr.setAnswers(a);
+
+tmr.run();
