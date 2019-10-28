@@ -25,6 +25,7 @@ export interface TestReportingSettings {
     TestResultsDirectory : string;
     TestRunSystem : string;
     TestSourceSettings : TestSourceSettings;
+    ExecutionStatusSettings: MinimumTestsExecutionStatusSettings;
 }
 
 export interface TestSelectionSettings {
@@ -112,6 +113,11 @@ export interface ExecutionSettings {
 
 export interface TestSourceSettings {
     PullRequestTargetBranchName : string;
+}
+
+export interface MinimumTestsExecutionStatusSettings {
+    MinimumExecutedTestsExpected : number;
+    ActionOnThresholdNotMet : string;
 }
 
 export interface DiagnosticsSettings {
