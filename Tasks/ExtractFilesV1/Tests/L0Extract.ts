@@ -59,6 +59,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'which': {
         'unzip': 'path/to/unzip',
         'tar': 'path/to/tar'
+    },
+    'checkPath': {
+        'path/to/unzip': true,
+        'path/to/tar': true
     }
 };
 
