@@ -251,7 +251,7 @@ Tasks/MSBuildV1/*   @daveken
 
 Tasks/MysqlDeploymentOnMachineGroupV1/*     @kmkumaran      @RoshanKumarMicrosoft
 
-Tasks/NodeToolV0/*      @hross
+Tasks/NodeToolV0/*      @damccorm
 
 Tasks/NpmV1/*       @zjrunner @jotaylo
 
