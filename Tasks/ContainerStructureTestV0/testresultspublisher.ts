@@ -4,6 +4,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 import { writeFileSync } from 'fs';
 import * as path from "path";
+import  * as semver from "semver"
 
 
 export interface TestSummary {
@@ -45,6 +46,12 @@ export class TestResultPublisher {
 
     public publishToTcm(testResults: TestSummary, testRunTitle: string) {
         let resultsFile = this.createResultsFile(JSON.stringify(testResults));
+
+        const agentVersion = tl.getVariable('Agent.Version');
+        if(semver.lt(agentVersion, "2.159.1")) {
+            console.log("Agent version is less than 2.159.0, hence not publishing the test results to TCM. Please update the agent.");
+            return;
+        }
 
         if (!resultsFile) {
             tl.warning("Unable to create the results file, hence not publishing the test results");
