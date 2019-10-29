@@ -49,8 +49,8 @@ export class TestResultPublisher {
 
         const agentVersion = tl.getVariable('Agent.Version');
         if(semver.lt(agentVersion, "2.159.1")) {
-            console.log("Agent version is less than 2.159.0, hence not publishing the test results to TCM. Please update the agent.");
-            return;
+            console.log(this.minimumAgentRequiredMsg);
+            throw this.minimumAgentRequiredMsg;
         }
 
         if (!resultsFile) {
@@ -225,4 +225,5 @@ export class TestResultPublisher {
     private readonly buildString = "build";
     private readonly hostType = tl.getVariable("System.HostType").toLowerCase();
     private readonly isBuild = this.hostType === this.buildString;
+    private readonly minimumAgentRequiredMsg: string = "Minimum agent required to publish the test results to Azure DevOps is greater than or equal to 2.159.0";
 }
