@@ -410,7 +410,7 @@
         {
             "name": "failOnMinTestsNotRun",
             "type": "boolean",
-            "label": "Fail task if a minimum number of tests are not run",
+            "label": "Fail the task if a minimum number of tests are not run.",
             "defaultValue": "False",
             "required": false,
             "helpMarkDown": "Selecting this option will fail the task if specified minimum number of tests is not run.",
@@ -422,7 +422,7 @@
             "label": "Minimum # of tests",
             "defaultValue": "1",
             "required": false,
-            "helpMarkDown": "Specify the minimum # of tests that should be executed to not fail the task.",
+            "helpMarkDown": "Specify the minimum # of tests that should be run for the task to succeed. Total tests executed is calculated as the sum of passed, failed and aborted tests.",
             "groupName": "reportingOptions",
             "visibleRule": "failOnMinTestsNotRun = true"
         },
