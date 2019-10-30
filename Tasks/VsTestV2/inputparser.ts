@@ -182,7 +182,7 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
         inputDataContract.TestReportingSettings.TestRunTitle = `TestRun_${definitionName}_${buildOrReleaseName}`;
     }
 
-    const actionOnThresholdNotMet = tl.getInput('failOnMinTestsNotRun');
+    const actionOnThresholdNotMet = tl.getBoolInput('failOnMinTestsNotRun');
 
     if (actionOnThresholdNotMet)
     {
@@ -194,7 +194,7 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
             inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected = miniumExpectedTests;
             console.log(tl.loc('minimumExpectedTests', inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected));
         } else {
-            tl.warning(tl.loc('invalidMinimumExpectedTests'));
+            throw new Error(tl.loc('invalidMinimumExpectedTests :' + tl.getInput('minimumExpectedTests')));
         }
     }
 
