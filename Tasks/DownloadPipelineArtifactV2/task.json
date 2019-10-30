@@ -129,6 +129,20 @@
             "helpMarkDown": "A comma-delimited list of tags. Only builds with these tags will be returned."
         },
         {
+            "name": "minimumBuildStatus",
+            "type": "pickList",
+            "label": "Minimum build status",
+            "defaultValue": "succeeded",
+            "visibleRule": "source == specific && runVersion != specific",
+            "required": false,
+            "options": {
+                "succeeded": "Succeeded",
+                "partiallySucceeded": "Partially succeeded",
+                "failed": "Failed"
+            },
+            "helpMarkDown": "Only builds with at least this status will be returned."
+        },
+        {
             "name": "artifact",
             "aliases": [
                 "artifactName"

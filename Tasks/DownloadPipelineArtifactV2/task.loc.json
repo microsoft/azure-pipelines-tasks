@@ -129,6 +129,20 @@
       "helpMarkDown": "ms-resource:loc.input.help.tags"
     },
     {
+      "name": "minimumBuildStatus",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.minimumBuildStatus",
+      "defaultValue": "succeeded",
+      "visibleRule": "source == specific && runVersion != specific",
+      "required": false,
+      "options": {
+          "succeeded": "Succeeded",
+          "partiallySucceeded": "Partially succeeded",
+          "failed": "Failed"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.minimumBuildStatus"
+  },
+{
       "name": "artifact",
       "aliases": [
         "artifactName"
