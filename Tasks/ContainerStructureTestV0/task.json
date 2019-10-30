@@ -15,10 +15,14 @@
         "Major": 0,
         "Minor": 1,
 <<<<<<< HEAD
+<<<<<<< HEAD
         "Patch": 4
 =======
         "Patch": 6
 >>>>>>> Added support of Azure Publish profile in WebApp Deploy Task and App Service Manager Task (#11553)
+=======
+        "Patch": 7
+>>>>>>> Not failing the CST task, when Unable to publish to TCM. (#11655)
     },
     "preview": true,
     "demands": [],
