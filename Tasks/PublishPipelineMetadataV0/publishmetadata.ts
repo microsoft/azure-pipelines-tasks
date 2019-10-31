@@ -26,7 +26,7 @@ function getPipelineMetadataObjects(): any {
                 requestObjects.push(JSON.parse(v.value));
             }
             catch (error) {
-                tl.debug("Failed to parse metadata variable; Error: " + error);
+                tl.debug("Failed to parse metadata for variable " + v.name + "; Error: " + error);
             }
         }
     });
@@ -112,7 +112,7 @@ async function run() {
                     tl.debug("publishToImageMetadataStore failed with error: " + result.statusMessage);
                 }
             }, (error) => {
-                tl.debug("publishToImageMetadataStore failed with error: " + error);
+                tl.debug("publishToImageMetadataStore failed with error: " + error + "for request payload: " + requestObject);
             });
         });
 
