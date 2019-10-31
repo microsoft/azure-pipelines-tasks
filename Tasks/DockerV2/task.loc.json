@@ -13,12 +13,17 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
+<<<<<<< HEAD
     "Minor": 160,
 <<<<<<< HEAD
     "Patch": 1
 =======
     "Patch": 3
 >>>>>>> Added support of Azure Publish profile in WebApp Deploy Task and App Service Manager Task (#11553)
+=======
+    "Minor": 161,
+    "Patch": 0
+>>>>>>> Updated make-options.js with the new task publishPipelinemetadata (#11669)
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
