@@ -295,6 +295,8 @@ Tasks/PublishCodeCoverageResultsV2/*    @karanjitsingh @acesiddhu
 
 Tasks/PublishPipelineArtifactV0/*       @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
+Tasks/PublishPipelineMetadataV0/*    @vithati @nidabas
+
 Tasks/PublishSymbolsV2/*    @arunkm @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
 
 Tasks/PublishTestResultsV1/*    @smalpani
