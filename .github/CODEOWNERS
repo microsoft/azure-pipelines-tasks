@@ -61,6 +61,8 @@ Tasks/AzurePowershellV4/*   @kmkumaran
 
 Tasks/AzureResourceGroupDeploymentV2/*      @bishal-pdmsft
 
+Tasks/AzureResourceManagerTemplateDeploymentV3/*      @bishal-pdmsft    @vinodkumar3
+
 Tasks/AzureRmWebAppDeploymentV3/*   @kmkumaran    @SumiranAgg     @vincentdass
 
 Tasks/AzureRmWebAppDeploymentV4/*   @kmkumaran    @SumiranAgg     @vincentdass
