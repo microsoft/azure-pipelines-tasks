@@ -140,6 +140,7 @@ export class AzureServiceClientBase {
         timeoutInMinutes = timeoutInMinutes || this.longRunningOperationRetryTimeout;
         var timeout = new Date().getTime() + timeoutInMinutes * 60 * 1000;
         var waitIndefinitely = timeoutInMinutes == 0;
+        var ignoreTimeoutErrorThreshold = 5;
         var request = new webClient.WebRequest();
         request.method = "GET";
         request.uri = response.headers["azure-asyncoperation"] || response.headers["location"];
@@ -147,25 +148,38 @@ export class AzureServiceClientBase {
             throw new Error(tl.loc("InvalidResponseLongRunningOperation"));
         }
         while (true) {
-            response = await this.beginRequest(request);
-            tl.debug(`Response status code : ${response.statusCode}`);
-            if (response.statusCode === 202 || (response.body && (response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress"))) {
-                if(response.body && response.body.status) {
-                    tl.debug(`Response status : ${response.body.status}`);
-                }
-                // If timeout; throw;
-                if (!waitIndefinitely && timeout < new Date().getTime()) {
-                    throw new Error(tl.loc("TimeoutWhileWaiting"));
-                }
+            try {
+                response = await this.beginRequest(request);
+                tl.debug(`Response status code : ${response.statusCode}`);
+                if (response.statusCode === 202 || (response.body && (response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress"))) {
+                    if (response.body && response.body.status) {
+                        tl.debug(`Response status : ${response.body.status}`);
+                    }
+                    // If timeout; throw;
+                    if (!waitIndefinitely && timeout < new Date().getTime()) {
+                        throw new Error(tl.loc("TimeoutWhileWaiting"));
+                    }
 
-                // Retry after given interval.
-                var sleepDuration = 15;
-                if (response.headers["retry-after"]) {
-                    sleepDuration = parseInt(response.headers["retry-after"]);
+                    // Retry after given interval.
+                    var sleepDuration = 15;
+                    if (response.headers["retry-after"]) {
+                        sleepDuration = parseInt(response.headers["retry-after"]);
+                    }
+                    await this.sleepFor(sleepDuration);
+                } else {
+                    break;
                 }
-                await this.sleepFor(sleepDuration);
-            } else {
-                break;
+            }
+            catch (error) {
+                let errorString: string = (!!error && error.toString()) || "";
+                if(!!errorString && errorString.toLowerCase().indexOf("request timeout") >= 0 && ignoreTimeoutErrorThreshold > 0) {
+                    // Ignore Request Timeout error and continue polling operation
+                    tl.debug(`Request Timeout: ${request.uri}`);
+                    ignoreTimeoutErrorThreshold--;
+                }
+                else {
+                    throw error;
+                }
             }
         }
 

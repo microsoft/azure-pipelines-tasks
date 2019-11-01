@@ -5,7 +5,13 @@
             "type": "node",
             "dest": "./",
             "compile" : true
-        }
+        },
+		{
+			"module": "../Common/utility-common-v2",
+			"type": "node",
+			"dest" : "./",
+			"compile" : true
+		}
     ],
     "externals": {
         "archivePackages": [
