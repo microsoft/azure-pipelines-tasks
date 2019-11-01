@@ -96,8 +96,7 @@ export interface ExecutionSettings {
     DefaultTestBatchSize : number;
     AssemblyLevelParallelism : boolean;
     CodeCoverageEnabled : boolean;
-    PathToCustomTestAdapters : string;
-    IgnoreTestFailures : boolean;
+    PathToCustomTestAdapters : string;   
     ProceedAfterAbortedTestCase : boolean;
     PathToCustomVsTestConsoleWrapperAssembly : string;
     SettingsFile : string;
@@ -116,6 +115,7 @@ export interface TestSourceSettings {
 }
 
 export interface MinimumTestsExecutionStatusSettings {
+    IgnoreTestFailures : boolean;
     MinimumExecutedTestsExpected : number;
     ActionOnThresholdNotMet : string;
 }
