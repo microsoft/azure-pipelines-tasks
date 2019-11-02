@@ -61,6 +61,8 @@ Tasks/AzurePowershellV4/*   @kmkumaran
 
 Tasks/AzureResourceGroupDeploymentV2/*      @bishal-pdmsft
 
+Tasks/AzureResourceManagerTemplateDeploymentV3/*      @bishal-pdmsft    @vinodkumar3
+
 Tasks/AzureRmWebAppDeploymentV3/*   @kmkumaran    @SumiranAgg     @vincentdass
 
 Tasks/AzureRmWebAppDeploymentV4/*   @kmkumaran    @SumiranAgg     @vincentdass
@@ -294,6 +296,8 @@ Tasks/PublishCodeCoverageResultsV1/*    @SadagopanRajaram @nigurr
 Tasks/PublishCodeCoverageResultsV2/*    @karanjitsingh @acesiddhu
 
 Tasks/PublishPipelineArtifactV0/*       @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
+
+Tasks/PublishPipelineMetadataV0/*    @vithati @nidabas
 
 Tasks/PublishSymbolsV2/*    @arunkm @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
 
