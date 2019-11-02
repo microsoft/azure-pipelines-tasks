@@ -129,20 +129,24 @@
       "helpMarkDown": "ms-resource:loc.input.help.tags"
     },
     {
-      "name": "minimumBuildStatus",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.minimumBuildStatus",
-      "defaultValue": "succeeded",
+      "name": "allowPartiallySucceededBuilds",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowPartiallySucceededBuilds",
+      "defaultValue": "false",
       "visibleRule": "source == specific && runVersion != specific",
       "required": false,
-      "options": {
-          "succeeded": "Succeeded",
-          "partiallySucceeded": "Partially succeeded",
-          "failed": "Failed"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.minimumBuildStatus"
+      "helpMarkDown": "ms-resource:loc.input.help.allowPartiallySucceededBuilds"
   },
-{
+  {
+      "name": "allowFailedBuilds",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowFailedBuilds",
+      "defaultValue": "false",
+      "visibleRule": "source == specific && runVersion != specific",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.allowFailedBuilds"
+  },
+  {
       "name": "artifact",
       "aliases": [
         "artifactName"

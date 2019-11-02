@@ -129,18 +129,22 @@
             "helpMarkDown": "A comma-delimited list of tags. Only builds with these tags will be returned."
         },
         {
-            "name": "minimumBuildStatus",
-            "type": "pickList",
-            "label": "Minimum build status",
-            "defaultValue": "succeeded",
+            "name": "allowPartiallySucceededBuilds",
+            "type": "boolean",
+            "label": "Download artifacts from partially succeeded builds.",
+            "defaultValue": "false",
             "visibleRule": "source == specific && runVersion != specific",
             "required": false,
-            "options": {
-                "succeeded": "Succeeded",
-                "partiallySucceeded": "Partially succeeded",
-                "failed": "Failed"
-            },
-            "helpMarkDown": "Only builds with at least this status will be returned."
+            "helpMarkDown": "If checked, this build task will try to download artifacts whether the build is succeeded or partially succeeded."
+        },
+        {
+            "name": "allowFailedBuilds",
+            "type": "boolean",
+            "label": "Download artifacts from failed builds.",
+            "defaultValue": "false",
+            "visibleRule": "source == specific && runVersion != specific",
+            "required": false,
+            "helpMarkDown": "If checked, this build task will try to download artifacts whether the build is succeeded or failed."
         },
         {
             "name": "artifact",
