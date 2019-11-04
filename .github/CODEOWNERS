@@ -77,6 +77,10 @@ Tasks/BashV3/*  @jtpetty
 
 Tasks/BatchScriptV1/*   @jtpetty
 
+Tasks/CacheBetaV0/*      @johnterickson
+
+Tasks/CacheBetaV1/*      @johnterickson
+
 Tasks/ChefV1/*      @kmkumaran
 
 Tasks/ChefKnifeV1/*     @kmkumaran
