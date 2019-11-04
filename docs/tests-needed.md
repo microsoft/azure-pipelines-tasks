@@ -22,7 +22,7 @@ of untested tasks to 0!
 | AzureAppServiceManageV0 | @kmkumaran      @SumiranAgg     @vincentdass | :heavy_check_mark: |
 | AzureAppServiceSettingsV1 | @eaarora-ms      @SumiranAgg     @vincentdass     @niadak |  |
 | AzureCLIV1 | @bishal-pdmsft |  |
-| AzureCLIV2 | @bishal-pdmsft |  |
+| AzureCLIV2 | @bishal-pdmsft  |  |
 | AzureCloudPowerShellDeploymentV1 | @kmkumaran |  |
 | AzureFileCopyV1 | @kmkumaran | :heavy_check_mark: |
 | AzureFileCopyV2 | @kmkumaran | :heavy_check_mark: |
@@ -43,14 +43,14 @@ of untested tasks to 0!
 | AzurePowerShellV3 | @kmkumaran | :heavy_check_mark: |
 | AzurePowerShellV4 | @kmkumaran | :heavy_check_mark: |
 | AzureResourceGroupDeploymentV2 | @bishal-pdmsft | :heavy_check_mark: |
-| AzureResourceManagerTemplateDeploymentV3 |  | :heavy_check_mark: |
+| AzureResourceManagerTemplateDeploymentV3 | @bishal-pdmsft    @vinodkumar3 | :heavy_check_mark: |
 | AzureRmWebAppDeploymentV3 | @kmkumaran    @SumiranAgg     @vincentdass | :heavy_check_mark: |
 | AzureRmWebAppDeploymentV4 | @kmkumaran    @SumiranAgg     @vincentdass | :heavy_check_mark: |
 | AzureVmssDeploymentV0 | @bishal-pdmsft | :heavy_check_mark: |
 | AzureWebAppContainerV1 | @kmkumaran    @SumiranAgg     @vincentdass | :heavy_check_mark: |
 | AzureWebAppV1 | @kmkumaran    @SumiranAgg     @vincentdass |  |
 | BashV3 | @jtpetty | :heavy_check_mark: |
-| BatchScriptV1 | @jtpetty | :heavy_check_mark: |
+| BatchScriptV1 | @jtpetty |  |
 | CacheBetaV0 |  |  |
 | CacheBetaV1 |  |  |
 | ChefKnifeV1 | @kmkumaran |  |
@@ -60,13 +60,14 @@ of untested tasks to 0!
 | CocoaPodsV0 | @leantk |  |
 | CondaEnvironmentV0 | @leantk | :heavy_check_mark: |
 | CondaEnvironmentV1 | @leantk | :heavy_check_mark: |
+| ContainerBuildV0 | @vithati @prebansa |  |
 | ContainerStructureTestV0 | @SadagopanRajaram   @navin22 |  |
 | CopyFilesOverSSHV0 | @leantk |  |
 | CopyFilesV2 | @jtpetty | :heavy_check_mark: |
 | CUrlUploaderV2 | @leantk |  |
 | DecryptFileV1 | @leantk |  |
 | DelayV1 | @bansalaseem |  |
-| DeleteFilesV1 | @jtpetty |  |
+| DeleteFilesV1 | @jtpetty | :heavy_check_mark: |
 | DeployVisualStudioTestAgentV2 | @SadagopanRajaram @ShreyasRmsft | :heavy_check_mark: |
 | DockerComposeV0 | @bansalaseem | :heavy_check_mark: |
 | DockerInstallerV0 |  |  |
@@ -86,11 +87,12 @@ of untested tasks to 0!
 | DownloadPipelineArtifactV2 |  |  |
 | DownloadSecureFileV1 | @leantk | :heavy_check_mark: |
 | DuffleInstallerV0 | @bansalaseem     @vithati |  |
-| ExtractFilesV1 | @jtpetty |  |
+| ExtractFilesV1 | @jtpetty | :heavy_check_mark: |
 | FileTransformV1 | @kmkumaran      @SumiranAgg     @vincentdass |  |
 | FileTransformV2 |  |  |
 | FtpUploadV1 | @leantk |  |
 | FtpUploadV2 |  |  |
+| FuncToolsInstallerV0 |  |  |
 | GitHubCommentV0 | @ds-ms |  |
 | GitHubReleaseV0 | @prativen   @mdmdakbar | :heavy_check_mark: |
 | GitHubReleaseV1 |  | :heavy_check_mark: |
@@ -123,7 +125,7 @@ of untested tasks to 0!
 | MavenV3 | @leantk | :heavy_check_mark: |
 | MSBuildV1 | @daveken | :heavy_check_mark: |
 | MysqlDeploymentOnMachineGroupV1 | @kmkumaran      @RoshanKumarMicrosoft | :heavy_check_mark: |
-| NodeToolV0 | @hross | :heavy_check_mark: |
+| NodeToolV0 | @damccorm | :heavy_check_mark: |
 | NpmAuthenticateV0 | @zjrunner |  |
 | NpmV0 |  | :heavy_check_mark: |
 | NpmV1 | @zjrunner @jotaylo | :heavy_check_mark: |
@@ -150,6 +152,7 @@ of untested tasks to 0!
 | PublishCodeCoverageResultsV2 | @karanjitsingh @acesiddhu |  |
 | PublishPipelineArtifactV0 | @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm |  |
 | PublishPipelineArtifactV1 |  |  |
+| PublishPipelineMetadataV0 | @vithati @nidabas |  |
 | PublishSymbolsV2 | @arunkm @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT | :heavy_check_mark: |
 | PublishTestResultsV1 | @smalpani | :heavy_check_mark: |
 | PublishTestResultsV2 | @SadagopanRajaram | :heavy_check_mark: |
