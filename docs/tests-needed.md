@@ -30,15 +30,11 @@ of untested tasks to 0!
 | AzureFunctionAppContainerV1 | @kmkumaran      @SumiranAgg | :heavy_check_mark: |
 | AzureFunctionAppV1 | @kmkumaran      @SumiranAgg |  |
 | AzureFunctionOnKubernetesV0 |  |  |
-| AzureFunctionV1 | @bansalaseem |  |
 | AzureIoTEdgeV2 | @prativen  @blackchoey  @michaeljqzq |  |
 | AzureKeyVaultV1 | @bansalaseem | :heavy_check_mark: |
 | AzureMonitorAlertsV0 | @kmkumaran | :heavy_check_mark: |
-| AzureMonitorV0 | @bansalaseem |  |
-| AzureMonitorV1 | @vithati |  |
 | AzureMysqlDeploymentV1 | @kmkumaran      @RoshanKumarMicrosoft | :heavy_check_mark: |
 | AzureNLBManagementV1 | @kmkumaran | :heavy_check_mark: |
-| AzurePolicyV0 | @bansalaseem |  |
 | AzurePowerShellV2 | @kmkumaran | :heavy_check_mark: |
 | AzurePowerShellV3 | @kmkumaran | :heavy_check_mark: |
 | AzurePowerShellV4 | @kmkumaran | :heavy_check_mark: |
@@ -50,9 +46,6 @@ of untested tasks to 0!
 | AzureWebAppContainerV1 | @kmkumaran    @SumiranAgg     @vincentdass | :heavy_check_mark: |
 | AzureWebAppV1 | @kmkumaran    @SumiranAgg     @vincentdass |  |
 | BashV3 | @jtpetty | :heavy_check_mark: |
-| BatchScriptV1 | @jtpetty |  |
-| CacheBetaV0 |  |  |
-| CacheBetaV1 |  |  |
 | ChefKnifeV1 | @kmkumaran |  |
 | ChefV1 | @kmkumaran |  |
 | CMakeV1 | @daveken |  |
@@ -66,7 +59,6 @@ of untested tasks to 0!
 | CopyFilesV2 | @jtpetty | :heavy_check_mark: |
 | CUrlUploaderV2 | @leantk |  |
 | DecryptFileV1 | @leantk |  |
-| DelayV1 | @bansalaseem |  |
 | DeleteFilesV1 | @jtpetty | :heavy_check_mark: |
 | DeployVisualStudioTestAgentV2 | @SadagopanRajaram @ShreyasRmsft | :heavy_check_mark: |
 | DockerComposeV0 | @bansalaseem | :heavy_check_mark: |
@@ -111,7 +103,6 @@ of untested tasks to 0!
 | InstallAppleCertificateV2 | @leantk | :heavy_check_mark: |
 | InstallAppleProvisioningProfileV1 | @leantk | :heavy_check_mark: |
 | InstallSSHKeyV0 | @leantk | :heavy_check_mark: |
-| InvokeRestApiV1 | @bansalaseem |  |
 | JavaToolInstallerV0 | @leantk | :heavy_check_mark: |
 | JenkinsDownloadArtifactsV1 | @Lovakumar      @kasubram | :heavy_check_mark: |
 | JenkinsQueueJobV2 | @leantk | :heavy_check_mark: |
@@ -132,7 +123,6 @@ of untested tasks to 0!
 | NuGetAuthenticateV0 | @zjrunner @zarenner |  |
 | NuGetCommandV2 | @zjrunner @jotaylo | :heavy_check_mark: |
 | NuGetInstallerV0 |  | :heavy_check_mark: |
-| NuGetPackagerV0 | @zjrunner |  |
 | NuGetPublisherV0 | @zjrunner | :heavy_check_mark: |
 | NuGetRestoreV1 |  | :heavy_check_mark: |
 | NuGetToolInstallerV0 | @zjrunner |  |
@@ -150,16 +140,12 @@ of untested tasks to 0!
 | PublishBuildArtifactsV1 | @leantk |  |
 | PublishCodeCoverageResultsV1 | @SadagopanRajaram @nigurr  |  |
 | PublishCodeCoverageResultsV2 | @karanjitsingh @acesiddhu |  |
-| PublishPipelineArtifactV0 | @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm |  |
-| PublishPipelineArtifactV1 |  |  |
 | PublishPipelineMetadataV0 | @vithati @nidabas |  |
 | PublishSymbolsV2 | @arunkm @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT | :heavy_check_mark: |
 | PublishTestResultsV1 | @smalpani | :heavy_check_mark: |
 | PublishTestResultsV2 | @SadagopanRajaram | :heavy_check_mark: |
-| PublishToAzureServiceBusV1 | @bansalaseem |  |
 | PyPIPublisherV0 | @bishal-pdmsft   @leantk | :heavy_check_mark: |
 | PythonScriptV0 | @leantk |  |
-| QueryWorkItemsV0 | @bansalaseem |  |
 | QuickPerfTestV1 | @SadagopanRajaram @ShreyasRmsft |  |
 | ReviewAppV0 | @ds-ms |  |
 | RunDistributedTestsV1 | @SadagopanRajaram @ShreyasRmsft |  |
