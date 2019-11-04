@@ -8,8 +8,8 @@ import { ArchiveUtil } from "../utilities/utils";
 import { AzureBlobUploadHelper } from "./azure-blob-upload-helper";
 
 export default class AcrTaskOperations {
-    public taskParameters: AcrTaskParameters ;
-    private acrTaskClient: AcrTaskClient;
+    private taskParameters: AcrTaskParameters ;
+    public acrTaskClient: AcrTaskClient;
 
     constructor(taskParameters: AcrTaskParameters) {
         this.taskParameters = taskParameters;
@@ -85,10 +85,14 @@ export default class AcrTaskOperations {
                     try
                     {
                         taskVersion = result.tags["taskVersion"]
+                        if(!taskVersion) 
+                        {
+                            taskVersion = "1.0.0"
+                        }
                     }
                     catch(error)
                     {
-                        defer.reject(error);
+                        taskVersion = "1.0.0"
                     }
                 }
 

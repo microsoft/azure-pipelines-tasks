@@ -59,9 +59,20 @@ export interface IPlatformProperties {
 	variant: string;
 }
 
+export interface IBaseImageTrigger {
+	status: string;
+	baseImageTriggerType: string;
+	name: string;
+}
+
+export interface ITrigger {
+	baseImageTrigger: IBaseImageTrigger;
+}
+
 export interface IAcrTaskRequestBodyProperties {
 	platform: IPlatformProperties;
 	step: ITaskStepProperties;
+	trigger: ITrigger
 }
 
 export interface IAcrTaskRequestBody {

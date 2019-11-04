@@ -21,7 +21,7 @@ async function run() {
         //check whether task exists
         var taskVersion = await taskOperations.getTask();
 
-        taskOperations.taskParameters.acrTask.version = taskVersion
+        taskOperations.acrTaskClient.acrTask.version = taskVersion
         var taskId = await taskOperations.createOrUpdateTask();
 
         if(!taskId)

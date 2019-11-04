@@ -8,6 +8,7 @@ import * as AcrTaskRequest from "../models/acrtaskrequestbody";
 import { TaskUtil } from "../utilities/utils";
 import { AcrTask } from "../models/acrtaskparameters";
 import * as semver from 'semver';
+import { tinyGuid } from 'utility-common-v2/tinyGuidUtility'
 
 const acrTaskbaseUri : string = "//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}" ;
 const dummyContextUrl : string = "https://dev.azure.com/";
@@ -15,7 +16,7 @@ const dummyContextUrl : string = "https://dev.azure.com/";
 export class AcrTaskClient extends ServiceClient {
     public createTask : boolean = false;
     public updateTask :  boolean = false;
-    private acrTask: AcrTask;
+    public acrTask: AcrTask;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, 
         subscriptionId: string, acrTask: AcrTask) {
@@ -374,6 +375,17 @@ export class AcrTaskClient extends ServiceClient {
         {
             step = this._getFileTaskStep();
         }
+        
+        let triggerName = this.acrTask.name + tinyGuid();
+        let baseImageTrigger =  {
+            status: "Enabled",
+            baseImageTriggerType: "Runtime",
+            name: triggerName
+        } as AcrTaskRequest.IBaseImageTrigger
+
+        let trigger = {
+            baseImageTrigger: baseImageTrigger
+        } as AcrTaskRequest.ITrigger
 
         return {
             location: this.acrTask.registry.location,
@@ -384,7 +396,8 @@ export class AcrTaskClient extends ServiceClient {
 			properties: {
                 "status": "Enabled",
                 platform : platform,
-				step: step as AcrTaskRequest.ITaskStepProperties
+                step: step as AcrTaskRequest.ITaskStepProperties,
+                trigger: trigger
 			}
 		} as AcrTaskRequest.IAcrTaskRequestBody;
     }
