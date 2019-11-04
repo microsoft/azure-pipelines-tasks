@@ -127,7 +127,7 @@ export class VersionParts {
                 !parts[2] || // The patch version must always be set
                 Number.isNaN(Number.parseInt(parts[0])) || // the major version number must be a number
                 Number.isNaN(Number.parseInt(parts[1])) || // the minor version number must be a number
-                Number.isNaN(Number.parseInt(parts[2].split(/\-|\+/)[0])) // the patch version number must be a number. (the patch version can have a '-' because of version numbers like: 1.0.0-beta-50)
+                Number.isNaN(Number.parseInt(parts[2].split(/\-|\+/)[0])) // the patch version number must be a number. (the patch version can have a '-', or a '+' because of version numbers like: 1.0.0-beta-50)
             ) {
                 throw tl.loc("OnlyExplicitVersionAllowed", version);
             }
@@ -156,7 +156,7 @@ export class VersionParts {
                 !parts[1] || // The minor version must always be set
                 (parts.length == 3 && !parts[2]) || // a version number like `1.1.` is invalid because the patch version is missing
                 Number.isNaN(Number.parseInt(parts[0])) || // the major version number must be a number
-                ( // The next lines check the minor version
+                (
                     parts[1] != "x" && // if the minor version is not `x`
                     (
                         Number.isNaN(Number.parseInt(parts[1])) || // the minor version number must be a number
