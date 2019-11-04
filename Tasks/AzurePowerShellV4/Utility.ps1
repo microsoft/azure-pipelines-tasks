@@ -17,7 +17,6 @@ function Get-SavedModulePathLinux {
 function Update-PSModulePathForHostedAgent {
     [CmdletBinding()]
     param([string] $targetAzurePs)
-    Trace-VstsEnteringInvocation $MyInvocation
     try {
         if ($targetAzurePs) {
             $hostedAgentAzModulePath = Get-SavedModulePath -azurePowerShellVersion $targetAzurePs
@@ -29,7 +28,6 @@ function Update-PSModulePathForHostedAgent {
         $env:PSModulePath = $env:PSModulePath.TrimStart(';') 
     } finally {
         Write-Verbose "The updated value of the PSModulePath is: $($env:PSModulePath)"
-        Trace-VstsLeavingInvocation $MyInvocation
     }
 }
 
@@ -63,9 +61,14 @@ function Get-LatestModule {
     $regexToMatch = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $patternToMatch
     $regexToExtract = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $patternToExtract
     $maxVersion = [version] "0.0.0"
+    $modulePath = $env:SystemDrive + "\Modules";
 
     try {
-        $moduleFolders = Get-ChildItem -Directory -Path $($env:SystemDrive + "\Modules") | Where-Object { $regexToMatch.IsMatch($_.Name) }
+        if (-not (Test-Path -Path $modulePath)) {
+            return $resultFolder
+        }
+
+        $moduleFolders = Get-ChildItem -Directory -Path $modulePath | Where-Object { $regexToMatch.IsMatch($_.Name) }
         foreach ($moduleFolder in $moduleFolders) {
             $moduleVersion = [version] $($regexToExtract.Match($moduleFolder.Name).Groups[0].Value)
             if($moduleVersion -gt $maxVersion) {
@@ -120,4 +123,29 @@ function Get-LatestModuleLinux {
     }
     Write-Verbose "Latest module folder detected: $resultFolder"
     return $resultFolder
+}
+
+function CleanUp-PSModulePathForHostedAgent {
+    # Clean up PSModulePath for hosted agent
+    $azureRMModulePath = "C:\Modules\azurerm_2.1.0"
+    $azureModulePath = "C:\Modules\azure_2.1.0"
+    $azPSModulePath = $env:PSModulePath
+
+    if ($azPSModulePath.split(";") -contains $azureRMModulePath) {
+        $azPSModulePath = (($azPSModulePath).Split(";") | ? { $_ -ne $azureRMModulePath }) -join ";"
+        write-verbose "$azureRMModulePath removed. Restart the prompt for the changes to take effect."
+    }
+    else {
+        write-verbose "$azureRMModulePath is not present in $azPSModulePath"
+    }
+
+    if ($azPSModulePath.split(";") -contains $azureModulePath) {
+        $azPSModulePath = (($azPSModulePath).Split(";") | ? { $_ -ne $azureModulePath }) -join ";"
+        write-verbose "$azureModulePath removed. Restart the prompt for the changes to take effect."
+    }
+    else {
+        write-verbose "$azureModulePath is not present in $azPSModulePath"
+    }
+
+    $env:PSModulePath = $azPSModulePath
 }
