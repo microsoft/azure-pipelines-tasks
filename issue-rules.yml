@@ -226,6 +226,11 @@ rules:
   contains: 'Azure'
   addLabels: ['Area: Release']
   assign: ['kmkumaran']
+# Area: PipelineCaching
+- valueFor: '**Enter Task Name**'
+  contains: 'Cache'
+  addLabels: ['Area: PipelineCaching']
+  assign: ['johnterickson']
 
 # Area: Test
 - valueFor: '**Enter Task Name**'

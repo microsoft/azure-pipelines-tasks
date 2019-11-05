@@ -73,8 +73,9 @@ export function getDeploymentMetadata(deploymentObject: any, allPods: any, deplo
         "ResourceUri": imageIds,
         "UserEmail": getUserEmail(),
         "Config": deploymentStrategy,
-        "Address": getEnvironmentResourceAddress() || clusterUrl,
-        "Platform": getPlatform()
+        "Address": getEnvironmentResourceAddress(clusterUrl),
+        "Platform": getPlatform(),
+        "PipelineRunInfo" : getPipelineRunInfo()
     };
 
     return metadataDetails;
@@ -174,14 +175,18 @@ function getDescription(): string {
     return description;
 }
 
-function getEnvironmentResourceAddress(): string {
+function getEnvironmentResourceAddress(clusterUrl: any): string {
+    const environmentName = tl.getVariable("Environment.Name");
     const environmentResourceName = tl.getVariable("Environment.ResourceName");
-    const environmentResourceId = tl.getVariable("Environment.ResourceId");
-    if (!environmentResourceName && !environmentResourceId) {
+    if (!environmentName && !environmentResourceName) {
+        if (clusterUrl && clusterUrl["url"]) {
+            return clusterUrl["url"];
+        }
+
         return "";
     }
 
-    return util.format("%s/%s", environmentResourceName, environmentResourceId);
+    return util.format("%s/%s", environmentName, environmentResourceName);
 }
 
 function getPipelineUrl(): { [key: string]: string } {
@@ -381,4 +386,17 @@ function getRelatedUrl(url: string, label: string): { [key: string]: string } | 
     else {
         return null;
     }
+}
+
+function getPipelineRunInfo(): any {
+    var deploymentPhaseIdentifier = tl.getVariable("Environment.DeploymentPhaseIdentifier")
+    if (deploymentPhaseIdentifier) {
+        return {
+            'planId' : tl.getVariable("SYSTEM.PLANID"),
+            'deploymentPhaseIdentifier' : tl.getVariable("Environment.DeploymentPhaseIdentifier"),
+            'jobName' : tl.getVariable("SYSTEM.JOBNAME"),
+            'hubName' : tl.getVariable("SYSTEM.HOSTTYPE")
+        };
+    }
+    return null;
 }

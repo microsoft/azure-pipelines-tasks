@@ -7,6 +7,7 @@ import * as pkgLocationUtils from "packaging-common/locationUtilities";
 
 export async function downloadUniversalPackage(
     downloadPath: string,
+    projectId: string,
     feedId: string,
     packageId: string,
     version: string,
@@ -28,6 +29,7 @@ export async function downloadUniversalPackage(
         let packageName: string = await artifactToolUtilities.getPackageNameFromId(
             feedUri,
             accessToken,
+            projectId,
             feedId,
             packageId
         );
@@ -36,6 +38,7 @@ export async function downloadUniversalPackage(
 
         const downloadOptions = {
             artifactToolPath,
+            projectId,
             feedId,
             accountUrl: serviceUri,
             packageName,
@@ -52,6 +55,7 @@ export async function downloadUniversalPackage(
         _logUniversalStartupVariables({
             ArtifactToolPath: artifactToolPath,
             PackageType: "Universal",
+            ProjectId: projectId,
             FeedId : feedId,
             PackageId: packageId,
             Version: version,
@@ -69,7 +73,8 @@ function downloadPackageUsingArtifactTool(
     let command = new Array<string>();
     var verbosity = tl.getVariable("Packaging.ArtifactTool.Verbosity") || "Error";
     
-    command.push("universal", "download",
+    command.push(
+        "universal", "download",
         "--feed", options.feedId,
         "--service", options.accountUrl,
         "--package-name", options.packageName,
@@ -79,7 +84,11 @@ function downloadPackageUsingArtifactTool(
         "--verbosity", verbosity,
         "--filter", filterPattern);
 
-    console.log(tl.loc("Info_Downloading", options.packageName, options.packageVersion, options.feedId));
+    if (options.projectId) {
+        command.push("--project", options.projectId);
+    }
+
+    console.log(tl.loc("Info_Downloading", options.packageName, options.packageVersion, options.feedId, options.projectId));
     const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(
         options.artifactToolPath,
         command,
