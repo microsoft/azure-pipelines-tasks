@@ -105,7 +105,6 @@ export class KuduServiceUtility {
                 'deployer=' + VSTS_ZIP_DEPLOY
             ];
             stackTraceUrl = this._appServiceKuduService.getKuduStackTrace();
-            tl.debug(tl.loc('KuduStackTraceURL', stackTraceUrl));
             let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
             await this._processDeploymentResponse(deploymentDetails);
 
@@ -128,7 +127,6 @@ export class KuduServiceUtility {
                 'deployer=' +   VSTS_DEPLOY
             ];
             stackTraceUrl = this._appServiceKuduService.getKuduStackTrace();
-            tl.debug(tl.loc('KuduStackTraceURL', stackTraceUrl));
             var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
             await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
