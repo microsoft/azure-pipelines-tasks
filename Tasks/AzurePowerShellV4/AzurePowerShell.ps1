@@ -49,33 +49,29 @@ if ($targetAzurePs -eq $latestVersion) {
 . "$PSScriptRoot\Utility.ps1"
 
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
-$endpoint = Get-VstsEndpoint -Name $serviceName -Require
-CleanUp-PSModulePathForHostedAgent
-Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
+$endpointObject = Get-VstsEndpoint -Name $serviceName -Require
+$endpoint = ConvertTo-Json $endpointObject
 
 try 
-{
-    # Initialize Azure.
-    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs
-    
+{   
     if ($input_pwsh)
     {
-            # Generate the script contents.
+        # Generate the script contents.
         Write-Host (Get-VstsLocString -Key 'GeneratingScript')
-        $UpdatePSModulePathArgument = $null;
-        if ($targetAzurePs)
-        {
-            $UpdatePSModulePathArgument = "-targetAzurePs $targetAzurePs"
-        }
-
         $contents = @()
         $contents += "`$ErrorActionPreference = '$__vsts_input_errorActionPreference'"
         if ($env:system_debug -eq "true") {
             $contents += "`$VerbosePreference = 'continue'"
         }
 
-        $contents += ". $PSScriptRoot\UpdatePSModulePath.ps1 $UpdatePSModulePathArgument"
+        $CoreAzArgument = $null;
+        if ($targetAzurePs) {
+            $CoreAzArgument = "-endpoint '$endpoint' -targetAzurePs $targetAzurePs"
+        } else {
+            $CoreAzArgument = "-endpoint '$endpoint'"
+        }
+        $contents += ". $PSScriptRoot\CoreAz.ps1 $CoreAzArgument"
+		
         if ($scriptType -eq "InlineScript") {
             $contents += "$scriptInline".Replace("`r`n", "`n").Replace("`n", "`r`n")
         } else {
@@ -96,11 +92,8 @@ try
         #
         # Note, use "-Command" instead of "-File". On PowerShell v4 and V3 when using "-File", terminating
         # errors do not cause a non-zero exit code.
-        if ($input_pwsh) {
-            $powershellPath = Get-Command -Name pwsh.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
-        } else {
-            $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
-        }
+        $powershellPath = Get-Command -Name pwsh.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
+        
         Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
         $arguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `". '$($__vstsAzPSScriptPath.Replace("'", "''"))'`""
         $splat = @{
@@ -164,7 +157,14 @@ try
     }
     else
     {
-                # Trace the expression as it will be invoked.
+	    CleanUp-PSModulePathForHostedAgent
+        Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
+
+	    # Initialize Azure.
+        Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+        Initialize-AzModule -Endpoint $endpointObject -azVersion $targetAzurePs
+		
+        # Trace the expression as it will be invoked.
         $__vstsAzPSInlineScriptPath = $null
         If ($scriptType -eq "InlineScript") {
             $scriptArguments = $null
