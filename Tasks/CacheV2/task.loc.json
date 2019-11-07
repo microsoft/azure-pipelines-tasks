@@ -1,6 +1,6 @@
 {
   "id": "D53CCAB4-555E-4494-9D06-11DB043FB4A9",
-  "name": "CacheBeta",
+  "name": "Cache",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://aka.ms/pipeline-caching-docs",
@@ -8,18 +8,17 @@
   "category": "Utility",
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 3,
+    "Major": 2,
+    "Minor": 0,
     "Patch": 0
   },
   "groups": [],
   "demands": [],
-  "preview": true,
-  "minimumAgentVersion": "2.159.2",
+  "minimumAgentVersion": "2.160.0",
   "inputs": [
     {
       "name": "key",
-      "type": "multiLine",
+      "type": "string",
       "label": "ms-resource:loc.input.label.key",
       "defaultValue": "",
       "required": true,
@@ -40,6 +39,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cacheHitVar"
+    },
+    {
+      "name": "restoreKeys",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.restoreKeys",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.restoreKeys"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
