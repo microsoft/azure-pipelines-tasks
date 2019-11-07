@@ -518,7 +518,7 @@ export function getTempKeychainPath(): string {
  * @param p12Pwd Password for the P12 file
  */
 export async function getP12Properties(p12Path: string, p12Pwd: string): Promise<{ fingerprint: string, commonName: string, notBefore: Date, notAfter: Date}> {
-    //openssl pkcs12 -in <p12Path> -nokeys -passin pass:"<p12Pwd>" | openssl x509 -noout -fingerprint –subject -dates
+    //openssl pkcs12 -in <p12Path> -nokeys -passin pass:"<p12Pwd>" | openssl x509 -noout -fingerprint –subject -nameopt multiline -dates
     let opensslPath: string = tl.which('openssl', true);
     let openssl1: ToolRunner = tl.tool(opensslPath);
     if (!p12Pwd) {
@@ -528,7 +528,7 @@ export async function getP12Properties(p12Path: string, p12Pwd: string): Promise
     openssl1.arg(['pkcs12', '-in', p12Path, '-nokeys', '-passin', 'pass:' + p12Pwd]);
 
     let openssl2: ToolRunner = tl.tool(opensslPath);
-    openssl2.arg(['x509', '-noout', '-fingerprint', '-subject', '-dates']);
+    openssl2.arg(['x509', '-noout', '-fingerprint', '-subject', '-nameopt', 'multiline', '-dates']);
     openssl1.pipeExecOutputToTool(openssl2);
 
     let fingerprint: string;
@@ -546,13 +546,9 @@ export async function getP12Properties(p12Path: string, p12Pwd: string): Promise
                 // Example value: "BB:26:83:C6:AA:88:35:DE:36:94:F2:CF:37:0A:D4:60:BB:AE:87:0C"
                 // Remove colons separating each octet.
                 fingerprint = value.replace(/:/g, '').trim();
-            } else if (key === 'subject') {
-                // Example value: "/UID=E848ASUQZY/CN=iPhone Developer: Chris Sidi (7RZ3N927YF)/OU=DJ8T2973U7/O=Chris Sidi/C=US"
-                // Extract the common name.
-                const matches: string[] = value.match(/\/CN=([^/]+)/);
-                if (matches && matches[1]) {
-                    commonName = matches[1].trim();
-                }
+            } else if (key === 'commonName') {
+                // Example value: "iPhone Developer: Chris Sidi (7RZ3N927YF)"
+                commonName = value;
             } else if (key === 'notBefore') {
                 // Example value: "Nov 13 03:37:42 2018 GMT"
                 notBefore = new Date(value);
@@ -734,7 +730,8 @@ function splitIntoKeyValue(line: string): {key: string, value: string} {
     const index: number = line.indexOf('=');
 
     if (index) {
-        return {key: line.substring(0, index), value: line.substring(index + 1)};
+        // trim turns "    commonName                " into "commonName", same with the key
+        return {key: line.substring(0, index).trim(), value: line.substring(index + 1).trim()};
     } else {
         return undefined;
     }

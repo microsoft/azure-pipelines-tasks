@@ -45,9 +45,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/build/temp/ios_signing_temp.keychain": false
     },
     "exec": {
-        "/usr/bin/openssl pkcs12 -in /build/temp/mySecureFileId.filename -nokeys -passin pass: | /usr/bin/openssl x509 -noout -fingerprint -subject -dates": {
+        "/usr/bin/openssl pkcs12 -in /build/temp/mySecureFileId.filename -nokeys -passin pass: | /usr/bin/openssl x509 -noout -fingerprint -subject -nameopt multiline -dates": {
             "code": 0,
-            "stdout": "MAC verified OK\nSHA1 Fingerprint=BB:26:83:C6:AA:88:35:DE:36:94:F2:CF:37:0A:D4:60:BB:AE:87:0C\nsubject= /UID=ZD34QB2EFN/CN=iPhone Developer: Madhuri Gummalla (HE432Y3E2Q)/OU=A9M46DL4GH/O=Madhuri Gummalla/C=US\nnotBefore=Nov 13 03:37:42 2018 GMT\nnotAfter=Nov 13 03:37:42 2099 GMT\n"
+            "stdout": "MAC verified OK\nSHA1 Fingerprint=BB:26:83:C6:AA:88:35:DE:36:94:F2:CF:37:0A:D4:60:BB:AE:87:0C\nsubject=\n    userId                    = ZD34QB2EFN\n    commonName                = iPhone Developer: Madhuri Gummalla (HE432Y3E2Q)\n    organizationalUnitName    = A9M46DL4GH\n    organizationName          = Madhuri Gummalla\n    countryName               = US\nnotBefore=Nov 13 03:37:42 2018 GMT\nnotAfter=Nov 13 03:37:42 2099 GMT\n"
         },
         "/usr/bin/openssl pkcs12 -in /build/temp/mySecureFileId.filename -nocerts -passin pass: -passout pass:115 | /usr/bin/grep friendlyName": {
             "code": 0,
