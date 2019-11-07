@@ -35,15 +35,15 @@ Tasks/AzureFunctionAppV1/*    @kmkumaran      @SumiranAgg
 
 Tasks/AzureFunctionAppContainerV1/*    @kmkumaran      @SumiranAgg
 
-Tasks/AzureFunctionV1/*     @bansalaseem
+Tasks/AzureFunctionV1/*     @vithati
 
 Tasks/AzureIoTEdgeV2/*      @prativen  @blackchoey  @michaeljqzq
 
-Tasks/AzureKeyVaultV1/*     @bansalaseem
+Tasks/AzureKeyVaultV1/*     @vithati
 
 Tasks/AzureMonitorAlertsV0/*    @kmkumaran
 
-Tasks/AzureMonitorV0/*      @bansalaseem
+Tasks/AzureMonitorV0/*      @vithati
 
 Tasks/AzureMonitorV1/*      @vithati
 
@@ -51,7 +51,7 @@ Tasks/AzureMysqlDeploymentV1/*  @kmkumaran      @RoshanKumarMicrosoft
 
 Tasks/AzureNLBManagementV1/*    @kmkumaran
 
-Tasks/AzurePolicyV0/*   @bansalaseem
+Tasks/AzurePolicyV0/*   @vithati
 
 Tasks/AzurePowerShellV2/*   @kmkumaran
 
@@ -153,19 +153,19 @@ Tasks/CUrlUploaderV2/*      @leantk
 
 Tasks/DecryptFileV1/*   @leantk
 
-Tasks/DelayV1/*     @bansalaseem
+Tasks/DelayV1/*     @vithati
 
 Tasks/DeleteFilesV1/*   @jtpetty
 
 Tasks/DeployVisualStudioTestAgentV2/*    @SadagopanRajaram @ShreyasRmsft
 
-Tasks/DockerV0/*    @bansalaseem
+Tasks/DockerV0/*    @vithati
 
-Tasks/DockerV1/*    @bansalaseem
+Tasks/DockerV1/*    @vithati
 
-Tasks/DockerV2/*    @bansalaseem
+Tasks/DockerV2/*    @vithati
 
-Tasks/DockerComposeV0/*     @bansalaseem
+Tasks/DockerComposeV0/*     @vithati
 
 Tasks/DotNetCoreCLIV2/*     @bishal-pdmsft
 
@@ -187,7 +187,7 @@ Tasks/DownloadPipelineArtifactV1/*      @mihaif @jahsu-MSFT @fadnavistanmay @owe
 
 Tasks/DownloadSecureFileV1/*    @leantk
 
-Tasks/DuffleInstallerV0/*   @bansalaseem     @vithati
+Tasks/DuffleInstallerV0/*   @vithati     @vithati
 
 Tasks/ExtractFilesV1/*      @jtpetty
 
@@ -211,11 +211,11 @@ Tasks/GulpV0/*      @hross
 
 Tasks/GulpV1/*      @hross
 
-Tasks/HelmDeployV0/*    @bansalaseem
+Tasks/HelmDeployV0/*    @vithati
 
-Tasks/HelmInstallerV0/*     @bansalaseem
+Tasks/HelmInstallerV0/*     @vithati
 
-Tasks/HelmInstallerV1/*     @bansalaseem
+Tasks/HelmInstallerV1/*     @vithati
 
 Tasks/IISWebAppDeployment/*     @kmkumaran
 
@@ -229,7 +229,7 @@ Tasks/InstallAppleProvisioningProfileV1/*   @leantk
 
 Tasks/InstallSSHKeyV0/*     @leantk
 
-Tasks/InvokeRestApiV1/*     @bansalaseem
+Tasks/InvokeRestApiV1/*     @vithati
 
 Tasks/JavaToolInstallerV0/*     @leantk
 
@@ -237,15 +237,15 @@ Tasks/JenkinsDownloadArtifactsV1/*      @Lovakumar      @kasubram
 
 Tasks/JenkinsQueueJobV2/*   @leantk
 
-Tasks/KubectlInstallerV0/*  @bansalaseem
+Tasks/KubectlInstallerV0/*  @vithati
 
-Tasks/KubernetesV0/*    @bansalaseem
+Tasks/KubernetesV0/*    @vithati
 
-Tasks/KubernetesV1/*    @bansalaseem
+Tasks/KubernetesV1/*    @vithati
 
-Tasks/KubernetesManifestV0/*    @bansalaseem
+Tasks/KubernetesManifestV0/*    @vithati
 
-Tasks/ManualInterventionV8/*    @bansalaseem
+Tasks/ManualInterventionV8/*    @vithati
 
 Tasks/MavenAuthenticateV0/*     @zjrunner   @aasim
 
@@ -311,13 +311,13 @@ Tasks/PublishTestResultsV2/*    @SadagopanRajaram
 
 Tasks/ContainerStructureTestV0/*    @SadagopanRajaram   @navin22
 
-Tasks/PublishToAzureServiceBusV1/*      @bansalaseem
+Tasks/PublishToAzureServiceBusV1/*      @vithati
 
 Tasks/PyPIPublisherV0/*     @bishal-pdmsft   @leantk
 
 Tasks/PythonScriptV0/*      @leantk
 
-Tasks/QueryWorkItemsV0/*    @bansalaseem
+Tasks/QueryWorkItemsV0/*    @vithati
 
 Tasks/QuickPerfTestV1/*     @SadagopanRajaram @ShreyasRmsft
 

@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import mocha = require('mocha');
 import * as utils from '../utils.js';
 import path = require('path');
-import tl = require("vsts-task-lib/task");
+import tl = require("azure-pipelines-task-lib/task");
 
 describe('ArchiveFiles L0 Suite', function () {
     before(() => { });
