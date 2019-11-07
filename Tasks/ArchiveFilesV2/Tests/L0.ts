@@ -1,13 +1,22 @@
 import * as assert from 'assert';
-import mocha = require('mocha');
 import * as utils from '../utils.js';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import fs = require('fs');
 import path = require('path');
-import tl = require("azure-pipelines-task-lib/task");
+import tl = require('azure-pipelines-task-lib/task');
 
 describe('ArchiveFiles L0 Suite', function () {
-    before(() => { });
-
-    after(() => { });
+    function runValidations(validator: () => void, tr, done) {
+        try {
+            validator();
+            done();
+        }
+        catch (error) {
+            console.log('STDERR', tr.stderr);
+            console.log('STDOUT', tr.stdout);
+            done(error);
+        }
+    }
 
     const files = (n) => {
         return Array.from(
@@ -28,6 +37,81 @@ describe('ArchiveFiles L0 Suite', function () {
     
             done();
         });
-    }) 
+    });
 
+    it('Successfully creates a zip', (done: MochaDone) => {
+        this.timeout(5000);
+        process.env['archiveType'] = 'zip';
+        process.env['archiveFile'] = 'myZip';
+        process.env['includeRootFolder'] = 'true';
+        const expectedArchivePath = path.join(__dirname, 'test_output', 'myZip.zip');
+
+        let tp: string = path.join(__dirname, 'L0CreateArchive.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
+            assert(tr.stdout.indexOf('Items to compress: 6') > -1, 'Should have found 6 items to compress');
+            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}`);
+        }, tr, done);
+    });
+
+    it('Successfully creates a tar', (done: MochaDone) => {
+        this.timeout(5000);
+        process.env['archiveType'] = 'tar';
+        process.env['archiveFile'] = 'myTar';
+        process.env['includeRootFolder'] = 'true';
+        const expectedArchivePath = path.join(__dirname, 'test_output', 'myTar.gz');
+
+        let tp: string = path.join(__dirname, 'L0CreateArchive.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
+            assert(tr.stdout.indexOf('Items to compress: 6') > -1, 'Should have found 6 items to compress');
+            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}`);
+        }, tr, done);
+    });
+
+    it('Successfully creates a 7z', (done: MochaDone) => {
+        this.timeout(5000);
+        process.env['archiveType'] = '7z';
+        process.env['archiveFile'] = 'my7z';
+        process.env['includeRootFolder'] = 'true';
+        const expectedArchivePath = path.join(__dirname, 'test_output', 'my7z.7z');
+
+        let tp: string = path.join(__dirname, 'L0CreateArchive.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
+            assert(tr.stdout.indexOf('Items to compress: 6') > -1, 'Should have found 6 items to compress');
+            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}`);
+        }, tr, done);
+    });
+
+    it('Successfully creates a wim', (done: MochaDone) => {
+        this.timeout(5000);
+        process.env['archiveType'] = 'wim';
+        process.env['archiveFile'] = 'mywim';
+        process.env['includeRootFolder'] = 'true';
+        const expectedArchivePath = path.join(__dirname, 'test_output', 'myWim.wim');
+
+        let tp: string = path.join(__dirname, 'L0CreateArchive.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
+            assert(tr.stdout.indexOf('Items to compress: 6') > -1, 'Should have found 6 items to compress');
+            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}`);
+        }, tr, done);
+    });
 });
