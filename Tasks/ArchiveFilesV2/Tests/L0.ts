@@ -65,7 +65,7 @@ describe('ArchiveFiles L0 Suite', function () {
 
         runValidations(() => {
             assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
-            if (process.platform.indexOf('win') >= 0) {
+            if (process.platform.indexOf('win32') >= 0) {
                 assert(tr.stdout.indexOf('Items to compress: 6') > -1, 'Should have found 6 items to compress');
             } else {
                 assert(tr.stdout.indexOf('adding: test_folder/ (') > -1, 'Should have found 6 items to compress');
@@ -85,7 +85,7 @@ describe('ArchiveFiles L0 Suite', function () {
         process.env['archiveFile'] = 'myTar';
         process.env['includeRootFolder'] = 'true';
         let expectedArchivePath = path.join(__dirname, 'test_output', 'myTar.gz');
-        if (process.platform.indexOf('win') < 0) {
+        if (process.platform.indexOf('win32') < 0) {
             expectedArchivePath = path.join(__dirname, 'test_output', 'myTar');
         }
 
@@ -113,8 +113,11 @@ describe('ArchiveFiles L0 Suite', function () {
         tr.run();
 
         runValidations(() => {
-            assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
-            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
+            // Dont perform validation if 7z cant be found (macOS)
+            if (tr.stderr.indexOf('Unable to locate executable file: \'7z') < 0) {
+                assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
+                assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
+            }
         }, tr, done);
     });
 
@@ -134,8 +137,10 @@ describe('ArchiveFiles L0 Suite', function () {
         tr.run();
 
         runValidations(() => {
-            assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
-            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
+            if (tr.stderr.indexOf('Unable to locate executable file: \'7z') < 0) {
+                assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
+                assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
+            }
         }, tr, done);
     });
 });
