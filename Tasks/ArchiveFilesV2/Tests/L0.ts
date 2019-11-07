@@ -100,6 +100,8 @@ describe('ArchiveFiles L0 Suite', function () {
         }, tr, done);
     });
 
+// These tests rely on 7z which isnt present on macOS
+if (process.platform.indexOf('darwin') >= 0) {
     it('Successfully creates a 7z', (done: MochaDone) => {
         this.timeout(5000);
         process.env['archiveType'] = '7z';
@@ -113,11 +115,8 @@ describe('ArchiveFiles L0 Suite', function () {
         tr.run();
 
         runValidations(() => {
-            // Dont perform validation if 7z cant be found (macOS)
-            if (tr.stderr.indexOf('Unable to locate executable file: \'7z') < 0) {
                 assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
                 assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
-            }
         }, tr, done);
     });
 
@@ -137,10 +136,9 @@ describe('ArchiveFiles L0 Suite', function () {
         tr.run();
 
         runValidations(() => {
-            if (tr.stderr.indexOf('Unable to locate executable file: \'7z') < 0) {
                 assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
                 assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
-            }
         }, tr, done);
     });
+}
 });
