@@ -75,7 +75,7 @@ describe('ArchiveFiles L0 Suite', function () {
                 assert(tr.stdout.indexOf('adding: test_folder/b/ (') > -1, 'Should have found 6 items to compress');
                 assert(tr.stdout.indexOf('adding: test_folder/b/abc.txt (') > -1, 'Should have found 6 items to compress');
             }
-            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}`);
+            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
         }, tr, done);
     });
 
@@ -93,7 +93,7 @@ describe('ArchiveFiles L0 Suite', function () {
 
         runValidations(() => {
             assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
-            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}`);
+            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
         }, tr, done);
     });
 
@@ -111,7 +111,7 @@ describe('ArchiveFiles L0 Suite', function () {
 
         runValidations(() => {
             assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
-            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}`);
+            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
         }, tr, done);
     });
 
@@ -129,7 +129,7 @@ describe('ArchiveFiles L0 Suite', function () {
 
         runValidations(() => {
             assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
-            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}`);
+            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
         }, tr, done);
     });
 });
