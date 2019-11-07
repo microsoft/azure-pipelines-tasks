@@ -91,7 +91,7 @@ export function getCreatorEmail(): string {
     const schedule = "schedule";
     const buildReason = tl.getVariable("Build.Reason");
     let userEmail: string = "";
-    if (isBuild && (!buildReason || (buildReason && tl.getVariable("Build.Reason").toLowerCase() !== schedule))) {
+    if (isBuild && (!buildReason || buildReason.toLowerCase() !== schedule)) {
         userEmail = tl.getVariable("Build.RequestedForEmail");
     }
     else {
