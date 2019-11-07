@@ -101,7 +101,7 @@ describe('ArchiveFiles L0 Suite', function () {
     });
 
 // These tests rely on 7z which isnt present on macOS
-if (process.platform.indexOf('darwin') >= 0) {
+if (process.platform.indexOf('darwin') < 0) {
     it('Successfully creates a 7z', (done: MochaDone) => {
         this.timeout(5000);
         process.env['archiveType'] = '7z';
