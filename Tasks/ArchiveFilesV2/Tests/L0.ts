@@ -2,6 +2,7 @@ import * as assert from 'assert';
 import * as utils from '../utils.js';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import fs = require('fs');
+import os = require('os');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 
@@ -64,7 +65,16 @@ describe('ArchiveFiles L0 Suite', function () {
 
         runValidations(() => {
             assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
-            assert(tr.stdout.indexOf('Items to compress: 6') > -1, 'Should have found 6 items to compress');
+            if (process.platform.indexOf('win') >= 0) {
+                assert(tr.stdout.indexOf('Items to compress: 6') > -1, 'Should have found 6 items to compress');
+            } else {
+                assert(tr.stdout.indexOf('adding: test_folder/ (') > -1, 'Should have found 6 items to compress');
+                assert(tr.stdout.indexOf('adding: test_folder/a/ (') > -1, 'Should have found 6 items to compress');
+                assert(tr.stdout.indexOf('adding: test_folder/a/abc.txt (') > -1, 'Should have found 6 items to compress');
+                assert(tr.stdout.indexOf('adding: test_folder/a/def.txt (') > -1, 'Should have found 6 items to compress');
+                assert(tr.stdout.indexOf('adding: test_folder/b/ (') > -1, 'Should have found 6 items to compress');
+                assert(tr.stdout.indexOf('adding: test_folder/b/abc.txt (') > -1, 'Should have found 6 items to compress');
+            }
             assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}`);
         }, tr, done);
     });
@@ -83,7 +93,6 @@ describe('ArchiveFiles L0 Suite', function () {
 
         runValidations(() => {
             assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
-            assert(tr.stdout.indexOf('Items to compress: 6') > -1, 'Should have found 6 items to compress');
             assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}`);
         }, tr, done);
     });
@@ -102,7 +111,6 @@ describe('ArchiveFiles L0 Suite', function () {
 
         runValidations(() => {
             assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
-            assert(tr.stdout.indexOf('Items to compress: 6') > -1, 'Should have found 6 items to compress');
             assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}`);
         }, tr, done);
     });
@@ -121,7 +129,6 @@ describe('ArchiveFiles L0 Suite', function () {
 
         runValidations(() => {
             assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
-            assert(tr.stdout.indexOf('Items to compress: 6') > -1, 'Should have found 6 items to compress');
             assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}`);
         }, tr, done);
     });
