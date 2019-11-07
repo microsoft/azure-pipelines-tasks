@@ -449,7 +449,7 @@ export class Kudu {
     }
 
     public getKuduStackTrace() {
-        let stackTraceUrl = this._client.getRequestUri('', []);
+        let stackTraceUrl = this._client.getRequestUri(`/api/vfs/LogFiles/kudu/trace`);
         return stackTraceUrl;
     }
 
