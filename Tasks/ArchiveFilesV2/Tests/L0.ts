@@ -84,7 +84,10 @@ describe('ArchiveFiles L0 Suite', function () {
         process.env['archiveType'] = 'tar';
         process.env['archiveFile'] = 'myTar';
         process.env['includeRootFolder'] = 'true';
-        const expectedArchivePath = path.join(__dirname, 'test_output', 'myTar.gz');
+        let expectedArchivePath = path.join(__dirname, 'test_output', 'myTar.gz');
+        if (process.platform.indexOf('win') < 0) {
+            expectedArchivePath = path.join(__dirname, 'test_output', 'myTar');
+        }
 
         let tp: string = path.join(__dirname, 'L0CreateArchive.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -120,7 +123,10 @@ describe('ArchiveFiles L0 Suite', function () {
         process.env['archiveType'] = 'wim';
         process.env['archiveFile'] = 'mywim';
         process.env['includeRootFolder'] = 'true';
-        const expectedArchivePath = path.join(__dirname, 'test_output', 'myWim.wim');
+        let expectedArchivePath = path.join(__dirname, 'test_output', 'myWim.wim');
+        if (process.platform.indexOf('win') < 0) {
+            expectedArchivePath = path.join(__dirname, 'test_output', 'mywim.wim');
+        }
 
         let tp: string = path.join(__dirname, 'L0CreateArchive.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
