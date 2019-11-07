@@ -10,8 +10,8 @@ import * as crypto from "crypto";
 const matchPatternForSize = new RegExp(/[\d\.]+/);
 const orgUrl = tl.getVariable('System.TeamFoundationCollectionUri');
 const buildString = "build";
-const hostType = tl.getVariable("System.HostType").toLowerCase();
-const isBuild = hostType === buildString;
+const hostType = tl.getVariable("System.HostType");
+const isBuild = hostType && hostType.toLowerCase() === buildString;
 const matchPatternForDigest = new RegExp(/sha256\:(.+)/);
 
 export function build(connection: ContainerConnection, dockerFile: string, commandArguments: string, labelArguments: string[], tagArguments: string[], onCommandOut: (output) => any): any {
