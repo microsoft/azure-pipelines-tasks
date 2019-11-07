@@ -17,6 +17,13 @@ describe('ArchiveFiles L0 Suite', function () {
             done(error);
         }
     }
+    
+    before(() => {
+        const testTemp = path.join(__dirname, 'test_temp');
+        if (!fs.existsSync(testTemp)) {
+            fs.mkdirSync(testTemp);
+        }
+    })
 
     const files = (n) => {
         return Array.from(
