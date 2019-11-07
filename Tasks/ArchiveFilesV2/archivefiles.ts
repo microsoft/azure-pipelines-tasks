@@ -68,7 +68,6 @@ function createFileList(files: string[]): string {
     const file: string = path.resolve(tempDirectory, fileName);
 
     try {
-        console.log(`Writing to ${file}: ${files.reduce((prev, cur) => prev + cur + "\n", "")}`);
         fs.writeFileSync(
             file,
             files.reduce((prev, cur) => prev + cur + "\n", ""),
