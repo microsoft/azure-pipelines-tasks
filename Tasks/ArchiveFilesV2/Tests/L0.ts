@@ -23,6 +23,10 @@ describe('ArchiveFiles L0 Suite', function () {
         if (!fs.existsSync(testTemp)) {
             fs.mkdirSync(testTemp);
         }
+        const testOutput = path.join(__dirname, 'test_output');
+        if (!fs.existsSync(testOutput)) {
+            fs.mkdirSync(testOutput);
+        }
     })
 
     const files = (n) => {
