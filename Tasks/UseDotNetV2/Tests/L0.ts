@@ -150,6 +150,7 @@ describe('UseDotNet', function () {
 
     it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should throw if version for pacakge type can not be found, and error message should contain the package type", (done) => {
         process.env["__failat__"] = "versionnotfound";
+        process.env["__versionspec__"] = "2.2.999-cantbefound-234";
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoFailTests.js"));
         tr.run();
         runValidations(() => {
@@ -160,11 +161,25 @@ describe('UseDotNet', function () {
 
     it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should throw if getting channel fails", (done) => {
         process.env["__failat__"] = "channelfetch";
+        process.env["__versionspec__"] = "2.2.999-cantbefound-234";
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoFailTests.js"));
         tr.run();
         runValidations(() => {
             assert(tr.succeeded == false, ("Should have failed as channels could not be fetched."));
             assert(tr.stdout.indexOf("ExceptionWhileDownloadOrReadReleasesIndex") > -1, "Should have thrown exception and returned.");
+        }, tr, done);
+    });
+
+    it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should throw if preview versions included and version not found", (done) => {
+        process.env["__failat__"] = "versionnotfound";
+        process.env["__versionspec__"] = "4.40.x";
+        process.env["__inlcudepreviewversion__"] = "true";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoFailTests.js"));
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == false, ("Should have failed as channels could not be fetched."));
+            assert(tr.stdout.indexOf("MatchingVersionNotFound") > -1, "Should not have found a matching version.");
+            assert(tr.stdout.indexOf("VersionNotFound") > -1, "Should have thrown with VersionNotFound error.");
         }, tr, done);
     });
 
@@ -226,6 +241,26 @@ describe('UseDotNet', function () {
     it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should return latest version info even if includePreviewVersion is true but latest version is non preview", (done) => {
         process.env["__versionspec__"] = "2.3.x";
         process.env["__inlcudepreviewversion__"] = "true";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoTestsCorrect.js"));
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have returned the correct version info."));
+        }, tr, done);
+    });
+
+    it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should return latest version info if includePreviewVersion is true and only 1 channel and is preview", (done) => {
+        process.env["__versionspec__"] = "3.x";
+        process.env["__inlcudepreviewversion__"] = "true";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoTestsCorrect.js"));
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have returned the correct version info."));
+        }, tr, done);
+    });
+
+    it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should return latest version info if includePreviewVersion is false and latest version is preview", (done) => {
+        process.env["__versionspec__"] = "4.x";
+        process.env["__inlcudepreviewversion__"] = "false";
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoTestsCorrect.js"));
         tr.run();
         runValidations(() => {
