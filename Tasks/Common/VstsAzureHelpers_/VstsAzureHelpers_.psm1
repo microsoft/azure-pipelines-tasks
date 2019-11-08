@@ -11,8 +11,6 @@ if ($global:DebugPreference -eq 'Continue') {
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 
-[System.Net.WebRequest]::DefaultWebProxy = Get-VstsWebProxy
-
 Import-Module $PSScriptRoot/../TlsHelper_
 Add-Tls12InSession
 
