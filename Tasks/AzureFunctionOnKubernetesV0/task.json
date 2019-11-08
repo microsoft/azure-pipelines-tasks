@@ -18,6 +18,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         "Patch": 2
 =======
         "Patch": 4
@@ -28,6 +29,9 @@
 =======
         "Patch": 6
 >>>>>>> Send pipeline run info like deploy phase identifier for artifact traceability. (#11638)
+=======
+        "Patch": 7
+>>>>>>> Fixing L0 failures in Docker related tasks. Adding null check. Disabling failing tests. (#11709)
     },
     "demands": [],
     "groups": [

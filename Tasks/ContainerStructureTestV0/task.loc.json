@@ -16,6 +16,7 @@
     "Minor": 1,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "Patch": 4
 =======
     "Patch": 6
@@ -23,6 +24,9 @@
 =======
     "Patch": 7
 >>>>>>> Not failing the CST task, when Unable to publish to TCM. (#11655)
+=======
+    "Patch": 8
+>>>>>>> Fixing L0 failures in Docker related tasks. Adding null check. Disabling failing tests. (#11709)
   },
   "preview": true,
   "demands": [],

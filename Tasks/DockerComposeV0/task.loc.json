@@ -14,7 +14,11 @@
   "version": {
     "Major": 0,
     "Minor": 160,
+<<<<<<< HEAD
     "Patch": 1
+=======
+    "Patch": 3
+>>>>>>> Fixing L0 failures in Docker related tasks. Adding null check. Disabling failing tests. (#11709)
   },
   "demands": [],
   "preview": "false",
