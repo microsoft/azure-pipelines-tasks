@@ -145,7 +145,6 @@
     "InvalidChannelObject": "ms-resource:loc.messages.InvalidChannelObject",
     "ReleasesIndexBodyIncorrect": "ms-resource:loc.messages.ReleasesIndexBodyIncorrect",
     "InvalidVersionObject": "ms-resource:loc.messages.InvalidVersionObject",
-    "InvalidVersion": "ms-resource:loc.messages.InvalidVersion",
     "FilesDataIsIncorrectInVersion": "ms-resource:loc.messages.FilesDataIsIncorrectInVersion",
     "VersionFilesDataIncorrect": "ms-resource:loc.messages.VersionFilesDataIncorrect",
     "VersionInformationNotComplete": "ms-resource:loc.messages.VersionInformationNotComplete",
