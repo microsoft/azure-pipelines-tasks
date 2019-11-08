@@ -75,7 +75,6 @@
   "loc.messages.InvalidChannelObject": "Object cannot be used as Channel, required properties such as channel-version, releases.json is missing.",
   "loc.messages.ReleasesIndexBodyIncorrect": "Parsed releases index body is not correct. Kindly see if the releases-index section is not empty in the file.",
   "loc.messages.InvalidVersionObject": "Releases.json has a release with invalid %s object: %s",
-  "loc.messages.InvalidVersion": "Invalid version specified %s",
   "loc.messages.FilesDataIsIncorrectInVersion": "In release %s for version %s, File data is incorrect (might have missing required fields, such as name, rid and url): %s",
   "loc.messages.VersionFilesDataIncorrect": "Version's files data is missing or has missing required fields.",
   "loc.messages.VersionInformationNotComplete": "Version: %s required information is not complete in releases.json file. Error: %s",
