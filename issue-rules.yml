@@ -270,3 +270,7 @@ tags:
   addLabels: ['triage']
 - noneMatch: '\s*Area:\s*([^]*)'
   addLabels: ['route']
+
+pathMappings:
+- path: 'AzureDevOps\VSTS\Pipelines\Platform'
+  labels: ['Area: Core']

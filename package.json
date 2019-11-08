@@ -31,7 +31,10 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks",
   "devDependencies": {
+    "@octokit/rest": "^16.34.1",
     "adm-zip": "0.4.13",
+    "azure-devops-node-api": "^9.0.1",
+    "js-yaml": "^3.13.1",
     "markdown-toc": "^1.2.0",
     "minimatch": "3.0.2",
     "minimist": "1.1.1",
