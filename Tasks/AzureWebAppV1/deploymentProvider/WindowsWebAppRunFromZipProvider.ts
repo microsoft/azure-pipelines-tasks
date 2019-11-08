@@ -35,7 +35,7 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
             tl.debug("Compressed folder into zip " +  webPackage);
         }
 
-        tl.debug("Initiated deployment via kudu service for webapp package : ");
+        tl.debug("Initiated deployment via kudu service for webapp package : " + webPackage);
         if (!this.isPublishProfileAuthSchemeEndpoint) {
             var addCustomApplicationSetting = ParameterParser.parse(runFromZipAppSetting);
             var deleteCustomApplicationSetting = ParameterParser.parse(oldRunFromZipAppSetting);
