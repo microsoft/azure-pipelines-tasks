@@ -18,6 +18,7 @@ export class VersionInfo {
         }
 
         this.version = versionInfoObject.version;
+        this.packageType = packageType;
         this.files = [];
         versionInfoObject.files.forEach(fileData => {
             try {
@@ -28,7 +29,6 @@ export class VersionInfo {
             }
         });
 
-        this.packageType = packageType;
         if (this.packageType == utils.Constants.sdk) {
             this.runtimeVersion = versionInfoObject["runtime-version"] || "";
         }
@@ -80,10 +80,20 @@ export class Channel {
 
         this.channelVersion = channelRelease["channel-version"];
         this.releasesJsonUrl = channelRelease["releases.json"];
+
+        if(!channelRelease["support-phase"])
+        {
+            tl.debug(tl.loc("SupportPhaseNotPresentInChannel", this.channelVersion));
+        }
+        else
+        {
+            this.supportPhase = channelRelease["support-phase"];
+        }
     }
 
     public channelVersion: string;
     public releasesJsonUrl: string;
+    public supportPhase: string;
 }
 
 export class VersionParts {
@@ -100,16 +110,36 @@ export class VersionParts {
         }
     }
 
-    private static ValidateVersionSpec(version): boolean {
+    /**
+     * Validate the version. Returns an exception if the version number is wrong.
+     * @param version the input version number as string
+     */
+    private static ValidateVersionSpec(version: string): void {
         try {
             let parts = version.split('.');
             // validate version
-            if (parts.length < 2 || parts.length > 3 || (parts[1] == "x" && parts.length > 2) || (parts[1] != "x" && parts.length <= 2) || !parts[0] || !parts[1] || (parts.length == 3 && !parts[2]) || Number.isNaN(Number.parseInt(parts[0])) || (Number.isNaN(Number.parseInt(parts[1])) && parts[1] != "x")) {
-                throw "";
+            if (parts.length < 2 || // check if the version has at least 3 parts
+                (parts[1] == "x" && parts.length > 2) ||  // a version number like `1.x` must have only major and minor version
+                (parts[1] != "x" && parts.length <= 2) ||  // a version number like `1.1` must have a patch version
+                !parts[0] || // The major version must always be set
+                !parts[1] || // The minor version must always be set
+                (parts.length == 3 && !parts[2]) || // a version number like `1.1.` is invalid because the patch version is missing
+                Number.isNaN(Number.parseInt(parts[0])) || // the major version number must be a number
+                (
+                    parts[1] != "x" && // if the minor version is not `x`
+                    (
+                        Number.isNaN(Number.parseInt(parts[1])) || // the minor version number must be a number
+                        (
+                            parts.length > 2 && parts[2] != "x" && // if the patch is not `x`, then its an explicit version
+                            !semver.valid(version) // validate the explicit version
+                        )
+                    )
+                )
+            ) {
+                throw tl.loc("VersionNumberHasTheWrongFormat", version);
             }
 
             new semver.Range(version);
-            return true;
         }
         catch (ex) {
             throw tl.loc("VersionNotAllowed", version)

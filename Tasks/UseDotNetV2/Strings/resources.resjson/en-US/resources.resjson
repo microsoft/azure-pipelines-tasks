@@ -81,5 +81,6 @@
   "loc.messages.FailedWhileExtractingPacakge": "Failed while extracting downloaded package with error: %s",
   "loc.messages.InstallingNuGetVersion": "Installing NuGet version %s",
   "loc.messages.FailureWhileInstallingNuGetVersion": "Failed while installing NuGet version. Error: %s",
-  "loc.messages.SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet."
+  "loc.messages.SettingUpNugetProxySettings": "Setting up proxy configuration for NuGet.",
+  "loc.messages.SupportPhaseNotPresentInChannel": "support-phase is not present in the channel with channel-version %s."
 }

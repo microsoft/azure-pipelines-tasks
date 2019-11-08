@@ -15,7 +15,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
   "satisfies": [
     "DotNetCore"
@@ -151,6 +151,7 @@
     "FailedWhileExtractingPacakge": "ms-resource:loc.messages.FailedWhileExtractingPacakge",
     "InstallingNuGetVersion": "ms-resource:loc.messages.InstallingNuGetVersion",
     "FailureWhileInstallingNuGetVersion": "ms-resource:loc.messages.FailureWhileInstallingNuGetVersion",
-    "SettingUpNugetProxySettings": "ms-resource:loc.messages.SettingUpNugetProxySettings"
+    "SettingUpNugetProxySettings": "ms-resource:loc.messages.SettingUpNugetProxySettings",
+    "SupportPhaseNotPresentInChannel": "ms-resource:loc.messages.SupportPhaseNotPresentInChannel"
   }
 }
