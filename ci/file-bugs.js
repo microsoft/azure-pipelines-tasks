@@ -4,9 +4,8 @@ const path = require('path');
 const jsyaml = require('js-yaml');
 const azdev = require('azure-devops-node-api');
 
-// TODO - remove my PATs
-const githubPAT = path.env['GITHUB_PAT'];
-const azpPAT = path.env['AZP_PAT'];
+const githubPAT = process.env['GITHUB_PAT'];
+const azpPAT = process.env['AZP_PAT'];
 
 // Number of bugs an area is allowed to have before a P0 AzDevOps bug is filed.
 const bugTolerance = 100;
@@ -102,22 +101,25 @@ function getIssuesByLabel(issues, issueType) {
     return labelMap;
 }
 
+// Generates urls to view bugs by label for the bodies of the bugs
 function getIssueUrls(labels) {
     var urls = '';
     labels.forEach(label => {
-        urls += `https://github.com/microsoft/azure-pipelines-tasks/issues?q=is%3Aissue+is%3Aopen+label%3Abug+label%3A%22Area%3A+Release%22+label%3A%22${label.replace(': ', '%3A+')}%22\n`
+        urls += `<div>https://github.com/microsoft/azure-pipelines-tasks/issues?q=is%3Aissue+is%3Aopen+label%3Abug+label%3A%22Area%3A+Release%22+label%3A%22${label.replace(': ', '%3A+')}%22</div>`
     });
 
     return urls;
 }
 
+// Gets the node api for getting workitems
 async function getNodeApi() {
     let authHandler = azdev.getPersonalAccessTokenHandler(azpPAT); 
     let connection = new azdev.WebApi('https://dev.azure.com/mseng', authHandler);  
     return await connection.getWorkItemTrackingApi();
 }
 
-async function createOrUpdateBug(nodeApi, path, title, message) {
+// Creates a bug. If one already exists with the same path/title, does nothing
+async function createBug(nodeApi, path, title, message) {
     // First try to find an already created bug. If that doesn't exist, create a new one.
     const wiql = `SELECT System.ID from workitems where [Title] = '${title}' and [System.AreaPath] = '${path}' AND [System.State] = 'Active'`;
     const items = await nodeApi.queryByWiql({query: wiql});
@@ -211,7 +213,7 @@ async function fileBugs(bugsByLabel, staleBugsByLabel, untouchedBugsByLabel) {
 <div>1) Check the path mappings at the bottom of https://github.com/microsoft/azure-pipelines-tasks/blob/master/issue-rules.yml. If your path is incorrectly mapped, add a PR and tag @damccorm for review</div>
 <div>2) If the path mappings look correct, file a bug in AzureDevOps\\VSTS\\Pipelines\\Platform and assign Danny McCormick (alias damccorm)</div>`;
 
-            await createOrUpdateBug(nodeApi, path, bugTitle, bugMessage);
+            await createBug(nodeApi, path, bugTitle, bugMessage);
         }
     }
 }
@@ -278,7 +280,14 @@ async function run() {
         }
     });
 
-    await fileBugs(labelMap, staleLabelMap, untouchedLabelMap);
+    try {
+        await fileBugs(labelMap, staleLabelMap, untouchedLabelMap);
+    }
+    catch (err) {
+        // Log error before throwing or it will get swallowed since its inside an async function
+        console.log(err);
+        throw err;
+    }
 }
 
 run();
