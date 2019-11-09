@@ -182,7 +182,7 @@ async function fileBugs(bugsByLabel, staleBugsByLabel, untouchedBugsByLabel) {
             }
         }
 
-        if (bugs > bugTolerance || staleBugs > staleBugTolerance|| untouchedBugs > untouchedBugTolerance) {
+        if (bugs > bugTolerance || staleBugs > staleBugTolerance || untouchedBugs > untouchedBugTolerance) {
             header(path);
             console.log('Bugs:', bugs);
             console.log('Stale bugs:', staleBugs);
