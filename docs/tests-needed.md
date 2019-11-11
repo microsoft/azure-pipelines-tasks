@@ -53,7 +53,7 @@ of untested tasks to 0!
 | CocoaPodsV0 | @leantk |  |
 | CondaEnvironmentV0 | @leantk | :heavy_check_mark: |
 | CondaEnvironmentV1 | @leantk | :heavy_check_mark: |
-| ContainerBuildV0 | @vithati @prebansa |  |
+| ContainerBuildV0 | @vithati @prebansa | :heavy_check_mark: |
 | ContainerStructureTestV0 | @SadagopanRajaram   @navin22 |  |
 | CopyFilesOverSSHV0 | @leantk |  |
 | CopyFilesV2 | @jtpetty | :heavy_check_mark: |
@@ -74,9 +74,6 @@ of untested tasks to 0!
 | DownloadGitHubReleaseV0 |  |  |
 | DownloadPackageV0 | @zjrunner |  |
 | DownloadPackageV1 |  | :heavy_check_mark: |
-| DownloadPipelineArtifactV0 | @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm |  |
-| DownloadPipelineArtifactV1 | @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm |  |
-| DownloadPipelineArtifactV2 |  |  |
 | DownloadSecureFileV1 | @leantk | :heavy_check_mark: |
 | DuffleInstallerV0 | @bansalaseem     @vithati |  |
 | ExtractFilesV1 | @jtpetty | :heavy_check_mark: |
@@ -110,7 +107,6 @@ of untested tasks to 0!
 | KubernetesManifestV0 | @bansalaseem | :heavy_check_mark: |
 | KubernetesV0 | @bansalaseem | :heavy_check_mark: |
 | KubernetesV1 | @bansalaseem | :heavy_check_mark: |
-| ManualInterventionV8 | @bansalaseem |  |
 | MavenAuthenticateV0 | @zjrunner   @aasim | :heavy_check_mark: |
 | MavenV2 | @leantk |  |
 | MavenV3 | @leantk | :heavy_check_mark: |
