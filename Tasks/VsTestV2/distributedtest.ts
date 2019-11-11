@@ -99,14 +99,16 @@ export class DistributedTest {
             if (this.inputDataContract.TestSelectionSettings.TestSelectionType.toLowerCase() !== 'testassemblies') {
                 sourceFilter = ['**\\*', '!**\\obj\\*'];
             }
-            ci.publishEvent({MinMatchLines: sourceFilter.length});
+            const taskProps: { [key: string]: any; } = {MiniMatchLines: sourceFilter.length};
+            ci.publishTelemetry('TestExecution','MinimatchFilterPerformance', taskProps);
             var start = new Date().getTime();
             const sources = tl.findMatch(this.inputDataContract.TestSelectionSettings.SearchFolder, sourceFilter);
             tl.debug('tl match count :' + sources.length);
             var end = new Date().getTime();
             var timeTaken = end - start;
             tl.debug('Time taken in milli seconds '+timeTaken);
-            ci.publishEvent({TimeToSearchDLLsInMilliSeconds: timeTaken});
+            const telemetryDP = {TimeToSearchDLLsInMilliSeconds: timeTaken};
+            ci.publishTelemetry('TestExecution','MinimatchFilterPerformance', taskProps);
             const filesMatching = [];
             sources.forEach(function (match: string) {
                 if (!fs.lstatSync(match).isDirectory()) {

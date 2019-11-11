@@ -101,13 +101,15 @@ export class NonDistributedTest {
     private createTestSourcesFile(): string {
         try {
             console.log(tl.loc('UserProvidedSourceFilter', this.sourceFilter.toString()));
-            ci.publishEvent({MinMatchLines: this.sourceFilter.length});
+            const taskProps: { [key: string]: any; } = {MiniMatchLines: this.sourceFilter.length};
+            ci.publishTelemetry('TestExecution','MinimatchFilterPerformance', taskProps);
             var start = new Date().getTime();
             const sources = tl.findMatch(this.inputDataContract.TestSelectionSettings.SearchFolder, this.sourceFilter);
             var end = new Date().getTime();
             var timeTaken = end - start;
             tl.debug('Time taken in milli seconds '+timeTaken);
-            ci.publishEvent({TimeToSearchDLLsInMilliSeconds: timeTaken});
+            const telemetryDP = {TimeToSearchDLLsInMilliSeconds: timeTaken};
+            ci.publishTelemetry('TestExecution','MinimatchFilterPerformance', telemetryDP);
             tl.debug('tl match count :' + sources.length);
             const filesMatching = [];
             sources.forEach(function (match: string) {
