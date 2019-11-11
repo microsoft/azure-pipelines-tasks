@@ -187,6 +187,7 @@ describe("ContainerBuildV0 Suite", function () {
         assert(tr.stdout.indexOf(`[command]buildctl build --frontend=dockerfile.v0 --local=context=${shared.formatPath("a/w/context")} --local=dockerfile=${shared.formatPath("a/w/meta/")}`) != -1, "buildctl build should run with expected arguments");
         console.log(tr.stderr);
         done();
+        process.env['RUNNING_ON'] = '';
     });
 
     it('Buildctl should perform build as well as push if dockerregistryserviceconnect is present', (done:MochaDone) => {
@@ -205,6 +206,7 @@ describe("ContainerBuildV0 Suite", function () {
         assert(tr.stdout.indexOf(`[command]buildctl build --frontend=dockerfile.v0 --local=context=${shared.formatPath("a/w/context")} --local=dockerfile=${shared.formatPath("a/w/meta/")} --exporter=image --exporter-opt=name=testuser/testrepo:11 --exporter-opt=push=true`) != -1, "buildctl build should run with expected arguments");
         console.log(tr.stderr);
         done();
+        process.env['RUNNING_ON'] = '';
     });
 
     it('Runs successfully for buildctl build and push with multiple tags', (done:MochaDone) => {
@@ -223,6 +225,7 @@ describe("ContainerBuildV0 Suite", function () {
         assert(tr.stdout.indexOf(`[command]buildctl build --frontend=dockerfile.v0 --local=context=${shared.formatPath("a/w/**")} --local=dockerfile=${shared.formatPath("a/w/**/")} --exporter=image --exporter-opt=name=testuser/testrepo:tag1,testuser/testrepo:tag2 --exporter-opt=push=true`) != -1, "buildctl build should run with expected arguments");
         console.log(tr.stderr);
         done();
+        process.env['RUNNING_ON'] = '';
     });
 
     it('Runs successfully for buildctl build when registry other than Docker hub is used', (done:MochaDone) => {
@@ -239,6 +242,7 @@ describe("ContainerBuildV0 Suite", function () {
         assert(tr.stdout.indexOf(`[command]buildctl build --frontend=dockerfile.v0 --local=context=${shared.formatPath("a/w/**")} --local=dockerfile=${shared.formatPath("a/w/**/")} --exporter=image --exporter-opt=name=testacr.azurecr.io/testrepo:11 --exporter-opt=push=true`) != -1, "buildctl build should run with expected arguments");
         console.log(tr.stderr);
         done();
+        process.env['RUNNING_ON'] = '';
     });
 
     it('Buildctl should honour poolservicename input', (done:MochaDone) => {
@@ -257,6 +261,7 @@ describe("ContainerBuildV0 Suite", function () {
         assert(tr.stdout.indexOf(`[command]buildctl build --frontend=dockerfile.v0 --local=context=${shared.formatPath("a/w/context")} --local=dockerfile=${shared.formatPath("a/w/meta/")}`) != -1, "buildctl build should run with expected arguments");
         console.log(tr.stderr);
         done();
+        process.env['RUNNING_ON'] = '';
     });
 
 });
