@@ -102,10 +102,11 @@ export class NonDistributedTest {
         try {
             console.log(tl.loc('UserProvidedSourceFilter', this.sourceFilter.toString()));
             const telemetryProps: { [key: string]: any; } = { MiniMatchLines: this.sourceFilter.length };
+            telemetryProps.ExecutionFlow = 'NonDistributed';
             var start = new Date().getTime();
             const sources = tl.findMatch(this.inputDataContract.TestSelectionSettings.SearchFolder, this.sourceFilter);
             var timeTaken = new Date().getTime() - start;
-            tl.debug( 'Time taken for applying the minimatch pattern to filter out the sources ${timeTaken} ms'+timeTaken );
+            tl.debug( `Time taken for applying the minimatch pattern to filter out the sources ${timeTaken} ms`);
             telemetryProps.TimeToSearchDLLsInMilliSeconds = timeTaken;
             tl.debug('tl match count :' + sources.length);
             ci.publishTelemetry('TestExecution','MinimatchFilterPerformance', telemetryProps);
