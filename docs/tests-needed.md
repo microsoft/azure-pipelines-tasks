@@ -29,7 +29,6 @@ of untested tasks to 0!
 | AzureFileCopyV3 | @kmkumaran | :heavy_check_mark: |
 | AzureFunctionAppContainerV1 | @kmkumaran      @SumiranAgg | :heavy_check_mark: |
 | AzureFunctionAppV1 | @kmkumaran      @SumiranAgg |  |
-| AzureFunctionOnKubernetesV0 |  |  |
 | AzureIoTEdgeV2 | @prativen  @blackchoey  @michaeljqzq |  |
 | AzureKeyVaultV1 | @bansalaseem | :heavy_check_mark: |
 | AzureMonitorAlertsV0 | @kmkumaran | :heavy_check_mark: |
