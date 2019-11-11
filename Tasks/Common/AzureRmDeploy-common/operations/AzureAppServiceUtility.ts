@@ -173,21 +173,35 @@ export class AzureAppServiceUtility {
                 appSettingsProperties[addProperties[property].name] = addProperties[property].value;
             }
         
-            console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(appSettingsProperties), JSON.stringify(deleteProperties)));
+            if(!!addProperties) {
+                console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(appSettingsProperties)));
+            }
+
+            if(!!deleteProperties) {
+                console.log(tl.loc('DeletingAppServiceApplicationSettings', JSON.stringify(Object.keys(deleteProperties))));
+            }
+            
             var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(appSettingsProperties, deleteProperties, true);
         }
-        else
-        {
+        else {
             for(var property in addProperties) {
                 if(!!addProperties[property] && addProperties[property].value !== undefined) {
                     addProperties[property] = addProperties[property].value;
                 }
             }
             
-            console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(addProperties), JSON.stringify(deleteProperties)));
-            var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
-        }
         
+            if(!!addProperties) {
+                console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(addProperties)));
+            }
+
+            if(!!deleteProperties) {
+                console.log(tl.loc('DeletingAppServiceApplicationSettings', JSON.stringify(Object.keys(deleteProperties))));
+            }
+
+            var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
+        }     
+
         if(!isNewValueUpdated) {
             console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
         }

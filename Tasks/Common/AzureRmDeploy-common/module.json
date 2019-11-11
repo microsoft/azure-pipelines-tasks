@@ -145,6 +145,7 @@
         "UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
         "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
+        "DeletingAppServiceApplicationSettings": "Deleting App Service Application settings. Data: %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
         "UpdatingAppServiceConnectionStrings" : "Updating App Service Connection Strings. Data: %s",
         "UpdatedAppServiceConnectionStrings" : "Updated App Service Connection Strings. Data: %s",
@@ -155,6 +156,7 @@
         "FailedToGetAppServiceConnectionStrings": "Failed to get App service '%s' Connection strings. Error: %s",
         "FailedToGetAppServiceConnectionStringSlotSettings": "Failed to get App service '%s' Connection string slot settings. Error: %s",
         "FailedToGetAppServiceSlotConfigurationNames" : "Failed to get App service '%s' Slot Configuration Names. Error: %s",
-        "FailedToPatchAppServiceConfiguration": "Failed to patch App Service '%s' configuration. Error: %s"
+        "FailedToPatchAppServiceConfiguration": "Failed to patch App Service '%s' configuration. Error: %s",
+        "KuduStackTraceURL" : "To debug further please check Kudu stack trace URL : %s"
     }
 }
