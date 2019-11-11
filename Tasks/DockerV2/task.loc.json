@@ -23,11 +23,15 @@
 =======
     "Minor": 161,
 <<<<<<< HEAD
+<<<<<<< HEAD
     "Patch": 0
 >>>>>>> Updated make-options.js with the new task publishPipelinemetadata (#11669)
 =======
     "Patch": 1
 >>>>>>> Fixing L0 failures in Docker related tasks. Adding null check. Disabling failing tests. (#11709)
+=======
+    "Patch": 2
+>>>>>>> Removing img change
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",

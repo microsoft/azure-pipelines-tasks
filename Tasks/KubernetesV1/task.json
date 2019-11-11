@@ -18,6 +18,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         "Patch": 1
 =======
         "Patch": 3
@@ -31,6 +32,9 @@
 =======
         "Patch": 6
 >>>>>>> Fixing L0 failures in Docker related tasks. Adding null check. Disabling failing tests. (#11709)
+=======
+        "Patch": 7
+>>>>>>> Removing img change
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",

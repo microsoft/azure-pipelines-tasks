@@ -17,6 +17,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         "Patch": 4
 =======
         "Patch": 6
@@ -27,6 +28,9 @@
 =======
         "Patch": 8
 >>>>>>> Fixing L0 failures in Docker related tasks. Adding null check. Disabling failing tests. (#11709)
+=======
+        "Patch": 9
+>>>>>>> Removing img change
     },
     "preview": true,
     "demands": [],
