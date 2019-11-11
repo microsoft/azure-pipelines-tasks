@@ -49,7 +49,8 @@ export async function buildctlBuildAndPush() {
     let registryAuthenticationToken: RegistryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
 
     // Connect to any specified container registry
-    let connection = new ContainerConnection();
+    var isPoolProviderContext = process.env["RUNNING_ON"] == "KUBERNETES";
+    let connection = new ContainerConnection(!isPoolProviderContext);
     connection.open(null, registryAuthenticationToken, true, false);
     let repositoryName = tl.getInput("repository");
     if (!repositoryName) {
@@ -83,19 +84,30 @@ export async function buildctlBuildAndPush() {
     buildctlTool.arg('--frontend=dockerfile.v0');
     buildctlTool.arg(contextarg);
     buildctlTool.arg(dockerfilearg);
+    var imageNameandTag = ""
     if (imageNames && imageNames.length > 0) {
         imageNames.forEach(imageName => {
             if (tags && tags.length > 0) {
                 tags.forEach(async tag => {
-                    buildctlTool.arg(`--output=type=image,name=${imageName}:${tag},push=true`);
-                    buildctlTool.exec();
+                    if (imageNameandTag)
+                    {
+                        imageNameandTag += ",";
+                    }
+                    imageNameandTag += imageName+":"+tag;
                 })
             }
             else {
-                buildctlTool.arg(`--output=type=image,name=${imageName},push=true`);
-                buildctlTool.exec();
+                if (imageNameandTag)
+                {
+                    imageNameandTag += ",";
+                }
+                imageNameandTag += imageName;
             }
         })
+        buildctlTool.arg('--exporter=image');
+        buildctlTool.arg(`--exporter-opt=name=${imageNameandTag}`);
+        buildctlTool.arg('--exporter-opt=push=true');
+        buildctlTool.exec();
     }
     else {
         // only build the image
