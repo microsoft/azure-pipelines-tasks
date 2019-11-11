@@ -60,6 +60,8 @@
         "DeployVisualStudioTestAgentV2",
         "DockerV0",
         "DockerV1",
+        "DockerV2",
+        "DockerComposeV0",
         "DockerInstallerV0",
         "DotNetCoreCLIV2",
         "DotNetCoreInstallerV0",
