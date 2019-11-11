@@ -2,6 +2,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import * as path from 'path';
 import * as utils from './helpers';
+import * as ci from './cieventlogger';
 import * as outStream from './outputstream';
 import * as os from 'os';
 import * as uuid from 'uuid';
@@ -23,14 +24,6 @@ export class NonDistributedTest {
 
             console.log(tl.loc('runTestsLocally', 'vstest.console.exe'));
             console.log('========================================================');
-
-            this.testAssemblyFiles = this.getTestAssemblies();
-            if (!this.testAssemblyFiles || this.testAssemblyFiles.length === 0) {
-                console.log('##vso[task.logissue type=warning;code=002004;]');
-                tl.warning(tl.loc('NoMatchingTestAssemblies', this.sourceFilter));
-                return;
-            }
-
             const exitCode = await this.startDtaExecutionHost();
             tl.debug('DtaExecutionHost finished');
 
@@ -105,17 +98,16 @@ export class NonDistributedTest {
             return 1;
         }
     }
-
-    private getTestAssemblies(): string[] {
-        tl.debug('Searching for test assemblies in: ' + this.inputDataContract.TestSelectionSettings.SearchFolder);
-        return tl.findMatch(this.inputDataContract.TestSelectionSettings.SearchFolder, this.sourceFilter);
-    }
-
     private createTestSourcesFile(): string {
         try {
             console.log(tl.loc('UserProvidedSourceFilter', this.sourceFilter.toString()));
-
+            ci.publishEvent({MinMatchLines: this.sourceFilter.length});
+            var start = new Date().getTime();
             const sources = tl.findMatch(this.inputDataContract.TestSelectionSettings.SearchFolder, this.sourceFilter);
+            var end = new Date().getTime();
+            var timeTaken = end - start;
+            tl.debug('Time taken in milli seconds '+timeTaken);
+            ci.publishEvent({TimeToSearchDLLsInMilliSeconds: timeTaken});
             tl.debug('tl match count :' + sources.length);
             const filesMatching = [];
             sources.forEach(function (match: string) {
