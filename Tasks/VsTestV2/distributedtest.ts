@@ -99,9 +99,14 @@ export class DistributedTest {
             if (this.inputDataContract.TestSelectionSettings.TestSelectionType.toLowerCase() !== 'testassemblies') {
                 sourceFilter = ['**\\*', '!**\\obj\\*'];
             }
-
+            ci.publishEvent({MinMatchLines: sourceFilter.length});
+            var start = new Date().getTime();
             const sources = tl.findMatch(this.inputDataContract.TestSelectionSettings.SearchFolder, sourceFilter);
             tl.debug('tl match count :' + sources.length);
+            var end = new Date().getTime();
+            var timeTaken = end - start;
+            tl.debug('Time taken in milli seconds '+timeTaken);
+            ci.publishEvent({TimeToSearchDLLsInMilliSeconds: timeTaken});
             const filesMatching = [];
             sources.forEach(function (match: string) {
                 if (!fs.lstatSync(match).isDirectory()) {
