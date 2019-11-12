@@ -95,7 +95,7 @@ rules:
   addLabels: ['Area: Release']
   assign: ['prativen']
 - valueFor: '**Enter Task Name**'
-  contains: 'GithubReleaseV'
+  contains: 'GithubRelease'
   addLabels: ['Area: Release']
   assign: ['prativen']
 - valueFor: '**Enter Task Name**'
@@ -239,6 +239,12 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'PublishTest'
   addLabels: ['Area: Test']
+  
+# Area: ArtifactsPackages
+- valueFor: '**Enter Task Name**'
+  contains: 'TwineAuthenticate'
+  addLabels: ['Area: ArtifactsPackages']
+
 # Types
 - valueFor: '*Type*'
   contains: Feature

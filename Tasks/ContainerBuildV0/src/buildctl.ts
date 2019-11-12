@@ -49,7 +49,8 @@ export async function buildctlBuildAndPush() {
     let registryAuthenticationToken: RegistryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
 
     // Connect to any specified container registry
-    let connection = new ContainerConnection();
+    var isPoolProviderContext = process.env["RUNNING_ON"] == "KUBERNETES";
+    let connection = new ContainerConnection(!isPoolProviderContext);
     connection.open(null, registryAuthenticationToken, true, false);
     let repositoryName = tl.getInput("repository");
     if (!repositoryName) {
