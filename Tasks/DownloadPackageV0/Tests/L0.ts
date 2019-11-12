@@ -9,7 +9,7 @@ describe('AntV1 Suite', function () {
     after(() => {
     });
 
-    it('Does a basic hello world test', (done: MochaDone) => {
+    it('Does a basic hello world test', function(done: MochaDone) {
         // TODO - add real tests
         done();
     });
