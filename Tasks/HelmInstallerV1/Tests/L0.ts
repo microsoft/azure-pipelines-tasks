@@ -2,7 +2,7 @@ import fs = require('fs');
 import assert = require('assert');
 import path = require('path');
 
-describe('AntV1 Suite', function () {
+describe('HelmInstallerV1 Suite', function () {
     before(() => {
     });
 
