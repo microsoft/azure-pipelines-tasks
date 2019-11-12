@@ -1,8 +1,8 @@
 import fs = require('fs');
 import path = require('path');
 import os = require('os');
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
+import tl = require('azure-pipelines-task-lib/task');
+import tr = require('azure-pipelines-task-lib/toolrunner');
 var uuidV4 = require('uuid/v4');
 
 async function run() {
@@ -32,6 +32,7 @@ async function run() {
         }
 
         // Create the tool runner.
+        console.log('========================== Starting Command Output ===========================');
         let bash = tl.tool(tl.which('bash', true))
             .arg('--noprofile')
             .arg(`--norc`)

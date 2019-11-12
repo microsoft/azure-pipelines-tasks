@@ -1,4 +1,4 @@
-import tmrm = require('vsts-task-lib/mock-run');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 	
 export function registerLocationHelpersMock(tmr: tmrm.TaskMockRunner) {
     const mockLocationUtils = {
@@ -27,8 +27,12 @@ export function registerLocationHelpersMock(tmr: tmrm.TaskMockRunner) {
         getSystemAccessToken: function() {
             return "token";
         },
-        getFeedRegistryUrl: function(packagingUrl: string, registryType, feedId: string, accessToken?: string) {
-            return packagingUrl + "/" + feedId;
+        getFeedRegistryUrl: function(packagingUrl: string, registryType, feedId: string, project: string, accessToken?: string) {
+            var url = packagingUrl;
+            if(project != null) {
+                url = url + "/" + project;
+            }
+            return url + "/" + feedId;
         },
         ProtocolType: {NuGet: 1, Npm: 2, Maven: 3, PyPi: 4},
         RegistryType: {npm: 1, NuGetV2: 2, NuGetV3: 3, PyPiSimple: 4, PyPiUpload: 5}

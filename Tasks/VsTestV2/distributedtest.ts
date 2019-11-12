@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
-import * as tr from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import * as inputdatacontract from './inputdatacontract';
 import * as utils from './helpers';
 import * as os from 'os';
@@ -99,9 +99,15 @@ export class DistributedTest {
             if (this.inputDataContract.TestSelectionSettings.TestSelectionType.toLowerCase() !== 'testassemblies') {
                 sourceFilter = ['**\\*', '!**\\obj\\*'];
             }
-
+            const telemetryProps: { [key: string]: any; } = { MiniMatchLines: sourceFilter.length };
+            telemetryProps.ExecutionFlow = 'Distributed';
+            var start = new Date().getTime();
             const sources = tl.findMatch(this.inputDataContract.TestSelectionSettings.SearchFolder, sourceFilter);
-            tl.debug('tl match count :' + sources.length);
+            tl.debug(`${sources.length} files matched the given minimatch filter`);
+            var timeTaken = new Date().getTime() - start;
+            tl.debug(`Time taken for applying the minimatch pattern to filter out the sources ${timeTaken} ms` );
+            telemetryProps.TimeToSearchDLLsInMilliSeconds = timeTaken;
+            ci.publishTelemetry('TestExecution','MinimatchFilterPerformance', telemetryProps);
             const filesMatching = [];
             sources.forEach(function (match: string) {
                 if (!fs.lstatSync(match).isDirectory()) {

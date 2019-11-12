@@ -2,9 +2,9 @@
     "id": "C7B7CCF9-D6E0-472B-97BB-06B6E43504F3",
     "name": "ChefKnife",
     "friendlyName": "Chef Knife",
-    "description": "Run Scripts with knife commands on your chef workstation",
-    "helpUrl": "https://aka.ms/chef-knife-readme",
-    "helpMarkDown": "[More Information](https://aka.ms/chef-knife-readme)",
+    "description": "Run scripts with Knife commands on your Chef workstation",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/chef-knife",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/chef-knife-readme)",
     "category": "Deploy",
     "visibility": [
         "Preview",
@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 17
+        "Patch": 19
     },
     "deprecated": true,
     "demands": [

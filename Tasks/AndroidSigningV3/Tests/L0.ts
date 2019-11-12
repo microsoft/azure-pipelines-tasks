@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as assert from 'assert';
 import * as path from 'path';
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('AndroidSigning Suite v3', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);

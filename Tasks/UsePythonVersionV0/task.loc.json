@@ -3,7 +3,7 @@
   "name": "UsePythonVersion",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=871498",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/use-python-version",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [
@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 148,
-    "Patch": 0
+    "Minor": 151,
+    "Patch": 2
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -72,6 +72,7 @@
     "ListAvailableVersions": "ms-resource:loc.messages.ListAvailableVersions",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
     "PrependPath": "ms-resource:loc.messages.PrependPath",
+    "PyPyNotFound": "ms-resource:loc.messages.PyPyNotFound",
     "ToolNotFoundMicrosoftHosted": "ms-resource:loc.messages.ToolNotFoundMicrosoftHosted",
     "ToolNotFoundSelfHosted": "ms-resource:loc.messages.ToolNotFoundSelfHosted",
     "VersionNotFound": "ms-resource:loc.messages.VersionNotFound"

@@ -2,9 +2,9 @@
     "id": "28782B92-5E8E-4458-9751-A71CD1492BAE",
     "name": "Delay",
     "friendlyName": "Delay",
-    "description": "Delay further execution of the workflow by a fixed time.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=870239",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870239)",
+    "description": "Delay further execution of a workflow by a fixed time",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/delay",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870239)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 6
+        "Patch": 8
     },
     "inputs": [
         {

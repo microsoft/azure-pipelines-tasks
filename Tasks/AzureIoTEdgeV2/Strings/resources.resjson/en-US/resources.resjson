@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure IoT Edge",
   "loc.helpMarkDown": "Visit the [documentation](https://aka.ms/azure-iot-edge-ci-cd-docs) for help",
-  "loc.description": "Azure IoT Edge pipelines tasks for continuous integration(build and push docker image) and continuous deployment(create Edge deployment on Azure)",
+  "loc.description": "Build and deploy an Azure IoT Edge image",
   "loc.instanceNameFormat": "Azure IoT Edge - $(action)",
   "loc.group.displayName.advanced_push": "Advanced",
   "loc.group.displayName.advanced_deploy": "Advanced",
@@ -35,6 +35,10 @@
   "loc.input.help.templateFilePath": "The path of Azure IoT Edge solution **.template.json**. This file defines the modules and routes in Azure IoT Edge solution, file name must end with **.template.json**",
   "loc.input.label.defaultPlatform": "Default platform",
   "loc.input.help.defaultPlatform": "In your **.template.json**, you can leave the modules platform unspecified. For these modules, the **default platform** will be used.",
+  "loc.input.label.fillRegistryCredential": "Add registry credential to deployment manifest",
+  "loc.input.help.fillRegistryCredential": "Add registry credential for pushing docker images to deployment manifest",
+  "loc.input.label.deploymentManifestOutputPath": "Output path",
+  "loc.input.help.deploymentManifestOutputPath": "The output path of generated deployment manifest",
   "loc.input.label.bypassModules": "Bypass module(s)",
   "loc.input.help.bypassModules": "Select the module(s) that you **DO NOT** need to build(or push) in the .template.json, specify module names and separate with comma.\n Example: if you have 2 modules **SampleModule1,SampleModule2** in your .template.json, you want to just build or push **SampleModule1**, then you set the bypass modules as **SampleModule2**. Leave empty if you would like to build all the modules in .template.json.",
   "loc.messages.BuildingModules": "Building module images...",
@@ -55,9 +59,16 @@
   "loc.messages.DependencyInstallSuccess": "%s installed with version: %s",
   "loc.messages.DependencyInstallFail": "%s installation failed, see detailed error in debug mode",
   "loc.messages.TemplateFileInvalid": "The path of template file is not valid: %s",
-  "loc.messages.ContainerRegistryInvalid": "Failed to fetch container registry authentication token, please check you container registry setting in build task. The token is %s",
+  "loc.messages.InvalidContainerRegistry": "Failed to fetch container registry authentication token, please check you container registry setting in build task. The username for container registry is %s",
   "loc.messages.DeploymentFileNotFound": "Deployment file can't be found. Please ensure Path of deployment file is correctly set in the task.",
   "loc.messages.ValidDeploymentFileNotFound": "Cannot find a valid deployment file. Please ensure Path of deployment file is correctly set in the task.",
   "loc.messages.AzureSdkNotFound": "Azure SDK not found",
-  "loc.messages.RootPathNotExist": "The Root path %s does not exist"
+  "loc.messages.RootPathNotExist": "The Root path %s does not exist",
+  "loc.messages.SkipModuleImageValidation": "SKIP_MODULE_IMAGE_VALIDATION set to true, skipping module image validation.",
+  "loc.messages.InvalidRegistryCredentialWarning": "Failed to login %s with given credential. %s",
+  "loc.messages.CheckModuleImageExistenceError": "%s does not exist or the credential is not set correctly. Error: %s",
+  "loc.messages.StartGenerateDeploymentManifest": "Start generating deployment manifest...",
+  "loc.messages.FinishGenerateDeploymentManifest": "Finished generating deployment manifest.",
+  "loc.messages.LoginRegistrySucess": "Successfully logged in to registry %s",
+  "loc.messages.SkipSettingEnvironmentVariableForSecret": "Environment variable %s already exist. Skip setting environment varialbe for secret: %s."
 }

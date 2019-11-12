@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "發行管線成品",
   "loc.helpMarkDown": "將本機目錄或檔案發行為目前管線的具名成品。",
-  "loc.description": "發行管線成品",
+  "loc.description": "將本機目錄或檔案發行為目前管線的具名成品",
   "loc.instanceNameFormat": "發行管線成品",
   "loc.input.label.artifactName": "成品的名稱",
   "loc.input.help.artifactName": "成品的名稱。",

@@ -1,10 +1,10 @@
 {
     "id": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
     "name": "UsePythonVersion",
-    "friendlyName": "Use Python Version",
-    "description": "Retrieves the specified version of Python from the tool cache. Optionally add it to PATH.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=871498",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=871498)",
+    "friendlyName": "Use Python version",
+    "description": "Use the specified version of Python from the tool cache, optionally adding it to the PATH",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/use-python-version",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=871498) or [see the Python documentation](https://www.python.org/doc/)",
     "category": "Tool",
     "runsOn": [
         "Agent",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 148,
-        "Patch": 0
+        "Minor": 151,
+        "Patch": 2
     },
     "demands": [],
     "instanceNameFormat": "Use Python $(versionSpec)",
@@ -72,6 +72,7 @@
         "ListAvailableVersions": "Versions in %s:",
         "PlatformNotRecognized": "Platform not recognized",
         "PrependPath": "Prepending PATH environment variable with directory: %s",
+        "PyPyNotFound": "Could not find an installation of PyPy%d in Agent.ToolsDirectory.",
         "ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
         "ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
         "VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory."

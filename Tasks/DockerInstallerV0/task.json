@@ -3,8 +3,8 @@
     "name": "DockerInstaller",
     "friendlyName": "Docker CLI installer",
     "description": "Install Docker CLI on agent machine.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=851275",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/docker-installer",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Tool",
     "visibility": [
         "Build",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 4
     },
     "demands": [],
     "satisfies": [
@@ -37,13 +37,13 @@
             "defaultValue": "stable",
             "required": false,
             "options": {
-              "stable": "stable",
-              "edge": "edge",
-              "test": "test",
-              "nightly": "nightly"
+                "stable": "stable",
+                "edge": "edge",
+                "test": "test",
+                "nightly": "nightly"
             },
             "helpMarkDown": "Pick the release type to install. Nightly is not supported on Windows"
-          }
+        }
     ],
     "instanceNameFormat": "Install Docker $(dockerVersion)",
     "execution": {

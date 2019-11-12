@@ -4,13 +4,13 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://aka.ms/AA3x715",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-github-release",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 148,
+    "Minor": 160,
     "Patch": 0
   },
   "minimumAgentVersion": "1.99.0",
@@ -19,7 +19,7 @@
   "inputs": [
     {
       "name": "connection",
-      "type": "connectedService:github:OAuth,PersonalAccessToken",
+      "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,Token",
       "label": "ms-resource:loc.input.label.connection",
       "defaultValue": "",
       "required": true,
@@ -27,13 +27,12 @@
     },
     {
       "name": "userRepository",
-      "type": "pickList",
+      "type": "githubRepositoryPicker",
       "label": "ms-resource:loc.input.label.userRepository",
       "defaultValue": "",
       "required": true,
       "properties": {
-        "EditableOptions": "True",
-        "SearchDataSourceName": "userRepositorySearch"
+        "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.userRepository"
     },
@@ -90,21 +89,10 @@
       "target": "version",
       "endpointId": "$(connection)",
       "dataSourceName": "Releases",
-      "resultTemplate": "{ \"Value\" : \"{{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{id}}{{/equals}}\", \"DisplayValue\" : \" {{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{#if name}}{{name}}{{else}}{{id}}{{/if}}{{/equals}}\" }",
+      "resultTemplate": "{ \"Value\" : \"{{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{id}}{{/equals}}\", \"DisplayValue\" : \" {{#equals defaultVersionType 'specificTag'}}{{tag_name}}{{else}}{{#if name}}{{name}}{{else}}{{tag_name}}{{/if}}{{/equals}}{{#if prerelease}} (Pre-release){{/if}}\" }",
       "parameters": {
         "repositoryName": "$(userRepository)",
         "releaseByTagName": "$(defaultVersionType)"
-      }
-    },
-    {
-      "target": "userRepositorySearch",
-      "endpointId": "$(connection)",
-      "dataSourceName": "SearchRepositoriesByName",
-      "resultSelector": "jsonpath:$['items'][*]",
-      "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }",
-      "parameters": {
-        "searchText": "$(searchText)",
-        "name": "$(searchText)"
       }
     }
   ],
@@ -116,6 +104,7 @@
   },
   "messages": {
     "DownloadArtifacts": "ms-resource:loc.messages.DownloadArtifacts",
-    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded"
+    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
+    "InvalidRelease": "ms-resource:loc.messages.InvalidRelease"
   }
 }

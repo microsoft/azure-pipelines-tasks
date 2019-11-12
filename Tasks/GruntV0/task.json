@@ -2,9 +2,9 @@
     "id": "521D1E15-F5FB-4B73-A93B-B2FE88A9A286",
     "name": "Grunt",
     "friendlyName": "Grunt",
-    "description": "The JavaScript Task Runner",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=627413",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627413)",
+    "description": "Run the Grunt JavaScript task runner",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/grunt",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627413) or [see the Grunt documentation](https://gruntjs.com/getting-started)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 141,
+        "Minor": 151,
         "Patch": 2
     },
     "demands": [
@@ -90,10 +90,10 @@
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish to Azure Pipelines/TFS",
+            "label": "Publish to Azure Pipelines",
             "defaultValue": "false",
             "groupName": "junitTestResults",
-            "helpMarkDown": "Select this option to publish JUnit test results produced by the Grunt build to Azure Pipelines/TFS."
+            "helpMarkDown": "Select this option to publish JUnit test results produced by the Grunt build to Azure Pipelines."
         },
         {
             "name": "testResultsFiles",

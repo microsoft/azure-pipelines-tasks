@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613744)",
-  "loc.description": "[Не рекомендуется] Тестирование мобильных приложений с помощью Xamarin Test Cloud с использованием Xamarin.UITest — рекомендованной задачей теперь является AppCenterTest",
+  "loc.description": "[Не рекомендуется] Тестирование мобильных приложений с Xamarin Test Cloud с помощью Xamarin.UITest. Вместо этого используйте задачу \"Тестирование в Центре приложений\".",
   "loc.instanceNameFormat": "Протестировать $(app) с помощью Xamarin.UITest в Xamarin Test Cloud",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.app": "Файл приложения",
@@ -27,6 +27,6 @@
   "loc.input.help.testCloudLocation": "Путь к test-cloud.exe. Можно использовать подстановочные знаки. В этом случае используется первый экземпляр test-cloud.exe ([дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=856077)).",
   "loc.input.label.optionalArgs": "Дополнительные аргументы",
   "loc.input.help.optionalArgs": "Дополнительные аргументы, передаваемые в test-cloud.exe.",
-  "loc.input.label.publishNUnitResults": "Публиковать результаты в Azure Pipelines или TFS",
-  "loc.input.help.publishNUnitResults": "Если этот параметр выбран, параметр --nunit-xml будет передан в test-cloud.exe. Результаты из XML-файла NUnit будут опубликованы в Azure Pipelines или TFS."
+  "loc.input.label.publishNUnitResults": "Опубликовать результаты в Azure Pipelines",
+  "loc.input.help.publishNUnitResults": "Если этот параметр выбран, параметр --nunit-xml будет передан в test-cloud.exe. Результаты из XML-файла NUnit будут опубликованы в Azure Pipelines."
 }

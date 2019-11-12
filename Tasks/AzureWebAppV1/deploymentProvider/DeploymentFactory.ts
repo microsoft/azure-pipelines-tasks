@@ -3,7 +3,7 @@ import { BuiltInLinuxWebAppDeploymentProvider } from './BuiltInLinuxWebAppDeploy
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider';
 import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvider';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
 
@@ -17,10 +17,10 @@ export class DeploymentFactory {
 
     public async GetDeploymentProvider(): Promise<IWebAppDeploymentProvider> {
         if(this._taskParams.isLinuxApp) {
-            tl.debug("Depolyment started for linux app service");
+            tl.debug("Deployment started for linux app service");
             return new BuiltInLinuxWebAppDeploymentProvider(this._taskParams);
         } else {
-            tl.debug("Depolyment started for windows app service");
+            tl.debug("Deployment started for windows app service");
             return await this._getWindowsDeploymentProvider()
         }
     }

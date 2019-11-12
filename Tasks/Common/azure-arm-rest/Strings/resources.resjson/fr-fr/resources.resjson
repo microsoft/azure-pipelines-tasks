@@ -137,5 +137,7 @@
   "loc.messages.ASE_SSLIssueRecommendation": "Pour utiliser un certificat dans App Service, celui-ci doit être signé par une autorité de certification de confiance. Si votre application web génère des erreurs de validation de certificat, cela signifie probablement que vous utilisez un certificat auto-signé. Pour résoudre ces erreurs, vous devez affecter la valeur true à une variable nommée VSTS_ARM_REST_IGNORE_SSL_ERRORS dans la définition de build ou la définition de mise en production",
   "loc.messages.FailedToGetAzureMetricAlerts": "Échec de l'obtention des alertes de métrique Azure : %s. Erreur : %s",
   "loc.messages.FailedToUpdateAzureMetricAlerts": "Échec de la mise à jour de la ressource '%s' de la règle d'alerte de métrique Azure. Erreur : %s",
-  "loc.messages.ResponseNotValid": "La réponse n'est pas dans un format valide"
+  "loc.messages.ResponseNotValid": "La réponse n'est pas dans un format valide",
+  "loc.messages.NotAbleToCreateFirewallRule": "Obtention d'une erreur durant l'ajout d'une règle de pare-feu au serveur Azure MySQL. Erreur : %s",
+  "loc.messages.ExpiredServicePrincipal": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Vérifiez si le principal de service utilisé est valide et s'il n'a pas expiré."
 }

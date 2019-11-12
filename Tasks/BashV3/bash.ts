@@ -1,8 +1,8 @@
 import fs = require('fs');
 import path = require('path');
 import os = require('os');
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
+import tl = require('azure-pipelines-task-lib/task');
+import tr = require('azure-pipelines-task-lib/toolrunner');
 var uuidV4 = require('uuid/v4');
 
 const noProfile = tl.getBoolInput('noProfile');
@@ -10,14 +10,10 @@ const noRc = tl.getBoolInput('noRc');
 
 async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
     let bashPwd = tl.tool(bashPath)
+        .arg('--noprofile')
+        .arg('--norc')
         .arg('-c')
         .arg('pwd');
-    if (noProfile) {
-        bashPwd.arg('--noprofile');
-    }
-    if (noRc) {
-        bashPwd.arg('--norc');
-    }
 
     let bashPwdOptions = <tr.IExecOptions>{
         cwd: directoryPath,
@@ -106,14 +102,15 @@ async function run() {
         }
 
         // Create the tool runner.
-        let bash = tl.tool(bashPath)
-            .arg(filePath);
+        console.log('========================== Starting Command Output ===========================');
+        let bash = tl.tool(bashPath);
         if (noProfile) {
             bash.arg('--noprofile');
         }
         if (noRc) {
             bash.arg('--norc');
         }
+        bash.arg(filePath);
 
         let options = <tr.IExecOptions>{
             cwd: input_workingDirectory,

@@ -1,18 +1,18 @@
-import tmrm = require('vsts-task-lib/mock-run');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 
 export function registerArtifactToolUtilitiesMock(tmr: tmrm.TaskMockRunner, toolPath: string) {
     tmr.registerMock('packaging-common/universal/ArtifactToolUtilities', {
         getArtifactToolFromService: function(serviceUri, accessToken, toolName) {
             return toolPath;
         },
-        getPackageNameFromId: function(serviceUri: string, accessToken: string, feedId: string, packageId: string) {
+        getPackageNameFromId: function(serviceUri: string, accessToken: string, projectId: string, feedId: string, packageId: string) {
             return packageId;
         }
     });
 }
 
 export function registerArtifactToolRunnerMock(tmr: tmrm.TaskMockRunner) {
-    var mtt = require('vsts-task-lib/mock-toolrunner');
+    var mtt = require('azure-pipelines-task-lib/mock-toolrunner');
     tmr.registerMock('packaging-common/universal/ArtifactToolRunner', {
         getOptions: function() {
             return {

@@ -3,13 +3,13 @@
   "name": "DownloadFileshareArtifacts",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-fileshare-artifacts",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 147,
+    "Minor": 154,
     "Patch": 0
   },
   "groups": [

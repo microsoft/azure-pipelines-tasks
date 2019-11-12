@@ -1,6 +1,7 @@
-import * as tl from "vsts-task-lib";
+import * as tl from "azure-pipelines-task-lib";
 import * as pkgLocationUtils from "packaging-common/locationUtilities"; 
-import {IExecSyncResult, IExecOptions} from "vsts-task-lib/toolrunner";
+import { getProjectAndFeedIdFromInputParam } from 'packaging-common/util';
+import {IExecSyncResult, IExecOptions} from "azure-pipelines-task-lib/toolrunner";
 import * as telemetry from "utility-common/telemetry";
 import * as artifactToolRunner from "packaging-common/universal/ArtifactToolRunner";
 import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolUtilities";
@@ -10,7 +11,7 @@ export async function run(artifactToolPath: string): Promise<void> {
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
     try {
-        // Get directory to publish
+        // Get directory where to download
         let downloadDir: string = tl.getInput("downloadDirectory");
         if (downloadDir.length < 1)
         {
@@ -20,6 +21,7 @@ export async function run(artifactToolPath: string): Promise<void> {
 
         let serviceUri: string;
         let feedId: string;
+        let projectId: string;
         let packageName: string;
         let version: string;
 
@@ -42,7 +44,9 @@ export async function run(artifactToolPath: string): Promise<void> {
             // getting inputs
             serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
-            feedId = tl.getInput("feedListDownload");
+            const feedProject = getProjectAndFeedIdFromInputParam("feedListDownload");
+            feedId = feedProject.feedId;
+            projectId = feedProject.projectId;
 
             // Getting package name from package Id
             const packageId = tl.getInput("packageListDownload");
@@ -51,7 +55,7 @@ export async function run(artifactToolPath: string): Promise<void> {
             internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
 
             const feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
-            packageName = await artifactToolUtilities.getPackageNameFromId(feedUri, accessToken, feedId, packageId);
+            packageName = await artifactToolUtilities.getPackageNameFromId(feedUri, accessToken, projectId, feedId, packageId);
 
             version = tl.getInput("versionListDownload");
 
@@ -67,7 +71,10 @@ export async function run(artifactToolPath: string): Promise<void> {
             }
 
             serviceUri = externalAuthInfo.packageSource.accountUrl;
-            feedId = tl.getInput("feedDownloadExternal");
+            const feedProject = getProjectAndFeedIdFromInputParam("feedDownloadExternal");
+            feedId = feedProject.feedId;
+            projectId = feedProject.projectId;
+
             packageName = tl.getInput("packageDownloadExternal");
             version = tl.getInput("versionDownloadExternal");
 
@@ -80,6 +87,7 @@ export async function run(artifactToolPath: string): Promise<void> {
 
         const downloadOptions = {
             artifactToolPath,
+            projectId,
             feedId,
             accountUrl: serviceUri,
             packageName,
@@ -113,7 +121,12 @@ function downloadPackageUsingArtifactTool(downloadDir: string, options: artifact
         "--path", downloadDir,
         "--patvar", "UNIVERSAL_DOWNLOAD_PAT",
         "--verbosity", tl.getInput("verbosity"));
-    console.log(tl.loc("Info_Downloading", options.packageName, options.packageVersion, options.feedId));
+
+    if (options.projectId) {
+        command.push("--project", options.projectId);
+    }
+
+    console.log(tl.loc("Info_Downloading", options.packageName, options.packageVersion, options.feedId, options.projectId));
     const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(options.artifactToolPath, command, execOptions);
     if (execResult.code === 0) {
         return;

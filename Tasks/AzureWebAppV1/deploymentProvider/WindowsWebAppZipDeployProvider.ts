@@ -1,5 +1,5 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
 import { DeploymentType } from '../taskparameters';
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
@@ -36,12 +36,15 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
         }
 
         tl.debug("Initiated deployment via kudu service for webapp package : ");
-        
-        var updateApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
-        var deleteApplicationSetting = ParameterParser.parse(deleteOldRunFromZipAppSetting)
-        var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(updateApplicationSetting, deleteApplicationSetting);
+        if (!this.isPublishProfileAuthSchemeEndpoint) {
+            var updateApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
+            var deleteApplicationSetting = ParameterParser.parse(deleteOldRunFromZipAppSetting)
+            var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(updateApplicationSetting, deleteApplicationSetting);
 
-        if(!isNewValueUpdated) {
+            if(!isNewValueUpdated) {
+                await this.kuduServiceUtility.warmpUp();
+            }
+        } else {
             await this.kuduServiceUtility.warmpUp();
         }
 

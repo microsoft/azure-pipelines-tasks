@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Helm-Charts paketieren und bereitstellen",
+  "loc.friendlyName": "Helm Charts paketieren und bereitstellen",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Führen Sie Helm-Befehle aus, um Ihren Kubernetes-Cluster in Azure Container Service bereitzustellen, zu konfigurieren oder zu aktualisieren.",
+  "loc.description": "Hiermit werden Helm-Befehle ausgeführt, um einen Kubernetes-Cluster in Azure Container Service bereitzustellen, zu konfigurieren oder zu aktualisieren.",
   "loc.instanceNameFormat": "Helm $(command)",
   "loc.group.displayName.cluster": "Kubernetes-Cluster",
   "loc.group.displayName.commands": "Befehle",
@@ -84,5 +84,6 @@
   "loc.messages.SkipDeleteSecureFiles": "TLS ist nicht in der Aufgabe aktiviert. Das Löschen von Zertifikaten wird übersprungen.",
   "loc.messages.SkipDownloadSecureFiles": "TLS ist nicht in der Aufgabe aktiviert. Das Herunterladen von Zertifikaten wird übersprungen.",
   "loc.messages.FileNotFound": "Datei nicht unter \"%s\" gefunden.",
-  "loc.messages.KubernetesServiceConnectionNotFound": "Die Details zur Kubernetes-Dienstverbindung wurden nicht gefunden."
+  "loc.messages.KubernetesServiceConnectionNotFound": "Die Details zur Kubernetes-Dienstverbindung wurden nicht gefunden.",
+  "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist."
 }

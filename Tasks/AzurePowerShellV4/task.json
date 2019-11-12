@@ -3,7 +3,7 @@
     "name": "AzurePowerShell",
     "friendlyName": "Azure PowerShell",
     "description": "Run a PowerShell script within an Azure environment",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613749)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -16,16 +16,20 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 0,
-        "Patch": 0
+        "Minor": 159,
+        "Patch": 4
     },
-    "preview": true,
     "releaseNotes": "Added support for Az Module and cross platform agents.",
     "groups": [
         {
             "name": "AzurePowerShellVersionOptions",
             "displayName": "Azure PowerShell version options",
             "isExpanded": true
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "minimumAgentVersion": "2.115.0",
@@ -41,7 +45,7 @@
             "required": true,
             "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell",
             "properties": {
-                "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
+                "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
             }
         },
         {
@@ -140,6 +144,24 @@
             "visibleRule": "TargetAzurePs = OtherVersion",
             "groupName": "AzurePowerShellVersionOptions",
             "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0"
+        },
+        {
+            "name": "pwsh",
+            "type": "boolean",
+            "label": "Use PowerShell Core",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "If this is true, then on Windows the task will use pwsh.exe from your PATH instead of powershell.exe.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "workingDirectory",
+            "type": "filePath",
+            "label": "Working Directory",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Working directory where the script is run.",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
@@ -149,13 +171,20 @@
             "platforms": [
                 "windows"
             ]
+        },
+        "Node": {
+            "target": "azurepowershell.js",
+            "argumentFormat": ""
         }
     },
     "messages": {
+        "GeneratingScript": "Generating script.",
+        "JS_FormattedCommand": "Formatted command: %s",
         "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
         "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
         "InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1",
         "JS_ExitCode": "PowerShell exited with code '%s'.",
-        "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream."
+        "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

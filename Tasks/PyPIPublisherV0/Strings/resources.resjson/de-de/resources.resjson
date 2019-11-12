@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "PyPI-Herausgeber",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=875289)",
-  "loc.description": "Hiermit wird ein sdist- oder wheel-Paket unter Verwendung von Twine erstellt und in einen PyPI-kompatiblen Index hochgeladen.",
+  "loc.description": "Hiermit wird unter Verwendung von Twine ein sdist- oder wheel-Paket erstellt und in einen PyPI-kompatiblen Index hochgeladen.",
   "loc.instanceNameFormat": "Paketieren und in PyPI veröffentlichen",
   "loc.input.label.serviceEndpoint": "PyPI-Dienstverbindung",
   "loc.input.help.serviceEndpoint": "Eine generische Dienstverbindung für die Verbindungsherstellung mit dem Paketindex.",

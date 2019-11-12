@@ -1,14 +1,15 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as Q from 'q';
 import * as utility from './Common/utility';
 import * as auth from 'packaging-common/nuget/Authentication';
 import { NuGetConfigHelper2 } from 'packaging-common/nuget/NuGetConfigHelper2';
 import * as ngRunner from 'packaging-common/nuget/NuGetToolRunner2';
 import * as path from 'path';
-import { IExecOptions } from 'vsts-task-lib/toolrunner';
+import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 import * as nutil from 'packaging-common/nuget/Utility';
 import * as commandHelper from 'packaging-common/nuget/CommandHelper';
 import * as pkgLocationUtils from 'packaging-common/locationUtilities';
+import { getProjectAndFeedIdFromInputParam } from 'packaging-common/util';
 
 export async function run(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
@@ -92,12 +93,13 @@ export async function run(): Promise<void> {
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === 'select') {
             const sources: Array<auth.IPackageSource> = new Array<auth.IPackageSource>();
-            const feed = tl.getInput('feedRestore');
-            if (feed) {
-                const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed, null, accessToken);
+            const feed = getProjectAndFeedIdFromInputParam('feedRestore');
+
+            if (feed.feedId) {
+                const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed.feedId, feed.projectId, null, accessToken);
                 sources.push(<auth.IPackageSource>
                     {
-                        feedName: feed,
+                        feedName: feed.feedId,
                         feedUri: feedUrl,
                         isInternal: true
                     });
@@ -123,6 +125,9 @@ export async function run(): Promise<void> {
         nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
 
         const configFile = nuGetConfigHelper.tempNugetConfigPath;
+
+        nuGetConfigHelper.backupExistingRootNuGetFiles();
+
         const dotnetPath = tl.which('dotnet', true);
 
         try {
@@ -131,6 +136,8 @@ export async function run(): Promise<void> {
             }
         } finally {
             credCleanup();
+
+            nuGetConfigHelper.restoreBackupRootNuGetFiles();
         }
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('PackagesInstalledSuccessfully'));

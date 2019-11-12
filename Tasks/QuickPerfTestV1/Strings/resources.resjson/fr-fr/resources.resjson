@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Test de performances web basé sur le cloud",
   "loc.helpMarkDown": "Déclenche un test de charge basé sur le cloud à l'aide d'Azure Pipelines. [En savoir plus](https://go.microsoft.com/fwlink/?linkid=613203)",
-  "loc.description": "Exécute un test de performances web rapide dans le cloud avec Azure Pipelines",
+  "loc.description": "Exécuter un test de performances web rapide dans le cloud avec Azure Pipelines",
   "loc.instanceNameFormat": "Test rapide de performances web $(testName)",
   "loc.input.label.connectedServiceName": "Connexion Azure Pipelines",
   "loc.input.help.connectedServiceName": "Sélectionnez une connexion de service inscrite pour communiquer avec le service de test de charge basé sur le cloud. Choisissez Gérer pour inscrire une nouvelle connexion de service.",

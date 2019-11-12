@@ -23,6 +23,7 @@ $endpoint = @{
     }
 }
 
+Register-Mock Get-VstsWebProxy { }
 Register-Mock Add-Tls12InSession { }
 Register-Mock Add-AzureRMAccount { 'Add-AzureRmAccount' }
 Register-Mock Set-CurrentAzureRMSubscription { 'Set-CurrentAzureRMSubscription' }

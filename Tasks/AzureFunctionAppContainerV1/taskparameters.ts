@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 
 export class TaskParametersUtility {
 
@@ -32,4 +32,5 @@ export interface TaskParameters {
     ResourceGroupName?: string;
     SlotName?: string;
     DeployToSlotOrASEFlag?: boolean;
+    isLinuxContainerApp?: boolean;
 }

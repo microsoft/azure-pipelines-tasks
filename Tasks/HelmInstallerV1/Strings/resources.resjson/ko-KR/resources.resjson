@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Helm 도구 설치 관리자",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "에이전트 머신에 Helm을 설치합니다.",
+  "loc.instanceNameFormat": "Helm $(helmVersionToInstall) 설치",
+  "loc.input.label.helmVersionToInstall": "Helm 버전 사양",
+  "loc.input.help.helmVersionToInstall": "설치할 Helm 버전을 지정합니다.",
+  "loc.messages.NotAValidSemverVersion": "버전이 올바른 형식으로 지정되지 않았습니다(예: 1.8.2, v1.8.2, 2.8.2, v2.8.2).",
+  "loc.messages.VerifyHelmInstallation": "helm 설치 확인 중..."
+}

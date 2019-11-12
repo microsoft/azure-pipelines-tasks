@@ -91,5 +91,5 @@
   "loc.messages.AFC_RootContainerAndDirectory": "Die Option \"/S\" gilt nicht für \"$root\"-Container.",
   "loc.messages.AFC_RedirectResponseInvalidStatusCode": "Der HTTP-Antwortcode \"{0}\" ist kein gültiger Umleitungsstatuscode.",
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Der Adressheader der Umleitungsantwort ist NULL.",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment."
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Deinstallieren Sie das benutzerdefinierte WinRM-Skript manuell, und wiederholen Sie die Bereitstellung."
 }

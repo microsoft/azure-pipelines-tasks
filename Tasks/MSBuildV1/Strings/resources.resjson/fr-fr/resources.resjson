@@ -27,6 +27,8 @@
   "loc.input.help.logProjectEvents": "Enregistrez éventuellement les détails de la chronologie de chaque projet (Windows uniquement).",
   "loc.input.label.createLogFile": "Créer le fichier journal",
   "loc.input.help.createLogFile": "Créez éventuellement un fichier journal (Windows uniquement).",
+  "loc.input.label.logFileVerbosity": "Détails du fichier journal",
+  "loc.input.help.logFileVerbosity": "Détails optionnels du fichier journal.",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "'Enregistrer les détails du projet' est uniquement pris en charge sur Windows.",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "'Créer le fichier journal' est uniquement pris en charge sur Windows.",
   "loc.messages.MSB_BuildToolNotFound": "MSBuild ou xbuild (Mono) sont introuvables sur l'agent macOS ou Linux."

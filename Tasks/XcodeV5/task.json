@@ -3,8 +3,8 @@
     "name": "Xcode",
     "friendlyName": "Xcode",
     "description": "Build, test, or archive an Xcode workspace on macOS. Optionally package an app.",
-    "helpUrl": "https://go.microsoft.com/fwlink/?LinkID=613730",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/xcode",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613730) or [see the Xcode documentation](https://developer.apple.com/xcode/)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -12,10 +12,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 5,
-        "Minor": 142,
-        "Patch": 1
+        "Minor": 151,
+        "Patch": 2
     },
-    "releaseNotes": "This version of the task is compatible with Xcode 8, Xcode 9 and Xcode 10. Features that were there solely to maintain compat with Xcode 7 have been removed. The task has better options to work with the Hosted macOS pool.",
+    "releaseNotes": "This version of the task is compatible with Xcode 8, Xcode 9 and Xcode 10. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
     "demands": [
         "xcode"
     ],
@@ -333,11 +333,11 @@
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish test results to Azure Pipelines/TFS",
+            "label": "Publish test results to Azure Pipelines",
             "required": false,
             "defaultValue": false,
             "groupName": "advanced",
-            "helpMarkDown": "Specify whether to publish JUnit test results to Azure Pipelines/TFS. This requires xcpretty to be enabled to generate JUnit test results."
+            "helpMarkDown": "Specify whether to publish JUnit test results to Azure Pipelines. This requires xcpretty to be enabled to generate JUnit test results."
         }
     ],
     "execution": {
@@ -378,6 +378,7 @@
         "FailedToFindScheme": "Failed to find a scheme in the workspace. Use `Scheme` to specify a target scheme.",
         "OutputDirectoryIgnored": "Output directory for build output (binaries) ignored. Specifying an output directory is incompatible with the '%s' action.",
         "NoDestinationPlatformWarning": "UI tests must be run against a simulator or a connected device. In the Xcode task, set `Destination platform` to a value other than `Default`.",
-        "XcprettyNotInstalled": "xcpretty is not installed on the build server. xcodebuild raw output will be shown. Publishing test results will fail if xcpretty is not installed."
+        "XcprettyNotInstalled": "xcpretty is not installed on the build server. xcodebuild raw output will be shown. Publishing test results will fail if xcpretty is not installed.",
+        "XcodeRequiresMac": "Using Xcode requires a macOS agent. Building with Xcode on Linux or Windows is not supported by Apple."
     }
 }

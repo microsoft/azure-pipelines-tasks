@@ -6,9 +6,10 @@ import { Kudu } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service-k
 import { AzureAppServiceUtility } from 'azurermdeploycommon/operations/AzureAppServiceUtility';
 import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
 import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/AzureResourceFilterUtility';
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
 import { ContainerBasedDeploymentUtility } from 'azurermdeploycommon/operations/ContainerBasedDeploymentUtility';
+import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility';
 
 export class AzureRmWebAppDeploymentProvider{
     protected taskParams:TaskParameters;
@@ -16,7 +17,6 @@ export class AzureRmWebAppDeploymentProvider{
     protected kuduService: Kudu;
     protected appServiceUtility: AzureAppServiceUtility;
     protected kuduServiceUtility: KuduServiceUtility;
-    protected azureEndpoint: AzureEndpoint;
     protected activeDeploymentID: string;
 
     constructor(taskParams: TaskParameters) {
@@ -24,20 +24,13 @@ export class AzureRmWebAppDeploymentProvider{
     }
 
     public async PreDeploymentStep() {
-        this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint();
-        console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppName));
-        
-        if(!this.taskParams.DeployToSlotOrASEFlag){
-            var appDetails = await AzureResourceFilterUtility.getAppDetails(this.azureEndpoint, this.taskParams.WebAppName);
-            this.taskParams.ResourceGroupName = appDetails["resourceGroupName"];
-        }
-
-        this.appService = new AzureAppService(this.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, this.taskParams.SlotName);
+        this.appService = new AzureAppService(this.taskParams.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, this.taskParams.SlotName);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
 
         this.kuduService = await this.appServiceUtility.getKuduService();
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
         tl.debug(`Resource Group: ${this.taskParams.ResourceGroupName}`);
+        tl.debug(`is Linux container web app: ${this.taskParams.isLinuxContainerApp}`);
     }
 
     public async DeployWebAppStep() {
@@ -46,12 +39,17 @@ export class AzureRmWebAppDeploymentProvider{
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
         await containerDeploymentUtility.deployWebAppImage(this.taskParams);
         
+        if(this.taskParams.AppSettings) {
+            var customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
+            await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
+        }
+
         await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
     }
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         if(this.kuduServiceUtility) {
-            await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
+            await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }

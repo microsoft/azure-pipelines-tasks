@@ -35,11 +35,13 @@ export class AzureAksService {
         });
     } 
 
-    public getAccessProfile(resourceGroup : string , clusterName : string ): Promise<Model.AKSClusterAccessProfile> {
-        return this.beginRequest(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.ContainerService/managedClusters/{ClusterName}/accessProfiles/clusterUser`,
+    public getAccessProfile(resourceGroup : string , clusterName : string, useClusterAdmin?: boolean): Promise<Model.AKSClusterAccessProfile> {
+        var accessProfileName = !!useClusterAdmin ? 'clusterAdmin' : 'clusterUser';
+        return this.beginRequest(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.ContainerService/managedClusters/{ClusterName}/accessProfiles/{AccessProfileName}`,
         {
             '{ResourceGroupName}': resourceGroup,
-            '{ClusterName}': clusterName
+            '{ClusterName}': clusterName,
+            '{AccessProfileName}': accessProfileName
         }).then((response) => {
             return  response.body;
         }, (reason) => {

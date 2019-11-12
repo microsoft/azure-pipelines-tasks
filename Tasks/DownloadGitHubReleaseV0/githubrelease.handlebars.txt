@@ -5,8 +5,9 @@
     "lastModified": "{{this.updated_at}}",
     "fileLength" : "{{this.size}}",
     "itemType": "file",
+    "contentType": "application/octet-stream",
     "metadata": {
-        "downloadUrl" : "{{this.browser_download_url}}"
+        "downloadUrl" : "{{this.url}}"
     }
   }{{#unless @last}},{{/unless}}
 {{/this}}

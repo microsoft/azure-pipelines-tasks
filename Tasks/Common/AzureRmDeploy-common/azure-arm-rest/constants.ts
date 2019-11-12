@@ -24,6 +24,9 @@ export const AzureServicePrinicipalAuthentications = {
 }
 
 export const AzureRmEndpointAuthenticationScheme = {
-	"ServicePrincipal": "serviceprincipal",
-	"ManagedServiceIdentity": "managedserviceidentity"
+    "ServicePrincipal": "serviceprincipal",
+    "ManagedServiceIdentity": "managedserviceidentity",
+    "PublishProfile": "publishprofile"
 }
+
+export const WebsiteEnableSyncUpdateSiteKey: string = "WEBSITE_ENABLE_SYNC_UPDATE_SITE";

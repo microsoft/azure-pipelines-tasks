@@ -48,7 +48,7 @@
   "loc.input.label.codeCoverageEnabled": "Couverture du code activée",
   "loc.input.help.codeCoverageEnabled": "Collectez les informations de couverture du code fournies par la série de tests.",
   "loc.input.label.otherConsoleOptions": "Autres options de console",
-  "loc.input.help.otherConsoleOptions": "Autres options de console pouvant être passées à vstest.console.exe, comme indiqué <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">ici</a>. <p>Ces options ne sont pas prises en charge et sont ignorées durant l'exécution des tests à l'aide du paramètre parallèle 'Multiagent' d'un travail d'agent, ou durant l'exécution des tests à l'aide de l'option 'Plan de test'. À la place, vous pouvez spécifier les options à l'aide d'un fichier de paramètres.</p>",
+  "loc.input.help.otherConsoleOptions": "Autres options de console pouvant être passées à vstest.console.exe, comme indiqué <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">ici</a>. <p>Ces options ne sont pas prises en charge et sont ignorées quand vous exécutez des tests à l'aide du paramètre parallèle 'Multiagent' d'un travail d'agent, quand vous exécutez des tests à l'aide de l'option 'Plan de test' ou 'Série de tests', ou quand vous sélectionnez une option de traitement par lot personnalisé. À la place, vous pouvez spécifier les options à l'aide d'un fichier de paramètres.</p>",
   "loc.input.label.distributionBatchType": "Tests par lot",
   "loc.input.help.distributionBatchType": "Un lot est un groupe de tests. Dans un lot de tests, tous les tests s'exécutent en même temps. Les résultats du lot sont ensuite publiés. Si le travail au cours duquel la tâche s'exécute est configurée pour utiliser plusieurs agents, chaque agent choisit les lots de tests disponibles pour s'exécuter en parallèle.<br><br><b>En fonction du nombre de tests et d'agents :</b> traitement par lot simple basé sur le nombre de tests et d'agents impliqués dans la série de tests.<br><br><b>En fonction du temps d'exécution des tests :</b> ce traitement par lot prend en compte le temps d'exécution pour créer des lots de tests où chaque lot a environ le même temps d'exécution.<br><br><b>En fonction des assemblys de tests :</b> les tests d'un assembly sont regroupés.",
   "loc.input.label.batchingBasedOnAgentsOption": "Options de lot",
@@ -59,7 +59,7 @@
   "loc.input.help.batchingBasedOnExecutionTimeOption": "Ce traitement par lot prend en compte le temps d'exécution pour créer des lots de tests où chaque lot a environ le même temps d'exécution. Les tests rapides sont regroupés, alors que les tests plus longs font éventuellement partie d'un autre lot. Quand cette option est utilisée avec le paramètre de travail multiagent, la durée totale des tests est réduite au minimum.",
   "loc.input.label.customRunTimePerBatchValue": "Temps d'exécution (en secondes) par lot",
   "loc.input.help.customRunTimePerBatchValue": "Spécifier le temps d'exécution (en secondes) par lot",
-  "loc.input.label.dontDistribute": "Ne pas distribuer les tests et effectuer plutôt une réplication quand plusieurs agents sont utilisés durant le travail",
+  "loc.input.label.dontDistribute": "Répliquer les tests au lieu de les distribuer quand plusieurs agents sont utilisés dans le travail",
   "loc.input.help.dontDistribute": "Si vous choisissez cette option, les tests ne sont pas distribués entre les agents quand la tâche s'exécute dans le cadre d'un travail multiagent.<br>Chacun des tests sélectionnés est répété sur chaque agent.<br>L'option est non applicable quand le travail d'agent est configuré pour s'exécuter sans parallélisme ou avec l'option de multiconfiguration.",
   "loc.input.label.testRunTitle": "Titre de la série de tests",
   "loc.input.help.testRunTitle": "Indiquez le nom de la série de tests.",
@@ -119,7 +119,7 @@
   "loc.messages.testSettingPropertiesNotSupported": "Les propriétés spécifiées dans le fichier testsettings sont accessibles via TestContext à l'aide de Visual Studio 2017 Update 4 ou une version ultérieure.",
   "loc.messages.vstestVersionInvalid": "La version %s de la plateforme de test spécifiée n'est pas prise en charge.",
   "loc.messages.configureDtaAgentFailed": "La configuration de l'agent de test et du serveur a échoué même après %d nouvelles tentatives. Erreur %s",
-  "loc.messages.otherConsoleOptionsNotSupported": "Les autres options de console ne sont pas prises en charge avec le paramètre de travail multiagent. Cette option va être ignorée.",
+  "loc.messages.otherConsoleOptionsNotSupported": "Les autres options de console ne sont pas prises en charge pour cette configuration de tâche. Cette option va être ignorée.",
   "loc.messages.distributedTestWorkflow": "Dans le flux de test distribué",
   "loc.messages.nonDistributedTestWorkflow": "Exécution des tests à l'aide de l'exécuteur vstest.console.exe.",
   "loc.messages.dtaNumberOfAgents": "Exécution du test distribué. Nombre d'agents dans le travail : %s",
@@ -178,5 +178,7 @@
   "loc.messages.UserProvidedSourceFilter": "Filtre source : %s",
   "loc.messages.UnableToGetFeatureFlag": "Impossible d'obtenir l'indicateur de fonctionnalité : %s",
   "loc.messages.diagnosticsInput": "Diagnostics activés : %s",
-  "loc.messages.UncPathNotSupported": "Le chemin du dossier de recherche des sources de test ne doit pas être un chemin UNC. Indiquez un chemin associé à une racine ou un chemin relatif à $(System.DefaultWorkingDirectory)."
+  "loc.messages.UncPathNotSupported": "Le chemin du dossier de recherche des sources de test ne doit pas être un chemin UNC. Indiquez un chemin associé à une racine ou un chemin relatif à $(System.DefaultWorkingDirectory).",
+  "loc.messages.LookingForBuildToolsInstalltion": "Tentative de localisation de vstest.console à partir d'une installation Visual Studio Build Tools.",
+  "loc.messages.LookingForVsInstalltion": "Tentative de localisation de vstest.console à partir d'une installation Visual Studio."
 }
