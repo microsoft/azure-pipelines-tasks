@@ -1,6 +1,6 @@
 import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
-import { OutputImage } from "./models/acrtaskrequestbody";
+import { OutputImage, TaskRequestStepType } from "./models/acrtaskrequestbody";
 import AcrTaskParameters from "./models/acrtaskparameters"
 import AcrTaskOperations from "./operations/acrtaskoperations"
 import { TaskUtil, MetadatUtil } from "./utilities/utils";
@@ -29,11 +29,7 @@ async function run() {
             throw new Error(tl.loc("FailedToExtractFromResponse", "taskId"))
         }
 
-        var runId = await taskOperations.runTask(taskId);
-        if(!runId)
-        {
-            throw new Error(tl.loc("FailedToExtractFromResponse", "runId"));
-        }
+        var runId = "";
 
         //cancel run on receiving pipeline cancel 
         process.on('SIGINT', () => {
@@ -44,22 +40,40 @@ async function run() {
             }
         });
 
-        var run = await taskOperations.pollGetRunStatus(runId); 
-        var loglink = await taskOperations.getlogLink(runId);
-        if(!loglink)
+        runId = await taskOperations.runTask(taskId);
+        if(!runId)
         {
-            throw new Error(tl.loc("FailedToExtractFromResponse", "loglink"));
+            throw new Error(tl.loc("FailedToExtractFromResponse", "runId"));
         }
 
-        await TaskUtil.publishLogs(loglink);
+        
+        var run = await taskOperations.pollGetRunStatus(runId); 
+        var loglink = await taskOperations.getlogLink(runId);
+        if(!!loglink)
+        {
+            await TaskUtil.publishLogs(loglink);
+        }
+        else
+        {
+            tl.warning(tl.loc("FailedToExtractFromResponse", "loglink"));
+        }
 
         switch (run.status) {
             case "Succeeded":
-                if(!!run.outputImages)
-                {
-                    var outputImages: OutputImage[] = run.outputImages; 
-                    await MetadatUtil.publishToImageMetadataStore(outputImages);
+                try {
+                    if(!!run.outputImages)
+                    {
+                        var outputImages: OutputImage[] = run.outputImages; 
+                        var sourceContextPath = tl.getInput("contextPath", true);
+                        var acrTask = taskOperations.acrTaskClient.acrTask
+                        var dockerFilePath = acrTask.taskRequestStepType == TaskRequestStepType.EncodedTask? sourceContextPath.concat(acrTask.dockerFile) : "";
+                        await MetadatUtil.publishToImageMetadataStore(outputImages, dockerFilePath);
+                    }
                 }
+                catch(err) {
+                    console.log("Unable to push pipeline metadata")
+                }
+               
                 tl.setResult(tl.TaskResult.Succeeded, tl.loc("TaskRunSucceeded"));
                 break;
             case "Cancelled":

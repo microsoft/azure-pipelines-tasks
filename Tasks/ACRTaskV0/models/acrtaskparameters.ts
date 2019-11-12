@@ -1,3 +1,4 @@
+import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import msRestAzure = require("azure-arm-rest-v2/azure-arm-common");
 import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
@@ -16,7 +17,8 @@ class AcrRegistry {
 export class AcrTask {
     version: string;
     name: string;
-    imageNames: string[];
+    repository: string;
+    tags: string[];
     registry: AcrRegistry;
     dockerFile: string;
     taskFile: string;
@@ -58,11 +60,10 @@ export default class AcrTaskParameters {
 
         let dockerfileOrTaskFile = tl.getInput("dockerfileOrTaskFile", true);
         // check whether dockerfile or yaml
-        let path = dockerfileOrTaskFile.split("/");
-        if(!path) {
+        if(!dockerfileOrTaskFile) {
            throw new Error(tl.loc("PathNotSet"));
         }
-        else if (path[path.length -1].endsWith(".yaml") || path[path.length -1].endsWith(".yml")) {
+        else if (path.extname(dockerfileOrTaskFile) == ".yaml" || path.extname(dockerfileOrTaskFile) == ".yml") {
             // file task step for yaml
             this.setFileTaskAcrTaskInputs(acrTask, dockerfileOrTaskFile);
         }
@@ -77,7 +78,8 @@ export default class AcrTaskParameters {
     private setEncodedTaskInputs(acrTask: AcrTask, dockerfileOrYaml: string) {
         acrTask.taskRequestStepType = TaskRequestStepType.EncodedTask;
         acrTask.dockerFile = dockerfileOrYaml;
-        acrTask.imageNames = tl.getDelimitedInput("imageNames", "\n");
+        acrTask.repository =tl.getInput("repository"); 
+        acrTask.tags = tl.getDelimitedInput("tags", "\n");
         acrTask.arguments = tl.getInput("arguments");
     }
 
@@ -99,7 +101,7 @@ export default class AcrTaskParameters {
             acrRegistry.name = resourceName;
             acrRegistry.location = acrRegistryObject.location;
             acrRegistry.resourceGroup = TaskUtil.getResourceGroupNameFromUrl(acrRegistryObject.id);
-            acrRegistry.loginServer = resourceName.concat(".azurecr.io");
+            acrRegistry.loginServer = acrRegistryObject.loginServer
             return acrRegistry;
         }
         else {

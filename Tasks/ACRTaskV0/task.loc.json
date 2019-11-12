@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 158,
+    "Minor": 161,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -67,16 +67,26 @@
       "helpMarkDown": "ms-resource:loc.input.help.dockerfileOrTaskFile"
     },
     {
-      "name": "imageNames",
+      "name": "repository",
+      "label": "ms-resource:loc.input.label.repository",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.repository",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "tags",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.imageNames",
-      "defaultValue": "$(Build.Repository.Name):$(Build.BuildId)",
+      "defaultValue": "$(Build.BuildId)",
       "properties": {
         "resizable": "true",
         "rows": "2"
       },
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.imageNames"
+      "label": "ms-resource:loc.input.label.tags",
+      "helpMarkDown": "ms-resource:loc.input.help.tags"
     },
     {
       "name": "arguments",

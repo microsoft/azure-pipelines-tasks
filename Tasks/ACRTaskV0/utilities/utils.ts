@@ -9,6 +9,7 @@ import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import { AcrTask } from "../models/acrtaskparameters";
 import webClient = require("azure-arm-rest-v2/webClient");
+import { getBaseImageNameFromDockerFile } from "docker-common-v2/containerimageutils";
 var archiver = require('archiver');
 
 export class ArchiveUtil {
@@ -86,29 +87,19 @@ export class TaskUtil {
             throw new Error(tl.loc("UnableToFindResourceGroupDueToNullId"));
         }
         const pathArray =id.split("/");
-        if(pathArray[3] != 'resourceGroups'){
+        if(pathArray.length <=0 ||  pathArray[3].toLowerCase() != 'resourcegroups'){
             throw new Error(tl.loc("UnableToFindResourceGroupDueToInvalidId"));
         }
+
         return pathArray[4];
     }
-    
-    public static getTagFromImageName(imageName: string): string {
-        var endIndex = 0;
-        if (imageUtils.hasRegistryComponent(imageName)) {
-            // Contains a registry component that may include ":", so omit
-            // this part of the name from the main delimiter determination
-            endIndex = imageName.indexOf("/");
-        }
-        endIndex = imageName.indexOf(":", endIndex);
-        return endIndex < 0 ? imageName : imageName.substr(endIndex + 1, imageName.length - 1);
-    }
-    
+
     public static getListOfTagValuesForImageNames(acrTask: AcrTask): acrTaskRequest.Value[] {
         let runValues : acrTaskRequest.Value[] = [];
-        acrTask.imageNames.forEach(function(name, index) {
+        acrTask.tags.forEach(function(tag, index) {
             var runValue = new acrTaskRequest.Value();
             runValue.name =  "Tag" + index + "";
-            runValue.value = TaskUtil.getTagFromImageName(name),
+            runValue.value = tag
             runValue.isSecret = false;
             runValues.push(runValue);
         });
@@ -116,24 +107,24 @@ export class TaskUtil {
         return runValues;
     }
 
-    public static addRunRegistryToImageName(imageNameWithoutTag: string): string {
+    public static addRunRegistryToImageName(repository: string): string {
         const registryTag =  "{{.Run.Registry}}/";
-        if(!imageUtils.hasRegistryComponent(imageNameWithoutTag))
+        if(!imageUtils.hasRegistryComponent(repository))
         {
-            imageNameWithoutTag = registryTag.concat(imageNameWithoutTag);
+            repository = registryTag.concat(repository);
         }
     
-        return imageNameWithoutTag
+        return repository
     }
     
     public static convertToImageNamesWithValuesTag(acrTask: AcrTask): string[] {
-        let imageNamesWithValuesTags: string[] = [...acrTask.imageNames];
-    
-        imageNamesWithValuesTags.forEach(function(name, index, imageNamesWithValuesTags) {
-            var imageNameWithoutTag = imageUtils.imageNameWithoutTag(name);
-            imageNameWithoutTag = TaskUtil.addRunRegistryToImageName(imageNameWithoutTag);
+        let tags: string[] = [...acrTask.tags];
+        let imageNamesWithValuesTags: string[] = []
+
+        var imageNameWithoutTag = TaskUtil.addRunRegistryToImageName(acrTask.repository);
+        tags.forEach(function(tag, index) {            
             var tagValue = ":{{.Values.Tag" + index + "}}";
-            imageNamesWithValuesTags[index] = imageNameWithoutTag.concat(tagValue);
+            imageNamesWithValuesTags.push(imageNameWithoutTag.concat(tagValue));
         });
     
         return imageNamesWithValuesTags;
@@ -187,7 +178,7 @@ export class TaskUtil {
 
 export class MetadatUtil {
 
-    public static async publishToImageMetadataStore(outputImages: acrTaskRequest.OutputImage[]): Promise<any> {
+    public static async publishToImageMetadataStore(outputImages: acrTaskRequest.OutputImage[], dockerFilePath?: string): Promise<any> {
         const build = "build";
         const hostType = tl.getVariable("System.HostType").toLowerCase();
         const runId = hostType === build ? parseInt(tl.getVariable("Build.BuildId")) : parseInt(tl.getVariable("Release.ReleaseId"));
@@ -195,7 +186,10 @@ export class MetadatUtil {
         const pipelineName = tl.getVariable("System.DefinitionName");
         const pipelineId = tl.getVariable("System.DefinitionId");
         const jobName = tl.getVariable("System.PhaseDisplayName");
-    
+
+
+        const baseImageName = dockerFilePath && fs.existsSync(dockerFilePath) ? getBaseImageNameFromDockerFile(dockerFilePath) : "NA";
+
         const requestUrl = tl.getVariable("System.TeamFoundationCollectionUri") + tl.getVariable("System.TeamProject") + "/_apis/deployment/imagedetails?api-version=5.0-preview.1";
         
         try
@@ -221,19 +215,19 @@ export class MetadatUtil {
                     tags.push(image.tag);
                 });
         
-                let imageUri = "https://" + outputImages[i].registry + "/" + outputImages[i].repository + "@" + outputImages[i].digest +"";
+                let imageUri = "https://" + outputImages[i].registry + "/" + outputImages[i].repository + "@" + outputImages[i].digest;
         
                 const requestBody: string = JSON.stringify(
                     {
                         "imageName": imageUri,
                         "imageUri": imageUri,
                         "hash": outputImages[i].digest,
-                        "baseImageName": "",
+                        "baseImageName": baseImageName,
                         "distance": 0,
                         "imageType": "",
                         "mediaType": "",
                         "tags": tags,
-                        "layerInfo": "",
+                        "layerInfo": [],
                         "runId": runId,
                         "pipelineVersion": pipelineVersion,
                         "pipelineName": pipelineName,

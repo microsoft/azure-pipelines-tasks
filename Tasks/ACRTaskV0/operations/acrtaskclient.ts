@@ -11,7 +11,7 @@ import * as semver from 'semver';
 import { tinyGuid } from 'utility-common-v2/tinyGuidUtility'
 
 const acrTaskbaseUri : string = "//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}" ;
-const dummyContextUrl : string = "https://dev.azure.com/";
+const dummyContextUrl : string = tl.getVariable('system.TeamFoundationCollectionUri'); 
 
 export class AcrTaskClient extends ServiceClient {
     public createTask : boolean = false;
@@ -51,7 +51,6 @@ export class AcrTaskClient extends ServiceClient {
 
         this.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             var statusCode = response.statusCode;
-            tl.debug("Response for get build source upload url " + JSON.stringify(response));
             if (statusCode === 200) {
                 // Generate Response
                 console.log(tl.loc("FetchUploadBlobSourceUrl"));
@@ -91,7 +90,6 @@ export class AcrTaskClient extends ServiceClient {
 
         this.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             var statusCode = response.statusCode;
-            tl.debug("Response for get acr task " + JSON.stringify(response));
             if (statusCode === 200) {
                 // Generate Response
                 this.updateTask = true;
@@ -146,7 +144,6 @@ export class AcrTaskClient extends ServiceClient {
 
         this.beginRequest(httpRequest).then(async (response) => {
             var statusCode = response.statusCode;
-            tl.debug("Response for createOrUpdate acr task " + JSON.stringify(response));
             if (statusCode === 200) {
                 // Generate Response
                 if(this.createTask)
@@ -212,11 +209,9 @@ export class AcrTaskClient extends ServiceClient {
         } as AcrTaskRequest.ITaskRunRequest;
 
         httpRequest.body = JSON.stringify(requestbody);
-        tl.debug("Request body for run Acr task " + JSON.stringify(requestbody));
         console.log(tl.loc("RunAcrTask", acrTaskName));
         this.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             var statusCode = response.statusCode;
-            tl.debug("Response for run Acr task " + JSON.stringify(response));
             if (statusCode === 200 || statusCode === 202) {
                 var runId = response.body.properties.runId;
                 var status = response.body.properties.status;
@@ -336,7 +331,6 @@ export class AcrTaskClient extends ServiceClient {
         this.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             var statusCode = response.statusCode;
             if (statusCode === 200) {
-                tl.debug("Response for get run" + JSON.stringify(response));
                 return new ApiResult(null, response.body.properties);
             }
             else {

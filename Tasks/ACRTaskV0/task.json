@@ -2,7 +2,7 @@
     "id": "769D88CB-515B-4456-A045-D9A4E11C90E3",
     "name": "ACRTaskV0",
     "friendlyName": "ACR Task",
-    "description": "Buid and run container images using ACR tasks",
+    "description": "Build and run container images using Azure Container Registry (ACR) tasks",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/en-us/azure/container-registry/container-registry-tasks-overview",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the ACR Task documentation](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-tasks-overview)",
@@ -15,7 +15,7 @@
     "demands": [],
     "version": {
         "Major": 0,
-        "Minor": 158,
+        "Minor": 161,
         "Patch": 0
     },
     "instanceNameFormat": "acrTask",
@@ -45,7 +45,7 @@
         },
         {
             "name": "azureContainerRegistry",
-            "label": "Azure container registry",
+            "label": "Azure Container Registry",
             "type": "pickList",
             "helpMarkDown": "Select an Azure Container Registry which will be used for pulling container images and deploying applications to the Kubernetes cluster. Required for commands that need to authenticate with a registry.",
             "required": true,
@@ -57,7 +57,7 @@
             "label": "Source context path",
             "defaultValue": "$(System.DefaultWorkingDirectory)",
             "required": true,
-            "helpMarkDown": "Path of the context to be uploaded. For release having multiple artifacts provide with artifact alias name in the path too. For example, $(System.DefaultWorkingDirectory)/_alias1 "
+            "helpMarkDown": "Path to the content to be sent as the context for the ACR task. For release having multiple artifacts provide with artifact alias name in the path too. For example, $(System.DefaultWorkingDirectory)/_alias1 "
         },
         {
             "name": "dockerfileOrTaskFile",
@@ -65,19 +65,29 @@
             "label": "Dockerfile or task file path",
             "defaultValue": "Dockerfile",
             "required": true,
-            "helpMarkDown": "Relative path to the Dockerfile or the task template/definition file path relative to the source context"
+            "helpMarkDown": "Relative path to the Dockerfile or the ACR task template file path relative to the source context"
         },
         {
-            "name": "imageNames",
+            "name": "repository",
+            "label": "Container repository",
+            "type": "string",
+            "helpMarkDown": "Name of the repository.",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "tags",
             "type": "multiLine",
-            "label": "Image names",
-            "defaultValue": "$(Build.Repository.Name):$(Build.BuildId)",
+            "defaultValue": "$(Build.BuildId)",
             "properties": {
                 "resizable": "true",
                 "rows": "2"
             },
-            "required": false,
-            "helpMarkDown": "A list of the names of the Docker images in separate lines to build and push."
+            "label": "Tags",
+            "helpMarkDown": "A list of tags in separate lines. These tags are used in build, push and buildAndPush commands. Ex:<br><br>beta1.1<br>latest"
         },
         {
             "name": "arguments",
@@ -93,19 +103,19 @@
             "label": "ValuesFilePath",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The task values/parameters file path relative to the source context. Valid for yaml files"
+            "helpMarkDown": "The ACR task values file path relative to the source context. Values.yaml contains \"key:value\" pairs that replace the keys in the acr task template file."
         },
         {
             "name": "os",
             "type": "pickList",
-            "label": "Operating System",
+            "label": "Operating system",
             "defaultValue": "linux",
             "required": false,
             "options": {
                 "linux": "Linux",
                 "windows": "Windows"
             },
-            "helpMarkDown": "Operating System",
+            "helpMarkDown": "operating system for the acr task",
             "groupName": "platform",
             "properties": {
                 "EditableOptions": "True"
@@ -137,7 +147,7 @@
             "label": "Working Directory",
             "defaultValue": "$(System.DefaultWorkingDirectory)",
             "required": false,
-            "helpMarkDown": "Current working directory where the script is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
+            "helpMarkDown": "Current working directory where the script(not ACR) is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
             "groupName": "advanced"
         }
     ],
