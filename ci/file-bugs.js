@@ -192,7 +192,7 @@ async function fileBugs(bugsByLabel, staleBugsByLabel, untouchedBugsByLabel) {
             let bugTitle = `Too many bugs in https://github.com/microsoft/azure-pipelines-tasks`;
             // Format message as html so it renders correctly.
             let bugMessage = 
-`<div>The number of bugs assigned to this labels owned by this area path in https://github.com/microsoft/azure-pipelines-tasks has exceeded the number of allowable bugs.</div>
+`<div>The number of bugs assigned to the labels owned by this area path in https://github.com/microsoft/azure-pipelines-tasks has exceeded the number of allowable bugs.</div>
 <div><br></div>
 <div>Labels owned by this area: ${JSON.stringify(labels)}</div>
 <div><br></div>
