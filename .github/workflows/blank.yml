@@ -19,6 +19,8 @@ jobs:
       uses: actions/setup-node@master
       with:
         version: 10.x
+        
+    - run: npm install
 
     - name: File bugs
       run: node ci/file-bugs.js
