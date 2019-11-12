@@ -103,9 +103,9 @@ export class DistributedTest {
             telemetryProps.ExecutionFlow = 'Distributed';
             var start = new Date().getTime();
             const sources = tl.findMatch(this.inputDataContract.TestSelectionSettings.SearchFolder, sourceFilter);
-            tl.debug('tl match count :' + sources.length);
+            tl.debug(`${sources.length} files matched the given minimatch filter`);
             var timeTaken = new Date().getTime() - start;
-            tl.debug(`Time taken for applying the minimatch pattern to filter out the sources ${timeTaken} ms `);
+            tl.debug(`Time taken for applying the minimatch pattern to filter out the sources ${timeTaken} ms` );
             telemetryProps.TimeToSearchDLLsInMilliSeconds = timeTaken;
             ci.publishTelemetry('TestExecution','MinimatchFilterPerformance', telemetryProps);
             const filesMatching = [];
