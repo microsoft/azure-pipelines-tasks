@@ -14,6 +14,7 @@
   "groups": [],
   "demands": [],
   "minimumAgentVersion": "2.155.1",
+  "preview": false,
   "deprecated": true,
   "inputs": [
     {
