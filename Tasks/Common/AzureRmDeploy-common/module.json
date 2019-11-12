@@ -156,6 +156,7 @@
         "FailedToGetAppServiceConnectionStrings": "Failed to get App service '%s' Connection strings. Error: %s",
         "FailedToGetAppServiceConnectionStringSlotSettings": "Failed to get App service '%s' Connection string slot settings. Error: %s",
         "FailedToGetAppServiceSlotConfigurationNames" : "Failed to get App service '%s' Slot Configuration Names. Error: %s",
-        "FailedToPatchAppServiceConfiguration": "Failed to patch App Service '%s' configuration. Error: %s"
+        "FailedToPatchAppServiceConfiguration": "Failed to patch App Service '%s' configuration. Error: %s",
+        "KuduStackTraceURL" : "To debug further please check Kudu stack trace URL : %s"
     }
 }

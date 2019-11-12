@@ -61,9 +61,14 @@ function Get-LatestModule {
     $regexToMatch = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $patternToMatch
     $regexToExtract = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $patternToExtract
     $maxVersion = [version] "0.0.0"
+    $modulePath = $env:SystemDrive + "\Modules";
 
     try {
-        $moduleFolders = Get-ChildItem -Directory -Path $($env:SystemDrive + "\Modules") | Where-Object { $regexToMatch.IsMatch($_.Name) }
+        if (-not (Test-Path -Path $modulePath)) {
+            return $resultFolder
+        }
+
+        $moduleFolders = Get-ChildItem -Directory -Path $modulePath | Where-Object { $regexToMatch.IsMatch($_.Name) }
         foreach ($moduleFolder in $moduleFolders) {
             $moduleVersion = [version] $($regexToExtract.Match($moduleFolder.Name).Groups[0].Value)
             if($moduleVersion -gt $maxVersion) {
