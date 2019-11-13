@@ -44,6 +44,8 @@ tr.setInput('secretName', process.env[shared.TestEnvVars.secretName] || '');
 tr.setInput('secretType', process.env[shared.TestEnvVars.secretType] || '');
 tr.setInput('dockerComposeFile', process.env[shared.TestEnvVars.dockerComposeFile] || '');
 tr.setInput('kustomizationPath', process.env[shared.TestEnvVars.kustomizationPath] || '');
+tr.setInput('baselineAndCanaryReplicas', process.env[shared.TestEnvVars.baselineAndCanaryReplicas] || '0');
+tr.setInput('trafficSplitMethod', process.env[shared.TestEnvVars.trafficSplitMethod]);
 
 process.env.SYSTEM_DEFAULTWORKINGDIRECTORY = testnamespaceWorkingDirectory;
 process.env.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI = teamFoundationCollectionUri;
@@ -96,6 +98,10 @@ if (process.env[shared.TestEnvVars.action] === 'bake') {
         stdout: 'baked manifest from helm chart'
     };
     a.exec[commandWithReleaseNameOverride] = {
+        'code': 0,
+        stdout: 'baked manifest from helm chart'
+    };
+    a.exec[`helm template ${process.env[shared.TestEnvVars.helmChart]} --namespace ${namespace} --set name=value:with:colons`] = {
         'code': 0,
         stdout: 'baked manifest from helm chart'
     };
@@ -243,6 +249,11 @@ a.exec[`${kubectlPath} scale ${process.env[shared.TestEnvVars.kind]}/${process.e
     stdout: 'created secret'
 }
 
+a.exec[`${kubectlPath} get service/nginx-service -o json --namespace testnamespace`] = {
+    'code': 0,
+    'stdout': '{\r\n     "apiVersion": "v1",\r\n     "kind": "Service",\r\n     "metadata": {\r\n         "annotations": {\r\n             "azure-pipelines/jobName": "Agent phase",\r\n             "azure-pipelines/org": "https://codedev.ms/anchauh/",\r\n             "azure-pipelines/pipeline": "aksCd-153 - 64 - CD",\r\n             "azure-pipelines/pipelineId": "40",\r\n             "azure-pipelines/project": "nginx",\r\n             "azure-pipelines/run": "41",\r\n             "azure-pipelines/runuri": "https://codedev.ms/anchauh/nginx/_releaseProgress?releaseId=41",\r\n             "kubectl.kubernetes.io/last-applied-configuration": "{\\"apiVersion\\":\\"v1\\",\\"kind\\":\\"Service\\",\\"metadata\\":{\\"annotations\\":{},\\"labels\\":{\\"app\\":\\"nginx\\"},\\"name\\":\\"nginx-service\\",\\"namespace\\":\\"testnamespace\\"},\\"spec\\":{\\"ports\\":[{\\"name\\":\\"http\\",\\"port\\":80,\\"protocol\\":\\"TCP\\",\\"targetPort\\":\\"http\\"}],\\"selector\\":{\\"app\\":\\"nginx\\"},\\"type\\":\\"LoadBalancer\\"}}\\n"\r\n         },\r\n         "creationTimestamp": "2019-09-11T10:09:09Z",\r\n         "labels": {\r\n             "app": "nginx"\r\n         },\r\n         "name": "nginx-service",\r\n         "namespace": "testnamespace",\r\n         "resourceVersion": "8754335",\r\n         "selfLink": "/api/v1/namespaces/testnamespace/services/nginx-service",\r\n         "uid": "31f02713-d47c-11e9-9448-16b93c17a2b4"\r\n     },\r\n     "spec": {\r\n         "clusterIP": "10.0.157.189",\r\n         "externalTrafficPolicy": "Cluster",\r\n         "ports": [\r\n             {\r\n                 "name": "http",\r\n                 "nodePort": 32112,\r\n                 "port": 80,\r\n                 "protocol": "TCP",\r\n                 "targetPort": "http"\r\n             }\r\n         ],\r\n         "selector": {\r\n             "app": "nginx"\r\n         },\r\n         "sessionAffinity": "***",\r\n         "type": "LoadBalancer"\r\n     },\r\n     "status": {\r\n         "loadBalancer": {\r\n             "ingress": [\r\n                 {\r\n                     "ip": "104.211.243.77"\r\n                 }\r\n             ]\r\n         }\r\n     }\r\n }'
+}
+
 const pipelineAnnotations: string = [
     `azure-pipelines/run=${buildNumber}`,
     `azure-pipelines/pipeline="${definitionName}"`,
@@ -277,6 +288,7 @@ if (process.env[shared.TestEnvVars.arguments]) {
         'stdout': 'deleted successfuly'
     };
 }
+
 
 tr.setAnswers(<any>a);
 tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
@@ -320,6 +332,7 @@ tr.registerMock('../utils/FileHelper', {
         });
 
         if (newFilePaths.length === 0) {
+            console.log(shared.ManifestFilesPath);
             newFilePaths.push(shared.ManifestFilesPath);
         }
         return newFilePaths;
@@ -329,7 +342,8 @@ tr.registerMock('../utils/FileHelper', {
     },
     getNewUserDirPath: fh.getNewUserDirPath,
     ensureDirExists: fh.ensureDirExists,
-    assertFileExists: fh.assertFileExists
+    assertFileExists: fh.assertFileExists,
+    writeManifestToFile: fh.writeManifestToFile
 });
 
 tr.registerMock('uuid/v4', function () {
