@@ -44,6 +44,15 @@
     ],
     "inputs": [
         {
+            "name": "helmCommand",
+            "type": "string",
+            "label": "Helm command",
+            "defaultValue": "helm",
+            "required": false,
+            "helpMarkDown": "The command used to call helm. Defaults to 'helm'. Useful when wrapping or using plugins.",
+            "groupName": "cluster"
+        },
+        {
             "name": "connectionType",
             "type": "pickList",
             "label": "Connection Type",
@@ -403,7 +412,7 @@
             "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
         }
     ],
-    "instanceNameFormat": "helm $(command)",
+    "instanceNameFormat": "$(command)",
     "showEnvironmentVariables": true,
     "prejobexecution": {
         "Node": {
