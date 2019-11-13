@@ -8,6 +8,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tmr.setInput('targetType', 'filepath');
 tmr.setInput('filePath', 'path/to/script');
 tmr.setInput('workingDirectory', '/fakecwd');
+tmr.setInput('AZP_BASHV3_OLD_SOURCE_BEHAVIOR', process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR']);
 
 //Create assertAgent and getVariable mocks, support not added in this version of task-lib
 const tl = require('azure-pipelines-task-lib/mock-task');
@@ -50,7 +51,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         'path/to/script': {
             isFile() {
                 return true;
-            }
+            },
+            mode: '777'
         }
     }
 };
