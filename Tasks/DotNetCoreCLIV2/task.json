@@ -17,8 +17,8 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 156,
-        "Patch": 2
+        "Minor": 160,
+        "Patch": 0
     },
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -514,7 +514,7 @@
         "Error_NoSourceSpecifiedForPush": "No source was specified for push",
         "Error_NoValueFoundForEnvVar": "No value was found for the provided environment variable.",
         "Error_NoVersionFoundInBuildNumber": "Could not find version number data in the following environment variable: BUILD_BUILDNUMBER. The value of the variable should contain a substring with the following formats: X.Y.Z or X.Y.Z.A where A, X, Y, and Z are positive integers.",
-        "Error_PackageFailure": "An error ocurred while trying to pack the files.",
+        "Error_PackageFailure": "An error occurred while trying to pack the files.",
         "Error_PushNotARegularFile": "%s is not a file. Check the 'Path/Pattern to nupkg' property of the task.",
         "Info_AttemptingToPackFile": "Attempting to pack file: ",
         "Info_NoPackagesMatchedTheSearchPattern": "No packages matched the search pattern.",

@@ -14,7 +14,7 @@
     "preview": false,
     "version": {
         "Major": 1,
-        "Minor": 1,
+        "Minor": 161,
         "Patch": 0
     },
     "demands": [],
@@ -30,7 +30,7 @@
     "inputs": [
         {
             "name": "gitHubConnection",
-            "type": "connectedService:github:OAuth,PersonalAccessToken",
+            "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,Token",
             "label": "GitHub connection (OAuth or PAT)",
             "defaultValue": "",
             "required": true,

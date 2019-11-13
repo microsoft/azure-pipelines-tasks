@@ -72,7 +72,7 @@ Build Machine Image (PREVIEW) task incorporates third party material from the pr
 64.	underscore.js (http://underscorejs.org/; https://github.com/jashkenas/underscore)
 65.	util-deprecate (https://github.com/TooTallNate/util-deprecate)
 66.	vso-node-api (https://github.com/Microsoft/vsts-node-api)
-67.	VSTS-task-lib  (https://github.com/Microsoft/vsts-task-lib)
+67.	azure-pipelines-task-lib  (https://github.com/Microsoft/azure-pipelines-task-lib)
 68.	winreg  (https://github.com/fresc81/node-winreg)
 69.	wrappy (https://github.com/npm/wrappy)
 70.	Xml2JS  (https://github.com/Leonidas-from-XIV/node-xml2js)
@@ -1983,7 +1983,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF vso-node-api NOTICES, INFORMATION, AND LICENSE
 
-%% VSTS-task-lib  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% azure-pipelines-task-lib  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 The MIT License (MIT)
 
@@ -2007,7 +2007,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 =========================================
-END OF VSTS-task-lib  NOTICES, INFORMATION, AND LICENSE
+END OF azure-pipelines-task-lib  NOTICES, INFORMATION, AND LICENSE
 
 %% winreg  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================

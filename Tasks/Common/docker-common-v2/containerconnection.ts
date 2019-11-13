@@ -22,8 +22,8 @@ export default class ContainerConnection {
     private configurationDirPath: string;    
     private oldDockerConfigContent: string;
 
-    constructor() {
-        this.dockerPath = tl.which("docker", true);
+    constructor(isDockerRequired: boolean = true) {
+        this.dockerPath = tl.which("docker", isDockerRequired);        
     }
 
     public createCommand(): tr.ToolRunner {
@@ -93,6 +93,16 @@ export default class ContainerConnection {
                     
                     imageNames.push(imageName);
                 });
+            }
+            else {
+                // in case there is no login information found and a repository is specified, the intention
+                // might be to tag the image to refer locally.
+                let imageName = repository;
+                if (enforceDockerNamingConvention) {
+                    imageName = imageUtils.generateValidImageName(imageName);
+                }
+                
+                imageNames.push(imageName);
             }
         }
 
