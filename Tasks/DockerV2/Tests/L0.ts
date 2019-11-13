@@ -240,9 +240,9 @@ describe("DockerV2 Suite", function () {
         console.log(tr.stderr);
         done();
     });
-    // Docker build tests end
+    // // Docker build tests end
 
-    // Docker push tests begin
+    // // Docker push tests begin
     it('Runs successfully for docker push', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
@@ -374,9 +374,9 @@ describe("DockerV2 Suite", function () {
         console.log(tr.stderr);
         done();
     });
-    // Docker push tests end
+    // // Docker push tests end
 
-    // Docker buildAndPush tests begin
+    // // Docker buildAndPush tests begin
     it('Runs successfully for docker buildAndPush', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
@@ -469,9 +469,9 @@ describe("DockerV2 Suite", function () {
         console.log(tr.stderr);
         done();
     });
-    // Docker buildAndPush tests end
+    // // Docker buildAndPush tests end
 
-    // Docker general command tests begin
+    // // Docker general command tests begin
     it('Runs successfully for docker images', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.images;
@@ -581,21 +581,21 @@ describe("DockerV2 Suite", function () {
         done();
     });
 
-    it("Runs successfully for docker build selected labels when addPipelineData is false", (done: MochaDone) => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
-        process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
-        process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
-        process.env[shared.TestEnvVars.addPipelineData] = "false";
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+    // it("Runs successfully for docker build selected labels when addPipelineData is false", (done: MochaDone) => {
+    //     let tp = path.join(__dirname, 'TestSetup.js');
+    //     process.env[shared.TestEnvVars.containerRegistry] = "dockerhubendpoint";
+    //     process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
+    //     process.env[shared.TestEnvVars.command] = shared.CommandTypes.build;
+    //     process.env[shared.TestEnvVars.addPipelineData] = "false";
+    //     let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+    //     tr.run();
 
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabelsWithAddPipelineFalse} -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
-        done();
-    });
+    //     assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
+    //     assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+    //     assert(tr.succeeded, 'task should have succeeded');
+    //     assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabelsWithAddPipelineFalse} -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
+    //     done();
+    // });
 
     function setEnvironmentVariables() : void {
         process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = 'https://mock.ms/mock/';

@@ -9,13 +9,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 139,
+    "Minor": 140,
     "Patch": 0
   },
   "groups": [],
   "demands": [],
-  "preview": true,
   "minimumAgentVersion": "2.155.1",
+  "preview": false,
+  "deprecated": true,
   "inputs": [
     {
       "name": "pipelineId",
