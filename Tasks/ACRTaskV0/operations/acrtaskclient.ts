@@ -373,7 +373,7 @@ export class AcrTaskClient extends ServiceClient {
         let triggerName = this.acrTask.name + tinyGuid();
         let baseImageTrigger =  {
             status: "Enabled",
-            baseImageTriggerType: "Runtime",
+            baseImageTriggerType: "All",
             name: triggerName
         } as AcrTaskRequest.IBaseImageTrigger
 
