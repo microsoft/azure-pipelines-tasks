@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 156,
-        "Patch": 77
+        "Patch": 78
     },
     "instanceNameFormat": "Automated Analysis",
     "groups": [
@@ -99,7 +99,7 @@
             "label": "Api key",
             "required": true,
             "groupName": "providerInputs",
-            "visibleRule": "metricProvider == Datadog",
+            "visibleRule": "provider == Datadog",
             "helpMarkDown": ""
         },
         {
@@ -108,7 +108,7 @@
             "label": "App key",
             "required": true,
             "groupName": "providerInputs",
-            "visibleRule": "metricProvider == Datadog",
+            "visibleRule": "provider == Datadog",
             "helpMarkDown": ""
         },
         {
