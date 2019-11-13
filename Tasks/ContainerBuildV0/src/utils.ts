@@ -100,7 +100,10 @@ export async function getServiceDetails() {
     };
     var serviceResponse = kubectlTool.execSync(executionOption);
 
-    if (serviceResponse && serviceResponse.stdout) {
+    if (serviceResponse && serviceResponse.stderr) {
+        tl.setResult(tl.TaskResult.Failed, serviceResponse.stderr);
+    }
+    else if (serviceResponse && serviceResponse.stdout) {
         namespace = JSON.parse(serviceResponse.stdout).metadata.namespace ? JSON.parse(serviceResponse.stdout).metadata.namespace : namespace;
         port = JSON.parse(serviceResponse.stdout).spec.ports[0].port ? JSON.parse(serviceResponse.stdout).spec.ports[0].port : port;
         clusteruri = JSON.parse(serviceResponse.stdout).status.loadBalancer.ingress[0].ip ? JSON.parse(serviceResponse.stdout).status.loadBalancer.ingress[0].ip : clusteruri;
