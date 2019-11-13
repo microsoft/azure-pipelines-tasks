@@ -6,16 +6,20 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as yaml from 'js-yaml';
 import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
 import * as KubernetesObjectUtility from '../utils/KubernetesObjectUtility';
-import * as constants from '../models/constants';
+import * as constants from 'kubernetes-common-v2/kubernetesconstants';
 import * as TaskInputParameters from '../models/TaskInputParameters';
-import * as models from '../models/constants';
+import * as models from 'kubernetes-common-v2/kubernetesconstants';
 import * as fileHelper from '../utils/FileHelper';
 import * as utils from '../utils/utilities';
+import * as KubernetesManifestUtility from 'kubernetes-common-v2/kubernetesmanifestutility';
+import * as KubernetesConstants from 'kubernetes-common-v2/kubernetesconstants';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { Kubectl, Resource } from 'kubernetes-common-v2/kubectl-object-model';
 import { isEqual, StringComparer } from './StringComparison';
 import { getDeploymentMetadata, getPublishDeploymentRequestUrl, isDeploymentEntity, getManifestUrls } from 'kubernetes-common-v2/image-metadata-helper';
-import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
+import { WebRequest, sendRequest } from 'utility-common-v2/restutilities';
+import { deployPodCanary } from './PodCanaryDeploymentHelper';
+import { deploySMICanary } from './SMICanaryDeploymentHelper';
 
 const publishPipelineMetadata = tl.getVariable("PUBLISH_PIPELINE_METADATA");
 
@@ -34,13 +38,13 @@ export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], depl
     const deployedManifestFiles = deployManifests(inputManifestFiles, kubectl, isCanaryDeploymentStrategy(deploymentStrategy));
 
     // check manifest stability
-    const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.deploymentTypes.concat([constants.DiscoveryAndLoadBalancerResource.service]));
+    const resourceTypes: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, models.deploymentTypes.concat([KubernetesConstants.DiscoveryAndLoadBalancerResource.service]));
     await checkManifestStability(kubectl, resourceTypes);
 
     // print ingress resources
-    const ingressResources: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, [constants.DiscoveryAndLoadBalancerResource.ingress]);
+    const ingressResources: Resource[] = KubernetesObjectUtility.getResources(deployedManifestFiles, [KubernetesConstants.DiscoveryAndLoadBalancerResource.ingress]);
     ingressResources.forEach(ingressResource => {
-        kubectl.getResource(constants.DiscoveryAndLoadBalancerResource.ingress, ingressResource.name);
+        kubectl.getResource(KubernetesConstants.DiscoveryAndLoadBalancerResource.ingress, ingressResource.name);
     });
 
     // annotate resources
@@ -73,48 +77,52 @@ function getManifestFiles(manifestFilePaths: string[]): string[] {
 function deployManifests(files: string[], kubectl: Kubectl, isCanaryDeploymentStrategy: boolean): string[] {
     let result;
     if (isCanaryDeploymentStrategy) {
-        const canaryDeploymentOutput = canaryDeploymentHelper.deployCanary(kubectl, files);
+        let canaryDeploymentOutput: any;
+        if (canaryDeploymentHelper.isSMICanaryStrategy()) {
+            canaryDeploymentOutput = deploySMICanary(kubectl, files);
+        } else {
+            canaryDeploymentOutput = deployPodCanary(kubectl, files);
+        }
         result = canaryDeploymentOutput.result;
         files = canaryDeploymentOutput.newFilePaths;
     } else {
-        result = kubectl.apply(files);
+        if (canaryDeploymentHelper.isSMICanaryStrategy()) {
+            const updatedManifests = appendStableVersionLabelToResource(files, kubectl);
+            result = kubectl.apply(updatedManifests);
+        }
+        else {
+            result = kubectl.apply(files);
+        }
     }
     utils.checkForErrors([result]);
     return files;
 }
 
+function appendStableVersionLabelToResource(files: string[], kubectl: Kubectl): string[] {
+    const manifestFiles = [];
+    const newObjectsList = [];
+
+    files.forEach((filePath: string) => {
+        const fileContents = fs.readFileSync(filePath);
+        yaml.safeLoadAll(fileContents, function (inputObject) {
+            const kind = inputObject.kind;
+            if (KubernetesObjectUtility.isDeploymentEntity(kind)) {
+                const updatedObject = canaryDeploymentHelper.markResourceAsStable(inputObject);
+                newObjectsList.push(updatedObject);
+            } else {
+                manifestFiles.push(filePath);
+            }
+        });
+    });
+
+    const updatedManifestFiles = fileHelper.writeObjectsToFile(newObjectsList);
+    manifestFiles.push(...updatedManifestFiles);
+    return manifestFiles;
+}
+
 async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): Promise<void> {
-    const rolloutStatusResults = [];
-    const numberOfResources = resources.length;
-    for (let i = 0; i < numberOfResources; i++) {
-        const resource = resources[i];
-        if (models.workloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
-            rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
-        }
-        if (isEqual(resource.type, constants.KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase)) {
-            try {
-                await checkPodStatus(kubectl, resource.name);
-            } catch (ex) {
-                tl.warning(tl.loc('CouldNotDeterminePodStatus', JSON.stringify(ex)));
-            }
-        }
-        if (isEqual(resource.type, constants.DiscoveryAndLoadBalancerResource.service, StringComparer.OrdinalIgnoreCase)) {
-            try {
-                const service = getService(kubectl, resource.name);
-                const spec = service.spec;
-                const status = service.status;
-                if (isEqual(spec.type, constants.ServiceTypes.loadBalancer, StringComparer.OrdinalIgnoreCase)) {
-                    if(!isLoadBalancerIPAssigned(status)) {
-                        await waitForServiceExternalIPAssignment(kubectl, resource.name);
-                    }
-                    console.log(tl.loc('ServiceExternalIP', resource.name, status.loadBalancer.ingress[0].ip));
-                }
-            } catch (ex) {
-                tl.warning(tl.loc('CouldNotDetermineServiceStatus', resource.name, JSON.stringify(ex)));
-            }
-        }
-    }
-    utils.checkForErrors(rolloutStatusResults);
+    await KubernetesManifestUtility.checkManifestStability(kubectl, resources);
+
 }
 
 function annotateResources(files: string[], kubectl: Kubectl, resourceTypes: Resource[], allPods: any) {
@@ -227,91 +235,4 @@ async function pushDeploymentDataToEvidenceStore(requestBody: string, requestUrl
 
 function isCanaryDeploymentStrategy(deploymentStrategy: string): boolean {
     return deploymentStrategy != null && deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY.toUpperCase();
-}
-
-async function checkPodStatus(kubectl: Kubectl, podName: string): Promise<void> {
-    const sleepTimeout = 10 * 1000; // 10 seconds
-    const iterations = 60; // 60 * 10 seconds timeout = 10 minutes max timeout
-    let podStatus;
-    for (let i = 0; i < iterations; i++) {
-        await sleep(sleepTimeout);
-        tl.debug(`Polling for pod status: ${podName}`);
-        podStatus = getPodStatus(kubectl, podName);
-        if (podStatus.phase && podStatus.phase !== 'Pending' && podStatus.phase !== 'Unknown') {
-            break;
-        }
-    }
-    podStatus = getPodStatus(kubectl, podName);
-    switch (podStatus.phase) {
-        case 'Succeeded':
-        case 'Running':
-            if (isPodReady(podStatus)) {
-                console.log(`pod/${podName} is successfully rolled out`);
-            }
-            break;
-        case 'Pending':
-            if (!isPodReady(podStatus)) {
-                tl.warning(`pod/${podName} rollout status check timedout`);
-            }
-            break;
-        case 'Failed':
-            tl.error(`pod/${podName} rollout failed`);
-            break;
-        default:
-            tl.warning(`pod/${podName} rollout status: ${podStatus.phase}`);
-    }
-}
-
-function getPodStatus(kubectl: Kubectl, podName: string): any {
-    const podResult = kubectl.getResource('pod', podName);
-    utils.checkForErrors([podResult]);
-    const podStatus = JSON.parse(podResult.stdout).status;
-    tl.debug(`Pod Status: ${JSON.stringify(podStatus)}`);
-    return podStatus;
-}
-
-function isPodReady(podStatus: any): boolean {
-    let allContainersAreReady = true;
-    podStatus.containerStatuses.forEach(container => {
-        if (container.ready === false) {
-            console.log(`'${container.name}' status: ${JSON.stringify(container.state)}`);
-            allContainersAreReady = false;
-        }
-    });
-    if (!allContainersAreReady) {
-        tl.warning(tl.loc('AllContainersNotInReadyState'));
-    }
-    return allContainersAreReady;
-}
-
-function getService(kubectl: Kubectl, serviceName) {
-    const serviceResult = kubectl.getResource(constants.DiscoveryAndLoadBalancerResource.service, serviceName);
-    utils.checkForErrors([serviceResult]);
-    return JSON.parse(serviceResult.stdout);
-}
-
-async function waitForServiceExternalIPAssignment(kubectl: Kubectl, serviceName: string): Promise<void> {
-    const sleepTimeout = 10 * 1000; // 10 seconds
-    const iterations = 18; // 18 * 10 seconds timeout = 3 minutes max timeout
-
-    for (let i = 0; i < iterations; i++) {
-        console.log(tl.loc('waitForServiceIpAssignment', serviceName));
-        await sleep(sleepTimeout);
-        let status = getService(kubectl, serviceName).status;
-        if (isLoadBalancerIPAssigned(status)) {
-            return;
-        }
-    }
-    tl.warning(tl.loc('waitForServiceIpAssignmentTimedOut', serviceName));
-}
-
-function isLoadBalancerIPAssigned(status: any) {
-    if (status && status.loadBalancer && status.loadBalancer.ingress && status.loadBalancer.ingress.length > 0) {
-        return true;
-    }
-    return false;
-}
-
-function sleep(timeout: number) {
-    return new Promise(resolve => setTimeout(resolve, timeout));
 }

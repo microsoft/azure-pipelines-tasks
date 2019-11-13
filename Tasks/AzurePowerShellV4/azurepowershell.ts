@@ -30,6 +30,7 @@ async function run() {
         let customTargetAzurePs: string = tl.getInput('CustomTargetAzurePs', false);
         let serviceName = tl.getInput('ConnectedServiceNameARM',/*required*/true);
         let endpointObject= await new AzureRMEndpoint(serviceName).getEndpoint();
+        let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
 
         // string constants
         let otherVersion = "OtherVersion"
@@ -102,6 +103,7 @@ async function run() {
             .arg(`. '${filePath.replace("'", "''")}'`);
 
         let options = <tr.IExecOptions>{
+            cwd: input_workingDirectory,
             failOnStdErr: false,
             errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
             outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.

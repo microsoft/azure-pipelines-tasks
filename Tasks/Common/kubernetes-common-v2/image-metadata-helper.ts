@@ -17,6 +17,9 @@ const workingDirectory = tl.getVariable("System.DefaultWorkingDirectory");
 const branch = tl.getVariable("Build.SourceBranchName") || tl.getVariable("Build.SourceBranch");
 const repositoryProvider = tl.getVariable("Build.Repository.Provider");
 const repositoryUrl = tl.getVariable("Build.Repository.Uri");
+const pipelineUrlLabel = "Pipeline_Url";
+const clusterUrlLabel = "Cluster_Url";
+const manifestUrlLabel = "Manifest_Url";
 
 // ToDo: Add UTs for public methods
 export function getDeploymentMetadata(deploymentObject: any, allPods: any, deploymentStrategy: string, clusterInfo: any, manifestUrls: string[]): any {
@@ -45,14 +48,22 @@ export function getDeploymentMetadata(deploymentObject: any, allPods: any, deplo
     }
 
     let name: string = deploymentObject.metadata && deploymentObject.metadata.name ? deploymentObject.metadata.name : "";
-    let relatedUrls = [getPipelineUrl()];
+    let relatedUrls = [];
+    let pipelineUrl = getPipelineUrl();
+    if (pipelineUrl) {
+        relatedUrls.push(pipelineUrl);
+    }
+
     let clusterUrl = getServerUrl(clusterInfo);
     if (clusterUrl) {
         relatedUrls.push(clusterUrl);
     }
 
     if (manifestUrls.length > 0) {
-        relatedUrls.push(...manifestUrls);
+        for (const url of manifestUrls) {
+            let relatedUrl = getRelatedUrl(url, manifestUrlLabel);
+            relatedUrls.push(relatedUrl);
+        }
     }
 
     const metadataDetails = {
@@ -62,8 +73,9 @@ export function getDeploymentMetadata(deploymentObject: any, allPods: any, deplo
         "ResourceUri": imageIds,
         "UserEmail": getUserEmail(),
         "Config": deploymentStrategy,
-        "Address": getEnvironmentResourceAddress() || clusterUrl,
-        "Platform": getPlatform()
+        "Address": getEnvironmentResourceAddress(clusterUrl),
+        "Platform": getPlatform(),
+        "PipelineRunInfo" : getPipelineRunInfo()
     };
 
     return metadataDetails;
@@ -163,36 +175,41 @@ function getDescription(): string {
     return description;
 }
 
-function getEnvironmentResourceAddress(): string {
+function getEnvironmentResourceAddress(clusterUrl: any): string {
+    const environmentName = tl.getVariable("Environment.Name");
     const environmentResourceName = tl.getVariable("Environment.ResourceName");
-    const environmentResourceId = tl.getVariable("Environment.ResourceId");
-    if (!environmentResourceName && !environmentResourceId) {
+    if (!environmentName && !environmentResourceName) {
+        if (clusterUrl && clusterUrl["url"]) {
+            return clusterUrl["url"];
+        }
+
         return "";
     }
 
-    return util.format("%s/%s", environmentResourceName, environmentResourceId);
+    return util.format("%s/%s", environmentName, environmentResourceName);
 }
 
-function getPipelineUrl(): string {
+function getPipelineUrl(): { [key: string]: string } {
     let pipelineUrl = "";
+    const pipelineId = tl.getVariable("System.DefinitionId");
     if (isBuild) {
-        pipelineUrl = orgUrl + tl.getVariable("System.TeamProject") + "/_build/results?buildId=" + tl.getVariable("Build.BuildId");
+        pipelineUrl = orgUrl + tl.getVariable("System.TeamProject") + "/_build?definitionId=" + pipelineId;
     }
     else {
-        pipelineUrl = orgUrl + tl.getVariable("System.TeamProject") + "/_releaseProgress?releaseId=" + tl.getVariable("Release.ReleaseId");
+        pipelineUrl = orgUrl + tl.getVariable("System.TeamProject") + "/_release?definitionId=" + pipelineId;
     }
 
-    return pipelineUrl;
+    return getRelatedUrl(pipelineUrl, pipelineUrlLabel);
 }
 
-function getServerUrl(clusterInfo: any): string {
+function getServerUrl(clusterInfo: any): { [key: string]: string } {
     let serverUrl: string = "";
     let serverUrlMatch = clusterInfo.match(matchPatternForServerUrl);
     if (serverUrlMatch && serverUrlMatch.length >= 1) {
         serverUrl = serverUrlMatch[0];
     }
 
-    return serverUrl;
+    return getRelatedUrl(serverUrl, clusterUrlLabel);
 }
 
 export function extractManifestsFromHelmOutput(helmOutput: string): any {
@@ -357,4 +374,29 @@ export function isPodEntity(kind: string): boolean {
     }
 
     return kind.toLowerCase() === "pod";
+}
+
+function getRelatedUrl(url: string, label: string): { [key: string]: string } | null {
+    if (url) {
+        return {
+            "url": url,
+            "label": label
+        };
+    }
+    else {
+        return null;
+    }
+}
+
+function getPipelineRunInfo(): any {
+    var deploymentPhaseIdentifier = tl.getVariable("Environment.DeploymentPhaseIdentifier")
+    if (deploymentPhaseIdentifier) {
+        return {
+            'planId' : tl.getVariable("SYSTEM.PLANID"),
+            'deploymentPhaseIdentifier' : tl.getVariable("Environment.DeploymentPhaseIdentifier"),
+            'jobName' : tl.getVariable("SYSTEM.JOBNAME"),
+            'hubName' : tl.getVariable("SYSTEM.HOSTTYPE")
+        };
+    }
+    return null;
 }
