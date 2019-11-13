@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as yaml from 'js-yaml';
 import { Resource } from 'kubernetes-common-v2/kubectl-object-model';
-import { KubernetesWorkload, deploymentTypes, workloadTypes } from '../models/constants';
+import { KubernetesWorkload, deploymentTypes, workloadTypes } from 'kubernetes-common-v2/kubernetesconstants';
 import { StringComparer, isEqual } from '../utils/StringComparison';
 
 export function isDeploymentEntity(kind: string): boolean {
@@ -24,6 +24,14 @@ export function isWorkloadEntity(kind: string): boolean {
     return workloadTypes.some((type: string) => {
         return isEqual(type, kind, StringComparer.OrdinalIgnoreCase);
     });
+}
+
+export function isServiceEntity(kind: string): boolean {
+    if (!kind) {
+        throw (tl.loc('ResourceKindNotDefined'));
+    }
+
+    return isEqual("Service", kind, StringComparer.OrdinalIgnoreCase);
 }
 
 export function getReplicaCount(inputObject: any): any {
@@ -289,7 +297,11 @@ function setSpecLabels(inputObject: any, newLabels: any) {
 function getSpecSelectorLabels(inputObject: any) {
 
     if (!!inputObject && !!inputObject.spec && !!inputObject.spec.selector) {
-        return inputObject.spec.selector.matchLabels;
+        if (isServiceEntity(inputObject.kind)) {
+            return inputObject.spec.selector;
+        } else {
+            return inputObject.spec.selector.matchLabels;
+        }
     }
 
     return null;

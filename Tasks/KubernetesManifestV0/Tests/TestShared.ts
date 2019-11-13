@@ -34,7 +34,9 @@ export let TestEnvVars = {
     endpointAuthorizationType: "__endpointAuthorizationType__",
     isStableDeploymentPresent: "__isStableDeploymentPresent__",
     isCanaryDeploymentPresent: "__isCanaryDeploymentPresent__",
-    isBaselineDeploymentPresent: "__isBaselineDeploymentPresent__"
+    isBaselineDeploymentPresent: "__isBaselineDeploymentPresent__",
+    baselineAndCanaryReplicas: "__baselineAndCanaryReplicas__",
+    trafficSplitMethod: "__trafficSplitMethod__"
 };
 
 export let OperatingSystems = {
@@ -62,6 +64,11 @@ export let Actions = {
 export let Strategy = {
     canary: "canary",
     none: "none"
+};
+
+export let TrafficSplitMethod = {
+    pod: "pod",
+    smi: "smi"
 };
 
 export const ManifestFilesPath = path.join(__dirname, 'manifests', 'deployment.yaml');
