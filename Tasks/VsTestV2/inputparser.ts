@@ -168,7 +168,7 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
 
     inputDataContract.TestReportingSettings.TestSourceSettings = <idc.TestSourceSettings>{};
     inputDataContract.TestReportingSettings.TestSourceSettings.PullRequestTargetBranchName = tl.getVariable('System.PullRequest.TargetBranch');
-    inputDataContract.TestReportingSettings.ExecutionStatusSettings = <idc.MinimumTestsExecutionStatusSettings>{};
+    inputDataContract.TestReportingSettings.ExecutionStatusSettings = <idc.ExecutionStatusSettings>{};
     inputDataContract.TestReportingSettings.ExecutionStatusSettings.IgnoreTestFailures = utils.Helper.stringToBool(tl.getVariable('vstest.ignoretestfailures'));
     if (utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestRunTitle)) {
 
