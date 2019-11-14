@@ -22,15 +22,14 @@ async function configureHelm() {
 async function verifyHelm() {
     console.log(tl.loc("VerifyHelmInstallation"));
     var helmToolPath = tl.which("helm", true);
-    var helmTool = tl.tool(helmToolPath);
 
     // Check if using Helm 2 or Helm 3
     if (version.startsWith("v2")) {
+        var helmTool = tl.tool(helmToolPath);
         helmTool.arg("init");
         helmTool.arg("--client-only");
+        return helmTool.exec()
     }
-    
-    return helmTool.exec()
 }
 
 configureHelm()
