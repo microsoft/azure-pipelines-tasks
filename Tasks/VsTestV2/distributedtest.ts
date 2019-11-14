@@ -75,7 +75,7 @@ export class DistributedTest {
 
         const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
         dtaExecutionHostTool.arg(['--inputFile', inputFilePath]);
-        const code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ ignoreReturnCode:this.inputDataContract.ExecutionSettings.IgnoreTestFailures, env: envVars });
+        const code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ ignoreReturnCode:this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.IgnoreTestFailures, env: envVars });
 
         //hydra: add consolidated ci for inputs in C# layer for now
         const consolidatedCiData = {
