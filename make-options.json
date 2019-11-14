@@ -145,7 +145,6 @@
         "QueryWorkItemsV0",
         "QuickPerfTestV1",
         "ReviewAppV0",
-        "RunDistributedTestsV1",
         "RunJMeterLoadTestV1",
         "RunLoadTestV1",
         "ServiceFabricComposeDeployV0",
