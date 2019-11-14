@@ -10,7 +10,7 @@ import * as helminstaller from "./helminstaller"
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
-var versionToInstall = ""
+var helmVersion = ""
 
 async function configureKubectl() {
     var version = await kubectlinstaller.getKuberctlVersion();
@@ -23,9 +23,8 @@ async function configureKubectl() {
 }
 
 async function configureHelm() {
-    var version = await helminstaller.getHelmVersion();
-    versionToInstall = version
-    var helmPath = await helminstaller.downloadHelm(version);
+    helmVersion = await helminstaller.getHelmVersion();
+    var helmPath = await helminstaller.downloadHelm(helmVersion);
 
     // prepend the tools path. instructs the agent to prepend for future tasks
     if (!process.env['PATH'].startsWith(path.dirname(helmPath))) {
@@ -39,11 +38,9 @@ async function verifyHelm() {
     var helmTool = tl.tool(helmToolPath);
 
     // Check if using Helm 2 or Helm 3
-    if (versionToInstall.startsWith("v2")) {
+    if (helmVersion.startsWith("v2")) {
         helmTool.arg("init");
         helmTool.arg("--client-only");
-    } else {
-        helmTool.arg("version");
     }
 
     return helmTool.exec()

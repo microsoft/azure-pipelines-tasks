@@ -7,11 +7,10 @@ import utils = require("./utils");
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
-var versionToInstall = ""
+var version = ""
 
 async function configureHelm() {
-    var version = await utils.getHelmVersion();
-    versionToInstall = version;
+    version = await utils.getHelmVersion();
     var helmPath = await utils.downloadHelm(version);
     // prepend the tools path. instructs the agent to prepend for future tasks
     if (!process.env['PATH'].startsWith(path.dirname(helmPath))) {
@@ -31,17 +30,19 @@ async function verifyHelm() {
 
     // Check if using Helm 2 or Helm 3
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (helmVersion.startsWith("v2")) {
 >>>>>>> Helm installer fix for v3
 =======
     if (versionToInstall.startsWith("v2")) {
 >>>>>>> Helm v3 fix refactor
+=======
+    if (version.startsWith("v2")) {
+>>>>>>> Only check for v2
         helmTool.arg("init");
         helmTool.arg("--client-only");
-    } else {
-        helmTool.arg("version");
     }
-
+    
     return helmTool.exec()
 }
 
