@@ -13,7 +13,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
+<<<<<<< HEAD
         "Minor": 159,
+=======
+        "Minor": 161,
+>>>>>>> Helm installer fix for v3
         "Patch": 0
     },
     "demands": [],

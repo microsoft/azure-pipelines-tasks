@@ -22,9 +22,15 @@ async function verifyHelm() {
     var helmVersion = await utils.getHelmVersion();
     var helmToolPath = tl.which("helm", true);
     var helmTool = tl.tool(helmToolPath);
+<<<<<<< HEAD
     
     // Check if using Helm 2 or Helm 3
     if (helmVersion.startsWith("2")) {
+=======
+
+    // Check if using Helm 2 or Helm 3
+    if (helmVersion.startsWith("v2")) {
+>>>>>>> Helm installer fix for v3
         helmTool.arg("init");
         helmTool.arg("--client-only");
     } else {
