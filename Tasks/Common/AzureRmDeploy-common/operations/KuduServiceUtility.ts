@@ -103,7 +103,6 @@ export class KuduServiceUtility {
                 'isAsync=true',
                 'deployer=' + VSTS_ZIP_DEPLOY
             ];
-
             let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
             await this._processDeploymentResponse(deploymentDetails);
 
@@ -111,7 +110,9 @@ export class KuduServiceUtility {
             return deploymentDetails.id;
         }
         catch(error) {
+            let stackTraceUrl:string = this._appServiceKuduService.getKuduStackTrace();
             tl.error(tl.loc('PackageDeploymentFailed'));
+            tl.error(tl.loc('KuduStackTraceURL', stackTraceUrl));
             throw Error(error);
         }
     }
@@ -123,14 +124,15 @@ export class KuduServiceUtility {
             let queryParameters: Array<string> = [
                 'deployer=' +   VSTS_DEPLOY
             ];
-
             var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
             await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
             console.log(tl.loc('PackageDeploymentSuccess'));
         }
         catch(error) {
+            let stackTraceUrl:string = this._appServiceKuduService.getKuduStackTrace();
             tl.error(tl.loc('PackageDeploymentFailed'));
+            tl.error(tl.loc('KuduStackTraceURL', stackTraceUrl));
             throw Error(error);
         }
     }
@@ -191,10 +193,10 @@ export class KuduServiceUtility {
     private async _processDeploymentResponse(deploymentDetails: any): Promise<void> {
         try {
             var kuduDeploymentDetails = await this._appServiceKuduService.getDeploymentDetails(deploymentDetails.id);
-            tl.debug(`logs from kudu deploy: ${kuduDeploymentDetails.log_url}`);
-
             let sysDebug = tl.getVariable('system.debug');
+
             if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED || sysDebug && sysDebug.toLowerCase() == 'true') {
+                tl.debug(`logs from kudu deploy: ${kuduDeploymentDetails.log_url}`);
                 await this._printZipDeployLogs(kuduDeploymentDetails.log_url);
             }
             else {

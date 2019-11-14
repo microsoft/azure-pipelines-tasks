@@ -13,6 +13,7 @@ import * as pipelineUtils from "docker-common-v2/pipelineutils";
 import Q = require('q');
 
 const matchPatternForDigestAndSize = new RegExp(/sha256\:([\w]+)(\s+)size\:\s([\w]+)/);
+let publishMetadataResourceIds: string[] = [];
 
 function pushMultipleImages(connection: ContainerConnection, imageNames: string[], tags: string[], commandArguments: string, onCommandOut: (image, output) => any): any {
     let promise: Q.Promise<void>;
@@ -202,6 +203,14 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
             "imageFingerPrint": imageFingerPrint
         }
     );
+
+    if (publishMetadataResourceIds.indexOf(imageUri) < 0) {
+        publishMetadataResourceIds.push(imageUri);
+    }
+
+    if (publishMetadataResourceIds.length > 0) {
+        tl.setVariable("RESOURCE_URIS", publishMetadataResourceIds.join(","));
+    }
 
     return sendRequestToImageStore(requestBody, requestUrl);
 }
