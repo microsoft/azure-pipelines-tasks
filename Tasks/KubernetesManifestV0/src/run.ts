@@ -1,6 +1,7 @@
 'use strict';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
+import * as utils from './utils/utilities';
 
 import { deploy } from './actions/deploy';
 import { bake } from './actions/bake';
@@ -10,7 +11,6 @@ import { deleteResources } from './actions/delete';
 import { promote } from './actions/promote';
 import { reject } from './actions/reject';
 import { createSecret } from './actions/createSecret';
-import { Connection } from './connection';
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
@@ -19,7 +19,7 @@ function run(): Promise<void> {
     if (action === 'bake') {
         return bake();
     }
-    const connection = new Connection();
+    const connection = utils.getConnection();
     let action_func = null;
     switch (action) {
         case 'deploy':

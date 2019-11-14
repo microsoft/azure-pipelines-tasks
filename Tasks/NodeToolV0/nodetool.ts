@@ -24,7 +24,8 @@ async function run() {
 //
 interface INodeVersion {
     version: string,
-    files: string[]
+    files: string[],
+    semanticVersion: string
 }
 
 //
@@ -108,13 +109,16 @@ async function queryLatestMatch(versionSpec: string): Promise<string> {
     nodeVersions.forEach((nodeVersion:INodeVersion) => {
         // ensure this version supports your os and platform
         if (nodeVersion.files.indexOf(dataFileName) >= 0) {
-            versions.push(nodeVersion.version);
+            // versions in the file are prefixed with 'v', which is not valid SemVer
+            // remove 'v' so that toolLib.evaluateVersions behaves properly
+            nodeVersion.semanticVersion = toolLib.cleanVersion(nodeVersion.version);
+            versions.push(nodeVersion.semanticVersion);
         }
     });
 
     // get the latest version that matches the version spec
-    let version: string = toolLib.evaluateVersions(versions, versionSpec);
-    return version;
+    let latestVersion: string = toolLib.evaluateVersions(versions, versionSpec);
+    return nodeVersions.find(v => v.semanticVersion === latestVersion).version;
 }
 
 async function acquireNode(version: string): Promise<string> {
