@@ -86,6 +86,11 @@ export class TaskParameters {
                 throw new Error(tl.loc("LocationNotProvided"));
             }
 
+            //Deployment mode
+            this.deploymentMode = tl.getInput("deploymentMode");
+            if(!!this.deploymentMode && this.deploymentMode === "Complete" && this.deploymentScope != "Resource Group"){
+                throw new Error(tl.loc("CompleteDeploymentModeNotSupported", this.deploymentScope));
+            }
 
             this.templateLocation = tl.getInput("templateLocation");
             if (this.templateLocation === "Linked artifact") {
@@ -98,7 +103,6 @@ export class TaskParameters {
             this.overrideParameters = tl.getInput("overrideParameters");
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentName = tl.getInput("deploymentName");
-            this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = await this.getARMCredentials(this.connectedService);
             this.deploymentOutputs = tl.getInput("deploymentOutputs");
             this.addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);

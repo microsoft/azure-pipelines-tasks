@@ -11,7 +11,6 @@ tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 async function configureHelm() {
     var version = await utils.getHelmVersion();
     var helmPath = await utils.downloadHelm(version);
-
     // prepend the tools path. instructs the agent to prepend for future tasks
     if (!process.env['PATH'].startsWith(path.dirname(helmPath))) {
         toolLib.prependPath(path.dirname(helmPath));
