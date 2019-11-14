@@ -1,11 +1,11 @@
 
-ci/*  @damccorm   @stephenmichaelf  @bryanmacfarlane
+ci/*  @damccorm   @stephenmichaelf  @jtpetty
 
-Tasks/AndroidSigningV2/*    @madhurig
+Tasks/AndroidSigningV2/*    @leantk
 
-Tasks/AndroidSigningV3/*    @madhurig
+Tasks/AndroidSigningV3/*    @leantk
 
-Tasks/ANTV1/*   @madhurig
+Tasks/ANTV1/*   @leantk
 
 Tasks/AppCenterDistributeV1/*   @DennisPan    @turanuk
 
@@ -15,11 +15,13 @@ Tasks/AppCenterDistributeV3/*   @DennisPan    @turanuk
 
 Tasks/AppCenterTestV1/*   @owenniblock
 
-Tasks/ArchiveFilesV2/*  @bryanmacfarlane
+Tasks/ArchiveFilesV2/*  @jtpetty
 
 Tasks/AzureAppServiceManageV0/*     @kmkumaran      @SumiranAgg     @vincentdass
 
-Tasks/AzureCLIV1/*      @sachinma
+Tasks/AzureAppServiceSettingsV1/*     @eaarora-ms      @SumiranAgg     @vincentdass     @niadak
+
+Tasks/AzureCLIV1/*      @bishal-pdmsft
 
 Tasks/AzureCloudPowerShellDeploymentV1/*    @kmkumaran
 
@@ -29,13 +31,13 @@ Tasks/AzureFileCopyV2/*    @kmkumaran
 
 Tasks/AzureFileCopyV3/*    @kmkumaran
 
-Tasks/AzureFunctionAppV1/*    @kmkumaran      @SumiranAgg     @vincentdass
+Tasks/AzureFunctionAppV1/*    @kmkumaran      @SumiranAgg
 
-Tasks/AzureFunctionAppContainerV1/*    @kmkumaran      @SumiranAgg     @vincentdass
+Tasks/AzureFunctionAppContainerV1/*    @kmkumaran      @SumiranAgg
 
 Tasks/AzureFunctionV1/*     @bansalaseem
 
-Tasks/AzureIoTEdgeV2/*      @prativen   @michaeljqzq    @shyama1208
+Tasks/AzureIoTEdgeV2/*      @prativen  @blackchoey  @michaeljqzq
 
 Tasks/AzureKeyVaultV1/*     @bansalaseem
 
@@ -57,7 +59,9 @@ Tasks/AzurePowerShellV3/*   @kmkumaran
 
 Tasks/AzurePowershellV4/*   @kmkumaran
 
-Tasks/AzureResourceGroupDeploymentV2/*      @sachinma
+Tasks/AzureResourceGroupDeploymentV2/*      @bishal-pdmsft
+
+Tasks/AzureResourceManagerTemplateDeploymentV3/*      @bishal-pdmsft    @vinodkumar3
 
 Tasks/AzureRmWebAppDeploymentV3/*   @kmkumaran    @SumiranAgg     @vincentdass
 
@@ -67,11 +71,11 @@ Tasks/AzureWebAppV1/*   @kmkumaran    @SumiranAgg     @vincentdass
 
 Tasks/AzureWebAppContainerV1/*   @kmkumaran    @SumiranAgg     @vincentdass
 
-Tasks/AzureVmssDeploymentV0/*       @sachinma
+Tasks/AzureVmssDeploymentV0/*       @bishal-pdmsft
 
-Tasks/BashV3/*  @bryanmacfarlane
+Tasks/BashV3/*  @jtpetty
 
-Tasks/BatchScriptV1/*   @bryanmacfarlane
+Tasks/BatchScriptV1/*   @jtpetty
 
 Tasks/ChefV1/*      @kmkumaran
 
@@ -79,9 +83,11 @@ Tasks/ChefKnifeV1/*     @kmkumaran
 
 Tasks/CMakeV1/*  @daveken
 
-Tasks/CmdLineV2/*   @bryanmacfarlane
+Tasks/CmdLineV2/*   @jtpetty
 
-Tasks/CocoaPodsV0/*     @madhurig
+Tasks/CocoaPodsV0/*     @leantk
+
+Tasks/Common/artifacts-common/*     @zjrunner   @zarenner   @shubham90
 
 Tasks/Common/AzureRmDeploy-common/*   @vincentdass  @SumiranAgg
 
@@ -101,51 +107,53 @@ Tasks/Common/VstsAzureHelpers_/*  @rajatagrawal-dev   @vincentdass
 
 Tasks/Common/VstsAzureRestHelpers_/*  @Ajay-MS  @rajatagrawal-dev
 
-Tasks/Common/azure-arm-rest/*   @vincentdass    @Ajay-MS
+Tasks/Common/azure-arm-rest/*   @vincentdass    @Ajay-MS    @bishal-pdmsft
 
-Tasks/Common/azure-arm-rest-v2/*    @kmkumaran      @SumiranAgg     @vincentdass
+Tasks/Common/azure-arm-rest-v2/*    @kmkumaran      @SumiranAgg     @vincentdass    @bishal-pdmsft
 
-Tasks/Common/azure-blobstorage-artifactProvider/*   @omeshp   @hiyadav
+Tasks/Common/azure-blobstorage-artifactProvider/*   @omeshp   @hiyadav    @bishal-pdmsft
 
-Tasks/Common/codeanalysis-common/*    @lkillgore
+Tasks/Common/codeanalysis-common/*    @leantk
 
 Tasks/Common/codecoverage-tools/*     @nigurr   @lkillgore
 
+Tasks/Common/coveragepublisher/*     @karanjitsingh   @acesiddhu
+
 Tasks/Common/docker-common/*      @jikuma   @vithati
 
-Tasks/Common/ios-signing-common/*     @madhurig   @hashtagchris
+Tasks/Common/ios-signing-common/*     @leantk   @hashtagchris
 
-Tasks/Common/java-common/*        @madhurig   @kelliejos
+Tasks/Common/java-common/*        @leantk   @kelliejos
 
 Tasks/Common/kubernetes-common/*      @nishubansal    @ds-ms
 
-Tasks/Common/packaging-common-old/*   @jotaylo
-
 Tasks/Common/packaging-common/*     @jotaylo
 
-Tasks/Common/securefiles-common/*   @madhurig   @hashtagchris
+Tasks/Common/securefiles-common/*   @leantk   @hashtagchris
 
 Tasks/Common/utility-common/*       @nishubansal    @ds-ms
 
 Tasks/Common/webdeployment-common/*   @SumiranAgg   @vincentdass
 
-Tasks/CondaEnvironmentV0/*      @madhurig
+Tasks/CondaEnvironmentV0/*      @leantk
 
-Tasks/CondaEnvironmentV1/*      @madhurig
+Tasks/CondaEnvironmentV1/*      @leantk
 
-Tasks/CopyFilesV2/*     @bryanmacfarlane
+Tasks/ContainerBuildV0/*    @vithati @prebansa
 
-Tasks/CopyFilesOverSSHV0/*      @madhurig
+Tasks/CopyFilesV2/*     @jtpetty
 
-Tasks/CUrlUploaderV2/*      @madhurig
+Tasks/CopyFilesOverSSHV0/*      @leantk
 
-Tasks/DecryptFileV1/*   @madhurig
+Tasks/CUrlUploaderV2/*      @leantk
+
+Tasks/DecryptFileV1/*   @leantk
 
 Tasks/DelayV1/*     @bansalaseem
 
-Tasks/DeleteFilesV1/*   @bryanmacfarlane
+Tasks/DeleteFilesV1/*   @jtpetty
 
-Tasks/DeployVisualStudioTestAgentV2/*       @cltshivash
+Tasks/DeployVisualStudioTestAgentV2/*    @SadagopanRajaram @ShreyasRmsft
 
 Tasks/DockerV0/*    @bansalaseem
 
@@ -155,11 +163,11 @@ Tasks/DockerV2/*    @bansalaseem
 
 Tasks/DockerComposeV0/*     @bansalaseem
 
-Tasks/DotNetCoreCLIV2/*     @sachinma
+Tasks/DotNetCoreCLIV2/*     @bishal-pdmsft
 
-Tasks/DotNetCoreInstallerV0/*   @sachinma
+Tasks/DotNetCoreInstallerV0/*   @bishal-pdmsft
 
-Tasks/DotNetCoreInstallerV1/*   @sachinma
+Tasks/DotNetCoreInstallerV1/*   @bishal-pdmsft
 
 Tasks/DownloadBuildArtifactsV0/*    @Lovakumar      @omeshp
 
@@ -169,25 +177,29 @@ Tasks/DownloadGitHubReleasesV0/*    @Lovakumar      @gykuma
 
 Tasks/DownloadPackageV0/*       @zjrunner
 
-Tasks/DownloadPipelineArtifactV0/*      @mihaif
+Tasks/DownloadPipelineArtifactV0/*      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
-Tasks/DownloadSecureFileV1/*    @madhurig
+Tasks/DownloadPipelineArtifactV1/*      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
+
+Tasks/DownloadSecureFileV1/*    @leantk
 
 Tasks/DuffleInstallerV0/*   @bansalaseem     @vithati
 
-Tasks/ExtractFilesV1/*      @bryanmacfarlane
+Tasks/ExtractFilesV1/*      @jtpetty
 
 Tasks/FileTransformV1/*     @kmkumaran      @SumiranAgg     @vincentdass
 
-Tasks/FtpUploadV1/*     @madhurig
+Tasks/FtpUploadV1/*     @leantk
+
+Tasks/GithubCommentV0/*     @ds-ms
 
 Tasks/GithubReleaseV0/*     @prativen   @mdmdakbar
 
-Tasks/GoV0/*    @sachinma
+Tasks/GoV0/*    @bishal-pdmsft
 
-Tasks/GoToolV0/*    @sachinma
+Tasks/GoToolV0/*    @bishal-pdmsft
 
-Tasks/GradleV2/*    @madhurig
+Tasks/GradleV2/*    @leantk
 
 Tasks/GruntV0/*     @hross
 
@@ -207,19 +219,19 @@ Tasks/IISWebAppDeploymentOnMachineGroupV0/*     @kmkumaran
 
 Tasks/IISWebAppManagementOnMachineGroupV0/*     @kmkumaran
 
-Tasks/InstallAppleCertificateV2/*   @madhurig
+Tasks/InstallAppleCertificateV2/*   @leantk
 
-Tasks/InstallAppleProvisioningProfileV1/*   @madhurig
+Tasks/InstallAppleProvisioningProfileV1/*   @leantk
 
-Tasks/InstallSSHKeyV0/*     @madhurig
+Tasks/InstallSSHKeyV0/*     @leantk
 
 Tasks/InvokeRestApiV1/*     @bansalaseem
 
-Tasks/JavaToolInstallerV0/*     @madhurig
+Tasks/JavaToolInstallerV0/*     @leantk
 
 Tasks/JenkinsDownloadArtifactsV1/*      @Lovakumar      @kasubram
 
-Tasks/JenkinsQueueJobV2/*   @madhurig
+Tasks/JenkinsQueueJobV2/*   @leantk
 
 Tasks/KubectlInstallerV0/*  @bansalaseem
 
@@ -231,15 +243,17 @@ Tasks/KubernetesManifestV0/*    @bansalaseem
 
 Tasks/ManualInterventionV8/*    @bansalaseem
 
-Tasks/MavenV2/*     @madhurig
+Tasks/MavenAuthenticateV0/*     @zjrunner   @aasim
 
-Tasks/MavenV3/*     @madhurig
+Tasks/MavenV2/*     @leantk
+
+Tasks/MavenV3/*     @leantk
 
 Tasks/MSBuildV1/*   @daveken
 
 Tasks/MysqlDeploymentOnMachineGroupV1/*     @kmkumaran      @RoshanKumarMicrosoft
 
-Tasks/NodeToolV0/*      @hross
+Tasks/NodeToolV0/*      @damccorm
 
 Tasks/NpmV1/*       @zjrunner @jotaylo
 
@@ -249,19 +263,25 @@ Tasks/NuGetV0/*     @zjrunner
 
 Tasks/NuGetCommandV2/*      @zjrunner @jotaylo
 
+Tasks/NuGetAuthenticateV0/*      @zjrunner @zarenner
+
 Tasks/NuGetPackagerV0/*     @zjrunner
 
 Tasks/NuGetPublisherV0/*    @zjrunner
 
 Tasks/NuGetToolInstallerV0/*    @zjrunner
 
-Tasks/PackerBuildV0/*   @sachinma
+Tasks/OpenPolicyAgentInstallerV0/*    @Anumita
 
-Tasks/PackerBuildV1/*   @sachinma
+Tasks/PackerBuildV0/*   @bishal-pdmsft
+
+Tasks/PackerBuildV1/*   @bishal-pdmsft
 
 Tasks/PipAuthenticateV0/*     @zjrunner @shubham90
 
-Tasks/PowerShellV2/*    @bryanmacfarlane
+Tasks/PipAuthenticateV1/*     @zjrunner @shubham90
+
+Tasks/PowerShellV2/*    @jtpetty
 
 Tasks/PowerShellOnTargetMachinesV1/*    @kmkumaran
 
@@ -269,41 +289,49 @@ Tasks/PowerShellOnTargetMachinesV2/*    @kmkumaran
 
 Tasks/PowerShellOnTargetMachinesV3/*    @kmkumaran
 
-Tasks/PublishBuildArtifactsV1/*     @madhurig
+Tasks/PublishBuildArtifactsV1/*     @leantk
 
-Tasks/PublishCodeCoverageResultsV1/*    @cltshivash    @nigurr 
+Tasks/PublishCodeCoverageResultsV1/*    @SadagopanRajaram @nigurr 
 
-Tasks/PublishPipelineArtifactV0/*       @mihaif
+Tasks/PublishCodeCoverageResultsV2/*    @karanjitsingh @acesiddhu
 
-Tasks/PublishSymbolsV2/*    @arunkm
+Tasks/PublishPipelineArtifactV0/*       @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
+
+Tasks/PublishPipelineMetadataV0/*    @vithati @nidabas
+
+Tasks/PublishSymbolsV2/*    @arunkm @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
 
 Tasks/PublishTestResultsV1/*    @smalpani
 
 Tasks/PublishTestResultsV2/*    @SadagopanRajaram
 
+Tasks/ContainerStructureTestV0/*    @SadagopanRajaram   @navin22
+
 Tasks/PublishToAzureServiceBusV1/*      @bansalaseem
 
-Tasks/PyPIPublisherV0/*     @sachinma   @madhurig
+Tasks/PyPIPublisherV0/*     @bishal-pdmsft   @leantk
 
-Tasks/PythonScriptV0/*      @madhurig
+Tasks/PythonScriptV0/*      @leantk
 
 Tasks/QueryWorkItemsV0/*    @bansalaseem
 
-Tasks/QuickPerfTestV1/*     @smalpani
+Tasks/QuickPerfTestV1/*     @SadagopanRajaram @ShreyasRmsft
 
-Tasks/RunDistributedTestsV1/*   @smalpani
+Tasks/ReviewAppV0/*   @ds-ms
 
-Tasks/RunJMeterLoadTestV1/*     @smalpani
+Tasks/RunDistributedTestsV1/*   @SadagopanRajaram @ShreyasRmsft
 
-Tasks/RunLoadTestV1/*   @cltshivash
+Tasks/RunJMeterLoadTestV1/*     @SadagopanRajaram @ShreyasRmsft
 
-Tasks/ServiceFabricComposeDeployV0/*    @sachinma
+Tasks/RunLoadTestV1/*   @SadagopanRajaram @ShreyasRmsft
 
-Tasks/ServiceFabricDeployV1/*   @sachinma
+Tasks/ServiceFabricComposeDeployV0/*    @bishal-pdmsft
 
-Tasks/ServiceFabricPowerShellV1/*   @sachinma
+Tasks/ServiceFabricDeployV1/*   @bishal-pdmsft
 
-Tasks/ServiceFabricUpdateManifestsV2/*  @sachinma
+Tasks/ServiceFabricPowerShellV1/*   @bishal-pdmsft
+
+Tasks/ServiceFabricUpdateManifestsV2/*  @bishal-pdmsft
 
 Tasks/SqlAzureDacpacDeploymentV1/*      @kmkumaran
 
@@ -311,36 +339,38 @@ Tasks/SqlDacpacDeploymentOnMachineGroupV0/*     @kmkumaran
 
 Tasks/SqlServerDacpacDeployment/*   @kmkumaran
 
-Tasks/SshV0/*   @madhurig
+Tasks/SshV0/*   @leantk
 
 Tasks/TwineAuthenticateV0/*     @zjrunner
 
+Tasks/TwineAuthenticateV1/*     @zjrunner @shubham90
+
 Tasks/UniversalPackagesV0/*     @zjrunner
 
-Tasks/UseDotNetV2/*     @sachinma
+Tasks/UseDotNetV2/*     @bishal-pdmsft
 
 Tasks/UseNodeV1/*     @damccorm
 
-Tasks/UsePythonVersionV0/*      @madhurig
+Tasks/UsePythonVersionV0/*      @leantk
 
 Tasks/UseRubyVersionV0/*    @hross
 
 Tasks/VSBuildV1/*   @daveken
 
-Tasks/VsTestV1/*    @cltshivash
+Tasks/VsTestV1/*    @SadagopanRajaram @ShreyasRmsft
 
-Tasks/VsTestV2/*    @cltshivash
+Tasks/VsTestV2/*    @SadagopanRajaram @ShreyasRmsft
 
-Tasks/VsTestPlatformToolInstallerV1/*   @cltshivash
+Tasks/VsTestPlatformToolInstallerV1/*   @SadagopanRajaram @ShreyasRmsft
 
 Tasks/WindowsMachineFileCopyV1/*    @kmkumaran
 
 Tasks/WindowsMachineFileCopyV2/*    @kmkumaran
 
-Tasks/XamarinAndroidV1/*    @madhurig
+Tasks/XamarinAndroidV1/*    @leantk
 
-Tasks/XamariniOSV2/*    @madhurig
+Tasks/XamariniOSV2/*    @leantk
 
-Tasks/XamarinTestCloudV1/*      @madhurig
+Tasks/XamarinTestCloudV1/*      @leantk
 
-Tasks/XcodeV5/* @madhurig
+Tasks/XcodeV5/* @leantk

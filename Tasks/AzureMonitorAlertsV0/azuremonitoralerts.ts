@@ -9,6 +9,8 @@ async function run() {
 	try {
 		tl.setResourcePath(path.join(__dirname, "task.json"));
 
+		console.log("##vso[task.logissue type=warning]" + tl.loc("DeprecatedTask"));
+		
 		let connectedServiceName: string = tl.getInput("ConnectedServiceName", true);
 		let resourceGroupName: string = tl.getInput("ResourceGroupName", true);
 		let resourceType: string = tl.getInput("ResourceType", true);

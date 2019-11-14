@@ -5,10 +5,14 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as yaml from "js-yaml";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as imageUtils from "docker-common-v2/containerimageutils";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 
 function dockerPull(connection: DockerComposeConnection, imageName: string, imageDigests: any, serviceName: string) {
     var command = connection.createCommand();
     command.arg("pull");
+    var arg = tl.getInput("arguments", false);
+    var commandArgs = dockerCommandUtils.getCommandArguments(arg || "");
+    command.line(commandArgs || "");
     command.arg(imageName);
 
     var output = "";

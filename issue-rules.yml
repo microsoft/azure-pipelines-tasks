@@ -23,73 +23,73 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'Bash'
   addLabels: ['Area: Core']
-  assign: ['bryanmacfarlane']
+  assign: ['jtpetty']
 - valueFor: '**Enter Task Name**'
   contains: 'CmdLine'
   addLabels: ['Area: Core']
-  assign: ['ericsciple']  
+  assign: ['jtpetty']  
 - valueFor: '**Enter Task Name**'
   contains: 'PowerShellV2'
   addLabels: ['Area: Core']
-  assign: ['ericsciple']
+  assign: ['jtpetty']
 # Area: CrossPlatform
 - valueFor: '**Enter Task Name**'
   contains: 'Android'
   addLabels: ['Area: CrossPlatform']
-  assign: ['madhurig']
+  assign: ['leantk']
 - valueFor: '**Enter Task Name**'
   contains: 'Gradle'
   addLabels: ['Area: CrossPlatform']
-  assign: ['madhurig']
+  assign: ['leantk']
 - valueFor: '**Enter Task Name**'
   contains: 'Python'
   addLabels: ['Area: CrossPlatform']
-  assign: ['madhurig']    
+  assign: ['leantk']    
 - valueFor: '**Enter Task Name**'
   contains: 'PyPI'
   addLabels: ['Area: CrossPlatform']
-  assign: ['madhurig']  
+  assign: ['leantk']  
 - valueFor: '**Enter Task Name**'
   contains: 'XCode'
   addLabels: ['Area: CrossPlatform']
-  assign: ['madhurig']      
+  assign: ['leantk']      
 - valueFor: '**Enter Task Name**'
   contains: 'Xamarin'
   addLabels: ['Area: CrossPlatform']
-  assign: ['madhurig']     
+  assign: ['leantk']     
 # Area: Release
 - valueFor: '**Enter Task Name**'
   contains: 'AzureCli'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'ResourceGroup'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'Vmss'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'DotNetCore'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'UseDotNet'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'Go'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'Packer'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'ServiceFabric'
   addLabels: ['Area: Release']
-  assign: ['sachinma']
+  assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
   contains: 'IoTEdge'
   addLabels: ['Area: Release']
@@ -249,7 +249,7 @@ rules:
 # add likely teams to look at based on text searches
 nomatches:
 - contains: 'Xcode' 
-  addLabels: ['Area: Cross Platform']
+  addLabels: ['Area: CrossPlatform']
 - contains: 'Bash' 
   addLabels: ['Area: Core']
 - contains: 'Nuget' 

@@ -23,6 +23,7 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
 });
 
 import { VersionInstaller } from "../versioninstaller";
+
 try {
     new VersionInstaller("sdk", "C:/unknownlocation");
 }

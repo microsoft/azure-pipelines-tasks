@@ -23,7 +23,13 @@ export default class ContainerConnection {
     private oldDockerConfigContent: string;
 
     constructor() {
-        this.dockerPath = tl.which("docker", true);
+        if(process.env["RUNNING_ON"] == "KUBERNETES") {
+            this.dockerPath = tl.which("img", true);
+        }
+        else {
+            this.dockerPath = tl.which("docker", true);
+        }
+        
     }
 
     public createCommand(): tr.ToolRunner {
@@ -94,6 +100,16 @@ export default class ContainerConnection {
                     imageNames.push(imageName);
                 });
             }
+            else {
+                // in case there is no login information found and a repository is specified, the intention
+                // might be to tag the image to refer locally.
+                let imageName = repository;
+                if (enforceDockerNamingConvention) {
+                    imageName = imageUtils.generateValidImageName(imageName);
+                }
+                
+                imageNames.push(imageName);
+            }
         }
 
         return imageNames;
@@ -117,7 +133,7 @@ export default class ContainerConnection {
     
     public setDockerConfigEnvVariable() {
         if (this.configurationDirPath && fs.existsSync(this.configurationDirPath)) {
-            tl.setVariable("DOCKER_CONFIG", this.configurationDirPath, true);
+            tl.setVariable("DOCKER_CONFIG", this.configurationDirPath);
         }
         else {
             tl.error(tl.loc('DockerRegistryNotFound'));

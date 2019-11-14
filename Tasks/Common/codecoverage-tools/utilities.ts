@@ -1,7 +1,7 @@
 
 import * as Q from "q";
 import * as fs from "fs";
-import * as tl from "vsts-task-lib/task";
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from "path";
 import * as xml2js from "xml2js";
 import * as fse from "fs-extra";

@@ -4,7 +4,9 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import * as kubectlutility from 'kubernetes-common-v2/kubectlutility';
 import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
-import { pipelineAnnotations } from '../models/constants';
+import { pipelineAnnotations } from 'kubernetes-common-v2/kubernetesconstants';
+import { KubernetesConnection } from 'kubernetes-common-v2/kubernetesconnection';
+import * as filehelper from './FileHelper';
 
 export function getManifestFiles(manifestFilePaths: string | string[]): string[] {
     if (!manifestFilePaths) {
@@ -14,6 +16,13 @@ export function getManifestFiles(manifestFilePaths: string | string[]): string[]
 
     const files = tl.findMatch(tl.getVariable('System.DefaultWorkingDirectory') || process.cwd(), manifestFilePaths);
     return files;
+}
+
+export function getConnection(): KubernetesConnection {
+    const kubernetesServiceConnection = tl.getInput('kubernetesServiceConnection', true);
+    const tempPath = filehelper.getNewUserDirPath();
+    const connection = new KubernetesConnection(kubernetesServiceConnection, tempPath);
+    return connection;
 }
 
 export async function getKubectl(): Promise<string> {
@@ -119,11 +128,15 @@ export function substituteImageNameInSpecFile(currentString: string, imageName: 
     return currentString.split('\n').reduce((acc, line) => {
         const imageKeyword = line.match(/^ *image:/);
         if (imageKeyword) {
-            const [currentImageName, currentImageTag] = line
+            let [currentImageName, currentImageTag] = line
                 .substring(imageKeyword[0].length) // consume the line from keyword onwards
                 .trim()
                 .replace(/[',"]/g, '') // replace allowed quotes with nothing
                 .split(':');
+
+            if (!currentImageTag && currentImageName.indexOf(' ') > 0) {
+                currentImageName = currentImageName.split(' ')[0]; // Stripping off comments
+            }
 
             if (currentImageName === imageName) {
                 return acc + `${imageKeyword[0]} ${imageNameWithNewTag}\n`;
