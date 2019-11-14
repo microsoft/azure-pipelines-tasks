@@ -20,7 +20,7 @@
         "Minor": 160,
         "Patch": 0
     },
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.116.0",
     "instanceNameFormat": "dotnet $(command)",
     "groups": [
         {
