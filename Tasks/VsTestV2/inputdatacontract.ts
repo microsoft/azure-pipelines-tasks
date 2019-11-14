@@ -25,7 +25,7 @@ export interface TestReportingSettings {
     TestResultsDirectory : string;
     TestRunSystem : string;
     TestSourceSettings : TestSourceSettings;
-    ExecutionStatusSettings: ExecutionStatusSettings;
+    ExecutionStatusSettings : ExecutionStatusSettings;
 }
 
 export interface TestSelectionSettings {
