@@ -5,7 +5,7 @@
         [Switch] $ServicePrincipal
     )
 
-    $certificate = ""
+    $certificate = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
 
     if ($ServicePrincipal) {
         $pemFileContent = $Endpoint.Auth.Parameters.ServicePrincipalCertificate
