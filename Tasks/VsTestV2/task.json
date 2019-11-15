@@ -19,11 +19,15 @@
         "Major": 2,
 <<<<<<< HEAD
         "Minor": 161,
+<<<<<<< HEAD
         "Patch": 0
 =======
         "Minor": 160,
         "Patch": 2
 >>>>>>> resolved comments
+=======
+        "Patch": 1
+>>>>>>> Updated VsTestV2 task to version V2.161.1 (#11777)
     },
     "demands": [
         "vstest"
