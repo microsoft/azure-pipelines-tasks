@@ -2,6 +2,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import * as path from 'path';
 import * as utils from './helpers';
+import * as ci from './cieventlogger';
 import * as outStream from './outputstream';
 import * as os from 'os';
 import * as uuid from 'uuid';
@@ -23,18 +24,10 @@ export class NonDistributedTest {
 
             console.log(tl.loc('runTestsLocally', 'vstest.console.exe'));
             console.log('========================================================');
-
-            this.testAssemblyFiles = this.getTestAssemblies();
-            if (!this.testAssemblyFiles || this.testAssemblyFiles.length === 0) {
-                console.log('##vso[task.logissue type=warning;code=002004;]');
-                tl.warning(tl.loc('NoMatchingTestAssemblies', this.sourceFilter));
-                return;
-            }
-
             const exitCode = await this.startDtaExecutionHost();
             tl.debug('DtaExecutionHost finished');
 
-            if (exitCode !== 0 && !this.inputDataContract.ExecutionSettings.IgnoreTestFailures) {
+            if (exitCode !== 0 && !this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.IgnoreTestFailures) {
                 tl.debug('Modules/DTAExecutionHost.exe process exited with code ' + exitCode);
                 tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailed'), true);
                 return;
@@ -86,7 +79,7 @@ export class NonDistributedTest {
         }
 
         const execOptions: tr.IExecOptions = <any>{
-            IgnoreTestFailures: this.inputDataContract.ExecutionSettings.IgnoreTestFailures,
+            IgnoreTestFailures: this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.IgnoreTestFailures,
             env: envVars,
             failOnStdErr: false,
             // In effect this will not be called as failOnStdErr is false
@@ -105,18 +98,18 @@ export class NonDistributedTest {
             return 1;
         }
     }
-
-    private getTestAssemblies(): string[] {
-        tl.debug('Searching for test assemblies in: ' + this.inputDataContract.TestSelectionSettings.SearchFolder);
-        return tl.findMatch(this.inputDataContract.TestSelectionSettings.SearchFolder, this.sourceFilter);
-    }
-
     private createTestSourcesFile(): string {
         try {
             console.log(tl.loc('UserProvidedSourceFilter', this.sourceFilter.toString()));
-
+            const telemetryProps: { [key: string]: any; } = { MiniMatchLines: this.sourceFilter.length };
+            telemetryProps.ExecutionFlow = 'NonDistributed';
+            var start = new Date().getTime();
             const sources = tl.findMatch(this.inputDataContract.TestSelectionSettings.SearchFolder, this.sourceFilter);
-            tl.debug('tl match count :' + sources.length);
+            var timeTaken = new Date().getTime() - start;
+            tl.debug( `Time taken for applying the minimatch pattern to filter out the sources ${timeTaken} ms` );
+            telemetryProps.TimeToSearchDLLsInMilliSeconds = timeTaken;
+            tl.debug(`${sources.length} files matched the given minimatch filter`);
+            ci.publishTelemetry('TestExecution','MinimatchFilterPerformance', telemetryProps);
             const filesMatching = [];
             sources.forEach(function (match: string) {
                 if (!fs.lstatSync(match).isDirectory()) {
