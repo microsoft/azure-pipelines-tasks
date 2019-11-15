@@ -13,6 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
+<<<<<<< HEAD
         "Minor": 160,
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -35,6 +36,10 @@
 =======
         "Patch": 7
 >>>>>>> Removing img change
+=======
+        "Minor": 161,
+        "Patch": 0
+>>>>>>> Kubernetes L0 fix (#11781)
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
