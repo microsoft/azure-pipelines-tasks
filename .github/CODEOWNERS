@@ -97,7 +97,7 @@ Tasks/Common/AzureRmDeploy-common/*   @vincentdass  @SumiranAgg
 
 Tasks/Common/Deployment/*   @bishal-pdMSFT  @chshrikh
 
-Tasks/Common/MSBuildHelpers/*   @ericsciple   @austin-jensen
+Tasks/Common/MSBuildHelpers/*   @daveken
 
 Tasks/Common/PowershellHelpers/*  @bishal-pdMSFT  @hiyadav
 
