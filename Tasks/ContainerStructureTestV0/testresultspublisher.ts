@@ -4,6 +4,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 import { writeFileSync } from 'fs';
 import * as path from "path";
+import  * as semver from "semver"
 
 
 export interface TestSummary {
@@ -45,6 +46,12 @@ export class TestResultPublisher {
 
     public publishToTcm(testResults: TestSummary, testRunTitle: string) {
         let resultsFile = this.createResultsFile(JSON.stringify(testResults));
+
+        const agentVersion = tl.getVariable('Agent.Version');
+        if(semver.lt(agentVersion, "2.159.1")) {
+            console.log(this.minimumAgentRequiredMsg);
+            throw this.minimumAgentRequiredMsg;
+        }
 
         if (!resultsFile) {
             tl.warning("Unable to create the results file, hence not publishing the test results");
@@ -118,10 +125,6 @@ export class TestResultPublisher {
         return resultFilePath;
     }
 
-    private getAttestationName(): string {
-        return `projects/${tl.getVariable("System.TeamProject")}/notes/${uuid.v1()}`
-    }
-
     private getTestTabUrl(): string {
       var pipeLineUrl = dockerCommandUtils.getPipelineLogsUrl();
       var testTabUrl = "";
@@ -173,7 +176,7 @@ export class TestResultPublisher {
           };
 
           return {
-            name: this.getAttestationName(),
+            name: uuid.v1(),
             description: "Test Results from Container structure test",
             resourceUri:[resourceUri],
             kind: "ATTESTATION",
@@ -222,4 +225,5 @@ export class TestResultPublisher {
     private readonly buildString = "build";
     private readonly hostType = tl.getVariable("System.HostType").toLowerCase();
     private readonly isBuild = this.hostType === this.buildString;
+    private readonly minimumAgentRequiredMsg: string = "Minimum agent required to publish the test results to Azure DevOps is greater than or equal to 2.159.0";
 }
