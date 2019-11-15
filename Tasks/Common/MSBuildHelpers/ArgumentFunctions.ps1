@@ -10,10 +10,13 @@ function Format-MSBuildArguments {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         if ($Platform) {
+            Test-MSBuildParam $Platform 'Platform'
             $MSBuildArguments = "$MSBuildArguments /p:platform=`"$Platform`""
         }
 
         if ($Configuration) {
+            Test-MSBuildParam $Configuration 'Configuration'
+
             $MSBuildArguments = "$MSBuildArguments /p:configuration=`"$Configuration`""
         }
 
@@ -33,5 +36,13 @@ function Format-MSBuildArguments {
         $MSBuildArguments
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Test-MSBuildParam ([string]$msbuildParam, [string]$parameterName)
+{
+    if($msBuildParam -match '[<>*|:\/&%".#?]')
+    {
+        throw "The MSBuild parameter '$parameterName' contains an invalid character. MSBuild parameters may not contain any of the following characters: <>*|:\/&%`".#?"
     }
 }
