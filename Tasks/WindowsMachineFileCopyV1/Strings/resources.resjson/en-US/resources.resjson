@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows machine file copy",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Copy files to remote Windows machines",
   "loc.instanceNameFormat": "Copy files from $(SourcePath)",
   "loc.group.displayName.advanced": "Advanced Options",

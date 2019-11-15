@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio test agent deployment",
-  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkId=838890)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=838890)",
   "loc.description": "Deprecated: Instead, use the 'Visual Studio Test' task to run unit and functional tests",
   "loc.instanceNameFormat": "Deploy TestAgent on $(testMachineGroup)",
   "loc.releaseNotes": "<ul><li>Support for Visual Studio Test Agent 2017: You can now deploy and run tests using multiple versions of Visual Studio Test Agent. Versions 2015 and 2017 are supported.</li><li>Machine groups created from the Test hub are no longer supported. You can continue to use a list of machines or Azure resource groups.</li></ul>",

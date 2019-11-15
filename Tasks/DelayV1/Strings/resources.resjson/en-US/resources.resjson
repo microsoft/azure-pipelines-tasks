@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Delay",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870239)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870239)",
   "loc.description": "Delay further execution of a workflow by a fixed time",
   "loc.instanceNameFormat": "Delay by $(delayForMinutes) minutes",
   "loc.input.label.delayForMinutes": "Delay Time (minutes)",

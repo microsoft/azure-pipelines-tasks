@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Install Apple provisioning profile",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862068)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862068)",
   "loc.description": "Install an Apple provisioning profile required to build on a macOS agent machine",
   "loc.instanceNameFormat": "Install an Apple provisioning profile",
   "loc.input.label.provisioningProfileLocation": "Provisioning profile location",

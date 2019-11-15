@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows machine file copy",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Copy files to remote Windows machines",
   "loc.instanceNameFormat": "Copy files from $(SourcePath)",
   "loc.releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp;Proxy support is being added. <br/>&nbsp;&nbsp; Removed support of legacy DTL machines.",

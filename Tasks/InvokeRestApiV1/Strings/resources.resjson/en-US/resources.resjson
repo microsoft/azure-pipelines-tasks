@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Invoke REST API",
-  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870236)",
   "loc.description": "Invoke a REST API as a part of your pipeline.",
   "loc.instanceNameFormat": "Invoke REST API: $(method)",
   "loc.group.displayName.completionOptions": "Advanced",

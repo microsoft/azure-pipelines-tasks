@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Publish To Azure Service Bus",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870237)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870237)",
   "loc.description": "Sends a message to Azure Service Bus using a service connection (no agent is required)",
   "loc.instanceNameFormat": "Publish to Azure Service Bus",
   "loc.group.displayName.advancedProperties": "Advanced",
