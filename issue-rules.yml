@@ -95,7 +95,7 @@ rules:
   addLabels: ['Area: Release']
   assign: ['prativen']
 - valueFor: '**Enter Task Name**'
-  contains: 'GithubReleaseV'
+  contains: 'GithubRelease'
   addLabels: ['Area: Release']
   assign: ['prativen']
 - valueFor: '**Enter Task Name**'
@@ -239,6 +239,12 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'PublishTest'
   addLabels: ['Area: Test']
+  
+# Area: ArtifactsPackages
+- valueFor: '**Enter Task Name**'
+  contains: 'TwineAuthenticate'
+  addLabels: ['Area: ArtifactsPackages']
+
 # Types
 - valueFor: '*Type*'
   contains: Feature
@@ -270,3 +276,20 @@ tags:
   addLabels: ['triage']
 - noneMatch: '\s*Area:\s*([^]*)'
   addLabels: ['route']
+
+pathMappings:
+- path: 'AzureDevOps\VSTS\Pipelines\Platform'
+  labels: ['Area: Core']
+- path: 'AzureDevOps\VSTS\Pipelines\Application'
+  labels: ['Area: Build']
+- path: 'AzureDevOps\VSTS\Pipelines\Integration'
+  labels: ['Area: CrossPlatform']
+- path: 'AzureDevOps\VSTS\Artifacts'
+  labels: ['Area: Artifacts', 'Area: ArtifactsCore', 'Area: ArtifactsPackages', 'Area: PipelineArtifact', 'Area: PipelineCaching', 'Area: Symbols']
+- path: 'AzureDevOps\VSTS\Pipelines\RM-Service'
+  labels: ['Area: Release', 'Area: AzureAppService']
+- path: 'AzureDevOps\VSTS\Pipelines\Test Management and Reporting'
+  labels: ['Area: Test', 'Area: TestManagement', 'Area: CodeCoverage']
+# TODO - AppCenter owned by teams in AzureDevOps org - probably nothing to be done, worth thinking about
+# - path: 
+#   labels: ['Area: AppCenter']
