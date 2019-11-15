@@ -28,3 +28,4 @@ $global:ErrorActionPreference = 'Stop' # Reset to stop.
 
 # Assert the Azure helpers module was imported and invoked.
 Assert-WasCalled Import-Module -- ([System.IO.Path]::GetFullPath("$PSScriptRoot\..\ps_modules\VstsAzureHelpers_"))
+Assert-WasCalled Initialize-AzModule

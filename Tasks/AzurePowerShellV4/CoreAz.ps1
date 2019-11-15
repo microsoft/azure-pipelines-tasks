@@ -8,7 +8,7 @@ param
     $targetAzurePs
 )
 
-Import-Module "$PSScriptRoot\ps_modules\VstsTaskSdk"
+Import-Module "$PSScriptRoot\ps_modules\VstsTaskSdk" -ArgumentList @{ NonInteractive = $true }
 Import-VstsLocStrings -LiteralPath "$PSScriptRoot\task.json"
 
 # Update PSModulePath for hosted agent
