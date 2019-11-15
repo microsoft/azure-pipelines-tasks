@@ -5,14 +5,14 @@
         [Switch] $ServicePrincipal
     )
 
-    # Add the certificate to the cert store.
-    $certificate = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
+    $certificate = ""
 
     if ($ServicePrincipal) {
         $pemFileContent = $Endpoint.Auth.Parameters.ServicePrincipalCertificate
         $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
         
-        $certificate.Import($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
+        # Add the certificate to the cert store.
+        $certificate = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
     }
     else {
         $bytes = [System.Convert]::FromBase64String($Endpoint.Auth.Parameters.Certificate)
