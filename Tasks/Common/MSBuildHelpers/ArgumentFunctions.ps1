@@ -43,6 +43,6 @@ function Test-MSBuildParam ([string]$msbuildParam, [string]$parameterName)
 {
     if($msBuildParam -match '[<>*|:\/&%".#?]')
     {
-        throw "The MSBuild parameter '$parameterName' contains an invalid character. MSBuild parameters may not contain any of the following characters: <>*|:\/&%`".#?"
+        throw "The value of MSBuild parameter '$parameterName' ($msBuildParam) contains an invalid character. The value of $parameterName may not contain any of the following characters: < > * | : \ / & % `" . # ?"
     }
 }
