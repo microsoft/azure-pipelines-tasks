@@ -17,7 +17,7 @@ export function appendToNpmrc(npmrc: string, data: string): void {
 export async function getLocalRegistries(packagingUrls: string[], npmrc: string): Promise<string[]> {
     const collectionHosts = packagingUrls.map((pkgUrl: string) => {
         const parsedUrl = url.parse(pkgUrl);
-        if (parsedUrl) {
+        if (parsedUrl && parsedUrl.host) {
             return parsedUrl.host.toLowerCase();
         }
         return undefined;
@@ -26,8 +26,11 @@ export async function getLocalRegistries(packagingUrls: string[], npmrc: string)
     const registries = NpmrcParser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true);
 
     const localRegistries = registries.filter(registry => {
-        const registryHost = url.parse(registry).host;
-        return collectionHosts.indexOf(registryHost.toLowerCase()) >= 0;
+        const registryUrl = url.parse(registry);
+        if(registryUrl && registryUrl.host) {
+            return collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0;
+        }
+        return undefined;
     });
 
     tl.debug(tl.loc('FoundLocalRegistries', localRegistries.length));

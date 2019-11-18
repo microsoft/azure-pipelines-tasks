@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SSH",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=821892)",
+  "loc.helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=821892)",
   "loc.description": "Run shell commands or a script on a remote machine using SSH",
   "loc.instanceNameFormat": "Run shell $(runOptions) on remote machine",
   "loc.group.displayName.advanced": "Advanced",
