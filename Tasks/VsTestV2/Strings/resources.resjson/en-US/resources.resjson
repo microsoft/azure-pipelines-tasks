@@ -22,6 +22,8 @@
   "loc.input.help.tcmTestRun": "Test run based selection is used when triggering automated test runs from the test hub. This option cannot be used for running tests in the CI/CD pipeline.",
   "loc.input.label.searchFolder": "Search folder",
   "loc.input.help.searchFolder": "Folder to search for the test assemblies.",
+  "loc.input.label.resultsDirectory": "Test results directory",
+  "loc.input.help.resultsDirectory": "Folder to store test results. Please make sure to clean up the the results directory before running tests to remove stale results.",
   "loc.input.label.testFiltercriteria": "Test filter criteria",
   "loc.input.help.testFiltercriteria": "Additional criteria to filter tests from Test assemblies. For example: `Priority=1|Name=MyTestMethod`. [More information](https://msdn.microsoft.com/en-us/library/jj155796.aspx)",
   "loc.input.label.runOnlyImpactedTests": "Run only impacted tests",

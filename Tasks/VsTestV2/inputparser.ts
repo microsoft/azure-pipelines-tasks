@@ -8,6 +8,7 @@ import { AreaCodes, DistributionTypes } from './constants';
 import * as idc from './inputdatacontract';
 import * as Q from "q";
 import * as isUncPath from 'is-unc-path';
+import { stringify } from 'querystring';
 const regedit = require('regedit');
 
 let serverBasedRun = false;
@@ -166,6 +167,14 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
     inputDataContract.TestReportingSettings.TestRunTitle = tl.getInput('testRunTitle');
     inputDataContract.TestReportingSettings.TestRunSystem = 'VSTS - vstest';
 
+    const resultsDir = tl.getInput('resultsDirectory');
+    if (utils.Helper.pathExistsAsDirectory(resultsDir.trim()))
+    {
+        inputDataContract.TestReportingSettings.TestResultsDirectory = resultsDir.trim();
+        tl.debug("TestResultsDirectory: " + resultsDir);
+        ci.publishEvent({ 'TestResultsDirectoryUi': resultsDir } );
+    }
+    
     inputDataContract.TestReportingSettings.TestSourceSettings = <idc.TestSourceSettings>{};
     inputDataContract.TestReportingSettings.TestSourceSettings.PullRequestTargetBranchName = tl.getVariable('System.PullRequest.TargetBranch');
     inputDataContract.TestReportingSettings.ExecutionStatusSettings = <idc.ExecutionStatusSettings>{};
