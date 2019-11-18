@@ -149,7 +149,7 @@
       "name": "resultsDirectory",
       "type": "string",
       "label": "ms-resource:loc.input.label.resultsDirectory",
-      "defaultValue": "",
+      "defaultValue": "$(Agent.TempDirectory)\\TestResults",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.resultsDirectory",
       "groupName": "testSelection"

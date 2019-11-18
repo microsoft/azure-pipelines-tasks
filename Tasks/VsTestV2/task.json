@@ -149,9 +149,9 @@
             "name": "resultsDirectory",
             "type": "string",
             "label": "Test results directory",
-            "defaultValue": "",
+            "defaultValue": "$(Agent.TempDirectory)\\TestResults",
             "required": false,
-            "helpMarkDown": "Folder to store test results. Please make sure to clean up the the results directory before running tests to remove stale results.",
+            "helpMarkDown": "Folder to store test results. The vstest task cleans up results directory before test run. $(Agent.TempDirectory) is cleaned after each pipeline run. In case the default value is overriden, the directory will not be automatically cleaned. When results directory is provided in both task and runsettings, the runsettings will be given priority.",
             "groupName": "testSelection"
         },
         {
