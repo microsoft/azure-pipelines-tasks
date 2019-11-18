@@ -113,7 +113,6 @@ export async function getServiceDetails() {
 
 export async function getBuildKitPod() {
 
-    try {
         await getServiceDetails();
 
         let request = new webclient.WebRequest();
@@ -133,9 +132,6 @@ export async function getBuildKitPod() {
 
         // set the environment variable
         process.env["BUILDKIT_HOST"] = "kube-pod://" + podname + "?namespace=" + namespace;
-	} catch (err) {
-        tl.setResult(tl.TaskResult.Failed, `${err}`);
-    }
 }
 
 function findBuildctl(rootFolder: string) {

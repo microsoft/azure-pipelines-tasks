@@ -16,20 +16,14 @@ export async function dockerBuildAndPush() {
 
     /* tslint:disable:no-var-requires */
     let commandImplementation = require("./dockerbuild");
-    await commandImplementation.runBuild(connection).then(() => {
-        tl.setResult(tl.TaskResult.Succeeded, "");
-    }
-    ).catch((error) => {
-        tl.setResult(tl.TaskResult.Failed, error.message)
+    await commandImplementation.runBuild(connection).then(() => {}).catch((error) => {
+        throw new Error(error.message);
     });
 
     if (tl.getInput("dockerRegistryServiceConnection")) {
         commandImplementation = require("./dockerpush")
-        await commandImplementation.run(connection).then(() => {
-            tl.setResult(tl.TaskResult.Succeeded, "");
-        }
-        ).catch((error) => {
-            tl.setResult(tl.TaskResult.Failed, error.message)
+        await commandImplementation.run(connection).then(() => {}).catch((error) => {
+            throw new Error(error.message);
         });
     }
 }
