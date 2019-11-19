@@ -18,11 +18,15 @@
 =======
         "Minor": 2,
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> make PPAV1 and DPA V2 public; update the min agent version and task version
         "Patch": 0
 =======
         "Patch": 1
 >>>>>>> update task title
+=======
+        "Patch": 2
+>>>>>>> Update task images (#11793)
     },
     "groups": [],
     "demands": [],
