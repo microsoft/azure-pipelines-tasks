@@ -75,7 +75,7 @@ export class DistributedTest {
 
         const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
         dtaExecutionHostTool.arg(['--inputFile', inputFilePath]);
-        const code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ ignoreReturnCode:this.inputDataContract.ExecutionSettings.IgnoreTestFailures, env: envVars });
+        const code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ ignoreReturnCode:this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.IgnoreTestFailures, env: envVars });
 
         //hydra: add consolidated ci for inputs in C# layer for now
         const consolidatedCiData = {
@@ -99,9 +99,15 @@ export class DistributedTest {
             if (this.inputDataContract.TestSelectionSettings.TestSelectionType.toLowerCase() !== 'testassemblies') {
                 sourceFilter = ['**\\*', '!**\\obj\\*'];
             }
-
+            const telemetryProps: { [key: string]: any; } = { MiniMatchLines: sourceFilter.length };
+            telemetryProps.ExecutionFlow = 'Distributed';
+            var start = new Date().getTime();
             const sources = tl.findMatch(this.inputDataContract.TestSelectionSettings.SearchFolder, sourceFilter);
-            tl.debug('tl match count :' + sources.length);
+            tl.debug(`${sources.length} files matched the given minimatch filter`);
+            var timeTaken = new Date().getTime() - start;
+            tl.debug(`Time taken for applying the minimatch pattern to filter out the sources ${timeTaken} ms` );
+            telemetryProps.TimeToSearchDLLsInMilliSeconds = timeTaken;
+            ci.publishTelemetry('TestExecution','MinimatchFilterPerformance', telemetryProps);
             const filesMatching = [];
             sources.forEach(function (match: string) {
                 if (!fs.lstatSync(match).isDirectory()) {

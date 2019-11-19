@@ -8,13 +8,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
+    "Minor": 2,
     "Patch": 3
   },
   "groups": [],
   "demands": [],
-  "preview": true,
   "minimumAgentVersion": "2.155.1",
+  "preview": false,
+  "deprecated": true,
   "inputs": [
     {
       "name": "buildType",

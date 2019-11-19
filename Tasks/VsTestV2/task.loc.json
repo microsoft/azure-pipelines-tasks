@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 160,
+    "Minor": 161,
     "Patch": 1
   },
   "demands": [
@@ -406,6 +406,25 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments",
       "groupName": "reportingOptions"
+    },
+    {
+      "name": "failOnMinTestsNotRun",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnMinTestsNotRun",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnMinTestsNotRun",
+      "groupName": "reportingOptions"
+    },
+    {
+      "name": "minimumExpectedTests",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.minimumExpectedTests",
+      "defaultValue": "1",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.minimumExpectedTests",
+      "groupName": "reportingOptions",
+      "visibleRule": "failOnMinTestsNotRun = true"
     },
     {
       "name": "diagnosticsEnabled",

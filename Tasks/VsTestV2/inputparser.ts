@@ -168,7 +168,8 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
 
     inputDataContract.TestReportingSettings.TestSourceSettings = <idc.TestSourceSettings>{};
     inputDataContract.TestReportingSettings.TestSourceSettings.PullRequestTargetBranchName = tl.getVariable('System.PullRequest.TargetBranch');
-
+    inputDataContract.TestReportingSettings.ExecutionStatusSettings = <idc.ExecutionStatusSettings>{};
+    inputDataContract.TestReportingSettings.ExecutionStatusSettings.IgnoreTestFailures = utils.Helper.stringToBool(tl.getVariable('vstest.ignoretestfailures'));
     if (utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestRunTitle)) {
 
         let definitionName = tl.getVariable('BUILD_DEFINITIONNAME');
@@ -181,6 +182,20 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
 
         inputDataContract.TestReportingSettings.TestRunTitle = `TestRun_${definitionName}_${buildOrReleaseName}`;
     }
+
+    const actionOnThresholdNotMet = tl.getBoolInput('failOnMinTestsNotRun');
+    if (actionOnThresholdNotMet)
+    {
+        inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet = "fail";       
+        const miniumExpectedTests = parseInt(tl.getInput('minimumExpectedTests'));
+        if (!isNaN(miniumExpectedTests)) {
+            inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected = miniumExpectedTests;
+            console.log(tl.loc('minimumExpectedTests', inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected));
+        } else {
+            throw new Error(tl.loc('invalidMinimumExpectedTests :' + tl.getInput('minimumExpectedTests')));
+        }
+    }
+
     return inputDataContract;
 }
 
@@ -345,8 +360,6 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
         throw new Error(tl.loc('pathToCustomAdaptersInvalid', inputDataContract.ExecutionSettings.PathToCustomTestAdapters));
     }
     console.log(tl.loc('pathToCustomAdaptersInput', inputDataContract.ExecutionSettings.PathToCustomTestAdapters));
-
-    inputDataContract.ExecutionSettings.IgnoreTestFailures = utils.Helper.stringToBool(tl.getVariable('vstest.ignoretestfailures'));
 
     inputDataContract.ExecutionSettings.ProceedAfterAbortedTestCase = false;
     if (tl.getVariable('ProceedAfterAbortedTestCase') && tl.getVariable('ProceedAfterAbortedTestCase').toUpperCase() === 'TRUE') {

@@ -10,7 +10,7 @@
     "version": {
         "Major": 1,
         "Minor": 161,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",
@@ -182,6 +182,7 @@
         "RedirectUrlError": "Unable to get redirect URL with error %.",
         "UnsupportedArchiveType": "Unsupported archive type: %s",
         "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
+        "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
         "Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
         "Info_UsingArtifactToolDownload": "Using artifact tool to download the package"
     }
