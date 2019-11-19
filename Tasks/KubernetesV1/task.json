@@ -14,6 +14,7 @@
     "version": {
         "Major": 1,
 <<<<<<< HEAD
+<<<<<<< HEAD
         "Minor": 160,
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -38,6 +39,9 @@
 >>>>>>> Removing img change
 =======
         "Minor": 161,
+=======
+        "Minor": 162,
+>>>>>>> Removed the publish metadata pipeline variable (#11766)
         "Patch": 0
 >>>>>>> Kubernetes L0 fix (#11781)
     },

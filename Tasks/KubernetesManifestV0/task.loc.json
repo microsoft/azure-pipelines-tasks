@@ -13,6 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
+<<<<<<< HEAD
     "Minor": 160,
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -35,6 +36,10 @@
 =======
     "Patch": 7
 >>>>>>> Removing img change
+=======
+    "Minor": 162,
+    "Patch": 0
+>>>>>>> Removed the publish metadata pipeline variable (#11766)
   },
   "demands": [],
   "groups": [],
