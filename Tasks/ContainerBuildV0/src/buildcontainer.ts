@@ -10,11 +10,11 @@ tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 async function buildContainer() {
     if (process.env["RUNNING_ON"] == "KUBERNETES") {
         tl.debug("Building image using buildctl");
-        buildctl.buildctlBuildAndPush();
+        return buildctl.buildctlBuildAndPush();
     }
     else {
         tl.debug("Building image using docker");
-        docker.dockerBuildAndPush();
+        return docker.dockerBuildAndPush();
     }
 }
 
