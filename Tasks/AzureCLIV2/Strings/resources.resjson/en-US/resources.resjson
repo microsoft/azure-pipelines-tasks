@@ -20,7 +20,7 @@
   "loc.input.label.powerShellErrorActionPreference": "ErrorActionPreference",
   "loc.input.help.powerShellErrorActionPreference": "Prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your powershell/powershell core script.",
   "loc.input.label.addSpnToEnvironment": "Access service principal details in script",
-  "loc.input.help.addSpnToEnvironment": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId`, `$servicePrincipalKey` and `$tenantId` in your script.\n\nThis is honored only when the Azure endpoint has Service Principal authentication scheme.",
+  "loc.input.help.addSpnToEnvironment": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$env:servicePrincipalId`, `$env:servicePrincipalKey` and `$env:tenantId` in your script.\n\nThis is honored only when the Azure endpoint has Service Principal authentication scheme.",
   "loc.input.label.useGlobalConfig": "Use global Azure CLI configuration",
   "loc.input.help.useGlobalConfig": "If this is false, this task will use its own separate [Azure CLI configuration directory](https://docs.microsoft.com/en-us/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file). This can be used to run Azure CLI tasks in *parallel* releases",
   "loc.input.label.cwd": "Working Directory",
