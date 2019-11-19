@@ -1,0 +1,5 @@
+{
+    "devDependencies": {
+        "nock": "9.0.11"
+    }
+}

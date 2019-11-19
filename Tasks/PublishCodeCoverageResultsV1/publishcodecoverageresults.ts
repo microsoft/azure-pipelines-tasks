@@ -193,7 +193,8 @@ async function generateHtmlReport(summaryFile: string, targetDir: string, pathTo
 
         // Listen for stderr.
         let isError = false;
-        dotnet.on('stderr', () => {
+        dotnet.on('stderr', (data: Buffer) => {
+            console.error(data.toString());
             isError = true;
         });
 

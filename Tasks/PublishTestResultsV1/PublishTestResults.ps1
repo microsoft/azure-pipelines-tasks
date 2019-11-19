@@ -83,6 +83,14 @@ try
         }
         else {
             Write-Verbose "Using Agent Command to publish test results"
+
+            foreach($file in $matchingTestResultsFiles) {
+                if ($file -match ",") {
+                    Write-Warning "File names containing , are not supported. Please rename the resutls file:$file";
+                }
+            }
+
+            $matchingTestResultsFiles = [string]::Join(",", $matchingTestResultsFiles);
         }
 
         $testRunSystem = "VSTS - PTR";
@@ -98,13 +106,14 @@ try
             {
                 Write-Warning "Update the build agent to be able to use the custom run title feature."
             }
+
             if($publishRunLevelAttachmentsExists)
             {
                 if ($switchToPowerShell -ieq "true") {
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption
                 }
                 else {
-                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunSystem;]"
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;config=$configuration;testRunSystem=$testRunSystem;]"
                 }
             }
             else 
@@ -117,7 +126,7 @@ try
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext
                 }
                 else {
-                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunSystem;]"
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;config=$configuration;testRunSystem=$testRunSystem;]"
                 }
             }
         }
@@ -129,7 +138,7 @@ try
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -PublishRunLevelAttachments $publishResultsOption -RunTitle $testRunTitle
                 }
                 else {
-                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunSystem;runTitle=$testRunTitle;]"
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;publishRunAttachments=$publishResultsOption;resultFiles=$matchingTestResultsFiles;platform=$platform;config=$configuration;testRunSystem=$testRunSystem;runTitle=$testRunTitle;]"
                 }
             }
             else 
@@ -142,7 +151,7 @@ try
                     Publish-TestResults -TestRunner $testRunner -TestResultsFiles $matchingTestResultsFiles -MergeResults $mergeResults -Platform $platform -Configuration $configuration -Context $distributedTaskContext -RunTitle $testRunTitle
                 }
                 else {
-                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;configuration=$configuration;testRunSystem=$testRunSystem;runTitle=$testRunTitle;]"
+                    Write-Host "##vso[results.publish type=$testRunner;mergeResults=$mergeResults;resultFiles=$matchingTestResultsFiles;platform=$platform;config=$configuration;testRunSystem=$testRunSystem;runTitle=$testRunTitle;]"
                 }
             }
         }

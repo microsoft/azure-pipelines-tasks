@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 151,
-        "Patch": 1
+        "Minor": 161,
+        "Patch": 0
     },
     "demands": [
         "msbuild"
@@ -90,14 +90,22 @@
             "type": "string",
             "label": "Platform",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "validation": {
+                "expression": "isMatch(value, '[<>*|:\\/&%\".#?]'",
+                "message": "The following characters are forbidden in Platform: < > * | : \\ / & % \" . # ?"
+            }
         },
         {
             "name": "configuration",
             "type": "string",
             "label": "Configuration",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "validation": {
+                "expression": "isMatch(value, '[<>*|:\\/&%\".#?]'",
+                "message": "The following characters are forbidden in Configuration: < > * | : \\ / & % \" . # ?"
+            }
         },
         {
             "name": "msbuildArguments",
