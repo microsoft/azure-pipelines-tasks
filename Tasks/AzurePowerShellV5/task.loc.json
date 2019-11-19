@@ -19,6 +19,7 @@
     "Minor": 162,
     "Patch": 0
   },
+  "preview": "true",
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
     {
