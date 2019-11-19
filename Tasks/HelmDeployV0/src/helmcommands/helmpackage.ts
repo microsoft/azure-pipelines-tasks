@@ -1,6 +1,5 @@
 "use strict";
 
-import fs = require('fs');
 import tl = require('azure-pipelines-task-lib/task');
 import helmcli from "./../helmcli";
 import * as helmutil from "./../utils";
@@ -27,7 +26,7 @@ export function addArguments(helmCli: helmcli) : void {
     }
 
     if(destination) {
-        if(!fs.existsSync(destination))
+        if(!tl.exist(destination))
         {
             tl.mkdirP(destination);
         }
