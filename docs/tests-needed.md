@@ -144,7 +144,6 @@ of untested tasks to 0!
 | PythonScriptV0 | @leantk |  |
 | QuickPerfTestV1 | @SadagopanRajaram @ShreyasRmsft |  |
 | ReviewAppV0 | @ds-ms |  |
-| RunDistributedTestsV1 | @SadagopanRajaram @ShreyasRmsft |  |
 | RunJMeterLoadTestV1 | @SadagopanRajaram @ShreyasRmsft |  |
 | RunLoadTestV1 | @SadagopanRajaram @ShreyasRmsft |  |
 | ServiceFabricComposeDeployV0 | @bishal-pdmsft | :heavy_check_mark: |

@@ -107,10 +107,14 @@ export async function buildctlBuildAndPush() {
         buildctlTool.arg('--exporter=image');
         buildctlTool.arg(`--exporter-opt=name=${imageNameandTag}`);
         buildctlTool.arg('--exporter-opt=push=true');
-        buildctlTool.exec();
+        buildctlTool.exec().then(() => {}).catch((error) => {
+            throw new Error(error.message);
+        });
     }
     else {
         // only build the image
-        await buildctlTool.exec();
+        await buildctlTool.exec().then(() => {}).catch((error) => {
+            throw new Error(error.message);
+        });
     }
 }
