@@ -17,7 +17,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 158,
+        "Minor": 162,
         "Patch": 0
     },
     "minimumAgentVersion": "2.115.0",
@@ -557,6 +557,7 @@
         "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
         "NGCommon_UnableToFindTool": "Unable to find tool %s",
         "Warning_SessionCreationFailed": "Could not create provenance session: %s",
-        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task."
+        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task.",
+        "NetCore3Update": "Info: Our Hosted Agents have been updated to contain .Net Core 3.0 SDK/Runtime along with other supported versions. \nThe .NET Core CLI is shared by all SDK's and its version will be 3.x, and hence you might see some difference in behaviour even while using older .NET Core SDK/runtime versions. \nSome commonly encountered behavoiur changes due to .NET Core CLI 3.0, are: \nIf you're using `Publish` command with -o or --Output argument, you will see that the output folder is not being created at root directory rather than Project File's directory. \nTo revert back to old behaviour, you can install the required SDK/runtime version with `Use .Net Core` task. For further information refer: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core-cli?view=azure-devops"
     }
 }

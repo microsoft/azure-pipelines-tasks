@@ -32,6 +32,7 @@ export class dotNetExe {
 
     public async execute() {
         tl.setResourcePath(path.join(__dirname, "task.json"));
+        console.log(tl.loc('NetCore3Update'));
         this.setConsoleCodePage();
 
         switch (this.command) {
@@ -258,7 +259,7 @@ export class dotNetExe {
     }
 
     private extractOutputArgument(): void {
-        if (!this.arguments || !this.arguments.trim()) {    
+        if (!this.arguments || !this.arguments.trim()) {
             return;
         }
 
@@ -348,7 +349,7 @@ export class dotNetExe {
                     tl.error(tl.loc("noWebProjectFound"));
                 }
                 return projectFilesUsingWebSdk;
-            } 
+            }
             return resolvedProjectFiles;
         }
         return projectFiles;
@@ -360,7 +361,7 @@ export class dotNetExe {
         try {
             var fileBuffer: Buffer = fs.readFileSync(projectfile);
             var webConfigContent: string;
-            
+
             var fileEncodings = ['utf8', 'utf16le'];
 
             for(var i = 0; i < fileEncodings.length; i++) {
@@ -386,7 +387,10 @@ export class dotNetExe {
     }
 
     private static getModifiedOutputForProjectFile(outputBase: string, projectFile: string): string {
-        return path.join(outputBase, path.basename(path.dirname(projectFile)));
+        let projectFileName = path.basename(projectFile);
+        let indexOfFileSeperator = projectFileName.indexOf('.');
+        projectFileName = projectFileName.slice(0, indexOfFileSeperator ? indexOfFileSeperator : projectFileName.length);
+        return path.join(outputBase, projectFileName);
     }
 }
 
