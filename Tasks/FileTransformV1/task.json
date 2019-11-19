@@ -19,6 +19,7 @@
         "Major": 1,
         "Minor": 156,
         "Patch": 6
+
     },
     "instanceNameFormat": "File Transform: $(Package)",
     "groups": [
