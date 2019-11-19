@@ -32,6 +32,31 @@
     return $certificate
 }
 
+function Add-CertificateForAz {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)] $Endpoint
+    )
+
+    $pemFileContent = $Endpoint.Auth.Parameters.ServicePrincipalCertificate
+    $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
+   
+    # Add the certificate to the cert store.
+    $certificate = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
+
+    $store = New-Object System.Security.Cryptography.X509Certificates.X509Store(
+            ([System.Security.Cryptography.X509Certificates.StoreName]::My),
+            ([System.Security.Cryptography.X509Certificates.StoreLocation]::CurrentUser))
+    $store.Open(([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite))
+    $store.Add($certificate)
+    $store.Close()
+
+    #store the thumbprint in a global variable which will be used to remove the certificate later on
+    $script:Endpoint_Authentication_Certificate = $certificate.Thumbprint
+    Write-Verbose "Added certificate to the certificate store."
+    return $certificate
+}
+
 function Format-Splat {
     [CmdletBinding()]
     param([Parameter(Mandatory = $true)][hashtable]$Hashtable)
