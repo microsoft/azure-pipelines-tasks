@@ -94,12 +94,12 @@ export class AzureVMOperationsTaskParameters {
         return azureEndpoint.applicationTokenCredentials;
     }
 
-    public async getAzureRGTaskParameters() : Promise<AzureVMOperationsTaskParameters> 
+    public async getAzureRGTaskParameters() : Promise<AzureVMOperationsTaskParameters>
     {
         try {
             this.connectedService = tl.getInput("ConnectedServiceName", true);
-            var endpointTelemetry = '{"endpointId":"' + this.connectedService + '"}';
-            console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureResourceGroupDeployment]" + endpointTelemetry);
+            var actionTelemetry = '{"action":"' + this.action + '"}';
+            console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureVMOperations]" + actionTelemetry);
             this.subscriptionId = tl.getEndpointDataParameter(this.connectedService, "SubscriptionId", true);
             this.endpointPortalUrl = tl.getEndpointDataParameter(this.connectedService, "armManagementPortalUrl", true);
             this.resourceGroupName = tl.getInput("resourceGroupName", true);
@@ -118,7 +118,7 @@ export class AzureVMOperationsTaskParameters {
             }
             var password = tl.getInput("password");
             this.agentServiceUserCredentials = new AgentServiceUserCredentials(userName, password);
-            
+
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentName = tl.getInput("deploymentName");
             this.deploymentMode = tl.getInput("deploymentMode");
@@ -130,5 +130,5 @@ export class AzureVMOperationsTaskParameters {
         } catch (error) {
             throw new Error(tl.loc("AzureVM_ConstructorFailed", error.message));
         }
-    }    
+    }
 }
