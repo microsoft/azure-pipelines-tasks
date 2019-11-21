@@ -1,20 +1,37 @@
 'use strict';
 import * as fs from 'fs';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as yaml from 'js-yaml';
-import { Resource } from 'kubernetes-common/kubectl-object-model';
-import { KubernetesWorkload, recognizedWorkloadTypes } from '../models/constants';
-import * as utils from '../utils/utilities';
-import { StringComparer } from '../utils/utilities';
+import { Resource } from 'kubernetes-common-v2/kubectl-object-model';
+import { KubernetesWorkload, deploymentTypes, workloadTypes } from 'kubernetes-common-v2/kubernetesconstants';
+import { StringComparer, isEqual } from '../utils/StringComparison';
 
 export function isDeploymentEntity(kind: string): boolean {
     if (!kind) {
         throw (tl.loc('ResourceKindNotDefined'));
     }
 
-    return recognizedWorkloadTypes.some(function (elem) {
-        return utils.isEqual(elem, kind, utils.StringComparer.OrdinalIgnoreCase);
+    return deploymentTypes.some((type: string) => {
+        return isEqual(type, kind, StringComparer.OrdinalIgnoreCase);
     });
+}
+
+export function isWorkloadEntity(kind: string): boolean {
+    if (!kind) {
+        throw (tl.loc('ResourceKindNotDefined'));
+    }
+
+    return workloadTypes.some((type: string) => {
+        return isEqual(type, kind, StringComparer.OrdinalIgnoreCase);
+    });
+}
+
+export function isServiceEntity(kind: string): boolean {
+    if (!kind) {
+        throw (tl.loc('ResourceKindNotDefined'));
+    }
+
+    return isEqual("Service", kind, StringComparer.OrdinalIgnoreCase);
 }
 
 export function getReplicaCount(inputObject: any): any {
@@ -27,7 +44,7 @@ export function getReplicaCount(inputObject: any): any {
     }
 
     const kind = inputObject.kind;
-    if (!utils.isEqual(kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase) && !utils.isEqual(kind, KubernetesWorkload.DaemonSet, StringComparer.OrdinalIgnoreCase)) {
+    if (!isEqual(kind, KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase) && !isEqual(kind, KubernetesWorkload.daemonSet, StringComparer.OrdinalIgnoreCase)) {
         return inputObject.spec.replicas;
     }
 
@@ -93,28 +110,11 @@ export function updateObjectAnnotations(inputObject: any, newAnnotations: Map<st
 }
 
 export function updateImagePullSecrets(inputObject: any, newImagePullSecrets: string[], override: boolean) {
-    if (!inputObject) {
+    if (!inputObject || !inputObject.spec || !newImagePullSecrets) {
         return;
     }
 
-    if (!inputObject.spec) {
-        return;
-    }
-
-    if (!newImagePullSecrets) {
-        return;
-    }
-
-    const newImagePullSecretsObjects = [];
-
-    newImagePullSecrets.forEach(imagePullSecret => {
-        const newImagePullSecretsObject = {
-            'name': imagePullSecret
-        };
-
-        newImagePullSecretsObjects.push(newImagePullSecretsObject);
-    });
-
+    const newImagePullSecretsObjects = Array.from(newImagePullSecrets, x => { return { 'name': x }; });
     let existingImagePullSecretObjects: any = getImagePullSecrets(inputObject);
 
     if (override) {
@@ -173,7 +173,7 @@ export function updateSelectorLabels(inputObject: any, newLabels: Map<string, st
         return;
     }
 
-    if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
+    if (isEqual(inputObject.kind, KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase)) {
         return;
     }
 
@@ -205,7 +205,7 @@ export function getResources(filePaths: string[], filterResourceTypes: string[])
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
             const inputObjectKind = inputObject ? inputObject.kind : '';
-            if (filterResourceTypes.filter(type => utils.isEqual(inputObjectKind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
+            if (filterResourceTypes.filter(type => isEqual(inputObjectKind, type, StringComparer.OrdinalIgnoreCase)).length > 0) {
                 const resource = {
                     type: inputObject.kind,
                     name: inputObject.metadata.name
@@ -223,7 +223,7 @@ function getSpecLabels(inputObject: any) {
         return null;
     }
 
-    if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
+    if (isEqual(inputObject.kind, KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase)) {
         return inputObject.metadata.labels;
     }
     if (!!inputObject.spec && !!inputObject.spec.template && !!inputObject.spec.template.metadata) {
@@ -239,7 +239,16 @@ function getImagePullSecrets(inputObject: any) {
         return null;
     }
 
-    if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
+    if (isEqual(inputObject.kind, KubernetesWorkload.cronjob, StringComparer.OrdinalIgnoreCase)) {
+        try {
+            return inputObject.spec.jobTemplate.spec.template.spec.imagePullSecrets;
+        } catch (ex) {
+            tl.debug(`Fetching imagePullSecrets failed due to this error: ${JSON.stringify(ex)}`);
+            return null;
+        }
+    }
+
+    if (isEqual(inputObject.kind, KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase)) {
         return inputObject.spec.imagePullSecrets;
     }
 
@@ -255,8 +264,18 @@ function setImagePullSecrets(inputObject: any, newImagePullSecrets: any) {
         return;
     }
 
-    if (utils.isEqual(inputObject.kind, KubernetesWorkload.Pod, StringComparer.OrdinalIgnoreCase)) {
+    if (isEqual(inputObject.kind, KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase)) {
         inputObject.spec.imagePullSecrets = newImagePullSecrets;
+        return;
+    }
+
+    if (isEqual(inputObject.kind, KubernetesWorkload.cronjob, StringComparer.OrdinalIgnoreCase)) {
+        try {
+            inputObject.spec.jobTemplate.spec.template.spec.imagePullSecrets = newImagePullSecrets;
+        } catch (ex) {
+            tl.debug(`Overriding imagePullSecrets failed due to this error: ${JSON.stringify(ex)}`);
+            //Do nothing
+        }
         return;
     }
 
@@ -278,7 +297,11 @@ function setSpecLabels(inputObject: any, newLabels: any) {
 function getSpecSelectorLabels(inputObject: any) {
 
     if (!!inputObject && !!inputObject.spec && !!inputObject.spec.selector) {
-        return inputObject.spec.selector.matchLabels;
+        if (isServiceEntity(inputObject.kind)) {
+            return inputObject.spec.selector;
+        } else {
+            return inputObject.spec.selector.matchLabels;
+        }
     }
 
     return null;

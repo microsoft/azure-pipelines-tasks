@@ -54,7 +54,7 @@
   "loc.input.label.externalEndpoint": "NuGet 서버",
   "loc.input.help.externalEndpoint": "외부 NuGet 서버의 자격 증명이 포함된 NuGet 서비스 연결입니다.",
   "loc.input.label.searchPatternPack": "압축할 csproj 또는 nuspec 파일의 경로",
-  "loc.input.help.searchPatternPack": "압축할 csproj 또는 nuspec 파일을 검색할 패턴입니다.\n\n세미콜론을 사용하여 여러 패턴을 구분할 수 있으며, 패턴 앞에 접두사 '-:'을 적용하여 패턴을 네거티브로 만들 수 있습니다(예: '**/*.csproj;-:**/*.Tests.csproj').",
+  "loc.input.help.searchPatternPack": "압축할 csproj 또는 nuspec 파일을 검색할 패턴입니다.\n\n세미콜론을 사용하여 여러 패턴을 구분할 수 있으며, 패턴 앞에 접두사 '!'을 적용하여 패턴을 네거티브로 만들 수 있습니다(예: '**/*.csproj;!**/*.Tests.csproj').",
   "loc.input.label.configurationToPack": "패키지할 구성",
   "loc.input.help.configurationToPack": "csproj 파일을 사용하는 경우 패키지할 구성을 지정합니다.",
   "loc.input.label.outputDir": "패키지 폴더",

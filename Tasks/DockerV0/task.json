@@ -4,7 +4,7 @@
     "friendlyName": "Docker",
     "description": "Build, tag, push, or run Docker images, or run a Docker command",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 153,
-        "Patch": 2
+        "Minor": 157,
+        "Patch": 0
     },
     "demands": [],
     "preview": "false",

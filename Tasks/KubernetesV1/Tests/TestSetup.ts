@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import * as shared from './TestShared';
 const querystring = require("querystring");
@@ -54,6 +54,7 @@ console.log("Inputs have been set");
 process.env['AGENT_VERSION'] = '2.115.0';
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
+process.env["SYSTEM_HOSTTYPE"] = "release";
 process.env["SYSTEM_SERVERTYPE"] = "hosted";
 process.env["ENDPOINT_AUTH_dockerhubendpoint"] = "{\"parameters\":{\"username\":\"test\", \"password\":\"regpassword\", \"email\":\"test@microsoft.com\",\"registry\":\"https://index.docker.io/v1/\"},\"scheme\":\"UsernamePassword\"}";
 process.env["ENDPOINT_AUTH_kubernetesEndpoint"] = "{\"parameters\":{\"kubeconfig\":\"kubeconfig\", \"username\":\"test\", \"password\":\"regpassword\",},\"scheme\":\"UsernamePassword\"}";
@@ -77,11 +78,7 @@ process.env['ENDPOINT_URL_AzureRMSpn'] = 'https://management.azure.com/';
 process.env['ENDPOINT_DATA_AzureRMSpn_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID'] = 'https://management.azure.com/';
 process.env['AZURE_HTTP_USER_AGENT'] = 'TEST_AGENT';
 process.env['PATH'] = KubectlPath;
-
-if (process.env["AGENT_TEMPDIRECTORY"] == null || process.env["AGENT_TEMPDIRECTORY"] == undefined || process.env["AGENT_TEMPDIRECTORY"] == "")
-{
-    process.env["AGENT_TEMPDIRECTORY"] = "/agent/_temp";
-}
+process.env["AGENT_TEMPDIRECTORY"] = process.cwd()
 
 //mock responses for Azure Resource Manager connection type
 nock("https://login.windows.net", {
@@ -241,14 +238,17 @@ fsClone.writeFileSync = function(fileName, data) {
     }
 };
 
-fsClone.chmodSync = function(path, mode) {
-      switch(path){
-          case KubectlPath:
+fsClone.chmodSync = function (path, mode) {
+    if (process.env["chmodShouldThrowError"] === "true") {
+        throw new Error("No enough permissions");
+    }
+    switch (path) {
+        case KubectlPath:
             console.log(`Set kubectlPath to ${KubectlPath} and added permissions`);
             break;
-          default:
-            fs.chmodSync(path, mode);        
-      }
+        default:
+            fs.chmodSync(path, mode);
+    }
 };
 
 fsClone.statSync = (s: string) => {

@@ -1,14 +1,12 @@
 'use strict';
 
-import * as tl from 'vsts-task-lib/task';
-import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
-import * as kubectlutility from 'kubernetes-common/kubectlutility';
-import { Kubectl } from 'kubernetes-common/kubectl-object-model';
-import { pipelineAnnotations } from '../models/constants';
-
-export enum StringComparer {
-    Ordinal, OrdinalIgnoreCase
-}
+import * as tl from 'azure-pipelines-task-lib/task';
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
+import * as kubectlutility from 'kubernetes-common-v2/kubectlutility';
+import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
+import { pipelineAnnotations } from 'kubernetes-common-v2/kubernetesconstants';
+import { KubernetesConnection } from 'kubernetes-common-v2/kubernetesconnection';
+import * as filehelper from './FileHelper';
 
 export function getManifestFiles(manifestFilePaths: string | string[]): string[] {
     if (!manifestFilePaths) {
@@ -18,6 +16,13 @@ export function getManifestFiles(manifestFilePaths: string | string[]): string[]
 
     const files = tl.findMatch(tl.getVariable('System.DefaultWorkingDirectory') || process.cwd(), manifestFilePaths);
     return files;
+}
+
+export function getConnection(): KubernetesConnection {
+    const kubernetesServiceConnection = tl.getInput('kubernetesServiceConnection', true);
+    const tempPath = filehelper.getNewUserDirPath();
+    const connection = new KubernetesConnection(kubernetesServiceConnection, tempPath);
+    return connection;
 }
 
 export async function getKubectl(): Promise<string> {
@@ -64,7 +69,11 @@ export function checkForErrors(execResults: IExecSyncResult[], warnIfError?: boo
         let stderr = '';
         execResults.forEach(result => {
             if (result.stderr) {
-                stderr += result.stderr + '\n';
+                if (result.code !== 0) {
+                    stderr += result.stderr + '\n';
+                } else {
+                    tl.warning(result.stderr);
+                }
             }
         });
         if (stderr.length > 0) {
@@ -111,51 +120,31 @@ export function annotateChildPods(kubectl: Kubectl, resourceType: string, resour
 */
 
 export function substituteImageNameInSpecFile(currentString: string, imageName: string, imageNameWithNewTag: string) {
-    const i = currentString.indexOf(imageName);
-    if (i < 0) {
+    if (currentString.indexOf(imageName) < 0) {
         tl.debug(`No occurence of replacement token: ${imageName} found`);
         return currentString;
     }
 
-    let newString = '';
-    currentString.split('\n')
-        .forEach((line) => {
-            if (line.indexOf(imageName) > 0 && line.toLocaleLowerCase().indexOf('image') > 0) {
-                const i = line.indexOf(imageName);
-                newString += line.substring(0, i);
-                const leftOverString = line.substring(i);
-                if (leftOverString.endsWith('"')) {
-                    newString += imageNameWithNewTag + '"' + '\n';
-                } else {
-                    newString += imageNameWithNewTag + '\n';
-                }
-            } else {
-                newString += line + '\n';
+    return currentString.split('\n').reduce((acc, line) => {
+        const imageKeyword = line.match(/^ *image:/);
+        if (imageKeyword) {
+            let [currentImageName, currentImageTag] = line
+                .substring(imageKeyword[0].length) // consume the line from keyword onwards
+                .trim()
+                .replace(/[',"]/g, '') // replace allowed quotes with nothing
+                .split(':');
+
+            if (!currentImageTag && currentImageName.indexOf(' ') > 0) {
+                currentImageName = currentImageName.split(' ')[0]; // Stripping off comments
             }
-        });
 
-    return newString;
-}
+            if (currentImageName === imageName) {
+                return acc + `${imageKeyword[0]} ${imageNameWithNewTag}\n`;
+            }
+        }
 
-export function isEqual(str1: string, str2: string, stringComparer: StringComparer): boolean {
-
-    if (str1 == null && str2 == null) {
-        return true;
-    }
-
-    if (str1 == null) {
-        return false;
-    }
-
-    if (str2 == null) {
-        return false;
-    }
-
-    if (stringComparer == StringComparer.OrdinalIgnoreCase) {
-        return str1.toUpperCase() === str2.toUpperCase();
-    } else {
-        return str1 === str2;
-    }
+        return acc + line + '\n';
+    }, '');
 }
 
 function createInlineArray(str: string | string[]): string {

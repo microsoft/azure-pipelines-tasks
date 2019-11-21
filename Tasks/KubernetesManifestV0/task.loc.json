@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 153,
-    "Patch": 3
+    "Minor": 162,
+    "Patch": 1
   },
   "demands": [],
   "groups": [],
@@ -50,8 +50,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.namespace",
       "required": true,
-      "defaultValue": "default",
-      "visibleRule": "action != bake",
+      "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.namespace"
     },
     {
@@ -68,16 +67,42 @@
       "visibleRule": "action = deploy || action = promote || action = reject"
     },
     {
+      "name": "trafficSplitMethod",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.trafficSplitMethod",
+      "required": false,
+      "defaultValue": "pod",
+      "options": {
+        "pod": "Pod",
+        "smi": "SMI"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.trafficSplitMethod",
+      "visibleRule": "strategy = canary"
+    },
+    {
       "name": "percentage",
       "type": "string",
       "label": "ms-resource:loc.input.label.percentage",
       "required": true,
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.percentage",
       "defaultValue": 0,
       "visibleRule": "strategy = Canary && action = deploy",
       "validation": {
         "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
         "message": "Enter valid percentage value i.e between 0 to 100."
+      }
+    },
+    {
+      "name": "baselineAndCanaryReplicas",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.baselineAndCanaryReplicas",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.baselineAndCanaryReplicas",
+      "defaultValue": 0,
+      "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
+      "validation": {
+        "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
+        "message": "Enter valid value i.e between 0 to 100."
       }
     },
     {
@@ -115,9 +140,20 @@
       "defaultValue": "helm2",
       "visibleRule": "action = bake",
       "options": {
-        "helm2": "Helm 2"
+        "helm2": "Helm 2",
+        "kompose": "Kompose",
+        "kustomize": "Kustomize"
       },
       "helpMarkDown": "ms-resource:loc.input.help.renderType"
+    },
+    {
+      "name": "dockerComposeFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.dockerComposeFile",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "action = bake && renderType = kompose",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerComposeFile"
     },
     {
       "name": "helmChart",
@@ -154,6 +190,15 @@
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.overrides",
       "visibleRule": "action = bake && renderType = helm2"
+    },
+    {
+      "name": "kustomizationPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.kustomizationPath",
+      "required": false,
+      "visibleRule": "action = bake && renderType = kustomize",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.kustomizationPath"
     },
     {
       "name": "resourceToPatch",
@@ -299,6 +344,7 @@
     "DownloadPathForStableTxt": "ms-resource:loc.messages.DownloadPathForStableTxt",
     "DownloadKubeCtlFailed": "ms-resource:loc.messages.DownloadKubeCtlFailed",
     "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
+    "DockerComposeFilePathNotSupplied": "ms-resource:loc.messages.DockerComposeFilePathNotSupplied",
     "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion",
     "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
     "ManifestFileNotFound": "ms-resource:loc.messages.ManifestFileNotFound",
@@ -308,8 +354,16 @@
     "NullInputObject": "ms-resource:loc.messages.NullInputObject",
     "ArgumentsInputNotSupplied": "ms-resource:loc.messages.ArgumentsInputNotSupplied",
     "NullInputObjectMetadata": "ms-resource:loc.messages.NullInputObjectMetadata",
-    "CanaryDeploymentAlreadyExistErrorMessage": "ms-resource:loc.messages.CanaryDeploymentAlreadyExistErrorMessage",
     "InvalidRejectActionDeploymentStrategy": "ms-resource:loc.messages.InvalidRejectActionDeploymentStrategy",
-    "InvalidPromotetActionDeploymentStrategy": "ms-resource:loc.messages.InvalidPromotetActionDeploymentStrategy"
+    "InvalidPromotetActionDeploymentStrategy": "ms-resource:loc.messages.InvalidPromotetActionDeploymentStrategy",
+    "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
+    "CouldNotDeterminePodStatus": "ms-resource:loc.messages.CouldNotDeterminePodStatus",
+    "KubectlShouldBeUpgraded": "ms-resource:loc.messages.KubectlShouldBeUpgraded",
+    "CouldNotDetermineServiceStatus": "ms-resource:loc.messages.CouldNotDetermineServiceStatus",
+    "waitForServiceIpAssignment": "ms-resource:loc.messages.waitForServiceIpAssignment",
+    "waitForServiceIpAssignmentTimedOut": "ms-resource:loc.messages.waitForServiceIpAssignmentTimedOut",
+    "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
+    "UnableToCreateTrafficSplitManifestFile": "ms-resource:loc.messages.UnableToCreateTrafficSplitManifestFile",
+    "StableSpecSelectorNotExist": "ms-resource:loc.messages.StableSpecSelectorNotExist"
   }
 }

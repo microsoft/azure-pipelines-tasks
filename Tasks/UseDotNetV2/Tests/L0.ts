@@ -150,6 +150,7 @@ describe('UseDotNet', function () {
 
     it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should throw if version for pacakge type can not be found, and error message should contain the package type", (done) => {
         process.env["__failat__"] = "versionnotfound";
+        process.env["__versionspec__"] = "2.2.999-cantbefound-234";
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoFailTests.js"));
         tr.run();
         runValidations(() => {
@@ -160,6 +161,7 @@ describe('UseDotNet', function () {
 
     it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should throw if getting channel fails", (done) => {
         process.env["__failat__"] = "channelfetch";
+        process.env["__versionspec__"] = "2.2.999-cantbefound-234";
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoFailTests.js"));
         tr.run();
         runValidations(() => {
@@ -168,8 +170,30 @@ describe('UseDotNet', function () {
         }, tr, done);
     });
 
+    it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should throw if preview versions included and version not found", (done) => {
+        process.env["__failat__"] = "versionnotfound";
+        process.env["__versionspec__"] = "4.40.x";
+        process.env["__inlcudepreviewversion__"] = "true";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoFailTests.js"));
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == false, ("Should have failed as channels could not be fetched."));
+            assert(tr.stdout.indexOf("MatchingVersionNotFound") > -1, "Should not have found a matching version.");
+            assert(tr.stdout.indexOf("VersionNotFound") > -1, "Should have thrown with VersionNotFound error.");
+        }, tr, done);
+    });
+
     it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should return correct version info for a correct version spec", (done) => {
         process.env["__versionspec__"] = "2.2.103";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoTestsCorrect.js"));
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have returned the correct version info."));
+        }, tr, done);
+    });
+
+    it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should be able to return versionInfo for sdk present in sdks property of a release object.", (done) => {
+        process.env["__versionspec__"] = "2.2.104";
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoTestsCorrect.js"));
         tr.run();
         runValidations(() => {
@@ -215,8 +239,28 @@ describe('UseDotNet', function () {
     });
 
     it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should return latest version info even if includePreviewVersion is true but latest version is non preview", (done) => {
-        process.env["__versionSpec__"] = "2.3.x";
+        process.env["__versionspec__"] = "2.3.x";
         process.env["__inlcudepreviewversion__"] = "true";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoTestsCorrect.js"));
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have returned the correct version info."));
+        }, tr, done);
+    });
+
+    it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should return latest version info if includePreviewVersion is true and only 1 channel and is preview", (done) => {
+        process.env["__versionspec__"] = "3.x";
+        process.env["__inlcudepreviewversion__"] = "true";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoTestsCorrect.js"));
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have returned the correct version info."));
+        }, tr, done);
+    });
+
+    it("[VersionFetcher.DotNetCoreVersionFetcher] getVersionInfo should return latest version info if includePreviewVersion is false and latest version is preview", (done) => {
+        process.env["__versionspec__"] = "4.x";
+        process.env["__inlcudepreviewversion__"] = "false";
         let tr = new ttm.MockTestRunner(path.join(__dirname, "versionFetcherGetVersionInfoTestsCorrect.js"));
         tr.run();
         runValidations(() => {
@@ -451,4 +495,42 @@ describe('UseDotNet', function () {
             assert(tr.stdout.indexOf("ErrorWhileSettingDotNetToolPath") > -1, "Should have printed this message as error must have been encountered while setting GlobalToolPath.");
         }, tr, done);
     });
+
+    it("[globaljsonfetcher] run should not fail if one global.json with a valid version was found.", (done) => {
+        process.env["__case__"] = "subdirAsRoot";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "globaljsonfetcherTest.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("GlobalJsonFound") > -1, "should found a global.json file");
+        }, tr, done);
+    });
+    it("[globaljsonfetcher] run should not fail if two global.json with a valid version was found.", (done) => {
+        process.env["__case__"] = "rootAsRoot";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "globaljsonfetcherTest.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("GlobalJsonFound") > -1, "should found a global.json file");
+        }, tr, done);
+    });
+    it("[globaljsonfetcher] run should fail if no global.json is found.", (done) => {
+        process.env["__case__"] = "invalidDir";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "globaljsonfetcherTest.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should't have passed."));
+            assert(tr.stdout.indexOf("FailedToFindGlobalJson") > -1, "should throw an error that no file was found.");
+        }, tr, done);
+    });
+    it("[globaljsonfetcher] run shouldn't fail if the global.json is empty.", (done) => {
+        process.env["__case__"] = "emptyGlobalJson";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "globaljsonfetcherTest.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should passed."));
+            assert(tr.stdout.indexOf("FailedToReadGlobalJson") > -1, "should throw an error that no file was found.");
+        }, tr, done);
+    })
 });
+

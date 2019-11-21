@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
-import tl = require('vsts-task-lib');
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import tl = require('azure-pipelines-task-lib');
 import * as shared from './TestShared';
 
 describe('Kubernetes Suite', function() {
@@ -34,7 +34,8 @@ describe('Kubernetes Suite', function() {
         delete process.env[shared.TestEnvVars.configMapFile];
         delete process.env[shared.TestEnvVars.configMapArguments];
         delete process.env[shared.TestEnvVars.outputFormat];
-        delete process.env[shared.TestEnvVars.configuration]
+        delete process.env[shared.TestEnvVars.configuration];
+        delete process.env["chmodShouldThrowError"];
     });
     after(function () {
     });
@@ -86,6 +87,26 @@ describe('Kubernetes Suite', function() {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.stdout.indexOf(`Set kubectlPath to ${shared.formatPath("newUserDir/kubectl.exe")} and added permissions`) != -1, "Kubectl path should be set to the correct location");
+        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} get pods -o json`) != -1, "kubectl get should run");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Run successfully when the user provides a specific location for kubectl even when chmod fails', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;
+        process.env[shared.TestEnvVars.arguments] = "pods";    
+        process.env[shared.TestEnvVars.versionOrLocation] = "location";
+        process.env[shared.TestEnvVars.specifyLocation] = shared.formatPath("newUserDir/kubectl.exe");
+        process.env[shared.isKubectlPresentOnMachine] = "false";
+        process.env["chmodShouldThrowError"] = "true";
+        tr.run();
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.stdout.indexOf(`Could not chmod ${process.env[shared.TestEnvVars.specifyLocation]}`) != -1, "chmod should have failed");
         assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();

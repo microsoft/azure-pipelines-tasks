@@ -1,17 +1,19 @@
 "use strict";
 
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as fs from 'fs';
-import ContainerConnection from "docker-common/containerconnection";
-import * as dockerCommandUtils from "docker-common/dockercommandutils";
+import ContainerConnection from "docker-common-v2/containerconnection";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 import * as utils from "./utils";
-import { findDockerFile } from "docker-common/fileutils";
-import { WebRequest, WebResponse, sendRequest } from 'utility-common/restutilities';
-import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "docker-common/containerimageutils";
+import { findDockerFile } from "docker-common-v2/fileutils";
+import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
+import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "docker-common-v2/containerimageutils";
+import * as pipelineUtils from "docker-common-v2/pipelineutils";
 
 import Q = require('q');
 
 const matchPatternForDigestAndSize = new RegExp(/sha256\:([\w]+)(\s+)size\:\s([\w]+)/);
+let publishMetadataResourceIds: string[] = [];
 
 function pushMultipleImages(connection: ContainerConnection, imageNames: string[], tags: string[], commandArguments: string, onCommandOut: (image, output) => any): any {
     let promise: Q.Promise<void>;
@@ -123,8 +125,23 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
     // Getting imageDetails
     const imageUri = getResourceName(imageName, digest);
     const baseImageName = dockerFilePath ? getBaseImageNameFromDockerFile(dockerFilePath) : "NA";
-    const layers = await dockerCommandUtils.getLayers(connection, imageName);
+    const history = await dockerCommandUtils.getHistory(connection, imageName);
+    if (!history) {
+        return null;
+    }
+
+    const layers = dockerCommandUtils.getLayers(history);
     const imageSize = dockerCommandUtils.getImageSize(layers);
+
+    // Get data for ImageFingerPrint
+    // v1Name is the layerID for the final layer in the image
+    // v2Blobs are ordered list of layers that represent the given image, obtained from docker inspect output
+    const v1Name = dockerCommandUtils.getImageFingerPrintV1Name(history);
+    const imageRootfsLayers = await dockerCommandUtils.getImageRootfsLayers(connection, v1Name);
+    let imageFingerPrint: { [key: string]: string | string[] } = {};
+    if (imageRootfsLayers && imageRootfsLayers.length > 0) {
+        imageFingerPrint = dockerCommandUtils.getImageFingerPrint(imageRootfsLayers, v1Name);
+    }
 
     // Getting pipeline variables
     const build = "build";
@@ -134,6 +151,21 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
     const pipelineName = tl.getVariable("System.DefinitionName");
     const pipelineId = tl.getVariable("System.DefinitionId");
     const jobName = tl.getVariable("System.PhaseDisplayName");
+    const creator = dockerCommandUtils.getCreatorEmail();
+    const logsUri = dockerCommandUtils.getPipelineLogsUrl();
+    const artifactStorageSourceUri = dockerCommandUtils.getPipelineUrl();
+    const contextUrl = tl.getVariable("Build.Repository.Uri") || "";
+    const revisionId = tl.getVariable("Build.SourceVersion") || "";
+
+    const addPipelineData = tl.getBoolInput("addPipelineData");
+    const labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
+    const buildOptions = dockerCommandUtils.getBuildAndPushArguments(dockerFilePath, labelArguments, tags);
+
+    // Capture Repository data for Artifact traceability
+    const repositoryTypeName = tl.getVariable("Build.Repository.Provider");
+    const repositoryId = tl.getVariable("Build.Repository.ID");
+    const repositoryName = tl.getVariable("Build.Repository.Name");
+    const branch = tl.getVariable("Build.SourceBranchName");
 
     const requestUrl = tl.getVariable("System.TeamFoundationCollectionUri") + tl.getVariable("System.TeamProject") + "/_apis/deployment/imagedetails?api-version=5.0-preview.1";
     const requestBody: string = JSON.stringify(
@@ -142,7 +174,7 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
             "imageUri": imageUri,
             "hash": digest,
             "baseImageName": baseImageName,
-            "distance": 0,
+            "distance": layers.length,
             "imageType": "",
             "mediaType": "",
             "tags": tags,
@@ -152,9 +184,28 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
             "pipelineName": pipelineName,
             "pipelineId": pipelineId,
             "jobName": jobName,
-            "imageSize": imageSize
+            "imageSize": imageSize,
+            "creator": creator,
+            "logsUri": logsUri,
+            "artifactStorageSourceUri": artifactStorageSourceUri,
+            "contextUrl": contextUrl,
+            "revisionId": revisionId,
+            "buildOptions": buildOptions,
+            "repositoryTypeName": repositoryTypeName,
+            "repositoryId": repositoryId,
+            "repositoryName": repositoryName,
+            "branch": branch,
+            "imageFingerPrint": imageFingerPrint
         }
     );
+
+    if (publishMetadataResourceIds.indexOf(imageUri) < 0) {
+        publishMetadataResourceIds.push(imageUri);
+    }
+
+    if (publishMetadataResourceIds.length > 0) {
+        tl.setVariable("RESOURCE_URIS", publishMetadataResourceIds.join(","));
+    }
 
     return sendRequestToImageStore(requestBody, requestUrl);
 }

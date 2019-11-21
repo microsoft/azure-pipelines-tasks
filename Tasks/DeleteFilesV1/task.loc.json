@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
-    "Patch": 9
+    "Minor": 154,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.92.0",
@@ -37,6 +37,14 @@
       "defaultValue": "myFileShare",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.Contents"
+    },
+    {
+      "name": "RemoveSourceFolder",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RemoveSourceFolder",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.RemoveSourceFolder"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

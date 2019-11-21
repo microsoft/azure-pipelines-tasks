@@ -2,18 +2,12 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
-import ContainerConnection from "docker-common/containerconnection";
-import * as dockerCommandUtils from "docker-common/dockercommandutils";
-import * as fileUtils from "docker-common/fileutils";
-import * as pipelineUtils from "docker-common/pipelineutils";
+import * as tl from "azure-pipelines-task-lib/task";
+import ContainerConnection from "docker-common-v2/containerconnection";
+import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
+import * as fileUtils from "docker-common-v2/fileutils";
+import * as pipelineUtils from "docker-common-v2/pipelineutils";
 import * as utils from "./utils";
-
-function useDefaultBuildContext(buildContext: string): boolean {
-    let defaultWorkingDir = tl.getVariable("SYSTEM_DEFAULTWORKINGDIRECTORY");
-    let defaultPath = path.join(defaultWorkingDir, "**");
-    return buildContext === defaultPath;
-}
 
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
     // find dockerfile path
@@ -43,8 +37,9 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         imageNames = connection.getQualifiedImageNamesFromConfig(repositoryName, true);
     }
 
+    const addPipelineData = tl.getBoolInput("addPipelineData");
     // get label arguments
-    let labelArguments = pipelineUtils.getDefaultLabels();
+    let labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
 
     // get tags input
     let tags = tl.getDelimitedInput("tags", "\n");
@@ -67,14 +62,8 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         tl.debug(tl.loc('NotAddingAnyTagsToBuild'));
     }
 
-    // get build context
-    let buildContext = tl.getPathInput("buildContext");
-    if (useDefaultBuildContext(buildContext)) {
-        buildContext = path.dirname(dockerFile);
-    }
-
     let output = "";
-    return dockerCommandUtils.build(connection, dockerFile, buildContext, commandArguments, labelArguments, tagArguments, (data) => output += data).then(() => {
+    return dockerCommandUtils.build(connection, dockerFile, commandArguments, labelArguments, tagArguments, (data) => output += data).then(() => {
         let taskOutputPath = utils.writeTaskOutput("build", output);
         outputUpdate(taskOutputPath);
     });

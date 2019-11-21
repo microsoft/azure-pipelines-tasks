@@ -5,9 +5,11 @@ import Q = require('q');
 import fs = require('fs');
 import os = require('os');
 
+import { AzureBlobUploadHelper } from './azure-blob-upload-helper';
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 import utils = require('./utils');
+import { inspect } from 'util';
 
 class UploadInfo {
     upload_id: string;
@@ -30,6 +32,13 @@ const DestinationTypeParameter = {
     [DestinationType.Groups]: "groups",
     [DestinationType.Store]: "stores"
 }
+
+interface Release {
+    version: string;
+    short_version: string;
+}
+
+type SymbolType = "Apple" | "AndroidProguard" | "UWP";
 
 function getEndpointDetails(endpointInputFieldName) {
     var errorMessage = tl.loc("CannotDecodeEndpoint");
@@ -82,7 +91,7 @@ function responseHandler(defer, err, res, body, handler: () => void) {
     handler();
 }
 
-function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string): Q.Promise<UploadInfo> {
+function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string, buildVersion: string): Q.Promise<UploadInfo> {
     tl.debug("-- Prepare for uploading release.");
     let defer = Q.defer<UploadInfo>();
     let beginUploadUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads`;
@@ -94,7 +103,15 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    request.post({ url: beginUploadUrl, headers: headers }, (err, res, body) => {
+
+    const requestOptions: request.UrlOptions & request.CoreOptions = { url: beginUploadUrl, headers };
+    if (buildVersion) {
+        requestOptions.body = JSON.stringify({
+            "build_version": buildVersion
+        });
+    }
+
+    request.post(requestOptions, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             let response = JSON.parse(body);
             let uploadInfo: UploadInfo = {
@@ -246,6 +263,27 @@ function updateRelease(apiServer: string, apiVersion: string, appSlug: string, r
     return defer.promise;
 }
 
+function getRelease(apiServer: string, apiVersion: string, appSlug: string, releaseId: string, token: string, userAgent: string): Q.Promise<Release> {
+    tl.debug("-- Getting release.");
+    let defer = Q.defer<Release>();
+    let getReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/releases/${releaseId}`;
+    tl.debug(`---- url: ${getReleaseUrl}`);
+
+    let headers = {
+        "X-API-Token": token,
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
+    };
+
+    request.get({ url: getReleaseUrl, headers: headers }, (err, res, body) => {
+        responseHandler(defer, err, res, body, () => {
+            defer.resolve(JSON.parse(body));
+        });
+    })
+
+    return defer.promise;
+}
+
 function getBranchName(ref: string): string {
     const gitRefsHeadsPrefix = 'refs/heads/';
     if (ref) {
@@ -276,7 +314,7 @@ function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> {
 
         utils.createZipFile(zipStream, zipPath).
             then(() => {
-                tl.debug(`---- symbols arechive file: ${zipPath}`)
+                tl.debug(`---- symbols archive file: ${zipPath}`)
                 defer.resolve(zipPath);
             });
     } else {
@@ -287,7 +325,7 @@ function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> {
     return defer.promise;
 }
 
-function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: string, token: string, userAgent: string): Q.Promise<SymbolsUploadInfo> {
+function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: SymbolType, token: string, userAgent: string, version?: string, build?: string): Q.Promise<SymbolsUploadInfo> {
     tl.debug("-- Begin symbols upload")
     let defer = Q.defer<SymbolsUploadInfo>();
 
@@ -300,7 +338,13 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
         "internal-request-source": "VSTS"
     };
 
-    let symbolsUploadBody = { "symbol_type": symbol_type };
+    const symbolsUploadBody = { "symbol_type": symbol_type };
+
+    if (symbol_type === "AndroidProguard") {
+        symbolsUploadBody["file_name"] = "mapping.txt";
+        symbolsUploadBody["version"] = version;
+        symbolsUploadBody["build"] = build;
+    }
 
     request.post({ url: beginSymbolUploadUrl, headers: headers, json: symbolsUploadBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
@@ -317,27 +361,20 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
     return defer.promise;
 }
 
-function uploadSymbols(uploadUrl: string, file: string, userAgent: string): Q.Promise<void> {
+async function uploadSymbols(uploadUrl: string, file: string): Promise<void> {
     tl.debug("-- Uploading symbols...");
-    let defer = Q.defer<void>();
     tl.debug(`---- url: ${uploadUrl}`);
 
-    let stat = fs.statSync(file);
-    let headers = {
-        "x-ms-blob-type": "BlockBlob",
-        "Content-Length": stat.size,
-        "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
-    };
+    try {
+        const azureBlobUploadHelper = new AzureBlobUploadHelper(tl.debug);
+        await azureBlobUploadHelper.upload(uploadUrl, file);
+    } catch (e) {
+        tl.error(inspect(e));
 
-    fs.createReadStream(file).pipe(request.put({ url: uploadUrl, headers: headers }, (err, res, body) => {
-        responseHandler(defer, err, res, body, () => {
-            tl.debug('-- Symbol uploaded.');
-            defer.resolve();
-        });
-    }));
+        throw e;
+    }
 
-    return defer.promise;
+    tl.debug('-- Symbol uploaded.');
 }
 
 function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, symbol_upload_id: string, token: string, userAgent: string): Q.Promise<void> {
@@ -384,25 +421,8 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
                 }
             })
         }
-    } else if (symbolsType === "UWP") {
-        // User can specifay a symbols path pattern that selects
-        // multiple PDB paths for UWP application.
-        let pdbPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
-
-        // Resolved paths can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
-        if (pdbPaths) {
-            pdbPaths.forEach(pdbFile => {
-                if (pdbFile) {
-                    let pdbPath = utils.checkAndFixFilePath(pdbFile, continueOnError);
-                    // The path can be null if continueIfSymbolsNotFound is true and the file does not exist.
-                    if (pdbPath) {
-                        symbolsPaths.push(pdbPath);
-                    }
-                }
-            })
-        }
     } else {
-        // For all other application types user can specifay a symbols path pattern
+        // For all other application types user can specify a symbols path pattern
         // that selects only one file or one folder.
         let symbolsFile = utils.resolveSinglePath(pattern, continueOnError, packParentFolder);
 
@@ -444,27 +464,28 @@ async function run() {
         let appFilePattern: string = tl.getInput('app', true);
 
         /* The task has support for different symbol types but App Center server only support Apple currently, add back these types in the task.json when support is available in App Center.
-        "AndroidJava": "Android (Java)",
         "AndroidNative": "Android (native C/C++)",
         "Windows": "Windows 8.1",
         "UWP": "Universal Windows Platform (UWP)"
         */
-        let symbolsType: string = tl.getInput('symbolsType', false);
+        const taskSymbolsType: string = tl.getInput('symbolsType', false);
+        const symbolsType = (taskSymbolsType === 'Android' ? 'AndroidProguard' : taskSymbolsType) as SymbolType;
         let symbolVariableName = null;
         switch (symbolsType) {
             case "Apple":
                 symbolVariableName = "dsymPath";
                 break;
-            case "AndroidJava":
+            case "AndroidProguard":
                 symbolVariableName = "mappingTxtPath";
                 break;
             case "UWP":
-                symbolVariableName = "pdbPath";
+                symbolVariableName = "appxsymPath";
                 break;
             default:
                 symbolVariableName = "symbolsPath";
         }
         let symbolsPathPattern: string = tl.getInput(symbolVariableName, false);
+        let buildVersion: string = tl.getInput('buildVersion', false);
         let packParentFolder: boolean = tl.getBoolInput('packParentFolder', false);
 
         let releaseNotesSelection = tl.getInput('releaseNotesSelection', true);
@@ -515,7 +536,7 @@ async function run() {
         let symbolsFile = await prepareSymbols(symbolsPaths);
 
         // Begin release upload
-        let uploadInfo: UploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent);
+        let uploadInfo: UploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent, buildVersion);
 
         // Perform the upload
         await uploadRelease(uploadInfo.upload_url, app, userAgent);
@@ -531,10 +552,17 @@ async function run() {
 
         if (symbolsFile) {
             // Begin preparing upload symbols
-            let symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolsType, apiToken, userAgent);
+            let version: string;
+            let build: string;
+            if (symbolsType === "AndroidProguard") {
+                const release = await getRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, apiToken, userAgent);
+                version = release.short_version;
+                build = release.version;
+            }
+            const symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolsType, apiToken, userAgent, version, build);
 
             // upload symbols
-            await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile, userAgent);
+            await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile);
 
             // Commit the symbols upload
             await commitSymbols(effectiveApiServer, effectiveApiVersion, appSlug, symbolsUploadInfo.symbol_upload_id, apiToken, userAgent);

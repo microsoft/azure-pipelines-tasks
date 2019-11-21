@@ -20,7 +20,11 @@ function getRegistryAuthenticationToken(): RegistryCredential {
   }
 
   if (token == null || token.username == null || token.password == null || token.serverUrl == null) {
-    throw Error(tl.loc('ContainerRegistryInvalid', JSON.stringify(token)));
+    let username = "";
+    if (token != null && token.username != null) {
+      username = token.username;
+    }
+    throw Error(tl.loc('InvalidContainerRegistry', username));
   }
   return token;
 }
@@ -50,26 +54,20 @@ export async function run() {
    * However, "michaeljqzq" is not in the scope of a credential.
    * So here is a work around to login in advanced call to `iotedgedev push` and then logout after everything done.
    */
-  tl.execSync(`docker`, `login -u "${registryAuthenticationToken.username}" -p "${registryAuthenticationToken.password}" ${registryAuthenticationToken.serverUrl}`, Constants.execSyncSilentOption)
+  tl.execSync(`docker`, ["login", "-u", registryAuthenticationToken.username, "-p", registryAuthenticationToken.password, registryAuthenticationToken.serverUrl], Constants.execSyncSilentOption)
 
-  let envList = {
-    [Constants.iotedgedevEnv.bypassModules]: bypassModules,
-    [Constants.iotedgedevEnv.registryServer]: registryAuthenticationToken.serverUrl,
-    [Constants.iotedgedevEnv.registryUsername]: registryAuthenticationToken.username,
-    [Constants.iotedgedevEnv.registryPassword]: registryAuthenticationToken.password,
-  };
+  let envList = process.env;
+  // Set bypass modules
+  util.setCliVarialbe(envList, Constants.iotedgedevEnv.bypassModules, bypassModules);
+  // Set registry credentials
+  util.setCliVarialbe(envList, Constants.iotedgedevEnv.registryServer, registryAuthenticationToken.serverUrl);
+  util.setCliVarialbe(envList, Constants.iotedgedevEnv.registryUsername, registryAuthenticationToken.username);
+  util.setCliVarialbe(envList, Constants.iotedgedevEnv.registryPassword, registryAuthenticationToken.password);
 
-  // Pass task variable to sub process
-  let tlVariables = tl.getVariables();
-  for (let v of tlVariables) {
-    // The variables in VSTS build contains dot, need to convert to underscore.
-    let name = v.name.replace('.', '_').toUpperCase();
-    if (!envList[name]) {
-      envList[name] = v.value;
-    }
-  }
+  // Pass secrets to sub process
+  util.populateSecretToEnvironmentVariable(envList);
 
-  tl.debug(`Following variables will be passed to the iotedgedev command: ${JSON.stringify(envList)}`);
+  tl.debug(`Following variables will be passed to the iotedgedev command: ${Object.keys(envList).join(", ")}`);
 
   try {
     let execOptions: IExecOptions = {
@@ -77,10 +75,7 @@ export async function run() {
       env: envList,
     } as IExecOptions;
     let defaultPlatform = tl.getInput('defaultPlatform', true);
-    let command: string = `push --no-build`;
-    command += ` --file ${templateFilePath}`;
-    command += ` --platform ${defaultPlatform}`;
-    await tl.exec(`${Constants.iotedgedev}`, command, execOptions);
+    await tl.exec(`${Constants.iotedgedev}`, ["push", "--no-build", "--file", templateFilePath, "--platform", defaultPlatform], execOptions);
 
     tl.execSync(`docker`, `logout`, Constants.execSyncSilentOption);
     util.createOrAppendDockerCredentials(registryAuthenticationToken);

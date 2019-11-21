@@ -35,12 +35,40 @@ class VsoClientMock {
         routeValues: any,
         queryParams?: any
     ): Promise<any> {
+        if(locationId == "7A20D846-C929-4ACC-9EA2-0D5A7DF1B197" 
+            && routeValues['packageId'] == "6f598cbe-a5e2-4f75-aa78-e0fd08301a17") {
+                return Promise.resolve({ requestUrl: "badNupKg" });
+        }
+
+        if(locationId == "6EA81B8C-7386-490B-A71F-6CF23C80B388"
+            && routeValues["packageName"] == "badNupkgPackageName") {
+                return Promise.resolve({ requestUrl: "badNupKgDownloadUrl" });
+        }
+
+        if(queryParams && "packageNameQuery" in queryParams) {
+            return Promise.resolve({ requestUrl: "packageNameResolverUrl" })
+        }
         return Promise.resolve({ requestUrl: this.packageUrlMap[locationId] });
     }
 }
 
 class RestMock {
     private metadataMap = {
+        packageNameResolverUrl: {
+            "count":2,
+            "value": [
+                {
+                    "name": "unknown"
+                },
+                {
+                    "name": "packageName",
+                    "id": "6f598cbe-a5e2-4f75-aa78-e0fd08301a15"
+                }
+            ]
+        },
+        badNupKg: {
+            name: "badNupkgPackageName"
+        },
         singlePackageMetadataUrl: {
             name: "singlePackageName"
         },
@@ -95,7 +123,8 @@ class HttpMock {
                 this.push("test");
                 this.push(null);
             }
-        })
+        }),
+        badNupKgDownloadUrl: fs.createReadStream(path.join(__dirname, "inputs", "badNupkgPackageName.nupkg"))
     };
 
     async get(resource: string, additionalHeaders?: any): Promise<any> {
