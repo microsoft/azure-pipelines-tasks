@@ -21,8 +21,6 @@ import { WebRequest, sendRequest } from 'utility-common-v2/restutilities';
 import { deployPodCanary } from './PodCanaryDeploymentHelper';
 import { deploySMICanary } from './SMICanaryDeploymentHelper';
 
-const publishPipelineMetadata = tl.getVariable("PUBLISH_PIPELINE_METADATA");
-
 export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], deploymentStrategy: string) {
 
     // get manifest files
@@ -48,12 +46,18 @@ export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], depl
     });
 
     // annotate resources
-    const allPods = JSON.parse((kubectl.getAllPods()).stdout);
+    let allPods: any;
+    try {
+        allPods = JSON.parse((kubectl.getAllPods()).stdout);
+    }
+    catch (e) {
+        tl.debug("Unable to parse pods; Error: "+ e);
+    }
+
     annotateResources(deployedManifestFiles, kubectl, resourceTypes, allPods);
 
-    // Capture and push deployment metadata only if the variable 'PUBLISH_PIPELINE_METADATA' is set to true,
-    // and deployment strategy is not specified (because for Canary/SMI we do not replace actual deployment objects)
-    if (publishPipelineMetadata && publishPipelineMetadata.toLowerCase() == "true" && !isCanaryDeploymentStrategy(deploymentStrategy)) {
+    // Capture and push deployment metadata only if deployment strategy is not specified (because for Canary/SMI we do not replace actual deployment objects)
+    if (!isCanaryDeploymentStrategy(deploymentStrategy)) {
         try {
             const clusterInfo = kubectl.getClusterInfo().stdout;
             captureAndPushDeploymentMetadata(inputManifestFiles, allPods, deploymentStrategy, clusterInfo, manifestFilePaths);

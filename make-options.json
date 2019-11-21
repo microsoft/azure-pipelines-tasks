@@ -135,7 +135,6 @@
         "PublishCodeCoverageResultsV1",
         "PublishPipelineArtifactV0",
         "PublishPipelineArtifactV1",
-        "PublishPipelineMetadataV0",
         "PublishSymbolsV2",
         "PublishTestResultsV1",
         "PublishTestResultsV2",
