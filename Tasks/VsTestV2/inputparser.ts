@@ -166,12 +166,12 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
     inputDataContract.TestReportingSettings.TestRunTitle = tl.getInput('testRunTitle');
     inputDataContract.TestReportingSettings.TestRunSystem = 'VSTS - vstest';
 
-    const resultsDir = path.resolve(tl.getVariable('System.DefaultWorkingDirectory'), tl.getInput('resultsDirectory').trim());
+    const resultsDir = path.resolve(tl.getVariable('System.DefaultWorkingDirectory'), tl.getInput('resultsFolder').trim());
     if (utils.Helper.pathExistsAsDirectory(resultsDir.trim()))
     {
         inputDataContract.TestReportingSettings.TestResultsDirectory =  resultsDir;
-        tl.debug("TestResultsDirectory: " + resultsDir);
-        ci.publishEvent({ 'TestResultsDirectoryUi': resultsDir } );
+        tl.debug("TestResultsFolder: " + resultsDir);
+        ci.publishEvent({ 'TestResultsFolderUi': resultsDir } );
     }
     
     inputDataContract.TestReportingSettings.TestSourceSettings = <idc.TestSourceSettings>{};

@@ -146,12 +146,12 @@
       "groupName": "testSelection"
     },
     {
-      "name": "resultsDirectory",
+      "name": "resultsFolder",
       "type": "string",
-      "label": "ms-resource:loc.input.label.resultsDirectory",
+      "label": "ms-resource:loc.input.label.resultsFolder",
       "defaultValue": "$(Agent.TempDirectory)\\TestResults",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.resultsDirectory",
+      "helpMarkDown": "ms-resource:loc.input.help.resultsFolder",
       "groupName": "testSelection"
     },
     {
