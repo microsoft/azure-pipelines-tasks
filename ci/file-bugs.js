@@ -204,7 +204,7 @@ async function fileBugs(bugsByLabel, staleBugsByLabel, untouchedBugsByLabel) {
 <div>The number of allowable bugs for a given area is:</div>
 <div>Bugs: ${bugTolerance}</div>
 <div>Stale bugs (>30 days without action): ${staleBugTolerance}</div>
-<div>Untouched bugs (stale, never responded to): ${untouchedBugs}</div>
+<div>Untouched bugs (stale, never responded to): ${untouchedBugTolerance}</div>
 <div><br></div>
 <div>To view this area's bugs, visit the following urls:</div>
 <div>${getIssueUrls(labels)}</div>

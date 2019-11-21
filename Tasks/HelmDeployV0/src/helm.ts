@@ -15,7 +15,6 @@ import fs = require('fs');
 import * as commonCommandOptions from "./commoncommandoption";
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
-const publishPipelineMetadata = tl.getVariable("PUBLISH_PIPELINE_METADATA");
 
 function getKubeConfigFilePath(): string {
     var userdir = helmutil.getTaskTempDir();
@@ -124,7 +123,7 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
         tl.setResult(tl.TaskResult.Failed, execResult.stderr);
     }
-    else if ((command === "install" || command === "upgrade") && publishPipelineMetadata && publishPipelineMetadata.toLowerCase() == "true") {
+    else if ((command === "install" || command === "upgrade")) {
         let output = execResult.stdout;
         let manifests = extractManifestsFromHelmOutput(output);
         if (manifests && manifests.length > 0) {

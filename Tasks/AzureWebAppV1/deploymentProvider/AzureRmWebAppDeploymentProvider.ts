@@ -23,7 +23,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     protected activeDeploymentID;
     protected publishProfileScmCredentials: publishProfileUtility.ScmCredentials;
     protected isPublishProfileAuthSchemeEndpoint: boolean = false;
-    protected slotName;
+    protected slotName: string;
 
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;
@@ -39,9 +39,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             this.kuduService = new Kudu(this.publishProfileScmCredentials.scmUri, this.publishProfileScmCredentials.username, this.publishProfileScmCredentials.password);
             let resourceId = publishProfileEndpoint.resourceId;
             let resourceIdSplit = resourceId.split("/");
-            if (resourceIdSplit.length === 11) {
-                this.slotName = resourceIdSplit[10];
-            }
+            this.slotName = resourceIdSplit.length === 11 ? resourceIdSplit[10] : "production";
         } else {
             this.appService = new AzureAppService(this.taskParams.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, 
                 this.taskParams.SlotName, this.taskParams.WebAppKind);
@@ -64,7 +62,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         }
 
         let appServiceApplicationUrl: string;
-        if (this.isPublishProfileAuthSchemeEndpoint) {
+        if (!this.isPublishProfileAuthSchemeEndpoint) {
             appServiceApplicationUrl = await this.appServiceUtility.getApplicationURL();
         } else {
             appServiceApplicationUrl = this.publishProfileScmCredentials.applicationUrl;
