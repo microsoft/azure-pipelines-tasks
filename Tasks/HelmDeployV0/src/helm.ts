@@ -15,7 +15,6 @@ import fs = require('fs');
 import * as commonCommandOptions from "./commoncommandoption";
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
-const publishPipelineMetadata = tl.getVariable("PUBLISH_PIPELINE_METADATA");
 
 function getKubeConfigFilePath(): string {
     var userdir = helmutil.getTaskTempDir();
@@ -124,26 +123,31 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
         tl.setResult(tl.TaskResult.Failed, execResult.stderr);
     }
-    else if ((command === "install" || command === "upgrade") && publishPipelineMetadata && publishPipelineMetadata.toLowerCase() == "true") {
-        let output = execResult.stdout;
-        let manifests = extractManifestsFromHelmOutput(output);
-        if (manifests && manifests.length > 0) {
-            const manifestUrls = getManifestFileUrlsFromHelmOutput(output);            
-            manifests.forEach(manifest => {
-                //Check if the manifest object contains a deployment entity
-                if (manifest.kind && isDeploymentEntity(manifest.kind)) {
-                    try {
-                        pushDeploymentDataToEvidenceStore(kubectlCli, manifest, manifestUrls).then((result) => {
-                            tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
-                        }, (error) => {
-                            tl.warning("publishToImageMetadataStore failed with error: " + error);
-                        });
+    else if ((command === "install" || command === "upgrade")) {
+        try {
+            let output = execResult.stdout;
+            let manifests = extractManifestsFromHelmOutput(output);
+            if (manifests && manifests.length > 0) {
+                const manifestUrls = getManifestFileUrlsFromHelmOutput(output);
+                manifests.forEach(manifest => {
+                    //Check if the manifest object contains a deployment entity
+                    if (manifest.kind && isDeploymentEntity(manifest.kind)) {
+                        try {
+                            pushDeploymentDataToEvidenceStore(kubectlCli, manifest, manifestUrls).then((result) => {
+                                tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
+                            }, (error) => {
+                                tl.warning("publishToImageMetadataStore failed with error: " + error);
+                            });
+                        }
+                        catch (e) {
+                            tl.warning("publishToImageMetadataStore failed with error: " + e);
+                        }
                     }
-                    catch (e) {
-                        tl.warning("Capturing deployment metadata failed with error: " + e);
-                    }
-                }
-            });
+                });
+            }
+        }
+        catch (e) {
+            tl.warning("Capturing deployment metadata failed with error: " + e);
         }
     }
 }
