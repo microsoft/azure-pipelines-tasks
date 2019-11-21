@@ -14,10 +14,14 @@
     "version": {
         "Major": 1,
 <<<<<<< HEAD
+<<<<<<< HEAD
         "Minor": 160,
         "Patch": 1
 =======
         "Minor": 161,
+=======
+        "Minor": 162,
+>>>>>>> pushing all metadata code inside try-catch block (#11815)
         "Patch": 0
 >>>>>>> Helm installer fix for v3
     },

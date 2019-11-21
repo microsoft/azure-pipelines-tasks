@@ -14,6 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
+<<<<<<< HEAD
     "Minor": 160,
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -36,6 +37,10 @@
 =======
     "Patch": 8
 >>>>>>> Removing img change
+=======
+    "Minor": 162,
+    "Patch": 0
+>>>>>>> pushing all metadata code inside try-catch block (#11815)
   },
   "demands": [],
   "groups": [

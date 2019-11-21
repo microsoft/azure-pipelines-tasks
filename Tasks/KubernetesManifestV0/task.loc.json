@@ -38,8 +38,12 @@
 >>>>>>> Removing img change
 =======
     "Minor": 162,
+<<<<<<< HEAD
     "Patch": 0
 >>>>>>> Removed the publish metadata pipeline variable (#11766)
+=======
+    "Patch": 1
+>>>>>>> pushing all metadata code inside try-catch block (#11815)
   },
   "demands": [],
   "groups": [],

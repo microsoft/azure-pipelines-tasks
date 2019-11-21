@@ -124,25 +124,30 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli) {
         tl.setResult(tl.TaskResult.Failed, execResult.stderr);
     }
     else if ((command === "install" || command === "upgrade")) {
-        let output = execResult.stdout;
-        let manifests = extractManifestsFromHelmOutput(output);
-        if (manifests && manifests.length > 0) {
-            const manifestUrls = getManifestFileUrlsFromHelmOutput(output);            
-            manifests.forEach(manifest => {
-                //Check if the manifest object contains a deployment entity
-                if (manifest.kind && isDeploymentEntity(manifest.kind)) {
-                    try {
-                        pushDeploymentDataToEvidenceStore(kubectlCli, manifest, manifestUrls).then((result) => {
-                            tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
-                        }, (error) => {
-                            tl.warning("publishToImageMetadataStore failed with error: " + error);
-                        });
+        try {
+            let output = execResult.stdout;
+            let manifests = extractManifestsFromHelmOutput(output);
+            if (manifests && manifests.length > 0) {
+                const manifestUrls = getManifestFileUrlsFromHelmOutput(output);
+                manifests.forEach(manifest => {
+                    //Check if the manifest object contains a deployment entity
+                    if (manifest.kind && isDeploymentEntity(manifest.kind)) {
+                        try {
+                            pushDeploymentDataToEvidenceStore(kubectlCli, manifest, manifestUrls).then((result) => {
+                                tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
+                            }, (error) => {
+                                tl.warning("publishToImageMetadataStore failed with error: " + error);
+                            });
+                        }
+                        catch (e) {
+                            tl.warning("publishToImageMetadataStore failed with error: " + e);
+                        }
                     }
-                    catch (e) {
-                        tl.warning("Capturing deployment metadata failed with error: " + e);
-                    }
-                }
-            });
+                });
+            }
+        }
+        catch (e) {
+            tl.warning("Capturing deployment metadata failed with error: " + e);
         }
     }
 }
