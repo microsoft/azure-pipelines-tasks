@@ -254,6 +254,11 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'TwineAuthenticate'
   addLabels: ['Area: ArtifactsPackages']
+  
+# Area: ArtifactsCore
+- valueFor: '**Enter Task Name**'
+  contains: 'DownloadPipelineArtifact'
+  addLabels: ['Area: ArtifactsCore']
 
 # Types
 - valueFor: '*Type*'
