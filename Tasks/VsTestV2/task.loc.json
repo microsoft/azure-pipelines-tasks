@@ -20,6 +20,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "Minor": 161,
 <<<<<<< HEAD
     "Patch": 0
@@ -38,6 +39,10 @@
     "Minor": 161,
     "Patch": 2
 >>>>>>> Updated VsTestV2 task to version 2.161.2 (#11809)
+=======
+    "Minor": 162,
+    "Patch": 1
+>>>>>>> Updated VsTestV2 task to version 10932935 And PTR Task to version 10925608 (#11807)
   },
   "demands": [
     "vstest"
