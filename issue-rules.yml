@@ -7,6 +7,9 @@ rules:
   addLabels: ['Area: AppCenter']
 # Area: Artifacts
 - valueFor: '**Enter Task Name**'
+  contains: 'DownloadPackage'
+  addLabels: ['Area: Artifacts']
+- valueFor: '**Enter Task Name**'
   contains: 'MavenAuthenticate'
   addLabels: ['Area: Artifacts']
 - valueFor: '**Enter Task Name**'
