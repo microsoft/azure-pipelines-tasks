@@ -187,29 +187,33 @@ export class AcrTaskClient extends ServiceClient {
             });
 
         var httpRequest = this._createHttpRequest(requestMethod, requestUri);
-        let overrideTaskStepProperties = {} as AcrTaskRequest.IOverrideTaskStepProperties;
-
-        // override contextPath
-        overrideTaskStepProperties = {
-            arguments: [],
-            contextPath: this.acrTask.context
-        } as AcrTaskRequest.IOverrideTaskStepProperties;
-
-        if (this.acrTask.taskRequestStepType == AcrTaskRequest.TaskRequestStepType.EncodedTask)
-        {
-            var runValues = TaskUtil.getListOfTagValuesForImageNames(this.acrTask);
-            overrideTaskStepProperties.values = runValues;
-        }
-
         let requestbody = {
             "type" : "TaskRunRequest",
             taskId: taskId,
-            taskName: acrTaskName,
-            overrideTaskStepProperties: overrideTaskStepProperties
+            taskName: acrTaskName
         } as AcrTaskRequest.ITaskRunRequest;
+        
+        if (this.acrTask.contextType == "file")
+        {
+            let overrideTaskStepProperties = {} as AcrTaskRequest.IOverrideTaskStepProperties;
+            // override contextPath
+            overrideTaskStepProperties = {
+                arguments: [],
+                contextPath: this.acrTask.context
+            } as AcrTaskRequest.IOverrideTaskStepProperties;
 
+            if (this.acrTask.taskRequestStepType == AcrTaskRequest.TaskRequestStepType.EncodedTask)
+            {
+                var runValues = TaskUtil.getListOfTagValuesForImageNames(this.acrTask);
+                overrideTaskStepProperties.values = runValues;
+            }
+
+            requestbody.overrideTaskStepProperties = overrideTaskStepProperties;
+        }       
+       
         httpRequest.body = JSON.stringify(requestbody);
         console.log(tl.loc("RunAcrTask", acrTaskName));
+        console.log(JSON.stringify(requestbody));
         this.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             var statusCode = response.statusCode;
             if (statusCode === 200 || statusCode === 202) {
@@ -369,19 +373,8 @@ export class AcrTaskClient extends ServiceClient {
         {
             step = this._getFileTaskStep();
         }
-        
-        let triggerName = this.acrTask.name + tinyGuid();
-        let baseImageTrigger =  {
-            status: "Enabled",
-            baseImageTriggerType: "Runtime",
-            name: triggerName
-        } as AcrTaskRequest.IBaseImageTrigger
 
-        let trigger = {
-            baseImageTrigger: baseImageTrigger
-        } as AcrTaskRequest.ITrigger
-
-        return {
+        var requestBody = {
             location: this.acrTask.registry.location,
             identity: {
                 "type" : "SystemAssigned"
@@ -390,16 +383,39 @@ export class AcrTaskClient extends ServiceClient {
 			properties: {
                 "status": "Enabled",
                 platform : platform,
-                step: step as AcrTaskRequest.ITaskStepProperties,
-                trigger: trigger
+                step: step as AcrTaskRequest.ITaskStepProperties
 			}
 		} as AcrTaskRequest.IAcrTaskRequestBody;
+        
+        if (this.acrTask.contextType == "git")
+        {
+            let triggerName = this.acrTask.name + tinyGuid();
+            let baseImageTrigger =  {
+                status: "Enabled",
+                baseImageTriggerType: "Runtime",
+                name: triggerName
+            } as AcrTaskRequest.IBaseImageTrigger
+    
+            let trigger = {
+                baseImageTrigger: baseImageTrigger
+            } as AcrTaskRequest.ITrigger
+
+            let agentConfiguration = {
+                cpu: "2"
+            } as AcrTaskRequest.IAgentConfiguration
+
+            requestBody.properties.agentConfiguration = agentConfiguration;
+            requestBody.properties.trigger = trigger;
+
+        }
+       
+        return requestBody;
     }
 
     private _getEncodedTaskStep(): AcrTaskRequest.EncodedTaskStep{
         try{
             var buildString = TaskUtil.createBuildCommand(this.acrTask);
-            let imageNames: string[] = TaskUtil.convertToImageNamesWithValuesTag(this.acrTask);
+            let imageNames: string[] = TaskUtil.getImageNames(this.acrTask);
             var taskSteps : AcrTaskRequest.TaskStep[] = []
     
             //add build step
@@ -423,11 +439,21 @@ export class AcrTaskClient extends ServiceClient {
            
             var encodedTask = {
                 type : AcrTaskRequest.TaskRequestStepType.EncodedTask,
-                encodedTaskContent: encodedTaskContent,
-                contextPath: null
+                encodedTaskContent: encodedTaskContent
             } as AcrTaskRequest.EncodedTaskStep;
     
-            if(!!this.acrTask.valuesFilePath)
+            if (this.acrTask.contextType == "git") 
+            {
+                encodedTask.contextPath = this.acrTask.context;
+                encodedTask.contextAccessToken = this.acrTask.contextAccessToken;
+            }
+            else
+            {
+                encodedTask.contextPath = null;
+                encodedTask.contextAccessToken = null;
+            }
+
+            if (!!this.acrTask.valuesFilePath)
             {
                 var encodedValuesContent = (new Buffer(this.acrTask.valuesFilePath)).toString('base64');
                 encodedTask.encodedValuesContent = encodedValuesContent
@@ -445,8 +471,18 @@ export class AcrTaskClient extends ServiceClient {
         var fileTask = {
             type : AcrTaskRequest.TaskRequestStepType.FileTask,
             taskFilePath : this.acrTask.taskFile,
-            contextPath: dummyContextUrl
         } as AcrTaskRequest.IFileTaskStep;
+
+        if (this.acrTask.contextType == "git") 
+        {
+            fileTask.contextPath = this.acrTask.context;
+            fileTask.contextAccessToken = this.acrTask.contextAccessToken;
+        }
+        else
+        {
+            fileTask.contextPath = dummyContextUrl;
+            fileTask.contextAccessToken = null;
+        }
 
         if(!!this.acrTask.valuesFilePath) {
             fileTask.valuesFilePath = this.acrTask.valuesFilePath;

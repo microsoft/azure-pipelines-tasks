@@ -15,6 +15,7 @@ class AcrRegistry {
 }
 
 export class AcrTask {
+    contextType: string
     version: string;
     name: string;
     repository: string;
@@ -23,6 +24,7 @@ export class AcrTask {
     dockerFile: string;
     taskFile: string;
     context: string;
+    contextAccessToken: string;
     taskRequestStepType: string;
     valuesFilePath: string;
     arguments: string;
@@ -58,6 +60,13 @@ export default class AcrTaskParameters {
         acrTask.os = tl.getInput("os", true);
         acrTask.architecture = tl.getInput("architecture", true);
 
+        acrTask.contextType = tl.getInput("contextType", true);
+        
+        if (acrTask.contextType == "git") {
+            //populate context path and accesstoken
+            this.populateGitContextDetails(acrTask)
+        }
+
         let dockerfileOrTaskFile = tl.getInput("dockerfileOrTaskFile", true);
         // check whether dockerfile or yaml
         if(!dockerfileOrTaskFile) {
@@ -78,7 +87,7 @@ export default class AcrTaskParameters {
     private setEncodedTaskInputs(acrTask: AcrTask, dockerfileOrYaml: string) {
         acrTask.taskRequestStepType = TaskRequestStepType.EncodedTask;
         acrTask.dockerFile = dockerfileOrYaml;
-        acrTask.repository =tl.getInput("repository"); 
+        acrTask.repository =tl.getInput("containerRepository"); 
         acrTask.tags = tl.getDelimitedInput("tags", "\n");
         acrTask.arguments = tl.getInput("arguments");
     }
@@ -107,5 +116,41 @@ export default class AcrTaskParameters {
         else {
             throw new Error(tl.loc('MultipleResourceGroupFoundForContainerRegistry', resourceName));
         }
+    }
+
+    private getGithubEndPointToken(): string {
+        var endpoint = tl.getInput("githubConnection", true);
+        const githubEndpointObject = tl.getEndpointAuthorization(endpoint, false);
+        let githubEndpointToken: string = null;
+    
+        if (!!githubEndpointObject) {
+            tl.debug('Endpoint scheme: ' + githubEndpointObject.scheme);
+    
+            if (githubEndpointObject.scheme === 'PersonalAccessToken') {
+                githubEndpointToken = githubEndpointObject.parameters.accessToken;
+            } else if (githubEndpointObject.scheme === 'OAuth') {
+                githubEndpointToken = githubEndpointObject.parameters.AccessToken;
+            } else if (githubEndpointObject.scheme === 'Token') {
+                githubEndpointToken = githubEndpointObject.parameters.AccessToken;
+            } else if (githubEndpointObject.scheme) {
+                throw new Error(tl.loc('InvalidEndpointAuthScheme', githubEndpointObject.scheme));
+            }
+        }
+    
+        if (!githubEndpointToken) {
+            throw new Error(tl.loc('InvalidGitHubEndpoint', endpoint));
+        }
+    
+        return githubEndpointToken;
+    }
+
+    private populateGitContextDetails(acrTask: AcrTask): void
+    {
+        var repoName = tl.getInput("repositoryName", true);
+        var branch = tl.getInput("branch", true);
+        const contextPath = `https://github.com/${repoName}.git#${branch}`;
+       
+        acrTask.context = contextPath;
+        acrTask.contextAccessToken = this.getGithubEndPointToken();
     }
 }

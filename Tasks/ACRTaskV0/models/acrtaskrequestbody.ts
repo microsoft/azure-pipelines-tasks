@@ -69,10 +69,15 @@ export interface ITrigger {
 	baseImageTrigger: IBaseImageTrigger;
 }
 
+export interface IAgentConfiguration {
+	cpu: string;
+}
+
 export interface IAcrTaskRequestBodyProperties {
 	platform: IPlatformProperties;
 	step: ITaskStepProperties;
-	trigger: ITrigger
+	agentConfiguration?: IAgentConfiguration;
+	trigger?: ITrigger;
 }
 
 export interface IAcrTaskRequestBody {

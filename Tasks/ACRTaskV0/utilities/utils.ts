@@ -87,7 +87,7 @@ export class TaskUtil {
             throw new Error(tl.loc("UnableToFindResourceGroupDueToNullId"));
         }
         const pathArray =id.split("/");
-        if(pathArray.length <=0 ||  pathArray[3].toLowerCase() != 'resourcegroups'){
+        if(pathArray.length <=0 || !pathArray[3] || pathArray[3].toLowerCase() != 'resourcegroups'){
             throw new Error(tl.loc("UnableToFindResourceGroupDueToInvalidId"));
         }
 
@@ -117,19 +117,28 @@ export class TaskUtil {
         return repository
     }
     
-    public static convertToImageNamesWithValuesTag(acrTask: AcrTask): string[] {
+    public static getImageNames(acrTask: AcrTask): string[] {
         let tags: string[] = [...acrTask.tags];
-        let imageNamesWithValuesTags: string[] = []
+        let imageNamesWithTags: string[] = []
 
         var imageNameWithoutTag = TaskUtil.addRunRegistryToImageName(acrTask.repository);
-        tags.forEach(function(tag, index) {            
-            var tagValue = ":{{.Values.Tag" + index + "}}";
-            imageNamesWithValuesTags.push(imageNameWithoutTag.concat(tagValue));
+        tags.forEach(function(tag, index) {  
+            var tagValue = ""
+            if (acrTask.contextType == "git")
+            {
+                tagValue = ":" + tag + "";     
+            }
+            else
+            {
+                tagValue = ":{{.Values.Tag" + index + "}}";
+            }          
+
+            imageNamesWithTags.push(imageNameWithoutTag.concat(tagValue));
         });
     
-        return imageNamesWithValuesTags;
+        return imageNamesWithTags;  
     }
-    
+
     public static async streamToString(readableStream) {
         return new Promise((resolve, reject) => {
           const chunks = [];
@@ -146,7 +155,7 @@ export class TaskUtil {
     public static createBuildCommand(acrTask: AcrTask): string {
         let buildString : string =  "";
         //add image names
-        let imageNames: string[] = this.convertToImageNamesWithValuesTag(acrTask);
+        let imageNames: string[] = this.getImageNames(acrTask);
         imageNames.forEach(function(name, index, imageNames) {
             buildString = buildString.concat("-t ", name, " ");
         });

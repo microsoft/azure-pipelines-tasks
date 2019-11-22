@@ -16,7 +16,12 @@ async function run() {
 
         var taskParameters = await new AcrTaskParameters().getAcrTaskParameters();
         var taskOperations = new AcrTaskOperations(taskParameters);
-        await taskOperations.populateContextPath();
+
+        if (taskOperations.acrTaskClient.acrTask.contextType == "file")
+        {
+            console.log("Populating context path");
+            await taskOperations.populateContextPath();
+        }
 
         //check whether task exists
         var taskVersion = await taskOperations.getTask();

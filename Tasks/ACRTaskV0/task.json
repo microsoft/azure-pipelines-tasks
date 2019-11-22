@@ -11,11 +11,11 @@
         "Build",
         "Release"
     ],
-
+    "preview": true,
     "demands": [],
     "version": {
         "Major": 0,
-        "Minor": 161,
+        "Minor": 162,
         "Patch": 0
     },
     "instanceNameFormat": "acrTask",
@@ -52,23 +52,7 @@
             "defaultValue": ""
         },
         {
-            "name": "contextPath",
-            "type": "string",
-            "label": "Source context path",
-            "defaultValue": "$(System.DefaultWorkingDirectory)",
-            "required": true,
-            "helpMarkDown": "Path to the content to be sent as the context for the ACR task. For release having multiple artifacts provide with artifact alias name in the path too. For example, $(System.DefaultWorkingDirectory)/_alias1 "
-        },
-        {
-            "name": "dockerfileOrTaskFile",
-            "type": "string",
-            "label": "Dockerfile or task file path",
-            "defaultValue": "Dockerfile",
-            "required": true,
-            "helpMarkDown": "Relative path to the Dockerfile or the ACR task template file path relative to the source context"
-        },
-        {
-            "name": "repository",
+            "name": "containerRepository",
             "label": "Container repository",
             "type": "string",
             "helpMarkDown": "Name of the repository.",
@@ -78,6 +62,63 @@
                 "EditableOptions": "True"
             }
         },
+        {
+            "name": "contextType",
+            "type": "pickList",
+            "label": "Source context type",
+            "defaultValue": "Git",
+            "required": true,
+            "options": {
+                "git": "Git",
+                "file": "File"
+            },
+            "helpMarkDown": "Method by which the source context should be provided to the ACR task."
+        },
+        {
+            "name": "contextPath",
+            "type": "string",
+            "label": "Source context path",
+            "defaultValue": "$(System.DefaultWorkingDirectory)",
+            "required": true,
+            "visibleRule": "contextType == file",
+            "helpMarkDown": "Path to the content to be sent as the context for the ACR task. For release having multiple artifacts provide with artifact alias name in the path too. For example, $(System.DefaultWorkingDirectory)/_alias1 "
+        },
+        {
+            "name": "githubConnection",
+            "type": "connectedService:github:OAuth,PersonalAccessToken,InstallationToken",
+            "label": "GitHub Connection",
+            "required": true,
+            "visibleRule": "contextType == git",
+            "helpMarkDown": "GitHub service connection"
+        },
+        {
+            "name": "repositoryName",
+            "type": "picklist",
+            "label": "Repository",
+            "required": true,
+            "visibleRule": "contextType == git",
+            "helpMarkDown": "Enter repository full name i.e. 'organization/repository' to be used as the source context",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name":"branch",
+            "type":"string",
+            "label":"Branch",
+            "required":true,
+            "visibleRule": "contextType == git",
+            "helpMarkDown":"Branch to be used as source context."
+        },
+        {
+            "name": "dockerfileOrTaskFile",
+            "type": "string",
+            "label": "Dockerfile or task file path",
+            "defaultValue": "Dockerfile",
+            "required": true,
+            "helpMarkDown": "Relative path to the Dockerfile or the ACR task template file path relative to the source context"
+        },
+        
         {
             "name": "tags",
             "type": "multiLine",
@@ -157,6 +198,12 @@
             "endpointId": "$(connectedServiceName)",
             "dataSourceName": "AzureRMContainerRegistries",
             "resultTemplate": "{\"DisplayValue\":\"{{{name}}}\", \"Value\":\"{{{name}}}\"}"
+        },
+        {
+            "target": "repositoryName",
+            "endpointId": "$(githubConnection)",
+            "dataSourceName": "UserRepositories",
+            "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }"
         }
     ],
     "execution": {
@@ -166,6 +213,8 @@
         }
     },
     "messages": {
+        "InvalidEndpointAuthScheme": "Invalid GitHub service connection scheme: %s. Only Token, OAuth and GitHub personal access token connections are allowed.",
+        "InvalidGithubEndpoint": "Invalid GitHub service endpoint: %s.",
         "TaskConstructorFailed": "Task failed while initializing. Error: %s",
         "CallbackCannotBeNull": "The callback cannot be null.",
         "UnableToFindResourceGroupDueToNullId": "Unable to find the resource group due to a null ID.",
