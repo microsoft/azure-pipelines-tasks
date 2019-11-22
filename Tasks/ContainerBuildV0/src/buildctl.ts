@@ -49,7 +49,8 @@ export async function buildctlBuildAndPush() {
     let registryAuthenticationToken: RegistryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
 
     // Connect to any specified container registry
-    let connection = new ContainerConnection();
+    var isPoolProviderContext = process.env["RUNNING_ON"] == "KUBERNETES";
+    let connection = new ContainerConnection(!isPoolProviderContext);
     connection.open(null, registryAuthenticationToken, true, false);
     let repositoryName = tl.getInput("repository");
     if (!repositoryName) {
@@ -106,10 +107,14 @@ export async function buildctlBuildAndPush() {
         buildctlTool.arg('--exporter=image');
         buildctlTool.arg(`--exporter-opt=name=${imageNameandTag}`);
         buildctlTool.arg('--exporter-opt=push=true');
-        buildctlTool.exec();
+        buildctlTool.exec().then(() => {}).catch((error) => {
+            throw new Error(error.message);
+        });
     }
     else {
         // only build the image
-        await buildctlTool.exec();
+        await buildctlTool.exec().then(() => {}).catch((error) => {
+            throw new Error(error.message);
+        });
     }
 }

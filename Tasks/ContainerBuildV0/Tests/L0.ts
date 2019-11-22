@@ -40,6 +40,7 @@ describe("ContainerBuildV0 Suite", function () {
         delete process.env['BUILD_REPOSITORY_NAME'];
         delete process.env['RELEASE_DEFINITIONNAME'];
         delete process.env['RELEASE_RELEASEWEBURL'];
+        delete process.env['RUNNING_ON'];
     });
 
     // Docker build tests begin

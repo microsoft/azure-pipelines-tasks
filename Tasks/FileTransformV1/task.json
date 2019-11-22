@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 156,
-        "Patch": 4
+        "Patch": 7
     },
     "instanceNameFormat": "File Transform: $(Package)",
     "groups": [

@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 3
   },
   "preview": "true",
   "demands": [],
@@ -66,7 +66,7 @@
       "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
       "properties": {
-        "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
+        "EndpointFilterRule": "ScopeLevel >= deploymentScope"
       }
     },
     {
