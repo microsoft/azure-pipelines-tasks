@@ -118,7 +118,10 @@ export class dotNetExe {
             }
         }
         if (failedProjects.length > 0) {
-            tl.warning(tl.loc('NetCore3Update'));
+            if (this.command === 'publish') {
+                tl.warning(tl.loc('NetCore3Update'));
+            }
+
             throw tl.loc("dotnetCommandFailed", failedProjects);
         }
     }
