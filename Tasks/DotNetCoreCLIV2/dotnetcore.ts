@@ -32,33 +32,37 @@ export class dotNetExe {
 
     public async execute() {
         tl.setResourcePath(path.join(__dirname, "task.json"));
-        console.log(tl.loc('NetCore3Update'));
         this.setConsoleCodePage();
 
-        switch (this.command) {
-            case "build":
-            case "publish":
-            case "run":
-                await this.executeBasicCommand();
-                break;
-            case "custom":
-                this.command = tl.getInput("custom", true);
-                await this.executeBasicCommand();
-                break;
-            case "test":
-                await this.executeTestCommand();
-                break;
-            case "restore":
-                await restoreCommand.run();
-                break;
-            case "pack":
-                await packCommand.run();
-                break;
-            case "push":
-                await pushCommand.run();
-                break;
-            default:
-                tl.setResult(tl.TaskResult.Failed, tl.loc("Error_CommandNotRecognized", this.command));
+        try {
+            switch (this.command) {
+                case "build":
+                case "publish":
+                case "run":
+                    await this.executeBasicCommand();
+                    break;
+                case "custom":
+                    this.command = tl.getInput("custom", true);
+                    await this.executeBasicCommand();
+                    break;
+                case "test":
+                    await this.executeTestCommand();
+                    break;
+                case "restore":
+                    await restoreCommand.run();
+                    break;
+                case "pack":
+                    await packCommand.run();
+                    break;
+                case "push":
+                    await pushCommand.run();
+                    break;
+                default:
+                    throw tl.loc("Error_CommandNotRecognized", this.command);
+            }
+        }
+        finally {
+            console.log(tl.loc('NetCore3Update'));
         }
     }
 
@@ -387,10 +391,7 @@ export class dotNetExe {
     }
 
     private static getModifiedOutputForProjectFile(outputBase: string, projectFile: string): string {
-        let projectFileName = path.basename(projectFile);
-        let indexOfFileSeperator = projectFileName.indexOf('.');
-        projectFileName = projectFileName.slice(0, indexOfFileSeperator ? indexOfFileSeperator : projectFileName.length);
-        return path.join(outputBase, projectFileName);
+        return path.join(outputBase, path.basename(path.dirname(projectFile)));
     }
 }
 

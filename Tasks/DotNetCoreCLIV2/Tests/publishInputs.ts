@@ -44,17 +44,17 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stdout": "published",
             "stderr": ""
         },
-        "dotnet publish web3/project1.json --configuration release --output /usr/out/project1": {
+        "dotnet publish web3/project.json --configuration release --output /usr/out/web3": {
             "code": 0,
             "stdout": "published",
             "stderr": ""
         },
-        "dotnet publish lib2/project.json --configuration release --output /usr/out/project": {
+        "dotnet publish lib2/project.json --configuration release --output /usr/out/lib2": {
             "code": 0,
             "stdout": "published",
             "stderr": ""
         },
-         "dotnet publish web3/project1.json --configuration release --output /usr/out": {
+         "dotnet publish web3/project.json --configuration release --output /usr/out": {
             "code": 0,
             "stdout": "published web3 without adding project name to path\n",
             "stderr": ""
@@ -96,7 +96,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "**/project.json;**/*.csproj;**/*.vbproj": ["web/project.json", "web2/project.json", "web.tests/project.json", "lib/project.json"],
         "**/*.csproj\n**/*.vbproj\n**/*.fsproj": ["web/project.csproj"],
         "*fail*/project.json": [],
-        "*customoutput/project.json": ["web3/project1.json", "lib2/project.json"],
+        "*customoutput/project.json": ["web3/project.json", "lib2/project.json"],
         "dummy/project.json": ["dummy/project.json"],
         "" : []
     }
