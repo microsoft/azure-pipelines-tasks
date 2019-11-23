@@ -42,12 +42,16 @@
 =======
     "Minor": 162,
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> Removed the publish metadata pipeline variable (#11766)
     "Patch": 0
 >>>>>>> Kubernetes L0 fix (#11781)
 =======
     "Patch": 1
 >>>>>>> pushing all metadata code inside try-catch block (#11815)
+=======
+    "Patch": 2
+>>>>>>> Users/suaggar/correlation (#11824)
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
