@@ -30,8 +30,11 @@ export class TestRunner {
                     tl.debug(`Tool is retrieved from cache.`);
                 }
 
+                const runnerPath = path.join(toolPath, this.toolName);
+                existsSync(runnerPath);
+                chmodSync(runnerPath, "777");
                 var start = new Date().getTime();
-                const output: string = this.runContainerStructureTest(path.join(toolPath, this.toolName), this.testFilePath, this.imageName);
+                const output: string = this.runContainerStructureTest(runnerPath, this.testFilePath, this.imageName);
                 var end = new Date().getTime();
 
                 if (!output || output.length <= 0) {
@@ -61,9 +64,6 @@ export class TestRunner {
     }
 
     private runContainerStructureTest(runnerPath: string, testFilePath: string, image: string): string {
-        existsSync(runnerPath);
-        chmodSync(runnerPath, "777");
-
         var toolPath = tl.which(runnerPath);
 
         if(!toolPath) {
