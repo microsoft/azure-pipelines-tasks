@@ -121,7 +121,6 @@ export function mockContainerDeploySettings() {
         properties: {
             "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES": "1",
-            "WEBSITE_RUN_FROM_PACKAGE":"0",
             "DOCKER_CUSTOM_IMAGE_NAME": "dockernamespace/dockerrepository:DockerImageTag",
             "WEBSITES_ENABLE_APP_SERVICE_STORAGE" : "false",
             "port": "1173"
@@ -136,7 +135,6 @@ export function mockContainerDeploySettings() {
         properties: {
             "WEBSITE_NODE_DEFAULT_VERSION":"6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES":"1",
-            "WEBSITE_RUN_FROM_PACKAGE":"0",
             "DOCKER_CUSTOM_IMAGE_NAME": "dockernamespace/dockerrepository:DockerImageTag",
             "WEBSITES_ENABLE_APP_SERVICE_STORAGE" : "false"
         }
@@ -157,7 +155,6 @@ export function mockContainerDeploySettings() {
         properties: {
             "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES": "1",
-            "WEBSITE_RUN_FROM_PACKAGE":"0",
             "DOCKER_CUSTOM_IMAGE_NAME": "dockernamespace/dockerrepository:DockerImageTag",
             "WEBSITES_ENABLE_APP_SERVICE_STORAGE" : "false"
         }
