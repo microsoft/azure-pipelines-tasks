@@ -10,6 +10,8 @@ import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
 import * as utility from './Common/utility';
 
+let MessagePrinted = false;
+
 export class dotNetExe {
     private command: string;
     private projects: string[];
@@ -62,7 +64,9 @@ export class dotNetExe {
             }
         }
         finally {
-            console.log(tl.loc('NetCore3Update'));
+            if (!MessagePrinted) {
+               console.log(tl.loc('NetCore3Update'));
+            }
         }
     }
 
@@ -118,8 +122,9 @@ export class dotNetExe {
             }
         }
         if (failedProjects.length > 0) {
-            if (this.command === 'publish') {
+            if (this.command === 'publish' && !MessagePrinted) {
                 tl.warning(tl.loc('NetCore3Update'));
+                MessagePrinted = true;
             }
 
             throw tl.loc("dotnetCommandFailed", failedProjects);
