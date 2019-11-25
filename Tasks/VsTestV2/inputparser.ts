@@ -166,12 +166,29 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
     inputDataContract.TestReportingSettings.TestRunTitle = tl.getInput('testRunTitle');
     inputDataContract.TestReportingSettings.TestRunSystem = 'VSTS - vstest';
 
-    const resultsDir = path.resolve(tl.getVariable('System.DefaultWorkingDirectory'), tl.getInput('resultsFolder').trim());
-    if (utils.Helper.pathExistsAsDirectory(resultsDir.trim()))
+    const resultsDir = path.resolve(tl.getVariable('Agent.TempDirectory'), tl.getInput('resultsFolder'));
+    inputDataContract.TestReportingSettings.TestResultsDirectory =  resultsDir;
+    tl.debug("TestResultsFolder: " + resultsDir);
+    
+    if (resultsDir.startsWith(tl.getVariable('Agent.TempDirectory') + 'TestResults'))
+    {   
+        ci.publishEvent({ 'TestResultsFolderUi': '$(Agent.TempDirectory)/TestResults' } );
+    }
+    else if (resultsDir.startsWith(tl.getVariable('Agent.TempDirectory')))
     {
-        inputDataContract.TestReportingSettings.TestResultsDirectory =  resultsDir;
-        tl.debug("TestResultsFolder: " + resultsDir);
-        ci.publishEvent({ 'TestResultsFolderUi': resultsDir } );
+        ci.publishEvent({ 'TestResultsFolderUi': '$(Agent.TempDirectory)' } );
+    }
+    else if (resultsDir.startsWith(tl.getVariable('Common.TestResultsDirectory')))
+    {
+        ci.publishEvent({ 'TestResultsFolderUi': '$(Common.TestResultsDirectory)' })
+    }
+    else if (resultsDir.startsWith(tl.getVariable('System.DefaultWorkingDirectory')))
+    {
+        ci.publishEvent({ 'TestResultsFolderUi': '$(System.DefaultWorkingDirectory)' })
+    }
+    else
+    {
+        ci.publishEvent({ 'TestResultsFolderUi': 'Custom Directory' })
     }
     
     inputDataContract.TestReportingSettings.TestSourceSettings = <idc.TestSourceSettings>{};
