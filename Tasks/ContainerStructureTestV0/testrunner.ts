@@ -16,7 +16,7 @@ export class TestRunner {
             try {
                 const runnerDownloadUrl = this.getContainerStructureTestRunnerDownloadPath(this.osType);
                 if (!runnerDownloadUrl) {
-                    throw new Error("Unable to get runner download path");
+                    throw new Error(`Not supported OS: ${this.osType}`);
                 }
 
                 let toolPath = toolLib.findLocalTool(this.toolName, "1.0.0");
