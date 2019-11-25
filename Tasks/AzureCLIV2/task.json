@@ -21,7 +21,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -130,7 +130,7 @@
             "label": "Access service principal details in script",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId`, `$servicePrincipalKey` and `$tenantId` in your script.\n\nThis is honored only when the Azure endpoint has Service Principal authentication scheme.",
+            "helpMarkDown": "Adds service principal id, service principal key and tenant id of the Azure endpoint you chose to the script's execution environment. You can use variables: `servicePrincipalId`, `servicePrincipalKey` and `tenantId` in your script.\n\nThis is honored only when the Azure endpoint has Service Principal authentication scheme.\n\nSyntax to access environment variables based on script type.\n\nPowershell script: $env:servicePrincipalId\n\nBatch script: %servicePrincipalId% \n\nShell script: $servicePrincipalId",
             "groupName": "advanced"
         },
         {
