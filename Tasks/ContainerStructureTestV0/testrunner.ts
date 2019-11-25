@@ -31,7 +31,9 @@ export class TestRunner {
                 }
 
                 const runnerPath = path.join(toolPath, this.toolName);
-                existsSync(runnerPath);
+
+                // Checking if tool exists, otherwise which will throw an error.
+                tl.which(runnerPath, true);
                 chmodSync(runnerPath, "777");
                 var start = new Date().getTime();
                 const output: string = this.runContainerStructureTest(runnerPath, this.testFilePath, this.imageName);
@@ -64,13 +66,7 @@ export class TestRunner {
     }
 
     private runContainerStructureTest(runnerPath: string, testFilePath: string, image: string): string {
-        var toolPath = tl.which(runnerPath);
-
-        if(!toolPath) {
-            throw "Unable to find the Tool";
-        }
-
-        var tool:tr.ToolRunner = tl.tool(toolPath).arg(["test", "--image", image, "--config", testFilePath, "--json"]);
+        var tool:tr.ToolRunner = tl.tool(runnerPath).arg(["test", "--image", image, "--config", testFilePath, "--json"]);
         let output = undefined;
 
         try {
