@@ -13,6 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
+<<<<<<< HEAD
     "Minor": 1,
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -31,6 +32,10 @@
 =======
     "Patch": 9
 >>>>>>> Removing img change
+=======
+    "Minor": 162,
+    "Patch": 0
+>>>>>>> Using the ToolLib to download and cache the tool (#11825)
   },
   "preview": true,
   "demands": [],
