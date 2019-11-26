@@ -41,8 +41,12 @@
 >>>>>>> Updated VsTestV2 task to version 2.161.2 (#11809)
 =======
     "Minor": 162,
+<<<<<<< HEAD
     "Patch": 1
 >>>>>>> Updated VsTestV2 task to version 10932935 And PTR Task to version 10925608 (#11807)
+=======
+    "Patch": 2
+>>>>>>> Adding results directory UI option in vstest task (#11789)
   },
   "demands": [
     "vstest"
@@ -167,6 +171,15 @@
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.searchFolder",
+      "groupName": "testSelection"
+    },
+    {
+      "name": "resultsFolder",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.resultsFolder",
+      "defaultValue": "$(Agent.TempDirectory)\\TestResults",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.resultsFolder",
       "groupName": "testSelection"
     },
     {

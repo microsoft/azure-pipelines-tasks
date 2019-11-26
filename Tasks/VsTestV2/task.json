@@ -41,8 +41,12 @@
 >>>>>>> Updated VsTestV2 task to version 2.161.2 (#11809)
 =======
         "Minor": 162,
+<<<<<<< HEAD
         "Patch": 1
 >>>>>>> Updated VsTestV2 task to version 10932935 And PTR Task to version 10925608 (#11807)
+=======
+        "Patch": 2
+>>>>>>> Adding results directory UI option in vstest task (#11789)
     },
     "demands": [
         "vstest"
@@ -167,6 +171,15 @@
             "defaultValue": "$(System.DefaultWorkingDirectory)",
             "required": true,
             "helpMarkDown": "Folder to search for the test assemblies.",
+            "groupName": "testSelection"
+        },
+        {
+            "name": "resultsFolder",
+            "type": "string",
+            "label": "Test results folder",
+            "defaultValue": "$(Agent.TempDirectory)\\TestResults",
+            "required": false,
+            "helpMarkDown": "Folder to store test results. When this input is not specified, results are stored in $(Agent.TempDirectory)/TestResults by default, which is cleaned at the end of a pipeline run. The results directory will always be cleaned up at the start of the vstest task before the tests are run. Relative folder path if provided will be considered relative to $(Agent.TempDirectory)",
             "groupName": "testSelection"
         },
         {
