@@ -86,12 +86,9 @@ async function run() {
             }
 
             tl.debug(`Resource Group: ${resourceGroupName}`);
-            let appServiceSlotName: boolean = (action == "Start Azure App Service" || action == "Stop Azure App Service" || action == "Restart Azure App Service") && !specifySlotFlag;
+
             let slotNameNotNeeded: boolean = (action == "Complete Swap" || action == "Swap Slots" || action == "Start Swap With Preview");
-            if(appServiceSlotName || slotNameNotNeeded)
-            {
-                slotName = "production";
-            }
+            slotName = (!specifySlotFlag || slotNameNotNeeded) ? "production" : slotName;
 
             appService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
             azureAppServiceUtils = new AzureAppServiceUtils(appService);
