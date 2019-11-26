@@ -23,7 +23,7 @@
   "loc.input.label.searchFolder": "Search folder",
   "loc.input.help.searchFolder": "Folder to search for the test assemblies.",
   "loc.input.label.resultsFolder": "Test results folder",
-  "loc.input.help.resultsFolder": "Folder to store test results. When this input is not specified, results are stored in $(Agent.TempDirectory) by default, which is cleaned at the end of a pipeline run. When the default value is overridden, the specified folder will be cleaned by the task before tests are run.",
+  "loc.input.help.resultsFolder": "Folder to store test results. When this input is not specified, results are stored in $(Agent.TempDirectory)/TestResults by default, which is cleaned at the end of a pipeline run. The results directory will always be cleaned up at the start of the vstest task before the tests are run. Relative folder path if provided will be considered relative to $(Agent.TempDirectory)",
   "loc.input.label.testFiltercriteria": "Test filter criteria",
   "loc.input.help.testFiltercriteria": "Additional criteria to filter tests from Test assemblies. For example: `Priority=1|Name=MyTestMethod`. [More information](https://msdn.microsoft.com/en-us/library/jj155796.aspx)",
   "loc.input.label.runOnlyImpactedTests": "Run only impacted tests",
