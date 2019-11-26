@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 161,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -182,6 +182,7 @@
     "RedirectUrlError": "ms-resource:loc.messages.RedirectUrlError",
     "UnsupportedArchiveType": "ms-resource:loc.messages.UnsupportedArchiveType",
     "Error_UnexpectedErrorArtifactToolDownload": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolDownload",
+    "Info_DownloadingArtifactTool": "ms-resource:loc.messages.Info_DownloadingArtifactTool",
     "Info_Downloading": "ms-resource:loc.messages.Info_Downloading",
     "Info_UsingArtifactToolDownload": "ms-resource:loc.messages.Info_UsingArtifactToolDownload"
   }

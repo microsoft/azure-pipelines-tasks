@@ -27,7 +27,7 @@ export class NonDistributedTest {
             const exitCode = await this.startDtaExecutionHost();
             tl.debug('DtaExecutionHost finished');
 
-            if (exitCode !== 0 && !this.inputDataContract.ExecutionSettings.IgnoreTestFailures) {
+            if (exitCode !== 0 && !this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.IgnoreTestFailures) {
                 tl.debug('Modules/DTAExecutionHost.exe process exited with code ' + exitCode);
                 tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailed'), true);
                 return;
@@ -79,7 +79,7 @@ export class NonDistributedTest {
         }
 
         const execOptions: tr.IExecOptions = <any>{
-            IgnoreTestFailures: this.inputDataContract.ExecutionSettings.IgnoreTestFailures,
+            IgnoreTestFailures: this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.IgnoreTestFailures,
             env: envVars,
             failOnStdErr: false,
             // In effect this will not be called as failOnStdErr is false
