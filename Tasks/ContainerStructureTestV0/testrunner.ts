@@ -32,8 +32,11 @@ export class TestRunner {
 
                 const runnerPath = path.join(toolPath, this.toolName);
 
-                // Checking if tool exists, otherwise which will throw an error.
-                tl.which(runnerPath, true);
+                // Checking if tool exists.
+                if (!existsSync(runnerPath)) {
+                    throw new Error(`Download or caching of tool(${runnerPath}) failed`);
+                }
+
                 chmodSync(runnerPath, "777");
                 var start = new Date().getTime();
                 const output: string = this.runContainerStructureTest(runnerPath, this.testFilePath, this.imageName);
