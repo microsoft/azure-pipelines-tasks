@@ -151,7 +151,7 @@
             "label": "Test results folder",
             "defaultValue": "$(Agent.TempDirectory)\\TestResults",
             "required": false,
-            "helpMarkDown": "Folder to store test results. When this input is not specified, results are stored in $(Agent.TempDirectory)/TestResults by default, which is cleaned at the end of a pipeline run. The specified results directory will always be cleaned up at the start of the vstest task before the tests are run. Relative folder path will be considered relative to $(Agent.TempDirectory)",
+            "helpMarkDown": "Folder to store test results. When this input is not specified, results are stored in $(Agent.TempDirectory)/TestResults by default, which is cleaned at the end of a pipeline run. The results directory will always be cleaned up at the start of the vstest task before the tests are run. Relative folder path if provided will be considered relative to $(Agent.TempDirectory)",
             "groupName": "testSelection"
         },
         {
