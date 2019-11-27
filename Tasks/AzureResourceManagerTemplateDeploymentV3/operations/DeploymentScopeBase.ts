@@ -54,7 +54,7 @@ export class DeploymentScopeBase {
                             return this.waitAndPerformAzureDeployment(retryCount);
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);
-                        tl.loc("Find more details about the deployment at: https://portal.azure.com/#blade/HubsExtension/DeploymentDetailsBlade/overview/id/" + this.getUrlEncodedString("subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourceGroups/issacnitinrg/providers/Microsoft.Resources/deployments/PolicyDeployment_6514630291545473334"));
+                        tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
@@ -69,8 +69,12 @@ export class DeploymentScopeBase {
         }
     }
 
-    private getUrlEncodedString(url: string) {
-        return url.replace('/', '%2F');
+    private getAzurePortalDeploymentURL() {
+        let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
+        portalUrl += "/#blade/HubsExtension/DeploymentDetailsBlade/overview/id/";
+
+        let subscriptionSpecificURL = "/subscriptions/" + this.taskParameters.subscriptionId + "/resourceGroups/" + this.taskParameters.resourceGroupName + "/providers/Microsoft.Resources/deployments/" + this.taskParameters.deploymentName;
+        return portalUrl + subscriptionSpecificURL.replace(/\//g, '%2F');
     }
 
     protected validateDeployment(): Promise<void> {
