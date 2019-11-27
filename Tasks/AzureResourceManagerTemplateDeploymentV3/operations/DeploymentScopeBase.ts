@@ -54,6 +54,7 @@ export class DeploymentScopeBase {
                             return this.waitAndPerformAzureDeployment(retryCount);
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);
+                        tl.loc("Find more details about the deployment at: https://portal.azure.com/#blade/HubsExtension/DeploymentDetailsBlade/overview/id/" + this.getUrlEncodedString("subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourceGroups/issacnitinrg/providers/Microsoft.Resources/deployments/PolicyDeployment_6514630291545473334"));
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
@@ -66,6 +67,10 @@ export class DeploymentScopeBase {
                 });
             });
         }
+    }
+
+    private getUrlEncodedString(url: string) {
+        return url.replace('/', '%2F');
     }
 
     protected validateDeployment(): Promise<void> {
