@@ -170,7 +170,7 @@ var buildNodeTask = function (taskPath, outDir) {
         cd(taskPath);
     }
 
-    run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
+    run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
     cd(originalDir);
 }
 exports.buildNodeTask = buildNodeTask;
@@ -619,7 +619,7 @@ var getExternals = function (externals, destRoot) {
             // copy the files
             var archiveDest = path.join(destRoot, archive.dest);
             mkdir('-p', archiveDest);
-            cp('-R', path.join(archiveSource, '*'), archiveDest)
+            cp('-R', path.join(archiveSource, '*'), archiveDest);
         });
     }
 
