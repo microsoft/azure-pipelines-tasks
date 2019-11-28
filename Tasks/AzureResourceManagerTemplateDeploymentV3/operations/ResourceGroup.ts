@@ -15,8 +15,17 @@ export class ResourceGroup extends DeploymentScopeBase {
     }
 
     public async deploy(): Promise<void> {
-        await this.createResourceGroupIfRequired();
-        await this.createTemplateDeployment();
+        try {
+            await this.createResourceGroupIfRequired();
+            await this.createTemplateDeployment();
+        } 
+        catch (error) {
+            if((error as string).toLowerCase().indexOf("serviceprincipal") != -1) {
+                var response = await this.printServicePrincipalRoleAssignmentDetails();
+                console.log(response);
+            }
+            throw error;
+        }
     }
 
     public deleteResourceGroup(): Promise<void> {

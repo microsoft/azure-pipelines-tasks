@@ -3,7 +3,7 @@ import tl = require("azure-pipelines-task-lib/task");
 import armDeployTaskParameters = require("../models/TaskParameters");
 import armResource = require("azure-arm-rest-v2/AzureServiceClientBase");
 import utils = require("./Utils");
-import { sleepFor } from 'azure-arm-rest-v2/webClient';
+import { sleepFor, WebRequest, WebResponse, sendRequest } from 'azure-arm-rest-v2/webClient';
 import { DeploymentParameters } from "./DeploymentParameters";
 
 export class DeploymentScopeBase {
@@ -37,7 +37,15 @@ export class DeploymentScopeBase {
         }
 
         this.deploymentParameters = params;
-        await this.performAzureDeployment(3);
+        try {
+            await this.performAzureDeployment(3);
+        } catch (error) {
+            if((error as string).toLowerCase().indexOf("serviceprincipal") != -1) {
+                var response = await this.printServicePrincipalRoleAssignmentDetails();
+                console.log(response);
+            }
+            throw error;
+        }
     }
 
     protected async performAzureDeployment(retryCount = 0): Promise<void> {
@@ -87,6 +95,14 @@ export class DeploymentScopeBase {
                 }
             });
         });
+    }
+
+    protected printServicePrincipalRoleAssignmentDetails() : Promise<WebResponse> {
+        let url = "https://management.azure.com/subscriptions/" + this.taskParameters.subscriptionId + "/resourceGroups/" + this.taskParameters.resourceGroupName + "/providers/Microsoft.Authorization/roleAssignments?api-version=2015-07-01";//&$filter=principalId%20eq%20'" + this.taskParameters.credentials.getClientId() + "'";
+        var request: WebRequest = new WebRequest();
+        request.method = 'GET';
+        request.uri = url;
+        return this.armClient.beginRequest(request);
     }
 
     private async waitAndPerformAzureDeployment(retryCount): Promise<void> {
