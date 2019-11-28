@@ -17,6 +17,7 @@ const webAppKindMap = new Map([
     [ 'app,linux', 'webAppLinux' ],
     [ 'app,container', 'webAppContainer']
 ]);
+const defaultslotname:string = "production";
 
 async function advancedSlotSwap(updateDeploymentStatus: boolean, appServiceSourceSlot: AzureAppService, appServiceTargetSlot: AzureAppService, appServiceSourceSlotUtils: AzureAppServiceUtils, appServiceTargetSlotUtils: AzureAppServiceUtils) {
 
@@ -88,7 +89,7 @@ async function run() {
             tl.debug(`Resource Group: ${resourceGroupName}`);
 
             let slotNameNotNeeded: boolean = (action == "Complete Swap" || action == "Swap Slots" || action == "Start Swap With Preview");
-            slotName = (!specifySlotFlag || slotNameNotNeeded) ? "production" : slotName;
+            slotName = (!specifySlotFlag || slotNameNotNeeded) ? defaultslotname : slotName;
 
             appService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
             azureAppServiceUtils = new AzureAppServiceUtils(appService);
