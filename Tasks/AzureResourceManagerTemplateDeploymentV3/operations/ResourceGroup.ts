@@ -23,7 +23,7 @@ export class ResourceGroup extends DeploymentScopeBase {
             if((error as string).toLowerCase().indexOf("serviceprincipal") != -1) {
                 try {
                     let spnName = await this.getServicePrincipalName()
-                    tl.warning(tl.loc("ServicePrincipalRoleAssignmentDetails", this.taskParameters.resourceGroupName, spnName));
+                    tl.warning(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
                 } catch (err) {
                     tl.error(err);
                 }

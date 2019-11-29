@@ -25,8 +25,8 @@ export class DeploymentScopeBase {
         } catch (error) {
             if((error as string).toLowerCase().indexOf("serviceprincipal") != -1) {
                 try {
-                    var servicePrincipalName = await this.getServicePrincipalName();
-                    tl.warning(tl.loc("ServicePrincipalRoleAssignmentDetails", this.taskParameters.resourceGroupName, JSON.stringify(servicePrincipalName)));
+                    var spnName = await this.getServicePrincipalName();
+                    tl.warning(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
                 } 
                 catch (err)
                 {
