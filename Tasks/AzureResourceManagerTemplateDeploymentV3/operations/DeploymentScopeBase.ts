@@ -3,9 +3,8 @@ import tl = require("azure-pipelines-task-lib/task");
 import armDeployTaskParameters = require("../models/TaskParameters");
 import armResource = require("azure-arm-rest-v2/AzureServiceClientBase");
 import utils = require("./Utils");
-import { sleepFor, WebRequest, WebResponse, sendRequest } from 'azure-arm-rest-v2/webClient';
+import { sleepFor } from 'azure-arm-rest-v2/webClient';
 import { DeploymentParameters } from "./DeploymentParameters";
-import armResourceManagement = require("azure-arm-rest-v2/azure-arm-resource");
 import azureGraph = require("azure-arm-rest-v2/azure-graph");
 
 export class DeploymentScopeBase {
