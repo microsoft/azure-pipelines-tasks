@@ -15,9 +15,6 @@ export class ResourceGroup extends DeploymentScopeBase {
     }
 
     public async deploy(): Promise<void> {
-        let spnName = await this.getServicePrincipalName();
-        tl.warning(tl.loc("ServicePrincipalRoleAssignmentDetails", this.taskParameters.resourceGroupName, spnName));
-        
         try {
             await this.createResourceGroupIfRequired();
             await this.createTemplateDeployment();
