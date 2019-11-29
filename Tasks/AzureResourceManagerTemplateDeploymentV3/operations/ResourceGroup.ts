@@ -16,7 +16,7 @@ export class ResourceGroup extends DeploymentScopeBase {
     }
 
     public async deploy(): Promise<void> {
-        this.getAssignedRolesForServicePrincipal();
+        await this.getAssignedRolesForServicePrincipal();
         try {
             await this.createResourceGroupIfRequired();
             await this.createTemplateDeployment();
@@ -24,7 +24,7 @@ export class ResourceGroup extends DeploymentScopeBase {
         catch (error) {
             if((error as string).toLowerCase().indexOf("serviceprincipal") != -1) {
                 try {
-                    this.getAssignedRolesForServicePrincipal()
+                    await this.getAssignedRolesForServicePrincipal()
                 } catch (err) {
                     tl.error(err);
                 }

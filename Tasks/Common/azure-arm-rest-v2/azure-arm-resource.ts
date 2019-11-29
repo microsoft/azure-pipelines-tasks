@@ -197,7 +197,7 @@ export class ResourceGroup {
             (error) => callback(error));
     }
     
-    public checkRolesForServicePrincipal(servicePrincipal: string, callback: azureServiceClientBase.ApiCallback) {
+    public getRolesForServicePrincipal(servicePrincipal: string, callback: azureServiceClientBase.ApiCallback) {
         var httpRequest: webClient.WebRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
 
