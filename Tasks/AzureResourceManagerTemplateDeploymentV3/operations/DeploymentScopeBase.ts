@@ -5,6 +5,8 @@ import armResource = require("azure-arm-rest-v2/AzureServiceClientBase");
 import utils = require("./Utils");
 import { sleepFor, WebRequest, WebResponse, sendRequest } from 'azure-arm-rest-v2/webClient';
 import { DeploymentParameters } from "./DeploymentParameters";
+import armResourceManagement = require("azure-arm-rest-v2/azure-arm-resource");
+import azureGraph = require("azure-arm-rest-v2/azure-graph");
 
 export class DeploymentScopeBase {
     protected deploymentParameters: DeploymentParameters;
@@ -18,7 +20,35 @@ export class DeploymentScopeBase {
     }
 
     public async deploy(): Promise<void> {
-        await this.createTemplateDeployment();
+        try {
+            await this.createTemplateDeployment();
+        } catch (error) {
+            if((error as string).toLowerCase().indexOf("serviceprincipal") != -1) {
+                try {
+                    this.getAssignedRolesForServicePrincipal();
+                } 
+                catch (error2)
+                {
+                    tl.error(error2);
+                }
+            }
+            throw error;
+        }
+    }
+
+    protected async getAssignedRolesForServicePrincipal(): Promise<any> {
+        var resourceManagementClient: armResourceManagement.ResourceManagementClient = new armResourceManagement.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.resourceGroupName, this.taskParameters.subscriptionId);
+        var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
+        var servicePrincipalId = await graphClient.servicePrincipals.GetServicePrincipal(null);
+        return new Promise<any>((resolve, reject) => {
+            try {
+                resourceManagementClient.resourceGroup.checkRolesForServicePrincipal(servicePrincipalId, (error, result, request, response) => {
+                    resolve(result);
+                });
+            } catch (error) {
+                reject(error);
+            }
+        });
     }
 
     protected async createTemplateDeployment() {
@@ -37,15 +67,7 @@ export class DeploymentScopeBase {
         }
 
         this.deploymentParameters = params;
-        try {
-            await this.performAzureDeployment(3);
-        } catch (error) {
-            if((error as string).toLowerCase().indexOf("serviceprincipal") != -1) {
-                var response = await this.printServicePrincipalRoleAssignmentDetails();
-                console.log(response);
-            }
-            throw error;
-        }
+        await this.performAzureDeployment(3);
     }
 
     protected async performAzureDeployment(retryCount = 0): Promise<void> {
@@ -95,14 +117,6 @@ export class DeploymentScopeBase {
                 }
             });
         });
-    }
-
-    protected printServicePrincipalRoleAssignmentDetails() : Promise<WebResponse> {
-        let url = "https://management.azure.com/subscriptions/" + this.taskParameters.subscriptionId + "/resourceGroups/" + this.taskParameters.resourceGroupName + "/providers/Microsoft.Authorization/roleAssignments?api-version=2015-07-01";//&$filter=principalId%20eq%20'" + this.taskParameters.credentials.getClientId() + "'";
-        var request: WebRequest = new WebRequest();
-        request.method = 'GET';
-        request.uri = url;
-        return this.armClient.beginRequest(request);
     }
 
     private async waitAndPerformAzureDeployment(retryCount): Promise<void> {

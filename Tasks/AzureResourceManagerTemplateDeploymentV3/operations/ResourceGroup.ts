@@ -2,6 +2,7 @@ import tl = require("azure-pipelines-task-lib/task");
 
 import armDeployTaskParameters = require("../models/TaskParameters");
 import armResource = require("azure-arm-rest-v2/azure-arm-resource");
+import azureGraph = require("azure-arm-rest-v2/azure-graph");
 import utils = require("./Utils");
 import { DeploymentScopeBase } from "./DeploymentScopeBase";
 
@@ -15,14 +16,18 @@ export class ResourceGroup extends DeploymentScopeBase {
     }
 
     public async deploy(): Promise<void> {
+        this.getAssignedRolesForServicePrincipal();
         try {
             await this.createResourceGroupIfRequired();
             await this.createTemplateDeployment();
         } 
         catch (error) {
             if((error as string).toLowerCase().indexOf("serviceprincipal") != -1) {
-                var response = await this.printServicePrincipalRoleAssignmentDetails();
-                console.log(response);
+                try {
+                    this.getAssignedRolesForServicePrincipal()
+                } catch (err) {
+                    tl.error(err);
+                }
             }
             throw error;
         }
