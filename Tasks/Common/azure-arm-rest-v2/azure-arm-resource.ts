@@ -210,13 +210,15 @@ export class ResourceGroup {
             "2015-07-01"
         );
 
-        console.log(httpRequest.uri);
-
         this.client.beginRequest(httpRequest)
         .then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClientBase.ApiResult>();
-            deferred.resolve(new azureServiceClientBase.ApiResult(null, response.body));
-            console.log(response)
+            var statusCode = response.statusCode;
+            if(statusCode !== 200 && statusCode !== 201) {
+                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
+            } else {
+                deferred.resolve(new azureServiceClientBase.ApiResult(null, response.body));
+            }
             return deferred.promise;
         }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result), 
             (error) => callback(error));

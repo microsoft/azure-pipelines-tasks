@@ -25,7 +25,8 @@ export class DeploymentScopeBase {
         } catch (error) {
             if((error as string).toLowerCase().indexOf("serviceprincipal") != -1) {
                 try {
-                    await this.getAssignedRolesForServicePrincipal();
+                    var servicePrincipalName = await this.getServicePrincipalName();
+                    tl.warning(tl.loc("ServicePrincipalRoleAssignmentDetails", this.taskParameters.resourceGroupName, JSON.stringify(servicePrincipalName)));
                 } 
                 catch (err)
                 {
@@ -36,21 +37,10 @@ export class DeploymentScopeBase {
         }
     }
 
-    protected async getAssignedRolesForServicePrincipal(): Promise<any> {
-        var resourceManagementClient: armResourceManagement.ResourceManagementClient = new armResourceManagement.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.resourceGroupName, this.taskParameters.subscriptionId);
+    protected async getServicePrincipalName(): Promise<string> {
         var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
         var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
-        console.log("Printing Service Principal")
-        console.log(servicePrincipalObject.objectId);
-        return new Promise<any>((resolve, reject) => {
-            try {
-                resourceManagementClient.resourceGroup.getRolesForServicePrincipal(servicePrincipalObject.objectId, (error, result, request, response) => {
-                    resolve(result);
-                });
-            } catch (error) {
-                reject(error);
-            }
-        });
+        return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";
     }
 
     protected async createTemplateDeployment() {

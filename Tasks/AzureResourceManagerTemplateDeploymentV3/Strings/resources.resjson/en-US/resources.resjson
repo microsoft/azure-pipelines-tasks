@@ -82,5 +82,6 @@
   "loc.messages.ResourceGroupNameNotProvided": "Resource Group name should be provided",
   "loc.messages.LocationNotProvided": "Location is required for deployment",
   "loc.messages.ARMServiceConnectionScope": "ARM Service Conection deployment scope - %s",
-  "loc.messages.CompleteDeploymentModeNotSupported": "Deployment mode 'Complete' is not supported for deployment at '%s' scope"
+  "loc.messages.CompleteDeploymentModeNotSupported": "Deployment mode 'Complete' is not supported for deployment at '%s' scope",
+  "loc.messages.ServicePrincipalRoleAssignmentDetails": "Please make sure the Service Principal with name %s used is assigned the right roles for the Resource Group %s. Follow the link for more details: "
 }

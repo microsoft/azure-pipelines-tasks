@@ -2,7 +2,6 @@ import tl = require("azure-pipelines-task-lib/task");
 
 import armDeployTaskParameters = require("../models/TaskParameters");
 import armResource = require("azure-arm-rest-v2/azure-arm-resource");
-import azureGraph = require("azure-arm-rest-v2/azure-graph");
 import utils = require("./Utils");
 import { DeploymentScopeBase } from "./DeploymentScopeBase";
 
@@ -16,7 +15,9 @@ export class ResourceGroup extends DeploymentScopeBase {
     }
 
     public async deploy(): Promise<void> {
-        await this.getAssignedRolesForServicePrincipal();
+        let spnName = await this.getServicePrincipalName();
+        tl.warning(tl.loc("ServicePrincipalRoleAssignmentDetails", this.taskParameters.resourceGroupName, spnName));
+        
         try {
             await this.createResourceGroupIfRequired();
             await this.createTemplateDeployment();
@@ -24,7 +25,8 @@ export class ResourceGroup extends DeploymentScopeBase {
         catch (error) {
             if((error as string).toLowerCase().indexOf("serviceprincipal") != -1) {
                 try {
-                    await this.getAssignedRolesForServicePrincipal()
+                    let spnName = await this.getServicePrincipalName()
+                    tl.warning(tl.loc("ServicePrincipalRoleAssignmentDetails", this.taskParameters.resourceGroupName, spnName));
                 } catch (err) {
                     tl.error(err);
                 }
