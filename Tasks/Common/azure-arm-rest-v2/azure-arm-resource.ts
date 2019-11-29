@@ -196,33 +196,6 @@ export class ResourceGroup {
         }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
-    
-    public getRolesForServicePrincipal(servicePrincipal: string, callback: azureServiceClientBase.ApiCallback) {
-        var httpRequest: webClient.WebRequest = new webClient.WebRequest();
-        httpRequest.method = 'GET';
-
-        httpRequest.uri = this.client.getRequestUri(
-            "//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Authorization/roleAssignments",
-            {
-                '{resourceGroupName}': this.client.resourceGroupName
-            },
-            ["$filter=assignedTo('" + servicePrincipal + "')"],
-            "2015-07-01"
-        );
-
-        this.client.beginRequest(httpRequest)
-        .then((response: webClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClientBase.ApiResult>();
-            var statusCode = response.statusCode;
-            if(statusCode !== 200 && statusCode !== 201) {
-                deferred.resolve(new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response)));
-            } else {
-                deferred.resolve(new azureServiceClientBase.ApiResult(null, response.body));
-            }
-            return deferred.promise;
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result), 
-            (error) => callback(error));
-    }
 }
 
 export class ResourceGroupDeployments extends depolymentsBase.DeploymentsBase {
