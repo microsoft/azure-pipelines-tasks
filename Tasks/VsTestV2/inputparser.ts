@@ -170,25 +170,25 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
     inputDataContract.TestReportingSettings.TestResultsDirectory =  resultsDir;
     tl.debug("TestResultsFolder: " + resultsDir);
     
-    if (resultsDir.startsWith(tl.getVariable('Agent.TempDirectory') + 'TestResults'))
+    if (resultsDir.startsWith(path.join(tl.getVariable('Agent.TempDirectory'), 'TestResults')))
     {   
-        ci.publishEvent({ 'TestResultsFolderUi': '$(Agent.TempDirectory)/TestResults' } );
+        ci.publishTelemetry('TestExecution', 'ResultsDirectory', { 'TestResultsFolderUi': '$(Agent.TempDirectory)/TestResults' } );
     }
     else if (resultsDir.startsWith(tl.getVariable('Agent.TempDirectory')))
     {
-        ci.publishEvent({ 'TestResultsFolderUi': '$(Agent.TempDirectory)' } );
+        ci.publishTelemetry('TestExecution', 'ResultsDirectory', { 'TestResultsFolderUi': '$(Agent.TempDirectory)' } );
     }
     else if (resultsDir.startsWith(tl.getVariable('Common.TestResultsDirectory')))
     {
-        ci.publishEvent({ 'TestResultsFolderUi': '$(Common.TestResultsDirectory)' })
+        ci.publishTelemetry('TestExecution', 'ResultsDirectory', { 'TestResultsFolderUi': '$(Common.TestResultsDirectory)' })
     }
     else if (resultsDir.startsWith(tl.getVariable('System.DefaultWorkingDirectory')))
     {
-        ci.publishEvent({ 'TestResultsFolderUi': '$(System.DefaultWorkingDirectory)' })
+        ci.publishTelemetry('TestExecution', 'ResultsDirectory', { 'TestResultsFolderUi': '$(System.DefaultWorkingDirectory)' })
     }
     else
     {
-        ci.publishEvent({ 'TestResultsFolderUi': 'Custom Directory' })
+        ci.publishTelemetry('TestExecution', 'ResultsDirectory', { 'TestResultsFolderUi': 'Custom Directory' })
     }
     
     inputDataContract.TestReportingSettings.TestSourceSettings = <idc.TestSourceSettings>{};
