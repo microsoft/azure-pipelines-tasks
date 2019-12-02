@@ -247,7 +247,7 @@
     "outputVariables": [
         {
             "name": "BuildNumber",
-            "description": "Stores the build number of the build artifact source"
+            "description": "Stores the build number of the pipeline artifact source"
         }
     ]
 }
