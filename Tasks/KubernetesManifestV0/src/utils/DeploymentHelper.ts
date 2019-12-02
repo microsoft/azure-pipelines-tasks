@@ -46,7 +46,14 @@ export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], depl
     });
 
     // annotate resources
-    const allPods = JSON.parse((kubectl.getAllPods()).stdout);
+    let allPods: any;
+    try {
+        allPods = JSON.parse((kubectl.getAllPods()).stdout);
+    }
+    catch (e) {
+        tl.debug("Unable to parse pods; Error: "+ e);
+    }
+
     annotateResources(deployedManifestFiles, kubectl, resourceTypes, allPods);
 
     // Capture and push deployment metadata only if deployment strategy is not specified (because for Canary/SMI we do not replace actual deployment objects)

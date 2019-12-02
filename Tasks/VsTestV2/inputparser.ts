@@ -166,6 +166,11 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
     inputDataContract.TestReportingSettings.TestRunTitle = tl.getInput('testRunTitle');
     inputDataContract.TestReportingSettings.TestRunSystem = 'VSTS - vstest';
 
+    const resultsDir = path.resolve(tl.getVariable('Agent.TempDirectory'), tl.getInput('resultsFolder'));
+    inputDataContract.TestReportingSettings.TestResultsDirectory =  resultsDir;
+    tl.debug("TestResultsFolder: " + resultsDir);
+    addResultsDirectoryToTelemetry(resultsDir);
+    
     inputDataContract.TestReportingSettings.TestSourceSettings = <idc.TestSourceSettings>{};
     inputDataContract.TestReportingSettings.TestSourceSettings.PullRequestTargetBranchName = tl.getVariable('System.PullRequest.TargetBranch');
     inputDataContract.TestReportingSettings.ExecutionStatusSettings = <idc.ExecutionStatusSettings>{};
@@ -619,6 +624,25 @@ function isDontShowUIRegKeySet(regPath: string): Q.Promise<boolean> {
         defer.resolve(false);
     });
     return defer.promise;
+}
+
+function addResultsDirectoryToTelemetry(resultsDir: string){
+
+    if (resultsDir.startsWith(path.join(tl.getVariable('Agent.TempDirectory'), 'TestResults'))) {  
+        ci.publishTelemetry('TestExecution', 'ResultsDirectory', { 'TestResultsFolderUi': '$(Agent.TempDirectory)/TestResults' } );
+    }
+    else if (resultsDir.startsWith(tl.getVariable('Agent.TempDirectory'))) {
+        ci.publishTelemetry('TestExecution', 'ResultsDirectory', { 'TestResultsFolderUi': '$(Agent.TempDirectory)' } );
+    }
+    else if (resultsDir.startsWith(tl.getVariable('Common.TestResultsDirectory'))) {
+        ci.publishTelemetry('TestExecution', 'ResultsDirectory', { 'TestResultsFolderUi': '$(Common.TestResultsDirectory)' })
+    }
+    else if (resultsDir.startsWith(tl.getVariable('System.DefaultWorkingDirectory'))) {
+        ci.publishTelemetry('TestExecution', 'ResultsDirectory', { 'TestResultsFolderUi': '$(System.DefaultWorkingDirectory)' })
+    }
+    else {
+        ci.publishTelemetry('TestExecution', 'ResultsDirectory', { 'TestResultsFolderUi': 'Custom Directory' })
+    }
 }
 
 export function setIsServerBasedRun(isServerBasedRun: boolean) {
