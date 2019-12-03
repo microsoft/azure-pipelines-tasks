@@ -1,5 +1,6 @@
 {
     "tasks": [
+        "ACRTaskV0",
         "AndroidSigningV2",
         "AndroidSigningV3",
         "ANTV1",
@@ -135,7 +136,6 @@
         "PublishCodeCoverageResultsV1",
         "PublishPipelineArtifactV0",
         "PublishPipelineArtifactV1",
-        "PublishPipelineMetadataV0",
         "PublishSymbolsV2",
         "PublishTestResultsV1",
         "PublishTestResultsV2",

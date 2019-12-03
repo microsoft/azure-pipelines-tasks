@@ -7,6 +7,9 @@ rules:
   addLabels: ['Area: AppCenter']
 # Area: Artifacts
 - valueFor: '**Enter Task Name**'
+  contains: 'DownloadPackage'
+  addLabels: ['Area: Artifacts']
+- valueFor: '**Enter Task Name**'
   contains: 'MavenAuthenticate'
   addLabels: ['Area: Artifacts']
 - valueFor: '**Enter Task Name**'
@@ -251,6 +254,11 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'TwineAuthenticate'
   addLabels: ['Area: ArtifactsPackages']
+  
+# Area: ArtifactsCore
+- valueFor: '**Enter Task Name**'
+  contains: 'DownloadPipelineArtifact'
+  addLabels: ['Area: ArtifactsCore']
 
 # Types
 - valueFor: '*Type*'
