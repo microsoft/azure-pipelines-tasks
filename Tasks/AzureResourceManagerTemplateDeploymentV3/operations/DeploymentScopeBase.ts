@@ -73,7 +73,13 @@ export class DeploymentScopeBase {
         let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
         portalUrl += "/#blade/HubsExtension/DeploymentDetailsBlade/overview/id/";
 
-        let subscriptionSpecificURL = "/subscriptions/" + this.taskParameters.subscriptionId + "/resourceGroups/" + this.taskParameters.resourceGroupName + "/providers/Microsoft.Resources/deployments/" + this.taskParameters.deploymentName;
+        let subscriptionSpecificURL = "/subscriptions/" + this.taskParameters.subscriptionId;
+        if(this.taskParameters.deploymentScope == "Resource Group") {
+            subscriptionSpecificURL += "/resourceGroups/" + this.taskParameters.resourceGroupName;
+        }
+
+        subscriptionSpecificURL += "/providers/Microsoft.Resources/deployments/" + this.taskParameters.deploymentName;
+
         return portalUrl + subscriptionSpecificURL.replace(/\//g, '%2F');
     }
 
