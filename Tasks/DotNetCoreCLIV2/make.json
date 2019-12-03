@@ -11,6 +11,14 @@
             "compile": true
         }
     ],
+    "externals": {
+        "archivePackages": [
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/msbuildlogger/3/msbuildlogger.zip",
+                "dest": "./dotnet-build-helpers/"
+            }
+        ]
+    },
     "rm": [
         {
             "items": [
