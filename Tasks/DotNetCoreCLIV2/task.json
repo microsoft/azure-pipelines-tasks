@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 165,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -132,6 +132,16 @@
             "visibleRule": "command = restore",
             "required": false,
             "helpMarkDown": "Write the additional arguments to be passed to **restore** command."
+        },
+        {
+            "name": "logProjectEvents",
+            "type": "boolean",
+            "label": "Record Project Details",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "generalAdvanced",
+            "visibleRule": "command = build",
+            "helpMarkDown": "Optionally record timeline details for each project."
         },
         {
             "name": "publishTestResults",
@@ -516,6 +526,7 @@
         }
     },
     "messages": {
+        "Build": "Build %s",
         "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
         "CouldNotSetCodePaging": "Could not set the code paging of due to following error: %s",
         "Error_AutomaticallyVersionReleases": "Autoversion: Getting version number from build option is not supported in releases",

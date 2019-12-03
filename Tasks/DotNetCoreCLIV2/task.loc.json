@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 165,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -132,6 +132,16 @@
       "visibleRule": "command = restore",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.restoreArguments"
+    },
+    {
+      "name": "logProjectEvents",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.logProjectEvents",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "generalAdvanced",
+      "visibleRule": "command = build",
+      "helpMarkDown": "ms-resource:loc.input.help.logProjectEvents"
     },
     {
       "name": "publishTestResults",
@@ -516,6 +526,7 @@
     }
   },
   "messages": {
+    "Build": "ms-resource:loc.messages.Build",
     "BuildIdentityPermissionsHint": "ms-resource:loc.messages.BuildIdentityPermissionsHint",
     "CouldNotSetCodePaging": "ms-resource:loc.messages.CouldNotSetCodePaging",
     "Error_AutomaticallyVersionReleases": "ms-resource:loc.messages.Error_AutomaticallyVersionReleases",
