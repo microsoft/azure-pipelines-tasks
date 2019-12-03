@@ -302,6 +302,6 @@
         "LocationNotProvided": "Location is required for deployment",
         "ARMServiceConnectionScope": "ARM Service Conection deployment scope - %s",
         "CompleteDeploymentModeNotSupported": "Deployment mode 'Complete' is not supported for deployment at '%s' scope",
-        "FindMoreDeploymentDetailsAzurePortal": "Find more details about the Azure deployment at: %s"
+        "FindMoreDeploymentDetailsAzurePortal": "Find more details about the Azure deployment at: (Please Copy-Paste the link) %s"
     }
 }
