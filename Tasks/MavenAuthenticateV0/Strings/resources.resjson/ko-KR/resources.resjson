@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Maven Authenticate",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=2099968)",
+  "loc.description": "Azure Artifacts 피드 또는 외부 Maven 저장소 자격 증명을 제공합니다.",
+  "loc.instanceNameFormat": "Maven Authenticate",
+  "loc.input.label.artifactsFeeds": "피드",
+  "loc.input.label.mavenServiceConnections": "이 조직/컬렉션 외부 저장소에 대한 자격 증명",
+  "loc.input.help.mavenServiceConnections": "프로젝트의 pom.xml에 있는 외부 저장소에 사용하는 자격 증명",
+  "loc.messages.Warning_FeedEntryAlreadyExists": "이미 피드 또는 저장소 '%s'에 대한 설정이 사용자 settings.xml 파일에 있습니다.",
+  "loc.messages.Warning_NoEndpointsToAuth": "인증할 저장소가 선택되지 않았습니다. task 설정을 살펴보세요.",
+  "loc.messages.Info_GeneratingExternalRepositories": "%s 외부 저장소에 대한 설정 파일을 생성합니다.",
+  "loc.messages.Info_GeneratingInternalFeeds": "%s 내부 피드에 대한 설정 파일을 생성합니다.",
+  "loc.messages.Info_M2FolderDoesntExist": "%s 경로에서 .m2 폴더를 찾을 수 없습니다. 폴더를 생성합니다.",
+  "loc.messages.Info_SettingsXmlRead": "인증 정보를 설정 파일 %s에 추가합니다.",
+  "loc.messages.Info_CreatingSettingsXml": "%s 경로에 settings.xml 파일을 생성합니다.",
+  "loc.messages.Info_WritingToSettingsXml": "settings.xml 파일에 인증 정보를 작성합니다.",
+  "loc.messages.Error_InvalidServiceConnection": "%s 서비스 연결이 유효하지 않습니다."
+}
