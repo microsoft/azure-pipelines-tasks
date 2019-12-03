@@ -514,7 +514,6 @@ export class ResourceGroup {
                 }
                 if (result.error) {
                     this.writeDeploymentErrors(result.error);
-                    tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
                     return reject(tl.loc("CreateTemplateDeploymentFailed"));
                 } else {
                     console.log(tl.loc("ValidDeployment"));
@@ -538,7 +537,6 @@ export class ResourceGroup {
                             return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount);
                         }
                         this.writeDeploymentErrors(error);
-                        tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
@@ -569,14 +567,6 @@ export class ResourceGroup {
             throw new Error(tl.loc("InvalidTemplateLocation"));
         }
         await this.performAzureDeployment(armClient, deployment, 3);
-    }
-
-    private getAzurePortalDeploymentURL() {
-        let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
-        portalUrl += "/#blade/HubsExtension/DeploymentDetailsBlade/overview/id/";
-
-        let subscriptionSpecificURL = "/subscriptions/" + this.taskParameters.subscriptionId + "/resourceGroups/" + this.taskParameters.resourceGroupName + "/providers/Microsoft.Resources/deployments/" + this.taskParameters.deploymentName;
-        return portalUrl + subscriptionSpecificURL.replace(/\//g, '%2F');
     }
 
     private enablePrereqDG = "ConfigureVMWithDGAgent";
