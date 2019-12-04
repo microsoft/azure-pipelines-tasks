@@ -6,11 +6,7 @@
                 "dest": "./"
             },
             {
-<<<<<<< HEAD
-                "url": "https://testexecution.blob.core.windows.net/testexecution/10932935/TestAgent.zip",
-=======
                 "url": "https://testexecution.blob.core.windows.net/testexecution/11022912/TestAgent.zip",
->>>>>>> upstream/master
                 "dest": "./Modules"
             },
             {
