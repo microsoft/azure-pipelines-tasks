@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 160,
+        "Minor": 161,
         "Patch": 0
     },
     "demands": [
@@ -66,7 +66,11 @@
             "label": "Platform",
             "helpMarkDown": "Specify the platform you want to build such as Win32, x86, x64 or any cpu.",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "validation": {
+                "expression": "isMatch(value, '[<>*|:\\/&%\".#?]'",
+                "message": "The following characters are forbidden in Platform: < > * | : \\ / & % \" . # ?"
+            }
         },
         {
             "name": "configuration",
@@ -74,7 +78,11 @@
             "label": "Configuration",
             "helpMarkDown": "Specify the configuration you want to build such as debug or release.",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "validation": {
+                "expression": "isMatch(value, '[<>*|:\\/&%\".#?]'",
+                "message": "The following characters are forbidden in Configuration: < > * | : \\ / & % \" . # ?"
+            }
         },
         {
             "name": "clean",

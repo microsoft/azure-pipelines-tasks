@@ -16,7 +16,6 @@ import tl = require('azure-pipelines-task-lib/task');
 
 import publishProfileUtility = require("utility-common-v2/publishProfileUtility");
 
-
 export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider {
     protected taskParams:TaskParameters;
     protected appService: AzureAppService;
@@ -41,9 +40,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             this.kuduService = new Kudu(this.publishProfileScmCredentials.scmUri, this.publishProfileScmCredentials.username, this.publishProfileScmCredentials.password);
             let resourceId = publishProfileEndpoint.resourceId;
             let resourceIdSplit = resourceId.split("/");
-            if (resourceIdSplit.length === 11) {
-                this.slotName = resourceIdSplit[10];
-            }
+            this.slotName = resourceIdSplit.length === 11 ? resourceIdSplit[10] : "production";
         } else {
             this.appService = new AzureAppService(this.taskParams.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, 
                 this.taskParams.SlotName, this.taskParams.WebAppKind);

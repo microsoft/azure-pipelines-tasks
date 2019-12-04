@@ -7,8 +7,7 @@ import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUti
 
 import tl = require('azure-pipelines-task-lib/task');
 
-const deleteOldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
-const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 0';
+const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE -WEBSITE_RUN_FROM_ZIP';
 var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
 
@@ -40,9 +39,8 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
 
         tl.debug("Initiated deployment via kudu service for webapp package : ");
         if (!!this.appServiceUtility) {
-            var updateApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
-            var deleteApplicationSetting = ParameterParser.parse(deleteOldRunFromZipAppSetting)
-            var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(updateApplicationSetting, deleteApplicationSetting);
+            var deleteApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
+            var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(null, deleteApplicationSetting);
 
             if(!isNewValueUpdated) {
                 await this.kuduServiceUtility.warmpUp();
