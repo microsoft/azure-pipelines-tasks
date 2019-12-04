@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 162,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [
         "vstest"
@@ -648,6 +648,9 @@
         "diagnosticsInput": "Diagnostics enabled : %s",
         "UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory).",
         "LookingForBuildToolsInstalltion": "Attempting to find vstest.console from a visual studio build tools installation with version %s.",
-        "LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation with version %s."
+        "LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation with version %s.",
+        "minTestsNotExecuted": "The specified minimum number of tests %d were not executed in the test run.",
+        "actionOnThresholdNotMet": "Action when minimum tests threshold not met : %s",
+        "minimumExpectedTests": "Minimum tests expected to be run: %d"
     }
 }
