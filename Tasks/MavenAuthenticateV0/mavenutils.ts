@@ -20,7 +20,7 @@ export function getInternalFeedsServerElements(input: string) {
         return serverElements;
     }
 
-    tl.debug(tl.loc("Info_GeneratingInteralFeeds", feeds.length));
+    tl.debug(tl.loc("Info_GeneratingInternalFeeds", feeds.length));
     for (let feed of feeds) {
         serverElements.push({
                 id: feed,
