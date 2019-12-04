@@ -569,7 +569,7 @@ export class ResourceGroup {
             }
             await this.performAzureDeployment(armClient, deployment, 3);
         } catch (error) {
-            if((error as string).toLowerCase().indexOf("serviceprincipal") != -1) {
+            if(error.toString().toLowerCase().indexOf("serviceprincipal") != -1) {
                 try {
                     var spnName = await this.getServicePrincipalName();
                     tl.warning(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
