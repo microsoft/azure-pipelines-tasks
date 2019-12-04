@@ -649,6 +649,8 @@
     "UncPathNotSupported": "ms-resource:loc.messages.UncPathNotSupported",
     "LookingForBuildToolsInstalltion": "ms-resource:loc.messages.LookingForBuildToolsInstalltion",
     "LookingForVsInstalltion": "ms-resource:loc.messages.LookingForVsInstalltion",
-    "minTestsNotExecuted": "ms-resource:loc.messages.minTestsNotExecuted"
+    "minTestsNotExecuted": "ms-resource:loc.messages.minTestsNotExecuted",
+    "actionOnThresholdNotMet": "ms-resource:loc.messages.actionOnThresholdNotMet",
+    "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests"
   }
 }

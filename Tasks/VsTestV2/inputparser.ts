@@ -175,6 +175,7 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
     inputDataContract.TestReportingSettings.TestSourceSettings.PullRequestTargetBranchName = tl.getVariable('System.PullRequest.TargetBranch');
     inputDataContract.TestReportingSettings.ExecutionStatusSettings = <idc.ExecutionStatusSettings>{};
     inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected = 0;
+    inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet = "donothing";
     inputDataContract.TestReportingSettings.ExecutionStatusSettings.IgnoreTestFailures = utils.Helper.stringToBool(tl.getVariable('vstest.ignoretestfailures'));
     if (utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestRunTitle)) {
 
@@ -200,6 +201,8 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
             throw new Error(tl.loc('invalidMinimumExpectedTests :' + tl.getInput('minimumExpectedTests')));
         }
     }
+    
+    console.log(tl.loc('actionOnThresholdNotMet', inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet))
     console.log(tl.loc('minimumExpectedTests', inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected));
     return inputDataContract;
 }
