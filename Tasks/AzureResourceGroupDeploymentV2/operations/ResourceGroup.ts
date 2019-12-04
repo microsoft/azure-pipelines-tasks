@@ -278,7 +278,7 @@ export class ResourceGroup {
     private createDeploymentName(): string {
         var name: string;
         if (this.taskParameters.templateLocation == "Linked artifact") {
-            name = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.taskParameters.csmFile)[0];
+            name = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.escapeBlockCharacters(this.taskParameters.csmFile))[0];
         } else {
             name = this.taskParameters.csmFileLink;
         }
@@ -382,7 +382,7 @@ export class ResourceGroup {
 
     private getDeploymentDataForLinkedArtifact(): Deployment {
         var template: TemplateObject;
-        var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.taskParameters.csmFile);
+        var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.escapeBlockCharacters(this.taskParameters.csmFile));
         if (fileMatches.length > 1) {
             throw new Error(tl.loc("TemplateFilePatternMatchingMoreThanOneFile", fileMatches));
         }
@@ -405,7 +405,7 @@ export class ResourceGroup {
 
         var parameters: Map<string, ParameterValue> = {} as Map<string, ParameterValue>;
         if (utils.isNonEmpty(this.taskParameters.csmParametersFile)) {
-            var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.taskParameters.csmParametersFile);
+            var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.escapeBlockCharacters(this.taskParameters.csmParametersFile));
             if (fileMatches.length > 1) {
                 throw new Error(tl.loc("TemplateParameterFilePatternMatchingMoreThanOneFile", fileMatches));
             }
@@ -572,11 +572,19 @@ export class ResourceGroup {
     }
 
     private getAzurePortalDeploymentURL() {
-        let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
-        portalUrl += "/#blade/HubsExtension/DeploymentDetailsBlade/overview/id/";
+        try {
+            let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
+            portalUrl += "/#blade/HubsExtension/DeploymentDetailsBlade/overview/id/";
+            let subscriptionSpecificURL = "/subscriptions/" + this.taskParameters.subscriptionId + "/resourceGroups/" + this.taskParameters.resourceGroupName + "/providers/Microsoft.Resources/deployments/" + this.taskParameters.deploymentName;
+            return portalUrl + subscriptionSpecificURL.replace(/\//g, '%2F');
+        } catch (error) {
+            tl.error(error);
+            return error;
+        }
+    }
 
-        let subscriptionSpecificURL = "/subscriptions/" + this.taskParameters.subscriptionId + "/resourceGroups/" + this.taskParameters.resourceGroupName + "/providers/Microsoft.Resources/deployments/" + this.taskParameters.deploymentName;
-        return portalUrl + subscriptionSpecificURL.replace(/\//g, '%2F');
+    private escapeBlockCharacters(str: string): string {
+        return str.replace(/[\[]/g, '$&[]');
     }
 
     private enablePrereqDG = "ConfigureVMWithDGAgent";
