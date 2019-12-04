@@ -13,7 +13,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
+<<<<<<< HEAD
     "Minor": 162,
+=======
+    "Minor": 161,
+>>>>>>> upstream/master
     "Patch": 0
   },
   "demands": [],
