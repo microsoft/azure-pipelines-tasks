@@ -117,7 +117,10 @@ export class DistributedTest {
 
             tl.debug('Files matching count :' + filesMatching.length);
             if (filesMatching.length === 0) {
-                throw new Error(tl.loc('noTestSourcesFound', sourceFilter.toString()));
+                tl.warning(tl.loc('noTestSourcesFound', sourceFilter.toString()));
+                if (this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet.toLowerCase() == "fail") {
+                    throw new Error(tl.loc('minTestsNotExecuted', this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected));
+                }
             }
 
             const tempFile = utils.Helper.GenerateTempFile('testSources_' + uuid.v1() + '.src');
