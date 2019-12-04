@@ -54,9 +54,7 @@ export class DeploymentScopeBase {
                             return this.waitAndPerformAzureDeployment(retryCount);
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);
-                        if(this.taskParameters.deploymentScope == "Resource Group" || this.taskParameters.deploymentScope == "Subscription") {
-                            tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
-                        }
+                        this.checkAndPrintPortalDeploymentURL();
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
@@ -71,18 +69,29 @@ export class DeploymentScopeBase {
         }
     }
 
-    private getAzurePortalDeploymentURL() {
-        let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
-        portalUrl += "/#blade/HubsExtension/DeploymentDetailsBlade/overview/id/";
-
-        let subscriptionSpecificURL = "/subscriptions/" + this.taskParameters.subscriptionId;
-        if(this.taskParameters.deploymentScope == "Resource Group") {
-            subscriptionSpecificURL += "/resourceGroups/" + this.taskParameters.resourceGroupName;
+    protected checkAndPrintPortalDeploymentURL() {
+        if(this.taskParameters.deploymentScope == "Resource Group" || this.taskParameters.deploymentScope == "Subscription") {
+            tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
         }
+    }
 
-        subscriptionSpecificURL += "/providers/Microsoft.Resources/deployments/" + this.taskParameters.deploymentName;
-
-        return portalUrl + subscriptionSpecificURL.replace(/\//g, '%2F');
+    private getAzurePortalDeploymentURL() {
+        try {
+            let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
+            portalUrl += "/#blade/HubsExtension/DeploymentDetailsBlade/overview/id/";
+    
+            let subscriptionSpecificURL = "/subscriptions/" + this.taskParameters.subscriptionId;
+            if(this.taskParameters.deploymentScope == "Resource Group") {
+                subscriptionSpecificURL += "/resourceGroups/" + this.taskParameters.resourceGroupName;
+            }
+    
+            subscriptionSpecificURL += "/providers/Microsoft.Resources/deployments/" + this.taskParameters.deploymentName;
+    
+            return portalUrl + subscriptionSpecificURL.replace(/\//g, '%2F');
+        } catch (error) {
+            tl.error(error);
+            return error;
+        }
     }
 
     protected validateDeployment(): Promise<void> {

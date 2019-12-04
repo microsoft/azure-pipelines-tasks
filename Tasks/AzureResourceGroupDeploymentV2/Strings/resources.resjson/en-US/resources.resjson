@@ -192,5 +192,5 @@
   "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
   "loc.messages.DeploymentGroupConfigurationNotSucceeded": "Deployment group configuration did not succeed on one or more Virtual Machine(s): %s",
   "loc.messages.DeploymentGroupConfigurationFailedOnVM": "Failure for Virtual Machine '%s': %s",
-  "loc.messages.FindMoreDeploymentDetailsAzurePortal": "Find more details about your deployment at: %s"
+  "loc.messages.FindMoreDeploymentDetailsAzurePortal": "Task successfully created an Azure Resource Manager deployment, but the deployment failed. Please see more detailed Azure resource manager deployment logs at: (Please Copy-Paste the link) %s"
 }
