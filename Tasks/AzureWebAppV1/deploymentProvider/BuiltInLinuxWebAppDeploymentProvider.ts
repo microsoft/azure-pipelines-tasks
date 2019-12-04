@@ -1,7 +1,9 @@
-import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import tl = require('azure-pipelines-task-lib/task');
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
+
+import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
+
+import tl = require('azure-pipelines-task-lib/task');
 
 var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
@@ -60,12 +62,11 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
     }
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
+        await super.UpdateDeploymentStatus(isDeploymentSuccess);
         if(this.kuduServiceUtility) {
             if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
-            }
-            
-            await super.UpdateDeploymentStatus(isDeploymentSuccess);
+            }           
         }
     }
 }

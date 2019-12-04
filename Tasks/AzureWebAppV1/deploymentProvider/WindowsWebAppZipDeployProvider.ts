@@ -1,9 +1,12 @@
-import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import tl = require('azure-pipelines-task-lib/task');
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
+
+import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import { DeploymentType } from '../taskparameters';
-import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import { FileTransformsUtility } from 'azurermdeploycommon/operations/FileTransformsUtility.js';
+import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
+
+import tl = require('azure-pipelines-task-lib/task');
+
 const deleteOldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
 const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 0';
 var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
@@ -36,7 +39,7 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
         }
 
         tl.debug("Initiated deployment via kudu service for webapp package : ");
-        if (!this.isPublishProfileAuthSchemeEndpoint) {
+        if (!!this.appServiceUtility) {
             var updateApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
             var deleteApplicationSetting = ParameterParser.parse(deleteOldRunFromZipAppSetting)
             var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(updateApplicationSetting, deleteApplicationSetting);
@@ -54,8 +57,8 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
     }
     
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
+        await super.UpdateDeploymentStatus(isDeploymentSuccess);
         if(this.kuduServiceUtility) {
-            await super.UpdateDeploymentStatus(isDeploymentSuccess);
             if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
             }
