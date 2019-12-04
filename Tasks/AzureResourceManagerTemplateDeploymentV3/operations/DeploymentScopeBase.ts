@@ -19,8 +19,33 @@ export class DeploymentScopeBase {
     }
 
     public async deploy(): Promise<void> {
+        await this.createTemplateDeployment();
+    }
+
+    protected async getServicePrincipalName(): Promise<string> {
+        var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
+        var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
+        return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";
+    }
+
+    protected async createTemplateDeployment() {
         try {
-            await this.createTemplateDeployment();
+            console.log(tl.loc("CreatingTemplateDeployment"));
+            var params: DeploymentParameters;
+            if (this.taskParameters.templateLocation === "Linked artifact") {
+                params = utils.getDeploymentDataForLinkedArtifact(this.taskParameters);
+            } else if (this.taskParameters.templateLocation === "URL of the file") {
+                params = await utils.getDeploymentObjectForPublicURL(this.taskParameters);
+            } else {
+                throw new Error(tl.loc("InvalidTemplateLocation"));
+            }
+    
+            if(!!this.deploymentParameters){
+                params.location = this.deploymentParameters.location;
+            }
+    
+            this.deploymentParameters = params;
+            await this.performAzureDeployment(3);
         } catch (error) {
             if((error as string).toLowerCase().indexOf("serviceprincipal") != -1) {
                 try {
@@ -34,31 +59,6 @@ export class DeploymentScopeBase {
             }
             throw error;
         }
-    }
-
-    protected async getServicePrincipalName(): Promise<string> {
-        var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
-        var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
-        return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";
-    }
-
-    protected async createTemplateDeployment() {
-        console.log(tl.loc("CreatingTemplateDeployment"));
-        var params: DeploymentParameters;
-        if (this.taskParameters.templateLocation === "Linked artifact") {
-            params = utils.getDeploymentDataForLinkedArtifact(this.taskParameters);
-        } else if (this.taskParameters.templateLocation === "URL of the file") {
-            params = await utils.getDeploymentObjectForPublicURL(this.taskParameters);
-        } else {
-            throw new Error(tl.loc("InvalidTemplateLocation"));
-        }
-
-        if(!!this.deploymentParameters){
-            params.location = this.deploymentParameters.location;
-        }
-
-        this.deploymentParameters = params;
-        await this.performAzureDeployment(3);
     }
 
     protected async performAzureDeployment(retryCount = 0): Promise<void> {

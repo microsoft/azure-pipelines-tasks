@@ -2,7 +2,7 @@ import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import util = require("util");
-
+import azureGraph = require("azure-arm-rest-v2/azure-graph");
 import env = require("./Environment");
 import deployAzureRG = require("../models/DeployAzureRG");
 import armResource = require("azure-arm-rest-v2/azure-arm-resource");
@@ -557,17 +557,37 @@ export class ResourceGroup {
     }
 
     private async createTemplateDeployment(armClient: armResource.ResourceManagementClient) {
-        console.log(tl.loc("CreatingTemplateDeployment"));
-        var deployment: Deployment;
-        if (this.taskParameters.templateLocation === "Linked artifact") {
-            deployment = this.getDeploymentDataForLinkedArtifact();
-        } else if (this.taskParameters.templateLocation === "URL of the file") {
-            deployment = await this.getDeploymentObjectForPublicURL();
-        } else {
-            throw new Error(tl.loc("InvalidTemplateLocation"));
+        try {
+            console.log(tl.loc("CreatingTemplateDeployment"));
+            var deployment: Deployment;
+            if (this.taskParameters.templateLocation === "Linked artifact") {
+                deployment = this.getDeploymentDataForLinkedArtifact();
+            } else if (this.taskParameters.templateLocation === "URL of the file") {
+                deployment = await this.getDeploymentObjectForPublicURL();
+            } else {
+                throw new Error(tl.loc("InvalidTemplateLocation"));
+            }
+            await this.performAzureDeployment(armClient, deployment, 3);
+        } catch (error) {
+            if((error as string).toLowerCase().indexOf("serviceprincipal") != -1) {
+                try {
+                    var spnName = await this.getServicePrincipalName();
+                    tl.warning(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
+                } 
+                catch (err)
+                {
+                    tl.error(err);
+                }
+            }
+            throw error;
         }
-        await this.performAzureDeployment(armClient, deployment, 3);
     }
+
+    protected async getServicePrincipalName(): Promise<string> {
+        var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
+        var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
+        return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";
+    }	    
 
     private enablePrereqDG = "ConfigureVMWithDGAgent";
     private enablePrereqWinRM = "ConfigureVMwithWinRM";

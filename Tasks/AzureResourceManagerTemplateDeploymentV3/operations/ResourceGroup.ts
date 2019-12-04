@@ -15,21 +15,8 @@ export class ResourceGroup extends DeploymentScopeBase {
     }
 
     public async deploy(): Promise<void> {
-        try {
-            await this.createResourceGroupIfRequired();
-            await this.createTemplateDeployment();
-        } 
-        catch (error) {
-            if((error as string).toLowerCase().indexOf("serviceprincipal") != -1) {
-                try {
-                    let spnName = await this.getServicePrincipalName()
-                    tl.warning(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
-                } catch (err) {
-                    tl.error(err);
-                }
-            }
-            throw error;
-        }
+        await this.createResourceGroupIfRequired();
+        await this.createTemplateDeployment();
     }
 
     public deleteResourceGroup(): Promise<void> {
