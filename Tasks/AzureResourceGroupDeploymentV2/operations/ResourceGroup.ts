@@ -580,7 +580,7 @@ export class ResourceGroup {
             var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
             return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";
         } catch (error) {
-            tl.error(tl.loc("ServicePrincipalFetchFailed", error));
+            tl.debug(tl.loc("ServicePrincipalFetchFailed", error));
             return "";
         }
     }
