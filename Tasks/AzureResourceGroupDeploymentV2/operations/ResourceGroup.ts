@@ -523,7 +523,7 @@ export class ResourceGroup {
         });
     }
 
-    private async performAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount = 0): Promise<void> {
+    private async performAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount = 0, spnName: string): Promise<void> {
         if (deployment.properties["mode"] === "Validation") {
             return this.validateDeployment(armClient, deployment);
         } else {
@@ -534,8 +534,13 @@ export class ResourceGroup {
                 armClient.deployments.createOrUpdate(this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
                     if (error) {
                         if(error.code == "ResourceGroupNotFound" && retryCount > 0){
-                            return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount);
+                            return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount, spnName);
                         }
+                        
+                        if(error.statusCode == 403) {
+                            tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
+                        }
+
                         this.writeDeploymentErrors(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
@@ -551,42 +556,33 @@ export class ResourceGroup {
         }
     }
 
-    private async waitAndPerformAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount): Promise<void> {
+    private async waitAndPerformAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount, spnName: string): Promise<void> {
         await sleepFor(3);
-        return this.performAzureDeployment(armClient, deployment, retryCount - 1);
+        return this.performAzureDeployment(armClient, deployment, retryCount - 1, spnName);
     }
 
     private async createTemplateDeployment(armClient: armResource.ResourceManagementClient) {
-        try {
-            console.log(tl.loc("CreatingTemplateDeployment"));
-            var deployment: Deployment;
-            if (this.taskParameters.templateLocation === "Linked artifact") {
-                deployment = this.getDeploymentDataForLinkedArtifact();
-            } else if (this.taskParameters.templateLocation === "URL of the file") {
-                deployment = await this.getDeploymentObjectForPublicURL();
-            } else {
-                throw new Error(tl.loc("InvalidTemplateLocation"));
-            }
-            await this.performAzureDeployment(armClient, deployment, 3);
-        } catch (error) {
-            if(error.toString().toLowerCase().indexOf("serviceprincipal") != -1) {
-                try {
-                    var spnName = await this.getServicePrincipalName();
-                    tl.warning(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
-                } 
-                catch (err)
-                {
-                    tl.error(err);
-                }
-            }
-            throw error;
+        console.log(tl.loc("CreatingTemplateDeployment"));
+        var deployment: Deployment;
+        if (this.taskParameters.templateLocation === "Linked artifact") {
+            deployment = this.getDeploymentDataForLinkedArtifact();
+        } else if (this.taskParameters.templateLocation === "URL of the file") {
+            deployment = await this.getDeploymentObjectForPublicURL();
+        } else {
+            throw new Error(tl.loc("InvalidTemplateLocation"));
         }
+        await this.performAzureDeployment(armClient, deployment, 3, await this.getServicePrincipalName());
     }
 
     protected async getServicePrincipalName(): Promise<string> {
-        var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
-        var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
-        return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";
+        try {
+            var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
+            var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
+            return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";
+        } catch (error) {
+            tl.error(tl.loc("ServicePrincipalFetchFailed", error));
+            return "";
+        }
     }
     	    
     private escapeBlockCharacters(str: string): string {

@@ -23,45 +23,36 @@ export class DeploymentScopeBase {
     }
 
     protected async getServicePrincipalName(): Promise<string> {
-        var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
-        var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
-        return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";
-    }
-
-    protected async createTemplateDeployment() {
         try {
-            console.log(tl.loc("CreatingTemplateDeployment"));
-            var params: DeploymentParameters;
-            if (this.taskParameters.templateLocation === "Linked artifact") {
-                params = utils.getDeploymentDataForLinkedArtifact(this.taskParameters);
-            } else if (this.taskParameters.templateLocation === "URL of the file") {
-                params = await utils.getDeploymentObjectForPublicURL(this.taskParameters);
-            } else {
-                throw new Error(tl.loc("InvalidTemplateLocation"));
-            }
-    
-            if(!!this.deploymentParameters){
-                params.location = this.deploymentParameters.location;
-            }
-    
-            this.deploymentParameters = params;
-            await this.performAzureDeployment(3);
+            var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
+            var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
+            return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";    
         } catch (error) {
-            if(error.toString().toLowerCase().indexOf("serviceprincipal") != -1) {
-                try {
-                    var spnName = await this.getServicePrincipalName();
-                    tl.warning(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
-                } 
-                catch (err)
-                {
-                    tl.error(err);
-                }
-            }
-            throw error;
+            tl.error(tl.loc("ServicePrincipalFetchFailed", error));
+            return "";
         }
     }
 
-    protected async performAzureDeployment(retryCount = 0): Promise<void> {
+    protected async createTemplateDeployment() {
+        console.log(tl.loc("CreatingTemplateDeployment"));
+        var params: DeploymentParameters;
+        if (this.taskParameters.templateLocation === "Linked artifact") {
+            params = utils.getDeploymentDataForLinkedArtifact(this.taskParameters);
+        } else if (this.taskParameters.templateLocation === "URL of the file") {
+            params = await utils.getDeploymentObjectForPublicURL(this.taskParameters);
+        } else {
+            throw new Error(tl.loc("InvalidTemplateLocation"));
+        }
+
+        if(!!this.deploymentParameters){
+            params.location = this.deploymentParameters.location;
+        }
+
+        this.deploymentParameters = params;
+        await this.performAzureDeployment(3, await this.getServicePrincipalName());
+    }
+
+    protected async performAzureDeployment(retryCount = 0, spnName: string): Promise<void> {
         if (this.deploymentParameters.properties["mode"] === "Validation") {
             return this.validateDeployment();
         } else {
@@ -72,9 +63,12 @@ export class DeploymentScopeBase {
                 this.armClient.deployments.createOrUpdate(this.taskParameters.deploymentName, this.deploymentParameters, (error, result, request, response) => {
                     if (error) {
                         if(this.taskParameters.deploymentScope === "Resource Group" && error.code == "ResourceGroupNotFound" && retryCount > 0){
-                            return this.waitAndPerformAzureDeployment(retryCount);
+                            return this.waitAndPerformAzureDeployment(retryCount, spnName);
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);
+                        if(error.statusCode == 403) {
+                            tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
+                        }
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
@@ -110,8 +104,8 @@ export class DeploymentScopeBase {
         });
     }
 
-    private async waitAndPerformAzureDeployment(retryCount): Promise<void> {
+    private async waitAndPerformAzureDeployment(retryCount, spnName: string): Promise<void> {
         await sleepFor(3);
-        return this.performAzureDeployment(retryCount - 1);
+        return this.performAzureDeployment(retryCount - 1, spnName);
     }
 }
