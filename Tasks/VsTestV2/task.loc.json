@@ -42,11 +42,15 @@
 =======
     "Minor": 162,
 <<<<<<< HEAD
+<<<<<<< HEAD
     "Patch": 1
 >>>>>>> Updated VsTestV2 task to version 10932935 And PTR Task to version 10925608 (#11807)
 =======
     "Patch": 2
 >>>>>>> Adding results directory UI option in vstest task (#11789)
+=======
+    "Patch": 3
+>>>>>>> Adding default value for minimum expected tests in vstest (#11872)
   },
   "demands": [
     "vstest"
@@ -676,6 +680,9 @@
     "diagnosticsInput": "ms-resource:loc.messages.diagnosticsInput",
     "UncPathNotSupported": "ms-resource:loc.messages.UncPathNotSupported",
     "LookingForBuildToolsInstalltion": "ms-resource:loc.messages.LookingForBuildToolsInstalltion",
-    "LookingForVsInstalltion": "ms-resource:loc.messages.LookingForVsInstalltion"
+    "LookingForVsInstalltion": "ms-resource:loc.messages.LookingForVsInstalltion",
+    "minTestsNotExecuted": "ms-resource:loc.messages.minTestsNotExecuted",
+    "actionOnThresholdNotMet": "ms-resource:loc.messages.actionOnThresholdNotMet",
+    "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests"
   }
 }
