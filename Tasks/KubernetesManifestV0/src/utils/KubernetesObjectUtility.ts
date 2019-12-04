@@ -287,6 +287,45 @@ function setImagePullSecrets(inputObject: any, newImagePullSecrets: any) {
     return;
 }
 
+export function updateImageDetails(inputObject: any, containers: string[]) {
+    if (!inputObject || !inputObject.spec || !containers) {
+        return;
+    }
+
+    if (!!inputObject.spec.template && !!inputObject.spec.template.spec) {
+        if (!!inputObject.spec.template.spec.containers) {
+            updateContainers(inputObject.spec.template.spec.containers, containers);
+        }
+        if (!!inputObject.spec.template.spec.initContainers) {
+            updateContainers(inputObject.spec.template.spec.initContainers, containers);
+        }
+        return;
+    }
+
+    if (!!inputObject.spec.containers) {
+        updateContainers(inputObject.spec.containers, containers);
+    }
+
+    if (!!inputObject.spec.initContainers) {
+        updateContainers(inputObject.spec.initContainers, containers);
+    }
+}
+
+function updateContainers(containers: any[], images: string[]) {
+    if (!containers || containers.length === 0) {
+        return containers;
+    }
+    containers.forEach((container) => {
+        const imageName: string = container.image.trim();
+        const img = imageName.split(':')[0] + ':';
+        images.forEach(image => {
+            if (image.startsWith(img) || image === img) {
+                container.image = image;
+            }
+        });
+    });
+}
+
 function setSpecLabels(inputObject: any, newLabels: any) {
     let specLabels = getSpecLabels(inputObject);
     if (!!newLabels) {
