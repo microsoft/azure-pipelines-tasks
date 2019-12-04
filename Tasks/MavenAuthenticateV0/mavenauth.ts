@@ -7,10 +7,13 @@ import { emitTelemetry } from 'artifacts-common/telemetry'
 const M2FolderName: string = ".m2";
 const SettingsXmlName: string = "settings.xml";
 
+
 async function run(): Promise<void> {
     let internalFeedServerElements: any[] = [];
     let externalServiceEndpointsServerElements: any[] = [];
     try {
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
+
         internalFeedServerElements = util.getInternalFeedsServerElements("artifactsFeeds");
         externalServiceEndpointsServerElements = util.getExternalServiceEndpointsServerElements("mavenServiceConnections");
         const newServerElements = internalFeedServerElements.concat(externalServiceEndpointsServerElements);
