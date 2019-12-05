@@ -2,7 +2,7 @@
 //'Unable to detect encoding of file ' + typeCode
 //'File buffer is too short to detect encoding type'
 
-var fs = require('fs');
+var fs = require('fs'); 
 import tl = require('azure-pipelines-task-lib');
 
 export class FileEncoding {
