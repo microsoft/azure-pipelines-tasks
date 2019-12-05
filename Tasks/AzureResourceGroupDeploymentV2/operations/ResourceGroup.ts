@@ -536,12 +536,10 @@ export class ResourceGroup {
                         if(error.code == "ResourceGroupNotFound" && retryCount > 0){
                             return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount, spnName);
                         }
-                        
+                        this.writeDeploymentErrors(error);
                         if(error.statusCode == 403) {
                             tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
                         }
-
-                        this.writeDeploymentErrors(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
