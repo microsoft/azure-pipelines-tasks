@@ -22,7 +22,7 @@ describe('Azure Resource Group Deployment', function () {
 	process.env["AGENT_TEMPDIRECTORY"] = process.env["AGENT_TEMPDIRECTORY"] || "C:\\temp\\agent\\home\\temp";
 
 // uncomment to get test traces
-//	process.env['TASK_TEST_TRACE'] = "1";
+	process.env['TASK_TEST_TRACE'] = "1";
 
     it("Successfully added Azure Pipelines Agent Extension on VM when option specified - Create or update RG", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
