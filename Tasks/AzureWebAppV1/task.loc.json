@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 160,
-    "Patch": 2
+    "Patch": 3
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -385,7 +385,6 @@
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName",
-    "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported"
   }
 }
