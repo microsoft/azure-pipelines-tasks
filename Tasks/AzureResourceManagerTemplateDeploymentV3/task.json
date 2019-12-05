@@ -302,7 +302,7 @@
         "LocationNotProvided": "Location is required for deployment",
         "ARMServiceConnectionScope": "ARM Service Conection deployment scope - %s",
         "CompleteDeploymentModeNotSupported": "Deployment mode 'Complete' is not supported for deployment at '%s' scope",
-        "ServicePrincipalRoleAssignmentDetails": "Please make sure the Service Principal with name %s is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal",
+        "ServicePrincipalRoleAssignmentDetails": "Please make sure the Service Principal with name %s is assigned the right roles for the entity %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal",
         "ServicePrincipalFetchFailed": "Error while fetching Service Principal details: %s"
     }
 }

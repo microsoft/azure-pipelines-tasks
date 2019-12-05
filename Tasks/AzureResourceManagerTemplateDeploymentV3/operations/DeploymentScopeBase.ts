@@ -67,7 +67,13 @@ export class DeploymentScopeBase {
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);
                         if(error.statusCode == 403) {
-                            tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
+                            if(this.taskParameters.deploymentScope == "Resource Group") {
+                                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
+                            } else if(this.taskParameters.deploymentScope == "Subscription") {
+                                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.subscriptionId));
+                            } else if(this.taskParameters.deploymentScope == "Management Group") {
+                                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.managementGroupId));    
+                            }
                         }
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
