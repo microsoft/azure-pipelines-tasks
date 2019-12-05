@@ -3,7 +3,6 @@ import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 import env = require("./Environment");
-
 import deployAzureRG = require("../models/DeployAzureRG");
 import armResource = require("azure-arm-rest-v2/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
@@ -538,6 +537,7 @@ export class ResourceGroup {
                             return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount);
                         }
                         this.writeDeploymentErrors(error);
+                        
                         this.checkAndPrintPortalDeploymentURL();
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
@@ -574,7 +574,7 @@ export class ResourceGroup {
         }
         await this.performAzureDeployment(armClient, deployment, 3);
     }
-
+    	    
     private getAzurePortalDeploymentURL() {
         try {
             let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
