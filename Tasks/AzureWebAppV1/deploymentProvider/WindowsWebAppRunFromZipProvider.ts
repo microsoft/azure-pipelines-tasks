@@ -1,10 +1,13 @@
-import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import tl = require('azure-pipelines-task-lib/task');
 import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility'
+
+import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import { DeploymentType } from '../taskparameters';
+import { FileTransformsUtility } from 'azurermdeploycommon/operations/FileTransformsUtility.js';
 import { PackageType } from 'azurermdeploycommon/webdeployment-common/packageUtility';
 import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
-import { FileTransformsUtility } from 'azurermdeploycommon/operations/FileTransformsUtility.js';
+
+import tl = require('azure-pipelines-task-lib/task');
+
 var deployUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azurermdeploycommon/webdeployment-common/ziputility.js');
 
@@ -35,8 +38,8 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
             tl.debug("Compressed folder into zip " +  webPackage);
         }
 
-        tl.debug("Initiated deployment via kudu service for webapp package : ");
-        if (!this.isPublishProfileAuthSchemeEndpoint) {
+        tl.debug("Initiated deployment via kudu service for webapp package : " + webPackage);
+        if (!!this.appServiceUtility) {
             var addCustomApplicationSetting = ParameterParser.parse(runFromZipAppSetting);
             var deleteCustomApplicationSetting = ParameterParser.parse(oldRunFromZipAppSetting);
             var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(addCustomApplicationSetting, deleteCustomApplicationSetting);
@@ -55,14 +58,17 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
     }
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if (this.isPublishProfileAuthSchemeEndpoint) {
-            await super.UpdateDeploymentStatus(isDeploymentSuccess);
-        } else {
+        if(!!this.appService) {
             await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
-
-            let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
-            console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
-            tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
         }
+
+        let appServiceApplicationUrl: string;
+        if (!!this.appServiceUtility) {
+            appServiceApplicationUrl = await this.appServiceUtility.getApplicationURL();
+        } else {
+            appServiceApplicationUrl = this.publishProfileScmCredentials.applicationUrl;
+        }
+        console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+        tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
     }
 }
