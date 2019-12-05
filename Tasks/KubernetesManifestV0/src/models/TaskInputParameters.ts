@@ -2,7 +2,6 @@
 
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
-import { validRange } from 'semver';
 
 export let namespace: string = tl.getInput('namespace', false);
 export const containers: string[] = tl.getDelimitedInput('containers', '\n');
