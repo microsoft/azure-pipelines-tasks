@@ -2,8 +2,8 @@ import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import util = require("util");
-
 import env = require("./Environment");
+
 import deployAzureRG = require("../models/DeployAzureRG");
 import armResource = require("azure-arm-rest-v2/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
