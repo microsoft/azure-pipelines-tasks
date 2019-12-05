@@ -43,6 +43,7 @@
         "Minor": 162,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> Removed the publish metadata pipeline variable (#11766)
         "Patch": 0
 >>>>>>> Kubernetes L0 fix (#11781)
@@ -52,6 +53,9 @@
 =======
         "Patch": 2
 >>>>>>> Users/suaggar/correlation (#11824)
+=======
+        "Patch": 3
+>>>>>>> Users/suaggar/tsg update in logs (#11903)
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
