@@ -22,7 +22,6 @@ process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALKEY"] = "key";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_TENANTID"] = "tenant";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID"] = "sId";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME"] = "sName";
-process.env["ENDPOINT_DATA_AzureRM_GRAPHURL"] = "https://graph.windows.net/";
 process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";
 process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
 
