@@ -26,4 +26,5 @@ tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-
 tr.registerMock('azure-arm-rest-v2/azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
 tr.registerMock('azure-arm-rest-v2/azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));
 tr.registerMock('azure-arm-rest-v2/azure-arm-network', require('./mock_node_modules/azure-arm-network'));
+tr.registerMock('azure-arm-rest-v2/azure-graph', require('./mock_node_modules/azure-graph/azure-graph'));
 tr.run();
