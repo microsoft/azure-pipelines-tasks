@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 162,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
@@ -49,7 +49,7 @@
       "name": "namespace",
       "type": "string",
       "label": "ms-resource:loc.input.label.namespace",
-      "required": true,
+      "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.namespace"
     },
@@ -364,6 +364,8 @@
     "waitForServiceIpAssignmentTimedOut": "ms-resource:loc.messages.waitForServiceIpAssignmentTimedOut",
     "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
     "UnableToCreateTrafficSplitManifestFile": "ms-resource:loc.messages.UnableToCreateTrafficSplitManifestFile",
-    "StableSpecSelectorNotExist": "ms-resource:loc.messages.StableSpecSelectorNotExist"
+    "StableSpecSelectorNotExist": "ms-resource:loc.messages.StableSpecSelectorNotExist",
+    "InvalidPercentage": "ms-resource:loc.messages.InvalidPercentage",
+    "InvalidBaselineAndCanaryReplicas": "ms-resource:loc.messages.InvalidBaselineAndCanaryReplicas"
   }
 }

@@ -7,6 +7,7 @@ import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
 import { pipelineAnnotations } from 'kubernetes-common-v2/kubernetesconstants';
 import { KubernetesConnection } from 'kubernetes-common-v2/kubernetesconnection';
 import * as filehelper from './FileHelper';
+var apiVersion = null;
 
 export function getManifestFiles(manifestFilePaths: string | string[]): string[] {
     if (!manifestFilePaths) {
@@ -33,10 +34,10 @@ export async function getKubectl(): Promise<string> {
     }
 }
 
-export function createKubectlArgs(kinds: Set<string>, names: Set<string>): string {
+export function createKubectlArgs(kind: string, names: Set<string>): string {
     let args = '';
-    if (!!kinds && kinds.size > 0) {
-        args = args + createInlineArray(Array.from(kinds.values()));
+    if (!!kind) {
+        args = args + kind;
     }
 
     if (!!names && names.size > 0) {
@@ -147,7 +148,21 @@ export function substituteImageNameInSpecFile(currentString: string, imageName: 
     }, '');
 }
 
+export function getAPIVersion() {
+    if(apiVersion)
+        return apiVersion;
+
+    const kubectlPath = tl.which('kubectl', true)
+    const command = tl.tool(kubectlPath);
+    command.arg('api-versions');
+    const result = command.execSync().stdout.split('\n');
+    apiVersion = result.find(version => version.startsWith('split.smi-spec.io'));
+
+    return apiVersion = (apiVersion != null && typeof apiVersion != 'undefined') ? apiVersion : 'split.smi-spec.io/v1alpha1';
+}
+
 function createInlineArray(str: string | string[]): string {
     if (typeof str === 'string') { return str; }
     return str.join(',');
 }
+

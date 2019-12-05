@@ -197,8 +197,9 @@ function createTrafficSplitManifestFile(serviceName: string, stableWeight: numbe
 }
 
 function getTrafficSplitObject(name: string, stableWeight: number, baselineWeight: number, canaryWeight: number): string {
+    const apiVersion = utils.getAPIVersion();
     const trafficSplitObjectJson = `{
-        "apiVersion": "split.smi-spec.io/v1alpha1",
+        "apiVersion": "${apiVersion}",
         "kind": "TrafficSplit",
         "metadata": {
             "name": "%s"

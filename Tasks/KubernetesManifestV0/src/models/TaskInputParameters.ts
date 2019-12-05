@@ -1,6 +1,8 @@
 'use strict';
 
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as canaryDeploymentHelper from '../utils/CanaryDeploymentHelper';
+import { validRange } from 'semver';
 
 export let namespace: string = tl.getInput('namespace', false);
 export const containers: string[] = tl.getDelimitedInput('containers', '\n');
@@ -26,4 +28,25 @@ if (!namespace) {
 if (!namespace) {
     tl.debug('Namespace was not supplied nor present in the endpoint; using "default" namespace instead.');
     namespace = 'default';
+}
+
+export function validateCanaryPercentage()
+{
+    if(deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY && !validateRegex("^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$", canaryPercentage))
+    {
+        throw new Error(tl.loc('InvalidPercentage'));
+    }
+}
+
+export function validateReplicaCount()
+{
+    if(deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY && trafficSplitMethod.toUpperCase() === canaryDeploymentHelper.TRAFFIC_SPLIT_STRATEGY && !validateRegex("^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$", baselineAndCanaryReplicas))
+    {
+        throw new Error(tl.loc('InvalidBaselineAndCanaryReplicas'));
+    }
+}
+
+function validateRegex(regex: string, testString: string) {
+    var percentageRegex = new RegExp(regex);
+    return percentageRegex.test(testString);
 }

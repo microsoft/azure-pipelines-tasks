@@ -10,6 +10,7 @@ import * as helper from '../utils/KubernetesObjectUtility';
 import { KubernetesWorkload } from 'kubernetes-common-v2/kubernetesconstants';
 import { StringComparer, isEqual } from './StringComparison';
 import * as utils from '../utils/utilities';
+import { isFulfilled } from 'q';
 
 export const CANARY_DEPLOYMENT_STRATEGY = 'CANARY';
 export const TRAFFIC_SPLIT_STRATEGY = 'SMI';
@@ -32,17 +33,7 @@ export function deleteCanaryDeployment(kubectl: Kubectl, manifestFilePaths: stri
 
     // create delete cmd prefix
     let argsPrefix: string;
-    argsPrefix = createCanaryObjectsArgumentString(inputManifestFiles, includeServices);
-
-    // append delete cmd args as suffix (if present)
-    const args = utils.getDeleteCmdArgs(argsPrefix, TaskInputParameters.args);
-    tl.debug('Delete cmd args : ' + args);
-
-    if (!!args && args.length > 0) {
-        // run kubectl delete cmd
-        const result = kubectl.delete(args);
-        utils.checkForErrors([result]);
-    }
+    createCanaryObjectsArgumentString(kubectl, inputManifestFiles, includeServices);
 }
 
 export function markResourceAsStable(inputObject: any): object {
@@ -194,10 +185,13 @@ function addCanaryLabelsAndAnnotations(inputObject: any, type: string) {
     }
 }
 
-function createCanaryObjectsArgumentString(files: string[], includeServices: boolean) {
-    const kindList = new Set();
-    const nameList = new Set();
+function addValueToList(map, key, value) {
+    map[key] = map[key] || new Set<string>();
+    map[key].add(value);
+}
 
+function createCanaryObjectsArgumentString(kubectl: Kubectl,files: string[], includeServices: boolean) {
+    var kindNameMap = {};
     files.forEach((filePath: string) => {
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
@@ -207,17 +201,29 @@ function createCanaryObjectsArgumentString(files: string[], includeServices: boo
                 || (includeServices && helper.isServiceEntity(kind))) {
                 const canaryObjectName = getCanaryResourceName(name);
                 const baselineObjectName = getBaselineResourceName(name);
-                kindList.add(kind);
-                nameList.add(canaryObjectName);
-                nameList.add(baselineObjectName);
+                addValueToList(kindNameMap, kind, canaryObjectName);
+                const result = kubectl.getResource(kind, baselineObjectName);
+                if(result != null && !result.stderr)
+                {
+                    addValueToList(kindNameMap, kind, baselineObjectName);
+                }
             }
         });
     });
-
-    if (kindList.size === 0) {
+ 
+    const kindList = Object.keys(kindNameMap);
+    if (kindList.length === 0) {
         tl.debug('CanaryDeploymentHelper : No deployment objects found');
     }
+    kindList.forEach(kind => {
+        const argsPrefix = utils.createKubectlArgs(kind, kindNameMap[kind]);
+        const args = utils.getDeleteCmdArgs(argsPrefix, TaskInputParameters.args);
+        tl.debug('Delete cmd args : ' + args);
 
-    const args = utils.createKubectlArgs(kindList, nameList);
-    return args;
+        if (!!args && args.length > 0) {
+            // run kubectl delete cmd
+            const result = kubectl.delete(args);
+            utils.checkForErrors([result]);
+        }
+    })
 }
