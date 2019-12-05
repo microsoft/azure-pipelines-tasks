@@ -54,7 +54,8 @@ export class DeploymentScopeBase {
                             return this.waitAndPerformAzureDeployment(retryCount);
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);
-                        this.checkAndPrintPortalDeploymentURL();
+                        this.checkAndPrintPortalDeploymentURL(error);
+                        
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
@@ -69,9 +70,11 @@ export class DeploymentScopeBase {
         }
     }
 
-    protected checkAndPrintPortalDeploymentURL() {
-        if(this.taskParameters.deploymentScope == "Resource Group" || this.taskParameters.deploymentScope == "Subscription") {
-            tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
+    protected checkAndPrintPortalDeploymentURL(error: any) {
+        if(!!error && (error.statusCode == 200 || error.statusCode == 201)) {
+            if(this.taskParameters.deploymentScope == "Resource Group") {
+                tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
+            }
         }
     }
 

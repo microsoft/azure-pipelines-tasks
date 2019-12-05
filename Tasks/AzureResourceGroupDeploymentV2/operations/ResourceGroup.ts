@@ -538,7 +538,7 @@ export class ResourceGroup {
                             return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount);
                         }
                         this.writeDeploymentErrors(error);
-                        tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
+                        this.checkAndPrintPortalDeploymentURL(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
@@ -550,6 +550,12 @@ export class ResourceGroup {
                     resolve();
                 });
             });
+        }
+    }
+
+    protected checkAndPrintPortalDeploymentURL(error: any) {
+        if(!!error && (error.statusCode == 200 || error.statusCode == 201)) {
+            tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
         }
     }
 
