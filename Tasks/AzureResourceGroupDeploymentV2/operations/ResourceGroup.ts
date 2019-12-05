@@ -569,7 +569,7 @@ export class ResourceGroup {
         } else {
             throw new Error(tl.loc("InvalidTemplateLocation"));
         }
-        await this.performAzureDeployment(armClient, deployment, 3, "abc");//await this.getServicePrincipalName());
+        await this.performAzureDeployment(armClient, deployment, 3, await this.getServicePrincipalName());
     }
 
     protected async getServicePrincipalName(): Promise<string> {
