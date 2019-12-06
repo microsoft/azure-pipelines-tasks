@@ -119,12 +119,14 @@ export class ResourceGroup {
     private winRMExtensionHelper: winRM.WinRMExtensionHelper;
     private deploymentGroupExtensionHelper: dgExtensionHelper.DeploymentGroupExtensionHelper;
     private environmentHelper: env.EnvironmentHelper;
+    private _spnName: string;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
         this.winRMExtensionHelper = new winRM.WinRMExtensionHelper(this.taskParameters);
         this.deploymentGroupExtensionHelper = new dgExtensionHelper.DeploymentGroupExtensionHelper(this.taskParameters);
         this.environmentHelper = new env.EnvironmentHelper(this.taskParameters);
+        this._spnName = null;
     }
 
     public async createOrUpdateResourceGroup(): Promise<void> {
@@ -524,7 +526,11 @@ export class ResourceGroup {
         });
     }
 
-    private async performAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount = 0, spnName: string): Promise<void> {
+    private async performAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount = 0): Promise<void> {
+        if(!this._spnName) {
+            this._spnName = await this.getServicePrincipalName();
+        }
+        
         if (deployment.properties["mode"] === "Validation") {
             return this.validateDeployment(armClient, deployment);
         } else {
@@ -535,13 +541,11 @@ export class ResourceGroup {
                 armClient.deployments.createOrUpdate(this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
                     if (error) {
                         if(error.code == "ResourceGroupNotFound" && retryCount > 0){
-                            return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount, spnName);
+                            return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount);
                         }
                         this.writeDeploymentErrors(error);
-                        if(error.statusCode == 403) {
-                            tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
-                        }
-                        this.checkAndPrintPortalDeploymentURL();
+                        this.printServicePrincipalRoleAssignmentError(error);
+                        this.checkAndPrintPortalDeploymentURL(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
@@ -556,13 +560,21 @@ export class ResourceGroup {
         }
     }
 
-    protected checkAndPrintPortalDeploymentURL() {
-        tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
+    private printServicePrincipalRoleAssignmentError(error: any) {
+        if(!!error && error.statusCode == 403) {
+            tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.resourceGroupName));
+        }
     }
 
-    private async waitAndPerformAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount, spnName: string): Promise<void> {
+    protected checkAndPrintPortalDeploymentURL(error: any) {
+        if(!!error && (error.statusCode < 400 || error.statusCode >= 500)) {
+            tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
+        }
+    }
+
+    private async waitAndPerformAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount): Promise<void> {
         await sleepFor(3);
-        return this.performAzureDeployment(armClient, deployment, retryCount - 1, spnName);
+        return this.performAzureDeployment(armClient, deployment, retryCount - 1);
     }
 
     private async createTemplateDeployment(armClient: armResource.ResourceManagementClient) {
@@ -575,7 +587,7 @@ export class ResourceGroup {
         } else {
             throw new Error(tl.loc("InvalidTemplateLocation"));
         }
-        await this.performAzureDeployment(armClient, deployment, 3, await this.getServicePrincipalName());
+        await this.performAzureDeployment(armClient, deployment, 3);
     }
 
     protected async getServicePrincipalName(): Promise<string> {
