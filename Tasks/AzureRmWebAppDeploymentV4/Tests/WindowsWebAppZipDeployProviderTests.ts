@@ -28,7 +28,6 @@ export class WindowsWebAppZipDeployProviderTests {
                         var map: Map<string, string> = new Map<string, string>();
                         map.set('MSDEPLOY_RENAME_LOCKED_FILES', '1');
                         map.set('ScmType', 'ScmType');
-                        map.set('WEBSITE_RUN_FROM_PACKAGE', '0');
                         return map;
                     },
                     zipDeploy: function(E, F) {

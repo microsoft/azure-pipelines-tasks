@@ -15,7 +15,7 @@
   "version": {
     "Major": 2,
     "Minor": 157,
-    "Patch": 6
+    "Patch": 12
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -480,6 +480,9 @@
     "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "DeploymentGroupConfigurationNotSucceeded": "ms-resource:loc.messages.DeploymentGroupConfigurationNotSucceeded",
-    "DeploymentGroupConfigurationFailedOnVM": "ms-resource:loc.messages.DeploymentGroupConfigurationFailedOnVM"
+    "DeploymentGroupConfigurationFailedOnVM": "ms-resource:loc.messages.DeploymentGroupConfigurationFailedOnVM",
+    "ServicePrincipalRoleAssignmentDetails": "ms-resource:loc.messages.ServicePrincipalRoleAssignmentDetails",
+    "ServicePrincipalFetchFailed": "ms-resource:loc.messages.ServicePrincipalFetchFailed",
+    "FindMoreDeploymentDetailsAzurePortal": "ms-resource:loc.messages.FindMoreDeploymentDetailsAzurePortal"
   }
 }

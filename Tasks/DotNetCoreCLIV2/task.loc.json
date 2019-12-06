@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 161,
+    "Minor": 162,
     "Patch": 0
   },
   "minimumAgentVersion": "2.115.0",
@@ -557,6 +557,7 @@
     "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
-    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
+    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
+    "NetCore3Update": "ms-resource:loc.messages.NetCore3Update"
   }
 }
