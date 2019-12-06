@@ -36,7 +36,6 @@ export class DistributedTest {
             }
         } catch (error) {
             ci.publishEvent({ environmenturi: this.inputDataContract.RunIdentifier, error: error });
-            tl.error(error);
             tl.setResult(tl.TaskResult.Failed, error, true);
         }
     }
