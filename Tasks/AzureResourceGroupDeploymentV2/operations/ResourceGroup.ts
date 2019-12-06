@@ -538,7 +538,7 @@ export class ResourceGroup {
                             return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount);
                         }
                         this.writeDeploymentErrors(error);
-                        this.checkAndPrintPortalDeploymentURL();
+                        this.checkAndPrintPortalDeploymentURL(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
@@ -553,8 +553,10 @@ export class ResourceGroup {
         }
     }
 
-    protected checkAndPrintPortalDeploymentURL() {
-        tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
+    protected checkAndPrintPortalDeploymentURL(error: any) {
+        if(!!error && (error.statusCode < 400 || error.statusCode >= 500)) {
+            tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
+        }
     }
 
     private async waitAndPerformAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount): Promise<void> {
