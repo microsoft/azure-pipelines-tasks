@@ -66,17 +66,7 @@ export class DeploymentScopeBase {
                             return this.waitAndPerformAzureDeployment(retryCount, spnName);
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);
-
-                        if(error.statusCode == 403) {
-                            if(this.taskParameters.deploymentScope == "Resource Group") {
-                                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
-                            } else if(this.taskParameters.deploymentScope == "Subscription") {
-                                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.subscriptionId));
-                            } else if(this.taskParameters.deploymentScope == "Management Group") {
-                                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.managementGroupId));    
-                            }
-                        }
-                        
+                        this.printServicePrincipalRoleAssignmentError(error, spnName);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
@@ -88,6 +78,18 @@ export class DeploymentScopeBase {
                     resolve();
                 });
             });
+        }
+    }
+
+    private printServicePrincipalRoleAssignmentError(error: any, spnName: string) {
+        if(!!error && error.statusCode == 403) {
+            if(this.taskParameters.deploymentScope == "Resource Group") {
+                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
+            } else if(this.taskParameters.deploymentScope == "Subscription") {
+                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.subscriptionId));
+            } else if(this.taskParameters.deploymentScope == "Management Group") {
+                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.managementGroupId));    
+            }
         }
     }
 

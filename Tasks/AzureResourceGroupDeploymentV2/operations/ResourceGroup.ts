@@ -537,10 +537,7 @@ export class ResourceGroup {
                             return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount, spnName);
                         }
                         this.writeDeploymentErrors(error);
-                        if(error.statusCode == 403) {
-                            tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
-                        }
-                        
+                        this.printServicePrincipalRoleAssignmentError(error, spnName);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
@@ -552,6 +549,12 @@ export class ResourceGroup {
                     resolve();
                 });
             });
+        }
+    }
+
+    private printServicePrincipalRoleAssignmentError(error: any, spnName: string) {
+        if(!!error && error.statusCode == 403) {
+            tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
         }
     }
 
