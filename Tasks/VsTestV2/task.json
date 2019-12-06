@@ -34,6 +34,7 @@
 =======
         "Minor": 162,
 <<<<<<< HEAD
+<<<<<<< HEAD
         "Patch": 0
 >>>>>>> Updated VsTestV2 task to version 2.162.0 (#11805)
 =======
@@ -55,6 +56,9 @@
 =======
         "Patch": 4
 >>>>>>> Updated VsTestV2 task to version 2.162.4 (#11882)
+=======
+        "Patch": 5
+>>>>>>> fixed no test assemblies found issue (#11918)
     },
     "demands": [
         "vstest"
