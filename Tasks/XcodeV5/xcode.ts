@@ -214,7 +214,9 @@ async function run() {
         }
         else if (signingOption === 'auto') {
             xcode_codeSignStyle = 'CODE_SIGN_STYLE=Automatic';
+        }
 
+        if (signingOption !== 'nosign') {
             let teamId: string = tl.getInput('teamId');
             if (teamId) {
                 xcode_devTeam = 'DEVELOPMENT_TEAM=' + teamId;

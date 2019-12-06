@@ -240,7 +240,7 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.teamId",
       "groupName": "sign",
-      "visibleRule": "signingOption = auto"
+      "visibleRule": "signingOption != nosign"
     },
     {
       "name": "destinationPlatformOption",

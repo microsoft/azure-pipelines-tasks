@@ -240,7 +240,7 @@
             "required": false,
             "helpMarkDown": "(Optional, unless you are a member of multiple development teams.) Specify the 10-character development team ID.",
             "groupName": "sign",
-            "visibleRule": "signingOption = auto"
+            "visibleRule": "signingOption != nosign"
         },
         {
             "name": "destinationPlatformOption",
