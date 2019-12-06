@@ -71,7 +71,7 @@ export class DeploymentScopeBase {
     }
 
     protected checkAndPrintPortalDeploymentURL() {
-        if(this.taskParameters.deploymentScope == "Resource Group") {
+        if(this.taskParameters.deploymentScope == "Resource Group" || this.taskParameters.deploymentScope == "Subscription") {
             tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
         }
     }
