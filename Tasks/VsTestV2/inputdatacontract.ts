@@ -96,7 +96,7 @@ export interface ExecutionSettings {
     DefaultTestBatchSize : number;
     AssemblyLevelParallelism : boolean;
     CodeCoverageEnabled : boolean;
-    PathToCustomTestAdapters : string;   
+    PathToCustomTestAdapters : string;
     ProceedAfterAbortedTestCase : boolean;
     PathToCustomVsTestConsoleWrapperAssembly : string;
     SettingsFile : string;
