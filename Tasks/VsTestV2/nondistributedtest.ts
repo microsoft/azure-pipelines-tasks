@@ -21,7 +21,6 @@ export class NonDistributedTest {
 
     private async invokeDtaExecutionHost() {
         try {
-
             console.log(tl.loc('runTestsLocally', 'vstest.console.exe'));
             console.log('========================================================');
             const exitCode = await this.startDtaExecutionHost();
@@ -103,10 +102,10 @@ export class NonDistributedTest {
             console.log(tl.loc('UserProvidedSourceFilter', this.sourceFilter.toString()));
             const telemetryProps: { [key: string]: any; } = { MiniMatchLines: this.sourceFilter.length };
             telemetryProps.ExecutionFlow = 'NonDistributed';
-            var start = new Date().getTime();
+            const start = new Date().getTime();
             const sources = tl.findMatch(this.inputDataContract.TestSelectionSettings.SearchFolder, this.sourceFilter);
-            var timeTaken = new Date().getTime() - start;
-            tl.debug( `Time taken for applying the minimatch pattern to filter out the sources ${timeTaken} ms` );
+            const timeTaken = new Date().getTime() - start;
+            tl.debug(`Time taken for applying the minimatch pattern to filter out the sources ${timeTaken} ms`);
             telemetryProps.TimeToSearchDLLsInMilliSeconds = timeTaken;
             tl.debug(`${sources.length} files matched the given minimatch filter`);
             ci.publishTelemetry('TestExecution','MinimatchFilterPerformance', telemetryProps);
@@ -120,8 +119,11 @@ export class NonDistributedTest {
             tl.debug('Files matching count :' + filesMatching.length);
             if (filesMatching.length === 0) {
                 tl.warning(tl.loc('noTestSourcesFound', this.sourceFilter.toString()));
-                if (this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet.toLowerCase() == "fail") {
+                if (this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet.toLowerCase() === 'fail') {
                     throw new Error(tl.loc('minTestsNotExecuted', this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected));
+                } else {
+                    tl.setResult(tl.TaskResult.Succeeded, tl.loc('noTestSourcesFound', this.sourceFilter.toString()), true);
+                    process.exit(0);
                 }
             }
 
@@ -135,6 +137,5 @@ export class NonDistributedTest {
     }
 
     private inputDataContract: InputDataContract;
-    private testAssemblyFiles: string[];
     private sourceFilter: string[] = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
 }
