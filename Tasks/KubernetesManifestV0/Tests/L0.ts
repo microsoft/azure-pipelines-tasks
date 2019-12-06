@@ -97,28 +97,61 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run successfuly for promote with canary strategy', (done: MochaDone) => {
+    it('Run successfuly for promote with canary strategy when baseline resource exists', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.promote;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
+        process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'true';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('nginx-deployment created') != -1, 'deployment is created');
         assert(tr.stdout.indexOf('deployment "nginx-deployment" successfully rolled out') != -1, 'deployment is successfully rolled out');
         assert(tr.stdout.indexOf('nginx-deployment annotated') != -1, 'nginx-deployment created.');
-        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted') != -1, 'Baseline and canary workloads are deleted');
+        assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') != -1, 'nginx-deployment-baseline workload exists');
+        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted') != -1, 'Baseline and Canary workloads deleted');
         done();
     });
 
-    it('Run successfuly for reject with canary strategy', (done: MochaDone) => {
+    it('Run successfuly for promote with canary strategy when baseline resource does not exist', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.promote;
+        process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
+        process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'false';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('nginx-deployment created') != -1, 'deployment is created');
+        assert(tr.stdout.indexOf('deployment "nginx-deployment" successfully rolled out') != -1, 'deployment is successfully rolled out');
+        assert(tr.stdout.indexOf('nginx-deployment annotated') != -1, 'nginx-deployment created.');
+        assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') == -1, 'nginx-deployment-baseline workload does not exist');
+        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted') != -1, 'Canary workload deleted');
+        done();
+    });
+
+    it('Run successfuly for reject with canary strategy when baseline resource exists', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.reject;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
+        process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'true';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted') != -1, 'Baseline and canary workloads are deleted');
+        assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') != -1, 'nginx-deployment-baseline workload exists');
+        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted') != -1, 'Baseline and Canary workloads deleted');
+        done();
+    });
+
+    it('Run successfuly for reject with canary strategy when baseline resource does not exist', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.reject;
+        process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
+        process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'false';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') == -1, 'nginx-deployment-baseline workload does not exist');
+        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted') != -1, 'Canary workload deleted');
         done();
     });
 
