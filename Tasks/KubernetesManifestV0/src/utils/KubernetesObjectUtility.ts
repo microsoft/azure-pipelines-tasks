@@ -292,21 +292,21 @@ export function updateImageDetails(inputObject: any, containers: string[]) {
         return;
     }
 
-    if (!!inputObject.spec.template && !!inputObject.spec.template.spec) {
-        if (!!inputObject.spec.template.spec.containers) {
+    if (inputObject.spec.template && !!inputObject.spec.template.spec) {
+        if (inputObject.spec.template.spec.containers) {
             updateContainers(inputObject.spec.template.spec.containers, containers);
         }
-        if (!!inputObject.spec.template.spec.initContainers) {
+        if (inputObject.spec.template.spec.initContainers) {
             updateContainers(inputObject.spec.template.spec.initContainers, containers);
         }
         return;
     }
 
-    if (!!inputObject.spec.containers) {
+    if (inputObject.spec.containers) {
         updateContainers(inputObject.spec.containers, containers);
     }
 
-    if (!!inputObject.spec.initContainers) {
+    if (inputObject.spec.initContainers) {
         updateContainers(inputObject.spec.initContainers, containers);
     }
 }
@@ -317,9 +317,17 @@ function updateContainers(containers: any[], images: string[]) {
     }
     containers.forEach((container) => {
         const imageName: string = container.image.trim();
-        const img = imageName.split(':')[0] + ':';
+        let img = '';
+        if (imageName.indexOf('/') > 0) {
+            const imgParts = imageName.split('/');
+            const registry = imgParts[0];
+            const imgName = imgParts[1].split(':')[0];
+            img = `${registry}/${imgName}`;
+        } else {
+            img = imageName.split(':')[0];
+        }
         images.forEach(image => {
-            if (image.startsWith(img) || image === img) {
+            if (image.startsWith(img + ':') || image === img) {
                 container.image = image;
             }
         });

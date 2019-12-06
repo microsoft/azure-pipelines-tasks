@@ -140,13 +140,13 @@ function updateResourceObjects(filePaths: string[], imagePullSecrets: string[], 
     filePaths.forEach((filePath: string) => {
         const fileContents = fs.readFileSync(filePath).toString();
         yaml.safeLoadAll(fileContents, function (inputObject: any) {
-            if (!!inputObject && !!inputObject.kind) {
+            if (inputObject && inputObject.kind) {
                 const kind = inputObject.kind;
                 if (KubernetesObjectUtility.isWorkloadEntity(kind)) {
-                    if (!!imagePullSecrets && imagePullSecrets.length > 0) {
+                    if (imagePullSecrets && imagePullSecrets.length > 0) {
                         KubernetesObjectUtility.updateImagePullSecrets(inputObject, imagePullSecrets, false);
                     }
-                    if (!!containers && containers.length > 0) {
+                    if (containers && containers.length > 0) {
                         KubernetesObjectUtility.updateImageDetails(inputObject, containers);
                     }
                 }
