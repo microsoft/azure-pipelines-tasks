@@ -126,7 +126,7 @@ export function substituteImageNameInSpecFile(currentString: string, imageName: 
     }
 
     return currentString.split('\n').reduce((acc, line) => {
-        const imageKeyword = line.match(/^ *image:/);
+        const imageKeyword = line.match(/ *image:/);
         if (imageKeyword) {
             let [currentImageName, currentImageTag] = line
                 .substring(imageKeyword[0].length) // consume the line from keyword onwards
