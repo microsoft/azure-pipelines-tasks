@@ -126,6 +126,7 @@ export class ResourceGroup {
         this.winRMExtensionHelper = new winRM.WinRMExtensionHelper(this.taskParameters);
         this.deploymentGroupExtensionHelper = new dgExtensionHelper.DeploymentGroupExtensionHelper(this.taskParameters);
         this.environmentHelper = new env.EnvironmentHelper(this.taskParameters);
+        this._spnName = null;
     }
 
     public async createOrUpdateResourceGroup(): Promise<void> {
