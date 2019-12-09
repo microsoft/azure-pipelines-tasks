@@ -31,9 +31,7 @@ export function deleteCanaryDeployment(kubectl: Kubectl, manifestFilePaths: stri
         throw (tl.loc('ManifestFileNotFound'));
     }
 
-    // create delete cmd prefix
-    let argsPrefix: string;
-    createCanaryObjectsArgumentString(kubectl, inputManifestFiles, includeServices);
+    deleteCanaryAndBaselineObjectsForEachKind(kubectl, inputManifestFiles, includeServices);
 }
 
 export function markResourceAsStable(inputObject: any): object {
@@ -50,11 +48,11 @@ export function markResourceAsStable(inputObject: any): object {
     return newObject;
 }
 
-export function isResourceMarkedAsStable(inputObject: any): boolean {    
-    return inputObject && 
-            inputObject.metadata && 
-            inputObject.metadata.labels &&
-            inputObject.metadata.labels[CANARY_VERSION_LABEL] == STABLE_LABEL_VALUE;
+export function isResourceMarkedAsStable(inputObject: any): boolean {
+    return inputObject &&
+        inputObject.metadata &&
+        inputObject.metadata.labels &&
+        inputObject.metadata.labels[CANARY_VERSION_LABEL] == STABLE_LABEL_VALUE;
 }
 
 export function getStableResource(inputObject: any): object {
@@ -168,8 +166,8 @@ function getNewCanaryObject(inputObject: any, replicas: number, type: string): o
 
 function isSpecContainsReplicas(kind: string) {
     return !isEqual(kind, KubernetesWorkload.pod, StringComparer.OrdinalIgnoreCase) &&
-            !isEqual(kind, KubernetesWorkload.daemonSet, StringComparer.OrdinalIgnoreCase) && 
-            !helper.isServiceEntity(kind)
+        !isEqual(kind, KubernetesWorkload.daemonSet, StringComparer.OrdinalIgnoreCase) &&
+        !helper.isServiceEntity(kind)
 }
 
 function addCanaryLabelsAndAnnotations(inputObject: any, type: string) {
@@ -190,7 +188,7 @@ function addValueToList(map, key, value) {
     map[key].add(value);
 }
 
-function createCanaryObjectsArgumentString(kubectl: Kubectl,files: string[], includeServices: boolean) {
+function deleteCanaryAndBaselineObjectsForEachKind(kubectl: Kubectl, files: string[], includeServices: boolean) {
     var kindNameMap = {};
     files.forEach((filePath: string) => {
         const fileContents = fs.readFileSync(filePath);
@@ -203,14 +201,13 @@ function createCanaryObjectsArgumentString(kubectl: Kubectl,files: string[], inc
                 const baselineObjectName = getBaselineResourceName(name);
                 addValueToList(kindNameMap, kind, canaryObjectName);
                 const result = kubectl.getResource(kind, baselineObjectName);
-                if(result != null && !result.stderr)
-                {
+                if (result != null && !result.stderr) {
                     addValueToList(kindNameMap, kind, baselineObjectName);
                 }
             }
         });
     });
- 
+
     const kindList = Object.keys(kindNameMap);
     if (kindList.length === 0) {
         tl.debug('CanaryDeploymentHelper : No deployment objects found');

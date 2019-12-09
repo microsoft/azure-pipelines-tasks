@@ -7,7 +7,6 @@ import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
 import { pipelineAnnotations } from 'kubernetes-common-v2/kubernetesconstants';
 import { KubernetesConnection } from 'kubernetes-common-v2/kubernetesconnection';
 import * as filehelper from './FileHelper';
-var apiVersion = null;
 
 export function getManifestFiles(manifestFilePaths: string | string[]): string[] {
     if (!manifestFilePaths) {
@@ -148,21 +147,12 @@ export function substituteImageNameInSpecFile(currentString: string, imageName: 
     }, '');
 }
 
-export function getAPIVersion() {
-    if(apiVersion)
-        return apiVersion;
-
-    const kubectlPath = tl.which('kubectl', true)
-    const command = tl.tool(kubectlPath);
-    command.arg('api-versions');
-    const result = command.execSync().stdout.split('\n');
-    apiVersion = result.find(version => version.startsWith('split.smi-spec.io'));
-
-    return apiVersion = (apiVersion != null && typeof apiVersion != 'undefined') ? apiVersion : 'split.smi-spec.io/v1alpha1';
+export function getTrafficSplitAPIVersion(kubectl: Kubectl) {
+    const result = kubectl.executeCommand('api-versions');
+    const trafficSplitAPIVersion = result.stdout.split('\n').find(version => version.startsWith('split.smi-spec.io'));
+    if (trafficSplitAPIVersion == null || typeof trafficSplitAPIVersion == 'undefined') {
+        throw new Error(tl.loc('UnableToCreateTrafficSplitManifestFile', 'Could not find a valid api version for TrafficSplit object'));
+    }
+    tl.debug("api-version: " + trafficSplitAPIVersion);
+    return trafficSplitAPIVersion;
 }
-
-function createInlineArray(str: string | string[]): string {
-    if (typeof str === 'string') { return str; }
-    return str.join(',');
-}
-

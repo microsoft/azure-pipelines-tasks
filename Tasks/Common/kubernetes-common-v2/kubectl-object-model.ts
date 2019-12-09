@@ -175,6 +175,14 @@ export class Kubectl {
         return this.execute(command);
     }
 
+    public executeCommand(customCommand: string, args?: string) {
+        const command = tl.tool(this.kubectlPath);
+        command.arg(customCommand);
+        if (args)
+            command.line(args);
+        return this.execute(command);
+    }
+
     private execute(command: ToolRunner, silent?: boolean) {
         if (this.ignoreSSLErrors) {
             command.arg('--insecure-skip-tls-verify');

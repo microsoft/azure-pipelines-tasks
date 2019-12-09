@@ -29,18 +29,14 @@ if (!namespace) {
     namespace = 'default';
 }
 
-export function validateCanaryPercentage()
-{
-    if(deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY && !validateRegex("^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$", canaryPercentage))
-    {
+export function validateCanaryPercentage() {
+    if (deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY && !validateRegex("^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$", canaryPercentage)) {
         throw new Error(tl.loc('InvalidPercentage'));
     }
 }
 
-export function validateReplicaCount()
-{
-    if(deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY && trafficSplitMethod.toUpperCase() === canaryDeploymentHelper.TRAFFIC_SPLIT_STRATEGY && !validateRegex("^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$", baselineAndCanaryReplicas))
-    {
+export function validateReplicaCount() {
+    if (deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY && trafficSplitMethod.toUpperCase() === canaryDeploymentHelper.TRAFFIC_SPLIT_STRATEGY && !validateRegex("^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$", baselineAndCanaryReplicas)) {
         throw new Error(tl.loc('InvalidBaselineAndCanaryReplicas'));
     }
 }

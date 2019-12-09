@@ -51,7 +51,7 @@ export async function deploy(kubectl: Kubectl, manifestFilePaths: string[], depl
         allPods = JSON.parse((kubectl.getAllPods()).stdout);
     }
     catch (e) {
-        tl.debug("Unable to parse pods; Error: "+ e);
+        tl.debug("Unable to parse pods; Error: " + e);
     }
 
     annotateResources(deployedManifestFiles, kubectl, resourceTypes, allPods);

@@ -363,7 +363,7 @@
     "waitForServiceIpAssignment": "Waiting for service %s external IP assignment",
     "waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timed out",
     "ServiceExternalIP": "service %s external IP is %s",
-    "UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file.",
+    "UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file. %s",
     "StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment.",
     "InvalidPercentage": "Invalid value for percentage.",
     "InvalidBaselineAndCanaryReplicas":  "Invalid value for replica count. Enter a value between 0 and 100."
