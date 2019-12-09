@@ -18,8 +18,7 @@
     },
     "demands": [],
     "groups": [],
-    "inputs": [
-        {
+    "inputs": [{
             "name": "action",
             "type": "pickList",
             "label": "Action",
@@ -329,43 +328,41 @@
     ],
     "dataSourceBindings": [],
     "instanceNameFormat": "$(action)",
-    "outputVariables": [
-        {
-            "name": "manifestsBundle",
-            "description": "The location of the manifest bundles created by bake action"
-        }
-    ],
+    "outputVariables": [{
+        "name": "manifestsBundle",
+        "description": "The location of the manifest bundles created by bake action"
+    }],
     "execution": {
         "Node": {
             "target": "src//run.js"
         }
     },
-  "messages": {
-    "DownloadPathForStableTxt": "Download path for stable.txt: %s",
-    "DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
-    "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
-    "DockerComposeFilePathNotSupplied": "docker-compose file path not supplied",
-    "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
-    "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
-    "ManifestFileNotFound": "No manifest file(s) matching %s was found.",
-    "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
-    "UnknownRenderType": "Unknown render engine",
-    "ResourceKindNotDefined": "Resource kind is null",
-    "NullInputObject": "Input object is null.",
-    "ArgumentsInputNotSupplied": "Arguments are not supplied.",
-    "NullInputObjectMetadata": "Input object metadata is null.",
-    "InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
-    "InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
-    "AllContainersNotInReadyState": "All the containers are not in a ready state.",
-    "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
-    "KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features.",
-    "CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
-    "waitForServiceIpAssignment": "Waiting for service %s external IP assignment",
-    "waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timed out",
-    "ServiceExternalIP": "service %s external IP is %s",
-    "UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file. %s",
-    "StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment.",
-    "InvalidPercentage": "Invalid value for percentage.",
-    "InvalidBaselineAndCanaryReplicas":  "Invalid value for replica count. Enter a value between 0 and 100."
-  }
+    "messages": {
+        "DownloadPathForStableTxt": "Download path for stable.txt: %s",
+        "DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
+        "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
+        "DockerComposeFilePathNotSupplied": "docker-compose file path not supplied",
+        "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
+        "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+        "ManifestFileNotFound": "No manifest file(s) matching %s was found.",
+        "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
+        "UnknownRenderType": "Unknown render engine",
+        "ResourceKindNotDefined": "Resource kind is null",
+        "NullInputObject": "Input object is null.",
+        "ArgumentsInputNotSupplied": "Arguments are not supplied.",
+        "NullInputObjectMetadata": "Input object metadata is null.",
+        "InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
+        "InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
+        "AllContainersNotInReadyState": "All the containers are not in a ready state.",
+        "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
+        "KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features.",
+        "CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
+        "waitForServiceIpAssignment": "Waiting for service %s external IP assignment",
+        "waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timed out",
+        "ServiceExternalIP": "service %s external IP is %s",
+        "UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file. %s",
+        "StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment.",
+        "InvalidPercentage": "Invalid value for percentage.",
+        "InvalidBaselineAndCanaryReplicas": "Invalid value for replica count. Enter a value between 0 and 100."
+    }
 }
