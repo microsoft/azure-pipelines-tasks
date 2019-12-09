@@ -15,7 +15,7 @@
   "version": {
     "Major": 2,
     "Minor": 157,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -350,6 +350,7 @@
     "CreatedRG": "ms-resource:loc.messages.CreatedRG",
     "CreatingTemplateDeployment": "ms-resource:loc.messages.CreatingTemplateDeployment",
     "TemplateParsingFailed": "ms-resource:loc.messages.TemplateParsingFailed",
+    "ClosingPairNotFound": "ms-resource:loc.messages.ClosingPairNotFound",
     "FileFetchFailed": "ms-resource:loc.messages.FileFetchFailed",
     "ParametersFileParsingFailed": "ms-resource:loc.messages.ParametersFileParsingFailed",
     "StartingDeployment": "ms-resource:loc.messages.StartingDeployment",

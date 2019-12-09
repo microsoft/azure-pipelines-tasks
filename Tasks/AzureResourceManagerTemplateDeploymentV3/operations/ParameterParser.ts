@@ -1,9 +1,12 @@
+import tl = require("azure-pipelines-task-lib/task");
 // This class manages the powershell parameters format
 
 export interface NameValuePair {
     name: string;
     value: string;
 }
+
+const speacialCharacters: string[] = ['{', '(', '[', '"', "'"];
 
 export class PowerShellParameters {
 
@@ -45,7 +48,7 @@ export class PowerShellParameters {
         }
         if (!!removeQuotes) {
             for (var name in result) {
-                result[name].value = result[name].value.replace(/^"(.*)"$/, '$1');
+                result[name].value = JSON.stringify(result[name].value);
             }
         }
 
@@ -97,8 +100,11 @@ export class PowerShellParameters {
                 if (currentPosition >= input.length) {
                     break;
                 }
-            }
+                if(speacialCharacters.indexOf(input[currentPosition]) > -1){
+                    currentPosition++;
+                }
 
+            }
         }
         return { currentPosition: currentPosition, hasSpecialCharacter: hasSpecialCharacter };
     }
@@ -106,7 +112,7 @@ export class PowerShellParameters {
     private static findClosingBracketIndex(input, currentPosition, closingBracket): number {
         for (; currentPosition < input.length; currentPosition++) {
             if (input[currentPosition] == closingBracket) {
-                break;
+                return currentPosition;
             }
             else if (input[currentPosition] == "(") {
                 currentPosition = this.findClosingBracketIndex(input, currentPosition + 1, ")");
@@ -125,29 +131,27 @@ export class PowerShellParameters {
             }
             else if (input[currentPosition] == this.escapeCharacter) {
                 currentPosition++;
-                if (currentPosition >= input.length) {
-                    break;
+                if(currentPosition < input.length && (speacialCharacters.indexOf(input[currentPosition]) > -1)){
+                    currentPosition++;
                 }
             }
         }
-
-        return currentPosition;
+        throw new Error(tl.loc("ClosingPairNotFound", closingBracket));
     }
 
     private static findClosingQuoteIndex(input, currentPosition, closingQuote) {
         for (; currentPosition < input.length; currentPosition++) {
             if (input[currentPosition] == this.escapeCharacter) {
                 currentPosition++;
-                if (currentPosition >= input.length) {
-                    break;
+                if(currentPosition < input.length && (speacialCharacters.indexOf(input[currentPosition]) > -1)){
+                    currentPosition++;
                 }
             }
             else if (input[currentPosition] == closingQuote) {
-                break;
+                return currentPosition;;
             }
         }
-
-        return currentPosition;
+        throw new Error(tl.loc("ClosingPairNotFound", closingQuote));
     }
 
     private static escapeCharacter = "`";

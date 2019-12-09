@@ -310,7 +310,7 @@ export class ResourceGroup {
                 return JSON.parse(value);
             case "string":
             case "securestring":
-                return JSON.parse(`"` + value + `"`); // Adding trailing quotes for JSON parser to detect string
+                return JSON.parse(value);
             default:
                 // Sending as string
                 break;

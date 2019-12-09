@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 157,
-        "Patch": 8
+        "Patch": 9
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -350,6 +350,7 @@
         "CreatedRG": "Resource Group created successfully.",
         "CreatingTemplateDeployment": "Creating deployment parameters.",
         "TemplateParsingFailed": "Ensure the Template file ( '%s' ) is valid. Task failed while parsing with following error: %s",
+        "ClosingPairNotFound": "Parse Error: Could not find corresponding closing pair %s ",
         "FileFetchFailed": "Failed to download the file. URL: '%s'. Error: %s",
         "ParametersFileParsingFailed": "Ensure the Parameters file ( '%s' ) is valid. Task failed while parsing with following error: %s",
         "StartingDeployment": "Starting Deployment.",

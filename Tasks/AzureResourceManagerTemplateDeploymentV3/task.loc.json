@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 5
+    "Patch": 6
   },
   "preview": "true",
   "demands": [],
@@ -265,6 +265,7 @@
     "CreatedRG": "ms-resource:loc.messages.CreatedRG",
     "CreatingTemplateDeployment": "ms-resource:loc.messages.CreatingTemplateDeployment",
     "TemplateParsingFailed": "ms-resource:loc.messages.TemplateParsingFailed",
+    "ClosingPairNotFound": "ms-resource:loc.messages.ClosingPairNotFound",
     "FileFetchFailed": "ms-resource:loc.messages.FileFetchFailed",
     "ParametersFileParsingFailed": "ms-resource:loc.messages.ParametersFileParsingFailed",
     "StartingDeployment": "ms-resource:loc.messages.StartingDeployment",
