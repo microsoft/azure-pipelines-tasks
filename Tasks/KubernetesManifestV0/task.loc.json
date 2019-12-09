@@ -14,6 +14,7 @@
   "version": {
     "Major": 0,
 <<<<<<< HEAD
+<<<<<<< HEAD
     "Minor": 160,
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -44,6 +45,10 @@
 =======
     "Patch": 1
 >>>>>>> pushing all metadata code inside try-catch block (#11815)
+=======
+    "Minor": 163,
+    "Patch": 0
+>>>>>>> [KubernetesManifest] Replacement logic fix (#11883)
   },
   "demands": [],
   "groups": [],
