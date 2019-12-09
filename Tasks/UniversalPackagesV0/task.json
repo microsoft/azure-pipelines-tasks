@@ -353,7 +353,7 @@
         {
             "name": "publishedPackageVar",
             "type": "string",
-            "label": "Package Ouput Variable",
+            "label": "Package Output Variable",
             "required": false,
             "defaultValue": "",
             "groupName": "output",
