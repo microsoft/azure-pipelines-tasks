@@ -193,7 +193,7 @@ function deleteCanaryAndBaselineObjects(kubectl: Kubectl, files: string[], inclu
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
             const name = inputObject.metadata.name;
-            const kind = inputObject.kind.toLowerCase();
+            const kind = inputObject.kind;
             if (helper.isDeploymentEntity(kind)
                 || (includeServices && helper.isServiceEntity(kind))) {
                 const canaryObjectName = getCanaryResourceName(name);
