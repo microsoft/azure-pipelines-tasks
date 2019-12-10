@@ -324,6 +324,14 @@
       "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
       "visibleRule": "action = createSecret && secretType = dockerRegistry"
+    },
+    {
+      "name": "timeout",
+      "tpye": "string",
+      "label": "ms-resource:loc.input.label.timeout",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.timeout",
+      "visibleRule": "action = deploy || action = patch || action = scale || action = promote"
     }
   ],
   "dataSourceBindings": [],

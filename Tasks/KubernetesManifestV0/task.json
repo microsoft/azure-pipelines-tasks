@@ -324,6 +324,14 @@
             "label": "Docker registry service connection",
             "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
             "visibleRule": "action = createSecret && secretType = dockerRegistry"
+        },
+        {
+            "name": "timeout",
+            "tpye": "string",
+            "label": "Timeout for rollout status",
+            "required": false,
+            "helpMarkDown": "The maximum time in seconds for a deployment to make progress before it is considered to be failed.",
+            "visibleRule": "action = deploy || action = patch || action = scale || action = promote"
         }
     ],
     "dataSourceBindings": [],

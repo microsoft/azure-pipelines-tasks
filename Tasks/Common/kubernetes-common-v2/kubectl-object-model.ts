@@ -116,10 +116,12 @@ export class Kubectl {
         return this.execute(command, true);
     }
 
-    public checkRolloutStatus(resourceType: string, name: string): IExecSyncResult {
+    public checkRolloutStatus(resourceType: string, name: string, timeoutInSeconds?: string): IExecSyncResult {
         const command = tl.tool(this.kubectlPath);
         command.arg(['rollout', 'status']);
         command.arg(resourceType + '/' + name);
+        if (timeoutInSeconds)
+            command.arg(['--timeout', timeoutInSeconds + 's']);
         return this.execute(command);
     }
 

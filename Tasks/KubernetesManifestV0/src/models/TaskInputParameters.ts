@@ -16,6 +16,7 @@ export const secretArguments: string = tl.getInput('secretArguments', false) || 
 export const secretType: string = tl.getInput('secretType', false);
 export const secretName: string = tl.getInput('secretName', false);
 export const dockerRegistryEndpoint: string = tl.getInput('dockerRegistryEndpoint', false);
+export const timeout: string = tl.getInput('timeout', false);
 
 if (!namespace) {
     const kubConnection = tl.getInput('kubernetesServiceConnection', false);
