@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 161,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [
         "msbuild"
@@ -92,7 +92,7 @@
             "defaultValue": "",
             "required": false,
             "validation": {
-                "expression": "isMatch(value, '[<>*|:\\/&%\".#?]'",
+                "expression": "isMatch(value, '[<>*|:\\/&%\".#?]')",
                 "message": "The following characters are forbidden in Platform: < > * | : \\ / & % \" . # ?"
             }
         },
@@ -103,7 +103,7 @@
             "defaultValue": "",
             "required": false,
             "validation": {
-                "expression": "isMatch(value, '[<>*|:\\/&%\".#?]'",
+                "expression": "isMatch(value, '[<>*|:\\/&%\".#?]')",
                 "message": "The following characters are forbidden in Configuration: < > * | : \\ / & % \" . # ?"
             }
         },
