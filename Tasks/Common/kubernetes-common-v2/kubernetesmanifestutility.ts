@@ -6,13 +6,13 @@ import * as utils from './utility';
 import * as KubernetesConstants from './kubernetesconstants';
 import { Kubectl, Resource } from './kubectl-object-model';
 
-export async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): Promise<void> {
+export async function checkManifestStability(kubectl: Kubectl, resources: Resource[], timeoutInSeconds?: string): Promise<void> {
     const rolloutStatusResults = [];
     const numberOfResources = resources.length;
     for (let i = 0; i < numberOfResources; i++) {
         const resource = resources[i];
         if (KubernetesConstants.workloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
-            rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name, tl.getInput('timeout')));
+            rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name, timeoutInSeconds));
         }
         if (utils.isEqual(resource.type, KubernetesConstants.KubernetesWorkload.pod, true)) {
             try {

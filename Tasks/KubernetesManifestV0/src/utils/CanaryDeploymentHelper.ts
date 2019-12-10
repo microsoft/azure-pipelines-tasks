@@ -10,7 +10,6 @@ import * as helper from '../utils/KubernetesObjectUtility';
 import { KubernetesWorkload } from 'kubernetes-common-v2/kubernetesconstants';
 import { StringComparer, isEqual } from './StringComparison';
 import * as utils from '../utils/utilities';
-import { isFulfilled } from 'q';
 
 export const CANARY_DEPLOYMENT_STRATEGY = 'CANARY';
 export const TRAFFIC_SPLIT_STRATEGY = 'SMI';
@@ -31,7 +30,7 @@ export function deleteCanaryDeployment(kubectl: Kubectl, manifestFilePaths: stri
         throw (tl.loc('ManifestFileNotFound'));
     }
 
-    deleteCanaryAndBaselineObjectsForEachKind(kubectl, inputManifestFiles, includeServices);
+    deleteCanaryAndBaselineObjects(kubectl, inputManifestFiles, includeServices);
 }
 
 export function markResourceAsStable(inputObject: any): object {
@@ -183,18 +182,18 @@ function addCanaryLabelsAndAnnotations(inputObject: any, type: string) {
     }
 }
 
-function addValueToList(map, key, value) {
+function addValueToList(map: any, key: string, value: string) {
     map[key] = map[key] || new Set<string>();
     map[key].add(value);
 }
 
-function deleteCanaryAndBaselineObjectsForEachKind(kubectl: Kubectl, files: string[], includeServices: boolean) {
+function deleteCanaryAndBaselineObjects(kubectl: Kubectl, files: string[], includeServices: boolean) {
     var kindNameMap = {};
     files.forEach((filePath: string) => {
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
             const name = inputObject.metadata.name;
-            const kind = inputObject.kind;
+            const kind = inputObject.kind.toLowerCase();
             if (helper.isDeploymentEntity(kind)
                 || (includeServices && helper.isServiceEntity(kind))) {
                 const canaryObjectName = getCanaryResourceName(name);
