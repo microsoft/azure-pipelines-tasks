@@ -7,6 +7,7 @@ import * as constants from 'kubernetes-common-v2/kubernetesconstants';
 import * as TaskParameters from '../models/TaskInputParameters';
 
 export async function patch(ignoreSslErrors?: boolean) {
+    TaskParameters.validateTimeoutForRolloutStatus();
     const kubectl = new Kubectl(await utils.getKubectl(), TaskParameters.namespace, ignoreSslErrors);
     let kind = tl.getInput('kind', false).toLowerCase();
     let name = tl.getInput('name', false);

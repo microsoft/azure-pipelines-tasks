@@ -88,5 +88,6 @@
   "loc.messages.UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file. %s",
   "loc.messages.StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment.",
   "loc.messages.InvalidPercentage": "Invalid value for percentage.",
-  "loc.messages.InvalidBaselineAndCanaryReplicas": "Invalid value for replica count. Enter a value between 0 and 100."
+  "loc.messages.InvalidBaselineAndCanaryReplicas": "Invalid value for replica count. Enter a value greater than 0.",
+  "loc.messages.InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number."
 }

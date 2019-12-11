@@ -87,7 +87,7 @@
             "defaultValue": 0,
             "visibleRule": "strategy = Canary && action = deploy",
             "validation": {
-                "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
+                "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d*)?)$)','Multiline')",
                 "message": "Enter valid percentage value i.e between 0 to 100."
             }
         },
@@ -100,8 +100,8 @@
             "defaultValue": 0,
             "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
             "validation": {
-                "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
-                "message": "Enter valid value i.e between 0 to 100."
+                "expression": "isMatch(value, '(^[1-9]\\d*$)','Multiline')",
+                "message": "Enter valid value greater than 0."
             }
         },
         {
@@ -327,8 +327,9 @@
         },
         {
             "name": "timeout",
-            "tpye": "string",
+            "type": "string",
             "label": "Timeout for rollout status",
+            "defaultValue": "600",
             "required": false,
             "helpMarkDown": "The length of time (in seconds) to wait before ending watch on rollout status",
             "visibleRule": "action = deploy || action = patch || action = scale || action = promote"
@@ -371,6 +372,7 @@
         "UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file. %s",
         "StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment.",
         "InvalidPercentage": "Invalid value for percentage.",
-        "InvalidBaselineAndCanaryReplicas": "Invalid value for replica count. Enter a value between 0 and 100."
+        "InvalidBaselineAndCanaryReplicas": "Invalid value for replica count. Enter a value greater than 0.",
+        "InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number."
     }
 }

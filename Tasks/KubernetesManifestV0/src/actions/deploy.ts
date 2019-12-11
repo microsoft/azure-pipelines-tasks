@@ -8,6 +8,7 @@ import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
 export async function deploy(ignoreSslErrors?: boolean) {
     TaskInputParameters.validateCanaryPercentage();
     TaskInputParameters.validateReplicaCount();
+    TaskInputParameters.validateTimeoutForRolloutStatus();
     const kubectlPath = await utils.getKubectl();
     const kubectl = new Kubectl(kubectlPath, TaskInputParameters.namespace, ignoreSslErrors);
     await deploymentHelper.deploy(kubectl, TaskInputParameters.manifests, TaskInputParameters.deploymentStrategy);

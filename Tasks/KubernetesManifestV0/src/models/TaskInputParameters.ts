@@ -30,14 +30,20 @@ if (!namespace) {
     namespace = 'default';
 }
 
+export function validateTimeoutForRolloutStatus() {
+    if (timeout && !validateRegex("^[1-9]\\d*$", timeout)) {
+        throw new Error(tl.loc('InvalidTimeoutValue'));
+    }
+}
+
 export function validateCanaryPercentage() {
-    if (deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY && !validateRegex("^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$", canaryPercentage)) {
+    if (deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY && (!validateRegex("^(([0-9]|[1-9][0-9]|100)(\\.\\d*)?)$", canaryPercentage) || parseFloat(canaryPercentage) == 0 || parseFloat(canaryPercentage) > 100)) {
         throw new Error(tl.loc('InvalidPercentage'));
     }
 }
 
 export function validateReplicaCount() {
-    if (deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY && trafficSplitMethod.toUpperCase() === canaryDeploymentHelper.TRAFFIC_SPLIT_STRATEGY && !validateRegex("^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$", baselineAndCanaryReplicas)) {
+    if (deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY && trafficSplitMethod.toUpperCase() === canaryDeploymentHelper.TRAFFIC_SPLIT_STRATEGY && !validateRegex("^[1-9]\\d*$", baselineAndCanaryReplicas)) {
         throw new Error(tl.loc('InvalidBaselineAndCanaryReplicas'));
     }
 }
