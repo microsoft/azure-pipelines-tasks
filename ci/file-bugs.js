@@ -101,33 +101,6 @@ function getIssuesByLabel(issues, issueType) {
     return labelMap;
 }
 
-function getProblem(bugs, staleBugs, untouchedBugs) {
-    let problem = '';
-
-    // Special case because we need commas
-    if (bugs > bugTolerance && staleBugs > staleBugTolerance && untouchedBugs > untouchedBugTolerance) {
-        return 'bugs, stale bugs, and untouched stale bugs';
-    }
-
-    if (bugs > bugTolerance) {
-        problem = 'bugs';
-    }
-    if (staleBugs > staleBugTolerance) {
-        if (problem) {
-            problem += ' and ';
-        }
-        problem += 'stale bugs';
-    }
-    if (untouchedBugs > untouchedBugTolerance) {
-        if (problem) {
-            problem += ' and ';
-        }
-        problem += 'untouched stale bugs';
-    }
-
-    return problem;
-}
-
 // Generates urls to view bugs by label for the bodies of the bugs
 function getIssueUrls(labels) {
     var urls = '';
@@ -219,9 +192,7 @@ async function fileBugs(bugsByLabel, staleBugsByLabel, untouchedBugsByLabel) {
             }
         }
 
-        const problem = getProblem(bugs, staleBugs, untouchedBugs);
-
-        if (problem) {
+        if (bugs > bugTolerance || staleBugs > staleBugTolerance || untouchedBugs > untouchedBugTolerance) {
             header(path);
             console.log('Bugs:', bugs);
             console.log('Stale bugs:', staleBugs);
@@ -231,7 +202,7 @@ async function fileBugs(bugsByLabel, staleBugsByLabel, untouchedBugsByLabel) {
             let bugTitle = `Too many bugs in https://github.com/microsoft/azure-pipelines-tasks`;
             // Format message as html so it renders correctly.
             let bugMessage = 
-`<div>The number of ${problem} assigned to the labels owned by this area path in https://github.com/microsoft/azure-pipelines-tasks has exceeded the number of allowable bugs.</div>
+`<div>The number of bugs, stale bugs, and/or untouched stale bugs assigned to the labels owned by this area path in https://github.com/microsoft/azure-pipelines-tasks has exceeded the allowable threshold.</div>
 <div><br></div>
 <div>Labels owned by this area: ${JSON.stringify(labels)}</div>
 <div><br></div>
