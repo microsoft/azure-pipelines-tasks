@@ -329,7 +329,7 @@
             "name": "timeout",
             "type": "string",
             "label": "Timeout for rollout status",
-            "defaultValue": "600",
+            "defaultValue": "0",
             "required": false,
             "helpMarkDown": "The length of time (in seconds) to wait before ending watch on rollout status",
             "visibleRule": "action = deploy || action = patch || action = scale || action = promote"
