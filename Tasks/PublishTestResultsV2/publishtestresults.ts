@@ -182,7 +182,7 @@ async function run() {
 function readAndPublishTestRunSummaryToEvidenceStore(testRunner: string) {
     try {
         const agentVersion = tl.getVariable('Agent.Version');
-        if(semver.lt(agentVersion, "2.162.0")) {
+        if(semver.lt(agentVersion, "2.162.1")) {
             throw "Required agent version greater than or equal to 2.162.0";
         }
 
