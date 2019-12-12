@@ -19,7 +19,6 @@ tl.cd(tl.getInput("cwd"));
 var registryType = tl.getInput("containerRegistryType", true);
 var command = tl.getInput("command", false);
 const environmentVariableMaximumSize = 32766;
-const publishPipelineMetadata = tl.getVariable("PUBLISH_PIPELINE_METADATA");
 
 var kubeconfigfilePath;
 if (command === "logout") {
@@ -115,46 +114,65 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
                 tl.setVariable('KubectlOutput', resultString);
             }
 
-            const outputFormat: string = tl.getInput("outputFormat", false);
-            const isOutputFormatSpecified: boolean = outputFormat && (outputFormat.toLowerCase() === "json" || outputFormat.toLowerCase() === "yaml");
-            // The deployment data is pushed to evidence store only for commands like 'apply' or 'create' which support Json and Yaml output format
-            if (publishPipelineMetadata && publishPipelineMetadata.toLowerCase() == "true" && isOutputFormatSpecified && isJsonOrYamlOutputFormatSupported(command)) {
-                const allPods = JSON.parse(getAllPods(clusterConnection).stdout);
-                const clusterInfo = getClusterInfo(clusterConnection).stdout;
+            try {
+                const outputFormat: string = tl.getInput("outputFormat", false);
+                const isOutputFormatSpecified: boolean = outputFormat && (outputFormat.toLowerCase() === "json" || outputFormat.toLowerCase() === "yaml");
+                // The deployment data is pushed to evidence store only for commands like 'apply' or 'create' which support Json and Yaml output format
+                if (isOutputFormatSpecified && isJsonOrYamlOutputFormatSupported(command)) {
+                    let podsOutputString: string = "";
+                    try {
+                        podsOutputString = getAllPods(clusterConnection).stdout;
+                    }
+                    catch (e) {
+                        tl.debug("Not pushing metadata to artifact metadata store as failed to retrieve container pods; Error: " + e);
+                        return;
+                    }
 
-                let fileArgs = "";
-                const configFilePathArgs = getCommandConfigurationFile();
-                if (configFilePathArgs.length > 0) {
-                    fileArgs = configFilePathArgs.join(" ");
-                }
-                else {
-                    fileArgs = tl.getInput("arguments", false);
-                }
-
-                const manifestUrls = getManifestFileUrlsFromArgumentsInput(fileArgs);
-                // For each output, check if it contains a JSON object
-                result.forEach(res => {
-                    let parsedObject: any;
-                    if (IsJsonString(res)) {
-                        parsedObject = JSON.parse(res);
+                    if (!IsJsonString(podsOutputString)) {
+                        tl.debug("Not pushing metadata to artifact metadata store as failed to retrieve container pods");
                     }
                     else {
-                        parsedObject = yaml.safeLoad(res);
-                    }
-                    // Check if the output contains a deployment
-                    if (parsedObject.kind && isDeploymentEntity(parsedObject.kind)) {
-                        try {
-                            pushDeploymentDataToEvidenceStore(clusterConnection, parsedObject, allPods, clusterInfo, manifestUrls).then((result) => {
-                                tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
-                            }, (error) => {
-                                tl.warning("publishToImageMetadataStore failed with error: " + error);
-                            });
+                        const allPods = JSON.parse(podsOutputString);
+                        const clusterInfo = getClusterInfo(clusterConnection).stdout;
+
+                        let fileArgs = "";
+                        const configFilePathArgs = getCommandConfigurationFile();
+                        if (configFilePathArgs.length > 0) {
+                            fileArgs = configFilePathArgs.join(" ");
                         }
-                        catch (e) {
-                            tl.warning("Capturing deployment metadata failed with error: " + e);
+                        else {
+                            fileArgs = tl.getInput("arguments", false);
                         }
+
+                        const manifestUrls = getManifestFileUrlsFromArgumentsInput(fileArgs);
+                        // For each output, check if it contains a JSON object
+                        result.forEach(res => {
+                            let parsedObject: any;
+                            if (IsJsonString(res)) {
+                                parsedObject = JSON.parse(res);
+                            }
+                            else {
+                                parsedObject = yaml.safeLoad(res);
+                            }
+                            // Check if the output contains a deployment
+                            if (parsedObject.kind && isDeploymentEntity(parsedObject.kind)) {
+                                try {
+                                    pushDeploymentDataToEvidenceStore(clusterConnection, parsedObject, allPods, clusterInfo, manifestUrls).then((result) => {
+                                        tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
+                                    }, (error) => {
+                                        tl.warning("publishToImageMetadataStore failed with error: " + error);
+                                    });
+                                }
+                                catch (e) {
+                                    tl.warning("pushDeploymentDataToEvidenceStore failed with error: " + e);
+                                }
+                            }
+                        });
                     }
-                });
+                }
+            }
+            catch (e) {
+                tl.warning("Capturing deployment metadata failed with error: " + e)
             }
         });
 }

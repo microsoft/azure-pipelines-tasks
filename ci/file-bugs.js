@@ -8,7 +8,7 @@ const githubPAT = process.env['GITHUB_PAT'];
 const azpPAT = process.env['AZP_PAT'];
 
 // Number of bugs an area is allowed to have before a P0 AzDevOps bug is filed.
-const bugTolerance = 100;
+const bugTolerance = 50;
 // Number of stale bugs an area is allowed to have before a P0 AzDevOps bug is filed.
 const staleBugTolerance = 10;
 // Number of untouched bugs an area is allowed to have before a P0 AzDevOps bug is filed. An untouched bug is one that is both stale and has never been responded to.
@@ -105,7 +105,7 @@ function getIssuesByLabel(issues, issueType) {
 function getIssueUrls(labels) {
     var urls = '';
     labels.forEach(label => {
-        urls += `<div>https://github.com/microsoft/azure-pipelines-tasks/issues?q=is%3Aissue+is%3Aopen+label%3Abug+label%3A%22Area%3A+Release%22+label%3A%22${label.replace(': ', '%3A+')}%22</div>`
+        urls += `<div>https://github.com/microsoft/azure-pipelines-tasks/issues?q=is%3Aissue+is%3Aopen+label%3Abug+label%3A%22${label.replace(': ', '%3A+')}%22</div>`
     });
 
     return urls;
@@ -135,6 +135,16 @@ async function createBug(nodeApi, path, title, message) {
               "op": "add",
               "path": "/fields/System.AreaPath",
               "value": path
+            },
+            {
+                "op": "add",
+                "path": "/fields/Microsoft.VSTS.Common.Priority",
+                "value": "1"
+            },
+            {
+                "op": "add",
+                "path": "/fields/System.Tags",
+                "value": "azure-pipelines-tasks"
             }
         ], 'AzureDevOps', 'Bug');
 
@@ -192,7 +202,7 @@ async function fileBugs(bugsByLabel, staleBugsByLabel, untouchedBugsByLabel) {
             let bugTitle = `Too many bugs in https://github.com/microsoft/azure-pipelines-tasks`;
             // Format message as html so it renders correctly.
             let bugMessage = 
-`<div>The number of bugs assigned to the labels owned by this area path in https://github.com/microsoft/azure-pipelines-tasks has exceeded the number of allowable bugs.</div>
+`<div>The number of bugs, stale bugs, and/or untouched stale bugs assigned to the labels owned by this area path in https://github.com/microsoft/azure-pipelines-tasks has exceeded the allowable threshold.</div>
 <div><br></div>
 <div>Labels owned by this area: ${JSON.stringify(labels)}</div>
 <div><br></div>
@@ -204,7 +214,7 @@ async function fileBugs(bugsByLabel, staleBugsByLabel, untouchedBugsByLabel) {
 <div>The number of allowable bugs for a given area is:</div>
 <div>Bugs: ${bugTolerance}</div>
 <div>Stale bugs (>30 days without action): ${staleBugTolerance}</div>
-<div>Untouched bugs (stale, never responded to): ${untouchedBugs}</div>
+<div>Untouched bugs (stale, never responded to): ${untouchedBugTolerance}</div>
 <div><br></div>
 <div>To view this area's bugs, visit the following urls:</div>
 <div>${getIssueUrls(labels)}</div>

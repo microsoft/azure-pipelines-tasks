@@ -99,7 +99,7 @@ function Initialize-AzSubscription {
     if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal') {
         try {
             if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
-                $servicePrincipalCertificate = Add-Certificate -Endpoint $Endpoint -ServicePrincipal
+                $servicePrincipalCertificate = Add-CertificateForAz -Endpoint $Endpoint
 
                 Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName"
                 $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId `
