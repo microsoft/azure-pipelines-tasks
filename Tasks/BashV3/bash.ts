@@ -122,7 +122,7 @@ async function run() {
 
         // Listen for stderr.
         let stderrFailure = false;
-        let aggregatedStderr = [];
+        const aggregatedStderr: Buffer[] = [];
         if (input_failOnStderr) {
             bash.on('stderr', (data: Buffer) => {
                 stderrFailure = true;
