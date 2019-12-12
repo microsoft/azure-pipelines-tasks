@@ -149,12 +149,13 @@ async function run() {
                         testRunTitle,
                         publishRunAttachments,
                         TESTRUN_SYSTEM);
-                }
-                else if(exitCode == 40000){
+                } else if (exitCode === 40000) {
                     // The exe returns with exit code: 40000 if there are test failures found and failTaskOnFailedTests is true
                     ci.addToConsolidatedCi('failedTestsInRun', true);
                     tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnFailedTests'));
+                }
 
+                if (exitCode !== 20000) {
                     // Doing it only for test results published using TestResultPublisher tool.
                     // For other publishes, publishing to evidence store happens as part of results.publish command itself.
                     readAndPublishTestRunSummaryToEvidenceStore(testRunner);
