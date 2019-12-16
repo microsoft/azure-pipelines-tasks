@@ -2,11 +2,7 @@
   "externals": {
     "archivePackages": [
       {
-<<<<<<< HEAD
-        "url": "https://publishtestresults.blob.core.windows.net/publishtestresults/11088643/PublishTestResults.zip",
-=======
-        "url": "https://publishtestresults.blob.core.windows.net/publishtestresults/11040905/PublishTestResults.zip",
->>>>>>> 3b68a25b536927850b1efa61c4d09272e504c994
+        "url": "https://publishtestresults.blob.core.windows.net/publishtestresults/11108202/PublishTestResults.zip",
         "dest": "./"
       }
     ]
