@@ -122,11 +122,21 @@ async function run() {
 
         // Listen for stderr.
         let stderrFailure = false;
-        const aggregatedStderr: Buffer[] = [];
+        const aggregatedStderr: string[] = [];
         if (input_failOnStderr) {
             bash.on('stderr', (data: Buffer) => {
                 stderrFailure = true;
-                aggregatedStderr.push(data);
+                // Truncate to at most 10 error messages
+                if (aggregatedStderr.length < 10) {
+                    // Truncate to at most 1000 bytes
+                    if (data.length > 1000) {
+                        aggregatedStderr.push(`${data.toString('utf8', 0, 1000)}<truncated>`);
+                    } else {
+                        aggregatedStderr.push(data.toString('utf8'));
+                    }
+                } else if (aggregatedStderr.length === 10) {
+                    aggregatedStderr.push('Additional writes to stderr truncated');
+                }
             });
         }
 
@@ -144,8 +154,8 @@ async function run() {
         // Fail on stderr.
         if (stderrFailure) {
             tl.error(tl.loc('JS_Stderr'));
-            aggregatedStderr.forEach((err: Buffer) => {
-                tl.error(err.toString());
+            aggregatedStderr.forEach((err: string) => {
+                tl.error(err);
             });
             result = tl.TaskResult.Failed;
         }
