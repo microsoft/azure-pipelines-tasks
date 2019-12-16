@@ -174,6 +174,8 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
     inputDataContract.TestReportingSettings.TestSourceSettings = <idc.TestSourceSettings>{};
     inputDataContract.TestReportingSettings.TestSourceSettings.PullRequestTargetBranchName = tl.getVariable('System.PullRequest.TargetBranch');
     inputDataContract.TestReportingSettings.ExecutionStatusSettings = <idc.ExecutionStatusSettings>{};
+    inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected = 0;
+    inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet = "donothing";
     inputDataContract.TestReportingSettings.ExecutionStatusSettings.IgnoreTestFailures = utils.Helper.stringToBool(tl.getVariable('vstest.ignoretestfailures'));
     if (utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestRunTitle)) {
 
@@ -192,15 +194,16 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
     if (actionOnThresholdNotMet)
     {
         inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet = "fail";       
-        const miniumExpectedTests = parseInt(tl.getInput('minimumExpectedTests'));
-        if (!isNaN(miniumExpectedTests)) {
-            inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected = miniumExpectedTests;
-            console.log(tl.loc('minimumExpectedTests', inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected));
+        const minimumExpectedTests = parseInt(tl.getInput('minimumExpectedTests'));
+        if (!isNaN(minimumExpectedTests)) {
+            inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected = minimumExpectedTests;
         } else {
             throw new Error(tl.loc('invalidMinimumExpectedTests :' + tl.getInput('minimumExpectedTests')));
         }
     }
-
+    
+    console.log(tl.loc('actionOnThresholdNotMet', inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet))
+    console.log(tl.loc('minimumExpectedTests', inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected));
     return inputDataContract;
 }
 

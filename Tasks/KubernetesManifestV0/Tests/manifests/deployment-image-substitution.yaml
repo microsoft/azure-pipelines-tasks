@@ -27,6 +27,8 @@ spec:
         image: myacr.azurecr.io/myimage 
       - name: untaggedwithcomment
         image: myimagewithcomment # this is a comment
+      - image: imagewithhyphen # this is a comment
+        name: imagewithhyphen
       imagePullSecrets:
       - name: key1
       initContainers:
