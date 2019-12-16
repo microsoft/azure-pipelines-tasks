@@ -12,11 +12,11 @@
     "Release"
   ],
   "author": "Microsoft Corporation",
-    "version": {
-        "Major": 2,
-        "Minor": 162,
-        "Patch": 2
-    },
+  "version": {
+      "Major": 2,
+      "Minor": 162,
+      "Patch": 2
+  },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
   "groups": [
