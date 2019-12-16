@@ -1,7 +1,7 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
+
 import tl = require('azure-pipelines-task-lib/task');
 var webCommonUtility = require('azurermdeploycommon/webdeployment-common/utility.js');
-
 
 export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvider {
     
@@ -25,8 +25,8 @@ export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvi
     }
     
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
+        await super.UpdateDeploymentStatus(isDeploymentSuccess);
         if(this.kuduServiceUtility) {
-            await super.UpdateDeploymentStatus(isDeploymentSuccess);
             if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
             }

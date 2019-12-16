@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 160,
-    "Patch": 5
+    "Minor": 161,
+    "Patch": 2
   },
   "demands": [],
   "satisfies": [
@@ -47,7 +47,7 @@
       "name": "Dockerfile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.Dockerfile",
-      "defaultValue": ".",
+      "defaultValue": "Dockerfile",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.Dockerfile"
     },
