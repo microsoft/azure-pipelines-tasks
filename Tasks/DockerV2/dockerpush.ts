@@ -143,26 +143,21 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
         imageFingerPrint = dockerCommandUtils.getImageFingerPrint(imageRootfsLayers, v1Name);
     }
 
-    const addPipelineData = tl.getBoolInput("addPipelineData");
-
     // Getting pipeline variables
     const build = "build";
     const hostType = tl.getVariable("System.HostType").toLowerCase();
     const runId = hostType === build ? parseInt(tl.getVariable("Build.BuildId")) : parseInt(tl.getVariable("Release.ReleaseId"));
-    const pipelineVersion = addPipelineData ? hostType === build ? tl.getVariable("Build.BuildNumber") : tl.getVariable("Release.ReleaseName") : "";
-    const pipelineName = addPipelineData ? tl.getVariable("System.DefinitionName") : "";
-    const pipelineId = addPipelineData ? tl.getVariable("System.DefinitionId") : "";
-    const jobName = addPipelineData ? tl.getVariable("System.PhaseDisplayName") : "";
-    const creator = addPipelineData ? dockerCommandUtils.getCreatorEmail() : "";
-    const logsUri = addPipelineData ? dockerCommandUtils.getPipelineLogsUrl() : "";
-    const artifactStorageSourceUri = addPipelineData ? dockerCommandUtils.getPipelineUrl() : "";
+    const pipelineVersion = hostType === build ? tl.getVariable("Build.BuildNumber") : tl.getVariable("Release.ReleaseName");
+    const pipelineName = tl.getVariable("System.DefinitionName");
+    const pipelineId = tl.getVariable("System.DefinitionId");
+    const jobName = tl.getVariable("System.PhaseDisplayName");
+    const creator = dockerCommandUtils.getCreatorEmail();
+    const logsUri = dockerCommandUtils.getPipelineLogsUrl();
+    const artifactStorageSourceUri = dockerCommandUtils.getPipelineUrl();
+    const contextUrl = tl.getVariable("Build.Repository.Uri") || "";
+    const revisionId = tl.getVariable("Build.SourceVersion") || "";
 
-    const repoUrl = tl.getVariable("Build.Repository.Uri");
-    const contextUrl = addPipelineData && repoUrl ? repoUrl : "";
-
-    const commitId = tl.getVariable("Build.SourceVersion");
-    const revisionId = addPipelineData && commitId ? commitId : "";
-
+    const addPipelineData = tl.getBoolInput("addPipelineData");
     const labelArguments = pipelineUtils.getDefaultLabels(addPipelineData);
     const buildOptions = dockerCommandUtils.getBuildAndPushArguments(dockerFilePath, labelArguments, tags);
 
