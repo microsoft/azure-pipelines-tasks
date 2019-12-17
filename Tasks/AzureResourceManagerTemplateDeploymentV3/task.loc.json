@@ -302,8 +302,6 @@
     "LocationNotProvided": "ms-resource:loc.messages.LocationNotProvided",
     "ARMServiceConnectionScope": "ms-resource:loc.messages.ARMServiceConnectionScope",
     "CompleteDeploymentModeNotSupported": "ms-resource:loc.messages.CompleteDeploymentModeNotSupported",
-    "ServicePrincipalRoleAssignmentDetails": "ms-resource:loc.messages.ServicePrincipalRoleAssignmentDetails",
-    "ServicePrincipalFetchFailed": "ms-resource:loc.messages.ServicePrincipalFetchFailed",
     "FindMoreDeploymentDetailsAzurePortal": "ms-resource:loc.messages.FindMoreDeploymentDetailsAzurePortal"
   }
 }
