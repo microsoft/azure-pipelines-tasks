@@ -1,16 +1,18 @@
-import ma = require('azure-pipelines-task-lib/mock-answer');
-import tmrm = require('azure-pipelines-task-lib/mock-run');
+import ma = require('vsts-task-lib/mock-answer');
+import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 
-let taskPath = path.join(__dirname, '..', 'bash.js');
+let taskPath = path.join(__dirname, '..', 'powershell.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tmr.setInput('targetType', 'filepath');
-tmr.setInput('filePath', 'path/to/script');
+tmr.setInput('targetType', 'inline');
+tmr.setInput('script', 'Write-Host "my script output"');
 tmr.setInput('workingDirectory', '/fakecwd');
+tmr.setInput('ignoreLASTEXITCODE', 'true');
+tmr.setInput('failOnStderr', 'true');
 
 //Create assertAgent and getVariable mocks, support not added in this version of task-lib
-const tl = require('azure-pipelines-task-lib/mock-task');
+const tl = require('vsts-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
 tlClone.getVariable = function(variable: string) {
     if (variable.toLowerCase() == 'agent.tempdirectory') {
@@ -21,37 +23,42 @@ tlClone.getVariable = function(variable: string) {
 tlClone.assertAgent = function(variable: string) {
     return;
 };
-tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
+tmr.registerMock('vsts-task-lib/mock-task', tlClone);
 
 // Mock task-lib
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'checkPath' : {
         '/fakecwd' : true,
-        'path/to/bash': true,
+        'path/to/powershell': true,
         'temp/path': true
     },
     'which': {
-        'bash': 'path/to/bash'
+        'powershell': 'path/to/powershell'
     },
     'assertAgent': {
         '2.115.0': true
     },
     'exec': {
-        'path/to/bash --noprofile --norc -c pwd': {
+        'path/to/powershell --noprofile --norc -c pwd': {
             "code": 0,
             "stdout": "temp/path"
         },
-        'path/to/bash temp/path/fileName.sh': {
+        "path/to/powershell -NoLogo -NoProfile -NonInteractive -Command . 'temp\\path\\fileName.ps1'": {
             "code": 0,
-            "stdout": "my script output"
+            "stdout": "",
+            "stderr": "myErrorTest"
+        },
+        "path/to/powershell -NoLogo -NoProfile -NonInteractive -Command . 'temp/path/fileName.ps1'": {
+            "code": 0,
+            "stdout": "",
+            "stderr": "myErrorTest"
         }
     },
     'stats': {
-        'path/to/script': {
+        'path/to/script.ps1': {
             isFile() {
                 return true;
-            },
-            mode: '777'
+            }
         }
     }
 };
@@ -60,7 +67,7 @@ tmr.setAnswers(a);
 // Mock fs
 const fs = require('fs');
 const fsClone = Object.assign({}, fs);
-fsClone.writeFileSync = function(filePath, contents, options) {
+fsClone.writeFile = function(filePath, contents, options) {
     // Normalize to linux paths for logs we check
     console.log(`Writing ${contents} to ${filePath.replace(/\\/g, '/')}`);
 }
