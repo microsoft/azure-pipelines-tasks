@@ -11,7 +11,6 @@ export class DeploymentScopeBase {
     protected deploymentParameters: DeploymentParameters;
     protected taskParameters: armDeployTaskParameters.TaskParameters;
     protected armClient: armResource.AzureServiceClientBase;
-    private _spnName: string = null;
 
     constructor(armClient: armResource.AzureServiceClientBase, taskParameters: armDeployTaskParameters.TaskParameters, deploymentParameters?: DeploymentParameters) {
         this.taskParameters = taskParameters;
@@ -50,15 +49,10 @@ export class DeploymentScopeBase {
         }
 
         this.deploymentParameters = params;
-        await this.performAzureDeployment(3);
+        await this.performAzureDeployment(3, await this.getServicePrincipalName());
     }
 
-    protected async performAzureDeployment(retryCount = 0): Promise<void> {
-
-        if(!this._spnName) {
-            this._spnName = await this.getServicePrincipalName();
-        }
-
+    protected async performAzureDeployment(retryCount = 0, spnName: string): Promise<void> {
         if (this.deploymentParameters.properties["mode"] === "Validation") {
             return this.validateDeployment();
         } else {
@@ -69,11 +63,20 @@ export class DeploymentScopeBase {
                 this.armClient.deployments.createOrUpdate(this.taskParameters.deploymentName, this.deploymentParameters, (error, result, request, response) => {
                     if (error) {
                         if(this.taskParameters.deploymentScope === "Resource Group" && error.code == "ResourceGroupNotFound" && retryCount > 0){
-                            return this.waitAndPerformAzureDeployment(retryCount);
+                            return this.waitAndPerformAzureDeployment(retryCount, spnName);
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);
-                        this.checkAndPrintPortalDeploymentURL(error);
-                        this.printServicePrincipalRoleAssignmentError(error);
+                        this.checkAndPrintPortalDeploymentURL();
+                        if(error.statusCode == 403) {
+                            if(this.taskParameters.deploymentScope == "Resource Group") {
+                                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
+                            } else if(this.taskParameters.deploymentScope == "Subscription") {
+                                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.subscriptionId));
+                            } else if(this.taskParameters.deploymentScope == "Management Group") {
+                                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.managementGroupId));    
+                            }
+                        }
+                        
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
@@ -88,20 +91,8 @@ export class DeploymentScopeBase {
         }
     }
 
-    private printServicePrincipalRoleAssignmentError(error: any) {
-        if(!!error && error.statusCode == 403) {
-            if(this.taskParameters.deploymentScope == "Resource Group") {
-                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.resourceGroupName));
-            } else if(this.taskParameters.deploymentScope == "Subscription") {
-                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.subscriptionId));
-            } else if(this.taskParameters.deploymentScope == "Management Group") {
-                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.managementGroupId));    
-            }
-        }
-    }
-
-    protected checkAndPrintPortalDeploymentURL(error: any) {
-        if((this.taskParameters.deploymentScope == "Resource Group" || this.taskParameters.deploymentScope == "Subscription") && (!!error && (error.statusCode < 400 || error.statusCode >= 500))) {
+    protected checkAndPrintPortalDeploymentURL() {
+        if(this.taskParameters.deploymentScope == "Resource Group") {
             tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
         }
     }
@@ -146,8 +137,8 @@ export class DeploymentScopeBase {
         });
     }
 
-    private async waitAndPerformAzureDeployment(retryCount): Promise<void> {
+    private async waitAndPerformAzureDeployment(retryCount, spnName: string): Promise<void> {
         await sleepFor(3);
-        return this.performAzureDeployment(retryCount - 1);
+        return this.performAzureDeployment(retryCount - 1, spnName);
     }
 }
