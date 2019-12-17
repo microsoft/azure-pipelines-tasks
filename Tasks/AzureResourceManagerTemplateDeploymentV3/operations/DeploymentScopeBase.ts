@@ -62,7 +62,11 @@ export class DeploymentScopeBase {
         if (this.deploymentParameters.properties["mode"] === "Validation") {
             return this.validateDeployment();
         } else {
-            await this.validateDeployment();
+            try {
+                await this.validateDeployment();
+            } catch (error) {
+                tl.warning(tl.loc("TemplateValidationFailure", error));
+            }
             console.log(tl.loc("StartingDeployment"));
             return new Promise<void>((resolve, reject) => {
                 this.taskParameters.deploymentName = this.taskParameters.deploymentName || utils.createDeploymentName(this.taskParameters);

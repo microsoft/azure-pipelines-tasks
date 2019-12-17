@@ -534,7 +534,11 @@ export class ResourceGroup {
         if (deployment.properties["mode"] === "Validation") {
             return this.validateDeployment(armClient, deployment);
         } else {
-            await this.validateDeployment(armClient, deployment);
+            try {
+                await this.validateDeployment(armClient, deployment);
+            } catch (error) {
+                tl.warning(tl.loc("ValidationFailure", error));
+            }
             console.log(tl.loc("StartingDeployment"));
             return new Promise<void>((resolve, reject) => {
                 this.taskParameters.deploymentName = this.taskParameters.deploymentName || this.createDeploymentName();
