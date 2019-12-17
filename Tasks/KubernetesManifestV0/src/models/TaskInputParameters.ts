@@ -31,7 +31,7 @@ if (!namespace) {
 }
 
 export function validateTimeoutForRolloutStatus() {
-    if (timeout && !validateRegex("^[1-9]\\d*$", timeout)) {
+    if (timeout && !validateRegex("^\\d*", timeout)) {
         throw new Error(tl.loc('InvalidTimeoutValue'));
     }
 }

@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 163,
-    "Patch": 1
+    "Minor": 165,
+    "Patch": 4
   },
   "demands": [],
   "groups": [],
@@ -97,7 +97,7 @@
       "label": "ms-resource:loc.input.label.baselineAndCanaryReplicas",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.baselineAndCanaryReplicas",
-      "defaultValue": 0,
+      "defaultValue": 1,
       "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
       "validation": {
         "expression": "isMatch(value, '(^[1-9]\\d*$)','Multiline')",

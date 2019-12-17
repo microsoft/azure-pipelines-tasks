@@ -97,7 +97,7 @@
             "label": "Baseline and canary replicas",
             "required": true,
             "helpMarkDown": "Baseline and canary replicas count",
-            "defaultValue": 0,
+            "defaultValue": 1,
             "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
             "validation": {
                 "expression": "isMatch(value, '(^[1-9]\\d*$)','Multiline')",
