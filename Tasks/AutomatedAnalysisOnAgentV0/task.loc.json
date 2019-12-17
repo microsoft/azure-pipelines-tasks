@@ -1,0 +1,414 @@
+{
+  "id": "ba91d5fb-2ff0-46c6-ad54-6baf41da7ddd",
+  "name": "AutomatedAnalysisOnAgent",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-monitor",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "version": {
+    "Major": 1,
+    "Minor": 156,
+    "Patch": 80
+  },
+  "preview": true,
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "providerInputs",
+      "displayName": "ms-resource:loc.group.displayName.providerInputs",
+      "isExpanded": false
+    },
+    {
+      "name": "metricInputs",
+      "displayName": "ms-resource:loc.group.displayName.metricInputs",
+      "isExpanded": false
+    },
+    {
+      "name": "orchestrationInputs",
+      "displayName": "ms-resource:loc.group.displayName.orchestrationInputs",
+      "isExpanded": false
+    },
+    {
+      "name": "preprocessingInputs",
+      "displayName": "ms-resource:loc.group.displayName.preprocessingInputs",
+      "isExpanded": false
+    },
+    {
+      "name": "classificationInputs",
+      "displayName": "ms-resource:loc.group.displayName.classificationInputs",
+      "isExpanded": false
+    },
+    {
+      "name": "scoringInputs",
+      "displayName": "ms-resource:loc.group.displayName.scoringInputs",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "logLevel",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.logLevel",
+      "defaultValue": "Info",
+      "required": false,
+      "options": {
+        "Info": "Info",
+        "Debug": "Debug",
+        "Warning": "Warning",
+        "Error": "Error",
+        "Critical": "Critical"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.logLevel"
+    },
+    {
+      "name": "pythonInterpreter",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pythonInterpreter",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pythonInterpreter"
+    },
+    {
+      "name": "provider",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.provider",
+      "defaultValue": "Prometheus",
+      "required": true,
+      "options": {
+        "Prometheus": "Prometheus",
+        "Datadog": "Datadog"
+      },
+      "groupName": "providerInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.provider"
+    },
+    {
+      "name": "endpointUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.endpointUrl",
+      "required": true,
+      "groupName": "providerInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.endpointUrl"
+    },
+    {
+      "name": "apiKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.apiKey",
+      "required": true,
+      "groupName": "providerInputs",
+      "visibleRule": "provider == Datadog",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "appKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.appKey",
+      "required": true,
+      "groupName": "providerInputs",
+      "visibleRule": "provider == Datadog",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "headers",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.headers",
+      "required": "false",
+      "properties": {
+        "resizable": "true",
+        "rows": "3"
+      },
+      "groupName": "providerInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.headers"
+    },
+    {
+      "name": "expressionTemplates",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.expressionTemplates",
+      "required": true,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "metricInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.expressionTemplates"
+    },
+    {
+      "name": "templateSubstitutions",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.templateSubstitutions",
+      "required": true,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "metricInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.templateSubstitutions"
+    },
+    {
+      "name": "areMetricsCritical",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.areMetricsCritical",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "metricInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.areMetricsCritical"
+    },
+    {
+      "name": "mustHaveData",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.mustHaveData",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "metricInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.mustHaveData"
+    },
+    {
+      "name": "analysisType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.analysisType",
+      "defaultValue": "realtime",
+      "required": true,
+      "options": {
+        "realtime": "realtime",
+        "range": "range"
+      },
+      "groupName": "orchestrationInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.analysisType"
+    },
+    {
+      "name": "windowType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.windowType",
+      "defaultValue": "sliding",
+      "required": true,
+      "options": {
+        "sliding": "sliding",
+        "growing": "growing"
+      },
+      "groupName": "orchestrationInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.windowType"
+    },
+    {
+      "name": "delay",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.delay",
+      "defaultValue": "0s",
+      "required": false,
+      "groupName": "orchestrationInputs",
+      "visibleRule": "analysisType == realtime",
+      "helpMarkDown": "ms-resource:loc.input.help.delay"
+    },
+    {
+      "name": "lifetime",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.lifetime",
+      "defaultValue": "10m",
+      "required": false,
+      "groupName": "orchestrationInputs",
+      "visibleRule": "analysisType == realtime",
+      "helpMarkDown": "ms-resource:loc.input.help.lifetime"
+    },
+    {
+      "name": "analysisBeginTime",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.analysisBeginTime",
+      "required": false,
+      "groupName": "orchestrationInputs",
+      "visibleRule": "analysisType == range",
+      "helpMarkDown": "ms-resource:loc.input.help.analysisBeginTime"
+    },
+    {
+      "name": "analysisEndTime",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.analysisEndTime",
+      "required": false,
+      "groupName": "orchestrationInputs",
+      "visibleRule": "analysisType == range",
+      "helpMarkDown": "ms-resource:loc.input.help.analysisEndTime"
+    },
+    {
+      "name": "interval",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.interval",
+      "defaultValue": "2m",
+      "required": false,
+      "groupName": "orchestrationInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.interval"
+    },
+    {
+      "name": "step",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.step",
+      "defaultValue": "1s",
+      "required": false,
+      "groupName": "orchestrationInputs",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "preprocessor",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.preprocessor",
+      "defaultValue": "ksigma",
+      "required": true,
+      "options": {
+        "ksigma": "ksigma",
+        "iqr": "iqr"
+      },
+      "groupName": "preprocessingInputs",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "nanStrategy",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.nanStrategy",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "preprocessingInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.nanStrategy"
+    },
+    {
+      "name": "classifier",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.classifier",
+      "defaultValue": "mannWhitney",
+      "required": true,
+      "options": {
+        "mannWhitney": "mannWhitney"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "metricGroups",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.metricGroups",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.metricGroups"
+    },
+    {
+      "name": "groupWeights",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.groupWeights",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.groupWeights"
+    },
+    {
+      "name": "direction",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.direction",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.direction"
+    },
+    {
+      "name": "confidenceLevel",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.confidenceLevel",
+      "required": false,
+      "groupName": "classificationInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.confidenceLevel"
+    },
+    {
+      "name": "allowedIncrease",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.allowedIncrease",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "allowedDecrease",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.allowedDecrease",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "criticalIncrease",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.criticalIncrease",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "criticalDecrease",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.criticalDecrease",
+      "required": false,
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      },
+      "groupName": "classificationInputs",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "marginalThreshold",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.marginalThreshold",
+      "required": false,
+      "groupName": "scoringInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.marginalThreshold"
+    },
+    {
+      "name": "passThreshold",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.passThreshold",
+      "required": false,
+      "groupName": "scoringInputs",
+      "helpMarkDown": "ms-resource:loc.input.help.passThreshold"
+    }
+  ],
+  "dataSourceBindings": [],
+  "execution": {
+    "Node": {
+      "target": "src//main.js"
+    }
+  }
+}
