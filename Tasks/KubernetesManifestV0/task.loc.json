@@ -332,7 +332,11 @@
       "defaultValue": "0",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.timeout",
-      "visibleRule": "action = deploy || action = patch || action = scale || action = promote"
+      "visibleRule": "action = deploy || action = patch || action = scale || action = promote",
+      "validation": {
+        "expression": "isMatch(value, '(^\\d*$)','Multiline')",
+        "message": "Enter valid a value for timeout."
+      }
     }
   ],
   "dataSourceBindings": [],

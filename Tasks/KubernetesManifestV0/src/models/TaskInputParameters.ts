@@ -31,13 +31,13 @@ if (!namespace) {
 }
 
 export function validateTimeoutForRolloutStatus() {
-    if (timeout && !validateRegex("^\\d*", timeout)) {
+    if (timeout && !validateRegex("^\\d*$", timeout)) {
         throw new Error(tl.loc('InvalidTimeoutValue'));
     }
 }
 
 export function validateCanaryPercentage() {
-    if (deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY && (!validateRegex("^(([0-9]|[1-9][0-9]|100)(\\.\\d*)?)$", canaryPercentage) || parseFloat(canaryPercentage) == 0 || parseFloat(canaryPercentage) > 100)) {
+    if (deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY && (!validateRegex("^(([0-9]|[1-9][0-9]|100)(\\.\\d*)?)$", canaryPercentage) || parseFloat(canaryPercentage) > 100)) {
         throw new Error(tl.loc('InvalidPercentage'));
     }
 }

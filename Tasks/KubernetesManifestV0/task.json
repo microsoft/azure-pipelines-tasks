@@ -332,7 +332,11 @@
             "defaultValue": "0",
             "required": false,
             "helpMarkDown": "The length of time (in seconds) to wait before ending watch on rollout status",
-            "visibleRule": "action = deploy || action = patch || action = scale || action = promote"
+            "visibleRule": "action = deploy || action = patch || action = scale || action = promote",
+            "validation": {
+                "expression": "isMatch(value, '(^\\d*$)','Multiline')",
+                "message": "Enter valid a value for timeout."
+            }
         }
     ],
     "dataSourceBindings": [],
