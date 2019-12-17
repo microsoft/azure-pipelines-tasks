@@ -537,7 +537,7 @@ export class ResourceGroup {
             try {
                 await this.validateDeployment(armClient, deployment);
             } catch (error) {
-                tl.warning(tl.loc("ValidationFailure", error));
+                tl.warning(tl.loc("TemplateValidationFailure", error));
             }
             console.log(tl.loc("StartingDeployment"));
             return new Promise<void>((resolve, reject) => {
