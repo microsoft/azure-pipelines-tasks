@@ -99,13 +99,19 @@ export class AzureRGTaskParameters {
     
     private _getAzureADGraphCredentials(connectedService: string): msRestAzure.ApplicationTokenCredentials {
         var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-        var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
+        var servicePrincipalAuth: string;
+        let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
+        if(authType == "spnCertificate") {
+            servicePrincipalAuth = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalCertificate", false);
+        } else {
+            servicePrincipalAuth = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
+        }
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
         var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentauthorityurl', false);
         envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
         var activeDirectoryResourceId: string = tl.getEndpointDataParameter(connectedService, 'graphUrl', false);
         activeDirectoryResourceId = (activeDirectoryResourceId != null) ? activeDirectoryResourceId : "https://graph.windows.net/";
-        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, activeDirectoryResourceId, envAuthorityUrl, activeDirectoryResourceId, false);
+        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalAuth, activeDirectoryResourceId, envAuthorityUrl, activeDirectoryResourceId, false);
         return credentials;
     }
 
