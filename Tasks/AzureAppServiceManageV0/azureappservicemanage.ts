@@ -1,15 +1,18 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
+
 import { AzureRMEndpoint, dispose } from 'azure-arm-rest-v2/azure-arm-endpoint';
-import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
-import { AzureRmEndpointAuthenticationScheme } from 'azure-arm-rest-v2/constants';
-import {AzureAppService  } from 'azure-arm-rest-v2/azure-arm-app-service';
-import { AzureApplicationInsights } from 'azure-arm-rest-v2/azure-arm-appinsights';
-import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
+
+import {AzureAppService} from 'azure-arm-rest-v2/azure-arm-app-service';
 import { AzureAppServiceUtils } from './operations/AzureAppServiceUtils';
-import { KuduServiceUtils } from './operations/KuduServiceUtils';
+import { AzureApplicationInsights } from 'azure-arm-rest-v2/azure-arm-appinsights';
+import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
 import { AzureResourceFilterUtils } from './operations/AzureResourceFilterUtils';
+import { AzureRmEndpointAuthenticationScheme } from 'azure-arm-rest-v2/constants';
+import { Kudu } from 'azure-arm-rest-v2/azure-arm-app-service-kudu';
+import { KuduServiceUtils } from './operations/KuduServiceUtils';
 import { enableContinuousMonitoring } from './operations/ContinuousMonitoringUtils';
+
 import publishProfileUtility = require("utility-common-v2/publishProfileUtility");
 
 const webAppKindMap = new Map([
@@ -88,8 +91,9 @@ async function run() {
 
             tl.debug(`Resource Group: ${resourceGroupName}`);
 
-            let slotNameNotNeeded: boolean = (action == "Complete Swap" || action == "Swap Slots" || action == "Start Swap With Preview");
-            slotName = (!specifySlotFlag || slotNameNotNeeded) ? defaultslotname : slotName;
+            if(((action == "Start Azure App Service" || action == "Stop Azure App Service" || action == "Restart Azure App Service") && !!specifySlotFlag) || action == "Delete Slot" || action == "Cancel Swap") {
+                slotName = defaultslotname;
+            }
 
             appService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
             azureAppServiceUtils = new AzureAppServiceUtils(appService);
