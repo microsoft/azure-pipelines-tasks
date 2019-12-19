@@ -32,12 +32,12 @@ function getClusterType(): any {
 
 function isKubConfigSetupRequired(command: string): boolean {
     var connectionType = tl.getInput("connectionType", true);
-    return command !== "package" && connectionType !== "None";
+    return command !== "package" && command !== "lint" && connectionType !== "None";
 }
 
 function isKubConfigLogoutRequired(command: string): boolean {
     var connectionType = tl.getInput("connectionType", true);
-    return command !== "package" && command !== "login" && connectionType !== "None";
+    return command !== "package" && command !== "lint" && command !== "login" && connectionType !== "None";
 }
 
 // get kubeconfig file path
@@ -103,7 +103,8 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli) {
         "init": "./helmcommands/helminit",
         "install": "./helmcommands/helminstall",
         "package": "./helmcommands/helmpackage",
-        "upgrade": "./helmcommands/helmupgrade"
+        "upgrade": "./helmcommands/helmupgrade",
+        "lint": "./helmcommands/helmlint"
     }
 
     var commandImplementation = require("./helmcommands/uinotimplementedcommands");
