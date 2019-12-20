@@ -90,12 +90,11 @@ async function run() {
 
             // specifySlotFlag variable is only visible for the Start/Stop/Restart App Service cases
             let specifySlotFlagisValid = (action == "Start Azure App Service" || action == "Stop Azure App Service" || action == "Restart Azure App Service");
-            // SlotName is read from input when the specifySlotFlag is visible and is true
-            let slotNameInput = specifySlotFlagisValid && !!specifySlotFlag;
             // slotName is only taken as an input in Delete Slot/ Cancel Swap and when specifySlotFlag is true for Start/Stop/Restart App Service
-            let slotNameisDefined = !(slotNameInput || action == "Delete Slot" || action == "Cancel Swap");
+            let slotNameisValid= ((specifySlotFlagisValid && !!specifySlotFlag) || action == "Delete Slot" || action == "Cancel Swap");
             
-            if(slotNameisDefined) {
+            if(!slotNameisValid) {
+                tl.debug("Setting slot name to default value i.e. production");
                 slotName = defaultslotname;
             }
 
