@@ -1,7 +1,6 @@
 import tl = require("azure-pipelines-task-lib/task");
 import msRestAzure = require('azure-arm-rest-v2/azure-arm-common');
 import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
-import { GraphManagementClient } from 'azure-arm-rest-v2/azure-graph';
 
 class TokenCredentials {
     private hostUrl: string;
