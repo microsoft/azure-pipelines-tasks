@@ -527,7 +527,7 @@ export class ResourceGroup {
     }
 
     private async performAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount = 0): Promise<void> {
-        if(!this._spnName) {
+        if(!this._spnName && this.taskParameters.authScheme == "ServicePrincipal") {
             this._spnName = await this.getServicePrincipalName();
         }
         
@@ -562,7 +562,11 @@ export class ResourceGroup {
 
     private printServicePrincipalRoleAssignmentError(error: any) {
         if(!!error && error.statusCode == 403) {
-            tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.resourceGroupName));
+            if(this.taskParameters.authScheme == "ServicePrincipal") {
+                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.resourceGroupName));
+            } else if(this.taskParameters.authScheme == "ManagedServiceIdentity") {
+                tl.error(tl.loc("ManagedServiceIdentityDetails", this.taskParameters.resourceGroupName));    
+            }
         }
     }
 

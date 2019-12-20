@@ -1,6 +1,7 @@
 import tl = require("azure-pipelines-task-lib/task");
 import msRestAzure = require('azure-arm-rest-v2/azure-arm-common');
 import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
+import { GraphManagementClient } from 'azure-arm-rest-v2/azure-graph';
 
 class TokenCredentials {
     private hostUrl: string;
@@ -74,7 +75,8 @@ export class AzureRGTaskParameters {
     public runAgentServiceAsUser: boolean;
     public addSpnToEnvironment: boolean;
     public connectedService: string;
-
+    public authScheme: string;
+    
     private getVSTSPatToken(deploymentGroupEndpointName: string): TokenCredentials {
         var endpointAuth = tl.getEndpointAuthorization(deploymentGroupEndpointName, true);
         if (endpointAuth.scheme === 'Token') {
@@ -96,29 +98,14 @@ export class AzureRGTaskParameters {
             throw (msg);
         }
     }
-    
-    private _getAzureADGraphCredentials(connectedService: string): msRestAzure.ApplicationTokenCredentials {
-        var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-        var servicePrincipalAuth: string;
-        let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
-        
-        if(authType == "spnCertificate") {
-            servicePrincipalAuth = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalCertificate", false);
-        } else {
-            servicePrincipalAuth = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
-        }
-
-        var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-        var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentauthorityurl', false);
-        envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
-        var activeDirectoryResourceId: string = tl.getEndpointDataParameter(connectedService, 'graphUrl', false);
-        activeDirectoryResourceId = (activeDirectoryResourceId != null) ? activeDirectoryResourceId : "https://graph.windows.net/";
-        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalAuth, activeDirectoryResourceId, envAuthorityUrl, activeDirectoryResourceId, false);
-        return credentials;
-    }
 
     private async getARMCredentials(connectedService: string): Promise<msRestAzure.ApplicationTokenCredentials> {
         var azureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint();
+        return azureEndpoint.applicationTokenCredentials;
+    }
+
+    private async getGraphCredentials(connectedService: string): Promise<msRestAzure.ApplicationTokenCredentials> {
+        var azureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint(true);
         return azureEndpoint.applicationTokenCredentials;
     }
 
@@ -161,7 +148,8 @@ export class AzureRGTaskParameters {
             this.deploymentName = tl.getInput("deploymentName");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = await this.getARMCredentials(this.connectedService);
-            this.graphCredentials = this._getAzureADGraphCredentials(this.connectedService);
+            this.authScheme = tl.getEndpointAuthorizationScheme(this.connectedService, true);
+            this.graphCredentials = await this.getGraphCredentials(this.connectedService);
             this.deploymentGroupProjectName = tl.getInput("project");
             this.deploymentOutputs = tl.getInput("deploymentOutputs");
             this.addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
