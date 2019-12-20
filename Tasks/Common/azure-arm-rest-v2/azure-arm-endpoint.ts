@@ -64,6 +64,7 @@ export class AzureRMEndpoint {
 
                 if(graph) {
                     var activeDirectoryResourceId: string = tl.getEndpointDataParameter(this._connectedServiceName, 'graphUrl', true);
+                    activeDirectoryResourceId = activeDirectoryResourceId != null ? activeDirectoryResourceId : "https://graph.windows.net/";
                     this.endpoint.url = activeDirectoryResourceId;
                     this.endpoint.activeDirectoryResourceID = activeDirectoryResourceId;
                 }
