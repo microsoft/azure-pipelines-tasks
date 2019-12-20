@@ -91,7 +91,7 @@ async function run() {
 
             tl.debug(`Resource Group: ${resourceGroupName}`);
 
-            if(((action == "Start Azure App Service" || action == "Stop Azure App Service" || action == "Restart Azure App Service") && !!specifySlotFlag) || action == "Delete Slot" || action == "Cancel Swap") {
+            if(!(((action == "Start Azure App Service" || action == "Stop Azure App Service" || action == "Restart Azure App Service") && !!specifySlotFlag) || action == "Delete Slot" || action == "Cancel Swap")) {
                 slotName = defaultslotname;
             }
 
