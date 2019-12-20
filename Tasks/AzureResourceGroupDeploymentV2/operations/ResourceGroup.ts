@@ -2,7 +2,7 @@ import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import util = require("util");
-import azureGraph = require("azure-arm-rest-v2/azure-graph");
+
 import env = require("./Environment");
 import deployAzureRG = require("../models/DeployAzureRG");
 import armResource = require("azure-arm-rest-v2/azure-arm-resource");
@@ -524,7 +524,7 @@ export class ResourceGroup {
         });
     }
 
-    private async performAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount = 0, spnName: string): Promise<void> {
+    private async performAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount = 0): Promise<void> {
         if (deployment.properties["mode"] === "Validation") {
             return this.validateDeployment(armClient, deployment);
         } else {
@@ -535,12 +535,9 @@ export class ResourceGroup {
                 armClient.deployments.createOrUpdate(this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
                     if (error) {
                         if(error.code == "ResourceGroupNotFound" && retryCount > 0){
-                            return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount, spnName);
+                            return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount);
                         }
                         this.writeDeploymentErrors(error);
-                        if(error.statusCode == 403) {
-                            tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", spnName, this.taskParameters.resourceGroupName));
-                        }
                         this.checkAndPrintPortalDeploymentURL();
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
@@ -560,9 +557,9 @@ export class ResourceGroup {
         tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
     }
 
-    private async waitAndPerformAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount, spnName: string): Promise<void> {
+    private async waitAndPerformAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount): Promise<void> {
         await sleepFor(3);
-        return this.performAzureDeployment(armClient, deployment, retryCount - 1, spnName);
+        return this.performAzureDeployment(armClient, deployment, retryCount - 1);
     }
 
     private async createTemplateDeployment(armClient: armResource.ResourceManagementClient) {
@@ -575,20 +572,9 @@ export class ResourceGroup {
         } else {
             throw new Error(tl.loc("InvalidTemplateLocation"));
         }
-        await this.performAzureDeployment(armClient, deployment, 3, await this.getServicePrincipalName());
+        await this.performAzureDeployment(armClient, deployment, 3);
     }
 
-    protected async getServicePrincipalName(): Promise<string> {
-        try {
-            var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
-            var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
-            return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";
-        } catch (error) {
-            tl.debug(tl.loc("ServicePrincipalFetchFailed", error));
-            return "";
-        }
-    }
-    	    
     private getAzurePortalDeploymentURL() {
         try {
             let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
