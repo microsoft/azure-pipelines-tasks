@@ -66,4 +66,17 @@ describe('PowerShell Suite', function () {
         }, tr, done);
     });
 
+    it('Reports stderr correctly', (done: MochaDone) => {
+        this.timeout(5000);
+
+        let tp: string = path.join(__dirname, 'L0StdErr.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(tr.failed, 'Bash should have failed');
+            assert(tr.stdout.indexOf('##vso[task.issue type=error;]myErrorTest') > 0, 'Bash should have correctly written myErrorTest');
+        }, tr, done);
+    });
 });
