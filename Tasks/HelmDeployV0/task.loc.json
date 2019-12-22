@@ -143,7 +143,8 @@
         "ls": "ls",
         "package": "package",
         "rollback": "rollback",
-        "upgrade": "upgrade"
+        "upgrade": "upgrade",
+        "plugin": "plugin"
       },
       "helpMarkDown": "ms-resource:loc.input.help.command",
       "groupName": "commands",
@@ -325,6 +326,25 @@
       "helpMarkDown": "ms-resource:loc.input.help.waitForExecution",
       "visibleRule": "command == init || command == install || command == upgrade",
       "groupName": "commands"
+    },
+    {
+      "name": "pluginCommand",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.pluginCommand",
+      "defaultValue": "run",
+      "options": {
+        "install": "install",
+        "list": "list",
+        "remove": "remove",
+        "update": "update",
+        "run": "run"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.pluginCommand",
+      "groupName": "commands",
+      "visibleRule": "command == plugin",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "arguments",

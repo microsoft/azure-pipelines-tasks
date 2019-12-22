@@ -103,7 +103,8 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli) {
         "init": "./helmcommands/helminit",
         "install": "./helmcommands/helminstall",
         "package": "./helmcommands/helmpackage",
-        "upgrade": "./helmcommands/helmupgrade"
+        "upgrade": "./helmcommands/helmupgrade",
+        "plugin": "./helmcommands/helmplugin"
     }
 
     var commandImplementation = require("./helmcommands/uinotimplementedcommands");
@@ -112,14 +113,21 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli) {
     }
 
     //set command
-    helmCli.setCommand(command);
-
-    // add arguments
-    commonCommandOptions.addArguments(helmCli);
+    if (command != "plugin"){
+        helmCli.setCommand(command);
+        // add arguments
+        commonCommandOptions.addArguments(helmCli);
+    }
+    // add command implementation arguments
     commandImplementation.addArguments(helmCli);
 
     const execResult = helmCli.execHelmCommand();
-    if (execResult.code != tl.TaskResult.Succeeded || !!execResult.error || !!execResult.stderr) {
+    
+    if (command === "plugin" && (execResult.code != 0 || !!execResult.error )) {
+        tl.debug('execResult: ' + JSON.stringify(execResult));
+        tl.setResult(tl.TaskResult.Failed, execResult.stderr);
+    }
+    else if (command != "plugin" && (execResult.code != tl.TaskResult.Succeeded || !!execResult.error || !!execResult.stderr)) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
         tl.setResult(tl.TaskResult.Failed, execResult.stderr);
     }
