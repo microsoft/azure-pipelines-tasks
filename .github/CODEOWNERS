@@ -307,11 +307,11 @@ Tasks/PublishPipelineMetadataV0/*    @vithati @nidabas
 
 Tasks/PublishSymbolsV2/*    @arunkm @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
 
-Tasks/PublishTestResultsV1/*    @shaiku
+Tasks/PublishTestResultsV1/*    @shailesh-sk
 
-Tasks/PublishTestResultsV2/*    @shaiku
+Tasks/PublishTestResultsV2/*    @shailesh-sk
 
-Tasks/ContainerStructureTestV0/*    @shaiku   @navin22
+Tasks/ContainerStructureTestV0/*    @shailesh-sk   @navin22
 
 Tasks/PublishToAzureServiceBusV1/*      @vithati
 
