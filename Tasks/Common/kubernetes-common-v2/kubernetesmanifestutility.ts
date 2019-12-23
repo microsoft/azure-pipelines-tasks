@@ -6,13 +6,13 @@ import * as utils from './utility';
 import * as KubernetesConstants from './kubernetesconstants';
 import { Kubectl, Resource } from './kubectl-object-model';
 
-export async function checkManifestStability(kubectl: Kubectl, resources: Resource[]): Promise<void> {
+export async function checkManifestStability(kubectl: Kubectl, resources: Resource[], timeoutInSeconds?: string): Promise<void> {
     const rolloutStatusResults = [];
     const numberOfResources = resources.length;
-    for (let i = 0; i< numberOfResources; i++) {
+    for (let i = 0; i < numberOfResources; i++) {
         const resource = resources[i];
         if (KubernetesConstants.workloadTypesWithRolloutStatus.indexOf(resource.type.toLowerCase()) >= 0) {
-            rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name));
+            rolloutStatusResults.push(kubectl.checkRolloutStatus(resource.type, resource.name, timeoutInSeconds));
         }
         if (utils.isEqual(resource.type, KubernetesConstants.KubernetesWorkload.pod, true)) {
             try {
@@ -27,7 +27,7 @@ export async function checkManifestStability(kubectl: Kubectl, resources: Resour
                 const spec = service.spec;
                 const status = service.status;
                 if (utils.isEqual(spec.type, KubernetesConstants.ServiceTypes.loadBalancer, true)) {
-                    if(!isLoadBalancerIPAssigned(status)) {
+                    if (!isLoadBalancerIPAssigned(status)) {
                         await waitForServiceExternalIPAssignment(kubectl, resource.name);
                     } else {
                         console.log(tl.loc('ServiceExternalIP', resource.name, status.loadBalancer.ingress[0].ip));
@@ -38,7 +38,7 @@ export async function checkManifestStability(kubectl: Kubectl, resources: Resour
             }
         }
     }
-    
+
     utils.checkForErrors(rolloutStatusResults);
 }
 
