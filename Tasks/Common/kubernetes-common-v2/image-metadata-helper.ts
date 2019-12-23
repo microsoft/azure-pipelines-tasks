@@ -229,7 +229,22 @@ export function extractManifestsFromHelmOutput(helmOutput: string): any {
         const files = manifestFiles.split("---");
         files.forEach(file => {
             file = file.trim();
-            if (file) {
+            let lines: string[] = file.split("\n");
+            let validYamlLines: string[] = [];
+            lines.forEach(line => {
+                // The helm output may contain non yaml lines such as "Release "{censored}" has been upgraded. Happy Helming!"
+                // Assuming the valid yaml contains colon, we will remove the lines that do not contain colon, before doing yaml.safeLoad
+                const yamlIdentifierColon = ":";
+                if (line.indexOf(yamlIdentifierColon) >= 0) {
+                    validYamlLines.push(line);
+                }
+                else {
+                    tl.debug("Removing non-yaml line:" + line + "from helm output");
+                }
+            });
+
+            if (validYamlLines.length > 0) {
+                file = validYamlLines.join("\n");
                 const parsedObject = yaml.safeLoad(file);
                 manifestObjects.push(parsedObject);
             }
