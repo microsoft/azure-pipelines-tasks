@@ -234,6 +234,16 @@ a.exec[`${kubectlPath} delete Deployment nginx-deployment-canary nginx-deploymen
     'stdout': ' "nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted'
 };
 
+a.exec[`${kubectlPath} delete Deployment nginx-deployment-canary --namespace testnamespace`] = {
+    'code': 0,
+    'stdout': ' "nginx-deployment-canary" deleted'
+};
+
+a.exec[`${kubectlPath} delete Deployment nginx-deployment-baseline --namespace testnamespace`] = {
+    'code': 0,
+    'stdout': ' "nginx-deployment-baseline" deleted'
+};
+
 a.exec[`${kubectlPath} delete secret secret --namespace testnamespace`] = {
     code: 0,
     stdout: 'deleted secret'

@@ -25,7 +25,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     protected virtualApplicationPath: string = "";
     protected activeDeploymentID;
     protected publishProfileScmCredentials: publishProfileUtility.ScmCredentials;
-    protected slotName;
+    protected slotName: string;
 
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;
