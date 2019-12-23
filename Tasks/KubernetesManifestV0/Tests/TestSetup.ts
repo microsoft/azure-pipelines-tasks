@@ -44,6 +44,8 @@ tr.setInput('secretName', process.env[shared.TestEnvVars.secretName] || '');
 tr.setInput('secretType', process.env[shared.TestEnvVars.secretType] || '');
 tr.setInput('dockerComposeFile', process.env[shared.TestEnvVars.dockerComposeFile] || '');
 tr.setInput('kustomizationPath', process.env[shared.TestEnvVars.kustomizationPath] || '');
+tr.setInput('baselineAndCanaryReplicas', process.env[shared.TestEnvVars.baselineAndCanaryReplicas] || '0');
+tr.setInput('trafficSplitMethod', process.env[shared.TestEnvVars.trafficSplitMethod]);
 
 process.env.SYSTEM_DEFAULTWORKINGDIRECTORY = testnamespaceWorkingDirectory;
 process.env.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI = teamFoundationCollectionUri;
@@ -232,6 +234,16 @@ a.exec[`${kubectlPath} delete Deployment nginx-deployment-canary nginx-deploymen
     'stdout': ' "nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted'
 };
 
+a.exec[`${kubectlPath} delete Deployment nginx-deployment-canary --namespace testnamespace`] = {
+    'code': 0,
+    'stdout': ' "nginx-deployment-canary" deleted'
+};
+
+a.exec[`${kubectlPath} delete Deployment nginx-deployment-baseline --namespace testnamespace`] = {
+    'code': 0,
+    'stdout': ' "nginx-deployment-baseline" deleted'
+};
+
 a.exec[`${kubectlPath} delete secret secret --namespace testnamespace`] = {
     code: 0,
     stdout: 'deleted secret'
@@ -340,7 +352,8 @@ tr.registerMock('../utils/FileHelper', {
     },
     getNewUserDirPath: fh.getNewUserDirPath,
     ensureDirExists: fh.ensureDirExists,
-    assertFileExists: fh.assertFileExists
+    assertFileExists: fh.assertFileExists,
+    writeManifestToFile: fh.writeManifestToFile
 });
 
 tr.registerMock('uuid/v4', function () {

@@ -2,7 +2,7 @@
     "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
     "name": "AzureCLI",
     "friendlyName": "Azure CLI",
-    "description": "Run Azure CLI commands against an Azure subscription in a PowerShell Core/Shell script when running on Linux agent or PowerShell/PowerSheell Core/Batch script when running on Windows agent.",
+    "description": "Run Azure CLI commands against an Azure subscription in a PowerShell Core/Shell script when running on Linux agent or PowerShell/Powershell Core/Batch script when running on Windows agent.",
     "author": "Microsoft Corporation",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
     "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV2/Readme.md) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
@@ -21,7 +21,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 4
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -130,7 +130,7 @@
             "label": "Access service principal details in script",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId`, `$servicePrincipalKey` and `$tenantId` in your script.\n\nThis is honored only when the Azure endpoint has Service Principal authentication scheme.",
+            "helpMarkDown": "Adds service principal id, service principal key and tenant id of the Azure endpoint you chose to the script's execution environment. You can use variables: `servicePrincipalId`, `servicePrincipalKey` and `tenantId` in your script.\n\nThis is honored only when the Azure endpoint has Service Principal authentication scheme.\n\nSyntax to access environment variables based on script type.\n\nPowershell script: $env:servicePrincipalId\n\nBatch script: %servicePrincipalId% \n\nShell script: $servicePrincipalId",
             "groupName": "advanced"
         },
         {

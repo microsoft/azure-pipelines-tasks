@@ -25,6 +25,7 @@ export interface TestReportingSettings {
     TestResultsDirectory : string;
     TestRunSystem : string;
     TestSourceSettings : TestSourceSettings;
+    ExecutionStatusSettings : ExecutionStatusSettings;
 }
 
 export interface TestSelectionSettings {
@@ -96,8 +97,8 @@ export interface ExecutionSettings {
     AssemblyLevelParallelism : boolean;
     CodeCoverageEnabled : boolean;
     PathToCustomTestAdapters : string;
-    IgnoreTestFailures : boolean;
     ProceedAfterAbortedTestCase : boolean;
+    PathToCustomVsTestConsoleWrapperAssembly : string;
     SettingsFile : string;
     AdditionalConsoleParameters : string;
     OverridenParameters : string;
@@ -111,6 +112,12 @@ export interface ExecutionSettings {
 
 export interface TestSourceSettings {
     PullRequestTargetBranchName : string;
+}
+
+export interface ExecutionStatusSettings {
+    IgnoreTestFailures : boolean;
+    MinimumExecutedTestsExpected : number;
+    ActionOnThresholdNotMet : string;
 }
 
 export interface DiagnosticsSettings {
