@@ -9,7 +9,7 @@ var uuidV4 = require('uuid/v4');
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
-
+        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-arm-rest-v2/module.json'));
         // Get inputs.
         let _vsts_input_errorActionPreference: string = tl.getInput('errorActionPreference', false) || 'Stop';
         switch (_vsts_input_errorActionPreference.toUpperCase()) {

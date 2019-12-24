@@ -115,6 +115,7 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
 async function doWork() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
+        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-arm-rest/module.json'));        
 
         const serverEndpoint: string = tl.getInput('serverEndpoint', true);
         const serverEndpointUrl: string = tl.getEndpointUrl(serverEndpoint, false);
