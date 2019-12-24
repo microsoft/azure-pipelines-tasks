@@ -27,6 +27,7 @@ async function run(): Promise<void> {
         const taskManifestPath = path.join(__dirname, "task.json");
         tl.debug("Setting resource path to " + taskManifestPath);
         tl.setResourcePath(taskManifestPath);
+        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-arm-rest-v2/module.json'));
         let connectionType = tl.getInput('ConnectedServiceNameSelector', true);
         if(connectionType === 'ConnectedServiceNameARM') {
             let connectedServiceName = tl.getInput('ConnectedServiceNameARM', true);
