@@ -88,16 +88,6 @@ async function run() {
 
             tl.debug(`Resource Group: ${resourceGroupName}`);
 
-            // specifySlotFlag variable is only visible for the Start/Stop/Restart App Service cases
-            let specifySlotFlagisValid = (action == "Start Azure App Service" || action == "Stop Azure App Service" || action == "Restart Azure App Service");
-            // slotName is only taken as an input in Delete Slot/ Cancel Swap and when specifySlotFlag is true for Start/Stop/Restart App Service
-            let slotNameisValid= ((specifySlotFlagisValid && !!specifySlotFlag) || action == "Delete Slot" || action == "Cancel Swap");
-            
-            if(!slotNameisValid) {
-                tl.debug("Setting slot name to default value i.e. production");
-                slotName = defaultslotname;
-            }
-
             appService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
             azureAppServiceUtils = new AzureAppServiceUtils(appService);
             let appServiceKuduService = await azureAppServiceUtils.getKuduService();
