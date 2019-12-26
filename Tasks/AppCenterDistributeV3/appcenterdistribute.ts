@@ -549,11 +549,9 @@ async function run() {
 
             // Expand symbols path pattern to a list of paths
             let symbolsPaths = expandSymbolsPaths(symbolType, symbolsPathPattern, continueIfSymbolsNotFound, packParentFolder);
-            tl.debug(JSON.stringify(symbolsPaths));
 
             // Prepare symbols
             let symbolsFile = await prepareSymbols(symbolsPaths, forceArchive);
-            tl.debug(symbolsFile);
 
             if (symbolsFile) {
                 // Begin preparing upload symbols
