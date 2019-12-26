@@ -404,36 +404,18 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
 
     let symbolsPaths: string[] = [];
 
-    if (symbolsType === "Apple") {
+    if (symbolsType === "Apple" || symbolsType === "Breakpad") {
         // User can specifay a symbols path pattern that selects
         // multiple dSYM folder paths for Apple application.
-        let dsymPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
+        let symPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
 
         // Resolved paths can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
-        if (dsymPaths) {
-            dsymPaths.forEach(dsymFolder => {
-                if (dsymFolder) {
-                    let folderPath = utils.checkAndFixFilePath(dsymFolder, continueOnError);
+        if (symPaths) {
+            symPaths.forEach(symFolder => {
+                if (symFolder) {
+                    let folderPath = utils.checkAndFixFilePath(symFolder, continueOnError);
                     // The path can be null if continueIfSymbolsNotFound is true and the folder does not exist.
                     if (folderPath) {
-                        symbolsPaths.push(folderPath);
-                    }
-                }
-            })
-        }
-    } else if (symbolsType === "Breakpad") {
-        // User can specifay a symbols path pattern that selects
-        // multiple dSYM folder paths for Apple application.
-        let soPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
-
-        // Resolved paths can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
-        if (soPaths) {
-            soPaths.forEach(soFolder => {
-                if (soFolder) {
-                    let folderPath = utils.checkAndFixFilePath(soFolder, continueOnError);
-                    // The path can be null if continueIfSymbolsNotFound is true and the folder does not exist.
-                    if (folderPath) {
-                        tl.debug(`Adding: ${folderPath}`)
                         symbolsPaths.push(folderPath);
                     }
                 }
