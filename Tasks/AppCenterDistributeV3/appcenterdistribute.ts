@@ -296,11 +296,11 @@ function getBranchName(ref: string): string {
  * If the input is a single folder, zip it's content. The archive name is the folder's name
  * If the input is a set of folders or files, zip them so they appear on the root of the archive. The archive name is the parent folder's name.
  */
-function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> {
+function prepareSymbols(symbolsPaths: string[], forceArchive: boolean): Q.Promise<string> {
     tl.debug("-- Prepare symbols");
     let defer = Q.defer<string>();
 
-    if (symbolsPaths.length === 1 && fs.statSync(symbolsPaths[0]).isFile()) {
+    if (!forceArchive && symbolsPaths.length === 1 && fs.statSync(symbolsPaths[0]).isFile()) {
         tl.debug(`.. a single symbols file: ${symbolsPaths[0]}`)
 
         // single file - Android source mapping txt file
@@ -424,7 +424,7 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
     } else if (symbolsType === "Breakpad") {
         // User can specifay a symbols path pattern that selects
         // multiple dSYM folder paths for Apple application.
-        let soPaths = utils.resolvePaths(pattern, continueOnError, true);
+        let soPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
 
         // Resolved paths can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
         if (soPaths) {
@@ -487,14 +487,14 @@ async function run() {
         "UWP": "Universal Windows Platform (UWP)"
         */
         const symbolType: TaskSymbolType = tl.getInput('symbolsType', false) as TaskSymbolType;
-        let symbolsLookup: { symbolType: ApiSymbolType, fieldName: string }[] = [];
+        let symbolsLookup: { symbolType: ApiSymbolType, fieldName: string, forceArchive?: boolean }[] = [];
         switch (symbolType) {
             case "Apple":
                 symbolsLookup.push({ symbolType, fieldName: "dsymPath" });
                 break;
             case "Android":
                 symbolsLookup.push({ symbolType: "AndroidProguard", fieldName: "mappingTxtPath" });
-                symbolsLookup.push({ symbolType: "Breakpad", fieldName: "nativeLibrariesPath" });
+                symbolsLookup.push({ symbolType: "Breakpad", fieldName: "nativeLibrariesPath", forceArchive: true });
                 break;
             case "UWP":
                 symbolsLookup.push({ symbolType, fieldName: "appxsymPath" });
@@ -562,7 +562,7 @@ async function run() {
             return publishRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, destinationType, isMandatory, isSilent, destinationId, apiToken, userAgent);
         }));
 
-        for (const { fieldName, symbolType } of symbolsLookup) {
+        for (const { fieldName, symbolType, forceArchive } of symbolsLookup) {
             let symbolsPathPattern: string = tl.getInput(fieldName, false);
 
             // Expand symbols path pattern to a list of paths
@@ -570,7 +570,7 @@ async function run() {
             tl.debug(JSON.stringify(symbolsPaths));
 
             // Prepare symbols
-            let symbolsFile = await prepareSymbols(symbolsPaths);
+            let symbolsFile = await prepareSymbols(symbolsPaths, forceArchive);
             tl.debug(symbolsFile);
 
             if (symbolsFile) {
