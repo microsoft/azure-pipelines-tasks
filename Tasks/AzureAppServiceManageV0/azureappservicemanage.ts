@@ -71,6 +71,7 @@ class AppServiceManage {
     private taskparams: TaskParameters;
     private azureEndpoint: AzureEndpoint;
 
+    // Reads valid task inputs and ignores invalid inputs as per visibility rule 
     private async readTaskInputs() {
         this.action = tl.getInput('Action', true);
         this.taskparams = {
@@ -90,16 +91,17 @@ class AppServiceManage {
             resourceGroupName: ""
         }
         
-        let invalidSpecifySlotFlag: boolean = this.action == Action.SwapSlot || this.action == Action.SwapWithPrev || this.action == Action.CompleteSwap || this.action == Action.CancelSwap || this.action == Action.DeleteSlot;
-        this.taskparams.specifySlotFlag = !invalidSpecifySlotFlag ? tl.getBoolInput('SpecifySlot', false) : false;
+        let ignoreSpecifySlotFlag: boolean = this.action == Action.SwapSlot || this.action == Action.SwapWithPrev || this.action == Action.CompleteSwap || this.action == Action.CancelSwap || this.action == Action.DeleteSlot;
+        this.taskparams.specifySlotFlag = !ignoreSpecifySlotFlag ? tl.getBoolInput('SpecifySlot', false) : false;
         this.taskparams.slotName = this.taskparams.specifySlotFlag || (this.action == Action.DeleteSlot || this.action == Action.CompleteSwap) ? tl.getInput('Slot', false) : defaultslotname;
-        this.taskparams.resourceGroupName = (!!invalidSpecifySlotFlag || !!this.taskparams.specifySlotFlag) ? tl.getInput('ResourceGroupName', false) : '';
+        this.taskparams.resourceGroupName = (!!ignoreSpecifySlotFlag || !!this.taskparams.specifySlotFlag) ? tl.getInput('ResourceGroupName', false) : '';
 
         this.azureEndpoint = await new AzureRMEndpoint(this.taskparams.connectedServiceName).getEndpoint();
         let endpointTelemetry = '{"endpointId":"' + this.taskparams.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureAppServiceManage]" + endpointTelemetry);
     }
 
+    // Fetch app service resource group name
     private async getRgName() {
         if(!this.taskparams.resourceGroupName) {
             this.taskparams.resourceGroupName = await AzureResourceFilterUtils.getResourceGroupName(this.azureEndpoint, 'Microsoft.Web/Sites', this.taskparams.webAppName);
@@ -107,6 +109,7 @@ class AppServiceManage {
         tl.debug(`Resource Group: ${this.taskparams.resourceGroupName}`);
     }
 
+    // Initializing kudu instance when publish profile is provided as auth scheme
     private async initializePublishProfile() {
         if (this.action !== Action.StartWebjobs && this.action !== Action.StopWebjobs && this.action !== Action.InstallExt) {
             throw Error(tl.loc('InvalidActionForPublishProfileEndpoint'));
@@ -116,6 +119,7 @@ class AppServiceManage {
         this.kuduServiceUtils = new KuduServiceUtils(this.kuduService);
     }
 
+    // Initializing arm and kudu instances for actions operating on one app service instance/ slot
     private async initializeService() {
         if (this.azureEndpoint.scheme && this.azureEndpoint.scheme.toLowerCase() === AzureRmEndpointAuthenticationScheme.PublishProfile) {
             await this.initializePublishProfile();
@@ -129,16 +133,18 @@ class AppServiceManage {
         }
     }
 
+    // Initializing arm and kudu instances for actions operating on target and source slots of app service
     private async initializeSourceTargetService() {
         await this.getRgName();
-        this.taskparams.targetSlot = (this.taskparams.swapWithProduction) ? "production" : this.taskparams.targetSlot;
+        this.taskparams.targetSlot = (this.taskparams.swapWithProduction) ? defaultslotname : this.taskparams.targetSlot;
         this.appServiceSourceSlot = new AzureAppService(this.azureEndpoint, this.taskparams.resourceGroupName, this.taskparams.webAppName, this.taskparams.sourceSlot);
         this.appServiceTargetSlot = new AzureAppService(this.azureEndpoint, this.taskparams.resourceGroupName, this.taskparams.webAppName, this.taskparams.targetSlot);
         this.appServiceSourceSlotUtils = new AzureAppServiceUtils(this.appServiceSourceSlot);
         this.appServiceTargetSlotUtils = new AzureAppServiceUtils(this.appServiceTargetSlot);
     }
 
-    private async isValidAction() {
+    // Validates if the app service selecetd for swap preview action has the capability for the same
+    private async isValidSwapPreviewAppService() {
         let appService = new AzureAppService(this.azureEndpoint, this.taskparams.resourceGroupName, this.taskparams.webAppName, defaultslotname);
         let configSettings = await appService.get(true);
         let WebAppKind = webAppKindMap.get(configSettings.kind) ? webAppKindMap.get(configSettings.kind) : configSettings.kind;
@@ -152,11 +158,12 @@ class AppServiceManage {
     }
 
     public async run() {
-        await this.readTaskInputs();
-
         try {
             tl.setResourcePath(path.join( __dirname, 'task.json'));
             tl.setResourcePath(path.join( __dirname, 'node_modules/azure-arm-rest-v2/module.json'));
+
+            // Reading task inputs
+            await this.readTaskInputs();
 
             switch(this.action) {
                 case "Start Azure App Service": {
@@ -184,7 +191,7 @@ class AppServiceManage {
                     break;
                 }
                 case "Complete Swap":
-                    await this.isValidAction();
+                    await this.isValidSwapPreviewAppService();
                 case "Swap Slots": {
                     await this.initializeSourceTargetService();
                     await this.advancedSlotSwap();
@@ -192,14 +199,14 @@ class AppServiceManage {
                     break;
                 }
                 case "Start Swap With Preview": {
-                    await this.isValidAction();
+                    await this.isValidSwapPreviewAppService();
                     await this.initializeSourceTargetService();
                     await this.advancedSlotSwap();
                     await this.appServiceSourceSlot.swapSlotWithPreview(this.taskparams.targetSlot, this.taskparams.preserveVnet);
                     break;
                 }
                 case "Cancel Swap": {
-                    await this.isValidAction();
+                    await this.isValidSwapPreviewAppService();
                     await this.initializeService();
                     await this.appService.cancelSwapSlotWithPreview();
                     break;
