@@ -59,7 +59,7 @@ nock('https://example.test')
     })
     .reply(200, {
         release_id: '1',
-        release_url: 'my_release_location' 
+        release_url: 'my_release_location'
     });
 
 //make it available
@@ -95,7 +95,7 @@ nock('https://example.test')
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    'checkPath' : {
+    'checkPath': {
         '/test/path/to/my.ipa': true,
         'a': true,
         'a/f.txt': true,
@@ -109,7 +109,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         'a/b/c/x.dsym/x1.txt': true,
         'a/b/c/x.dsym/x2.txt': true
     },
-    'findMatch' : {
+    'findMatch': {
         'a/**/*.dsym': [
             'a/b/c/x.dsym'
         ],
@@ -131,7 +131,7 @@ fs.createReadStream = (s: string) => {
 fs.createWriteStream = (s: string) => {
     let stream = new Writable;
 
-    stream.write = () => {};
+    stream.write = () => { };
 
     return stream;
 };
@@ -172,27 +172,12 @@ fs.readdirSync = (folder: string) => {
 
 fs.statSync = (s: string) => {
     let stat = new Stats;
-
-    stat.isFile = () => {
-        if (s.endsWith('.txt')) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    stat.isDirectory = () => {
-        if (s.endsWith('.txt')) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
+    stat.isFile = () => s.endsWith('.txt');
+    stat.isDirectory = () => !s.endsWith('.txt');
     stat.size = 100;
-
     return stat;
 }
+fs.lstatSync = fs.statSync;
 
 azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
     return Promise.resolve();
