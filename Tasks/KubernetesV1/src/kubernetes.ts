@@ -2,17 +2,23 @@
 
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import * as yaml from 'js-yaml';
 
-import ClusterConnection from "./clusterconnection";
 import * as kubectlConfigMap from "./kubernetesconfigmap";
 import * as kubectlSecret from "./kubernetessecret";
-import { getNameSpace, isJsonOrYamlOutputFormatSupported, getCommandConfigurationFile } from "./kubernetescommand";
-import trm = require('azure-pipelines-task-lib/toolrunner');
-import { getDeploymentMetadata, IsJsonString, getPublishDeploymentRequestUrl, isDeploymentEntity, getManifestFileUrlsFromArgumentsInput } from 'kubernetes-common-v2/image-metadata-helper';
+import * as yaml from 'js-yaml';
+
+import { IsJsonString, getDeploymentMetadata, getManifestFileUrlsFromArgumentsInput, getPublishDeploymentRequestUrl, isDeploymentEntity } from 'kubernetes-common-v2/image-metadata-helper';
 import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
+import { getCommandConfigurationFile, getNameSpace, isJsonOrYamlOutputFormatSupported } from "./kubernetescommand";
+
+import ClusterConnection from "./clusterconnection";
+
+import trm = require('azure-pipelines-task-lib/toolrunner');
+
+
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+tl.setResourcePath(path.join( __dirname, '../node_modules/azure-arm-rest-v2/module.json'));
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));
 
