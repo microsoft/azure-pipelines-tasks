@@ -16,8 +16,14 @@ describe('Azure Resource Group Deployment', function () {
     before((done) => {
         done();
     });
+    
     after(function () {
     });
+
+    beforeEach(() => {
+        process.env["AGENT_TEMPDIRECTORY"] = "temp/agent";
+    });
+
     it("Successfully added Azure Pipelines Agent Extension on VM when option specified - Create or update RG", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
