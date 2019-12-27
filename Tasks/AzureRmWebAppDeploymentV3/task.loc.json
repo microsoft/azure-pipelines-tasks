@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 160,
+    "Minor": 163,
     "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -760,6 +760,7 @@
     "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
     "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
-    "JarNotSupported": "ms-resource:loc.messages.JarNotSupported"
+    "JarNotSupported": "ms-resource:loc.messages.JarNotSupported",
+    "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM"
   }
 }
