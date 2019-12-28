@@ -12,13 +12,15 @@ export class Utility {
         if (!!githubEndpointObject) {
             tl.debug("Endpoint scheme: " + githubEndpointObject.scheme);
             
-            if (githubEndpointObject.scheme === 'Token') {
+            if (githubEndpointObject.scheme === 'PersonalAccessToken') {
                 githubEndpointToken = githubEndpointObject.parameters.accessToken
             } else if (githubEndpointObject.scheme === 'OAuth'){
                 // scheme: 'OAuth'
                 githubEndpointToken = githubEndpointObject.parameters.AccessToken
-            }
-            else if (githubEndpointObject.scheme) {
+            } else if (githubEndpointObject.scheme === 'Token'){
+                // scheme: 'Token'
+                githubEndpointToken = githubEndpointObject.parameters.AccessToken
+            } else if (githubEndpointObject.scheme) {
                 throw new Error(tl.loc("InvalidEndpointAuthScheme", githubEndpointObject.scheme));
             }
         }
