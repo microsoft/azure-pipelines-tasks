@@ -12,7 +12,7 @@ export class Utility {
         if (!!githubEndpointObject) {
             tl.debug("Endpoint scheme: " + githubEndpointObject.scheme);
             
-            if (githubEndpointObject.scheme === 'PersonalAccessToken') {
+            if (githubEndpointObject.scheme === 'Token') {
                 githubEndpointToken = githubEndpointObject.parameters.accessToken
             } else if (githubEndpointObject.scheme === 'OAuth'){
                 // scheme: 'OAuth'
