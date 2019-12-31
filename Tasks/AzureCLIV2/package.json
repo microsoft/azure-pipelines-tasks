@@ -1,6 +1,6 @@
 {
   "name": "vsts-tasks-azurecli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Azure Pipelines Azure CLI Task",
   "main": "azureclitask.js",
   "scripts": {
