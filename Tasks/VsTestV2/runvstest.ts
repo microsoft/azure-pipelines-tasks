@@ -49,7 +49,11 @@ async function execute() {
             console.log(tl.loc('nonDistributedTestWorkflow'));
             console.log('======================================================');
             const inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
-            const enableHydra = inputDataContract.ServerType.toLowerCase() === "hosted";
+            var enableHydra = false;
+            if (!utils.Helper.isNullOrWhitespace(inputDataContract.ServerType)) {
+                enableHydra = inputDataContract.ServerType.toLowerCase() === "hosted";
+            }
+
             if (enableHydra || inputDataContract.EnableSingleAgentAPIFlow || (inputDataContract.ExecutionSettings
                 && inputDataContract.ExecutionSettings.RerunSettings
                 && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests)) {
