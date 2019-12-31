@@ -3,8 +3,8 @@ import tl = require("azure-pipelines-task-lib/task");
 
 export class ScriptTypeFactory {
     public static getSriptType(): ScriptType {
-        let scriptType: string = tl.getInput("scriptType", false) || "batch";
-        let scriptLocation: string = tl.getInput("scriptLocation", false) || "inlineScript";
+        let scriptType: string = tl.getInput("scriptType", true);
+        let scriptLocation: string = tl.getInput("scriptLocation", true);
         let scriptArguments: string = tl.getInput("scriptArguments", false);
         switch(scriptType){
             case 'ps':
