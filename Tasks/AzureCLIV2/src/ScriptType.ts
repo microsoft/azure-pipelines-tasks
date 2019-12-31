@@ -3,18 +3,18 @@ import tl = require("azure-pipelines-task-lib/task");
 
 export class ScriptTypeFactory {
     public static getSriptType(): ScriptType {
-        let scriptType: string = tl.getInput("scriptType", true);
-        let scriptLocation: string = tl.getInput("scriptLocation", true);
+        let scriptType: string = tl.getInput("scriptType", false) || "batch";
+        let scriptLocation: string = tl.getInput("scriptLocation", false) || "inlineScript";
         let scriptArguments: string = tl.getInput("scriptArguments", false);
         switch(scriptType){
-            case 'ps': 
+            case 'ps':
                 return new WindowsPowerShell(scriptLocation, scriptArguments);
-            case 'pscore': 
+            case 'pscore':
                 return new PowerShellCore(scriptLocation, scriptArguments);
-            case 'bash': 
+            case 'bash':
                 return new Bash(scriptLocation, scriptArguments);
             case 'batch':
-            default: 
+            default:
                 return new Batch(scriptLocation, scriptArguments);
         }
     }

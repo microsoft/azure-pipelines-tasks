@@ -7,7 +7,7 @@ import fs = require("fs");
 export class Utility {
 
     public static async getScriptPath(scriptLocation: string, fileExtensions: string[]): Promise<string> {
-        if (scriptLocation === "scriptPath") {
+        if (scriptLocation.toLowerCase() === "scriptpath") {
             let filePath: string = tl.getPathInput("scriptPath", true, true);
             if (Utility.checkIfFileExists(filePath, fileExtensions)) {
                 return filePath;
@@ -39,15 +39,15 @@ export class Utility {
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${powerShellErrorActionPreference}'`);
         let filePath: string = tl.getPathInput("scriptPath", false, true);;
-        if (scriptLocation === "inlineScript") {
-            let inlineScript: string = tl.getInput("inlineScript", true);
-            filePath = path.join(tempDirectory, `azureclitaskscript${new Date().getTime()}_inlinescript.${fileExtensions[0]}`);
-            await Utility.createFile(filePath, inlineScript);
-        }
-        else{
+        if (scriptLocation.toLowerCase() === "scriptpath") {
             if (!Utility.checkIfFileExists(filePath, fileExtensions)) {
                 throw new Error(tl.loc('JS_InvalidFilePath', filePath));
             }
+        }
+        else{
+            let inlineScript: string = tl.getInput("inlineScript", true);
+            filePath = path.join(tempDirectory, `azureclitaskscript${new Date().getTime()}_inlinescript.${fileExtensions[0]}`);
+            await Utility.createFile(filePath, inlineScript);
         }
 
         let content: string = `. '${filePath.replace("'", "''")}' `;
