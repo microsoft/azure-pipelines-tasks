@@ -37,6 +37,8 @@ Tasks/AzureFunctionAppV1/*    @kmkumaran      @SumiranAgg
 
 Tasks/AzureFunctionAppContainerV1/*    @kmkumaran      @SumiranAgg
 
+Tasks/AzureFunctionOnKubernetesV0/*     @vithati    @ajinkya599  
+
 Tasks/AzureFunctionV1/*     @vithati
 
 Tasks/AzureIoTEdgeV2/*      @prativen  @blackchoey  @michaeljqzq
@@ -196,6 +198,8 @@ Tasks/ExtractFilesV1/*      @jtpetty
 Tasks/FileTransformV1/*     @kmkumaran      @SumiranAgg     @vincentdass
 
 Tasks/FtpUploadV1/*     @leantk
+
+Tasks/FuncToolsInstallerV0/*     @vithati   @ajinkya599
 
 Tasks/GithubCommentV0/*     @ds-ms
 
