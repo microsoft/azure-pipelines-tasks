@@ -23,7 +23,7 @@ export class AzureRMEndpoint {
         this.endpoint = null;
     }
 
-    public async getEndpoint(graph: boolean = false): Promise<AzureEndpoint> {
+    public async getEndpoint(useGraphActiveDirectoryResource: boolean = false): Promise<AzureEndpoint> {
         if(!!this.endpoint) {
             return this.endpoint;
         }
@@ -62,7 +62,7 @@ export class AzureRMEndpoint {
                     scopeLevel: tl.getEndpointDataParameter(this._connectedServiceName, 'ScopeLevel', true),
                 } as AzureEndpoint;
 
-                if(graph) {
+                if(useGraphActiveDirectoryResource) {
                     var activeDirectoryResourceId: string = tl.getEndpointDataParameter(this._connectedServiceName, 'graphUrl', true);
                     activeDirectoryResourceId = activeDirectoryResourceId != null ? activeDirectoryResourceId : "https://graph.windows.net/";
                     this.endpoint.url = activeDirectoryResourceId;
