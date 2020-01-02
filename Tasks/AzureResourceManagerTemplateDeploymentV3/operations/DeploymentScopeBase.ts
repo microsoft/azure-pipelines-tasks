@@ -10,11 +10,12 @@ export class DeploymentScopeBase {
     protected deploymentParameters: DeploymentParameters;
     protected taskParameters: armDeployTaskParameters.TaskParameters;
     protected armClient: armResource.AzureServiceClientBase;
-
+    private _spnName: string;
     constructor(armClient: armResource.AzureServiceClientBase, taskParameters: armDeployTaskParameters.TaskParameters, deploymentParameters?: DeploymentParameters) {
         this.taskParameters = taskParameters;
         this.armClient = armClient;
         this.deploymentParameters = deploymentParameters;
+        this._spnName = null;
     }
 
     public async deploy(): Promise<void> {

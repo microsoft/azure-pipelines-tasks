@@ -20,6 +20,7 @@ export class TaskParameters {
     public deploymentName: string;
     public deploymentMode: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
+    public graphCredentials: msRestAzure.ApplicationTokenCredentials;
     public deploymentOutputs: string;
     public addSpnToEnvironment: boolean;
     public connectedService: string;

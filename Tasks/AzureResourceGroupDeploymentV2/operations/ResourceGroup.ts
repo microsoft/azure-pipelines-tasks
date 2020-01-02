@@ -119,12 +119,14 @@ export class ResourceGroup {
     private winRMExtensionHelper: winRM.WinRMExtensionHelper;
     private deploymentGroupExtensionHelper: dgExtensionHelper.DeploymentGroupExtensionHelper;
     private environmentHelper: env.EnvironmentHelper;
+    private _spnName: string;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
         this.winRMExtensionHelper = new winRM.WinRMExtensionHelper(this.taskParameters);
         this.deploymentGroupExtensionHelper = new dgExtensionHelper.DeploymentGroupExtensionHelper(this.taskParameters);
         this.environmentHelper = new env.EnvironmentHelper(this.taskParameters);
+	this._spnName = null;
     }
 
     public async createOrUpdateResourceGroup(): Promise<void> {
