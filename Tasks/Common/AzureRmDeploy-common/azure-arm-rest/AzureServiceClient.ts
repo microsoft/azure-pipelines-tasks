@@ -132,10 +132,6 @@ export class ServiceClient {
                 request.headers["Authorization"] = "Bearer " + token;
                 httpResponse = await webClient.sendRequest(request);
             }
-
-            if(!!httpResponse.headers[CorrelationIdInResponse]) {
-                tl.debug(`Correlation ID from ARM api call response : ${httpResponse.headers[CorrelationIdInResponse]}`);
-            }
         } catch(exception) {
             let exceptionString: string = exception.toString();
             if(exceptionString.indexOf("Hostname/IP doesn't match certificates's altnames") != -1
