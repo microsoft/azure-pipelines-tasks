@@ -17,7 +17,7 @@
     "version": {
         "Major": 5,
         "Minor": 162,
-        "Patch": 2
+        "Patch": 3
     },
     "preview": "true",
     "releaseNotes": "Added support for Az Module and cross platform agents.",
