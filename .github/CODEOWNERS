@@ -37,6 +37,8 @@ Tasks/AzureFunctionAppV1/*    @kmkumaran      @SumiranAgg
 
 Tasks/AzureFunctionAppContainerV1/*    @kmkumaran      @SumiranAgg
 
+Tasks/AzureFunctionOnKubernetesV0/*     @vithati    @ajinkya599  
+
 Tasks/AzureFunctionV1/*     @vithati
 
 Tasks/AzureIoTEdgeV2/*      @prativen  @blackchoey  @michaeljqzq
@@ -197,6 +199,8 @@ Tasks/FileTransformV1/*     @kmkumaran      @SumiranAgg     @vincentdass
 
 Tasks/FtpUploadV1/*     @leantk
 
+Tasks/FuncToolsInstallerV0/*     @vithati   @ajinkya599
+
 Tasks/GithubCommentV0/*     @ds-ms
 
 Tasks/GithubReleaseV0/*     @prativen   @mdmdakbar
@@ -307,11 +311,11 @@ Tasks/PublishPipelineMetadataV0/*    @vithati @nidabas
 
 Tasks/PublishSymbolsV2/*    @arunkm @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT
 
-Tasks/PublishTestResultsV1/*    @smalpani
+Tasks/PublishTestResultsV1/*    @shailesh-sk
 
-Tasks/PublishTestResultsV2/*    @SadagopanRajaram
+Tasks/PublishTestResultsV2/*    @shailesh-sk
 
-Tasks/ContainerStructureTestV0/*    @SadagopanRajaram   @navin22
+Tasks/ContainerStructureTestV0/*    @shailesh-sk   @navin22
 
 Tasks/PublishToAzureServiceBusV1/*      @vithati
 

@@ -2,12 +2,13 @@ import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
-let taskPath = path.join(__dirname, '..', 'bash.js');
+let taskPath = path.join(__dirname, '..', 'cmdline.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tmr.setInput('targetType', 'filepath');
-tmr.setInput('filePath', 'path/to/script');
+tmr.setInput('targetType', 'inline');
 tmr.setInput('workingDirectory', '/fakecwd');
+tmr.setInput('script', `echo 'Hello world'\necho 'Goodbye world'`);
+tmr.setInput('failOnStderr', 'true');
 
 //Create assertAgent and getVariable mocks, support not added in this version of task-lib
 const tl = require('azure-pipelines-task-lib/mock-task');
@@ -22,6 +23,7 @@ tlClone.assertAgent = function(variable: string) {
     return;
 };
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
+tmr.setInput('script2', `echo 'Hello world'\necho 'Goodbye world'`);
 
 // Mock task-lib
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -37,21 +39,15 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         '2.115.0': true
     },
     'exec': {
-        'path/to/bash --noprofile --norc -c pwd': {
+        'path/to/bash --noprofile --norc temp\\path\\fileName.sh': {
             "code": 0,
-            "stdout": "temp/path"
+            "stdout": "",
+            "stderr": "myErrorTest"
         },
-        'path/to/bash temp/path/fileName.sh': {
+        'path/to/bash --noprofile --norc temp/path/fileName.sh': {
             "code": 0,
-            "stdout": "my script output"
-        }
-    },
-    'stats': {
-        'path/to/script': {
-            isFile() {
-                return true;
-            },
-            mode: '777'
+            "stdout": "",
+            "stderr": "myErrorTest"
         }
     }
 };
@@ -61,8 +57,7 @@ tmr.setAnswers(a);
 const fs = require('fs');
 const fsClone = Object.assign({}, fs);
 fsClone.writeFileSync = function(filePath, contents, options) {
-    // Normalize to linux paths for logs we check
-    console.log(`Writing ${contents} to ${filePath.replace(/\\/g, '/')}`);
+    console.log(`Writing ${contents} to ${filePath}`);
 }
 tmr.registerMock('fs', fsClone);
 

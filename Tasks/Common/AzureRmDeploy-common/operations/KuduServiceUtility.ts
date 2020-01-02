@@ -1,10 +1,13 @@
 import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import path = require('path');
-import { Kudu } from '../azure-arm-rest/azure-arm-app-service-kudu';
-import { KUDU_DEPLOYMENT_CONSTANTS } from '../azure-arm-rest/constants';
-import webClient = require('../azure-arm-rest/webClient');
+
 import { AzureDeployPackageArtifactAlias } from '../Constants';
+import { KUDU_DEPLOYMENT_CONSTANTS } from '../azure-arm-rest/constants';
+import { Kudu } from '../azure-arm-rest/azure-arm-app-service-kudu';
+
+import webClient = require('../azure-arm-rest/webClient');
+
 var deployUtility = require('../webdeployment-common/utility.js');
 var zipUtility = require('../webdeployment-common/ziputility.js');
 const physicalRootPath: string = '/site/wwwroot';
@@ -128,6 +131,7 @@ export class KuduServiceUtility {
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
             await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
             console.log(tl.loc('PackageDeploymentSuccess'));
+            console.log("NOTE: Run From Package makes wwwroot read-only, so you will receive an error when writing files to this directory.");
         }
         catch(error) {
             let stackTraceUrl:string = this._appServiceKuduService.getKuduStackTrace();

@@ -10,6 +10,7 @@ import * as TaskInputParameters from '../models/TaskInputParameters';
 import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
 
 export async function promote(ignoreSslErrors?: boolean) {
+    TaskInputParameters.validateTimeoutForRolloutStatus();
     const kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace, ignoreSslErrors);
 
     if (!canaryDeploymentHelper.isCanaryDeploymentStrategy()) {

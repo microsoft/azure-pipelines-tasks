@@ -18,6 +18,7 @@ export interface InputDataContract {
     ExecutionSettings : ExecutionSettings;
     Logging : Logging;
     SourcesDirectory : string;
+    ServerType : string;
 }
 
 export interface TestReportingSettings {
@@ -96,7 +97,7 @@ export interface ExecutionSettings {
     DefaultTestBatchSize : number;
     AssemblyLevelParallelism : boolean;
     CodeCoverageEnabled : boolean;
-    PathToCustomTestAdapters : string;   
+    PathToCustomTestAdapters : string;
     ProceedAfterAbortedTestCase : boolean;
     PathToCustomVsTestConsoleWrapperAssembly : string;
     SettingsFile : string;
