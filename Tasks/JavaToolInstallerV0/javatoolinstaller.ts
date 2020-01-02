@@ -6,7 +6,6 @@ import toolLib = require('vsts-task-tool-lib/tool');
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { JavaFilesExtractor } from './FileExtractor/JavaFilesExtractor';
 taskLib.setResourcePath(path.join(__dirname, 'task.json'));
-taskLib.setResourcePath(path.join( __dirname, 'node_modules/azure-arm-rest/module.json'));
 
 async function run() {
     try {
