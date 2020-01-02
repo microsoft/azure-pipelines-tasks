@@ -324,8 +324,8 @@ describe('Kubernetes Manifests Suite', function () {
         assert(deploymentObject.spec.template.spec.containers[3].image === 'myacr.azurecr.io/myimage:1', 'untagged image with registry not tagged correctly');
         assert(deploymentObject.spec.template.spec.containers[4].image === 'myimagewithcomment:1', 'untagged image with comment not tagged correctly');
         assert(deploymentObject.spec.template.spec.containers[5].image === 'imagewithhyphen:1', 'manifest regex should work correctly');
-        assert(deploymentObject.spec.template.spec.containers[6].image === 'myacr.azurecr.io/folder/image-a:1', 'manifest regex should work correctly');
-        assert(deploymentObject.spec.template.spec.containers[7].image === 'myacr.azurecr.io/folder/image-b:1', 'manifest regex should work correctly');
+        assert(deploymentObject.spec.template.spec.containers[6].image === 'myacr.azurecr.io/folder/image-a:1', 'untagged image with common folder not tagged correctly');
+        assert(deploymentObject.spec.template.spec.containers[7].image === 'myacr.azurecr.io/folder/image-b:1', 'untagged image with common folder not tagged correctly');
 
         assert(deploymentObject.spec.template.spec.initContainers[0].image === 'nginx-init:42.1', 'untagged image with multiple slashes not tagged correctly');
         done();
