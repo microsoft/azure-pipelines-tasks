@@ -3,7 +3,7 @@
     "name": "AzureFunctionApp",
     "friendlyName": "Azure Functions",
     "description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based web applications",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpUrl": "https://aka.ms/azurefunctiontroubleshooting",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiondeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 160,
-        "Patch": 3
+        "Minor": 163,
+        "Patch": 1
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [

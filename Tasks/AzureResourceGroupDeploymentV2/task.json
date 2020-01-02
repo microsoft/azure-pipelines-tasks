@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 162,
-        "Patch": 2
+        "Minor": 163,
+        "Patch": 3
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -480,9 +480,6 @@
         "LogDeploymentName": "Deployment name is %s",
         "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
         "DeploymentGroupConfigurationNotSucceeded": "Deployment group configuration did not succeed on one or more Virtual Machine(s): %s",
-        "DeploymentGroupConfigurationFailedOnVM": "Failure for Virtual Machine '%s': %s",
-        "ServicePrincipalRoleAssignmentDetails": "Please make sure the Service Principal with name %s is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal",
-        "ServicePrincipalFetchFailed": "Error while fetching Service Principal details: %s",
-        "FindMoreDeploymentDetailsAzurePortal": "Task successfully created an Azure Resource Manager deployment, but the deployment failed. Please see more detailed Azure resource manager deployment logs at: (Please Copy-Paste the link) %s"
+        "DeploymentGroupConfigurationFailedOnVM": "Failure for Virtual Machine '%s': %s"
     }
 }

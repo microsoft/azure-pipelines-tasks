@@ -3,7 +3,7 @@
     "name": "AzureWebAppContainer",
     "friendlyName": "Azure Web App for Containers",
     "description": "Deploy containers to Azure App Service",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-web-app-containers",
+    "helpUrl": "https://aka.ms/azurewebappcontainertroubleshooting",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/azurewebapponcontainerdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 160,
-        "Patch": 2
+        "Minor": 163,
+        "Patch": 1
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
