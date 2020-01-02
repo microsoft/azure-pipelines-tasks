@@ -20,7 +20,7 @@ export async function checkManifestStability(kubectl: Kubectl, resources: Resour
                 let result = kubectl.checkRolloutStatus(resource.type, resource.name, timeoutInSeconds);
                 utils.checkForErrors([result]);
             } catch (ex) {
-                tl.error(ex.error);
+                tl.error(ex);
                 kubectl.describe(resource.type, resource.name);
                 if (environmentUrl)
                     console.log('For more information go to ' + environmentUrl);
