@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Android signing",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613717)",
   "loc.description": "Sign and align Android APK files",
   "loc.instanceNameFormat": "Signing and aligning APK file(s) $(files)",
   "loc.releaseNotes": "This version of the task uses apksigner instead of jarsigner to sign APKs.",

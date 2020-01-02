@@ -1,6 +1,8 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
+import tr = require('azure-pipelines-task-lib/toolrunner');
 import fs = require('fs');
+import stream = require("stream");
 import utils = require('./utils.js');
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
@@ -82,12 +84,12 @@ function createFileList(files: string[]): string {
     return file;
 }
 
-function getOptions() {
+function getOptions(): tr.IExecSyncOptions {
     var dirName: string;
     if (includeRootFolder) {
         dirName = path.dirname(rootFolderOrFile);
         tl.debug("cwd (include root folder)= " + dirName);
-        return { cwd: dirName };
+        return { cwd: dirName, outStream: process.stdout as stream.Writable, errStream: process.stderr as stream.Writable };
     } else {
         var stats: tl.FsStats = tl.stats(rootFolderOrFile);
         if (stats.isFile()) {
@@ -96,13 +98,13 @@ function getOptions() {
             dirName = rootFolderOrFile;
         }
         tl.debug("cwd (exclude root folder)= " + dirName);
-        return { cwd: dirName };
+        return { cwd: dirName, outStream: process.stdout as stream.Writable, errStream: process.stderr as stream.Writable };
     }
 }
 
 function sevenZipArchive(archive: string, compression: string, files: string[]) {
     tl.debug('Creating archive with 7-zip: ' + archive);
-    var sevenZip = tl.createToolRunner(getSevenZipLocation());
+    var sevenZip = tl.tool(getSevenZipLocation());
     sevenZip.arg('a');
     sevenZip.arg('-t' + compression);
     if (verbose) {
@@ -149,7 +151,7 @@ function zipArchive(archive: string, files: string[]) {
     if (typeof xpZipLocation == "undefined") {
         xpZipLocation = tl.which('zip', true);
     }
-    var zip = tl.createToolRunner(xpZipLocation);
+    var zip = tl.tool(xpZipLocation);
     zip.arg('-r');
     // Verbose gets priority over quiet
     if (verbose) {
@@ -172,7 +174,7 @@ function tarArchive(archive: string, compression: string, files: string[]) {
     if (typeof xpTarLocation == "undefined") {
         xpTarLocation = tl.which('tar', true);
     }
-    var tar = tl.createToolRunner(xpTarLocation);
+    var tar = tl.tool(xpTarLocation);
     if (tl.exist(archive)) {
         tar.arg('-r'); // append files to existing tar
     } else {
@@ -360,7 +362,7 @@ function doWork() {
         tl.setResult(tl.TaskResult.Succeeded, 'Successfully created archive: ' + archiveFile);
     } catch (e) {
         tl.debug(e.message);
-        tl._writeError(e);
+        tl.error(e);
         tl.setResult(tl.TaskResult.Failed, e.message);
     }
 }
