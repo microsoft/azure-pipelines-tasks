@@ -66,7 +66,6 @@ export class AzureRGTaskParameters {
     public deploymentName: string;
     public deploymentMode: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
-    public graphCredentials: msRestAzure.ApplicationTokenCredentials;
     public deploymentGroupProjectName = "";
     public tokenCredentials: TokenCredentials;
     public deploymentOutputs: string;

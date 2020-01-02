@@ -5,13 +5,11 @@ import armResource = require("azure-arm-rest-v2/AzureServiceClientBase");
 import utils = require("./Utils");
 import { sleepFor } from 'azure-arm-rest-v2/webClient';
 import { DeploymentParameters } from "./DeploymentParameters";
-import azureGraph = require("azure-arm-rest-v2/azure-graph");
 
 export class DeploymentScopeBase {
     protected deploymentParameters: DeploymentParameters;
     protected taskParameters: armDeployTaskParameters.TaskParameters;
     protected armClient: armResource.AzureServiceClientBase;
-    private _spnName: string = null;
 
     constructor(armClient: armResource.AzureServiceClientBase, taskParameters: armDeployTaskParameters.TaskParameters, deploymentParameters?: DeploymentParameters) {
         this.taskParameters = taskParameters;
@@ -21,17 +19,6 @@ export class DeploymentScopeBase {
 
     public async deploy(): Promise<void> {
         await this.createTemplateDeployment();
-    }
-
-    protected async getServicePrincipalName(): Promise<string> {
-        try {
-            var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
-            var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
-            return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";    
-        } catch (error) {
-            tl.debug(tl.loc("ServicePrincipalFetchFailed", error));
-            return "";
-        }
     }
 
     protected async createTemplateDeployment() {
@@ -54,7 +41,6 @@ export class DeploymentScopeBase {
     }
 
     protected async performAzureDeployment(retryCount = 0): Promise<void> {
-
         if(!this._spnName && this.taskParameters.authScheme == "ServicePrincipal") {
             this._spnName = await this.getServicePrincipalName();
         }
@@ -72,8 +58,6 @@ export class DeploymentScopeBase {
                             return this.waitAndPerformAzureDeployment(retryCount);
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);
-                        this.checkAndPrintPortalDeploymentURL(error);
-                        this.printServicePrincipalRoleAssignmentError(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
