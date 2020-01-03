@@ -5,13 +5,11 @@ import armResource = require("azure-arm-rest-v2/AzureServiceClientBase");
 import utils = require("./Utils");
 import { sleepFor } from 'azure-arm-rest-v2/webClient';
 import { DeploymentParameters } from "./DeploymentParameters";
-import azureGraph = require("azure-arm-rest-v2/azure-graph");
 
 export class DeploymentScopeBase {
     protected deploymentParameters: DeploymentParameters;
     protected taskParameters: armDeployTaskParameters.TaskParameters;
     protected armClient: armResource.AzureServiceClientBase;
-    private _spnName: string = null;
 
     constructor(armClient: armResource.AzureServiceClientBase, taskParameters: armDeployTaskParameters.TaskParameters, deploymentParameters?: DeploymentParameters) {
         this.taskParameters = taskParameters;
@@ -21,17 +19,6 @@ export class DeploymentScopeBase {
 
     public async deploy(): Promise<void> {
         await this.createTemplateDeployment();
-    }
-
-    protected async getServicePrincipalName(): Promise<string> {
-        try {
-            var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
-            var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
-            return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";    
-        } catch (error) {
-            tl.debug(tl.loc("ServicePrincipalFetchFailed", error));
-            return "";
-        }
     }
 
     protected async createTemplateDeployment() {
@@ -54,11 +41,6 @@ export class DeploymentScopeBase {
     }
 
     protected async performAzureDeployment(retryCount = 0): Promise<void> {
-
-        if(!this._spnName) {
-            this._spnName = await this.getServicePrincipalName();
-        }
-
         if (this.deploymentParameters.properties["mode"] === "Validation") {
             return this.validateDeployment();
         } else {
@@ -72,8 +54,6 @@ export class DeploymentScopeBase {
                             return this.waitAndPerformAzureDeployment(retryCount);
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);
-                        this.checkAndPrintPortalDeploymentURL(error);
-                        this.printServicePrincipalRoleAssignmentError(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
@@ -85,43 +65,6 @@ export class DeploymentScopeBase {
                     resolve();
                 });
             });
-        }
-    }
-
-    private printServicePrincipalRoleAssignmentError(error: any) {
-        if(!!error && error.statusCode == 403) {
-            if(this.taskParameters.deploymentScope == "Resource Group") {
-                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.resourceGroupName));
-            } else if(this.taskParameters.deploymentScope == "Subscription") {
-                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.subscriptionId));
-            } else if(this.taskParameters.deploymentScope == "Management Group") {
-                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.managementGroupId));    
-            }
-        }
-    }
-
-    protected checkAndPrintPortalDeploymentURL(error: any) {
-        if((this.taskParameters.deploymentScope == "Resource Group" || this.taskParameters.deploymentScope == "Subscription") && (!!error && (error.statusCode < 400 || error.statusCode >= 500))) {
-            tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
-        }
-    }
-
-    private getAzurePortalDeploymentURL() {
-        try {
-            let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
-            portalUrl += "/#blade/HubsExtension/DeploymentDetailsBlade/overview/id/";
-    
-            let subscriptionSpecificURL = "/subscriptions/" + this.taskParameters.subscriptionId;
-            if(this.taskParameters.deploymentScope == "Resource Group") {
-                subscriptionSpecificURL += "/resourceGroups/" + this.taskParameters.resourceGroupName;
-            }
-    
-            subscriptionSpecificURL += "/providers/Microsoft.Resources/deployments/" + this.taskParameters.deploymentName;
-    
-            return portalUrl + subscriptionSpecificURL.replace(/\//g, '%2F');
-        } catch (error) {
-            tl.error(error);
-            return error;
         }
     }
 

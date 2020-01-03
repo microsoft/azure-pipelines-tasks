@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 151,
-        "Patch": 7
+        "Patch": 9
     },
     "satisfies": [
         "Java"
@@ -170,6 +170,7 @@
         "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "CorrelationIdForARM" : "Correlation ID from ARM api call response : %s"
     }
 }
