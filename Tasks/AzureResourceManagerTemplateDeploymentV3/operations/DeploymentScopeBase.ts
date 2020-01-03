@@ -60,6 +60,8 @@ export class DeploymentScopeBase {
                             return this.waitAndPerformAzureDeployment(retryCount);
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);
+                        this.checkAndPrintPortalDeploymentURL(error);
+                        this.printServicePrincipalRoleAssignmentError(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
@@ -138,7 +140,6 @@ export class DeploymentScopeBase {
                 }
                 if (result.error) {
                     utils.writeDeploymentErrors(this.taskParameters, result.error);
-                    this.checkAndPrintPortalDeploymentURL(result.error);
                     return reject(tl.loc("CreateTemplateDeploymentFailed"));
                 } else {
                     console.log(tl.loc("ValidDeployment"));
