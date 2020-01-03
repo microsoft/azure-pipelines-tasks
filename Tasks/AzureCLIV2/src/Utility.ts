@@ -39,15 +39,15 @@ export class Utility {
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${powerShellErrorActionPreference}'`);
         let filePath: string = tl.getPathInput("scriptPath", false, true);;
-        if (scriptLocation.toLowerCase() === "scriptpath") {
-            if (!Utility.checkIfFileExists(filePath, fileExtensions)) {
-                throw new Error(tl.loc('JS_InvalidFilePath', filePath));
-            }
-        }
-        else{
+        if (scriptLocation.toLowerCase() === 'inlinescript') {
             let inlineScript: string = tl.getInput("inlineScript", true);
             filePath = path.join(tempDirectory, `azureclitaskscript${new Date().getTime()}_inlinescript.${fileExtensions[0]}`);
             await Utility.createFile(filePath, inlineScript);
+        }
+        else{
+            if (!Utility.checkIfFileExists(filePath, fileExtensions)) {
+                throw new Error(tl.loc('JS_InvalidFilePath', filePath));
+            }
         }
 
         let content: string = `. '${filePath.replace("'", "''")}' `;
