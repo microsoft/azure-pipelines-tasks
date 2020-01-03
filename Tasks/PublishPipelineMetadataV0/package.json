@@ -4,6 +4,7 @@
   "description": "Publish Pipeline Metadata to Evidence store",
   "main": "publishmetadata.js",
   "dependencies": {
+    "@types/node": "12.12.7",
     "utility-common-v2": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz"
   },
   "devDependencies": {},
