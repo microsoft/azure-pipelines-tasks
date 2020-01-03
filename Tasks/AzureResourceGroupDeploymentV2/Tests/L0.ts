@@ -16,14 +16,15 @@ describe('Azure Resource Group Deployment', function () {
     after(function () {
     });
     
+    beforeEach(() => {
+        process.env["AGENT_TEMPDIRECTORY"] = "temp/agent";
+    });
+    
     process.env['AGENT_HOMEDIRECTORY'] = process.env['AGENT_HOMEDIRECTORY'] || "C:\\temp\\agent\\home";
     process.env['BUILD_SOURCESDIRECTORY'] = process.env['BUILD_SOURCESDIRECTORY'] || "C:\\temp\\agent\\home\\sources",
     process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] || "C:\\temp\\agent\\home";
     process.env["AGENT_TEMPDIRECTORY"] = process.env["AGENT_TEMPDIRECTORY"] || "C:\\temp\\agent\\home\\temp";
     
-    beforeEach(() => {
-        process.env["AGENT_TEMPDIRECTORY"] = "temp/agent";
-    });
 
 // uncomment to get test traces
 //	process.env['TASK_TEST_TRACE'] = "1";
