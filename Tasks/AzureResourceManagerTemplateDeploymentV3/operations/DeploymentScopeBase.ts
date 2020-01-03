@@ -5,6 +5,7 @@ import armResource = require("azure-arm-rest-v2/AzureServiceClientBase");
 import utils = require("./Utils");
 import { sleepFor } from 'azure-arm-rest-v2/webClient';
 import { DeploymentParameters } from "./DeploymentParameters";
+import azureGraph = require("azure-arm-rest-v2/azure-graph");
 
 export class DeploymentScopeBase {
     protected deploymentParameters: DeploymentParameters;
@@ -89,6 +90,17 @@ export class DeploymentScopeBase {
         }
     }
 
+    protected async getServicePrincipalName(): Promise<string> {
+        try {
+            var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
+            var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
+            return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";    
+        } catch (error) {
+            tl.debug(tl.loc("ServicePrincipalFetchFailed", error));
+            return "";
+        }
+    }
+
     protected checkAndPrintPortalDeploymentURL(error: any) {
         if((this.taskParameters.deploymentScope == "Resource Group" || this.taskParameters.deploymentScope == "Subscription") && (!!error && (error.statusCode < 400 || error.statusCode >= 500))) {
             tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
@@ -126,6 +138,7 @@ export class DeploymentScopeBase {
                 }
                 if (result.error) {
                     utils.writeDeploymentErrors(this.taskParameters, result.error);
+                    this.checkAndPrintPortalDeploymentURL(result.error);
                     return reject(tl.loc("CreateTemplateDeploymentFailed"));
                 } else {
                     console.log(tl.loc("ValidDeployment"));

@@ -14,6 +14,7 @@ import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
 import { sleepFor } from 'azure-arm-rest-v2/webClient';
+import azureGraph = require("azure-arm-rest-v2/azure-graph");
 
 var hm = require("typed-rest-client/HttpClient");
 var uuid = require("uuid");
@@ -516,6 +517,7 @@ export class ResourceGroup {
                 }
                 if (result.error) {
                     this.writeDeploymentErrors(result.error);
+                    this.checkAndPrintPortalDeploymentURL(result.error);
                     return reject(tl.loc("CreateTemplateDeploymentFailed"));
                 } else {
                     console.log(tl.loc("ValidDeployment"));
@@ -567,9 +569,32 @@ export class ResourceGroup {
         }
     }
 
+    protected async getServicePrincipalName(): Promise<string> {
+        try {
+            var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
+            var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
+            return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";    
+        } catch (error) {
+            tl.debug(tl.loc("ServicePrincipalFetchFailed", error));
+            return "";
+        }
+    }
+
     protected checkAndPrintPortalDeploymentURL(error: any) {
         if(!!error && (error.statusCode < 400 || error.statusCode >= 500)) {
             tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
+        }
+    }
+
+    private getAzurePortalDeploymentURL() {
+        try {
+            let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
+            portalUrl += "/#blade/HubsExtension/DeploymentDetailsBlade/overview/id/";
+            let subscriptionSpecificURL = "/subscriptions/" + this.taskParameters.subscriptionId + "/resourceGroups/" + this.taskParameters.resourceGroupName + "/providers/Microsoft.Resources/deployments/" + this.taskParameters.deploymentName;
+            return portalUrl + subscriptionSpecificURL.replace(/\//g, '%2F');
+        } catch (error) {
+            tl.error(error);
+            return error;
         }
     }
 
