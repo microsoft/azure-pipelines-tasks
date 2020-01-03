@@ -17,7 +17,7 @@ describe('Azure Resource Group Deployment', function () {
     });
     
     beforeEach(() => {
-        process.env["AGENT_TEMPDIRECTORY"] = "C:\\temp\\agent";
+        process.env["AGENT_TEMPDIRECTORY"] = "C:/temp/agent";
     });
 
     process.env['AGENT_HOMEDIRECTORY'] = process.env['AGENT_HOMEDIRECTORY'] || "C:\\temp\\agent\\home";
