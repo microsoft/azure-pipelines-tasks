@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 10
+    "Patch": 13
   },
   "preview": "true",
   "demands": [],
@@ -301,9 +301,6 @@
     "ResourceGroupNameNotProvided": "ms-resource:loc.messages.ResourceGroupNameNotProvided",
     "LocationNotProvided": "ms-resource:loc.messages.LocationNotProvided",
     "ARMServiceConnectionScope": "ms-resource:loc.messages.ARMServiceConnectionScope",
-    "CompleteDeploymentModeNotSupported": "ms-resource:loc.messages.CompleteDeploymentModeNotSupported",
-    "ServicePrincipalRoleAssignmentDetails": "ms-resource:loc.messages.ServicePrincipalRoleAssignmentDetails",
-    "ServicePrincipalFetchFailed": "ms-resource:loc.messages.ServicePrincipalFetchFailed",
-    "FindMoreDeploymentDetailsAzurePortal": "ms-resource:loc.messages.FindMoreDeploymentDetailsAzurePortal"
+    "CompleteDeploymentModeNotSupported": "ms-resource:loc.messages.CompleteDeploymentModeNotSupported"
   }
 }

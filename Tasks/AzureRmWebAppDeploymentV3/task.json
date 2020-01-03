@@ -3,7 +3,7 @@
     "name": "AzureRmWebAppDeployment",
     "friendlyName": "Azure App Service deploy",
     "description": "Deploy to Azure App Service a web, mobile, or API app using Docker, Java, .NET, .NET Core, Node.js, PHP, Python, or Ruby",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-rm-web-app-deployment",
+    "helpUrl": "https://aka.ms/azureappservicetroubleshooting",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 160,
+        "Minor": 163,
         "Patch": 2
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
@@ -760,6 +760,7 @@
         "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline",
         "ASE_WebDeploySSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to pass -allowUntrusted in additional arguments of web deploy option.",
         "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
-        "JarNotSupported": "Jar deployment is not supported in this version. Change the task version to '4.*' which is in preview mode"
+        "JarNotSupported": "Jar deployment is not supported in this version. Change the task version to '4.*' which is in preview mode",
+        "CorrelationIdForARM" : "Correlation ID from ARM api call response : %s"
     }
 }

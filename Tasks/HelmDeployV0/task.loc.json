@@ -14,10 +14,11 @@
   "version": {
     "Major": 0,
     "Minor": 162,
-    "Patch": 5
+    "Patch": 7
   },
   "demands": [],
-  "groups": [{
+  "groups": [
+    {
       "name": "cluster",
       "displayName": "ms-resource:loc.group.displayName.cluster",
       "isExpanded": true,
@@ -41,7 +42,8 @@
       "visibleRule": "command != login && command != logout && command != package"
     }
   ],
-  "inputs": [{
+  "inputs": [
+    {
       "name": "connectionType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.connectionType",
@@ -385,7 +387,8 @@
       "groupName": "advanced"
     }
   ],
-  "dataSourceBindings": [{
+  "dataSourceBindings": [
+    {
       "target": "kubernetesCluster",
       "endpointId": "$(azureSubscriptionEndpoint)",
       "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",

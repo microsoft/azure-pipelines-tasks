@@ -259,6 +259,9 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'DownloadPipelineArtifact'
   addLabels: ['Area: ArtifactsCore']
+- valueFor: '**Enter Task Name**'
+  contains: 'PublishPipelineArtifact'
+  addLabels: ['Area: ArtifactsCore']
 
 # Types
 - valueFor: '*Type*'

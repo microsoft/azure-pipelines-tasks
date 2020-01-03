@@ -19,28 +19,15 @@ export class TaskParameters {
     public deploymentName: string;
     public deploymentMode: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
-    public graphCredentials: msRestAzure.ApplicationTokenCredentials;
     public deploymentOutputs: string;
     public addSpnToEnvironment: boolean;
     public connectedService: string;
     public deploymentScope: string;
     public managementGroupId: string;
-    
+
     private async getARMCredentials(connectedService: string): Promise<msRestAzure.ApplicationTokenCredentials> {
         var azureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint();
         return azureEndpoint.applicationTokenCredentials;
-    }
-
-    private _getAzureADGraphCredentials(connectedService: string): msRestAzure.ApplicationTokenCredentials {
-        var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-        var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
-        var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-        var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentauthorityurl', false);
-        envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
-        var activeDirectoryResourceId: string = tl.getEndpointDataParameter(connectedService, 'graphUrl', false);
-        activeDirectoryResourceId = (activeDirectoryResourceId != null) ? activeDirectoryResourceId : "https://graph.windows.net/";
-        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, activeDirectoryResourceId, envAuthorityUrl, activeDirectoryResourceId, false);
-        return credentials;
     }
 
     public async getTaskParameters() : Promise<TaskParameters>
@@ -117,7 +104,6 @@ export class TaskParameters {
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentName = tl.getInput("deploymentName");
             this.credentials = await this.getARMCredentials(this.connectedService);
-            this.graphCredentials = this._getAzureADGraphCredentials(this.connectedService);
             this.deploymentOutputs = tl.getInput("deploymentOutputs");
             this.addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
             this.action = tl.getInput("action");
