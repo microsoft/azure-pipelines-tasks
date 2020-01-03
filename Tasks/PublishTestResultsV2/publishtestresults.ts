@@ -85,6 +85,10 @@ async function run() {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
         }
 
+        if(!path.isAbsolute(searchFolder))
+        {
+            searchFolder = path.join(tl.getVariable('System.DefaultWorkingDirectory'),searchFolder);
+        }
         // Sending allowBrokenSymbolicLinks as true, so we don't want to throw error when symlinks are broken.
         // And can continue with other files if there are any.
         const findOptions = <tl.FindOptions>{
