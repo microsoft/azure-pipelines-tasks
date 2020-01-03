@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 162,
-    "Patch": 3
+    "Patch": 4
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,
