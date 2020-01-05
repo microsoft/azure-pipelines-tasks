@@ -517,7 +517,6 @@ export class ResourceGroup {
                 }
                 if (result.error) {
                     this.writeDeploymentErrors(result.error);
-                    this.checkAndPrintPortalDeploymentURL(result.error);
                     return reject(tl.loc("CreateTemplateDeploymentFailed"));
                 } else {
                     console.log(tl.loc("ValidDeployment"));
@@ -545,6 +544,7 @@ export class ResourceGroup {
                             return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount);
                         }
                         this.writeDeploymentErrors(error);
+                        this.checkAndPrintPortalDeploymentURL(result.error);
                         this.printServicePrincipalRoleAssignmentError(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
