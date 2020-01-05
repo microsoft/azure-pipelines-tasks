@@ -82,8 +82,5 @@
   "loc.messages.ResourceGroupNameNotProvided": "Resource Group name should be provided",
   "loc.messages.LocationNotProvided": "Location is required for deployment",
   "loc.messages.ARMServiceConnectionScope": "ARM Service Conection deployment scope - %s",
-  "loc.messages.CompleteDeploymentModeNotSupported": "Deployment mode 'Complete' is not supported for deployment at '%s' scope",
-  "loc.messages.ServicePrincipalRoleAssignmentDetails": "Please make sure the Service Principal with name %s is assigned the right roles for the entity %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal",
-  "loc.messages.ServicePrincipalFetchFailed": "Error while fetching Service Principal details: %s",
-  "loc.messages.FindMoreDeploymentDetailsAzurePortal": "Task successfully created an Azure Resource Manager deployment, but the deployment failed. Please see more detailed Azure resource manager deployment logs at: (Please Copy-Paste the link) %s"
+  "loc.messages.CompleteDeploymentModeNotSupported": "Deployment mode 'Complete' is not supported for deployment at '%s' scope"
 }
