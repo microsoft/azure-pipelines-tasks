@@ -517,7 +517,6 @@ export class ResourceGroup {
                 }
                 if (result.error) {
                     this.writeDeploymentErrors(result.error);
-                    tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
                     return reject(tl.loc("CreateTemplateDeploymentFailed"));
                 } else {
                     console.log(tl.loc("ValidDeployment"));
@@ -591,21 +590,6 @@ export class ResourceGroup {
         }
     }
 
-<<<<<<< HEAD
-=======
-    private getAzurePortalDeploymentURL() {
-        try {
-            let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
-            portalUrl += "/#blade/HubsExtension/DeploymentDetailsBlade/overview/id/";
-            let subscriptionSpecificURL = "/subscriptions/" + this.taskParameters.subscriptionId + "/resourceGroups/" + this.taskParameters.resourceGroupName + "/providers/Microsoft.Resources/deployments/" + this.taskParameters.deploymentName;
-            return portalUrl + subscriptionSpecificURL.replace(/\//g, '%2F');
-        } catch (error) {
-            tl.error(error);
-            return null;
-        }
-    }
-
->>>>>>> 6c74009b9... SPN Auth credential bug fix for ARG and PackerBuild tasks (#11994)
     private async waitAndPerformAzureDeployment(armClient: armResource.ResourceManagementClient, deployment: Deployment, retryCount): Promise<void> {
         await sleepFor(3);
         return this.performAzureDeployment(armClient, deployment, retryCount - 1);
@@ -632,7 +616,7 @@ export class ResourceGroup {
             return portalUrl + subscriptionSpecificURL.replace(/\//g, '%2F');
         } catch (error) {
             tl.error(error);
-            return error;
+            return null;
         }
     }
 

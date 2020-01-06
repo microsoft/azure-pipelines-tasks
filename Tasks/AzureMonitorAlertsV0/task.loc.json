@@ -13,12 +13,8 @@
   ],
   "version": {
     "Major": 0,
-<<<<<<< HEAD
     "Minor": 159,
-=======
-    "Minor": 163,
->>>>>>> 6c74009b9... SPN Auth credential bug fix for ARG and PackerBuild tasks (#11994)
-    "Patch": 2
+    "Patch": 3
   },
   "minimumAgentVersion": "2.111.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
