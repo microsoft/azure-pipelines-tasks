@@ -115,7 +115,7 @@ export default class TaskParameters {
     }
 
     private async getGraphCredentials(connectedService: string): Promise<msRestAzure.ApplicationTokenCredentials> {
-        var azureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint(true);
+        var azureEndpoint = await new AzureRMEndpoint.AzureRMEndpoint(connectedService).getEndpoint(true);
         return azureEndpoint.applicationTokenCredentials;
     }
 }
