@@ -119,6 +119,7 @@ export class TestResultsPublisher {
         envVars = this.addToProcessEnvVars(envVars, 'jobname', tl.getVariable('System.JobName'));
         envVars = this.addToProcessEnvVars(envVars, 'jobattempt', tl.getVariable('System.JobAttempt'));
         envVars = this.addToProcessEnvVars(envVars, 'jobidentifier', tl.getVariable('System.JobIdentifier'));
+        envVars = this.addToProcessEnvVars(envVars, 'agenttempdirectory', tl.getVariable('Agent.TempDirectory'));
 
         // Setting proxy details
         envVars = this.addToProcessEnvVars(envVars, "proxyurl", tl.getVariable('agent.proxyurl'));

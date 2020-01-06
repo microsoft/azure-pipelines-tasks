@@ -1,5 +1,6 @@
 {
     "tasks": [
+        "ACRTaskV0",
         "AndroidSigningV2",
         "AndroidSigningV3",
         "ANTV1",
@@ -30,6 +31,7 @@
         "AzurePowerShellV2",
         "AzurePowerShellV3",
         "AzurePowerShellV4",
+        "AzurePowerShellV5",
         "AzureResourceGroupDeploymentV2",
         "AzureResourceManagerTemplateDeploymentV3",
         "AzureRmWebAppDeploymentV3",
@@ -135,7 +137,6 @@
         "PublishCodeCoverageResultsV1",
         "PublishPipelineArtifactV0",
         "PublishPipelineArtifactV1",
-        "PublishPipelineMetadataV0",
         "PublishSymbolsV2",
         "PublishTestResultsV1",
         "PublishTestResultsV2",
@@ -145,7 +146,6 @@
         "QueryWorkItemsV0",
         "QuickPerfTestV1",
         "ReviewAppV0",
-        "RunDistributedTestsV1",
         "RunJMeterLoadTestV1",
         "RunLoadTestV1",
         "ServiceFabricComposeDeployV0",

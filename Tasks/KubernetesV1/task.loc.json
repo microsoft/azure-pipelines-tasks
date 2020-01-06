@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 160,
-    "Patch": 6
+    "Minor": 162,
+    "Patch": 8
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
