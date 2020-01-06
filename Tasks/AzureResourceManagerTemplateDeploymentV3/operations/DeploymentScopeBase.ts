@@ -105,7 +105,10 @@ export class DeploymentScopeBase {
 
     protected checkAndPrintPortalDeploymentURL(error: any) {
         if((this.taskParameters.deploymentScope == "Resource Group" || this.taskParameters.deploymentScope == "Subscription") && (!!error && (error.statusCode < 400 || error.statusCode >= 500))) {
-            tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
+            let url = this.getAzurePortalDeploymentURL();
+            if(url != null) {
+                tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
+            }
         }
     }
 
@@ -124,7 +127,7 @@ export class DeploymentScopeBase {
             return portalUrl + subscriptionSpecificURL.replace(/\//g, '%2F');
         } catch (error) {
             tl.error(error);
-            return error;
+            return null;
         }
     }
 
