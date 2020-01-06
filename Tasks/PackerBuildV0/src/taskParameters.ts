@@ -34,7 +34,7 @@ export default class TaskParameters {
 
     public imageUri: string;
 
-    public graphCredentials: Promise<msRestAzure.ApplicationTokenCredentials>;
+    public graphCredentialsPromise: Promise<msRestAzure.ApplicationTokenCredentials>;
 
     constructor() {
         try {
@@ -71,7 +71,7 @@ export default class TaskParameters {
 
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
 
-                this.graphCredentials = this.getGraphCredentials(this.serviceEndpoint);
+                this.graphCredentialsPromise = this.getGraphCredentials(this.serviceEndpoint);
             }
 
             console.log(tl.loc("ParsingAdditionalBuilderParameters"));
