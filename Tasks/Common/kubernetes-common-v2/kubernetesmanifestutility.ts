@@ -21,9 +21,7 @@ export async function checkManifestStability(kubectl: Kubectl, resources: Resour
                 utils.checkForErrors([result]);
             } catch (ex) {
                 tl.error(ex);
-                kubectl.describe(resource.type, resource.name);
-                if (environmentUrl)
-                    console.log(tl.loc('EnvironmentLink', environmentUrl));
+                describeResource(kubectl, resource.type, resource.name, environmentUrl);
                 rolloutStatusHasErrors = true;
             }
         }
@@ -32,9 +30,7 @@ export async function checkManifestStability(kubectl: Kubectl, resources: Resour
                 await checkPodStatus(kubectl, resource.name);
             } catch (ex) {
                 tl.warning(tl.loc('CouldNotDeterminePodStatus', JSON.stringify(ex)));
-                kubectl.describe(resource.type, resource.name);
-                if (environmentUrl)
-                    console.log(tl.loc('EnvironmentLink', environmentUrl));
+                describeResource(kubectl, resource.type, resource.name, environmentUrl);
             }
         }
         if (utils.isEqual(resource.type, KubernetesConstants.DiscoveryAndLoadBalancerResource.service, true)) {
@@ -51,9 +47,7 @@ export async function checkManifestStability(kubectl: Kubectl, resources: Resour
                 }
             } catch (ex) {
                 tl.warning(tl.loc('CouldNotDetermineServiceStatus', resource.name, JSON.stringify(ex)));
-                kubectl.describe(resource.type, resource.name);
-                if (environmentUrl)
-                    console.log(tl.loc('EnvironmentLink', environmentUrl)); 
+                describeResource(kubectl, resource.type, resource.name, environmentUrl);
             }
         }
     }
@@ -83,24 +77,18 @@ export async function checkPodStatus(kubectl: Kubectl, podName: string): Promise
             if (isPodReady(podStatus)) {
                 console.log(`pod/${podName} is successfully rolled out`);
             } else {
-                kubectl.describe(KubernetesConstants.KubernetesWorkload.pod, podName);
-                if (environmentUrl)
-                    console.log(tl.loc('EnvironmentLink', environmentUrl));
+                describeResource(kubectl, KubernetesConstants.KubernetesWorkload.pod, podName, environmentUrl);
             }
             break;
         case 'Pending':
             if (!isPodReady(podStatus)) {
                 tl.warning(`pod/${podName} rollout status check timedout`);
-                kubectl.describe(KubernetesConstants.KubernetesWorkload.pod, podName);
-                if (environmentUrl)
-                    console.log(tl.loc('EnvironmentLink', environmentUrl));
+                describeResource(kubectl, KubernetesConstants.KubernetesWorkload.pod, podName, environmentUrl);
             }
             break;
         case 'Failed':
             tl.error(`pod/${podName} rollout failed`);
-            kubectl.describe(KubernetesConstants.KubernetesWorkload.pod, podName);
-            if (environmentUrl)
-                console.log(tl.loc('EnvironmentLink', environmentUrl));
+            describeResource(kubectl, KubernetesConstants.KubernetesWorkload.pod, podName, environmentUrl);
             break;
         default:
             tl.warning(`pod/${podName} rollout status: ${podStatus.phase}`);
@@ -168,4 +156,10 @@ function getEnvironmentUrl(): string {
     }
 
     return requestUrl;
+}
+
+function describeResource(kubectl: Kubectl, resourceType: string, resourceName: string, environmentUrl: string) {
+    kubectl.describe(resourceType, resourceName);
+    if (environmentUrl)
+        console.log(tl.loc('EnvironmentLink', environmentUrl));
 }
