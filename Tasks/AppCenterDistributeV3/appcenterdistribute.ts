@@ -91,7 +91,7 @@ function responseHandler(defer, err, res, body, handler: () => void) {
     handler();
 }
 
-function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string): Q.Promise<UploadInfo> {
+function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string, buildVersion: string): Q.Promise<UploadInfo> {
     tl.debug("-- Prepare for uploading release.");
     let defer = Q.defer<UploadInfo>();
     let beginUploadUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads`;
@@ -103,7 +103,15 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    request.post({ url: beginUploadUrl, headers: headers }, (err, res, body) => {
+
+    const requestOptions: request.UrlOptions & request.CoreOptions = { url: beginUploadUrl, headers };
+    if (buildVersion) {
+        requestOptions.body = JSON.stringify({
+            "build_version": buildVersion
+        });
+    }
+
+    request.post(requestOptions, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             let response = JSON.parse(body);
             let uploadInfo: UploadInfo = {
@@ -413,25 +421,8 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
                 }
             })
         }
-    } else if (symbolsType === "UWP") {
-        // User can specifay a symbols path pattern that selects
-        // multiple PDB paths for UWP application.
-        let pdbPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
-
-        // Resolved paths can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
-        if (pdbPaths) {
-            pdbPaths.forEach(pdbFile => {
-                if (pdbFile) {
-                    let pdbPath = utils.checkAndFixFilePath(pdbFile, continueOnError);
-                    // The path can be null if continueIfSymbolsNotFound is true and the file does not exist.
-                    if (pdbPath) {
-                        symbolsPaths.push(pdbPath);
-                    }
-                }
-            })
-        }
     } else {
-        // For all other application types user can specifay a symbols path pattern
+        // For all other application types user can specify a symbols path pattern
         // that selects only one file or one folder.
         let symbolsFile = utils.resolveSinglePath(pattern, continueOnError, packParentFolder);
 
@@ -488,12 +479,13 @@ async function run() {
                 symbolVariableName = "mappingTxtPath";
                 break;
             case "UWP":
-                symbolVariableName = "pdbPath";
+                symbolVariableName = "appxsymPath";
                 break;
             default:
                 symbolVariableName = "symbolsPath";
         }
         let symbolsPathPattern: string = tl.getInput(symbolVariableName, false);
+        let buildVersion: string = tl.getInput('buildVersion', false);
         let packParentFolder: boolean = tl.getBoolInput('packParentFolder', false);
 
         let releaseNotesSelection = tl.getInput('releaseNotesSelection', true);
@@ -544,7 +536,7 @@ async function run() {
         let symbolsFile = await prepareSymbols(symbolsPaths);
 
         // Begin release upload
-        let uploadInfo: UploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent);
+        let uploadInfo: UploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent, buildVersion);
 
         // Perform the upload
         await uploadRelease(uploadInfo.upload_url, app, userAgent);

@@ -448,6 +448,11 @@ export class Kudu {
         }
     }
 
+    public getKuduStackTrace() {
+        let stackTraceUrl = this._client.getRequestUri(`/api/vfs/LogFiles/kudu/trace`);
+        return stackTraceUrl;
+    }
+
     public async zipDeploy(webPackage: string, queryParameters?: Array<string>): Promise<any> {
         let httpRequest = new webClient.WebRequest();
         httpRequest.method = 'POST';
