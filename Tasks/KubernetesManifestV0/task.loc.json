@@ -377,6 +377,8 @@
     "StableSpecSelectorNotExist": "ms-resource:loc.messages.StableSpecSelectorNotExist",
     "InvalidPercentage": "ms-resource:loc.messages.InvalidPercentage",
     "InvalidBaselineAndCanaryReplicas": "ms-resource:loc.messages.InvalidBaselineAndCanaryReplicas",
-    "InvalidTimeoutValue": "ms-resource:loc.messages.InvalidTimeoutValue"
+    "InvalidTimeoutValue": "ms-resource:loc.messages.InvalidTimeoutValue",
+    "RolloutStatusTimedout": "ms-resource:loc.messages.RolloutStatusTimedout",
+    "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink"
   }
 }

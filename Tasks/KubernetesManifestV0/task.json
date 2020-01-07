@@ -377,6 +377,8 @@
         "StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment.",
         "InvalidPercentage": "Invalid value for percentage.",
         "InvalidBaselineAndCanaryReplicas": "Invalid value for replica count. Enter a value greater than 0.",
-        "InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number."
+        "InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number.",
+        "RolloutStatusTimedout": "Rollout status check failed.",
+        "EnvironmentLink": "For more information, go to %s"
     }
 }
