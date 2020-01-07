@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 162,
-    "Patch": 3
+    "Minor": 163,
+    "Patch": 6
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -480,10 +480,14 @@
     "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "DeploymentGroupConfigurationNotSucceeded": "ms-resource:loc.messages.DeploymentGroupConfigurationNotSucceeded",
-    "DeploymentGroupConfigurationFailedOnVM": "ms-resource:loc.messages.DeploymentGroupConfigurationFailedOnVM",
     "ServicePrincipalRoleAssignmentDetails": "ms-resource:loc.messages.ServicePrincipalRoleAssignmentDetails",
     "ServicePrincipalFetchFailed": "ms-resource:loc.messages.ServicePrincipalFetchFailed",
     "FindMoreDeploymentDetailsAzurePortal": "ms-resource:loc.messages.FindMoreDeploymentDetailsAzurePortal",
+<<<<<<< HEAD
     "TemplateValidationFailure": "ms-resource:loc.messages.TemplateValidationFailure"
+=======
+    "ManagedServiceIdentityDetails": "ms-resource:loc.messages.ManagedServiceIdentityDetails",
+    "DeploymentGroupConfigurationFailedOnVM": "ms-resource:loc.messages.DeploymentGroupConfigurationFailedOnVM"
+>>>>>>> 45371436d1102c23fc4b9afe0954776a34c5f682
   }
 }

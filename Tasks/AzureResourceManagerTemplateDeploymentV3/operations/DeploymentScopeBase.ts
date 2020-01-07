@@ -11,27 +11,16 @@ export class DeploymentScopeBase {
     protected deploymentParameters: DeploymentParameters;
     protected taskParameters: armDeployTaskParameters.TaskParameters;
     protected armClient: armResource.AzureServiceClientBase;
-    private _spnName: string = null;
-
+    private _spnName: string;
     constructor(armClient: armResource.AzureServiceClientBase, taskParameters: armDeployTaskParameters.TaskParameters, deploymentParameters?: DeploymentParameters) {
         this.taskParameters = taskParameters;
         this.armClient = armClient;
         this.deploymentParameters = deploymentParameters;
+        this._spnName = null;
     }
 
     public async deploy(): Promise<void> {
         await this.createTemplateDeployment();
-    }
-
-    protected async getServicePrincipalName(): Promise<string> {
-        try {
-            var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
-            var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
-            return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";    
-        } catch (error) {
-            tl.debug(tl.loc("ServicePrincipalFetchFailed", error));
-            return "";
-        }
     }
 
     protected async createTemplateDeployment() {
@@ -54,8 +43,7 @@ export class DeploymentScopeBase {
     }
 
     protected async performAzureDeployment(retryCount = 0): Promise<void> {
-
-        if(!this._spnName) {
+        if(!this._spnName && this.taskParameters.authScheme == "ServicePrincipal") {
             this._spnName = await this.getServicePrincipalName();
         }
 
@@ -95,19 +83,37 @@ export class DeploymentScopeBase {
 
     private printServicePrincipalRoleAssignmentError(error: any) {
         if(!!error && error.statusCode == 403) {
-            if(this.taskParameters.deploymentScope == "Resource Group") {
-                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.resourceGroupName));
-            } else if(this.taskParameters.deploymentScope == "Subscription") {
-                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.subscriptionId));
-            } else if(this.taskParameters.deploymentScope == "Management Group") {
-                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.managementGroupId));    
+            if(this.taskParameters.authScheme == "ServicePrincipal") {
+                if(this.taskParameters.deploymentScope == "Resource Group") {
+                    tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.resourceGroupName));
+                } else if(this.taskParameters.deploymentScope == "Subscription") {
+                    tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.subscriptionId));
+                } else if(this.taskParameters.deploymentScope == "Management Group") {
+                    tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.managementGroupId));    
+                }
+            } else if(this.taskParameters.authScheme == "ManagedServiceIdentity") {
+                tl.error(tl.loc("ManagedServiceIdentityDetails", this.taskParameters.resourceGroupName));    
             }
+        }
+    }
+
+    protected async getServicePrincipalName(): Promise<string> {
+        try {
+            var graphClient: azureGraph.GraphManagementClient = new azureGraph.GraphManagementClient(this.taskParameters.graphCredentials);
+            var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
+            return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";    
+        } catch (error) {
+            tl.debug(tl.loc("ServicePrincipalFetchFailed", error));
+            return "";
         }
     }
 
     protected checkAndPrintPortalDeploymentURL(error: any) {
         if((this.taskParameters.deploymentScope == "Resource Group" || this.taskParameters.deploymentScope == "Subscription") && (!!error && (error.statusCode < 400 || error.statusCode >= 500))) {
-            tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
+            let url = this.getAzurePortalDeploymentURL();
+            if(url != null) {
+                tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
+            }
         }
     }
 
@@ -126,7 +132,7 @@ export class DeploymentScopeBase {
             return portalUrl + subscriptionSpecificURL.replace(/\//g, '%2F');
         } catch (error) {
             tl.error(error);
-            return error;
+            return null;
         }
     }
 

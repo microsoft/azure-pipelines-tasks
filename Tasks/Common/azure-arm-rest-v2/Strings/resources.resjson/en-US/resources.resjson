@@ -150,5 +150,6 @@
   "loc.messages.ResponseNotValid": "Response is not in a valid format",
   "loc.messages.NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s",
   "loc.messages.MethodNotImplementedError": "Method '%s' is not implemented.",
-  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired. For more information refer https://aka.ms/azureappservicedeploytsg"
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired. For more information refer https://aka.ms/azureappservicedeploytsg",
+  "loc.messages.CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
 }
