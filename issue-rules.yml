@@ -79,6 +79,9 @@ rules:
   contains: 'AzureResourceGroupDeployment'
   addLabels: ['Area: Release']
 - valueFor: '**Enter Task Name**'
+  contains: 'FileTransform'
+  addLabels: ['Area: Release']
+- valueFor: '**Enter Task Name**'
   contains: 'ResourceGroup'
   addLabels: ['Area: Release']
   assign: ['bishal-pdmsft']
