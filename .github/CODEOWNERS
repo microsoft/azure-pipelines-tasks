@@ -151,7 +151,7 @@ Tasks/ContainerBuildV0/*    @vithati @prebansa
 
 Tasks/CopyFilesV2/*     @jtpetty
 
-Tasks/CopyFilesOverSSHV0/*      @leantk
+Tasks/CopyFilesOverSSHV0/*      @zachariahcox
 
 Tasks/CUrlUploaderV2/*      @leantk
 
@@ -233,7 +233,7 @@ Tasks/InstallAppleCertificateV2/*   @leantk
 
 Tasks/InstallAppleProvisioningProfileV1/*   @leantk
 
-Tasks/InstallSSHKeyV0/*     @leantk
+Tasks/InstallSSHKeyV0/*     @zachariahcox
 
 Tasks/InvokeRestApiV1/*     @vithati
 
