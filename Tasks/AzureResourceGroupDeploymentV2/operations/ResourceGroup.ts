@@ -534,6 +534,11 @@ export class ResourceGroup {
         if (deployment.properties["mode"] === "Validation") {
             return this.validateDeployment(armClient, deployment);
         } else {
+            try {
+                await this.validateDeployment(armClient, deployment);
+            } catch (error) {
+                tl.warning(tl.loc("TemplateValidationFailure", error));
+            }
             console.log(tl.loc("StartingDeployment"));
             return new Promise<void>((resolve, reject) => {
                 this.taskParameters.deploymentName = this.taskParameters.deploymentName || this.createDeploymentName();
@@ -544,7 +549,11 @@ export class ResourceGroup {
                             return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount);
                         }
                         this.writeDeploymentErrors(error);
-                        this.checkAndPrintPortalDeploymentURL(result.error);
+                        if(!!result && !!result.error) {
+                            this.checkAndPrintPortalDeploymentURL(result.error);
+                        } else if(!!error) {
+                            this.checkAndPrintPortalDeploymentURL(error);    
+                        }
                         this.printServicePrincipalRoleAssignmentError(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
