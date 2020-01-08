@@ -262,6 +262,14 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'PublishPipelineArtifact'
   addLabels: ['Area: ArtifactsCore']
+- valueFor: '**Enter Task Name**'
+  contains: 'PublishSymbols'
+  addLabels: ['Area: ArtifactsCore']
+  
+# Area: CodeCoverage
+- valueFor: '**Enter Task Name**'
+  contains: 'PublishCodeCoverageResults'
+  addLabels: ['Area: CodeCoverage']
 
 # Types
 - valueFor: '*Type*'
