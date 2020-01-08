@@ -275,6 +275,11 @@ rules:
   contains: 'PublishSymbols'
   addLabels: ['Area: ArtifactsCore']
   
+# Area: Artifacts
+- valueFor: '**Enter Task Name**'
+  contains: 'Gulp'
+  addLabels: ['Area: Artifacts']
+  
 # Area: CodeCoverage
 - valueFor: '**Enter Task Name**'
   contains: 'PublishCodeCoverageResults'
