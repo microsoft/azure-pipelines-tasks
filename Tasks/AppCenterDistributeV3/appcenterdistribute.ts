@@ -406,14 +406,14 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
 
     if (symbolsType === "Apple" || symbolsType === "Breakpad") {
         // User can specifay a symbols path pattern that selects
-        // multiple dSYM folder paths for Apple application.
-        let symPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
+        // multiple symbols folder paths.
+        let symbolPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
 
         // Resolved paths can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
-        if (symPaths) {
-            symPaths.forEach(symFolder => {
-                if (symFolder) {
-                    let folderPath = utils.checkAndFixFilePath(symFolder, continueOnError);
+        if (symbolPaths) {
+            symbolPaths.forEach(symbolFolder => {
+                if (symbolFolder) {
+                    let folderPath = utils.checkAndFixFilePath(symbolFolder, continueOnError);
                     // The path can be null if continueIfSymbolsNotFound is true and the folder does not exist.
                     if (folderPath) {
                         symbolsPaths.push(folderPath);
@@ -545,13 +545,13 @@ async function run() {
         }));
 
         for (const { fieldName, symbolType, forceArchive } of symbolsLookup) {
-            let symbolsPathPattern: string = tl.getInput(fieldName, false);
+            const symbolsPathPattern: string = tl.getInput(fieldName, false);
 
             // Expand symbols path pattern to a list of paths
-            let symbolsPaths = expandSymbolsPaths(symbolType, symbolsPathPattern, continueIfSymbolsNotFound, packParentFolder);
+            const symbolsPaths = expandSymbolsPaths(symbolType, symbolsPathPattern, continueIfSymbolsNotFound, packParentFolder);
 
             // Prepare symbols
-            let symbolsFile = await prepareSymbols(symbolsPaths, forceArchive);
+            const symbolsFile = await prepareSymbols(symbolsPaths, forceArchive);
 
             if (symbolsFile) {
                 // Begin preparing upload symbols

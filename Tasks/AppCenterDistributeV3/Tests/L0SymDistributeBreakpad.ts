@@ -22,7 +22,7 @@ tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
 tmr.setInput('nativeLibrariesPath', '/local/**/*.so')
 
-//prepare upload
+// prepare upload
 nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/release_uploads')
     .reply(201, {
@@ -30,14 +30,14 @@ nock('https://example.test')
         upload_url: 'https://example.upload.test/release_upload'
     });
 
-//upload 
+// upload 
 nock('https://example.upload.test')
     .post('/release_upload')
     .reply(201, {
         status: 'success'
     });
 
-//finishing upload, commit the package
+// finishing upload, commit the package
 nock('https://example.test')
     .patch('/v0.1/apps/testuser/testapp/release_uploads/1', {
         status: 'committed'
@@ -47,7 +47,7 @@ nock('https://example.test')
         release_url: 'my_release_location'
     });
 
-//make it available
+// make it available
 nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/releases/1/groups', {
         id: "00000000-0000-0000-0000-000000000000",
@@ -60,7 +60,7 @@ nock('https://example.test')
     }))
     .reply(200);
 
-//begin symbol upload
+// begin symbol upload
 nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/symbol_uploads', {
         symbol_type: 'Breakpad'
@@ -71,7 +71,7 @@ nock('https://example.test')
         expiration_date: 1234567
     });
 
-//finishing symbol upload, commit the symbol 
+// finishing symbol upload, commit the symbol 
 nock('https://example.test')
     .patch('/v0.1/apps/testuser/testapp/symbol_uploads/100', {
         status: 'committed'
