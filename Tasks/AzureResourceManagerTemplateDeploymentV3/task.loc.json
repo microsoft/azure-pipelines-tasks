@@ -305,7 +305,7 @@
     "ServicePrincipalRoleAssignmentDetails": "ms-resource:loc.messages.ServicePrincipalRoleAssignmentDetails",
     "ServicePrincipalFetchFailed": "ms-resource:loc.messages.ServicePrincipalFetchFailed",
     "FindMoreDeploymentDetailsAzurePortal": "ms-resource:loc.messages.FindMoreDeploymentDetailsAzurePortal",
-    "TemplateValidationFailure": "ms-resource:loc.messages.TemplateValidationFailure",
-    "ManagedServiceIdentityDetails": "ms-resource:loc.messages.ManagedServiceIdentityDetails"
+    "ManagedServiceIdentityDetails": "ms-resource:loc.messages.ManagedServiceIdentityDetails",
+    "TemplateValidationFailure": "ms-resource:loc.messages.TemplateValidationFailure"
   }
 }
