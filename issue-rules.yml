@@ -52,6 +52,9 @@ rules:
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
 - valueFor: '**Enter Task Name**'
+  contains: 'PublishBuildArtifact'
+  addLabels: ['Area: CrossPlatform']
+- valueFor: '**Enter Task Name**'
   contains: 'Python'
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
