@@ -65,7 +65,11 @@ export class DeploymentScopeBase {
                             return this.waitAndPerformAzureDeployment(retryCount);
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);
-                        this.checkAndPrintPortalDeploymentURL(error);
+                        if(!!result && !!result.error) {
+                            this.checkAndPrintPortalDeploymentURL(result.error);
+                        } else if(!!error) {
+                            this.checkAndPrintPortalDeploymentURL(error);
+                        }
                         this.printServicePrincipalRoleAssignmentError(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
