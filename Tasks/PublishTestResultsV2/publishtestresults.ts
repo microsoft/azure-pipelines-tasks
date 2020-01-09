@@ -86,8 +86,8 @@ async function run() {
         if (isNullOrWhitespace(searchFolder)) {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
         }
-            tl.debug(tl.getVariable('System.DefaultWorkingDirectory'));
-        if(tl.getVariable('System.DefaultWorkingDirectory')!=null && (!path.isAbsolute(searchFolder)))
+        
+        if(tl.getVariable('System.DefaultWorkingDirectory') && (!path.isAbsolute(searchFolder)))
         {
             searchFolder = path.join(tl.getVariable('System.DefaultWorkingDirectory'),searchFolder);
         }
