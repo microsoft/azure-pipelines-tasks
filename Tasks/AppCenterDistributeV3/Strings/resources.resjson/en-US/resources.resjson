@@ -23,6 +23,8 @@
   "loc.input.help.dsymPath": "Relative path from the repo root to dSYM folder. Path may contain wildcards.",
   "loc.input.label.mappingTxtPath": "Mapping file",
   "loc.input.help.mappingTxtPath": "Relative path from the repo root to Android's mapping.txt file.",
+  "loc.input.label.nativeLibrariesPath": "Native Library File Path",
+  "loc.input.help.nativeLibrariesPath": "Relative path from the repo root to the additional native libraries you want to publish (e.g. .so files).",
   "loc.input.label.packParentFolder": "Include all items in parent folder",
   "loc.input.help.packParentFolder": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps.",
   "loc.input.label.releaseNotesSelection": "Create release notes",
