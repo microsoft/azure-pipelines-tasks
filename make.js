@@ -343,7 +343,7 @@ target.test = function() {
     // setup the version of node to run the tests
     util.installNode(options.node);
 
-    run('mocha ' + testsSpec.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
+    run('mocha ' + [pattern1, pattern2, pattern3].join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
 }
 
 //
