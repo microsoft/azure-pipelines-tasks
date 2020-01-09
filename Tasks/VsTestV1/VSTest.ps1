@@ -250,6 +250,7 @@ finally
                 }
                 else {
                     Write-Verbose "Using Agent Command to publish test results"
+                    $resultFiles = [string]::Join(",", $resultFiles);
                 }
 
                 # Remove the below hack once the min agent version is updated to S91 or above
@@ -264,7 +265,7 @@ finally
                             Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle -PublishRunLevelAttachments $publishResultsOption
                         }
                         else {
-                            Write-Host "##vso[results.publish type=VSTest;publishRunAttachments=$publishResultsOption;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest;runTitle=$testRunTitle;]"
+                            Write-Host "##vso[results.publish type=VSTest;publishRunAttachments=$publishResultsOption;resultFiles=$resultFiles;platform=$platform;config=$configuration;testRunSystem=VSTest;runTitle=$testRunTitle;mergeResults=false;]"
                         }
                     }
                     else
@@ -277,7 +278,7 @@ finally
                             Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -RunTitle $testRunTitle
                         }
                         else {
-                            Write-Host "##vso[results.publish type=VSTest;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest;runTitle=$testRunTitle;]"
+                            Write-Host "##vso[results.publish type=VSTest;resultFiles=$resultFiles;platform=$platform;config=$configuration;testRunSystem=VSTest;runTitle=$testRunTitle;mergeResults=false;]"
                         }
                     }
                 }
@@ -294,7 +295,7 @@ finally
                             Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration -PublishRunLevelAttachments $publishResultsOption
                         }
                         else {
-                            Write-Host "##vso[results.publish type=VSTest;publishRunAttachments=$publishResultsOption;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest;]"
+                            Write-Host "##vso[results.publish type=VSTest;publishRunAttachments=$publishResultsOption;resultFiles=$resultFiles;platform=$platform;config=$configuration;testRunSystem=VSTest;mergeResults=false;]"
                         }
                     }
                     else
@@ -307,7 +308,7 @@ finally
                             Publish-TestResults -Context $distributedTaskContext -TestResultsFiles $resultFiles -TestRunner "VSTest" -Platform $platform -Configuration $configuration
                         }
                         else {
-                            Write-Host "##vso[results.publish type=VSTest;resultFiles=$resultFiles;platform=$platform;configuration=$configuration;testRunSystem=VSTest;]"
+                            Write-Host "##vso[results.publish type=VSTest;resultFiles=$resultFiles;platform=$platform;config=$configuration;testRunSystem=VSTest;mergeResults=false;]"
                         }
                     }
                 }

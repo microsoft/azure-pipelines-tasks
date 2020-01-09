@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/node": "^6.14.2",
+    "azure-devops-node-api": "9.0.1",
     "azure-pipelines-task-lib": "2.8.0",
     "decompress-zip": "0.3.0",
     "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz",

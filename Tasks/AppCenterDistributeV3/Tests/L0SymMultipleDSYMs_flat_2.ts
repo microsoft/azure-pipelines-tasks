@@ -213,6 +213,8 @@ fs.statSync = (s: string) => {
     return stat;
 }
 
+fs.lstatSync = fs.statSync;
+
 azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
     return Promise.resolve();
 }

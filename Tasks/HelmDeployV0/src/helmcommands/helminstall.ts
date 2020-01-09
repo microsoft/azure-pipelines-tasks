@@ -3,7 +3,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 import helmcli from "./../helmcli";
 import * as helmutil from "./../utils";
-import {addHelmTlsSettings} from "./../tlssetting";
+import { addHelmTlsSettings } from "./../tlssetting";
 
 /*supported chart install
 By chart reference: helm install stable/mariadb
@@ -17,7 +17,7 @@ chart reference and repo url: helm install –repo https://example.com/charts/ n
 
  */
 
-export function addArguments(helmCli: helmcli) : void { 
+export function addArguments(helmCli: helmcli): void {
     var chartType = tl.getInput("chartType", true);
     var releaseName = tl.getInput("releaseName", false);
     var overrideValues = tl.getInput("overrideValues", false);
@@ -30,46 +30,56 @@ export function addArguments(helmCli: helmcli) : void {
     var rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
     var enableTls = tl.getBoolInput("enableTls", false);
 
-    if(namespace) {
+    if (namespace) {
         helmCli.addArgument("--namespace ".concat(namespace));
     }
 
-    if(valueFile && valueFile != rootFolder) {
+    if (valueFile && valueFile != rootFolder) {
         helmCli.addArgument("--values");
-        helmCli.addArgument("\"" + helmutil.resolvePath(valueFile)+ "\"");
+        helmCli.addArgument("\"" + helmutil.resolvePath(valueFile) + "\"");
     }
 
-    if(overrideValues) {
+    if (overrideValues) {
         helmCli.addArgument("--set ".concat(overrideValues));
     }
 
-    if(updatedependency) {
+    if (updatedependency) {
         helmCli.addArgument("--dep-up");
     }
 
-    if(releaseName) {
+    //Version check for Helm, as --name flag with install is no longer supported in Helm 3
+    var isHelmV3 = helmCli.isHelmV3();
+    if (isHelmV3) {
+        if (releaseName) {
+            helmCli.addArgument(releaseName);
+        }
+        else {
+            helmCli.addArgument('--generate-name');
+        }
+    }
+    else if (releaseName) {
         helmCli.addArgument("--name ".concat(releaseName));
     }
 
-    if(waitForExecution) {
+    if (waitForExecution) {
         helmCli.addArgument("--wait");
     }
 
-    if(argumentsInput) {
+    if (argumentsInput) {
         helmCli.addArgument(argumentsInput);
     }
 
-    if(enableTls) {
+    if (enableTls) {
         addHelmTlsSettings(helmCli);
     }
 
-    if(chartType === "Name") {
+    if (chartType === "Name") {
         var chartName = tl.getInput("chartName", true);
         helmCli.addArgument(chartName);
 
     }
     else {
         var chartPath = tl.getInput("chartPath", true);
-        helmCli.addArgument("\"" + helmutil.resolvePath(chartPath)+ "\"");
+        helmCli.addArgument("\"" + helmutil.resolvePath(chartPath) + "\"");
     }
 }

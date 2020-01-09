@@ -9,9 +9,11 @@ import {
 } from './azureModels';
 
 import {
-    ServiceClient,
-    ToError
+    ServiceClient
 } from './AzureServiceClient';
+import {
+    ToError
+} from './AzureServiceClientBase';
 import { Kudu } from './azure-arm-app-service-kudu';
 import constants = require('./constants');
 var parseString = require('xml2js').parseString;
@@ -321,7 +323,7 @@ export class AzureAppService {
             {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
-            }, null, '2016-08-01');
+            }, null, '2018-02-01');
             
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
@@ -369,7 +371,7 @@ export class AzureAppService {
             {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
-            }, null, '2016-08-01');
+            }, null, '2018-02-01');
             
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {

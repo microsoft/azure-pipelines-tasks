@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 158,
-        "Patch": 0
+        "Minor": 163,
+        "Patch": 2
     },
     "preview": "true",
     "minimumAgentVersion": "2.104.1",
@@ -157,7 +157,7 @@
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
         "UpdatingAppServiceConnectionStrings" : "Updating App Service Connection Strings. Data: %s",
-        "UpdatedAppServiceConnectionStrings" : "Updated App Service Connection Strings. Data: %s",
+        "UpdatedAppServiceConnectionStrings" : "Updated App Service Connection Strings.",
         "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
         "FailedToUpdateAppServiceConfigSlotSettings" : "Failed to update App service '%s' Configuration Slot Settings. Error: %s",
         "FailedToUpdateAppServiceConnectionStrings": "Failed to update App service '%s' Connection Strings. Error: %s",
