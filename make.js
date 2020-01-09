@@ -345,8 +345,8 @@ target.test = function() {
 
     // Group the tests into chunks so that we don't run into 'The command line is too long.'
     var chunkSize = 50;
-    for (var i = 0; i < array.length; i += chunkSize) {
-        var chunk = array.slice(i, i + chunkSize);
+    for (var i = 0; i < testsSpec.length; i += chunkSize) {
+        var chunk = testsSpec.slice(i, i + chunkSize);
         run('mocha ' + chunk.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
     }
 }
