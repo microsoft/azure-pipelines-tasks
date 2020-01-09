@@ -7,7 +7,7 @@ var Zip = require('jszip');
 
 var workDir = tl.getVariable("System.DefaultWorkingDirectory");
 
-export function checkAndFixFilePath(filePath: string, continueOnError: boolean): string {
+export function checkAndFixFilePath(filePath: string, continueOnError: boolean ): string {
     if (filePath) {
         if (arePathEqual(filePath, workDir)) {
             // Path points to the source root, ignore it
@@ -32,10 +32,10 @@ export function getArchivePath(symbolsRoot: string): string {
     // If symbol paths do not have anything common, e.g /a/b/c and /x/y/z,
     // let's use some default name for the archive.
     let zipName = symbolsRoot ? path.basename(symbolsRoot) : "symbols";
-    tl.debug(`---- Zip file name=${zipName}`);
+    tl.debug(`---- Zip file name=${zipName}`); 
 
-    let zipPath = path.join(workDir, `${zipName}.zip`);
-    tl.debug(`.... Zip file path=${zipPath}`);
+    let zipPath = path.join(workDir, `${zipName}.zip`); 
+    tl.debug(`.... Zip file path=${zipPath}`); 
 
     return zipPath;
 }
@@ -57,7 +57,7 @@ function getAllFiles(rootPath: string, recursive: boolean): string[] {
 
         let children = fs.readdirSync(folderPath);
         for (let i = 0; i < children.length; i++) {
-            let childPath = [folderPath, children[i]].join("/");
+            let childPath = [folderPath, children[i]].join( "/");
             if (fs.statSync(childPath).isDirectory()) {
                 if (recursive) {
                     folders.push(childPath);
@@ -92,7 +92,7 @@ export function createZipStream(symbolsPaths: string[], symbolsRoot: string): No
                 // e.g "/a/b/c" and "/x/y/z", or "C:/u/v/w" and "D:/u/v/w",
                 // let's use "a/b/c" and "x/y/z", or "C/u/v/w" and "D/u/v/w"
                 // as relative paths in the archive.
-                relativePath = filePath.replace(/^\/+/, "").replace(":", "");
+                relativePath = filePath.replace(/^\/+/,"").replace(":", "");
             }
 
             tl.debug(`...... zip-entry: ${relativePath}`);
@@ -212,10 +212,10 @@ export function findCommonParent(list: string[]): string {
         if (idx === 0) {
             // Take the first path as the common parent candidate
             commonSegments = nextPath.split("/");
-        } else if (commonSegments.length === 0) {
+        } else if (commonSegments.length === 0) { 
             // We've already detected that the paths do not have a common parent.
             // No sense to check the rest of paths.
-            return null;
+            return null; 
         } else {
             let pathSegmants: string[] = nextPath.split("/");
 
