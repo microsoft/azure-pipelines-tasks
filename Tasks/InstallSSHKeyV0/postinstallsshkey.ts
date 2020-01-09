@@ -16,7 +16,8 @@ async function run() {
             sshTool.deleteKey(deleteKey)
         }
     } catch (err) {
-        tl.setResult(tl.TaskResult.Failed, err);
+        // This gets cleaned up by the agent anyways, best effort
+        tl.debug(`Cleanup failed with error: ${err}`);
     }
 }
 
