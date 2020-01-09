@@ -19,9 +19,13 @@ var xpUnzipLocation: string;
 // 7zip
 var xpSevenZipLocation: string;
 var winSevenZipLocation: string = path.join(__dirname, '7zip/7z.exe');
+var win32bitSevenZipLocation: string = path.join(__dirname, 'ia32/7zip/7z.exe');
 
 function getSevenZipLocation(): string {
     if (win) {
+        if (process.arch === 'ia32') {
+            return win32bitSevenZipLocation;
+        }
         return winSevenZipLocation;
     } else {
         if (typeof xpSevenZipLocation == "undefined") {
