@@ -76,8 +76,7 @@ export function createZipStream(symbolsPaths: string[], symbolsRoot: string): No
     let zip = new Zip();
 
     symbolsPaths.forEach(rootPath => {
-
-        let filePaths = fs.lstatSync(rootPath).isFile()
+        const filePaths = fs.lstatSync(rootPath).isFile()
             ? [rootPath]
             : getAllFiles(rootPath, /*recursive=*/ true);
         tl.debug(`------ Adding files: ${filePaths}`);

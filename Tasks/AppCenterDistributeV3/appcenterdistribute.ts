@@ -296,7 +296,7 @@ function getBranchName(ref: string): string {
  * If the input is a single folder, zip it's content. The archive name is the folder's name
  * If the input is a set of folders or files, zip them so they appear on the root of the archive. The archive name is the parent folder's name.
  */
-function prepareSymbols(symbolsPaths: string[], forceArchive: boolean): Q.Promise<string> {
+function prepareSymbols(symbolsPaths: string[], forceArchive: boolean = false): Q.Promise<string> {
     tl.debug("-- Prepare symbols");
     let defer = Q.defer<string>();
 
@@ -407,13 +407,13 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
     if (symbolsType === "Apple" || symbolsType === "Breakpad") {
         // User can specifay a symbols path pattern that selects
         // multiple symbols folder paths.
-        let symbolPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
+        const symbolPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
 
         // Resolved paths can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
         if (symbolPaths) {
             symbolPaths.forEach(symbolFolder => {
                 if (symbolFolder) {
-                    let folderPath = utils.checkAndFixFilePath(symbolFolder, continueOnError);
+                    const folderPath = utils.checkAndFixFilePath(symbolFolder, continueOnError);
                     // The path can be null if continueIfSymbolsNotFound is true and the folder does not exist.
                     if (folderPath) {
                         symbolsPaths.push(folderPath);
@@ -469,7 +469,7 @@ async function run() {
         "UWP": "Universal Windows Platform (UWP)"
         */
         const symbolType: TaskSymbolType = tl.getInput('symbolsType', false) as TaskSymbolType;
-        let symbolsLookup: { symbolType: ApiSymbolType, fieldName: string, forceArchive?: boolean }[] = [];
+        const symbolsLookup: { symbolType: ApiSymbolType, fieldName: string, forceArchive?: boolean }[] = [];
         switch (symbolType) {
             case "Apple":
                 symbolsLookup.push({ symbolType, fieldName: "dsymPath" });

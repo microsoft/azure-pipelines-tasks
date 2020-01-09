@@ -172,11 +172,28 @@ fs.readdirSync = (folder: string) => {
 
 fs.statSync = (s: string) => {
     let stat = new Stats;
-    stat.isFile = () => s.endsWith('.txt');
-    stat.isDirectory = () => !s.endsWith('.txt');
+
+    stat.isFile = () => {
+        if (s.endsWith('.txt')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    stat.isDirectory = () => {
+        if (s.endsWith('.txt')) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     stat.size = 100;
+
     return stat;
 }
+
 fs.lstatSync = fs.statSync;
 
 azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {

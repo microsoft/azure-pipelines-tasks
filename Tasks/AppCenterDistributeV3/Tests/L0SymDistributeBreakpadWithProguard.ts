@@ -5,14 +5,14 @@ import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 
-var Readable = require('stream').Readable
-var Writable = require('stream').Writable
-var Stats = require('fs').Stats
+const Readable = require('stream').Readable
+const Writable = require('stream').Writable
+const Stats = require('fs').Stats
 
-var nock = require('nock');
+const nock = require('nock');
 
-let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
-let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+const taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
+const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
@@ -101,7 +101,7 @@ nock('https://example.test')
     .reply(200);
 
 // provide answers for task mock
-let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'checkPath': {
         '/test/path/to/my.apk': true,
         '/test/path/to': true,
@@ -130,7 +130,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 tmr.setAnswers(a);
 
 fs.createReadStream = (s: string) => {
-    let stream = new Readable;
+    const stream = new Readable;
     stream.push(s);
     stream.push(null);
 
@@ -138,7 +138,7 @@ fs.createReadStream = (s: string) => {
 };
 
 fs.createWriteStream = (s: string) => {
-    let stream = new Writable;
+    const stream = new Writable;
 
     stream.write = () => { };
 
@@ -166,7 +166,7 @@ fs.readdirSync = (folder: string) => {
 };
 
 fs.statSync = (s: string) => {
-    let stat = new Stats;
+    const stat = new Stats;
     stat.isFile = () => s.endsWith('.txt');
     stat.isDirectory = () => !s.endsWith('.txt');
     stat.size = 100;
