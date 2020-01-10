@@ -549,7 +549,7 @@ export class ResourceGroup {
                             return this.waitAndPerformAzureDeployment(armClient, deployment, retryCount);
                         }
                         this.writeDeploymentErrors(error);
-                        this.checkAndPrintPortalDeploymentURL(!!result && !!result.error ? result.error : error);    
+                        this.checkAndPrintPortalDeploymentURL((!!result && !!result.error) ? result.error : error);    
                         this.printServicePrincipalRoleAssignmentError(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
