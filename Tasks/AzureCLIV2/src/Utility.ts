@@ -8,7 +8,7 @@ export class Utility {
 
     public static async getScriptPath(scriptLocation: string, fileExtensions: string[]): Promise<string> {
         if (scriptLocation.toLowerCase() === "scriptpath") {
-            let filePath: string = tl.getPathInput("scriptPath", true, true);
+            let filePath: string = tl.getPathInput("scriptPath", true, false);
             if (Utility.checkIfFileExists(filePath, fileExtensions)) {
                 return filePath;
             }
@@ -38,7 +38,7 @@ export class Utility {
 
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${powerShellErrorActionPreference}'`);
-        let filePath: string = tl.getPathInput("scriptPath", false, true);;
+        let filePath: string = tl.getPathInput("scriptPath", false, false);
         if (scriptLocation.toLowerCase() === 'inlinescript') {
             let inlineScript: string = tl.getInput("inlineScript", true);
             filePath = path.join(tempDirectory, `azureclitaskscript${new Date().getTime()}_inlinescript.${fileExtensions[0]}`);
