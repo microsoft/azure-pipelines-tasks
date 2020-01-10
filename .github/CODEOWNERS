@@ -153,9 +153,9 @@ Tasks/CopyFilesV2/*     @jtpetty
 
 Tasks/CopyFilesOverSSHV0/*      @zachariahcox
 
-Tasks/CUrlUploaderV2/*      @leantk
+Tasks/CUrlUploaderV2/*      @zachariahcox
 
-Tasks/DecryptFileV1/*   @leantk
+Tasks/DecryptFileV1/*   @zachariahcox
 
 Tasks/DelayV1/*     @vithati
 
@@ -197,7 +197,7 @@ Tasks/ExtractFilesV1/*      @jtpetty
 
 Tasks/FileTransformV1/*     @kmkumaran      @SumiranAgg     @vincentdass
 
-Tasks/FtpUploadV1/*     @leantk
+Tasks/FtpUploadV1/*     @zachariahcox
 
 Tasks/FuncToolsInstallerV0/*     @vithati   @ajinkya599
 
@@ -349,7 +349,7 @@ Tasks/SqlDacpacDeploymentOnMachineGroupV0/*     @kmkumaran
 
 Tasks/SqlServerDacpacDeployment/*   @kmkumaran
 
-Tasks/SshV0/*   @leantk
+Tasks/SshV0/*   @zachariahcox
 
 Tasks/TwineAuthenticateV0/*     @shubham90
 
