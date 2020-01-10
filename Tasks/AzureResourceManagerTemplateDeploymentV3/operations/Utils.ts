@@ -200,7 +200,7 @@ class Utils {
     public static createDeploymentName(taskParameters: armDeployTaskParameters.TaskParameters): string {
         var name: string;
         if (taskParameters.templateLocation == "Linked artifact") {
-            name = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), taskParameters.csmFile)[0];
+            name = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.escapeBlockCharacters(taskParameters.csmFile))[0];
         } else {
             name = taskParameters.csmFileLink;
         }
@@ -224,7 +224,7 @@ class Utils {
 
     public static getDeploymentDataForLinkedArtifact(taskParameters: armDeployTaskParameters.TaskParameters): DeploymentParameters {
         var template: TemplateObject;
-        var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), taskParameters.csmFile);
+        var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.escapeBlockCharacters(taskParameters.csmFile));
         if (fileMatches.length > 1) {
             throw new Error(tl.loc("TemplateFilePatternMatchingMoreThanOneFile", fileMatches));
         }
@@ -247,7 +247,7 @@ class Utils {
 
         var parameters: Map<string, ParameterValue> = {} as Map<string, ParameterValue>;
         if (this.isNonEmpty(taskParameters.csmParametersFile)) {
-            var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), taskParameters.csmParametersFile);
+            var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.escapeBlockCharacters(taskParameters.csmParametersFile));
             if (fileMatches.length > 1) {
                 throw new Error(tl.loc("TemplateParameterFilePatternMatchingMoreThanOneFile", fileMatches));
             }
@@ -402,6 +402,10 @@ class Utils {
         }
 
         return result;
+    }
+
+    private static escapeBlockCharacters(str: string): string {
+        return str.replace(/[\[]/g, '$&[]');
     }
 }
 
