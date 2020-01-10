@@ -15,10 +15,16 @@ export async function run() {
   }
   util.setTaskRootPath(path.dirname(templateFilePath));
 
+  let bypassModules = tl.getInput('bypassModules');
+  if (bypassModules == null) bypassModules = "";
+  tl.debug(`Bypass Modules are: ${bypassModules}`);
+
   util.setupIotedgedev();
 
   let envList = process.env;
   util.setCliVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputFolder, tl.getVariable(Constants.outputFileFolder));
+  // Set bypass modules
+  util.setCliVarialbe(envList, Constants.iotedgedevEnv.bypassModules, bypassModules);
 
   // Pass secrets to sub process
   util.populateSecretToEnvironmentVariable(envList);
