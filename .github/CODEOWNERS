@@ -9,11 +9,11 @@ Tasks/AndroidSigningV3/*    @leantk
 
 Tasks/ANTV1/*   @leantk
 
-Tasks/AppCenterDistributeV1/*   @DennisPan    @turanuk
+Tasks/AppCenterDistributeV1/*   @DennisPan    @turanuk    @ranterle
 
-Tasks/AppCenterDistributeV2/*   @DennisPan    @turanuk
+Tasks/AppCenterDistributeV2/*   @DennisPan    @turanuk    @ranterle
 
-Tasks/AppCenterDistributeV3/*   @DennisPan    @turanuk
+Tasks/AppCenterDistributeV3/*   @DennisPan    @turanuk    @ranterle
 
 Tasks/AppCenterTestV1/*   @owenniblock
 
@@ -151,7 +151,7 @@ Tasks/ContainerBuildV0/*    @vithati @prebansa
 
 Tasks/CopyFilesV2/*     @jtpetty
 
-Tasks/CopyFilesOverSSHV0/*      @leantk
+Tasks/CopyFilesOverSSHV0/*      @zachariahcox
 
 Tasks/CUrlUploaderV2/*      @leantk
 
@@ -233,7 +233,7 @@ Tasks/InstallAppleCertificateV2/*   @leantk
 
 Tasks/InstallAppleProvisioningProfileV1/*   @leantk
 
-Tasks/InstallSSHKeyV0/*     @leantk
+Tasks/InstallSSHKeyV0/*     @zachariahcox
 
 Tasks/InvokeRestApiV1/*     @vithati
 

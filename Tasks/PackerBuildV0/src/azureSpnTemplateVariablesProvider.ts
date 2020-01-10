@@ -42,7 +42,7 @@ export default class AzureSpnTemplateVariablesProvider implements definitions.IT
         // if we are creating windows VM and SPN object-id is not available in service endpoint, fetch it from Graph endpoint
         // NOP for nix
         if(!spnObjectId && taskParameters.osType.toLowerCase().match(/^win/)) {
-            spnObjectId = await this.getServicePrincipalObjectId(taskParameters.graphCredentials);
+            spnObjectId = await this.getServicePrincipalObjectId(await taskParameters.graphCredentialsPromise);
         }
 
         this._spnVariables.set(constants.TemplateVariableObjectIdName, spnObjectId);
