@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 163,
+    "Minor": 164,
     "Patch": 1
   },
   "demands": [],
@@ -326,16 +326,16 @@
       "visibleRule": "action = createSecret && secretType = dockerRegistry"
     },
     {
-      "name": "timeout",
+      "name": "rolloutStatusTimeout",
       "type": "string",
-      "label": "ms-resource:loc.input.label.timeout",
+      "label": "ms-resource:loc.input.label.rolloutStatusTimeout",
       "defaultValue": "0",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.timeout",
+      "helpMarkDown": "ms-resource:loc.input.help.rolloutStatusTimeout",
       "visibleRule": "action = deploy || action = patch || action = scale || action = promote",
       "validation": {
         "expression": "isMatch(value, '(^\\d*$)','Multiline')",
-        "message": "Enter valid a value for timeout."
+        "message": "Enter a valid value for timeout."
       }
     }
   ],
@@ -377,6 +377,8 @@
     "StableSpecSelectorNotExist": "ms-resource:loc.messages.StableSpecSelectorNotExist",
     "InvalidPercentage": "ms-resource:loc.messages.InvalidPercentage",
     "InvalidBaselineAndCanaryReplicas": "ms-resource:loc.messages.InvalidBaselineAndCanaryReplicas",
-    "InvalidTimeoutValue": "ms-resource:loc.messages.InvalidTimeoutValue"
+    "InvalidTimeoutValue": "ms-resource:loc.messages.InvalidTimeoutValue",
+    "RolloutStatusTimedout": "ms-resource:loc.messages.RolloutStatusTimedout",
+    "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink"
   }
 }

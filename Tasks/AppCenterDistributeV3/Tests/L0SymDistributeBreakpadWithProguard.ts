@@ -5,39 +5,23 @@ import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 
-var Readable = require('stream').Readable
-var Writable = require('stream').Writable
-var Stats = require('fs').Stats
+const Readable = require('stream').Readable
+const Writable = require('stream').Writable
+const Stats = require('fs').Stats
 
-var nock = require('nock');
+const nock = require('nock');
 
-let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
-let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+const taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
+const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
-tmr.setInput('app', '/test/path/to/my.ipa');
+tmr.setInput('app', '/test/path/to/my.apk');
+tmr.setInput('symbolsType', 'Android');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
-tmr.setInput('symbolsType', 'Apple');
-tmr.setInput('dsymPath', 'a/b/c/(x|y).dsym');
-
-/*
-  dSyms folder structure:
-  a
-    f.txt
-    b
-      f.txt
-      c
-        d
-          f.txt
-        f.txt
-        x.dsym
-          x1.txt
-          x2.txt
-        y.dsym
-          y1.txt
-*/
+tmr.setInput('nativeLibrariesPath', '/local/**/*.so')
+tmr.setInput('mappingTxtPath', 'a/**/mapping.txt');
 
 //prepare upload
 nock('https://example.test')
@@ -61,7 +45,7 @@ nock('https://example.test')
     })
     .reply(200, {
         release_id: '1',
-        release_url: 'my_release_location' 
+        release_url: 'my_release_location'
     });
 
 //make it available
@@ -77,10 +61,30 @@ nock('https://example.test')
     }))
     .reply(200);
 
+nock('https://example.test')
+    .get('/v0.1/apps/testuser/testapp/releases/1')
+    .reply(200, {
+        short_version: "1.0",
+        version: "1"
+    });
+
 //begin symbol upload
 nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/symbol_uploads', {
-        symbol_type: 'Apple'
+        symbol_type: 'Breakpad'
+    })
+    .reply(201, {
+        symbol_upload_id: 100,
+        upload_url: 'https://example.upload.test/symbol_upload',
+        expiration_date: 1234567
+    });
+
+nock('https://example.test')
+    .post('/v0.1/apps/testuser/testapp/symbol_uploads', {
+        symbol_type: "AndroidProguard",
+        file_name: "mapping.txt",
+        version: "1.0",
+        build: "1"
     })
     .reply(201, {
         symbol_upload_id: 100,
@@ -90,43 +94,43 @@ nock('https://example.test')
 
 //finishing symbol upload, commit the symbol 
 nock('https://example.test')
+    .persist()
     .patch('/v0.1/apps/testuser/testapp/symbol_uploads/100', {
         status: 'committed'
     })
     .reply(200);
 
 // provide answers for task mock
-let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    'checkPath' : {
-        '/test/path/to/my.ipa': true,
-        'a': true,
-        'a/f.txt': true,
-        'a/b': true,
-        'a/b/f.txt': true,
-        'a/b/c': true,
-        'a/b/c/f.txt': true,
-        'a/b/c/d': true,
-        'a/b/c/d/f.txt': true,
-        'a/b/c/x.dsym': true,
-        'a/b/c/x.dsym/x1.txt': true,
-        'a/b/c/x.dsym/x2.txt': true,
-        'a/b/c/y.dsym': true,
-        'a/b/c/y.dsym/y1.txt': true
+const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+    'checkPath': {
+        '/test/path/to/my.apk': true,
+        '/test/path/to': true,
+        'a/mapping.txt': true,
+        '/test/path/to/f1.txt': true,
+        '/test/path/to/f2.txt': true,
+        '/test/path/to/folder': true,
+        '/test/path/to/folder/f11.txt': true,
+        '/test/path/to/folder/f12.txt': true,
+        '/local/x64/libSasquatchBreakpad.so': true,
+        '/local/x86/libSasquatchBreakpad.so': true
     },
-    'findMatch' : {
-        'a/b/c/(x|y).dsym': [
-            'a/b/c/x.dsym',
-            'a/b/c/y.dsym'
+    'findMatch': {
+        'a/**/mapping.txt': [
+            'a/mapping.txt'
         ],
-        '/test/path/to/my.ipa': [
-            '/test/path/to/my.ipa'
+        '/local/**/*.so': [
+            '/local/x86/libSasquatchBreakpad.so',
+            '/local/x64/libSasquatchBreakpad.so'
+        ],
+        '/test/path/to/my.apk': [
+            '/test/path/to/my.apk'
         ]
     }
 };
 tmr.setAnswers(a);
 
 fs.createReadStream = (s: string) => {
-    let stream = new Readable;
+    const stream = new Readable;
     stream.push(s);
     stream.push(null);
 
@@ -134,9 +138,9 @@ fs.createReadStream = (s: string) => {
 };
 
 fs.createWriteStream = (s: string) => {
-    let stream = new Writable;
+    const stream = new Writable;
 
-    stream.write = () => {};
+    stream.write = () => { };
 
     return stream;
 };
@@ -144,35 +148,17 @@ fs.createWriteStream = (s: string) => {
 fs.readdirSync = (folder: string) => {
     let files: string[] = [];
 
-    if (folder === 'a') {
+    if (folder === '/test/path/to') {
         files = [
-            'f.txt',
-            'b'
+            'mappings.txt',
+            'f1.txt',
+            'f2.txt',
+            'folder'
         ]
-    } else if (folder === 'a/b') {
+    } else if (folder === '/test/path/to/folder') {
         files = [
-            'f.txt',
-            'c'
-        ]
-    } else if (folder === 'a/b/c') {
-        files = [
-            'f.txt',
-            'd',
-            'x.dsym',
-            'y.dsym'
-        ]
-    } else if (folder === 'a/b/c/d') {
-        files = [
-            'f.txt'
-        ]
-    } else if (folder === 'a/b/c/x.dsym') {
-        files = [
-            'x1.txt',
-            'x2.txt'
-        ]
-    } else if (folder === 'a/b/c/y.dsym') {
-        files = [
-            'y1.txt'
+            'f11.txt',
+            'f12.txt'
         ]
     }
 
@@ -180,16 +166,15 @@ fs.readdirSync = (folder: string) => {
 };
 
 fs.statSync = (s: string) => {
-    let stat = new Stats;
+    const stat = new Stats;
     stat.isFile = () => s.endsWith('.txt');
     stat.isDirectory = () => !s.endsWith('.txt');
     stat.size = 100;
     return stat;
 }
-
 fs.lstatSync = fs.statSync;
 
-azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async () => {
+azureBlobUploadHelper.AzureBlobUploadHelper.prototype.upload = async (uploadUrl, file) => {
     return Promise.resolve();
 }
 
