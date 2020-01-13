@@ -18,6 +18,9 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'Npm'
   addLabels: ['Area: Artifacts']  
+- valueFor: '**Enter Task Name**'
+  contains: 'UniversalPackage'
+  addLabels: ['Area: Artifacts']
 # Area: Build
 - valueFor: '**Enter Task Name**'
   contains: 'VSBuild'
