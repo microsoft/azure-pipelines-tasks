@@ -17,7 +17,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 162,
+        "Minor": 164,
         "Patch": 0
     },
     "minimumAgentVersion": "2.115.0",
@@ -123,6 +123,15 @@
             "visibleRule": "command = build || command = publish || command = run || command = test || command = custom",
             "required": false,
             "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, runtime. The arguments depend on the command selected."
+        },
+        {
+            "name": "restoreArguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "visibleRule": "command = restore",
+            "required": false,
+            "helpMarkDown": "Write the additional arguments to be passed to **restore** command."
         },
         {
             "name": "publishTestResults",
