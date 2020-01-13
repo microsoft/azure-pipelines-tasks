@@ -114,8 +114,10 @@ export class azureclitask {
         }
 
         this.isLoggedIn = true;
-        //set the subscription imported to the current subscription
-        Utility.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
+        if (!!subscriptionID) {
+            //set the subscription imported to the current subscription
+            Utility.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
+        }
     }
 
     private static setConfigDirectory(): void {
