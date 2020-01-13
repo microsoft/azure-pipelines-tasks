@@ -23,35 +23,37 @@ export function deploySMICanary(kubectl: Kubectl, filePaths: string[]) {
     filePaths.forEach((filePath: string) => {
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
-            const name = inputObject.metadata.name;
-            const kind = inputObject.kind;
-            if (helper.isDeploymentEntity(kind)) {
-                // Get stable object
-                tl.debug('Querying stable object');                
-                const stableObject = canaryDeploymentHelper.fetchResource(kubectl, kind, name);
-                if (!stableObject) {
-                    tl.debug('Stable object not found. Creating only canary object');
-                    // If stable object not found, create canary deployment.
-                    const newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
-                    tl.debug('New canary object is: ' + JSON.stringify(newCanaryObject));
-                    newObjectsList.push(newCanaryObject);
-                } else {
-                    if (!canaryDeploymentHelper.isResourceMarkedAsStable(stableObject)) {
-                        throw (tl.loc('StableSpecSelectorNotExist', name));
-                    }
+            if (inputObject) {
+                const name = inputObject.metadata.name;
+                const kind = inputObject.kind;
+                if (helper.isDeploymentEntity(kind)) {
+                    // Get stable object
+                    tl.debug('Querying stable object');
+                    const stableObject = canaryDeploymentHelper.fetchResource(kubectl, kind, name);
+                    if (!stableObject) {
+                        tl.debug('Stable object not found. Creating only canary object');
+                        // If stable object not found, create canary deployment.
+                        const newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
+                        tl.debug('New canary object is: ' + JSON.stringify(newCanaryObject));
+                        newObjectsList.push(newCanaryObject);
+                    } else {
+                        if (!canaryDeploymentHelper.isResourceMarkedAsStable(stableObject)) {
+                            throw (tl.loc('StableSpecSelectorNotExist', name));
+                        }
 
-                    tl.debug('Stable object found. Creating canary and baseline objects');
-                    // If canary object not found, create canary and baseline object.
-                    const newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
-                    const newBaselineObject = canaryDeploymentHelper.getNewBaselineResource(stableObject, canaryReplicaCount);
-                    tl.debug('New canary object is: ' + JSON.stringify(newCanaryObject));
-                    tl.debug('New baseline object is: ' + JSON.stringify(newBaselineObject));
-                    newObjectsList.push(newCanaryObject);
-                    newObjectsList.push(newBaselineObject);
+                        tl.debug('Stable object found. Creating canary and baseline objects');
+                        // If canary object not found, create canary and baseline object.
+                        const newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
+                        const newBaselineObject = canaryDeploymentHelper.getNewBaselineResource(stableObject, canaryReplicaCount);
+                        tl.debug('New canary object is: ' + JSON.stringify(newCanaryObject));
+                        tl.debug('New baseline object is: ' + JSON.stringify(newBaselineObject));
+                        newObjectsList.push(newCanaryObject);
+                        newObjectsList.push(newBaselineObject);
+                    }
+                } else {
+                    // Updating non deployment entity as it is.
+                    newObjectsList.push(inputObject);
                 }
-            } else {
-                // Updating non deployment entity as it is.
-                newObjectsList.push(inputObject);
             }
         });
     });
@@ -69,47 +71,48 @@ function createCanaryService(kubectl: Kubectl, filePaths: string[]) {
     filePaths.forEach((filePath: string) => {
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
+            if (inputObject) {
+                const name = inputObject.metadata.name;
+                const kind = inputObject.kind;
+                if (helper.isServiceEntity(kind)) {
+                    const newCanaryServiceObject = canaryDeploymentHelper.getNewCanaryResource(inputObject);
+                    tl.debug('New canary service object is: ' + JSON.stringify(newCanaryServiceObject));
+                    newObjectsList.push(newCanaryServiceObject);
 
-            const name = inputObject.metadata.name;
-            const kind = inputObject.kind;
-            if (helper.isServiceEntity(kind)) {
-                const newCanaryServiceObject = canaryDeploymentHelper.getNewCanaryResource(inputObject);
-                tl.debug('New canary service object is: ' + JSON.stringify(newCanaryServiceObject));
-                newObjectsList.push(newCanaryServiceObject);
+                    const newBaselineServiceObject = canaryDeploymentHelper.getNewBaselineResource(inputObject);
+                    tl.debug('New baseline object is: ' + JSON.stringify(newBaselineServiceObject));
+                    newObjectsList.push(newBaselineServiceObject);
 
-                const newBaselineServiceObject = canaryDeploymentHelper.getNewBaselineResource(inputObject);
-                tl.debug('New baseline object is: ' + JSON.stringify(newBaselineServiceObject));
-                newObjectsList.push(newBaselineServiceObject);
+                    tl.debug('Querying for stable service object');
+                    const stableObject = canaryDeploymentHelper.fetchResource(kubectl, kind, canaryDeploymentHelper.getStableResourceName(name));
+                    if (!stableObject) {
+                        const newStableServiceObject = canaryDeploymentHelper.getStableResource(inputObject);
+                        tl.debug('New stable service object is: ' + JSON.stringify(newStableServiceObject));
+                        newObjectsList.push(newStableServiceObject);
 
-                tl.debug('Querying for stable service object');
-                const stableObject = canaryDeploymentHelper.fetchResource(kubectl, kind, canaryDeploymentHelper.getStableResourceName(name));
-                if (!stableObject) {
-                    const newStableServiceObject = canaryDeploymentHelper.getStableResource(inputObject);
-                    tl.debug('New stable service object is: ' + JSON.stringify(newStableServiceObject));
-                    newObjectsList.push(newStableServiceObject);
-
-                    tl.debug('Creating the traffic object for service: ' + name);
-                    const trafficObject = createTrafficSplitManifestFile(name, 0, 0, 1000);
-                    tl.debug('Creating the traffic object for service: ' + trafficObject);
-                    trafficObjectsList.push(trafficObject);
-                } else {
-                    let updateTrafficObject = true;
-                    const trafficObject = canaryDeploymentHelper.fetchResource(kubectl, TRAFFIC_SPLIT_OBJECT, getTrafficSplitResourceName(name));
-                    if (trafficObject) {
-                        const trafficJObject = JSON.parse(JSON.stringify(trafficObject));             
-                        if (trafficJObject && trafficJObject.spec && trafficJObject.spec.backends) {
-                            trafficJObject.spec.backends.forEach((s) => {
-                                if (s.service === canaryDeploymentHelper.getCanaryResourceName(name) && s.weight === "1000m") {
-                                    tl.debug('Update traffic objcet not required');
-                                    updateTrafficObject = false;
-                                }
-                            })
+                        tl.debug('Creating the traffic object for service: ' + name);
+                        const trafficObject = createTrafficSplitManifestFile(name, 0, 0, 1000);
+                        tl.debug('Creating the traffic object for service: ' + trafficObject);
+                        trafficObjectsList.push(trafficObject);
+                    } else {
+                        let updateTrafficObject = true;
+                        const trafficObject = canaryDeploymentHelper.fetchResource(kubectl, TRAFFIC_SPLIT_OBJECT, getTrafficSplitResourceName(name));
+                        if (trafficObject) {
+                            const trafficJObject = JSON.parse(JSON.stringify(trafficObject));
+                            if (trafficJObject && trafficJObject.spec && trafficJObject.spec.backends) {
+                                trafficJObject.spec.backends.forEach((s) => {
+                                    if (s.service === canaryDeploymentHelper.getCanaryResourceName(name) && s.weight === "1000m") {
+                                        tl.debug('Update traffic objcet not required');
+                                        updateTrafficObject = false;
+                                    }
+                                })
+                            }
                         }
-                    }
-                    
-                    if (updateTrafficObject) {
-                        tl.debug('Stable service object present so updating the traffic object for service: ' + name);
-                        trafficObjectsList.push(updateTrafficSplitObject(name));
+
+                        if (updateTrafficObject) {
+                            tl.debug('Stable service object present so updating the traffic object for service: ' + name);
+                            trafficObjectsList.push(updateTrafficSplitObject(name));
+                        }
                     }
                 }
             }
@@ -152,7 +155,7 @@ function adjustTraffic(kubectl: Kubectl, manifestFilePaths: string[], stableWeig
     const inputManifestFiles: string[] = utils.getManifestFiles(manifestFilePaths);
 
     if (inputManifestFiles == null || inputManifestFiles.length == 0) {
-       return;
+        return;
     }
 
     const trafficSplitManifests = [];

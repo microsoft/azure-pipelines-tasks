@@ -17,36 +17,37 @@ export function deployPodCanary(kubectl: Kubectl, filePaths: string[]) {
     filePaths.forEach((filePath: string) => {
         const fileContents = fs.readFileSync(filePath);
         yaml.safeLoadAll(fileContents, function (inputObject) {
+            if (inputObject) {
+                const name = inputObject.metadata.name;
+                const kind = inputObject.kind;
+                if (helper.isDeploymentEntity(kind)) {
+                    tl.debug('Calculating replica count for canary');
+                    const canaryReplicaCount = calculateReplicaCountForCanary(inputObject, percentage);
+                    tl.debug('Replica count is ' + canaryReplicaCount);
 
-            const name = inputObject.metadata.name;
-            const kind = inputObject.kind;
-            if (helper.isDeploymentEntity(kind)) {
-                tl.debug('Calculating replica count for canary');
-                const canaryReplicaCount = calculateReplicaCountForCanary(inputObject, percentage);
-                tl.debug('Replica count is ' + canaryReplicaCount);
-
-                // Get stable object
-                tl.debug('Querying stable object');
-                const stableObject = canaryDeploymentHelper.fetchResource(kubectl, kind, name);
-                if (!stableObject) {
-                    tl.debug('Stable object not found. Creating only canary object');
-                    // If stable object not found, create canary deployment.
-                    const newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
-                    tl.debug('New canary object is: ' + JSON.stringify(newCanaryObject));
-                    newObjectsList.push(newCanaryObject);
+                    // Get stable object
+                    tl.debug('Querying stable object');
+                    const stableObject = canaryDeploymentHelper.fetchResource(kubectl, kind, name);
+                    if (!stableObject) {
+                        tl.debug('Stable object not found. Creating only canary object');
+                        // If stable object not found, create canary deployment.
+                        const newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
+                        tl.debug('New canary object is: ' + JSON.stringify(newCanaryObject));
+                        newObjectsList.push(newCanaryObject);
+                    } else {
+                        tl.debug('Stable object found. Creating canary and baseline objects');
+                        // If canary object not found, create canary and baseline object.
+                        const newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
+                        const newBaselineObject = canaryDeploymentHelper.getNewBaselineResource(stableObject, canaryReplicaCount);
+                        tl.debug('New canary object is: ' + JSON.stringify(newCanaryObject));
+                        tl.debug('New baseline object is: ' + JSON.stringify(newBaselineObject));
+                        newObjectsList.push(newCanaryObject);
+                        newObjectsList.push(newBaselineObject);
+                    }
                 } else {
-                    tl.debug('Stable object found. Creating canary and baseline objects');
-                    // If canary object not found, create canary and baseline object.
-                    const newCanaryObject = canaryDeploymentHelper.getNewCanaryResource(inputObject, canaryReplicaCount);
-                    const newBaselineObject = canaryDeploymentHelper.getNewBaselineResource(stableObject, canaryReplicaCount);
-                    tl.debug('New canary object is: ' + JSON.stringify(newCanaryObject));
-                    tl.debug('New baseline object is: ' + JSON.stringify(newBaselineObject));
-                    newObjectsList.push(newCanaryObject);
-                    newObjectsList.push(newBaselineObject);
+                    // Updating non deployment entity as it is.
+                    newObjectsList.push(inputObject);
                 }
-            } else {
-                // Updating non deployment entity as it is.
-                newObjectsList.push(inputObject);
             }
         });
     });

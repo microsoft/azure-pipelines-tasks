@@ -114,7 +114,7 @@ function appendStableVersionLabelToResource(files: string[], kubectl: Kubectl): 
                 const updatedObject = canaryDeploymentHelper.markResourceAsStable(inputObject);
                 newObjectsList.push(updatedObject);
             } else {
-                manifestFiles.push(filePath);
+                newObjectsList.push(inputObject);
             }
         });
     });
