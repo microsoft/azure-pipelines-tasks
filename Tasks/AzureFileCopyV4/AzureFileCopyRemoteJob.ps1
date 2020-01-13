@@ -4,8 +4,6 @@ $AzureFileCopyRemoteJob = {
         [string]$targetPath,
         [string]$containerSasToken,
         [string]$additionalArguments,
-        [string]$azCopyToolFileNamesString,
-        [string]$azCopyToolFileContentsString,
         [switch]$CleanTargetBeforeCopy,
         [switch]$EnableDetailedLogging
     )
@@ -23,70 +21,12 @@ $AzureFileCopyRemoteJob = {
         }
     }
 
-    function Write-LogsAndCleanup
-    {
-        [CmdletBinding()]
-        param(
-            [Nullable[bool]]$isLogsPresent,
-            [AllowEmptyString()][string]$logFilePath,
-            [AllowEmptyString()][string]$azCopyLocation
-        )
-        
-        # Print AzCopy.exe verbose logs
-        Get-AzCopyVerboseLogs -isLogsPresent $isLogsPresent -logFilePath $logFilePath -ErrorAction SilentlyContinue
-
-        # Delete AzCopy tool folder
-        Remove-AzCopyFolder -azCopyLocation $azCopyLocation -ErrorAction SilentlyContinue
-    }
-
-    function Get-AzCopyVerboseLogs
-    {
-        [CmdletBinding()]
-        param(
-            [bool]$isLogsPresent,
-            [string]$logFilePath
-        )
-
-        if($isLogsPresent)
-        {
-            Write-DetailLogs (Get-Content -Path $logFilePath | Out-String)
-        }
-    }
-
-    function Remove-AzCopyFolder
-    {
-        [CmdletBinding()]
-        param([string]$azCopyLocation)
-
-        $tempParentFolder = (Get-Item $azCopyLocation).Parent.FullName
-
-        Get-ChildItem -Path $azCopyLocation -Recurse -Force | Remove-Item -Force -Recurse
-        Remove-Item $azCopyLocation -Force
-        Remove-Item $tempParentFolder -Force
-    }
-
     try
     {
         $useDefaultArguments = ($additionalArguments -eq "")
-        
-        $azCopyToolFileNames = $azCopyToolFileNamesString.Split(";")
-        $azCopyToolFileContents = $azCopyToolFileContentsString.Split(";")
 
-        $randomFolderName = "AFC_" + [guid]::NewGuid()
-        $randomFolderPath = Join-Path -Path $env:windir -ChildPath "DtlDownloads\$randomFolderName"
-        $azCopyDestinationPath = Join-Path -Path $randomFolderPath -ChildPath "AzCopy"
-
-        Write-DetailLogs "Copying AzCopy tool files to location: $azCopyDestinationPath"
-        New-Item -ItemType Directory -Force -Path $azCopyDestinationPath
-
-        for($i=0; $i -lt $azCopyToolFileNames.Length; $i++)
-        {
-            $path = Join-Path -Path $azCopyDestinationPath -ChildPath $azCopyToolFileNames[$i]
-            $content = [Convert]::FromBase64String($azCopyToolFileContents[$i])
-            [System.IO.File]::WriteAllBytes($path, $content)
-        }
-
-        Write-DetailLogs "Copied AzCopy tool files"
+        #argument to check whether azcopy.exe needs to be downloaded on VM or it is already present on VM
+        $shouldDownload = $false
 
         if($CleanTargetBeforeCopy)
         {
@@ -97,30 +37,66 @@ $AzureFileCopyRemoteJob = {
             }
             else
             {
-                Write-DetailLogs "Folder at path $targtPath not found for cleanup."
+                Write-DetailLogs "Folder at path $targetPath not found for cleanup."
             }
         }
 
-        $azCopyExeLocation = Join-Path -Path $azCopyDestinationPath -ChildPath "AzCopy.exe"
+        try
+        {
+            $azCopyVersionCommand = azcopy --version
+            $azCopyVersion = $azCopyVersionCommand.split(' ')[2]
+            if($azCopyVersion -lt '10.3.3')
+            {
+                $shouldDownload = $true
+            }
+        }
+        catch
+        {
+            $shouldDownload = $true
+        }
 
-        $logFileName = "AzCopyVerbose_" + [guid]::NewGuid() + ".log"
-        $logFilePath = Join-Path -Path $azCopyDestinationPath -ChildPath $logFileName
+        if($shouldDownload)
+        {
+            try
+            {
+                $azCopyFolderName = "ADO_AzCopyV10"
+                $azCopyFolderPath = Join-Path -Path $env:systemdrive -ChildPath $azCopyFolderName
+                New-Item -ItemType Directory -Force -Path $azCopyFolderPath
+	
+		        $azCopyZipPath = Join-Path -Path $azCopyFolderPath -ChildPath "AzCopy.zip"
+
+                # Downloading AzCopy from URL and copying it in $azcopyZipPath
+                $webclient = New-Object System.Net.WebClient
+                $webclient.DownloadFile('https://vstsagenttools.blob.core.windows.net/tools/azcopy/10.3/AzCopy.zip',$azCopyZipPath)
+
+                #Unzipping the azcopy zip to $azcopyFolderPath
+                Expand-Archive $azCopyZipPath -DestinationPath $azCopyFolderPath
+
+				$azCopyFolderEnvPath = Join-Path -Path $azCopyFolderPath -ChildPath "AzCopy"
+
+                [Environment]::SetEnvironmentVariable("Path", $azCopyFolderEnvPath + ';' + $env:Path, [System.EnvironmentVariableTarget]::Machine)
+            }
+            catch
+            {
+                $exceptionMessage = $_.Exception.Message.ToString()
+                Write-Verbose "Failed while downloading: $exceptionMessage"
+                throw
+            }
+        }
 
         if($useDefaultArguments)
         {
             # Adding default optional arguments:
-            # /Z: Journal file Location
-            # /V: AzCopy verbose logs file location
-            # /S: Recursive copy
-            # /Y: Suppresses all AzCopy confirmation prompts
+            # log-level: Defines the log verbosity for the log file. Default is INFO(all requests/responses)
+            # recursive: Recursive copy
 
             Write-DetailLogs "Using default AzCopy arguments for dowloading to VM"
-            $additionalArguments = "/Z:`"$azCopyDestinationPath`" /V:`"$logFilePath`" /S /Y"
+            $additionalArguments = "--recursive --log-level=INFO"
         }
 
-        Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $additionalArguments"
+        Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $additionalArguments"
 
-        $azCopyCommand = "& `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" $additionalArguments"
+        $azCopyCommand = "& azcopy copy `"$containerURL$containerSasToken`" `"$targetPath`" $additionalArguments"
         Invoke-Expression $azCopyCommand
     }
     catch
@@ -130,6 +106,9 @@ $AzureFileCopyRemoteJob = {
     }
     finally
     {
-        Write-LogsAndCleanup -isLogsPresent $useDefaultArguments -logFilePath "$logFilePath" -azCopyLocation "$azCopyDestinationPath" -ErrorAction SilentlyContinue
+        #cleaning log and plan files of jobs
+        Write-Output "##[command] & azcopy jobs clean"
+        $cleanLogsCommand = "& azcopy jobs clean"
+        Invoke-Expression $cleanLogsCommand
     }
 }

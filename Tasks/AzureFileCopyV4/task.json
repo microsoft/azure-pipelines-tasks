@@ -20,15 +20,8 @@
     "demands": [
         "azureps"
     ],
-    "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp; Support Az Module and stop supporting Azure classic service endpoint.",
+    "releaseNotes": "What's new in Version 4.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.3.3",
     "minimumAgentVersion": "1.103.0",
-    "groups": [
-        {
-            "name": "output",
-            "displayName": "Output",
-            "isExpanded": true
-        }
-    ],
     "inputs": [
         {
             "name": "SourcePath",
