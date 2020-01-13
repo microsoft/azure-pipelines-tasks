@@ -38,8 +38,8 @@ interface Release {
     short_version: string;
 }
 
-type SymbolType = "Apple" | "AndroidProguard" | "UWP";
-
+type ApiSymbolType = "Apple" | "AndroidProguard" | "Breakpad" | "UWP";
+type TaskSymbolType = "Apple" | "Android" | "UWP";
 function getEndpointDetails(endpointInputFieldName) {
     var errorMessage = tl.loc("CannotDecodeEndpoint");
     var endpoint = tl.getInput(endpointInputFieldName, true);
@@ -296,11 +296,11 @@ function getBranchName(ref: string): string {
  * If the input is a single folder, zip it's content. The archive name is the folder's name
  * If the input is a set of folders or files, zip them so they appear on the root of the archive. The archive name is the parent folder's name.
  */
-function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> {
+function prepareSymbols(symbolsPaths: string[], forceArchive: boolean = false): Q.Promise<string> {
     tl.debug("-- Prepare symbols");
     let defer = Q.defer<string>();
 
-    if (symbolsPaths.length === 1 && fs.statSync(symbolsPaths[0]).isFile()) {
+    if (!forceArchive && symbolsPaths.length === 1 && fs.statSync(symbolsPaths[0]).isFile()) {
         tl.debug(`.. a single symbols file: ${symbolsPaths[0]}`)
 
         // single file - Android source mapping txt file
@@ -325,7 +325,7 @@ function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> {
     return defer.promise;
 }
 
-function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: SymbolType, token: string, userAgent: string, version?: string, build?: string): Q.Promise<SymbolsUploadInfo> {
+function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: ApiSymbolType, token: string, userAgent: string, version?: string, build?: string): Q.Promise<SymbolsUploadInfo> {
     tl.debug("-- Begin symbols upload")
     let defer = Q.defer<SymbolsUploadInfo>();
 
@@ -404,16 +404,16 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
 
     let symbolsPaths: string[] = [];
 
-    if (symbolsType === "Apple") {
+    if (symbolsType === "Apple" || symbolsType === "Breakpad") {
         // User can specifay a symbols path pattern that selects
-        // multiple dSYM folder paths for Apple application.
-        let dsymPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
+        // multiple symbols folder paths.
+        const symbolPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
 
         // Resolved paths can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
-        if (dsymPaths) {
-            dsymPaths.forEach(dsymFolder => {
-                if (dsymFolder) {
-                    let folderPath = utils.checkAndFixFilePath(dsymFolder, continueOnError);
+        if (symbolPaths) {
+            symbolPaths.forEach(symbolFolder => {
+                if (symbolFolder) {
+                    const folderPath = utils.checkAndFixFilePath(symbolFolder, continueOnError);
                     // The path can be null if continueIfSymbolsNotFound is true and the folder does not exist.
                     if (folderPath) {
                         symbolsPaths.push(folderPath);
@@ -468,23 +468,23 @@ async function run() {
         "Windows": "Windows 8.1",
         "UWP": "Universal Windows Platform (UWP)"
         */
-        const taskSymbolsType: string = tl.getInput('symbolsType', false);
-        const symbolsType = (taskSymbolsType === 'Android' ? 'AndroidProguard' : taskSymbolsType) as SymbolType;
-        let symbolVariableName = null;
-        switch (symbolsType) {
+        const symbolType: TaskSymbolType = tl.getInput('symbolsType', false) as TaskSymbolType;
+        const symbolsLookup: { symbolType: ApiSymbolType, fieldName: string, forceArchive?: boolean }[] = [];
+        switch (symbolType) {
             case "Apple":
-                symbolVariableName = "dsymPath";
+                symbolsLookup.push({ symbolType, fieldName: "dsymPath" });
                 break;
-            case "AndroidProguard":
-                symbolVariableName = "mappingTxtPath";
+            case "Android":
+                symbolsLookup.push({ symbolType: "AndroidProguard", fieldName: "mappingTxtPath" });
+                symbolsLookup.push({ symbolType: "Breakpad", fieldName: "nativeLibrariesPath", forceArchive: true });
                 break;
             case "UWP":
-                symbolVariableName = "appxsymPath";
+                symbolsLookup.push({ symbolType, fieldName: "appxsymPath" });
                 break;
             default:
-                symbolVariableName = "symbolsPath";
+                symbolsLookup.push({ symbolType, fieldName: "symbolsPath" });
         }
-        let symbolsPathPattern: string = tl.getInput(symbolVariableName, false);
+
         let buildVersion: string = tl.getInput('buildVersion', false);
         let packParentFolder: boolean = tl.getBoolInput('packParentFolder', false);
 
@@ -529,12 +529,6 @@ async function run() {
             continueIfSymbolsNotFound = true;
         }
 
-        // Expand symbols path pattern to a list of paths
-        let symbolsPaths = expandSymbolsPaths(symbolsType, symbolsPathPattern, continueIfSymbolsNotFound, packParentFolder);
-
-        // Prepare symbols
-        let symbolsFile = await prepareSymbols(symbolsPaths);
-
         // Begin release upload
         let uploadInfo: UploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent, buildVersion);
 
@@ -545,27 +539,37 @@ async function run() {
         let releaseId = await commitRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken, userAgent);
 
         await updateRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, releaseNotes, apiToken, userAgent);
-        
+
         await Q.all(destinationIds.map(destinationId => {
             return publishRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, destinationType, isMandatory, isSilent, destinationId, apiToken, userAgent);
         }));
 
-        if (symbolsFile) {
-            // Begin preparing upload symbols
-            let version: string;
-            let build: string;
-            if (symbolsType === "AndroidProguard") {
-                const release = await getRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, apiToken, userAgent);
-                version = release.short_version;
-                build = release.version;
+        for (const { fieldName, symbolType, forceArchive } of symbolsLookup) {
+            const symbolsPathPattern: string = tl.getInput(fieldName, false);
+
+            // Expand symbols path pattern to a list of paths
+            const symbolsPaths = expandSymbolsPaths(symbolType, symbolsPathPattern, continueIfSymbolsNotFound, packParentFolder);
+
+            // Prepare symbols
+            const symbolsFile = await prepareSymbols(symbolsPaths, forceArchive);
+
+            if (symbolsFile) {
+                // Begin preparing upload symbols
+                let version: string;
+                let build: string;
+                if (symbolType === "AndroidProguard") {
+                    const release = await getRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, apiToken, userAgent);
+                    version = release.short_version;
+                    build = release.version;
+                }
+                const symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolType, apiToken, userAgent, version, build);
+
+                // upload symbols
+                await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile);
+
+                // Commit the symbols upload
+                await commitSymbols(effectiveApiServer, effectiveApiVersion, appSlug, symbolsUploadInfo.symbol_upload_id, apiToken, userAgent);
             }
-            const symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolsType, apiToken, userAgent, version, build);
-
-            // upload symbols
-            await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile);
-
-            // Commit the symbols upload
-            await commitSymbols(effectiveApiServer, effectiveApiVersion, appSlug, symbolsUploadInfo.symbol_upload_id, apiToken, userAgent);
         }
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("Succeeded"));
