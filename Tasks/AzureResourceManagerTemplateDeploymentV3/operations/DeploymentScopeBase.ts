@@ -50,6 +50,11 @@ export class DeploymentScopeBase {
         if (this.deploymentParameters.properties["mode"] === "Validation") {
             return this.validateDeployment();
         } else {
+            try {
+                await this.validateDeployment();
+            } catch (error) {
+                tl.warning(tl.loc("TemplateValidationFailure", error));
+            }
             console.log(tl.loc("StartingDeployment"));
             return new Promise<void>((resolve, reject) => {
                 this.taskParameters.deploymentName = this.taskParameters.deploymentName || utils.createDeploymentName(this.taskParameters);
@@ -60,7 +65,11 @@ export class DeploymentScopeBase {
                             return this.waitAndPerformAzureDeployment(retryCount);
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);
-                        this.checkAndPrintPortalDeploymentURL(error);
+                        if(!!result && !!result.error) {
+                            this.checkAndPrintPortalDeploymentURL(result.error);
+                        } else if(!!error) {
+                            this.checkAndPrintPortalDeploymentURL(error);
+                        }
                         this.printServicePrincipalRoleAssignmentError(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
@@ -105,7 +114,10 @@ export class DeploymentScopeBase {
 
     protected checkAndPrintPortalDeploymentURL(error: any) {
         if((this.taskParameters.deploymentScope == "Resource Group" || this.taskParameters.deploymentScope == "Subscription") && (!!error && (error.statusCode < 400 || error.statusCode >= 500))) {
-            tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
+            let url = this.getAzurePortalDeploymentURL();
+            if(url != null) {
+                tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
+            }
         }
     }
 
@@ -124,7 +136,7 @@ export class DeploymentScopeBase {
             return portalUrl + subscriptionSpecificURL.replace(/\//g, '%2F');
         } catch (error) {
             tl.error(error);
-            return error;
+            return null;
         }
     }
 

@@ -52,6 +52,9 @@ rules:
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
 - valueFor: '**Enter Task Name**'
+  contains: 'PublishBuildArtifact'
+  addLabels: ['Area: CrossPlatform']
+- valueFor: '**Enter Task Name**'
   contains: 'Python'
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
@@ -72,6 +75,12 @@ rules:
   contains: 'AzureCli'
   addLabels: ['Area: Release']
   assign: ['bishal-pdmsft']
+- valueFor: '**Enter Task Name**'
+  contains: 'AzureResourceGroupDeployment'
+  addLabels: ['Area: Release']
+- valueFor: '**Enter Task Name**'
+  contains: 'FileTransform'
+  addLabels: ['Area: Release']
 - valueFor: '**Enter Task Name**'
   contains: 'ResourceGroup'
   addLabels: ['Area: Release']
@@ -262,6 +271,14 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'PublishPipelineArtifact'
   addLabels: ['Area: ArtifactsCore']
+- valueFor: '**Enter Task Name**'
+  contains: 'PublishSymbols'
+  addLabels: ['Area: ArtifactsCore']
+  
+# Area: Artifacts
+- valueFor: '**Enter Task Name**'
+  contains: 'Gulp'
+  addLabels: ['Area: Artifacts']
   
 # Area: CodeCoverage
 - valueFor: '**Enter Task Name**'

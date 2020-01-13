@@ -333,9 +333,18 @@ target.test = function() {
     var pattern1 = buildPath + '/' + taskType + '/Tests/' + suiteType + '.js';
     var pattern2 = buildPath + '/Common/' + taskType + '/Tests/' + suiteType + '.js';
     var pattern3 = buildTestsPath + '/' + suiteType + '.js';
-    var testsSpec = matchFind(pattern1, buildPath)
-        .concat(matchFind(pattern2, buildPath))
-        .concat(matchFind(pattern3, buildTestsPath, { noRecurse: true }));
+    
+    var testsSpec = [];
+	
+    if (matchFind(pattern1, buildPath).length > 0) {
+	testsSpec.push(pattern1);
+    }
+    if (matchFind(pattern2, buildPath).length > 0) {
+	testsSpec.push(pattern2);
+    }
+	
+    testsSpec.concat(matchFind(pattern3, buildTestsPath, { noRecurse: true }));
+
     if (!testsSpec.length && !process.env.TF_BUILD) {
         fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2, pattern3])}`);
     }
