@@ -21,7 +21,7 @@
         "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
-    "minimumAgentVersion": "3.0.0",
+    "minimumAgentVersion": "2.115.0",
     "showEnvironmentVariables": true,
     "groups": [
         {
