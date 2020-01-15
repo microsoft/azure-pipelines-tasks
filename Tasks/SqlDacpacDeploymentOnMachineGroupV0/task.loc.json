@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 20
+    "Patch": 21
   },
   "demands": [],
   "minimumAgentVersion": "1.102.0",
@@ -32,7 +32,8 @@
       "options": {
         "dacpac": "Sql Dacpac",
         "sqlQuery": "Sql Query File",
-        "sqlInline": "Inline Sql"
+        "sqlInline": "Inline Sql",
+        "sqlQueryWithPattern": "SQL Query Files with pattern"
       },
       "helpMarkDown": "ms-resource:loc.input.help.TaskType"
     },
@@ -55,11 +56,20 @@
       "helpMarkDown": "ms-resource:loc.input.help.SqlFile"
     },
     {
+      "name": "SqlPattern",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlPattern",
+      "required": true,
+      "visibleRule": "TaskType = sqlQueryWithPattern",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlPattern"
+    },
+    {
       "name": "ExecuteInTransaction",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.ExecuteInTransaction",
       "required": false,
-      "visibleRule": "TaskType = sqlQuery",
+      "visibleRule": "TaskType = sqlQuery || TaskType = sqlQueryWithPattern",
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.ExecuteInTransaction"
     },
@@ -114,7 +124,7 @@
       "label": "ms-resource:loc.input.label.ServerName",
       "required": true,
       "defaultValue": "localhost",
-      "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+      "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline || TaskType = sqlQueryWithPattern",
       "helpMarkDown": "ms-resource:loc.input.help.ServerName"
     },
     {
@@ -123,7 +133,7 @@
       "label": "ms-resource:loc.input.label.DatabaseName",
       "required": true,
       "defaultValue": "",
-      "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+      "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline || TaskType = sqlQueryWithPattern",
       "helpMarkDown": "ms-resource:loc.input.help.DatabaseName"
     },
     {
@@ -132,7 +142,7 @@
       "label": "ms-resource:loc.input.label.AuthScheme",
       "required": true,
       "defaultValue": "windowsAuthentication",
-      "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+      "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline || TaskType = sqlQueryWithPattern",
       "options": {
         "windowsAuthentication": "Windows Authentication",
         "sqlServerAuthentication": "SQL Server Authentication"
@@ -190,7 +200,7 @@
       "label": "ms-resource:loc.input.label.AdditionalArgumentsSql",
       "required": false,
       "defaultValue": "",
-      "visibleRule": "TaskType = sqlQuery || TaskType = sqlInline",
+      "visibleRule": "TaskType = sqlQuery || TaskType = sqlInline || TaskType = sqlQueryWithPattern",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArgumentsSql"
     }
   ],

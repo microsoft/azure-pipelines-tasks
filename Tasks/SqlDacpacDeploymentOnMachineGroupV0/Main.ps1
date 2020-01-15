@@ -42,6 +42,32 @@ function Get-SingleFile
     }
 }
 
+function Get-MultipleFiles
+{
+    param (
+        [string]$pattern
+    )
+
+    Write-Verbose "Finding files with pattern $pattern"
+    $files = Find-VstsFiles -LegacyPattern "$pattern"
+    Write-Verbose "Matched files = $files"
+
+    if ($files -is [system.array])
+    {
+        return $files
+    }
+    else
+    {
+        if (!$files)
+        {
+            throw (Get-VstsLocString -Key "Nofileswerefoundtodeploywithsearchpattern0" -ArgumentList $pattern)
+        }
+
+        # Always return array
+        return , $files
+    }
+}
+
 function New-SqlBatchFilesDestDirectory
 {
     param (
@@ -64,6 +90,7 @@ function New-SqlBatchFilesDestDirectory
 $taskType = Get-VstsInput -Name "TaskType" -Require
 $dacpacFile = Get-VstsInput -Name "dacpacFile"
 $sqlFiles = Get-VstsInput -Name "sqlFile" 
+$sqlPattern = Get-VstsInput -Name "SqlPattern"
 $executeInTransaction = Get-VstsInput -Name "ExecuteInTransaction" -AsBool
 $exclusiveLock = Get-VstsInput -Name "ExclusiveLock" -AsBool
 $appLockName = Get-VstsInput -Name "AppLockName" 
@@ -78,7 +105,6 @@ $connectionString = Get-VstsInput -Name "connectionString"
 $publishProfile = Get-VstsInput -Name "publishProfile"
 $additionalArguments = Get-VstsInput -Name "additionalArguments"
 $additionalArgumentsSql = Get-VstsInput -Name "additionalArgumentsSql"
-
 
 Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
 . "$PSScriptRoot\Utility.ps1"
@@ -113,7 +139,7 @@ Try
     }
     else
     {
-        if ($taskType -eq "sqlQuery")
+        if ($taskType -eq "sqlQuery" -or $taskType -eq "sqlQueryWithPattern")
         {
             if ($executeInTransaction)
             {
@@ -127,18 +153,32 @@ Try
                 New-SqlBatchFilesDestDirectory -directoryName $destPath
 
                 $sqlScriptsWithExpandedPath = ""
-                $sqlScriptFiles = $sqlFiles -split ";"
-                foreach ($sqlScript in $sqlScriptFiles) 
+                if ($taskType -eq "sqlQuery")
                 {
-                    $sqlScript = $sqlScript.Trim()
-                    if (-not [string]::IsNullOrEmpty($sqlScript)) 
+                    $sqlScriptFiles = $sqlFiles -split ";"
+                    foreach ($sqlScript in $sqlScriptFiles) 
                     {
-                        $sqlScript = Get-SingleFile -pattern $sqlScript
+                        $sqlScript = $sqlScript.Trim()
+                        if (-not [string]::IsNullOrEmpty($sqlScript)) 
+                        {
+                            $sqlScript = Get-SingleFile -pattern $sqlScript
+                            $batchFiles = Create-BatchFilesForSqlFile -sqlFilePath $sqlScript -destPath $destPath -batch $batch
+                            $sqlScriptsWithExpandedPath = $sqlScriptsWithExpandedPath + $batchFiles + "; "
+                            $batch = [int]$batch + 1
+                        }
+                    }
+                }
+                else
+                {
+                    $sqlScriptFiles = Get-MultipleFiles -pattern $sqlPattern
+                    foreach ($sqlScript in $sqlScriptFiles) 
+                    {
                         $batchFiles = Create-BatchFilesForSqlFile -sqlFilePath $sqlScript -destPath $destPath -batch $batch
                         $sqlScriptsWithExpandedPath = $sqlScriptsWithExpandedPath + $batchFiles + "; "
                         $batch = [int]$batch + 1
                     }
                 }
+
                 Write-Verbose "Executing sql scripts $sqlScriptsWithExpandedPath under transaction using app lock $appLockName"
                 Invoke-SqlScriptsInTransaction -serverName $serverName -databaseName $databaseName -appLockName $appLockName -sqlscriptFiles $sqlScriptsWithExpandedPath -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
 
@@ -154,13 +194,24 @@ Try
             } 
             else 
             {
-                $sqlScriptFiles = $sqlFiles -split ";"
-                foreach ($sqlScript in $sqlScriptFiles) 
+                if ($taskType -eq "sqlQuery")
                 {
-                    $sqlScript = $sqlScript.Trim()
-                    if (-not [string]::IsNullOrEmpty($sqlScript)) 
+                    $sqlScriptFiles = $sqlFiles -split ";"
+                    foreach ($sqlScript in $sqlScriptFiles) 
                     {
-                        $sqlScript = Get-SingleFile -pattern $sqlScript
+                        $sqlScript = $sqlScript.Trim()
+                        if (-not [string]::IsNullOrEmpty($sqlScript)) 
+                        {
+                            $sqlScript = Get-SingleFile -pattern $sqlScript
+                            Invoke-SqlQueryDeployment -taskType $taskType -sqlFile $sqlScript -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+                        }
+                    }
+                }
+                else
+                {
+                    $sqlScriptFiles = Get-MultipleFiles -pattern $sqlPattern
+                    foreach ($sqlScript in $sqlScriptFiles) 
+                    {
                         Invoke-SqlQueryDeployment -taskType $taskType -sqlFile $sqlScript -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
                     }
                 }

@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 20
+        "Patch": 21
     },
     "demands": [],
     "minimumAgentVersion": "1.102.0",
@@ -32,7 +32,8 @@
             "options": {
                 "dacpac": "Sql Dacpac",
                 "sqlQuery": "Sql Query File",
-                "sqlInline": "Inline Sql"
+                "sqlInline": "Inline Sql",
+                "sqlQueryWithPattern": "SQL Query Files with pattern"
             },
             "helpMarkDown": "Specify the way in which you want to deploy DB, either by using Dacpac or by using Sql Script."
         },
@@ -55,11 +56,20 @@
             "helpMarkDown": "Location of the SQL file on the target. Provide semi-colon separated list of SQL script files to execute multiple files. The SQL scripts will be executed in the order given. Location can also be a UNC path like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported, like $env:windir, $env:systemroot, $env:windir\\FabrikamFibre\\DB. Wildcards can be used. For example, `**/*.sql` for sql file present in all sub folders."
         },
         {
+            "name": "SqlPattern",
+            "type": "string",
+            "label": "Sql Files pattern",
+            "required": true,
+            "visibleRule": "TaskType = sqlQueryWithPattern",
+            "defaultValue": "",
+            "helpMarkDown": "One pattern to locate the SQL files. The SQL files will be executed in the order of full path by name. For example, `**/*.sql` for SQL files present in all sub folders."
+        },
+        {
             "name": "ExecuteInTransaction",
             "type": "boolean",
             "label": "Execute within a transaction",
             "required": false,
-            "visibleRule": "TaskType = sqlQuery",
+            "visibleRule": "TaskType = sqlQuery || TaskType = sqlQueryWithPattern",
             "defaultValue": "false",
             "helpMarkDown": "Executes SQL script(s) within a transaction"
         },
@@ -114,7 +124,7 @@
             "label": "Server Name",
             "required": true,
             "defaultValue": "localhost",
-            "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+            "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline || TaskType = sqlQueryWithPattern",
             "helpMarkDown": "Provide the SQL Server name like, machinename\\FabriakmSQL,1433 or localhost or .\\SQL2012R2. Specifying localhost will connect to the Default SQL Server instance on the machine."
         },
         {
@@ -123,7 +133,7 @@
             "label": "Database Name",
             "required": true,
             "defaultValue": "",
-            "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+            "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline || TaskType = sqlQueryWithPattern",
             "helpMarkDown": "Provide the name of the SQL Server database."
         },
         {
@@ -132,7 +142,7 @@
             "label": "Authentication",
             "required": true,
             "defaultValue": "windowsAuthentication",
-            "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+            "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline || TaskType = sqlQueryWithPattern",
             "options": {
                 "windowsAuthentication": "Windows Authentication",
                 "sqlServerAuthentication": "SQL Server Authentication"
@@ -190,7 +200,7 @@
             "label": "Additional Arguments",
             "required": false,
             "defaultValue": "",
-            "visibleRule": "TaskType = sqlQuery || TaskType = sqlInline",
+            "visibleRule": "TaskType = sqlQuery || TaskType = sqlInline || TaskType = sqlQueryWithPattern",
             "helpMarkDown": "Additional Invoke-Sqlcmd arguments that will be applied when deploying the SQL Server database."
         }
     ],

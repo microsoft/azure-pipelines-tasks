@@ -9,6 +9,8 @@
   "loc.input.help.DacpacFile": "Location of the DACPAC file on the target machines or on a UNC path like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported, like $env:windir, $env:systemroot, $env:windir\\FabrikamFibre\\DB. Wildcards can be used. For example, `**/*.dacpac` for DACPAC file present in all sub folders.",
   "loc.input.label.SqlFile": "Sql File",
   "loc.input.help.SqlFile": "Location of the SQL file on the target. Provide semi-colon separated list of SQL script files to execute multiple files. The SQL scripts will be executed in the order given. Location can also be a UNC path like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported, like $env:windir, $env:systemroot, $env:windir\\FabrikamFibre\\DB. Wildcards can be used. For example, `**/*.sql` for sql file present in all sub folders.",
+  "loc.input.label.SqlPattern": "Sql Files pattern",
+  "loc.input.help.SqlPattern": "One pattern to locate the SQL files. The SQL files will be executed in the order of full path by name. For example, `**/*.sql` for SQL files present in all sub folders.",
   "loc.input.label.ExecuteInTransaction": "Execute within a transaction",
   "loc.input.help.ExecuteInTransaction": "Executes SQL script(s) within a transaction",
   "loc.input.label.ExclusiveLock": "Acquire an exclusive app lock while executing script(s)",
