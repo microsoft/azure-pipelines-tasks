@@ -24,7 +24,7 @@ export async function patch(ignoreSslErrors?: boolean) {
     const resources = kubectl.getResources(result.stdout, ['deployment', 'replicaset', 'daemonset', 'pod', 'statefulset']);
 
     resources.forEach(resource => {
-        utils.checkForErrors([kubectl.checkRolloutStatus(resource.type, resource.name, TaskParameters.timeout)]);
+        utils.checkForErrors([kubectl.checkRolloutStatus(resource.type, resource.name, TaskParameters.rolloutStatusTimeout)]);
         utils.checkForErrors([kubectl.annotate(resource.type, resource.name, constants.pipelineAnnotations, true)]);
         utils.checkForErrors(utils.annotateChildPods(kubectl, resource.type, resource.name, JSON.parse((kubectl.getAllPods()).stdout)));
     });
