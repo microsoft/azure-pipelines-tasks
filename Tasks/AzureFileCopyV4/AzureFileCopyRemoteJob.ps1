@@ -45,7 +45,7 @@ $AzureFileCopyRemoteJob = {
         {
             $azCopyVersionCommand = azcopy --version
             $azCopyVersion = $azCopyVersionCommand.split(' ')[2]
-            if($azCopyVersion -lt '10.3.3')
+            if([version]$azCopyVersion -lt [version]"10.3.3")
             {
                 $shouldDownload = $true
             }
@@ -78,8 +78,7 @@ $AzureFileCopyRemoteJob = {
             catch
             {
                 $exceptionMessage = $_.Exception.Message.ToString()
-                Write-Verbose "Failed while downloading: $exceptionMessage"
-                throw
+                throw "Failed while downloading azcopy.exe from the URL with exception $exceptionMessage. Please download azcopy.exe 10.3.3 and set this extracted path in env:Path"
             }
         }
 

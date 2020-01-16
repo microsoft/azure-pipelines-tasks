@@ -237,11 +237,6 @@
         }
     ],
     "instanceNameFormat": "$(Destination) File Copy",
-    "prejobexecution": {
-        "Node": {
-            "target": "PreJobExecutionAzureFileCopy.js"
-        }
-    },
     "execution": {
         "PowerShell3": {
             "target": "AzureFileCopy.ps1"
