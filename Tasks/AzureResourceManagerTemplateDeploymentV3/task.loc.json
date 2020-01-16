@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 17
+    "Patch": 18
   },
   "preview": "true",
   "demands": [],
@@ -304,8 +304,8 @@
     "ServicePrincipalRoleAssignmentDetails": "ms-resource:loc.messages.ServicePrincipalRoleAssignmentDetails",
     "ServicePrincipalFetchFailed": "ms-resource:loc.messages.ServicePrincipalFetchFailed",
     "FindMoreDeploymentDetailsAzurePortal": "ms-resource:loc.messages.FindMoreDeploymentDetailsAzurePortal",
-    "TemplateValidationFailure": "ms-resource:loc.messages.TemplateValidationFailure",
     "ManagedServiceIdentityDetails": "ms-resource:loc.messages.ManagedServiceIdentityDetails",
-    "CompleteDeploymentModeNotSupported": "ms-resource:loc.messages.CompleteDeploymentModeNotSupported"
+    "CompleteDeploymentModeNotSupported": "ms-resource:loc.messages.CompleteDeploymentModeNotSupported",
+    "TemplateValidationFailure": "ms-resource:loc.messages.TemplateValidationFailure"
   }
 }
