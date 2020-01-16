@@ -62,8 +62,7 @@ $AzureFileCopyRemoteJob = {
                 $azCopyFolderName = "ADO_AzCopyV10"
                 $azCopyFolderPath = Join-Path -Path $env:systemdrive -ChildPath $azCopyFolderName
                 New-Item -ItemType Directory -Force -Path $azCopyFolderPath
-                
-                $azCopyZipPath = Join-Path -Path $azCopyFolderPath -ChildPath "AzCopy.zip"
+				$azCopyZipPath = Join-Path -Path $azCopyFolderPath -ChildPath "AzCopy.zip"
 
                 # Downloading AzCopy from URL and copying it in $azcopyZipPath
                 $webclient = New-Object System.Net.WebClient
@@ -71,8 +70,8 @@ $AzureFileCopyRemoteJob = {
 
                 #Unzipping the azcopy zip to $azcopyFolderPath
                 Expand-Archive $azCopyZipPath -DestinationPath $azCopyFolderPath
-                
-                $azCopyFolderEnvPath = Join-Path -Path $azCopyFolderPath -ChildPath "AzCopy"
+				
+				$azCopyFolderEnvPath = Join-Path -Path $azCopyFolderPath -ChildPath "AzCopy"
 
                 [Environment]::SetEnvironmentVariable("Path", $azCopyFolderEnvPath + ';' + $env:Path, [System.EnvironmentVariableTarget]::Machine)
             }
