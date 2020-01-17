@@ -1,6 +1,5 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import * as fs from "fs";
-import * as ltx from "ltx";
 
 import * as auth from "./Authentication";
 import { INuGetXmlHelper } from "./INuGetXmlHelper";
@@ -28,7 +27,8 @@ export class NuGetExeXmlHelper implements INuGetXmlHelper {
         nugetTool.arg(this._nugetConfigPath);
 
         let updatePassword = false;
-        const tempPassword = '***redacted***';
+        // adding a random guid to the password to reduce the possibility of it appearing anywhere else in the nuget.config file.
+        const tempPassword = 'password-733b11bd-d341-40d8-afcf-b32d5ce6f23a';
         if (username || password) {
             if (!username || !password) {
                 tl.debug('Adding NuGet source with username and password, but one of them is missing.');
@@ -40,6 +40,7 @@ export class NuGetExeXmlHelper implements INuGetXmlHelper {
             nugetTool.arg("-Password");
             nugetTool.arg(tempPassword);
             // temp password must be stored in clear text so that it can be found and replaced
+            // temp password is needed because we don't want to call nuget with a real token
             nugetTool.arg("-StorePasswordInClearText");
             updatePassword = true;
         }
@@ -58,8 +59,7 @@ export class NuGetExeXmlHelper implements INuGetXmlHelper {
 
             xmlString = xmlString.replace(tempPassword, password);
 
-            const xml = ltx.parse(xmlString);
-            fs.writeFileSync(this._nugetConfigPath, xml.root().toString());
+            fs.writeFileSync(this._nugetConfigPath, xmlString);
             tl.debug('Successfully updated tempNuget.config');
         }
     }
