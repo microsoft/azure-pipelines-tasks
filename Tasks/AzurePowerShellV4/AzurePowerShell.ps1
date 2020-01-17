@@ -13,6 +13,7 @@ $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
 $input_pwsh = Get-VstsInput -Name pwsh -AsBool
 $input_workingDirectory = Get-VstsInput -Name workingDirectory -Require
 
+Write-Host "## Stage 1: Input Validation"
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
 if ($scriptType -eq "FilePath") {
@@ -45,7 +46,9 @@ if ($targetAzurePs -eq $latestVersion) {
 } elseif (-not($regex.IsMatch($targetAzurePs))) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
+Write-Host "## Stage 1: Input Validation Complete" 
 
+Write-Host "## Stage 2: Initialize Azure"
 . "$PSScriptRoot\Utility.ps1"
 
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
@@ -53,12 +56,28 @@ $endpoint = Get-VstsEndpoint -Name $serviceName -Require
 CleanUp-PSModulePathForHostedAgent
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
 
+# troubleshoot link
+$troubleshoot = "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-powershell?view=azure-devops#troubleshooting"
+$status = $true
 try 
 {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs
-    
+    Write-Host "## Stage 2: Initialize Azure Complete"
+}
+catch {
+    $status = $false
+    throw
+}
+finally {
+    if (!$status) {
+        Write-Host "## Initialize Azure failed: For troubleshooting, refer: $troubleshoot"
+    }
+}
+
+Write-Host "## Stage 3: Running script"
+try {
     if ($input_pwsh)
     {
             # Generate the script contents.
@@ -248,3 +267,4 @@ finally {
     Remove-EndpointSecrets
     Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue
 }
+Write-Host "## Stage 3: Running script Complete"
