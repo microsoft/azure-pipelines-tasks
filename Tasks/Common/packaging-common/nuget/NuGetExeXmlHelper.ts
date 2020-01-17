@@ -3,10 +3,8 @@ import * as fs from "fs";
 import * as ltx from "ltx";
 
 import * as auth from "./Authentication";
-import * as CommandHelper from "./CommandHelper";
 import { INuGetXmlHelper } from "./INuGetXmlHelper";
 import * as ngToolRunner from './NuGetToolRunner2';
-import * as nutil from "./Utility";
 
 export class NuGetExeXmlHelper implements INuGetXmlHelper {
     constructor(
@@ -41,12 +39,9 @@ export class NuGetExeXmlHelper implements INuGetXmlHelper {
             nugetTool.arg(username);
             nugetTool.arg("-Password");
             nugetTool.arg(tempPassword);
+            // temp password must be stored in clear text so that it can be found and replaced
+            nugetTool.arg("-StorePasswordInClearText");
             updatePassword = true;
-
-            if (!CommandHelper.isWindowsAgent()) {
-                // only Windows supports DPAPI. Older NuGets fail to add credentials at all if DPAPI fails.
-                nugetTool.arg("-StorePasswordInClearText");
-            }
         }
 
         // short run, use execSync
@@ -61,7 +56,7 @@ export class NuGetExeXmlHelper implements INuGetXmlHelper {
                 xmlString = xmlString.substr(1);
             }
 
-            xmlString.replace(tempPassword, password);
+            xmlString = xmlString.replace(tempPassword, password);
 
             const xml = ltx.parse(xmlString);
             fs.writeFileSync(this._nugetConfigPath, xml.root().toString());
