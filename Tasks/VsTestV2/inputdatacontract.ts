@@ -18,6 +18,7 @@ export interface InputDataContract {
     ExecutionSettings : ExecutionSettings;
     Logging : Logging;
     SourcesDirectory : string;
+    ServerType : string;
 }
 
 export interface TestReportingSettings {

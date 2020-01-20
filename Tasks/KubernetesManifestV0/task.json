@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 163,
+        "Minor": 164,
         "Patch": 1
     },
     "demands": [],
@@ -326,7 +326,7 @@
             "visibleRule": "action = createSecret && secretType = dockerRegistry"
         },
         {
-            "name": "timeout",
+            "name": "rolloutStatusTimeout",
             "type": "string",
             "label": "Timeout for rollout status",
             "defaultValue": "0",
@@ -335,7 +335,7 @@
             "visibleRule": "action = deploy || action = patch || action = scale || action = promote",
             "validation": {
                 "expression": "isMatch(value, '(^\\d*$)','Multiline')",
-                "message": "Enter valid a value for timeout."
+                "message": "Enter a valid value for timeout."
             }
         }
     ],
@@ -377,6 +377,8 @@
         "StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment.",
         "InvalidPercentage": "Invalid value for percentage.",
         "InvalidBaselineAndCanaryReplicas": "Invalid value for replica count. Enter a value greater than 0.",
-        "InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number."
+        "InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number.",
+        "RolloutStatusTimedout": "Rollout status check failed.",
+        "EnvironmentLink": "For more information, go to %s"
     }
 }

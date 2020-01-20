@@ -136,7 +136,7 @@ export class ServiceClient {
             }
 
             if(!!httpResponse.headers[CorrelationIdInResponse]) {
-                tl.debug(tl.loc('CorrelationIdForARM', httpResponse.headers[CorrelationIdInResponse]));
+                tl.debug(`Correlation ID from ARM api call response : ${httpResponse.headers[CorrelationIdInResponse]}`);
             }
         } catch(exception) {
             let exceptionString: string = exception.toString();
