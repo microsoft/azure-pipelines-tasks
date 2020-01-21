@@ -79,6 +79,9 @@ rules:
   addLabels: ['Area: Release']
   assign: ['bishal-pdmsft']
 - valueFor: '**Enter Task Name**'
+  contains: 'ACRTask'
+  addLabels: ['Area: Release']
+- valueFor: '**Enter Task Name**'
   contains: 'AzureResourceGroupDeployment'
   addLabels: ['Area: Release']
 - valueFor: '**Enter Task Name**'
