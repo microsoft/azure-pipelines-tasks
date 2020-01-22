@@ -47,6 +47,10 @@ rules:
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
 - valueFor: '**Enter Task Name**'
+  contains: 'CocoaPods'
+  addLabels: ['Area: CrossPlatform']
+  assign: ['leantk']
+- valueFor: '**Enter Task Name**'
   contains: 'Gradle'
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
