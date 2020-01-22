@@ -242,11 +242,6 @@ function Upload-FilesToAzureContainer
     }
     finally
     {
-        #cleaning log and plan files of jobs
-        Write-Output "##[command] & `"$azCopyExeLocation`" jobs clean"
-        $cleanLogsCommand = "& `"$azCopyExeLocation`" jobs clean"
-        Invoke-Expression $cleanLogsCommand
-
         #azcopy logout to remove all credentials
         Write-Output "##[command] & `"$azCopyExeLocation`" logout"
         $command = "& `"$azCopyExeLocation`" logout"

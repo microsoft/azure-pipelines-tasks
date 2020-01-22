@@ -102,11 +102,4 @@ $AzureFileCopyRemoteJob = {
         Write-Verbose "AzureFileCopyRemoteJob threw exception"
         throw
     }
-    finally
-    {
-        #cleaning log and plan files of jobs
-        Write-Output "##[command] & azcopy jobs clean"
-        $cleanLogsCommand = "& azcopy jobs clean"
-        Invoke-Expression $cleanLogsCommand
-    }
 }
