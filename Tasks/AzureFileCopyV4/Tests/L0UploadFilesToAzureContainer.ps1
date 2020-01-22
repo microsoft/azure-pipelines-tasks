@@ -44,4 +44,4 @@ $LASTEXITCODE = 0
 Upload-FilesToAzureContainer -sourcePath $validInputSourcePath -endPoint $spnEndpoint -storageAccountName $validInputStorageAccount -containerName $validInputContainerName `
                              -blobPrefix $validInputBlobPrefix -azCopyLocation $validAzCopyLocation -destinationType $validInputAzureBlobDestinationType
 
-Assert-WasCalled Invoke-Expression -Times 4
+Assert-WasCalled Invoke-Expression -Times 3
