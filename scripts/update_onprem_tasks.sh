@@ -16,7 +16,7 @@ declare -r LOG_DEBUG_COLOR="\033[1;34m"
 declare -r LOG_DEFAULT_COLOR="\033[0m"
 declare -r LOG_SUCCESS_COLOR="\033[1;32m"
 
-declare -Ar AUTH_TASKS=([0]="MavenAuthenticateV0" [1]="NpmAuthenticateV0" [2]="PipAuthenticateV1" [3]="TwineAuthenticateV1" [4]="NuGetAuthenticateV1")
+declare -Ar AUTH_TASKS=([0]="MavenAuthenticateV0" [1]="npmAuthenticateV0" [2]="PipAuthenticateV1" [3]="TwineAuthenticateV1" [4]="NuGetAuthenticateV0")
 declare -Ar LOG_LEVELS=([0]="ERROR" [1]="WARNING" [2]="INFO" [3]="DEBUG")
 
 log() {
@@ -138,12 +138,22 @@ npm install >/dev/null 2>&1
 log_success "Ok\n"
 
 
-log_info "\nBuilding and uploading tasks.\n"
+log_info "\nBuilding and uploading tasks...\n"
+tfx login --service-url ${COLLECTION_URL} --token ${TOKEN} >/dev/null 2>&1
 for task in "${AUTH_TASKS[@]}"; do
-    log_info "  Processing task ${task}: "
-    node make.js build --task ${task} >/dev/null 2>&1
-    tfx build tasks upload --overwrite --task-path ./_build/Tasks/${task} --service-url ${COLLECTION_URL}  --token ${TOKEN} 
-    log_success "Done\n"
+    log_info "  ${task}: "
+    # Check if the task is already installed on the instance.
+    current_onprem_version=`tfx build tasks list --json | jq ".[] | select(.name==\"${task%??}\").version | \"\(.major).\(.minor).\(.patch)\""`
+    current_built_version=`cat Tasks/${task}/task.loc.json  | jq '.version | "\(.Major).\(.Minor).\(.Patch)"'`
+    lowest_version=`printf "${current_onprem_version}\n${current_built_version}" | sort -V | head -1`
+    
+    if [  "${lowest_version}" == "${current_built_version}" ]; then
+        log_warning "Skipped\n"
+    else
+        node make.js build --task ${task} 
+        tfx build tasks upload --task-path ./_build/Tasks/${task} 
+        log_success "Done\n"
+    fi
 done
 
 # Get list of tasks from TFS and verify they were updated.
