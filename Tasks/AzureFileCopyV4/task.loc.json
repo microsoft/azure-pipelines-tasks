@@ -12,22 +12,16 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 3,
-    "Minor": 154,
-    "Patch": 20
+    "Major": 4,
+    "Minor": 164,
+    "Patch": 0
   },
+  "preview": true,
   "demands": [
     "azureps"
   ],
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "1.103.0",
-  "groups": [
-    {
-      "name": "output",
-      "displayName": "ms-resource:loc.group.displayName.output",
-      "isExpanded": true
-    }
-  ],
   "inputs": [
     {
       "name": "SourcePath",
@@ -174,6 +168,15 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
+      "name": "sasTokenTimeOutInMinutes",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sasTokenTimeOutInMinutes",
+      "defaultValue": "240",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sasTokenTimeOutInMinutes",
+      "visibleRule": "Destination = AzureBlob"
+    },
+    {
       "name": "enableCopyPrerequisites",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.enableCopyPrerequisites",
@@ -208,32 +211,16 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.skipCACheck",
       "visibleRule": "Destination = AzureVMs"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "StorageContainerUri",
+      "description": "Uri of the container where the files were copied to. Valid only when the selected destination is Azure Blob."
     },
     {
-      "name": "outputStorageUri",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.outputStorageUri",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "output",
-      "helpMarkDown": "ms-resource:loc.input.help.outputStorageUri"
-    },
-    {
-      "name": "outputStorageContainerSasToken",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.outputStorageContainerSasToken",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "output",
-      "helpMarkDown": "ms-resource:loc.input.help.outputStorageContainerSasToken"
-    },
-    {
-      "name": "sasTokenTimeOutInMinutes",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sasTokenTimeOutInMinutes",
-      "required": false,
-      "groupName": "output",
-      "helpMarkDown": "ms-resource:loc.input.help.sasTokenTimeOutInMinutes"
+      "name": "StorageContainerSasToken",
+      "description": "SasToken for the container where the files were copied to. Valid only when the selected destination is Azure Blob."
     }
   ],
   "dataSourceBindings": [
@@ -250,11 +237,6 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "prejobexecution": {
-    "Node": {
-      "target": "PreJobExecutionAzureFileCopy.js"
-    }
-  },
   "execution": {
     "PowerShell3": {
       "target": "AzureFileCopy.ps1"
@@ -306,6 +288,8 @@
     "AFC_AzCopyBlobUploadNonZeroExitCode": "ms-resource:loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode",
     "AFC_PreexecutionJob_UnableToGetStorageKey": "ms-resource:loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey",
     "AFC_UninstallWinRMCustomScriptExtension": "ms-resource:loc.messages.AFC_UninstallWinRMCustomScriptExtension",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "UnsupportedAuthScheme": "ms-resource:loc.messages.UnsupportedAuthScheme",
+    "ServicePrincipalError": "ms-resource:loc.messages.ServicePrincipalError"
   }
 }
