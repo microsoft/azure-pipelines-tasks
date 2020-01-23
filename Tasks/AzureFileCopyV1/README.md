@@ -75,7 +75,7 @@ The parameters of the task are described in details, including examples, to show
 
 * **Storage Account**: The name of an existing storage account in the Azure Subscription specified earlier.
 
-* **Destination**: The target for copying the files and is either an Azure blob or VMs. The section below details the parameters that need to be filled-out if the target is Azure VMs.
+* **Destination**: The target for copying the files is either an Azure blob or VMs. The section below details the parameters that need to be filled-out if the target is Azure VMs.
 
  * **Resource Group**: Name of the resource group that contains the Azure VMs.
 
