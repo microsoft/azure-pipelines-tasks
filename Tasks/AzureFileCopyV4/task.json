@@ -12,22 +12,16 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 3,
-        "Minor": 154,
-        "Patch": 20
+        "Major": 4,
+        "Minor": 165,
+        "Patch": 0
     },
+    "preview": true,
     "demands": [
         "azureps"
     ],
-    "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp; Support Az Module and stop supporting Azure classic service endpoint.",
+    "releaseNotes": "What's new in Version 4.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.3.3",
     "minimumAgentVersion": "1.103.0",
-    "groups": [
-        {
-            "name": "output",
-            "displayName": "Output",
-            "isExpanded": true
-        }
-    ],
     "inputs": [
         {
             "name": "SourcePath",
@@ -35,7 +29,7 @@
             "label": "Source",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Absolute path of the source folder, or file on the local machine, or a UNC share. Expression should return a single folder or a file."
+            "helpMarkDown": "Absolute path of the source folder, or file on the local machine, or a UNC share. Expression should return a single folder or a file. Wild card symbol (*) is supported anywhere in the file path or file name."
         },
         {
             "name": "ConnectedServiceNameARM",
@@ -162,7 +156,7 @@
             "label": "Optional Arguments (for uploading files to blob)",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Optional AzCopy.exe arguments that will be applied when uploading to blob like, /NC:10. If no optional arguments are specified here, the following optional arguments will be added by default.<br> /Y, /SetContentType, /Z, /V,<br> /S (only if container name is not $root),<br> /BlobType:page (only if specified storage account is a premium account).<br> If source path is a file, /Pattern will always be added irrespective of whether or not you have specified optional arguments."
+            "helpMarkDown": "Optional AzCopy.exe arguments that will be applied when uploading to blob like, --check-length=true. If no optional arguments are specified here, the following optional arguments will be added by default.<br> --log-level=INFO (if the pipeline is running in debug mode set --log-level=DEBUG),<br> --recursive (only if container name is not $root),<br> --blob-type=PageBlob (only if specified storage account is a premium account)."
         },
         {
             "name": "AdditionalArgumentsForVMCopy",
@@ -170,8 +164,17 @@
             "label": "Optional Arguments (for downloading files to VM)",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Optional AzCopy.exe arguments that will be applied when downloading to VM like, /NC:10. If no optional arguments are specified here, the following optional arguments will be added by default.<br> /Y, /S, /Z, /V",
+            "helpMarkDown": "Optional AzCopy.exe arguments that will be applied when downloading to VM like,  --check-length=true. If no optional arguments are specified here, the following optional arguments will be added by default.<br> --log-level=INFO (if the pipeline is running in debug mode set --log-level=DEBUG),<br> --recursive",
             "visibleRule": "Destination = AzureVMs"
+        },
+        {
+            "name": "sasTokenTimeOutInMinutes",
+            "type": "string",
+            "label": "SAS Token Expiration Period In Minutes",
+            "defaultValue": "240",
+            "required": false,
+            "helpMarkDown": "Provide the time in minutes after which SAS token for the container will expire. By default, this token expires after 4 hours.",
+            "visibleRule": "Destination = AzureBlob"
         },
         {
             "name": "enableCopyPrerequisites",
@@ -208,32 +211,16 @@
             "required": false,
             "helpMarkDown": "If this option is selected, client skips the validation that the server certificate is signed by a trusted certificate authority (CA) when connecting over Hypertext Transfer Protocol over Secure Socket Layer (HTTPS).",
             "visibleRule": "Destination = AzureVMs"
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "StorageContainerUri",
+            "description": "Uri of the container where the files were copied to. Valid only when the selected destination is Azure Blob."
         },
         {
-            "name": "outputStorageUri",
-            "type": "string",
-            "label": "Storage Container URI",
-            "required": false,
-            "defaultValue": "",
-            "groupName": "output",
-            "helpMarkDown": "Provide a name for the variable for the storage container URI that the files were copied to with this task.  Valid only when the selected destination is Azure Blob."
-        },
-        {
-            "name": "outputStorageContainerSasToken",
-            "type": "string",
-            "label": "Storage Container SAS Token",
-            "required": false,
-            "defaultValue": "",
-            "groupName": "output",
-            "helpMarkDown": "Provide a name for the variable for the storage container SAS Token used to access the files copied to with this task.  Valid only when the selected destination is Azure Blob."
-        },
-        {
-            "name": "sasTokenTimeOutInMinutes",
-            "type": "string",
-            "label": "SAS Token Expiration Period In Minutes",
-            "required": false,
-            "groupName": "output",
-            "helpMarkDown": "Provide the time in minutes after which SAS token will expire. Valid only when the selected destination is Azure Blob."
+            "name": "StorageContainerSasToken",
+            "description": "SasToken for the container where the files were copied to. Valid only when the selected destination is Azure Blob."
         }
     ],
     "dataSourceBindings": [
@@ -250,11 +237,6 @@
         }
     ],
     "instanceNameFormat": "$(Destination) File Copy",
-    "prejobexecution": {
-        "Node": {
-            "target": "PreJobExecutionAzureFileCopy.js"
-        }
-    },
     "execution": {
         "PowerShell3": {
             "target": "AzureFileCopy.ps1"
@@ -306,6 +288,8 @@
         "AFC_AzCopyBlobUploadNonZeroExitCode": "AzCopy.exe exited with non-zero exit code while uploading files to blob storage.",
         "AFC_PreexecutionJob_UnableToGetStorageKey": "Unable to fetch storage account key. Error: '{0}'",
         "AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment.",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "UnsupportedAuthScheme": "Unsupported authentication scheme '{0}' for endpoint.",
+        "ServicePrincipalError": "There was an error with the service principal used for the deployment."
     }
 }
