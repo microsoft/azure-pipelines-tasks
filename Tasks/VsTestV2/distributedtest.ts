@@ -94,7 +94,7 @@ export class DistributedTest {
             console.log(tl.loc('UserProvidedSourceFilter', sourceFilter.toString()));
 
             if (this.inputDataContract.TestSelectionSettings.TestSelectionType.toLowerCase() !== 'testassemblies') {
-                sourceFilter = ['**\\*', '!**\\obj\\*'];
+                sourceFilter = ['**\\*', '!**\\obj\\**'];
             }
             const telemetryProps: { [key: string]: any; } = { MiniMatchLines: sourceFilter.length };
             telemetryProps.ExecutionFlow = 'Distributed';
