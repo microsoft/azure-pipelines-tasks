@@ -137,7 +137,7 @@ export class Kubectl {
         const outputLines = applyOutput.split('\n');
         const results = [];
         outputLines.forEach(line => {
-            if (line) {
+            if (line && line.trim().length > 0) {
                 const words = line.split(' ');
                 const resourceInfo = words[0].trim().split('/');
                 const resourceType = resourceInfo[0];
