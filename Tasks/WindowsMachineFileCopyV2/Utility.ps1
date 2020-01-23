@@ -55,3 +55,17 @@ function Copy-OnLocalMachine(
     $credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $adminUserName, $adminPassword
     Invoke-Command -ScriptBlock $CopyJob -ArgumentList "", $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments
 }
+
+function Try-CleanupPSDrive (
+	[string] $path
+	)
+{
+	try {
+		Write-Verbose "[command] cmd.exe /c net use /delete `"$path`" `"2>NUL`""
+		cmd.exe /c net use /delete "$path" "2>NUL"
+	}
+	catch {
+		#Ignore the error if any
+		Write-Verbose "Unable to remove path: $path. Ignoring error message: $($_.Exception.Message)"
+	}
+}

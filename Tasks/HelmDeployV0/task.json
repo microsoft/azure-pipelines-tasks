@@ -2,8 +2,9 @@
     "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
     "name": "HelmDeploy",
     "friendlyName": "Package and deploy Helm charts",
-    "description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running helm commands.",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/helm-deploy",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Helm documentation](https://helm.sh/docs/)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -12,12 +13,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 138,
-        "Patch": 10
+        "Minor": 165,
+        "Patch": 0
     },
     "demands": [],
-    "groups": [
-        {
+    "groups": [{
             "name": "cluster",
             "displayName": "Kubernetes Cluster",
             "isExpanded": true,
@@ -41,8 +41,7 @@
             "visibleRule": "command != login && command != logout && command != package"
         }
     ],
-    "inputs": [
-        {
+    "inputs": [{
             "name": "connectionType",
             "type": "pickList",
             "label": "Connection Type",
@@ -50,7 +49,8 @@
             "required": true,
             "options": {
                 "Azure Resource Manager": "Azure Resource Manager",
-                "Kubernetes Service Connection": "Kubernetes Service Connection"
+                "Kubernetes Service Connection": "Kubernetes Service Connection",
+                "None": "None"
             },
             "helpMarkDown": "Select 'Azure Resource Manager' to connect to an Azure Kubernetes Service by using Azure Service Connection. Select 'Kubernetes Service Connection' to connect to any Kubernetes cluster by using kubeconfig or Service Account",
             "groupName": "cluster"
@@ -93,6 +93,15 @@
             "properties": {
                 "EditableOptions": "True"
             }
+        },
+        {
+            "name": "useClusterAdmin",
+            "type": "boolean",
+            "label": "Use cluster admin credentials",
+            "defaultValue": "false",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "groupName": "cluster",
+            "helpMarkDown": "Use cluster administrator credentials instead of default cluster user credentials."
         },
         {
             "name": "kubernetesServiceEndpoint",
@@ -376,8 +385,7 @@
             "groupName": "advanced"
         }
     ],
-    "dataSourceBindings": [
-        {
+    "dataSourceBindings": [{
             "target": "kubernetesCluster",
             "endpointId": "$(azureSubscriptionEndpoint)",
             "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
@@ -393,6 +401,7 @@
         }
     ],
     "instanceNameFormat": "helm $(command)",
+    "showEnvironmentVariables": true,
     "prejobexecution": {
         "Node": {
             "target": "src//downloadsecurefiles.js"
@@ -426,6 +435,7 @@
         "SkipDeleteSecureFiles": "TLS not enabled in the Task. Skipping delete of certificates.",
         "SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
         "FileNotFound": "File not found at %s",
-        "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found."
+        "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Programme d'installation de l'outil NuGet",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=852538)",
-  "loc.description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this task to change the version of NuGet used in the NuGet tasks.",
+  "loc.description": "Acquiert une version spécifique de NuGet à partir d'Internet ou du cache d'outils, puis l'ajoute à PATH. Cette tâche vous permet de changer la version de NuGet utilisée dans les tâches NuGet.",
   "loc.instanceNameFormat": "Utiliser NuGet $(versionSpec)",
   "loc.input.label.versionSpec": "Version de NuGet.exe à installer",
   "loc.input.help.versionSpec": "Version ou plage de versions spécifiant la version de NuGet à rendre disponible sur le chemin. Utilisez x en tant que caractère générique. Consultez la [liste des versions de NuGet disponibles](http://dist.nuget.org/tools.json).\n\nSi vous souhaitez établir une correspondance avec une version préliminaire, la spécification doit contenir une version principale, une version mineure, une version de correctif et une version préliminaire parmi la liste ci-dessus.\n\nExemples : 4.x, 3.3.x, 2.8.6, >=4.0.0-0",

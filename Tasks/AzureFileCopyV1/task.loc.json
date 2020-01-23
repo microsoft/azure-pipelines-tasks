@@ -3,6 +3,7 @@
   "name": "AzureFileCopy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-file-copy",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -12,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 142
+    "Minor": 153,
+    "Patch": 2
   },
   "demands": [
     "azureps"
@@ -347,6 +348,7 @@
     "AFC_BlobStorageNotFound": "ms-resource:loc.messages.AFC_BlobStorageNotFound",
     "AFC_RootContainerAndDirectory": "ms-resource:loc.messages.AFC_RootContainerAndDirectory",
     "AFC_RedirectResponseInvalidStatusCode": "ms-resource:loc.messages.AFC_RedirectResponseInvalidStatusCode",
-    "AFC_RedirectResponseLocationHeaderIsNull": "ms-resource:loc.messages.AFC_RedirectResponseLocationHeaderIsNull"
+    "AFC_RedirectResponseLocationHeaderIsNull": "ms-resource:loc.messages.AFC_RedirectResponseLocationHeaderIsNull",
+    "AFC_UninstallWinRMCustomScriptExtension": "ms-resource:loc.messages.AFC_UninstallWinRMCustomScriptExtension"
   }
 }

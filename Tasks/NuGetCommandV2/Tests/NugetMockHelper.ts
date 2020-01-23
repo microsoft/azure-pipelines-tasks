@@ -1,4 +1,4 @@
-import tmrm = require('vsts-task-lib/mock-run');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import VersionInfoVersion from 'packaging-common/pe-parser/VersionInfoVersion'
 import {VersionInfo} from 'packaging-common/pe-parser/VersionResource'
 import * as nugetPackUtils from "packaging-common/PackUtilities"
@@ -12,11 +12,12 @@ export class NugetMockHelper {
 
     constructor(private tmr: tmrm.TaskMockRunner) {
         process.env['AGENT_HOMEDIRECTORY'] = "c:\\agent\\home\\directory";
-        process.env['BUILD_SOURCESDIRECTORY'] = "c:\\agent\\home\\directory\\sources",
+        process.env['BUILD_SOURCESDIRECTORY'] = "c:\\agent\\home\\directory\\sources";
         process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
         process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
+        process.env['DISABLE_NUGET_PLUGINS_CACHE_WORKAROUND'] = "true";
 
         pkgMock.registerLocationHelpersMock(tmr);
     }
@@ -83,8 +84,8 @@ export class NugetMockHelper {
     }
 
     public registerToolRunnerMock() {
-        var mtt = require('vsts-task-lib/mock-toolrunner');
-        this.tmr.registerMock('vsts-task-lib/toolrunner', mtt);
+        var mtt = require('azure-pipelines-task-lib/mock-toolrunner');
+        this.tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtt);
     }
 
     public setAnswers(a) {

@@ -1,11 +1,12 @@
 {
-  "loc.friendlyName": "Security and compliance assessment",
-  "loc.description": "Security and compliance assessment with Azure policies on resources that belong to the resource group and Azure subscription",
-  "loc.instanceNameFormat": "Azure Policy compliance assessment for $(ResourceGroupName)",
-  "loc.input.label.ConnectedServiceName": "Azure subscription",
-  "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription to enforce the policies.",
-  "loc.input.label.ResourceGroupName": "Resource group",
-  "loc.input.help.ResourceGroupName": "Provide name of a resource group.",
-  "loc.input.label.Resources": "Resource name",
-  "loc.input.help.Resources": "Select name of Azure resources for which you want to check the policy compliance."
+  "loc.friendlyName": "检查 Azure Policy 符合性",
+  "loc.helpMarkDown": "",
+  "loc.description": "Azure Policy 的安全性与符合性评估",
+  "loc.instanceNameFormat": "检查策略符合性",
+  "loc.input.label.ConnectedServiceName": "Azure 订阅",
+  "loc.input.help.ConnectedServiceName": "选择要强制实施策略的 Azure 资源管理器订阅。",
+  "loc.input.label.ResourceGroupName": "资源组",
+  "loc.input.help.ResourceGroupName": "提供资源组的名称。",
+  "loc.input.label.Resources": "资源名称",
+  "loc.input.help.Resources": "选择要检查其策略符合性的 Azure 资源的名称。"
 }

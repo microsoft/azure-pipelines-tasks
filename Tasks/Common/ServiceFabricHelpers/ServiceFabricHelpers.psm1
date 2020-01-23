@@ -11,3 +11,4 @@ Export-ModuleMember -Function Get-ServiceFabricEncryptedText
 Export-ModuleMember -Variable SF_Operations
 Export-ModuleMember -Function Publish-Telemetry
 Export-ModuleMember -Function Get-SfSdkVersion
+Export-ModuleMember -Function Trace-WarningIfCertificateNotPresentInLocalCertStore

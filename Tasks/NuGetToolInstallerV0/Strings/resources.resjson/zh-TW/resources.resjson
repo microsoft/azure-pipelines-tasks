@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet 工具安裝程式",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=852538)",
-  "loc.description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this task to change the version of NuGet used in the NuGet tasks.",
+  "loc.description": "從網際網路或工具快取取得特定版本的 NuGet，然後將其新增到 PATH。使用此工作可變更 NuGet 工作中所使用的 NuGet 版本。",
   "loc.instanceNameFormat": "使用 NuGet $(versionSpec)",
   "loc.input.label.versionSpec": "要安裝的 NuGet.exe 版本",
   "loc.input.help.versionSpec": "指定要在路徑中提供之 NuGet 版本的版本或版本範圍。使用 x 作為萬用字元。請參閱 [可用的 NuGet 版本清單](http://dist.nuget.org/tools.json)。\n\n若要比對發行前版本，規格中必須包含上述清單中的主要、次要、修補程式和發行前版本。\n\n例如: 4.x、3.3.x、2.8.6、>=4.0.0-0",

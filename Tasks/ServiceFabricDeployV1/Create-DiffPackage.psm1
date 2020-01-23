@@ -15,6 +15,7 @@ function New-DiffPackage
 
          # Load utility functions
         . "$PSScriptRoot\utilities.ps1"
+        . "$PSScriptRoot\ServiceFabricSDK\Utilities.ps1"
         Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
         Import-Module $PSScriptRoot\ps_modules\PowershellHelpers
 
@@ -23,7 +24,7 @@ function New-DiffPackage
         $applicationTypeName = $localAppManifestXml.ApplicationManifest.ApplicationTypeName
         $localAppTypeVersion = $localAppManifestXml.ApplicationManifest.ApplicationTypeVersion
 
-        $app = Get-ServiceFabricApplication -ApplicationName $ApplicationName
+        $app = Get-ServiceFabricApplicationAction -ApplicationName $ApplicationName
 
         # If $app is null, it means the application does not exist in the cluster. Diff Package is equal to Full Package. Use Full Package to do deployment
         if (!$app -or $app.ApplicationTypeName -ne $applicationTypeName)
@@ -50,7 +51,7 @@ function New-DiffPackage
         $diffPackagePath = New-Item -ItemType Directory -Path $diffPackagePath -Force
 
         # Get the service types from the cluster
-        $serviceTypes = Get-ServiceFabricServiceType -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $clusterAppTypeVersion
+        $serviceTypes = Get-ServiceFabricServiceTypeAction -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $clusterAppTypeVersion
         # Pack the service manifest names into an array
         $clusterServiceManifestNames = $serviceTypes.ServiceManifestName
 
@@ -68,7 +69,7 @@ function New-DiffPackage
         $clusterServiceManifestByName = @{}
         foreach ($clusterServiceManifestName in $clusterServiceManifestNames)
         {
-            $clusterServiceManifestContent = Get-ServiceFabricServiceManifest -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $clusterAppTypeVersion -ServiceManifestName $clusterServiceManifestName
+            $clusterServiceManifestContent = Get-ServiceFabricServiceManifestAction -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $clusterAppTypeVersion -ServiceManifestName $clusterServiceManifestName
             $clusterServiceManifestByName[$clusterServiceManifestName] = [XML]$clusterServiceManifestContent
         }
 

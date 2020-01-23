@@ -2,8 +2,8 @@ import Q = require('q');
 import os = require('os');
 import path = require('path');
 import fs = require('fs');
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
 
 import * as url from "url";
@@ -230,7 +230,8 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
                         repo = repo instanceof Array ? repo[0] : repo;
                         let url:string = repo.url instanceof Array ? repo.url[0] : repo.url;
                         if (url && (url.toLowerCase().includes(collectionName) ||
-                                    url.toLowerCase().includes(packageUrl))) {
+                                    url.toLowerCase().includes(packageUrl) ||
+                                    packagingLocation.PackagingUris.some(uri => url.toLowerCase().startsWith(uri.toLowerCase())))) {
                         tl.debug('using credentials for url: ' + url);
                         repos.push({
                             id: (repo.id && repo.id instanceof Array)
@@ -300,7 +301,7 @@ export function getExecOptions(): tr.IExecOptions {
 }
 
 export function publishMavenInfo(mavenInfo: string) {
-    const stagingDir: string = path.join(os.tmpdir(), '.mavenInfo');
+    const stagingDir: string = path.join(tl.getVariable('Agent.TempDirectory'), '.mavenInfo');
     const randomString: string = uuidV4();
     const infoFilePath: string = path.join(stagingDir, 'MavenInfo-' + randomString + '.md');
     if (!tl.exist(stagingDir)) {

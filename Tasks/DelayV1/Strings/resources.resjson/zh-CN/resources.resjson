@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "延迟",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870239)",
-  "loc.description": "将执行工作流再延迟固定时间。",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=870239)",
+  "loc.description": "按固定时间延迟工作流的执行",
   "loc.instanceNameFormat": "延迟 $(delayForMinutes) 分钟",
   "loc.input.label.delayForMinutes": "延迟时间(分钟)",
-  "loc.input.help.delayForMinutes": "将执行工作流延迟指定时间(以分钟为单位)。"
+  "loc.input.help.delayForMinutes": "按指定时间(分钟)延迟工作流的执行。0 值表示工作流的执行不会延迟。"
 }

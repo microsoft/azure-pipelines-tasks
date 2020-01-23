@@ -2,7 +2,7 @@
 
 import * as path from "path";
 import * as util from "util";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as constants from "./constants";
 import * as definitions from "./definitions"
 import * as utils from "./utilities"
@@ -29,5 +29,9 @@ export default class CustomTemplateFileProvider extends TemplateFileProviderBase
 
         this._templateFileLocation = initialTemplateFileLocation;
         return this._templateFileLocation; 
+    }
+    
+    public cleanup(): void {
+        // do not delete in case of user provided template.
     }
 }

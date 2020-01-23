@@ -1,13 +1,13 @@
 import { BuildOutput, BuildEngine } from './BuildOutput';
 import { ModuleOutput } from './ModuleOutput';
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 import { BaseTool } from './BaseTool';
 
 import path = require('path');
 import fs = require('fs');
 import xml2js = require('xml2js');
 
-import tl = require('vsts-task-lib/task');
+import * as tl from 'azure-pipelines-task-lib/task';
 
 /**
  * An object that is able to configure the build to run FindBugs and identify and parse FindBugs reports

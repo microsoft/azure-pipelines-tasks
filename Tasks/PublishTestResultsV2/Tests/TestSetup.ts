@@ -1,6 +1,6 @@
-import  * as ma from 'vsts-task-lib/mock-answer';
-import * as tmrm from 'vsts-task-lib/mock-run';
-import * as tmt from 'vsts-task-lib/mock-task';
+import  * as ma from 'azure-pipelines-task-lib/mock-answer';
+import * as tmrm from 'azure-pipelines-task-lib/mock-run';
+import * as tmt from 'azure-pipelines-task-lib/mock-task';
 import * as constants from './Constants';
 import * as path from 'path';
 
@@ -17,10 +17,11 @@ tr.setInput('configuration', process.env[constants.configuration]);
 tr.setInput('testRunTitle', process.env[constants.testRunTitle]);
 tr.setInput('publishRunAttachments', process.env[constants.publishRunAttachments]);
 tr.setInput('searchFolder', process.env[constants.searchFolder]);
+tr.setInput('failTaskOnFailedTests', process.env[constants.failTaskOnFailedTests]);
 
 const PublishExeToolPath = path.join(__dirname, '../modules', 'TestResultsPublisher.exe');
 const newUuid = "1e1faf9e-d9e5-4054-b351-398ac75b62f5";
-const PublishExeArgs = '@' + path.join(__dirname, newUuid + '.txt');
+const PublishExeArgs = ['@' + path.join(__dirname, newUuid + '.txt')];
 
 // Construct the answers object
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -31,7 +32,8 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'exec': {
     }
 };
-a.exec[`${PublishExeToolPath} ${PublishExeArgs}`] = {
+
+a.exec[`${PublishExeToolPath} ${PublishExeArgs[0]}`] = {
     'code': +process.env[constants.listPackagesReturnCode],
     'stdout': 'tool output',
     'stderr': ''
@@ -40,7 +42,7 @@ a.exec[`${PublishExeToolPath} ${PublishExeArgs}`] = {
 tr.setAnswers(a);
 
 // Mock toolrunner
-tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
+tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
 
 // Mock guid generator
 tr.registerMock('uuid', {
@@ -50,7 +52,7 @@ tr.registerMock('uuid', {
 });
 
 // Create mock for getVariable
-const tl = require('vsts-task-lib/mock-task');
+const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
 
 tlClone.getVariable = function (variable: string) {
@@ -69,7 +71,7 @@ tlClone.findMatch = function () {
 tlClone.getEndpointAuthorizationParameter = function () {
     return 'ad4sldkajdsf4ksa5randomaccesstoken7lf9adsnfandfjlsdf';
 }
-tr.registerMock('vsts-task-lib/mock-task', tlClone);
+tr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 // Start the run
 tr.run();

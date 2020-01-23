@@ -34,8 +34,11 @@ async function run() {
 
             input_arguments = tl.getInput('arguments') || '';
         }
-        else {
+        else if(input_targetType.toUpperCase() == 'INLINE') {
             input_script = tl.getInput('script', false) || '';
+        }
+        else {
+            throw new Error(tl.loc('PS_InvalidTargetType', input_targetType));
         }
 
         // Generate the script contents.
@@ -76,6 +79,7 @@ async function run() {
         //
         // Note, use "-Command" instead of "-File" to match the Windows implementation. Refer to
         // comment on Windows implementation for an explanation why "-Command" is preferred.
+        console.log('========================== Starting Command Output ===========================');
         let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
             .arg('-NoLogo')
             .arg('-NoProfile')
@@ -92,9 +96,21 @@ async function run() {
 
         // Listen for stderr.
         let stderrFailure = false;
+        const aggregatedStderr: string[] = [];
         if (input_failOnStderr) {
-            powershell.on('stderr', (data) => {
+            powershell.on('stderr', (data: Buffer) => {
                 stderrFailure = true;
+                // Truncate to at most 10 error messages
+                if (aggregatedStderr.length < 10) {
+                    // Truncate to at most 1000 bytes
+                    if (data.length > 1000) {
+                        aggregatedStderr.push(`${data.toString('utf8', 0, 1000)}<truncated>`);
+                    } else {
+                        aggregatedStderr.push(data.toString('utf8'));
+                    }
+                } else if (aggregatedStderr.length === 10) {
+                    aggregatedStderr.push('Additional writes to stderr truncated');
+                }
             });
         }
 
@@ -109,6 +125,9 @@ async function run() {
         // Fail on stderr.
         if (stderrFailure) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('JS_Stderr'));
+            aggregatedStderr.forEach((err: string) => {
+                tl.error(err);
+            });
         }
     }
     catch (err) {

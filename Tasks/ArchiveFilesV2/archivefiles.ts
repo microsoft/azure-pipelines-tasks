@@ -1,5 +1,9 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
+import tr = require('azure-pipelines-task-lib/toolrunner');
+import fs = require('fs');
+import stream = require("stream");
+import utils = require('./utils.js');
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 
@@ -8,6 +12,8 @@ var includeRootFolder: boolean = tl.getBoolInput('includeRootFolder', true);
 var archiveType: string = tl.getInput('archiveType', true);
 var archiveFile: string = path.normalize(tl.getPathInput('archiveFile', true, false).trim());
 var replaceExistingArchive: boolean = tl.getBoolInput('replaceExistingArchive', true);
+var verbose: boolean = tl.getBoolInput('verbose', false);
+var quiet: boolean = tl.getBoolInput('quiet', false);
 
 tl.debug('repoRoot: ' + repoRoot);
 
@@ -56,12 +62,34 @@ function makeAbsolute(normalizedPath: string): string {
     return result;
 }
 
-function getOptions() {
+function createFileList(files: string[]): string {
+    const tempDirectory: string = tl.getVariable('Agent.TempDirectory');
+    const fileName: string = Math.random().toString(36).replace('0.', '');
+    const file: string = path.resolve(tempDirectory, fileName);
+
+    try {
+        fs.writeFileSync(
+            file,
+            files.reduce((prev, cur) => prev + cur + "\n", ""),
+            { encoding: "utf8" });
+    }
+    catch (error) {
+        if (fs.existsSync(file)) {
+            fs.unlinkSync(file);
+        }
+
+        throw error;
+    }
+
+    return file;
+}
+
+function getOptions(): tr.IExecSyncOptions {
     var dirName: string;
     if (includeRootFolder) {
         dirName = path.dirname(rootFolderOrFile);
         tl.debug("cwd (include root folder)= " + dirName);
-        return { cwd: dirName };
+        return { cwd: dirName, outStream: process.stdout as stream.Writable, errStream: process.stderr as stream.Writable };
     } else {
         var stats: tl.FsStats = tl.stats(rootFolderOrFile);
         if (stats.isFile()) {
@@ -70,20 +98,51 @@ function getOptions() {
             dirName = rootFolderOrFile;
         }
         tl.debug("cwd (exclude root folder)= " + dirName);
-        return { cwd: dirName };
+        return { cwd: dirName, outStream: process.stdout as stream.Writable, errStream: process.stderr as stream.Writable };
     }
 }
 
 function sevenZipArchive(archive: string, compression: string, files: string[]) {
     tl.debug('Creating archive with 7-zip: ' + archive);
-    var sevenZip = tl.createToolRunner(getSevenZipLocation());
+    var sevenZip = tl.tool(getSevenZipLocation());
     sevenZip.arg('a');
     sevenZip.arg('-t' + compression);
-    sevenZip.arg(archive);
-    for (var i = 0; i < files.length; i++) {
-        sevenZip.arg(files[i]);
+    if (verbose) {
+        // Set highest logging level
+        sevenZip.arg('-bb3');
     }
+
+    const sevenZipCompression = tl.getInput('sevenZipCompression', false);
+    if (sevenZipCompression) {
+        sevenZip.arg('-mx=' + mapSevenZipCompressionLevel(sevenZipCompression));
+    }
+
+    sevenZip.arg(archive);
+
+    const fileList: string = createFileList(files);
+    sevenZip.arg('@' + fileList);
+
     return handleExecResult(sevenZip.execSync(getOptions()), archive);
+}
+
+// map from YAML-friendly value to 7-Zip numeric value
+function mapSevenZipCompressionLevel(sevenZipCompression: string) {    
+    switch (sevenZipCompression.toLowerCase()) {
+        case "ultra":
+            return "9";
+        case "maximum":
+            return "7";
+        case "normal":
+            return "5";
+        case "fast":
+            return "3";
+        case "fastest":
+            return "1";
+        case "none":
+            return "0";
+        default:
+            return "5";
+    }
 }
 
 // linux & mac only
@@ -92,8 +151,15 @@ function zipArchive(archive: string, files: string[]) {
     if (typeof xpZipLocation == "undefined") {
         xpZipLocation = tl.which('zip', true);
     }
-    var zip = tl.createToolRunner(xpZipLocation);
+    var zip = tl.tool(xpZipLocation);
     zip.arg('-r');
+    // Verbose gets priority over quiet
+    if (verbose) {
+        zip.arg('-v');
+    }
+    else if (quiet) {
+        zip.arg('-q');
+    }
     zip.arg(archive);
     for (var i = 0; i < files.length; i++) {
         zip.arg(files[i]);
@@ -108,11 +174,14 @@ function tarArchive(archive: string, compression: string, files: string[]) {
     if (typeof xpTarLocation == "undefined") {
         xpTarLocation = tl.which('tar', true);
     }
-    var tar = tl.createToolRunner(xpTarLocation);
+    var tar = tl.tool(xpTarLocation);
     if (tl.exist(archive)) {
         tar.arg('-r'); // append files to existing tar
     } else {
         tar.arg('-c'); // create new tar otherwise
+    }
+    if (verbose) {
+        tar.arg('-v');
     }
     if (compression) {
         tar.arg('--' + compression);
@@ -143,7 +212,7 @@ export class FailTaskError extends Error {
  * Windows only
  * standard gnu-tar extension formats with recognized auto compression formats
  * https://www.gnu.org/software/tar/manual/html_section/tar_69.html
- *   
+ *
  * Computes the name of the tar to use inside a compressed tar.
  * E.g. foo.tar.gz is expected to have foo.tar inside
  */
@@ -253,7 +322,11 @@ function doWork() {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         // Find matching archive files
         var files: string[] = findFiles();
-        tl.debug('Found: ' + files.length + ' files to archive:');
+        utils.reportArchivePlan(files).forEach(function(line) {
+            console.log(line);
+        });
+
+        tl.debug('Listing all ' + files.length + ' files to archive:');
         for (var i = 0; i < files.length; i++) {
             tl.debug(files[i]);
         }
@@ -289,7 +362,7 @@ function doWork() {
         tl.setResult(tl.TaskResult.Succeeded, 'Successfully created archive: ' + archiveFile);
     } catch (e) {
         tl.debug(e.message);
-        tl._writeError(e);
+        tl.error(e);
         tl.setResult(tl.TaskResult.Failed, e.message);
     }
 }

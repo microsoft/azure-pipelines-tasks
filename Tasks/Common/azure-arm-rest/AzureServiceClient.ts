@@ -1,7 +1,8 @@
 import tl = require('vsts-task-lib/task');
-import util = require("util")
 import msRestAzure = require("./azure-arm-common");
 import webClient = require("./webClient");
+
+const CorrelationIdInResponse = "x-ms-correlation-request-id";
 
 export class ApiResult {
     public error;
@@ -133,6 +134,10 @@ export class ServiceClient {
                 request.headers["Authorization"] = "Bearer " + token;
                 httpResponse = await webClient.sendRequest(request);
             }
+
+            if(!!httpResponse.headers[CorrelationIdInResponse]) {
+                tl.debug(`Correlation ID from ARM api call response : ${httpResponse.headers[CorrelationIdInResponse]}`);
+            }
         } catch(exception) {
             let exceptionString: string = exception.toString();
             if(exceptionString.indexOf("Hostname/IP doesn't match certificates's altnames") != -1
@@ -143,7 +148,10 @@ export class ServiceClient {
 
             throw exception;
         }
-
+        
+        if(httpResponse.headers["azure-asyncoperation"] || httpResponse.headers["location"])
+            tl.debug(request.uri + " ==> " + httpResponse.headers["azure-asyncoperation"] || httpResponse.headers["location"])
+        
         return httpResponse;
     }
 
@@ -157,11 +165,13 @@ export class ServiceClient {
         if (!request.uri) {
             throw new Error(tl.loc("InvalidResponseLongRunningOperation"));
         }
-
         while (true) {
             response = await this.beginRequest(request);
             tl.debug(`Response status code : ${response.statusCode}`);
             if (response.statusCode === 202 || (response.body && (response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress"))) {
+                if(response.body && response.body.status) {
+                    tl.debug(`Response status : ${response.body.status}`);
+                }
                 // If timeout; throw;
                 if (!waitIndefinitely && timeout < new Date().getTime()) {
                     throw new Error(tl.loc("TimeoutWhileWaiting"));

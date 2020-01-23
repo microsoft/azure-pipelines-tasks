@@ -3,6 +3,7 @@
   "name": "HelmDeploy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/helm-deploy",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -12,12 +13,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 138,
-    "Patch": 10
+    "Minor": 165,
+    "Patch": 0
   },
   "demands": [],
-  "groups": [
-    {
+  "groups": [{
       "name": "cluster",
       "displayName": "ms-resource:loc.group.displayName.cluster",
       "isExpanded": true,
@@ -41,8 +41,7 @@
       "visibleRule": "command != login && command != logout && command != package"
     }
   ],
-  "inputs": [
-    {
+  "inputs": [{
       "name": "connectionType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.connectionType",
@@ -50,7 +49,8 @@
       "required": true,
       "options": {
         "Azure Resource Manager": "Azure Resource Manager",
-        "Kubernetes Service Connection": "Kubernetes Service Connection"
+        "Kubernetes Service Connection": "Kubernetes Service Connection",
+        "None": "None"
       },
       "helpMarkDown": "ms-resource:loc.input.help.connectionType",
       "groupName": "cluster"
@@ -93,6 +93,15 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "useClusterAdmin",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useClusterAdmin",
+      "defaultValue": "false",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "groupName": "cluster",
+      "helpMarkDown": "ms-resource:loc.input.help.useClusterAdmin"
     },
     {
       "name": "kubernetesServiceEndpoint",
@@ -376,8 +385,7 @@
       "groupName": "advanced"
     }
   ],
-  "dataSourceBindings": [
-    {
+  "dataSourceBindings": [{
       "target": "kubernetesCluster",
       "endpointId": "$(azureSubscriptionEndpoint)",
       "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
@@ -393,6 +401,7 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "showEnvironmentVariables": true,
   "prejobexecution": {
     "Node": {
       "target": "src//downloadsecurefiles.js"
@@ -426,6 +435,7 @@
     "SkipDeleteSecureFiles": "ms-resource:loc.messages.SkipDeleteSecureFiles",
     "SkipDownloadSecureFiles": "ms-resource:loc.messages.SkipDownloadSecureFiles",
     "FileNotFound": "ms-resource:loc.messages.FileNotFound",
-    "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound"
+    "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

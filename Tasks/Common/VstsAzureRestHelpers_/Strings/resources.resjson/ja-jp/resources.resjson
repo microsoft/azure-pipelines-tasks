@@ -6,8 +6,8 @@
   "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "ロード バランサーの詳細をフェッチできません",
   "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "パブリック IP アドレスの詳細をフェッチできません",
   "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "ネットワーク インターフェイスの詳細をフェッチできません",
-  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: {0}, status message: {1}",
-  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Service Principal. Status code: {0}, status message: {1}",
-  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailure": "Failed to obtain access token using client certificate for service principal id: {0}. {1}",
-  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailureTokenNull": "Failed to obtain access token using client certificate for service principal id: {0}, tokenResult is null."
+  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。仮想マシンのマネージド サービス ID (MSI) を構成してください 'https://aka.ms/azure-msi-docs'。状態コード: {0}、ステータス メッセージ: {1}",
+  "loc.messages.AZ_MsiAccessTokenFetchFailure": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。状態コード: {0}、ステータス メッセージ: {1}",
+  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailure": "サービス プリンシパル ID {0} のクライアント証明書を使用してアクセス トークンを取得できませんでした。{1}",
+  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailureTokenNull": "サービス プリンシパル ID {0} のクライアント証明書を使用してアクセス トークンを取得できませんでした。tokenResult が null です。"
 }

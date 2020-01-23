@@ -1,5 +1,5 @@
-import * as toolLib from 'vsts-task-tool-lib/tool';
-import * as taskLib from 'vsts-task-lib/task';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
+import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as restm from 'typed-rest-client/RestClient';
 import * as path from 'path';
 import * as commandHelper from './CommandHelper';
@@ -99,8 +99,16 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
 }
 
 export async function cacheBundledNuGet(
-    cachedVersionToUse: string = DEFAULT_NUGET_VERSION,
-    nugetPathSuffix = DEFAULT_NUGET_PATH_SUFFIX): Promise<string> {
+    cachedVersionToUse?: string,
+    nugetPathSuffix?: string): Promise<string> {
+    if (cachedVersionToUse == null) {
+        cachedVersionToUse = DEFAULT_NUGET_VERSION;
+    }
+
+    if (nugetPathSuffix == null) {
+        nugetPathSuffix = DEFAULT_NUGET_PATH_SUFFIX;
+    }
+
     if (taskLib.getVariable(FORCE_NUGET_4_0_0) &&
         taskLib.getVariable(FORCE_NUGET_4_0_0).toLowerCase() === "true"){
         cachedVersionToUse = NUGET_VERSION_4_0_0;
@@ -130,7 +138,10 @@ async function getLatestMatchVersionInfo(versionSpec: string): Promise<INuGetVer
     taskLib.debug('Querying versions list');
 
     let versionsUrl = 'https://dist.nuget.org/tools.json';
-    let rest: restm.RestClient = new restm.RestClient('vsts-tasks/NuGetToolInstaller');
+    let proxyRequestOptions = {
+        proxy: taskLib.getHttpProxyConfiguration(versionsUrl)
+    };
+    let rest: restm.RestClient = new restm.RestClient('vsts-tasks/NuGetToolInstaller', undefined, undefined, proxyRequestOptions);
 
     let nugetVersions: INuGetVersionInfo[] = (await rest.get<INuGetVersionInfo[]>(versionsUrl, GetRestClientOptions())).result;
     // x.stage is the string representation of the enum, NuGetReleaseStage.Value = number, NuGetReleaseStage[NuGetReleaseStage.Value] = string, NuGetReleaseStage[x.stage] = number

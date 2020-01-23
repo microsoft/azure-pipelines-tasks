@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Copia dei file del computer Windows",
+  "loc.friendlyName": "Copia file in computer Windows",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=627415)",
-  "loc.description": "Consente di copiare file nei computer remoti",
+  "loc.description": "Copia i file in computer Windows remoti",
   "loc.instanceNameFormat": "Copia file da $(SourcePath)",
   "loc.releaseNotes": "Novità della versione 2.0: <br/>&nbsp;&nbsp;Aggiunta del supporto proxy. <br/>&nbsp;&nbsp; Rimozione del supporto per computer DTL legacy.",
   "loc.group.displayName.advanced": "Opzioni avanzate",
@@ -12,7 +12,7 @@
   "loc.input.label.AdminUserName": "Account di accesso amministratore",
   "loc.input.help.AdminUserName": "Account di accesso dell'amministratore per i computer di destinazione.",
   "loc.input.label.AdminPassword": "Password",
-  "loc.input.help.AdminPassword": "Password for administrator login for the target machines. <br>It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark the variable as 'secret' to secure it. ",
+  "loc.input.help.AdminPassword": "Password dell'account di accesso dell'amministratore per i computer di destinazione. <br>Può accettare una variabile definita nelle pipeline di compilazione o versione come '$(passwordVariable)'. <br>Per proteggere la variabile, è possibile contrassegnarla come 'secret'. ",
   "loc.input.label.TargetPath": "Cartella di destinazione",
   "loc.input.help.TargetPath": "Percorso locale nei computer di destinazione oppure percorso UNC accessibile per la copia dei file dall'origine, ad esempio u:\\fabrikam o \\\\\\\\fabrikam\\Web.",
   "loc.input.label.CleanTargetBeforeCopy": "Pulisci destinazione",
@@ -30,7 +30,7 @@
   "loc.messages.WFC_CopyStartedFor0": "Copia avviata per - {0}",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment": "Nell'ambiente '{0}' non esiste alcun computer per la distribuzione",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment0ForDeployment": "Nell'ambiente '{0}' non esiste alcun computer per la distribuzione",
-  "loc.messages.WFC_CopyingFailedForResource": "Copying failed for resource: {0}",
-  "loc.messages.WFC_FailedToCreatePSDrive": "Failed to Create PSDrive with Destination: '{0}', ErrorMessage: '{1}'",
-  "loc.messages.WFC_RobocopyError": "Robocopy Error. Computer: '{0}'. ErrorMessage: '{1}'"
+  "loc.messages.WFC_CopyingFailedForResource": "La copia non è riuscita per la risorsa: {0}",
+  "loc.messages.WFC_FailedToCreatePSDrive": "Non è stato possibile creare PSDrive con destinazione: '{0}'. Messaggio di errore: '{1}'",
+  "loc.messages.WFC_RobocopyError": "Errore di Robocopy. Computer: '{0}'. Messaggio di errore: '{1}'"
 }

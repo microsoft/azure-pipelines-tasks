@@ -1,9 +1,9 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
-import tl = require('vsts-task-lib');
-import trm = require('vsts-task-lib/toolrunner');
+import tl = require('azure-pipelines-task-lib');
+import trm = require('azure-pipelines-task-lib/toolrunner');
 
 let taskPath = path.join(__dirname, '..', 'azurermwebappdeployment.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -95,9 +95,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 }
 
 
-import mockTask = require('vsts-task-lib/mock-task');
+import mockTask = require('azure-pipelines-task-lib/mock-task');
 var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
-var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
+var msDeployUtility = require('webdeployment-common-v2/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
@@ -207,7 +207,7 @@ tr.registerMock('./kuduutility.js', {
     }
 });
 
-tr.registerMock("webdeployment-common/ziputility.js",{
+tr.registerMock("webdeployment-common-v2/ziputility.js",{
     getArchivedEntries: function(webDeployPkg) {
         return {
             "entries": [

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Windows Machine File Copy",
+  "loc.friendlyName": "Windows machine file copy",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
-  "loc.description": "Copy files to remote machine(s)",
+  "loc.description": "Copy files to remote Windows machines",
   "loc.instanceNameFormat": "Copy files from $(SourcePath)",
   "loc.group.displayName.advanced": "Advanced Options",
   "loc.input.label.SourcePath": "Source",
@@ -11,7 +11,7 @@
   "loc.input.label.AdminUserName": "Admin Login",
   "loc.input.help.AdminUserName": "Administrator login for the target machines.",
   "loc.input.label.AdminPassword": "Password",
-  "loc.input.help.AdminPassword": "Password for administrator login for the target machines. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it. ",
+  "loc.input.help.AdminPassword": "Password for administrator login for the target machines. <br>It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark variable as 'secret' to secure it. ",
   "loc.input.label.TargetPath": "Destination Folder",
   "loc.input.help.TargetPath": "Local Path on the target machines or an accessible UNC path for copying the files from the source like d:\\fabrikam or \\\\\\\\fabrikam\\Web.",
   "loc.input.label.CleanTargetBeforeCopy": "Clean Target",

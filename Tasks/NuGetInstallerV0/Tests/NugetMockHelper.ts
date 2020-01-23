@@ -9,7 +9,11 @@ export class NugetMockHelper {
     private defaultNugetVersion = '3.3.0';
     private defaultNugetVersionInfo = [3,3,0,212];
     
-    constructor(private tmr: tmrm.TaskMockRunner, unix: boolean = false) { 
+    constructor(private tmr: tmrm.TaskMockRunner, unix?: boolean) {
+        if (unix == null) {
+            unix = false
+        }
+
         process.env['AGENT_HOMEDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['BUILD_SOURCESDIRECTORY'] = "c:\\agent\\home\\directory\\sources",
         process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";

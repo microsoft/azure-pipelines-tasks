@@ -1,4 +1,4 @@
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as nondistributedtest from './nondistributedtest';
 import * as path from 'path';
 import * as distributedTest from './distributedtest';
@@ -49,7 +49,12 @@ async function execute() {
             console.log(tl.loc('nonDistributedTestWorkflow'));
             console.log('======================================================');
             const inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
-            if (enableApiExecution || inputDataContract.EnableSingleAgentAPIFlow || (inputDataContract.ExecutionSettings
+            var enableHydra = false;
+            if (!utils.Helper.isNullOrWhitespace(inputDataContract.ServerType)) {
+                enableHydra = inputDataContract.ServerType.toLowerCase() === "hosted";
+            }
+
+            if (enableHydra || inputDataContract.EnableSingleAgentAPIFlow || (inputDataContract.ExecutionSettings
                 && inputDataContract.ExecutionSettings.RerunSettings
                 && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests)) {
                 if (enableApiExecution) {

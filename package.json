@@ -2,19 +2,21 @@
   "name": "Agent.Tasks",
   "version": "0.5.0",
   "description": "Tasks for the Azure Pipelines build system",
-  "main": "gulpfile.js",
+  "main": "make.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
     "build": "node make.js build",
+    "bump": "node make.js bump",
+    "gensprintly": "node make.js gensprintlyzip",
     "test": "node make.js test",
     "testLegacy": "node make.js testLegacy",
     "package": "node make.js package"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/vsts-tasks"
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks"
   },
   "keywords": [
     "Azure",
@@ -25,15 +27,16 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
-  "homepage": "https://github.com/Microsoft/vsts-tasks",
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks",
   "devDependencies": {
-    "gulp": "3.9.0",
-    "gulp-util": "3.0.4",
+    "adm-zip": "0.4.13",
+    "azure-devops-node-api": "^9.0.1",
+    "js-yaml": "^3.13.1",
     "markdown-toc": "^1.2.0",
     "minimatch": "3.0.2",
-    "minimist": "1.1.1",
+    "minimist": "^1.1.1",
     "mocha": "2.3.3",
     "mocha-junit-reporter": "1.17.0",
     "node-uuid": "1.4.6",
@@ -41,6 +44,7 @@
     "semver": "4.3.3",
     "shelljs": "^0.3.0",
     "sync-request": "3.0.1",
+    "typed-rest-client": "1.0.9",
     "typescript": "2.3.4",
     "validator": "3.33.0"
   }

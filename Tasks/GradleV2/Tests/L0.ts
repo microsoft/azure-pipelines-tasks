@@ -4,7 +4,7 @@ import os = require('os');
 import process = require('process');
 import fs = require('fs');
 
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 import { BuildOutput, BuildEngine } from 'codeanalysis-common/Common/BuildOutput';
 import { PmdTool } from 'codeanalysis-common/Common/PmdTool';
@@ -467,7 +467,7 @@ describe('Gradle L0 Suite', function () {
 
             assert(tr.stdout.search(/##vso\[results.publish\]/) < 0, 'publish test results should not have got called.');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
-            assert(tr.stdout.search(/##vso\[task.issue type=warning;\]No test result files matching/) >= 0, 'should have produced warning.');
+            assert(tr.stdout.search(/NoTestResults/) >= 0, 'should have produced a verbose message.');
             assert(tr.succeeded, 'task should have succeeded');
 
             done();

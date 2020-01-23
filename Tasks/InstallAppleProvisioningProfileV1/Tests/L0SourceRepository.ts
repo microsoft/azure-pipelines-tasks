@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import os = require('os');
@@ -8,7 +8,7 @@ let taskPath = path.join(__dirname, '..', 'installprovprofile.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('provisioningProfileLocation', 'sourceRepository');
-tr.setInput('provProfileSourceRepository', '/build/source/myprovisioningprofile.moblieprovision');
+tr.setInput('provProfileSourceRepository', '/build/source/myprovisioningprofile.mobileprovision');
 
 process.env['AGENT_VERSION'] = '2.116.0';
 process.env['HOME'] = '/users/test';
@@ -36,15 +36,15 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/bin/cp": true
     },
     "exist": {
-        "/build/source/myprovisioningprofile.moblieprovision": true
+        "/build/source/myprovisioningprofile.mobileprovision": true
     },
     "stats": {
-        "/build/source/myprovisioningprofile.moblieprovision": {
+        "/build/source/myprovisioningprofile.mobileprovision": {
             "isFile": true
         }
     },
     "exec": {
-        "/usr/bin/security cms -D -i /build/source/myprovisioningprofile.moblieprovision": {
+        "/usr/bin/security cms -D -i /build/source/myprovisioningprofile.mobileprovision": {
             "code": 0,
             "stdout": "prov profile details here"
         },
@@ -56,7 +56,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "testprovname"
         },
-        "/bin/cp -f /build/source/myprovisioningprofile.moblieprovision /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {
+        "/bin/cp -f /build/source/myprovisioningprofile.mobileprovision /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {   
             "code": 0,
             "stdout": "provisioning profile copied"
         },

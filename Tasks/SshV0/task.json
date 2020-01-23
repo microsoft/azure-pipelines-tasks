@@ -3,7 +3,8 @@
     "name": "SSH",
     "friendlyName": "SSH",
     "description": "Run shell commands or a script on a remote machine using SSH",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=821892)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/ssh",
+    "helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=821892)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -16,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 142,
+        "Minor": 151,
         "Patch": 1
     },
     "demands": [],
@@ -112,13 +113,14 @@
         }
     },
     "messages": {
-        "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
-        "SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
-        "SshConnectionSuccessful": "Successfully connected.",
         "ConnectionFailed": "Failed to connect to remote machine. Verify the SSH service connection details. Error: %s.",
-        "RemoteCopyFailed": "Failed to copy script to remote machine. Error: %s.",
+        "FailedToWriteScript": "Failed to write the script to disk: %s",
         "RemoteCmdExecutionErr": "Command failed with errors on remote machine.",
         "RemoteCmdNonZeroExitCode": "Command %s exited with code %s.",
-        "RemoteScriptFileCleanUpFailed": "Failed to delete the script file copied to the remote machine. Error = %s."
+        "RemoteCopyFailed": "Failed to copy script to remote machine. Error: %s.",
+        "RemoteScriptFileCleanUpFailed": "Failed to delete the script file copied to the remote machine. Error = %s.",
+        "SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
+        "SshConnectionSuccessful": "Successfully connected.",
+        "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified."
     }
 }

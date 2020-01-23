@@ -113,10 +113,12 @@ async function main(): Promise<void> {
                 throw new Error(tl.loc("NGCommon_UnabletoDetectNuGetVersion"));
             }
 
+            // save and reset the tool path env var, so this task doesn't act as a tool installer
+            const tempNuGetPath = tl.getVariable(ngToolGetter.NUGET_EXE_TOOL_PATH_ENV_VAR);
             const cachedVersion = await ngToolGetter.cacheBundledNuGet(versionToUse, nuGetPathSuffix);
             nuGetPath = await ngToolGetter.getNuGet(cachedVersion);
+            tl.setVariable(ngToolGetter.NUGET_EXE_TOOL_PATH_ENV_VAR, tempNuGetPath);
         }
-
         //find nuget location to use
         let credProviderPath = nutil.locateCredentialProvider();
 

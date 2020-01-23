@@ -133,7 +133,7 @@ function Remove-ClientCertificate
         Write-Warning (Get-VstsLocString -Key WarningOnRemoveCertificate -ArgumentList $_)
     }
 }
-function Warn-IfCertificateNotPresentInLocalCertStore{
+function Trace-WarningIfCertificateNotPresentInLocalCertStore{
     [CmdletBinding()]
     Param (
         $certificate
@@ -166,6 +166,11 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
 
     try
     {
+        if (![Environment]::Is64BitProcess)
+        {
+            throw (Get-VstsLocString -Key TaskNotRunningOnx64Agent)
+        }
+
         $certificate = $null
         $regKey = "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK"
         if (!(Test-Path $regKey))

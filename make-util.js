@@ -170,7 +170,7 @@ var buildNodeTask = function (taskPath, outDir) {
         cd(taskPath);
     }
 
-    run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
+    run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
     cd(originalDir);
 }
 exports.buildNodeTask = buildNodeTask;
@@ -619,7 +619,7 @@ var getExternals = function (externals, destRoot) {
             // copy the files
             var archiveDest = path.join(destRoot, archive.dest);
             mkdir('-p', archiveDest);
-            cp('-R', path.join(archiveSource, '*'), archiveDest)
+            cp('-R', path.join(archiveSource, '*'), archiveDest);
         });
     }
 
@@ -933,8 +933,8 @@ var getTaskYaml = function(taskJson) {
         }
 
         // Does the input have a default value?
-        var isDefaultValueAvailable = input.defaultValue && input.defaultValue.length > 0;
-        var defaultValue = isDefaultValueAvailable ? input.defaultValue : null;
+        var isDefaultValueAvailable = input.defaultValue && (input.defaultValue.length > 0 || input.type == 'boolean');
+        var defaultValue = isDefaultValueAvailable ? input.defaultValue.toString() : null;
 
         // Comment out the input?
         if (!input.required ||

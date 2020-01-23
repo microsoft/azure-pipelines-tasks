@@ -170,8 +170,7 @@ function getNpmConfigRunner(includeDebugLogs: boolean): trm.ToolRunner {
 function getTempNpmrcPath() : string {
     var tempNpmrcDir
         = tl.getVariable('Agent.BuildDirectory')
-        || tl.getVariable('Agent.ReleaseDirectory')
-        || process.cwd();
+        || tl.getVariable('Agent.TempDirectory');
     tempNpmrcDir = path.join(tempNpmrcDir, 'npm');
     tl.mkdirP(tempNpmrcDir);
     var tempUserNpmrcPath: string = path.join(tempNpmrcDir, 'auth.' + tl.getVariable('build.buildId') + '.npmrc');

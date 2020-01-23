@@ -24,5 +24,6 @@
   "loc.messages.NGCommon_SpsNotFound": "La zone '%s' [%s] est introuvable. Il existe peut-être un problème lié à votre installation de Team Foundation Server.",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Version NuGet inconnue sélectionnée.",
   "loc.messages.NGCommon_UnableToFindTool": "Outil %s introuvable",
+  "loc.messages.Warning_SessionCreationFailed": "Impossible de créer une session de provenance : %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Mise à jour de NuGet.exe version %s vers la version %s. Des changements de comportement ou des changements importants peuvent se produire lors de la mise à jour de NuGet vers une nouvelle version. Pour éviter cela, décochez l'option 'Rechercher la dernière version' dans la tâche."
 }

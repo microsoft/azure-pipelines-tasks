@@ -5,5 +5,8 @@
     "find": {
     },
     "findMatch": {
+    },
+    "exist": {
+        "/user/admin/summary.xml": false
     }
 }

@@ -1,9 +1,7 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
+import * as tl from 'azure-pipelines-task-lib/task';
 import sign = require('ios-signing-common/ios-signing-common');
 import os = require('os');
-
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 async function run() {
     try {
@@ -11,30 +9,30 @@ async function run() {
 
         // Check platform is macOS since demands are not evaluated on Hosted pools
         if (os.platform() !== 'darwin') {
-            throw new Error(tl.loc('InstallRequiresMac'));
-        }
+            console.log(tl.loc('InstallRequiresMac'));
+        } else {
+            let keychain: string = tl.getInput('keychain');
+            let keychainPath: string = tl.getTaskVariable('APPLE_CERTIFICATE_KEYCHAIN');
 
-        let keychain: string = tl.getInput('keychain');
-        let keychainPath: string = tl.getTaskVariable('APPLE_CERTIFICATE_KEYCHAIN');
+            let deleteCert: boolean = tl.getBoolInput('deleteCert');
+            let hash: string = tl.getTaskVariable('APPLE_CERTIFICATE_SHA1HASH');
+            if (deleteCert && hash) {
+                sign.deleteCert(keychainPath, hash);
+            }
 
-        let deleteCert: boolean = tl.getBoolInput('deleteCert');
-        let hash: string = tl.getTaskVariable('APPLE_CERTIFICATE_SHA1HASH');
-        if (deleteCert && hash) {
-            sign.deleteCert(keychainPath, hash);
-        }
+            let deleteKeychain: boolean = false;
+            if (keychain === 'temp') {
+                deleteKeychain = true;
+            } else if (keychain === 'custom') {
+                deleteKeychain = tl.getBoolInput('deleteCustomKeychain');
+            }
 
-        let deleteKeychain: boolean = false;
-        if (keychain === 'temp') {
-            deleteKeychain = true;
-        } else if (keychain === 'custom') {
-            deleteKeychain = tl.getBoolInput('deleteCustomKeychain');
-        }
-
-        if (deleteKeychain && keychainPath) {
-            await sign.deleteKeychain(keychainPath);
+            if (deleteKeychain && keychainPath) {
+                await sign.deleteKeychain(keychainPath);
+            }
         }
     } catch (err) {
-        tl.setResult(tl.TaskResult.Failed, err);
+        tl.warning(err);
     }
 }
 

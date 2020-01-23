@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Script por lotes",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613733)",
-  "loc.description": "Ejecute un script .cmd o .bat de Windows y, opcionalmente, permítale cambiar el entorno",
+  "loc.description": "Ejecute un script por lotes o un comando de Windows y, opcionalmente, permítale cambiar el entorno",
   "loc.instanceNameFormat": "Run script $(filename)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.filename": "Ruta de acceso",

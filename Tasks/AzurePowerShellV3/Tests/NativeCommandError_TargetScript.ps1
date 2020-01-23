@@ -1,3 +1,3 @@
 Write-Output "output 1"
-net user foobar
+OPENFILES M:/rok
 Write-Output "output 2"

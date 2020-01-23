@@ -1,5 +1,6 @@
 {
   "loc.messages.AadAuthority": "AAD-Autorität: {0}",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "Das Zertifikat mit dem Fingerabdruck \"{0}\" ist nicht im lokalen Zertifikatspeicher vorhanden. Dies kann möglicherweise zu Fehlern führen. Wenn Release-/Buildfehler auftreten, versuchen Sie es noch mal, oder stellen Sie sicher, dass nicht mehrere Agents Builds/Releases unter Verwendung desselben Dienstendpunkts parallel auf demselben Computer ausführen.",
   "loc.messages.ClientAppId": "Clientanwendungs-ID: {0}",
   "loc.messages.ClusterAppId": "Clusteranwendungs-ID: {0}",
   "loc.messages.ConnectedToCluster": "Die Verbindung mit dem Cluster wurde erfolgreich hergestellt.",
@@ -10,8 +11,9 @@
   "loc.messages.ServiceFabricSDKNotInstalled": "Das Service Fabric SDK ist nicht auf dem Build-Agent installiert. Navigieren Sie zu https://aka.ms/servicefabric, um es herunterzuladen und zu installieren.",
   "loc.messages.UseWindowsSecurity": "Die Windows-Sicherheit ist festgelegt. Der Schalter \"WindowsCredential\" wird beim Herstellen einer Verbindung verwendet.",
   "loc.messages.ServerCertificateNotFoundForTextEncrypt": "Das Serverzertifikat des Clusters mit Fingerabdruck \"{0}\" ist für die Textverschlüsselung erforderlich, aber das Zertifikat wurde nicht auf dem Agent-Computer im Zertifikatspeicher \"CurrentUser\\My\" gefunden.",
-  "loc.messages.RetryingClusterConnection": "Retrying to connect to cluster..",
-  "loc.messages.WarningOnRemoveCertificate": "An error occurred attempting to remove the client certificate. Error message: {0}",
-  "loc.messages.TelemetryWarning": "Unable to push telemetry data. Error: {0}.",
-  "loc.messages.SfSdkVersion": "Service fabric SDK version: {0}."
+  "loc.messages.RetryingClusterConnection": "Es wird erneut versucht, eine Verbindung mit dem Cluster herzustellen...",
+  "loc.messages.WarningOnRemoveCertificate": "Fehler beim Entfernen des Clientzertifikats. Fehlermeldung: {0}",
+  "loc.messages.TelemetryWarning": "Die Telemetriedaten konnten nicht per Push übertragen werden. Fehler: {0}.",
+  "loc.messages.SfSdkVersion": "Service Fabric-SDK-Version: {0}.",
+  "loc.messages.TaskNotRunningOnx64Agent": "Der Agent ist kein x64-Agent. Diese Aufgabe wird nur für einen x64-Agent unterstützt."
 }

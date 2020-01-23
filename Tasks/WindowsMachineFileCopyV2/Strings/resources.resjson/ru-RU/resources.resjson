@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Копирование файлов на компьютер Windows",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?linkid=627415)",
-  "loc.description": "Копировать файлы на удаленные компьютеры",
+  "loc.description": "Копировать файлы на удаленные компьютеры с Windows",
   "loc.instanceNameFormat": "Копировать файлы из $(SourcePath)",
   "loc.releaseNotes": "Новые возможности в версии 2.0: <br/>Добавлена поддержка прокси-сервера. <br/>Удалена поддержка устаревших компьютеров DTL.",
   "loc.group.displayName.advanced": "Дополнительные параметры",
@@ -12,7 +12,7 @@
   "loc.input.label.AdminUserName": "Имя для входа администратора",
   "loc.input.help.AdminUserName": "Имя для входа администратора для целевых компьютеров.",
   "loc.input.label.AdminPassword": "Пароль",
-  "loc.input.help.AdminPassword": "Password for administrator login for the target machines. <br>It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark the variable as 'secret' to secure it. ",
+  "loc.input.help.AdminPassword": "Пароль для входа администратора на конечные компьютеры. <br>Допустимы переменные, заданные в конвейерах сборки или выпуска как \"$(passwordVariable)\". <br>Чтобы защитить переменную, пометьте ее как secret.",
   "loc.input.label.TargetPath": "Папка назначения",
   "loc.input.help.TargetPath": "Локальный путь на целевых компьютерах или доступный UNC-путь, куда копируются файлы из источника, например d:\\fabrikam или \\\\\\\\fabrikam\\Web.",
   "loc.input.label.CleanTargetBeforeCopy": "Очистить целевую папку",
@@ -21,7 +21,7 @@
   "loc.input.help.CopyFilesInParallel": "Если задать это значение, файлы будут копироваться на компьютеры параллельно.",
   "loc.input.label.AdditionalArguments": "Дополнительные аргументы",
   "loc.input.help.AdditionalArguments": "Дополнительные аргументы robocopy, которые будут применены при копировании файлов, например /min:33553332 /l.",
-  "loc.messages.WFC_ParameterCannotBeNullorEmpty": "Параметр \"{0}\" не может быть пуст или равен NULL.",
+  "loc.messages.WFC_ParameterCannotBeNullorEmpty": "Параметр \"{0}\" не может быть пустым или иметь значение NULL.",
   "loc.messages.WFC_FailedToConnectToPathWithUser": "Не удалось подключиться к пути {0} с учетными данными пользователя {1} для копирования.",
   "loc.messages.WFC_CopyingFailedConsultRobocopyLogsForMoreDetails": "Произошел сбой копирования. Дополнительные сведения см. в журналах robocopy.",
   "loc.messages.WFC_CopyingRecurivelyFrom0to1MachineSucceed": "Рекурсивное копирование из {0} в {1} на компьютере {2} успешно выполнено.",
@@ -30,7 +30,7 @@
   "loc.messages.WFC_CopyStartedFor0": "Начато копирование: {0}",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment": "В окружении \"{0}\" отсутствует компьютер для развертывания",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment0ForDeployment": "В окружении \"{0}\" отсутствует компьютер для развертывания",
-  "loc.messages.WFC_CopyingFailedForResource": "Copying failed for resource: {0}",
-  "loc.messages.WFC_FailedToCreatePSDrive": "Failed to Create PSDrive with Destination: '{0}', ErrorMessage: '{1}'",
-  "loc.messages.WFC_RobocopyError": "Robocopy Error. Computer: '{0}'. ErrorMessage: '{1}'"
+  "loc.messages.WFC_CopyingFailedForResource": "Ошибка копирования ресурса: {0}",
+  "loc.messages.WFC_FailedToCreatePSDrive": "Не удалось создать PSDrive с назначением \"{0}\"; сообщение об ошибке: \"{1}\"",
+  "loc.messages.WFC_RobocopyError": "Ошибка Robocopy. Компьютер: \"{0}\". Сообщение об ошибке: \"{1}\""
 }

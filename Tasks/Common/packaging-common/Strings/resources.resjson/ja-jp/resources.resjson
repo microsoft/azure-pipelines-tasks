@@ -24,5 +24,6 @@
   "loc.messages.NGCommon_SpsNotFound": "'%s' [%s] の領域が見つかりません。Team Foundation Server のインストールで問題が発生した可能性があります。",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "不明な NuGet バージョンが選ばれました。",
   "loc.messages.NGCommon_UnableToFindTool": "ツール %s が見つかりません",
+  "loc.messages.Warning_SessionCreationFailed": "次の来歴セッションを作成できませんでした: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "NuGet.exe のバージョンを %s に更新しています (現在のバージョンは %s)。NuGet を新しいバージョンに更新すると、動作の変更やビルド ブレークを起こす変更が発生することがあります。これを避けるには、タスクの [最新バージョンのチェック] オプションをオフにします。"
 }

@@ -50,7 +50,7 @@ Use the next options to manage your `JAVA_HOME` attribute by JDK Version and Pat
 
 #### How do I generate a wrapper from my Gradle project?
 
-The Gradle wrapper allows the build agent to download and configure the exact Gradle environment that is checked into the repoistory without having any software configuration on the build agent itself other than the JVM.
+The Gradle wrapper allows the build agent to download and configure the exact Gradle environment that is checked into the repository without having any software configuration on the build agent itself other than the JVM.
 
 - **1.** Create the Gradle wrapper by issuing the following command from the root project directory where your build.gradle resides:
 `jamal@fabrikam> gradle wrapper`

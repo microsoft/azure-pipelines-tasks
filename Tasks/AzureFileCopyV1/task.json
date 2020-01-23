@@ -1,9 +1,10 @@
 {
     "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
     "name": "AzureFileCopy",
-    "friendlyName": "Azure File Copy",
-    "description": "Copy files to Azure blob or VM(s)",
-    "helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
+    "friendlyName": "Azure file copy",
+    "description": "Copy files to Azure Blob Storage or virtual machines",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-file-copy",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -12,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 142
+        "Minor": 153,
+        "Patch": 2
     },
     "demands": [
         "azureps"
@@ -347,6 +348,7 @@
         "AFC_BlobStorageNotFound": "Storage account: {0} not found. Please specify existing storage account",
         "AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers.",
         "AFC_RedirectResponseInvalidStatusCode": "The HTTP response code: '{0}' is not a valid redirect status code",
-        "AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null."
+        "AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null.",
+        "AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment."
     }
 }

@@ -3,8 +3,8 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as url from "url";
-import * as tl from "vsts-task-lib/task";
-import * as tr from "vsts-task-lib/toolrunner";
+import * as tl from "azure-pipelines-task-lib/task";
+import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as utils from "./utilities";
 import * as os from "os";
 import * as toolLib from 'vsts-task-tool-lib/tool';
@@ -32,8 +32,7 @@ export default class ClusterConnection {
     }
     
     // get kubeconfig file path
-    private async getKubeConfig(): Promise<string> {
-        var connectionType = tl.getInput("connectionType", true);
+    private async getKubeConfig(connectionType): Promise<string> {
         return this.loadClusterType(connectionType).getKubeConfig().then((config) => {
             return config;
         });
@@ -41,7 +40,7 @@ export default class ClusterConnection {
 
     private async initialize(): Promise<void> {
         return this.getKubectl().then((kubectlpath)=> {
-            this.kubectlPath = kubectlpath; 
+            this.kubectlPath = kubectlpath;
             // prepend the tools path. instructs the agent to prepend for future tasks
             if(!process.env['PATH'].toLowerCase().startsWith(path.dirname(this.kubectlPath.toLowerCase()))) {
                 toolLib.prependPath(path.dirname(this.kubectlPath));
@@ -55,10 +54,14 @@ export default class ClusterConnection {
     }
 
     // open kubernetes connection
-    public async open(){
+    public async open() {
+        var connectionType = tl.getInput("connectionType", true);
+        if (connectionType === "None") {
+            return this.initialize();
+        }
         var kubeconfig;
         if (!this.kubeconfigFile) {
-            kubeconfig =  await this.getKubeConfig();
+            kubeconfig = await this.getKubeConfig(connectionType);
         }
 
         return this.initialize().then(() => {
@@ -74,6 +77,10 @@ export default class ClusterConnection {
 
     // close kubernetes connection
     public close(): void {
+        var connectionType = tl.getInput("connectionType", true);
+        if (connectionType === "None") {
+            return;
+        }
         if (this.kubeconfigFile != null && fs.existsSync(this.kubeconfigFile))
         {
            delete process.env["KUBECONFIG"];
@@ -104,28 +111,42 @@ export default class ClusterConnection {
         command.on("errline", line => {
             errlines.push(line);
         });
-        return command.exec(options).fail(error => {
+
+        tl.debug(tl.loc('CallToolRunnerExec'));
+        
+        let promise = command.exec(options)
+        .fail(error => {
+            tl.debug(tl.loc('ToolRunnerExecCallFailed', error));
             errlines.forEach(line => tl.error(line));
             throw error;
+        })
+        .then(() => {
+            tl.debug(tl.loc('ToolRunnerExecCallSucceeded'));
         });
+
+        tl.debug(tl.loc('ReturningToolRunnerExecPromise'));
+        return promise;
     }
 
     private async getKubectl() : Promise<string> {
         let versionOrLocation = tl.getInput("versionOrLocation");
         if( versionOrLocation === "location") {
             let pathToKubectl = tl.getPathInput("specifyLocation", true, true);
-            fs.chmodSync(pathToKubectl, "777");
+            try {
+                fs.chmodSync(pathToKubectl, "777");
+            } catch (ex) {
+                tl.debug(`Could not chmod ${pathToKubectl}, exception: ${JSON.stringify(ex)}`)
+            }
             return pathToKubectl;
         }
-        else if(versionOrLocation === "version") {
-            var defaultVersionSpec = "1.7.0";
+        else if (versionOrLocation === "version") {
+            var defaultVersionSpec = "1.13.2";
             let versionSpec = tl.getInput("versionSpec");
             let checkLatest: boolean = tl.getBoolInput('checkLatest', false);
             var version = await utils.getKubectlVersion(versionSpec, checkLatest);
             if (versionSpec != defaultVersionSpec || checkLatest)
             {
                tl.debug(tl.loc("DownloadingClient"));
-               var version = await utils.getKubectlVersion(versionSpec, checkLatest);
                return await utils.downloadKubectl(version); 
             }
 
@@ -138,7 +159,6 @@ export default class ClusterConnection {
             
            // Download the default version
            tl.debug(tl.loc("DownloadingClient"));
-           var version = await utils.getKubectlVersion(versionSpec, checkLatest);
            return await utils.downloadKubectl(version); 
         }
     }

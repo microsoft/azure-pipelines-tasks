@@ -2,13 +2,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
 
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 export function getTempPath(): string {
     const tempNpmrcDir
         = tl.getVariable('Agent.BuildDirectory')
-        || tl.getVariable('Agent.ReleaseDirectory')
-        || process.cwd();
+        || tl.getVariable('Agent.TempDirectory');
         const tempPath = path.join(tempNpmrcDir, 'npm');
     if (tl.exist(tempPath) === false) {
         tl.mkdirP(tempPath);
@@ -75,4 +74,24 @@ export function toNerfDart(uri: string): string {
     delete parsed.hash;
 
     return url.resolve(url.format(parsed), '.');
+}
+
+export function getProjectAndFeedIdFromInputParam(inputParam: string): any {
+    const feedProject = tl.getInput(inputParam);
+    return getProjectAndFeedIdFromInput(feedProject);
+}
+
+export function getProjectAndFeedIdFromInput(feedProject: string): any {
+    var projectId = null;
+    var feedId = feedProject;
+    if(feedProject && feedProject.includes("/")) {
+        const feedProjectParts = feedProject.split("/");
+        projectId = feedProjectParts[0] || null;
+        feedId = feedProjectParts[1];
+    }
+
+    return {
+        feedId: feedId,
+        projectId: projectId
+    }
 }
