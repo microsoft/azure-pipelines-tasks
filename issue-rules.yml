@@ -47,6 +47,10 @@ rules:
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
 - valueFor: '**Enter Task Name**'
+  contains: 'CocoaPods'
+  addLabels: ['Area: CrossPlatform']
+  assign: ['leantk']
+- valueFor: '**Enter Task Name**'
   contains: 'Gradle'
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
@@ -78,6 +82,9 @@ rules:
   contains: 'AzureCli'
   addLabels: ['Area: Release']
   assign: ['bishal-pdmsft']
+- valueFor: '**Enter Task Name**'
+  contains: 'ACRTask'
+  addLabels: ['Area: Release']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureResourceGroupDeployment'
   addLabels: ['Area: Release']
