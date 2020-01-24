@@ -1,6 +1,6 @@
 import fs = require('fs');
 import path = require('path');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
