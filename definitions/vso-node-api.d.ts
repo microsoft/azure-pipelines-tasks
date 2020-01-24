@@ -4631,7 +4631,7 @@ declare module 'vso-node-api/interfaces/GalleryInterfaces' {
 	     */
 	    filters: QueryFilter[];
 	    /**
-	     * The Flags are used to deterine which set of information the caller would like returned for the matched extensions.
+	     * The Flags are used to determine which set of information the caller would like returned for the matched extensions.
 	     */
 	    flags: ExtensionQueryFlags;
 	}
@@ -4653,7 +4653,7 @@ declare module 'vso-node-api/interfaces/GalleryInterfaces' {
 	     */
 	    Id = 4,
 	    /**
-	     * The catgeory is unlike other filters. It is AND'd with the other filters instead of being a seperate query.
+	     * The category is unlike other filters. It is AND'd with the other filters instead of being a separate query.
 	     */
 	    Category = 5,
 	    /**

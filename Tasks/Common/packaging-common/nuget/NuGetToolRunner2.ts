@@ -19,7 +19,7 @@ interface EndpointCredentials {
     username?: string;
     password: string;
 }
-interface EnpointCredentialsContainer {
+interface EndpointCredentialsContainer {
     endpointCredentials: EndpointCredentials[];
 }
 export interface NuGetEnvironmentSettings {
@@ -30,7 +30,7 @@ export interface NuGetEnvironmentSettings {
     extensionsDisabled: boolean;
 
     /* NO_PROXY support
-    / Agent.ProxyBypassList supplies a list of regexes, nuget is expecting a list of comma seperated domains.
+    / Agent.ProxyBypassList supplies a list of regexes, nuget is expecting a list of comma separated domains.
     / so we need to determine if the uris match any of the regexes. */
     // provide to read the uris from a config file (install)
     configFile?: string;
@@ -452,7 +452,7 @@ export function getProxyBypassForConfig(configFile: string): string {
 
 function buildCredentialJson(authInfo: auth.NuGetExtendedAuthInfo): string {
     if (authInfo && authInfo.externalAuthInfo) {
-        let enpointCredentialsJson: EnpointCredentialsContainer = {
+        let endpointCredentialsJson: EndpointCredentialsContainer = {
             endpointCredentials: [] as EndpointCredentials[]
         };
 
@@ -461,7 +461,7 @@ function buildCredentialJson(authInfo: auth.NuGetExtendedAuthInfo): string {
             switch(authInfo.authType) {
                 case (auth.ExternalAuthType.UsernamePassword):
                     let usernamePasswordAuthInfo =  authInfo as auth.UsernamePasswordExternalAuthInfo;
-                    enpointCredentialsJson.endpointCredentials.push({
+                    endpointCredentialsJson.endpointCredentials.push({
                         endpoint: authInfo.packageSource.feedUri,
                         username: usernamePasswordAuthInfo.username,
                         password: usernamePasswordAuthInfo.password
@@ -471,7 +471,7 @@ function buildCredentialJson(authInfo: auth.NuGetExtendedAuthInfo): string {
                     break;
                 case (auth.ExternalAuthType.Token):
                     let tokenAuthInfo =  authInfo as auth.TokenExternalAuthInfo;
-                    enpointCredentialsJson.endpointCredentials.push({
+                    endpointCredentialsJson.endpointCredentials.push({
                         endpoint: authInfo.packageSource.feedUri,
                         /* No username provided */
                         password: tokenAuthInfo.token
@@ -489,12 +489,12 @@ function buildCredentialJson(authInfo: auth.NuGetExtendedAuthInfo): string {
             }
         });
 
-        if (enpointCredentialsJson.endpointCredentials.length < 1) {
+        if (endpointCredentialsJson.endpointCredentials.length < 1) {
             tl.debug(`None detected.`);
             return null;
         }
 
-        const externalCredentials: string = JSON.stringify(enpointCredentialsJson);
+        const externalCredentials: string = JSON.stringify(endpointCredentialsJson);
         return externalCredentials;
     }
 

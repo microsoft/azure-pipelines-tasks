@@ -107,7 +107,7 @@ describe('PublishTestResultsV1 Find files legacy suite', function () {
         done();
     });
 
-    it('Search pattern seperated by semi-colon(delimiter)', (done) => {
+    it('Search pattern separated by semi-colon(delimiter)', (done) => {
         let test = ff.findFiles(path.join(data, '*.log') + ";" +path.join(data, '*.txt'));
         assert(test.length === 4);
         assert(test[0] === posixFormat(path.join(data, 'a.log')));
@@ -117,7 +117,7 @@ describe('PublishTestResultsV1 Find files legacy suite', function () {
         done();
     });
     
-    it('Search pattern seperated by semi-colon(delimiter)', (done) => {
+    it('Search pattern separated by semi-colon(delimiter)', (done) => {
         let test = ff.findFiles(path.join(data, 'a*') + ";-:" + path.join(data, 'a.txt'));
         assert(test.length === 1);
         assert(test[0] === posixFormat(path.join(data, 'a.log')));

@@ -18,7 +18,7 @@ interface TaskParameters {
 
 // Python has "scripts" or "bin" directories where command-line tools that come with packages are installed.
 // This is where pip is, along with anything that pip installs.
-// There is a seperate directory for `pip install --user`.
+// There is a separate directory for `pip install --user`.
 //
 // For reference, these directories are as follows:
 //   macOS / Linux:

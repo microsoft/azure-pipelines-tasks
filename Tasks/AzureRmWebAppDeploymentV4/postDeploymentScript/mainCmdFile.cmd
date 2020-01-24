@@ -1,6 +1,6 @@
 @echo off
 
-:: Send stdout and stderr to seperate file
+:: Send stdout and stderr to separate file
 call cmd /c "%Home%\\site\\VSTS_PostDeployment_%1\\kuduPostDeploymentScript.cmd" > "%Home%\\site\\VSTS_PostDeployment_%1\\stdout.txt" 2> "%Home%\\site\\VSTS_PostDeployment_%1\\stderr.txt"
 
 :: write return code of previous command to script_result file

@@ -66,7 +66,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 };
 
-// Need to add these as seperate string since they are dynamic
+// Need to add these as separate string since they are dynamic
 a['exec'][sevenZip1Command] = {
     "code": 0,
     "stdout": "extracted zip1"

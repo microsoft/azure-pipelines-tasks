@@ -18,7 +18,7 @@ export abstract class CodeCoverageEnabler implements ICodeCoverageEnabler {
     abstract enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean>;
 
     // -----------------------------------------------------
-    // Convert the Azure Pipelines specific filter to comma seperated specific filter pattern
+    // Convert the Azure Pipelines specific filter to comma separated specific filter pattern
     // - +:com.abc,-:com.xy -> com.abc,com.xy
     // -----------------------------------------------------    
     protected extractFilters(classFilter: string) {
