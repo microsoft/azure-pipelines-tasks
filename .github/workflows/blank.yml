@@ -20,7 +20,7 @@ jobs:
       with:
         version: 10.x
 
-    # Need to explicitly install @octokit/rest separately or else it will mess with our typings.
+    # Need to explicitly install @octokit/rest seperately or else it will mess with our typings.
     - run: npm install && npm install @octokit/rest
 
     - name: File bugs
