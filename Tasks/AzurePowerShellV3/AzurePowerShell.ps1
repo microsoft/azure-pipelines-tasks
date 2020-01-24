@@ -11,7 +11,7 @@ $__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
 
-Write-Host "## Stage 1: Input Validation"
+Write-Host "## Validating Inputs"
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
 if ($scriptType -eq "FilePath") {
@@ -44,9 +44,9 @@ if ($targetAzurePs -eq $latestVersion) {
 } elseif (-not($regex.IsMatch($targetAzurePs))) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
-Write-Host "## Stage 1: Input Validation Complete" 
+Write-Host "## Validating Inputs Complete" 
 
-Write-Host "## Stage 2: Initialize Azure"
+Write-Host "## Initializing Azure"
 . "$PSScriptRoot\Utility.ps1"
 $targetAzurePs = Get-RollForwardVersion -azurePowerShellVersion $targetAzurePs
 
@@ -79,25 +79,21 @@ catch
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs -authScheme $authScheme
 
 # troubleshoot link
-$troubleshoot = "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-powershell?view=azure-devops#troubleshooting"
-$status = $true
+$troubleshoot = "https://aka.ms/azure-powershell-troubleshoot"
 try {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Initialize-Azure -azurePsVersion $targetAzurePs -strict
-    Write-Host "## Stage 2: Initialize Azure Complete"
-} 
-catch {
-    $status = $false
-    throw
+    Write-Host "## Initializing Azure Complete"
+    $success = $true
 } 
 finally {
-    if (!$status) {
-        Write-Host "## Initialize Azure failed: For troubleshooting, refer: $troubleshoot"
+    if (!$success) {
+        Write-VstsTaskError "Initialize Azure failed: For troubleshooting, refer: $troubleshoot"
     }
 }
 
-Write-Host "## Stage 3: Running script"
+Write-Host "## Running script"
 try {
     # Trace the expression as it will be invoked.
     $__vstsAzPSInlineScriptPath = $null
@@ -177,7 +173,7 @@ finally {
         Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
     }
 }
-Write-Host "## Stage 3: Running script Complete"
+Write-Host "## Running script Complete"
 
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Remove-EndpointSecrets
