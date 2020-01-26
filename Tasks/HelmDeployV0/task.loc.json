@@ -383,6 +383,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.tillernamespace",
       "type": "string",
       "groupName": "advanced"
+    },
+    {
+      "name": "failOnStderr",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStderr",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
+      "groupName": "advanced"
     }
   ],
   "dataSourceBindings": [{
