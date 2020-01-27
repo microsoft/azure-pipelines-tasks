@@ -12,6 +12,7 @@ import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
 export async function promote(ignoreSslErrors?: boolean) {
     TaskInputParameters.validateTimeoutForRolloutStatus();
     const kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace, ignoreSslErrors);
+    utils.displayKubectlVersion(kubectl);
 
     if (!canaryDeploymentHelper.isCanaryDeploymentStrategy()) {
         tl.debug('Strategy is not canary deployment. Invalid request.');

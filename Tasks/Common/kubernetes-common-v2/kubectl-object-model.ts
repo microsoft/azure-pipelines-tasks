@@ -178,12 +178,12 @@ export class Kubectl {
         return this.execute(command);
     }
 
-    public executeCommand(customCommand: string, args?: string) {
+    public executeCommand(customCommand: string, args?: string, silent?: boolean) {
         const command = tl.tool(this.kubectlPath);
         command.arg(customCommand);
         if (args)
             command.line(args);
-        return this.execute(command);
+        return this.execute(command, silent);
     }
 
     private execute(command: ToolRunner, silent?: boolean) {
