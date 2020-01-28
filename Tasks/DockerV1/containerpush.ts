@@ -40,9 +40,13 @@ function dockerPush(connection: ContainerConnection, image: string, imageDigestF
 }
 
 export function run(connection: ContainerConnection): any {
-    var imageLsCommand = connection.createCommand();
-    imageLsCommand.arg("images");
-    connection.execCommand(imageLsCommand);
+    try {
+        var imageLsCommand = connection.createCommand();
+        imageLsCommand.arg("images");
+        connection.execCommand(imageLsCommand);
+    } catch (ex) {
+        tl.warning(ex);
+    }
 
     let command = tl.getInput("command", true);    
     var commandArguments = dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
