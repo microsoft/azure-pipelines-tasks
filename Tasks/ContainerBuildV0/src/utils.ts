@@ -3,6 +3,7 @@
 import tl = require("azure-pipelines-task-lib/task");
 import toolLib = require("azure-pipelines-tool-lib/tool");
 import * as tr from "azure-pipelines-task-lib/toolrunner";
+import * as crypto from "crypto";
 import * as path from 'path';
 import fs = require('fs');
 import webclient = require("azure-arm-rest-v2/webClient");
@@ -16,8 +17,7 @@ const buildctlToolNameWithExtension = buildctlToolName + getExecutableExtension(
 const stableBuildctlVersion = "v0.5.1"
 var serviceName = "azure-pipelines-pool"
 var namespace = "azuredevops"
-var port = "8080"
-var clusteruri = ""
+var clusterip = ""
 
 export async function getStableBuildctlVersion(): Promise<string> {
     var request = new webclient.WebRequest();
@@ -86,10 +86,7 @@ export async function getServiceDetails() {
 
     var kubectlToolPath = tl.which("kubectl", true);
     var kubectlTool = tl.tool(kubectlToolPath);
-    var serviceNameInput = tl.getInput('poolService', false);
-    if (serviceNameInput) {
-        serviceName = serviceNameInput;
-    }
+    
     kubectlTool.arg('get');
     kubectlTool.arg('service');
     kubectlTool.arg(`${serviceName}`);
@@ -106,8 +103,7 @@ export async function getServiceDetails() {
     else if (serviceResponse && serviceResponse.stdout) {
         var responseOutput = JSON.parse(serviceResponse.stdout);
         namespace = responseOutput.metadata.namespace ? responseOutput.metadata.namespace : namespace;
-        port = responseOutput.spec.ports[0].port ? responseOutput.spec.ports[0].port : port;
-        clusteruri = responseOutput.status.loadBalancer.ingress[0].ip ? responseOutput.status.loadBalancer.ingress[0].ip : clusteruri;
+        clusterip = responseOutput.spec.clusterIP;
     }
 }
 
@@ -115,13 +111,20 @@ export async function getBuildKitPod() {
 
         await getServiceDetails();
 
+        var sharedsecret = tl.getInput('sharedSecret', false);
+        var hmac = crypto.createHmac('sha512', sharedsecret);
+        
+        var hmacdigest = hmac.digest('hex');
+        tl.debug("Computed hmac ");
+
         let request = new webclient.WebRequest();
         let headers = {
-            "key": tl.getVariable('Build.Repository.Name') + tl.getInput("Dockerfile", true)
+            "key": tl.getVariable('Build.Repository.Name') + tl.getInput("Dockerfile", true),
+            "X-Azure-Signature": hmacdigest
         };
         let webRequestOptions: webclient.WebRequestOptions = { retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true };
 
-        request.uri = `http://${clusteruri}:${port}/buildPod`;
+        request.uri = `http://${clusterip}/buildPod`;
         request.headers = headers
         request.method = "GET";
 
