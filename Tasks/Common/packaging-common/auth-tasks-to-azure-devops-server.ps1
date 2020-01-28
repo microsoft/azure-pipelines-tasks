@@ -6,6 +6,13 @@
 # - remove the azure-pipelines-tasks repo
 # - uninstall tfx-cli
 
+# IMPORTANT! Read this if you're running this script behind a proxy.
+# This script is running 'npm install' and 'git clone'. 
+# To make this script work behind a proxy you may need to run the following two commands before running this script to set up proxy configurations:
+# git config --global http.proxy http://<username>:<password>@<proxy-server-url>:<port>
+# npm config set http://<username>:<password>@<proxy-server-url>:<port>
+# We do not want to set these up for you because we want to make sure 
+
 param(
     # The URL of Azure DevOps Server, e.g. https://fabrikam.visualstudio.com/DefaultCollection
     [Parameter(Mandatory=$true)]
@@ -15,8 +22,8 @@ param(
     [string]$PAT,
     # The task to add to Azure DevOps Server
     # If task is not provided, the script will automatically install NuGetAuthenticateV2, MavenAuthenticateV0, PipAuthenticateV1 and TwineAuthenticateV1
+    [Parameter(Mandatory=$false)]
     [string]$Task
-    # TODO: Proxy parameters
 )
 
 $script:ErrorActionPreference='Stop'
@@ -46,13 +53,13 @@ try {
     Write-Error "Failed to run 'git --version'. Make sure you have git installed."
 }
 
-
 try {
     Write-Host "tfx --version"
     tfx --version
 } catch {
     $uninstallTfxCli = 1;
     try {
+        Write-Host "npm installing tfx-cli"
         npm install -g tfx-cli --registry=https://registry.npmjs.org/
     } catch {
         Write-Error "Failed to run 'npm install -g tfx-cli --registry=https://registry.npmjs.org/'. You may have to manually install tfx-cli to run this script."
