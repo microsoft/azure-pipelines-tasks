@@ -1,6 +1,7 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import path = require('path');
+import minimatch = require('minimatch');
 
 import task = require('./ftpuploadtask');
 import FtpOptions = task.FtpOptions;
@@ -293,7 +294,7 @@ export function findFiles(ftpOptions: FtpOptions): string[] {
 
         tl.debug('searching for files, pattern: ' + normalizedPattern);
 
-        let matched = tl.match(allFiles, normalizedPattern, matchOptions);
+        let matched = minimatch.match(allFiles, normalizedPattern, matchOptions);
         tl.debug('Found total matches: ' + matched.length);
         // ensure each result is only added once
         for (let j = 0; j < matched.length; j++) {
