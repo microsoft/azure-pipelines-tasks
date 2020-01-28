@@ -7,7 +7,7 @@ export let TestEnvVars = {
     dockerFile: "__dockerFile__",
     buildContext: "__buildContext__",
     tags: "__tags__",
-    poolServiceName: "__poolServiceName__"
+    sharedSecret: "__sharedSecret__"
 };
 
 export let OperatingSystems = {
