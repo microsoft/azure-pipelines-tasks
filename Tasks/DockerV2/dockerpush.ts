@@ -53,6 +53,10 @@ function pushMultipleImages(connection: ContainerConnection, imageNames: string[
 }
 
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
+    var imageLsCommand = connection.createCommand();
+    imageLsCommand.arg("images");
+    connection.execCommand(imageLsCommand);
+    
     // ignore the arguments input if the command is buildAndPush, as it is ambiguous
     let commandArguments = isBuildAndPushCommand ? "" : dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
