@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import fs = require('fs');
 import path = require('path');
 import os = require('os');
@@ -16,7 +16,7 @@ const osType = os.type();
 const isWindows = !!osType.match(/^Win/);
 
 //Create osType, stats mocks, support not added in this version of task-lib
-const tl = require('vsts-task-lib/mock-task');
+const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
 tlClone.osType = function() {
     return osType;
@@ -38,10 +38,10 @@ tlClone.exist = function(path) {
     }
     return exist;
 };
-tlClone.rmRF = function(path, flag) {
+tlClone.rmRF = function(path) {
     console.log('Removing ' + path);
 };
-tmr.registerMock('vsts-task-lib/mock-task', tlClone);
+tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 let zipExecutable = path.join(__dirname, '..', '7zip', '7z.exe');
 let sevenZip1Command: string = `${zipExecutable} x -o${__dirname} ${path.join(__dirname, 'zip1.zip')}`;
