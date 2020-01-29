@@ -10,6 +10,6 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "dependencies": {
-    "vsts-task-lib": "2.0.1-preview"
+    "azure-pipelines-task-lib": "^2.9.3"
   }
 }
