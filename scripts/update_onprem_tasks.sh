@@ -16,7 +16,7 @@ declare -r LOG_DEBUG_COLOR="\033[1;34m"
 declare -r LOG_DEFAULT_COLOR="\033[0m"
 declare -r LOG_SUCCESS_COLOR="\033[1;32m"
 
-declare -Ar AUTH_TASKS=([0]="MavenAuthenticateV0" [1]="npmAuthenticateV0" [2]="PipAuthenticateV1" [3]="TwineAuthenticateV1" [4]="NuGetAuthenticateV0")
+declare -Ar AUTH_TASKS=([MavenAuthenticateV0]="MavenAuthenticateV0" [NpmAuthenticateV0]="npmAuthenticateV0" [PipAuthenticateV1]="PipAuthenticateV1" [TwineAuthenticateV1]="TwineAuthenticateV1" [NuGetAuthenticateV0]="NuGetAuthenticateV0")
 declare -Ar LOG_LEVELS=([0]="ERROR" [1]="WARNING" [2]="INFO" [3]="DEBUG")
 
 log() {
@@ -50,15 +50,15 @@ get_args() {
                 LOG_LEVEL=4
             ;;
             --collection-url | -c)
+                if [ -z ${2} ]; then
+                    log_error "Missing required parameter: 'collection-url'"
+                    display_help
+                    exit 1
+                fi
                 COLLECTION_URL=${2%/}
                 shift
             ;;
             --token | -t)
-                if [ -z ${2} ]; then
-                    log_error "Missing required parameter: 'token'"
-                    display_help
-                    exit 1
-                fi
                 TOKEN=${2}
                 shift
             ;;
@@ -85,79 +85,123 @@ display_help() {
     echo 'Display help'
 }
 
+# Get system arch
+get_arch() {
+    arch=`arch`
+    if [ "${arch}" == "x86_32" ]; then
+        arch="x86";
+    fi
+    if [ "${arch}" == "x86_64" ]; then
+        arch="x64";
+    fi
+    echo $arch;
+}
+
+# Get os name
+get_os() {
+    os=`uname -s | awk '{print tolower($0)}'`;
+    echo $os;
+}
+
 # Check for required args
 get_args "${@}"
 
-if [ -z ${COLLECTION_URL} ]; then
-    log_error "Missing required parameter: 'collection-url'"
+if [ -z ${TOKEN} ]; then
+    log_error "Missing required parameter: 'token'"
     display_help
     exit 1
 fi
 
-# Check for installed software, we need:
-# * nodejs + npm
-# * jq
+# Create temporary directory
+working_dir=$(mktemp -d -t uot-XXXXXXXXXX)
+pushd $working_dir > /dev/null 2>&1
+
+# Log error and exit
+leae() {
+    log_error "$1\n";
+    
+    log_info "Cleaning up..."
+    popd >/dev/null 2>&1
+    rm -rf $working_dir
+    log_success "Done\n"
+    
+    exit 1;
+}
+
+# Check for installed software that the customer needs to install, we need:
 # * git
+# * tar
 
 log_info "Checking for requirements..."
-if $(node -v >/dev/null); then
-    log_debug "\n'node.js' is installed.\n"
-else
-    log_error "\nRequired dependency node.js is not installed. Please download and install 'node.js' from here before proceeding: https://nodejs.org/en/download/"
-    exit 1
-fi
 
-if $(jq --help >/dev/null); then
-    log_debug "'jq' is installed.\n"
-else
-    log_error "\nRequired dependency 'jq' is not installed. Please download and install 'jq' for your OS from here before proceeding: https://stedolan.github.io/jq/download/"
-    exit 1
-fi
+git --version >/dev/null || leae "\nRequired dependency 'git' is not installed. Please download and install 'git' for your OS from here before proceeding: https://git-scm.com/downloads"
+log_debug "\n'git' is installed.\n"
 
-if $(git --version >/dev/null); then
-    log_debug "'git' is installed.\n"
-else
-    log_error "\nRequired dependency 'git' is not installed. Please download and install 'git' for your OS from here before proceeding: https://git-scm.com/downloads"
-    exit 1
-fi
+tar --version >/dev/null || leae "\nRequired dependency 'tar' is not installed. Please download and install 'tar' for your OS before proceeding."
+log_debug "'tar' is installed.\n"
 
-log_success "Ok\n"
+jq --help >/dev/null || leae "\nRequired dependency 'jq' is not installed. Please download and install 'jq' for your OS from here before proceeding: https://stedolan.github.io/jq/download/"
+log_debug "'jq' is installed.\n"
 
-# Download tfx-cli
-log_info "Installing tfx-cli..."
-# TODO REMOVE THIS COMMENT
-#sudo npm install -g tfx-cli > /dev/null 2>&1
-log_success "Ok\n"
+log_success "Done\n"
+
+# Install our requirements, we need:
+# * nodejs + npm
+# * jq
+
+# Install our version of node that is supported. (v8.17.0)
+log_info "Installing required software..."
+
+# Install npm 
+node_ver="node-v8.17.0-$(get_os)-$(get_arch)";
+npm_download_url="https://nodejs.org/dist/v8.17.0/${node_ver}.tar.gz";
+
+wget $npm_download_url > /dev/null 2>&1 || leae "\nUnable to download required dependency 'npm' from url ${npm_download_url}. Please verify your internet connection or specify proxy parameters."
+
+mkdir nodejs > /dev/null 2>&1;
+tar -xvzf ${node_ver}.tar.gz -C nodejs > /dev/null  || leae "\nUnable to install required dependency 'npm'."
+
+log_debug "\n'npm' installed locally.\n"
+nodejsbin="${working_dir}/nodejs/${node_ver}/bin/node";
+npmbin="${working_dir}/nodejs/${node_ver}/bin/npm";
+
+# Install tfx-cli
+eval "${npmbin} install -g tfx-cli > /dev/null 2>&1" || leae "Unable to install required dependency 'tfx-cli' from npm."
+log_debug "'tfx-cli' installed locally.\n"
+
+log_success "Done\n"
 
 # Download & build the tasks
 log_info "Cloning tasks repository..."
-pushd /tmp/azurepipelinestasks >/dev/null 2>&1
 
-# git clone -q --single-branch --no-tags https://github.com/microsoft/azure-pipelines-tasks.git /tmp/azurepipelinestasks`
-npm install >/dev/null 2>&1
-log_success "Ok\n"
+git clone -q --single-branch --no-tags https://github.com/microsoft/azure-pipelines-tasks.git $working_dir/azurepipelinestasks || leae "\nUnable to clone azure-pipelines-tasks repository."
 
+pushd $working_dir/azurepipelinestasks >/dev/null 2>&1
+eval "${npmbin} install >/dev/null 2>&1" || leae "\n Unable to resolve azure-pipelines-tasks dependencies."
+log_success "Done\n"
 
-log_info "\nBuilding and uploading tasks...\n"
-tfx login --service-url ${COLLECTION_URL} --token ${TOKEN} >/dev/null 2>&1
-for task in "${AUTH_TASKS[@]}"; do
-    log_info "  ${task}: "
+log_info "Building and uploading tasks...\n"
+tfx login --service-url ${COLLECTION_URL} --token ${TOKEN} >/dev/null 2>&1 || leae "\nUnable to login to collection using the given token."
+for taskkey in "${!AUTH_TASKS[@]}"; do
+    task=${AUTH_TASKS[$taskkey]};
+    log_info "  ${taskkey}: "
+
     # Check if the task is already installed on the instance.
     current_onprem_version=`tfx build tasks list --json | jq ".[] | select(.name==\"${task%??}\").version | \"\(.major).\(.minor).\(.patch)\""`
-    current_built_version=`cat Tasks/${task}/task.loc.json  | jq '.version | "\(.Major).\(.Minor).\(.Patch)"'`
+    current_built_version=`cat Tasks/${taskkey}/task.loc.json  | jq '.version | "\(.Major).\(.Minor).\(.Patch)"'`
     lowest_version=`printf "${current_onprem_version}\n${current_built_version}" | sort -V | head -1`
     
     if [  "${lowest_version}" == "${current_built_version}" ]; then
         log_warning "Skipped\n"
     else
-        node make.js build --task ${task} 
-        tfx build tasks upload --task-path ./_build/Tasks/${task} 
+        node make.js build --task ${taskkey}  >/dev/null 2>&1 || leae "\nUnable to build task ${taskkey}."
+        tfx build tasks upload --task-path ./_build/Tasks/${taskkey}  >/dev/null 2>&1 || leae "\nUnable to upload task ${taskkey} to the collection."
         log_success "Done\n"
     fi
 done
 
-# Get list of tasks from TFS and verify they were updated.
+log_info "Cleaning up..."
+popd >/dev/null 2>&1
+rm -rf $working_dir
 
-# Clean up
-# * Remove tfx-cli ??
-# * Remove any files that were downloaded.
+log_success "Done\n"
