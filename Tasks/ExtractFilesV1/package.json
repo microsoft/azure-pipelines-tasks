@@ -16,7 +16,9 @@
   "dependencies": {
     "@types/node": "^6.0.101",
     "@types/q": "^1.0.7",
-    "vsts-task-lib": "^0.9.20",
-    "collections": "3.0.0"
+    "@types/mocha": "^5.2.7",
+    "azure-pipelines-task-lib": "^2.9.3",
+    "collections": "3.0.0",
+    "minimatch": "^3.0.4"
   }
 }

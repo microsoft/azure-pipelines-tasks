@@ -9,13 +9,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
+    "Minor": 2,
     "Patch": 0
   },
   "groups": [],
   "demands": [],
-  "preview": true,
-  "minimumAgentVersion": "2.155.1",
+  "preview": false,
+  "minimumAgentVersion": "2.161.0",
   "inputs": [
     {
       "name": "source",
@@ -129,6 +129,24 @@
       "helpMarkDown": "ms-resource:loc.input.help.tags"
     },
     {
+      "name": "allowPartiallySucceededBuilds",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowPartiallySucceededBuilds",
+      "defaultValue": "false",
+      "visibleRule": "source == specific && runVersion != specific",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.allowPartiallySucceededBuilds"
+  },
+  {
+      "name": "allowFailedBuilds",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowFailedBuilds",
+      "defaultValue": "false",
+      "visibleRule": "source == specific && runVersion != specific",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.allowFailedBuilds"
+  },
+  {
       "name": "artifact",
       "aliases": [
         "artifactName"

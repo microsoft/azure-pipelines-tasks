@@ -24,7 +24,6 @@ $counters = @(
     "\Processor Information(_Total)\% of Maximum Frequency"
     "\Processor Information(_Total)\% Processor Time"
 )
-$sampleInterval = '5' # 5 seconds
 $maxSize = "1000" # 1,000 mb
 & C:\Windows\System32\logman.exe create counter -n $collectorName -c @counters -o "$PSScriptRoot\..\performance-monitors-$jobName-$('{0:yyyyMMdd-hhmmss}' -f ([System.DateTime]::Now))" -v nnnnnn -f bin -max $maxSize
 

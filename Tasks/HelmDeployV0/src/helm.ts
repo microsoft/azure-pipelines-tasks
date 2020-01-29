@@ -2,20 +2,24 @@
 
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
+
+import * as commonCommandOptions from "./commoncommandoption";
+import * as helmutil from "./utils"
+
+import { AKSCluster, AKSClusterAccessProfile, AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
+import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
+import { extractManifestsFromHelmOutput, getDeploymentMetadata, getManifestFileUrlsFromHelmOutput, getPublishDeploymentRequestUrl, isDeploymentEntity } from 'kubernetes-common-v2/image-metadata-helper';
+
 import { AzureAksService } from 'azure-arm-rest-v2/azure-arm-aks-service';
 import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
-import { AzureEndpoint, AKSCluster, AKSClusterAccessProfile } from 'azure-arm-rest-v2/azureModels';
-import { getDeploymentMetadata, getPublishDeploymentRequestUrl, isDeploymentEntity, extractManifestsFromHelmOutput, getManifestFileUrlsFromHelmOutput } from 'kubernetes-common-v2/image-metadata-helper';
-import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
-
 import helmcli from "./helmcli";
 import kubernetescli from "./kubernetescli"
-import * as helmutil from "./utils"
+
 import fs = require('fs');
-import * as commonCommandOptions from "./commoncommandoption";
+
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
-const publishPipelineMetadata = tl.getVariable("PUBLISH_PIPELINE_METADATA");
+tl.setResourcePath(path.join( __dirname, '../node_modules/azure-arm-rest-v2/module.json'));
 
 function getKubeConfigFilePath(): string {
     var userdir = helmutil.getTaskTempDir();
@@ -124,26 +128,31 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
         tl.setResult(tl.TaskResult.Failed, execResult.stderr);
     }
-    else if ((command === "install" || command === "upgrade") && publishPipelineMetadata && publishPipelineMetadata.toLowerCase() == "true") {
-        let output = execResult.stdout;
-        let manifests = extractManifestsFromHelmOutput(output);
-        if (manifests && manifests.length > 0) {
-            const manifestUrls = getManifestFileUrlsFromHelmOutput(output);            
-            manifests.forEach(manifest => {
-                //Check if the manifest object contains a deployment entity
-                if (manifest.kind && isDeploymentEntity(manifest.kind)) {
-                    try {
-                        pushDeploymentDataToEvidenceStore(kubectlCli, manifest, manifestUrls).then((result) => {
-                            tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
-                        }, (error) => {
-                            tl.warning("publishToImageMetadataStore failed with error: " + error);
-                        });
+    else if ((command === "install" || command === "upgrade")) {
+        try {
+            let output = execResult.stdout;
+            let manifests = extractManifestsFromHelmOutput(output);
+            if (manifests && manifests.length > 0) {
+                const manifestUrls = getManifestFileUrlsFromHelmOutput(output);
+                manifests.forEach(manifest => {
+                    //Check if the manifest object contains a deployment entity
+                    if (manifest.kind && isDeploymentEntity(manifest.kind)) {
+                        try {
+                            pushDeploymentDataToEvidenceStore(kubectlCli, manifest, manifestUrls).then((result) => {
+                                tl.debug("DeploymentDetailsApiResponse: " + JSON.stringify(result));
+                            }, (error) => {
+                                tl.warning("publishToImageMetadataStore failed with error: " + error);
+                            });
+                        }
+                        catch (e) {
+                            tl.warning("publishToImageMetadataStore failed with error: " + e);
+                        }
                     }
-                    catch (e) {
-                        tl.warning("Capturing deployment metadata failed with error: " + e);
-                    }
-                }
-            });
+                });
+            }
+        }
+        catch (e) {
+            tl.warning("Capturing deployment metadata failed with error: " + e);
         }
     }
 }

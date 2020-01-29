@@ -171,21 +171,10 @@ describe('AppCenterDistribute L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Positive path: a single PDB', function () {
+    it('Positive path: a single APPXSYM', function () {
         this.timeout(4000);
 
-        let tp = path.join(__dirname, 'L0SymPDBs_single.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
-    });
-
-
-    it('Positive path: multiple PDBs', function () {
-        this.timeout(4000);
-
-        let tp = path.join(__dirname, 'L0SymPDBs_multiple.js');
+        let tp = path.join(__dirname, 'L0SymAPPXSYMs_single.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
@@ -267,6 +256,56 @@ describe('AppCenterDistribute L0 Suite', function () {
 
         let tp = path.join(__dirname, 'L0AndroidMappingTxtProvided.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
+    it('Negative path: upload zip file fails without build version', function () {
+        this.timeout(4000);
+
+        let tp = path.join(__dirname, 'L0PublishZipNoBuildVersionFails.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.failed, 'task should have failed');
+    });
+
+    it('Positive path: upload without build version don\'t change the body', function () {
+        this.timeout(4000);
+
+        let tp = path.join(__dirname, 'L0EmptyBuildVersionDoesntAppearInBody.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
+    it('Positive path: upload with build version updates the body and leads to successfull upload', function () {
+        this.timeout(4000);
+
+        let tp = path.join(__dirname, 'L0BuildVersionSpecifiedInBodyLeadToSuccessfulUpload.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
+    it('Positive path: upload Breakpad .so files always packs them to .zip', function () {
+        this.timeout(4000);
+
+        const tp = path.join(__dirname, 'L0SymDistributeBreakpad.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+    
+    it('Positive path: upload both Breakpad .so files and Proguard mapping.txt', function () {
+        this.timeout(4000);
+
+        const tp = path.join(__dirname, 'L0SymDistributeBreakpadWithProguard.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');

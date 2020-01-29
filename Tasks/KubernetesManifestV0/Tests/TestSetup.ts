@@ -44,6 +44,8 @@ tr.setInput('secretName', process.env[shared.TestEnvVars.secretName] || '');
 tr.setInput('secretType', process.env[shared.TestEnvVars.secretType] || '');
 tr.setInput('dockerComposeFile', process.env[shared.TestEnvVars.dockerComposeFile] || '');
 tr.setInput('kustomizationPath', process.env[shared.TestEnvVars.kustomizationPath] || '');
+tr.setInput('baselineAndCanaryReplicas', process.env[shared.TestEnvVars.baselineAndCanaryReplicas] || '0');
+tr.setInput('trafficSplitMethod', process.env[shared.TestEnvVars.trafficSplitMethod]);
 
 process.env.SYSTEM_DEFAULTWORKINGDIRECTORY = testnamespaceWorkingDirectory;
 process.env.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI = teamFoundationCollectionUri;
@@ -204,7 +206,7 @@ a.exec[`${kubectlPath} rollout status ${process.env[shared.TestEnvVars.kind]}/${
 
 a.exec[`${kubectlPath} patch ${process.env[shared.TestEnvVars.kind]} ${process.env[shared.TestEnvVars.name]} --type=${process.env[shared.TestEnvVars.mergeStrategy]} -p ${process.env[shared.TestEnvVars.patch]} --namespace ${process.env[shared.TestEnvVars.namespace] || 'testnamespace'}`] = {
     'code': 0,
-    'stdout': `${process.env[shared.TestEnvVars.kind]} "${process.env[shared.TestEnvVars.name]}" successfully rolled out`
+    'stdout': `${process.env[shared.TestEnvVars.kind]}/${process.env[shared.TestEnvVars.name]} patched`
 };
 
 a.exec[`${kubectlPath} get pods -o json --namespace testnamespace`] = {
@@ -230,6 +232,16 @@ a.exec[`${kubectlPath} describe deployment nginx-deployment-baseline --namespace
 a.exec[`${kubectlPath} delete Deployment nginx-deployment-canary nginx-deployment-baseline --namespace testnamespace`] = {
     'code': 0,
     'stdout': ' "nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted'
+};
+
+a.exec[`${kubectlPath} delete Deployment nginx-deployment-canary --namespace testnamespace`] = {
+    'code': 0,
+    'stdout': ' "nginx-deployment-canary" deleted'
+};
+
+a.exec[`${kubectlPath} delete Deployment nginx-deployment-baseline --namespace testnamespace`] = {
+    'code': 0,
+    'stdout': ' "nginx-deployment-baseline" deleted'
 };
 
 a.exec[`${kubectlPath} delete secret secret --namespace testnamespace`] = {
@@ -340,7 +352,8 @@ tr.registerMock('../utils/FileHelper', {
     },
     getNewUserDirPath: fh.getNewUserDirPath,
     ensureDirExists: fh.ensureDirExists,
-    assertFileExists: fh.assertFileExists
+    assertFileExists: fh.assertFileExists,
+    writeManifestToFile: fh.writeManifestToFile
 });
 
 tr.registerMock('uuid/v4', function () {
