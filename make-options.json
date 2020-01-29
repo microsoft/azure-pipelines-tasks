@@ -157,6 +157,7 @@
         "SqlAzureDacpacDeploymentV1",
         "SqlDacpacDeploymentOnMachineGroupV0",
         "SqlServerDacpacDeployment",
+        "ShellScriptV2",
         "SshV0",
         "TwineAuthenticateV0",
         "TwineAuthenticateV1",
