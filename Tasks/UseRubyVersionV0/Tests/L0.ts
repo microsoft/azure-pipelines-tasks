@@ -12,8 +12,6 @@ describe('UseRubyVersion L0 Suite', function () {
     });
 
     it('finds version in cache in Linux', function () {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0FindVersionInLinuxCache.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
