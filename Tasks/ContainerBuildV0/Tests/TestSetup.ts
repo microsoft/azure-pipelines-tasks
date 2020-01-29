@@ -21,7 +21,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 var nock = require("nock");
 tr.setInput('dockerRegistryServiceConnection',  process.env[shared.TestEnvVars.dockerRegistryServiceConnection] || "");
 tr.setInput('repository',  process.env[shared.TestEnvVars.repository] || "");
-tr.setInput('poolService',  process.env[shared.TestEnvVars.poolServiceName] || "");
+tr.setInput('sharedSecret',  process.env[shared.TestEnvVars.sharedSecret] || "sharedsecret1234");
 tr.setInput('Dockerfile',  process.env[shared.TestEnvVars.dockerFile] || DefaultDockerFileInput);
 tr.setInput('buildContext',  process.env[shared.TestEnvVars.buildContext] || DefaultBuildContext);
 tr.setInput('tags', process.env[shared.TestEnvVars.tags] || "11");
@@ -95,7 +95,7 @@ let a = {
        },
        "kubectl get service azure-pipelines-pool -o=json" : {
            "code": 0,
-           "stdout": "{\"metadata\": {\"namespace\": \"azuredevops\"},\"spec\": {\"ports\": [{\"port\": 8080}]},\"status\": {\"loadBalancer\": {\"ingress\": [{\"ip\": \"testip\"}]}}}"
+           "stdout": "{\"metadata\": {\"namespace\": \"azuredevops\"},\"spec\": {\"clusterIP\": \"10.0.11.12\"},\"status\": {\"loadBalancer\": {\"ingress\": [{\"ip\": \"testip\"}]}}}"
        },
        "kubectl get service azure-pipelines-pool-custom -o=json" : {
         "code": 0,
@@ -105,7 +105,7 @@ let a = {
     "find": {}
 };
 
-nock('http://testip:8080')
+nock('http://10.0.11.12')
     .get('/buildPod')
     .reply(201, {
         status: 'success',

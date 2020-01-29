@@ -116,10 +116,12 @@ export class Kubectl {
         return this.execute(command, true);
     }
 
-    public checkRolloutStatus(resourceType: string, name: string): IExecSyncResult {
+    public checkRolloutStatus(resourceType: string, name: string, timeoutInSeconds?: string): IExecSyncResult {
         const command = tl.tool(this.kubectlPath);
         command.arg(['rollout', 'status']);
         command.arg(resourceType + '/' + name);
+        if (timeoutInSeconds)
+            command.arg(['--timeout', timeoutInSeconds + 's']);
         return this.execute(command);
     }
 
@@ -135,10 +137,11 @@ export class Kubectl {
         const outputLines = applyOutput.split('\n');
         const results = [];
         outputLines.forEach(line => {
-            const words = line.split(' ');
-            if (words.length > 2) {
-                const resourceType = words[0].trim();
-                const resourceName = JSON.parse(words[1].trim());
+            if (line && line.trim().length > 0) {
+                const words = line.split(' ');
+                const resourceInfo = words[0].trim().split('/');
+                const resourceType = resourceInfo[0];
+                const resourceName = resourceInfo[1];
                 if (filterResourceTypes.filter(type => !!type && resourceType.toLowerCase().startsWith(type.toLowerCase())).length > 0) {
                     results.push({
                         type: resourceType,
@@ -172,6 +175,14 @@ export class Kubectl {
         const command = tl.tool(this.kubectlPath);
         command.arg('delete');
         command.line(args);
+        return this.execute(command);
+    }
+
+    public executeCommand(customCommand: string, args?: string) {
+        const command = tl.tool(this.kubectlPath);
+        command.arg(customCommand);
+        if (args)
+            command.line(args);
         return this.execute(command);
     }
 

@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 161,
-    "Patch": 0
+    "Patch": 3
   },
   "demands": [
     "msbuild"
@@ -90,22 +90,14 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.platform",
       "defaultValue": "",
-      "required": false,
-      "validation": {
-        "expression": "isMatch(value, '[<>*|:\\/&%\".#?]'",
-        "message": "The following characters are forbidden in Platform: < > * | : \\ / & % \" . # ?"
-      }
+      "required": false
     },
     {
       "name": "configuration",
       "type": "string",
       "label": "ms-resource:loc.input.label.configuration",
       "defaultValue": "",
-      "required": false,
-      "validation": {
-        "expression": "isMatch(value, '[<>*|:\\/&%\".#?]'",
-        "message": "The following characters are forbidden in Configuration: < > * | : \\ / & % \" . # ?"
-      }
+      "required": false
     },
     {
       "name": "msbuildArguments",

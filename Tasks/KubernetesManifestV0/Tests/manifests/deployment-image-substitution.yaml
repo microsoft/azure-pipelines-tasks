@@ -27,6 +27,12 @@ spec:
         image: myacr.azurecr.io/myimage 
       - name: untaggedwithcomment
         image: myimagewithcomment # this is a comment
+      - image: imagewithhyphen # this is a comment
+        name: imagewithhyphen
+      - name: untaggedinsamefoldera
+        image: myacr.azurecr.io/folder/image-a
+      - name: untaggedinsamefolderb
+        image: myacr.azurecr.io/folder/image-b
       imagePullSecrets:
       - name: key1
       initContainers:

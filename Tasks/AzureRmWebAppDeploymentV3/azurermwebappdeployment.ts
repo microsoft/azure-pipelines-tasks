@@ -1,19 +1,22 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
-import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
-import { AzureEndpoint } from 'azure-arm-rest/azureModels';
-import { AzureResourceFilterUtility } from './operations/AzureResourceFilterUtility';
-import { KuduServiceUtility } from './operations/KuduServiceUtility';
-import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
-import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
-import { AzureAppServiceUtility } from './operations/AzureAppServiceUtility';
-import { ContainerBasedDeploymentUtility } from './operations/ContainerBasedDeploymentUtility';
-import { TaskParameters, TaskParametersUtility } from './operations/TaskParameters';
-import { FileTransformsUtility } from './operations/FileTransformsUtility';
+
 import * as ParameterParser from './parameterparser'
-import { addReleaseAnnotation } from './operations/ReleaseAnnotationUtility';
+
+import { TaskParameters, TaskParametersUtility } from './operations/TaskParameters';
+
+import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
+import { AzureAppServiceUtility } from './operations/AzureAppServiceUtility';
+import { AzureEndpoint } from 'azure-arm-rest/azureModels';
+import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
+import { AzureResourceFilterUtility } from './operations/AzureResourceFilterUtility';
+import { ContainerBasedDeploymentUtility } from './operations/ContainerBasedDeploymentUtility';
 import { DeployWar } from './operations/WarDeploymentUtilities';
+import { FileTransformsUtility } from './operations/FileTransformsUtility';
+import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
+import { KuduServiceUtility } from './operations/KuduServiceUtility';
+import { addReleaseAnnotation } from './operations/ReleaseAnnotationUtility';
 
 var packageUtility = require('webdeployment-common/packageUtility.js');
 

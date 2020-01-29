@@ -17,7 +17,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 162,
+        "Minor": 164,
         "Patch": 0
     },
     "minimumAgentVersion": "2.115.0",
@@ -125,6 +125,15 @@
             "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, runtime. The arguments depend on the command selected."
         },
         {
+            "name": "restoreArguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "visibleRule": "command = restore",
+            "required": false,
+            "helpMarkDown": "Write the additional arguments to be passed to **restore** command."
+        },
+        {
             "name": "publishTestResults",
             "type": "boolean",
             "label": "Publish test results and code coverage",
@@ -155,10 +164,10 @@
             "name": "modifyOutputPath",
             "type": "boolean",
             "visibleRule": "command = publish",
-            "label": "Add project name to publish path",
+            "label": "Add project's folder name to publish path",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "If true, folders created by the publish command will have project file name prefixed to their folder names when output path is specified explicitly in arguments. This is useful if you want to publish multiple projects to the same folder."
+            "helpMarkDown": "If true, folders created by the publish command will have project's folder name prefixed to their folder names when output path is specified explicitly in arguments. This is useful if you want to publish multiple projects to the same folder."
         },
         {
             "name": "selectOrConfig",
