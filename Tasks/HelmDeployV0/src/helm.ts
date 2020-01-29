@@ -73,7 +73,7 @@ async function run() {
         command: command,
         jobId: tl.getVariable('SYSTEM_JOBID')
     };
-    var failOnStderr = tl.getBoolInput("failOnStderr", true);
+    var failOnStderr = tl.getBoolInput("failOnStderr");
 
     console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
         "TaskEndpointId",
