@@ -2,6 +2,7 @@
 # This is what this script does:
 # - install tfx-cli
 # - git clone azure-pipelines-tasks to a temporary location
+# - npm install and run build on preferred tasks
 # - upload task(s) to your Azure DevOps Server instance
 # - remove the azure-pipelines-tasks repo
 # - uninstall tfx-cli
@@ -21,7 +22,7 @@ param(
     [Parameter(Mandatory=$true)]
     [string]$PAT,
     # The task to add to Azure DevOps Server
-    # If task is not provided, the script will automatically install NuGetAuthenticateV2, MavenAuthenticateV0, PipAuthenticateV1 and TwineAuthenticateV1
+    # If task is not provided, the script will automatically install NuGetAuthenticateV0, MavenAuthenticateV0, PipAuthenticateV1 and TwineAuthenticateV1
     [Parameter(Mandatory=$false)]
     [string]$Task
 )
@@ -29,7 +30,8 @@ param(
 $script:ErrorActionPreference='Stop'
 
 $uninstallTfxCli = 0
-$tempPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "Pipelines");
+$originalDirectory = Get-Location
+$tempPath = [System.IO.Path]::Combine($originalDirectory, "Pipelines"); 
 $pipelineRepoURL = "https://github.com/microsoft/azure-pipelines-tasks.git"
 
 # Make it work when TLS 1.0/1.1 is disabled
@@ -40,10 +42,11 @@ if ([Net.ServicePointManager]::SecurityProtocol.ToString().Split(',').Trim() -no
 # Verify all required software is installed
 Write-Host "Checking for required software"
 try {
-    Write-Host "npm -v"
-    npm -v
+    Write-Host "node --version"
+    node --version
 } catch {
-    Write-Error "Failed to run 'npm -v'. Make sure you have npm installed."
+    Write-Error "Failed to run 'node --version'. Make sure you have node and npm installed."
+    exit
 }
 
 try {
@@ -51,6 +54,7 @@ try {
     git --version
 } catch {
     Write-Error "Failed to run 'git --version'. Make sure you have git installed."
+    exit
 }
 
 try {
@@ -74,21 +78,37 @@ try {
     Write-Error "Failed to run 'git clone $pipelineRepoURL $tempPath'"
 }
 
-# upload auth task(s)
-try {
-    if (!$Task) {
-        $taskArray = @("NuGetAuthenticateV0", "MavenAuthenticateV0", "PipAuthenticateV1", "TwineAuthenticateV1")
-    } else {
-        $taskArray = @($task)
-    }
+# go to temp path and install
+Write-Host "Go to $tempPath and npm install"
+Set-Location -Path $tempPath
+npm install
 
-    forEach($taskItem in $taskArray) {
-        Write-Host "Attempting to upload $taskItem to Azure DevOps Server"
-        tfx build tasks upload --task-path $tempPath\Tasks\$taskItem --service-url $ServiceURL --token $PAT
-    }
-} catch {
-    Write-Error "Failed to run 'tfx build tasks upload'"
+# Create an array of tasks
+if (!$Task) {
+    $taskArray = @("NuGetAuthenticateV0", "MavenAuthenticateV0", "PipAuthenticateV1", "TwineAuthenticateV1")
+} else {
+    $taskArray = @($task)
 }
+
+# build and upload auth task(s)
+forEach($taskItem in $taskArray) {
+    try {
+        Write-Host "Building $taskItem"
+        node make.js build --task $taskItem
+    } catch {
+        Write-Error "Failed to build $taskItem"
+        exit
+    }
+    try {
+        Write-Host "Attempting to upload $taskItem to Azure DevOps Server"
+        tfx build tasks upload --task-path _build\Tasks\$taskItem --service-url $ServiceURL --token $PAT
+    } catch {
+        Write-Error "Failed to run 'tfx build tasks upload'"
+    }
+}
+
+Write-Host "Going back to $originalDirectory"
+Set-Location -Path $originalDirectory
 
 # clean up - remove pipeline tasks repo
 Write-Host "Removing $tempPath"
