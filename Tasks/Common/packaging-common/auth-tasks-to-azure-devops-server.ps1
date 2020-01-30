@@ -1,18 +1,11 @@
 # This is a script that will add the new authenticate tasks to Azure DevOps Server.
 # This is what this script does:
 # - install tfx-cli
-# - git clone azure-pipelines-tasks to a temporary location
+# - git clone azure-pipelines-tasks to a temporary directory named Pipelines in your current directory
 # - npm install and run build on preferred tasks
 # - upload task(s) to your Azure DevOps Server instance
-# - remove the azure-pipelines-tasks repo
+# - remove the Pipelines directory
 # - uninstall tfx-cli
-
-# IMPORTANT! Read this if you're running this script behind a proxy.
-# This script is running 'npm install' and 'git clone'. 
-# To make this script work behind a proxy you may need to run the following two commands before running this script to set up proxy configurations:
-# git config --global http.proxy http://<username>:<password>@<proxy-server-url>:<port>
-# npm config set http://<username>:<password>@<proxy-server-url>:<port>
-# We do not want to set these up for you because we want to make sure 
 
 param(
     # The URL of Azure DevOps Server, e.g. https://fabrikam.visualstudio.com/DefaultCollection
@@ -24,7 +17,14 @@ param(
     # The task to add to Azure DevOps Server
     # If task is not provided, the script will automatically install NuGetAuthenticateV0, MavenAuthenticateV0, PipAuthenticateV1 and TwineAuthenticateV1
     [Parameter(Mandatory=$false)]
-    [string]$Task
+    [string]$Task,
+    # Optional proxy URL. When this variable is set, we'll run the following commands:
+    # $env:HTTP_PROXY=$PROXY
+    # $env:HTTPS_PROXY=$PROXY
+    # git config --global http.proxy $PROXY
+    # npm config set http.proxy $PROXY
+    [Parameter(Mandatory=$false)]
+    [string]$Proxy
 )
 
 $script:ErrorActionPreference='Stop'
@@ -37,6 +37,18 @@ $pipelineRepoURL = "https://github.com/microsoft/azure-pipelines-tasks.git"
 # Make it work when TLS 1.0/1.1 is disabled
 if ([Net.ServicePointManager]::SecurityProtocol.ToString().Split(',').Trim() -notcontains 'Tls12') {
     [Net.ServicePointManager]::SecurityProtocol += [Net.SecurityProtocolType]::Tls12
+}
+
+# Set proxy variables
+if ($Proxy) {
+    Write-Host "HTTP_PROXY=$PROXY"
+    $env:HTTP_PROXY=$PROXY
+    Write-Host "HTTPS_PROXY=$PROXY"
+    $env:HTTPS_PROXY=$PROXY
+    Write-Host "git config --global http.proxy $PROXY"
+    git config --global http.proxy $PROXY
+    Write-Host "npm config set http.proxy $PROXY"
+    npm config set http.proxy $PROXY
 }
 
 # Verify all required software is installed
