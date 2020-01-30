@@ -140,13 +140,14 @@ export class azureclitask {
             }
             else {
                 tl.debug('key based endpoint');
-                cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false).replace(/"/g, '\\"');
-                tl.setSecret(`"${cliPassword.replace(/\\/g, '\"')}"`);
+                cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
                 this.servicePrincipalKey = cliPassword;
             }
 
+            let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
+            tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
-            this.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" -p "${cliPassword}" --tenant "${tenantId}"`), tl.loc("LoginFailed"));
+            this.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" -p "${escapedCliPassword}" --tenant "${tenantId}"`), tl.loc("LoginFailed"));
         }
         else if(authScheme.toLowerCase() == "managedserviceidentity") {
             //login using msi
