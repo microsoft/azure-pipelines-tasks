@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 165,
-    "Patch": 0
+    "Patch": 6
   },
   "demands": [],
   "satisfies": [
@@ -23,13 +23,6 @@
   "preview": "true",
   "groups": [],
   "inputs": [
-    {
-      "name": "sharedSecret",
-      "label": "ms-resource:loc.input.label.sharedSecret",
-      "type": "string",
-      "helpMarkDown": "ms-resource:loc.input.help.sharedSecret",
-      "defaultValue": ""
-    },
     {
       "name": "dockerRegistryServiceConnection",
       "type": "connectedService:dockerregistry",
