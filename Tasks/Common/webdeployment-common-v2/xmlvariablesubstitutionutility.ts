@@ -150,8 +150,8 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
                         isSubstitutionApplied = updateXmlNodeAttribute(xmlNode, variableMap, replacableTokenValues) || isSubstitutionApplied;
                     }
                 } catch (error){
-                    tl.debug("Error occurred while processing xml node : " + xmlNode.nodeName);
-                    tl.debug(error);
+                    tl.error("Error occurred while processing xml node : " + xmlNode.nodeName);
+                    throw new Error(error);
                 }
             }  
         }
