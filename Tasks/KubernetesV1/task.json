@@ -475,6 +475,7 @@
         "ToolRunnerExecCallFailed": "Toolrunner exec() method returned error for the kubectl command. Error: %s.",
         "ToolRunnerExecCallSucceeded": "Toolrunner exec() method returned successfully for the kubectl command.",
         "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "UnableToFetchKubectlVersion": "Could not fetch Kubectl version. Please make sure that the Kubernetes server is up and running."
     }
 }

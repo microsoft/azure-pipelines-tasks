@@ -70,16 +70,22 @@ async function run(clusterConnection: ClusterConnection, command: string) {
     }
 }
 
-function displayKubectlVersion(connection: ClusterConnection) : void {
-    var command = connection.createCommand();
-    command.arg('version');
-    command.arg(['-o', 'json']);
-    const result = command.execSync({ silent: true } as trm.IExecOptions);
-    const resultInJSON = JSON.parse(result.stdout);
-    console.log('==============================================================================');
-    console.log('\t\t\tKubectl Client Version: ' + resultInJSON.clientVersion.gitVersion);
-    console.log('\t\t\tKubectl Server Version: ' + resultInJSON.serverVersion.gitVersion);
-    console.log('==============================================================================');
+function displayKubectlVersion(connection: ClusterConnection): void {
+    try {
+        var command = connection.createCommand();
+        command.arg('version');
+        command.arg(['-o', 'json']);
+        const result = command.execSync({ silent: true } as trm.IExecOptions);
+        const resultInJSON = JSON.parse(result.stdout);
+        if (resultInJSON.clientVersion && resultInJSON.clientVersion.gitVersion && resultInJSON.serverVersion && resultInJSON.serverVersion.gitVersion) {
+            console.log('==============================================================================');
+            console.log('\t\t\tKubectl Client Version: ' + resultInJSON.clientVersion.gitVersion);
+            console.log('\t\t\tKubectl Server Version: ' + resultInJSON.serverVersion.gitVersion);
+            console.log('==============================================================================');
+        }
+    } catch (ex) {
+            tl.error(tl.loc('UnableToFetchKubectlVersion'));
+    }
 }
 
 function getAllPods(connection: ClusterConnection): trm.IExecSyncResult {
