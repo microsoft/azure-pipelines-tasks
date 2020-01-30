@@ -1,1 +1,5 @@
-{}
+{
+  "loc.messages.UnableToFetchKubectlVersion": "Could not fetch Kubectl version. Please make sure that the Kubernetes server is up and running.",
+  "loc.messages.KubectlClientVersion": "Kubectl Client Version",
+  "loc.messages.KubectlServerVersion": "Kubectl Server Version"
+}

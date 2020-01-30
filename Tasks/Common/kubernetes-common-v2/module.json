@@ -1,3 +1,7 @@
 {
-    
+    "messages": {
+        "UnableToFetchKubectlVersion": "Could not fetch Kubectl version. Please make sure that the Kubernetes server is up and running.",
+        "KubectlClientVersion": "Kubectl Client Version",
+        "KubectlServerVersion": "Kubectl Server Version"
+    }
 }

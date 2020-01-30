@@ -208,12 +208,18 @@ export class Kubectl {
         this.execute(command);
     }
 
-    private displayKubectlVersion() : void {
-        const result = this.executeCommand('version', '-o json', true);
-        const resultInJSON = JSON.parse(result.stdout);
-        console.log('==============================================================================');
-        console.log('\t\t\tKubectl Client Version: ' + resultInJSON.clientVersion.gitVersion);
-        console.log('\t\t\tKubectl Server Version: ' + resultInJSON.serverVersion.gitVersion);
-        console.log('==============================================================================');
+    private displayKubectlVersion(): void {
+        try {
+            const result = this.executeCommand('version', '-o json', true);
+            const resultInJSON = JSON.parse(result.stdout);
+            if (resultInJSON.clientVersion && resultInJSON.clientVersion.gitVersion && resultInJSON.serverVersion && resultInJSON.serverVersion.gitVersion) {
+                console.log('==============================================================================');
+                console.log('\t\t\t' + tl.loc('KubectlClientVersion') + ': ' + resultInJSON.clientVersion.gitVersion);
+                console.log('\t\t\t' + tl.loc('KubectlServerVersion') + ': ' + resultInJSON.serverVersion.gitVersion);
+                console.log('==============================================================================');
+            }
+        } catch (ex) {
+            console.log(tl.loc('UnableToFetchKubectlVersion'));
+        }
     }
 }
