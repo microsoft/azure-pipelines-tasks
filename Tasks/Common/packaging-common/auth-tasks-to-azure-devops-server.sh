@@ -89,6 +89,7 @@ get_args() {
 
 # Display help function
 display_help() {
+    echo ''
     echo 'Utility script to upload protocol authentication tasks to Azure DevOps Server.';
     echo ''
     echo 'Usage: auth-tasks-to-azure-devops-server.sh [options]'
@@ -178,7 +179,7 @@ node_ver="node-v8.17.0-$(get_os)-$(get_arch)";
 npm_download_url="https://nodejs.org/dist/v8.17.0/${node_ver}.tar.gz";
 
 # Set proxy for wget
-if [ -n ${PROXY} ]; then
+if [[ -n ${PROXY} ]]; then
     export http_proxy=$PROXY;
     export https_proxy=$PROXY;
     export use_proxy=on;
@@ -193,7 +194,7 @@ nodejsbin="${working_dir}/nodejs/${node_ver}/bin/node";
 npmbin="${working_dir}/nodejs/${node_ver}/bin/npm";
 
 # Set proxy for npm
-if [ -n ${PROXY} ]; then
+if [[ -n ${PROXY} ]]; then
     eval "${npmbin} config set proxy ${PROXY} > /dev/null 2>&1"
     eval "${npmbin} config set https-proxy ${PROXY} > /dev/null 2>&1"
 fi
@@ -208,13 +209,14 @@ log_success "Done\n"
 log_info "Cloning tasks repository..."
 
 # Set proxy for git
-if [ -n ${PROXY} ]; then
+if [[ -n ${PROXY} ]]; then
     git config --local  http.proxy $PROXY > /dev/null 2>&1
 fi
+
 git clone -q --single-branch --no-tags https://github.com/microsoft/azure-pipelines-tasks.git $working_dir/azurepipelinestasks || leae "\nUnable to clone azure-pipelines-tasks repository."
 
 pushd $working_dir/azurepipelinestasks >/dev/null 2>&1
-eval "${npmbin} install >/dev/null 2>&1" || leae "\n Unable to resolve azure-pipelines-tasks dependencies."
+eval "${npmbin} install >/dev/null 2>&1" || leae "\nUnable to resolve azure-pipelines-tasks dependencies."
 log_success "Done\n"
 
 log_info "Building and uploading tasks...\n"
