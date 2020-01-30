@@ -52,6 +52,8 @@ catch (error) {
 }
 
 async function run(clusterConnection: ClusterConnection, command: string) {
+    displayKubectlVersion(clusterConnection);
+
     var secretName = tl.getInput("secretName", false);
     var configMapName = tl.getInput("configMapName", false);
 
@@ -66,6 +68,18 @@ async function run(clusterConnection: ClusterConnection, command: string) {
     if (command) {
         await executeKubectlCommand(clusterConnection, command);
     }
+}
+
+function displayKubectlVersion(connection: ClusterConnection) : void {
+    var command = connection.createCommand();
+    command.arg('version');
+    command.arg(['-o', 'json']);
+    const result = command.execSync({ silent: true } as trm.IExecOptions);
+    const resultInJSON = JSON.parse(result.stdout);
+    console.log('==============================================================================');
+    console.log('\t\t\tKubectl Client Version: ' + resultInJSON.clientVersion.gitVersion);
+    console.log('\t\t\tKubectl Server Version: ' + resultInJSON.serverVersion.gitVersion);
+    console.log('==============================================================================');
 }
 
 function getAllPods(connection: ClusterConnection): trm.IExecSyncResult {
