@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 165,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "groups": [{
@@ -393,7 +393,8 @@
       "groupName": "advanced"
     }
   ],
-  "dataSourceBindings": [{
+  "dataSourceBindings": [
+    {
       "target": "kubernetesCluster",
       "endpointId": "$(azureSubscriptionEndpoint)",
       "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
