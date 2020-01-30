@@ -67,7 +67,7 @@ get_args() {
                 exit 0
             ;;
             *)
-                log_error "Unknown parameter: ${1}"
+                log_error "Unknown parameter: ${1}\n\n"
                 display_help
                 exit 1
             ;;
@@ -82,7 +82,20 @@ get_args() {
 
 # Display help function
 display_help() {
-    echo 'Display help'
+    echo 'Utility script to upload protocol authentication tasks to Azure DevOps Server.';
+    echo ''
+    echo 'Usage: auth-tasks-to-azure-devops-server.sh [options]'
+    echo ''
+    echo 'Options:'
+    echo ''
+    echo '  --collection-url,-c        The url of the collection where the build tasks need'
+    echo '                             to be updated. Ex. https://{server}:8080/tfs/CollectionName'
+    echo '  --token,-t                 The Personal Authentication Token (PAT) that is scoped for'
+    echo '                             your collection. To learn about generating a PAT, please'
+    echo '                             go to https://aka.ms/azdevops-pat'
+    echo '  --verbose,-v               Display verbose logs.'
+    echo '  --help,-h                  Display this help'
+    echo ''
 }
 
 # Get system arch
@@ -152,7 +165,7 @@ log_success "Done\n"
 # Install our version of node that is supported. (v8.17.0)
 log_info "Installing required software..."
 
-# Install npm 
+# Install npm
 node_ver="node-v8.17.0-$(get_os)-$(get_arch)";
 npm_download_url="https://nodejs.org/dist/v8.17.0/${node_ver}.tar.gz";
 
@@ -185,7 +198,7 @@ tfx login --service-url ${COLLECTION_URL} --token ${TOKEN} >/dev/null 2>&1 || le
 for taskkey in "${!AUTH_TASKS[@]}"; do
     task=${AUTH_TASKS[$taskkey]};
     log_info "  ${taskkey}: "
-
+    
     # Check if the task is already installed on the instance.
     current_onprem_version=`tfx build tasks list --json | jq ".[] | select(.name==\"${task%??}\").version | \"\(.major).\(.minor).\(.patch)\""`
     current_built_version=`cat Tasks/${taskkey}/task.loc.json  | jq '.version | "\(.Major).\(.Minor).\(.Patch)"'`
