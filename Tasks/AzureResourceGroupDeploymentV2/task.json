@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 163,
-        "Patch": 5
+        "Patch": 8
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -483,6 +483,7 @@
         "ServicePrincipalRoleAssignmentDetails": "Please make sure the Service Principal with name %s is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal",
         "ServicePrincipalFetchFailed": "Error while fetching Service Principal details: %s",
         "FindMoreDeploymentDetailsAzurePortal": "Task successfully created an Azure Resource Manager deployment, but the deployment failed. Please see more detailed Azure resource manager deployment logs at: (Please Copy-Paste the link) %s",
+        "TemplateValidationFailure": "Validation errors were found in the Azure Resource Manager template. This can potentially cause template deployment to fail. %s. Please follow https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax",
         "ManagedServiceIdentityDetails": "Please make sure the Managed Service Identity used for deployment is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
         "DeploymentGroupConfigurationFailedOnVM": "Failure for Virtual Machine '%s': %s"
     }

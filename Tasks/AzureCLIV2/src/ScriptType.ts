@@ -5,16 +5,20 @@ export class ScriptTypeFactory {
     public static getSriptType(): ScriptType {
         let scriptType: string = tl.getInput("scriptType", true);
         let scriptLocation: string = tl.getInput("scriptLocation", true);
+        if (!(['inlinescript', 'scriptpath'].find((acceptedValue) => { return scriptLocation.toLowerCase() === acceptedValue; }))) {
+            throw new Error(tl.loc('UnacceptedScriptLocationValue', scriptLocation));
+        }
+
         let scriptArguments: string = tl.getInput("scriptArguments", false);
         switch(scriptType){
-            case 'ps': 
+            case 'ps':
                 return new WindowsPowerShell(scriptLocation, scriptArguments);
-            case 'pscore': 
+            case 'pscore':
                 return new PowerShellCore(scriptLocation, scriptArguments);
-            case 'bash': 
+            case 'bash':
                 return new Bash(scriptLocation, scriptArguments);
             case 'batch':
-            default: 
+            default:
                 return new Batch(scriptLocation, scriptArguments);
         }
     }
@@ -34,7 +38,7 @@ export abstract class ScriptType {
     public abstract async getTool(): Promise<any>;
 
     public async cleanUp(): Promise<void> {
-        if(this._scriptLocation === "inlineScript"){
+        if(this._scriptLocation.toLowerCase() === 'inlinescript') {
             await Utility.deleteFile(this._scriptPath);
         }
     }

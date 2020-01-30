@@ -1,6 +1,7 @@
 import * as os from 'os';
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as minimatch from 'minimatch';
 import { SshHelper } from './sshhelper';
 
 // This method will find the list of matching files for the specified contents
@@ -69,7 +70,7 @@ function getFilesToCopy(sourceFolder: string, contents: string[]): string[] {
         tl.debug('Include matching ' + pattern);
 
         // let minimatch do the actual filtering
-        const matches: string[] = tl.match(allFiles, pattern, matchOptions);
+        const matches: string[] = minimatch.match(allFiles, pattern, matchOptions);
 
         tl.debug('Include matched ' + matches.length + ' files');
         for (const matchPath of matches) {
@@ -85,7 +86,7 @@ function getFilesToCopy(sourceFolder: string, contents: string[]): string[] {
         tl.debug('Exclude matching ' + pattern);
 
         // let minimatch do the actual filtering
-        const matches: string[] = tl.match(files, pattern, matchOptions);
+        const matches: string[] = minimatch.match(files, pattern, matchOptions);
 
         tl.debug('Exclude matched ' + matches.length + ' files');
         files = [];
@@ -110,7 +111,7 @@ async function run() {
         const hostname: string = tl.getEndpointDataParameter(sshEndpoint, 'host', false);
         let port: string = tl.getEndpointDataParameter(sshEndpoint, 'port', true); //port is optional, will use 22 as default port if not specified
         if (!port) {
-            tl._writeLine(tl.loc('UseDefaultPort'));
+            console.log(tl.loc('UseDefaultPort'));
             port = '22';
         }
 
@@ -163,7 +164,7 @@ async function run() {
         await sshHelper.setupConnection();
 
         if (cleanTargetFolder) {
-            tl._writeLine(tl.loc('CleanTargetFolder', targetFolder));
+            console.log(tl.loc('CleanTargetFolder', targetFolder));
             const cleanTargetFolderCmd = 'rm -rf "' + targetFolder + '"/*';
             try {
                 await sshHelper.runCommandOnRemoteMachine(cleanTargetFolderCmd, null);
@@ -181,7 +182,7 @@ async function run() {
             tl.debug('filesToCopy = ' + filesToCopy);
 
             let failureCount = 0;
-            tl._writeLine(tl.loc('CopyingFiles', filesToCopy.length));
+            console.log(tl.loc('CopyingFiles', filesToCopy.length));
             for (const fileToCopy of filesToCopy) {
                 try {
                     tl.debug('fileToCopy = ' + fileToCopy);
@@ -197,7 +198,7 @@ async function run() {
                     tl.debug('relativePath = ' + relativePath);
                     const targetPath = path.posix.join(targetFolder, relativePath);
 
-                    tl._writeLine(tl.loc('StartedFileCopy', fileToCopy, targetPath));
+                    console.log(tl.loc('StartedFileCopy', fileToCopy, targetPath));
                     if (!overwrite) {
                         const fileExists: boolean = await sshHelper.checkRemotePathExists(targetPath);
                         if (fileExists) {
@@ -211,7 +212,7 @@ async function run() {
                     failureCount++;
                 }
             }
-            tl._writeLine(tl.loc('CopyCompleted', filesToCopy.length));
+            console.log(tl.loc('CopyCompleted', filesToCopy.length));
             if (failureCount) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc('NumberFailed', failureCount));
             }

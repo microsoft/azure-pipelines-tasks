@@ -50,6 +50,11 @@ export class DeploymentScopeBase {
         if (this.deploymentParameters.properties["mode"] === "Validation") {
             return this.validateDeployment();
         } else {
+            try {
+                await this.validateDeployment();
+            } catch (error) {
+                tl.warning(tl.loc("TemplateValidationFailure", error));
+            }
             console.log(tl.loc("StartingDeployment"));
             return new Promise<void>((resolve, reject) => {
                 this.taskParameters.deploymentName = this.taskParameters.deploymentName || utils.createDeploymentName(this.taskParameters);
@@ -60,7 +65,7 @@ export class DeploymentScopeBase {
                             return this.waitAndPerformAzureDeployment(retryCount);
                         }
                         utils.writeDeploymentErrors(this.taskParameters, error);
-                        this.checkAndPrintPortalDeploymentURL(error);
+                        this.checkAndPrintPortalDeploymentURL((!!result && !!result.error) ? result.error : error);
                         this.printServicePrincipalRoleAssignmentError(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
