@@ -6,6 +6,7 @@ set -e
 declare -i LOG_LEVEL=3
 declare COLLECTION_URL
 declare TOKEN
+declare PROXY
 
 # Logging utility
 # Constants
@@ -62,6 +63,10 @@ get_args() {
                 TOKEN=${2}
                 shift
             ;;
+            --proxy | -p)
+                PROXY=${2}
+                shift
+            ;;
             --help | -h)
                 display_help
                 exit 0
@@ -93,6 +98,7 @@ display_help() {
     echo '  --token,-t                 The Personal Authentication Token (PAT) that is scoped for'
     echo '                             your collection. To learn about generating a PAT, please'
     echo '                             go to https://aka.ms/azdevops-pat'
+    echo '  --proxy,-p                 Use the specified proxy server for HTTP traffic.'
     echo '  --verbose,-v               Display verbose logs.'
     echo '  --help,-h                  Display this help'
     echo ''
@@ -169,6 +175,12 @@ log_info "Installing required software..."
 node_ver="node-v8.17.0-$(get_os)-$(get_arch)";
 npm_download_url="https://nodejs.org/dist/v8.17.0/${node_ver}.tar.gz";
 
+# Set proxy for wget
+if [ -n ${PROXY} ]; then
+    export http_proxy=$PROXY;
+    export https_proxy=$PROXY;
+    export use_proxy=on;
+fi
 wget $npm_download_url > /dev/null 2>&1 || leae "\nUnable to download required dependency 'npm' from url ${npm_download_url}. Please verify your internet connection or specify proxy parameters."
 
 mkdir nodejs > /dev/null 2>&1;
@@ -177,6 +189,12 @@ tar -xvzf ${node_ver}.tar.gz -C nodejs > /dev/null  || leae "\nUnable to install
 log_debug "\n'npm' installed locally.\n"
 nodejsbin="${working_dir}/nodejs/${node_ver}/bin/node";
 npmbin="${working_dir}/nodejs/${node_ver}/bin/npm";
+
+# Set proxy for npm
+if [ -n ${PROXY} ]; then
+    eval "${npmbin} config set proxy ${PROXY} > /dev/null 2>&1"
+    eval "${npmbin} config set https-proxy ${PROXY} > /dev/null 2>&1"
+fi
 
 # Install tfx-cli
 eval "${npmbin} install -g tfx-cli > /dev/null 2>&1" || leae "Unable to install required dependency 'tfx-cli' from npm."
@@ -187,6 +205,10 @@ log_success "Done\n"
 # Download & build the tasks
 log_info "Cloning tasks repository..."
 
+# Set proxy for git
+if [ -n ${PROXY} ]; then
+    git config --local  http.proxy $PROXY > /dev/null 2>&1
+fi
 git clone -q --single-branch --no-tags https://github.com/microsoft/azure-pipelines-tasks.git $working_dir/azurepipelinestasks || leae "\nUnable to clone azure-pipelines-tasks repository."
 
 pushd $working_dir/azurepipelinestasks >/dev/null 2>&1
@@ -194,13 +216,13 @@ eval "${npmbin} install >/dev/null 2>&1" || leae "\n Unable to resolve azure-pip
 log_success "Done\n"
 
 log_info "Building and uploading tasks...\n"
-tfx login --service-url ${COLLECTION_URL} --token ${TOKEN} >/dev/null 2>&1 || leae "\nUnable to login to collection using the given token."
+tfx login --service-url ${COLLECTION_URL} --token ${TOKEN} --proxy ${PROXY} >/dev/null 2>&1 || leae "\nUnable to login to collection using the given token."
 for taskkey in "${!AUTH_TASKS[@]}"; do
     task=${AUTH_TASKS[$taskkey]};
     log_info "  ${taskkey}: "
     
     # Check if the task is already installed on the instance.
-    current_onprem_version=`tfx build tasks list --json | jq ".[] | select(.name==\"${task%??}\").version | \"\(.major).\(.minor).\(.patch)\""`
+    current_onprem_version=`tfx build tasks list --proxy ${PROXY} --json | jq ".[] | select(.name==\"${task%??}\").version | \"\(.major).\(.minor).\(.patch)\""`
     current_built_version=`cat Tasks/${taskkey}/task.loc.json  | jq '.version | "\(.Major).\(.Minor).\(.Patch)"'`
     lowest_version=`printf "${current_onprem_version}\n${current_built_version}" | sort -V | head -1`
     
@@ -208,7 +230,7 @@ for taskkey in "${!AUTH_TASKS[@]}"; do
         log_warning "Skipped\n"
     else
         node make.js build --task ${taskkey}  >/dev/null 2>&1 || leae "\nUnable to build task ${taskkey}."
-        tfx build tasks upload --task-path ./_build/Tasks/${taskkey}  >/dev/null 2>&1 || leae "\nUnable to upload task ${taskkey} to the collection."
+        tfx build tasks upload --task-path ./_build/Tasks/${taskkey}  --proxy ${PROXY}  >/dev/null 2>&1 || leae "\nUnable to upload task ${taskkey} to the collection."
         log_success "Done\n"
     fi
 done
