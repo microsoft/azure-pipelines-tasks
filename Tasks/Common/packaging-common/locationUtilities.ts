@@ -36,12 +36,10 @@ export async function getServiceUriFromAreaId(serviceUri: string, accessToken: s
     const locationApi = await webApi.getLocationsApi();
 
     tl.debug(`Getting URI for area ID ${areaId} from ${serviceUri}`);
-    try {
-        const serviceUriFromArea = await retryOnExceptionHelper(() => locationApi.getResourceArea(areaId), 3, 1000);
-        return serviceUriFromArea.locationUrl;
-    } catch (error) {
-        throw new Error(error);
-    }
+    const resourceArea = await retryOnExceptionHelper(() => locationApi.getResourceArea(areaId), 3, 1000);
+    tl.debug(`Found resource area with locationUrl: ${resourceArea && resourceArea.locationUrl}`);
+
+    return resourceArea.locationUrl;
 }
 
 export async function getNuGetUriFromBaseServiceUri(serviceUri: string, accesstoken: string): Promise<string> {
@@ -87,16 +85,15 @@ export async function getPackagingUris(protocolType: ProtocolType): Promise<Pack
     const areaId = getAreaIdForProtocol(protocolType);
 
     const serviceUri = await getServiceUriFromAreaId(collectionUrl, accessToken, areaId);
+    tl.debug(`Found serviceUri: ${serviceUri}`);
 
     const webApi = getWebApiWithProxy(serviceUri);
-
     const locationApi = await webApi.getLocationsApi();
 
-    tl.debug('Acquiring Packaging endpoints from ' + serviceUri);
-
+    tl.debug('Acquiring Packaging endpoints...');
     const connectionData = await retryOnExceptionHelper(() => locationApi.getConnectionData(interfaces.ConnectOptions.IncludeServices), 3, 1000);
-
     tl.debug('Successfully acquired the connection data');
+
     const defaultAccessPoint: string = connectionData.locationServiceData.accessMappings.find((mapping) =>
         mapping.moniker === connectionData.locationServiceData.defaultAccessMappingMoniker
     ).accessPoint;
@@ -147,7 +144,9 @@ export function getWebApiWithProxy(serviceUri: string, accessToken?: string): vs
         allowRetries: true,
         maxRetries: 5
     };
-    return new vsts.WebApi(serviceUri, credentialHandler, options);
+    const webApi = new vsts.WebApi(serviceUri, credentialHandler, options);
+    tl.debug(`Created webApi client for ${serviceUri}; options: ${JSON.stringify(options)}`);
+    return webApi
 }
 
 // This function is to apply retries generically for any unreliable network calls
@@ -158,10 +157,10 @@ export async function retryOnExceptionHelper<T>(action: () => Promise<T>, maxTri
         } catch (error) {
             maxTries--;
             if (maxTries < 1) {
-                throw Error(error);
+                throw error;
             }
             tl.debug(`Network call failed. Number of retries left: ${maxTries}`);
-            tl.debug(JSON.stringify(error));
+            if (error) tl.warning(error.toString());
             await delay(retryIntervalInMilliseconds);
         }
     }
