@@ -2,11 +2,14 @@
 
 set -e
 
-# Defaults
+# PARAMS
 declare -i LOG_LEVEL=3
 declare COLLECTION_URL
 declare TOKEN
 declare PROXY
+
+# Global constants
+declare -Ar AUTH_TASKS=([MavenAuthenticateV0]="MavenAuthenticateV0" [NpmAuthenticateV0]="npmAuthenticateV0" [PipAuthenticateV1]="PipAuthenticateV1" [TwineAuthenticateV1]="TwineAuthenticateV1" [NuGetAuthenticateV0]="NuGetAuthenticateV0")
 
 # Logging utility
 # Constants
@@ -17,7 +20,6 @@ declare -r LOG_DEBUG_COLOR="\033[1;34m"
 declare -r LOG_DEFAULT_COLOR="\033[0m"
 declare -r LOG_SUCCESS_COLOR="\033[1;32m"
 
-declare -Ar AUTH_TASKS=([MavenAuthenticateV0]="MavenAuthenticateV0" [NpmAuthenticateV0]="npmAuthenticateV0" [PipAuthenticateV1]="PipAuthenticateV1" [TwineAuthenticateV1]="TwineAuthenticateV1" [NuGetAuthenticateV0]="NuGetAuthenticateV0")
 declare -Ar LOG_LEVELS=([0]="ERROR" [1]="WARNING" [2]="INFO" [3]="DEBUG")
 
 log() {
