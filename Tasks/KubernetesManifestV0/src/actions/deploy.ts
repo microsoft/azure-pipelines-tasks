@@ -11,6 +11,5 @@ export async function deploy(ignoreSslErrors?: boolean) {
     TaskInputParameters.validateTimeoutForRolloutStatus();
     const kubectlPath = await utils.getKubectl();
     const kubectl = new Kubectl(kubectlPath, TaskInputParameters.namespace, ignoreSslErrors);
-    utils.displayKubectlVersion(kubectl);
     await deploymentHelper.deploy(kubectl, TaskInputParameters.manifests, TaskInputParameters.deploymentStrategy);
 }

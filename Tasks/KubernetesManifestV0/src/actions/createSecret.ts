@@ -9,7 +9,6 @@ import { getDockerRegistryEndpointAuthenticationToken } from 'docker-common-v2/r
 
 export async function createSecret(ignoreSslErrors?: boolean) {
     const kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace, ignoreSslErrors);
-    utils.displayKubectlVersion(kubectl);
     let result;
     if (isEqual(TaskInputParameters.secretType, 'dockerRegistry', StringComparer.OrdinalIgnoreCase)) {
         const authProvider: AuthenticationToken = getDockerRegistryEndpointAuthenticationToken(TaskInputParameters.dockerRegistryEndpoint);

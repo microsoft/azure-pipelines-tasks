@@ -9,7 +9,6 @@ import * as TaskParameters from '../models/TaskInputParameters';
 export async function patch(ignoreSslErrors?: boolean) {
     TaskParameters.validateTimeoutForRolloutStatus();
     const kubectl = new Kubectl(await utils.getKubectl(), TaskParameters.namespace, ignoreSslErrors);
-    utils.displayKubectlVersion(kubectl);
     let kind = tl.getInput('kind', false);
     if(kind)
         kind = kind.toLowerCase();

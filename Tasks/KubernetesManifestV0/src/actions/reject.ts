@@ -8,7 +8,6 @@ import * as TaskInputParameters from '../models/TaskInputParameters';
 
 export async function reject(ignoreSslErrors?: boolean) {
     const kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace, ignoreSslErrors);
-    utils.displayKubectlVersion(kubectl);
 
     if (!canaryDeploymentHelper.isCanaryDeploymentStrategy()) {
         tl.debug('Strategy is not canary deployment. Invalid request.');

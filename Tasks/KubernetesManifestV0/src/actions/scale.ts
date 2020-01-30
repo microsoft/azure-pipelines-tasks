@@ -11,7 +11,6 @@ import { Kubectl } from 'kubernetes-common-v2/kubectl-object-model';
 export async function scale(ignoreSslErrors?: boolean) {
     TaskInputParameters.validateTimeoutForRolloutStatus();
     const kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace, ignoreSslErrors);
-    utils.displayKubectlVersion(kubectl);
     const kind = tl.getInput('kind', true).toLowerCase();
     const replicas = tl.getInput('replicas', true);
     const name = tl.getInput('name', true);

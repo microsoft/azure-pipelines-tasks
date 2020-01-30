@@ -19,6 +19,7 @@ export class Kubectl {
         } else {
             this.namespace = 'default';
         }
+        this.displayKubectlVersion();
     }
 
     public apply(configurationPaths: string | string[]): IExecSyncResult {
@@ -205,5 +206,14 @@ export class Kubectl {
         command.arg('secret');
         command.arg(secretName);
         this.execute(command);
+    }
+
+    private displayKubectlVersion() : void {
+        const result = this.executeCommand('version', '-o json', true);
+        const resultInJSON = JSON.parse(result.stdout);
+        console.log('==============================================================================');
+        console.log('\t\t\tKubectl Client Version: ' + resultInJSON.clientVersion.gitVersion);
+        console.log('\t\t\tKubectl Server Version: ' + resultInJSON.serverVersion.gitVersion);
+        console.log('==============================================================================');
     }
 }

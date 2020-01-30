@@ -156,12 +156,3 @@ export function getTrafficSplitAPIVersion(kubectl: Kubectl) {
     tl.debug("api-version: " + trafficSplitAPIVersion);
     return trafficSplitAPIVersion;
 }
-
-export function displayKubectlVersion(kubectl: Kubectl) {
-    const result = kubectl.executeCommand('version', '-o json', true);
-    const resultInJSON = JSON.parse(result.stdout);
-    console.log('==============================================================================');
-    console.log('\t\t\tKubectl Client Version: ' + resultInJSON.clientVersion.gitVersion);
-    console.log('\t\t\tKubectl Server Version: ' + resultInJSON.serverVersion.gitVersion);
-    console.log('==============================================================================');
-}

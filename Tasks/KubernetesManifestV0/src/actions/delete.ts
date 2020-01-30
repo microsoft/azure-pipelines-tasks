@@ -13,7 +13,6 @@ export async function deleteResources(ignoreSslErrors?: boolean) {
     }
 
     const kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace, ignoreSslErrors);
-    utils.displayKubectlVersion(kubectl);
     const result = kubectl.delete(args);
     utils.checkForErrors([result]);
 }
