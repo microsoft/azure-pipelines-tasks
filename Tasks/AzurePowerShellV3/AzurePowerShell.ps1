@@ -79,7 +79,7 @@ catch
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs -authScheme $authScheme
 
 # troubleshoot link
-$troubleshoot = "https://aka.ms/azure-powershell-troubleshoot"
+$troubleshoot = "https://aka.ms/azurepowershelltroubleshooting"
 try {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
