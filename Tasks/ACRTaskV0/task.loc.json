@@ -1,6 +1,6 @@
 {
   "id": "769D88CB-515B-4456-A045-D9A4E11C90E3",
-  "name": "ACRTaskV0",
+  "name": "ACRTask",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 162,
-    "Patch": 0
+    "Patch": 6
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,

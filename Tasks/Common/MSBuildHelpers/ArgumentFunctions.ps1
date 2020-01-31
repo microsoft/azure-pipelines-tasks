@@ -40,8 +40,8 @@ function Format-MSBuildArguments {
 
 function Test-MSBuildParam ([string]$msbuildParam, [string]$parameterName)
 {
-    if ($msBuildParam -match '[<>*|:\/&%".#?]')
+    if ($msBuildParam -match '[<>*|:\/&%"#?]')
     {
-        throw "The value of MSBuild parameter '$parameterName' ($msBuildParam) contains an invalid character. The value of $parameterName may not contain any of the following characters: < > * | : \ / & % `" . # ?"
+        throw "The value of MSBuild parameter '$parameterName' ($msBuildParam) contains an invalid character. The value of $parameterName may not contain any of the following characters: < > * | : \ / & % `" # ?"
     }
 }

@@ -186,5 +186,8 @@
   "loc.messages.diagnosticsInput": "Diagnostics enabled : %s",
   "loc.messages.UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory).",
   "loc.messages.LookingForBuildToolsInstalltion": "Attempting to find vstest.console from a visual studio build tools installation with version %s.",
-  "loc.messages.LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation with version %s."
+  "loc.messages.LookingForVsInstalltion": "Attempting to find vstest.console from a visual studio installation with version %s.",
+  "loc.messages.minTestsNotExecuted": "The specified minimum number of tests %d were not executed in the test run.",
+  "loc.messages.actionOnThresholdNotMet": "Action when minimum tests threshold not met : %s",
+  "loc.messages.minimumExpectedTests": "Minimum tests expected to be run: %d"
 }

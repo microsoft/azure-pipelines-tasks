@@ -18,6 +18,9 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'Npm'
   addLabels: ['Area: Artifacts']  
+- valueFor: '**Enter Task Name**'
+  contains: 'UniversalPackage'
+  addLabels: ['Area: Artifacts']
 # Area: Build
 - valueFor: '**Enter Task Name**'
   contains: 'VSBuild'
@@ -44,6 +47,10 @@ rules:
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
 - valueFor: '**Enter Task Name**'
+  contains: 'CocoaPods'
+  addLabels: ['Area: CrossPlatform']
+  assign: ['leantk']
+- valueFor: '**Enter Task Name**'
   contains: 'Gradle'
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
@@ -51,6 +58,9 @@ rules:
   contains: 'Maven'
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
+- valueFor: '**Enter Task Name**'
+  contains: 'PublishBuildArtifact'
+  addLabels: ['Area: CrossPlatform']
 - valueFor: '**Enter Task Name**'
   contains: 'Python'
   addLabels: ['Area: CrossPlatform']
@@ -72,6 +82,15 @@ rules:
   contains: 'AzureCli'
   addLabels: ['Area: Release']
   assign: ['bishal-pdmsft']
+- valueFor: '**Enter Task Name**'
+  contains: 'ACRTask'
+  addLabels: ['Area: Release']
+- valueFor: '**Enter Task Name**'
+  contains: 'AzureResourceGroupDeployment'
+  addLabels: ['Area: Release']
+- valueFor: '**Enter Task Name**'
+  contains: 'FileTransform'
+  addLabels: ['Area: Release']
 - valueFor: '**Enter Task Name**'
   contains: 'ResourceGroup'
   addLabels: ['Area: Release']
@@ -259,6 +278,22 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'DownloadPipelineArtifact'
   addLabels: ['Area: ArtifactsCore']
+- valueFor: '**Enter Task Name**'
+  contains: 'PublishPipelineArtifact'
+  addLabels: ['Area: ArtifactsCore']
+- valueFor: '**Enter Task Name**'
+  contains: 'PublishSymbols'
+  addLabels: ['Area: ArtifactsCore']
+  
+# Area: Artifacts
+- valueFor: '**Enter Task Name**'
+  contains: 'Gulp'
+  addLabels: ['Area: Artifacts']
+  
+# Area: CodeCoverage
+- valueFor: '**Enter Task Name**'
+  contains: 'PublishCodeCoverageResults'
+  addLabels: ['Area: CodeCoverage']
 
 # Types
 - valueFor: '*Type*'

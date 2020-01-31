@@ -36,6 +36,7 @@ export function parseInputsForDistributedTestRun() : idc.InputDataContract {
     inputDataContract.AccessTokenType = 'jwt';
     inputDataContract.RunIdentifier = getRunIdentifier();
     inputDataContract.SourcesDirectory = tl.getVariable('Build.SourcesDirectory');
+    inputDataContract.ServerType = tl.getVariable('System.ServerType'); 
 
     logWarningForWER(tl.getBoolInput('uiTests'));
     ci.publishEvent({ 'UiTestsOptionSelected': tl.getBoolInput('uiTests')} );
@@ -64,6 +65,7 @@ export function parseInputsForNonDistributedTestRun() : idc.InputDataContract {
     inputDataContract.RunIdentifier = getRunIdentifier();
     inputDataContract.EnableSingleAgentAPIFlow = utils.Helper.stringToBool(tl.getVariable('Hydra.EnableApiFlow'));
     inputDataContract.SourcesDirectory = tl.getVariable('Build.SourcesDirectory');
+    inputDataContract.ServerType = tl.getVariable('System.ServerType'); 
 
     logWarningForWER(tl.getBoolInput('uiTests'));
 
@@ -169,31 +171,13 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
     const resultsDir = path.resolve(tl.getVariable('Agent.TempDirectory'), tl.getInput('resultsFolder'));
     inputDataContract.TestReportingSettings.TestResultsDirectory =  resultsDir;
     tl.debug("TestResultsFolder: " + resultsDir);
-    
-    if (resultsDir.startsWith(tl.getVariable('Agent.TempDirectory') + 'TestResults'))
-    {   
-        ci.publishEvent({ 'TestResultsFolderUi': '$(Agent.TempDirectory)/TestResults' } );
-    }
-    else if (resultsDir.startsWith(tl.getVariable('Agent.TempDirectory')))
-    {
-        ci.publishEvent({ 'TestResultsFolderUi': '$(Agent.TempDirectory)' } );
-    }
-    else if (resultsDir.startsWith(tl.getVariable('Common.TestResultsDirectory')))
-    {
-        ci.publishEvent({ 'TestResultsFolderUi': '$(Common.TestResultsDirectory)' })
-    }
-    else if (resultsDir.startsWith(tl.getVariable('System.DefaultWorkingDirectory')))
-    {
-        ci.publishEvent({ 'TestResultsFolderUi': '$(System.DefaultWorkingDirectory)' })
-    }
-    else
-    {
-        ci.publishEvent({ 'TestResultsFolderUi': 'Custom Directory' })
-    }
+    addResultsDirectoryToTelemetry(resultsDir);
     
     inputDataContract.TestReportingSettings.TestSourceSettings = <idc.TestSourceSettings>{};
     inputDataContract.TestReportingSettings.TestSourceSettings.PullRequestTargetBranchName = tl.getVariable('System.PullRequest.TargetBranch');
     inputDataContract.TestReportingSettings.ExecutionStatusSettings = <idc.ExecutionStatusSettings>{};
+    inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected = 0;
+    inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet = "donothing";
     inputDataContract.TestReportingSettings.ExecutionStatusSettings.IgnoreTestFailures = utils.Helper.stringToBool(tl.getVariable('vstest.ignoretestfailures'));
     if (utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestRunTitle)) {
 
@@ -212,15 +196,16 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
     if (actionOnThresholdNotMet)
     {
         inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet = "fail";       
-        const miniumExpectedTests = parseInt(tl.getInput('minimumExpectedTests'));
-        if (!isNaN(miniumExpectedTests)) {
-            inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected = miniumExpectedTests;
-            console.log(tl.loc('minimumExpectedTests', inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected));
+        const minimumExpectedTests = parseInt(tl.getInput('minimumExpectedTests'));
+        if (!isNaN(minimumExpectedTests)) {
+            inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected = minimumExpectedTests;
         } else {
             throw new Error(tl.loc('invalidMinimumExpectedTests :' + tl.getInput('minimumExpectedTests')));
         }
     }
-
+    
+    console.log(tl.loc('actionOnThresholdNotMet', inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet))
+    console.log(tl.loc('minimumExpectedTests', inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected));
     return inputDataContract;
 }
 
@@ -644,6 +629,25 @@ function isDontShowUIRegKeySet(regPath: string): Q.Promise<boolean> {
         defer.resolve(false);
     });
     return defer.promise;
+}
+
+function addResultsDirectoryToTelemetry(resultsDir: string){
+
+    if (resultsDir.startsWith(path.join(tl.getVariable('Agent.TempDirectory'), 'TestResults'))) {  
+        ci.publishTelemetry('TestExecution', 'ResultsDirectory', { 'TestResultsFolderUi': '$(Agent.TempDirectory)/TestResults' } );
+    }
+    else if (resultsDir.startsWith(tl.getVariable('Agent.TempDirectory'))) {
+        ci.publishTelemetry('TestExecution', 'ResultsDirectory', { 'TestResultsFolderUi': '$(Agent.TempDirectory)' } );
+    }
+    else if (resultsDir.startsWith(tl.getVariable('Common.TestResultsDirectory'))) {
+        ci.publishTelemetry('TestExecution', 'ResultsDirectory', { 'TestResultsFolderUi': '$(Common.TestResultsDirectory)' })
+    }
+    else if (resultsDir.startsWith(tl.getVariable('System.DefaultWorkingDirectory'))) {
+        ci.publishTelemetry('TestExecution', 'ResultsDirectory', { 'TestResultsFolderUi': '$(System.DefaultWorkingDirectory)' })
+    }
+    else {
+        ci.publishTelemetry('TestExecution', 'ResultsDirectory', { 'TestResultsFolderUi': 'Custom Directory' })
+    }
 }
 
 export function setIsServerBasedRun(isServerBasedRun: boolean) {

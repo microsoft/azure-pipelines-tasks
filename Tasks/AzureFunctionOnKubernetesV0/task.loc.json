@@ -14,12 +14,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 162,
-    "Patch": 0
+    "Minor": 165,
+    "Patch": 1
   },
   "demands": [],
-  "groups": [
-    {
+  "groups": [{
       "name": "serviceConnections",
       "displayName": "ms-resource:loc.group.displayName.serviceConnections",
       "isExpanded": true
@@ -30,8 +29,7 @@
       "isExpanded": true
     }
   ],
-  "inputs": [
-    {
+  "inputs": [{
       "name": "dockerRegistryServiceConnection",
       "type": "connectedService:dockerregistry",
       "label": "ms-resource:loc.input.label.dockerRegistryServiceConnection",

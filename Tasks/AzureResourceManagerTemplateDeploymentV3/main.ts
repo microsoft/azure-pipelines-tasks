@@ -6,6 +6,7 @@ import resourceGroup = require("./operations/ResourceGroup");
 import armResource = require("azure-arm-rest-v2/azure-arm-resource");
 import armManagementGroup = require("azure-arm-rest-v2/azure-arm-management-group");
 import armSubscription = require("azure-arm-rest-v2/azure-arm-subscription");
+
 import { DeploymentParameters } from "./operations/DeploymentParameters";
 import { DeploymentScopeBase } from "./operations/DeploymentScopeBase";
 
@@ -60,6 +61,7 @@ function run(): Promise<void> {
 var taskManifestPath = path.join(__dirname, "task.json");
 tl.debug("Setting resource path to " + taskManifestPath);
 tl.setResourcePath(taskManifestPath);
+tl.setResourcePath(path.join( __dirname, 'node_modules/azure-arm-rest-v2/module.json'));
 
 run().then((result) =>
    tl.setResult(tl.TaskResult.Succeeded, "")

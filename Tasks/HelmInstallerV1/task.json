@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 162,
-        "Patch": 0
+        "Minor": 165,
+        "Patch": 1
     },
     "preview": true,
     "demands": [],
@@ -22,15 +22,13 @@
         "Helm"
     ],
     "groups": [],
-    "inputs": [
-        {
-            "name": "helmVersionToInstall",
-            "label": "Helm Version Spec",
-            "type": "string",
-            "helpMarkDown": "Specify the version of Helm to install.",
-            "defaultValue": "latest"
-        }
-    ],
+    "inputs": [{
+        "name": "helmVersionToInstall",
+        "label": "Helm Version Spec",
+        "type": "string",
+        "helpMarkDown": "Specify the version of Helm to install.",
+        "defaultValue": "latest"
+    }],
     "instanceNameFormat": "Install Helm $(helmVersionToInstall)",
     "execution": {
         "Node": {
