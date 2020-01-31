@@ -478,6 +478,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "UnableToFetchKubectlVersion": "ms-resource:loc.messages.UnableToFetchKubectlVersion",
     "KubectlClientVersion": "ms-resource:loc.messages.KubectlClientVersion",
-    "KubectlServerVersion": "ms-resource:loc.messages.KubectlServerVersion"
+    "KubectlServerVersion": "ms-resource:loc.messages.KubectlServerVersion",
+    "KubectlServerVerisonNotFound": "ms-resource:loc.messages.KubectlServerVerisonNotFound"
   }
 }

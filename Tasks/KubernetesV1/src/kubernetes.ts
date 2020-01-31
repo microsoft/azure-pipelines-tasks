@@ -77,11 +77,18 @@ function displayKubectlVersion(connection: ClusterConnection): void {
         command.arg(['-o', 'json']);
         const result = command.execSync({ silent: true } as trm.IExecOptions);
         const resultInJSON = JSON.parse(result.stdout);
-        if (resultInJSON.clientVersion && resultInJSON.clientVersion.gitVersion && resultInJSON.serverVersion && resultInJSON.serverVersion.gitVersion) {
+        if (resultInJSON.clientVersion && resultInJSON.clientVersion.gitVersion) {
             console.log('==============================================================================');
             console.log('\t\t\t' + tl.loc('KubectlClientVersion') + ': ' + resultInJSON.clientVersion.gitVersion);
-            console.log('\t\t\t' + tl.loc('KubectlServerVersion') + ': ' + resultInJSON.serverVersion.gitVersion);
-            console.log('==============================================================================');
+            if (resultInJSON.serverVersion && resultInJSON.serverVersion.gitVersion) {
+                console.log('\t\t\t' + tl.loc('KubectlServerVersion') + ': ' + resultInJSON.serverVersion.gitVersion);
+                console.log('==============================================================================');
+            }
+            else {
+                console.log('\t' + tl.loc('KubectlServerVersion') + ': ' + tl.loc('KubectlServerVerisonNotFound'));
+                console.log('==============================================================================');
+                tl.debug(tl.loc('UnableToFetchKubectlVersion'));
+            }
         }
     } catch (ex) {
             console.log(tl.loc('UnableToFetchKubectlVersion'));
