@@ -19,6 +19,7 @@ export class Kubectl {
         } else {
             this.namespace = 'default';
         }
+        this.displayKubectlVersion();
     }
 
     public apply(configurationPaths: string | string[]): IExecSyncResult {
@@ -178,12 +179,12 @@ export class Kubectl {
         return this.execute(command);
     }
 
-    public executeCommand(customCommand: string, args?: string) {
+    public executeCommand(customCommand: string, args?: string, silent?: boolean) {
         const command = tl.tool(this.kubectlPath);
         command.arg(customCommand);
         if (args)
             command.line(args);
-        return this.execute(command);
+        return this.execute(command, silent);
     }
 
     private execute(command: ToolRunner, silent?: boolean) {
@@ -205,5 +206,27 @@ export class Kubectl {
         command.arg('secret');
         command.arg(secretName);
         this.execute(command);
+    }
+
+    private displayKubectlVersion(): void {
+        try {
+            const result = this.executeCommand('version', '-o json', true);
+            const resultInJSON = JSON.parse(result.stdout);
+            if (resultInJSON.clientVersion && resultInJSON.clientVersion.gitVersion) {
+                console.log('==============================================================================');
+                console.log('\t\t\t' + tl.loc('KubectlClientVersion') + ': ' + resultInJSON.clientVersion.gitVersion);
+                if (resultInJSON.serverVersion && resultInJSON.serverVersion.gitVersion) {
+                    console.log('\t\t\t' + tl.loc('KubectlServerVersion') + ': ' + resultInJSON.serverVersion.gitVersion);
+                    console.log('==============================================================================');
+                }
+                else {
+                    console.log('\t' + tl.loc('KubectlServerVersion') + ': ' + tl.loc('KubectlServerVerisonNotFound'));
+                    console.log('==============================================================================');
+                    tl.debug(tl.loc('UnableToFetchKubectlVersion'));
+                }
+            }
+        } catch (ex) {
+            console.log(tl.loc('UnableToFetchKubectlVersion'));
+        }
     }
 }
