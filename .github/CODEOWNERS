@@ -95,7 +95,7 @@ Tasks/CmdLineV2/*   @jtpetty
 
 Tasks/CocoaPodsV0/*     @leantk
 
-Tasks/Common/artifacts-common/*     @jotaylo    @shubham90
+Tasks/Common/artifacts-common/*     @phil-hodgson    @aasim    @satbai
 
 Tasks/Common/AzureRmDeploy-common/*   @vincentdass  @SumiranAgg
 
@@ -135,7 +135,7 @@ Tasks/Common/java-common/*        @leantk   @kelliejos
 
 Tasks/Common/kubernetes-common/*      @nishubansal    @ds-ms
 
-Tasks/Common/packaging-common/*     @jotaylo
+Tasks/Common/packaging-common/*     @phil-hodgson    @aasim    @satbai
 
 Tasks/Common/securefiles-common/*   @leantk   @hashtagchris
 
@@ -183,7 +183,7 @@ Tasks/DownloadFileshareArtifactsV0/*    @Lovakumar      @omeshp
 
 Tasks/DownloadGitHubReleasesV0/*    @Lovakumar      @gykuma
 
-Tasks/DownloadPackageV0/*       @jotaylo    @shubham90
+Tasks/DownloadPackageV0/*       @phil-hodgson    @aasim    @satbai
 
 Tasks/DownloadPipelineArtifactV0/*      @mihaif @jahsu-MSFT @fadnavistanmay @owenhuynMSFT @arunkm
 
@@ -253,7 +253,7 @@ Tasks/KubernetesManifestV0/*    @vithati
 
 Tasks/ManualInterventionV8/*    @vithati
 
-Tasks/MavenAuthenticateV0/*     @jotaylo    @shubham90  @aasim
+Tasks/MavenAuthenticateV0/*     @phil-hodgson    @aasim    @satbai
 
 Tasks/MavenV2/*     @leantk
 
@@ -265,21 +265,21 @@ Tasks/MysqlDeploymentOnMachineGroupV1/*     @kmkumaran      @RoshanKumarMicrosof
 
 Tasks/NodeToolV0/*      @damccorm
 
-Tasks/NpmV1/*      @jotaylo
+Tasks/NpmV1/*      @phil-hodgson    @aasim    @satbai
 
-Tasks/NpmAuthenticateV0/*       @jotaylo    @shubham90
+Tasks/NpmAuthenticateV0/*       @phil-hodgson    @aasim    @satbai
 
-Tasks/NuGetV0/*     @jotaylo    @shubham90
+Tasks/NuGetV0/*     @phil-hodgson    @aasim    @satbai
 
-Tasks/NuGetCommandV2/*      @jotaylo    @shubham90
+Tasks/NuGetCommandV2/*      @phil-hodgson    @aasim    @satbai
 
-Tasks/NuGetAuthenticateV0/*      @jotaylo   @shubham90
+Tasks/NuGetAuthenticateV0/*      @phil-hodgson    @aasim    @satbai
 
-Tasks/NuGetPackagerV0/*     @jotaylo    @shubham90
+Tasks/NuGetPackagerV0/*     @phil-hodgson    @aasim    @satbai
 
-Tasks/NuGetPublisherV0/*    @jotaylo    @shubham90
+Tasks/NuGetPublisherV0/*    @phil-hodgson    @aasim    @satbai
 
-Tasks/NuGetToolInstallerV0/*    @jotaylo    @shubham90
+Tasks/NuGetToolInstallerV0/*    @phil-hodgson    @aasim    @satbai
 
 Tasks/OpenPolicyAgentInstallerV0/*    @Anumita
 
@@ -287,9 +287,9 @@ Tasks/PackerBuildV0/*   @bishal-pdmsft
 
 Tasks/PackerBuildV1/*   @bishal-pdmsft
 
-Tasks/PipAuthenticateV0/*     @shubham90
+Tasks/PipAuthenticateV0/*     @phil-hodgson    @aasim    @satbai
 
-Tasks/PipAuthenticateV1/*     @shubham90
+Tasks/PipAuthenticateV1/*     @phil-hodgson    @aasim    @satbai
 
 Tasks/PowerShellV2/*    @jtpetty
 
@@ -351,11 +351,11 @@ Tasks/SqlServerDacpacDeployment/*   @kmkumaran
 
 Tasks/SshV0/*   @zachariahcox
 
-Tasks/TwineAuthenticateV0/*     @shubham90
+Tasks/TwineAuthenticateV0/*     @phil-hodgson    @aasim    @satbai
 
-Tasks/TwineAuthenticateV1/*     @shubham90
+Tasks/TwineAuthenticateV1/*     @phil-hodgson    @aasim    @satbai
 
-Tasks/UniversalPackagesV0/*     @shubham90  @jotaylo
+Tasks/UniversalPackagesV0/*     @phil-hodgson    @aasim    @satbai
 
 Tasks/UseDotNetV2/*     @bishal-pdmsft
 

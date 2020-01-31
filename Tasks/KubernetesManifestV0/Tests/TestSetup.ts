@@ -206,7 +206,7 @@ a.exec[`${kubectlPath} rollout status ${process.env[shared.TestEnvVars.kind]}/${
 
 a.exec[`${kubectlPath} patch ${process.env[shared.TestEnvVars.kind]} ${process.env[shared.TestEnvVars.name]} --type=${process.env[shared.TestEnvVars.mergeStrategy]} -p ${process.env[shared.TestEnvVars.patch]} --namespace ${process.env[shared.TestEnvVars.namespace] || 'testnamespace'}`] = {
     'code': 0,
-    'stdout': `${process.env[shared.TestEnvVars.kind]} "${process.env[shared.TestEnvVars.name]}" successfully rolled out`
+    'stdout': `${process.env[shared.TestEnvVars.kind]}/${process.env[shared.TestEnvVars.name]} patched`
 };
 
 a.exec[`${kubectlPath} get pods -o json --namespace testnamespace`] = {

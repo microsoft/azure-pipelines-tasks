@@ -13,12 +13,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 164,
-    "Patch": 1
+    "Minor": 165,
+    "Patch": 0
   },
   "demands": [],
   "groups": [],
-  "inputs": [{
+  "inputs": [
+    {
       "name": "action",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.action",
@@ -341,10 +342,12 @@
   ],
   "dataSourceBindings": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "outputVariables": [{
-    "name": "manifestsBundle",
-    "description": "The location of the manifest bundles created by bake action"
-  }],
+  "outputVariables": [
+    {
+      "name": "manifestsBundle",
+      "description": "The location of the manifest bundles created by bake action"
+    }
+  ],
   "execution": {
     "Node": {
       "target": "src//run.js"

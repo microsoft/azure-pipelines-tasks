@@ -9,7 +9,9 @@ import * as TaskParameters from '../models/TaskInputParameters';
 export async function patch(ignoreSslErrors?: boolean) {
     TaskParameters.validateTimeoutForRolloutStatus();
     const kubectl = new Kubectl(await utils.getKubectl(), TaskParameters.namespace, ignoreSslErrors);
-    let kind = tl.getInput('kind', false).toLowerCase();
+    let kind = tl.getInput('kind', false);
+    if(kind)
+        kind = kind.toLowerCase();
     let name = tl.getInput('name', false);
     const filePath = tl.getInput('resourceFileToPatch', false);
     const strategy = tl.getInput('mergeStrategy', false);
