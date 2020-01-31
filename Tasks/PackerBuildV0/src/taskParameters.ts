@@ -4,8 +4,8 @@ import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as constants from "./constants";
 import * as utils from "./utilities";
-
 import msRestAzure = require("azure-arm-rest/azure-arm-common");
+import AzureRMEndpoint = require("azure-arm-rest/azure-arm-endpoint");
 
 export default class TaskParameters {
     public templateType: string;
@@ -34,7 +34,7 @@ export default class TaskParameters {
 
     public imageUri: string;
 
-    public graphCredentials: msRestAzure.ApplicationTokenCredentials;
+    public graphCredentialsPromise: Promise<msRestAzure.ApplicationTokenCredentials>;
 
     constructor() {
         try {
@@ -71,7 +71,7 @@ export default class TaskParameters {
 
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
 
-                this.graphCredentials = this._getAzureADGraphCredentials(this.serviceEndpoint);
+                this.graphCredentialsPromise = this.getGraphCredentials(this.serviceEndpoint);
             }
 
             console.log(tl.loc("ParsingAdditionalBuilderParameters"));
@@ -114,15 +114,8 @@ export default class TaskParameters {
         return inputPath;
     }
 
-    private _getAzureADGraphCredentials(connectedService: string): msRestAzure.ApplicationTokenCredentials {
-        var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-        var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
-        var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-        var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentauthorityurl', false);
-        envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
-        var activeDirectoryResourceId: string = tl.getEndpointDataParameter(connectedService, 'graphUrl', false);
-        activeDirectoryResourceId = (activeDirectoryResourceId != null) ? activeDirectoryResourceId : "https://graph.windows.net/";
-        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, activeDirectoryResourceId, envAuthorityUrl, activeDirectoryResourceId, false);
-        return credentials;
+    private async getGraphCredentials(connectedService: string): Promise<msRestAzure.ApplicationTokenCredentials> {
+        var azureEndpoint = await new AzureRMEndpoint.AzureRMEndpoint(connectedService).getEndpoint(true);
+        return azureEndpoint.applicationTokenCredentials;
     }
 }

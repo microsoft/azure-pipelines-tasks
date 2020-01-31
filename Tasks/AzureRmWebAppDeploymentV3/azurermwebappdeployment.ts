@@ -31,7 +31,6 @@ async function main() {
 
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
-        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-arm-rest/module.json'));
         var taskParams: TaskParameters = TaskParametersUtility.getParameters();
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(taskParams.connectedServiceName).getEndpoint();
         var virtualApplicationPath: string;

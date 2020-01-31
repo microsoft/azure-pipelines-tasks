@@ -314,9 +314,8 @@ export function updateImageDetails(inputObject: any, containers: string[]) {
 function extractImageName(imageName) {
     let img = '';
     if (imageName.indexOf('/') > 0) {
-        const imgParts = imageName.split('/');
-        const registry = imgParts[0];
-        const imgName = imgParts[1].split(':')[0];
+        const registry = imageName.substring(0, imageName.indexOf('/'));
+        const imgName = imageName.substring(imageName.indexOf('/') + 1).split(':')[0];
         img = `${registry}/${imgName}`;
     } else {
         img = imageName.split(':')[0];

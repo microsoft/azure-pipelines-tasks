@@ -97,28 +97,61 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
-    it('Run successfuly for promote with canary strategy', (done: MochaDone) => {
+    it('Run successfuly for promote with canary strategy when baseline resource exists', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.promote;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
+        process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'true';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('nginx-deployment created') != -1, 'deployment is created');
         assert(tr.stdout.indexOf('deployment "nginx-deployment" successfully rolled out') != -1, 'deployment is successfully rolled out');
         assert(tr.stdout.indexOf('nginx-deployment annotated') != -1, 'nginx-deployment created.');
-        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted') != -1, 'Baseline and canary workloads are deleted');
+        assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') != -1, 'nginx-deployment-baseline workload exists');
+        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted') != -1, 'Baseline and Canary workloads deleted');
         done();
     });
 
-    it('Run successfuly for reject with canary strategy', (done: MochaDone) => {
+    it('Run successfuly for promote with canary strategy when baseline resource does not exist', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.promote;
+        process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
+        process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'false';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('nginx-deployment created') != -1, 'deployment is created');
+        assert(tr.stdout.indexOf('deployment "nginx-deployment" successfully rolled out') != -1, 'deployment is successfully rolled out');
+        assert(tr.stdout.indexOf('nginx-deployment annotated') != -1, 'nginx-deployment created.');
+        assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') == -1, 'nginx-deployment-baseline workload does not exist');
+        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted') != -1, 'Canary workload deleted');
+        done();
+    });
+
+    it('Run successfuly for reject with canary strategy when baseline resource exists', (done: MochaDone) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.Actions.reject;
         process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
+        process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'true';
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted') != -1, 'Baseline and canary workloads are deleted');
+        assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') != -1, 'nginx-deployment-baseline workload exists');
+        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted. "nginx-deployment-baseline" deleted') != -1, 'Baseline and Canary workloads deleted');
+        done();
+    });
+
+    it('Run successfuly for reject with canary strategy when baseline resource does not exist', (done: MochaDone) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.Actions.reject;
+        process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
+        process.env[shared.TestEnvVars.isBaselineDeploymentPresent] = 'false';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') == -1, 'nginx-deployment-baseline workload does not exist');
+        assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted') != -1, 'Canary workload deleted');
         done();
     });
 
@@ -285,12 +318,15 @@ describe('Kubernetes Manifests Suite', function () {
         const deploymentFile = fs.readFileSync(testFile).toString();
         const deploymentObject = yaml.load(deploymentFile);
 
-        updateImageDetails(deploymentObject, ['nginx:42', 'mysql:8.0', 'imagewithhyphen:1', 'myacr.azurecr.io/myimage:1', 'myimagewithcomment:1', 'nginx-init:42.1']);
+        updateImageDetails(deploymentObject, ['nginx:42', 'mysql:8.0', 'imagewithhyphen:1', 'myacr.azurecr.io/myimage:1', 'myimagewithcomment:1', 'nginx-init:42.1', 'myacr.azurecr.io/folder/image-a:1', 'myacr.azurecr.io/folder/image-b:2']);
         assert(deploymentObject.spec.template.spec.containers[0].image === 'nginx:42', 'nginx image not tagged correctly');
         assert(deploymentObject.spec.template.spec.containers[2].image === 'mysql:8.0', 'untagged image not tagged correctly');
         assert(deploymentObject.spec.template.spec.containers[3].image === 'myacr.azurecr.io/myimage:1', 'untagged image with registry not tagged correctly');
         assert(deploymentObject.spec.template.spec.containers[4].image === 'myimagewithcomment:1', 'untagged image with comment not tagged correctly');
         assert(deploymentObject.spec.template.spec.containers[5].image === 'imagewithhyphen:1', 'manifest regex should work correctly');
+        assert(deploymentObject.spec.template.spec.containers[6].image === 'myacr.azurecr.io/folder/image-a:1', 'untagged image with common folder not tagged correctly');
+        assert(deploymentObject.spec.template.spec.containers[7].image === 'myacr.azurecr.io/folder/image-b:2', 'untagged image with common folder not tagged correctly');
+
         assert(deploymentObject.spec.template.spec.initContainers[0].image === 'nginx-init:42.1', 'nginx-init image not tagged correctly');
         done();
     });

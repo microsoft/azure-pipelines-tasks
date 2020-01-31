@@ -16,7 +16,8 @@
   "dependencies": {
     "@types/node": "^6.0.101",
     "@types/q": "^1.0.7",
-    "vsts-task-lib": "^0.9.20",
-    "ftp": "0.3.10"
+    "azure-pipelines-task-lib": "^2.9.3",
+    "ftp": "0.3.10",
+    "minimatch": "^3.0.4"
   }
 }

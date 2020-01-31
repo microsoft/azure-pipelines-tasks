@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 162,
+    "Minor": 165,
     "Patch": 0
   },
   "preview": true,
@@ -22,15 +22,13 @@
     "Helm"
   ],
   "groups": [],
-  "inputs": [
-    {
-      "name": "helmVersionToInstall",
-      "label": "ms-resource:loc.input.label.helmVersionToInstall",
-      "type": "string",
-      "helpMarkDown": "ms-resource:loc.input.help.helmVersionToInstall",
-      "defaultValue": "latest"
-    }
-  ],
+  "inputs": [{
+    "name": "helmVersionToInstall",
+    "label": "ms-resource:loc.input.label.helmVersionToInstall",
+    "type": "string",
+    "helpMarkDown": "ms-resource:loc.input.help.helmVersionToInstall",
+    "defaultValue": "latest"
+  }],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {

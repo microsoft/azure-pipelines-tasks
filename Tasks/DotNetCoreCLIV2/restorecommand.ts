@@ -131,8 +131,9 @@ export async function run(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
 
         try {
+            const additionalRestoreArguments = tl.getInput('restoreArguments', false);
             for (const projectFile of projectFiles) {
-                await dotNetRestoreAsync(dotnetPath, projectFile, packagesDirectory, configFile, noCache, verbosity);
+                await dotNetRestoreAsync(dotnetPath, projectFile, packagesDirectory, configFile, noCache, verbosity, additionalRestoreArguments);
             }
         } finally {
             credCleanup();
@@ -154,7 +155,7 @@ export async function run(): Promise<void> {
     }
 }
 
-function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDirectory: string, configFile: string, noCache: boolean, verbosity: string): Q.Promise<number> {
+function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDirectory: string, configFile: string, noCache: boolean, verbosity: string, additionalRestoreArguments?: string): Q.Promise<number> {
     const dotnet = tl.tool(dotnetPath);
     dotnet.arg('restore');
 
@@ -177,6 +178,10 @@ function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDir
     if (verbosity && verbosity !== '-') {
         dotnet.arg('--verbosity');
         dotnet.arg(verbosity);
+    }
+
+    if (additionalRestoreArguments) {
+        dotnet.line(additionalRestoreArguments);
     }
 
     const envWithProxy = ngRunner.setNuGetProxyEnvironment(process.env, configFile, null);

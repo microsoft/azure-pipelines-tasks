@@ -242,22 +242,4 @@ describe("ContainerBuildV0 Suite", function () {
         done();
     });
 
-    it('Buildctl should honour poolservicename input', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        process.env['RUNNING_ON'] = 'KUBERNETES';
-        process.env[shared.TestEnvVars.repository] = "testuser/testrepo";   
-        process.env[shared.TestEnvVars.poolServiceName] = "azure-pipelines-pool-custom";
-        process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
-        process.env[shared.TestEnvVars.buildContext] = shared.formatPath("a/w/context");
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
-
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]buildctl build --frontend=dockerfile.v0 --local=context=${shared.formatPath("a/w/context")} --local=dockerfile=${shared.formatPath("a/w/meta/")}`) != -1, "buildctl build should run with expected arguments");
-        console.log(tr.stderr);
-        done();
-    });
-
 });

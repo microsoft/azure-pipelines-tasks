@@ -183,6 +183,7 @@ async function run() {
     tl.debug('Completed action');
     try {
         switch(action) {
+            case "Complete Swap":
             case "Swap Slots": {
                 if(appServiceSourceSlotUtils && appServiceTargetSlotUtils && updateDeploymentStatus) {
                     let sourceSlotKuduService = await appServiceSourceSlotUtils.getKuduService();
