@@ -48,7 +48,6 @@ Based on the type of Azure App Service and Azure Pipelines agent, the task choos
 
 By default the task tries to select the appropriate deployment technology given the input package, app service type and agent OS.
 
-* When post deployment script is provided, use Zip Deploy 
 * When the App Service type is Web App on Linux App, use Zip Deploy 
 * If War file is provided, use War Deploy 
 * If Jar file is provided, use Run From Zip 
@@ -87,34 +86,6 @@ The task is used to deploy a Web  project to an existing Azure Web App or Functi
 
 * **Select deployment method:** Select the option to to choose from  auto, zipDeploy and runFromPackage. Deafult value is Auto-detect where the task tries to select the appropriate deployment technology given the input package, app service type and agent OS.
 
-* **File transformation and variable substitution:**  Refer to following links:
-  * [XML transformation](https://docs.microsoft.com/en-us/vsts/build-release/tasks/transforms-variable-substitution?view=vsts#xml-transformation)
-  * [XML variable substitution](https://docs.microsoft.com/en-us/vsts/build-release/tasks/transforms-variable-substitution?view=vsts#xml-variable-substitution)
-  * [JSON variable substitution](https://docs.microsoft.com/en-us/vsts/build-release/tasks/transforms-variable-substitution?view=vsts#json-variable-substitution)
-* **Deployment script:** 
-The task provides an option to customize the deployment by providing a script that will run on the Azure App Service once the application artifacts have been copied successfully to the App Service. You can choose to either provide an inline deployment script or point to a script file in your atifact folder. This is very useful when you want to restore your application dependencies on the App service directly. Restoring packages of Node, PHP, Python applications helps in avoiding timeouts when the application dependency results in a large artifact getting copied over from Azure Pipelines Agent to Azure app service. An example of this script is:
-```
-@echo off
-if NOT exist requirements.txt (
- echo No Requirements.txt found.
- EXIT /b 0
-)
-if NOT exist "$(PYTHON_EXT)/python.exe" (
- echo Python extension not available >&2
- EXIT /b 1
-)
-echo Installing dependencies
-call "$(PYTHON_EXT)/python.exe" -m pip install -U setuptools
-if %errorlevel% NEQ 0 (
- echo Failed to install setuptools >&2
- EXIT /b 1
-)
-call "$(PYTHON_EXT)/python.exe" -m pip install -r requirements.txt
-if %errorlevel% NEQ 0 (
- echo Failed to install dependencies>&2
- EXIT /b 1
-)
-```
 
 * **Runtime Stack:**
 Web App on Linux offers two different options to publish your application, one is Custom image deployment (Web App for Containers) and the other is App deployment with a built-in platform image (Web App on Linux). You will see this parameter only when you selected 'Linux Web App' in the App type selection option in the task.
