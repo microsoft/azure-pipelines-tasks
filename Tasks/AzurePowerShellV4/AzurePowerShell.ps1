@@ -57,7 +57,7 @@ CleanUp-PSModulePathForHostedAgent
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
 
 # troubleshoot link
-$troubleshoot = "https://aka.ms/azure-powershell-troubleshoot"
+$troubleshoot = "https://aka.ms/azurepowershelltroubleshooting"
 try 
 {
     # Initialize Azure.
