@@ -87,7 +87,7 @@ npm run build
 ## Build a specific task (recommended):
 
 ```bash
-node make.js build --task ShellScript
+node make.js build --task ShellScriptV2
 ```
 
 ## Run Tests
@@ -106,7 +106,7 @@ node make.js test
 
 Run tests for the task that you are intersted in:
 ```bash
-node make.js test --task ShellScript --suite L0
+node make.js test --task ShellScriptV2 --suite L0
 ```
 
 Tests should be run with changes. Ideally, new tests are added for your change.
