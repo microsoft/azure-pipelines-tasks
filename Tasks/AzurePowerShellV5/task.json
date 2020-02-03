@@ -4,6 +4,7 @@
     "friendlyName": "Azure PowerShell",
     "description": "Run a PowerShell script within an Azure environment",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
+    "helpUrl": "https://aka.ms/azurepowershelltroubleshooting",
     "category": "Deploy",
     "visibility": [
         "Build",
