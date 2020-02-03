@@ -53,12 +53,7 @@ get_args() {
                 LOG_LEVEL=4
             ;;
             --collection-url | -c)
-                if [ -z ${2} ]; then
-                    log_error "Missing required parameter: 'collection-url'"
-                    display_help
-                    exit 1
-                fi
-                COLLECTION_URL=${2%/}
+                COLLECTION_URL=${2}
                 shift
             ;;
             --token | -t)
@@ -133,6 +128,13 @@ if [ -z ${TOKEN} ]; then
     display_help
     exit 1
 fi
+
+if [ -z ${COLLECTION_URL} ]; then
+    log_error "Missing required parameter: 'collection-url'"
+    display_help
+    exit 1
+fi
+COLLECTION_URL="${COLLECTION_URL%/}"
 
 # Create temporary directory
 working_dir=$(mktemp -d -t uot-XXXXXXXXXX)
