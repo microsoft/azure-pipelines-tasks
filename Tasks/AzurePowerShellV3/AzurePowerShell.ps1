@@ -93,7 +93,7 @@ finally {
     }
 }
 
-Write-Host "## Running script"
+Write-Host "## Beginning Script Execution"
 try {
     # Trace the expression as it will be invoked.
     $__vstsAzPSInlineScriptPath = $null
@@ -173,7 +173,7 @@ finally {
         Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
     }
 }
-Write-Host "## Running script Complete"
+Write-Host "## Script Execution Complete"
 
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Remove-EndpointSecrets
