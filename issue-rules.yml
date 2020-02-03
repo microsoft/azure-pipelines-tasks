@@ -18,6 +18,9 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'Npm'
   addLabels: ['Area: Artifacts']  
+- valueFor: '**Enter Task Name**'
+  contains: 'UniversalPackage'
+  addLabels: ['Area: Artifacts']
 # Area: Build
 - valueFor: '**Enter Task Name**'
   contains: 'VSBuild'
@@ -41,6 +44,10 @@ rules:
 # Area: CrossPlatform
 - valueFor: '**Enter Task Name**'
   contains: 'Android'
+  addLabels: ['Area: CrossPlatform']
+  assign: ['leantk']
+- valueFor: '**Enter Task Name**'
+  contains: 'CocoaPods'
   addLabels: ['Area: CrossPlatform']
   assign: ['leantk']
 - valueFor: '**Enter Task Name**'
@@ -75,6 +82,9 @@ rules:
   contains: 'AzureCli'
   addLabels: ['Area: Release']
   assign: ['bishal-pdmsft']
+- valueFor: '**Enter Task Name**'
+  contains: 'ACRTask'
+  addLabels: ['Area: Release']
 - valueFor: '**Enter Task Name**'
   contains: 'AzureResourceGroupDeployment'
   addLabels: ['Area: Release']

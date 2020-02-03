@@ -16,7 +16,7 @@ export async function scale(ignoreSslErrors?: boolean) {
     const name = tl.getInput('name', true);
     const result = kubectl.scale(kind, name, replicas);
     utils.checkForErrors([result]);
-    utils.checkForErrors([kubectl.checkRolloutStatus(kind, name, TaskInputParameters.timeout)]);
+    utils.checkForErrors([kubectl.checkRolloutStatus(kind, name, TaskInputParameters.rolloutStatusTimeout)]);
     utils.checkForErrors([kubectl.annotate(kind, name, constants.pipelineAnnotations, true)]);
     utils.checkForErrors(utils.annotateChildPods(kubectl, kind, name, JSON.parse((kubectl.getAllPods()).stdout)));
 }
