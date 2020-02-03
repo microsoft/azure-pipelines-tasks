@@ -14,6 +14,9 @@ if (process.env['commands']) {
 if (process.env['runOptions']) {
     tmr.setInput('runOptions', process.env['runOptions']);
 }
+if (process.env['handshakeTimeout']) {
+    tmr.setInput('handshakeTimeout', process.env['handshakeTimeout']);
+}
 
 const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
