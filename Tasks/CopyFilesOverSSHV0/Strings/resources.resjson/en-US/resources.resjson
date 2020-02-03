@@ -20,6 +20,8 @@
   "loc.input.help.failOnEmptySource": "Fail if no matching files to be copied are found under the source folder.",
   "loc.input.label.flattenFolders": "Flatten folders",
   "loc.input.help.flattenFolders": "Flatten the folder structure and copy all files into the specified target folder on the remote machine.",
+  "loc.input.label.handshakeTimeout": "SSH handshake timeout",
+  "loc.input.help.handshakeTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
   "loc.messages.CheckLogForStdErr": "Check the build log for STDERR from the command.",
   "loc.messages.CleanTargetFolder": "Cleaning target folder %s on the remote machine",
   "loc.messages.CleanTargetFolderFailed": "Failed to clean the target folder on the remote machine. %s",

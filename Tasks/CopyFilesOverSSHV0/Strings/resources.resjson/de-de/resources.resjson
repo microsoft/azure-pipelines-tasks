@@ -20,6 +20,8 @@
   "loc.input.help.failOnEmptySource": "Ein Fehler tritt auf, wenn keine zu kopierenden übereinstimmenden Dateien im Quellordner gefunden wurden.",
   "loc.input.label.flattenFolders": "Ordner vereinfachen",
   "loc.input.help.flattenFolders": "Vereinfacht die Ordnerstruktur und kopiert alle Dateien in den angegebenen Zielordner auf dem Remotecomputer.",
+  "loc.input.label.handshakeTimeout": "SSH handshake timeout",
+  "loc.input.help.handshakeTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
   "loc.messages.CheckLogForStdErr": "Überprüfen Sie das Buildprotokoll auf Ausgabe an STDERR vom Befehl.",
   "loc.messages.CleanTargetFolder": "Der Zielordner \"%s\" wird auf dem Remotecomputer bereinigt.",
   "loc.messages.CleanTargetFolderFailed": "Fehler beim Bereinigen des Zielordners auf dem Remotecomputer. %s",

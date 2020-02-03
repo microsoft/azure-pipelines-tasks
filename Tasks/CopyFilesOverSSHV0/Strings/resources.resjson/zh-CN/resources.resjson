@@ -20,6 +20,8 @@
   "loc.input.help.failOnEmptySource": "如果在源文件夹下找不到要复制的匹配文件，则失败。",
   "loc.input.label.flattenFolders": "精简文件夹",
   "loc.input.help.flattenFolders": "精简文件夹结构，并将所有文件复制到远程计算机上的指定目标文件夹。",
+  "loc.input.label.handshakeTimeout": "SSH handshake timeout",
+  "loc.input.help.handshakeTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
   "loc.messages.CheckLogForStdErr": "从命令检查 STDERR 生成日志。",
   "loc.messages.CleanTargetFolder": "正在清理远程计算机上的目标文件夹 %s",
   "loc.messages.CleanTargetFolderFailed": "未能清理远程计算机上的目标文件夹。%s",

@@ -20,6 +20,8 @@
   "loc.input.help.failOnEmptySource": "ソース フォルダーの下に一致するコピー対象のファイルが見つからない場合に、失敗します。",
   "loc.input.label.flattenFolders": "フォルダーのフラット化",
   "loc.input.help.flattenFolders": "フォルダー構造をフラットにし、すべてのファイルを、リモート コンピューター上にある指定のターゲット フォルダーにコピーします。",
+  "loc.input.label.handshakeTimeout": "SSH handshake timeout",
+  "loc.input.help.handshakeTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
   "loc.messages.CheckLogForStdErr": "コマンドからの STDERR がないかビルド ログをご確認ください。",
   "loc.messages.CleanTargetFolder": "リモート コンピューター上のターゲット フォルダー %s を空にしています",
   "loc.messages.CleanTargetFolderFailed": "リモート コンピューター上のターゲット フォルダーを空にできませんでした。%s",
