@@ -72,7 +72,7 @@ finally {
     }
 }
 
-Write-Host "## Running script"
+Write-Host "## Beginning Script Execution"
 try {
     if ($input_pwsh)
     {
@@ -263,4 +263,4 @@ finally {
     Remove-EndpointSecrets
     Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue
 }
-Write-Host "## Running script Complete"
+Write-Host "## Script Execution Complete"

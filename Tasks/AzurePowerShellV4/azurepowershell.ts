@@ -91,7 +91,7 @@ async function run() {
                                             // encode the BOM into its UTF8 binary sequence.
         console.log("## Initializing Azure Complete");
 
-        console.log("## Running script");
+        console.log("## Beginning Script Execution");
         // Run the script.
         //
         // Note, prefer "pwsh" over "powershell". At some point we can remove support for "powershell".
@@ -135,12 +135,12 @@ async function run() {
         if (stderrFailure) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('JS_Stderr'));
         }
-        console.log("## Running script Complete");
+        console.log("## Script Execution Complete"); 
     }
     catch (err) {
         // troubleshoot link
         const troubleshoot = "https://aka.ms/azurepowershelltroubleshooting";
-        console.log(`For troubleshooting, refer: ${troubleshoot}`);
+        console.log(`##[error] run failed: For troubleshooting, refer: ${troubleshoot}`);
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     }
 }
