@@ -18,6 +18,8 @@
   "loc.input.help.args": "Argumentos que se pasan al script de shell.",
   "loc.input.label.failOnStdErr": "Error en STDERR",
   "loc.input.help.failOnStdErr": "Si se selecciona esta opción, la compilación dará error cuando el script o los comandos remotos escriban en STDERR.",
+  "loc.input.label.handshakeTimeout": "SSH handshake timeout",
+  "loc.input.help.handshakeTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
   "loc.messages.ConnectionFailed": "No se pudo conectar a la máquina remota. Compruebe los detalles de la conexión de servicio SSH. Error: %s.",
   "loc.messages.FailedToWriteScript": "No se pudo escribir el script en el disco: %s",
   "loc.messages.RemoteCmdExecutionErr": "No se pudo ejecutar el comando debido a errores en la máquina remota.",

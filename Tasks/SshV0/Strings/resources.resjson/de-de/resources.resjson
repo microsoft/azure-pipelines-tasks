@@ -18,6 +18,8 @@
   "loc.input.help.args": "An das Shellskript zu übergebende Argumente.",
   "loc.input.label.failOnStdErr": "Fehler für STDERR",
   "loc.input.help.failOnStdErr": "Wenn diese Option ausgewählt ist, tritt ein Buildfehler auf, wenn die Remotebefehle oder Skripts in STDERR schreiben.",
+  "loc.input.label.handshakeTimeout": "SSH handshake timeout",
+  "loc.input.help.handshakeTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
   "loc.messages.ConnectionFailed": "Fehler beim Herstellen einer Verbindung mit dem Remotecomputer. Überprüfen Sie die SSH-Dienstverbindungsdetails. Fehler: %s.",
   "loc.messages.FailedToWriteScript": "Fehler beim Schreiben des Skripts auf den Datenträger: %s",
   "loc.messages.RemoteCmdExecutionErr": "Fehler des Befehls auf dem Remotecomputer.",
