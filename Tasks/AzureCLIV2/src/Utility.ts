@@ -56,7 +56,7 @@ export class Utility {
         }
         contents.push(content.trim());
 
-        let powerShellIgnoreLASTEXITCODE: string = tl.getInput('powerShellIgnoreLASTEXITCODE', false);
+        let powerShellIgnoreLASTEXITCODE: boolean = tl.getBoolInput('powerShellIgnoreLASTEXITCODE', false);
         if (!powerShellIgnoreLASTEXITCODE) {
             contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);
             contents.push(`    Write-Host '##vso[task.debug]$LASTEXITCODE is not set.'`);
