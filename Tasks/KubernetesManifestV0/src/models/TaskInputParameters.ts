@@ -16,7 +16,7 @@ export const secretArguments: string = tl.getInput('secretArguments', false) || 
 export const secretType: string = tl.getInput('secretType', false);
 export const secretName: string = tl.getInput('secretName', false);
 export const dockerRegistryEndpoint: string = tl.getInput('dockerRegistryEndpoint', false);
-export const timeout: string = tl.getInput('timeout', false);
+export const rolloutStatusTimeout: string = tl.getInput('rolloutStatusTimeout', false);
 
 if (!namespace) {
     const kubConnection = tl.getInput('kubernetesServiceConnection', false);
@@ -31,7 +31,7 @@ if (!namespace) {
 }
 
 export function validateTimeoutForRolloutStatus() {
-    if (timeout && !validateRegex("^\\d*$", timeout)) {
+    if (rolloutStatusTimeout && !validateRegex("^\\d*$", rolloutStatusTimeout)) {
         throw new Error(tl.loc('InvalidTimeoutValue'));
     }
 }

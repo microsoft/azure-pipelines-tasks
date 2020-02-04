@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 164,
-        "Patch": 0
+        "Minor": 165,
+        "Patch": 1
     },
     "demands": [],
     "groups": [],
@@ -326,7 +326,7 @@
             "visibleRule": "action = createSecret && secretType = dockerRegistry"
         },
         {
-            "name": "timeout",
+            "name": "rolloutStatusTimeout",
             "type": "string",
             "label": "Timeout for rollout status",
             "defaultValue": "0",
@@ -335,7 +335,7 @@
             "visibleRule": "action = deploy || action = patch || action = scale || action = promote",
             "validation": {
                 "expression": "isMatch(value, '(^\\d*$)','Multiline')",
-                "message": "Enter valid a value for timeout."
+                "message": "Enter a valid value for timeout."
             }
         }
     ],
