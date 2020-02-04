@@ -106,13 +106,13 @@
       "groupName": "advanced"
     },
     {
-      "name": "handshakeTimeout",
+      "name": "readyTimeout",
       "type": "string",
-      "label": "ms-resource:loc.input.label.handshakeTimeout",
+      "label": "ms-resource:loc.input.label.readyTimeout",
       "defaultValue": "20000",
       "required": true,
       "groupName": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.handshakeTimeout",
+      "helpMarkDown": "ms-resource:loc.input.help.readyTimeout",
       "validation": {
         "expression": "isMatch(value, '(^\\d*$)','Multiline')",
         "message": "Enter a valid value for timeout."

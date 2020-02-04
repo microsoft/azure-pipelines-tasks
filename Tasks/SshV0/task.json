@@ -106,7 +106,7 @@
             "groupName": "advanced"
         },
         {
-            "name": "handshakeTimeout",
+            "name": "readyTimeout",
             "type": "string",
             "label": "SSH handshake timeout",
             "defaultValue": "20000",
