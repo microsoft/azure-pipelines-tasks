@@ -9,7 +9,7 @@ var fileEncoding = require('./fileencoding.js');
 
 function getReplacableTokenFromTags(xmlNode, variableMap) {
     var parameterSubValue = {};
-    if(xmlNode.hasChildNodes()) {
+    if(xmlNode.childNodes) {
         var children = xmlNode.childNodes;
         for (let childs = 0; childs < children.length; childs ++) {
             let childNode = children[childs];
@@ -150,8 +150,8 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
                         isSubstitutionApplied = updateXmlNodeAttribute(xmlNode, variableMap, replacableTokenValues) || isSubstitutionApplied;
                     }
                 } catch (error){
-                    tl.debug("Error occurred while processing xml node : " + xmlNode.nodeName);
-                    tl.debug(error);
+                    tl.error("Error occurred while processing xml node : " + xmlNode.nodeName);
+                    throw new Error(error);
                 }
             }  
         }
@@ -216,7 +216,7 @@ function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues):
                     xmlDomNode.setAttribute(attributeName, ConfigFileAppSettingsTokenName);
                     isValueReplaced = true;
                 }
-                else if(xmlDomNode.hasChildNodes()) {
+                else if(xmlDomNode.childNodes) {
                     let children = xmlDomNode.childNodes;
                     for (let childs = 0; childs < children.length; childs ++) {
                         let childNode = children[childs];
@@ -238,7 +238,7 @@ function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues):
             }
         }
     }
-    if(xmlDomNode.hasChildNodes()) {
+    if(xmlDomNode.childNodes) {
         let children = xmlDomNode.childNodes;
         for (let childs = 0; childs < children.length; childs ++) {
             let childNode = children[childs];
@@ -259,7 +259,7 @@ function updateXmlConnectionStringsNodeAttribute(xmlDomNode, variableMap, replac
         return isSubstitutionApplied;
     }
 
-    if(xmlDomNode.hasAttributes()) {
+    if(xmlDomNode.attributes) {
         if(xmlDomNode.hasAttribute("connectionString")) {
             var connectionStringName = xmlDomNode.getAttribute("name");
             if (connectionStringName && variableMap[xmlDomNode.getAttribute("name")]) {
@@ -279,7 +279,7 @@ function updateXmlConnectionStringsNodeAttribute(xmlDomNode, variableMap, replac
         }
     }
 
-    if(xmlDomNode.hasChildNodes()) {
+    if(xmlDomNode.childNodes) {
         let children = xmlDomNode.childNodes;
         for (let childs = 0; childs < children.length; childs ++) {
             let childNode = children[childs];
@@ -305,7 +305,7 @@ function replaceEscapeXMLCharacters(xmlDOMNode) {
         }
     }
 
-    if(xmlDOMNode.hasChildNodes())
+    if(xmlDOMNode.childNodes)
     {
         let xmlDOMchildNodes = xmlDOMNode.childNodes;
         for (let i = 0; i <xmlDOMchildNodes.length; i++) {
