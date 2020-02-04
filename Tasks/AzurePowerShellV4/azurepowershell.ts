@@ -58,7 +58,7 @@ async function run() {
         console.log("## Validating Inputs Complete");
 
         // Generate the script contents.
-        console.log("## Initializing Azure");
+        console.log("## Initializing Az module");
         console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
         let azFilePath = path.join(path.resolve(__dirname), 'InitializeAz.ps1');
@@ -89,7 +89,7 @@ async function run() {
             '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
             { encoding: 'utf8' });           // Since UTF8 encoding is specified, node will
                                             // encode the BOM into its UTF8 binary sequence.
-        console.log("## Initializing Azure Complete");
+        console.log("## Az module initialization Complete");
 
         console.log("## Beginning Script Execution");
         // Run the script.

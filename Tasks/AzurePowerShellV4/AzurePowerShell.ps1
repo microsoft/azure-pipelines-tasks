@@ -48,7 +48,7 @@ if ($targetAzurePs -eq $latestVersion) {
 }
 Write-Host "## Validating Inputs Complete" 
 
-Write-Host "## Initializing Azure"
+Write-Host "## Initializing Az module"
 . "$PSScriptRoot\Utility.ps1"
 
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
@@ -63,12 +63,12 @@ try
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs
-    Write-Host "## Initializing Azure Complete"
+    Write-Host "## Az module initialization Complete"
     $success = $true
 }
 finally {
     if (!$success) {
-        Write-VstsTaskError "Initialize Azure failed: For troubleshooting, refer: $troubleshoot"
+        Write-VstsTaskError "Initializing Az module failed: For troubleshooting, refer: $troubleshoot"
     }
 }
 
