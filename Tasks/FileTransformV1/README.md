@@ -4,8 +4,6 @@
 
 Use this task to apply file transformations and variable substitutions on configuration and parameters files. For details of how translations are processed, see [File transforms and variable substitution reference](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/transforms-variable-substitution?view=azure-devops).
 
-The new File Transform Task version fails when no substitution has been applied (i.e. the changes were already present in the package).
-
 ## File transformations
 
 * At present file transformations are supported for only XML files.
@@ -63,7 +61,7 @@ To substitute JSON variables that are nested or hierarchical, specify them using
 ```
 # File transform
 # Replace tokens with variable values in XML or JSON configuration files
-- task: FileTransform@2
+- task: FileTransform@1
   inputs:
     #folderPath: '$(System.DefaultWorkingDirectory)/**/*.zip' 
     #enableXmlTransform: # Optional
