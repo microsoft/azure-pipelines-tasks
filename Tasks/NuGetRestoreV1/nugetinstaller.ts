@@ -13,7 +13,6 @@ import peParser = require('packaging-common/pe-parser/index');
 import {VersionInfo} from "packaging-common/pe-parser/VersionResource";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import { getProjectAndFeedIdFromInputParam } from "packaging-common/util"
-import { logError } from 'packaging-common/util';
 
 const NUGET_ORG_V2_URL: string = "https://www.nuget.org/api/v2/";
 const NUGET_ORG_V3_URL: string = "https://api.nuget.org/v3/index.json";
@@ -36,7 +35,7 @@ async function main(): Promise<void> {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
         tl.debug("Unable to get packaging URIs, using default collection URI");
-        logError(error);
+        tl.debug(JSON.stringify(error));
         const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
         packagingLocation = {
             PackagingUris: [collectionUrl],

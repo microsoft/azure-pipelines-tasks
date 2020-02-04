@@ -10,7 +10,6 @@ import * as ngToolGetter from "packaging-common/nuget/NuGetToolGetter";
 import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner";
 import * as nutil from "packaging-common/nuget/Utility";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import { logError } from 'packaging-common/util';
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
@@ -30,7 +29,7 @@ async function main(): Promise<void> {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
         tl.debug("Unable to get packaging URIs, using default collection URI");
-        logError(error);
+        tl.debug(JSON.stringify(error));
         const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
         packagingLocation = {
             PackagingUris: [collectionUrl],
