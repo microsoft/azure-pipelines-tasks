@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 164,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "groups": [],
@@ -101,8 +101,8 @@
       "defaultValue": 1,
       "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
       "validation": {
-        "expression": "isMatch(value, '(^[1-9]\\d*$)','Multiline')",
-        "message": "Enter valid value greater than 0."
+        "expression": "isMatch(value, '(^([0-9]|([1-9]\\d*))$)','Multiline')",
+        "message": "Enter valid value for baseline and canary replica count."
       }
     },
     {
