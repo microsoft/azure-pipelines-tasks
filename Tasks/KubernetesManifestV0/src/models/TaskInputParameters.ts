@@ -43,7 +43,7 @@ export function validateCanaryPercentage() {
 }
 
 export function validateReplicaCount() {
-    if (deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY && trafficSplitMethod.toUpperCase() === canaryDeploymentHelper.TRAFFIC_SPLIT_STRATEGY && !validateRegex("^[1-9]\\d*$", baselineAndCanaryReplicas)) {
+    if (deploymentStrategy.toUpperCase() === canaryDeploymentHelper.CANARY_DEPLOYMENT_STRATEGY && trafficSplitMethod.toUpperCase() === canaryDeploymentHelper.TRAFFIC_SPLIT_STRATEGY && !validateRegex("(^([0-9]|([1-9]\\d*))$)", baselineAndCanaryReplicas)) {
         throw new Error(tl.loc('InvalidBaselineAndCanaryReplicas'));
     }
 }
