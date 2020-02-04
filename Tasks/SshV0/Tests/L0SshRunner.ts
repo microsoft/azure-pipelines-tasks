@@ -14,6 +14,9 @@ if (process.env['commands']) {
 if (process.env['runOptions']) {
     tmr.setInput('runOptions', process.env['runOptions']);
 }
+if (process.env['readyTimeout']) {
+    tmr.setInput('readyTimeout', process.env['readyTimeout']);
+}
 
 const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
