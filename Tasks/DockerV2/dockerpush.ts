@@ -58,7 +58,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         imageLsCommand.arg("images");
         connection.execCommand(imageLsCommand);
     } catch (ex) {
-        tl.warning(ex);
+        
     }
 
     // ignore the arguments input if the command is buildAndPush, as it is ambiguous
