@@ -25,6 +25,8 @@ async function run() {
             port = '22';
         }
 
+        const readyTimeout = getReadyTimeoutVariable();
+
         //setup the SSH connection configuration based on endpoint details
         let sshConfig;
         if (privateKey && privateKey !== '') {
@@ -34,7 +36,8 @@ async function run() {
                 port: port,
                 username: username,
                 privateKey: privateKey,
-                passphrase: password
+                passphrase: password,
+                readyTimeout: readyTimeout
             }
         } else {
             //use password
@@ -43,7 +46,8 @@ async function run() {
                 host: hostname,
                 port: port,
                 username: username,
-                password: password
+                password: password,
+                readyTimeout: readyTimeout
             }
         }
 
@@ -190,3 +194,10 @@ function tryDeleteFile(filePath: string): void {
 }
 
 run();
+
+function getReadyTimeoutVariable(): number {
+    let readyTimeoutString: string = tl.getInput('readyTimeout', true);
+    const readyTimeout: number = parseInt(readyTimeoutString, 10);
+
+    return readyTimeout;
+} 
