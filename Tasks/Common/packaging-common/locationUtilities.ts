@@ -4,6 +4,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { IRequestOptions } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
 
 import * as provenance from "./provenance";
+import { logError, LogType } from './util';
 
 export enum ProtocolType {
     NuGet,
@@ -146,7 +147,7 @@ export function getWebApiWithProxy(serviceUri: string, accessToken?: string): vs
     };
     const webApi = new vsts.WebApi(serviceUri, credentialHandler, options);
     tl.debug(`Created webApi client for ${serviceUri}; options: ${JSON.stringify(options)}`);
-    return webApi
+    return webApi;
 }
 
 // This function is to apply retries generically for any unreliable network calls
@@ -160,7 +161,7 @@ export async function retryOnExceptionHelper<T>(action: () => Promise<T>, maxTri
                 throw error;
             }
             tl.debug(`Network call failed. Number of retries left: ${maxTries}`);
-            if (error) tl.warning(error.toString());
+            if (error) { logError(error, LogType.warning); }
             await delay(retryIntervalInMilliseconds);
         }
     }
@@ -177,8 +178,8 @@ interface RegistryLocation {
 };
 
 export async function getFeedRegistryUrl(
-    packagingUrl: string, 
-    registryType: RegistryType, 
+    packagingUrl: string,
+    registryType: RegistryType,
     feedId: string,
     project: string,
     accessToken?: string,

@@ -79,7 +79,12 @@ async function getServiceUriFromAreaId(areaId: string, accessToken: string): Pro
         return serviceUriFromArea.locationUrl;
     } catch (error) {
         tl.debug(`Failed to obtain the service URI for area ID ${areaId}`);
-        tl.debug(JSON.stringify(error));
+        if (error instanceof Error) {
+            if (error.message) { tl.debug(error.message); }
+            if (error.stack) { tl.debug(error.stack); }
+        } else {
+            tl.debug(error);
+        }
         throw error;
     }
 }
