@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 164,
-        "Patch": 0
+        "Minor": 165,
+        "Patch": 2
     },
     "demands": [],
     "groups": [],
@@ -100,8 +100,8 @@
             "defaultValue": 1,
             "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
             "validation": {
-                "expression": "isMatch(value, '(^[1-9]\\d*$)','Multiline')",
-                "message": "Enter valid value greater than 0."
+                "expression": "isMatch(value, '(^([0-9]|([1-9]\\d*))$)','Multiline')",
+                "message": "Enter valid value for baseline and canary replica count."
             }
         },
         {
@@ -326,7 +326,7 @@
             "visibleRule": "action = createSecret && secretType = dockerRegistry"
         },
         {
-            "name": "timeout",
+            "name": "rolloutStatusTimeout",
             "type": "string",
             "label": "Timeout for rollout status",
             "defaultValue": "0",
@@ -335,7 +335,7 @@
             "visibleRule": "action = deploy || action = patch || action = scale || action = promote",
             "validation": {
                 "expression": "isMatch(value, '(^\\d*$)','Multiline')",
-                "message": "Enter valid a value for timeout."
+                "message": "Enter a valid value for timeout."
             }
         }
     ],
@@ -376,7 +376,7 @@
         "UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file. %s",
         "StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment.",
         "InvalidPercentage": "Invalid value for percentage.",
-        "InvalidBaselineAndCanaryReplicas": "Invalid value for replica count. Enter a value greater than 0.",
+        "InvalidBaselineAndCanaryReplicas": "Invalid value for replica count.",
         "InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number.",
         "RolloutStatusTimedout": "Rollout status check failed.",
         "EnvironmentLink": "For more information, go to %s"

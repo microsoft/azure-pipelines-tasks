@@ -46,7 +46,10 @@ export class azureclitask {
             }
         }
         finally {
-            await scriptType.cleanUp();
+            if (scriptType) {
+                await scriptType.cleanUp();
+            }
+
             if (this.cliPasswordPath) {
                 tl.debug('Removing spn certificate file');
                 tl.rmRF(this.cliPasswordPath);
@@ -99,8 +102,10 @@ export class azureclitask {
                 this.servicePrincipalKey = cliPassword;
             }
 
+            let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
+            tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
-            Utility.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
+            Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" -p "${escapedCliPassword}" --tenant "${tenantId}"`), tl.loc("LoginFailed"));
         }
         else if(authScheme.toLowerCase() == "managedserviceidentity") {
             //login using msi

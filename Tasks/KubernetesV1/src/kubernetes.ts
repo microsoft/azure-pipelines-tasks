@@ -52,6 +52,8 @@ catch (error) {
 }
 
 async function run(clusterConnection: ClusterConnection, command: string) {
+    displayKubectlVersion(clusterConnection);
+
     var secretName = tl.getInput("secretName", false);
     var configMapName = tl.getInput("configMapName", false);
 
@@ -65,6 +67,31 @@ async function run(clusterConnection: ClusterConnection, command: string) {
 
     if (command) {
         await executeKubectlCommand(clusterConnection, command);
+    }
+}
+
+function displayKubectlVersion(connection: ClusterConnection): void {
+    try {
+        var command = connection.createCommand();
+        command.arg('version');
+        command.arg(['-o', 'json']);
+        const result = command.execSync({ silent: true } as trm.IExecOptions);
+        const resultInJSON = JSON.parse(result.stdout);
+        if (resultInJSON.clientVersion && resultInJSON.clientVersion.gitVersion) {
+            console.log('==============================================================================');
+            console.log('\t\t\t' + tl.loc('KubectlClientVersion') + ': ' + resultInJSON.clientVersion.gitVersion);
+            if (resultInJSON.serverVersion && resultInJSON.serverVersion.gitVersion) {
+                console.log('\t\t\t' + tl.loc('KubectlServerVersion') + ': ' + resultInJSON.serverVersion.gitVersion);
+                console.log('==============================================================================');
+            }
+            else {
+                console.log('\t' + tl.loc('KubectlServerVersion') + ': ' + tl.loc('KubectlServerVerisonNotFound'));
+                console.log('==============================================================================');
+                tl.debug(tl.loc('UnableToFetchKubectlVersion'));
+            }
+        }
+    } catch (ex) {
+            console.log(tl.loc('UnableToFetchKubectlVersion'));
     }
 }
 

@@ -86,7 +86,11 @@ async function run() {
         if (isNullOrWhitespace(searchFolder)) {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
         }
-
+        
+        if(tl.getVariable('System.DefaultWorkingDirectory') && (!path.isAbsolute(searchFolder)))
+        {
+            searchFolder = path.join(tl.getVariable('System.DefaultWorkingDirectory'),searchFolder);
+        }
         // Sending allowBrokenSymbolicLinks as true, so we don't want to throw error when symlinks are broken.
         // And can continue with other files if there are any.
         const findOptions = <tl.FindOptions>{
@@ -182,17 +186,17 @@ async function run() {
 function readAndPublishTestRunSummaryToEvidenceStore(testRunner: string) {
     try {
         const agentVersion = tl.getVariable('Agent.Version');
-        if(semver.lt(agentVersion, "2.162.1")) {
-            throw "Required agent version greater than or equal to 2.162.0";
+        if (semver.lt(agentVersion, "2.164.0")) {
+            throw "Required agent version greater than or equal to 2.164.0";
         }
 
         var tempPath = tl.getVariable('Agent.TempDirectory');
         var testRunSummaryPath = path.join(tempPath, "PTR_TEST_RUNSUMMARY.json");
 
         var testRunSummary = fs.readFileSync(testRunSummaryPath, 'utf-8');
-    
+
         var properties = <{ [key: string]: string }>{};
-    
+
         properties['name'] = "PublishTestResults";
         properties['testrunner'] = testRunner;
         properties['testrunsummary'] = testRunSummary;

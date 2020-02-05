@@ -13,12 +13,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 164,
-    "Patch": 0
+    "Minor": 165,
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
-  "inputs": [{
+  "inputs": [
+    {
       "name": "action",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.action",
@@ -100,8 +101,8 @@
       "defaultValue": 1,
       "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
       "validation": {
-        "expression": "isMatch(value, '(^[1-9]\\d*$)','Multiline')",
-        "message": "Enter valid value greater than 0."
+        "expression": "isMatch(value, '(^([0-9]|([1-9]\\d*))$)','Multiline')",
+        "message": "Enter valid value for baseline and canary replica count."
       }
     },
     {
@@ -326,25 +327,27 @@
       "visibleRule": "action = createSecret && secretType = dockerRegistry"
     },
     {
-      "name": "timeout",
+      "name": "rolloutStatusTimeout",
       "type": "string",
-      "label": "ms-resource:loc.input.label.timeout",
+      "label": "ms-resource:loc.input.label.rolloutStatusTimeout",
       "defaultValue": "0",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.timeout",
+      "helpMarkDown": "ms-resource:loc.input.help.rolloutStatusTimeout",
       "visibleRule": "action = deploy || action = patch || action = scale || action = promote",
       "validation": {
         "expression": "isMatch(value, '(^\\d*$)','Multiline')",
-        "message": "Enter valid a value for timeout."
+        "message": "Enter a valid value for timeout."
       }
     }
   ],
   "dataSourceBindings": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "outputVariables": [{
-    "name": "manifestsBundle",
-    "description": "The location of the manifest bundles created by bake action"
-  }],
+  "outputVariables": [
+    {
+      "name": "manifestsBundle",
+      "description": "The location of the manifest bundles created by bake action"
+    }
+  ],
   "execution": {
     "Node": {
       "target": "src//run.js"

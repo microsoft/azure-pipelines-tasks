@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 164,
-    "Patch": 2
+    "Minor": 165,
+    "Patch": 1
   },
   "demands": [],
   "groups": [{
@@ -383,9 +383,18 @@
       "helpMarkDown": "ms-resource:loc.input.help.tillernamespace",
       "type": "string",
       "groupName": "advanced"
+    },
+    {
+      "name": "failOnStderr",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStderr",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
+      "groupName": "advanced"
     }
   ],
-  "dataSourceBindings": [{
+  "dataSourceBindings": [
+    {
       "target": "kubernetesCluster",
       "endpointId": "$(azureSubscriptionEndpoint)",
       "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
