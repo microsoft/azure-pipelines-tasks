@@ -76,7 +76,7 @@ get_args() {
         esac
         
         if ! shift; then
-            log_error 'Missing parameter argument.'
+            log_error 'Missing parameter argument.\n'
             exit 1
         fi
     done
