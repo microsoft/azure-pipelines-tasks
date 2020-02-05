@@ -5,7 +5,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as dockerCommandUtils from "docker-common-v2/dockercommandutils";
 import * as pipelineutils from "docker-common-v2/pipelineutils";
 import * as shared from "./TestShared";
-import hashring = require("consistent");
+import ConsistentHashing = require("consistent-hashing");
 
 describe("ContainerBuildV0 Suite", function () {
     this.timeout(30000);
@@ -244,20 +244,20 @@ describe("ContainerBuildV0 Suite", function () {
     });
 
     it('Consistent hash must be computed correctly', (done) => {
-        var ring = hashring({ hash: 'md5' });
-        ring.add("buildkitd-0");
-        ring.add("buildkitd-1");
-        ring.add("buildkitd-2");
-        var chosenbuildkitpod = ring.get("testrepoF:\a\w\meta\Dockerfile");
+        var ring = new ConsistentHashing([]);
+        ring.addNode("buildkitd-0");
+        ring.addNode("buildkitd-1");
+        ring.addNode("buildkitd-2");
+        var chosenbuildkitpod = ring.getNode("testrepoF:\a\w\meta\Dockerfile");
         
         // can return different pod for different key
         assert(chosenbuildkitpod,"buildkitd-2");
-        var chosenbuildkitpod1 = ring.get("testuser\testrepoF:\a\w\meta\Dockerfile");
+        var chosenbuildkitpod1 = ring.getNode("testuser\testrepoF:\a\w\meta\Dockerfile");
         
         assert(chosenbuildkitpod1,"buildkitd-0");
        
         // must return same pod if same key given
-        var chosenbuildkitpod3 = ring.get("testrepoF:\a\w\meta\Dockerfile");
+        var chosenbuildkitpod3 = ring.getNode("testrepoF:\a\w\meta\Dockerfile");
         assert(chosenbuildkitpod3,"buildkitd-2");
         done();
     });

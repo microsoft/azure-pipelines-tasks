@@ -9,7 +9,7 @@ import fs = require('fs');
 import webclient = require("azure-arm-rest-v2/webClient");
 import * as os from "os";
 import * as util from "util";
-import hashring = require("consistent");
+import ConsistentHashing = require("consistent-hashing");
 
 const buildctlToolName = "buildctl"
 const uuidV4 = require('uuid/v4');
@@ -103,7 +103,7 @@ export async function getBuildKitPod() {
         throw new Error(serviceResponse.stderr);
     }
     else if (serviceResponse && serviceResponse.stdout) {
-        var ring = hashring({hash: 'md5'});
+        var ring = new ConsistentHashing([]);
         var responseOutput = JSON.parse(serviceResponse.stdout);
         numberOfBuildKitPods = responseOutput.items ? responseOutput.items.length : 0;
         
@@ -112,18 +112,19 @@ export async function getBuildKitPod() {
 
             // add each buildkitpod name in hashring
             responseOutput.items.forEach(buildkititem => {
-                ring.add(buildkititem.metadata.name);
+                ring.addNode(buildkititem.metadata.name);
             })
 
             namespace = responseOutput.items[0].metadata.namespace;
             tl.debug("buildkitpod namespace - " + namespace);
 
             var key = tl.getVariable('Build.Repository.Name') + tl.getInput("Dockerfile", true);
-            var chosenbuildkitpod = ring.get(key);
+            var chosenbuildkitpod = ring.getNode(key);
             tl.debug("buildkitpod chosen  - " + chosenbuildkitpod);
 
             // set the environment variable
             process.env["BUILDKIT_HOST"] = "kube-pod://" + chosenbuildkitpod + "?namespace=" + namespace;
+            console.log("HOST:" + process.env['BUILDKIT_HOST']);
         }
         else {
             throw new Error("No buildkit pods found");
