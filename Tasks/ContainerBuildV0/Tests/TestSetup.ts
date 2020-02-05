@@ -21,7 +21,6 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 var nock = require("nock");
 tr.setInput('dockerRegistryServiceConnection',  process.env[shared.TestEnvVars.dockerRegistryServiceConnection] || "");
 tr.setInput('repository',  process.env[shared.TestEnvVars.repository] || "");
-tr.setInput('sharedSecret',  process.env[shared.TestEnvVars.sharedSecret] || "sharedsecret1234");
 tr.setInput('Dockerfile',  process.env[shared.TestEnvVars.dockerFile] || DefaultDockerFileInput);
 tr.setInput('buildContext',  process.env[shared.TestEnvVars.buildContext] || DefaultBuildContext);
 tr.setInput('tags', process.env[shared.TestEnvVars.tags] || "11");
@@ -96,6 +95,10 @@ let a = {
        "kubectl get service azure-pipelines-pool -o=json" : {
            "code": 0,
            "stdout": "{\"metadata\": {\"namespace\": \"azuredevops\"},\"spec\": {\"clusterIP\": \"10.0.11.12\"},\"status\": {\"loadBalancer\": {\"ingress\": [{\"ip\": \"testip\"}]}}}"
+       },
+       "kubectl get pods -l=role=buildkit -o=json" : {
+           "code": 0,
+           "stdout": "{\"apiVersion\": \"v1\",\"items\": [{\"apiVersion\": \"v1\",\"kind\": \"Pod\",\"metadata\": {\"name\": \"buildkitd-0\",\"namespace\": \"azd\"}},{\"apiVersion\": \"v1\",\"kind\": \"Pod\",\"metadata\": {\"name\": \"buildkitd-1\",\"namespace\": \"azd\"}},{\"apiVersion\": \"v1\",\"kind\": \"Pod\",\"metadata\": {\"name\": \"buildkitd-2\",\"namespace\": \"azd\"}}],\"kind\": \"List\"}"
        },
        "kubectl get service azure-pipelines-pool-custom -o=json" : {
         "code": 0,
