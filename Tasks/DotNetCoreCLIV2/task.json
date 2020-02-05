@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 165,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -262,7 +262,7 @@
             "name": "verbosityRestore",
             "type": "pickList",
             "label": "Verbosity",
-            "defaultValue": "Detailed",
+            "defaultValue": "Normal",
             "helpMarkDown": "Specifies the amount of detail displayed in the output.",
             "required": "false",
             "groupName": "restoreAdvanced",
