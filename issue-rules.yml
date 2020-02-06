@@ -41,6 +41,9 @@ rules:
 - valueFor: '**Enter Task Name**'
   contains: 'Bash'
   addLabels: ['Area: Core']
+- valueFor: '**Enter Task Name**'
+  contains: 'Batch'
+  addLabels: ['Area: Core']
   assign: ['jtpetty']
 - valueFor: '**Enter Task Name**'
   contains: 'CmdLine'
