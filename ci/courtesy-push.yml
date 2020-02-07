@@ -1,6 +1,5 @@
 steps:
-- script: init.cmd
-  displayName: Initialize Environment
+- bash: ls
 
 - task: DownloadBuildArtifacts@0
   inputs:
@@ -15,3 +14,6 @@ steps:
     cleanDestinationFolder: true 
 
 - bash: ls -R IndividualNugetPackagesDownloaded
+
+- script: init.cmd
+  displayName: Initialize Environment
