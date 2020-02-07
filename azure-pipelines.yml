@@ -3,10 +3,11 @@ trigger:
 - releases/*
 
 resources:
-- repository: AzureDevOps
-  type: github
-  endpoint: AzureDevOps
-  name: AzureDevOps/AzureDevOps
+  repositories:
+  - repository: AzureDevOps
+    type: github
+    endpoint: AzureDevOps
+    name: AzureDevOps/AzureDevOps
 
 jobs:
 
