@@ -6,7 +6,7 @@ steps:
 
 - task: ExtractFiles@1
   inputs:
-    archiveFilePatterns: 'IndividualNugetPackages.zip'
+    archiveFilePatterns: '$(System.ArtifactsDirectory)/IndividualNugetPackages.zip'
     destinationFolder: IndividualNugetPackagesDownloaded
     cleanDestinationFolder: true 
   displayName: 'Extract artifact'
