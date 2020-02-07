@@ -1,5 +1,9 @@
 steps:
 
 # Clean
-- checkout: git://AzureDevOps/AzureDevOps
-  clean: true
+- checkout: AzureDevOps
+
+- script: init.cmd
+  displayName: Initialize Environment
+
+- 
