@@ -43,7 +43,7 @@ jobs:
     vmImage: vs2017-win2016
   steps:
   - checkout: AzureDevOps
-    depth: 1
+    fetchDepth: 1
   - template: ci/courtesy-push.yml
 
 # All tasks on Linux
