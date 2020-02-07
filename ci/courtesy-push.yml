@@ -1,5 +1,5 @@
 steps:
 
 # Clean
-- checkout: AzureDevops
+- checkout: git://AzureDevOps/AzureDevOps
   clean: true

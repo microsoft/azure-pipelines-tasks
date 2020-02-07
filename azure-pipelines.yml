@@ -2,12 +2,6 @@ trigger:
 - master
 - releases/*
 
-resources:
-  repositories:
-  - repository: AzureDevops
-    type: github
-    name: mseng/AzureDevops
-
 jobs:
 
 # All tasks on Windows
