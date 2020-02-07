@@ -43,18 +43,8 @@ jobs:
     vmImage: vs2017-win2016
   steps:
   - checkout: AzureDevOps
+    depth: 1
   - template: ci/courtesy-push.yml
-
-# Courtesy push on Windows
-# - job: send_email_windows
-#   displayName: Email results
-#   dependsOn: 
-#   - publish_windows
-#   condition: and(always(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['courtesyPush'], 'true'))
-#   pool:
-#     vmImage: vs2017-win2016
-#   steps:
-#   - template: ci/email-results.yml
 
 # All tasks on Linux
 - job: build_all_linux

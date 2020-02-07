@@ -12,8 +12,16 @@ steps:
   inputs:
     destinationFolder: IndividualNugetPackagesDownloaded
     cleanDestinationFolder: true 
+  displayName: 'Extract artifact'
 
 - bash: ls -R IndividualNugetPackagesDownloaded
 
 - script: init.cmd
-  displayName: Initialize Environment
+  displayName: 'Initialize Environment'
+
+- script: node courtesy-push.js .nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackagesDownloaded\unified_deps.xml
+
+- script: |
+    cd IndividualNugetPackagesDownloaded\IndividualNugetPackagesDownloaded
+    push.cmd
+  displayName: 'Push Nuget packages'
