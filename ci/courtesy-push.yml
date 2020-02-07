@@ -1,3 +1,17 @@
 steps:
 - script: init.cmd
   displayName: Initialize Environment
+
+- task: DownloadBuildArtifacts@0
+  inputs:
+    artifactName: package
+  displayName: 'Download Artifact'
+
+- bash: ls -R $(System.ArtifactsDirectory)
+
+- task: ExtractFiles@1
+  inputs:
+    destinationFolder: IndividualNugetPackagesDownloaded
+    cleanDestinationFolder: true 
+
+- script: ls -R IndividualNugetPackagesDownloaded

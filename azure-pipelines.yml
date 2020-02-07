@@ -2,6 +2,12 @@ trigger:
 - master
 - releases/*
 
+resources:
+- repository: AzureDevOps
+  type: github
+  endpoint: AzureDevOps
+  name: AzureDevOps/AzureDevOps
+
 jobs:
 
 # All tasks on Windows
@@ -35,6 +41,7 @@ jobs:
   pool:
     vmImage: vs2017-win2016
   steps:
+  - checkout: AzureDevOps
   - template: ci/courtesy-push.yml
 
 # Courtesy push on Windows
