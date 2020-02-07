@@ -1,13 +1,3 @@
-resources:
-- repository: AzureDevOps
-  type: github
-  endpoint: AzureDevOps
-  name: AzureDevOps/AzureDevOps
-
 steps:
-
-# Clean
-- checkout: AzureDevOps
-
 - script: init.cmd
   displayName: Initialize Environment
