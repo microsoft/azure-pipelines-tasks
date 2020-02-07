@@ -4,6 +4,8 @@ steps:
     artifactName: IndividualNugetPackages
   displayName: 'Download Artifact'
 
+- bash: ls -R $(System.ArtifactsDirectory)
+
 - task: ExtractFiles@1
   inputs:
     archiveFilePatterns: '$(System.ArtifactsDirectory)/IndividualNugetPackages.zip'
