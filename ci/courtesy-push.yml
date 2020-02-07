@@ -1,3 +1,9 @@
+resources:
+- repository: AzureDevOps
+  type: github
+  endpoint: AzureDevOps
+  name: AzureDevOps/AzureDevOps
+
 steps:
 
 # Clean
