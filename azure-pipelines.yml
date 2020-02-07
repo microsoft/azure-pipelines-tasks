@@ -5,7 +5,7 @@ trigger:
 resources:
   repositories:
   - repository: AzureDevOps
-    type: externaltfs
+    type: git
     endpoint: AzureDevOps
     name: AzureDevOps/AzureDevOps
 
