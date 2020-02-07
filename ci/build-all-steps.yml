@@ -87,6 +87,7 @@ steps:
       Add-Content "$HOME\.git-credentials" "https://$(GitHubPAT):x-oauth-basic@github.com"
       git config --global user.email "damccorm@microsoft.com"
       git config --global user.name "damccorm"
+      git config --global --add url."git@github.com:".insteadOf "https://github.com/"
       git checkout -b $releaseBranch
       git push origin $releaseBranch
     condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['courtesyPush'], 'true'))
