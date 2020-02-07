@@ -14,4 +14,4 @@ steps:
     destinationFolder: IndividualNugetPackagesDownloaded
     cleanDestinationFolder: true 
 
-- script: ls -R IndividualNugetPackagesDownloaded
+- bash: ls -R IndividualNugetPackagesDownloaded
