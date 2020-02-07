@@ -20,11 +20,33 @@ jobs:
   displayName: Publish
   dependsOn: 
   - build_all_windows
-  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
+  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
   pool:
     vmImage: vs2017-win2016
   steps:
   - template: ci/publish-steps.yml
+
+# Courtesy push on Windows
+- job: courtesy_push_windows
+  displayName: Courtesy Push
+  dependsOn: 
+  - publish_windows
+  condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['courtesyPush'], 'true'))
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - template: ci/courtesy-push.yml
+
+# Courtesy push on Windows
+# - job: send_email_windows
+#   displayName: Email results
+#   dependsOn: 
+#   - publish_windows
+#   condition: and(always(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['courtesyPush'], 'true'))
+#   pool:
+#     vmImage: vs2017-win2016
+#   steps:
+#   - template: ci/email-results.yml
 
 # All tasks on Linux
 - job: build_all_linux

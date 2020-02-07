@@ -190,8 +190,9 @@ var setTaskVariables = function(tasks) {
 }
 
 var buildReason = process.env['BUILD_REASON'].toLowerCase();
+var isCourtesyPush = process.env['IS_COURTESY_PUSH'];
 var tasks;
-if (buildReason == 'individualci' || buildReason == 'batchedci') {
+if (buildReason == 'individualci' || buildReason == 'batchedci' || isCourtesyPush) {
     // If CI, we will compare any tasks that have updated versions.
     getTasksToBuildForCI().then(tasks => {
         setTaskVariables(tasks)

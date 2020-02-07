@@ -1,0 +1,11 @@
+steps:
+
+resources:
+  repositories:
+  - repository: AzureDevops
+    type: github
+    name: mseng/AzureDevops
+
+# Clean
+- checkout: AzureDevops
+  clean: true
