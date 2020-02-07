@@ -1,6 +1,4 @@
 steps:
-- bash: ls
-
 - task: DownloadBuildArtifacts@0
   inputs:
     artifactName: package
