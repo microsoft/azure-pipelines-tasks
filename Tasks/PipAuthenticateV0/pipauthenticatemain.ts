@@ -4,7 +4,7 @@ import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as telemetry from "utility-common/telemetry";
 import * as auth from "./authentication";
 import * as utils from "./utilities";
-import { getProjectAndFeedIdFromInput } from 'packaging-common/util';
+import { getProjectAndFeedIdFromInput, logError } from 'packaging-common/util';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));
@@ -32,7 +32,7 @@ async function main(): Promise<void> {
                     localAccessToken);
             } catch (error) {
                 tl.debug(tl.loc("FailedToGetPackagingUri"));
-                tl.debug(JSON.stringify(error));
+                logError(error);
                 packagingLocation = serviceUri;
             }
 
