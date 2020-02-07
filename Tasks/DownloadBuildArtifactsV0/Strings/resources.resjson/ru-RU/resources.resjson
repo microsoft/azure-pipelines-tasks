@@ -44,7 +44,6 @@
   "loc.messages.ArtifactsSuccessfullyDownloaded": "Артефакты успешно скачаны в %s",
   "loc.messages.RetryingOperation": "Ошибка в %s, выполняется повторная попытка => осталось повторных попыток: %s",
   "loc.messages.OperationFailed": "Сбой в %s с ошибкой: %s",
-  "loc.messages.ArtifactNameDirectoryNotFound": "Каталог \"%s\" не существует. Будет использоваться родительский каталог: %s",
   "loc.messages.LatestBuildFound": "Последняя найденная сборка: %s",
   "loc.messages.LatestBuildNotFound": "Последняя сборка не найдена",
   "loc.messages.LatestBuildFromBranchNotFound": "Последняя сборка из ветви %s не найдена",

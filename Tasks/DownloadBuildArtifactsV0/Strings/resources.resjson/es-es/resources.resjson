@@ -44,7 +44,6 @@
   "loc.messages.ArtifactsSuccessfullyDownloaded": "Los artefactos se han descargado correctamente en %s",
   "loc.messages.RetryingOperation": "Error: en %s, por lo que se está reintentando => reintentos pendientes: %s",
   "loc.messages.OperationFailed": "Error en %s: %s",
-  "loc.messages.ArtifactNameDirectoryNotFound": "El directorio \"%s\" no existe. Se usa el directorio primario: %s",
   "loc.messages.LatestBuildFound": "Última compilación encontrada: %s",
   "loc.messages.LatestBuildNotFound": "Última compilación no encontrada",
   "loc.messages.LatestBuildFromBranchNotFound": "No se encontró la última compilación de la rama %s",

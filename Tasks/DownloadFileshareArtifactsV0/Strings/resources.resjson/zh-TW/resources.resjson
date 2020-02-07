@@ -15,6 +15,5 @@
   "loc.input.label.parallelizationLimit": "平行處理的限制",
   "loc.input.help.parallelizationLimit": "要同時下載的檔案數目",
   "loc.messages.DownloadArtifacts": "正在從 %s 下載成品 %s",
-  "loc.messages.ArtifactsSuccessfullyDownloaded": "已成功將成品下載到 %s",
-  "loc.messages.ArtifactNameDirectoryNotFound": "目錄 '%s' 不存在。正在回復到父目錄: %s"
+  "loc.messages.ArtifactsSuccessfullyDownloaded": "已成功將成品下載到 %s"
 }

@@ -44,7 +44,6 @@
   "loc.messages.ArtifactsSuccessfullyDownloaded": "Téléchargement réussi des artefacts sur %s",
   "loc.messages.RetryingOperation": "Erreur dans %s. Nouvelle tentative => nouvelles tentatives en attente : %s",
   "loc.messages.OperationFailed": "Échec dans %s. Erreur : %s",
-  "loc.messages.ArtifactNameDirectoryNotFound": "Le répertoire '%s' n'existe pas. Retour au répertoire parent : %s",
   "loc.messages.LatestBuildFound": "Dernière build trouvée : %s",
   "loc.messages.LatestBuildNotFound": "Dernière build introuvable",
   "loc.messages.LatestBuildFromBranchNotFound": "Dernière build de la branche %s introuvable",

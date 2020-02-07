@@ -44,7 +44,6 @@
   "loc.messages.ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
   "loc.messages.RetryingOperation": "Error: in %s, so retrying => retries pending  : %s",
   "loc.messages.OperationFailed": "Failed in %s with error: %s",
-  "loc.messages.ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s",
   "loc.messages.LatestBuildFound": "Latest build found:  %s",
   "loc.messages.LatestBuildNotFound": "Latest build not found",
   "loc.messages.LatestBuildFromBranchNotFound": "Latest build from branch %s not found",

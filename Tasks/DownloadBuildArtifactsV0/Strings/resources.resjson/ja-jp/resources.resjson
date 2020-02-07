@@ -44,7 +44,6 @@
   "loc.messages.ArtifactsSuccessfullyDownloaded": "成果物が %s に正常にダウンロードされました",
   "loc.messages.RetryingOperation": "%s でエラーが発生したため、再試行します。保留中の再試行回数:  %s",
   "loc.messages.OperationFailed": "%s でエラー %s のために失敗しました",
-  "loc.messages.ArtifactNameDirectoryNotFound": "ディレクトリ '%s' が存在しません。親ディレクトリ: %s に戻ります",
   "loc.messages.LatestBuildFound": "最新のビルドが見つかりました。%s",
   "loc.messages.LatestBuildNotFound": "最新のビルドが見つかりません",
   "loc.messages.LatestBuildFromBranchNotFound": "ブランチ %s からの最新のビルドが見つかりませんでした",

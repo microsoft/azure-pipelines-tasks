@@ -67,12 +67,7 @@ async function main(): Promise<void> {
         let artifactName = tl.getInput("artifactName", true);
         artifactName = artifactName.replace('/', '\\');
         let artifactLocation = path.join(downloadUrl, artifactName);
-
         console.log(tl.loc("DownloadArtifacts", artifactName, artifactLocation));
-        if (!fs.existsSync(artifactLocation)) {
-            console.log(tl.loc("ArtifactNameDirectoryNotFound", artifactLocation, downloadUrl));
-            artifactLocation = downloadUrl;
-        }
 
         let downloaderOptions = new engine.ArtifactEngineOptions();
         downloaderOptions.itemPattern = itemPattern;

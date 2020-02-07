@@ -15,6 +15,5 @@
   "loc.input.label.parallelizationLimit": "Parallelization limit",
   "loc.input.help.parallelizationLimit": "Number of files to download simultaneously",
   "loc.messages.DownloadArtifacts": "Downloading artifact %s from: %s",
-  "loc.messages.ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
-  "loc.messages.ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s"
+  "loc.messages.ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s"
 }

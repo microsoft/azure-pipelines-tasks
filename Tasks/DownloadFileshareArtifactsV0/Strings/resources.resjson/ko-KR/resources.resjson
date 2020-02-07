@@ -15,6 +15,5 @@
   "loc.input.label.parallelizationLimit": "병렬 처리 제한",
   "loc.input.help.parallelizationLimit": "동시에 다운로드할 파일 수",
   "loc.messages.DownloadArtifacts": "%s 아티팩트를 %s에서 다운로드 중",
-  "loc.messages.ArtifactsSuccessfullyDownloaded": "%s에 아티팩트를 다운로드했습니다.",
-  "loc.messages.ArtifactNameDirectoryNotFound": "디렉터리 '%s'이(가) 없습니다. 부모 디렉터리 %s(으)로 대체됩니다."
+  "loc.messages.ArtifactsSuccessfullyDownloaded": "%s에 아티팩트를 다운로드했습니다."
 }

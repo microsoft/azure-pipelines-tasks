@@ -44,7 +44,6 @@
   "loc.messages.ArtifactsSuccessfullyDownloaded": "已成功將成品下載到 %s",
   "loc.messages.RetryingOperation": "錯誤: 在 %s，因此即將重試 => 暫止的重試次數: %s",
   "loc.messages.OperationFailed": "無法於 %s，錯誤: %s",
-  "loc.messages.ArtifactNameDirectoryNotFound": "目錄 '%s' 不存在。正在回復到父目錄: %s",
   "loc.messages.LatestBuildFound": "找到最新組建: %s",
   "loc.messages.LatestBuildNotFound": "找不到最新組建",
   "loc.messages.LatestBuildFromBranchNotFound": "找不到分支 %s 的最新組建",

@@ -44,7 +44,6 @@
   "loc.messages.ArtifactsSuccessfullyDownloaded": "Erfolgreich in \"%s\" heruntergeladene Artefakte",
   "loc.messages.RetryingOperation": "Fehler in \"%s\", Vorgang wird wiederholt. Ausstehende Versuche: %s",
   "loc.messages.OperationFailed": "Fehler in \"%s\": %s",
-  "loc.messages.ArtifactNameDirectoryNotFound": "Das Verzeichnis \"%s\" ist nicht vorhanden. Fallback auf das übergeordnete Verzeichnis: %s",
   "loc.messages.LatestBuildFound": "Gefundener aktueller Build: %s",
   "loc.messages.LatestBuildNotFound": "Aktueller Build wurde nicht gefunden.",
   "loc.messages.LatestBuildFromBranchNotFound": "Aktueller Build aus Branch \"%s\" nicht gefunden.",

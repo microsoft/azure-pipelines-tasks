@@ -75,7 +75,6 @@
   },
   "messages": {
     "DownloadArtifacts": "ms-resource:loc.messages.DownloadArtifacts",
-    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
-    "ArtifactNameDirectoryNotFound": "ms-resource:loc.messages.ArtifactNameDirectoryNotFound"
+    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded"
   }
 }

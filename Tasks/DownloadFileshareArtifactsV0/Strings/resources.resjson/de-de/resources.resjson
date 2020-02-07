@@ -15,6 +15,5 @@
   "loc.input.label.parallelizationLimit": "Parallelisierungslimit",
   "loc.input.help.parallelizationLimit": "Anzahl von Dateien, die gleichzeitig heruntergeladen werden sollen",
   "loc.messages.DownloadArtifacts": "Artefakt \"%s\" wird von %s heruntergeladen.",
-  "loc.messages.ArtifactsSuccessfullyDownloaded": "Erfolgreich in \"%s\" heruntergeladene Artefakte",
-  "loc.messages.ArtifactNameDirectoryNotFound": "Das Verzeichnis \"%s\" ist nicht vorhanden. Fallback auf das übergeordnete Verzeichnis: %s"
+  "loc.messages.ArtifactsSuccessfullyDownloaded": "Erfolgreich in \"%s\" heruntergeladene Artefakte"
 }

@@ -15,6 +15,5 @@
   "loc.input.label.parallelizationLimit": "Límite de paralelización",
   "loc.input.help.parallelizationLimit": "Número de archivos para descargar simultáneamente",
   "loc.messages.DownloadArtifacts": "Descargando el artefacto %s desde: %s",
-  "loc.messages.ArtifactsSuccessfullyDownloaded": "Los artefactos se han descargado correctamente en %s",
-  "loc.messages.ArtifactNameDirectoryNotFound": "El directorio \"%s\" no existe. Se usa el directorio primario: %s"
+  "loc.messages.ArtifactsSuccessfullyDownloaded": "Los artefactos se han descargado correctamente en %s"
 }

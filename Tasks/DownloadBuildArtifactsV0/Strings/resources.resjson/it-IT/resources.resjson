@@ -44,7 +44,6 @@
   "loc.messages.ArtifactsSuccessfullyDownloaded": "Gli artefatti sono stati scaricati in %s",
   "loc.messages.RetryingOperation": "Errore in %s. Verranno eseguiti nuovi tentativi => Tentativi in sospeso: %s",
   "loc.messages.OperationFailed": "Operazione non riuscita in %s. Errore: %s",
-  "loc.messages.ArtifactNameDirectoryNotFound": "La directory '%s' non esiste. Verrà eseguito il fallback alla directory padre: '%s'",
   "loc.messages.LatestBuildFound": "Compilazione più recente trovata: %s",
   "loc.messages.LatestBuildNotFound": "Compilazione più recente non trovata",
   "loc.messages.LatestBuildFromBranchNotFound": "La compilazione più recente dal ramo %s non è stata trovata",

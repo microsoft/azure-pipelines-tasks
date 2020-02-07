@@ -319,10 +319,6 @@ async function main(): Promise<void> {
                     let downloadUrl = artifact.resource.data;
                     let artifactName = artifact.name.replace('/', '\\');
                     let artifactLocation = path.join(downloadUrl, artifactName);
-                    if (!fs.existsSync(artifactLocation)) {
-                        console.log(tl.loc("ArtifactNameDirectoryNotFound", artifactLocation, downloadUrl));
-                        artifactLocation = downloadUrl;
-                    }
 
                     console.log(tl.loc("DownloadArtifacts", artifact.name, artifactLocation));
                     var fileShareProvider = new providers.FilesystemProvider(artifactLocation, artifactName);

@@ -15,6 +15,5 @@
   "loc.input.label.parallelizationLimit": "Предел параллелизма",
   "loc.input.help.parallelizationLimit": "Число одновременно скачиваемых файлов",
   "loc.messages.DownloadArtifacts": "Скачивается артефакт %s из: %s",
-  "loc.messages.ArtifactsSuccessfullyDownloaded": "Артефакты успешно скачаны в %s",
-  "loc.messages.ArtifactNameDirectoryNotFound": "Каталог \"%s\" не существует. Будет использоваться родительский каталог: %s"
+  "loc.messages.ArtifactsSuccessfullyDownloaded": "Артефакты успешно скачаны в %s"
 }

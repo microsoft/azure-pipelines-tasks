@@ -15,6 +15,5 @@
   "loc.input.label.parallelizationLimit": "Limite di parallelizzazione",
   "loc.input.help.parallelizationLimit": "Numero di file da scaricare contemporaneamente",
   "loc.messages.DownloadArtifacts": "Download dell'artefatto %s da %s",
-  "loc.messages.ArtifactsSuccessfullyDownloaded": "Gli artefatti sono stati scaricati in %s",
-  "loc.messages.ArtifactNameDirectoryNotFound": "La directory '%s' non esiste. Verrà eseguito il fallback alla directory padre: '%s'"
+  "loc.messages.ArtifactsSuccessfullyDownloaded": "Gli artefatti sono stati scaricati in %s"
 }

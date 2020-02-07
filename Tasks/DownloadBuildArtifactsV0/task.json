@@ -249,7 +249,6 @@
         "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
         "RetryingOperation": "Error: in %s, so retrying => retries pending  : %s",
         "OperationFailed": "Failed in %s with error: %s",
-        "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s",
         "LatestBuildFound": "Latest build found:  %s",
         "LatestBuildNotFound": "Latest build not found",
         "LatestBuildFromBranchNotFound": "Latest build from branch %s not found",

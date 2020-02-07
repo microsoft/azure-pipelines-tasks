@@ -15,6 +15,5 @@
   "loc.input.label.parallelizationLimit": "并行化限制",
   "loc.input.help.parallelizationLimit": "要同时下载的文件数",
   "loc.messages.DownloadArtifacts": "正在从后列位置下载项目 %s: %s",
-  "loc.messages.ArtifactsSuccessfullyDownloaded": "已成功将项目下载到 %s",
-  "loc.messages.ArtifactNameDirectoryNotFound": "目录“%s”不存在。请回退到父级目录: %s"
+  "loc.messages.ArtifactsSuccessfullyDownloaded": "已成功将项目下载到 %s"
 }

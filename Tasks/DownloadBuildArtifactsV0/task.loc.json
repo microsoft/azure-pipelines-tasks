@@ -249,7 +249,6 @@
     "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
     "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
     "OperationFailed": "ms-resource:loc.messages.OperationFailed",
-    "ArtifactNameDirectoryNotFound": "ms-resource:loc.messages.ArtifactNameDirectoryNotFound",
     "LatestBuildFound": "ms-resource:loc.messages.LatestBuildFound",
     "LatestBuildNotFound": "ms-resource:loc.messages.LatestBuildNotFound",
     "LatestBuildFromBranchNotFound": "ms-resource:loc.messages.LatestBuildFromBranchNotFound",

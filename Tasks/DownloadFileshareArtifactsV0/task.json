@@ -75,7 +75,6 @@
     },
     "messages": {
         "DownloadArtifacts": "Downloading artifact %s from: %s",
-        "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
-        "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s"
+        "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s"
     }
 }

@@ -44,7 +44,6 @@
   "loc.messages.ArtifactsSuccessfullyDownloaded": "已成功将项目下载到 %s",
   "loc.messages.RetryingOperation": "错误: 在 %s 中，正在重试 => 重试挂起: %s",
   "loc.messages.OperationFailed": "%s 中失败，出现错误: %s",
-  "loc.messages.ArtifactNameDirectoryNotFound": "目录“%s”不存在。请回退到父级目录: %s",
   "loc.messages.LatestBuildFound": "找到最新生成: %s",
   "loc.messages.LatestBuildNotFound": "找不到最新生成",
   "loc.messages.LatestBuildFromBranchNotFound": "找不到分支 %s 中的最新生成",
