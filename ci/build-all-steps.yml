@@ -84,9 +84,7 @@ steps:
       $releaseBranch = "test/releases/m" + $currentSprint
 
       # Push branch to git
-      git config --global user.email "mattc@xbox.com"
-      git config --global user.name "azure-pipelines-bot"
       git checkout -b $releaseBranch
-      git push origin $releaseBranch
+      git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
     condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['courtesyPush'], 'true'))
     displayName: Push release branch
