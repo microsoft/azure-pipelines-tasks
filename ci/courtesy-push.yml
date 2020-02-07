@@ -5,5 +5,3 @@ steps:
 
 - script: init.cmd
   displayName: Initialize Environment
-
-- 
