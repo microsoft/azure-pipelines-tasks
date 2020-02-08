@@ -44,6 +44,7 @@ jobs:
   steps:
   - checkout: AzureDevOps
     fetchDepth: 1
+  - checkout: self
   - template: ci/courtesy-push.yml
 
 # All tasks on Linux

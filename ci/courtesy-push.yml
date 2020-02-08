@@ -5,11 +5,12 @@ steps:
     downloadPath: 'IndividualNugetPackagesDownloaded'
   displayName: 'Download Artifact'
 
-- script: dir /s IndividualNugetPackagesDownloaded
+- script: dir
 
-- script: node courtesy-push.js .nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+- script: node courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
 
 - script: |
+    cd AzureDevOps
     init.cmd
     cd IndividualNugetPackagesDownloaded\IndividualNugetPackages
     push.cmd
@@ -25,5 +26,6 @@ steps:
       $releaseBranch = "users/damccorm/m" + $currentSprint + "/courtesyPush"
 
       # Push branch to git
+      cd AzureDevOps
       git checkout -b $releaseBranch
       git push origin $releaseBranch
