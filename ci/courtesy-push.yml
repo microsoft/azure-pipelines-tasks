@@ -2,24 +2,16 @@ steps:
 - task: DownloadBuildArtifacts@0
   inputs:
     artifactName: IndividualNugetPackages
+    downloadPath: 'IndividualNugetPackagesDownloaded'
   displayName: 'Download Artifact'
-
-- task: ExtractFiles@1
-  inputs:
-    archiveFilePatterns: '$(System.ArtifactsDirectory)/IndividualNugetPackages.zip'
-    destinationFolder: IndividualNugetPackagesDownloaded
-    cleanDestinationFolder: true 
-  displayName: 'Extract artifact'
 
 - bash: ls -R IndividualNugetPackagesDownloaded
 
-- script: init.cmd
-  displayName: 'Initialize Environment'
-
-- script: node courtesy-push.js .nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackagesDownloaded\unified_deps.xml
+- script: node courtesy-push.js .nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
 
 - script: |
-    cd IndividualNugetPackagesDownloaded\IndividualNugetPackagesDownloaded
+    init.cmd
+    cd IndividualNugetPackagesDownloaded\IndividualNugetPackages
     push.cmd
   displayName: 'Push Nuget packages'
 
