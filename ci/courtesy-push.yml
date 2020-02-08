@@ -8,6 +8,10 @@ steps:
 - script: dir
 
 - script: node azure-pipelines-tasks\ci\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+  displayName: 'Update unified deps'
+
+- powershell: AzureDevOps\archive\Preinstall\StrongNameHijack.msi
+  displayName: 'Prep env'
 
 - script: |
     cd AzureDevOps
