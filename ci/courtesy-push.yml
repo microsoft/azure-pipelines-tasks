@@ -5,7 +5,7 @@ steps:
     downloadPath: 'IndividualNugetPackagesDownloaded'
   displayName: 'Download Artifact'
 
-- bash: ls -R IndividualNugetPackagesDownloaded
+- script: dir /s IndividualNugetPackagesDownloaded
 
 - script: node courtesy-push.js .nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
 
