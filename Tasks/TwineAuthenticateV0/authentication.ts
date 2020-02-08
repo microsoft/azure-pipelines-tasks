@@ -1,6 +1,7 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import { getProjectAndFeedIdFromInput } from 'packaging-common/util';
+import { logError } from 'packaging-common/util';
 
 export interface IPackageSource {
     feedUri: string;
@@ -50,7 +51,7 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<AuthIn
             localAccessToken);
     } catch (error) {
         tl.debug(tl.loc("FailedToGetPackagingUri"));
-        tl.debug(JSON.stringify(error));
+        logError(error);
         packagingLocation = serviceUri;
     }
 
