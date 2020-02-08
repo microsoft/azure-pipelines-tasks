@@ -12,7 +12,7 @@ steps:
 
 - powershell: |
     cd AzureDevOps
-    archive\Preinstall\StrongNameHijack.msi
+    .\archive\Preinstall\StrongNameHijack.msi
   displayName: 'Preinstall strongnamehijack'
 
 - script: |
