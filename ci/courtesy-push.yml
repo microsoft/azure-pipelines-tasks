@@ -7,7 +7,7 @@ steps:
 
 - script: dir
 
-- script: node courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+- script: node azure-pipelines-tasks\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
 
 - script: |
     cd AzureDevOps
