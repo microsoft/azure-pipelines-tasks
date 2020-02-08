@@ -12,7 +12,7 @@ steps:
 
 - script: |
     cd AzureDevOps
-    AzureDevOps\archive\Preinstall\StrongNameHijack.msi
+    archive\Preinstall\StrongNameHijack.msi
     init.cmd
     cd IndividualNugetPackagesDownloaded\IndividualNugetPackages
     push.cmd
