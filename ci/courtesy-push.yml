@@ -15,8 +15,8 @@ steps:
   displayName: 'Update unified deps'
 
 - task: NuGetAuthenticate@0
-#   inputs: #TODO
-#     nuGetServiceConnections: 
+  inputs:
+    nuGetServiceConnections: 'Codex-Deps'
 
 - script: |
     cd IndividualNugetPackagesDownloaded
@@ -30,15 +30,16 @@ steps:
     API_KEY: $(ApiKey)
 
 - powershell: |
-      # Build the release branch name
-      $startdate = Get-Date -Date '2020-01-20'
-      $enddate = Get-Date
-      $difference = New-TimeSpan -Start $startdate -End $enddate
-      $sprintsSince165 = ($difference.Days/21) - (($difference.Days/21)%1) # Weirdly, PowerShell modulo is actually a remainder operator. This gets the actual modulo value.
-      $currentSprint = $sprintsSince165 + 165
-      $releaseBranch = "users/damccorm/m" + $currentSprint + "/courtesyPush"
+    # Build the release branch name
+    $startdate = Get-Date -Date '2020-01-20'
+    $enddate = Get-Date
+    $difference = New-TimeSpan -Start $startdate -End $enddate
+    $sprintsSince165 = ($difference.Days/21) - (($difference.Days/21)%1) # Weirdly, PowerShell modulo is actually a remainder operator. This gets the actual modulo value.
+    $currentSprint = $sprintsSince165 + 165
+    $releaseBranch = "users/damccorm/m" + $currentSprint + "/courtesyPush"
 
-      # Push branch to git
-      cd AzureDevOps
-      git checkout -b $releaseBranch
-      git push origin $releaseBranch
+    # Push branch to git
+    cd AzureDevOps
+    git checkout -b $releaseBranch
+    git push origin $releaseBranch
+  displayName: Push branch to Azure DevOps
