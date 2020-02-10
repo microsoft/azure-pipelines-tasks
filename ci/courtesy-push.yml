@@ -20,10 +20,7 @@ steps:
 
 - script: |
     cd IndividualNugetPackagesDownloaded
-    dir
     cd IndividualNugetPackages
-    dir
-    nuget setapikey %API_KEY% -source https://mseng.pkgs.visualstudio.com/_packaging/Codex-Deps/nuget/v3/index.json
     push.cmd
   displayName: 'Push Nuget packages'
   env:
