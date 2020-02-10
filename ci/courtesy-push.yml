@@ -11,7 +11,10 @@ steps:
   displayName: 'Update unified deps'
 
 - script: |
-    cd AzureDevOps\IndividualNugetPackagesDownloaded\IndividualNugetPackages
+    cd IndividualNugetPackagesDownloaded
+    dir
+    cd IndividualNugetPackages
+    dir
     push.cmd
   displayName: 'Push Nuget packages'
 
