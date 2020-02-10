@@ -73,6 +73,7 @@ async function run() {
         command: command,
         jobId: tl.getVariable('SYSTEM_JOBID')
     };
+    var failOnStderr = tl.getBoolInput("failOnStderr");
 
     console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
         "TaskEndpointId",
@@ -88,7 +89,7 @@ async function run() {
                 kubectlCli.unsetKubeConfigEnvVariable();
                 break;
             default:
-                runHelm(helmCli, command, kubectlCli);
+                runHelm(helmCli, command, kubectlCli, failOnStderr);
         }
     } catch (err) {
         // not throw error so that we can logout from helm and kubernetes
@@ -103,7 +104,7 @@ async function run() {
     }
 }
 
-function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli) {
+function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, failOnStderr: boolean) {
     var helmCommandMap = {
         "init": "./helmcommands/helminit",
         "install": "./helmcommands/helminstall",
@@ -124,7 +125,7 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli) {
     commandImplementation.addArguments(helmCli);
 
     const execResult = helmCli.execHelmCommand();
-    if (execResult.code != tl.TaskResult.Succeeded || !!execResult.error || !!execResult.stderr) {
+    if (execResult.code != tl.TaskResult.Succeeded || !!execResult.error || (failOnStderr && !!execResult.stderr)) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
         tl.setResult(tl.TaskResult.Failed, execResult.stderr);
     }

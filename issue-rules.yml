@@ -19,7 +19,16 @@ rules:
   contains: 'Npm'
   addLabels: ['Area: Artifacts']  
 - valueFor: '**Enter Task Name**'
+  contains: 'NpmAuthenticate'
+  addLabels: ['Area: Artifacts']
+- valueFor: '**Enter Task Name**'
   contains: 'UniversalPackage'
+  addLabels: ['Area: Artifacts']
+- valueFor: '**Enter Task Name**'
+  contains: 'NuGetCommand'
+  addLabels: ['Area: Artifacts']
+- valueFor: '**Enter Task Name**'
+  contains: 'NuGetToolInstaller'
   addLabels: ['Area: Artifacts']
 # Area: Build
 - valueFor: '**Enter Task Name**'
@@ -31,6 +40,9 @@ rules:
 # Area: Core
 - valueFor: '**Enter Task Name**'
   contains: 'Bash'
+  addLabels: ['Area: Core']
+- valueFor: '**Enter Task Name**'
+  contains: 'Batch'
   addLabels: ['Area: Core']
   assign: ['jtpetty']
 - valueFor: '**Enter Task Name**'
