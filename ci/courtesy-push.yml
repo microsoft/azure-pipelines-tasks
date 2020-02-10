@@ -17,7 +17,7 @@ steps:
 - task: NuGetAuthenticate@0
   inputs:
     nuGetServiceConnections: 'Codex-Deps'
-  'Authenticate with nuget'
+  displayName: 'Authenticate with nuget'
 
 - script: nuget restore
   displayName: 'nuget restore'
