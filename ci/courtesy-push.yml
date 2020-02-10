@@ -11,10 +11,7 @@ steps:
   displayName: 'Update unified deps'
 
 - script: |
-    cd AzureDevOps
-    .\Compliance\Tools\LocalDevBoxMachineSetup\dependencies\StrongNameHijack.msi
-    init.cmd
-    cd IndividualNugetPackagesDownloaded\IndividualNugetPackages
+    cd AzureDevOps\IndividualNugetPackagesDownloaded\IndividualNugetPackages
     push.cmd
   displayName: 'Push Nuget packages'
 
