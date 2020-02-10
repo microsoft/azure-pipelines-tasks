@@ -17,10 +17,15 @@ steps:
 - task: NuGetAuthenticate@0
   inputs:
     nuGetServiceConnections: 'Codex-Deps'
+  'Authenticate with nuget'
+
+- script: nuget restore
+  displayName: 'nuget restore'
 
 - script: |
     cd IndividualNugetPackagesDownloaded
     cd IndividualNugetPackages
+    nuget setapikey %API_KEY% -source https://mseng.pkgs.visualstudio.com/_packaging/Codex-Deps/nuget/v3/index.json
     push.cmd
   displayName: 'Push Nuget packages'
   env:
