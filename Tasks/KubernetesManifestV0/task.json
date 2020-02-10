@@ -13,13 +13,12 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 159,
+        "Minor": 165,
         "Patch": 2
     },
     "demands": [],
     "groups": [],
-    "inputs": [
-        {
+    "inputs": [{
             "name": "action",
             "type": "pickList",
             "label": "Action",
@@ -49,7 +48,7 @@
             "name": "namespace",
             "type": "string",
             "label": "Namespace",
-            "required": true,
+            "required": false,
             "defaultValue": "",
             "helpMarkDown": "Sets the namespace for the commands by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
         },
@@ -67,16 +66,42 @@
             "visibleRule": "action = deploy || action = promote || action = reject"
         },
         {
+            "name": "trafficSplitMethod",
+            "type": "pickList",
+            "label": "Traffic split method",
+            "required": false,
+            "defaultValue": "pod",
+            "options": {
+                "pod": "Pod",
+                "smi": "SMI"
+            },
+            "helpMarkDown": "Traffic split method to be used",
+            "visibleRule": "strategy = canary"
+        },
+        {
             "name": "percentage",
             "type": "string",
             "label": "Percentage",
             "required": true,
-            "helpMarkDown": "",
+            "helpMarkDown": "Percentage of traffic redirect to canary deployment",
             "defaultValue": 0,
             "visibleRule": "strategy = Canary && action = deploy",
             "validation": {
-                "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d{1,2})?)$)','Multiline')",
+                "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d*)?)$)','Multiline')",
                 "message": "Enter valid percentage value i.e between 0 to 100."
+            }
+        },
+        {
+            "name": "baselineAndCanaryReplicas",
+            "type": "string",
+            "label": "Baseline and canary replicas",
+            "required": true,
+            "helpMarkDown": "Baseline and canary replicas count",
+            "defaultValue": 1,
+            "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
+            "validation": {
+                "expression": "isMatch(value, '(^([0-9]|([1-9]\\d*))$)','Multiline')",
+                "message": "Enter valid value for baseline and canary replica count."
             }
         },
         {
@@ -299,16 +324,27 @@
             "label": "Docker registry service connection",
             "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
             "visibleRule": "action = createSecret && secretType = dockerRegistry"
+        },
+        {
+            "name": "rolloutStatusTimeout",
+            "type": "string",
+            "label": "Timeout for rollout status",
+            "defaultValue": "0",
+            "required": false,
+            "helpMarkDown": "The length of time (in seconds) to wait before ending watch on rollout status",
+            "visibleRule": "action = deploy || action = patch || action = scale || action = promote",
+            "validation": {
+                "expression": "isMatch(value, '(^\\d*$)','Multiline')",
+                "message": "Enter a valid value for timeout."
+            }
         }
     ],
     "dataSourceBindings": [],
     "instanceNameFormat": "$(action)",
-    "outputVariables": [
-        {
-            "name": "manifestsBundle",
-            "description": "The location of the manifest bundles created by bake action"
-        }
-    ],
+    "outputVariables": [{
+        "name": "manifestsBundle",
+        "description": "The location of the manifest bundles created by bake action"
+    }],
     "execution": {
         "Node": {
             "target": "src//run.js"
@@ -328,15 +364,21 @@
         "NullInputObject": "Input object is null.",
         "ArgumentsInputNotSupplied": "Arguments are not supplied.",
         "NullInputObjectMetadata": "Input object metadata is null.",
-        "CanaryDeploymentAlreadyExistErrorMessage": "Canary deployment already exists. Rejecting this deployment.",
         "InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
         "InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
         "AllContainersNotInReadyState": "All the containers are not in a ready state.",
         "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
         "KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features.",
-        "CouldNotDetermineServiceStatus":  "Could not determine the service %s status due to the error: %s",
+        "CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
         "waitForServiceIpAssignment": "Waiting for service %s external IP assignment",
         "waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timed out",
-        "ServiceExternalIP": "service %s external IP is %s"
+        "ServiceExternalIP": "service %s external IP is %s",
+        "UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file. %s",
+        "StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment.",
+        "InvalidPercentage": "Invalid value for percentage.",
+        "InvalidBaselineAndCanaryReplicas": "Invalid value for replica count.",
+        "InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number.",
+        "RolloutStatusTimedout": "Rollout status check failed.",
+        "EnvironmentLink": "For more information, go to %s"
     }
 }

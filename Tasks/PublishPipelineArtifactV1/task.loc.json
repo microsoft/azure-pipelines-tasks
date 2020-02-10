@@ -9,13 +9,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 0
+    "Minor": 2,
+    "Patch": 2
   },
   "groups": [],
   "demands": [],
-  "preview": true,
-  "minimumAgentVersion": "2.155.1",
+  "preview": false,
+  "minimumAgentVersion": "2.159.2",
   "inputs": [
     {
       "name": "path",
@@ -38,6 +38,48 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.artifactName"
+    },
+    {
+      "name": "artifactType",
+      "aliases": [
+        "publishLocation"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.artifactType",
+      "defaultValue": "pipeline",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.artifactType",
+      "options": {
+        "pipeline": "Azure Pipelines",
+        "filepath": "A file share"
+      }
+    },
+    {
+      "name": "fileSharePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.fileSharePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.fileSharePath",
+      "visibleRule": "artifactType = filepath"
+    },
+    {
+      "name": "parallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.parallel",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.parallel",
+      "visibleRule": "artifactType = filepath"
+    },
+    {
+      "name": "parallelCount",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.parallelCount",
+      "defaultValue": 8,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.parallelCount",
+      "visibleRule": "artifactType = filepath && parallel = true"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

@@ -10,8 +10,8 @@ import * as crypto from "crypto";
 const matchPatternForSize = new RegExp(/[\d\.]+/);
 const orgUrl = tl.getVariable('System.TeamFoundationCollectionUri');
 const buildString = "build";
-const hostType = tl.getVariable("System.HostType").toLowerCase();
-const isBuild = hostType === buildString;
+const hostType = tl.getVariable("System.HostType");
+const isBuild = hostType && hostType.toLowerCase() === buildString;
 const matchPatternForDigest = new RegExp(/sha256\:(.+)/);
 
 export function build(connection: ContainerConnection, dockerFile: string, commandArguments: string, labelArguments: string[], tagArguments: string[], onCommandOut: (output) => any): any {
@@ -91,7 +91,7 @@ export function getCreatorEmail(): string {
     const schedule = "schedule";
     const buildReason = tl.getVariable("Build.Reason");
     let userEmail: string = "";
-    if (isBuild && (!buildReason || (buildReason && tl.getVariable("Build.Reason").toLowerCase() !== schedule))) {
+    if (isBuild && (!buildReason || buildReason.toLowerCase() !== schedule)) {
         userEmail = tl.getVariable("Build.RequestedForEmail");
     }
     else {
@@ -113,11 +113,21 @@ export function getPipelineLogsUrl(): string {
     return pipelineUrl;
 }
 
-export function getBuildAndPushArguments(dockerFile: string, labelArguments: string[], tagArguments: string[]): Object {
+export function getBuildAndPushArguments(dockerFile: string, labelArguments: string[], tagArguments: string[]): { [key: string]: string } {
+    let labelArgumentsString = "";
+    let tagArgumentsString = "";
+    if (labelArguments && labelArguments.length > 0) {
+        labelArgumentsString = labelArguments.join(", ");
+    }
+
+    if (tagArguments && tagArguments.length > 0) {
+        tagArgumentsString = tagArguments.join(", ");
+    }
+
     let buildArguments = {
         "dockerFilePath": dockerFile,
-        "labels": labelArguments,
-        "tags": tagArguments,
+        "labels": labelArgumentsString,
+        "tags": tagArgumentsString,
         "context": getBuildContext(dockerFile)
     };
 
@@ -230,6 +240,12 @@ function parseHistoryForLayers(input: string) {
     else {
         directive = 'RUN';
         argument = input.substring(indexCreatedBy + createdByMatch.length, input.length - 1);
+    }
+
+    const layerIdMatch = "; layerId:";
+    const indexLayerId = argument.indexOf(layerIdMatch);
+    if (indexLayerId >= 0) {
+        argument = argument.substring(0, indexLayerId);
     }
 
     let createdAt: string = "";

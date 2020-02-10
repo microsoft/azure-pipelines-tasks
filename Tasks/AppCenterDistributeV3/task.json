@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 157,
+        "Minor": 159,
         "Patch": 0
     },
     "releaseNotes": "Added support for forwarding Android mapping to App Center Diagnostics. Added missing descriptions.",
@@ -72,7 +72,8 @@
             "groupName": "symbols",
             "options": {
                 "Apple": "Apple",
-                "Android": "Android"
+                "Android": "Android",
+                "UWP": "UWP"
             }
         },
         {
@@ -85,16 +86,12 @@
             "visibleRule": "symbolsType == AndroidNative || symbolsType = Windows"
         },
         {
-            "name": "pdbPath",
-            "aliases": [
-                "symbolsPdbFiles"
-            ],
+            "name": "appxsymPath",
             "type": "filePath",
-            "label": "Symbols path (*.pdb)",
-            "defaultValue": "**/*.pdb",
+            "label": "Symbols path (*.appxsym)",
             "groupName": "symbols",
             "required": false,
-            "helpMarkDown": "Relative path from the repo root to PDB symbols files. Path may contain wildcards.",
+            "helpMarkDown": "Relative path from the repo root to APPXSYM symbols file.",
             "visibleRule": "symbolsType = UWP"
         },
         {
@@ -120,6 +117,15 @@
             "required": false,
             "helpMarkDown": "Relative path from the repo root to Android's mapping.txt file.",
             "visibleRule": "symbolsType = Android"
+        },
+        {
+            "name": "nativeLibrariesPath",
+            "type": "filePath",
+            "label": "Native Library File Path",
+            "groupName": "symbols",
+            "required": false,
+            "helpMarkDown": "Relative path from the repo root to the additional native libraries you want to publish (e.g. .so files).",
+            "visibleRule": "symbolsType == Android"
         },
         {
             "name": "packParentFolder",

@@ -3,8 +3,8 @@
     "name": "ContainerStructureTest",
     "friendlyName": "Container Structure Test",
     "description": "Uses container-structure-test (https://github.com/GoogleContainerTools/container-structure-test) to validate the structure of an image based on four categories of tests - command tests, file existence tests, file content tests and metadata tests",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
+    "helpUrl": "https://aka.ms/containerstructuretest",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/containerstructuretest)",
     "category": "Test",
     "visibility": [
         "Build",
@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 1
+        "Minor": 162,
+        "Patch": 0
     },
     "preview": true,
     "demands": [],
@@ -61,6 +61,14 @@
             "label": "Config file path",
             "required": true,
             "helpMarkDown": "Config files path, that contains container structure tests. Either .yaml or .json files"
+        },
+        {
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test run title",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide a name for the Test Run."
         },
         {
             "name": "failTaskOnFailedTests",

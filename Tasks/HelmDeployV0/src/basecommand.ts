@@ -49,9 +49,16 @@ abstract class basecommand {
     }
 
     public static handleExecResult(execResult: tr.IExecSyncResult) {
-        if (execResult.code != tl.TaskResult.Succeeded || !!execResult.error || !!execResult.stderr) {
+        if (execResult.code != tl.TaskResult.Succeeded) {
+
             tl.debug('execResult: ' + JSON.stringify(execResult));
-            tl.setResult(tl.TaskResult.Failed, execResult.stderr);
+            if(!!execResult.error || !!execResult.stderr) {
+                tl.setResult(tl.TaskResult.Failed, execResult.stderr);
+            }
+            else
+            {
+                tl.setResult(tl.TaskResult.Failed, "");
+            }
         }
     }
 }

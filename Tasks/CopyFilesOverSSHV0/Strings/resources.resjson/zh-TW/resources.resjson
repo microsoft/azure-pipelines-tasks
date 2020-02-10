@@ -20,6 +20,8 @@
   "loc.input.help.failOnEmptySource": "若在來源資料夾中找不到要複製的檔案，作業便會失敗。",
   "loc.input.label.flattenFolders": "壓平合併資料夾",
   "loc.input.help.flattenFolders": "壓平合併資料夾結構，並將所有檔案複製到遠端電腦上指定的目標資料夾中。",
+  "loc.input.label.readyTimeout": "SSH handshake timeout",
+  "loc.input.help.readyTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete.",
   "loc.messages.CheckLogForStdErr": "請查看建置記錄中的命令有無 STDERR。",
   "loc.messages.CleanTargetFolder": "清理遠端電腦上的目標資料夾 %s",
   "loc.messages.CleanTargetFolderFailed": "無法清理遠端電腦上的目標資料夾。%s",

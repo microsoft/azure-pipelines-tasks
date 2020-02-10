@@ -6,17 +6,17 @@ import fs = require("fs");
 
 export class Utility {
 
-    public static async getScriptPath(scriptLocation:string, fileExtensions:string[]): Promise<string> {
-        if (scriptLocation === "scriptPath") {
-            let filePath: string = tl.getPathInput("scriptPath", true, true);
-            if(Utility.checkIfFileExists(filePath, fileExtensions)){
+    public static async getScriptPath(scriptLocation: string, fileExtensions: string[]): Promise<string> {
+        if (scriptLocation.toLowerCase() === "scriptpath") {
+            let filePath: string = tl.getPathInput("scriptPath", true, false);
+            if (Utility.checkIfFileExists(filePath, fileExtensions)) {
                 return filePath;
             }
             throw new Error(tl.loc('JS_InvalidFilePath', filePath));
         }
-        let tmpDir = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
+        let tempDirectory = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
         let inlineScript: string = tl.getInput("inlineScript", true);
-        let scriptPath: string = path.join(tmpDir, `azureclitaskscript${new Date().getTime()}.${fileExtensions[0]}`);
+        let scriptPath: string = path.join(tempDirectory, `azureclitaskscript${new Date().getTime()}.${fileExtensions[0]}`);
         await Utility.createFile(scriptPath, inlineScript);
         return scriptPath;
     }
@@ -32,23 +32,31 @@ export class Utility {
                 throw new Error(tl.loc('JS_InvalidErrorActionPreference', powerShellErrorActionPreference));
         }
 
-        let contents: string[] = [];
-        contents.push(`$ErrorActionPreference = '${powerShellErrorActionPreference}'`); 
+        // Write the script to disk.
+        tl.assertAgent('2.115.0');
+        let tempDirectory = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
 
-        if (scriptLocation === "scriptPath") {
-            let filePath: string = tl.getPathInput("scriptPath", true, true);
-            if (Utility.checkIfFileExists(filePath, fileExtensions)){
-                contents.push(`. '${filePath.replace("'", "''")}' ${scriptArguments}`.trim());
-            }
-            else{
+        let contents: string[] = [];
+        contents.push(`$ErrorActionPreference = '${powerShellErrorActionPreference}'`);
+        let filePath: string = tl.getPathInput("scriptPath", false, false);
+        if (scriptLocation.toLowerCase() === 'inlinescript') {
+            let inlineScript: string = tl.getInput("inlineScript", true);
+            filePath = path.join(tempDirectory, `azureclitaskscript${new Date().getTime()}_inlinescript.${fileExtensions[0]}`);
+            await Utility.createFile(filePath, inlineScript);
+        }
+        else{
+            if (!Utility.checkIfFileExists(filePath, fileExtensions)) {
                 throw new Error(tl.loc('JS_InvalidFilePath', filePath));
             }
         }
-        else {
-            let inlineScript: string = tl.getInput("inlineScript", true);
-            contents.push(inlineScript);
+
+        let content: string = `. '${filePath.replace("'", "''")}' `;
+        if (scriptArguments) {
+            content += scriptArguments;
         }
-        let powerShellIgnoreLASTEXITCODE: string = tl.getInput('powerShellIgnoreLASTEXITCODE', false);
+        contents.push(content.trim());
+
+        let powerShellIgnoreLASTEXITCODE: boolean = tl.getBoolInput('powerShellIgnoreLASTEXITCODE', false);
         if (!powerShellIgnoreLASTEXITCODE) {
             contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);
             contents.push(`    Write-Host '##vso[task.debug]$LASTEXITCODE is not set.'`);
@@ -58,13 +66,8 @@ export class Utility {
             contents.push(`}`);
         }
 
-        // Write the script to disk.
-        tl.assertAgent('2.115.0');
-        let tempDirectory = tl.getVariable('agent.tempDirectory');
-        tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let scriptPath: string = path.join(tempDirectory, `azureclitaskscript${new Date().getTime()}.${fileExtensions[0]}`);
-
-        await Utility.createFile(scriptPath,'\ufeff' + contents.join(os.EOL), { encoding : 'utf8'} );
+        await Utility.createFile(scriptPath, '\ufeff' + contents.join(os.EOL), { encoding: 'utf8' });
         return scriptPath;
     }
 
@@ -82,7 +85,7 @@ export class Utility {
         }
     }
 
-    public static async createFile(filePath: string, data: string, options?:any): Promise<void> {
+    public static async createFile(filePath: string, data: string, options?: any): Promise<void> {
         try {
             fs.writeFileSync(filePath, data, options);
         }
@@ -93,12 +96,12 @@ export class Utility {
     }
 
     public static checkIfFileExists(filePath: string, fileExtensions: string[]): boolean {
-        let matchingFiles:string[] = fileExtensions.filter((fileExtension:string) => {
+        let matchingFiles: string[] = fileExtensions.filter((fileExtension: string) => {
             if (tl.stats(filePath).isFile() && filePath.toUpperCase().match(new RegExp(`\.${fileExtension.toUpperCase()}$`))) {
                 return true;
             }
         });
-        if (matchingFiles.length > 0){
+        if (matchingFiles.length > 0) {
             return true;
         }
         return false;
