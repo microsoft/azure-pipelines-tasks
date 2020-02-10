@@ -3,7 +3,6 @@ steps:
   inputs:
     versionSpec: '4.3.0'
   displayName: 'Install nuget'
-
 - task: DownloadBuildArtifacts@0
   inputs:
     artifactName: IndividualNugetPackages
@@ -14,6 +13,10 @@ steps:
 
 - script: node azure-pipelines-tasks\ci\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: 'Update unified deps'
+
+- task: NuGetAuthenticate@0
+#   inputs: #TODO
+#     nuGetServiceConnections: 
 
 - script: |
     cd IndividualNugetPackagesDownloaded
