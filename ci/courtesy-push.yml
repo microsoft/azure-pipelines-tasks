@@ -1,4 +1,9 @@
 steps:
+- task: NuGetToolInstaller@0
+  inputs:
+    versionSpec: '4.3.0'
+  displayName: 'Install nuget'
+
 - task: DownloadBuildArtifacts@0
   inputs:
     artifactName: IndividualNugetPackages
