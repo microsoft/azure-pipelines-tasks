@@ -43,6 +43,8 @@ steps:
     # Push branch to git
     cd AzureDevOps
     git checkout -b $releaseBranch
+    git config --global user.email "damccorm@microsoft.com"
+    git config --global user.name "Danny McCormick"
     git add .nuget\externals\UnifiedDependencies.xml
     git commit -m "Courtesy bump of tasks"
     git push origin $releaseBranch
