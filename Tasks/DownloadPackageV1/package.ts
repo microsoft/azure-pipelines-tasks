@@ -157,7 +157,7 @@ export abstract class Package {
                 tl.debug("Found " + packages["count"] + " packages matching search pattern " + packageId);
                 for (let i = 0; i < packages["count"]; i++) {
                     if (packages["value"][i]["id"] == packageId && packages["value"][i]["versions"][0]["isLatest"]) {
-                        return resolve(packages["value"][i]["versions"][0]["version"]);
+                        return resolve(packages["value"][i]["versions"][0]["normalizedVersion"]);
                     }
                 }
                 return reject("Latest version not found."); 
