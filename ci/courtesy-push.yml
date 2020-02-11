@@ -43,5 +43,7 @@ steps:
     # Push branch to git
     cd AzureDevOps
     git checkout -b $releaseBranch
+    git add .nuget\externals\UnifiedDependencies.xml
+    git commit -m "Courtesy bump of tasks"
     git push origin $releaseBranch
   displayName: Push branch to Azure DevOps
