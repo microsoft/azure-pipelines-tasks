@@ -26,8 +26,13 @@ let connection = new azdev.WebApi(orgUrl, authHandler);
 console.log('Getting api');
 connection.getGitApi().then(gitApi => {
     console.log('Creating PR');
-    gitApi.createPullRequest(pullRequestToCreate, azureDevOpsRepoId, project);
-    console.log('Created PR successfully');
+    gitApi.createPullRequest(pullRequestToCreate, azureDevOpsRepoId, project).then(res => {
+        console.log(`Created PR ${res}`);
+    }).catch(err => {
+        console.log(err);
+        throw err;
+    });
 }).catch(err => {
     console.log(err);
+    throw err;
 });
