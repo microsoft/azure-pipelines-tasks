@@ -28,8 +28,6 @@ steps:
 #     cd IndividualNugetPackages
 #     push.cmd
 #   displayName: 'Push Nuget packages'
-#   env:
-#     API_KEY: $(ApiKey)
 
 - powershell: |
     # Build the release branch name
@@ -54,4 +52,4 @@ steps:
     node open-courtesy-push-pull-request.js $releaseBranch
   displayName: Push branch to Azure DevOps
   env:
-    TOKEN: $(System.AccessToken)
+    TOKEN: $(Package.Token)
