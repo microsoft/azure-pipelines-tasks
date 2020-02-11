@@ -27,4 +27,7 @@ console.log('Getting api');
 connection.getGitApi().then(gitApi => {
     console.log('Creating PR');
     gitApi.createPullRequest(pullRequestToCreate, azureDevOpsRepoId, project);
+    console.log('Created PR successfully');
+}).catch(err => {
+    console.log(err);
 });
