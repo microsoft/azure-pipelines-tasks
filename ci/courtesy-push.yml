@@ -12,7 +12,7 @@ steps:
 
 - script: dir
 
-- script: node azure-pipelines-tasks\ci\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: 'Update unified deps'
 
 - task: NuGetAuthenticate@0
@@ -48,4 +48,10 @@ steps:
     git add .nuget\externals\UnifiedDependencies.xml
     git commit -m "Courtesy bump of tasks"
     git push origin $releaseBranch
+
+    cd ..\azure-pipelines-tasks\ci\courtesy-push
+    npm install
+    node open-courtesy-push-pull-request.js $releaseBranch
   displayName: Push branch to Azure DevOps
+  env:
+    TOKEN: $(System.AccessToken)
