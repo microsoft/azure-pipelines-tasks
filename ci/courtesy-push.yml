@@ -38,7 +38,7 @@ steps:
     $difference = New-TimeSpan -Start $startdate -End $enddate
     $sprintsSince165 = ($difference.Days/21) - (($difference.Days/21)%1) # Weirdly, PowerShell modulo is actually a remainder operator. This gets the actual modulo value.
     $currentSprint = $sprintsSince165 + 165
-    $releaseBranch = "users/damccorm/m" + $currentSprint + "/courtesyPush"
+    $releaseBranch = "users/damccorm/test/m" + $currentSprint + "/courtesyPush"
 
     # Push branch to git
     cd AzureDevOps
