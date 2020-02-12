@@ -1442,7 +1442,13 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
     var taskFeedUrl = process.env.AGGREGATE_TASKS_FEED_URL;
     var apiKey = 'Skyrise';
 
-    fs.writeFileSync(taskPushCmdPath, `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey ${apiKey}`);
+    var pushCmd = `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey ${apiKey}`;
+
+    if (process.env['courtesyPush']) {
+        pushCmd += ' -skipDuplicate'
+    }
+
+    fs.writeFileSync(taskPushCmdPath, pushCmd);
 }
 
 // Rename task folders that are created from the aggregate. Allows NuGet generation from aggregate using same process as normal.

@@ -72,3 +72,17 @@ steps:
   - powershell: ./ci/stop-collect-diagnostics.ps1
     displayName: Stop collect diagnostics
     condition: and(always(), eq(variables.collect_diagnostics, 'true'), ne(variables['numTasks'], 0))
+
+  - powershell: |
+      # Build the release branch name
+      $startdate = Get-Date -Date '2020-01-20'
+      $enddate = Get-Date
+      $difference = New-TimeSpan -Start $startdate -End $enddate
+      $sprintsSince165 = ($difference.Days/21) - (($difference.Days/21)%1) # Weirdly, PowerShell modulo is actually a remainder operator. This gets the actual modulo value.
+      $currentSprint = $sprintsSince165 + 165
+      $releaseBranch = "damccormtest/releases/m" + $currentSprint
+      # Push branch to git
+      git checkout -b $releaseBranch
+      git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+    condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['courtesyPush'], 'true'))
+    displayName: Push release branch 

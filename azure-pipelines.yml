@@ -2,6 +2,13 @@ trigger:
 - master
 - releases/*
 
+resources:
+  repositories:
+  - repository: AzureDevOps
+    type: git
+    endpoint: AzureDevOps
+    name: AzureDevOps/AzureDevOps
+
 jobs:
 
 # All tasks on Windows
@@ -25,6 +32,21 @@ jobs:
     vmImage: vs2017-win2016
   steps:
   - template: ci/publish-steps.yml
+
+# Courtesy push on Windows
+- job: courtesy_push_windows
+  displayName: Courtesy Push
+  dependsOn: 
+  - publish_windows
+  condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables['courtesyPush'], 'true'))
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - checkout: AzureDevOps
+    fetchDepth: 1
+    persistCredentials: true
+  - checkout: self
+  - template: ci/courtesy-push.yml
 
 # All tasks on Linux
 - job: build_all_linux
