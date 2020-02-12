@@ -309,6 +309,14 @@ export function updateImageDetails(inputObject: any, containers: string[]) {
     if (inputObject.spec.initContainers) {
         updateContainers(inputObject.spec.initContainers, containers);
     }
+
+    if (inputObject.spec.jobTemplate.spec.template.spec.containers) {
+        updateContainers(inputObject.spec.jobTemplate.spec.template.spec.containers, containers);
+    }
+
+    if (inputObject.spec.jobTemplate.spec.template.spec.initContainers) {
+        updateContainers(inputObject.spec.jobTemplate.spec.template.spec.initContainers, containers);
+    }
 }
 
 function extractImageName(imageName) {
