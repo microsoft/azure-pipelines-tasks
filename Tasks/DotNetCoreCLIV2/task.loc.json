@@ -135,6 +135,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.logProjectEvents"
     },
     {
+      "name": "restoreArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.restoreArguments",
+      "defaultValue": "",
+      "visibleRule": "command = restore",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.restoreArguments"
+    },
+    {
       "name": "publishTestResults",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishTestResults",

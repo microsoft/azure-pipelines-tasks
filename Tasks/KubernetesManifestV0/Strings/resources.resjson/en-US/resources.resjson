@@ -61,6 +61,8 @@
   "loc.input.help.secretArguments": "Specify keys and literal values to insert in secret.For example, --from-literal=key1=value1 --from-literal=key2=\"top secret\".",
   "loc.input.label.dockerRegistryEndpoint": "Docker registry service connection",
   "loc.input.help.dockerRegistryEndpoint": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
+  "loc.input.label.rolloutStatusTimeout": "Timeout for rollout status",
+  "loc.input.help.rolloutStatusTimeout": "The length of time (in seconds) to wait before ending watch on rollout status",
   "loc.messages.DownloadPathForStableTxt": "Download path for stable.txt: %s",
   "loc.messages.DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
@@ -83,6 +85,11 @@
   "loc.messages.waitForServiceIpAssignment": "Waiting for service %s external IP assignment",
   "loc.messages.waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timed out",
   "loc.messages.ServiceExternalIP": "service %s external IP is %s",
-  "loc.messages.UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file.",
-  "loc.messages.StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment."
+  "loc.messages.UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file. %s",
+  "loc.messages.StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment.",
+  "loc.messages.InvalidPercentage": "Invalid value for percentage.",
+  "loc.messages.InvalidBaselineAndCanaryReplicas": "Invalid value for replica count.",
+  "loc.messages.InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number.",
+  "loc.messages.RolloutStatusTimedout": "Rollout status check failed.",
+  "loc.messages.EnvironmentLink": "For more information, go to %s"
 }

@@ -43,6 +43,22 @@ export default class helmcli extends basecommand {
         return this.arguments;
     }
 
+    public getHelmVersion(): tr.IExecSyncResult {
+        var command = this.createCommand();
+        command.arg('version');
+        command.line('--client');
+        command.line('--short');
+
+        return this.execCommandSync(command);
+    }
+
+    public isHelmV3(): boolean {
+        var helmVersion = this.getHelmVersion();
+        if(helmVersion.stdout.charAt(1) == '3')
+            return true;
+        return false;
+    }
+
     public execHelmCommand(): tr.IExecSyncResult {
         var command = this.createCommand();
         command.arg(this.command);

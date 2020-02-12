@@ -13,6 +13,7 @@ import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as telemetry from "utility-common/telemetry";
 import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions2";
 import { getProjectAndFeedIdFromInputParam } from 'packaging-common/util';
+import { logError } from 'packaging-common/util';
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
@@ -33,7 +34,7 @@ export async function run(nuGetPath: string): Promise<void> {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
         tl.debug("Unable to get packaging URIs, using default collection URI");
-        tl.debug(JSON.stringify(error));
+        logError(error);
         const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
         packagingLocation = {
             PackagingUris: [collectionUrl],

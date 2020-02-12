@@ -13,23 +13,21 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 162,
-    "Patch": 0
+    "Minor": 165,
+    "Patch": 1
   },
   "demands": [],
   "satisfies": [
     "Kubectl"
   ],
   "groups": [],
-  "inputs": [
-    {
-      "name": "kubectlVersion",
-      "label": "ms-resource:loc.input.label.kubectlVersion",
-      "type": "string",
-      "helpMarkDown": "ms-resource:loc.input.help.kubectlVersion",
-      "defaultValue": "latest"
-    }
-  ],
+  "inputs": [{
+    "name": "kubectlVersion",
+    "label": "ms-resource:loc.input.label.kubectlVersion",
+    "type": "string",
+    "helpMarkDown": "ms-resource:loc.input.help.kubectlVersion",
+    "defaultValue": "latest"
+  }],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {

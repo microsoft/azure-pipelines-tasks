@@ -290,4 +290,24 @@ describe('AppCenterDistribute L0 Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
     });
+
+    it('Positive path: upload Breakpad .so files always packs them to .zip', function () {
+        this.timeout(4000);
+
+        const tp = path.join(__dirname, 'L0SymDistributeBreakpad.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+    
+    it('Positive path: upload both Breakpad .so files and Proguard mapping.txt', function () {
+        this.timeout(4000);
+
+        const tp = path.join(__dirname, 'L0SymDistributeBreakpadWithProguard.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+    });
 });

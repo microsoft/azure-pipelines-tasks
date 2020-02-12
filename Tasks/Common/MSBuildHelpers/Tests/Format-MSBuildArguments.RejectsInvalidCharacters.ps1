@@ -47,7 +47,7 @@ foreach ($acceptConfigurationCase in $acceptConfigurationCases)
 }
 
 # Arrange.
-$rejectCases = 'Release; /Logger:"\\networkshare\\NotActuallyALogger.dll', '<AngleBraces>', 'ASTER*SKS', 'AMPER&AND', 'PER%ENT', '"double quotes"', 'periods.', '#HASHTAGS', 'question marks?'
+$rejectCases = 'Release; /Logger:"\\networkshare\\NotActuallyALogger.dll', 'Angle<Braces', 'secarB>elgnA', 'ASTER*SKS', 'AMPER&AND', 'PER%ENT', '"double quotes"', '#HASHTAGS', 'question marks?'
 
 # Act.
 foreach ($rejectCase in $rejectCases)
