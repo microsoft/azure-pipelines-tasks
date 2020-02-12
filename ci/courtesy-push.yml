@@ -1,7 +1,7 @@
 steps:
 - task: NuGetToolInstaller@0
   inputs:
-    versionSpec: '4.8.2'
+    versionSpec: '5.4.0'
   displayName: 'Install nuget'
 
 - task: DownloadBuildArtifacts@0
