@@ -150,7 +150,7 @@
             ],
             "type": "radio",
             "label": "Azure PowerShell Version",
-            "defaultValue": "OtherVersion",
+            "defaultValue": "LatestVersion",
             "required": false,
             "options": {
                 "LatestVersion": "Latest installed version",

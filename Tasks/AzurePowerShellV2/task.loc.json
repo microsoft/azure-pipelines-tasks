@@ -117,7 +117,7 @@
       ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.TargetAzurePs",
-      "defaultValue": "OtherVersion",
+      "defaultValue": "LatestVersion",
       "required": false,
       "options": {
         "LatestVersion": "Latest installed version",
