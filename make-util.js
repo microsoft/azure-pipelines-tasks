@@ -1445,7 +1445,7 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
     var pushCmd = `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey ${apiKey}`;
 
     if (process.env['courtesyPush']) {
-        pushCmd += ' --skip-duplicate'
+        pushCmd += ' -skip-duplicate'
     }
 
     fs.writeFileSync(taskPushCmdPath, pushCmd);
