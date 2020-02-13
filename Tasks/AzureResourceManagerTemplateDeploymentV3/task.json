@@ -300,7 +300,7 @@
         "LogDeploymentName": "Deployment name is %s",
         "ResourceGroupNameNotProvided": "Resource Group name should be provided",
         "LocationNotProvided": "Location is required for deployment",
-        "ARMServiceConnectionScope": "ARM Service Conection deployment scope - %s",
+        "ARMServiceConnectionScope": "ARM Service Connection deployment scope - %s",
         "ServicePrincipalRoleAssignmentDetails": "Please make sure the Service Principal with name %s is assigned the right roles for the entity %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal",
         "ServicePrincipalFetchFailed": "Error while fetching Service Principal details: %s",
         "FindMoreDeploymentDetailsAzurePortal": "Task successfully created an Azure Resource Manager deployment, but the deployment failed. Please see more detailed Azure resource manager deployment logs at: (Please Copy-Paste the link) %s",
