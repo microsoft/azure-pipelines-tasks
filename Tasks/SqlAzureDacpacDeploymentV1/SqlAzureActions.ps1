@@ -271,6 +271,9 @@ function Run-SqlCmd {
     }
     elseif ($authenticationType -eq "connectionString") {
       Check-ConnectionString
+      
+      $connectionString = EscapeSpecialChars -str $connectionString
+      
       $commandToRun = "Invoke-Sqlcmd -connectionString `"$connectionString`" "
       $commandToLog = "Invoke-Sqlcmd -connectionString `"**********`" "
     }
